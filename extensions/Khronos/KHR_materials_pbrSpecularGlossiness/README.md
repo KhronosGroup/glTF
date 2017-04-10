@@ -51,7 +51,9 @@ For example, the following defines a material like gold using specular-glossines
 
 ### Specular - Glossiness
 
-Todo: Add figure
+<p>
+<img src="./figures/specular-glossiness material.png"/>
+</p>
 
 The specular-glossiness material model is defined by the following properties:
 * `diffuse` - Reflected diffuse color of the material
@@ -62,7 +64,7 @@ The diffuse value represents the reflected diffuse color of the material. The sp
 
 The specular property from specular-glossiness material model is the same as the base color value from the metallic-roughness material model for metals. The glossiness property from specular-glossiness material model is related with the roughness property from the metallic-roughness material model and is defined as `glossiness = 1 - roughness`. See [appendix](#appendix) for more details on how you can convert between these two material models.
 
-The value for each property (`diffuse`, `specular`, `glossiness`) can be defined using factors or textures. The `specular` and `glossiness` properties are packed together in a single texture called `specularGlossinessTexture`.  If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. The factors (`diffuseFactor`, `specularFactor`, `glossinessFactor`) scale, in linear space, the components given in the respective textures (`diffuseTexture`, `specularGlossinessTexture`). Texture content must be converted to linear space before it is used for any lighting computations.  
+The value for each property (`diffuse`, `specular`, `glossiness`) can be defined using factors or textures. The `specular` and `glossiness` properties are packed together in a single texture called `specularGlossinessTexture`.  If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. The factors (`diffuseFactor`, `specularFactor`, `glossinessFactor`) scale, in linear space, the components given in the respective textures (`diffuseTexture`, `specularGlossinessTexture`). Texture content must be converted to linear space before it is used for any lighting computations.
 
 The following equations show how to calculate bidirectional reflectance distribution function (BRDF) inputs (*c<sub>diff</sub>*, *F<sub>0</sub>*, *&alpha;*) from the metallic-roughness material properties. 
 
@@ -98,7 +100,7 @@ The RGBA components of the reflected diffuse color of the material. Metals have 
 
 ### diffuseTexture
 
-The diffuse texture. This texture contains RGB(A) components of the reflected diffuse color of the material in sRGB color space. If the fourth component (A) is present, it represents the opacity of the material. Otherwise, an opacity of 1.0 is assumed.
+The diffuse texture. This texture contains RGB(A) components of the reflected diffuse color of the material in sRGB color space. If the fourth component (A) is present, it represents the alpha coverage of the material. Otherwise, an alpha of 1.0 is assumed. The `alphaMode` property specifies how alpha is interpreted. The stored texels must not be premultiplied.
 
 * **Type**: [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)  
 * **Required**: No
@@ -159,10 +161,10 @@ The [additional maps](/specification/2.0/README.md#additionalmaps) defined in gl
 }
 ```
 
-<a name="conformance"></a>
-## Conformance and best practices
+<a name="bestpractices"></a>
+## Best practices
 
-The PBR specular-glossiness extension can be used along with PBR metallic-roughness material model in glTF to enable support for both PBR workflows. Specular-glossiness can represent a broader range of materials compared to metallic-roughness. However, supporting specular-glossiness on low-resource devices may not be possible as it is more resource heavy than the metallic-roughness model. To get the best of both worlds a glTF asset can include both metallic-roughness and specular-glossiness in a single glTF. This allows the asset to take advantage of richer specular-glossiness materials where possible and still have a fall back with metallic-roughness to ensure that the asset can be rendered everywhere. Since such an approach requires including both material models it is best suited for a web scenario where a client can choose to download the appropriate material model from a server hosting the glTF file. 
+The PBR specular-glossiness extension can be used along with PBR metallic-roughness material model in glTF to enable support for both PBR workflows. Specular-glossiness can represent a broader range of materials compared to metallic-roughness. However, supporting specular-glossiness on low-resource devices may not be possible as it is more resource heavy than the metallic-roughness model. To get the best of both worlds a glTF asset can include both metallic-roughness and specular-glossiness in a single glTF asset. This allows the asset to take advantage of richer specular-glossiness materials where possible and still have a fall back with metallic-roughness to ensure that the asset can be rendered everywhere. Since such an approach requires including both material models it is best suited for a web scenario where a client can choose to download the appropriate material model from a server hosting the glTF asset. 
 
 The following example shows how the same material can be defined using both metallic-roughness as well as specular-glossiness material models:
 
@@ -187,20 +189,18 @@ The following example shows how the same material can be defined using both meta
     ]
 }
 ```
-If the pbrSpecularGlossiness extension is included in an asset, then any runtime implementation that supports the extension should always render the asset using the specular-glossiness material properties to ensure quality.
+If the specular-glossiness extension is included in an asset, then any client implementation that supports the extension should always render the asset using the specular-glossiness material properties.
 
-A glTF asset may also choose to use the pbrSpecularGlossiness extension without including any metallic-roughness properties for its material definition. If such an asset chooses to include the extension using the `extensionUsed` property then a runtime that doesn't support the pbrSpecularGlossiness extension may choose to render the asset by converting the specular-glossiness values to metallic-roughness using the conversion mechanism described in the [appendix](#appendix). Such a conversion during load can be slow and potentially lossy so the runtime could also choose to ignore the material parameters and render the asset using 50% gray emissive color as described in the [base specification](/specification/2.0/README.md#appendix-a).
-
-If an asset includes the pbrSpecularGlossiness extension using the `extensionsRequired` property and does not specify any metallic-roughness properties then only a runtime that supports the pbrSpecularGlossines extension can render it. With this approach you trade off portability of the asset to ensure quality.  
+A `material` may specify the specular-glossiness extension without including any metallic-roughness properties. For such an asset, the best practice is to include the specular-glossiness extension using the `extensionRequired` property so that the asset is only loaded by clients that can render the specular-glossiness material. This approach trades asset portability for a smaller file size. If `extensionsUsed` property is specified instead of `extensionsRequired`, then a client that does not support the specular-glossiness extension will render the asset as if no material was specified. 
 
 The following table describes the expected rendering behavior based on the material definitions included in the asset:
 
-| | Runtime supports Metallic-Roughness | Runtime supports Metallic-Roughness and Specular-Glossiness | Runtime supports Specular-Glossiness|
-|----|:----:|:----:|:----:|
-|Asset has Metallic-Roughness | Render Metallic-Roughness | Render Metallic-Roughness | Convert and Render in Specular-Glossiness (not lossy) | 
-|Asset has Metallic-Roughness and Specular-Glossiness | Render Metallic-Roughness | Render Specular-Glossiness | Render Specular-Glossiness|
-|Asset has Specular-Glossiness| Convert and render Metallic-Roughness (lossy) | Render Specular-Glossiness | Render Specular-Glossiness|
-
+| | Client supports metallic-roughness | Client supports metallic-roughness and specular-glossiness | 
+|----|:----:|:----:|
+|Asset has metallic-roughness | Render metallic-roughness | Render metallic-roughness |  
+|Asset has metallic-roughness and specular-glossiness | Render metallic-roughness | Render specular-glossiness | 
+|Asset has specular-glossiness with `extensionsRequired`| Fail to load | Render specular-glossiness | 
+|Asset has specular-glossiness with `extensionsUsed` | Render as if no material | Render specular-glossiness | 
 
 ## Appendix
 
