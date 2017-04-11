@@ -25,6 +25,5 @@
         "extensions": { },
         "extras": { }
     },
-    "required": [ "channels", "samplers" ],
-    "additionalProperties": false
+    "required": [ "channels", "samplers" ]
 }

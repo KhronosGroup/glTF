@@ -41,11 +41,23 @@
             "gltf_detailedDescription": "The RGB components of the emissive color of the material. If an emissiveTexture is specified, this value is multiplied with the texel values."
         },
         "alphaMode": {
-            "type": "string",
-            "enum": [ "OPAQUE", "MASK", "BLEND" ],
             "default": "OPAQUE",
             "description": "The alpha rendering mode of the material.",
-            "gltf_detailedDescription": "The material's alpha rendering mode enumeration specifying the interpretation of the alpha value of the main factor and texture. If the alpha mode is not specified, it defaults to `OPAQUE` where the alpha value is ignored and the rendered output is fully opaque. In `MASK` mode, the rendered output is either fully opaque or fully transparent depending on the alpha value and the specified alpha cutoff value. In `BLEND` mode, the alpha value is used to composite the source and destination areas. The rendered output is combined with the background using the normal painting operation (i.e. the Porter and Duff over operator)."
+            "gltf_detailedDescription": "The material's alpha rendering mode enumeration specifying the interpretation of the alpha value of the main factor and texture. In `OPAQUE` mode, the alpha value is ignored and the rendered output is fully opaque. In `MASK` mode, the rendered output is either fully opaque or fully transparent depending on the alpha value and the specified alpha cutoff value. In `BLEND` mode, the alpha value is used to composite the source and destination areas. The rendered output is combined with the background using the normal painting operation (i.e. the Porter and Duff over operator).",
+            "anyOf": [
+                {
+                    "enum": [ "OPAQUE" ]
+                },
+                {
+                    "enum": [ "MASK" ]
+                },
+                {
+                    "enum": [ "BLEND" ]
+                },
+                {
+                    "type": "string"
+                }
+            ]
         },
         "alphaCutoff": {
             "type": "number",
@@ -63,6 +75,5 @@
     },
      "dependencies" : {
         "alphaCutoff" : ["alphaMode"]
-    },
-    "additionalProperties": false
+    }
 }

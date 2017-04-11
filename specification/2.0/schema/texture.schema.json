@@ -11,12 +11,11 @@
         },
         "source": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the image used by this texture. When undefined, a default texture should be used."
+            "description": "The index of the image used by this texture."
         },
         "name": { },
         "extensions": { },
         "extras": { }
     },
-    "additionalProperties": false,
     "gltf_webgl": "`createTexture()`, `deleteTexture()`, `bindTexture()`, `texImage2D()`, and `texParameterf()`"
 }

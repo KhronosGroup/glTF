@@ -35,6 +35,5 @@
         "extensions": { },
         "extras": { }
     },
-    "additionalProperties": false,
     "required": [ "yfov", "znear" ]
 }

@@ -14,15 +14,23 @@
             "description": "A perspective camera containing properties to create a perspective projection matrix."
         },
         "type": {
-            "type": "string",
             "description": "Specifies if the camera uses a perspective or orthographic projection.",
-            "enum": [ "perspective", "orthographic" ],
-            "gltf_detailedDescription": "Specifies if the camera uses a perspective or orthographic projection.  Based on this, either the camera's `perspective` or `orthographic` property will be defined."
+            "gltf_detailedDescription": "Specifies if the camera uses a perspective or orthographic projection.  Based on this, either the camera's `perspective` or `orthographic` property will be defined.",
+            "anyOf": [
+                {
+                    "enum": [ "perspective" ]
+                },
+                {
+                    "enum": [ "orthographic" ]
+                },
+                {
+                    "type": "string"
+                }
+            ]
         },
         "name": { },
         "extensions": { },
         "extras": { }
     },
-    "additionalProperties": false,
     "required": [ "type" ]
 }

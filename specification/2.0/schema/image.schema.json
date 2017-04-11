@@ -25,7 +25,6 @@
         "extensions": { },
         "extras": { }
     },
-    "additionalProperties": false,
     "dependencies": {
         "bufferView": [ "mimeType" ]
     },
