@@ -1794,7 +1794,7 @@ The stride, in bytes, between vertex attributes or other interleavable data.  Wh
 
 ### bufferView.target
 
-The target that the WebGL buffer should be bound to.  All valid values correspond to WebGL enums.  When this is not provided, the bufferView contains animation or skin data.
+The target that the GPU buffer should be bound to.
 
 * **Type**: `integer`
 * **Required**: No
