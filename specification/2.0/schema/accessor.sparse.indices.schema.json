@@ -16,15 +16,28 @@
             "default": 0
         },
         "componentType": {
-            "type": "integer",
             "description": "The indices data type.",
-            "enum": [ 5121, 5123, 5125 ],
-            "gltf_enumNames": [ "UNSIGNED_BYTE", "UNSIGNED_SHORT", "UNSIGNED_INT" ],
-            "gltf_detailedDescription": "The indices data type.  Valid values correspond to WebGL enums: `5121` (UNSIGNED_BYTE), `5123` (UNSIGNED_SHORT), `5125` (UNSIGNED_INT)."
+            "gltf_detailedDescription": "The indices data type.  Valid values correspond to WebGL enums: `5121` (UNSIGNED_BYTE), `5123` (UNSIGNED_SHORT), `5125` (UNSIGNED_INT).",
+            "anyOf": [
+                {
+                    "enum": [ 5121 ],
+                    "description": "UNSIGNED_BYTE"
+                },
+                {
+                    "enum": [ 5123 ],
+                    "description": "UNSIGNED_SHORT"
+                },
+                {
+                    "enum": [ 5125 ],
+                    "description": "UNSIGNED_INT"
+                },
+                {
+                    "type": "integer"
+                }
+            ]
         },
         "extensions": { },
         "extras": { }
     },
-    "additionalProperties": false,
     "required": [ "bufferView", "componentType" ]
 }

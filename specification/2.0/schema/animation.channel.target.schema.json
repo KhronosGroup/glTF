@@ -10,13 +10,27 @@
             "description": "The index of the node to target."
         },
         "path": {
-            "type": "string",
             "description": "The name of the node's TRS property to modify, or the \"weights\" of the Morph Targets it instantiates.",
-            "enum": [ "translation", "rotation", "scale", "weights" ]
+            "anyOf": [
+                {
+                    "enum": [ "translation" ]
+                },
+                {
+                    "enum": [ "rotation" ]
+                },
+                {
+                    "enum": [ "scale" ]
+                },
+                {
+                    "enum": [ "weights" ]
+                },
+                {
+                    "type": "string"
+                }
+            ]
         },
         "extensions": { },
         "extras": { }
     },
-    "additionalProperties": false,
     "required": [ "node", "path" ]
 }

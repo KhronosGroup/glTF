@@ -22,6 +22,5 @@
         "extensions": { },
         "extras": { }
     },
-    "additionalProperties": false,
     "required": [ "byteLength" ]
 }

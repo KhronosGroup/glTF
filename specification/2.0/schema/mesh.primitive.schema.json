@@ -24,12 +24,42 @@
             "description": "The index of the material to apply to this primitive when rendering."
         },
         "mode": {
-            "type": "integer",
             "description": "The type of primitives to render.",
-            "enum": [ 0, 1, 2, 3, 4, 5, 6 ],
-            "gltf_enumNames": [ "POINTS", "LINES", "LINE_LOOP", "LINE_STRIP", "TRIANGLES", "TRIANGLE_STRIP", "TRIANGLE_FAN" ],
             "default": 4,
-            "gltf_detailedDescription": "The type of primitives to render. All valid values correspond to WebGL enums."
+            "gltf_detailedDescription": "The type of primitives to render. All valid values correspond to WebGL enums.",
+            "anyOf": [
+                {
+                    "enum": [ 0 ],
+                    "description": "POINTS"
+                },
+                {
+                    "enum": [ 1 ],
+                    "description": "LINES"
+                },
+                {
+                    "enum": [ 2 ],
+                    "description": "LINE_LOOP"
+                },
+                {
+                    "enum": [ 3 ],
+                    "description": "LINE_STRIP"
+                },
+                {
+                    "enum": [ 4 ],
+                    "description": "TRIANGLES"
+                },
+                {
+                    "enum": [ 5 ],
+                    "description": "TRIANGLE_STRIP"
+                },
+                {
+                    "enum": [ 6 ],
+                    "description": "TRIANGLE_FAN"
+                },
+                {
+                    "type": "integer"
+                }
+            ]
         },
         "targets": {
             "type": "array",
@@ -42,7 +72,6 @@
         "extensions": { },
         "extras": { }
     },
-    "additionalProperties": false,
     "gltf_webgl": "`drawElements()` and `drawArrays()`",
     "required": [ "attributes" ]
 }

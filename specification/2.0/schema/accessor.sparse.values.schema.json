@@ -18,6 +18,5 @@
         "extensions": { },
         "extras": { }
     },
-    "additionalProperties": false,
     "required": [ "bufferView" ]
 }

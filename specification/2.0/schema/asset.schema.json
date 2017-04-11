@@ -15,12 +15,16 @@
         },
         "version": {
             "type": "string",
-            "description": "The glTF version.",
-            "enum": [ "2.0" ]
+            "description": "The glTF version that this asset targets.",
+            "pattern": "^[0-9]+\\.[0-9]+$"
+        },
+        "minVersion": {
+            "type": "string",
+            "description": "The minimum glTF version that this asset targets.",
+            "pattern": "^[0-9]+\\.[0-9]+$"
         },
         "extensions": { },
         "extras": { }
     },
-    "additionalProperties": false,
     "required": [ "version" ]
 }
