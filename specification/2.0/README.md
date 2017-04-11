@@ -625,7 +625,7 @@ In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to 
 
 > **Implementation note:** Splitting one mesh into *primitives* could be useful to limit number of indices per draw call.
 
-If `material` is not supplied, and no extension is present that defines material properties, then the object should be rendered using a 50% gray emissive color.  
+If `material` is not supplied, then the object should be rendered using a 50% gray PBR metallic-roughness material with `[ 0.5, 0.5, 0.5 ]` for `baseColorFactor`, `0` for `metallicFactor`, and `1` for `roughnessFactor`.
 
 The following example defines a mesh containing one triangle set primitive:
 
@@ -636,9 +636,10 @@ The following example defines a mesh containing one triangle set primitive:
             "primitives": [
                 {
                     "attributes": {
-                        "NORMAL": 25,
-                        "POSITION": 23,
-                        "TEXCOORD_0": 27
+                        "NORMAL": 23,
+                        "POSITION": 22,
+                        "TANGENT": 24,
+                        "TEXCOORD_0": 25
                     },
                     "indices": 21,
                     "material": 3,
@@ -652,13 +653,32 @@ The following example defines a mesh containing one triangle set primitive:
 
 Each attribute is defined as a property of the `attributes` object. The name of the property corresponds to an enumerated value identifying the vertex attribute, such as `POSITION`. The value of the property is the index of an accessor that contains the data.
 
-Valid attribute semantic property names include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, and `WEIGHT`.  `TEXCOORD` and `COLOR` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_1`, etc.  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
+Valid attribute semantic property names include `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`, `JOINT`, and `WEIGHT`.  Application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
+
+Each mesh has a limit of two UV texture coordinate sets and one vertex color.
+
+Valid accessor type and component type for each attribute semantic property are defined below.
+
+|Name|Accessor Type(s)|Component Type(s)|Description|
+|----|----------------|-----------------|-----------|
+|`POSITION`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex positions|
+|`NORMAL`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex normals|
+|`TANGENT`|`"VEC4"`|`5126`&nbsp;(FLOAT)|XYZW vertex tangents where the w component is a sign value (-1 or +1) indicating handedness of the tangent basis|
+|`TEXCOORD_0`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the first set|
+|`TEXCOORD_1`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the second set|
+|`COLOR_0`|`"VEC3"`<br>`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|RGB or RGBA vertex color|
+|`JOINT`|`"VEC4"`|`5120`&nbsp;(UNSIGNED_BYTE)<br>`5123`&nbsp;(UNSIGNED_SHORT)|See [Morph Targets](#morph-targets) or [Skins](#skins)|
+|`WEIGHT`|`"VEC4`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|See [Morph Targets](#morph-targets)|
+
+Extensions can add additional property names, accessor types, and/or accessor component types.
 
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
 
-#### Tangent-space definition
+> **Implementation note:** When normals are not specified, implementations should calculate smoothed normals.
 
-**TODO**
+> **Implementation note:** When tangents are not specified, implementations should calculate tangents using default MikkTSpace algorithms.  For best results, the mesh triangles should also be processed using default MikkTSpace algorithms.
+
+> **Implementation note:** When normals and tangents are specified, implementations should compute the bitangent by taking the cross product of the normal and tangent xyz vectors and multiplying against the w component of the tangent: `bitangent = cross(normal, tangent.xyz) * tangent.w`
 
 #### Morph Targets
 

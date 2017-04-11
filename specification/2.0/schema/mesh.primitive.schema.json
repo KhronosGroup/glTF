@@ -63,7 +63,7 @@
         },
         "targets": {
             "type": "array",
-            "description": "An array of Morph Targets, each  Morph Target is a dictionary mapping attributes (only \"POSITION\" and \"NORMAL\" supported) to their deviations in the Morph Target.",
+            "description": "An array of Morph Targets, each  Morph Target is a dictionary mapping attributes (only `POSITION`, `NORMAL`, and `TANGENT` supported) to their deviations in the Morph Target.",
             "items": {
                 "$ref": "mesh.primitive.target.schema.json"
             },
