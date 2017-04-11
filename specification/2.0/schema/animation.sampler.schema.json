@@ -13,23 +13,19 @@
         "interpolation": {
             "description": "Interpolation algorithm.",
             "default": "LINEAR",
-            "gltf_detailedDescription": "Interpolation algorithm. When an animation targets a node's rotation, and the animation's interpolation is `\"LINEAR\"`, spherical linear interpolation (slerp) should be used to interpolate quaternions. When interpolation is `\"STEP\"`, animated value remains constant to the value of the first point of the timeframe, until the next timeframe.",
+            "gltf_detailedDescription": "Interpolation algorithm. When an animation targets a node's rotation, and the animation's interpolation is `\"LINEAR\"`, spherical linear interpolation (slerp) should be used to interpolate quaternions. When interpolation is `\"STEP\"`, animated value remains constant to the value of the first point of the timeframe, until the next timeframe. When interpolation is `\"CATMULLROMSPLINE\"`, the animation's interpolation is computed using a uniform Catmull-Rom spline. When interpolation is `\"CUBICSPLINE\"`, the animation's interpolation is computed using a cubic spline with specified tangents. For each input value, the output stores three values: in-tangent, spline vertex, and out-tangent.",
             "anyOf": [
                 {
-                    "enum": [ "LINEAR" ],
-                    "description": "When an animation targets a node's rotation, and the animation's interpolation is `\"LINEAR\"`, spherical linear interpolation (slerp) should be used to interpolate quaternions."
+                    "enum": [ "LINEAR" ]
                 },
                 {
-                    "enum": [ "STEP" ],
-                    "description": "When interpolation is `\"STEP\"`, animated value remains constant to the value of the first point of the timeframe, until the next timeframe."
+                    "enum": [ "STEP" ]
                 },
                 {
-                    "enum": [ "CATMULLROMSPLINE" ],
-                    "description": "When interpolation is `\"CATMULLROMSPLINE\"`, the animation's interpolation is computed using a uniform Catmull-Rom spline."
+                    "enum": [ "CATMULLROMSPLINE" ]
                 },
                 {
-                    "enum": [ "CUBICSPLINE" ],
-                    "description": "When interpolation is `\"CUBICSPLINE\"`, the animation's interpolation is computed using a cubic spline with specified tangents. For each input value, the output stores three values: in-tangent, spline vertex, and out-tangent."
+                    "enum": [ "CUBICSPLINE" ]
                 },
                 {
                     "type": "string"
