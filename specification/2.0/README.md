@@ -6,7 +6,7 @@
 
 The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
-Last Updated: February 27, 2017
+Last Updated: April 11, 2017
 
 Editors
 
