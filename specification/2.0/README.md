@@ -932,6 +932,8 @@ Samplers are stored in the `samplers` array of the asset. Each sampler specifies
 
 glTF defines materials using a common set of parameters that are based on widely used material representations from Physically-Based Rendering (PBR). Specifically, glTF uses the metallic-roughness material model. Using this declarative representation of materials enables a glTF file to be rendered consistently across platforms. 
 
+<p><img src="figures/materials.png" /></p>
+
 ### Metallic-Roughness Material 
 
 All parameters related to the metallic-roughness material model are defined under the `pbrMetallicRoughness` property of `material` object. The following example shows how a material like gold can be defined using the metallic-roughness parameters: 
