@@ -640,6 +640,8 @@ Each attribute is defined as a property of the `attributes` object. The name of 
 
 Valid attribute semantic property names include `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`, `JOINT`, and `WEIGHT`.  Application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
 
+Each mesh has a limit of two UV texture coordinate sets and one vertex color.
+
 Valid accessor type and component type for each attribute semantic property are defined below.
 
 |Name|Accessor Type(s)|Component Type(s)|Description|
@@ -647,9 +649,9 @@ Valid accessor type and component type for each attribute semantic property are 
 |`POSITION`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex positions|
 |`NORMAL`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex normals|
 |`TANGENT`|`"VEC4"`|`5126`&nbsp;(FLOAT)|XYZW vertex tangents where the w component is a signed float (-1, +1) indicating handedness of the tangent basis|
-|`TEXCOORD_0`|`"VEC2"`|`5126`&nbsp;(FLOAT)|UV texture coordinates for the first set|
-|`TEXCOORD_1`|`"VEC2"`|`5126`&nbsp;(FLOAT)|UV texture coordinates for the second set|
-|`COLOR_0`|`"VEC3"`<br>`"VEC4"`|`5126`&nbsp;(FLOAT)|RGB or RGBA vertex color|
+|`TEXCOORD_0`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the first set|
+|`TEXCOORD_1`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the second set|
+|`COLOR_0`|`"VEC3"`<br>`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|RGB or RGBA vertex color|
 |`JOINT`|`"VEC4"`|`5120`&nbsp;(UNSIGNED_BYTE)<br>`5123`&nbsp;(UNSIGNED_SHORT)|See [Morph Targets](#morph-targets) or [Skins](#skins)|
 |`WEIGHT`|`"VEC4`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|See [Morph Targets](#morph-targets)|
 
