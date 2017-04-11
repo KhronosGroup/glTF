@@ -30,7 +30,6 @@
         },
         "target": {
             "description": "The target that the GPU buffer should be bound to.",
-            "gltf_detailedDescription": "The target that the WebGL buffer should be bound to.  All valid values correspond to WebGL enums.  When this is not provided, the bufferView contains animation or skin data.",
             "gltf_webgl": "`bindBuffer()`",
             "anyOf": [
                 {
