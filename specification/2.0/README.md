@@ -653,7 +653,7 @@ The following example defines a mesh containing one triangle set primitive:
 
 Each attribute is defined as a property of the `attributes` object. The name of the property corresponds to an enumerated value identifying the vertex attribute, such as `POSITION`. The value of the property is the index of an accessor that contains the data.
 
-Valid attribute semantic property names include `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`, `JOINT`, and `WEIGHT`.  Application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
+Valid attribute semantic property names include `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`, `JOINTS_0`, and `WEIGHTS_0`.  Application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
 
 Each mesh has a limit of two UV texture coordinate sets and one vertex color.
 
@@ -667,8 +667,8 @@ Valid accessor type and component type for each attribute semantic property are 
 |`TEXCOORD_0`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the first set|
 |`TEXCOORD_1`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the second set|
 |`COLOR_0`|`"VEC3"`<br>`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|RGB or RGBA vertex color|
-|`JOINT`|`"VEC4"`|`5120`&nbsp;(UNSIGNED_BYTE)<br>`5123`&nbsp;(UNSIGNED_SHORT)|See [Morph Targets](#morph-targets) or [Skins](#skins)|
-|`WEIGHT`|`"VEC4`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|See [Morph Targets](#morph-targets)|
+|`JOINTS_0`|`"VEC4"`|`5120`&nbsp;(UNSIGNED_BYTE)<br>`5123`&nbsp;(UNSIGNED_SHORT)|See [Morph Targets](#morph-targets) or [Skins](#skins)|
+|`WEIGHTS_0`|`"VEC4`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|See [Morph Targets](#morph-targets)|
 
 Extensions can add additional property names, accessor types, and/or accessor component types.
 
@@ -748,7 +748,7 @@ All skins are stored in the `skins` array of the asset. Each skin is defined by 
 
 #### Skinned Mesh Attributes
 
-The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The `JOINT` attribute data contains the indices of the joints from corresponding `joints` array that should affect the vertex. The `WEIGHT` attribute data defines the weights indicating how strongly the joint should influence the vertex. The following mesh skin defines `JOINT` and `WEIGHT` vertex attributes for a triangle mesh primitive:
+The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The `JOINTS_0` attribute data contains the indices of the joints from corresponding `joints` array that should affect the vertex. The `WEIGHTS_0` attribute data defines the weights indicating how strongly the joint should influence the vertex. The following mesh skin defines `JOINTS_0` and `WEIGHTS_0` vertex attributes for a triangle mesh primitive:
 
 ```json
 {
@@ -758,11 +758,11 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
             "primitives": [
                 {
                     "attributes": {
-                        "JOINT": 179,
+                        "JOINTS_0": 179,
                         "NORMAL": 165,
                         "POSITION": 163,
                         "TEXCOORD_0": 167,
-                        "WEIGHT": 176
+                        "WEIGHTS_0": 176
                     },
                     "indices": 161,
                     "material": 1,
@@ -776,8 +776,8 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
 
 The number of joints that influence one vertex is limited to 4, so referenced accessors must have `VEC4` type and following component formats:
 
-* **`JOINT`**: `UNSIGNED_BYTE` or `UNSIGNED_SHORT`
-* **`WEIGHT`**: `FLOAT`, or normalized `UNSIGNED_BYTE`, or normalized `UNSIGNED_SHORT`
+* **`JOINTS_0`**: `UNSIGNED_BYTE` or `UNSIGNED_SHORT`
+* **`WEIGHTS_0`**: `FLOAT`, or normalized `UNSIGNED_BYTE`, or normalized `UNSIGNED_SHORT`
 
 #### Joint Hierarchy
 
@@ -2473,7 +2473,7 @@ Array of weights to be applied to the Morph Targets.
 <a name="reference-node"></a>
 ## node
 
-A node in the node hierarchy.  When the node contains [`skin`](#reference-skin), all `mesh.primitives` must contain `JOINT` and `WEIGHT` attributes.  A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation. If none are provided, the transform is the identity. When a node is targeted for animation (referenced by an animation.channel.target), only TRS properties may be present; `matrix` will not be present.
+A node in the node hierarchy.  When the node contains [`skin`](#reference-skin), all `mesh.primitives` must contain `JOINTS_0` and `WEIGHTS_0` attributes.  A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation. If none are provided, the transform is the identity. When a node is targeted for animation (referenced by an animation.channel.target), only TRS properties may be present; `matrix` will not be present.
 
 **Properties**
 
