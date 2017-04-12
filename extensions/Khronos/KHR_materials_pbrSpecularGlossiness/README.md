@@ -68,7 +68,7 @@ The value for each property (`diffuse`, `specular`, `glossiness`) can be defined
 
 The following equations show how to calculate bidirectional reflectance distribution function (BRDF) inputs (*c<sub>diff</sub>*, *F<sub>0</sub>*, *&alpha;*) from the metallic-roughness material properties. In addition to the material properties, if a primitive specifies a vertex color using the attribute semantic property `COLOR_0`, then this value acts as an additional linear multiplier to *c<sub>diff</sub>*.
 
-*c<sub>diff</sub>* = `diffuse.rgb * (1 - max(specular.r, specular.g, specular.b) * vertexColor`
+*c<sub>diff</sub>* = `diffuse.rgb * (1 - max(specular.r, specular.g, specular.b)) * vertexColor`
 <br>
 *F<sub>0</sub>* = `specular`
 <br>
