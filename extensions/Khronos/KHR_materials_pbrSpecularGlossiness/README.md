@@ -88,7 +88,7 @@ The following table lists the allowed types and ranges for the specular-glossine
 |**glossinessFactor** | `number` | The glossiness or smoothness of the material. |No, default:`1.0`|
 |**specularGlossinessTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The specular-glossiness texture.|No|
 
-Additional properties are not allowed.
+Additional properties are allowed.
 
 * **JSON schema**: [glTF.KHR_materials_pbrSpecularGlossiness.schema.json](schema/glTF.KHR_materials_pbrSpecularGlossiness.schema.json)
 

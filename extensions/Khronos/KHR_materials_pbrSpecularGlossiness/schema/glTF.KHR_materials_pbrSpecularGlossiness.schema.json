@@ -49,6 +49,5 @@
             "description": "The specular-glossiness texture.",
             "gltf_detailedDescription": "The specular-glossiness texture is RGBA texture, containing the specular color of the material (RGB components) and its glossiness (A component). The values are in sRGB space."
         }
-    },
-    "additionalProperties": false
+    }
 }
