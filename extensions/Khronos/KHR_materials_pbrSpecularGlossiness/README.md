@@ -1,6 +1,11 @@
 # KHR\_materials\_pbrSpecularGlossiness
 
-## Contributors
+## Khronos 3D Formats Working Group
+* Saurabh Bhatia, Microsoft [@iamsbtron](https://twitter.com/iamsbtron)
+* Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
+* Patrick Cozzi, Cesium, [@pjcozzi](https://twitter.com/pjcozzi)
+
+## Acknowledgments
 
 * Max Limper, Fraunhofer IGD, [@mlimper_cg](https://twitter.com/mlimper_cg)
 * Timo Sturm, Fraunhofer IGD, [@\_tsturm\_](https://twitter.com/\_tsturm\_)
@@ -8,9 +13,6 @@
 * Maik Th&ouml;ner, Fraunhofer IGD, [@mthoener](https://twitter.com/mthoener)
 * Eric Haines, Autodesk, [@pointinpolygon](https://twitter.com/pointinpolygon)
 * Cedric Pinson, Sketchfab, [@trigrou](https://twitter.com/trigrou)
-* Saurabh Bhatia, Microsoft [@iamsbtron](https://twitter.com/iamsbtron)
-* Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
-* Patrick Cozzi, Cesium, [@pjcozzi](https://twitter.com/pjcozzi)
 
 ## Status
 
