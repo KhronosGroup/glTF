@@ -10,16 +10,22 @@ Last Updated: April 11, 2017
 
 Editors
 
+* Saurabh Bhatia, Microsoft
 * Patrick Cozzi, Cesium
-* Tony Parisi, WEVR
-
-Contributors
-
-* Fabrice Robinet, Individual Contributor (Previous Editor and Incubator)
-* Remi Arnaud, Starbreeze Studios
-* Uli Klumpp, Individual Contributor
-* Neil Trevett, NVIDIA
 * Alexey Knyazev, Individual Contributor
+* Tony Parisi, Unity
+
+Khronos 3D Formats Working Group and Alumni
+
+* Remi Arnaud, Starbreeze Studios
+* Emiliano Gambaretto, Adobe
+* Gary Hsu, Microsoft
+* Marco Hutter, Individual Contributor
+* Uli Klumpp, Individual Contributor
+* Fabrice Robinet, Individual Contributor (Previous Editor and Incubator)
+* Neil Trevett, NVIDIA
+* Jan Paul Van Waveren, Oculus
+* Amanda Watson, Oculus
 
 Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 
@@ -3394,20 +3400,28 @@ Application-specific data.
 
 
 # Acknowledgments
-
 * Sarah Chow, Cesium
 * Tom Fili, Cesium
+* Darryl Gough
+* Eric Haines, Autodesk
+* Yu Chen Hou
 * Scott Hunter, Analytical Graphics, Inc.
 * Brandon Jones, Google
+* Sean Lilley, Cesium
+* Max Limper, Fraunhofer IGD
 * Ed Mackey, Analytical Graphics, Inc.
-* Matthew McMullan,
-* Darryl Gough, 
-* Alex Wood,
+* Matthew McMullan
+* Mohamad Moneimne, University of Pennsylvania
+* Kai Ninomiya, formerly Cesium
+* Norbert Nopper
+* Cedric Pinson, Sketchfab
+* Jeff Russell, Marmoset
+* Miguel Sousa, Fraunhofer IGD
+* Timo Sturm, Fraunhofer IGD
 * Rob Taglang, Cesium
-* Marco Hutter,
-* Sean Lilley,
-* Corentin Wallez,
-* Yu Chen Hou
+* Maik Thöner, Fraunhofer IGD
+* Corentin Wallez, Google
+* Alex Wood, Analytical Graphics, Inc
 
 # Appendix A: GLB File Format Specification
 
