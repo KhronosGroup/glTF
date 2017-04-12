@@ -777,7 +777,7 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
 The number of joints that influence one vertex is limited to 4, so referenced accessors must have `VEC4` type and following component formats:
 
 * **`JOINTS_0`**: `UNSIGNED_BYTE` or `UNSIGNED_SHORT`
-* **`WEIGHT_0`**: `FLOAT`, or normalized `UNSIGNED_BYTE`, or normalized `UNSIGNED_SHORT`
+* **`WEIGHTS_0`**: `FLOAT`, or normalized `UNSIGNED_BYTE`, or normalized `UNSIGNED_SHORT`
 
 #### Joint Hierarchy
 
