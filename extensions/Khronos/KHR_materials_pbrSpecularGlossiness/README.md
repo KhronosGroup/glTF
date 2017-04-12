@@ -74,7 +74,7 @@ The following equations show how to calculate bidirectional reflectance distribu
 <br>
 *F<sub>0</sub>* = `specular`
 <br>
-*&alpha;* = `max((1 - glossiness) ^ 2, epsilon)`
+*&alpha;* = `(1 - glossiness) ^ 2`
 
 All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [appendix](/specification/2.0/README.md#appendix-a) for more details on the BRDF calculations.
 
