@@ -70,6 +70,7 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
     * [Additional Maps](#additional-maps)
     * [Alpha Coverage](#alpha-coverage)
     * [Double Sided](#double-sided)
+    * [Default Material](#default-material)
   * [Cameras](#cameras)
     * [Projection Matrices](#projection-matrices)
   * [Animations](#animations)
@@ -302,6 +303,8 @@ The node named `Car` has four children. Each of those nodes could in turn have i
 ### Transformations
 
 Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). `translation` and `scale` are `FLOAT_VEC3` values in the local coordinate system. `rotation` is a `FLOAT_VEC4` unit quaternion value, `(x, y, z, w)`, in the local coordinate system.
+
+Matrices must be decomposable to TRS. This implies that transformation matrices cannot skew or shear.
 
 TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation.
 
@@ -631,7 +634,7 @@ In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to 
 
 > **Implementation note:** Splitting one mesh into *primitives* could be useful to limit number of indices per draw call.
 
-If `material` is not supplied, then the object should be rendered using a 50% gray PBR metallic-roughness material with `[ 0.5, 0.5, 0.5 ]` for `baseColorFactor`, `0` for `metallicFactor`, and `1` for `roughnessFactor`.
+If `material` is not specified, then a [default material](#default-material) is used.
 
 The following example defines a mesh containing one triangle set primitive:
 
@@ -661,8 +664,6 @@ Each attribute is defined as a property of the `attributes` object. The name of 
 
 Valid attribute semantic property names include `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`, `JOINTS_0`, and `WEIGHTS_0`.  Application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
 
-Each mesh has a limit of two UV texture coordinate sets and one vertex color.
-
 Valid accessor type and component type for each attribute semantic property are defined below.
 
 |Name|Accessor Type(s)|Component Type(s)|Description|
@@ -676,11 +677,11 @@ Valid accessor type and component type for each attribute semantic property are 
 |`JOINTS_0`|`"VEC4"`|`5120`&nbsp;(UNSIGNED_BYTE)<br>`5123`&nbsp;(UNSIGNED_SHORT)|See [Morph Targets](#morph-targets) or [Skins](#skins)|
 |`WEIGHTS_0`|`"VEC4`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|See [Morph Targets](#morph-targets)|
 
-Extensions can add additional property names, accessor types, and/or accessor component types.
+`TEXCOORD`, `COLOR`, `JOINTS`, and `WEIGHTS` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. Clients must support at least two UV texture coordinate sets, one vertex color, and one joints/weights set. Extensions can add additional property names, accessor types, and/or accessor component types.
 
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
 
-> **Implementation note:** When normals are not specified, implementations should calculate smoothed normals.
+> **Implementation note:** When normals are not specified, implementations should calculate flat normals.
 
 > **Implementation note:** When tangents are not specified, implementations should calculate tangents using default MikkTSpace algorithms.  For best results, the mesh triangles should also be processed using default MikkTSpace algorithms.
 
@@ -1075,6 +1076,10 @@ The `alphaMode` property defines how the alpha value of the main factor and text
 ### Double Sided
 
 The `doubleSided` property specifies whether the material is double sided. When this value is false, back-face culling is enabled. When this value is true, back-face culling is disabled and double sided lighting is enabled. The back-face must have its normals reversed before the lighting equation is evaluated.
+
+### Default Material
+
+The default material, used when a mesh does not specify a material, is defined to be a material with no properties specified. All the default values of [`material`](#reference-material) apply. Note that this material does not emit light and will be black unless some lighting is present in the scene.
 
 ## Cameras
 
@@ -2319,7 +2324,7 @@ The material appearance of a primitive.
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
-|**pbrMetallicRoughness**|`object`|A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology.|No|
+|**pbrMetallicRoughness**|`object`|A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology. When not specified, all the default values of [`pbrMetallicRoughness`](#reference-pbrmetallicroughness) apply.|No|
 |**normalTexture**|`object`|The normal map texture.|No|
 |**occlusionTexture**|`object`|The occlusion map texture.|No|
 |**emissiveTexture**|`object`|The emissive map texture.|No|
