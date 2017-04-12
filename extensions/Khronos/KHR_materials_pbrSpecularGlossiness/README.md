@@ -26,7 +26,7 @@ Written against the glTF 2.0 spec.
 
 This extension defines the specular-glossiness material model from Physically-Based Rendering (PBR). This extensions allows glTF to support this additional workflow. 
 
-The [conformance](#conformance) section specifies what an implementation must to do when encountering this extension, and how the extension interacts with the materials defined in the base specification.
+The [best practices](#bestpractices) section specifies what an implementation must to do when encountering this extension, and how the extension interacts with the materials defined in the base specification.
 
 ## Extending Materials
 
