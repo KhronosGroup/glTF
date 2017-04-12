@@ -1071,7 +1071,7 @@ The `doubleSided` property specifies whether the material is double sided. When 
 
 ### Default Material
 
-The default material, used when a mesh does not specify a material, is defined to be a material with no properties specified. All the default values of [`material`](#reference-material) apply.
+The default material, used when a mesh does not specify a material, is defined to be a material with no properties specified. All the default values of [`material`](#reference-material) apply. Note that this material does not emit light and will be black unless some lighting is present in the scene.
 
 ## Cameras
 
