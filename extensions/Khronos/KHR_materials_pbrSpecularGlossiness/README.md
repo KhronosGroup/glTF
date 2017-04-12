@@ -74,7 +74,7 @@ The following equations show how to calculate bidirectional reflectance distribu
 <br>
 *F<sub>0</sub>* = `specular`
 <br>
-*&alpha;* = `max((1 - glossiness) ^ 2, epsilon)`
+*&alpha;* = `(1 - glossiness) ^ 2`
 
 All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [appendix](/specification/2.0/README.md#appendix-a) for more details on the BRDF calculations.
 
@@ -88,7 +88,7 @@ The following table lists the allowed types and ranges for the specular-glossine
 |**glossinessFactor** | `number` | The glossiness or smoothness of the material. |No, default:`1.0`|
 |**specularGlossinessTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The specular-glossiness texture.|No|
 
-Additional properties are not allowed.
+Additional properties are allowed.
 
 * **JSON schema**: [glTF.KHR_materials_pbrSpecularGlossiness.schema.json](schema/glTF.KHR_materials_pbrSpecularGlossiness.schema.json)
 
