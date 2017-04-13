@@ -1124,6 +1124,7 @@ Runtimes are expected to use the following projection matrices.
 #### Infinite perspective projection
 <p><img src="figures/infinite-perspective.png" /></p>
 where
+
 - `a` equals `camera.perspective.aspectRatio`;
 - `y` equals `camera.perspective.yfov`;
 - `n` equals `camera.perspective.znear`.
@@ -1131,6 +1132,7 @@ where
 #### Finite perspective projection
 <p><img src="figures/finite-perspective.png" /></p>
 where
+
 - `a` equals `camera.perspective.aspectRatio`;
 - `y` equals `camera.perspective.yfov`;
 - `f` equals `camera.perspective.zfar`;
@@ -1139,6 +1141,7 @@ where
 #### Orthographic projection
 <p><img src="figures/ortho.png" /></p>
 where
+
 - `r` equals `camera.orthographic.xmag`;
 - `t` equals `camera.orthographic.ymag`;
 - `f` equals `camera.orthographic.zfar`;
