@@ -3417,7 +3417,7 @@ Application-specific data.
 * Matthew McMullan
 * Mohamad Moneimne, University of Pennsylvania
 * Kai Ninomiya, formerly Cesium
-* Norbert Nopper
+* Norbert Nopper, UX3D
 * Cedric Pinson, Sketchfab
 * Jeff Russell, Marmoset
 * Miguel Sousa, Fraunhofer IGD
