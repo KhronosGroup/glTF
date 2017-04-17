@@ -63,6 +63,7 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 #### WebGL Engines
 
 * [glTF loader](https://github.com/mrdoob/three.js/blob/master/examples/js/loaders/GLTFLoader.js) in [Three.js](https://threejs.org/)
+   * [Drag and drop glTF viewer](https://gltf-viewer.donmccurdy.com/)
    * [model-tag](https://github.com/mrdoob/model-tag) - custom HTML Elements for displaying 3D models
 * [glTF loader](https://github.com/BabylonJS/Babylon.js/tree/master/loaders/src/glTF) in [BabylonJS](http://babylonjs.com/)
 * [glTF loader](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js) in [Cesium](http://cesiumjs.org/)
