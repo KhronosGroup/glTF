@@ -7,16 +7,6 @@
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The index of the bufferView."
         },
-        "indexCount" : {
-            "type" : "integer",
-            "description" : "The number of indices of this primitive.",
-            "minimum" : 0
-        },
-        "vertexCount" : {
-            "type" : "integer",
-            "description" : "The number of vertex of this primitive.",
-            "minimum" : 0
-        },
         "attributes" : {
             "type" : "array",
             "description" : "The information for correctly writing attributes of decompressed geometry to a buffer.",
