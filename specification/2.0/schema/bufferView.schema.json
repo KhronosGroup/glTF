@@ -12,12 +12,13 @@
         "byteOffset": {
             "type": "integer",
             "description": "The offset into the buffer in bytes.",
-            "minimum": 0
+            "minimum": 0,
+            "default": 0
         },
         "byteLength": {
             "type": "integer",
             "description": "The length of the bufferView in bytes.",
-            "minimum": 0
+            "minimum": 1
         },
         "byteStride": {
             "type": "integer",
@@ -49,5 +50,5 @@
         "extensions": { },
         "extras": { }
     },
-    "required": [ "buffer", "byteOffset", "byteLength" ]
+    "required": [ "buffer", "byteLength" ]
 }
