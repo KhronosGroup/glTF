@@ -65,23 +65,6 @@ except `primitives`:
             "extensions" : {
                 "KHR_draco_mesh_compression" : {
                     "bufferView" : 5,
-                    "attributes" : [
-                        {
-                            "semantic" : "POSITION",
-                            "componentType" : 5126,
-                            "type" : "VEC3",
-                        },
-                        {
-                            "semantic" : "NORMAL",
-                            "componentType" : 5126,
-                            "type" : "VEC3",
-                        },
-                        {
-                            "semantic" : "TEXCOORD_0",
-                            "componentType" : 5126,
-                            "type" : "VEC2",
-                        },
-                    ],
                     "version" : "0.9.1"
                 }
             }
@@ -106,23 +89,6 @@ We will explain each of the property in the following sections.
 The `bufferView` property points to the buffer containing compressed data. The data should be passed to a mesh decoder and decompressed to a
 mesh.
 
-#### attributes
-The decompressed mesh needs to be writen to the memory for uploading to the GPU,
-including indices and attributes data. `attributes` is used to define the
-order of the attributes. For example, if we have the above `attributes`, then we need to write the attributes to a vertex buffer like
-
-     --------------------------------------------------
-    |    POSITION    |    NORMAL    |    TEXCOORD_0    |  
-     --------------------------------------------------
-
-`componentType` and `type` are duplicated properties in
-`accessor` of `attributes`. The purpose of having these in the extension is to
-define how to write the decompressed mesh to buffer for uploading to the GPU without
-refering to the sibling `attributes` node.
-
-The extension currently doesn't support morph targets, e.g. `targets` is used in
-`primitive`. 
-
 #### version
 The version of Draco encoder used to compress the mesh. This is used for verifying compatibility of Draco encoder and decoder. With this property, the loader could easily determine if the current decoder supports decoding the data.
 
@@ -143,8 +109,7 @@ To process this extension, there are some changes need to be made in loading a g
 * Check `version` property and verify the version of encoder used for the mesh
   is compatible with the current decoder.
 * When encountering a `primitive` with the extension the first time, you must process the extension first. Get the data from the pointed `bufferView` in the extension and decompress the data to a geometry of a specific format, e.g. Draco geometry.
-* Write the indices and vertex data of the mesh to separate buffers. This allows for uploading data with different target including ARRAY_BUFFER and ELEMENT_ARRAY_BUFFER. When writing attributes to a buffer, the order should follow property `attributes` as discribed above.
-* Then, process `attributes` and `indices` properties of the `primitive`. When handling `accessor`, insteading of getting data from the regular `bufferView --> buffer`, get the data from the buffers created in previous step.
+* Then, process `attributes` and `indices` properties of the `primitive`. When loading each `accessor`, if there is no `bufferView` then go to the previously decoded geometry in the `primitive` to get indices and attributes data.
 
 It is pretty straigtforward for top-down loading of a glTF asset, e.g. only
 decompress the geometry data when a `primitive` is met for the first time. However, for

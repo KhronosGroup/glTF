@@ -7,14 +7,6 @@
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The index of the bufferView."
         },
-        "attributes" : {
-            "type" : "array",
-            "description" : "The information for correctly writing attributes of decompressed geometry to a buffer.",
-            "items" : {
-                "allOf" : [ { "$ref" : "attribute.KHR_draco_mesh_compression.schema.json" } ],
-                "description" : "Information of each attribute that is in the compressed geometry.",
-            }
-        },
         "version" : {
             "type" : "string",
             "description" : "The version of Draco encoder that is used on the compressed geometry data."
