@@ -37,7 +37,8 @@
     "dependencies": {
         "bufferView": [ "mimeType" ]
     },
-    "not": {
-        "required": [ "bufferView", "uri" ]
-    }
+    "oneOf": [
+        { "required": [ "uri" ] },
+        { "required": [ "bufferView" ] }
+    ]
 }
