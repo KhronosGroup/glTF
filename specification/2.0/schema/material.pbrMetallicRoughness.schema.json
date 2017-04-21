@@ -3,6 +3,7 @@
     "title": "pbrMetallicRoughness",
     "type": "object",
     "description": "A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "baseColorFactor": {
             "type": "array",
@@ -42,6 +43,8 @@
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The metallic-roughness texture.",
             "gltf_detailedDescription": "The metallic-roughness texture. The metalness values are sampled from the B channel. The roughness values are sampled from the G channel. These values are linear. If other channels are present (R or A), they are ignored for metallic-roughness calculations."
-        }
+        },
+        "extensions": { },
+        "extras": { }
     }
 }
