@@ -64,7 +64,7 @@
             "minimum": 0.0,
             "default": 0.5,
             "description": "The alpha cutoff value of the material.",
-            "gltf_detailedDescription": "Specifies the cutoff threshold when in `MASK` mode. If the alpha value is greater than or equal to this value then it is rendered as fully opaque, otherwise, it is rendered as fully transparent. This value is ignored for other modes."
+            "gltf_detailedDescription": "Specifies the cutoff threshold when in `MASK` mode. If the alpha value is greater than or equal to this value then it is rendered as fully opaque, otherwise, it is rendered as fully transparent. A value greater than 1.0 will render the entire material as fully transparent. This value is ignored for other modes."
         },
         "doubleSided": {
             "type": "boolean",
