@@ -23,6 +23,12 @@
                 "type": "number"
             },
             "minItems": 0
+        },
+        "closed": {
+            "type": "boolean",
+            "default": false,
+            "description": "Specifies whether the mesh is closed (watertight).",
+            "gltf_detailedDescription": "Specifies whether the mesh is closed (watertight).  Application can use this property within rendering techniques where it is important to consider - e.g. when applying clipping planes capped with material or just to enable back-face culling (regardless of doubleSided property of material)."
         }
     },
     "required": [ "primitives" ]
