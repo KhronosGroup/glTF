@@ -8,10 +8,8 @@
         "attributes": {
             "type": "object",
             "description": "A dictionary object, where each key corresponds to mesh attribute semantic and each value is the index of the accessor containing attribute's data.",
-            "properties": {
-            },
             "additionalProperties": {
-                "$ref": "mesh.primitive.attribute.schema.json"
+                "$ref": "glTFid.schema.json"
             }
         },
         "indices": {
@@ -65,9 +63,13 @@
             "type": "array",
             "description": "An array of Morph Targets, each  Morph Target is a dictionary mapping attributes (only `POSITION`, `NORMAL`, and `TANGENT` supported) to their deviations in the Morph Target.",
             "items": {
-                "$ref": "mesh.primitive.target.schema.json"
+                "type": "object",
+                "additionalProperties": {
+                    "$ref": "glTFid.schema.json"
+                },
+                "description": "A dictionary object specifying attributes displacements in a Morph Target, where each key corresponds to one of the three supported attribute semantic (`POSITION`, `NORMAL`, or `TANGENT`) and each value is the index of the accessor containing the attribute displacements' data."
             },
-            "minItems": 0
+            "minItems": 1
         },
         "extensions": { },
         "extras": { }

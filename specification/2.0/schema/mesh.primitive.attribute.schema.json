@@ -1,6 +1,0 @@
-{
-    "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "attribute",
-    "allOf": [ { "$ref": "glTFid.schema.json" } ],
-    "description": "A dictionary object, where each key corresponds to mesh attribute semantic and each value is the index of the accessor containing attribute's data."
-}
