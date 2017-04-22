@@ -121,5 +121,8 @@
         "extensions": { },
         "extras": { }
     },
+    "dependencies": {
+        "byteOffset": [ "bufferView" ]
+    },
     "required": [ "componentType", "count", "type", "max", "min" ]
 }
