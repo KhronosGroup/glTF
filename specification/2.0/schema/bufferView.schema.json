@@ -26,7 +26,7 @@
             "minimum": 0,
             "maximum": 255,
             "default": 0,
-            "gltf_detailedDescription": "The stride, in bytes, between vertex attributes or other interleavable data.  When this is zero, data is tightly packed.",
+            "gltf_detailedDescription": "The stride, in bytes, between vertex attributes.  When this is zero, data is tightly packed.",
             "gltf_webgl": "`vertexAttribPointer()` stride parameter"
         },
         "target": {
