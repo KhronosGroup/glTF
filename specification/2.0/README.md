@@ -690,7 +690,9 @@ Valid accessor type and component type for each attribute semantic property are 
 #### Morph Targets
 
 Morph Targets are defined by extending the Mesh concept.
+
 A Morph Target is a morphable Mesh where primitives' attributes are obtained by adding the original attributes to a weighted sum of targets attributes.
+
 For instance, the Morph Target vertices `POSITION` for the primitive at index *i* are computed in this way:
 ```
 primitives[i].attributes.POSITION + 
@@ -698,7 +700,8 @@ primitives[i].attributes.POSITION +
   weights[1] * primitives[i].targets[1].POSITION +
   weights[2] * primitives[i].targets[2].POSITION + ...
 ```
-Morph Targets are implemented via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to an accessor containing Morph Target displacement data, currently only two attributes ('POSITION' and 'NORMAL') are supported. All primitives are required to list the same number of `targets` in the same order.
+Morph Targets are implemented via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to an accessor containing Morph Target displacement data, currently only three attributes (`POSITION`, `NORMAL`, and `TANGENT`) are supported. All primitives are required to list the same number of `targets` in the same order.
+
 The `weights` array is optional, it stores the default targets weights, in the absence of `node.weights` the primitives attributes are resolved using these weights. When this property is missing the default targets weights are assumed to be zero.
 
 The following example extends the Mesh defined in the previous example to a morphable one by adding two Morph Targets:
@@ -730,7 +733,7 @@ The following example extends the Mesh defined in the previous example to a morp
 }
 ```
 
-After applying morph targets to vertex positions and normals, tangent space must be recalculated. See [Appendix B](#appendix-b-tangent-space-recalculation) for details.
+After applying morph targets to vertex positions and normals, tangent space may need to be recalculated. See [Appendix B](#appendix-b-tangent-space-recalculation) for details.
 
 ### Skins
 
