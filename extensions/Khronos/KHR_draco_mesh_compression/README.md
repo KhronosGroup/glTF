@@ -92,6 +92,9 @@ mesh.
 #### version
 The version of Draco encoder used to compress the mesh. This is used for verifying compatibility of Draco encoder and decoder. With this property, the loader could easily determine if the current decoder supports decoding the data.
 
+### Order of attributes
+One thing to note is that the order of attributes stored in the extension. We define that the order should be the same as `attributes` in `primitive`. E.g, in the example above, `POSITION` will have attribute id 0 in the decoded mesh, and `NORMAL` as 1, `TEXCOORD_0` as 2. The id should be used along with `accessors` to correctly load all attributes from extension.
+
 #### Restrictions on geometry type
 When using this extension, the `mode` of `primitive` could only be one of
 `POINTS`, `TRIANGLES` and `TRIANGLE_STRIP` and the mesh data will be decoded accordingly. For example, if `mode` is `POINTS`, then the
@@ -109,7 +112,7 @@ To process this extension, there are some changes need to be made in loading a g
 * Check `version` property and verify the version of encoder used for the mesh
   is compatible with the current decoder.
 * When encountering a `primitive` with the extension the first time, you must process the extension first. Get the data from the pointed `bufferView` in the extension and decompress the data to a geometry of a specific format, e.g. Draco geometry.
-* Then, process `attributes` and `indices` properties of the `primitive`. When loading each `accessor`, if there is no `bufferView` then go to the previously decoded geometry in the `primitive` to get indices and attributes data.
+* Then, process `attributes` and `indices` properties of the `primitive`. When loading each `accessor`, if there is no `bufferView` then go to the previously decoded geometry in the `primitive` to get indices and attributes data. To load an attriute in extension, it is required to first determine the id of this attribute in `attributes` of `primitive`, then use the id to get the attribute from decoded mesh.
 
 It is pretty straigtforward for top-down loading of a glTF asset, e.g. only
 decompress the geometry data when a `primitive` is met for the first time. However, for
