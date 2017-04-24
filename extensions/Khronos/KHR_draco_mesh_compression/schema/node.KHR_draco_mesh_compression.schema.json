@@ -15,7 +15,7 @@
             },
             "minItems" : 1,
             "maxItems" : 8,
-            "gltf_detailedDescription" : "It is used to define the order of attributes stored in the decompressed geometry. The respective attribute id is used to get attribute data."
+            "gltf_detailedDescription" : "It is used to define the order of attributes stored in the decompressed geometry. The respective array's index is used to get attribute data."
         },
         "version" : {
             "type" : "string",
