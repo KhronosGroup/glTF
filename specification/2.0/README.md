@@ -674,8 +674,8 @@ Valid accessor type and component type for each attribute semantic property are 
 |`TEXCOORD_0`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the first set|
 |`TEXCOORD_1`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the second set|
 |`COLOR_0`|`"VEC3"`<br>`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|RGB or RGBA vertex color|
-|`JOINTS_0`|`"VEC4"`|`5120`&nbsp;(UNSIGNED_BYTE)<br>`5123`&nbsp;(UNSIGNED_SHORT)|See [Morph Targets](#morph-targets) or [Skins](#skins)|
-|`WEIGHTS_0`|`"VEC4`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|See [Morph Targets](#morph-targets)|
+|`JOINTS_0`|`"VEC4"`|`5120`&nbsp;(UNSIGNED_BYTE)<br>`5123`&nbsp;(UNSIGNED_SHORT)|See [Skinned Mesh Attributes](#skinned-mesh-attributes)|
+|`WEIGHTS_0`|`"VEC4`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|See [Skinned Mesh Attributes](#skinned-mesh-attributes)|
 
 `TEXCOORD`, `COLOR`, `JOINTS`, and `WEIGHTS` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. Clients must support at least two UV texture coordinate sets, one vertex color, and one joints/weights set. Extensions can add additional property names, accessor types, and/or accessor component types.
 
