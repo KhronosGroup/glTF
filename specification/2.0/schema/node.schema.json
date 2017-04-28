@@ -73,8 +73,7 @@
             "description": "The weights of the instantiated Morph Target. Number of elements must match number of Morph Targets of used mesh.",
             "minItems": 1,
             "items": {
-                "type": "number",
-                "minimum": 0
+                "type": "number"
             }
         },
         "name": { },
