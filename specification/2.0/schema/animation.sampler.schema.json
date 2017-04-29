@@ -35,7 +35,7 @@
         "output": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The index of an accessor, containing keyframe output values.",
-            "gltf_detailedDescription": "The index of an accessor, containing keyframe output values. Output and input accessors must have the same `count` except for `CUBICSPLINE` where output count is 3x the input count. When sampler is used with TRS target, output accessor's componentType must be `FLOAT`."
+            "gltf_detailedDescription": "The index of an accessor, containing keyframe output values. When sampler is used with TRS target, output accessor's componentType must be `FLOAT`, output and input accessors must have the same `count` except for `CUBICSPLINE` interpolation where output count is 3x the input count. When sampler is used with morph weights target, output accessor's componentType can be `FLOAT` or normalized integer, output count must be the input count times the number of morph targets."
         },
         "extensions": { },
         "extras": { }

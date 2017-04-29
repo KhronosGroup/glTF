@@ -1301,13 +1301,22 @@ The following examples show expected animations usage.
 }
 ```
 
-*Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the index of one of the samplers present in the containing animation's `samplers` array. The `target` property is an object that identifies which node to animate using its `node` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale"`.
+*Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the index of one of the samplers present in the containing animation's `samplers` array. The `target` property is an object that identifies which node to animate using its `node` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
 
 Each of the animation's *samplers* defines the input/output pair: a set of floating point scalar values representing time in seconds; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation, or floating-point scalars used to animate Morph Targets. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property
 
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
 
 glTF animations can be used to animate Morph Targets. A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation.
+
+When Morph Target animation keyframe data lies within `[-1.0, +1.0]` range, it could be stored in fixed-point normalized integers. In that case, following equations must be used to get corresponding floating-point value `f` from a normalized integer `c` and vise-versa:
+
+|`accessor.componentType`|int-to-float|float-to-int|
+|------------------------|--------|----------------|
+| Unsigned Byte          |`f = c / 255.0`|`c = round(f * 255.0)`|
+| Signed Byte            |`f = max(c / 127.0, -1.0)`|`c = round(f * 127.0)`|
+| Unsigned Short         |`f = c / 65535.0`|`c = round(f * 65535.0)`|
+| Signed Short           |`f = max(c / 32767.0, -1.0)`|`c = round(f * 32767.0)`|
 
 ## Specifying Extensions
 
