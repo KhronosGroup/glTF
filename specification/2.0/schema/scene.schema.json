@@ -12,7 +12,7 @@
                 "$ref": "glTFid.schema.json"
             },
             "uniqueItems": true,
-            "default": [ ]
+            "minItems": 1
         },
         "name": { },
         "extensions": { },
