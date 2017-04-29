@@ -1309,6 +1309,15 @@ glTF animations can be used to drive articulated or skinned animations. Skinned 
 
 glTF animations can be used to animate Morph Targets. A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation.
 
+When Morph Target animation keyframe data lies within `[-1.0, +1.0]` range, it could be stored in fixed-point normalized integers. In that case, following equations must be used to get corresponding floating-point value `f` from a normalized integer `c` and vise-versa:
+
+|`accessor.componentType`|int-to-float|float-to-int|
+|------------------------|--------|----------------|
+| Unsigned Byte          |`f = c / 255.0`|`c = round(f * 255.0)`|
+| Signed Byte            |`f = max(c / 127.0, -1.0)`|`c = round(f * 127.0)`|
+| Unsigned Short         |`f = c / 65535.0`|`c = round(f * 65535.0)`|
+| Signed Short           |`f = max(c / 32767.0, -1.0)`|`c = round(f * 32767.0)`|
+
 ## Specifying Extensions
 
 glTF defines an extension mechanism that allows the base format to be extended with new capabilities. Any glTF object can have an optional `extensions` property, as in the following example:
