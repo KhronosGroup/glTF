@@ -584,7 +584,7 @@ When nor `sparse`, neither `bufferView` is defined, `min` and `max` properties c
 
 The offset of an `accessor` into a `bufferView` (i.e., `accessor.byteOffset`) and the offset of an `accessor` into a `buffer` (i.e., `accessor.byteOffset + bufferView.byteOffset`) must be a multiple of the size of the accessor's component type.
 
-When `byteStride` of referenced `bufferView` equals `0` (or not defined), it means that accessor elements are tightly packed, i.e., effective stride equals to the size of the element. Such effective stride must be the same across all accessors that use that `bufferView`. When `bufferView.byteStride` is defined, it must be a multiple of the size of the accessor's component type. 
+When `byteStride` of referenced `bufferView` is not defined, it means that accessor elements are tightly packed, i.e., effective stride equals the size of the element. When `byteStride` is defined, it must be a multiple of the size of the accessor's component type. `byteStride` must be defined, when two or more accessors use the same `bufferView`.
 
 Each `accessor` must fit its `bufferView`, i.e., `accessor.byteOffset + STRIDE * (accessor.count - 1) + SIZE_OF_ELEMENT` must be less than or equal to `bufferView.length`.
 
