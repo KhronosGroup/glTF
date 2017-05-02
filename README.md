@@ -70,7 +70,7 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 * [glTF loader](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js) in [Cesium](http://cesiumjs.org/)
    * The [COLLADA to glTF](http://cesiumjs.org/convertmodel.html) converter also supports drag-and-drop viewing of glTF assets
    * [3D Models](https://cesiumjs.org/tutorials/3D-Models-Tutorial/) tutorial
-   * [Drag and drop glTF Viewer](https://www.virtualgis.io/gltfviewer/) ([source](https://github.com/virtualgis/gltfviewer)))
+   * [Drag and drop glTF Viewer](https://www.virtualgis.io/gltfviewer/) ([source](https://github.com/virtualgis/gltfviewer))
 * Initial [glTF loader](https://github.com/pex-gl/pex-gltf) in [PEX](http://vorg.github.io/pex/) (geometry and materials)
 * Initial [glTF loader](https://github.com/xeolabs/xeogl/tree/master/src/importing/gltf) in [xeogl](http://xeogl.org/) (geometry and materials)
    * [Importing glTF](https://github.com/xeolabs/xeogl/wiki/Importing-glTF) tutorial
