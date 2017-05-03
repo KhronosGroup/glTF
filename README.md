@@ -22,6 +22,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 <p align="center">
 <a href="specification/1.0/figures/gltfOverview-0.2.0.png"><img src="specification/1.0/figures/gltfOverview-0.2.0-small.png" /></a>
 </p>
+
 Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/javagl/gltfOverview)).
 
 ## glTF Tools
