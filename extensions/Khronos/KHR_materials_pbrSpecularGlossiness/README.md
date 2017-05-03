@@ -1,6 +1,11 @@
 # KHR\_materials\_pbrSpecularGlossiness
 
-## Contributors
+## Khronos 3D Formats Working Group
+* Saurabh Bhatia, Microsoft [@iamsbtron](https://twitter.com/iamsbtron)
+* Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
+* Patrick Cozzi, Cesium, [@pjcozzi](https://twitter.com/pjcozzi)
+
+## Acknowledgments
 
 * Max Limper, Fraunhofer IGD, [@mlimper_cg](https://twitter.com/mlimper_cg)
 * Timo Sturm, Fraunhofer IGD, [@\_tsturm\_](https://twitter.com/\_tsturm\_)
@@ -8,9 +13,6 @@
 * Maik Th&ouml;ner, Fraunhofer IGD, [@mthoener](https://twitter.com/mthoener)
 * Eric Haines, Autodesk, [@pointinpolygon](https://twitter.com/pointinpolygon)
 * Cedric Pinson, Sketchfab, [@trigrou](https://twitter.com/trigrou)
-* Saurabh Bhatia, Microsoft [@iamsbtron](https://twitter.com/iamsbtron)
-* Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
-* Patrick Cozzi, Cesium, [@pjcozzi](https://twitter.com/pjcozzi)
 
 ## Status
 
@@ -24,7 +26,7 @@ Written against the glTF 2.0 spec.
 
 This extension defines the specular-glossiness material model from Physically-Based Rendering (PBR). This extensions allows glTF to support this additional workflow. 
 
-The [conformance](#conformance) section specifies what an implementation must to do when encountering this extension, and how the extension interacts with the materials defined in the base specification.
+The [best practices](#bestpractices) section specifies what an implementation must to do when encountering this extension, and how the extension interacts with the materials defined in the base specification.
 
 ## Extending Materials
 
@@ -72,7 +74,7 @@ The following equations show how to calculate bidirectional reflectance distribu
 <br>
 *F<sub>0</sub>* = `specular`
 <br>
-*&alpha;* = `max((1 - glossiness) ^ 2, epsilon)`
+*&alpha;* = `(1 - glossiness) ^ 2`
 
 All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [appendix](/specification/2.0/README.md#appendix-a) for more details on the BRDF calculations.
 
@@ -86,7 +88,7 @@ The following table lists the allowed types and ranges for the specular-glossine
 |**glossinessFactor** | `number` | The glossiness or smoothness of the material. |No, default:`1.0`|
 |**specularGlossinessTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The specular-glossiness texture.|No|
 
-Additional properties are not allowed.
+Additional properties are allowed.
 
 * **JSON schema**: [glTF.KHR_materials_pbrSpecularGlossiness.schema.json](schema/glTF.KHR_materials_pbrSpecularGlossiness.schema.json)
 

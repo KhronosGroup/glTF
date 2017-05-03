@@ -10,16 +10,22 @@ Last Updated: April 11, 2017
 
 Editors
 
+* Saurabh Bhatia, Microsoft
 * Patrick Cozzi, Cesium
-* Tony Parisi, WEVR
-
-Contributors
-
-* Fabrice Robinet, Individual Contributor (Previous Editor and Incubator)
-* Remi Arnaud, Starbreeze Studios
-* Uli Klumpp, Individual Contributor
-* Neil Trevett, NVIDIA
 * Alexey Knyazev, Individual Contributor
+* Tony Parisi, Unity
+
+Khronos 3D Formats Working Group and Alumni
+
+* Remi Arnaud, Starbreeze Studios
+* Emiliano Gambaretto, Adobe
+* Gary Hsu, Microsoft
+* Marco Hutter, Individual Contributor
+* Uli Klumpp, Individual Contributor
+* Fabrice Robinet, Individual Contributor (Previous Editor and Incubator)
+* Neil Trevett, NVIDIA
+* Jan Paul Van Waveren, Oculus
+* Amanda Watson, Oculus
 
 Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 
@@ -64,6 +70,7 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
     * [Additional Maps](#additional-maps)
     * [Alpha Coverage](#alpha-coverage)
     * [Double Sided](#double-sided)
+    * [Default Material](#default-material)
   * [Cameras](#cameras)
     * [Projection Matrices](#projection-matrices)
   * [Animations](#animations)
@@ -296,6 +303,8 @@ The node named `Car` has four children. Each of those nodes could in turn have i
 ### Transformations
 
 Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). `translation` and `scale` are `FLOAT_VEC3` values in the local coordinate system. `rotation` is a `FLOAT_VEC4` unit quaternion value, `(x, y, z, w)`, in the local coordinate system.
+
+Matrices must be decomposable to TRS. This implies that transformation matrices cannot skew or shear.
 
 TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation.
 
@@ -625,7 +634,7 @@ In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to 
 
 > **Implementation note:** Splitting one mesh into *primitives* could be useful to limit number of indices per draw call.
 
-If `material` is not supplied, then the object should be rendered using a 50% gray PBR metallic-roughness material with `[ 0.5, 0.5, 0.5 ]` for `baseColorFactor`, `0` for `metallicFactor`, and `1` for `roughnessFactor`.
+If `material` is not specified, then a [default material](#default-material) is used.
 
 The following example defines a mesh containing one triangle set primitive:
 
@@ -653,9 +662,7 @@ The following example defines a mesh containing one triangle set primitive:
 
 Each attribute is defined as a property of the `attributes` object. The name of the property corresponds to an enumerated value identifying the vertex attribute, such as `POSITION`. The value of the property is the index of an accessor that contains the data.
 
-Valid attribute semantic property names include `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`, `JOINT`, and `WEIGHT`.  Application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
-
-Each mesh has a limit of two UV texture coordinate sets and one vertex color.
+Valid attribute semantic property names include `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`, `JOINTS_0`, and `WEIGHTS_0`.  Application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
 
 Valid accessor type and component type for each attribute semantic property are defined below.
 
@@ -667,14 +674,14 @@ Valid accessor type and component type for each attribute semantic property are 
 |`TEXCOORD_0`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the first set|
 |`TEXCOORD_1`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the second set|
 |`COLOR_0`|`"VEC3"`<br>`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|RGB or RGBA vertex color|
-|`JOINT`|`"VEC4"`|`5120`&nbsp;(UNSIGNED_BYTE)<br>`5123`&nbsp;(UNSIGNED_SHORT)|See [Morph Targets](#morph-targets) or [Skins](#skins)|
-|`WEIGHT`|`"VEC4`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|See [Morph Targets](#morph-targets)|
+|`JOINTS_0`|`"VEC4"`|`5120`&nbsp;(UNSIGNED_BYTE)<br>`5123`&nbsp;(UNSIGNED_SHORT)|See [Morph Targets](#morph-targets) or [Skins](#skins)|
+|`WEIGHTS_0`|`"VEC4`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|See [Morph Targets](#morph-targets)|
 
-Extensions can add additional property names, accessor types, and/or accessor component types.
+`TEXCOORD`, `COLOR`, `JOINTS`, and `WEIGHTS` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. Clients must support at least two UV texture coordinate sets, one vertex color, and one joints/weights set. Extensions can add additional property names, accessor types, and/or accessor component types.
 
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
 
-> **Implementation note:** When normals are not specified, implementations should calculate smoothed normals.
+> **Implementation note:** When normals are not specified, implementations should calculate flat normals.
 
 > **Implementation note:** When tangents are not specified, implementations should calculate tangents using default MikkTSpace algorithms.  For best results, the mesh triangles should also be processed using default MikkTSpace algorithms.
 
@@ -748,7 +755,7 @@ All skins are stored in the `skins` array of the asset. Each skin is defined by 
 
 #### Skinned Mesh Attributes
 
-The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The `JOINT` attribute data contains the indices of the joints from corresponding `joints` array that should affect the vertex. The `WEIGHT` attribute data defines the weights indicating how strongly the joint should influence the vertex. The following mesh skin defines `JOINT` and `WEIGHT` vertex attributes for a triangle mesh primitive:
+The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The `JOINTS_0` attribute data contains the indices of the joints from corresponding `joints` array that should affect the vertex. The `WEIGHTS_0` attribute data defines the weights indicating how strongly the joint should influence the vertex. The following mesh skin defines `JOINTS_0` and `WEIGHTS_0` vertex attributes for a triangle mesh primitive:
 
 ```json
 {
@@ -758,11 +765,11 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
             "primitives": [
                 {
                     "attributes": {
-                        "JOINT": 179,
+                        "JOINTS_0": 179,
                         "NORMAL": 165,
                         "POSITION": 163,
                         "TEXCOORD_0": 167,
-                        "WEIGHT": 176
+                        "WEIGHTS_0": 176
                     },
                     "indices": 161,
                     "material": 1,
@@ -776,8 +783,8 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
 
 The number of joints that influence one vertex is limited to 4, so referenced accessors must have `VEC4` type and following component formats:
 
-* **`JOINT`**: `UNSIGNED_BYTE` or `UNSIGNED_SHORT`
-* **`WEIGHT`**: `FLOAT`, or normalized `UNSIGNED_BYTE`, or normalized `UNSIGNED_SHORT`
+* **`JOINTS_0`**: `UNSIGNED_BYTE` or `UNSIGNED_SHORT`
+* **`WEIGHTS_0`**: `FLOAT`, or normalized `UNSIGNED_BYTE`, or normalized `UNSIGNED_SHORT`
 
 #### Joint Hierarchy
 
@@ -1070,6 +1077,10 @@ The `alphaMode` property defines how the alpha value of the main factor and text
 
 The `doubleSided` property specifies whether the material is double sided. When this value is false, back-face culling is enabled. When this value is true, back-face culling is disabled and double sided lighting is enabled. The back-face must have its normals reversed before the lighting equation is evaluated.
 
+### Default Material
+
+The default material, used when a mesh does not specify a material, is defined to be a material with no properties specified. All the default values of [`material`](#reference-material) apply. Note that this material does not emit light and will be black unless some lighting is present in the scene.
+
 ## Cameras
 
 A camera defines the projection matrix that transforms from view to clip coordinates. The projection can be perspective or orthographic. Cameras are contained in nodes and thus can be transformed. Their world-space transformation matrix is used for calculating view-space transformation.
@@ -1288,9 +1299,8 @@ The following examples show expected animations usage.
 
 Each of the animation's *samplers* defines the input/output pair: a set of floating point scalar values representing time in seconds; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation, or floating-point scalars used to animate Morph Targets. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property
 
-> Note: glTF 2.0 animation samplers support only discrete and linear interpolation.
-
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
+
 glTF animations can be used to animate Morph Targets. A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation.
 
 ## Specifying Extensions
@@ -2313,7 +2323,7 @@ The material appearance of a primitive.
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
-|**pbrMetallicRoughness**|`object`|A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology.|No|
+|**pbrMetallicRoughness**|`object`|A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology. When not specified, all the default values of [`pbrMetallicRoughness`](#reference-pbrmetallicroughness) apply.|No|
 |**normalTexture**|`object`|The normal map texture.|No|
 |**occlusionTexture**|`object`|The occlusion map texture.|No|
 |**emissiveTexture**|`object`|The emissive map texture.|No|
@@ -2473,7 +2483,7 @@ Array of weights to be applied to the Morph Targets.
 <a name="reference-node"></a>
 ## node
 
-A node in the node hierarchy.  When the node contains [`skin`](#reference-skin), all `mesh.primitives` must contain `JOINT` and `WEIGHT` attributes.  A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation. If none are provided, the transform is the identity. When a node is targeted for animation (referenced by an animation.channel.target), only TRS properties may be present; `matrix` will not be present.
+A node in the node hierarchy.  When the node contains [`skin`](#reference-skin), all `mesh.primitives` must contain `JOINTS_0` and `WEIGHTS_0` attributes.  A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation. If none are provided, the transform is the identity. When a node is targeted for animation (referenced by an animation.channel.target), only TRS properties may be present; `matrix` will not be present.
 
 **Properties**
 
@@ -3394,20 +3404,28 @@ Application-specific data.
 
 
 # Acknowledgments
-
 * Sarah Chow, Cesium
 * Tom Fili, Cesium
+* Darryl Gough
+* Eric Haines, Autodesk
+* Yu Chen Hou
 * Scott Hunter, Analytical Graphics, Inc.
 * Brandon Jones, Google
+* Sean Lilley, Cesium
+* Max Limper, Fraunhofer IGD
 * Ed Mackey, Analytical Graphics, Inc.
-* Matthew McMullan,
-* Darryl Gough, 
-* Alex Wood,
+* Matthew McMullan
+* Mohamad Moneimne, University of Pennsylvania
+* Kai Ninomiya, formerly Cesium
+* Norbert Nopper
+* Cedric Pinson, Sketchfab
+* Jeff Russell, Marmoset
+* Miguel Sousa, Fraunhofer IGD
+* Timo Sturm, Fraunhofer IGD
 * Rob Taglang, Cesium
-* Marco Hutter,
-* Sean Lilley,
-* Corentin Wallez,
-* Yu Chen Hou
+* Maik Thöner, Fraunhofer IGD
+* Corentin Wallez, Google
+* Alex Wood, Analytical Graphics, Inc
 
 # Appendix A: GLB File Format Specification
 

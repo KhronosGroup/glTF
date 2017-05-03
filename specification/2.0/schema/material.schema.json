@@ -10,7 +10,7 @@
         "extras": { },
         "pbrMetallicRoughness": {
             "allOf": [ { "$ref": "material.pbrMetallicRoughness.schema.json" } ],
-            "description": "A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology."
+            "description": "A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology. When not specified, all the default values of `pbrMetallicRoughness` apply."
         },
         "normalTexture": {
             "allOf": [ { "$ref": "material.normalTextureInfo.schema.json" } ],
