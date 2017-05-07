@@ -7,7 +7,7 @@
             "properties" : {
             },
             "additionalProperties" : {
-                "$ref" : "light.schema.json"
+                "$ref" : "light.KHR_materials_common.schema.json"
             },
             "default" : {}
         }
