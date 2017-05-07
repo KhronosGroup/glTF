@@ -380,7 +380,7 @@ Table 3. Spot Light Properties
 
 | Property                     | Type         | Description | Default Value |
 |:----------------------------:|:------------:|:-----------:|:-------------:|
-| `falloffAngle`              | `FLOAT` | Falloff angle for the spot light, in radians.| PI / 2 |
+| `falloffAngle`              | `FLOAT` | Falloff angle for the spot light, in radians.| PI |
 | `falloffExponent`           | `FLOAT` | Falloff exponent for the spotlight. | 0 |
 
 
