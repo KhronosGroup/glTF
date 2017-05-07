@@ -353,7 +353,6 @@ Table 2. Common Light Shared Properties
 |:----------------------------:|:------------:|:-----------:|:-------------:|:----------:|
 | `color`                      | `FLOAT_VEC4` | RGBA value for light's color.|[0,0,0,1] | `ambient`, `directional`, `point`, `spot` |
 | `constantAttenuation`       | `FLOAT` | Constant attenuation of point and spot lights. | 0 | `point`, `spot` |
-`directional`, `spot` |
 | `distance`                   | `FLOAT` | Distance, in world units, over which the light affects objects in the scene. A value of zero indicates infinite distance. | 0 | `point`, `spot` |
 | `linearAttenuation`       | `FLOAT` | Linear (distance-based) attenuation of point and spot lights. | 1 | `point`, `spot` |
 | `quadraticAttenuation`       | `FLOAT` | Quadratic attenuation of point and spot lights. | 1 | `point`, `spot` |
