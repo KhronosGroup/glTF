@@ -85,7 +85,7 @@
         "skin": [ "mesh" ]
     },
     "not": {
-        "oneOf": [
+        "anyOf": [
             { "required": [ "matrix", "translation" ] },
             { "required": [ "matrix", "rotation" ] },
             { "required": [ "matrix", "scale" ] }
