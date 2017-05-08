@@ -83,5 +83,12 @@
     "dependencies": {
         "weights": [ "mesh" ],
         "skin": [ "mesh" ]
+    },
+    "not": {
+        "oneOf": [
+            { "required": [ "matrix", "translation" ] },
+            { "required": [ "matrix", "rotation" ] },
+            { "required": [ "matrix", "scale" ] }
+        ]
     }
 }
