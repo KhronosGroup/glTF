@@ -43,16 +43,19 @@
         "alphaMode": {
             "default": "OPAQUE",
             "description": "The alpha rendering mode of the material.",
-            "gltf_detailedDescription": "The material's alpha rendering mode enumeration specifying the interpretation of the alpha value of the main factor and texture. In `OPAQUE` mode, the alpha value is ignored and the rendered output is fully opaque. In `MASK` mode, the rendered output is either fully opaque or fully transparent depending on the alpha value and the specified alpha cutoff value. In `BLEND` mode, the alpha value is used to composite the source and destination areas. The rendered output is combined with the background using the normal painting operation (i.e. the Porter and Duff over operator).",
+            "gltf_detailedDescription": "The material's alpha rendering mode enumeration specifying the interpretation of the alpha value of the main factor and texture.",
             "anyOf": [
                 {
-                    "enum": [ "OPAQUE" ]
+                    "enum": [ "OPAQUE" ],
+                    "description": "The alpha value is ignored and the rendered output is fully opaque."
                 },
                 {
-                    "enum": [ "MASK" ]
+                    "enum": [ "MASK" ],
+                    "description": "The rendered output is either fully opaque or fully transparent depending on the alpha value and the specified alpha cutoff value."
                 },
                 {
-                    "enum": [ "BLEND" ]
+                    "enum": [ "BLEND" ],
+                    "description": "The alpha value is used to composite the source and destination areas. The rendered output is combined with the background using the normal painting operation (i.e. the Porter and Duff over operator)."
                 },
                 {
                     "type": "string"
