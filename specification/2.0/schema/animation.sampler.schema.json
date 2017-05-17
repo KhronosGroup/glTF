@@ -13,19 +13,23 @@
         "interpolation": {
             "description": "Interpolation algorithm.",
             "default": "LINEAR",
-            "gltf_detailedDescription": "Interpolation algorithm. When an animation targets a node's rotation, and the animation's interpolation is `\"LINEAR\"`, spherical linear interpolation (slerp) should be used to interpolate quaternions. When interpolation is `\"STEP\"`, animated value remains constant to the value of the first point of the timeframe, until the next timeframe. When interpolation is `\"CATMULLROMSPLINE\"`, the animation's interpolation is computed using a uniform Catmull-Rom spline. When interpolation is `\"CUBICSPLINE\"`, the animation's interpolation is computed using a cubic spline with specified tangents. For each input value, the output stores three values: in-tangent, spline vertex, and out-tangent.",
+            "gltf_detailedDescription": "Interpolation algorithm.",
             "anyOf": [
                 {
-                    "enum": [ "LINEAR" ]
+                    "enum": [ "LINEAR" ],
+                    "description": "When an animation targets a node's rotation, spherical linear interpolation (slerp) should be used to interpolate quaternions."
                 },
                 {
-                    "enum": [ "STEP" ]
+                    "enum": [ "STEP" ],
+                    "description": "The animated value remains constant to the value of the first point of the timeframe, until the next timeframe."
                 },
                 {
-                    "enum": [ "CATMULLROMSPLINE" ]
+                    "enum": [ "CATMULLROMSPLINE" ],
+                    "description": "The animation's interpolation is computed using a uniform Catmull-Rom spline."
                 },
                 {
-                    "enum": [ "CUBICSPLINE" ]
+                    "enum": [ "CUBICSPLINE" ],
+                    "description": "The animation's interpolation is computed using a cubic spline with specified tangents. For each input value, the output stores three values: in-tangent, spline vertex, and out-tangent."
                 },
                 {
                     "type": "string"
