@@ -50,6 +50,7 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
     * [Buffers and Buffer Views](#buffers-and-buffer-views)
       * [GLB-stored Buffer](#glb-stored-buffer)
     * [Accessors](#accessors)
+        * [Floating-Point Data](#floating-point-data)
         * [Accessor Element Size](#accessor-element-size)
         * [Sparse Accessors](#sparse-accessors)
     * [Data Alignment](#data-alignment)   
@@ -493,12 +494,18 @@ The following fragment shows two accessors, the first is a scalar accessor for r
 }
 ```
 
+#### Floating-Point Data
+
+Data of `5126 (GL_FLOAT)` componentType must use IEEE-754 single precision format. 
+
+Values of `NaN`, `+Infinity`, and `-Infinity` are not allowed.
+
 #### Accessor Element Size
 
 The following tables can be used to compute the size of element accessible by accessor.
 
 | `componentType` | Size in bytes |
-|:-:|:-:|
+|:---------------:|:-------------:|
 | `5120` (BYTE) | 1 |
 | `5121`(UNSIGNED_BYTE) | 1 |
 | `5122` (SHORT) | 2 |
@@ -507,7 +514,7 @@ The following tables can be used to compute the size of element accessible by ac
 | `5126` (FLOAT) | 4 |
 
 | `type` | Number of components |
-|:-:|:-:|
+|:------:|:--------------------:|
 | `"SCALAR"` | 1 |
 | `"VEC2"` | 2 |
 | `"VEC3"` | 3 |
