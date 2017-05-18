@@ -99,8 +99,8 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 #### JavaScript / Node.js
 
 * [gltf-walker](https://github.com/ksons/gltf-walker) - convenience library for processing glTF
-* [rest3d](https://github.com/amd/rest3d) - serves glTF and other 3D assets via a REST API (glTF 0.8)
 * [gltf-viewer](https://github.com/avgp/gltf-viewer) - web component to display glTF models on a website
+* [rest3d](https://github.com/amd/rest3d) - serves glTF and other 3D assets via a REST API (glTF 0.8)
 * [gltf-viewer-element](https://www.npmjs.com/package/gltf-viewer-element) - Node.js package for loading and rendering glTF (0.8)
 * [Amobee 3D](http://amobee3d.s3.amazonaws.com/ads/Amobee3D_AdList.html) (0.8)
 
