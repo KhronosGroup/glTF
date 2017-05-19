@@ -81,7 +81,8 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
 * [Appendix A: GLB File Format Specification](#appendix-a-glb-file-format-specification)
 * [Appendix B: Tangent Space Recalculation](#appendix-b-tangent-space-recalculation)
 * [Appendix C: BRDF Implementation](#appendix-c-brdf-implementation)
-* [Appendix D: Full Khronos Trademark Statement](#appendix-d-full-khronos-trademark-statement)
+* [Appendix D: Spline Interpolation](#appendix-d-spline-interpolation)
+* [Appendix E: Full Khronos Trademark Statement](#appendix-d-full-khronos-trademark-statement)
 
 # Introduction
 
@@ -1310,7 +1311,7 @@ The following examples show expected animations usage.
 
 *Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the index of one of the samplers present in the containing animation's `samplers` array. The `target` property is an object that identifies which node to animate using its `node` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
 
-Each of the animation's *samplers* defines the input/output pair: a set of floating point scalar values representing time in seconds; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation, or floating-point scalars used to animate Morph Targets. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property
+Each of the animation's *samplers* defines the input/output pair: a set of floating point scalar values representing time in seconds; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation, or floating-point scalars used to animate Morph Targets. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, `CATMULLROMSPLINE`, and `CUBICSPLINE`. See [Appendix D](#appendix-d-spline-interpolation) for additional information about spline interpolation.
 
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
 
@@ -3461,6 +3462,55 @@ See [GLB_FORMAT.md](GLB_FORMAT.md).
 
 **TODO**
 
-# Appendix D: Full Khronos Trademark Statement
+# Appendix D: Spline Interpolation
+
+Animations in glTF support two kinds of spline interpolations: `CUBICSPLINE` and `CATMULLROMSPLINE`.
+
+## Cubic Spline
+
+The keyframes of a cubic spline in glTF have input and output values where each input value corresponds to three output values: in-tangent, spline vertex, and out-tangent.
+
+Given a set of keyframes
+
+&nbsp;&nbsp;&nbsp;&nbsp;Input *t*<sub>*k*</sub> and output in-tangent ***a***<sub>k</sub>, vertex ***v***<sub>*k*</sub>, and out-tangent ***b***<sub>k</sub> for *k* = 1,...,*n*
+
+A spline segment between two keyframes is represented in a cubic Hermite spline form
+
+&nbsp;&nbsp;&nbsp;&nbsp;***p***(*t*) = (2*t*<sup>3</sup> - 3*t*<sup>2</sup> + 1)***p***<sub>0</sub> + (*t<sup>3</sup>* - 2*t*<sup>2</sup> + *t*)***m***<sub>0</sub> + (-2*t*<sup>3</sup> + 3*t*<sup>2</sup>)***p***<sub>1</sub> + (*t*<sup>3</sup> - *t*<sup>2</sup>)***m***<sub>1</sub>
+
+Where
+
+&nbsp;&nbsp;&nbsp;&nbsp;*t* is a value between 0 and 1  
+&nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>0</sub> is the starting vertex at *t* = 0  
+&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>0</sub> is the starting tangent at *t* = 0  
+&nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>1</sub> is the ending vertex at *t* = 1  
+&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>1</sub> is the ending tangent at *t* = 1  
+&nbsp;&nbsp;&nbsp;&nbsp;***p***(*t*) is the resulting value  
+
+Where at input offset *t*<sub>*current*</sub> with keyframe index *k*
+
+&nbsp;&nbsp;&nbsp;&nbsp;*t* = (*t*<sub>*current*</sub> - *t*<sub>*k*</sub>) / (*t*<sub>*k*+1</sub> - *t*<sub>*k*</sub>)  
+&nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>0</sub> = ***v***<sub>*k*</sub>  
+&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>0</sub> = (*t*<sub>*k*+1</sub> - *t*<sub>*k*</sub>)***b***<sub>k</sub>  
+&nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>1</sub> = ***v***<sub>*k*+1</sub>  
+&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>1</sub> = (*t*<sub>*k*+1</sub> - *t*<sub>*k*</sub>)***a***<sub>k+1</sub>  
+
+When the sampler targets a node's rotation property, the resulting ***p***(*t*) quaternion must be normalized before applying the result to the node's rotation.
+
+> **Implementation Note:** When writing out rotation output values, exporters should take care to not write out values which can result in an invalid quaternion with all zero values. This can be achieved by ensuring the output values never have both -***q*** and ***q*** in the same spline.
+
+## Catmull-Rom Spline
+
+`CATMULLROMSPLINE` splines in glTF are standard Catmull-Rom splines, also known as uniform Catmull-Rom spline. They are different than a cubic spline in that the tangents are calculated instead of specified. The spline curve does not reach the first and last points. The first and last points are used to define the starting and ending tangents of the spline.
+
+Given a set of keyframes
+
+&nbsp;&nbsp;&nbsp;&nbsp;Input *t*<sub>*k*</sub> and output vertex ***v***<sub>*k*</sub> for *k* = 1,...,*n* where the spline starts at *t*<sub>2</sub> and ends at *t*<sub>*n*-1</sub>
+
+The tangents are calculated as follows
+
+&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>*k*</sub> = (***v***<sub>*k*+1</sub> - ***v***<sub>*k*-1</sub>) / (*t*<sub>*k*+1</sub> - *t*<sub>*k*-1</sub>) for *k* = 2,...,*n*-1
+
+# Appendix E: Full Khronos Trademark Statement
 
 Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. This specification is protected by copyright laws and contains material proprietary to the Khronos Group, Inc. It or any components may not be reproduced, republished, distributed, transmitted, displayed, broadcast, or otherwise exploited in any manner without the express prior written permission of Khronos Group. You may use this specification for implementing the functionality therein, without altering or removing any trademark, copyright or other notice from the specification, but the receipt or possession of this specification does not convey any rights to reproduce, disclose, or distribute its contents, or to manufacture, use, or sell anything that it may describe, in whole or in part. Khronos Group grants express permission to any current Promoter, Contributor or Adopter member of Khronos to copy and redistribute UNMODIFIED versions of this specification in any fashion, provided that NO CHARGE is made for the specification and the latest available update of the specification for any version of the API is used whenever possible. Such distributed specification may be reformatted AS LONG AS the contents of the specification are not changed in any way. The specification may be incorporated into a product that is sold as long as such product includes significant independent work developed by the seller. A link to the current version of this specification on the Khronos Group website should be included whenever possible with specification distributions. Khronos Group makes no, and expressly disclaims any, representations or warranties, express or implied, regarding this specification, including, without limitation, any implied warranties of merchantability or fitness for a particular purpose or non-infringement of any intellectual property. Khronos Group makes no, and expressly disclaims any, warranties, express or implied, regarding the correctness, accuracy, completeness, timeliness, and reliability of the specification. Under no circumstances will the Khronos Group, or any of its Promoters, Contributors or Members or their respective partners, officers, directors, employees, agents, or representatives be liable for any damages, whether direct, indirect, special or consequential damages for lost revenues, lost profits, or otherwise, arising from or in connection with these materials. Khronos, Vulkan, SYCL, SPIR, WebGL, EGL, COLLADA, StreamInput, OpenVX, OpenKCam, glTF, OpenKODE, OpenVG, OpenWF, OpenSL ES, OpenMAX, OpenMAX AL, OpenMAX IL and OpenMAX DL are trademarks and WebCL is a certification mark of The Khronos Group Inc. OpenCL is a trademark of Apple Inc. and OpenGL and OpenML are registered trademarks and the OpenGL ES and OpenGL SC logos are trademarks of Silicon Graphics International used under license by Khronos. All other product names, trademarks, and/or company names are used solely for identification and belong to their respective owners.

@@ -25,11 +25,11 @@
                 },
                 {
                     "enum": [ "CATMULLROMSPLINE" ],
-                    "description": "The animation's interpolation is computed using a uniform Catmull-Rom spline."
+                    "description": "The animation's interpolation is computed using a uniform Catmull-Rom spline. There must be at least four keyframes when using this interpolation."
                 },
                 {
                     "enum": [ "CUBICSPLINE" ],
-                    "description": "The animation's interpolation is computed using a cubic spline with specified tangents. For each input value, the output stores three values: in-tangent, spline vertex, and out-tangent."
+                    "description": "The animation's interpolation is computed using a cubic spline with specified tangents. For each input value, the output stores three values: in-tangent, spline vertex, and out-tangent. There must be at least two keyframes when using this interpolation."
                 },
                 {
                     "type": "string"
