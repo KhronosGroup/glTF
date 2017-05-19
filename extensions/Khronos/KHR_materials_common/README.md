@@ -179,8 +179,7 @@ Constant shading does not reflect light sources in the scene; therefore the comm
 
 ### Properties Reference
 
-* [`KHR_materials_common glTF extension`](#reference-khr_materials_common-gltf-e
-xtension) (root object)
+* [`KHR_materials_common glTF extension`](#reference-khr_materials_common-gltf-extension) (root object)
 
 
 ---------------------------------------
