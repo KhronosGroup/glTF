@@ -1,16 +1,33 @@
 {
-    "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "KHR_materials_common glTF extension",
-    "type" : "object",
-    "properties" : {
-        "lights" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "light.schema.json"
-            },
-            "default" : {}
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_common glTF extension",
+    "description": "glTF extension to use common lighting models for shading.",
+    "type": "object",
+    "properties": {
+        "technique": {
+            "anyOf": [
+                {
+                    "enum": [ 0 ],
+                    "description": "BLINN"
+                },
+                {
+                    "enum": [ 1 ],
+                    "description": "PHONG"
+                },
+                {
+                    "enum": [ 2 ],
+                    "description": "LAMBERT"
+                },
+                {
+                    "enum": [ 3 ],
+                    "description": "CONSTANT"
+                },
+                {
+                    "type": "integer"
+                }
+            ],
+            "description": "Enum value defining which lighting model to use for the material."
         }
     },
-    "additionalProperties" : false
+    "required": ["technique"]
 }
