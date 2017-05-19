@@ -677,7 +677,7 @@ Valid accessor type and component type for each attribute semantic property are 
 |----|----------------|-----------------|-----------|
 |`POSITION`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex positions|
 |`NORMAL`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex normals|
-|`TANGENT`|`"VEC4"`|`5126`&nbsp;(FLOAT)|XYZW vertex tangents where the w component is a sign value (-1 or +1) indicating handedness of the tangent basis|
+|`TANGENT`|`"VEC4"`|`5126`&nbsp;(FLOAT)|XYZW vertex tangents where the *w* component is a sign value (-1 or +1) indicating handedness of the tangent basis|
 |`TEXCOORD_0`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the first set|
 |`TEXCOORD_1`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the second set|
 |`COLOR_0`|`"VEC3"`<br>`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|RGB or RGBA vertex color|
@@ -709,7 +709,15 @@ primitives[i].attributes.POSITION +
 ```
 Morph Targets are implemented via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to an accessor containing Morph Target displacement data, currently only three attributes (`POSITION`, `NORMAL`, and `TANGENT`) are supported. All primitives are required to list the same number of `targets` in the same order.
 
-The `weights` array is optional, it stores the default targets weights, in the absence of `node.weights` the primitives attributes are resolved using these weights. When this property is missing the default targets weights are assumed to be zero.
+Valid accessor type and component type for each attribute semantic property are defined below. Note that the *w* component for handedness is omitted when targeting `TANGENT` data since handedness cannot be displaced.
+
+|Name|Accessor Type(s)|Component Type(s)|Description|
+|----|----------------|-----------------|-----------|
+|`POSITION`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex position displacements|
+|`NORMAL`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex normal displacements|
+|`TANGENT`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex tangent displacements|
+
+A Morph Target may also define an optional `mesh.weights` property that stores the default targets weights. In the absence of a `node.weights` property, the primitives attributes are resolved using these weights. When this property is missing, the default targets weights are assumed to be zero.
 
 The following example extends the Mesh defined in the previous example to a morphable one by adding two Morph Targets:
 ```json
@@ -717,21 +725,23 @@ The following example extends the Mesh defined in the previous example to a morp
     "primitives": [
         {
             "attributes": {
-                "NORMAL": 25,
-                "POSITION": 23,
-                "TEXCOORD_0": 27
+                "NORMAL": 23,
+                "POSITION": 22,
+                "TANGENT": 24,
+                "TEXCOORD_0": 25
             },
             "indices": 21,
             "material": 3,
-            "mode": 4,
             "targets": [
                 {
-                    "NORMAL": 35,
-                    "POSITION": 33
+                    "NORMAL": 33,
+                    "POSITION": 32,
+                    "TANGENT": 34
                 },
                 {
-                    "NORMAL": 45,
-                    "POSITION": 43
+                    "NORMAL": 43,
+                    "POSITION": 42,
+                    "TANGENT": 44
                 }
             ]
         }
