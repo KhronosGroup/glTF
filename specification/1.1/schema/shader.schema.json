@@ -1,0 +1,30 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "shader",
+    "type" : "object",
+    "description" : "A vertex or fragment shader.",
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties" : {
+        "uri" : {
+            "type" : "string",
+            "description" : "The uri of the GLSL source.",
+            "format" : "uri",
+            "gltf_detailedDescription" : "The uri of the GLSL source.  Relative paths are relative to the .gltf file.  Instead of referencing an external file, the uri can also be a data-uri.",
+            "gltf_uriType" : "text"
+        },
+        "type" : {
+            "type" : "integer",
+            "description" : "The shader stage.",
+            "enum" : [35632, 35633],
+            "gltf_enumNames" : ["FRAGMENT_SHADER", "VERTEX_SHADER"],
+            "gltf_detailedDescription" : "The shader stage.  All valid values correspond to WebGL enums."
+        },
+        "name" : {},
+        "extensions" : {},
+        "extras" : {}
+    },
+    "additionalProperties" : false,
+    "required" : ["uri", "type"],
+    "gltf_webgl" : "`createShader()`, `deleteShader()`, `shaderSource()`, `compileShader()`, `getShaderParameter()`, and `getShaderInfoLog()`"
+}
+

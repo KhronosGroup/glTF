@@ -1,0 +1,6 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "attribute",
+    "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+    "description" : "A dictionary object of strings, where each string is the ID of the accessor containing an attribute."
+}

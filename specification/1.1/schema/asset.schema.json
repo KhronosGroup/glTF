@@ -1,0 +1,35 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "asset",
+    "type" : "object",
+    "description" : "Metadata about the glTF asset.",
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties" : {
+        "copyright" : {
+            "type" : "string",
+            "description" : "A copyright message suitable for display to credit the content creator."
+        },
+        "generator" : {
+            "type" : "string",
+            "description" : "Tool that generated this glTF model.  Useful for debugging."
+        },
+        "premultipliedAlpha" : {
+            "type" : "boolean",
+            "description" : "Specifies if the shaders were generated with premultiplied alpha.",
+            "default" : false,
+            "gltf_webgl" : "`getContext()` with premultipliedAlpha"
+        },
+        "profile" : {
+            "allOf" : [ { "$ref" : "asset.profile.schema.json" } ],
+            "default" : {}
+        },
+        "version" : {
+            "type" : "string",
+            "description" : "The glTF version."
+        },
+        "extensions" : {},
+        "extras" : {}
+    },
+    "additionalProperties" : false,
+    "required": ["version"]
+}

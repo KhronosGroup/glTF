@@ -1,0 +1,37 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "skin",
+    "type" : "object",
+    "description" : "Joints and matrices defining a skin.",
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties" : {
+        "bindShapeMatrix" : {
+            "type" : "array",
+            "description" : "Floating-point 4x4 transformation matrix stored in column-major order.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 16,
+            "maxItems" : 16,
+            "default" : [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ]
+        },
+        "inverseBindMatrices" : {
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The ID of the accessor containing the floating-point 4x4 inverse-bind matrices.  The default is that each matrix is a 4x4 identity matrix, which implies that inverse-bind matrices were pre-applied."
+        },
+        "jointNames" : {
+            "type" : "array",
+            "description" : "Joint names of the joints (nodes with a `jointName` property) in this skin.",
+            "items" : {
+                "$ref" : "glTFid.schema.json"
+            },
+            "uniqueItems" : true,
+            "gltf_detailedDescription" : "Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is the same as the `count` property of the `inverseBindMatrices` accessor (when defined), and the same as the total quantity of all skeleton nodes from node-trees referenced by the skinned mesh instance node's `skeletons` array."
+        },
+        "name" : {},
+        "extensions" : {},
+        "extras" : {}
+    },
+    "additionalProperties" : false,
+    "required" : ["jointNames"]
+}
