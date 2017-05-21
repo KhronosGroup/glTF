@@ -42,7 +42,9 @@
             "type": "array",
             "description": "The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar.",
             "items": {
-                "type": "number"
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
             },
             "minItems": 4,
             "maxItems": 4,
