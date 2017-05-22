@@ -239,7 +239,9 @@ Positive rotation is counterclockwise.
 
 The glTF asset contains zero or more *scenes*, the set of visual objects to render. Scenes are defined in a `scenes` array. An additional property, `scene` (note singular), identifies which of the scenes in the array is to be displayed at load time.
 
-When `scene` is undefined, scene of index 0 should be displayed. When `scenes` array is undefined, nothing is rendered at load time. 
+When `scene` is undefined, runtime is not required to render anything at load time.
+
+> **Implementation Note:** This allows applications to use glTF assets as libraries of individual entities such as materials or meshes.   
 
 The following example defines a glTF asset with a single scene, that contains a single node.
 
