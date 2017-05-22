@@ -7,7 +7,8 @@
     "properties": {
         "bufferView": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the bufferView."
+            "description": "The index of the bufferView.",
+            "gltf_detailedDescription": "The index of the bufferView. When not defined, accessor must be initialized with zeros; `sparse` property or extensions could override zeros with actual values."
         },
         "byteOffset": {
             "type": "integer",
