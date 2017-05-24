@@ -1,8 +1,9 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "KHR_materials_pbrSpecularGlossiness glTF extension",
-    "description": "glTF extension that defines the specular-glossiness material model from Physically-Based Rendering (PBR) methodology.",
     "type": "object",
+    "description": "glTF extension that defines the specular-glossiness material model from Physically-Based Rendering (PBR) methodology.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "diffuseFactor": {
             "type": "array",
@@ -43,11 +44,12 @@
             "maximum": 1.0,
             "gltf_detailedDescription": "The glossiness or smoothness of the material. A value of 1.0 means the material has full glossiness or is perfectly smooth. A value of 0.0 means the material has no glossiness or is completely rough. This value is linear."
         },
-
         "specularGlossinessTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The specular-glossiness texture.",
             "gltf_detailedDescription": "The specular-glossiness texture is RGBA texture, containing the specular color of the material (RGB components) and its glossiness (A component). The values are in sRGB space."
-        }
+        },
+        "extensions": { },
+        "extras": { }
     }
 }
