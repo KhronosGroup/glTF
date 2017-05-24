@@ -754,6 +754,9 @@ The following example extends the Mesh defined in the previous example to a morp
 
 After applying morph targets to vertex positions and normals, tangent space may need to be recalculated. See [Appendix B](#appendix-b-tangent-space-recalculation) for details.
 
+> **Implementation note:** The number of morph targets is not limited in glTF. A conformant renderer must support at least eight morphed attributes. This means that it has to support at least eight morph targets that contain a `POSITION` attribute, or four morph targets that contain a `POSITION` and a `NORMAL` attribute, or two morph targets that contain `POSITION`, `NORMAL` and `TANGENT` attributes. For assets that contain a higher number of morphed attributes, renderers may choose to either fully support them (for example, by performing the morph computations in software), or to only use the eight attributes of the morph targets with the highest weights. 
+
+
 ### Skins
 
 All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property (which points to an accessor with IBM data), used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property points to node that is the root of a joints hierarchy. 
