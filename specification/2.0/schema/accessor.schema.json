@@ -125,5 +125,5 @@
     "dependencies": {
         "byteOffset": [ "bufferView" ]
     },
-    "required": [ "componentType", "count", "type", "max", "min" ]
+    "required": [ "componentType", "count", "type" ]
 }
