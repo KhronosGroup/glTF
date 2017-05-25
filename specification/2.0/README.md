@@ -3499,7 +3499,7 @@ When the sampler targets a node's rotation property, the resulting ***p***(*t*) 
 
 > **Implementation Note:** When writing out rotation output values, exporters should take care to not write out values which can result in an invalid quaternion with all zero values. This can be achieved by ensuring the output values never have both -***q*** and ***q*** in the same spline.
 
-> **Implementation Note:** The first in-tangent and last out-tangent should be zeros as they are not used in the spline calculations.
+> **Implementation Note:** The first in-tangent ***a***<sub>1</sub> and last out-tangent ***b***<sub>*n*</sub> should be zeros as they are not used in the spline calculations.
 
 ## Catmull-Rom Spline
 
