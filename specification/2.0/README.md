@@ -3499,17 +3499,22 @@ When the sampler targets a node's rotation property, the resulting ***p***(*t*) 
 
 > **Implementation Note:** When writing out rotation output values, exporters should take care to not write out values which can result in an invalid quaternion with all zero values. This can be achieved by ensuring the output values never have both -***q*** and ***q*** in the same spline.
 
+> **Implementation Note:** The first in-tangent and last out-tangent should be zeros as they are not used in the spline calculations.
+
 ## Catmull-Rom Spline
 
-`CATMULLROMSPLINE` splines in glTF are standard Catmull-Rom splines, also known as uniform Catmull-Rom spline. They are different than a cubic spline in that the tangents are calculated instead of specified. The spline curve does not reach the first and last points. The first and last points are used to define the starting and ending tangents of the spline.
+`CATMULLROMSPLINE` splines in glTF are standard Catmull-Rom splines, also known as uniform Catmull-Rom spline. They are different than a cubic spline in that the inner tangents are calculated instead of specified. The first and last output elements define the start and end tangents of the spline.
 
 Given a set of keyframes
 
-&nbsp;&nbsp;&nbsp;&nbsp;Input *t*<sub>*k*</sub> and output vertex ***v***<sub>*k*</sub> for *k* = 1,...,*n* where the spline starts at *t*<sub>2</sub> and ends at *t*<sub>*n*-1</sub>
+&nbsp;&nbsp;&nbsp;&nbsp;Input *t*<sub>*k*</sub> for *k* = 1,...,*n*  
+&nbsp;&nbsp;&nbsp;&nbsp;Output start tangent ***a***, vertex ***v***<sub>*k*</sub> for *k* = 1,...,*n*, and end tangent ***b***  
 
-The tangents are calculated as follows
+The tangents are defined as
 
-&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>*k*</sub> = (***v***<sub>*k*+1</sub> - ***v***<sub>*k*-1</sub>) / (*t*<sub>*k*+1</sub> - *t*<sub>*k*-1</sub>) for *k* = 2,...,*n*-1
+&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>1</sub> = ***a***  
+&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>*k*</sub> = (***v***<sub>*k*+1</sub> - ***v***<sub>*k*-1</sub>) / (*t*<sub>*k*+1</sub> - *t*<sub>*k*-1</sub>) for *k* = 2,...,*n*-1  
+&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>*n*</sub> = ***b***  
 
 # Appendix E: Full Khronos Trademark Statement
 
