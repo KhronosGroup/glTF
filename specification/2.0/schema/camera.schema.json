@@ -32,5 +32,8 @@
         "extensions": { },
         "extras": { }
     },
-    "required": [ "type" ]
+    "required": [ "type" ],
+    "not": {
+        "required": [ "perspective", "orthographic" ]
+    }
 }

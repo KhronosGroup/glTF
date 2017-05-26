@@ -7,7 +7,8 @@
     "properties": {
         "bufferView": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the bufferView."
+            "description": "The index of the bufferView.",
+            "gltf_detailedDescription": "The index of the bufferView. When not defined, accessor must be initialized with zeros; `sparse` property or extensions could override zeros with actual values."
         },
         "byteOffset": {
             "type": "integer",
@@ -101,7 +102,7 @@
             },
             "minItems": 1,
             "maxItems": 16,
-            "gltf_detailedDescription": "Maximum value of each component in this attribute.  Both min and max arrays have the same length.  The length is determined by the value of the type property; it can be 1, 2, 3, 4, 9, or 16.\n\nWhen `componentType` is `5126` (FLOAT) each array value must be stored as double-precision JSON number with numerical value which is equal to buffer-stored single-precision value to avoid extra runtime conversions.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer. When accessor is sparse, this property must contain max values of accessor data with sparse substitution applied."
+            "gltf_detailedDescription": "Maximum value of each component in this attribute.  Array elements must be treated as having the same data type as accessor's `componentType`. Both min and max arrays have the same length.  The length is determined by the value of the type property; it can be 1, 2, 3, 4, 9, or 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer. When accessor is sparse, this property must contain max values of accessor data with sparse substitution applied."
         },
         "min": {
             "type": "array",
@@ -111,7 +112,7 @@
             },
             "minItems": 1,
             "maxItems": 16,
-            "gltf_detailedDescription": "Minimum value of each component in this attribute.  Both min and max arrays have the same length.  The length is determined by the value of the type property; it can be 1, 2, 3, 4, 9, or 16.\n\nWhen `componentType` is `5126` (FLOAT) each array value must be stored as double-precision JSON number with numerical value which is equal to buffer-stored single-precision value to avoid extra runtime conversions.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer. When accessor is sparse, this property must contain min values of accessor data with sparse substitution applied."
+            "gltf_detailedDescription": "Minimum value of each component in this attribute.  Array elements must be treated as having the same data type as accessor's `componentType`. Both min and max arrays have the same length.  The length is determined by the value of the type property; it can be 1, 2, 3, 4, 9, or 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer. When accessor is sparse, this property must contain min values of accessor data with sparse substitution applied."
         },
         "sparse": {
             "allOf": [ { "$ref": "accessor.sparse.schema.json" } ],
@@ -124,5 +125,5 @@
     "dependencies": {
         "byteOffset": [ "bufferView" ]
     },
-    "required": [ "componentType", "count", "type", "max", "min" ]
+    "required": [ "componentType", "count", "type" ]
 }
