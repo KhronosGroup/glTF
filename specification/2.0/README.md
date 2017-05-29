@@ -943,7 +943,7 @@ Images referred to by textures are stored in the `images` array of the asset.
 Each image contains one of
 - a URI to an external file in one of the supported images formats, or
 - a URI with embedded base64-encoded data, or
-- a reference to a `bufferView`.
+- a reference to a `bufferView`; in that case `mimeType` must be defined.
 
 The following example shows an image pointing to an external PNG image file and another image referencing a `bufferView` with JPEG data.
 
@@ -960,6 +960,8 @@ The following example shows an image pointing to an external PNG image file and 
     ]
 }
 ```
+> **Implementation Note:** When image data is provided by `uri` and `mimeType` is defined, clients should prefer JSON-defined MIME Type over one provided by transport layer.
+
 First image pixel corresponds to the lower left corner of the image.
 
 > **Implementation Note:** With WebGL API, the first pixel transferred from the `TexImageSource` (i.e., HTML Image object) to the WebGL implementation corresponds to the upper left corner of the source. To achieve correct rendering, WebGL runtimes must flip Y axis by enabling `UNPACK_FLIP_Y_WEBGL` flag. This behavior was changed from glTF 1.0.
