@@ -315,6 +315,8 @@ TRS properties are converted to matrices and postmultiplied in the `T * R * S` o
 
 When a node is targeted for animation (referenced by an `animation.channel.target`), only TRS properties may be present; `matrix` will not be present. 
 
+> **Implementation Note:** If the determinant of the transform is a negative value, the winding order of the mesh triangle faces should be reversed. This supports negative scales for mirroring geometry.
+
 In the example below, node named `Box` defines non-default rotation and translation.
 
 ```json
