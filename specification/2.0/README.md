@@ -309,11 +309,15 @@ The node named `Car` has four children. Each of those nodes could in turn have i
 
 Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). `translation` and `scale` are `FLOAT_VEC3` values in the local coordinate system. `rotation` is a `FLOAT_VEC4` unit quaternion value, `(x, y, z, w)`, in the local coordinate system.
 
-Matrices must be decomposable to TRS. This implies that transformation matrices cannot skew or shear.
+When `matrix` is defined, it must be decomposable to TRS. This implies that transformation matrices cannot skew or shear.
 
 TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation.
 
 When a node is targeted for animation (referenced by an `animation.channel.target`), only TRS properties may be present; `matrix` will not be present. 
+
+> **Implementation Note:** If the determinant of the transform is a negative value, the winding order of the mesh triangle faces should be reversed. This supports negative scales for mirroring geometry.
+
+> **Implementation Note:** Non-invertible transformations (e.g., scaling one axis to zero) could lead to lighting and/or visibility artifacts.
 
 In the example below, node named `Box` defines non-default rotation and translation.
 
