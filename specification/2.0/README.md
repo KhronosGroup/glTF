@@ -83,7 +83,7 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
 * [Appendix B: Tangent Space Recalculation](#appendix-b-tangent-space-recalculation)
 * [Appendix C: BRDF Implementation](#appendix-c-brdf-implementation)
 * [Appendix D: Spline Interpolation](#appendix-d-spline-interpolation)
-* [Appendix E: Full Khronos Copyright Statement](#appendix-d-full-khronos-copyright-statement)
+* [Appendix E: Full Khronos Copyright Statement](#appendix-e-full-khronos-copyright-statement)
 
 # Introduction
 
