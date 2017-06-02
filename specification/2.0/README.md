@@ -83,7 +83,7 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
 * [Appendix B: Tangent Space Recalculation](#appendix-b-tangent-space-recalculation)
 * [Appendix C: BRDF Implementation](#appendix-c-brdf-implementation)
 * [Appendix D: Spline Interpolation](#appendix-d-spline-interpolation)
-* [Appendix E: Full Khronos Trademark Statement](#appendix-d-full-khronos-trademark-statement)
+* [Appendix E: Full Khronos Copyright Statement](#appendix-e-full-khronos-copyright-statement)
 
 # Introduction
 
@@ -3556,6 +3556,44 @@ The tangents are defined as
 &nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>*k*</sub> = (***v***<sub>*k*+1</sub> - ***v***<sub>*k*-1</sub>) / (*t*<sub>*k*+1</sub> - *t*<sub>*k*-1</sub>) for *k* = 2,...,*n*-1  
 &nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>*n*</sub> = ***b***  
 
-# Appendix E: Full Khronos Trademark Statement
+# Appendix E: Full Khronos Copyright Statement
 
-Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. This specification is protected by copyright laws and contains material proprietary to the Khronos Group, Inc. It or any components may not be reproduced, republished, distributed, transmitted, displayed, broadcast, or otherwise exploited in any manner without the express prior written permission of Khronos Group. You may use this specification for implementing the functionality therein, without altering or removing any trademark, copyright or other notice from the specification, but the receipt or possession of this specification does not convey any rights to reproduce, disclose, or distribute its contents, or to manufacture, use, or sell anything that it may describe, in whole or in part. Khronos Group grants express permission to any current Promoter, Contributor or Adopter member of Khronos to copy and redistribute UNMODIFIED versions of this specification in any fashion, provided that NO CHARGE is made for the specification and the latest available update of the specification for any version of the API is used whenever possible. Such distributed specification may be reformatted AS LONG AS the contents of the specification are not changed in any way. The specification may be incorporated into a product that is sold as long as such product includes significant independent work developed by the seller. A link to the current version of this specification on the Khronos Group website should be included whenever possible with specification distributions. Khronos Group makes no, and expressly disclaims any, representations or warranties, express or implied, regarding this specification, including, without limitation, any implied warranties of merchantability or fitness for a particular purpose or non-infringement of any intellectual property. Khronos Group makes no, and expressly disclaims any, warranties, express or implied, regarding the correctness, accuracy, completeness, timeliness, and reliability of the specification. Under no circumstances will the Khronos Group, or any of its Promoters, Contributors or Members or their respective partners, officers, directors, employees, agents, or representatives be liable for any damages, whether direct, indirect, special or consequential damages for lost revenues, lost profits, or otherwise, arising from or in connection with these materials. Khronos, Vulkan, SYCL, SPIR, WebGL, EGL, COLLADA, StreamInput, OpenVX, OpenKCam, glTF, OpenKODE, OpenVG, OpenWF, OpenSL ES, OpenMAX, OpenMAX AL, OpenMAX IL and OpenMAX DL are trademarks and WebCL is a certification mark of The Khronos Group Inc. OpenCL is a trademark of Apple Inc. and OpenGL and OpenML are registered trademarks and the OpenGL ES and OpenGL SC logos are trademarks of Silicon Graphics International used under license by Khronos. All other product names, trademarks, and/or company names are used solely for identification and belong to their respective owners.
+Copyright 2013-2017 The Khronos Group Inc. 
+
+This specification is protected by copyright laws and contains material proprietary 
+to Khronos. Except as described by these terms, it or any components 
+may not be reproduced, republished, distributed, transmitted, displayed, broadcast 
+or otherwise exploited in any manner without the express prior written permission 
+of Khronos. 
+
+This specification has been created under the Khronos Intellectual Property Rights 
+Policy, which is Attachment A of the Khronos Group Membership Agreement available at
+www.khronos.org/files/member_agreement.pdf. Khronos grants a conditional 
+copyright license to use and reproduce the unmodified specification for any purpose, 
+without fee or royalty, EXCEPT no licenses to any patent, trademark or other 
+intellectual property rights are granted under these terms. Parties desiring to 
+implement the specification and make use of Khronos trademarks in relation to that 
+implementation, and receive reciprocal patent license protection under the Khronos 
+IP Policy must become Adopters and confirm the implementation as conformant under 
+the process defined by Khronos for this specification; 
+see https://www.khronos.org/adopters.
+
+Khronos makes no, and expressly disclaims any, representations or warranties, 
+express or implied, regarding this specification, including, without limitation: 
+merchantability, fitness for a particular purpose, non-infringement of any 
+intellectual property, correctness, accuracy, completeness, timeliness, and 
+reliability. Under no circumstances will Khronos, or any of its Promoters, 
+Contributors or Members, or their respective partners, officers, directors, 
+employees, agents or representatives be liable for any damages, whether direct, 
+indirect, special or consequential damages for lost revenues, lost profits, or 
+otherwise, arising from or in connection with these materials.
+
+Vulkan is a registered trademark and Khronos, OpenXR, SPIR, SPIR-V, SYCL, WebGL, 
+WebCL, OpenVX, OpenVG, EGL, COLLADA, glTF, NNEF, OpenKODE, OpenKCAM, StreamInput, 
+OpenWF, OpenSL ES, OpenMAX, OpenMAX AL, OpenMAX IL, OpenMAX DL, OpenML and DevU are 
+trademarks of The Khronos Group Inc. ASTC is a trademark of ARM Holdings PLC, 
+OpenCL is a trademark of Apple Inc. and OpenGL and OpenML are registered trademarks 
+and the OpenGL ES and OpenGL SC logos are trademarks of Silicon Graphics 
+International used under license by Khronos. All other product names, trademarks, 
+and/or company names are used solely for identification and belong to their 
+respective owners.
