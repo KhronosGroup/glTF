@@ -22,6 +22,9 @@ Khronos 3D Formats Working Group and Alumni
 * Gary Hsu, Microsoft
 * Marco Hutter, Individual Contributor
 * Uli Klumpp, Individual Contributor
+* Ed Mackey, Individual Contributor
+* Don McCurdy, Google
+* Norbert Nopper, UX3D
 * Fabrice Robinet, Individual Contributor (Previous Editor and Incubator)
 * Neil Trevett, NVIDIA
 * Jan Paul Van Waveren, Oculus
@@ -3476,11 +3479,9 @@ Application-specific data.
 * Brandon Jones, Google
 * Sean Lilley, Cesium
 * Max Limper, Fraunhofer IGD
-* Ed Mackey, Analytical Graphics, Inc.
 * Matthew McMullan
 * Mohamad Moneimne, University of Pennsylvania
 * Kai Ninomiya, formerly Cesium
-* Norbert Nopper, UX3D
 * Cedric Pinson, Sketchfab
 * Jeff Russell, Marmoset
 * Miguel Sousa, Fraunhofer IGD
