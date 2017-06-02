@@ -1352,22 +1352,29 @@ The following examples show expected animations usage.
 
 When `node` isn't defined, channel should be ignored. Valid path names are `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
 
-Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating point scalar values representing time in seconds; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation, or floating-point scalars used to animate Morph Targets. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, `CATMULLROMSPLINE`, and `CUBICSPLINE`. See [Appendix D](#appendix-d-spline-interpolation) for additional information about spline interpolation.
+Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating point scalar values representing time in seconds; and a set of vectors or scalars representing animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, `CATMULLROMSPLINE`, and `CUBICSPLINE`. See [Appendix D](#appendix-d-spline-interpolation) for additional information about spline interpolation.
+
+|`channel.path`|Accessor Type|Component Type(s)|Description|
+|----|----------------|-----------------|-----------|
+|`"translation"`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ translation vector|
+|`"rotation"`|`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|XYZW rotation quaternion|
+|`"scale"`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ scale vector|
+|`"weights"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|Weights of morph targets|
+
+Implementations must use following equations to get corresponding floating-point value `f` from a normalized integer `c` and vise-versa:
+
+|`accessor.componentType`|int-to-float|float-to-int|
+|-----------------------------|--------|----------------|
+| `5120`&nbsp;(BYTE)          |`f = max(c / 127.0, -1.0)`|`c = round(f * 127.0)`|
+| `5121`&nbsp;(UNSIGNED_BYTE) |`f = c / 255.0`|`c = round(f * 255.0)`|
+| `5122`&nbsp;(SHORT)         |`f = max(c / 32767.0, -1.0)`|`c = round(f * 32767.0)`|
+| `5123`&nbsp;(UNSIGNED_SHORT)|`f = c / 65535.0`|`c = round(f * 65535.0)`|
 
 Animation Sampler's `input` accessor **must** have `min` and `max` properties defined.
 
+A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation.
+
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
-
-glTF animations can be used to animate Morph Targets. A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation.
-
-When Morph Target animation keyframe data lies within `[-1.0, +1.0]` range, it could be stored in fixed-point normalized integers. In that case, following equations must be used to get corresponding floating-point value `f` from a normalized integer `c` and vise-versa:
-
-|`accessor.componentType`|int-to-float|float-to-int|
-|------------------------|--------|----------------|
-| Unsigned Byte          |`f = c / 255.0`|`c = round(f * 255.0)`|
-| Signed Byte            |`f = max(c / 127.0, -1.0)`|`c = round(f * 127.0)`|
-| Unsigned Short         |`f = c / 65535.0`|`c = round(f * 65535.0)`|
-| Signed Short           |`f = max(c / 32767.0, -1.0)`|`c = round(f * 32767.0)`|
 
 ## Specifying Extensions
 
