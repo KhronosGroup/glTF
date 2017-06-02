@@ -20,6 +20,7 @@ Khronos 3D Formats Working Group and Alumni
 * Remi Arnaud, Starbreeze Studios
 * Emiliano Gambaretto, Adobe
 * Gary Hsu, Microsoft
+* Scott Nagy, Microsoft
 * Marco Hutter, Individual Contributor
 * Uli Klumpp, Individual Contributor
 * Ed Mackey, Individual Contributor
@@ -716,6 +717,13 @@ Valid accessor type and component type for each attribute semantic property are 
 > **Implementation note:** When tangents are not specified, implementations should calculate tangents using default MikkTSpace algorithms.  For best results, the mesh triangles should also be processed using default MikkTSpace algorithms.
 
 > **Implementation note:** When normals and tangents are specified, implementations should compute the bitangent by taking the cross product of the normal and tangent xyz vectors and multiplying against the w component of the tangent: `bitangent = cross(normal, tangent.xyz) * tangent.w`
+
+> **Implementation note:** When the 'mode' property is set to a non-triangular type (such as POINTS or LINES) some additional considerations must be taken while considering the proper rendering technique:
+> > For LINES with with `NORMAL` and `TANGENT` properties can render with standard lighting including normal maps.
+> > 
+> > For all POINTS or LINES with no `TANGENT` property, render with standard lighting but ignore any normal maps on the material.
+> > 
+> > For POINTS or LINES with no `NORMAL` property, don't calculate lighting and instead output the `COLOR` value for each pixel drawn.
 
 #### Morph Targets
 
