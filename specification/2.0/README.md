@@ -4,7 +4,7 @@
 
 *Version 2.0*
 
-The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
+The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern 3D applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
 Last Updated: April 11, 2017
 
@@ -3725,6 +3725,17 @@ The tangents are defined as
 # Appendix E: Full Khronos Copyright Statement
 
 Copyright 2013-2017 The Khronos Group Inc. 
+
+Some parts of this Specification are purely informative and do not define requirements
+necessary for compliance and so are outside the Scope of this Specification. These
+parts of the Specification are marked as being non-normative, or identified as 
+**Implementation Notes**.
+ 
+Where this Specification includes normative references to external documents, only the
+specifically identified sections and functionality of those external documents are in
+Scope. Requirements defined by external documents not created by Khronos may contain
+contributions from non-members of Khronos not covered by the Khronos Intellectual
+Property Rights Policy.
 
 This specification is protected by copyright laws and contains material proprietary 
 to Khronos. Except as described by these terms, it or any components 
