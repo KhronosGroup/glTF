@@ -6,7 +6,7 @@ glTF™ (GL Transmission Format) is a royalty-free specification for the efficie
 
 ## Specification
 
-* [glTF Specification, 1.1](specification/1.1/README.md) (or [all specification versions](specification/README.md))
+* [glTF Specification, 2.0](specification/2.0/README.md) (or [all specification versions](specification/README.md))
 * [glTF Extension Registry](extensions/README.md)
 
 Please provide feedback by submitting [issues](https://github.com/KhronosGroup/glTF/issues).
@@ -15,12 +15,6 @@ Please provide feedback by submitting [issues](https://github.com/KhronosGroup/g
 
 [Sample models](https://github.com/KhronosGroup/glTF-Sample-Models) for learning glTF, and testing runtime engines and content pipeline tools.
 
-## Overview
-
-<p align="center">
-<a href="specification/1.0/figures/gltfOverview-0.2.0.png"><img src="specification/1.0/figures/gltfOverview-0.2.0-small.png" /></a>
-</p>
-Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/javagl/gltfOverview)).
 
 ## glTF Tools
 

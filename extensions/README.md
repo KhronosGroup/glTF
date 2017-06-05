@@ -1,14 +1,19 @@
 # glTF Extension Registry
 
-## Khronos extensions
+## Extensions for glTF 2.0
 
-* [KHR_binary_glTF](Khronos/KHR_binary_glTF/README.md)
+#### Khronos extensions
+* [KHR_materials_pbrSpecularGlossiness](Khronos/KHR_materials_pbrSpecularGlossiness/README.md)
 
-## Draft Khronos extensions
-
+#### Draft Khronos extensions
 _Draft Khronos extensions are not ratified yet._
+* [KHR_materials_common](Khronos/KHR_materials_common/README.md)
+* [KHR_technique_webgl](Khronos/KHR_technique_webgl/README.md)
 
-* [KHR_materials_common](Khronos/KHR_materials_common)
+## Extensions for glTF 1.0
+
+#### Khronos extensions
+* [KHR_binary_glTF](Khronos/KHR_binary_glTF/README.md)
 
 ## Vendor extensions
 
