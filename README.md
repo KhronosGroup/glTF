@@ -2,6 +2,8 @@
 <img src="specification/figures/gltf.png" />
 </p>
 
+[![Join the chat at https://gitter.im/KhronosGroup/glTF](https://badges.gitter.im/KhronosGroup/glTF.svg)](https://gitter.im/KhronosGroup/glTF)
+
 glTF™ (GL Transmission Format) is a royalty-free specification for the efficient transmission and loading of 3D scenes and models by applications. glTF minimizes both the size of 3D assets, and the runtime processing needed to unpack and use those assets. glTF defines an extensible, common publishing format for 3D content tools and services that streamlines authoring workflows and enables interoperable use of content across the industry.
 
 ## Specification
@@ -9,12 +11,11 @@ glTF™ (GL Transmission Format) is a royalty-free specification for the efficie
 * [glTF Specification, 2.0](specification/2.0/README.md) (or [all specification versions](specification/README.md))
 * [glTF Extension Registry](extensions/README.md)
 
-Please provide feedback by submitting [issues](https://github.com/KhronosGroup/glTF/issues).
+Please provide spec feedback and community updates by submitting [issues](https://github.com/KhronosGroup/glTF/issues).  For quick questions, use [gitter](https://gitter.im/KhronosGroup/glTF).
 
 ## Sample Models
 
 [Sample models](https://github.com/KhronosGroup/glTF-Sample-Models) for learning glTF, and testing runtime engines and content pipeline tools.
-
 
 ## glTF Tools
 
@@ -38,46 +39,82 @@ Please provide feedback by submitting [issues](https://github.com/KhronosGroup/g
 
 * [glTF Validator](https://github.com/KhronosGroup/glTF-Validator) - open-source command-line and drag-and-top tool to validate glTF assets against the spec
 
+### Editors
+
+* [gltf-vscode](https://marketplace.visualstudio.com/items?itemName=cesium.gltf-vscode) extension for [VSCode](https://code.visualstudio.com/) - Open source, cross-platform JSON schema validation and previews for glTF 1.0
+
 ### Exporters
 
 * [Blender](https://github.com/Kupoman/blendergltf) - work in progress
+
+### Optimizers
+
+* [glTF Pipeline](https://github.com/AnalyticalGraphicsInc/gltf-pipeline) - Node.js command-line tool and module for optimizing glTF assets
 
 ### Loaders and Viewers
 
 #### WebGL Engines
 
 * [glTF loader](https://github.com/mrdoob/three.js/blob/master/examples/js/loaders/GLTFLoader.js) in [Three.js](https://threejs.org/)
+   * [Drag and drop glTF viewer](https://gltf-viewer.donmccurdy.com/)
    * [model-tag](https://github.com/mrdoob/model-tag) - custom HTML Elements for displaying 3D models
-* [glTF loader](https://github.com/BabylonJS/Babylon.js/tree/master/loaders/glTF) in [BabylonJS](http://babylonjs.com/)
+* [glTF loader](https://github.com/BabylonJS/Babylon.js/tree/master/loaders/src/glTF) in [BabylonJS](http://babylonjs.com/)
+   * [Sandbox](https://www.babylonjs.com/sandbox/) - drag and drop glTF assets
 * [glTF loader](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js) in [Cesium](http://cesiumjs.org/)
    * The [COLLADA to glTF](http://cesiumjs.org/convertmodel.html) converter also supports drag-and-drop viewing of glTF assets
    * [3D Models](https://cesiumjs.org/tutorials/3D-Models-Tutorial/) tutorial
+   * [Drag and drop glTF Viewer](https://www.virtualgis.io/gltfviewer/) ([source](https://github.com/virtualgis/gltfviewer))
 * Initial [glTF loader](https://github.com/pex-gl/pex-gltf) in [PEX](http://vorg.github.io/pex/) (geometry and materials)
 * Initial [glTF loader](https://github.com/xeolabs/xeogl/tree/master/src/importing/gltf) in [xeogl](http://xeogl.org/) (geometry and materials)
    * [Importing glTF](https://github.com/xeolabs/xeogl/wiki/Importing-glTF) tutorial
-* [aframe-gltf](https://github.com/aframevr/aframe) - loader for A-Frame, a framework for creating virtual reality web experiences
+* [glTF loader](https://aframe.io/docs/0.5.0/components/gltf-model.html) in [A-Frame](https://aframe.io/)
 * [glTF loader](https://github.com/emadurandal/GLBoost/blob/master/src/js/middle_level/loader/GLTFLoader.js) in [GLBoost](https://github.com/emadurandal/GLBoost) ([examples](https://gitcdn.xyz/repo/emadurandal/GLBoost/master/examples/index.html))
 * [glTF plug-in](https://github.com/xml3d/xml3d-gltf-plugin) for [xml3d.js](http://xml3d.org)  (geometry and materials)
+* [glTF reader/writer](https://github.com/cedricpinson/osgjs/blob/master/sources/osgPlugins/ReaderWriterGLTF.js) in [OSG.JS](http://osgjs.org/)
+* [glTF loader](https://github.com/x3dom/x3dom/blob/master/src/util/glTF/glTFLoader.js) in [X3DOM](http://x3dom.org/)
+* [grimoirejs-gltf](https://github.com/GrimoireGL/grimoirejs-gltf) in [Grimoire.js](https://github.com/GrimoireGL/GrimoireJS)
 
-[Compare WebGL-based glTF loaders](https://github.com/cx20/gltf-test) from various engines
+#### WebGL Engine Comparison
+
+* [Compare WebGL-based glTF loaders](https://github.com/cx20/gltf-test) from various engines
+
+#### WebGL Samples
+
+* [WebGL-PBR](https://github.com/moneimne/WebGL-PBR) - barebones reference implementation for PBR in glTF 2.0 (in progress)
+
+#### WebGL Applications
+
+* [Sketchfab](https://blog.sketchfab.com/sketchfab-now-supports-gltf/)
+* [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export)
+* [glTF plugin](https://wordpress.org/plugins/gltf-media-type/) for WordPress
 
 #### JavaScript / Node.js
 
 * [gltf-walker](https://github.com/ksons/gltf-walker) - convenience library for processing glTF
+* [gltf-viewer](https://github.com/avgp/gltf-viewer) - web component to display glTF models on a website
 * [rest3d](https://github.com/amd/rest3d) - serves glTF and other 3D assets via a REST API (glTF 0.8)
 * [gltf-viewer-element](https://www.npmjs.com/package/gltf-viewer-element) - Node.js package for loading and rendering glTF (0.8)
 * [Amobee 3D](http://amobee3d.s3.amazonaws.com/ads/Amobee3D_AdList.html) (0.8)
+* [RedCube.js](https://github.com/Reon90/redcube) - glTF viewer without dependencies
 
 #### C++
 
-* [nvpro-pipeline](https://github.com/nvpro-pipeline/pipeline) - research rendering pipeline by NVIDIA for minimizing CPU cost 
+* [nvpro-pipeline](https://github.com/nvpro-pipeline/pipeline) - research rendering pipeline by NVIDIA for minimizing CPU cost
 * [Tiny glTF loader](https://github.com/syoyo/tinygltfloader) - Header only C++ glTF parsing library
+   * [alembic_to_gltf](https://github.com/syoyo/tinygltfloader/tree/master/examples/alembic_to_gltf) - Simple Alembic to glTF converter
+   * [cyhair_to_gltf](https://github.com/syoyo/tinygltfloader/tree/master/examples/cyhair_to_gltf) - Simple CyHair (hair curves) to glTF converter
 * [Cinder](http://discourse.libcinder.org/t/gltf-initial-release-wip/212) - Work-in-progress glTF importer
+* [yocto-gltf](https://github.com/xelatihy/yocto-gl) - Single file, header only, C++ glTF loading/writing automatically generated from the spec.
 * [LibreOffice](http://zolnaitamas.blogspot.com/2014/08/3d-models-in-impress-libreoffice-43.html) (glTF 0.8)
+
+#### C++ and Vulkan
+
+* [Laugh Engine](https://github.com/jian-ru/laugh_engine#laugh-engine) - Vulkan PBR and IBL renderer
+* [VulKan ToolS](https://github.com/McNopper/Vulkan) - Vulkan helper library supporting glTF 2.0 assets with PBR materials
 
 #### C# #
 
-* [C# glTF loader](https://github.com/KhronosGroup/glTF/tree/master/loaders/CSharp) - C# reference loader for glTF
+* [C# glTF loader](https://github.com/KhronosGroup/glTF-CSharp-Loader) - C# reference loader for glTF
 * [Aspose.3D for .NET](http://www.aspose.com/products/3d/net) - Import, export, and convert glTF
 
 #### Go
@@ -106,7 +143,6 @@ Please provide feedback by submitting [issues](https://github.com/KhronosGroup/g
 ### Utilities
 
 * [gltf-utilities](https://github.com/AnalyticalGraphicsInc/gltf-utilities) - JavaScript utility library to help load glTF
-* [gltf-statistics](https://github.com/AnalyticalGraphicsInc/gltf-statistics) - JavaScript and Node.js library and command-line tool to display statistics for glTF models (glTF 0.8)
 
 ## Stack Overflow
 
@@ -114,7 +150,17 @@ Please provide feedback by submitting [issues](https://github.com/KhronosGroup/g
 
 ## Presentations and Articles
 
+### Intros
+
+* **glTF Webinar** ([video](https://www.youtube.com/watch?v=KALedPvtFHY), [slides](https://www.khronos.org/assets/uploads/developers/library/2017-glTF-webinar/glTF-Webinar_Feb17.pdf)) by Marco Hutter. February 2017
 * [glTF Brief](https://docs.google.com/presentation/d/1BRdEGqJFIWk3QOehOxJqM9dIE4kIBNQhIm7UeBaVse0/edit#slide=id.g185e245559_2_28) by Tony Parisi, FormVR and Amanda Watson, Oculus. October 2016
+
+### All Presentations and Articles
+
+* [glTF 2.0: PBR Materials](https://www.khronos.org/assets/uploads/developers/library/2017-gtc/glTF-2.0-and-PBR-GTC_May17.pdf) by Saurabh Bhatia, May 2017
+* [glTF Workflow for a Saturday Night](https://blog.mozvr.com/a-saturday-night-gltf-workflow/) by Diego F. Goberna, April 2017
+* [Call for feedback on glTF 2.0](https://www.khronos.org/blog/call-for-feedback-on-gltf-2.0) by Neil Trevett, February 2017
+* [Improve expressiveness of WebGL with the topic 3D file format glTF now! (in Japanese)](http://qiita.com/emadurandal/items/1a034c4addd7ff8b5184) by Yuki Shimada(@emadurandal), WebGL advent calendar 2016 at Qiita. December 2016
 * [Bringing 3D to everyone through open standards](https://blogs.windows.com/buildingapps/2016/10/28/bringing-3d-to-everyone-through-open-standards/) by Forest W. Gouin and Jean Paoli. October 2016
 * [Using Quantization with 3D Models](http://cesiumjs.org/2016/08/08/Cesium-web3d-quantized-attributes/) by Rob Taglang. August 2016
 * [glTF and Mobile VR: Inclusive standards for a 3D world](https://www.khronos.org/assets/uploads/developers/library/2016-siggraph/glTF-MobileVR-Oculus-BOF-Update-SIGGRAPH_Jul16.pdf). Amanda Watson, Oculus, WebGL + glTF BOF. July 2016

@@ -5,6 +5,9 @@
     "description" : "Image data used to create a texture.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
+        "name" : {},
+        "extensions" : {},
+        "extras" : {},
         "uri" : {
             "type" : "string",
             "description" : "The uri of the image.",
