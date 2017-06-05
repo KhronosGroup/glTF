@@ -14,6 +14,7 @@ Editors
 * Patrick Cozzi, Cesium
 * Alexey Knyazev, Individual Contributor
 * Tony Parisi, Unity
+* Steven Vergenz, AltspaceVR
 
 Khronos 3D Formats Working Group and Alumni
 
@@ -25,7 +26,7 @@ Khronos 3D Formats Working Group and Alumni
 * Ed Mackey, Individual Contributor
 * Don McCurdy, Google
 * Norbert Nopper, UX3D
-* Fabrice Robinet, Individual Contributor (Previous Editor and Incubator)
+* Fabrice Robinet, Individual (Previous Editor and Incubator)
 * Neil Trevett, NVIDIA
 * Jan Paul Van Waveren, Oculus
 * Amanda Watson, Oculus
