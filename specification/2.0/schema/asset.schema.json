@@ -13,6 +13,10 @@
             "type": "string",
             "description": "Tool that generated this glTF model.  Useful for debugging."
         },
+        "license": {
+            "type": "string",
+            "description": "A license message suitable for display to name any license(s) governing use of the content.  If you're using a common license, add a SPDX license identifier for the license you're using."
+        },
         "version": {
             "type": "string",
             "description": "The glTF version that this asset targets.",
