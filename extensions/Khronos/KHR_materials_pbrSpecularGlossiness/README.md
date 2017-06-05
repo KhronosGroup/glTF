@@ -16,7 +16,7 @@
 
 ## Status
 
-Draft 
+Complete 
 
 ## Dependencies
 
@@ -76,7 +76,7 @@ The following equations show how to calculate bidirectional reflectance distribu
 <br>
 *&alpha;* = `(1 - glossiness) ^ 2`
 
-All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [appendix](/specification/2.0/README.md#appendix-a) for more details on the BRDF calculations.
+All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [appendix](/specification/2.0/README.md#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
 The following table lists the allowed types and ranges for the specular-glossiness model:
 

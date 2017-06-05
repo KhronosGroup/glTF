@@ -14,7 +14,7 @@ Complete
 
 ## Dependencies
 
-Written against the glTF 1.0 spec.
+Written against the glTF 1.0 spec. This extension is no longer needed in glTF 2.0 as glTF 2.0 includes [GLB File Format Specification](/specification/2.0/README.md#glb-file-format-specification).
 
 ## Overview
 
