@@ -81,13 +81,20 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
     * [Projection Matrices](#projection-matrices)
   * [Animations](#animations)
   * [Specifying Extensions](#specifying-extensions)
+* [GLB File Format Specification](#glb-file-format-specification)
+  * [File Extension](#file-extension)
+  * [MIME Type](#mime-type)
+  * [Binary glTF Layout](#binary-gltf-layout)
+    * [Header](#header)
+    * [Chunks](#chunks)
+      * [Structured JSON Content](#structured-json-content)
+      * [Binary Buffer](#binary-buffer)
 * [Properties Reference](#properties-reference)
 * [Acknowledgments](#acknowledgments)
-* [Appendix A: GLB File Format Specification](#appendix-a-glb-file-format-specification)
-* [Appendix B: Tangent Space Recalculation](#appendix-b-tangent-space-recalculation)
-* [Appendix C: BRDF Implementation](#appendix-c-brdf-implementation)
-* [Appendix D: Spline Interpolation](#appendix-d-spline-interpolation)
-* [Appendix E: Full Khronos Copyright Statement](#appendix-e-full-khronos-copyright-statement)
+* [Appendix A: Tangent Space Recalculation](#appendix-a-tangent-space-recalculation)
+* [Appendix B: BRDF Implementation](#appendix-b-brdf-implementation)
+* [Appendix C: Spline Interpolation](#appendix-c-spline-interpolation)
+* [Appendix D: Full Khronos Copyright Statement](#appendix-d-full-khronos-copyright-statement)
 
 # Introduction
 
@@ -178,7 +185,7 @@ glTF uses URIs to reference buffers and image resources. These URIs may point to
 
 Clients are required to support only embedded resources and relative external references (in a sense of [RFC3986](https://tools.ietf.org/html/rfc3986#section-4.2)). Clients are free to support other schemes (such as `http://`) depending on expected usage.
 
- > **Implementation Note:** This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, or textures, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading. Alternatively, an asset could use GLB container to store JSON and binary data in one file without base64 encoding. See [Appendix A: GLB File Format Specification](#appendix-a-glb-file-format-specification) for details.
+ > **Implementation Note:** This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, or textures, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading. Alternatively, an asset could use GLB container to store JSON and binary data in one file without base64 encoding. See [GLB File Format Specification](#glb-file-format-specification) for details.
 
 # Concepts
 
@@ -459,7 +466,7 @@ glTF asset could use GLB file container to pack all resources into one file. glT
 }
 ```
 
-See [Appendix A](#appendix-a-glb-file-format-specification) for details on GLB File Format.
+See [GLB File Format Specification](#glb-file-format-specification) for details on GLB File Format.
 
 ### Accessors
 
@@ -783,7 +790,7 @@ The following example extends the Mesh defined in the previous example to a morp
 }
 ```
 
-After applying morph targets to vertex positions and normals, tangent space may need to be recalculated. See [Appendix B](#appendix-b-tangent-space-recalculation) for details.
+After applying morph targets to vertex positions and normals, tangent space may need to be recalculated. See [Appendix A](#appendix-a-tangent-space-recalculation) for details.
 
 > **Implementation note:** The number of morph targets is not limited in glTF. A conformant client must support at least eight morphed attributes. This means that it has to support at least eight morph targets that contain a `POSITION` attribute, or four morph targets that contain a `POSITION` and a `NORMAL` attribute, or two morph targets that contain `POSITION`, `NORMAL` and `TANGENT` attributes. For assets that contain a higher number of morphed attributes, renderers may choose to either fully support them (for example, by performing the morph computations in software), or to only use the eight attributes of the morph targets with the highest weights. 
 
@@ -1065,7 +1072,7 @@ The following equations show how to calculate bidirectional reflectance distribu
 <br>
 *&alpha;* = `roughness ^ 2`
 
-All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix C](#appendix-c-brdf-implementation) for more details on the BRDF calculations.
+All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix B](#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
 ### Additional Maps
 
@@ -1360,7 +1367,7 @@ The following examples show expected animations usage.
 
 When `node` isn't defined, channel should be ignored. Valid path names are `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
 
-Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating point scalar values representing time in seconds; and a set of vectors or scalars representing animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, `CATMULLROMSPLINE`, and `CUBICSPLINE`. See [Appendix D](#appendix-d-spline-interpolation) for additional information about spline interpolation.
+Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating point scalar values representing time in seconds; and a set of vectors or scalars representing animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, `CATMULLROMSPLINE`, and `CUBICSPLINE`. See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
 
 |`channel.path`|Accessor Type|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
@@ -1424,6 +1431,103 @@ All glTF extensions required to load and/or render an asset must be listed in th
 ```
 
 For more information on glTF extensions, consult the [extensions registry specification](../extensions/README.md).
+
+# GLB File Format Specification
+
+glTF provides two delivery options that can also be used together:
+
+* glTF JSON points to external binary data (geometry, key frames, skins), and images.
+* glTF JSON embeds base64-encoded binary data, and images inline using data URIs.
+
+For these resources, glTF requires either separate requests or extra space due to base64-encoding. Base64-encoding requires extra processing to decode and increases the file size (by ~33% for encoded resources). While gzip mitigates the file size increase, decompression and decoding still add significant loading time.
+
+To solve this, a container format, _Binary glTF_ is introduced. In Binary glTF, a glTF asset (JSON, .bin, and images) can be stored in a binary blob. 
+
+This binary blob (which can be a file, for example) has the following structure:
+* A 12-byte preamble, entitled the `header`.
+* One or more `chunks` that contains JSON content and binary data.
+
+The `chunk` containing JSON can refer to external resources as usual, and can also reference resources stored within other `chunks`.
+
+For example, an application that wants to download textures on demand may embed everything except images in the Binary glTF. Embedded base64-encoded resources are also still supported, but it would be inefficient to use them.
+
+### File Extension
+
+The file extension to be used with Binary glTF is `.glb`.
+
+### MIME Type
+
+Use `model/gltf-binary`.
+
+## Binary glTF Layout
+
+Binary glTF is little endian. Figure 1 shows an example of a Binary glTF asset.
+
+**Figure 1**: Binary glTF layout.
+
+![](figures/glb2.png)
+
+The following sections describe the structure more in detail.
+
+### Header
+
+The 12-byte header consists of three 4-byte entries:
+
+```
+uint32 magic
+uint32 version
+uint32 length
+```
+
+* `magic` equals `0x46546C67`. It is ASCII string `glTF`, and can be used to identify data as Binary glTF.
+
+* `version` indicates the version of the Binary glTF container format. This specification defines version 2.
+
+* `length` is the total length of the Binary glTF, including Header and all Chunks, in bytes.
+
+> **Implementation Note:** Client implementations that load GLB format should also check for the [asset version properties](readme.md#asset) in the JSON chunk, as the version specified in the GLB header only refers to the GLB container version.
+
+### Chunks
+
+Each chunk has the following structure:
+```
+uint32 chunkLength
+uint32 chunkType
+ubyte[] chunkData
+```
+
+* `chunkLength` is the length of `chunkData`, in bytes.
+
+* `chunkType` indicates the type of chunk. See Table 1 for details.
+
+* `chunkData` is a binary payload of chunk.
+
+The start and the end of each chunk must be aligned to 4-byte boundary. See chunks definitions for padding schemes. Chunks must appear in exactly the order given in the Table 1.
+
+**Table 1**: Chunk types
+
+|  | Chunk Type | ASCII | Description | Occurrences |
+|----|------------|-------|-------------------------|-------------|
+| 1. | 0x4E4F534A | JSON | Structured JSON content | 1 |
+| 2. | 0x004E4942 | BIN | Binary buffer | 0 or 1 |
+
+ Clients must ignore chunks with unknown types.
+ 
+#### Structured JSON Content
+
+This chunk holds the structured glTF content description, as it would be provided within a .gltf file.
+
+> **Implementation Note:** In a JavaScript implementation, the `TextDecoder` API can be used to extract the glTF content from the ArrayBuffer, and then the JSON can be parsed with `JSON.parse` as usual.
+
+This chunk must be the very first chunk of Binary glTF asset. By reading this chunk first, an implementation is able to progressively retrieve resources from subsequent chunks. This way, it is also possible to read only a selected subset of resources from a Binary glTF asset (for instance, the coarsest LOD of a mesh).
+
+This chunk must be padded with trailing `Space` chars (`0x20`) to satisfy alignment requirements.  
+
+#### Binary buffer
+
+This chunk contains the binary payload for geometry, animation key frames, skins, and images. See glTF specification for details on referencing this chunk from JSON.
+
+This chunk must be padded with trailing zeros (`0x00`) to satisfy alignment requirements.
 
 # Properties Reference
 
@@ -3634,6 +3738,7 @@ Application-specific data.
 * **Type**: `any`
 * **Required**: No
 
+
 # Acknowledgments
 * Sarah Chow, Cesium
 * Tom Fili, Cesium
@@ -3656,19 +3761,16 @@ Application-specific data.
 * Corentin Wallez, Google
 * Alex Wood, Analytical Graphics, Inc
 
-# Appendix A: GLB File Format Specification
 
-See [GLB_FORMAT.md](GLB_FORMAT.md).
-
-# Appendix B: Tangent Space Recalculation
+# Appendix A: Tangent Space Recalculation
 
 **TODO**
 
-# Appendix C: BRDF Implementation
+# Appendix B: BRDF Implementation
 
 **TODO**
 
-# Appendix D: Spline Interpolation
+# Appendix C: Spline Interpolation
 
 Animations in glTF support two kinds of spline interpolations: `CUBICSPLINE` and `CATMULLROMSPLINE`.
 
@@ -3722,7 +3824,7 @@ The tangents are defined as
 &nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>*k*</sub> = (***v***<sub>*k*+1</sub> - ***v***<sub>*k*-1</sub>) / (*t*<sub>*k*+1</sub> - *t*<sub>*k*-1</sub>) for *k* = 2,...,*n*-1  
 &nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>*n*</sub> = ***b***  
 
-# Appendix E: Full Khronos Copyright Statement
+# Appendix D: Full Khronos Copyright Statement
 
 Copyright 2013-2017 The Khronos Group Inc. 
 
