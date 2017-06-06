@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>glTF PBR Example</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <style>
+            body {
+                color: #222;
+                font-family: sans-serif;
+                font-size:16pt;                
+                font-weight: bold;
+                text-align:center;
+
+                background: linear-gradient(#666, #444);
+                margin: 0px;
+                overflow: hidden;
+            }
+
+            #info {
+                position: absolute;
+                top: 0px; width: 100%;
+                padding: 5px;
+            }
+
+            a {
+                color: #ffffff;
+            }
+
+            #oldie a {
+                color:#da0
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="container"></div>
+        <div id="info">glTF PBR Example</div>
+
+        <!-- Three.JS Core -->
+        <script src="js/three.min.js"></script>
+
+        <!-- Three.JS Extensions / Utils -->
+        <script src="js/GLTFLoader.js"></script>
+        <script src="js/OrbitControls.js"></script>
+
+        <!-- Additional Utils -->
+        <script src="js/Detector.js"></script>
+        <script src="js/stats.min.js"></script>
+
+
+        <script id="fragmentShader" type="x-shader/x-fragment">
+/*
+
+
+import lib-defines.glsl
+import lib-env.glsl
+import lib-normal.glsl
+import lib-random.glsl
+
+//:Default background colors when there is no data in channel (alpha is 0)
+
+const vec4 channelsBackground = vec4(
+0.5, // Diffuse
+0.3, // Roughness
+0.0, // Metallic
+0.0  // Unused
+);
+
+//:All channel needed are bound here.
+
+//: param auto channel_basecolor
+uniform sampler2D diffuse_tex;
+//: param auto channel_glossiness
+uniform sampler2D roughness_tex;
+//: param auto channel_specular
+uniform sampler2D specular_tex;
+//: param auto channel_emissive
+uniform sampler2D emissive_tex;
+
+//:AO map.
+
+//: param auto texture_ao
+uniform sampler2D ao_tex;
+
+//:Eye position.
+
+//: param auto world_eye_position
+uniform vec3 camera_pos;
+
+//:Number of miplevels in the envmap.
+
+//: param auto environment_max_lod
+uniform float maxLod;
+
+//:An int representing the number of samples made for specular contribution computation. The more //:the higher quality and the performance impact.
+
+//: param custom {
+//:   "default": 16,
+//:   "label": "Quality",
+//:   "widget": "combobox",
+//:   "values": {
+//:     "Low (4 spp)": 4,
+//:     "Medium (16 spp)": 16,
+//:     "High (64 spp)": 64
+//:   }
+//: }
+uniform int nbSamples;
+
+//:A value used to tweak the force of the height.
+
+//: param custom {
+//:   "default": 1.0,
+//:   "label": "Height force",
+//:   "min": 0.01,
+//:   "max": 10.0
+//: }
+uniform float height_force;
+
+//:A value used to tweak the emissive intensity.
+
+//: param custom {
+//:   "default": 10.0,
+//:   "label": "Emissive Intensity",
+//:   "min": 0.00,
+//:   "max": 100.0
+//: }
+uniform float emissive_intensity;
+
+
+const float EPSILON_COEF = 1e-4;
+
+
+// Variables for lighting properties
+
+
+float normal_distrib(
+  float ndh,
+  float Roughness)
+{
+  // use GGX / Trowbridge-Reitz, same as Disney and Unreal 4
+  // cf http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf p3
+  float alpha = Roughness * Roughness;
+  float tmp = alpha / max(1e-8,(ndh*ndh*(alpha*alpha-1.0)+1.0));
+  return tmp * tmp * M_INV_PI;
+}
+
+vec3 fresnel(
+  float vdh,
+  vec3 F0)
+{
+  // Schlick with Spherical Gaussian approximation
+  // cf http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf p3
+  float sphg = pow(2.0, (-5.55473*vdh - 6.98316) * vdh);
+  return F0 + (vec3(1.0, 1.0, 1.0) - F0) * sphg;
+}
+
+float G1(
+float ndw, // w is either Ln or Vn
+float k)
+{
+  // One generic factor of the geometry function divided by ndw
+  // NB : We should have k > 0
+  return 1.0 / ( ndw*(1.0-k) +  k );
+}
+
+float visibility(
+  float ndl,
+  float ndv,
+  float Roughness)
+{
+  // Schlick with Smith-like choice of k
+  // cf http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf p3
+  // visibility is a Cook-Torrance geometry function divided by (n.l)*(n.v)
+  float k = max(Roughness * Roughness * 0.5, 1e-5);
+  return G1(ndl,k)*G1(ndv,k);
+}
+
+vec3 cook_torrance_contrib(
+  float vdh,
+  float ndh,
+  float ndl,
+  float ndv,
+  vec3 Ks,
+  float Roughness)
+{
+  // This is the contribution when using importance sampling with the GGX based
+  // sample distribution. This means ct_contrib = ct_brdf / ggx_probability
+  return fresnel(vdh,Ks) * (visibility(ndl,ndv,Roughness) * vdh * ndl / ndh );
+}
+
+vec3 importanceSampleGGX(vec2 Xi, vec3 A, vec3 B, vec3 C, float roughness)
+{
+  float a = roughness*roughness;
+  float cosT = sqrt((1.0-Xi.y)/(1.0+(a*a-1.0)*Xi.y));
+  float sinT = sqrt(1.0-cosT*cosT);
+  float phi = 2.0*M_PI*Xi.x;
+  return (sinT*cos(phi)) * A + (sinT*sin(phi)) * B + cosT * C;
+}
+
+float probabilityGGX(float ndh, float vdh, float Roughness)
+{
+  return normal_distrib(ndh, Roughness) * ndh / (4.0*vdh);
+}
+
+float distortion(vec3 Wn)
+{
+  // Computes the inverse of the solid angle of the (differential) pixel in
+  // the cube map pointed at by Wn
+  float sinT = sqrt(1.0-Wn.y*Wn.y);
+  return sinT;
+}
+
+float computeLOD(vec3 Ln, float p)
+{
+  return max(0.0, (maxLod-1.5) - 0.5*(log(float(nbSamples)) + log( p * distortion(Ln) ))
+  * M_INV_LOG2);
+}
+
+vec3 shade(V2F inputs)
+{
+  vec3 eye_vec = normalize(camera_pos - inputs.position);
+  vec4 out_color = texture2D(diffuse_tex, inputs.tex_coord);
+
+//:All tangent space normals
+
+  vec3 normalBN = normalFromBaseNormal(inputs.tex_coord);
+  vec3 normalH = normalFromHeight(inputs.tex_coord, height_force);
+  vec3 normalTGT = normalBlend(normalBN, normalH); // Blend both normals
+
+//:Compute a world space normal from the tangent space one
+
+  vec3 normalWS = normalize(
+  normalTGT.x * inputs.tangent
+  + normalTGT.y * inputs.bitangent
+  + normalTGT.z * inputs.normal
+  );
+
+//:Compute material model (diffuse, specular & roughness)
+  
+  vec2  roughness_a = texture2D(roughness_tex,inputs.tex_coord).rg;
+  vec4 specular = texture2D(specular_tex, inputs.tex_coord);
+  float ao = texture2D(ao_tex, inputs.tex_coord).r;
+
+  vec3 baseColor;
+  float roughness;
+  vec3 specularColor;
+
+  baseColor = out_color.rgb + vec3(channelsBackground.x) * (1.0 - out_color.a);
+  roughness = (1-roughness_a.r) + channelsBackground.z * (1.0 - roughness_a.g);
+  specularColor = specular.rgb + vec3(channelsBackground.z) * (1.0 - specular.a);
+
+  vec3 diffColor = baseColor;
+  vec3 specColor = specularColor;
+
+//:Create a local basis for BRDF work
+
+  vec3 Tp = normalize(
+  inputs.tangent
+  - normalWS*dot(inputs.tangent, normalWS)
+  ); // local tangent
+  vec3 Bp = normalize(
+  inputs.bitangent
+  - normalWS*dot(inputs.bitangent, normalWS)
+  - Tp*dot(inputs.bitangent, Tp)
+  ); // local bitangent
+
+  float ndv = dot(eye_vec, normalWS);
+
+//:Trick to remove black artefacts Backface ? place the eye at the opposite - removes black zones
+
+  if (ndv < 0) {
+  eye_vec = reflect(eye_vec, normalWS);
+  ndv = abs(ndv);
+  }
+
+//:Diffuse contribution
+
+  vec3 contribE =  diffColor * (vec3(1.0,1.0,1.0)- specColor) * envIrradiance(normalWS);
+
+
+//:Specular contribution
+
+  vec3 contribS = vec3(0.0);
+  for(int i=0; i<nbSamples; ++i)
+  {
+  vec2 Xi = hammersley2D(i, nbSamples);
+  vec3 Hn = importanceSampleGGX(Xi,Tp,Bp,normalWS,roughness);
+  vec3 Ln = -reflect(eye_vec,Hn);
+  float ndl = dot(normalWS, Ln);
+
+  // Horizon fading trick from http://marmosetco.tumblr.com/post/81245981087
+  const float horizonFade = 1.3;
+  float horiz = clamp( 1.0 + horizonFade * ndl, 0.0, 1.0 );
+  horiz *= horiz;
+
+  ndl = max( 1e-8, abs(ndl) );
+  float vdh = max(1e-8, dot(eye_vec, Hn));
+  float ndh = max(1e-8, dot(normalWS, Hn));
+  float lodS = roughness < 0.01 ? 0.0 : computeLOD(Ln,
+    probabilityGGX(ndh, vdh, roughness));
+  contribS +=
+  envSampleLOD(Ln, lodS) *
+  ao *
+  cook_torrance_contrib(
+    vdh, ndh, ndl, ndv,
+    specColor,
+    roughness) * horiz;
+  }
+  contribS /= float(nbSamples);
+
+  // Emissive
+  vec3 contribEm =  emissive_intensity * texture2D(emissive_tex, inputs.tex_coord).rgb;
+
+  
+  // Sum diffuse + spec + emissive
+  return contribE + contribS + contribEm;
+}
+}*/
+
+
+
+            precision highp float;
+
+            uniform sampler2D u_diffuse;
+            uniform sampler2D u_gloss;
+            uniform sampler2D u_normal;
+            uniform sampler2D u_specular;            
+
+            varying vec3 v_positionTS;            
+            varying vec3 v_lightDirTS;
+            varying vec2 v_texcoord_0;
+
+            void main(void)
+            {
+              vec3 normal = normalize(texture2D(u_normal, v_texcoord_0).rgb * 2.0 - 1.0);
+
+              vec4 diffuse       = texture2D(u_diffuse, v_texcoord_0);
+              vec3 diffuseLight  = vec3(0.0, 0.0, 0.0);
+              
+              vec3 specular      = texture2D(u_specular, v_texcoord_0).rgb;
+              vec3 specularLight = vec3(0.0, 0.0, 0.0);
+              float shininess    = texture2D(u_gloss, v_texcoord_0).r * 128.0;
+              
+              vec3 viewDir = -normalize(v_positionTS);       
+              vec3 h       = normalize(v_lightDirTS + viewDir);
+                            
+              diffuseLight  += vec3(1.0, 1.0, 1.0) * max(dot(normal,v_lightDirTS), 0.);
+              float specularIntensity = max(0., pow(max(dot(normal, h), 0.), shininess));
+              specularLight += vec3(1.0, 1.0, 1.0) * specularIntensity;
+              
+              vec3 color = vec3(0.0, 0.0, 0.0);
+              color += diffuse.rgb * diffuseLight;
+              color += specular    * specularLight;
+
+              gl_FragColor = vec4(color * diffuse.a, diffuse.a);
+            }
+        </script>
+
+
+        <script id="vertexShader" type="x-shader/x-vertex">
+            precision highp float;
+            
+            attribute vec3 tangent;
+            attribute vec3 binormal;
+
+            varying vec3 v_positionTS;            
+            varying vec3 v_lightDirTS;
+            varying vec2 v_texcoord_0;
+
+            mat3 transpose(mat3 m) {
+              return mat3(m[0][0], m[1][0], m[2][0],
+                          m[0][1], m[1][1], m[2][1],
+                          m[0][2], m[1][2], m[2][2]);
+            }
+
+            void main(void)
+            {
+              v_texcoord_0 = uv;              
+
+              vec3 normalVS   = normalMatrix * normal;
+              vec3 binormalVS = normalMatrix * binormal;
+              vec3 tangentVS  = normalMatrix * tangent;
+              
+              mat3 tbn = transpose(mat3(tangentVS, binormalVS, normalVS));
+
+              vec4 pos     = modelViewMatrix * vec4(position, 1.0);
+              v_positionTS = tbn * pos.xyz;
+              v_lightDirTS = tbn * vec3(0.0, 0.0, 1.0);
+              
+              gl_Position = projectionMatrix * pos;
+            }
+        </script>
+
+
+        <script>
+
+            if (!Detector.webgl)
+            {
+                Detector.addGetWebGLMessage();
+            }
+
+            var container, stats;
+
+            var camera, scene, renderer, shaderUniforms;
+
+            var orbitControls = null;
+
+            var clock = new THREE.Clock();
+
+            init();
+            animate();
+
+            //
+
+            function init()
+            {
+
+                container = document.getElementById( 'container' );
+
+                camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
+                camera.position.z = 70;
+
+                scene = new THREE.Scene();
+
+                var loader = new THREE.GLTFLoader;
+                loader.load( "assets/hammer/hammer.gltf", function(data)
+                {
+                    var gltf = data;
+
+                    var object = gltf.scene;
+
+                    scene.add( object );
+
+
+
+                    var texLoader      = new THREE.TextureLoader();
+                    var diffuseTexture = texLoader.load('assets/hammer/diffuse.jpeg',
+                                                        function(texture)
+                                                        {
+                                                            texture.flipY = false;
+                                                        });
+                    var normalTexture = texLoader.load('assets/hammer/normal.jpg',
+                                                        function(texture)
+                                                        {
+                                                            texture.flipY = false;
+                                                        });
+                    var glossTexture = texLoader.load('assets/hammer/gloss.jpg',
+                                                        function(texture)
+                                                        {
+                                                            texture.flipY = false;
+                                                        });
+                    var specularTexture = texLoader.load('assets/hammer/specular.jpg',
+                                                        function(texture)
+                                                        {
+                                                            texture.flipY = false;
+                                                        });
+
+                    var customUniforms = 
+                    {
+                        
+                        u_diffuse   : { value : diffuseTexture },
+                        u_normal    : { value : normalTexture },
+                        u_gloss     : { value : glossTexture },
+                        u_specular  : { value : specularTexture }
+                    };
+
+                    var overrideMaterial = new THREE.ShaderMaterial(
+                    {
+                        uniforms : customUniforms,
+                        vertexShader   : document.getElementById('vertexShader'   ).textContent,
+                        fragmentShader : document.getElementById('fragmentShader').textContent
+                    });
+
+
+                    //TODO: fix
+                    var node = scene.children[0].children[0].children[0];
+
+                    node.material = overrideMaterial;
+
+                    onWindowResize();
+                });
+
+                renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                renderer.setPixelRatio(window.devicePixelRatio);
+                container.appendChild(renderer.domElement);
+
+                stats = new Stats();
+                container.appendChild(stats.dom);
+
+                orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+                
+                // add this only if there is no animation loop (requestAnimationFrame)
+                //orbitControls.addEventListener( 'change', render );
+
+                orbitControls.enableDamping = true;
+                orbitControls.dampingFactor = 0.25;
+                orbitControls.enableZoom = false;
+                orbitControls.enablePan = false;
+
+                onWindowResize();
+
+                window.addEventListener( 'resize', onWindowResize, false );
+            }
+
+            //
+
+            function onWindowResize( event ) {
+                /*
+                shaderUniforms.resolution.value.x = window.innerWidth;
+                shaderUniforms.resolution.value.y = window.innerHeight;
+                */
+
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+
+                renderer.setSize( window.innerWidth, window.innerHeight );
+            }
+
+            //
+
+            function animate() {
+
+                requestAnimationFrame( animate );
+
+                orbitControls.update();
+
+                THREE.GLTFLoader.Shaders.update(scene, camera);
+
+                render();
+                stats.update();
+
+            }
+
+            //
+
+            function render() {
+
+                /*var delta = clock.getDelta();
+
+                shaderUniforms.time.value += delta * 5;
+                shaderUniforms.time.value = clock.elapsedTime;
+
+                for ( var i = 0; i < scene.children.length; i ++ ) {
+
+                    var object = scene.children[ i ];
+
+                    object.rotation.y += delta * 0.5 * ( i % 2 ? 1 : -1 );
+                    object.rotation.x += delta * 0.5 * ( i % 2 ? -1 : 1 );
+
+                }
+*/
+                renderer.render( scene, camera );
+
+            }
+
+        </script>
+
+    </body>
+</html>

@@ -19,6 +19,7 @@ _Draft Khronos extensions are not ratified yet._
 
 * [CESIUM_RTC](Vendor/CESIUM_RTC/README.md)
 * [WEB3D_quantized_attributes](Vendor/WEB3D_quantized_attributes/README.md)
+* [FRAUNHOFER_materials_pbr](Vendor/FRAUNHOFER_materials_pbr/README.md)
 
 # About glTF Extensions
 
