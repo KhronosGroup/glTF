@@ -14,7 +14,6 @@ Editors
 * Patrick Cozzi, Cesium
 * Alexey Knyazev, Individual Contributor
 * Tony Parisi, Unity
-* Steven Vergenz, AltspaceVR
 
 Khronos 3D Formats Working Group and Alumni
 
@@ -3496,6 +3495,7 @@ Application-specific data.
 * Timo Sturm, Fraunhofer IGD
 * Rob Taglang, Cesium
 * Maik Thöner, Fraunhofer IGD
+* Steven Vergenz, AltspaceVR
 * Corentin Wallez, Google
 * Alex Wood, Analytical Graphics, Inc
 
