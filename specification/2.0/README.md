@@ -174,7 +174,7 @@ To simplify client-side implementation, glTF has following restrictions on JSON 
 1. JSON must use UTF-8 encoding without BOM.
 2. All strings defined in this spec (properties names, enums) use only ASCII charset and must be written as plain text, e.g., `"buffer"` instead of `"\u0062\u0075\u0066\u0066\u0065\u0072"`.
 
-   > **Implementation Note:** This allows generic glTF loader to not have full Unicode support. Application-specific strings (e.g., value of `"name"` property) could use any charset.
+   > **Implementation Note:** This allows generic glTF client implementations to not have full Unicode support. Application-specific strings (e.g., value of `"name"` property) could use any charset.
 3. Names (keys) within JSON objects must be unique, i.e., duplicate keys aren't allowed.
 
 ## URIs
@@ -183,7 +183,7 @@ glTF uses URIs to reference buffers and image resources. These URIs may point to
  
  > **Implementation Note:** Data URIs could be [decoded with JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding) or consumed directly by web browsers in HTML tags.
 
-Clients are required to support only embedded resources and relative external references (in a sense of [RFC3986](https://tools.ietf.org/html/rfc3986#section-4.2)). Clients are free to support other schemes (such as `http://`) depending on expected usage.
+Client implementations are required to support only embedded resources and relative external references (in a sense of [RFC3986](https://tools.ietf.org/html/rfc3986#section-4.2)). Clients are free to support other schemes (such as `http://`) depending on expected usage.
 
  > **Implementation Note:** This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, or textures, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading. Alternatively, an asset could use GLB container to store JSON and binary data in one file without base64 encoding. See [GLB File Format Specification](#glb-file-format-specification) for details.
 
@@ -569,7 +569,7 @@ In this accessor, the `componentType` is `5126` (FLOAT), so each component is fo
 
 `accessor.min` and `accessor.max` properties are arrays that contain per-component minimum and maximum values, respectively. Exporters and loaders must treat these values as having the same data type as accessor's `componentType`, i.e., use integers (JSON number without fractional part) for integer types and use floating-point decimals for `5126` (FLOAT).
 
-> **Implementation Note:** JavaScript clients should convert JSON-parsed floating-point doubles to single precision, when `componentType` is `5126` (FLOAT). This could be done with `Math.fround` function.
+> **Implementation Note:** JavaScript client implementations should convert JSON-parsed floating-point doubles to single precision, when `componentType` is `5126` (FLOAT). This could be done with `Math.fround` function.
 
 While these properties are not required for all accessor usages, there are cases when minimum and maximum must be defined. Refer to other sections of this specification for details. 
 
@@ -715,15 +715,15 @@ Valid accessor type and component type for each attribute semantic property are 
 
 `POSITION` accessor **must** have `min` and `max` properties defined.
 
-`TEXCOORD`, `COLOR`, `JOINTS`, and `WEIGHTS` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. Clients must support at least two UV texture coordinate sets, one vertex color, and one joints/weights set. Extensions can add additional property names, accessor types, and/or accessor component types.
+`TEXCOORD`, `COLOR`, `JOINTS`, and `WEIGHTS` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. Client implementations must support at least two UV texture coordinate sets, one vertex color, and one joints/weights set. Extensions can add additional property names, accessor types, and/or accessor component types.
 
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
 
-> **Implementation note:** When normals are not specified, implementations should calculate flat normals.
+> **Implementation note:** When normals are not specified, client implementations should calculate flat normals.
 
-> **Implementation note:** When tangents are not specified, implementations should calculate tangents using default MikkTSpace algorithms.  For best results, the mesh triangles should also be processed using default MikkTSpace algorithms.
+> **Implementation note:** When tangents are not specified, client implementations should calculate tangents using default MikkTSpace algorithms.  For best results, the mesh triangles should also be processed using default MikkTSpace algorithms.
 
-> **Implementation note:** When normals and tangents are specified, implementations should compute the bitangent by taking the cross product of the normal and tangent xyz vectors and multiplying against the w component of the tangent: `bitangent = cross(normal, tangent.xyz) * tangent.w`
+> **Implementation note:** When normals and tangents are specified, client implementations should compute the bitangent by taking the cross product of the normal and tangent xyz vectors and multiplying against the w component of the tangent: `bitangent = cross(normal, tangent.xyz) * tangent.w`
 
 > **Implementation note:** When the 'mode' property is set to a non-triangular type (such as POINTS or LINES) some additional considerations must be taken while considering the proper rendering technique:
 > > For LINES with with `NORMAL` and `TANGENT` properties can render with standard lighting including normal maps.
@@ -792,7 +792,7 @@ The following example extends the Mesh defined in the previous example to a morp
 
 After applying morph targets to vertex positions and normals, tangent space may need to be recalculated. See [Appendix A](#appendix-a-tangent-space-recalculation) for details.
 
-> **Implementation note:** The number of morph targets is not limited in glTF. A conformant client must support at least eight morphed attributes. This means that it has to support at least eight morph targets that contain a `POSITION` attribute, or four morph targets that contain a `POSITION` and a `NORMAL` attribute, or two morph targets that contain `POSITION`, `NORMAL` and `TANGENT` attributes. For assets that contain a higher number of morphed attributes, renderers may choose to either fully support them (for example, by performing the morph computations in software), or to only use the eight attributes of the morph targets with the highest weights. 
+> **Implementation note:** The number of morph targets is not limited in glTF. A conformant client implementation must support at least eight morphed attributes. This means that it has to support at least eight morph targets that contain a `POSITION` attribute, or four morph targets that contain a `POSITION` and a `NORMAL` attribute, or two morph targets that contain `POSITION`, `NORMAL` and `TANGENT` attributes. For assets that contain a higher number of morphed attributes, renderers may choose to either fully support them (for example, by performing the morph computations in software), or to only use the eight attributes of the morph targets with the highest weights. 
 
 
 ### Skins
@@ -984,7 +984,7 @@ The following example shows an image pointing to an external PNG image file and 
     ]
 }
 ```
-> **Implementation Note:** When image data is provided by `uri` and `mimeType` is defined, clients should prefer JSON-defined MIME Type over one provided by transport layer.
+> **Implementation Note:** When image data is provided by `uri` and `mimeType` is defined, client implementations should prefer JSON-defined MIME Type over one provided by transport layer.
 
 First image pixel corresponds to the lower left corner of the image.
 
@@ -1511,7 +1511,7 @@ The start and the end of each chunk must be aligned to 4-byte boundary. See chun
 | 1. | 0x4E4F534A | JSON | Structured JSON content | 1 |
 | 2. | 0x004E4942 | BIN | Binary buffer | 0 or 1 |
 
- Clients must ignore chunks with unknown types.
+ Client implementations must ignore chunks with unknown types.
  
 #### Structured JSON Content
 
