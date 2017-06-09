@@ -6,7 +6,7 @@
 
 The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern 3D applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
-Last Updated: June 8, 2017
+Last Updated: June 9, 2017
 
 Editors
 
@@ -986,9 +986,9 @@ The following example shows an image pointing to an external PNG image file and 
 ```
 > **Implementation Note:** When image data is provided by `uri` and `mimeType` is defined, client implementations should prefer JSON-defined MIME Type over one provided by transport layer.
 
-First image pixel corresponds to the lower left corner of the image.
+First image pixel (UV coordinates origin) corresponds to the upper left corner of the image.
 
-> **Implementation Note:** With WebGL API, the first pixel transferred from the `TexImageSource` (i.e., HTML Image object) to the WebGL implementation corresponds to the upper left corner of the source. To achieve correct rendering, WebGL runtimes must flip Y axis by enabling `UNPACK_FLIP_Y_WEBGL` flag. This behavior was changed from glTF 1.0.
+> **Implementation Note:** OpenGL-based implementations must flip Y axis to achieve correct texture sampling.
 
 Any colorspace information (such as ICC profiles, intents, etc) from PNG or JPEG containers must be ignored.
 
