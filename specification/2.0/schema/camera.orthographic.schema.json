@@ -7,11 +7,11 @@
     "properties": {
         "xmag": {
             "type": "number",
-            "description": "The floating-point horizontal magnification of the view."
+            "description": "The floating-point horizontal magnification of the view. Must not be zero."
         },
         "ymag": {
             "type": "number",
-            "description": "The floating-point vertical magnification of the view."
+            "description": "The floating-point vertical magnification of the view. Must not be zero."
         },
         "zfar": {
             "type": "number",
