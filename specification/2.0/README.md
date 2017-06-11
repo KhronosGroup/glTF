@@ -191,7 +191,7 @@ Client implementations are required to support only embedded resources and relat
 
 <p align="center">
 <img src="figures/dictionary-objects.png" /><br/>
-The top-level arrays in a glTF asset.  See the <a href="#properties">Properties Reference</a>.
+The top-level arrays in a glTF asset.  See the <a href="#properties-reference">Properties Reference</a>.
 </p>
 
 ## Asset
@@ -208,7 +208,7 @@ Each glTF asset must have an `asset` property. In fact, it's the only required t
 }
 ```
 
-> **Implementation Note:** Client implementations should first check whether a `minVersion` property is specified and ensure both major and minor versions can be supported. If no `minVersion` is specified, then clients should check the `version` property and ensure the major version is supported. Clients that load [GLB format](GLB_FORMAT.md) should also check for the `minVersion` and `version` properties in the JSON chunk as the version specified in the GLB header only refers to the GLB container version.
+> **Implementation Note:** Client implementations should first check whether a `minVersion` property is specified and ensure both major and minor versions can be supported. If no `minVersion` is specified, then clients should check the `version` property and ensure the major version is supported. Clients that load [GLB format](#glb-file-format-specification) should also check for the `minVersion` and `version` properties in the JSON chunk as the version specified in the GLB header only refers to the GLB container version.
 
 
 ## Indices and Names
@@ -1455,7 +1455,7 @@ All glTF extensions required to load and/or render an asset must be listed in th
 }
 ```
 
-For more information on glTF extensions, consult the [extensions registry specification](../extensions/README.md).
+For more information on glTF extensions, consult the [extensions registry specification](../../extensions/README.md).
 
 # GLB File Format Specification
 
@@ -1510,7 +1510,7 @@ uint32 length
 
 * `length` is the total length of the Binary glTF, including Header and all Chunks, in bytes.
 
-> **Implementation Note:** Client implementations that load GLB format should also check for the [asset version properties](readme.md#asset) in the JSON chunk, as the version specified in the GLB header only refers to the GLB container version.
+> **Implementation Note:** Client implementations that load GLB format should also check for the [asset version properties](#asset) in the JSON chunk, as the version specified in the GLB header only refers to the GLB container version.
 
 ### Chunks
 
@@ -2250,7 +2250,7 @@ The root object for a glTF asset.
 
 Additional properties are allowed.
 
-* **JSON schema**: [gltf.schema.json](schema/gltf.schema.json)
+* **JSON schema**: [glTF.schema.json](schema/glTF.schema.json)
 
 #### glTF.extensionsUsed
 
