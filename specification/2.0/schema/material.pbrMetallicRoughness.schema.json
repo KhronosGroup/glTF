@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "pbrMetallicRoughness",
+    "title": "Material PBR Metallic Roughness",
     "type": "object",
     "description": "A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
