@@ -35,6 +35,14 @@ Please provide spec feedback and community updates by submitting [issues](https:
 * [colladaToBglTFConverter](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter) - Groovy/JavaScript tool to convert COLLADA to Binary glTF (0.8 / CESIUM_binary_glTF)
 * [jgltf-obj](https://github.com/javagl/JglTF/tree/master/jgltf-obj) - Java library/application to convert OBJ to glTF
 
+### Exporters
+
+* [Blender glTF 2.0 Exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter) - work in progress
+
+### Optimizers
+
+* [glTF Pipeline](https://github.com/AnalyticalGraphicsInc/gltf-pipeline) - Node.js command-line tool and module for optimizing glTF assets
+
 ### Validators
 
 * [glTF Validator](https://github.com/KhronosGroup/glTF-Validator) - open-source command-line and drag-and-top tool to validate glTF assets against the spec
@@ -42,14 +50,6 @@ Please provide spec feedback and community updates by submitting [issues](https:
 ### Editors
 
 * [gltf-vscode](https://marketplace.visualstudio.com/items?itemName=cesium.gltf-vscode) extension for [VSCode](https://code.visualstudio.com/) - Open source, cross-platform JSON schema validation and previews for glTF 1.0
-
-### Exporters
-
-* [Blender](https://github.com/Kupoman/blendergltf) - work in progress
-
-### Optimizers
-
-* [glTF Pipeline](https://github.com/AnalyticalGraphicsInc/gltf-pipeline) - Node.js command-line tool and module for optimizing glTF assets
 
 ### Loaders and Viewers
 
