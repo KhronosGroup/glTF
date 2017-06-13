@@ -21,6 +21,9 @@ _Draft Khronos extensions are not ratified yet._
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
 
 
+#### Vendor extensions
+* [AVR_sampler_offset_tile](Vendor/AVR_sampler_offset_tile/README.md)
+
 ## Extensions for glTF 1.0
 
 #### Khronos extensions
