@@ -49,7 +49,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 
 ### Editors
 
-* [gltf-vscode](https://marketplace.visualstudio.com/items?itemName=cesium.gltf-vscode) extension for [VSCode](https://code.visualstudio.com/) - Open source, cross-platform JSON schema validation and previews for glTF 1.0
+* [gltf-vscode](https://marketplace.visualstudio.com/items?itemName=cesium.gltf-vscode) extension for [VSCode](https://code.visualstudio.com/) - Open source, cross-platform JSON schema validation and previews for glTF 2.0 and 1.0
 
 ### Loaders and Viewers
 
