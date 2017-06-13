@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "texture",
+    "title": "Texture",
     "type": "object",
     "description": "A texture and its sampler.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],

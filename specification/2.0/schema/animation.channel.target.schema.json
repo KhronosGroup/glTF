@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "target",
+    "title": "Animation Channel Target",
     "type": "object",
     "description": "The index of the node and TRS property that an animation channel targets.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

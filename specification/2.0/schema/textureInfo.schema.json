@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "textureInfo",
+    "title": "Texture Info",
     "type": "object",
     "description": "Reference to a texture.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
