@@ -1,0 +1,24 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "AVR_sampler_offset_tile sampler extension",
+    "type" : "object",
+    "properties" : {
+        "offsetS": {
+            "type": "number",
+            "description": "How much a single repetition of the texture is offset from the beginning, in the S direction. Typical range is 0.0 to 1.0."
+        },
+        "offsetT": {
+            "type": "number",
+            "description": "How much a single repetition of the texture is offset from the beginning, in the T direction. Typical range is 0.0 to 1.0."
+        },
+        "tileS": {
+            "type": "number",
+            "description": "How many times the texture is repeated across the surface, in the S direction."
+        },
+        "tileT": {
+            "type": "number",
+            "description": "How many times the texture is repeated across the surface, in the T direction."
+        }
+    },
+    "additionalProperties" : false
+}
