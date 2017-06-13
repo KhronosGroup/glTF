@@ -10,6 +10,9 @@ _Draft Khronos extensions are not ratified yet._
 * [KHR_materials_common](Khronos/KHR_materials_common/README.md)
 * [KHR_technique_webgl](Khronos/KHR_technique_webgl/README.md)
 
+#### Vendor extensions
+* [AVR_sampler_offset_tile](Vendor/AVR_sampler_offset_tile/README.md)
+
 ## Extensions for glTF 1.0
 
 #### Khronos extensions
@@ -22,7 +25,7 @@ _Draft Khronos extensions are not ratified yet._
 
 # About glTF Extensions
 
-glTF extensions extend the base glTF model format.  Extensions can introduce new properties (including properties that reference external data, and the extension can define the format of those data), new parameter semantics, reserved IDs, and new container formats.  Extensions are written against a specific version of glTF and may be promoted to core glTF in a later glTF version. 
+glTF extensions extend the base glTF model format.  Extensions can introduce new properties (including properties that reference external data, and the extension can define the format of those data), new parameter semantics, reserved IDs, and new container formats.  Extensions are written against a specific version of glTF and may be promoted to core glTF in a later glTF version.
 
 ## Extension Mechanics
 

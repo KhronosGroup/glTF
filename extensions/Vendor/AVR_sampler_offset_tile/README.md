@@ -10,7 +10,7 @@ Draft
 
 ## Dependencies
 
-Written against the glTF draft 2.0 spec.
+Written against the glTF 2.0 spec.
 
 ## Overview
 
@@ -18,12 +18,14 @@ Many techniques can be used to optimize resource usage for a 3d scene. Chief amo
 
 To support this use case, this extension adds `offsetS`, `offsetT`, `tileS`, and `tileT` properties to the sampler structure. These properties would typically be implemented like this in GLSL: `vec2 uvTransformed = uvFromMeshData * vec2(tileS, tileT) + vec2(offsetS, offsetT);`
 
+This is equivalent to Unity's `Material#SetTextureOffset` and `Material#SetTextureScale`, or Three.js's `Texture#offset` and `Texture#repeat`.
+
 ## glTF Schema Updates
 
 The `AVR_sampler_offset_tile` extension may be defined on `sampler` structures. It may contain the following properties:
 
 | Name      | Type    | Default | Description
-----------------------------------------------
+------------------------------------------------------------------
 | `offsetS` | `float` | `0.0`   | The value added to `uv.x`
 | `offsetT` | `float` | `0.0`   | The value added to `uv.y`
 | `tileS`   | `float` | `1.0`   | The value multiplied with `uv.x`
@@ -31,12 +33,12 @@ The `AVR_sampler_offset_tile` extension may be defined on `sampler` structures. 
 
 ### JSON Schema
 
-TODO: Links to the JSON schema for the new extension properties.
+[AVR_sampler_offset_tile.sampler.schema.json](schema/AVR_sampler_offset_tile.sampler.schema.json)
 
 ## Known Implementations
 
-* TODO: List of known implementations, with links to each if available.
+* [UnityGLTF](https://github.com/AltspaceVR/UnityGLTF) (upcoming)
 
 ## Resources
 
-* TODO: Resources, if any.
+*None*
