@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "lightmapTextureInfo",
+    "type": "object",
+    "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+    "properties": {
+        "index": { },
+        "texCoord": { },
+        "strength": {
+            "type": "number",
+            "description": "A scalar multiplier controlling the amount of light applied from the lightmap.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "maximum": 1.0
+        }
+    }
+}
