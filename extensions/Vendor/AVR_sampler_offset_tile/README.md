@@ -25,7 +25,7 @@ This is equivalent to Unity's `Material#SetTextureOffset` and `Material#SetTextu
 The `AVR_sampler_offset_tile` extension may be defined on `sampler` structures. It may contain the following properties:
 
 | Name      | Type    | Default | Description
-------------------------------------------------------------------
+|-----------|---------|---------|---------------------------------
 | `offsetS` | `float` | `0.0`   | The value added to `uv.x`
 | `offsetT` | `float` | `0.0`   | The value added to `uv.y`
 | `tileS`   | `float` | `1.0`   | The value multiplied with `uv.x`
