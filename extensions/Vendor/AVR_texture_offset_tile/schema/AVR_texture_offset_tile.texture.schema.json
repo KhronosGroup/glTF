@@ -5,28 +5,28 @@
     "properties" : {
         "offsetS": {
             "type": "number",
-            "description": "How much a single repetition of the texture is offset from the beginning, in the S direction.",
+            "description": "The horizontal offset of the UV coordinate origin as a percentage of the texture width.",
             "minimum": -1.0,
             "maximum": 1.0,
             "default": 0.0
         },
         "offsetT": {
             "type": "number",
-            "description": "How much a single repetition of the texture is offset from the beginning, in the T direction.",
+            "description": "The vertical offset of the UV coordinate origin as a percentage of the texture height.",
             "minimum": -1.0,
             "maximum": 1.0,
             "default": 0.0
         },
         "tileS": {
             "type": "number",
-            "description": "How many times the texture is repeated across the surface, in the S direction.",
+            "description": "The scale factor applied to the horizontal component of the UV coordinates.",
             "minimum": -1.0,
             "maximum": 1.0,
             "default": 1.0
         },
         "tileT": {
             "type": "number",
-            "description": "How many times the texture is repeated across the surface, in the T direction.",
+            "description": "The scale factor applied to the vertical component of the UV coordinates.",
             "minimum": -1.0,
             "maximum": 1.0,
             "default": 1.0

@@ -11,7 +11,7 @@ _Draft Khronos extensions are not ratified yet._
 * [KHR_technique_webgl](Khronos/KHR_technique_webgl/README.md)
 
 #### Vendor extensions
-* [AVR_sampler_offset_tile](Vendor/AVR_sampler_offset_tile/README.md)
+* [AVR_texture_offset_tile](Vendor/AVR_texture_offset_tile/README.md)
 
 ## Extensions for glTF 1.0
 
@@ -69,7 +69,7 @@ This allows an engine to quickly determine if it supports the extensions needed 
 
 To create a new extension, use the [extension template](Template.md) and open a pull request into this repo.  Make sure to add the extension to the glTF Extension Registry (top of this file).
 
-If lack of extension support prevents proper geometry loading, extension specification _must_ state that (and such extension must be mentioned in `extensionsRequired` top-level glTF property).  
+If lack of extension support prevents proper geometry loading, extension specification _must_ state that (and such extension must be mentioned in `extensionsRequired` top-level glTF property).
 
 Extensions start as a vendor extension, then can become a multi-vendor extensions if there are multiple implementations, and can become a ratified Khronos extension (the multi-vendor extension is an optional step).
 
