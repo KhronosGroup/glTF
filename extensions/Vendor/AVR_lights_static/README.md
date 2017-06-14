@@ -10,7 +10,7 @@ Draft
 
 ## Dependencies
 
-Written against the glTF 2.0 spec.
+Written against the glTF 2.0 spec, and the draft [AVR_texture_offset_tile](../AVR_texture_offset_tile/README.md) extension.
 
 ## Overview
 
@@ -22,13 +22,16 @@ This extension allows glTF materials to provide one of these precomputed texture
 
 ## glTF Schema Updates
 
-The `AVR_lights_static` extension may be defined on `material` structures. It may contain the following properties:
+The `AVR_lights_static` extension may be defined on `node` structures. This data is specified on the node instead of the material or texture because every node with a lightmap is going to need a separate texture from an otherwise identical but differently-placed node.
 
-| Name       | Type      | Default    | Description
-|------------|-----------|------------|---------------------------------
-| `index`    | `glTFid`  | *required* | Texture reference to a lightmap. The referenced texture contains RGB components in sRGB color space. If a fourth component (A) is present, it is ignored.
-| `texCoord` | `integer` | `0`        | The set index of texture's TEXCOORD attribute used for texture coordinate mapping.
-| `strength` | `number`  | `1.0`      | The influence of the lightmap on the final output.
+The extension object may contain the following properties:
+
+| Name         | Type      | Default    | Description
+|--------------|-----------|------------|---------------------------------
+| `index`      | `glTFid`  | *required* | Texture reference to a lightmap. The referenced texture contains RGB components in sRGB color space. If a fourth component (A) is present, it is ignored.
+| `texCoord`   | `integer` | `0`        | The set index of texture's TEXCOORD attribute used for texture coordinate mapping.
+| `strength`   | `number`  | `1.0`      | The influence of the lightmap on the final output.
+| `extensions` | `object`  |            | If desired, use the `AVR_texture_offset_tile` extension to use a texture atlas as a lightmap.
 
 ### JSON Schema
 

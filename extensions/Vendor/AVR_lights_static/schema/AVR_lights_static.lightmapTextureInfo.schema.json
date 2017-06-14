@@ -2,10 +2,9 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "lightmapTextureInfo",
     "type": "object",
+    "description": "This extension allows glTF materials to provide one of these precomputed textures to a consuming application, providing greater realism for a reduced computational cost. The details of how this lightmap is applied will depend on the lighting model in use by the consumer.",
     "allOf": [ { "$ref": "textureInfo.schema.json" } ],
     "properties": {
-        "index": { },
-        "texCoord": { },
         "strength": {
             "type": "number",
             "description": "A scalar multiplier controlling the amount of light applied from the lightmap.",
