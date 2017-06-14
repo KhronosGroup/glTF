@@ -1,4 +1,4 @@
-# KHR_technique_webgl 
+# KHR_technique_webgl
 
 ## Contributors
 
@@ -290,11 +290,15 @@ Each shader program includes an `attributes` property, which specifies the verte
 
 #### Shaders
 
-Shader source files are stored in the asset's `shaders` dictionary property, which contains one or more shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
+Shader source files are stored in the asset's `shaders` dictionary property, which contains one or more shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file (or a reference to a bufferView). Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
 
 ```json
 {
 	"shaders": [
+      {
+          "type": 35633,
+          "bufferView": 4
+      },
     	{
         	"type": 35632,
         	"uri": "duck0FS.glsl"
