@@ -22,7 +22,7 @@ _Draft Khronos extensions are not ratified yet._
 
 
 #### Vendor extensions
-* [AVR_sampler_offset_tile](Vendor/AVR_sampler_offset_tile/README.md)
+* [AVR_texture_offset_tile](Vendor/AVR_texture_offset_tile/README.md)
 
 ## Extensions for glTF 1.0
 

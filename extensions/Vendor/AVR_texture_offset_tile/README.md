@@ -39,7 +39,7 @@ All of these values are restricted to the range [-1, 1]. While negative values a
 
 ### Example JSON
 
-This example utilizes only the top left quadrant of the source image.
+This example utilizes only the top right quadrant of the source image.
 
 ```json
 {
