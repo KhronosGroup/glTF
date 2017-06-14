@@ -16,13 +16,13 @@ Written against the glTF 2.0 spec.
 
 Many techniques can be used to optimize resource usage for a 3d scene. Chief among them is the ability to minimize the number of textures the GPU must load. To achieve this, many engines encourage packing many objects' low-resolution textures into a single large texture atlas. The region of the resulting atlas that corresponds with each object is then defined by vertical and horizontal offsets, and the width and height of the region.
 
-To support this use case, this extension adds `offsetS`, `offsetT`, `tileS`, and `tileT` properties to the texture structure. These properties would typically be implemented as transforms on the UV coordinates. In GLSL: `vec2 uvTransformed = uvFromMeshData * vec2(tileS, tileT) + vec2(offsetS, offsetT);`
+To support this use case, this extension adds `offsetS`, `offsetT`, `tileS`, and `tileT` properties to textureInfo structures. These properties would typically be implemented as transforms on the UV coordinates. In GLSL: `vec2 uvTransformed = uvFromMeshData * vec2(tileS, tileT) + vec2(offsetS, offsetT);`
 
 This is equivalent to Unity's `Material#SetTextureOffset` and `Material#SetTextureScale`, or Three.js's `Texture#offset` and `Texture#repeat`.
 
 ## glTF Schema Updates
 
-The `AVR_texture_offset_tile` extension may be defined on `texture` structures. It may contain the following properties:
+The `AVR_texture_offset_tile` extension may be defined on `textureInfo` structures. It may contain the following properties:
 
 | Name      | Type     | Default | Description
 |-----------|----------|---------|---------------------------------
@@ -35,7 +35,7 @@ All of these values are restricted to the range [-1, 1]. While negative values a
 
 ### JSON Schema
 
-[AVR_texture_offset_tile.texture.schema.json](schema/AVR_texture_offset_tile.texture.schema.json)
+[AVR_texture_offset_tile.textureInfo.schema.json](schema/AVR_texture_offset_tile.textureInfo.schema.json)
 
 ### Example JSON
 
@@ -43,15 +43,16 @@ This example utilizes only the top right quadrant of the source image.
 
 ```json
 {
-	"textures": [
+	"materials": [
 		{
-			"source": 0,
-			"sampler": 0,
-			"extensions": {
-				"AVR_texture_offset_tile": {
-					"offsetS": 0.5,
-					"tileS": 0.5,
-					"tileT": 0.5
+			"emissionTexture": {
+				"source": 0,
+				"extensions": {
+					"AVR_texture_offset_tile": {
+						"offsetS": 0.5,
+						"tileS": 0.5,
+						"tileT": 0.5
+					}
 				}
 			}
 		}
@@ -63,14 +64,15 @@ This example inverts the T axis, effectively defining a bottom-left origin.
 
 ```json
 {
-	"textures": [
+	"materials": [
 		{
-			"source": 0,
-			"sampler": 0,
-			"extensions": {
-				"AVR_texture_offset_tile": {
-					"offsetT": 1,
-					"tileT": -1
+			"emissionTexture": {
+				"source": 0,
+				"extensions": {
+					"AVR_texture_offset_tile": {
+						"offsetT": 1,
+						"tileT": -1
+					}
 				}
 			}
 		}
