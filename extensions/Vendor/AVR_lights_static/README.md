@@ -26,7 +26,7 @@ The `AVR_lights_static` extension may be defined on `material` structures. It ma
 
 | Name       | Type      | Default    | Description
 |------------|-----------|------------|---------------------------------
-| `index`    | `glTFid`  | *required* | Texture reference to a lightmap.
+| `index`    | `glTFid`  | *required* | Texture reference to a lightmap. The referenced texture contains RGB components in sRGB color space. If a fourth component (A) is present, it is ignored.
 | `texCoord` | `integer` | `0`        | The set index of texture's TEXCOORD attribute used for texture coordinate mapping.
 | `strength` | `number`  | `1.0`      | The influence of the lightmap on the final output.
 
