@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "AVR_texture_offset_tile texture extension",
+    "title" : "AVR_texture_offset_tile textureInfo extension",
     "type" : "object",
     "properties" : {
         "offsetS": {
