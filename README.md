@@ -21,19 +21,25 @@ Please provide spec feedback and community updates by submitting [issues](https:
 
 ### Converters
 
-* [COLLADA2GLTF](https://github.com/KhronosGroup/COLLADA2GLTF/) - Command-line tool to convert COLLADA to glTF
-* [COLLADA|OBJ to glTF](http://cesiumjs.org/convertmodel.html) - online drag and drop converter for COLLADA and OBJ
-* [Assimp](http://www.assimp.org/) - General-purpose conversion pipeline with a glTF importer/exporter pipeline. See the [list of supported import formats](https://github.com/assimp/assimp#supported-file-formats).
-* [obj2gltf](https://github.com/AnalyticalGraphicsInc/OBJ2GLTF) - Command-line tool to convert OBJ to glTF
-* [FBX-glTF](https://github.com/cyrillef/FBX-glTF) - FBX glTF importer/exporter plug-in and converter
-* [osm2cesium](https://github.com/stirringhalo/osm2cesium) - Extracts buildings in OpenStreetMap and converts them to glTF
-* [Docker collada2gltf](https://hub.docker.com/r/winsent/collada2gltf/) - Docker container of Python web service to convert COLLADA to glTF
-* [binary-gltf-utils](https://github.com/Qantas94Heavy/binary-gltf-utils) - Node.js tool to convert glTF to Binary glTF
-* [gltf2glb](https://github.com/Geopipe/gltf2glb) - Python tool to convert glTF to Binary glTF
-* [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) - Simple Node.js web service built on COLLADA2GLTF
-* [collada2gltf](https://www.npmjs.com/package/collada2gltf) - Node.js wrapper around COLLADA2GLTF
-* [colladaToBglTFConverter](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter) - Groovy/JavaScript tool to convert COLLADA to Binary glTF (0.8 / CESIUM_binary_glTF)
-* [jgltf-obj](https://github.com/javagl/JglTF/tree/master/jgltf-obj) - Java library/application to convert OBJ to glTF
+* **Assimp → glTF**
+  * [Assimp](http://www.assimp.org/) - General-purpose conversion pipeline with a glTF importer/exporter pipeline. See the [list of supported import formats](https://github.com/assimp/assimp#supported-file-formats).
+* **COLLADA → glTF**
+  * [COLLADA2GLTF](https://github.com/KhronosGroup/COLLADA2GLTF/) - Command-line tool to convert COLLADA to glTF
+  * [Docker collada2gltf](https://hub.docker.com/r/winsent/collada2gltf/) - Docker container of Python web service to convert COLLADA to glTF
+  * [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) - Simple Node.js web service built on COLLADA2GLTF
+  * [Node.js collada2gltf](https://www.npmjs.com/package/collada2gltf) - Node.js wrapper around COLLADA2GLTF
+  * [colladaToBglTFConverter](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter) - Groovy/JavaScript tool to convert COLLADA to Binary glTF (0.8 / CESIUM_binary_glTF)
+* **FBX → glTF**
+  * [FBX-glTF](https://github.com/cyrillef/FBX-glTF) - FBX glTF importer/exporter plug-in and converter
+* **OBJ (Wavefront) → glTF**
+  * [obj2gltf](https://github.com/AnalyticalGraphicsInc/OBJ2GLTF) - Command-line tool to convert OBJ to glTF
+  * [jgltf-obj](https://github.com/javagl/JglTF/tree/master/jgltf-obj) - Java library/application to convert OBJ to glTF
+* **OSM (OpenStreetMap) → glTF**
+  * [osm2cesium](https://github.com/stirringhalo/osm2cesium) - Extracts buildings in OpenStreetMap and converts them to glTF
+
+Multiple formats:
+
+  * [COLLADA|OBJ to glTF](http://cesiumjs.org/convertmodel.html) - online drag and drop converter for COLLADA and OBJ
 
 ### Exporters
 
@@ -42,6 +48,8 @@ Please provide spec feedback and community updates by submitting [issues](https:
 ### Optimizers
 
 * [glTF Pipeline](https://github.com/AnalyticalGraphicsInc/gltf-pipeline) - Node.js command-line tool and module for optimizing glTF assets
+* [gltf2glb](https://github.com/Geopipe/gltf2glb) - Python tool to convert glTF to Binary glTF
+* [binary-gltf-utils](https://github.com/Qantas94Heavy/binary-gltf-utils) - Node.js tool to convert glTF to Binary glTF
 
 ### Validators
 
