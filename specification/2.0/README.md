@@ -882,6 +882,8 @@ The joint hierarchy used for controlling skinned mesh pose is simply the glTF no
 
 For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-0.2.0.png).
 
+> **Implementation Note:** A node definition does not specify whether the node should be treated as a joint. Client implementations may wish to traverse the `skins` array first, marking each joint node.
+
 ### Instantiation
 
 A mesh is instantiated by `node.mesh` property. The same mesh could be used by many nodes, which could have different transformations. For example:
