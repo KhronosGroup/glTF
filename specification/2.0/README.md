@@ -1455,6 +1455,8 @@ All glTF extensions required to load and/or render an asset must be listed in th
 }
 ```
 
+`extensionsRequired` is a subset of `extensionsUsed`. All values in `extensionsRequired` must also exist in `extensionsUsed`.
+
 For more information on glTF extensions, consult the [extensions registry specification](../../extensions/README.md).
 
 # GLB File Format Specification
