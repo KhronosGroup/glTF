@@ -54,12 +54,14 @@ var global = window;
         // only CommonJS-like enviroments that support module.exports,
         // like Node.
         factory(module.exports);
-    } else if (typeof define === 'function' && define.amd) {
+    }
+    else if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define([], function () {
             return factory(root);
         });
-    } else {
+    }
+    else {
         // Browser globals
         factory(root);
     }
@@ -71,11 +73,14 @@ var global = window;
     // case-insensitive check, CONSIDER skipping leading whitespace
     var isAbsolutePathRegex = new RegExp("^" + window.location.protocol, "i");
     // Case-insensitive check, CONSIDER skipping leading whitespace
-    var isDataUriRegex = /^data:/i; 
+    var isDataUriRegex = /^data:/i;
 
     var glTFParser = Object.create(Object.prototype, {
 
-        _rootDescription: { value: null, writable: true },
+        _rootDescription: {
+            value: null,
+            writable: true
+        },
 
         rootDescription: {
             set: function(value) {
@@ -86,7 +91,10 @@ var global = window;
             }
         },
 
-        baseURL: { value: null, writable: true },
+        baseURL: {
+            value: null,
+            writable: true
+        },
 
         resolvePathIfNeeded: {
             value: function (path) {
@@ -105,9 +113,11 @@ var global = window;
                     var descriptions = this.json[category];
                     if (descriptions) {
                         var descriptionKeys = Object.keys(descriptions);
-                        descriptionKeys.forEach( function(descriptionKey) {
+                        descriptionKeys.forEach(function(descriptionKey) {
                             var description = descriptions[descriptionKey];
-                            description.uri = this.resolvePathIfNeeded(description.uri);
+                            if (description.uri) {
+                                description.uri = this.resolvePathIfNeeded(description.uri);
+                            }
                         }, this);
                     }
                 }, this);
@@ -138,17 +148,15 @@ var global = window;
         },
 
         getEntryDescription: {
-            value: function (entryID, entryType) {
-                var entries = null;
-
-                var category = entryType;
-                entries = this.rootDescription[category];
-                if (!entries) {
-                    console.log("ERROR:CANNOT find expected category named:"+category);
+            value: function (entryID, category) {
+                var entries = this.rootDescription[category];
+                if (entries) {
+                    return entries[entryID];
+                }
+                else {
+                    console.error("CANNOT find expected category named:" + category);
                     return null;
                 }
-
-                return entries ? entries[entryID] : null;
             }
         },
 
@@ -170,7 +178,7 @@ var global = window;
                 var categoryState = this._state.categoryState;
                 var keys = categoryState.keys;
                 if (!keys) {
-                    console.log("INCONSISTENCY ERROR");
+                    console.error("INCONSISTENCY ERROR");
                     return false;
                 }
 
@@ -222,11 +230,9 @@ var global = window;
                     var keys = categoryState.keys;
                     if (!keys) {
                         categoryState.keys = keys = Object.keys(this.rootDescription[category]);
-                        if (keys) {
-                            if (keys.length == 0) {
-                                this._stepToNextDescription();
-                                continue;
-                            }
+                        if (keys.length === 0) {
+                            this._stepToNextDescription();
+                            continue;
                         }
                     }
 
@@ -235,19 +241,18 @@ var global = window;
                     var description = this.getEntryDescription(entryID, type);
                     if (!description) {
                         if (this.handleError) {
-                            this.handleError("INCONSISTENCY ERROR: no description found for entry "+entryID);
+                            this.handleError("INCONSISTENCY ERROR: no description found for entry " + entryID);
                             success = false;
                             break;
                         }
-                    } else {
-
+                    }
+                    else {
                         if (methodForType[type]) {
                             if (methodForType[type].call(this, entryID, description, this._state.userInfo) === false) {
                                 success = false;
                                 break;
                             }
                         }
-
                         this._stepToNextDescription();
                     }
                 }
@@ -255,7 +260,6 @@ var global = window;
                 if (this.handleLoadCompleted) {
                     this.handleLoadCompleted(success);
                 }
-
             }
         },
 
@@ -263,7 +267,7 @@ var global = window;
             enumerable: true,
             value: function(callback) {
                 var self = this;
-                //FIXME: handle error
+                // FIXME: handle error
                 if (!this._json)  {
                     var jsonPath = this._path;
                     var i = jsonPath.lastIndexOf("/");
@@ -271,8 +275,8 @@ var global = window;
                     var jsonfile = new XMLHttpRequest();
                     jsonfile.open("GET", jsonPath, true);
                     jsonfile.onreadystatechange = function() {
-                        if (jsonfile.readyState == 4) {
-                            if (jsonfile.status == 200) {
+                        if (jsonfile.readyState === 4) {
+                            if (jsonfile.status === 200) {
                                 self.json = JSON.parse(jsonfile.responseText);
                                 if (callback) {
                                     callback(self.json);
@@ -281,34 +285,39 @@ var global = window;
                         }
                     };
                     jsonfile.send(null);
-               } else {
+                }
+                else {
                     if (callback) {
-                        callback(this.json);
+                        callback(this._json);
                     }
                 }
             }
         },
 
-        /* load JSON and assign it as description to the reader */
+        // load JSON and assign it as description to the reader
         _buildLoader: {
             value: function(callback) {
                 var self = this;
                 function JSONReady(json) {
                     self.rootDescription = json;
-                    if (callback)
+                    if (callback) {
                         callback(this);
+                    }
                 }
 
                 this._loadJSONIfNeeded(JSONReady);
             }
         },
 
-        _state: { value: null, writable: true },
+        _state: {
+            value: null,
+            writable: true
+        },
 
         _getEntryType: {
             value: function(entryID) {
                 var rootKeys = categoriesDepsOrder;
-                for (var i = 0 ;  i < rootKeys.length ; i++) {
+                for (var i = 0; i < rootKeys.length; i++) {
                     var rootValues = this.rootDescription[rootKeys[i]];
                     if (rootValues) {
                         return rootKeys[i];
@@ -320,7 +329,7 @@ var global = window;
 
         getNextCategoryIndex: {
             value: function(currentIndex) {
-                for (var i = currentIndex ; i < categoriesDepsOrder.length ; i++) {
+                for (var i = currentIndex; i < categoriesDepsOrder.length; i++) {
                     if (this.hasCategory(categoriesDepsOrder[i])) {
                         return i;
                     }
@@ -335,7 +344,7 @@ var global = window;
             value: function(userInfo, options) {
                 var self = this;
                 this._buildLoader(function loaderReady(reader) {
-                    var startCategory = self.getNextCategoryIndex.call(self,0);
+                    var startCategory = self.getNextCategoryIndex.call(self, 0);
                     if (startCategory !== -1) {
                         self._state = { "userInfo" : userInfo,
                                         "options" : options,
@@ -355,10 +364,13 @@ var global = window;
             }
         },
 
-        //this is meant to be global and common for all instances
-        _knownURLs: { writable: true, value: {} },
+        // this is meant to be global and common for all instances
+        _knownURLs: {
+            writable: true,
+            value: {}
+        },
 
-        //to be invoked by subclass, so that ids can be ensured to not overlap
+        // to be invoked by subclass, so that ids can be ensured to not overlap
         loaderContext: {
             value: function() {
                 if (typeof this._knownURLs[this._path] === "undefined") {
@@ -381,7 +393,7 @@ var global = window;
 
     });
 
-    if(root) {
+    if (root) {
         root.glTFParser = glTFParser;
     }
 
