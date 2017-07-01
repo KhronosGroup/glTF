@@ -13,9 +13,19 @@ glTF™ (GL Transmission Format) is a royalty-free specification for the efficie
 
 Please provide spec feedback and community updates by submitting [issues](https://github.com/KhronosGroup/glTF/issues).  For quick questions, use [gitter](https://gitter.im/KhronosGroup/glTF).
 
-## Sample Models
+## Quickstart
+
+### For developers
 
 [Sample models](https://github.com/KhronosGroup/glTF-Sample-Models) for learning glTF, and testing runtime engines and content pipeline tools.
+
+### For artists
+
+- [Blender glTF 2.0 Exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter)
+- Preview tools:
+  - [Sketchfab](https://sketchfab.com/)
+  - [BabylonJS Sandbox](https://www.babylonjs.com/sandbox/)
+  - [glTF viewer](https://gltf-viewer.donmccurdy.com/) (three.js)
 
 ## glTF Tools
 
