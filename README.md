@@ -21,7 +21,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 
 ### For artists
 
-[Blender Exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter), for creating and converting models with glTF 2.0.
+[Blender exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter) for creating and converting models with glTF 2.0.
 
 Preview tools:
   - [Sketchfab](https://sketchfab.com/)
@@ -32,20 +32,20 @@ Preview tools:
 
 ### Converters and Exporters
 
-| Tool | Status | Input Formats | Description |
-|------|--------|---------------|-------------|
-| [Blender Exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | — | Official glTF 2.0 exporter for Blender |
-| [COLLADA2GLTF](https://github.com/KhronosGroup/COLLADA2GLTF/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | `COLLADA` | Official command-line converter |
-| [COLLADA\|OBJ to glTF](http://cesiumjs.org/convertmodel.html) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | `OBJ`, `COLLADA` | Online drag and drop converter |
-| [obj2gltf](https://github.com/AnalyticalGraphicsInc/OBJ2GLTF)  | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | `OBJ` | Command-line converter |
-| [FBX-glTF](https://github.com/cyrillef/FBX-glTF) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | `FBX` | Plug-in and command-line converter |
-| [Assimp](http://www.assimp.org/) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | [Multiple](https://github.com/assimp/assimp#supported-file-formats) | General-purpose online conversion pipeline |
-| [colladaToBglTFConverter](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter) | ![status](https://img.shields.io/badge/glTF-0%2E8-orange.svg?style=flat) | `COLLADA` | Groovy/JavaScript converter |
-| [Docker collada2gltf](https://hub.docker.com/r/winsent/collada2gltf/) | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | `COLLADA` | Docker container for Python web service, built on COLLADA2GLTF |
-| [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | `COLLADA` | Node.js web service, built on COLLADA2GLTF |
-| [Node.js collada2gltf](https://www.npmjs.com/package/collada2gltf) | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | `COLLADA` | Node.js programmatic wrapper for COLLADA2GLTF |
-| [jgltf-obj](https://github.com/javagl/JglTF/tree/master/jgltf-obj) | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | `OBJ` | Java library/application |
-| [osm2cesium](https://github.com/stirringhalo/osm2cesium) | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | `OSM` | Extracts buildings in OpenStreetMap and converts them to glTF |
+| Tool | Input | Output | Description |
+|------|-------|--------|-------------|
+| [Blender Exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official exporter for Blender |
+| [COLLADA2GLTF](https://github.com/KhronosGroup/COLLADA2GLTF/) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official command-line converter |
+| [COLLADA\|OBJ to glTF](http://cesiumjs.org/convertmodel.html) | `OBJ`, `COLLADA` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Online drag and drop converter |
+| [obj2gltf](https://github.com/AnalyticalGraphicsInc/OBJ2GLTF)  | `OBJ` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Command-line converter |
+| [FBX-glTF](https://github.com/cyrillef/FBX-glTF) | `FBX` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Plug-in and command-line converter |
+| [Assimp](http://www.assimp.org/) | [Multiple](https://github.com/assimp/assimp#supported-file-formats) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | General-purpose online conversion pipeline |
+| [colladaToBglTFConverter](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-0%2E8-orange.svg?style=flat) | Groovy/JavaScript converter |
+| [Docker collada2gltf](https://hub.docker.com/r/winsent/collada2gltf/) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Docker container for Python web service, built on COLLADA2GLTF |
+| [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Node.js web service, built on COLLADA2GLTF |
+| [Node.js collada2gltf](https://www.npmjs.com/package/collada2gltf) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Node.js programmatic wrapper for COLLADA2GLTF |
+| [jgltf-obj](https://github.com/javagl/JglTF/tree/master/jgltf-obj) | `OBJ` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Java library/application |
+| [osm2cesium](https://github.com/stirringhalo/osm2cesium) | `OSM` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Extracts buildings in OpenStreetMap and converts them to glTF |
 
 ### Optimizers
 
