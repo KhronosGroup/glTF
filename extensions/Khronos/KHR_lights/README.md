@@ -109,7 +109,7 @@ Table 1. Light Shared Properties
 | `falloffAngle`         | Falloff angle in radians.       | PI / 2.0      | `spot`                                    |
 | `falloffExponent`      | Falloff exponent.               | 0.0           | `spot`                                    |
 
-### Ambient
+#### Ambient
 
 Ambient lights define constant lighting throughout the scene. Ambient lights support only the `color` light property described in Table 1.
 For Physically-Based Rendering (PBR) materials, this parameter is treated as having an environment map having this color value for image based lighting (IBL).
@@ -118,10 +118,10 @@ For Physically-Based Rendering (PBR) materials, this parameter is treated as hav
 
 Directional lights are light sources that emit from infinitely far away in a specified direction. This light type uses the light properties `color` and `direction` described in Table 1.
 
-### Point
+#### Point
 
 Point lights emit light in all directions over a  distance. Point lights support the `color`, `constantAttenuation`, `linearAttenuation` and `quadraticAttenuation` light properties described in Table 1. Point lights do not have a direction.
 
-### Spot
+#### Spot
 
 Sport lights emit light in a directions over a distance. Spot lights support the `color`, `constantAttenuation`, `linearAttenuation`, `quadraticAttenuation`, `falloffAngle` and `falloffExponent` light properties described in Table 1.
