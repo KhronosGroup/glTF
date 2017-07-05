@@ -33,7 +33,7 @@ Lights define light sources in the scene.
 
 The other lights are contained in nodes thus can be transformed.
 
-A conforming implementation of this extension must be able to load light data defined in the asset, but it is not obligated to render the asset using those lights. 
+A conforming implementation of this extension must be able to load light data defined in the asset and has to render the assets using those lights. 
 
 ### Defining Lights
 
@@ -77,9 +77,13 @@ Each light defines a mandatory `type` property that designates the type of light
 For light types that have a position (`point` and `spot` lights), the light's position is defined of the node's world location.
 For light types that have a direction (`directional` and `spot` lights), the light's direction is defined as the vector `(0.0, 0.0, -1.0)` and the rotation of the node orients the light accordingly.
 
+`ambient` lights are only valid referenced by a scene.
+
 ### Adding Light Instances to Scenes
 
 `ambient` lights have no position and no orientation. These lights are placed in the scene by defining an `extensions` property of a scene, and within that a `KHR_lights` property that identifies a light using its `light` property.
+
+`directional`, `point`, `spot` lights are only valid referenced by a node.
 
 ```javascript
 "scenes" : [
