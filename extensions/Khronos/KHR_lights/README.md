@@ -124,8 +124,54 @@ Directional lights are light sources that emit from infinitely far away in a spe
 
 #### Point
 
-Point lights emit light in all directions over a  distance. Point lights support the `color`, `constantAttenuation`, `linearAttenuation` and `quadraticAttenuation` light properties described in Table 1. Point lights do not have a direction.
+Point lights emit light in all directions over a distance. Point lights support the `color` property. `constantAttenuation`, `linearAttenuation` and `quadraticAttenuation` light properties embedded in the `positional` property describe the different attenuations.
+
+```javascript
+"extensions": {
+    "KHR_lights" : {
+        "lights": [
+            {
+                "positional": [
+                    "constantAttenuation": 1.0
+                ],
+                "color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "type": "point"
+            }
+        ]
+    }
+}
+```
+
+Point lights do not have a direction.
 
 #### Spot
 
-Sport lights emit light in a directions over a distance. Spot lights support the `color`, `constantAttenuation`, `linearAttenuation`, `quadraticAttenuation`, `falloffAngle` and `falloffExponent` light properties described in Table 1.
+Spot lights emit light in a direction over a distance.  Spot lights support the `color` property. `constantAttenuation`, `linearAttenuation` and `quadraticAttenuation` light properties embedded in the `positional` property describe the different attenuations. Spot light specific properties `falloffAngle` and `falloffExponent` properties are embedded inside the `spot` property.
+
+```javascript
+"extensions": {
+    "KHR_lights" : {
+        "lights": [
+            {
+                "positional": [
+                    "constantAttenuation": 1.0,
+                    "spot": [
+                        "falloffAngle": 1.57079632679,
+                        "falloffExponent": 0.0
+                    ]
+                ],
+                "color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "type": "spot"
+            }
+        ]
+    }
+}
+```
