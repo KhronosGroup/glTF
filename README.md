@@ -31,17 +31,15 @@ Preview tools:
 
 ## glTF Tools
 
-### Converters and Exporters
+### Importers
 
-### Importers, Exporters, and Converters
+### Converters and Exporters
 
 | Tool | Input | Output | Description |
 |------|-------|--------|-------------|
 | [Khronos Group Blender Exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official exporter for Blender |
-| [Blender Importer](https://github.com/ksons/gltf-blender-importer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | — | Blender importer for glTF 2.0 (alpha) |
 | [COLLADA2GLTF](https://github.com/KhronosGroup/COLLADA2GLTF/) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official command-line converter |
 | [Unity Exporter (Sketchfab fork)](https://github.com/sketchfab/Unity-glTF-Exporter) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Unity editor wizard that exports to glTF Format |
-| [Unity Loader](https://github.com/AltspaceVR/UnityGLTF) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | — | Unity3D library for exporting, loading, parsing, and rendering glTF assets |
 | [Cesium drag-and-drop converter](http://cesiumjs.org/convertmodel.html) | `OBJ`, `COLLADA` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Online drag and drop converter |
 | [obj2gltf](https://github.com/AnalyticalGraphicsInc/OBJ2GLTF)  | `OBJ` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Command-line converter |
 | [batchgltf](https://github.com/feiss/batchgltf) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Batch converter with GUI |
@@ -70,11 +68,12 @@ Preview tools:
 |------|--------|-------------|
 | [glTF Validator](https://github.com/KhronosGroup/glTF-Validator) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official command-line and drag-and-top tool to validate glTF assets against the specification |
 
-### Editors
+### Editors and Modeling Tools
 
 | Tool | Status | Description |
 |------|--------|-------------|
 | [glTF VCode Extension](https://marketplace.visualstudio.com/items?itemName=cesium.gltf-vscode) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Cross-platform JSON schema validation and previews for glTF 2.0 and 1.0 |
+| [Blender Importer](https://github.com/ksons/gltf-blender-importer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Blender importer for glTF 2.0 (alpha) |
 
 ### Loaders and Viewers
 
@@ -112,6 +111,12 @@ Preview tools:
 * [Sketchfab](https://blog.sketchfab.com/sketchfab-now-supports-gltf/)
 * [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export)
 * [glTF plugin](https://wordpress.org/plugins/gltf-media-type/) for WordPress
+
+#### Game Engines
+
+| Tool | Status | Description |
+|------|--------|-------------|
+| [Unity Loader](https://github.com/AltspaceVR/UnityGLTF) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Unity3D library for exporting, loading, parsing, and rendering glTF assets |
 
 #### JavaScript / Node.js
 
