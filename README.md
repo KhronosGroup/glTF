@@ -79,28 +79,21 @@ Preview tools:
 
 #### WebGL Engines
 
-* [glTF loader](https://github.com/mrdoob/three.js/blob/master/examples/js/loaders/GLTFLoader.js) in [Three.js](https://threejs.org/)
-   * [Drag and drop glTF viewer](https://gltf-viewer.donmccurdy.com/)
-   * [model-tag](https://github.com/mrdoob/model-tag) - custom HTML Elements for displaying 3D models
-* [glTF loader](https://github.com/BabylonJS/Babylon.js/tree/master/loaders/src/glTF) in [BabylonJS](http://babylonjs.com/)
-   * [Sandbox](https://www.babylonjs.com/sandbox/) - drag and drop glTF assets
-* [glTF loader](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js) in [Cesium](http://cesiumjs.org/)
-   * The [COLLADA to glTF](http://cesiumjs.org/convertmodel.html) converter also supports drag-and-drop viewing of glTF assets
-   * [3D Models](https://cesiumjs.org/tutorials/3D-Models-Tutorial/) tutorial
-   * [Drag and drop glTF Viewer](https://www.virtualgis.io/gltfviewer/) ([source](https://github.com/virtualgis/gltfviewer))
-* Initial [glTF loader](https://github.com/pex-gl/pex-gltf) in [PEX](http://vorg.github.io/pex/) (geometry and materials)
-* Initial [glTF loader](https://github.com/xeolabs/xeogl/tree/master/src/importing/gltf) in [xeogl](http://xeogl.org/) (geometry and materials)
-   * [Importing glTF](https://github.com/xeolabs/xeogl/wiki/Importing-glTF) tutorial
-* [glTF loader](https://aframe.io/docs/0.5.0/components/gltf-model.html) in [A-Frame](https://aframe.io/)
-* [glTF loader](https://github.com/emadurandal/GLBoost/blob/master/src/js/middle_level/loader/GLTFLoader.js) in [GLBoost](https://github.com/emadurandal/GLBoost) ([examples](https://gitcdn.xyz/repo/emadurandal/GLBoost/master/examples/index.html))
-* [glTF plug-in](https://github.com/xml3d/xml3d-gltf-plugin) for [xml3d.js](http://xml3d.org)  (geometry and materials)
-* [glTF reader/writer](https://github.com/cedricpinson/osgjs/blob/master/sources/osgPlugins/ReaderWriterGLTF.js) in [OSG.JS](http://osgjs.org/)
-* [glTF loader](https://github.com/x3dom/x3dom/blob/master/src/util/glTF/glTFLoader.js) in [X3DOM](http://x3dom.org/)
-* [grimoirejs-gltf](https://github.com/GrimoireGL/grimoirejs-gltf) in [Grimoire.js](https://github.com/GrimoireGL/GrimoireJS)
+To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/gltf-test).
 
-#### WebGL Engine Comparison
-
-* [Compare WebGL-based glTF loaders](https://github.com/cx20/gltf-test) from various engines
+| Engine | Status | Scope | Related |
+|--------|--------|-------|-------------|
+| three.js ([loader](https://threejs.org/docs/index.html#examples/loaders/GLTF2Loader) / [engine](https://threejs.org/)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | All | [Drag-and-drop viewer](https://gltf-viewer.donmccurdy.com/), [`<gltf-model/>` component](https://github.com/mrdoob/model-tag) |
+| BabylonJS ([loader](https://github.com/BabylonJS/Babylon.js/tree/master/loaders/src/glTF) / [engine](http://babylonjs.com/)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | All | [Sandbox / viewer](https://www.babylonjs.com/sandbox/) |
+| Cesium ([loader](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js) / [engine](http://cesiumjs.org/)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | All | [Drag-and-drop viewer](https://www.virtualgis.io/gltfviewer/), [tutorial](https://cesiumjs.org/tutorials/3D-Models-Tutorial/) |
+| OSG.JS ([loader](https://github.com/cedricpinson/osgjs/blob/master/sources/osgPlugins/ReaderWriterGLTF.js) / [engine](http://osgjs.org/)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | All | |
+| A-Frame ([loader](https://aframe.io/docs/0.6.0/components/gltf-model.html) / [engine](https://aframe.io/)) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | All | [Preview of glTF 2.0 component](https://github.com/donmccurdy/aframe-extras/tree/master/src/loaders) |
+| PEX ([loader](https://github.com/pex-gl/pex-gltf) / [engine](http://vorg.github.io/pex/)) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Geometry and materials| |
+| GLBoost ([loader](https://github.com/emadurandal/GLBoost/blob/master/src/js/middle_level/loader/GLTFLoader.js) / [engine](https://github.com/emadurandal/GLBoost)) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | ? | [Examples](https://gitcdn.xyz/repo/emadurandal/GLBoost/master/examples/index.html) |
+| xml3d.js ([loader](https://github.com/xml3d/xml3d-gltf-plugin) / [engine](http://xml3d.org)) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Geometry and materials | |
+| X3DOM ([loader](https://github.com/x3dom/x3dom/blob/master/src/util/glTF/glTFLoader.js) / [engine](http://x3dom.org/)) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Geometry and materials | |
+| Grimoire.js ([loader](https://github.com/GrimoireGL/grimoirejs-gltf) / [engine](https://github.com/GrimoireGL/GrimoireJS)) | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | ? | |
+| xeogl ([loader](https://github.com/xeolabs/xeogl/tree/master/src/importing/gltf) / [engine](http://xeogl.org/)) | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Geometry and materials | [Tutorial](https://github.com/xeolabs/xeogl/wiki/Importing-glTF) |
 
 #### WebGL Samples
 
