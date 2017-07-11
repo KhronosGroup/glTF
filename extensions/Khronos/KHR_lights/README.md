@@ -5,10 +5,6 @@
 * Norbert Nopper, UX3D, <mailto:nopper@ux3d.io>
 * Thomas Kress, UX3D, <mailto:kress@ux3d.io>
 
-## Former Contributors
-
-* Tony Parisi, WEVR, [@auradeluxe](https://twitter.com/auradeluxe), <mailto:tparisi@gmail.com>
-
 ## Status
 
 Draft (not ratified yet)
