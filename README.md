@@ -27,7 +27,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 Preview tools:
   - [Sketchfab](https://sketchfab.com/)
   - [BabylonJS Sandbox](https://www.babylonjs.com/sandbox/)
-  - [glTF viewer](https://gltf-viewer.donmccurdy.com/) (three.js)
+  - [Drag-and-drop viewer](https://gltf-viewer.donmccurdy.com/)
 
 ## glTF Tools
 
@@ -47,7 +47,6 @@ Preview tools:
 | [FBX-glTF](https://github.com/cyrillef/FBX-glTF) | `FBX` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Plug-in and command-line converter |
 | [jgltf-obj](https://github.com/javagl/JglTF/tree/master/jgltf-obj) | `OBJ` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Java programmatic and command-line converters |
 | [Assimp](http://www.assimp.org/) | [Multiple](https://github.com/assimp/assimp#supported-file-formats) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | General-purpose online conversion pipeline |
-| [colladaToBglTFConverter](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-0%2E8-orange.svg?style=flat) | Groovy/Java command-line converter |
 | [Unity Exporter (original)](https://github.com/tparisi/Unity-glTF-Exporter) | — | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Unity editor wizard that exports to glTF Format |
 | [Docker collada2gltf](https://hub.docker.com/r/winsent/collada2gltf/) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Docker container for Python web service, built on COLLADA2GLTF |
 | [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Node.js web service, built on COLLADA2GLTF |
@@ -77,11 +76,13 @@ Preview tools:
 
 ### Applications
 
-* [Sketchfab](https://blog.sketchfab.com/sketchfab-now-supports-gltf/)
-* [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export)
-* [glTF plugin](https://wordpress.org/plugins/gltf-media-type/) for WordPress
-* [Remix 3D](https://www.remix3d.com) by Microsoft
-* [Paint 3D](https://www.microsoft.com/en-us/store/p/paint-3d/9nblggh5fv99) by Microsoft
+| Application | Status | Description |
+|-------------|--------|-------------|
+| [Paint 3D](https://www.microsoft.com/en-us/store/p/paint-3d/9nblggh5fv99) by Microsoft | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | 3D creation tool |
+| [Remix 3D](https://www.remix3d.com) by Microsoft | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Share and print 3D creations |
+| [Sketchfab](https://blog.sketchfab.com/sketchfab-now-supports-gltf/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Platform to publish, share & discover 3D online and in VR |
+| [Wordpress](https://wordpress.org/plugins/gltf-media-type/) (plugin) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Inline glTF renderer for WordPress |
+| [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Web-based 3D platform for architecture and interiors |
 
 ### Loaders and Viewers
 
@@ -115,35 +116,37 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 #### JavaScript / Node.js
 
-* [gltf-walker](https://github.com/ksons/gltf-walker) - convenience library for processing glTF
-* [gltf-viewer](https://github.com/avgp/gltf-viewer) - web component to display glTF models on a website
-* [rest3d](https://github.com/amd/rest3d) - serves glTF and other 3D assets via a REST API (glTF 0.8)
-* [gltf-viewer-element](https://www.npmjs.com/package/gltf-viewer-element) - Node.js package for loading and rendering glTF (0.8)
-* [Amobee 3D](http://amobee3d.s3.amazonaws.com/ads/Amobee3D_AdList.html) (0.8)
-* [RedCube.js](https://github.com/Reon90/redcube) - glTF viewer without dependencies
+| Tool | Status | Description |
+|------|--------|-------------|
+| [gltf-viewer](https://github.com/avgp/gltf-viewer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Web component to display glTF models on a website |
+| [gltf-walker](https://github.com/ksons/gltf-walker) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Convenience library for processing glTF |
+| [RedCube.js](https://github.com/Reon90/redcube) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | glTF viewer without dependencies |
 
 #### C++
 
-* [nvpro-pipeline](https://github.com/nvpro-pipeline/pipeline) - research rendering pipeline by NVIDIA for minimizing CPU cost
-* [Tiny glTF loader](https://github.com/syoyo/tinygltfloader) - Header only C++ glTF parsing library
-   * [alembic_to_gltf](https://github.com/syoyo/tinygltfloader/tree/master/examples/alembic_to_gltf) - Simple Alembic to glTF converter
-   * [cyhair_to_gltf](https://github.com/syoyo/tinygltfloader/tree/master/examples/cyhair_to_gltf) - Simple CyHair (hair curves) to glTF converter
-* [Cinder](http://discourse.libcinder.org/t/gltf-initial-release-wip/212) - Work-in-progress glTF importer
-* [yocto-gltf](https://github.com/xelatihy/yocto-gl) - Single file, header only, C++ glTF loading/writing automatically generated from the spec.
-* [LibreOffice](http://zolnaitamas.blogspot.com/2014/08/3d-models-in-impress-libreoffice-43.html) (glTF 0.8)
-* [AssetKit](https://github.com/recp/assetkit) - 3D asset importer/exporter/util library based on COLLADA/glTF specs
-* [Lugdunum3D](https://github.com/Lugdunum3D/glTF2-loader/tree/dev) - C++ glTF (2.0 only) loader
-* [gltfpp](https://github.com/mmha/gltfpp) - glTF 2.0 loader for C++14
+| Tool | Status | Description |
+|------|--------|-------------|
+| [Tiny glTF loader](https://github.com/syoyo/tinygltf) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat)  | Header only C++ glTF parsing library, with [Alembic→glTF](https://github.com/syoyo/tinygltfloader/tree/master/examples/alembic_to_gltf) and [CyHair->glTF](https://github.com/syoyo/tinygltfloader/tree/master/examples/cyhair_to_gltf) converters |
+| [yocto-gltf](https://github.com/xelatihy/yocto-gl) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Single file, header only, C++ glTF loading/writing automatically generated from the spec |
+| [Lugdunum3D](https://github.com/Lugdunum3D/glTF2-loader/tree/dev) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | C++ glTF (2.0 only) loader |
+| [gltfpp](https://github.com/mmha/gltfpp) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF 2.0 loader for C++14 |
+| [Cinder](http://discourse.libcinder.org/t/gltf-initial-release-wip/212) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Work-in-progress glTF importer |
+| [nvpro-pipeline](https://github.com/nvpro-pipeline/pipeline) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Research rendering pipeline by NVIDIA for minimizing CPU cost |
+| [AssetKit](https://github.com/recp/assetkit) | ? | 3D asset importer/exporter/util library |
 
 #### C++ and Vulkan
 
-* [Laugh Engine](https://github.com/jian-ru/laugh_engine#laugh-engine) - Vulkan PBR and IBL renderer
-* [VulKan ToolS](https://github.com/McNopper/Vulkan) - Vulkan helper library supporting glTF 2.0 assets with PBR materials
+| Tool | Status | Description |
+|------|--------|-------------|
+| [Laugh Engine](https://github.com/jian-ru/laugh_engine#laugh-engine) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Vulkan PBR and IBL renderer |
+| [VulKan ToolS](https://github.com/McNopper/Vulkan) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Vulkan helper library supporting glTF 2.0 assets with PBR materials |
 
 #### C# #
 
-* [C# glTF loader](https://github.com/KhronosGroup/glTF-CSharp-Loader) - C# reference loader for glTF
-* [Aspose.3D for .NET](http://www.aspose.com/products/3d/net) - Import, export, and convert glTF
+| Tool | Status | Description |
+|------|--------|-------------|
+| [C# glTF loader](https://github.com/KhronosGroup/glTF-CSharp-Loader) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | C# reference loader for glTF |
+| [Aspose.3D for .NET](http://www.aspose.com/products/3d/net) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat)| Import, export, and convert glTF |
 
 #### Go
 
