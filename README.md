@@ -29,7 +29,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
   * [Languages](#languages)
   * [Utilities](#utilities)
 * [Stack Overflow](#stack-overflow)
-* [Presentations and Articles](#presentations-and-artices)
+* [Presentations and Articles](#presentations-and-articles)
   * [Intros](#intros)
   * [All Presentations and Articles](#all-presentations-and-articles)
 
