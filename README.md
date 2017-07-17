@@ -13,6 +13,26 @@ glTF™ (GL Transmission Format) is a royalty-free specification for the efficie
 
 Please provide spec feedback and community updates by submitting [issues](https://github.com/KhronosGroup/glTF/issues).  For quick questions, use [gitter](https://gitter.im/KhronosGroup/glTF).
 
+## Contents
+
+* [Quickstart](#quickstart)
+* [glTF Tools](#gltf-tools)
+  * [Converters and Exporters](#converters-and-exporters)
+  * [Optimizers](#optimizers)
+  * [Validators](#validators)
+  * [Editors and Modeling Tools](#editors-and-modeling-tools)
+  * [Applications](#applications)
+  * [Loaders and Viewers](#loaders-and-viewers)
+    * [WebGL Engines](#webgl-engines)
+    * [WebGL Samples](#webgl-samples)
+    * [Game Engines](#game-engines)
+  * [Languages](#languages)
+  * [Utilities](#utilities)
+* [Stack Overflow](#stack-overflow)
+* [Presentations and Articles](#presentations-and-artices)
+  * [Intros](#intros)
+  * [All Presentations and Articles](#all-presentations-and-articles)
+
 ## Quickstart
 
 ### For developers
@@ -30,8 +50,6 @@ Preview tools:
   - [Drag-and-drop viewer](https://gltf-viewer.donmccurdy.com/)
 
 ## glTF Tools
-
-### Importers
 
 ### Converters and Exporters
 
@@ -113,6 +131,8 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | Tool | Status | Description |
 |------|--------|-------------|
 | [Unity Loader](https://github.com/AltspaceVR/UnityGLTF) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Unity3D library for exporting, loading, parsing, and rendering glTF assets |
+
+### Languages
 
 #### JavaScript / Node.js
 
