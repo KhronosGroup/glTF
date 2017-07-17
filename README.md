@@ -13,9 +13,24 @@ glTF™ (GL Transmission Format) is a royalty-free specification for the efficie
 
 Please provide spec feedback and community updates by submitting [issues](https://github.com/KhronosGroup/glTF/issues).  For quick questions, use [gitter](https://gitter.im/KhronosGroup/glTF).
 
+## Quickstart
+
+### For developers
+
+* [Sample models](https://github.com/KhronosGroup/glTF-Sample-Models) for testing runtime engines and content pipeline tools.
+* [Drag-and-drop validator](http://github.khronos.org/glTF-Validator/) for verifying correctness of existing glTF files.
+
+### For artists
+
+[Blender exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter) for creating and converting models with glTF 2.0.
+
+Preview tools:
+  - [Sketchfab](https://sketchfab.com/)
+  - [BabylonJS Sandbox](https://www.babylonjs.com/sandbox/)
+  - [Drag-and-drop viewer](https://gltf-viewer.donmccurdy.com/)
+
 ## Contents
 
-* [Quickstart](#quickstart)
 * [glTF Tools](#gltf-tools)
   * [Converters and Exporters](#converters-and-exporters)
   * [Optimizers](#optimizers)
@@ -32,22 +47,6 @@ Please provide spec feedback and community updates by submitting [issues](https:
 * [Presentations and Articles](#presentations-and-articles)
   * [Intros](#intros)
   * [All Presentations and Articles](#all-presentations-and-articles)
-
-## Quickstart
-
-### For developers
-
-* [Sample models](https://github.com/KhronosGroup/glTF-Sample-Models) for testing runtime engines and content pipeline tools.
-* [Drag-and-drop validator](http://github.khronos.org/glTF-Validator/) for verifying correctness of existing glTF files.
-
-### For artists
-
-[Blender exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter) for creating and converting models with glTF 2.0.
-
-Preview tools:
-  - [Sketchfab](https://sketchfab.com/)
-  - [BabylonJS Sandbox](https://www.babylonjs.com/sandbox/)
-  - [Drag-and-drop viewer](https://gltf-viewer.donmccurdy.com/)
 
 ## glTF Tools
 
@@ -150,6 +149,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | [yocto-gltf](https://github.com/xelatihy/yocto-gl) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Single file, header only, C++ glTF loading/writing automatically generated from the spec |
 | [Lugdunum3D](https://github.com/Lugdunum3D/glTF2-loader/tree/dev) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | C++ glTF (2.0 only) loader |
 | [gltfpp](https://github.com/mmha/gltfpp) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF 2.0 loader for C++14 |
+| [TGen](https://github.com/mlimper/tgen/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Simple C++ Tangent Generator |
 | [Cinder](http://discourse.libcinder.org/t/gltf-initial-release-wip/212) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Work-in-progress glTF importer |
 | [nvpro-pipeline](https://github.com/nvpro-pipeline/pipeline) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Research rendering pipeline by NVIDIA for minimizing CPU cost |
 | [AssetKit](https://github.com/recp/assetkit) | ? | 3D asset importer/exporter/util library |
@@ -203,6 +203,12 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | Tool | Status | Description |
 |------|--------|-------------|
 | [Orka](https://github.com/onox/orka) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | The OpenGL 4.5 Rendering Kernel in Ada |
+
+#### TypeScript
+
+| Tool | Status | Description |
+|------|--------|-------------|
+| [gltf-typescript-generator](https://github.com/robertlong/gltf-typescript-generator) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | CLI to generate a TypeScript interface for glTF |
 
 ### Utilities
 
