@@ -75,6 +75,14 @@ Preview tools:
 | [glTF VCode Extension](https://marketplace.visualstudio.com/items?itemName=cesium.gltf-vscode) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Cross-platform JSON schema validation and previews for glTF 2.0 and 1.0 |
 | [Blender Importer](https://github.com/ksons/gltf-blender-importer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Blender importer for glTF 2.0 (alpha) |
 
+### Applications
+
+* [Sketchfab](https://blog.sketchfab.com/sketchfab-now-supports-gltf/)
+* [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export)
+* [glTF plugin](https://wordpress.org/plugins/gltf-media-type/) for WordPress
+* [Remix 3D](https://www.remix3d.com) by Microsoft
+* [Paint 3D](https://www.microsoft.com/en-us/store/p/paint-3d/9nblggh5fv99) by Microsoft
+
 ### Loaders and Viewers
 
 #### WebGL Engines
@@ -98,12 +106,6 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 #### WebGL Samples
 
 * [WebGL-PBR](https://github.com/moneimne/WebGL-PBR) - barebones reference implementation for PBR in glTF 2.0 (in progress)
-
-#### WebGL Applications
-
-* [Sketchfab](https://blog.sketchfab.com/sketchfab-now-supports-gltf/)
-* [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export)
-* [glTF plugin](https://wordpress.org/plugins/gltf-media-type/) for WordPress
 
 #### Game Engines
 
@@ -129,6 +131,9 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 * [Cinder](http://discourse.libcinder.org/t/gltf-initial-release-wip/212) - Work-in-progress glTF importer
 * [yocto-gltf](https://github.com/xelatihy/yocto-gl) - Single file, header only, C++ glTF loading/writing automatically generated from the spec.
 * [LibreOffice](http://zolnaitamas.blogspot.com/2014/08/3d-models-in-impress-libreoffice-43.html) (glTF 0.8)
+* [AssetKit](https://github.com/recp/assetkit) - 3D asset importer/exporter/util library based on COLLADA/glTF specs
+* [Lugdunum3D](https://github.com/Lugdunum3D/glTF2-loader/tree/dev) - C++ glTF (2.0 only) loader
+* [gltfpp](https://github.com/mmha/gltfpp) - glTF 2.0 loader for C++14
 
 #### C++ and Vulkan
 
@@ -142,15 +147,22 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 #### Go
 
-* [gltf](https://github.com/sturfeeinc/glTF) - A go library for marshaling and unmarshaling glTF
+| Tool | Status | Description |
+|------|--------|-------------|
+| [gltf](https://github.com/sturfeeinc/glTF) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | go library for marshaling and unmarshaling glTF |
 
 #### Rust
 
-* [gltf](https://github.com/Alteous/gltf) - Rust library for loading glTF
+| Tool | Status | Description |
+|------|--------|-------------|
+| [Loader](https://github.com/Alteous/gltf) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | |
+| [Viewer](https://github.com/bwasty/gltf-viewer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | |
 
 #### Haxe
 
-* [haxe-gltf](https://github.com/FuzzyWuzzie/haxe-gltf) - A Haxe library for reading glTF
+| Tool | Status | Description |
+|------|--------|-------------|
+| [haxe-gltf](https://github.com/FuzzyWuzzie/haxe-gltf) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | A Haxe library for reading glTF |
 
 #### Java
 
@@ -162,6 +174,12 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
       * [jgltf-viewer-jogl](https://github.com/javagl/JglTF/tree/master/jgltf-viewer-jogl) - A glTF viewer based on [JOGL](http://jogamp.org/jogl/www/)
       * [jgltf-viewer-lwjgl](https://github.com/javagl/JglTF/tree/master/jgltf-viewer-lwjgl) - A glTF viewer based on [LWJGL version 2](http://legacy.lwjgl.org/)
   * [jgltf-browser](https://github.com/javagl/JglTF/tree/master/jgltf-browser) - An application combining the above libraries
+
+#### Ada
+
+| Tool | Status | Description |
+|------|--------|-------------|
+| [Orka](https://github.com/onox/orka) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | The OpenGL 4.5 Rendering Kernel in Ada |
 
 ### Utilities
 
