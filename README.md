@@ -178,8 +178,8 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 | Tool | Status | Description |
 |------|--------|-------------|
-| [Loader](https://github.com/Alteous/gltf) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | |
-| [Viewer](https://github.com/bwasty/gltf-viewer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | |
+| [Loader](https://github.com/Alteous/gltf) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | A crate for loading glTF 2.0 |
+| [Viewer](https://github.com/bwasty/gltf-viewer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF 2.0 Viewer written in Rust |
 
 #### Haxe
 
