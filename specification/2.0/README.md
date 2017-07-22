@@ -1013,9 +1013,11 @@ The following example shows an image pointing to an external PNG image file and 
 ```
 > **Implementation Note:** When image data is provided by `uri` and `mimeType` is defined, client implementations should prefer JSON-defined MIME Type over one provided by transport layer.
 
-First image pixel (UV coordinates origin) corresponds to the upper left corner of the image.
-
-> **Implementation Note:** OpenGL-based implementations must flip Y axis to achieve correct texture sampling.
+The origin of the UV coordinates (0, 0) corresponds to the upper left corner of a texture image.
+This is illustrated in the following figure, where the respective UV coordinates are shown for all four corners of a normalized UV space:
+<p align="center">
+<img src="figures/texcoords.jpg" /><br/>
+</p>
 
 Any colorspace information (such as ICC profiles, intents, etc) from PNG or JPEG containers must be ignored.
 
