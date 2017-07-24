@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Texture",
+    "type": "object",
+    "description": "A texture and its sampler.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "sampler": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the sampler used by this texture. When undefined, a sampler with repeat wrapping and auto filtering should be used."
+        },
+        "source": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the image used by this texture."
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "gltf_webgl": "`createTexture()`, `deleteTexture()`, `bindTexture()`, `texImage2D()`, and `texParameterf()`"
+}

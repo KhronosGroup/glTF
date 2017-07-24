@@ -1,0 +1,129 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Accessor",
+    "type": "object",
+    "description": "A typed view into a bufferView.  A bufferView contains raw binary data.  An accessor provides a typed view into a bufferView or a subset of a bufferView similar to how WebGL's `vertexAttribPointer()` defines an attribute in a buffer.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "bufferView": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the bufferView.",
+            "gltf_detailedDescription": "The index of the bufferView. When not defined, accessor must be initialized with zeros; `sparse` property or extensions could override zeros with actual values."
+        },
+        "byteOffset": {
+            "type": "integer",
+            "description": "The offset relative to the start of the bufferView in bytes.",
+            "minimum": 0,
+            "default": 0,
+            "gltf_detailedDescription": "The offset relative to the start of the bufferView in bytes.  This must be a multiple of the size of the component datatype.",
+            "gltf_webgl": "`vertexAttribPointer()` offset parameter"
+        },
+        "componentType": {
+            "description": "The datatype of components in the attribute.",
+            "gltf_detailedDescription": "The datatype of components in the attribute.  All valid values correspond to WebGL enums.  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, `Uint32Array`, and `Float32Array`, respectively.  5125 (UNSIGNED_INT) is only allowed when the accessor contains indices, i.e., the accessor is only referenced by `primitive.indices`.",
+            "gltf_webgl": "`vertexAttribPointer()` type parameter",
+            "anyOf": [
+                {
+                    "enum": [ 5120 ],
+                    "description": "BYTE"
+                },
+                {
+                    "enum": [ 5121 ],
+                    "description": "UNSIGNED_BYTE"
+                },
+                {
+                    "enum": [ 5122 ],
+                    "description": "SHORT"
+                },
+                {
+                    "enum": [ 5123 ],
+                    "description": "UNSIGNED_SHORT"
+                },
+                {
+                    "enum": [ 5125 ],
+                    "description": "UNSIGNED_INT"
+                },
+                {
+                    "enum": [ 5126 ],
+                    "description": "FLOAT"
+                },
+                {
+                    "type": "integer"
+                }
+            ]
+        },
+        "normalized": {
+            "type": "boolean",
+            "description": "Specifies whether integer data values should be normalized.",
+            "default": false,
+            "gltf_detailedDescription": "Specifies whether integer data values should be normalized (`true`) to [0, 1] (for unsigned types) or [-1, 1] (for signed types), or converted directly (`false`) when they are accessed. This property is defined only for accessors that contain vertex attributes or animation output data.",
+            "gltf_webgl": "`vertexAttribPointer()` normalized parameter"
+        },
+        "count": {
+            "type": "integer",
+            "description": "The number of attributes referenced by this accessor.",
+            "minimum": 1,
+            "gltf_detailedDescription": "The number of attributes referenced by this accessor, not to be confused with the number of bytes or number of components."
+        },
+        "type": {
+            "description": "Specifies if the attribute is a scalar, vector, or matrix.",
+            "anyOf": [
+                {
+                    "enum": [ "SCALAR" ]
+                },
+                {
+                    "enum": [ "VEC2" ]
+                },
+                {
+                    "enum": [ "VEC3" ]
+                },
+                {
+                    "enum": [ "VEC4" ]
+                },
+                {
+                    "enum": [ "MAT2" ]
+                },
+                {
+                    "enum": [ "MAT3" ]
+                },
+                {
+                    "enum": [ "MAT4" ]
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "max": {
+            "type": "array",
+            "description": "Maximum value of each component in this attribute.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 1,
+            "maxItems": 16,
+            "gltf_detailedDescription": "Maximum value of each component in this attribute.  Array elements must be treated as having the same data type as accessor's `componentType`. Both min and max arrays have the same length.  The length is determined by the value of the type property; it can be 1, 2, 3, 4, 9, or 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer. When accessor is sparse, this property must contain max values of accessor data with sparse substitution applied."
+        },
+        "min": {
+            "type": "array",
+            "description": "Minimum value of each component in this attribute.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 1,
+            "maxItems": 16,
+            "gltf_detailedDescription": "Minimum value of each component in this attribute.  Array elements must be treated as having the same data type as accessor's `componentType`. Both min and max arrays have the same length.  The length is determined by the value of the type property; it can be 1, 2, 3, 4, 9, or 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer. When accessor is sparse, this property must contain min values of accessor data with sparse substitution applied."
+        },
+        "sparse": {
+            "allOf": [ { "$ref": "accessor.sparse.schema.json" } ],
+            "description": "Sparse storage of attributes that deviate from their initialization value."
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "dependencies": {
+        "byteOffset": [ "bufferView" ]
+    },
+    "required": [ "componentType", "count", "type" ]
+}

@@ -1,0 +1,54 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Buffer View",
+    "type": "object",
+    "description": "A view into a buffer generally representing a subset of the buffer.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "buffer": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the buffer."
+        },
+        "byteOffset": {
+            "type": "integer",
+            "description": "The offset into the buffer in bytes.",
+            "minimum": 0,
+            "default": 0
+        },
+        "byteLength": {
+            "type": "integer",
+            "description": "The length of the bufferView in bytes.",
+            "minimum": 1
+        },
+        "byteStride": {
+            "type": "integer",
+            "description": "The stride, in bytes.",
+            "minimum": 4,
+            "maximum": 252,
+            "multipleOf": 4,
+            "gltf_detailedDescription": "The stride, in bytes, between vertex attributes.  When this is not defined, data is tightly packed. When two or more accessors use the same bufferView, this field must be defined.",
+            "gltf_webgl": "`vertexAttribPointer()` stride parameter"
+        },
+        "target": {
+            "description": "The target that the GPU buffer should be bound to.",
+            "gltf_webgl": "`bindBuffer()`",
+            "anyOf": [
+                {
+                    "enum": [ 34962 ],
+                    "description": "ARRAY_BUFFER"
+                },
+                {
+                    "enum": [ 34963 ],
+                    "description": "ELEMENT_ARRAY_BUFFER"
+                },
+                {
+                    "type": "integer"
+                }
+            ]
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "buffer", "byteLength" ]
+}

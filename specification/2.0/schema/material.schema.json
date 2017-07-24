@@ -1,0 +1,82 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Material",
+    "type": "object",
+    "description": "The material appearance of a primitive.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "name": { },
+        "extensions": { },
+        "extras": { },
+        "pbrMetallicRoughness": {
+            "allOf": [ { "$ref": "material.pbrMetallicRoughness.schema.json" } ],
+            "description": "A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology. When not specified, all the default values of `pbrMetallicRoughness` apply."
+        },
+        "normalTexture": {
+            "allOf": [ { "$ref": "material.normalTextureInfo.schema.json" } ],
+            "description": "The normal map texture.",
+            "gltf_detailedDescription": "A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [1/255 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer. In GLSL, this vector would be unpacked like so: `float3 normalVector = tex2D(<sampled normal map texture value>, texCoord) * 2 - 1`."
+        },
+        "occlusionTexture": {
+            "allOf": [ { "$ref": "material.occlusionTextureInfo.schema.json" } ],
+            "description": "The occlusion map texture.",
+            "gltf_detailedDescription": "The occlusion map texture. The occlusion values are sampled from the R channel. Higher values indicate areas that should receive full indirect lighting and lower values indicate no indirect lighting. These values are linear. If other channels are present (GBA), they are ignored for occlusion calculations."
+        },
+        "emissiveTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The emissive map texture.",
+            "gltf_detailedDescription": "The emissive map controls the color and intensity of the light being emitted by the material. This texture contains RGB components in sRGB color space. If a fourth component (A) is present, it is ignored."
+        },
+        "emissiveFactor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [ 0.0, 0.0, 0.0 ],
+            "description": "The emissive color of the material.",
+            "gltf_detailedDescription": "The RGB components of the emissive color of the material. These values are linear. If an emissiveTexture is specified, this value is multiplied with the texel values."
+        },
+        "alphaMode": {
+            "default": "OPAQUE",
+            "description": "The alpha rendering mode of the material.",
+            "gltf_detailedDescription": "The material's alpha rendering mode enumeration specifying the interpretation of the alpha value of the main factor and texture.",
+            "anyOf": [
+                {
+                    "enum": [ "OPAQUE" ],
+                    "description": "The alpha value is ignored and the rendered output is fully opaque."
+                },
+                {
+                    "enum": [ "MASK" ],
+                    "description": "The rendered output is either fully opaque or fully transparent depending on the alpha value and the specified alpha cutoff value."
+                },
+                {
+                    "enum": [ "BLEND" ],
+                    "description": "The alpha value is used to composite the source and destination areas. The rendered output is combined with the background using the normal painting operation (i.e. the Porter and Duff over operator)."
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "alphaCutoff": {
+            "type": "number",
+            "minimum": 0.0,
+            "default": 0.5,
+            "description": "The alpha cutoff value of the material.",
+            "gltf_detailedDescription": "Specifies the cutoff threshold when in `MASK` mode. If the alpha value is greater than or equal to this value then it is rendered as fully opaque, otherwise, it is rendered as fully transparent. A value greater than 1.0 will render the entire material as fully transparent. This value is ignored for other modes."
+        },
+        "doubleSided": {
+            "type": "boolean",
+            "default": false,
+            "description": "Specifies whether the material is double sided.",
+            "gltf_detailedDescription": "Specifies whether the material is double sided. When this value is false, back-face culling is enabled. When this value is true, back-face culling is disabled and double sided lighting is enabled. The back-face must have its normals reversed before the lighting equation is evaluated."
+        }
+    },
+     "dependencies" : {
+        "alphaCutoff" : ["alphaMode"]
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Animation Channel",
+    "type": "object",
+    "description": "Targets an animation's sampler at a node's property.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "sampler": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of a sampler in this animation used to compute the value for the target.",
+            "gltf_detailedDescription": "The index of a sampler in this animation used to compute the value for the target, e.g., a node's translation, rotation, or scale (TRS)."
+        },
+        "target": {
+            "allOf": [ { "$ref": "animation.channel.target.schema.json" } ],
+            "description": "The index of the node and TRS property to target."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "sampler", "target" ]
+}

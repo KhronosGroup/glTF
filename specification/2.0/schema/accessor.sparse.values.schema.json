@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Accessor Sparse Values",
+    "type": "object",
+    "description": "Array of size `accessor.sparse.count` times number of components storing the displaced accessor attributes pointed by `accessor.sparse.indices`.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "bufferView": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the bufferView with sparse values. Referenced bufferView can't have ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER target."
+        },
+        "byteOffset": {
+            "type": "integer",
+            "description": "The offset relative to the start of the bufferView in bytes. Must be aligned.",
+            "minimum": 0,
+            "default": 0
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "bufferView" ]
+}

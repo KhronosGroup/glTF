@@ -1,0 +1,56 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "technique",
+    "type" : "object",
+    "description" : "A template for material appearances.",
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "parameters" : {
+            "type" : "object",
+            "description" : "A dictionary object of technique.parameters objects.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "technique.parameters.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of technique.parameters objects.  Each parameter defines an attribute or uniform input, and an optional semantic and value.  Each parameter must be referenced by the attributes or uniforms dictionary properties."
+        },
+        "attributes" : {
+            "type" : "object",
+            "description" : "A dictionary object of strings that maps GLSL attribute names to technique parameter IDs.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "technique.attribute.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of strings that maps GLSL attribute names to technique parameter IDs.  Each string must also be in the parameters dictionary object."
+        },
+        "program" : {
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The index of the program."
+        },
+        "uniforms" : {
+            "type" : "object",
+            "description" : "A dictionary object of strings that maps GLSL uniform names to technique parameter IDs.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "technique.uniform.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of strings that maps GLSL attribute names to technique parameter IDs.  Each string must also be in the parameters dictionary object."
+        },
+        "states" : {
+            "allOf" : [ { "$ref" : "technique.states.schema.json" } ],
+            "description" : "Fixed-function rendering states.",
+            "default" : {}
+        },
+        "name" : {},
+        "extensions" : {},
+        "extras" : {}
+    },
+    "additionalProperties" : false,
+    "required" : ["program"]
+}

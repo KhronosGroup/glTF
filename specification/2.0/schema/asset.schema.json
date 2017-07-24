@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Asset",
+    "type": "object",
+    "description": "Metadata about the glTF asset.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "copyright": {
+            "type": "string",
+            "description": "A copyright message suitable for display to credit the content creator."
+        },
+        "generator": {
+            "type": "string",
+            "description": "Tool that generated this glTF model.  Useful for debugging."
+        },
+        "version": {
+            "type": "string",
+            "description": "The glTF version that this asset targets.",
+            "pattern": "^[0-9]+\\.[0-9]+$"
+        },
+        "minVersion": {
+            "type": "string",
+            "description": "The minimum glTF version that this asset targets.",
+            "pattern": "^[0-9]+\\.[0-9]+$"
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "version" ]
+}

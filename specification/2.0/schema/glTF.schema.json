@@ -1,0 +1,154 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "glTF",
+    "type": "object",
+    "description": "The root object for a glTF asset.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "extensionsUsed": {
+            "type": "array",
+            "description": "Names of glTF extensions used somewhere in this asset.",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true,
+            "minItems": 1
+        },
+        "extensionsRequired": {
+            "type": "array",
+            "description": "Names of glTF extensions required to properly load this asset.",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true,
+            "minItems": 1
+        },
+        "accessors": {
+            "type": "array",
+            "description": "An array of accessors.",
+            "items": {
+                "$ref": "accessor.schema.json"
+            },
+            "minItems": 1,
+            "gltf_detailedDescription": "An array of accessors.  An accessor is a typed view into a bufferView."
+        },
+        "animations": {
+            "type": "array",
+            "description": "An array of keyframe animations.",
+            "items": {
+                "$ref": "animation.schema.json"
+            },
+            "minItems": 1
+        },
+        "asset": {
+            "allOf": [ { "$ref": "asset.schema.json" } ],
+            "description": "Metadata about the glTF asset."
+        },
+        "buffers": {
+            "type": "array",
+            "description": "An array of buffers.",
+            "items": {
+                "$ref": "buffer.schema.json"
+            },
+            "minItems": 1,
+            "gltf_detailedDescription": "An array of buffers.  A buffer points to binary geometry, animation, or skins."
+        },
+        "bufferViews": {
+            "type": "array",
+            "description": "An array of bufferViews.",
+            "items": {
+                "$ref": "bufferView.schema.json"
+            },
+            "minItems": 1,
+            "gltf_detailedDescription": "An array of bufferViews.  A bufferView is a view into a buffer generally representing a subset of the buffer."
+        },
+        "cameras": {
+            "type": "array",
+            "description": "An array of cameras.",
+            "items": {
+                "$ref": "camera.schema.json"
+            },
+            "minItems": 1,
+            "gltf_detailedDescription": "An array of cameras.  A camera defines a projection matrix."
+        },
+        "images": {
+            "type": "array",
+            "description": "An array of images.",
+            "items": {
+                "$ref": "image.schema.json"
+            },
+            "minItems": 1,
+            "gltf_detailedDescription": "An array of images.  An image defines data used to create a texture."
+        },
+        "materials": {
+            "type": "array",
+            "description": "An array of materials.",
+            "items": {
+                "$ref": "material.schema.json"
+            },
+            "minItems": 1,
+            "gltf_detailedDescription": "An array of materials.  A material defines the appearance of a primitive."
+        },
+        "meshes": {
+            "type": "array",
+            "description": "An array of meshes.",
+            "items": {
+                "$ref": "mesh.schema.json"
+            },
+            "minItems": 1,
+            "gltf_detailedDescription": "An array of meshes.  A mesh is a set of primitives to be rendered."
+        },
+        "nodes": {
+            "type": "array",
+            "description": "An array of nodes.",
+            "items": {
+                "$ref": "node.schema.json"
+            },
+            "minItems": 1
+        },
+        "samplers": {
+            "type": "array",
+            "description": "An array of samplers.",
+            "items": {
+                "$ref": "sampler.schema.json"
+            },
+            "minItems": 1,
+            "gltf_detailedDescription": "An array of samplers.  A sampler contains properties for texture filtering and wrapping modes."
+        },
+        "scene": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the default scene."
+        },
+        "scenes": {
+            "type": "array",
+            "description": "An array of scenes.",
+            "items": {
+                "$ref": "scene.schema.json"
+            },
+            "minItems": 1
+        },
+        "skins": {
+            "type": "array",
+            "description": "An array of skins.",
+            "items": {
+                "$ref": "skin.schema.json"
+            },
+            "minItems": 1,
+            "gltf_detailedDescription": "An array of skins.  A skin is defined by joints and matrices."
+        },
+        "textures": {
+            "type": "array",
+            "description": "An array of textures.",
+            "items": {
+                "$ref": "texture.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "dependencies": {
+        "scene": [ "scenes" ]
+    },
+    "required": [ "asset" ]
+}

@@ -1,0 +1,29 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Mesh",
+    "type": "object",
+    "description": "A set of primitives to be rendered.  A node can contain one mesh.  A node's transform places the mesh in the scene.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "primitives": {
+            "type": "array",
+            "description": "An array of primitives, each defining geometry to be rendered with a material.",
+            "items": {
+                "$ref": "mesh.primitive.schema.json"
+            },
+            "minItems": 1
+        },
+        "weights": {
+            "type": "array",
+            "description": "Array of weights to be applied to the Morph Targets.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 1
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "primitives" ]
+}
