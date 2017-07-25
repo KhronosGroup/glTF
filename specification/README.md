@@ -9,9 +9,10 @@ glTF registry contains base specifications; specifications of Khronos- and vendo
 ## glTF Extensions
 [glTF Extension Registry](../extensions)
 
-## glTF 1.0 overview
+## glTF 2.0 overview
 
 <p align="center">
-<a href="1.0/figures/gltfOverview-0.2.0.png"><img src="1.0/figures/gltfOverview-0.2.0-small.png" /></a>
+<a href="2.0/figures/gltfOverview-2.0.0.png"><img src="2.0/figures/gltfOverview-2.0.0-small.png" /></a>
 </p>
-Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/javagl/gltfOverview)).
+Diagram by Marco Hutter ( <a href="https://github.com/javagl/gltfOverview">(repo)</a> ).
+
