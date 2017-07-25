@@ -15,6 +15,12 @@ Please provide spec feedback and community updates by submitting [issues](https:
 
 ## Quickstart
 
+### Overview
+
+<p align="center">
+<a href="specification/2.0/figures/gltfOverview-2.0.0.png"><img src="specification/2.0/figures/gltfOverview-2.0.0-small.png" /></a>
+</p>
+
 ### For developers
 
 * [Sample models](https://github.com/KhronosGroup/glTF-Sample-Models) for testing runtime engines and content pipeline tools.
