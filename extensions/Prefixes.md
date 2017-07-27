@@ -2,6 +2,8 @@
 
 The following extension prefixes are reserved:
 
+* `AVR` - AltspaceVR
+* `BLENDER` - Blender
 * `CESIUM` - Cesium
 * `EXT` - Multi-vendor
 * `KHR` - Ratified or intended-to-be-ratified Khronos

@@ -1,30 +1,48 @@
 {
-    "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "animation sampler",
-    "type" : "object",
-    "description" : "Combines input and output accessors with an interpolation algorithm to define a keyframe graph (but not its target).",
-    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
-    "properties" : {
-        "input" : {
-            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The index of an accessor containing keyframe input values, e.g., time.",
-            "gltf_detailedDescription" : "The index of an accessor containing keyframe input values, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`."
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Animation Sampler",
+    "type": "object",
+    "description": "Combines input and output accessors with an interpolation algorithm to define a keyframe graph (but not its target).",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "input": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of an accessor containing keyframe input values, e.g., time.",
+            "gltf_detailedDescription": "The index of an accessor containing keyframe input values, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`."
         },
-        "interpolation" : {
-            "type" : "string",
-            "description" : "Interpolation algorithm.",
-            "enum" : ["LINEAR", "STEP"],
-            "default" : "LINEAR",
-            "gltf_detailedDescription" : "Interpolation algorithm. When an animation targets a node's rotation, and the animation's interpolation is `\"LINEAR\"`, spherical linear interpolation (slerp) should be used to interpolate quaternions. When interpolation is `\"STEP\"`, animated value remains constant to the value of the first point of the timeframe, until the next timeframe."
+        "interpolation": {
+            "description": "Interpolation algorithm.",
+            "default": "LINEAR",
+            "gltf_detailedDescription": "Interpolation algorithm.",
+            "anyOf": [
+                {
+                    "enum": [ "LINEAR" ],
+                    "description": "The animated values are linearly interpolated between keyframes. When targeting a rotation, spherical linear interpolation (slerp) should be used to interpolate quaternions. The number output of elements must equal the number of input elements."
+                },
+                {
+                    "enum": [ "STEP" ],
+                    "description": "The animated values remain constant to the output of the first keyframe, until the next keyframe. The number of output elements must equal the number of input elements."
+                },
+                {
+                    "enum": [ "CATMULLROMSPLINE" ],
+                    "description": "The animation's interpolation is computed using a uniform Catmull-Rom spline. The number of output elements must equal two more than the number of input elements. The first and last output elements represent the start and end tangents of the spline. There must be at least four keyframes when using this interpolation."
+                },
+                {
+                    "enum": [ "CUBICSPLINE" ],
+                    "description": "The animation's interpolation is computed using a cubic spline with specified tangents. The number of output elements must equal three times the number of input elements. For each input element, the output stores three elements, an in-tangent, a spline vertex, and an out-tangent. There must be at least two keyframes when using this interpolation."
+                },
+                {
+                    "type": "string"
+                }
+            ]
         },
-        "output" : {
-            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The index of an accessor, containing keyframe output values.",
-            "gltf_detailedDescription" : "The index of an accessor, containing keyframe output values. Output and input accessors must have the same `count`. When sampler is used with TRS target, output accessor's componentType must be `FLOAT`."
+        "output": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of an accessor, containing keyframe output values.",
+            "gltf_detailedDescription": "The index of an accessor containing keyframe output values. When targeting TRS target, the `accessor.componentType` of the output values must be `FLOAT`. When targeting morph weights, the `accessor.componentType` of the output values must be `FLOAT` or normalized integer where each output element stores values with a count equal to the number of morph targets."
         },
-        "extensions" : {},
-        "extras" : {}
+        "extensions": { },
+        "extras": { }
     },
-    "additionalProperties" : false,
-    "required": ["input", "output"]
+    "required": [ "input", "output" ]
 }

@@ -1,11 +1,23 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "textureInfo",
+    "title": "Texture Info",
     "type": "object",
-    "allOf": [ { "$ref": "textureInfoBase.schema.json" } ],
+    "description": "Reference to a texture.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "index": {},
-        "texCoord": {}
+        "index": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the texture."
+        },
+        "texCoord": {
+            "type": "integer",
+            "description": "The set index of texture's TEXCOORD attribute used for texture coordinate mapping.",
+            "default": 0,
+            "minimum": 0,
+            "gltf_detailedDescription": "This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0)."
+        },
+        "extensions": { },
+        "extras": { }
     },
-    "additionalProperties": false
+    "required": [ "index" ]
 }
