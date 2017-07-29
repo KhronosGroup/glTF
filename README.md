@@ -69,7 +69,7 @@ Preview tools:
 | [Blender Exporter](https://github.com/Kupoman/blendergltf) | — | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | glTF exporter for Blender |
 | [FBX-glTF](https://github.com/cyrillef/FBX-glTF) | `FBX` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Plug-in and command-line converter |
 | [jgltf-obj](https://github.com/javagl/JglTF/tree/master/jgltf-obj) | `OBJ` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Java programmatic and command-line converters |
-| [Assimp](http://www.assimp.org/) | [Multiple](https://github.com/assimp/assimp#supported-file-formats) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | General-purpose online conversion pipeline |
+| [Assimp](http://www.assimp.org/) | [Multiple](https://github.com/assimp/assimp#supported-file-formats) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | General-purpose online conversion pipeline |
 | [Unity Exporter (original)](https://github.com/tparisi/Unity-glTF-Exporter) | — | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Unity editor wizard that exports to glTF Format |
 | [Docker collada2gltf](https://hub.docker.com/r/winsent/collada2gltf/) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Docker container for Python web service, built on COLLADA2GLTF |
 | [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Node.js web service, built on COLLADA2GLTF |
