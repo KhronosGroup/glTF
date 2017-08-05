@@ -1250,6 +1250,8 @@ glTF 2.0 also supports animation of instantiated Morph Targets in a similar fash
 
 > **Note:** glTF 2.0 defines only animation storage, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc...
 
+> **Note:** glTF 2.0 does not specifically define how an animation will be used when imported but, as a best practice, it is recommended that each animation is self contained as an action. This clarification is necessary due to early glTF 2.0 exporters splitting the tracks of a single source animation into several glTF animations (behaviour that is not currently advised today).
+
 All animations are stored in the `animations` array of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
 
 The following examples show expected animations usage.
