@@ -15,11 +15,11 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension defines a Blinn-Phong material, which belongs to possible set of common materials for use with glTF 2.0. 
+This extension defines a Blinn-Phong model based material for use with glTF 2.0 in the same way as the core specification defines Physically Based Rendering (PBR) based materials. Other extension may define additional commonly used materials. For example, if a need for a Phong model arises, an extension named e.g. `cmnPhong` could be specified. 
 
-Even Physically Based Rendering (PBR) materials are state of the art and included in core glTF 2.0 or another extension, the demand for materials based on e.g. a Phong model is still there.
+Given the long history of the Blinn-Phong model and the vast amount of collective experience with applying this model, the demand for convenient use of such materials is still there.
 
-This extension defines one common material type, Blinn-Phong, as other or simpler materials can be described by having a zero factor. The Blinn-Phong is prefered over the Phong model, as it is more used. If a need for a Phong model is still needed, an extension named e.g. `cmnPhong` should be specified. 
+This extension defines a single material type, Blinn-Phong. Other or simpler materials types such as Lambertian or Constant types can be described by having zero factors.
 
 ## Extending Materials
 
@@ -71,10 +71,64 @@ The following table lists the allowed types and ranges for the specular-glossine
 
 |                            |Type         |Description|Required|
 |----------------------------|-------------|-----------|--------|
-|**diffuseFactor**           | `number[4]` | The reflected diffuse factor of the material.|No, default: `[1.0,1.0,1.0,1.0]`|
+|**diffuseFactor**           | `number[4]` | The reflected diffuse RGBA factor of the material.|No, default: `[1.0,1.0,1.0,1.0]`|
 |**diffuseTexture**          | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The diffuse texture.|No|
 |**specularFactor**          | `number[3]` | The specular RGB color of the material.      |No, default: `[1.0,1.0,1.0]`|
 |**shininessFactor**         | `number`    | The shininess of the material.|No, default: `1.0`          |
 |**specularShininessTexture**| [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)|The specular shininess texture.|No|
 
-Additional properties are allowed.
+Additional properties are allowed and may lead to undefined behaviour in conforming viewers.
+
+The material is intended for shading according to the Blinn-Phong lighting model or a close approximation.
+
+This equation is not complex and detailed via the ACM. Refer to “Models of Light
+Reflection for Computer Synthesized Pictures,” SIGGRAPH 77, pp 192-198 [http://portal.acm.org/citation.cfm?id=563893](http://portal.acm.org/citation.cfm?id=563893), and in particular the "Simple Highlight Model" section.
+
+The following code illustrates the basic computation:
+
+```
+color = <emission> + <ambient> * al + <diffuse> * max(N * L, 0) + <specular> * max(H * N, 0)^<shininess>
+```
+
+where (all vectors normalized)
+
+* `al` – A constant amount of ambient light contribution coming from the scene, i.e. the sum of all ambient light values.
+* `N` – Normal vector
+* `L` – Light vector
+* `I` – Eye vector
+* `H` – Half-angle vector,calculated as halfway between the unit Eye and Light vectors, using the
+equation H= normalize(I+L)
+
+> **Implementation Note**: Writers should be aware about the range of the specular exponent (`shininess`), which is _not_ a normalized range. Concretely speaking, given the above equation, a `shininess` value of 1.0 corresponds to a very low shininess. For orientation: using the traditional OpenGL fixed function pipeline, the specular exponent was expected to be within [0, 128]. However, using glTF, larger `shininess` values are clearly possible. [Mention caution with `shininess < 1` ?]
+
+Blinn shading uses all of the common material properties defined in Table 1. The following example defines a Blinn shaded material with a diffuse texture, moderate shininess and red specular highlights. 
+
+```javascript
+    "materials": [
+        {
+            "name": "shiny_textured",
+            "extensions": {
+                "KHR_materials_cmnBlinnPhong": {
+                    "diffuseFactor" : [
+                        0.8, 
+                        0.8, 
+                        0.8, 
+                        1.0
+                    ], 
+                    "diffuseTexture" : {
+                        "index" : 0
+                    }, 
+                    "shininessFactor" : 10.0, 
+                    "specularFactor" : [
+                        1, 
+                        0, 
+                        0
+                    ]
+                }
+            }
+
+        }
+    ]
+
+```
+
