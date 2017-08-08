@@ -19,7 +19,7 @@ This extension defines a Blinn-Phong model based material for use with glTF 2.0 
 
 Given the long history of the Blinn-Phong model and the vast amount of collective experience with applying this model, the demand for convenient use of such materials is still there.
 
-This extension defines a single material type, Blinn-Phong. Other or simpler materials types such as Lambertian or Constant types can be described by having zero factors.
+This extension defines a single material type, Blinn-Phong. Other or simpler materials types such as Lambert or Constant can be described by having zero factors.
 
 ## Extending Materials
 
