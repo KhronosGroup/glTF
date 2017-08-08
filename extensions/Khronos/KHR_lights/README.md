@@ -116,7 +116,7 @@ For Physically-Based Rendering (PBR) materials, this parameter is treated as hav
 
 #### Directional
 
-Directional lights are light sources that emit from infinitely far away in a specified direction. This light type uses the light properties `color` and `direction` described in Table 1.
+Directional lights are light sources that emit from infinitely far away in the direction of the -z axis. This light type uses the light properties `color` and `direction` described in Table 1.
 
 #### Point
 
