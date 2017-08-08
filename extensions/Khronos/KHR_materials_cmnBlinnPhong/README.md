@@ -101,7 +101,7 @@ equation H= normalize(I+L)
 
 > **Implementation Note**: Writers should be aware about the range of the specular exponent (`shininess`), which is _not_ a normalized range. Concretely speaking, given the above equation, a `shininess` value of 1.0 corresponds to a very low shininess. For orientation: using the traditional OpenGL fixed function pipeline, the specular exponent was expected to be within [0, 128]. However, using glTF, larger `shininess` values are clearly possible. [Mention caution with `shininess < 1` ?]
 
-Blinn shading uses all of the common material properties defined in Table 1. The following example defines a Blinn shaded material with a diffuse texture, moderate shininess and red specular highlights. 
+The following example defines a Blinn shaded material with a diffuse texture, moderate shininess and red specular highlights. 
 
 ```javascript
     "materials": [
