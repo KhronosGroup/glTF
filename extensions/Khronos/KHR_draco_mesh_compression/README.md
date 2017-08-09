@@ -123,7 +123,9 @@ easy enough to change the loader to ignore `accessor` without `bufferView` in gl
 definitely open to change this if there actually are some use cases that require
 loading `accessor` independently. 
 
-For effectiveness, it is also valid to not support the fallback which is provided in the above specification, e.g. not providing the data buffer for uncompressed assets. To do that, a glTF file could just ignored the `bufferViews` of `accessors` belong to a `primitive`. This is valid because in glTF 2.0, `bufferView` is not required in `accessor`, although if it is not present, it will be used with `sparse` field to act as a sparse accessor. In this case, Draco must be considered a required extension and should report error if a loader doens't support it.
+The extension provides compressed alternatives to one or more of a primitive's uncompressed attributes. A loader may choose to use the uncompressed attributes instead — when the extension is not supported, or for other reasons. When using compressed Draco data, the corresponding uncompressed attributes defined by the primitive should be ignored. If additional uncompressed attributes are defined by the primitive, but are not provided by the Draco extension, the loader must proceed to use these additional attributes as usual.
+
+* Implementation note: To prevent transmission of redundant data, exporters should generally write compressed Draco data into a separate buffer from the uncompressed fallback, and shared data into a third buffer. Loaders may then optimize to request only the necessary buffers.
 
 ## Resources
 
