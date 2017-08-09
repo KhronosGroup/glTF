@@ -31,17 +31,12 @@ The following picture shows the structure of the schema update.
 **Figure 1**: Structure of geometry compression extension.
 ![](figures/structure.png)
 
-In general, we will use the extension to point to the buffer that contains the compressed data. The major change is that the `accessor` in an extended `primitive` no
-longer points to a `bufferView`. Instead, the `attributes` of a primitive will use the decompressed data. This is valid because in glTF 2.0, `bufferView` is not required in `accessor`, although if it is not present, it will be used with `sparse` field to act as a sparse accessor. In this extension, we will ignore the `bufferView` property.
+In general, we will use the extension to point to the buffer that contains the compressed data. One of the requirements is that a loader/engine should be able to load the glTF assets no matter it supports the extension or not. To achieve that, all the existing components of the glTF specification stays the same when the extension exists, so that a loader doesn't support decoding compressed assets could just ignore the extension.
 
-Usage of the extension must be listed in the `extensionUsed` and `extensionsRequired`. 
+Usage of the extension must be listed in the `extensionUsed`. 
 
 ```javascript
 "extensionsUsed" : [
-    "KHR_draco_mesh_compression"
-]
-
-"extensionsRequired" : [
     "KHR_draco_mesh_compression"
 ]
 
@@ -65,7 +60,7 @@ except `primitives`:
             "extensions" : {
                 "KHR_draco_mesh_compression" : {
                     "bufferView" : 5,
-                    "attributesOrder" : [
+                    "attributes" : [
                         "POSITION",
                         "NORMAL",
                         "TEXCOORD_0"
@@ -97,8 +92,8 @@ mesh.
 #### version
 The version of Draco encoder used to compress the mesh. This is used for verifying compatibility of Draco encoder and decoder. With this property, the loader could easily determine if the current decoder supports decoding the data. Currently, Draco supports backward compatibility. So decoding is supported if the version of asset is <= Draco decoder version. For more detail, please check version support status on [Draco project](https://github.com/google/draco).
 
-### attributesOrder
-`attributesOrder` defines the order of attributes stored in the decompressed geometry. E.g, in the example above, `POSITION` will have attribute id 0 in the decoded mesh, and `NORMAL` as 1, `TEXCOORD_0` as 2. The id should be used along with `accessors` to correctly load all attributes from extension.
+### attributes
+`attributes` defines the attributes stored in the decompressed geometry. E.g, in the example above, `POSITION`, `NORMAL` and `TEXCOORD_0`.
 
 #### Restrictions on geometry type
 When using this extension, the `mode` of `primitive` could only be one of
@@ -114,10 +109,11 @@ For full details on the `KHR_draco_mesh_compression` extension properties, see t
 ## Conformance
 
 To process this extension, there are some changes need to be made in loading a glTF asset.
-* Check `version` property and verify the version of encoder used for the mesh
-  is compatible with the current decoder.
+* Check if the extension is supported. If not then load the glTF asset ignoring the compression extension properties in `primitive`.
+    * If `KHR_draco_mesh_compression` is in `extensionsUsed` then to verify if the loader supports decoding the compression extension.
+    * Check `version` property and verify the version of encoder used for the mesh is compatible with the current decoder.
 * When encountering a `primitive` with the extension the first time, you must process the extension first. Get the data from the pointed `bufferView` in the extension and decompress the data to a geometry of a specific format, e.g. Draco geometry.
-* Then, process `attributes` and `indices` properties of the `primitive`. When loading each `accessor`, if there is no `bufferView` then go to the previously decoded geometry in the `primitive` to get indices and attributes data. To load an attribute in extension, it is required to first determine the id of this attribute in using `attributesOrder`, then use the id to get the attribute from decoded mesh.
+* Then, process `attributes` and `indices` properties of the `primitive`. When loading each `accessor`, go to the previously decoded geometry in the `primitive` to get indices and attributes data. A loader could use the decompressed data to overwrite `accessors` or render the decompressed geometry directly (e.g. ThreeJS).
 
 It is pretty straightforward for top-down loading of a glTF asset, e.g. only
 decompress the geometry data when a `primitive` is met for the first time. However, for
@@ -126,6 +122,8 @@ loading an `accessor` without knowing its parent `primitive`. And it should be
 easy enough to change the loader to ignore `accessor` without `bufferView` in glTF 2.0. But we are
 definitely open to change this if there actually are some use cases that require
 loading `accessor` independently. 
+
+For effectiveness, it is also valid to not support the fallback which is provided in the above specification, e.g. not providing the data buffer for uncompressed assets. To do that, a glTF file could just ignored the `bufferViews` of `accessors` belong to a `primitive`. This is valid because in glTF 2.0, `bufferView` is not required in `accessor`, although if it is not present, it will be used with `sparse` field to act as a sparse accessor. In this case, Draco must be considered a required extension and should report error if a loader doens't support it.
 
 ## Resources
 

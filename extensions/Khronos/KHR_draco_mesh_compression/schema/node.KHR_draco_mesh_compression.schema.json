@@ -7,15 +7,15 @@
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The index of the bufferView."
         },
-        "attributesOrder" : {
+        "attributes" : {
             "type" : "array",
-            "description" : "The order of attributes in decompressed geometry.",
+            "description" : "The attributes stored in the compressed geometry.",
             "items" : {
                 "type" : "string",
             },
             "minItems" : 1,
             "maxItems" : 8,
-            "gltf_detailedDescription" : "It is used to define the order of attributes stored in the decompressed geometry. The respective array's index is used to get attribute data."
+            "gltf_detailedDescription" : "It is used to define the attributes stored in the compressed geometry."
         },
         "version" : {
             "type" : "string",
