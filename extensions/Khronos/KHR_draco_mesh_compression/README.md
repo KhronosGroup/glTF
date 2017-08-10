@@ -18,7 +18,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension defines a schema to use [Draco geometry compression](https://github.com/google/draco) libraries in glTF format. This allows glTF to support streaming compressed geometry data instead of the raw data.
+This extension defines a schema to use [Draco geometry compression](https://github.com/google/draco) libraries in glTF format. This allows glTF to support streaming compressed geometry data instead of the raw data. This extension specification is based on [Draco bitestream version 2.0](https://google.github.io/draco/spec/).
 
 The [conformance](#conformance) section specifies what an implementation must do when encountering this extension, and how the extension interacts with the attributes defined in the base specification.
 
@@ -67,7 +67,6 @@ except `primitives`:
                         "WEIGHTS_0" : 3,
                         "JOINTS_0" : 4
                     },
-                    "version" : "0.9.1"
                 }
             }
         },
@@ -91,9 +90,6 @@ We will explain each of the property in the following sections.
 The `bufferView` property points to the buffer containing compressed data. The data should be passed to a mesh decoder and decompressed to a
 mesh.
 
-#### version
-The version of Draco encoder used to compress the mesh. This is used for verifying compatibility of Draco encoder and decoder. With this property, the loader could easily determine if the current decoder supports decoding the data. Currently, Draco supports backward compatibility. So decoding is supported if the version of asset is <= Draco decoder version. For more detail, please check version support status on [Draco project](https://github.com/google/draco).
-
 ### attributes
 `attributes` defines the attributes stored in the decompressed geometry. E.g, in the example above, `POSITION`, `NORMAL`, `TEXCOORD_0`, `WEIGHTS_0` and `JOINTS_0`. Each attribute is associated with an attribute id which is its unique id in the compressed data. The `attributes` defined in the extension must be a subset of the attributes of the primitive. For types of attributes that are defined both in Draco library and [glTF mesh](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#meshes), loaders should be able to request arbitrary attributes by name, e.g. `POSITION`, `NORMAL` and `COLOR`. Other types of attributes will be encoded as generic attributes by the Draco library and could be requested by the attribute id, e.g. `JOINTS_0` and `WEIGHTS_0`.
 
@@ -113,7 +109,6 @@ For full details on the `KHR_draco_mesh_compression` extension properties, see t
 To process this extension, there are some changes need to be made in loading a glTF asset.
 * Check if the extension is supported. If not then load the glTF asset ignoring the compression extension properties in `primitive`.
     * If `KHR_draco_mesh_compression` is in `extensionsUsed` then to verify if the loader supports decoding the compression extension.
-    * Check `version` property and verify the version of encoder used for the mesh is compatible with the current decoder.
 * When encountering a `primitive` with the extension the first time, you must process the extension first. Get the data from the pointed `bufferView` in the extension and decompress the data to a geometry of a specific format, e.g. Draco geometry.
 * Then, process `attributes` and `indices` properties of the `primitive`. When loading each `accessor`, go to the previously decoded geometry in the `primitive` to get indices and attributes data. A loader could use the decompressed data to overwrite `accessors` or render the decompressed geometry directly (e.g. ThreeJS).
 
