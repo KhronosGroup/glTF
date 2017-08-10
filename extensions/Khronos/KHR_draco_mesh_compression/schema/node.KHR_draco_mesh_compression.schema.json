@@ -1,27 +1,26 @@
 {
-    "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "KHR_draco_mesh_compression extension",
-    "type" : "object",
-    "properties" : {
-        "bufferView" : {
-            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The index of the bufferView."
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_draco_mesh_compression extension",
+    "type": "object",
+    "properties": {
+        "bufferView": {
+            "allOf": [ { "$ref" : "glTFid.schema.json" } ],
+            "description": "The index of the bufferView."
         },
-        "attributes" : {
-            "type" : "array",
-            "description" : "The attributes stored in the compressed geometry.",
-            "items" : {
-                "type" : "string",
-            },
-            "minItems" : 1,
-            "maxItems" : 8,
-            "gltf_detailedDescription" : "It is used to define the attributes stored in the compressed geometry."
+        "attributes": {
+            "type": "object",
+            "description": "A dictionary object, where each key corresponds to an attribute and its unique attribute id stored in the compressed geometry.",
+            "minProperties": 1,
+            "additionalProperties": {
+                "$ref": "glTFid.schema.json"
+            }
+            "description": "It is used to define the attributes stored in the compressed geometry."
         },
-        "version" : {
-            "type" : "string",
-            "description" : "The version of Draco encoder that is used on the compressed geometry data."
+        "version": {
+            "type": "string",
+            "description": "The version of Draco encoder that is used on the compressed geometry data."
         },
     },
-    "additionalProperties" : false,
-    "required" : ["bufferView", "attributes"]
+    "additionalProperties": false,
+    "required": [ "bufferView", "attributes" ]
 }
