@@ -9,12 +9,11 @@
         },
         "attributes": {
             "type": "object",
-            "description": "A dictionary object, where each key corresponds to an attribute and its unique attribute id stored in the compressed geometry.",
             "minProperties": 1,
             "additionalProperties": {
                 "$ref": "glTFid.schema.json"
             },
-            "description": "It is used to define the attributes stored in the compressed geometry."
+            "description": "A dictionary object, where each key corresponds to an attribute and its unique attribute id stored in the compressed geometry."
         },
         "version": {
             "type": "string",
