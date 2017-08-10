@@ -13,13 +13,13 @@
             "minProperties": 1,
             "additionalProperties": {
                 "$ref": "glTFid.schema.json"
-            }
+            },
             "description": "It is used to define the attributes stored in the compressed geometry."
         },
         "version": {
             "type": "string",
             "description": "The version of Draco encoder that is used on the compressed geometry data."
-        },
+        }
     },
     "additionalProperties": false,
     "required": [ "bufferView", "attributes" ]
