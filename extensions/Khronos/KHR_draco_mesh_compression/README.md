@@ -60,13 +60,13 @@ except `primitives`:
             "extensions" : {
                 "KHR_draco_mesh_compression" : {
                     "bufferView" : 5,
-                    "attributes" : [
+                    "attributes" : {
                         "POSITION" : 0,
                         "NORMAL" : 1,
                         "TEXCOORD_0" : 2,
                         "WEIGHTS_0" : 3,
                         "JOINTS_0" : 4
-                    ],
+                    },
                     "version" : "0.9.1"
                 }
             }
@@ -95,7 +95,7 @@ mesh.
 The version of Draco encoder used to compress the mesh. This is used for verifying compatibility of Draco encoder and decoder. With this property, the loader could easily determine if the current decoder supports decoding the data. Currently, Draco supports backward compatibility. So decoding is supported if the version of asset is <= Draco decoder version. For more detail, please check version support status on [Draco project](https://github.com/google/draco).
 
 ### attributes
-`attributes` defines the attributes stored in the decompressed geometry. E.g, in the example above, `POSITION`, `NORMAL`, `TEXCOORD_0`, `WEIGHTS_0` and `JOINTS_0`. Each attribute is associated with an attribute id which is its unique id in the compressed data. For types of attributes that are defined both in Draco library and [glTF mesh](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#meshes), loaders should be able to request arbitrary attributes by name, e.g. `POSITION`, `NORMAL` and `COLOR`. Other types of attributes will be encoded as generic attributes by the Draco library and could be requested by the attribute id, e.g. `JOINTS_0` and `WEIGHTS_0`.
+`attributes` defines the attributes stored in the decompressed geometry. E.g, in the example above, `POSITION`, `NORMAL`, `TEXCOORD_0`, `WEIGHTS_0` and `JOINTS_0`. Each attribute is associated with an attribute id which is its unique id in the compressed data. The `attributes` defined in the extension must be a subset of the attributes of the primitive. For types of attributes that are defined both in Draco library and [glTF mesh](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#meshes), loaders should be able to request arbitrary attributes by name, e.g. `POSITION`, `NORMAL` and `COLOR`. Other types of attributes will be encoded as generic attributes by the Draco library and could be requested by the attribute id, e.g. `JOINTS_0` and `WEIGHTS_0`.
 
 #### Restrictions on geometry type
 When using this extension, the `mode` of `primitive` could only be one of
@@ -128,6 +128,8 @@ loading `accessor` independently.
 The extension provides compressed alternatives to one or more of a primitive's uncompressed attributes. A loader may choose to use the uncompressed attributes instead — when the extension is not supported, or for other reasons. When using compressed Draco data, the corresponding uncompressed attributes defined by the primitive should be ignored. If additional uncompressed attributes are defined by the primitive, but are not provided by the Draco extension, the loader must proceed to use these additional attributes as usual.
 
 * Implementation note: To prevent transmission of redundant data, exporters should generally write compressed Draco data into a separate buffer from the uncompressed fallback, and shared data into a third buffer. Loaders may then optimize to request only the necessary buffers.
+
+If the uncompressed version of asset is not provided for the fallback described above, then the extension must be added to `extenionRequired` so that the loaders/engines don't support the extension could report failure.
 
 ## Resources
 
