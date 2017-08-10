@@ -107,8 +107,10 @@ For full details on the `KHR_draco_mesh_compression` extension properties, see t
 ## Conformance
 
 To process this extension, there are some changes need to be made in loading a glTF asset.
-* Check if the extension is supported. If not then load the glTF asset ignoring the compression extension properties in `primitive`.
-    * If `KHR_draco_mesh_compression` is in `extensionsUsed` then to verify if the loader supports decoding the compression extension.
+* If `KHR_draco_mesh_compression` is in `extensionsRequired` then the loader must support the extension or it will fail loading the assets.
+* If `KHR_draco_mesh_compression` is in `extensionsUsed` but not `extensionsRequired`:
+    * Check if the loader supports the extension. If not, then load the glTF asset ignoring the compression extension in `primitive`.
+    * If the loader supports the extension, then process the extension and ignore the attributes and indices of the primitive that are contained in the extension.
 * When encountering a `primitive` with the extension the first time, you must process the extension first. Get the data from the pointed `bufferView` in the extension and decompress the data to a geometry of a specific format, e.g. Draco geometry.
 * Then, process `attributes` and `indices` properties of the `primitive`. When loading each `accessor`, go to the previously decoded geometry in the `primitive` to get indices and attributes data. A loader could use the decompressed data to overwrite `accessors` or render the decompressed geometry directly (e.g. ThreeJS).
 
