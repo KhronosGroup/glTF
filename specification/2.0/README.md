@@ -2238,7 +2238,7 @@ The root object for a glTF asset.
 |**extensionsRequired**|`string` `[1-*]`|Names of glTF extensions required to properly load this asset.|No|
 |**accessors**|accessor `[1-*]`|An array of accessors.|No|
 |**animations**|animation `[1-*]`|An array of keyframe animations.|No|
-|**asset**|`object`|Metadata about the glTF asset.|No|
+|**asset**|`object`|Metadata about the glTF asset.|Yes|
 |**buffers**|buffer `[1-*]`|An array of buffers.|No|
 |**bufferViews**|bufferView `[1-*]`|An array of bufferViews.|No|
 |**cameras**|camera `[1-*]`|An array of cameras.|No|
@@ -2288,12 +2288,12 @@ An array of keyframe animations.
 * **Type**: animation `[1-*]`
 * **Required**: No
 
-#### glTF.asset
+#### glTF.asset :white_check_mark: 
 
 Metadata about the glTF asset.
 
 * **Type**: `object`
-* **Required**: No
+* **Required**: Yes
 
 #### glTF.buffers
 
