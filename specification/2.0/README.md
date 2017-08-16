@@ -3782,6 +3782,7 @@ Application-specific data.
 * Brandon Jones, Google
 * Sean Lilley, Cesium
 * Max Limper, Fraunhofer IGD
+* Juan Linietsky, Godot Engine
 * Matthew McMullan
 * Mohamad Moneimne, University of Pennsylvania
 * Kai Ninomiya, formerly Cesium
