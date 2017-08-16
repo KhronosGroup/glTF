@@ -14,10 +14,6 @@
                 "$ref": "glTFid.schema.json"
             },
             "description": "A dictionary object, where each key corresponds to an attribute and its unique attribute id stored in the compressed geometry."
-        },
-        "version": {
-            "type": "string",
-            "description": "The version of Draco encoder that is used on the compressed geometry data."
         }
     },
     "additionalProperties": false,

@@ -136,7 +136,3 @@ If the uncompressed version of asset is not provided for the fallback described 
   and
   [example](https://github.com/mrdoob/three.js/blob/dev/examples/webgl_loader_draco.html)
 
-
-# Appendix: Alternative Approach
-
-See [ALTERNATIVE.md](ALTERNATIVE.md).
