@@ -91,7 +91,7 @@ The `bufferView` property points to the buffer containing compressed data. The d
 mesh.
 
 ### attributes
-`attributes` defines the attributes stored in the decompressed geometry. E.g, in the example above, `POSITION`, `NORMAL`, `TEXCOORD_0`, `WEIGHTS_0` and `JOINTS_0`. Each attribute is associated with an attribute id which is its unique id in the compressed data. The `attributes` defined in the extension must be a subset of the attributes of the primitive. For types of attributes that are defined both in Draco library and [glTF mesh](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#meshes), loaders should be able to request arbitrary attributes by name, e.g. `POSITION`, `NORMAL` and `COLOR`. Other types of attributes will be encoded as generic attributes by the Draco library and could be requested by the attribute id, e.g. `JOINTS_0` and `WEIGHTS_0`.
+`attributes` defines the attributes stored in the decompressed geometry. E.g, in the example above, `POSITION`, `NORMAL`, `TEXCOORD_0`, `WEIGHTS_0` and `JOINTS_0`. Each attribute is associated with an attribute id which is its unique id in the compressed data. The `attributes` defined in the extension must be a subset of the attributes of the primitive. To request an attribute, loaders should be able to use the correspondent attribute id specified in the `attributes` to get the from the compressed data.
 
 #### Restrictions on geometry type
 When using this extension, the `mode` of `primitive` could only be one of
