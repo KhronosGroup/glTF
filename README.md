@@ -248,7 +248,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 ### All Presentations and Articles
 
-* SIGGRAPH 2017 glTF BOF, [video](https://www.youtube.com/watch?v=UMN6rh-5nPg)
+* SIGGRAPH 2017 glTF BOF [video](https://www.youtube.com/watch?v=UMN6rh-5nPg). August 2017
    * glTF 2.0 and Community Update: Tony Parisi, Unity, and Patrick Cozzi, Cesium
    * Microsoft update - Paint 3D, View 3D, 3D in Office and one more thing…: Saurabh Bhatia and Gary Hsu, Microsoft
    * glTF VSCode editor: Ed Mackey, AGI
@@ -258,6 +258,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
    * WebGL PBR reference implementation: Scott Nagy, Microsoft, and Mohamad Moneimne, Cesium
    * Sketchfab update: Aurelien Chatelain, Sketchfab
    * [glTF 2.0 Export in InstantUV](http://max-limper.de/publications/GLTF2017/GLTF2017.pdf): Max Limper, Fraunhofer
+* [Physically-Based Rendering in Cesium](https://cesium.com/blog/2017/08/08/Physically-Based-Rendering-in-Cesium/) by Mohamad Moneimne. August 2017
 * [Why we should all support glTF 2.0 as THE standard asset exchange format for game engines](https://godotengine.org/article/we-should-all-use-gltf-20-export-3d-assets-game-engines) by Juan Linietsky. August 2017
 * [Exporting glTF 2.0 from Maya LT](https://www.donmccurdy.com/2017/06/27/exporting-gltf-2-0-from-maya-lt-2/) by Don McCurdy. June 2017
 * [glTF 2.0: PBR Materials](https://www.khronos.org/assets/uploads/developers/library/2017-gtc/glTF-2.0-and-PBR-GTC_May17.pdf) by Saurabh Bhatia. May 2017
