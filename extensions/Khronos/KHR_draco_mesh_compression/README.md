@@ -54,6 +54,8 @@ except `primitives`:
                 "POSITION" : 11,
                 "NORMAL" : 12,
                 "TEXCOORD_0" : 13,
+                "WEIGHTS_0" : 14,
+                "JOINTS_0" : 15,
             },
             "indices" : 10,
             "mode" : 4
