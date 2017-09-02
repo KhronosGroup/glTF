@@ -173,7 +173,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 |------|--------|-------------|
 | [Laugh Engine](https://github.com/jian-ru/laugh_engine#laugh-engine) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Vulkan PBR and IBL renderer |
 | [Lugdunum3D](https://github.com/Lugdunum3D/Lugdunum) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | A modern cross-platform 3D rendering engine built with Vulkan and modern C++14 |
-| [VulKan ToolS](https://github.com/McNopper/Vulkan) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Vulkan helper library supporting glTF 2.0 assets with PBR materials |
+| [UX3D Engine](http://www.ux3d.io/ux3d-engine/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Cross-platform multi-threaded Vulkan 3D Engine with glTF 2.0 import and export |
 
 #### C# #
 
