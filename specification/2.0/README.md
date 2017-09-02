@@ -727,7 +727,7 @@ Each attribute is defined as a property of the `attributes` object. The name of 
 
 Valid attribute semantic property names include `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`, `JOINTS_0`, and `WEIGHTS_0`.  Application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
 
-The valid accessor type and component type for each attribute semantic property is defined below.
+Valid accessor types and component types for each attribute semantic property are defined below.
 
 |Name|Accessor Type(s)|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
@@ -774,7 +774,7 @@ primitives[i].attributes.POSITION +
 ```
 Morph Targets are implemented via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to an accessor containing Morph Target displacement data. Currently only three attributes (`POSITION`, `NORMAL`, and `TANGENT`) are supported. All primitives are required to list the same number of `targets` in the same order.
 
-The valid accessor type and component type for each attribute semantic property is defined below. Note that the *w* component for handedness is omitted when targeting `TANGENT` data since handedness cannot be displaced.
+Valid accessor types and component types for each attribute semantic property are defined below. Note that the *w* component for handedness is omitted when targeting `TANGENT` data since handedness cannot be displaced.
 
 |Name|Accessor Type(s)|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
