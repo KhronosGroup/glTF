@@ -10,9 +10,8 @@
 
 #### Draft Khronos extensions
 _Draft Khronos extensions are not ratified yet._
-* [KHR_materials_common](Khronos/KHR_materials_common/README.md)
-* [KHR_technique_webgl](Khronos/KHR_technique_webgl/README.md)
-* [KHR_texture_transform](Khronos/KHR_texture_transform/README.md)
+* KHR_lights *(in progress)*
+* KHR_technique_webgl *(in progress)*
 
 #### Vendor extensions
 
