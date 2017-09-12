@@ -93,7 +93,7 @@ The `bufferView` property points to the buffer containing compressed data. The d
 mesh.
 
 ### attributes
-`attributes` defines the attributes stored in the decompressed geometry. E.g, in the example above, `POSITION`, `NORMAL`, `TEXCOORD_0`, `WEIGHTS_0` and `JOINTS_0`. Each attribute is associated with an attribute id which is its unique id in the compressed data. The `attributes` defined in the extension must be a subset of the attributes of the primitive. To request an attribute, loaders should be able to use the correspondent attribute id specified in the `attributes` to get the from the compressed data.
+`attributes` defines the attributes stored in the decompressed geometry. E.g, in the example above, `POSITION`, `NORMAL`, `TEXCOORD_0`, `WEIGHTS_0` and `JOINTS_0`. Each attribute is associated with an attribute id which is its unique id in the compressed data. The `attributes` defined in the extension must be a subset of the attributes of the primitive. To request an attribute, loaders should be able to use the correspondent attribute id specified in the `attributes` to get the attribute from the compressed data.
 
 #### Restrictions on geometry type
 When using this extension, the `mode` of `primitive` could only be one of
