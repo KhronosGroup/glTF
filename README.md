@@ -247,6 +247,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 ### All Presentations and Articles
 
+* [State of glTF 2.0 for WebVR Devs](https://gist.github.com/donmccurdy/de7ff6c44ecd76fddf1ecad170a114a8) by Don McCurdy, Google. September 2017
 * [glTF Exporter in three.js and A-Frame](https://blog.mozvr.com/gltf-exporter-in-three-js-and-a-frame/) by Fernando Serrano. August 2017
 * SIGGRAPH 2017 glTF BOF [video](https://www.youtube.com/watch?v=UMN6rh-5nPg). August 2017
    * glTF 2.0 and Community Update: Tony Parisi, Unity, and Patrick Cozzi, Cesium
