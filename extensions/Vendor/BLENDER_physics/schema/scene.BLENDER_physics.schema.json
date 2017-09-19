@@ -1,0 +1,15 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "physics",
+    "type" : "object",
+    "description" : "Rigid body physics properties for a scene",
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties" : {
+        "gravity" : {
+            "description" : "A scalar gravity value in m/s/s",
+            "type" : "number",
+            "default" : -9.8
+        }
+    },
+    "additionalProperties" : false
+}
