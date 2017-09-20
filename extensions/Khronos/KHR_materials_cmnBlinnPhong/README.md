@@ -4,6 +4,7 @@
 
 * Norbert Nopper, UX3D, <mailto:nopper@ux3d.io>
 * Thomas Kress, UX3D, <mailto:kress@ux3d.io>
+* many others
 
 ## Status
 
@@ -17,9 +18,9 @@ Written against the glTF 2.0 spec.
 
 This extension defines a Blinn-Phong model based material for use with glTF 2.0 in the same way as the core specification defines Physically Based Rendering (PBR) based materials. Other extension may define additional commonly used materials. For example, if a need for a Phong model arises, an extension named e.g. `cmnPhong` could be specified. 
 
-Given the long history of the Blinn-Phong model and the vast amount of collective experience with applying this model, the demand for convenient use of such materials is still exists.
+Given the long history of the Blinn-Phong model and the vast amount of collective experience with applying this model, the demand for convenient use of such materials still exists.
 
-This extension defines a single material type, Blinn-Phong. Other or simpler materials types such as Lambert or Constant may be emulated by applying zero factors. Please note, strict Lambert or Constant materials may be specified in dedicated extensions. 
+This extension defines a single material type, Blinn-Phong. 
 
 ## Extending Materials
 
@@ -100,8 +101,8 @@ where (all vectors normalized)
 * `N` – Normal vector
 * `L` – Light vector
 * `I` – Eye vector
-* `H` – Half-angle vector,calculated as halfway between the unit Eye and Light vectors, using the
-equation H= normalize(I+L)
+* `H` – Half-angle vector, calculated as halfway between the unit Eye and Light vectors, using the
+equation H = normalize (I+L)
 
 > **Implementation Note**: Writers should be aware of the range of the specular exponent (`shininess`), which is _not_ a normalized range. Concretely speaking, given the above equation, a `shininess` value of 1.0 corresponds to a very low shininess. For orientation: using the traditional OpenGL fixed function pipeline, the specular exponent was expected to be within [0, 128]. However, using glTF, larger `shininess` values are clearly possible. [Mention caution with `shininess < 1` ?]
 
