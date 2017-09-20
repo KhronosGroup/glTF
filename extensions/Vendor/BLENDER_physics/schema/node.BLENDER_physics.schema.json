@@ -37,7 +37,7 @@
             "maxItems": 3
         },
         "primaryAxis" : {
-            "description": "The axis to use for the height of the collision shape",
+            "description": "The axis to use for the height of the collision shape (only applies to `CAPSULE`, `CYLINDER`, and `CONE`)",
             "type": "string",
             "enum": [
                 "X",
