@@ -1,9 +1,9 @@
 BABYLON.Color3.prototype.clamp = function (min, max) {
     if (!min) min = 0;
     if (!max) max = 1;
-    this.r = BABYLON.MathTools.Clamp(this.r, min, max);
-    this.g = BABYLON.MathTools.Clamp(this.g, min, max);
-    this.b = BABYLON.MathTools.Clamp(this.b, min, max);
+    this.r = BABYLON.Scalar.Clamp(this.r, min, max);
+    this.g = BABYLON.Scalar.Clamp(this.g, min, max);
+    this.b = BABYLON.Scalar.Clamp(this.b, min, max);
     return this;
 }
 
