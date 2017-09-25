@@ -41,8 +41,6 @@
         <script src="js/three.pbrUtilities.js"></script>
 
         <!-- Additional Utils -->
-        <script src="js/Detector.js"></script>
-        <script src="js/stats.min.js"></script>
         <script src="js/dat.gui.min.js"></script>
 
         <script id="fragmentShaderSpecularGlossiness" type="x-shader/x-fragment">
@@ -421,12 +419,7 @@
             var options = new Options();
             var gui = new dat.GUI();
 
-            if (!Detector.webgl)
-            {
-                Detector.addGetWebGLMessage();
-            }
-
-            var container, stats;
+            var container;
             var camera, scene, renderer;
 
             var cubeTexIrr, cubeTexEnv;
@@ -527,9 +520,6 @@
 
                 container.appendChild(renderer.domElement);
 
-                stats = new Stats();
-                container.appendChild(stats.dom);
-
                 onWindowResize();
 
                 window.addEventListener( 'resize', onWindowResize, false );
@@ -552,7 +542,6 @@
                 requestAnimationFrame( animate );
 
                 render();
-                stats.update();
             }
 
             //
