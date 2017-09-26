@@ -4,7 +4,7 @@
 
 *Version 2.0*
 
-The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern 3D applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
+The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format. glTF bridges the gap between 3D content creation tools and modern 3D applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
 Last Updated: June 9, 2017
 
@@ -98,7 +98,7 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
 
 # Introduction
 
-The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern graphics applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
+The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format. glTF bridges the gap between 3D content creation tools and modern graphics applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
 ## Motivation
 
@@ -106,7 +106,7 @@ The GL Transmission Format (glTF) is an API-neutral runtime asset delivery forma
 
 Traditional 3D modeling formats have been designed to store data for offline use, primarily to support authoring workflows on desktop systems. Industry-standard 3D interchange formats allow for sharing assets between different modeling tools, and within the content pipeline in general. However, neither of these types of formats is optimized for download speed or fast loading at runtime. Files tend to grow very large, and applications need to do a significant amount of processing to load such assets into GPU-accelerated applications.
 
-Applications seeking high performance rarely load modeling formats directly; instead, they process models offline as part of a custom content pipeline, converting the assets into a proprietary format optimized for their runtime application.  This has led to a fragmented market of incompatible proprietary runtime formats and duplicated efforts in the content creation pipeline. 3D assets exported for one application cannot be reused in another application without going back to the original modeling, tool-specific source and performing another proprietary export step.
+Applications seeking high performance rarely load modeling formats directly; instead, they process models offline as part of a custom content pipeline, converting the assets into a proprietary format optimized for their runtime application. This has led to a fragmented market of incompatible proprietary runtime formats and duplicated efforts in the content creation pipeline. 3D assets exported for one application cannot be reused in another application without going back to the original modeling, tool-specific source and performing another proprietary export step.
 
 With the advent of mobile- and web-based 3D computing, new classes of applications have emerged that require fast, dynamic loading of standardized 3D assets. Digital marketing solutions, e-commerce product visualizations, and online model-sharing sites are just a few of the connected 3D applications being built today using WebGL or OpenGL ES. Beyond the need for efficient delivery, many of these online applications can benefit from a standard, interoperable format to enable sharing and reuse of assets between users, between applications, and within heterogeneous, distributed content pipelines.
 
@@ -142,7 +142,7 @@ glTF has been designed to meet the following goals:
 * *Complete 3D scene representation.* Exporting single objects from a modeling package is not sufficient for many applications. Often, authors want to load entire scenes, including nodes, transformations, transform hierarchy, meshes, materials, cameras, and animations into their applications. glTF strives to preserve all of this information for use in the downstream application.
 * *Extensibility.* While the initial base specification supports a rich feature set, there will be many opportunities for growth and improvement. glTF defines a mechanism that allows the addition of both general-purpose and vendor-specific extensions.
 
-The design of glTF takes a pragmatic approach. The format is meant to mirror the GPU APIs as closely as possible, but if it did only that, there would be no cameras, animations, or other features typically found in both modeling tools and runtime systems, and much semantic information would be lost in the translation. By supporting these common constructs, glTF content can not only load and render, but it can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
+The design of glTF takes a pragmatic approach. The format is meant to mirror the GPU APIs as closely as possible, but if it did only that, there would be no cameras, animations, or other features typically found in both modeling tools and runtime systems, and much semantic information would be lost in the translation. By supporting these common constructs, glTF content can not only be loaded and rendered, but can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
 
 The following are outside the scope of the initial design of glTF:
 
@@ -151,7 +151,7 @@ The following are outside the scope of the initial design of glTF:
 
 Version 2.0 of glTF does not define compression for geometry and other rich data. However, the design team believes that compression is a very important part of a transmission standard, and there is already work underway to define compression extensions.
 
-> The 3D Formats Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs.
+> The 3D Formats Working Group is developing partnerships to define the codec options for geometry compression. glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs.
 
 ## Versioning
 
@@ -181,22 +181,22 @@ To simplify client-side implementation, glTF has following restrictions on JSON 
 
 glTF uses URIs to reference buffers and image resources. These URIs may point to external resources or be data URIs that embed resources in the JSON. Embedded resources use "data" URI scheme ([RFC2397](https://tools.ietf.org/html/rfc2397)).
  
- > **Implementation Note:** Data URIs could be [decoded with JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding) or consumed directly by web browsers in HTML tags.
+> **Implementation Note:** Data URIs could be [decoded with JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding) or consumed directly by web browsers in HTML tags.
 
 Client implementations are required to support only embedded resources and relative external references (in a sense of [RFC3986](https://tools.ietf.org/html/rfc3986#section-4.2)). Clients are free to support other schemes (such as `http://`) depending on expected usage.
 
- > **Implementation Note:** This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, or textures, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading. Alternatively, an asset could use GLB container to store JSON and binary data in one file without base64 encoding. See [GLB File Format Specification](#glb-file-format-specification) for details.
+> **Implementation Note:** This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, or textures, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading. Alternatively, an asset could use a GLB container to store JSON and binary data in one file without base64 encoding. See [GLB File Format Specification](#glb-file-format-specification) for details.
 
 # Concepts
 
 <p align="center">
 <img src="figures/dictionary-objects.png" /><br/>
-The top-level arrays in a glTF asset.  See the <a href="#properties-reference">Properties Reference</a>.
+The top-level arrays in a glTF asset. See the <a href="#properties-reference">Properties Reference</a>.
 </p>
 
 ## Asset
 
-Each glTF asset must have an `asset` property. In fact, it's the only required top-level property for JSON to be a valid glTF. The `asset` object must contain glTF version which specifies the target glTF version of the asset. Additionally, an optional `minVersion` property can be used to specify the minimum glTF version support required to load the asset. The `minVersion` property allows asset creators to specify a minimum version that a client implementation must support in order to load the asset. This is very similar to the `extensionsRequired` concept, where an asset should only be loaded if the client supports the specified extension. Additional metadata can be stored in optional properties such as `generator` or `copyright`.  For example,
+Each glTF asset must have an `asset` property. In fact, it's the only required top-level property for JSON to be a valid glTF. The `asset` object must contain a `version` property which specifies the target glTF version of the asset. Additionally, an optional `minVersion` property can be used to specify the minimum glTF version support required to load the asset. The `minVersion` property allows asset creators to specify a minimum version that a client implementation must support in order to load the asset. This is very similar to the `extensionsRequired` concept, where an asset should only be loaded if the client supports the specified extension. Additional metadata can be stored in optional properties such as `generator` or `copyright`. For example,
 
 ```json
 {
@@ -208,12 +208,12 @@ Each glTF asset must have an `asset` property. In fact, it's the only required t
 }
 ```
 
-> **Implementation Note:** Client implementations should first check whether a `minVersion` property is specified and ensure both major and minor versions can be supported. If no `minVersion` is specified, then clients should check the `version` property and ensure the major version is supported. Clients that load [GLB format](#glb-file-format-specification) should also check for the `minVersion` and `version` properties in the JSON chunk as the version specified in the GLB header only refers to the GLB container version.
+> **Implementation Note:** Client implementations should first check whether a `minVersion` property is specified and ensure both major and minor versions can be supported. If no `minVersion` is specified, then clients should check the `version` property and ensure the major version is supported. Clients that load the [GLB format](#glb-file-format-specification) should also check for the `minVersion` and `version` properties in the JSON chunk as the version specified in the GLB header only refers to the GLB container version.
 
 
 ## Indices and Names
 
-Entities of a glTF asset are referenced by their indices in corresponding arrays, e.g., a `bufferView` refers to a `buffer` by specifying the buffer's index in `buffers` array.  For example:
+Entities of a glTF asset are referenced by their indices in corresponding arrays, e.g., a `bufferView` refers to a `buffer` by specifying the buffer's index in the `buffers` array. For example,
 
 ```json
 {
@@ -254,7 +254,7 @@ Positive rotation is counterclockwise.
 
 The glTF asset contains zero or more *scenes*, the set of visual objects to render. Scenes are defined in a `scenes` array. An additional property, `scene` (note singular), identifies which of the scenes in the array is to be displayed at load time.
 
-When `scene` is undefined, runtime is not required to render anything at load time.
+When `scene` is undefined, the runtime is not required to render anything at load time.
 
 > **Implementation Note:** This allows applications to use glTF assets as libraries of individual entities such as materials or meshes.   
 
@@ -320,7 +320,7 @@ The node named `Car` has four children. Each of those nodes could in turn have i
 
 ### Transformations
 
-Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). `translation` and `scale` are `FLOAT_VEC3` values in the local coordinate system. `rotation` is a `FLOAT_VEC4` unit quaternion value, `(x, y, z, w)`, in the local coordinate system.
+Any node can define a local space transformation either by supplying a `matrix` property, or any of the `translation`, `rotation`, and `scale` properties (also known as *TRS properties*). `translation` and `scale` are `FLOAT_VEC3` values in the local coordinate system. `rotation` is a `FLOAT_VEC4` unit quaternion value, `(x, y, z, w)`, in the local coordinate system.
 
 When `matrix` is defined, it must be decomposable to TRS. This implies that transformation matrices cannot skew or shear.
 
@@ -332,7 +332,7 @@ When a node is targeted for animation (referenced by an `animation.channel.targe
 
 > **Implementation Note:** Non-invertible transformations (e.g., scaling one axis to zero) could lead to lighting and/or visibility artifacts.
 
-In the example below, node named `Box` defines non-default rotation and translation.
+In the example below, the node named `Box` defines a non-default rotation and translation.
 
 ```json
 {
@@ -360,7 +360,7 @@ In the example below, node named `Box` defines non-default rotation and translat
 }
 ```
 
-The next example defines the transformation for a node with attached camera using the `matrix` property rather than using the individual TRS values:
+The next example defines the transformation for a node with attached camera using the `matrix` property rather than using the individual TRS values.
 
 ```json
 {
@@ -444,13 +444,13 @@ The following example defines two buffer views: the first is an ELEMENT_ARRAY_BU
 }
 ```
 
-Buffer view could have `byteStride` property. It means byte-distance between consequential elements. This field  is defined only for buffer views that contain vertex attributes.
+A buffer view can have a `byteStride` property. It means byte-distance between consecutive elements. This field is defined only for buffer views that contain vertex attributes.
 
 Buffers and buffer views do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) access buffers or buffer views via *accessors*.
 
 #### GLB-stored Buffer
 
-glTF asset could use GLB file container to pack all resources into one file. glTF Buffer referring to GLB-stored `BIN` chunk, must have `buffer.uri` property undefined, and it must be the first element of `buffers` array. In the following example, the first buffer objects refers to GLB-stored data, while the second points to external resource:
+A glTF asset can use a GLB file container to pack all resources into one file. The glTF Buffer referring to the GLB-stored `BIN` chunk must have its `buffer.uri` property undefined, and it must be the first element of the `buffers` array. In the following example, the first buffer objects refers to GLB-stored data, while the second points to an external resource.
 
 ```json
 {
@@ -476,7 +476,7 @@ An *accessor* defines a method for retrieving data as typed arrays from within a
 
 All accessors are stored in the asset's `accessors` array.
 
-The following fragment shows two accessors, the first is a scalar accessor for retrieving a primitive's indices, and the second is a 3-float-component vector accessor for retrieving the primitive's position data.
+The following fragment shows two accessors: the first is a scalar accessor for retrieving a primitive's indices, and the second is a 3-float-component vector accessor for retrieving the primitive's position data.
 
 ```json
 {
@@ -523,7 +523,7 @@ Values of `NaN`, `+Infinity`, and `-Infinity` are not allowed.
 
 #### Accessor Element Size
 
-The following tables can be used to compute the size of element accessible by accessor.
+The following tables can be used to compute the size of element accessible by an accessor.
 
 | `componentType` | Size in bytes |
 |:---------------:|:-------------:|
@@ -563,11 +563,11 @@ For example:
 }
 ```
 
-In this accessor, the `componentType` is `5126` (FLOAT), so each component is four bytes.  The `type` is `"VEC3"`, so there are three components.  The size of each element is 12 bytes (`4 * 3`).
+In this accessor, the `componentType` is `5126` (FLOAT), so each component is four bytes. The `type` is `"VEC3"`, so there are three components. The size of each element is 12 bytes (`4 * 3`).
 
 #### Accessors Bounds
 
-`accessor.min` and `accessor.max` properties are arrays that contain per-component minimum and maximum values, respectively. Exporters and loaders must treat these values as having the same data type as accessor's `componentType`, i.e., use integers (JSON number without fractional part) for integer types and use floating-point decimals for `5126` (FLOAT).
+`accessor.min` and `accessor.max` properties are arrays that contain per-component minimum and maximum values, respectively. Exporters and loaders must treat these values as having the same data type as the accessor's `componentType`, i.e., use integers (JSON number without fractional part) for integer types and use floating-point decimals for `5126` (FLOAT).
 
 > **Implementation Note:** JavaScript client implementations should convert JSON-parsed floating-point doubles to single precision, when `componentType` is `5126` (FLOAT). This could be done with `Math.fround` function.
 
@@ -611,22 +611,23 @@ The following fragment shows an example of `sparse` accessor with 10 elements de
     ]
 }
 ```
-A sparse accessor differs from a regular one in that `bufferView` property isn't required. When it's omitted, the sparse accessor is initialized as an array of zeros of size `(size of the accessor element) * (accessor.count)` bytes.
+
+A sparse accessor differs from a regular one in that the `bufferView` property isn't required. When it's omitted, the sparse accessor is initialized as an array of zeros of size `(size of the accessor element) * (accessor.count)` bytes.
 A sparse accessor `min` and `max` properties correspond, respectively, to the minimum and maximum component values once the sparse substitution is applied.
 
-When nor `sparse`, neither `bufferView` is defined, `min` and `max` properties could have any values. This is intended for use cases when binary data is supplied by external means (e.g., via extensions).
+When neither `sparse` nor `bufferView` is defined, the `min` and `max` properties can have any values. This is intended for use cases when binary data is supplied by external means (e.g., via extensions).
 
 #### Data Alignment
 
 The offset of an `accessor` into a `bufferView` (i.e., `accessor.byteOffset`) and the offset of an `accessor` into a `buffer` (i.e., `accessor.byteOffset + bufferView.byteOffset`) must be a multiple of the size of the accessor's component type.
 
-When `byteStride` of referenced `bufferView` is not defined, it means that accessor elements are tightly packed, i.e., effective stride equals the size of the element. When `byteStride` is defined, it must be a multiple of the size of the accessor's component type. `byteStride` must be defined, when two or more accessors use the same `bufferView`.
+When the `byteStride` of the referenced `bufferView` is not defined, it means that the accessor's elements are tightly packed, i.e., effective stride equals the size of the element. When `byteStride` is defined, it must be a multiple of the size of the accessor's component type. `byteStride` must be defined when two or more accessors use the same `bufferView`.
 
 Each `accessor` must fit its `bufferView`, i.e., `accessor.byteOffset + STRIDE * (accessor.count - 1) + SIZE_OF_ELEMENT` must be less than or equal to `bufferView.length`.
 
 For performance and compatibility reasons, vertex attributes must be aligned to 4-byte boundaries inside `bufferView` (i.e., `accessor.byteOffset` and `bufferView.byteStride` must be multiples of 4). 
 
-Accessors of matrix type have data stored in column-major order; start of each column must be aligned to 4-byte boundaries. To achieve this, three `type`/`componentType` combinations require special layout:
+Accessors of matrix type have data stored in column-major order. The start of each column must be aligned to a 4-byte boundary. To achieve this, three `type`/`componentType` combinations require special layout:
 
 **MAT2, 1-byte components**
 ```
@@ -653,7 +654,7 @@ Alignment requirements apply only to start of each column, so trailing bytes cou
 
 > **Implementation Note:** For JavaScript, this allows a runtime to efficiently create a single ArrayBuffer from a glTF `buffer` or an ArrayBuffer per `bufferView`, and then use an `accessor` to turn a typed array view (e.g., `Float32Array`) into an ArrayBuffer without copying it because the byte offset of the typed array view is a multiple of the size of the type (e.g., `4` for `Float32Array`).
 
-Consider the following example:
+Consider the following example.
 
 ```json
 {
@@ -676,18 +677,19 @@ Consider the following example:
     ]
 }
 ```
-Accessing binary data defined by example above could be done like this:
+
+Accessing binary data defined by the example above could be done like this:
 
 ```js
 var typedView = new Uint16Array(buffer, accessor.byteOffset + accessor.bufferView.byteOffset, accessor.count);
 ```
 
-The size of the accessor component type is two bytes (the `componentType` is unsigned short). The accessor's `byteOffset` is also divisible by two. Likewise, the accessor's offset into buffer `0` is `5228 ` (`620 + 4608`), which is divisible by two.
+The size of the accessor's component type is two bytes (the `componentType` is unsigned short). The accessor's `byteOffset` is also divisible by two. Likewise, the accessor's offset into buffer `0` is `5228 ` (`620 + 4608`), which is divisible by two.
 
 
 ## Geometry
 
-Any node can contain one mesh, defined in its `mesh` property. Mesh can be skinned using a information provided in referenced `skin` object. Mesh can have morph targets.
+Any node can contain one mesh, defined in its `mesh` property. A mesh can be skinned using information provided in a referenced `skin` object. A mesh can have morph targets.
 
 ### Meshes
 
@@ -725,7 +727,7 @@ Each attribute is defined as a property of the `attributes` object. The name of 
 
 Valid attribute semantic property names include `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`, `JOINTS_0`, and `WEIGHTS_0`.  Application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
 
-Valid accessor type and component type for each attribute semantic property are defined below.
+Valid accessor types and component types for each attribute semantic property are defined below.
 
 |Name|Accessor Type(s)|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
@@ -738,7 +740,7 @@ Valid accessor type and component type for each attribute semantic property are 
 |`JOINTS_0`|`"VEC4"`|`5120`&nbsp;(UNSIGNED_BYTE)<br>`5123`&nbsp;(UNSIGNED_SHORT)|See [Skinned Mesh Attributes](#skinned-mesh-attributes)|
 |`WEIGHTS_0`|`"VEC4`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|See [Skinned Mesh Attributes](#skinned-mesh-attributes)|
 
-`POSITION` accessor **must** have `min` and `max` properties defined.
+A `POSITION` accessor **must** have `min` and `max` properties defined.
 
 `TEXCOORD`, `COLOR`, `JOINTS`, and `WEIGHTS` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. Client implementations must support at least two UV texture coordinate sets, one vertex color, and one joints/weights set. Extensions can add additional property names, accessor types, and/or accessor component types.
 
@@ -746,12 +748,12 @@ Valid accessor type and component type for each attribute semantic property are 
 
 > **Implementation note:** When normals are not specified, client implementations should calculate flat normals.
 
-> **Implementation note:** When tangents are not specified, client implementations should calculate tangents using default MikkTSpace algorithms.  For best results, the mesh triangles should also be processed using default MikkTSpace algorithms.
+> **Implementation note:** When tangents are not specified, client implementations should calculate tangents using default MikkTSpace algorithms. For best results, the mesh triangles should also be processed using default MikkTSpace algorithms.
 
 > **Implementation note:** When normals and tangents are specified, client implementations should compute the bitangent by taking the cross product of the normal and tangent xyz vectors and multiplying against the w component of the tangent: `bitangent = cross(normal, tangent.xyz) * tangent.w`
 
 > **Implementation note:** When the 'mode' property is set to a non-triangular type (such as POINTS or LINES) some additional considerations must be taken while considering the proper rendering technique:
-> > For LINES with with `NORMAL` and `TANGENT` properties can render with standard lighting including normal maps.
+> > For LINES with `NORMAL` and `TANGENT` properties, render with standard lighting including normal maps.
 > > 
 > > For all POINTS or LINES with no `TANGENT` property, render with standard lighting but ignore any normal maps on the material.
 > > 
@@ -770,9 +772,9 @@ primitives[i].attributes.POSITION +
   weights[1] * primitives[i].targets[1].POSITION +
   weights[2] * primitives[i].targets[2].POSITION + ...
 ```
-Morph Targets are implemented via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to an accessor containing Morph Target displacement data, currently only three attributes (`POSITION`, `NORMAL`, and `TANGENT`) are supported. All primitives are required to list the same number of `targets` in the same order.
+Morph Targets are implemented via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to an accessor containing Morph Target displacement data. Currently only three attributes (`POSITION`, `NORMAL`, and `TANGENT`) are supported. All primitives are required to list the same number of `targets` in the same order.
 
-Valid accessor type and component type for each attribute semantic property are defined below. Note that the *w* component for handedness is omitted when targeting `TANGENT` data since handedness cannot be displaced.
+Valid accessor types and component types for each attribute semantic property are defined below. Note that the *w* component for handedness is omitted when targeting `TANGENT` data since handedness cannot be displaced.
 
 |Name|Accessor Type(s)|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
@@ -780,11 +782,12 @@ Valid accessor type and component type for each attribute semantic property are 
 |`NORMAL`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex normal displacements|
 |`TANGENT`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex tangent displacements|
 
-`POSITION` accessor **must** have `min` and `max` properties defined.
+A `POSITION` accessor **must** have `min` and `max` properties defined.
 
-A Morph Target may also define an optional `mesh.weights` property that stores the default targets weights. In the absence of a `node.weights` property, the primitives attributes are resolved using these weights. When this property is missing, the default targets weights are assumed to be zero.
+A Morph Target may also define an optional `mesh.weights` property that stores the default target weights. In the absence of a `node.weights` property, the primitives attributes are resolved using these weights. When this property is missing, the default target weights are assumed to be zero.
 
 The following example extends the Mesh defined in the previous example to a morphable one by adding two Morph Targets:
+
 ```json
 {
     "primitives": [
@@ -824,7 +827,7 @@ After applying morph targets to vertex positions and normals, tangent space may 
 
 All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property (which points to an accessor with IBM data), used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property points to node that is the root of a joints hierarchy. 
 
-> **Implementation Note:** Matrix, defining how to pose the skin's geometry for use with the joints ("Bind Shape Matrix") should be premultiplied to mesh data or to Inverse Bind Matrices. 
+> **Implementation Note:** The matrix, defining how to pose the skin's geometry for use with the joints (the "Bind Shape Matrix") should be premultiplied to mesh data or to the Inverse Bind Matrices.
 
 ```json
 {    
@@ -843,7 +846,7 @@ All skins are stored in the `skins` array of the asset. Each skin is defined by 
 
 #### Skinned Mesh Attributes
 
-The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The `JOINTS_0` attribute data contains the indices of the joints from corresponding `joints` array that should affect the vertex. The `WEIGHTS_0` attribute data defines the weights indicating how strongly the joint should influence the vertex. The following mesh skin defines `JOINTS_0` and `WEIGHTS_0` vertex attributes for a triangle mesh primitive:
+The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The `JOINTS_0` attribute data contains the indices of the joints from corresponding `joints` array that should affect the vertex. The `WEIGHTS_0` attribute data defines the weights indicating how strongly the joint should influence the vertex. The following mesh skin defines `JOINTS_0` and `WEIGHTS_0` vertex attributes for a triangle mesh primitive.
 
 ```json
 {
@@ -869,7 +872,7 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
 }
 ```
 
-The number of joints that influence one vertex is limited to 4, so referenced accessors must have `VEC4` type and following component formats:
+The number of joints that influence one vertex is limited to 4, so referenced accessors must have `VEC4` type and one of the following component formats:
 
 * **`JOINTS_0`**: `UNSIGNED_BYTE` or `UNSIGNED_SHORT`
 * **`WEIGHTS_0`**: `FLOAT`, or normalized `UNSIGNED_BYTE`, or normalized `UNSIGNED_SHORT`
@@ -900,17 +903,16 @@ A mesh is instantiated by `node.mesh` property. The same mesh could be used by m
                 -20,
                 -1,
                 0
-            ]            
+            ]
         }
     ]
 }
-
 ```
 
 A Morph Target is instanced within a node using:
 - The Morph Target referenced in the `mesh` property.
 - The Morph Target `weights` overriding the `weights` of the Morph Target referenced in the `mesh` property.
-The example below instatiates a Morph Target with non-default weights.
+The example below instantiates a Morph Target with non-default weights.
 
 ```json
 {
@@ -966,6 +968,7 @@ A skin is instanced within a node using a combination of the node's `mesh` and `
 }
 ```
 
+
 ## Texture Data
 
 glTF separates texture access into three distinct types of objects: Textures, Images, and Samplers.
@@ -1011,7 +1014,8 @@ The following example shows an image pointing to an external PNG image file and 
     ]
 }
 ```
-> **Implementation Note:** When image data is provided by `uri` and `mimeType` is defined, client implementations should prefer JSON-defined MIME Type over one provided by transport layer.
+
+> **Implementation Note:** When image data is provided by `uri` and `mimeType` is defined, client implementations should prefer the JSON-defined MIME Type over one provided by the transport layer.
 
 The origin of the UV coordinates (0, 0) corresponds to the upper left corner of a texture image.
 This is illustrated in the following figure, where the respective UV coordinates are shown for all four corners of a normalized UV space:
@@ -1049,6 +1053,7 @@ Samplers are stored in the `samplers` array of the asset. Each sampler specifies
 > * Has a wrapping mode (either `wrapS` or `wrapT`) equal to `REPEAT` or `MIRRORED_REPEAT`, or
 > * Has a minification filter (`minFilter`) that uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`).
 
+
 ## Materials
 
 glTF defines materials using a common set of parameters that are based on widely used material representations from Physically-Based Rendering (PBR). Specifically, glTF uses the metallic-roughness material model. Using this declarative representation of materials enables a glTF file to be rendered consistently across platforms. 
@@ -1057,7 +1062,7 @@ glTF defines materials using a common set of parameters that are based on widely
 
 ### Metallic-Roughness Material 
 
-All parameters related to the metallic-roughness material model are defined under the `pbrMetallicRoughness` property of `material` object. The following example shows how a material like gold can be defined using the metallic-roughness parameters: 
+All parameters related to the metallic-roughness material model are defined under the `pbrMetallicRoughness` property of a `material` object. The following example shows how a material like gold can be defined using the metallic-roughness parameters.
 
 ```json
 {
@@ -1079,7 +1084,7 @@ The metallic-roughness material model is defined by the following properties:
 * `metallic` - The metalness of the material
 * `roughness` - The roughness of the material
 
-The base color has two different interpretations depending on the value of metalness. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used. 
+The base color has two different interpretations depending on the value of the metalness. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used.
 
 The value for each property (`baseColor`, `metallic`, `roughness`) can be defined using factors or textures. The `metallic` and `roughness` properties are packed together in a single texture called `metallicRoughnessTexture`. If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. If both factors and textures are present the factor value acts as a linear multiplier for the corresponding texture values. Texture content must be converted to linear space before it is used for any lighting computations. 
 
@@ -1089,7 +1094,7 @@ Then, the result would be
 [0.9 * 0.2, 0.5 * 1.0, 0.3 * 0.7, 1.0 * 1.0] = [0.18, 0.5, 0.21, 1.0]
 ```
 
-The following equations show how to calculate bidirectional reflectance distribution function (BRDF) inputs (*c<sub>diff</sub>*, *F<sub>0</sub>*, *&alpha;*) from the metallic-roughness material properties. In addition to the material properties, if a primitive specifies a vertex color using the attribute semantic property `COLOR_0`, then this value acts as an additional linear multiplier to `baseColor`.
+The following equations show how to calculate the bidirectional reflectance distribution function (BRDF) inputs (*c<sub>diff</sub>*, *F<sub>0</sub>*, *&alpha;*) from the metallic-roughness material properties. In addition to the material properties, if a primitive specifies a vertex color using the attribute semantic property `COLOR_0`, then this value acts as an additional linear multiplier to `baseColor`.
 
 `const dielectricSpecular = rgb(0.04, 0.04, 0.04)`
 <br>
@@ -1143,7 +1148,7 @@ The following examples shows a material that is defined using `pbrMetallicRoughn
 }
 ```
 
->**Implementation Note:** If an implementation is resource-bound and cannot support all the maps defined it should support these additional maps in the following priority order.  Resource-bound implementations should drop maps from the bottom to the top.
+>**Implementation Note:** If an implementation is resource-bound and cannot support all the maps defined it should support these additional maps in the following priority order. Resource-bound implementations should drop maps from the bottom to the top.
 >
 >| Map       | Rendering impact when map is not supported |
 >|-----------|--------------------------------------------|
@@ -1153,7 +1158,7 @@ The following examples shows a material that is defined using `pbrMetallicRoughn
 
 ### Alpha Coverage
 
-The `alphaMode` property defines how the alpha value of the main factor and texture should be interpreted. The alpha value is defined in the `baseColor` for metallic-roughness material model. 
+The `alphaMode` property defines how the alpha value of the main factor and texture should be interpreted. The alpha value is defined in the `baseColor` for the metallic-roughness material model.
 
 `alphaMode` can be one of the following values:
 * `OPAQUE` - The rendered output is fully opaque and any alpha value is ignored.
@@ -1165,7 +1170,7 @@ The `alphaMode` property defines how the alpha value of the main factor and text
 >**Implementation Note for Real-Time Rasterizers:** Real-time rasterizers typically use depth buffers and mesh sorting to support alpha modes. The following describe the expected behavior for these types of renderers.
 >* `OPAQUE` - A depth value is written for every pixel and mesh sorting is not required for correct output.
 >* `MASK` - A depth value is not written for a pixel that is discarded after the alpha test. A depth value is written for all other pixels. Mesh sorting is not required for correct output.
->* `BLEND` - Support for this mode varies. There is no perfect and fast solution that works for all cases. Implementations should try to achieve the correct blending output for as many situations as possible. Whether depth value is written or whether to sort is up to the implementation. For example, implementations can discard pixels which have zero or close to zero alpha value to avoid sorting issues.
+>* `BLEND` - Support for this mode varies. There is no perfect and fast solution that works for all cases. Implementations should try to achieve the correct blending output for as many situations as possible. Whether a depth value is written and whether to sort is up to the implementation. For example, implementations can discard pixels which have zero or close to zero alpha value to avoid sorting issues.
 
 ### Double Sided
 
@@ -1181,7 +1186,7 @@ A camera defines the projection matrix that transforms from view to clip coordin
 
 Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
 
-Depending on the presence of `zfar` property, perspective cameras could use finite or infinite projection.
+Depending on the presence of the `zfar` property, perspective cameras could use finite or infinite projection.
 
 The following example defines two perspective cameras with supplied values for Y field of view, aspect ratio, and clipping information.
 
@@ -1250,9 +1255,9 @@ glTF 2.0 also supports animation of instantiated Morph Targets in a similar fash
 
 > **Note:** glTF 2.0 defines only animation storage, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc...
 
-> **Implementation Note:** glTF 2.0 does not specifically define how an animation will be used when imported but, as a best practice, it is recommended that each animation is self contained as an action. For example, "Walk" and "Run" animations might each contain multiple channels targeting a model's various bones. The client implementation may choose when to play any of the available animations.
+> **Implementation Note:** glTF 2.0 does not specifically define how an animation will be used when imported but, as a best practice, it is recommended that each animation is self-contained as an action. For example, "Walk" and "Run" animations might each contain multiple channels targeting a model's various bones. The client implementation may choose when to play any of the available animations.
 
-All animations are stored in the `animations` array of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
+All animations are stored in the `animations` array of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data together with an interpolation method (the `samplers` property).
 
 The following examples show expected animations usage.
 
@@ -1396,9 +1401,9 @@ The following examples show expected animations usage.
 
 *Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the index of one of the samplers present in the containing animation's `samplers` array. The `target` property is an object that identifies which node to animate using its `node` property, and which property of the node to animate using `path`. Non-animated properties must keep their values during animation.
 
-When `node` isn't defined, channel should be ignored. Valid path names are `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
+When `node` isn't defined, the channel should be ignored. Valid path names are `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
 
-Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating point scalar values representing time in seconds; and a set of vectors or scalars representing animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, `CATMULLROMSPLINE`, and `CUBICSPLINE`. See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
+Each of the animation's *samplers* defines an `input`/`output` pair: a set of floating point scalar values representing time in seconds; and a set of vectors or scalars representing the animated property's values. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, `CATMULLROMSPLINE`, and `CUBICSPLINE`. See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
 
 |`channel.path`|Accessor Type|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
@@ -1407,7 +1412,7 @@ Each of the animation's *samplers* defines the `input`/`output` pair: a set of f
 |`"scale"`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ scale vector|
 |`"weights"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|Weights of morph targets|
 
-Implementations must use following equations to get corresponding floating-point value `f` from a normalized integer `c` and vise-versa:
+Implementations must use the following equations to get the corresponding floating-point value `f` from a normalized integer `c` and vice-versa:
 
 |`accessor.componentType`|int-to-float|float-to-int|
 |-----------------------------|--------|----------------|
@@ -1416,11 +1421,12 @@ Implementations must use following equations to get corresponding floating-point
 | `5122`&nbsp;(SHORT)         |`f = max(c / 32767.0, -1.0)`|`c = round(f * 32767.0)`|
 | `5123`&nbsp;(UNSIGNED_SHORT)|`f = c / 65535.0`|`c = round(f * 65535.0)`|
 
-Animation Sampler's `input` accessor **must** have `min` and `max` properties defined.
+An Animation Sampler's `input` accessor **must** have `min` and `max` properties defined.
 
-A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation.
+A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. Morph Target animation is by nature sparse; consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation.
 
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
+
 
 ## Specifying Extensions
 
@@ -1465,12 +1471,13 @@ All glTF extensions required to load and/or render an asset must be listed in th
 
 For more information on glTF extensions, consult the [extensions registry specification](../../extensions/README.md).
 
+
 # GLB File Format Specification
 
 glTF provides two delivery options that can also be used together:
 
 * glTF JSON points to external binary data (geometry, key frames, skins), and images.
-* glTF JSON embeds base64-encoded binary data, and images inline using data URIs.
+* glTF JSON embeds base64-encoded binary data and images inline using data URIs.
 
 For these resources, glTF requires either separate requests or extra space due to base64-encoding. Base64-encoding requires extra processing to decode and increases the file size (by ~33% for encoded resources). While gzip mitigates the file size increase, decompression and decoding still add significant loading time.
 
@@ -1523,6 +1530,7 @@ uint32 length
 ### Chunks
 
 Each chunk has the following structure:
+
 ```
 uint32 chunkLength
 uint32 chunkType
@@ -1531,11 +1539,11 @@ ubyte[] chunkData
 
 * `chunkLength` is the length of `chunkData`, in bytes.
 
-* `chunkType` indicates the type of chunk. See Table 1 for details.
+* `chunkType` indicates the type of the chunk. See Table 1 for details.
 
-* `chunkData` is a binary payload of chunk.
+* `chunkData` is the binary payload of the chunk.
 
-The start and the end of each chunk must be aligned to 4-byte boundary. See chunks definitions for padding schemes. Chunks must appear in exactly the order given in the Table 1.
+The start and the end of each chunk must be aligned to 4-byte boundary. See the chunk definitions for padding schemes. Chunks must appear in exactly the order given in the Table 1.
 
 **Table 1**: Chunk types
 
@@ -1552,13 +1560,13 @@ This chunk holds the structured glTF content description, as it would be provide
 
 > **Implementation Note:** In a JavaScript implementation, the `TextDecoder` API can be used to extract the glTF content from the ArrayBuffer, and then the JSON can be parsed with `JSON.parse` as usual.
 
-This chunk must be the very first chunk of Binary glTF asset. By reading this chunk first, an implementation is able to progressively retrieve resources from subsequent chunks. This way, it is also possible to read only a selected subset of resources from a Binary glTF asset (for instance, the coarsest LOD of a mesh).
+This chunk must be the very first chunk of a Binary glTF asset. By reading this chunk first, an implementation is able to progressively retrieve resources from subsequent chunks. This way, it is also possible to read only a selected subset of resources from a Binary glTF asset (for instance, the coarsest LOD of a mesh).
 
 This chunk must be padded with trailing `Space` chars (`0x20`) to satisfy alignment requirements.  
 
 #### Binary buffer
 
-This chunk contains the binary payload for geometry, animation key frames, skins, and images. See glTF specification for details on referencing this chunk from JSON.
+This chunk contains the binary payload for geometry, animation key frames, skins, and images. See the glTF specification for details on referencing this chunk from JSON.
 
 This chunk must be padded with trailing zeros (`0x00`) to satisfy alignment requirements.
 
