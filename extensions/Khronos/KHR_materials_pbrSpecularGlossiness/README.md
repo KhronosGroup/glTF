@@ -206,11 +206,4 @@ The following table describes the expected rendering behavior based on the mater
 
 ## Appendix
 
-Conversion between the two PBR material models:
-- [Convert between metallic-roughness and specular-glossiness using BabylonJS](examples/convert-between-workflows-bjs/) 
-- [Convert between metallic-roughness and specular-glossiness using WebGL and threeJS](examples/convert-between-workflows/) 
-
-
-
-
-
+[Conversion between the two PBR material models](./examples)
