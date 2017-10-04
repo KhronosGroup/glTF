@@ -96,9 +96,7 @@ mesh.
 `attributes` defines the attributes stored in the decompressed geometry. E.g, in the example above, `POSITION`, `NORMAL`, `TEXCOORD_0`, `WEIGHTS_0` and `JOINTS_0`. Each attribute is associated with an attribute id which is its unique id in the compressed data. The `attributes` defined in the extension must be a subset of the attributes of the primitive. To request an attribute, loaders should be able to use the correspondent attribute id specified in the `attributes` to get the attribute from the compressed data.
 
 #### Restrictions on geometry type
-When using this extension, the `mode` of `primitive` could only be one of
-`POINTS`, `TRIANGLES` and `TRIANGLE_STRIP` and the mesh data will be decoded accordingly. For example, if `mode` is `POINTS`, then the
-decompressed geometry will be a point cloud.
+When using this extension, the `mode` of `primitive` could only be one of `TRIANGLES` and `TRIANGLE_STRIP` and the mesh data will be decoded accordingly.
 
 ### JSON Schema
 
