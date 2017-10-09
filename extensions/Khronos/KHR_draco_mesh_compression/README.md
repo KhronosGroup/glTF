@@ -126,7 +126,7 @@ The extension provides compressed alternatives to one or more of a primitive's u
 
 * Implementation note: To prevent transmission of redundant data, exporters should generally write compressed Draco data into a separate buffer from the uncompressed fallback, and shared data into a third buffer. Loaders may then optimize to request only the necessary buffers.
 
-If the uncompressed version of asset is not provided for the fallback described above, then the extension must be added to `extenionRequired` so that the loaders/engines don't support the extension could report failure.
+If the uncompressed version of asset is not provided for the fallback described above, then the extension must be added to `extensionsRequired` so that the loaders/engines don't support the extension could report failure.
 
 ## Resources
 
