@@ -4,7 +4,7 @@
 
 * Mitchell Stokes, Blender, <mailto:mogurijin@gmail.com>
 * Daniel Stokes, Blender, <mailto:kupomail@gmail.com>
-* Steven Vergenz, AltspaceVR, <mailto:steven@altvr.com>
+* Steven Vergenz, Microsoft, <mailto:steven.vergenz@microsoft.com>
 
 ## Status
 
