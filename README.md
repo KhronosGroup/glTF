@@ -43,6 +43,7 @@ Preview tools:
   * [Optimizers](#optimizers)
   * [Validators](#validators)
   * [Editors and Modeling Tools](#editors-and-modeling-tools)
+  * [Viewers and Debugging](#viewers-and-debugging)
   * [Applications](#applications)
   * [Loaders and Viewers](#loaders-and-viewers)
     * [WebGL Engines](#webgl-engines)
