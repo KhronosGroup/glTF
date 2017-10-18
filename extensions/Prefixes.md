@@ -6,6 +6,7 @@ The following extension prefixes are reserved:
 * `BLENDER` - Blender
 * `CESIUM` - Cesium
 * `EXT` - Multi-vendor
+* `GOOGLE` - Google
 * `KHR` - Ratified or intended-to-be-ratified Khronos
 * `OWLII` - Owlii
 * `WEB3D` - Web3D Consortium
