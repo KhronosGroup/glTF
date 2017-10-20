@@ -450,7 +450,9 @@ Buffers and buffer views do not contain type information. They simply define the
 
 #### GLB-stored Buffer
 
-glTF asset could use GLB file container to pack all resources into one file. glTF Buffer referring to GLB-stored `BIN` chunk, must have `buffer.uri` property undefined, and it must be the first element of `buffers` array. In the following example, the first buffer objects refers to GLB-stored data, while the second points to external resource:
+glTF asset could use GLB file container to pack all resources into one file. glTF Buffer referring to GLB-stored `BIN` chunk, must have `buffer.uri` property undefined, and it must be the first element of `buffers` array; byte length of `BIN` chunk could be up to 3 bytes bigger than JSON-defined `buffer.byteLength` to satisfy GLB padding requirements. 
+
+In the following example, the first buffer objects refers to GLB-stored data, while the second points to external resource:
 
 ```json
 {
