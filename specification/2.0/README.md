@@ -1025,7 +1025,7 @@ Any colorspace information (such as ICC profiles, intents, etc) from PNG or JPEG
 
 ### Samplers
 
-Samplers are stored in the `samplers` array of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
+Samplers are stored in the `samplers` array of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S (U) and T (V).
 
 
 ```json
@@ -3319,7 +3319,7 @@ Minification filter.  All valid values correspond to WebGL enums.
 
 #### sampler.wrapS
 
-s wrapping mode.  All valid values correspond to WebGL enums.
+S (U) wrapping mode.  All valid values correspond to WebGL enums.
 
 * **Type**: `integer`
 * **Required**: No, default: `10497`
@@ -3331,7 +3331,7 @@ s wrapping mode.  All valid values correspond to WebGL enums.
 
 #### sampler.wrapT
 
-t wrapping mode.  All valid values correspond to WebGL enums.
+T (V) wrapping mode.  All valid values correspond to WebGL enums.
 
 * **Type**: `integer`
 * **Required**: No, default: `10497`
