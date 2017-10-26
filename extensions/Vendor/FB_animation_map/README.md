@@ -1,4 +1,4 @@
-# EXT_animation_map 
+# FB_animation_map 
 
 ## Contributors
 
@@ -40,17 +40,17 @@ It maps a semantic, which can be any string a client wishes to bind, to an array
 
 ## glTF Schema Updates
 
-The new EXT_animation_map property is a root glTF level optional extension object.  The **bindings** array is a list of objects with a semantic, and an array of animations mapped to that semantic.
+The new FB_animation_map property is a root glTF level optional extension object.  The **bindings** array is a list of objects with a semantic, and an array of animations mapped to that semantic.
 
 **Listing 1**: An animation map that binds animations 0 and 3 to the ENTER event, 1 to the LEAVE event, and 2 to loop continuously for the life of the object.
 
 ```javascript
 {
     "extensionsUsed": {
-        "EXT_animation_map"
+        "FB_animation_map"
     },
     "extensions" : {
-        "EXT_animation_map" : {
+        "FB_animation_map" : {
               "bindings": [
                   {
                       "semantic": "ENTER",
