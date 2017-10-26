@@ -1,0 +1,30 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "EXT_animation_map extension",
+    "type" : "object",
+    "definitions": {
+        "semanticBinding": {
+            "type": "object",
+            "properties": {
+                "semantic": {
+                    "type": "string"
+                },
+                "animations": {
+                    "type": "array",
+                    "items": {
+                        "type": "number",
+                        "minimum": 0
+                    }
+                }
+            }
+        }
+    },
+    "properties" : {
+        "bindings" : {
+            "type" : "array",
+            "description" : "A list of bindings between event or state semantics and animation indexes",
+            "items": { "$ref": "#/definitions/semanticBinding" }
+        }
+    },
+    "required" : ["bindings"]
+}
