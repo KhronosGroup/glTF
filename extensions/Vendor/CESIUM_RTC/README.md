@@ -15,7 +15,7 @@ Written against the glTF draft 1.0 spec.
 
 ## Overview
 
-Massive world graphics applications have position vertex attributes with precision requirements that result in jittering artifacts when naively rendered with 32-bit floating-point values.  This extension introduces the metadata required to implement the _Relative To Center_ (RTC) high-precision rendering technique described by [[Ohlarik08](http://blogs.agi.com/insight3d/index.php/2008/09/03/precisions-precisions/)].
+Massive world graphics applications have position vertex attributes with precision requirements that result in jittering artifacts when naively rendered with 32-bit floating-point values.  This extension introduces the metadata required to implement the _Relative To Center_ (RTC) high-precision rendering technique described by [[Ohlarik08](http://help.agi.com/AGIComponents/html/BlogPrecisionsPrecisions.htm)].
 
 In this technique, each position is defined relative to an origin (the _center_) such that 32-bit floating-point precision is adequate to describe the distance between each position and the center.  These relative positions are stored in the glTF vertex data.  At runtime, the positions are transformed with a modified model-view matrix that makes the center relative to the eye.  This avoids 32-bit subtraction of large translation components on the GPU.
 
@@ -75,4 +75,4 @@ See [CESIUM_RTC.schema.json](CESIUM_RTC.schema.json).
 
 ## Resources
 
-* [Ohlarik08] Deron Ohlarik. [Precisions, Precisions](http://blogs.agi.com/insight3d/index.php/2008/09/03/precisions-precisions/). 2008.
+* [Ohlarik08] Deron Ohlarik. [Precisions, Precisions](http://help.agi.com/AGIComponents/html/BlogPrecisionsPrecisions.htm). 2008.
