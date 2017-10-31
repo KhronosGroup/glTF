@@ -28,7 +28,7 @@ It maps a semantic, which can be any string a client wishes to bind, to an array
 * **LEAVE**: Trigger a single shot animation as the object is leaving the scene or viewport
 * **ALWAYS**: Constantly loop an animation
 
-The following semantics require a list of glTF Node objects to specify interaction targets.  If the nodes are omitted, it can be assumed that the entire glTF Scene is the target.
+The following semantics require a list of glTF Node objects to specify interaction targets.  The event is triggered by acting on any of the nodes listed.  If the nodes are omitted, it can be assumed that the entire glTF Scene is the target.
 
 * **TRIGGER**: A user triggering a single shot animation on Touch, Tap, Click, or any other way of activating
 * **GRAB**: Triggered when an object is picked up, for example grabbed in vr, or dragged in WebGL.
