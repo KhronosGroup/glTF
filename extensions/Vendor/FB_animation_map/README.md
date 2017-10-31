@@ -40,7 +40,7 @@ It maps a semantic, which can be any string a client wishes to bind, to an array
 
 ## glTF Schema Updates
 
-The new FB_animation_map property is a root glTF level optional extension object.  The **bindings** array is a list of objects with a semantic, and an array of animations mapped to that semantic.
+The new FB_animation_map property is a root glTF level optional extension object.  The **bindings** array is a list of objects containing a semantic, and an array of animations mapped to that semantic.  Animations should be played all at once, though future additions could add parallel, serial, or random play modes.
 
 **Listing 1**: An animation map that binds animations 0 and 3 to the ENTER event, 1 to the LEAVE event, and 2 to loop continuously for the life of the object.
 
