@@ -15,8 +15,16 @@
                         "type": "number",
                         "minimum": 0
                     }
+                },
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "type": "number",
+                        "minimum": 0
+                    }
                 }
-            }
+            },
+            "required": ["semantic", "animations"]
         }
     },
     "properties" : {
