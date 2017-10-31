@@ -12,14 +12,14 @@
                 "animations": {
                     "type": "array",
                     "items": {
-                        "type": "number",
+                        "type": "integer",
                         "minimum": 0
                     }
                 },
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "type": "number",
+                        "type": "integer",
                         "minimum": 0
                     }
                 }
