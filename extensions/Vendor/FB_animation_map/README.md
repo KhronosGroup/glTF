@@ -27,6 +27,9 @@ It maps a semantic, which can be any string a client wishes to bind, to an array
 * **ENTER**: Trigger a single shot animation when the object first enters the scene or viewport
 * **LEAVE**: Trigger a single shot animation as the object is leaving the scene or viewport
 * **ALWAYS**: Constantly loop an animation
+
+The following semantics require a list of glTF Node objects to specify interaction targets.
+
 * **TRIGGER**: A user triggering a single shot animation on Touch, Tap, Click, or any other way of activating
 * **GRAB**: Triggered when an object is picked up, for example grabbed in vr, or dragged in WebGL.
 * **HELD**: Looped during the entire duration an object is grabbed.
@@ -38,11 +41,13 @@ It maps a semantic, which can be any string a client wishes to bind, to an array
 * **PROXIMITY**: Looped while a viewer is near to an object
 * **PROXIMITY_LEAVE**: Triggered when a viewer gets further from an object
 
+The 'object' referred to is the mesh 
+
 ## glTF Schema Updates
 
-The new FB_animation_map property is a root glTF level optional extension object.  The **bindings** array is a list of objects containing a semantic, and an array of animations mapped to that semantic.  Animations should be played all at once, though future additions could add parallel (default), sequential, or random play modes.
+The new FB_animation_map property is a root glTF level optional extension object.  The **bindings** array is a list of objects containing a semantic, an array of animations mapped to that semantic, and an optional list of nodes that this animation targets.  The node parameter is used for interactive animations like GRAB or GAZE.  Animations should be played all at once, though future additions could add parallel (default), sequential, or random play modes.
 
-**Listing 1**: An animation map that binds animations 0 and 3 to the ENTER event, 1 to the LEAVE event, and 2 to loop continuously for the life of the object.
+**Listing 1**: An animation map that binds animations 0 and 3 to the ENTER event, 1 to the LEAVE event, and 2 to loop continuously for the life of the object.  There is a GAZE_ENTER event that is triggered when the specified node 3 is looked at.
 
 ```javascript
 {
@@ -63,6 +68,11 @@ The new FB_animation_map property is a root glTF level optional extension object
                   {
                       "semantic": "ALWAYS",
                       "animations": [2]
+                  },
+                  {
+                      "semantic": "GAZE_ENTER",
+                      "animations": [4],
+                      "node": [3]
                   }
               ]
         }
