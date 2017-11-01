@@ -104,13 +104,13 @@ The `bufferView` property points to the buffer containing compressed data. The d
 `attributes` defines the attributes stored in the decompressed geometry. E.g, in the example above, `POSITION`, `NORMAL`, `TEXCOORD_0`, `WEIGHTS_0` and `JOINTS_0`. Each attribute is associated with an attribute id which is its unique id in the compressed data. The `attributes` defined in the extension must be a subset of the attributes of the primitive. To request an attribute, loaders must be able to use the correspondent attribute id specified in the `attributes` to get the attribute from the compressed data.
 
 #### Restrictions on geometry type
-When using this extension, the `mode` of `primitive` could be either `TRIANGLES` or `TRIANGLE_STRIP` and the mesh data will be decoded accordingly.
+When using this extension, the `mode` of `primitive` must be either `TRIANGLES` or `TRIANGLE_STRIP` and the mesh data will be decoded accordingly.
 
 ### JSON Schema
 
 For full details on the `KHR_draco_mesh_compression` extension properties, see the schema:
 
-* [extension property (normative)](schema/node.KHR_draco_mesh_compression.schema.json) `KHR_draco_mesh_compression` extensions object.
+* [extension property (normative)](schema/node.KHR_draco_mesh_compression.schema.json)
 
 ## Conformance
 
