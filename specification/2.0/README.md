@@ -251,12 +251,9 @@ Positive rotation is counterclockwise.
 
 The [node transformations](#transformations) and [animation channel paths](#animations) are 3D vectors or quaternions with the following data types and semantics:
 
-|Property|Type|Component Type(s)|Description|
-|----|----------------|-----------------|-----------|
-|translation|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ translation vector|
-|rotation|`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|XYZW rotation quaternion|
-|scale|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ scale vector|
-
+* translation: A 3D vector containing the translation along the x, y and z axes
+* rotation: A quaternion (x, y, z, w), where w is the scalar
+* scale: A 3D vector containing the scaling factors along the x, y and z axes
 
 
 
