@@ -20,7 +20,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension defines a schema to use [Draco geometry compression (non-normative)](https://github.com/google/draco) libraries in glTF format. This allows glTF to support streaming compressed geometry data instead of the raw data. This extension specification is based on [Draco bitestream version 2.2 (normative)](https://google.github.io/draco/spec/).
+This extension defines a schema to use [Draco geometry compression (non-normative)](https://github.com/google/draco) libraries in glTF format. This allows glTF to support streaming compressed geometry data instead of the raw data. This extension specification is based on [Draco bitstream version 2.2 (the entirety of this specification is normative and included in Scope)](https://google.github.io/draco/spec/).
 
 The [conformance](#conformance) section specifies what an implementation must do when encountering this extension, and how the extension interacts with the attributes defined in the base specification.
 
@@ -110,13 +110,13 @@ When using this extension, the `mode` of `primitive` must be either `TRIANGLES` 
 
 For full details on the `KHR_draco_mesh_compression` extension properties, see the schema:
 
-* [extension property (normative)](schema/node.KHR_draco_mesh_compression.schema.json)
+* [extension property (the entirety of this specification is normative and included in Scope)](schema/node.KHR_draco_mesh_compression.schema.json)
 
-## Conformance
+## Recommended Loader Process
 
 *This section is non-normative.*
 
-Below is the process when a loader encounters a glTF asset with the Draco extension set:
+Below is the recommended process when a loader encounters a glTF asset with the Draco extension set:
 
 * If `KHR_draco_mesh_compression` is in `extensionRequired` and the loader does not support the Draco extension, then the loader must fail loading the asset.
 * If the loader does not support the Draco extension and `KHR_draco_mesh_compression` is not in `extensionRequired`, then load the glTF asset ignoring `KHR_draco_mesh_compression` in `primitive`.
