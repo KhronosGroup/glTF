@@ -112,9 +112,7 @@ For full details on the `KHR_draco_mesh_compression` extension properties, see t
 
 * [extension property (the entirety of this specification is normative and included in Scope)](schema/node.KHR_draco_mesh_compression.schema.json)
 
-## Recommended Loader Process
-
-*This section is non-normative.*
+## Conformance 
 
 Below is the recommended process when a loader encounters a glTF asset with the Draco extension set:
 
@@ -126,7 +124,11 @@ Below is the recommended process when a loader encounters a glTF asset with the 
     * Then the loader must process `attributes` and `indices` properties of the `primitive`. When loading each `accessor`, you must ignore the `bufferView` and go to the previously decoded Draco geometry in the `primitive` to get the data of indices and attributes. A loader must use the decompressed data to fill the `accessors` or render the decompressed Draco geometry directly (e.g. [ThreeJS (non-normative)](https://github.com/mrdoob/three.js/blob/dev/examples/js/loaders/draco/DRACOLoader.js)).
     * If additional attributes are defined in `primitive`'s `attributes`, but not defined in `KHR_draco_mesh_compression`'s `attributes`, then the loader must process the additional attributes as usual.
 
-* Implementation note: To prevent transmission of redundant data, exporters should generally write compressed Draco data into a separate buffer from the uncompressed fallback, and shared data into a third buffer. Loaders may then optimize to request only the necessary buffers.
+## Implementation note
+
+*This section is non-normative.*
+
+To prevent transmission of redundant data, exporters should generally write compressed Draco data into a separate buffer from the uncompressed fallback, and shared data into a third buffer. Loaders may then optimize to request only the necessary buffers.
 
 ## Resources
 
