@@ -241,7 +241,7 @@ For property names, glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCas
 
 ## Coordinate System and Units
 
-glTF uses a right-handed coordinate system, that is, the cross product of X and Y yields Z. glTF defines the y axis as up.
+glTF uses a right-handed coordinate system, that is, the cross product of +X and +Y yields +Z. glTF defines +Y as up. The front of a glTF asset faces +Z.
 
 The units for all linear distances are meters.
 
