@@ -1,34 +1,26 @@
 {
     "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "AVR_texture_offset_tile textureInfo extension",
+    "title" : "AVR_texture_offset_scale textureInfo extension",
     "type" : "object",
     "properties" : {
         "offsetS": {
             "type": "number",
             "description": "The horizontal offset of the UV coordinate origin as a percentage of the texture width.",
-            "minimum": -1.0,
-            "maximum": 1.0,
             "default": 0.0
         },
         "offsetT": {
             "type": "number",
             "description": "The vertical offset of the UV coordinate origin as a percentage of the texture height.",
-            "minimum": -1.0,
-            "maximum": 1.0,
             "default": 0.0
         },
-        "tileS": {
+        "scaleS": {
             "type": "number",
             "description": "The scale factor applied to the horizontal component of the UV coordinates.",
-            "minimum": -1.0,
-            "maximum": 1.0,
             "default": 1.0
         },
-        "tileT": {
+        "scaleT": {
             "type": "number",
             "description": "The scale factor applied to the vertical component of the UV coordinates.",
-            "minimum": -1.0,
-            "maximum": 1.0,
             "default": 1.0
         }
     },
