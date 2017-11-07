@@ -5,7 +5,7 @@
     "properties" : {
         "offset": {
             "type": "array",
-            "description": "The offset of the UV coordinate origin as a percentage of the texture width.",
+            "description": "The offset of the UV coordinate origin as a percentage of the texture dimensions.",
             "items": {
                 "type": "number"
             },
@@ -15,7 +15,7 @@
         },
         "rotation": {
             "type": "number",
-            "description": "Rotate the texture by this many radians clockwise.",
+            "description": "Rotate the texture by this many radians counter-clockwise.",
             "default": 0.0
         },
         "scale": {
@@ -30,7 +30,7 @@
         },
         "matrix": {
             "type": "array",
-            "description": "Transform the UV coordinates applied to this texture this matrix",
+            "description": "Transform the UV coordinates applied to this texture by this matrix.",
             "items": {
                 "type": "number"
             },
