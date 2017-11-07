@@ -1,0 +1,52 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "EXT_texture_transform textureInfo extension",
+    "type" : "object",
+    "properties" : {
+        "offset": {
+            "type": "array",
+            "description": "The offset of the UV coordinate origin as a percentage of the texture width.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2,
+            "default": [ 0.0, 0.0 ]
+        },
+        "rotation": {
+            "type": "number",
+            "description": "Rotate the texture by this many radians clockwise.",
+            "default": 0.0
+        },
+        "scale": {
+            "type": "array",
+            "description": "The scale factor applied to the components of the UV coordinates.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2,
+            "default": [ 1.0, 1.0 ]
+        },
+        "matrix": {
+            "type": "array",
+            "description": "Transform the UV coordinates applied to this texture this matrix",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 9,
+            "maxItems": 9,
+            "default": [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 ],
+            "gltf_detailedDescription": "A floating-point 3x3 transformation matrix stored in column-major order.",
+            "gltf_webgl": "`uniformMatrix4fv()` with the transpose parameter equal to false"
+        }
+    },
+    "additionalProperties" : false,
+    "not": {
+        "anyOf": [
+            { "required": [ "matrix", "offset" ] },
+            { "required": [ "matrix", "rotation" ] },
+            { "required": [ "matrix", "scale" ] }
+        ]
+    }
+}

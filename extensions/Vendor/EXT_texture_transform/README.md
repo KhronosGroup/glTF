@@ -1,4 +1,4 @@
-# EXT_texture_offset_scale
+# EXT_texture_transform
 
 ## Contributors
 
@@ -22,7 +22,7 @@ This is equivalent to Unity's `Material#SetTextureOffset` and `Material#SetTextu
 
 ## glTF Schema Updates
 
-The `EXT_texture_offset_scale` extension may be defined on `textureInfo` structures. It may contain the following properties:
+The `EXT_texture_transform` extension may be defined on `textureInfo` structures. It may contain the following properties:
 
 | Name      | Type     | Default | Description
 |-----------|----------|---------|---------------------------------
@@ -35,7 +35,7 @@ All of these values are restricted to the range [-1, 1]. While negative values a
 
 ### JSON Schema
 
-[EXT_texture_offset_scale.textureInfo.schema.json](schema/EXT_texture_offset_scale.textureInfo.schema.json)
+[EXT_texture_transform.textureInfo.schema.json](schema/EXT_texture_transform.textureInfo.schema.json)
 
 ### Example JSON
 
@@ -48,7 +48,7 @@ This example utilizes only the top right quadrant of the source image.
 			"emissionTexture": {
 				"source": 0,
 				"extensions": {
-					"EXT_texture_offset_scale": {
+					"EXT_texture_transform": {
 						"offsetS": 0.5,
 						"scaleS": 0.5,
 						"scaleT": 0.5
@@ -69,7 +69,7 @@ This example inverts the T axis, effectively defining a bottom-left origin.
 			"emissionTexture": {
 				"source": 0,
 				"extensions": {
-					"EXT_texture_offset_scale": {
+					"EXT_texture_transform": {
 						"offsetT": 1,
 						"scaleT": -1
 					}
