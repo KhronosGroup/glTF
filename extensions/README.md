@@ -11,7 +11,7 @@ _Draft Khronos extensions are not ratified yet._
 * [KHR_technique_webgl](Khronos/KHR_technique_webgl/README.md)
 
 #### Vendor extensions
-* [MSFT_texture_transform](Vendor/MSFT_texture_transform/README.md)
+* [EXT_texture_transform](Vendor/EXT_texture_transform/README.md)
 
 ## Extensions for glTF 1.0
 
