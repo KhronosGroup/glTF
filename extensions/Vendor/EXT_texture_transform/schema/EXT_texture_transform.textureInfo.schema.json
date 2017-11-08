@@ -1,0 +1,33 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "EXT_texture_transform textureInfo extension",
+    "type" : "object",
+    "properties" : {
+        "offset": {
+            "type": "array",
+            "description": "The offset of the UV coordinate origin as a percentage of the texture dimensions.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2,
+            "default": [ 0.0, 0.0 ]
+        },
+        "scale": {
+            "type": "array",
+            "description": "The scale factor applied to the components of the UV coordinates.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2,
+            "default": [ 1.0, 1.0 ]
+        },
+        "texCoord": {
+            "type": "integer",
+            "description": "Overrides the textureInfo texCoord value if this extension is supported.",
+            "default": 0
+        }
+    },
+    "additionalProperties" : false
+}
