@@ -1,4 +1,4 @@
-# EXT_texture_transform
+# MSFT_texture_transform
 
 ## Contributors
 
@@ -45,12 +45,12 @@ This is equivalent to Unity's `Material#SetTextureOffset` and `Material#SetTextu
 
 ## glTF Schema Updates
 
-The `EXT_texture_transform` extension may be defined on `textureInfo` structures. It may contain the following properties:
+The `MSFT_texture_transform` extension may be defined on `textureInfo` structures. It may contain the following properties:
 
 | Name       | Type       | Default             | Description
 |------------|------------|---------------------|---------------------------------
 | `offset`   | `array[2]` | `[0.0, 0.0]`        | The offset of the UV coordinate origin as a percentage of the texture dimensions.
-| `rotation` | `number`   | `0.0`               | Rotate the texture by this many radians counter-clockwise.
+| `rotation` | `number`   | `0.0`               | Rotate the UVs by this many radians counter-clockwise (or the texture clockwise).
 | `scale`    | `array[2]` | `[1.0, 1.0]`        | The scale factor applied to the components of the UV coordinates.
 | `matrix`   | `array[9]` | 3x3 identity matrix | Transform the UV coordinates applied to this texture by this matrix.
 
@@ -58,7 +58,7 @@ The `EXT_texture_transform` extension may be defined on `textureInfo` structures
 
 ### JSON Schema
 
-[EXT_texture_transform.textureInfo.schema.json](schema/EXT_texture_transform.textureInfo.schema.json)
+[MSFT_texture_transform.textureInfo.schema.json](schema/MSFT_texture_transform.textureInfo.schema.json)
 
 ### Example JSON
 
@@ -70,7 +70,7 @@ This example utilizes only the top right quadrant of the source image.
     "emissionTexture": {
       "source": 0,
       "extensions": {
-        "EXT_texture_transform": {
+        "MSFT_texture_transform": {
           "offset": [0.5, 0.0],
           "scale": [0.5, 0.5]
         }
@@ -88,7 +88,7 @@ This example inverts the T axis, effectively defining a bottom-left origin.
     "emissionTexture": {
       "source": 0,
       "extensions": {
-        "EXT_texture_transform": {
+        "MSFT_texture_transform": {
           "offset": [0, 1],
           "scale": [1, -1]
         }

@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "EXT_texture_transform textureInfo extension",
+    "title" : "MSFT_texture_transform textureInfo extension",
     "type" : "object",
     "properties" : {
         "offset": {
@@ -15,7 +15,7 @@
         },
         "rotation": {
             "type": "number",
-            "description": "Rotate the texture by this many radians counter-clockwise.",
+            "description": "Rotate the UVs by this many radians counter-clockwise (or the texture clockwise).",
             "default": 0.0
         },
         "scale": {
