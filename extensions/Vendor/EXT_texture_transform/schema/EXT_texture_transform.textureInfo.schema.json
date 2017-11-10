@@ -28,9 +28,10 @@
         "texCoord": {
             "type": "integer",
             "description": "Overrides the textureInfo texCoord value if this extension is supported.",
-            "default": 0,
             "minimum": 0
-        }
+        },
+        "extensions": { },
+        "extras": { }
     },
     "additionalProperties" : false
 }
