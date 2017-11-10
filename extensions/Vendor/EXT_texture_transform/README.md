@@ -28,7 +28,7 @@ The `EXT_texture_transform` extension may be defined on `textureInfo` structures
 |------------|------------|--------------|---------------------------------
 | `offset`   | `array[2]` | `[0.0, 0.0]` | The offset of the UV coordinate origin as a percentage of the texture dimensions.
 | `scale`    | `array[2]` | `[1.0, 1.0]` | The scale factor applied to the components of the UV coordinates.
-| `texCoord` | `integer`  | `0`          | Overrides the textureInfo texCoord value if this extension is supported.
+| `texCoord` | `integer`  |              | Overrides the textureInfo texCoord value if supplied, and if this extension is supported.
 
 Though this extension's values are unbounded, they will only produce sane results if the texture sampler's `wrap` mode is `REPEAT`, or if the result of the final UV transformation is within the range [0, 1] (i.e. negative scale settings and correspondingly positive offsets).
 
