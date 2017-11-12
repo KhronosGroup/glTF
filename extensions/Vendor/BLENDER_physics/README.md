@@ -24,13 +24,22 @@ This extension extends nodes to include information necessary to construct rigid
 A `BLENDER_physics` object is added to the extensions list of any `node` that should participate in the physics simulation.
 The properties available are listed in the table below.
 
-**Properties**
+**BLENDER_physics Properties**
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**collisionShape**|`string`|The shape a physics simulation should use to represent the node|No, default: `BOX`|
+|**collisionShapes**|`array`|Shapes a simulation should use to represent the node|Yes|
 |**mass**|`number`|The 'weight', irrespective of gravity, of the node|No, default: `1.0`|
 |**static**|`boolean`|Whether or not the Node should be moved by physics simulations|No, default: `false`|
+|**collisionGroups**|`integer`|A 32-bit bit field representing the node's group membership|No, default: `1`|
+|**collisionMasks**|`integer`|A 32-bit bit field representing what groups the node can collide with|No, default: `1`|
+
+
+
+**shape Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
 |**boundingBox**|`array`|The dimensions of the local (i.e., does not include the node's transform) bounding box of the collision shape centered on the origin|Yes|
 |**primaryAxis**|`string`|The axis to use for the height of the collision shape (only applies to `CAPSULE`, `CYLINDER`, and `CONE`)|No, default: `Y`|
 |**mesh**|`glTF id`|The ID of the mesh to use for `CONVEX_HULL` and `MESH` collision shapes|No, default: `node's mesh` if it exists, otherwise use `BOX` shape|
@@ -38,8 +47,6 @@ The properties available are listed in the table below.
 |**offsetRotation**|`array`|A rotation offset (as a quaternion) applied to the physics shape in addition to the node's rotation|No, default: `[0.0, 0.0, 0.0, 1.0]`|
 |**offsetScale**|`array`|A non-uniform scale offset applied to the collision shape in addition to the node's scale|No, default: `[1.0, 1.0, 1.0]`|
 |**offsetTranslation**|`array`|A translation offset applied to the collision shape in addition to the node's translation|No, default: `[0.0, 0.0, 0.0]`|
-|**collisionGroups**|`integer`|A 32-bit bit field representing the node's group membership|No, default: `1`|
-|**collisionMasks**|`integer`|A 32-bit bit field representing what groups the node can collide with|No, default: `1`|
 
 **Collision Shapes**
 
@@ -71,13 +78,17 @@ Replace `<glTF id>` with the value appropriate for the spec version.
 {
     "extensions": {
         "BLENDER_physics": {
-            "boundingBox": [
-                2.0000009536743164,
-                2.0000009536743164,
-                4.323975563049316
+            "collisionShapes" [
+                {
+                    "boundingBox": [
+                        2.0000009536743164,
+                        2.0000009536743164,
+                        4.323975563049316
+                    ],
+                    "shapeType": "CAPSULE",
+                    "primaryAxis": "Z"
+                }
             ],
-            "collisionShape": "CAPSULE",
-            "primaryAxis": "Z",
             "mass": 1.0,
             "static": false
         }
@@ -107,15 +118,19 @@ Replace `<glTF id>` with the value appropriate for the spec version.
 {
     "extensions": {
         "BLENDER_physics": {
-            "boundingBox": [
-                2.0000009536743164,
-                2.0000009536743164,
-                2.0
-            ],
-            "collisionShape": "MESH",
-            "primaryAxis": "Z",
+            "collisionShapes": [
+                {
+                    "boundingBox": [
+                        2.0000009536743164,
+                        2.0000009536743164,
+                        2.0
+                    ],
+                    "shapeType": "MESH",
+                    "primaryAxis": "Z",
+                    "mesh": <glTF id>
+                }
+            ]
             "mass": 1.0,
-            "mesh": <glTF id>,
             "static": false
         }
     },
@@ -165,6 +180,7 @@ If a value is not supplied, the importer should assume -9.8m/s/s.
 ### JSON Schema
 
 * [node.BLENDER_physics.schema.json](https://github.com/Kupoman/blendergltf/blob/master/extensions/BLENDER_physics/schema/node.BLENDER_physics.schema.json)
+* [node.BLENDER_physics.shape.schema.json](https://github.com/Kupoman/blendergltf/blob/master/extensions/BLENDER_physics/schema/node.BLENDER_physics.shape.schema.json)
 * [scene.BLENDER_physics.schema.json](https://github.com/Kupoman/blendergltf/blob/master/extensions/BLENDER_physics/schema/scene.BLENDER_physics.schema.json)
 
 ## Known Implementations

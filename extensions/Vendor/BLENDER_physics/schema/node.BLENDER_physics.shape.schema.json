@@ -1,0 +1,87 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "shape",
+    "type" : "object",
+    "description" : "Description of a collision shape for rigid body simulations",
+    "properties" : {
+        "shapeType" : {
+            "description": "The shape a physics simulation should use to represent the node",
+            "type": "string",
+            "enum": [
+                "BOX",
+                "SPHERE",
+                "CAPSULE",
+                "CYLINDER",
+                "CONE",
+                "CONVEX_HULL",
+                "MESH"
+            ],
+            "default": "BOX"
+        },
+        "boundingBox" : {
+            "description": "The dimensions of the local (i.e., does not include the node's transform) bounding box of the collision shape centered on the origin",
+            "type": "array",
+            "items": {"type": "number"},
+            "minItems": 3,
+            "maxItems": 3
+        },
+        "primaryAxis" : {
+            "description": "The axis to use for the height of the collision shape",
+            "type": "string",
+            "enum": [
+                "X",
+                "Y",
+                "Z"
+            ],
+            "default": "Y"
+        },
+        "mesh" : {
+            "description": "The ID of the mesh to use for CONVEX_HULL and MESH collision shapes",
+            "allOf": [{"$ref": "glTFid.schema.json"}]
+        },
+        "offsetMatrix": {
+            "type": "array",
+            "description": "A 4x4 transform matrix applied to the collision shape in addition to the node's transform",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 16,
+            "maxItems": 16,
+            "default": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ]
+        },
+        "offsetRotation": {
+            "type": "array",
+            "description": "A rotation offset (as a quaternion) applied to the collision shape in addition to the node's rotation",
+            "items": {
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            "minItems": 4,
+            "maxItems": 4,
+            "default": [ 0.0, 0.0, 0.0, 1.0 ]
+        },
+        "offsetScale": {
+            "type": "array",
+            "description": "A non-uniform scale offset applied to the collision shape in addition to the node's scale",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [ 1.0, 1.0, 1.0 ]
+        },
+        "offsetTranslation": {
+            "type": "array",
+            "description": "A translation offset applied to the collision shape in addition to the node's translation",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [ 0.0, 0.0, 0.0 ]
+        },
+    },
+    "additionalProperties" : false,
+    "required" : ["boundingBox"]
+}
