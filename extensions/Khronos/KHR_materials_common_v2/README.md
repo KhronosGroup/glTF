@@ -47,17 +47,22 @@ For all technique computations, the following definitions are assumed:
 *(all vectors normalized)*
 
 * `diffuseTerm` – diffuseFactor * diffuseTexture
+    * *Reflected diffuse color of the material.*
 * `specularTerm` – specularFactor * specularShininessTexture.rgb
+    * *Specular color of the material.*
 * `shineTerm` – shininessFactor * specularShininessTexture.a
-* `emissiveTerm` – emissiveFactor * emissiveTexture // core Materials spec
-* `occlusionTerm` – occlusionFactor * occlusionTexture // core Materials spec
-* `aL` – A constant amount of ambient light contribution coming from the scene,
-i.e. the sum of all ambient light values.
+    * *Shininess component of the specular color.*
+* `emissiveTerm` – emissiveFactor * emissiveTexture
+    *  [*From core glTF material specification.*](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#additional-maps)
+* `occlusionTerm` – occlusionFactor * occlusionTexture
+    *  [*From core glTF material specification.*](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#additional-maps)
+* `aL` – Ambient light
+    * *Constant sum of all ambient light contributions from the scene.*
 * `N` – Normal vector
 * `L` – Light vector
 * `I` – Eye vector
-* `H` – Half-angle vector, calculated as halfway between the unit Eye and Light
-vectors, using the equation H = normalize (I+L)
+* `H` – Half-angle vector
+    * *Calculated as halfway between the unit Eye and Light vectors, using the equation `H = normalize(I+L)`.*
 
 ### Constant
 
@@ -138,17 +143,10 @@ moderate shininess and red specular highlights.
 
 ### Blinn-Phong
 
-The `BLINNPHONG` technique is intended for shading according to the Blinn-Phong lighting
-model or a close approximation, and is defined by the following properties:
-
-* `diffuse` - Reflected diffuse color of the material
-* `specular` - Specular color of the material
-* `shininess` - Shininess factor of the specular color
-
-TODO: EXPLAIN FURTHER 
-
-This underlying equation is detailed by ACM: “Models of Light Reflection for
-Computer Synthesized Pictures,” SIGGRAPH 77, pp 192-198
+The `BLINNPHONG` technique is intended for shading according to the Blinn-Phong
+lighting model or a close approximation. The underlying equation is detailed by
+ACM: “Models of Light Reflection for Computer Synthesized Pictures,” SIGGRAPH
+77, pp 192-198
 [http://portal.acm.org/citation.cfm?id=563893](http://portal.acm.org/citation.cfm?id=563893).
 In particular see the section, "Simple Highlight Model."
 
@@ -163,13 +161,13 @@ color = emissiveTerm + occlusionTerm * (diffuseTerm * max(N * L, 0) + specularTe
 > speaking, given the above equation, a `shininess` value of 1.0 corresponds to
 > a very low shininess. For orientation: using the traditional OpenGL fixed
 > function pipeline, the specular exponent was expected to be within [0, 128].
-> However, using glTF, larger `shininess` values are clearly possible. [Mention
-> caution with `shininess < 1` ?]
+> However, using glTF, larger `shininess` values are clearly possible.
+
+> **TODO:** Mention caution with `shininess < 1`?
 
 <details>
     <summary>Example: Blinn-Phong</summary>
-The following example defines a Blinn-Phong shaded material with a diffuse texture,
-moderate shininess and red specular highlights. 
+The following example defines a Blinn-Phong shaded material with a diffuse texture, moderate shininess and red specular highlights.
 
 ```json
     "materials": [
@@ -203,10 +201,11 @@ moderate shininess and red specular highlights.
 ## Extending Materials
 
 Materials are defined by adding the `KHR_materials_common` extension to any
-glTF material.
+glTF material. When the extension is provided alongside a core glTF material
+or another material extension, client implementations may choose the most
+appropriate material for performance or other constraints.
 
-For example, the following defines a Blinn-Phong material having
-all possible parameters:
+For example, a Blinn-Phong material using all possible parameters:
 
 ```json
 {
@@ -249,7 +248,3 @@ all possible parameters:
     ]
 }
 ```
-
-When the extension is provided alongside a core glTF material or another
-material extension, client implementations may choose the most appropriate
-option for performance or other constraints.
