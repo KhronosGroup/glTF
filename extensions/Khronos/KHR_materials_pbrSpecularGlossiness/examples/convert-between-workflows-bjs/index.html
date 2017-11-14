@@ -19,8 +19,8 @@
         }
     </style>
 
+    <script src="https://preview.babylonjs.com/babylon.max.js"></script>
     <script src="js/dat.gui.min.js"></script>
-    <script src="js/babylon.max.js"></script>
     <script src="js/babylon.colorExtensions.js"></script>
     <script src="js/babylon.pbrUtilities.js"></script>
 </head>
@@ -69,56 +69,37 @@
 
         var canvas = document.getElementById("renderCanvas");
         var engine = new BABYLON.Engine(canvas, true);
+        var scene = new BABYLON.Scene(engine);
 
-        var metallicRoughnessMaterial = null;
-        var specularGlossinessMaterial = null;
+        var camera = new BABYLON.ArcRotateCamera("camera", 0, 0, 1, BABYLON.Vector3.Zero(), scene);
+        camera.setPosition(new BABYLON.Vector3(0, 0, -20));
+        camera.attachControl(canvas);
 
-        var createScene = function () {
-            var scene = new BABYLON.Scene(engine);
+        scene.environmentTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("images/countrySpecularHDR.dds", scene);
+        scene.createDefaultSkybox(null, true);
 
-            var camera = new BABYLON.ArcRotateCamera("camera", 0, 0, 1, BABYLON.Vector3.Zero(), scene);
-            camera.setPosition(new BABYLON.Vector3(0, 0, -20));
-            camera.attachControl(canvas);
+        const sphereDiameter = 4;
+        const sphereSegments = 64;
 
-            //var light = new BABYLON.PointLight("Omni", new BABYLON.Vector3(60, 60, 80), scene);
+        var metallicRoughnessMaterial = new BABYLON.PBRMaterial("Metallic-Roughness", scene);
+        metallicRoughnessMaterial.useScalarInLinearSpace = true;
+        var metallicRoughnessSphere = BABYLON.Mesh.CreateSphere(metallicRoughnessMaterial.name, sphereSegments, sphereDiameter, scene);
+        metallicRoughnessSphere.position.x = -sphereDiameter;
+        metallicRoughnessSphere.material = metallicRoughnessMaterial;
+        var metallicRoughnessLabel = createLabel(metallicRoughnessMaterial.name);
+        metallicRoughnessLabel.parent = metallicRoughnessSphere;
+        metallicRoughnessLabel.position.y = -3;
 
-            var hdrTexture = new BABYLON.HDRCubeTexture("images/country.babylon.hdr", scene);
+        var specularGlossinessMaterial = new BABYLON.PBRMaterial("Specular-Glossiness", scene);
+        specularGlossinessMaterial.useScalarInLinearSpace = true;
+        var specularGlossinessSphere = BABYLON.Mesh.CreateSphere(specularGlossinessMaterial.name, sphereSegments, sphereDiameter, scene);
+        specularGlossinessSphere.position.x = sphereDiameter;
+        specularGlossinessSphere.material = specularGlossinessMaterial;
+        var specularGlossinessLabel = createLabel(specularGlossinessMaterial.name);
+        specularGlossinessLabel.parent = specularGlossinessSphere;
+        specularGlossinessLabel.position.y = -3;
 
-            var hdrSkybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 1000.0, scene);
-            var hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBox", scene);
-            hdrSkyboxMaterial.backFaceCulling = false;
-            hdrSkyboxMaterial.reflectionTexture = hdrTexture.clone();
-            hdrSkyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-            hdrSkyboxMaterial.microSurface = 1.0;
-            hdrSkyboxMaterial.cameraExposure = 0.6;
-            hdrSkyboxMaterial.cameraContrast = 1.6;
-            hdrSkyboxMaterial.disableLighting = true;
-            hdrSkybox.material = hdrSkyboxMaterial;
-            hdrSkybox.infiniteDistance = true;
-
-            const sphereDiameter = 4;
-            const sphereSegments = 64;
-
-            metallicRoughnessMaterial = new BABYLON.PBRMaterial("Metallic-Roughness", scene);
-            metallicRoughnessMaterial.useScalarInLinearSpace = true;
-            metallicRoughnessMaterial.reflectionTexture = hdrTexture;
-            var metallicRoughnessSphere = BABYLON.Mesh.CreateSphere(metallicRoughnessMaterial.name, sphereSegments, sphereDiameter, scene);
-            metallicRoughnessSphere.position.x = -sphereDiameter;
-            metallicRoughnessSphere.material = metallicRoughnessMaterial;
-
-            specularGlossinessMaterial = new BABYLON.PBRMaterial("Specular-Glossiness", scene);
-            specularGlossinessMaterial.useScalarInLinearSpace = true;
-            specularGlossinessMaterial.reflectionTexture = hdrTexture;
-            var specularGlossinessSphere = BABYLON.Mesh.CreateSphere(specularGlossinessMaterial.name, sphereSegments, sphereDiameter, scene);
-            specularGlossinessSphere.position.x = sphereDiameter;
-            specularGlossinessSphere.material = specularGlossinessMaterial;
-
-            onMetallicRoughnessChange();
-
-            return scene;
-        }
-
-        var scene = createScene();
+        onMetallicRoughnessChange();
 
         engine.runRenderLoop(function () {
             scene.render();
@@ -198,6 +179,19 @@
             specularGlossinessMaterial.alpha = options.specularGlossiness.opacity;
             specularGlossinessMaterial.reflectivityColor = BABYLON.Color3.FromHexString(options.specularGlossiness.specular);
             specularGlossinessMaterial.microSurface = options.specularGlossiness.glossiness;
+        }
+
+        function createLabel(text) {
+            var dynamicTexture = new BABYLON.DynamicTexture("DynamicTexture", 512, scene, true);
+            dynamicTexture.hasAlpha = true;
+            dynamicTexture.drawText(text, null, null, "36px Arial", "black", "transparent", true);
+            var plane = BABYLON.Mesh.CreatePlane("TextPlane", 10, scene);
+            plane.material = new BABYLON.StandardMaterial("TextPlaneMaterial", scene);
+            plane.material.backFaceCulling = false;
+            plane.material.specularColor = BABYLON.Color3.Black();
+            plane.material.diffuseTexture = dynamicTexture;
+            plane.material.useAlphaFromDiffuseTexture = true;
+            return plane;
         }
     </script>
 </body>

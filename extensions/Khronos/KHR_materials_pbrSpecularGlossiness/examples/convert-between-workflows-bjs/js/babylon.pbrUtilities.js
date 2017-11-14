@@ -31,14 +31,16 @@ var BABYLON;
         }
 
         PbrUtilities.ConvertToMetallicRoughness = function (specularGlossiness) {
-            function solveMetallic(dielectricSpecular, diffuse, specular, oneMinusSpecularStrength) {
-                specular = Math.max(specular, dielectricSpecular);
+            function solveMetallic(diffuse, specular, oneMinusSpecularStrength) {
+                if (specular < dielectricSpecular.r) {
+                    return 0;
+                }
 
-                var a = dielectricSpecular;
-                var b = diffuse * oneMinusSpecularStrength / (1 - dielectricSpecular) + specular - 2 * dielectricSpecular;
-                var c = dielectricSpecular - specular;
+                var a = dielectricSpecular.r;
+                var b = diffuse * oneMinusSpecularStrength / (1 - dielectricSpecular.r) + specular - 2 * dielectricSpecular.r;
+                var c = dielectricSpecular.r - specular;
                 var D = b * b - 4 * a * c;
-                return BABYLON.MathTools.Clamp((-b + Math.sqrt(D)) / (2 * a), 0, 1);
+                return BABYLON.Scalar.Clamp((-b + Math.sqrt(D)) / (2 * a), 0, 1);
             }
 
             var diffuse = specularGlossiness.diffuse;
@@ -47,11 +49,11 @@ var BABYLON;
             var glossiness = specularGlossiness.glossiness;
 
             var oneMinusSpecularStrength = 1 - specular.getMaxComponent();
-            var metallic = solveMetallic(dielectricSpecular.r, diffuse.getPerceivedBrightness(), specular.getPerceivedBrightness(), oneMinusSpecularStrength);
+            var metallic = solveMetallic(diffuse.getPerceivedBrightness(), specular.getPerceivedBrightness(), oneMinusSpecularStrength);
 
-            var baseColorFromDiffuse = diffuse.scale(oneMinusSpecularStrength / ((1 - dielectricSpecular.r) * Math.max(1 - metallic, epsilon)));
-            var baseColorFromSpecular = specular.subtract(dielectricSpecular.scale((1 - metallic) / Math.max(metallic, epsilon)));
-            var baseColor = BABYLON.Color3.Lerp(baseColorFromDiffuse, baseColorFromSpecular, metallic * metallic);
+            var baseColorFromDiffuse = diffuse.scale(oneMinusSpecularStrength / (1 - dielectricSpecular.r) / Math.max(1 - metallic, epsilon));
+            var baseColorFromSpecular = specular.subtract(dielectricSpecular.scale(1 - metallic)).scale(1 / Math.max(metallic, epsilon));
+            var baseColor = BABYLON.Color3.Lerp(baseColorFromDiffuse, baseColorFromSpecular, metallic * metallic).clamp();
 
             return {
                 baseColor: baseColor,

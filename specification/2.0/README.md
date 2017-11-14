@@ -880,7 +880,7 @@ The joint hierarchy used for controlling skinned mesh pose is simply the glTF no
 
 **TODO: object-space VS world-space joints**
 
-For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-0.2.0.png).
+For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-2.0.0.png).
 
 > **Implementation Note:** A node definition does not specify whether the node should be treated as a joint. Client implementations may wish to traverse the `skins` array first, marking each joint node.
 
@@ -1013,9 +1013,11 @@ The following example shows an image pointing to an external PNG image file and 
 ```
 > **Implementation Note:** When image data is provided by `uri` and `mimeType` is defined, client implementations should prefer JSON-defined MIME Type over one provided by transport layer.
 
-First image pixel (UV coordinates origin) corresponds to the upper left corner of the image.
-
-> **Implementation Note:** OpenGL-based implementations must flip Y axis to achieve correct texture sampling.
+The origin of the UV coordinates (0, 0) corresponds to the upper left corner of a texture image.
+This is illustrated in the following figure, where the respective UV coordinates are shown for all four corners of a normalized UV space:
+<p align="center">
+<img src="figures/texcoords.jpg" /><br/>
+</p>
 
 Any colorspace information (such as ICC profiles, intents, etc) from PNG or JPEG containers must be ignored.
 
@@ -1023,7 +1025,7 @@ Any colorspace information (such as ICC profiles, intents, etc) from PNG or JPEG
 
 ### Samplers
 
-Samplers are stored in the `samplers` array of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
+Samplers are stored in the `samplers` array of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S (U) and T (V).
 
 
 ```json
@@ -1248,6 +1250,8 @@ glTF 2.0 also supports animation of instantiated Morph Targets in a similar fash
 
 > **Note:** glTF 2.0 defines only animation storage, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc...
 
+> **Implementation Note:** glTF 2.0 does not specifically define how an animation will be used when imported but, as a best practice, it is recommended that each animation is self contained as an action. For example, "Walk" and "Run" animations might each contain multiple channels targeting a model's various bones. The client implementation may choose when to play any of the available animations.
+
 All animations are stored in the `animations` array of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
 
 The following examples show expected animations usage.
@@ -1394,7 +1398,7 @@ The following examples show expected animations usage.
 
 When `node` isn't defined, channel should be ignored. Valid path names are `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
 
-Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating point scalar values representing time in seconds; and a set of vectors or scalars representing animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, `CATMULLROMSPLINE`, and `CUBICSPLINE`. See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
+Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating point scalar values representing linear time in seconds; and a set of vectors or scalars representing animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, `CATMULLROMSPLINE`, and `CUBICSPLINE`. See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
 
 |`channel.path`|Accessor Type|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
@@ -1413,6 +1417,8 @@ Implementations must use following equations to get corresponding floating-point
 | `5123`&nbsp;(UNSIGNED_SHORT)|`f = c / 65535.0`|`c = round(f * 65535.0)`|
 
 Animation Sampler's `input` accessor **must** have `min` and `max` properties defined.
+
+> **Implementation Note:** Animations with non-linear time inputs, such as time warps in Autodesk 3ds Max or Maya, are not directly representable with glTF animations. glTF is a runtime format and non-linear time inputs are expensive to compute at runtime. Exporter implementations should sample a non-linear time animation into linear inputs and outputs for an accurate representation.
 
 A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation.
 
@@ -2236,7 +2242,7 @@ The root object for a glTF asset.
 |**extensionsRequired**|`string` `[1-*]`|Names of glTF extensions required to properly load this asset.|No|
 |**accessors**|accessor `[1-*]`|An array of accessors.|No|
 |**animations**|animation `[1-*]`|An array of keyframe animations.|No|
-|**asset**|`object`|Metadata about the glTF asset.|No|
+|**asset**|`object`|Metadata about the glTF asset.|Yes|
 |**buffers**|buffer `[1-*]`|An array of buffers.|No|
 |**bufferViews**|bufferView `[1-*]`|An array of bufferViews.|No|
 |**cameras**|camera `[1-*]`|An array of cameras.|No|
@@ -2286,12 +2292,12 @@ An array of keyframe animations.
 * **Type**: animation `[1-*]`
 * **Required**: No
 
-#### glTF.asset
+#### glTF.asset :white_check_mark: 
 
 Metadata about the glTF asset.
 
 * **Type**: `object`
-* **Required**: No
+* **Required**: Yes
 
 #### glTF.buffers
 
@@ -3313,7 +3319,7 @@ Minification filter.  All valid values correspond to WebGL enums.
 
 #### sampler.wrapS
 
-s wrapping mode.  All valid values correspond to WebGL enums.
+S (U) wrapping mode.  All valid values correspond to WebGL enums.
 
 * **Type**: `integer`
 * **Required**: No, default: `10497`
@@ -3325,7 +3331,7 @@ s wrapping mode.  All valid values correspond to WebGL enums.
 
 #### sampler.wrapT
 
-t wrapping mode.  All valid values correspond to WebGL enums.
+T (V) wrapping mode.  All valid values correspond to WebGL enums.
 
 * **Type**: `integer`
 * **Required**: No, default: `10497`
@@ -3778,6 +3784,7 @@ Application-specific data.
 * Brandon Jones, Google
 * Sean Lilley, Cesium
 * Max Limper, Fraunhofer IGD
+* Juan Linietsky, Godot Engine
 * Matthew McMullan
 * Mohamad Moneimne, University of Pennsylvania
 * Kai Ninomiya, formerly Cesium
@@ -3798,7 +3805,67 @@ Application-specific data.
 
 # Appendix B: BRDF Implementation
 
-**TODO**
+*This section is non-normative.*
+
+The glTF spec is designed to allow applications to choose different lighting implementations based on their requirements.
+
+An implementation sample is available at https://github.com/KhronosGroup/glTF-WebGL-PBR/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters.
+
+As previously defined
+
+`const dielectricSpecular = rgb(0.04, 0.04, 0.04)`
+<br>
+`const black = rgb(0, 0, 0)`
+
+*c<sub>diff</sub>* = `lerp(baseColor.rgb * (1 - dielectricSpecular.r), black, metallic)`
+<br>
+*F<sub>0</sub>* = `lerp(dieletricSpecular, baseColor.rgb, metallic)`
+<br>
+*&alpha;* = `roughness ^ 2`
+
+Additionally,  
+*V* is the eye vector to the shading location  
+*L* is the vector from the light to the shading location  
+*N* is the surface normal in the same space as the above values  
+*H* is the half vector, where *H* = normalize(*L*+*V*)  
+
+The core lighting equation the sample uses is the Schlick BRDF model from [An Inexpensive BRDF Model for Physically-based Rendering](https://www.cs.virginia.edu/~jdl/bib/appearance/analytic%20models/schlick94b.pdf)
+
+![](figures/lightingSum.PNG)
+
+Below are common implementations for the various terms found in the lighting equation.
+
+### Surface Reflection Ratio (F)
+
+**Fresnel Schlick**
+
+Simplified implementation of Fresnel from [An Inexpensive BRDF Model for Physically based Rendering](https://www.cs.virginia.edu/~jdl/bib/appearance/analytic%20models/schlick94b.pdf) by Christophe Schlick.
+
+![](figures/lightingF.PNG)
+
+### Geometric Occlusion (G)
+
+**Schlick**
+
+Implementation of microfacet occlusion from [An Inexpensive BRDF Model for Physically based Rendering](https://www.cs.virginia.edu/~jdl/bib/appearance/analytic%20models/schlick94b.pdf) by Christophe Schlick.
+
+![](figures/lightingG.PNG)
+
+### Microfaced Distribution (D)
+
+**Trowbridge-Reitz**
+
+Implementation of microfaced distrubtion from [Average Irregularity Representation of a Roughened Surface for Ray Reflection](https://www.osapublishing.org/josa/abstract.cfm?uri=josa-65-5-531) by T. S. Trowbridge, and K. P. Reitz
+
+![](figures/lightingD.PNG)
+
+### Diffuse Term (diffuse)
+
+**Lambert**
+
+Implementation of diffuse from [Lambert's Photometria](https://archive.org/details/lambertsphotome00lambgoog) by Johann Heinrich Lambert
+
+![](figures/lightingDiff.PNG)
 
 # Appendix C: Spline Interpolation
 
