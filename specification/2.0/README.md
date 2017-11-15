@@ -249,6 +249,13 @@ All angles are in radians.
 
 Positive rotation is counterclockwise.
 
+The [node transformations](#transformations) and [animation channel paths](#animations) are 3D vectors or quaternions with the following data types and semantics:
+
+* translation: A 3D vector containing the translation along the x, y and z axes
+* rotation: A quaternion (x, y, z, w), where w is the scalar
+* scale: A 3D vector containing the scaling factors along the x, y and z axes
+
+
 
 ## Scenes
 
@@ -886,7 +893,7 @@ The joint hierarchy used for controlling skinned mesh pose is simply the glTF no
 
 **TODO: object-space VS world-space joints**
 
-For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-2.0.0.png).
+For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-2.0.0a.png).
 
 > **Implementation Note:** A node definition does not specify whether the node should be treated as a joint. Client implementations may wish to traverse the `skins` array first, marking each joint node.
 
@@ -2735,8 +2742,8 @@ A node in the node hierarchy.  When the node contains [`skin`](#reference-skin),
 |**matrix**|`number` `[16]`|A floating-point 4x4 transformation matrix stored in column-major order.|No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`|
 |**mesh**|`integer`|The index of the mesh in this node.|No|
 |**rotation**|`number` `[4]`|The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar.|No, default: `[0,0,0,1]`|
-|**scale**|`number` `[3]`|The node's non-uniform scale.|No, default: `[1,1,1]`|
-|**translation**|`number` `[3]`|The node's translation.|No, default: `[0,0,0]`|
+|**scale**|`number` `[3]`|The node's non-uniform scale, given as the scaling factors along the x, y, and z axes.|No, default: `[1,1,1]`|
+|**translation**|`number` `[3]`|The node's translation along the x, y, and z axes.|No, default: `[0,0,0]`|
 |**weights**|`number` `[1-*]`|The weights of the instantiated Morph Target. Number of elements must match number of Morph Targets of used mesh.|No|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
@@ -2797,14 +2804,14 @@ The node's unit quaternion rotation in the order (x, y, z, w), where w is the sc
 
 #### node.scale
 
-The node's non-uniform scale.
+The node's non-uniform scale, given as the scaling factors along the x, y, and z axes.
 
 * **Type**: `number` `[3]`
 * **Required**: No, default: `[1,1,1]`
 
 #### node.translation
 
-The node's translation.
+The node's translation along the x, y, and z axes.
 
 * **Type**: `number` `[3]`
 * **Required**: No, default: `[0,0,0]`
@@ -3567,7 +3574,7 @@ The index of the node and TRS property that an animation channel targets.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**node**|`integer`|The index of the node to target.|No|
-|**path**|`string`|The name of the node's TRS property to modify, or the "weights" of the Morph Targets it instantiates.| :white_check_mark: Yes|
+|**path**|`string`|The name of the node's TRS property to modify, or the "weights" of the Morph Targets it instantiates. For the "translation" property, the values that are provided by the sampler are the translation along the x, y, and z axes. For the "rotation" property, the values are a quaternion in the order (x, y, z, w), where w is the scalar. For the "scale" property, the values are the scaling factors along the x, y, and z axes.| :white_check_mark: Yes|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
@@ -3585,7 +3592,7 @@ The index of the node to target.
 
 #### target.path :white_check_mark: 
 
-The name of the node's TRS property to modify, or the "weights" of the Morph Targets it instantiates.
+The name of the node's TRS property to modify, or the "weights" of the Morph Targets it instantiates. For the "translation" property, the values that are provided by the sampler are the translation along the x, y, and z axes. For the "rotation" property, the values are a quaternion in the order (x, y, z, w), where w is the scalar. For the "scale" property, the values are the scaling factors along the x, y, and z axes.
 
 * **Type**: `string`
 * **Required**: Yes

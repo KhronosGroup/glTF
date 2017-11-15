@@ -52,7 +52,7 @@
         },
         "scale": {
             "type": "array",
-            "description": "The node's non-uniform scale.",
+            "description": "The node's non-uniform scale, given as the scaling factors along the x, y, and z axes.",
             "items": {
                 "type": "number"
             },
@@ -62,7 +62,7 @@
         },
         "translation": {
             "type": "array",
-            "description": "The node's translation.",
+            "description": "The node's translation along the x, y, and z axes.",
             "items": {
                 "type": "number"
             },
