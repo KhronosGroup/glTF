@@ -886,7 +886,7 @@ The joint hierarchy used for controlling skinned mesh pose is simply the glTF no
 
 **TODO: object-space VS world-space joints**
 
-For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-2.0.0.png).
+For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-2.0.0a.png).
 
 > **Implementation Note:** A node definition does not specify whether the node should be treated as a joint. Client implementations may wish to traverse the `skins` array first, marking each joint node.
 
