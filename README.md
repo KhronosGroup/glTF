@@ -18,7 +18,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 ### Overview
 
 <p align="center">
-<a href="specification/2.0/figures/gltfOverview-2.0.0.png"><img src="specification/2.0/figures/gltfOverview-2.0.0-small.png" /></a>
+<a href="specification/2.0/figures/gltfOverview-2.0.0a.png"><img src="specification/2.0/figures/gltfOverview-2.0.0a-small.png" /></a>
 </p>
 
 ### For developers
