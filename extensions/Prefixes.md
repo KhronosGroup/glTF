@@ -2,6 +2,7 @@
 
 The following extension prefixes are reserved:
 
+* `ALI` - Alibaba
 * `AVR` - AltspaceVR
 * `BLENDER` - Blender
 * `CESIUM` - Cesium
