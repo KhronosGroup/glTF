@@ -10,6 +10,7 @@ The following extension prefixes are reserved:
 * `FB` - Facebook
 * `GOOGLE` - Google
 * `KHR` - Ratified or intended-to-be-ratified Khronos
+* `MSFT` - Microsoft
 * `OWLII` - Owlii
 * `WEB3D` - Web3D Consortium
 
