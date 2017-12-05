@@ -1413,7 +1413,7 @@ The following examples show expected animations usage.
 
 When `node` isn't defined, channel should be ignored. Valid path names are `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
 
-Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating point scalar values representing linear time in seconds; and a set of vectors or scalars representing animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, `CATMULLROMSPLINE`, and `CUBICSPLINE`. See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
+Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating point scalar values representing linear time in seconds; and a set of vectors or scalars representing animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, and `CUBICSPLINE`. See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
 
 |`channel.path`|Accessor Type|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
@@ -1850,7 +1850,6 @@ Interpolation algorithm.
 * **Allowed values**:
    * `"LINEAR"` The animated values are linearly interpolated between keyframes. When targeting a rotation, spherical linear interpolation (slerp) should be used to interpolate quaternions. The number output of elements must equal the number of input elements.
    * `"STEP"` The animated values remain constant to the output of the first keyframe, until the next keyframe. The number of output elements must equal the number of input elements.
-   * `"CATMULLROMSPLINE"` The animation's interpolation is computed using a uniform Catmull-Rom spline. The number of output elements must equal two more than the number of input elements. The first and last output elements represent the start and end tangents of the spline. There must be at least four keyframes when using this interpolation.
    * `"CUBICSPLINE"` The animation's interpolation is computed using a cubic spline with specified tangents. The number of output elements must equal three times the number of input elements. For each input element, the output stores three elements, an in-tangent, a spline vertex, and an out-tangent. There must be at least two keyframes when using this interpolation.
 
 #### animation sampler.output :white_check_mark: 
@@ -3884,9 +3883,7 @@ Implementation of diffuse from [Lambert's Photometria](https://archive.org/detai
 
 # Appendix C: Spline Interpolation
 
-Animations in glTF support two kinds of spline interpolations: `CUBICSPLINE` and `CATMULLROMSPLINE`.
-
-## Cubic Spline
+Animations in glTF support spline interpolation with a cubic spline.
 
 The keyframes of a cubic spline in glTF have input and output values where each input value corresponds to three output values: in-tangent, spline vertex, and out-tangent.
 
@@ -3920,21 +3917,6 @@ When the sampler targets a node's rotation property, the resulting ***p***(*t*) 
 > **Implementation Note:** When writing out rotation output values, exporters should take care to not write out values which can result in an invalid quaternion with all zero values. This can be achieved by ensuring the output values never have both -***q*** and ***q*** in the same spline.
 
 > **Implementation Note:** The first in-tangent ***a***<sub>1</sub> and last out-tangent ***b***<sub>*n*</sub> should be zeros as they are not used in the spline calculations.
-
-## Catmull-Rom Spline
-
-`CATMULLROMSPLINE` splines in glTF are standard Catmull-Rom splines, also known as uniform Catmull-Rom spline. They are different than a cubic spline in that the inner tangents are calculated instead of specified. The first and last output elements define the start and end tangents of the spline.
-
-Given a set of keyframes
-
-&nbsp;&nbsp;&nbsp;&nbsp;Input *t*<sub>*k*</sub> for *k* = 1,...,*n*  
-&nbsp;&nbsp;&nbsp;&nbsp;Output start tangent ***a***, vertex ***v***<sub>*k*</sub> for *k* = 1,...,*n*, and end tangent ***b***  
-
-The tangents are defined as
-
-&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>1</sub> = ***a***  
-&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>*k*</sub> = (***v***<sub>*k*+1</sub> - ***v***<sub>*k*-1</sub>) / (*t*<sub>*k*+1</sub> - *t*<sub>*k*-1</sub>) for *k* = 2,...,*n*-1  
-&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>*n*</sub> = ***b***  
 
 # Appendix D: Full Khronos Copyright Statement
 
