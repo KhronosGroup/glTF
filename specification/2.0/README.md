@@ -164,7 +164,7 @@ Major version updates are not expected to be compatible with previous versions.
 ## File Extensions and MIME Types
 
 * `*.gltf` files use `model/gltf+json`
-* `*.bin` files use `application/octet-stream`
+* `*.bin` files use `application/gltf-buffer`
 * Texture files use the official `image/*` type based on the specific image format. For compatibility with modern web browsers, the following image formats are supported: `image/jpeg`, `image/png`.
 
 ## JSON encoding
