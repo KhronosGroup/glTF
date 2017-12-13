@@ -74,6 +74,7 @@ Preview tools:
 | [PiXYZ Studio](https://www.pixyz-software.com/studio/) | [Multiple](https://docs.google.com/spreadsheets/d/1aWdeBOvZsbnwHfbyhuVS4vBDwevsT2Bz65hEhc0CtnU/pubhtml?gid=786960864) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Interactively prepare & optimize any CAD data |
 | [FBX2glTF](https://github.com/facebookincubator/FBX2glTF)  | `FBX` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Command-line converter |
 | [fbx2gltf](https://github.com/pissang/qtek-model-viewer#converter)  | `FBX`, `COLLADA`, `OBJ` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Python tool to convert models to glTF2.0 format, model is parsed by FBX SDK. |
+| [Simplygon Cloud](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/simplygon.simplygon)  | [Multiple](https://simplygonclouddoc.simplygon.com/tutorials/firstprocessing.html#asset) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Cloud based asset optimization pipeline |
 | [COLLADA2GLTF](https://github.com/KhronosGroup/COLLADA2GLTF/) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Official command-line converter, with updates for glTF 2.0 in progress |
 | [Cesium drag-and-drop converter](http://cesiumjs.org/convertmodel.html) | `OBJ`, `COLLADA` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Online drag and drop converter |
 | [batchgltf](https://github.com/feiss/batchgltf) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Batch converter with GUI |
@@ -90,6 +91,7 @@ Preview tools:
 |------|--------|-------------|
 | [gltf-import-export](https://github.com/najadojo/gltf-import-export) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | NPM package to convert between glb and gltf files |
 | [makeglb](https://github.com/sbtron/makeglb) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Drag and drop browser tool to convert gltf to self contained binary glb |
+| [gltf-toolkit](https://github.com/microsoft/gltf-toolkit) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Collection of tools and libraries to modify and optimize glTF assets |
 | [glTF Pipeline](https://github.com/AnalyticalGraphicsInc/gltf-pipeline) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Official Node.js command-line tool for optimizing glTF assets |
 | [gltf2glb](https://github.com/Geopipe/gltf2glb) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Python tool to convert glTF to Binary glTF |
 | [binary-gltf-utils](https://github.com/Qantas94Heavy/binary-gltf-utils) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Node.js tool to convert glTF to Binary glTF |
