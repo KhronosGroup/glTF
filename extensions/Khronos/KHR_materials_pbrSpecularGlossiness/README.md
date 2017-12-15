@@ -31,21 +31,20 @@ The [best practices](#bestpractices) section specifies what an implementation mu
 ## Extending Materials
 
 The PBR specular-glossiness materials are defined by adding the `KHR_materials_pbrSpecularGlossiness` extension to any glTF material. 
-For example, the following defines a material like gold using specular-glossiness parameters.:
+For example, the following defines a material like gold using specular-glossiness parameters.
 
-```
+```json
 {
     "materials": [
         {
             "name": "gold",
             "extensions": {
                 "KHR_materials_pbrSpecularGlossiness": {
-                    "diffuseFactor": [ 0.5, 0.5, 0.5, 1 ],
-                    "specularFactor": [ 0.0, 0.0, 0.0 ],
-                    "glossinessFactor": 0.8
+                    "diffuseFactor": [ 0.0, 0.0, 0.0, 1.0 ],
+                    "specularFactor": [ 1.0, 0.766, 0.336 ],
+                    "glossinessFactor": 0.9
                 }
             }
-
         }
     ]
 }
@@ -136,7 +135,7 @@ The specular-glossiness texture is a RGBA texture, containing the specular color
 
 The [additional maps](/specification/2.0/README.md#additional-maps) defined in glTF materials node can also be used with the PBR specular-glossiness material model parameters defined in this extension.
 
-```
+```json
 {
     "materials": [
         {
@@ -147,15 +146,12 @@ The [additional maps](/specification/2.0/README.md#additional-maps) defined in g
                     },
                     "glossinessFactor": 0.5,
                     "specularGlossinessTexture": {
-                        "index": 0,
-                        "texCoord": 0
+                        "index": 1
                     }
                 }
             },
             "normalTexture": {
-                "scale": 2,
-                "index": 3,
-                "texCoord": 1
+                "index": 2
             },
             "emissiveFactor": [ 0.2, 0.1, 0.0 ]
         }
@@ -170,21 +166,20 @@ The PBR specular-glossiness extension can be used along with PBR metallic-roughn
 
 The following example shows how the same material can be defined using both metallic-roughness as well as specular-glossiness material models:
 
-```
+```json
 {
     "materials": [
         {
             "name": "gold",
             "pbrMetallicRoughness": {
-                "baseColorfactor": [ 1.000, 0.766, 0.336, 1.0 ],
-                "metallicFactor": 1.0,
-                "roughnessFactor": 0.0
+                "baseColorfactor": [ 1.0, 0.766, 0.336, 1.0 ],
+                "roughnessFactor": 0.1
             },
             "extensions": {
                 "KHR_materials_pbrSpecularGlossiness": {
-                    "diffuseFactor": [ 0.5, 0.5, 0.5, 1 ],
-                    "specularFactor": [ 0.0, 0.0, 0.0 ],
-                    "glossinessFactor": 0.8
+                    "diffuseFactor": [ 0.0, 0.0, 0.0, 1.0 ],
+                    "specularFactor": [ 1.0, 0.766, 0.336 ],
+                    "glossinessFactor": [ 0.9 ]
                 }
             }
         }
