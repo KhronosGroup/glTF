@@ -35,7 +35,7 @@
         "output": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The index of an accessor, containing keyframe output values.",
-            "gltf_detailedDescription": "The index of an accessor containing keyframe output values. When targeting TRS target, the `accessor.componentType` of the output values must be `FLOAT`. When targeting morph weights, the `accessor.componentType` of the output values must be `FLOAT` or normalized integer where each output element stores values with a count equal to the number of morph targets."
+            "gltf_detailedDescription": "The index of an accessor containing keyframe output values. When targeting translation or scale paths, the `accessor.componentType` of the output values must be `FLOAT`. When targeting rotation or morph weights, the `accessor.componentType` of the output values must be `FLOAT` or normalized integer. For weights, each output element stores `SCALAR` values with a count equal to the number of morph targets."
         },
         "extensions": { },
         "extras": { }
