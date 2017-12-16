@@ -27,6 +27,7 @@
         },
         "version" : {
             "type" : "string",
+            "pattern": "^1\\.",
             "description" : "The glTF version."
         }
     },

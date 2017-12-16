@@ -2,12 +2,15 @@
 
 The following extension prefixes are reserved:
 
+* `ALI` - Alibaba
 * `AVR` - AltspaceVR
 * `BLENDER` - Blender
 * `CESIUM` - Cesium
 * `EXT` - Multi-vendor
+* `FB` - Facebook
 * `GOOGLE` - Google
 * `KHR` - Ratified or intended-to-be-ratified Khronos
+* `MSFT` - Microsoft
 * `OWLII` - Owlii
 * `WEB3D` - Web3D Consortium
 
