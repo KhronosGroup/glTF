@@ -1,4 +1,4 @@
-# FB_animation_map 
+# EXT_animation_map 
 
 ## Contributors
 
