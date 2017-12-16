@@ -40,6 +40,9 @@ The following semantics require a list of glTF Node objects to specify interacti
 * **PROXIMITY_ENTER**: Triggered when a viewer gets close to an object
 * **PROXIMITY**: Looped while a viewer is near to an object
 * **PROXIMITY_LEAVE**: Triggered when a viewer gets further from an object
+* **POINTER_ENTER**: Triggered when pointer intersects an object
+* **POINTING**: Looped while a user is pointing at an object
+* **POINTER_LEAVE**: Triggered when a pointer exits an object
 
 ## glTF Schema Updates
 
