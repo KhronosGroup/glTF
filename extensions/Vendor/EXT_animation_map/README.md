@@ -46,17 +46,17 @@ The following semantics require a list of glTF Node objects to specify interacti
 
 ## glTF Schema Updates
 
-The new FB_animation_map property is a root glTF level optional extension object.  The **bindings** array is a list of objects containing a semantic, an array of animations mapped to that semantic, and an optional list of nodes that this animation targets.  The node parameter is used for interactive animations like GRAB or GAZE.  Animations should be played all at once, though future additions could add parallel (default), sequential, or random play modes.
+The new EXT_animation_map property is a root glTF level optional extension object.  The **bindings** array is a list of objects containing a semantic, an array of animations mapped to that semantic, and an optional list of nodes that this animation targets.  The node parameter is used for interactive animations like GRAB or GAZE.  Animations should be played all at once, though future additions could add parallel (default), sequential, or random play modes.
 
 **Listing 1**: An animation map that binds animations 0 and 3 to the ENTER event, 1 to the LEAVE event, and 2 to loop continuously for the life of the object.  There is a GAZE_ENTER event that is triggered when the specified node 3 is looked at.
 
 ```javascript
 {
     "extensionsUsed": {
-        "FB_animation_map"
+        "EXT_animation_map"
     },
     "extensions" : {
-        "FB_animation_map" : {
+        "EXT_animation_map" : {
               "bindings": [
                   {
                       "semantic": "ENTER",
