@@ -145,11 +145,11 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | [Grimoire.js](https://github.com/GrimoireGL/GrimoireJS) ([loader](https://github.com/GrimoireGL/grimoirejs-gltf)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Geometry and materials, partial animation | |
 | [Hilo3d](https://github.com/hiloteam/Hilo3d) ([loader](https://github.com/hiloteam/Hilo3d/blob/master/src/loader/GLTFLoader.js)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | All | [Doc](https://hiloteam.github.io/Hilo3d/docs/) |
 | [A-Frame](https://aframe.io/) ([loader](https://aframe.io/docs/0.6.0/components/gltf-model.html)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | All | [Doc](https://aframe.io/docs/0.7.0/components/gltf-model.html) |
+| [xeogl](http://xeogl.org/) ([loader](http://xeogl.org/examples/#importing_gltf_BoomBox)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Geometry and materials | [Tutorial](http://xeogl.org/docs/classes/GLTFModel.html) |
 | [PEX](http://vorg.github.io/pex/) ([loader](https://github.com/pex-gl/pex-gltf)) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Geometry and materials| |
 | [GLBoost](https://github.com/emadurandal/GLBoost) ([loader](https://github.com/emadurandal/GLBoost/blob/master/src/js/middle_level/loader/GLTFLoader.js)) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | ? | [Examples](https://gitcdn.xyz/repo/emadurandal/GLBoost/master/examples/index.html) |
 | [xml3d.js](http://xml3d.org) ([loader](https://github.com/xml3d/xml3d-gltf-plugin)) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Geometry and materials | |
 | [X3DOM](http://x3dom.org/) ([loader](https://github.com/x3dom/x3dom/blob/master/src/util/glTF/glTFLoader.js)) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Geometry and materials | |
-| [xeogl](http://xeogl.org/) ([loader](https://github.com/xeolabs/xeogl/tree/master/src/importing/gltf)) | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Geometry and materials | [Tutorial](https://github.com/xeolabs/xeogl/wiki/Importing-glTF) |
 
 #### WebGL Sample Code
 
