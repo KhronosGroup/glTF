@@ -837,19 +837,45 @@ After applying morph targets to vertex positions and normals, tangent space may 
 
 ### Skins
 
-All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property (which points to an accessor with IBM data), used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property points to node that is the root of a joints hierarchy. 
+All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property (which points to an accessor with IBM data), used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property points to the node that is the root of a joints hierarchy. 
 
-> **Implementation Note:** Matrix, defining how to pose the skin's geometry for use with the joints ("Bind Shape Matrix") should be premultiplied to mesh data or to Inverse Bind Matrices. 
+> **Implementation Note:** The matrix defining how to pose the skin's geometry for use with the joints ("Bind Shape Matrix") should be premultiplied to mesh data or to Inverse Bind Matrices. 
+
+> **Implementation Note:** Client implementations should apply only the transform of the skeleton root node to the skinned mesh while ignoring the transform of the skinned mesh node. In the example below, the position of `node_0` and the scale of `node_1` are applied while the position of `node_3` and rotation of `node_4` are ignored.
 
 ```json
-{    
+{
+    "nodes": [
+        {
+            "name": "node_0",
+            "children": [ 1 ],
+            "position": [ 0.0, 1.0, 0.0 ]
+        },
+        {
+            "name": "node_1",
+            "children": [ 2 ],
+            "scale": [ 0.5, 0.5, 0.5 ]
+        },
+        {
+            "name": "node_2"
+        },
+        {
+            "name": "node_3",
+            "children": [ 4 ],
+            "position": [ 1.0, 0.0, 0.0 ]
+        },
+        {
+            "name": "node_4",
+            "mesh": 0,
+            "rotation": [ 0.0, 1.0, 0.0, 0.0 ],
+            "skin": 0
+        }
+    ],
     "skins": [
         {
-            "inverseBindMatrices": 11,
-            "joints": [
-                1,
-                2
-            ],
+            "name": "skin_0",
+            "inverseBindMatrices": 0,
+            "joints": [ 1, 2 ],
             "skeleton": 1
         }
     ]
