@@ -226,13 +226,17 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 #### Java
 
 * [JglTF](https://github.com/javagl/JglTF) - Java libraries for glTF
-  * [jgltf-impl](https://github.com/javagl/JglTF/tree/master/jgltf-impl) - Classes representing a glTF model, auto-generated from the schema
+  * jgltf-impl - Classes representing a glTF model, auto-generated from the glTF JSON schema
+    * [jgltf-impl-v1](https://github.com/javagl/JglTF/tree/master/jgltf-impl-v1) - glTF 1.0
+    * [jgltf-impl-v2](https://github.com/javagl/JglTF/tree/master/jgltf-impl-v2) - glTF 2.0
+    * [jgltf-impl-v2-technique-webgl](https://github.com/javagl/JglTF/tree/master/jgltf-impl-v2-technique-webgl) - KHR_technique_webgl extension
   * [jgltf-model](https://github.com/javagl/JglTF/tree/master/jgltf-model) - Classes for reading, processing, converting and writing glTF
-  * [jgltf-obj](https://github.com/javagl/JglTF/tree/master/jgltf-obj) - A library for converting OBJ to glTF
-  * [jgltf-viewer](https://github.com/javagl/JglTF/tree/master/jgltf-viewer) - A viewer for glTF, with different implementations:
-      * [jgltf-viewer-jogl](https://github.com/javagl/JglTF/tree/master/jgltf-viewer-jogl) - A glTF viewer based on [JOGL](http://jogamp.org/jogl/www/)
-      * [jgltf-viewer-lwjgl](https://github.com/javagl/JglTF/tree/master/jgltf-viewer-lwjgl) - A glTF viewer based on [LWJGL version 2](http://legacy.lwjgl.org/)
-  * [jgltf-browser](https://github.com/javagl/JglTF/tree/master/jgltf-browser) - An application combining the above libraries
+  * [jgltf-obj](https://github.com/javagl/JglTF/tree/master/jgltf-obj) - Library for converting OBJ to glTF
+  * [jgltf-viewer](https://github.com/javagl/JglTF/tree/master/jgltf-viewer) - Viewer for glTF, with different implementations:
+      * [jgltf-viewer-jogl](https://github.com/javagl/JglTF/tree/master/jgltf-viewer-jogl) - glTF viewer based on [JOGL](http://jogamp.org/jogl/www/)
+      * [jgltf-viewer-lwjgl](https://github.com/javagl/JglTF/tree/master/jgltf-viewer-lwjgl) - glTF viewer based on [LWJGL version 2](http://legacy.lwjgl.org/)
+  * [jgltf-browser](https://github.com/javagl/JglTF/tree/master/jgltf-browser) - Application combining the above libraries
+  * [jgltf-validator](https://github.com/javagl/JglTF/tree/master/jgltf-validator) - Simple glTF validator, only intended for internal use
 
 #### Ada
 
