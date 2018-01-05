@@ -163,6 +163,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 |------|--------|-------------|
 | [Unity Loader](https://github.com/AltspaceVR/UnityGLTF) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Unity3D library for exporting, loading, parsing, and rendering glTF assets |
 | [Godot Game Engine](https://godotengine.org/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Godot 3.0 fully supports glTF import |
+| [jMonkeyEngine](http://jmonkeyengine.org/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | jME 3.2 supports glTF 2.0 |
 
 ### Languages
 
