@@ -485,7 +485,7 @@ See [GLB File Format Specification](#glb-file-format-specification) for details 
 
 All large data for meshes, skins, and animations is stored in buffers and retrieved via accessors.
 
-An *accessor* defines a method for retrieving data as typed arrays from within a `bufferView`. The accessor specifies a component type (e.g. `5126 (GL_FLOAT)`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the `bufferView` using the properties `byteOffset` and `count`. The latter specifies the number of elements within the `bufferView`, *not* the number of bytes. Elements could be, e.g., vertex indices, vertex attributes, animation keyframes, etc.
+An *accessor* defines a method for retrieving data as typed arrays from within a `bufferView`. The accessor specifies a component type (e.g. `5126 (FLOAT)`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the `bufferView` using the properties `byteOffset` and `count`. The latter specifies the number of elements within the `bufferView`, *not* the number of bytes. Elements could be, e.g., vertex indices, vertex attributes, animation keyframes, etc.
 
 All accessors are stored in the asset's `accessors` array.
 
@@ -530,7 +530,7 @@ The following fragment shows two accessors, the first is a scalar accessor for r
 
 #### Floating-Point Data
 
-Data of `5126 (GL_FLOAT)` componentType must use IEEE-754 single precision format. 
+Data of `5126 (FLOAT)` componentType must use IEEE-754 single precision format. 
 
 Values of `NaN`, `+Infinity`, and `-Infinity` are not allowed.
 
