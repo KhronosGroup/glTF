@@ -261,6 +261,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 * [gltf-utilities](https://github.com/AnalyticalGraphicsInc/gltf-utilities) - JavaScript utility library to help load glTF
 * [wetzel](https://github.com/AnalyticalGraphicsInc/wetzel) - Generate Markdown documentation from JSON Schema
+* [gltf-enum](http://gltf-enum.com/) - Simple site to help work with all the different enums in glTF spec
 
 ## Stack Overflow
 
