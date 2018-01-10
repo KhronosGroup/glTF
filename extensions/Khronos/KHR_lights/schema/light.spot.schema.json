@@ -1,0 +1,19 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "light/spot",
+    "type" : "object",
+    "allOf" : [ { "$ref" : "light.schema.json" } ],
+    "properties" : {
+        "fallOffAngle" : {
+            "type" : "number",
+            "description" : "Fall off angle in radians.",
+            "default" : 3.14159265
+        },
+        "fallOffExponent" : {
+            "type" : "number",
+            "description" : "Fall off exponent.",
+            "default" : 0.0
+        }
+    },
+    "additionalProperties" : false
+}

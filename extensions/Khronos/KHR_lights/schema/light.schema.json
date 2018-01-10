@@ -1,0 +1,50 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "light",
+    "type": "object",
+    "description": "An ambient, hemisphere, directional, point, or spot light.",
+    "allOf" : [ { "$ref" : "../../../../specification/2.0/schema/glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        
+        "color": {
+            "type": "array",
+            "subtype": "number",
+            "description": "Color of the light source.",
+            "default": [1, 1, 1]
+        },
+        "intensity": {
+            "type": "number",
+            "description": "Intensity of the light source in lumens.",
+            "default": 1.0
+        },
+        "hemisphere": {
+            "type": "object",
+            "dependencies": {
+                "type": ["hemisphere"]
+            },
+            "$ref": "Hemisphere light properties."
+        },
+        "spot": {
+            "type": "object",
+            "dependencies": {
+                "type": ["spot"]
+            },
+            "$ref": "light.spot.schema.json"
+        },
+        "type": {
+            "type": "string",
+            "description": "Specifies the light type.",
+            "enum": [
+                "ambient",
+                "hemisphere",
+                "directional",
+                "point",
+                "spot"
+            ]
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "type"
+    ]
+}
