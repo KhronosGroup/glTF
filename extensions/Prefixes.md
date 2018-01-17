@@ -11,6 +11,7 @@ The following extension prefixes are reserved:
 * `GOOGLE` - Google
 * `KHR` - Ratified or intended-to-be-ratified Khronos
 * `MSFT` - Microsoft
+* `NV` - NVIDIA Corporation
 * `OWLII` - Owlii
 * `WEB3D` - Web3D Consortium
 
