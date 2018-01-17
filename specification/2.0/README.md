@@ -766,7 +766,7 @@ All indices for indexed attribute semantics, must start with 0 and be continuous
 > **Implementation note:** When normals and tangents are specified, client implementations should compute the bitangent by taking the cross product of the normal and tangent xyz vectors and multiplying against the w component of the tangent: `bitangent = cross(normal, tangent.xyz) * tangent.w`
 
 > **Implementation note:** When the 'mode' property is set to a non-triangular type (such as POINTS or LINES) some additional considerations must be taken while considering the proper rendering technique:
-> > For LINES with with `NORMAL` and `TANGENT` properties can render with standard lighting including normal maps.
+> > For LINES with `NORMAL` and `TANGENT` properties can render with standard lighting including normal maps.
 > > 
 > > For all POINTS or LINES with no `TANGENT` property, render with standard lighting but ignore any normal maps on the material.
 > > 
