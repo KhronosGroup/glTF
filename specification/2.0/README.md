@@ -743,7 +743,7 @@ Valid accessor type and component type for each attribute semantic property are 
 |Name|Accessor Type(s)|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
 |`POSITION`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex positions|
-|`NORMAL`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex normals|
+|`NORMAL`|`"VEC3"`|`5126`&nbsp;(FLOAT)|Normalized XYZ vertex normals|
 |`TANGENT`|`"VEC4"`|`5126`&nbsp;(FLOAT)|XYZW vertex tangents where the *w* component is a sign value (-1 or +1) indicating handedness of the tangent basis|
 |`TEXCOORD_0`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the first set|
 |`TEXCOORD_1`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the second set|
@@ -2614,7 +2614,7 @@ A set of parameter values that are used to define the metallic-roughness materia
 
 #### material.normalTexture
 
-A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [1/255 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer. In GLSL, this vector would be unpacked like so: `float3 normalVector = tex2D(normalMap, texCoord) * 2 - 1`.
+A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [1/255 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer. In GLSL, this vector would be unpacked like so: `float3 normalVector = tex2D(normalMap, texCoord) * 2 - 1`. Client implementations should normalize the normal vectors before using them in lighting equations.
 
 * **Type**: `object`
 * **Required**: No
