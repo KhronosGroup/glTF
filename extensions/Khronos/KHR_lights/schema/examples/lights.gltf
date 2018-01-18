@@ -37,23 +37,6 @@
         },
         {
           "color": [
-            0.1,
-            0.6,
-            1
-          ],
-          "hemisphere": {
-            "groundColor": [
-              0.0,
-              0.3,
-              0.0
-            ]
-          },
-          "name": "Hemisphere",
-          "intensity": 0.75,
-          "type": "hemisphere"
-        },
-        {
-          "color": [
             0.3,
             0.7,
             1.0
@@ -250,7 +233,7 @@
       ],
       "extensions": {
         "KHR_lights": {
-          "light": 3
+          "light": 0
         }
       }
     }

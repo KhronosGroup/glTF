@@ -17,13 +17,6 @@
             "description": "Intensity of the light source in lumens.",
             "default": 1.0
         },
-        "hemisphere": {
-            "type": "object",
-            "dependencies": {
-                "type": ["hemisphere"]
-            },
-            "$ref": "Hemisphere light properties."
-        },
         "spot": {
             "type": "object",
             "dependencies": {

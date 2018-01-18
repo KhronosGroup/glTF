@@ -20,13 +20,13 @@ This extension defines a set of lights for use with glTF 2.0.
 
 Many 3D tools and engines support built-in implementations of light types. Using this extension, tools can export and engines can import these lights. 
 
-This extension defines five light types: `ambient`, `directional`, `point`, `hemisphere` and `spot`.
+This extension defines five light types: `ambient`, `directional`, `point` and `spot`.
 
 ## Lights
 
 Lights define light sources within a scene.
 
-`ambient` and `hemisphere` lights are not transformable and, thus, can only be defined on the scene. All other lights are contained in nodes and inherit the transform of that node.
+`ambient` lights are not transformable and, thus, can only be defined on the scene. All other lights are contained in nodes and inherit the transform of that node.
 
 A conforming implementation of this extension must be able to load light data defined in the asset and has to render the asset using those lights. 
 
@@ -34,7 +34,7 @@ A conforming implementation of this extension must be able to load light data de
 
 Lights are defined within an dictionary property in the glTF manifest file, by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_lights` property with a `lights` array inside it.
 
-Each light defines a mandatory `type` property that designates the type of light (`ambient`, `hemisphere`, `directional`, `point` or `spot`). The following example defines a white-colored directional light.
+Each light defines a mandatory `type` property that designates the type of light (`ambient`, `directional`, `point` or `spot`). The following example defines a white-colored directional light.
 
 ```javascript
 "extensions": {
@@ -70,11 +70,11 @@ Each light defines a mandatory `type` property that designates the type of light
 ```
 
 For light types that have a position (`point` and `spot` lights), the light's position is defined as the node's world location.
-For light types that have a direction (`directional` and `spot` lights), the light's direction is defined as the 3-vector `(0.0, 0.0, -1.0)` and the rotation of the node orients the light accordingly.
+For light types that have a direction (`directional` and `spot` lights), the light's direction is defined as the 3-vector `(0.0, 0.0, 1.0)` and the rotation of the node orients the light accordingly.
 
 ### Adding Light Instances to Scenes
 
-`ambient` and `hemisphere` lights have no position and no orientation. These lights must be attached to the scene by defining the `extensions.KHR_lights` property and, within that, an index into the `lights` array using the `light` property.
+`ambient` lights have no position and no orientation. These lights must be attached to the scene by defining the `extensions.KHR_lights` property and, within that, an index into the `lights` array using the `light` property.
 
 ```javascript
 "scenes" : [
@@ -103,42 +103,6 @@ All light types share the common set of properties listed below.
 #### Ambient
 
 Ambient lights define constant lighting throughout the scene.
-
-#### Hemisphere
-
-Hemisphere lights define a global light whose illumination blends linearly between two colours, based on the y-coord of the surface normal in world space.
-```
-float interp = world_space_normal.y * 0.5 + 0.5;
-color = mix(groundColor, color, interp);
-```
-
-| Property | Description | Required |
-|:-----------------------|:------------------------------------------| :--------------------------|
-| `groundColor` | Bottom color of the hemisphere light. | No, Default: `[1.0, 1.0, 1.0]` |
-
-```javascript
-"extensions": {
-    "KHR_lights" : {
-        "lights": [
-            {
-                "hemisphere": {
-                    "groundColor": [
-                        0.0,
-                        1.0,
-                        0.0
-                    ]
-                },
-                "color": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "type": "hemisphere"
-            }
-        ]
-    }
-}
-```
 
 #### Directional
 
