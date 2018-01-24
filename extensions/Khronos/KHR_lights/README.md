@@ -114,11 +114,11 @@ Point lights emit light in all directions from a position in space. The brightne
 
 #### Spot
 
-Spot lights emit light in a cone over a distance. The angle and falloff of the cone is defined using two numbers, the `innerConeAngle` and `outerConeAngle`. As with point lights, the brightness also attenuates in a physically correct manner as distance increases from the light's position (i.e. brightness goes like the inverse square of the distance). Spot light intensity refers to the brightness inside the `innerConeAngle` and is defined in candela, which is lumens per square radian (lm/sr).
+Spot lights emit light in a cone over a distance. The angle and falloff of the cone is defined using two numbers, the `innerConeAngle` and `outerConeAngle`. As with point lights, the brightness also attenuates in a physically correct manner as distance increases from the light's position (i.e. brightness goes like the inverse square of the distance). Spot light intensity refers to the brightness inside the `innerConeAngle` and is defined in candela, which is lumens per square radian (lm/sr). Engines that don't support two angles for spotlights should use `outerConeAngle` as the spotlight angle (leaving `innerConeAngle` to implicitly be `0`).
 
 | Property | Description | Required |
 |:-----------------------|:------------------------------------------| :--------------------------|
-| `innerConeAngle` | Angle from centre of spotlight where falloff begins. | No, Default: `PI / 4.0` |
+| `innerConeAngle` | Angle from centre of spotlight where falloff begins. | No, Default: `0` |
 | `outerConeAngle` | Angle from centre of spotlight where falloff ends. Must be greater than innerConeAngle. | No, Default: `PI / 2.0` |
 
 ```javascript
