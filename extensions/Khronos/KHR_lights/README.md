@@ -106,7 +106,7 @@ Ambient lights define constant lighting throughout the scene.
 
 #### Directional
 
-Directional lights are light sources that emit from infinitely far away in the direction of the -z axis. This light type inherits the orientation of the node that it belongs to. Because it is at an infinite distance, the light is not attenuated. It's intensity is defined in lumens per metre squared, or lux (lm/m^2).
+Directional lights are light sources that act as though they are infinitely far away and emit light in the direction of the +z axis. This light type inherits the orientation of the node that it belongs to. Because it is at an infinite distance, the light is not attenuated. It's intensity is defined in lumens per metre squared, or lux (lm/m^2).
 
 #### Point
 
@@ -118,8 +118,8 @@ Spot lights emit light in a cone over a distance. The angle and falloff of the c
 
 | Property | Description | Required |
 |:-----------------------|:------------------------------------------| :--------------------------|
-| `innerConeAngle` | Angle from centre of spotlight where falloff begins. | No, Default: `0` |
-| `outerConeAngle` | Angle from centre of spotlight where falloff ends. Must be greater than innerConeAngle. | No, Default: `PI / 2.0` |
+| `innerConeAngle` | Angle, in radians, from centre of spotlight where falloff begins. Must be greater than `0`, less than `outerConeAngle` and less than `PI / 2.0`. | No, Default: `0` |
+| `outerConeAngle` | Angle, in radians, from centre of spotlight where falloff ends.  Must be greater than `0`, greater than `innerConeAngle` and less than `PI / 2.0`. | No, Default: `PI / 4.0` |
 
 ```javascript
 "extensions": {
