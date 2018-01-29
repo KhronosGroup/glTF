@@ -55,7 +55,7 @@ Each light defines a mandatory `type` property that designates the type of light
 
 ### Adding Light Instances to Nodes
 
-`directional`, `point`, `spot` lights have position and/or orientation, which can be animated. These lights are attached to a node by defining the `extensions.KHR_lights` property and, within that, an index into the `lights` array using the `light` property.
+Nodes can have lights attached to them, just like any other objects that have a transform. Only lights of types `directional`, `point`, and `spot` have position and/or orientation so only these light types are allowed. These lights are attached to a node by defining the `extensions.KHR_lights` property and, within that, an index into the `lights` array using the `light` property.
 
 ```javascript
 "nodes" : [
@@ -74,7 +74,7 @@ For light types that have a direction (`directional` and `spot` lights), the lig
 
 ### Adding Light Instances to Scenes
 
-`ambient` lights have no position and no orientation. These lights must be attached to the scene by defining the `extensions.KHR_lights` property and, within that, an index into the `lights` array using the `light` property.
+Lights that have no transform information can be attached to scenes. `ambient` lights have no position, no orientation and no range. They are therefore global and belong to a scene rather than a node. These lights are attached to the scene by defining the `extensions.KHR_lights` property and, within that, an index into the `lights` array using the `light` property.
 
 ```javascript
 "scenes" : [
@@ -96,13 +96,13 @@ All light types share the common set of properties listed below.
 
 | Property | Description | Required |
 |:-----------------------|:------------------------------------------| :--------------------------|
-| `color` | RGB value for light's color. | No, Default: `[1.0, 1.0, 1.0]` |
+| `color` | RGB value for light's color in linear space. | No, Default: `[1.0, 1.0, 1.0]` |
 | `intensity` | Brightness of light in. The units that this is defined in depend on the type of light. `point` and `spot` lights use luminous intensity in candela (lm/sr) while `directional` lights use illuminance in lux (lm/m^2) | No, Default: `1.0` |
 | `type` | Declares the type of the light. | :white_check_mark: Yes |
 
 #### Ambient
 
-Ambient lights define constant lighting throughout the scene.
+Ambient lights define constant lighting throughout the scene. They are referenced only by a scene object and only 1 can be referenced per scene.
 
 #### Directional
 
