@@ -24,6 +24,7 @@ This extension defines the metalness-roughness material model from Physically-Ba
 ![\[Comparison\]](Figures/vertex_metal_rough_comparison.png)
 
 Left: per-vertex albedo only. Right: per-vertex albedo attributes extended with metalness-roughness
+
 [painted_sphere.glb](examples/painted_sphere.glb)
 
 ## glTF Schema Updates
@@ -130,4 +131,4 @@ Unbound from 0.2.7 onwards supports glTF 2.0 export with optional EXT_pbr_attrib
 
 ## Resources
 
-[painted_sphere.glb](examples/painted_sphere.glb)
+Example File: [painted_sphere.glb](examples/painted_sphere.glb)
