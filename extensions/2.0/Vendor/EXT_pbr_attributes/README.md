@@ -57,8 +57,8 @@ Left: per-vertex albedo only. Right: per-vertex albedo attributes extended with 
                     "material": 0,
                     "mode": 4,
                     "attributes": {
-	                      "METALLIC_ROUGHNESS": 4,
-			                  "COLOR_0": 3,
+                        "METALLIC_ROUGHNESS": 4,
+                        "COLOR_0": 3,
                         "NORMAL": 2,
                         "POSITION": 1
                     },
@@ -90,8 +90,8 @@ Left: per-vertex albedo only. Right: per-vertex albedo attributes extended with 
                     "material": 0,
                     "mode": 4,
                     "attributes": {
-	                      "ROUGHNESS": 4,
-			                  "COLOR_0": 3,
+                        "ROUGHNESS": 4,
+                        "COLOR_0": 3,
                         "NORMAL": 2,
                         "POSITION": 1
                     },
