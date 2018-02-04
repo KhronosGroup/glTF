@@ -20,7 +20,7 @@ Written against the glTF draft 2.0 spec.
 This extension defines the metalness-roughness material model from Physically-Based Rendering (PBR) as a per vertex attribute. These additional attributes, together with the already existing albedo (COLOR_0), complete a full PBR workflow representation per vertex.
 
 ### Example
-![\[Comparison\]](vertex_metal_rough_comparison.png)
+![\[Comparison\]](Figures/vertex_metal_rough_comparison.png)
 Left: per-vertex albedo only. Right: per-vertex albedo attributes extended with metalness-roughness
 
 ## glTF Schema Updates
