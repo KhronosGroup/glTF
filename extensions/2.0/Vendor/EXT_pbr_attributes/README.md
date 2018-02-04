@@ -4,8 +4,8 @@
 
 ## Contributors
 
-* Florian Hoenig, Unbound Technologies, inc., fhoenig@unbound.io
-* Michael Saenger, Unbound Technologies, inc., michael@unbound.io
+* Florian Hoenig, Unbound Technologies, inc., [@rianflo](http://twitter.com/rianflo)
+* Michael Saenger, Unbound Technologies, inc., [@abductee_org](http://twitter.com/abductee_org)
 
 ## Status
 
