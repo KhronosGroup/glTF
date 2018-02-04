@@ -21,6 +21,7 @@ This extension defines the metalness-roughness material model from Physically-Ba
 
 ### Example
 ![\[Comparison\]](Figures/vertex_metal_rough_comparison.png)
+
 Left: per-vertex albedo only. Right: per-vertex albedo attributes extended with metalness-roughness
 
 ## glTF Schema Updates
