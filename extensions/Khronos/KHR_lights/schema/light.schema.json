@@ -5,7 +5,6 @@
     "description": "An ambient, hemisphere, directional, point, or spot light.",
     "allOf" : [ { "$ref" : "../../../../specification/2.0/schema/glTFChildOfRootProperty.schema.json" } ],
     "properties": {
-        
         "color": {
             "type": "array",
             "subtype": "number",
@@ -34,7 +33,10 @@
                 "point",
                 "spot"
             ]
-        }
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
     },
     "additionalProperties": false,
     "required": [
