@@ -3,6 +3,7 @@
 The following extension prefixes are reserved:
 
 * `ALI` - Alibaba
+* `AMZN` - Amazon
 * `AVR` - AltspaceVR
 * `BLENDER` - Blender
 * `CESIUM` - Cesium
