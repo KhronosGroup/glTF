@@ -11,6 +11,7 @@
             0,
             0
           ],
+          "name": "Ambient",
           "intensity": 0.25,
           "type": "ambient"
         },
@@ -20,6 +21,7 @@
             0.9,
             0.7
           ],
+          "name": "Directional",
           "intensity": 3.0,
           "type": "directional"
         },
@@ -29,6 +31,7 @@
             0.0,
             0.0
           ],
+          "name": "Point",
           "intensity": 20.0,
           "type": "point"
         },
@@ -38,6 +41,7 @@
             0.7,
             1.0
           ],
+          "name": "Spot",
           "intensity": 40.0,
           "type": "spot",
           "spot": {
