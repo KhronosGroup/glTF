@@ -1,12 +1,16 @@
-
-
-
 # EXT_pbr_attributes
 
-## Contributors
+## Contributors and Acknowledgements
 
-* Florian Hoenig, Unbound Technologies, inc., [@rianflo](http://twitter.com/rianflo)
-* Michael Saenger, Unbound Technologies, inc., [@abductee_org](http://twitter.com/abductee_org)
+* Florian Hoenig, Unbound Technologies, [@rianflo](http://twitter.com/rianflo)
+* Michael Saenger, Unbound Technologies, [@abductee_org](http://twitter.com/abductee_org)
+* Alex Evans, Mediamolecule, [@mmalex](https://twitter.com/mmalex)
+* Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
+* Warren Moore, metalbyexample.com, [@warrenm](https://twitter.com/warrenm)
+* David Farrell, Oculus, [@Nosferalatu](https://twitter.com/Nosferalatu)
+* Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)
+* Ocean Quigley, Facebook, [@oceanquigley](https://twitter.com/oceanquigley)
+* Scott Nagy, Microsoft, [@visageofscott](https://twitter.com/visageofscott)
 
 ## Status
 
@@ -14,7 +18,7 @@ Draft
 
 ## Dependencies
 
-Written against the glTF draft 2.0 spec.
+Written against the glTF 2.0 spec.
 
 ## Overview
 
@@ -39,37 +43,24 @@ Left: per-vertex albedo only. Right: per-vertex albedo attributes extended with 
     "extensionsUsed": [
         "EXT_pbr_attributes"
     ],
-    ...
     "materials": [
         {
             "name": "gold",
             "pbrMetallicRoughness": {
-                "baseColorFactor": [ 1.000, 0.766, 0.336, 1.0 ],
-                "metallicFactor": 1.0,
-                "roughnessFactor": 0.0
+                "baseColorFactor": [1, 1, 1, 1],
+                "metallicFactor" : 1,
+                "roughnessFactor": 1
+            },
+            "extensions" : {
+                "EXT_pbr_attributes" : {
+                    "baseColorAttribSpace" : "sRGB"
+                }
             }
         }
     ],
-    ...
     "meshes": [
         {
             "name": "myMesh_metallic_roughness",
-            "primitives": [
-                {
-                    "material": 0,
-                    "mode": 4,
-                    "attributes": {
-                        "METALLIC_ROUGHNESS": 4,
-                        "COLOR_0": 3,
-                        "NORMAL": 2,
-                        "POSITION": 1
-                    },
-                    "indices": 0
-                }
-            ]
-        },
-        {
-            "name": "myMesh_metallic_roughness_seperate",
             "primitives": [
                 {
                     "material": 0,
@@ -85,7 +76,7 @@ Left: per-vertex albedo only. Right: per-vertex albedo attributes extended with 
                 }
             ]
         },
-		    {
+        {
             "name": "myMesh_roughness_only",
             "primitives": [
                 {
@@ -101,33 +92,45 @@ Left: per-vertex albedo only. Right: per-vertex albedo attributes extended with 
                 }
             ]
         }
-
-    ],
-    ...
-} 
+    ]
+}
 ```
 
 ### JSON Schema
 
-TODO: Links to the JSON schema for the new extension properties.
+
+This extension adds on additional `enum` to the `materials` section. 
+
+[Schema for color space selection](Schema/glTF.EXT_pbr_attributes.schema.json)
+
+This enum provides information about the color space interpretation of the baseColor (COLOR_0) vertex attribute. If not present, `"linear"` is assumed. If color space is sRGB, the implementation is required to convert the color to linear space in order to correctly interpolate via the fixed function pipeline.
 
 ### Attributes
 
-Valid attribute semantic property names include `METALLIC_ROUGHNESS`, `METALLIC`, `ROUGHNES`.
-Valid accessor type and component type for each attribute semantic property are defined below.
+Valid attribute semantic property names include `METALLIC`, `ROUGHNESS`.
+Valid accessor type and component type for each attribute semantic property are defined below:
 
 |Name|Accessor Type(s)|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
-|`METALLIC_ROUGHNESS`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|XY Comined PBR Parameters where *x* is PBR Metallic Material Parameter and *y* is PBR Roughness Material Parameter|
 |`METALLIC`|`"SCALAR"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|PBR Metallic Material Parameter|
 |`ROUGHNESS`|`"SCALAR"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|PBR Roughness Material Parameter|
 
-If one or more of the attributes are present the replace the respective   "metallicFactor" and "roughnessFactor" of the pbrMetallicRoughness material.
+If one or more of the attributes are present they must be multiplied with the respective "metallicFactor" and "roughnessFactor" of the pbrMetallicRoughness material.
+If a metallicRoughnessTexture texture is defined in the referenced material, an implementation must multiply the texture values with both attribute value and constant factor.
 
+## Best Practices
+
+The primary motivation of this extension is to allow PBR materials to be represented primarily by vertex attributes.
+For this use case, it is recommended to set both "metallicFactor" and "roughnessFactor" to 1.0. Both factors can be then interpreted and used as a global "knob" for artistic control.
+Loaders should pay attention to floating point precision such that 1.0 is exactly represented.
+
+If an exporter implementation chooses to add a metallicRoughnessTexture, the texture values take semantic precedence with regards to being linear shading parameters and the attribute values are interpreted as a factor.
+Such configurations are defined for consistency with base color, but are not recommended.
 
 ## Known Implementations
 
-Unbound from 0.2.7 onwards supports glTF 2.0 export with optional EXT_pbr_attributes 
+* Unbound from 0.2.7 onwards supports glTF 2.0 export with optional EXT_pbr_attributes 
+* [TODO: add list]
 
 ## Resources
 
