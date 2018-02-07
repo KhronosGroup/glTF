@@ -45,7 +45,7 @@ Left: per-vertex albedo only. Right: per-vertex albedo attributes extended with 
     ],
     "materials": [
         {
-            "name": "gold",
+            "name": "vertexPBRMat",
             "pbrMetallicRoughness": {
                 "baseColorFactor": [1, 1, 1, 1],
                 "metallicFactor" : 1,
@@ -127,9 +127,16 @@ Loaders should pay attention to floating point precision such that 1.0 is exactl
 If an exporter implementation chooses to add a metallicRoughnessTexture, the texture values take semantic precedence with regards to being linear shading parameters and the attribute values are interpreted as a factor.
 Such configurations are defined for consistency with base color, but are not recommended.
 
+### Caveats with regards to Core
+`EXT_pbr_attributes` is generally best placed in `"extensionsUsed"`.
+In case of an implementation not supporting this extension, the resulting fallback will be a vertex-colored result. If material roughness and metalness factors were set to 1.0 as recommended, the fallback will result in a fully rough and fully metallic surface.
+If sRGB was used for COLOR_0, the resulting color space and interpolation will be off.
+
+Implementations concerned with these potentially undesirable results, maybe choose to add the extension to `"extensionsRequired"`.
+
 ## Known Implementations
 
-* Unbound from 0.2.7 onwards supports glTF 2.0 export with optional EXT_pbr_attributes 
+* Unbound from 0.2.6 onwards supports glTF 2.0 export with optional EXT_pbr_attributes 
 * [TODO: add list]
 
 ## Resources
