@@ -1563,8 +1563,8 @@ The start and the end of each chunk must be aligned to 4-byte boundary. See chun
 | 1. | 0x4E4F534A | JSON | Structured JSON content | 1 |
 | 2. | 0x004E4942 | BIN | Binary buffer | 0 or 1 |
 
- Client implementations must ignore chunks with unknown types.
- 
+Client implementations must ignore chunks with unknown types to enable glTF extensions to reference additional chunks with new types following the first two chunks.
+
 #### Structured JSON Content
 
 This chunk holds the structured glTF content description, as it would be provided within a .gltf file.
@@ -1578,6 +1578,8 @@ This chunk must be padded with trailing `Space` chars (`0x20`) to satisfy alignm
 #### Binary buffer
 
 This chunk contains the binary payload for geometry, animation key frames, skins, and images. See glTF specification for details on referencing this chunk from JSON.
+
+This chunk must be the second chunk of the Binary glTF asset.
 
 This chunk must be padded with trailing zeros (`0x00`) to satisfy alignment requirements.
 
