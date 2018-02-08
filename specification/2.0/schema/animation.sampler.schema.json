@@ -24,10 +24,6 @@
                     "description": "The animated values remain constant to the output of the first keyframe, until the next keyframe. The number of output elements must equal the number of input elements."
                 },
                 {
-                    "enum": [ "CATMULLROMSPLINE" ],
-                    "description": "The animation's interpolation is computed using a uniform Catmull-Rom spline. The number of output elements must equal two more than the number of input elements. The first and last output elements represent the start and end tangents of the spline. There must be at least four keyframes when using this interpolation."
-                },
-                {
                     "enum": [ "CUBICSPLINE" ],
                     "description": "The animation's interpolation is computed using a cubic spline with specified tangents. The number of output elements must equal three times the number of input elements. For each input element, the output stores three elements, an in-tangent, a spline vertex, and an out-tangent. There must be at least two keyframes when using this interpolation."
                 },
@@ -39,7 +35,7 @@
         "output": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The index of an accessor, containing keyframe output values.",
-            "gltf_detailedDescription": "The index of an accessor containing keyframe output values. When targeting TRS target, the `accessor.componentType` of the output values must be `FLOAT`. When targeting morph weights, the `accessor.componentType` of the output values must be `FLOAT` or normalized integer where each output element stores values with a count equal to the number of morph targets."
+            "gltf_detailedDescription": "The index of an accessor containing keyframe output values. When targeting translation or scale paths, the `accessor.componentType` of the output values must be `FLOAT`. When targeting rotation or morph weights, the `accessor.componentType` of the output values must be `FLOAT` or normalized integer. For weights, each output element stores `SCALAR` values with a count equal to the number of morph targets."
         },
         "extensions": { },
         "extras": { }

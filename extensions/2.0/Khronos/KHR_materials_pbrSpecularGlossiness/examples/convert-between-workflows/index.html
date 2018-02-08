@@ -1,0 +1,663 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>glTF PBR Example</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <style>
+            body {
+                color: #222;
+                font-family: sans-serif;
+                font-size:16pt;      
+                text-align:center;
+                background: linear-gradient(#AAA, #666);
+                margin: 0px;
+                overflow: hidden;
+            }
+
+            #info {
+                font-weight: bold;
+                position: absolute;
+                width: 200px;
+                padding: 8px;
+                top: 8px;
+                left: calc(50% - 104px);
+                color: #444;
+                background: rgba(255,255,255,0.8);
+                box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.4);
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="container"></div>
+        <div id="info">glTF PBR Example</div>
+
+        <!-- Three.JS Core -->
+        <script src="js/three.min.js"></script>
+
+        <!-- Three.JS Additions -->
+        <script src="js/three.colorExtensions.js"></script>
+        <script src="js/three.pbrUtilities.js"></script>
+
+        <!-- Additional Utils -->
+        <script src="js/dat.gui.min.js"></script>
+
+        <script id="fragmentShaderSpecularGlossiness" type="x-shader/x-fragment">
+            precision highp float;
+
+            uniform vec4  diffuseFactor;
+            uniform vec3  specularFactor;
+            uniform float glossinessFactor;
+
+            vec4 getDiffuseColor()
+            {
+                float specularStrength = max( max( specularFactor.r, specularFactor.g ), specularFactor.b );
+                return vec4( vec3( diffuseFactor ) * ( 1.0 - specularStrength ), diffuseFactor.a );
+            }
+
+            float getSpecularRoughness()
+            {
+                return clamp( 1.0 - glossinessFactor, 0.04, 1.0 );
+            }
+
+            vec3 getSpecularColor()
+            {
+                return specularFactor;
+            }
+        </script>
+
+        <script id="fragmentShaderMetallicRoughness" type="x-shader/x-fragment">
+            precision highp float;
+
+            uniform vec3  dielectricSpecular;
+            uniform vec4  baseColorFactor;
+            uniform float metallicFactor;
+            uniform float roughnessFactor;
+
+            vec4 getDiffuseColor()
+            {
+                return vec4( vec3( baseColorFactor ) * ( 1.0 - dielectricSpecular.r ) * ( 1.0 - metallicFactor ), baseColorFactor.a );
+            }
+
+            float getSpecularRoughness()
+            {
+                return clamp( roughnessFactor, 0.04, 1.0 );
+            }
+
+            vec3 getSpecularColor()
+            {
+                return mix( dielectricSpecular, vec3( baseColorFactor ), metallicFactor );
+            }
+        </script>
+
+        <script id="fragmentShader" type="x-shader/x-fragment">
+            // Three.js built-in uniforms
+            //uniform mat4 viewMatrix;
+            //uniform vec3 cameraPosition;
+            //uniform float toneMappingExposure;
+            //uniform float toneMappingWhitePoint;            
+
+            uniform samplerCube irrMap;
+            uniform samplerCube envMap;
+
+            varying vec3 vViewPosition;
+            varying vec3 vNormal;
+
+
+            /////////////////////////////////////////////////////////
+            //               CONSTANT DEFINITIONS                  //
+            /////////////////////////////////////////////////////////
+
+            #define PI 3.14159265359
+            #define RECIPROCAL_PI 0.31830988618
+            #define RECIPROCAL_PI2 0.15915494
+            #define EPSILON 1e-6
+
+            #define saturate(a) clamp( a, 0.0, 1.0 )
+
+
+            /////////////////////////////////////////////////////////
+            //                UTILITY DEFINITIONS                  //
+            /////////////////////////////////////////////////////////
+
+            float pow2(const in float x) { return x*x; }
+
+            vec3 inverseTransformDirection(in vec3 dir, in mat4 matrix)
+            {
+                return normalize( ( vec4( dir, 0.0 ) * matrix ).xyz );
+            }
+
+
+            /////////////////////////////////////////////////////////
+            //                    STRUCTURES                       //
+            /////////////////////////////////////////////////////////
+
+            struct IncidentLight
+            {
+                vec3 color;
+                vec3 direction;
+            };
+
+            struct ReflectedLight
+            {
+                vec3 diffuse;
+                vec3 specular;
+            };
+
+            struct GeometricContext
+            {
+                vec3 position;
+                vec3 normal;
+                vec3 viewDir;
+            };
+
+            struct PhysicalMaterial
+            {
+                vec3    diffuseColor;
+                float   specularRoughness;
+                vec3    specularColor;
+            };
+
+
+            /////////////////////////////////////////////////////////
+            //                IRRADIANCE EVALUATION                //
+            /////////////////////////////////////////////////////////
+
+            float GGXRoughnessToBlinnExponent(const in float ggxRoughness)
+            {
+                return (2.0 / pow2(ggxRoughness + 0.0001) - 2.0);
+            }
+
+
+            float getSpecularMIPLevel(const in float blinnShininessExponent, const in int maxMIPLevel)
+            {
+                float maxMIPLevelScalar = float( maxMIPLevel );
+                float desiredMIPLevel = maxMIPLevelScalar - 0.79248 - 0.5 * log2( pow2( blinnShininessExponent ) + 1.0 );
+                return clamp( desiredMIPLevel, 0.0, maxMIPLevelScalar );
+            }
+
+
+            vec3 getLightProbeIndirectRadiance(const in vec3 reflectVec, const in float blinnShininessExponent, const in int maxMIPLevel)
+            {
+                //TODO: a random factor - fix this
+                float mipLevel = 0.5 * getSpecularMIPLevel(blinnShininessExponent, maxMIPLevel);
+                
+                // with Texture LOD extension
+                //vec3 texColor = textureCubeLodEXT(envMap, reflectVec).rgb;
+
+                // without Texture LOD extension
+                vec3 envMapColor = textureCube(envMap, reflectVec, mipLevel).rgb;
+
+                // assumed to be linear
+
+                //for sRGB input, use this line:
+                //return sRGBToLinear(vec4(envMapColor, 1.0)).rgb;
+
+                //linear input
+                return envMapColor;
+            }
+
+
+            /////////////////////////////////////////////////////////
+            //              DIFFUSE BRDF EVALUATION                //
+            /////////////////////////////////////////////////////////
+            
+            vec3 BRDF_Diffuse_Lambert(const in vec3 diffuseColor)
+            {
+                return RECIPROCAL_PI * diffuseColor;
+            }
+
+
+            /////////////////////////////////////////////////////////
+            //             SPECULAR BRDF EVALUATION                //
+            /////////////////////////////////////////////////////////
+
+            vec3 F_Schlick(const in vec3 specularColor, const in float dotLH)
+            {
+                float fresnel = exp2( ( -5.55473 * dotLH - 6.98316 ) * dotLH );
+                return ( 1.0 - specularColor ) * fresnel + specularColor;
+            }
+
+
+            float G_GGX_Smith(const in float alpha, const in float dotNL, const in float dotNV)
+            {
+                float a2 = pow2( alpha );
+                float gl = dotNL + sqrt( a2 + ( 1.0 - a2 ) * pow2( dotNL ) );
+                float gv = dotNV + sqrt( a2 + ( 1.0 - a2 ) * pow2( dotNV ) );
+                return 1.0 / ( gl * gv );
+            }
+
+
+            float G_GGX_SmithCorrelated(const in float alpha, const in float dotNL, const in float dotNV)
+            {
+                float a2 = pow2( alpha );
+                float gv = dotNL * sqrt( a2 + ( 1.0 - a2 ) * pow2( dotNV ) );
+                float gl = dotNV * sqrt( a2 + ( 1.0 - a2 ) * pow2( dotNL ) );
+                return 0.5 / max( gv + gl, EPSILON );
+            }
+
+
+            float D_GGX(const in float alpha, const in float dotNH)
+            {
+                float a2 = pow2( alpha );
+                float denom = pow2( dotNH ) * ( a2 - 1.0 ) + 1.0;
+                return RECIPROCAL_PI * a2 / pow2( denom );
+            }
+
+
+            vec3 BRDF_Specular_GGX(const in IncidentLight incidentLight,
+                                   const in GeometricContext geometry,
+                                   const in vec3 specularColor,
+                                   const in float roughness)
+            {
+                float alpha = pow2( roughness );
+
+                vec3 halfDir = normalize( incidentLight.direction + geometry.viewDir );
+
+                float dotNL = saturate( dot( geometry.normal, incidentLight.direction ) );
+                float dotNV = saturate( dot( geometry.normal, geometry.viewDir ) );
+                float dotNH = saturate( dot( geometry.normal, halfDir ) );
+                float dotLH = saturate( dot( incidentLight.direction, halfDir ) );
+                
+                vec3  F = F_Schlick( specularColor, dotLH );
+                float G = G_GGX_SmithCorrelated( alpha, dotNL, dotNV );
+                float D = D_GGX( alpha, dotNH );
+                
+                return F * (G * D);
+            }
+
+
+            vec3 BRDF_Specular_GGX_Environment(const in GeometricContext geometry,
+                                               const in vec3 specularColor,
+                                               const in float roughness)
+            {
+                float dotNV = saturate(dot(geometry.normal, geometry.viewDir));
+
+                const vec4 c0 = vec4( -1, -0.0275, -0.572,  0.022);
+                const vec4 c1 = vec4(  1,  0.0425,   1.04, -0.04);
+
+                vec4 r = roughness * c0 + c1;
+
+                float a004 = min(r.x * r.x, exp2(-9.28 * dotNV)) * r.x + r.y;
+                vec2 AB    = vec2(-1.04, 1.04) * a004 + r.zw;
+
+                return specularColor * AB.x + AB.y;
+            }
+
+
+            /////////////////////////////////////////////////////////
+            //          MAIN LIGHTING COMPUTATION FUNCTION         //
+            /////////////////////////////////////////////////////////
+
+            void computeLighting(const in GeometricContext geometry,
+                                 const in PhysicalMaterial material,
+                                 inout ReflectedLight reflectedLight)
+            {
+                // diffuse: sample irradiance over the hemisphere from cube map
+
+                vec3 irradiance = textureCube(irrMap, geometry.normal).rgb;
+                irradiance *= PI;
+
+                vec3 diffuseBRDFContrib = BRDF_Diffuse_Lambert(material.diffuseColor);
+
+                reflectedLight.diffuse  = irradiance * diffuseBRDFContrib;
+
+
+                // specular: sample radiance using from the environment map
+
+                vec3 reflectVec = reflect(-geometry.viewDir, geometry.normal);
+                reflectVec      = inverseTransformDirection(reflectVec, viewMatrix);
+
+                float blinnExpFromRoughness = GGXRoughnessToBlinnExponent(material.specularRoughness);
+                vec3 radiance               = getLightProbeIndirectRadiance(reflectVec, blinnExpFromRoughness, 8);
+
+                //TODO: not physically based, but just randomly using mip levels right now
+                vec3 specularBRDFContrib    = BRDF_Specular_GGX_Environment(geometry, material.specularColor, material.specularRoughness);
+
+                reflectedLight.specular     = radiance * specularBRDFContrib;
+            }
+
+
+            /////////////////////////////////////////////////////////
+            //                  MAIN PROGRAM                       //
+            /////////////////////////////////////////////////////////
+
+            void main()
+            {
+                // lighting information is given through our irradiance / radiance maps                
+                // - "uniform samplerCube irrMap" = irradiance cube map for diffuse lighting
+                // - "uniform samplerCube envMap" = radiance cube map for specular reflections
+
+
+                // material definition
+
+                vec4 diffuseColor = getDiffuseColor();
+
+                PhysicalMaterial material;
+                material.diffuseColor      = vec3(diffuseColor);
+                material.specularRoughness = getSpecularRoughness();
+                material.specularColor     = getSpecularColor();
+
+
+                // local geometry definition
+
+                GeometricContext geometry;
+                geometry.position = vViewPosition;
+                geometry.normal   = normalize(vNormal);
+                geometry.viewDir  = normalize(-vViewPosition);
+                
+
+                // lighting computation
+
+                ReflectedLight reflectedLight = ReflectedLight(
+                    vec3( 0.0, 0.0, 0.0 ), //diffuse
+                    vec3( 0.0, 0.0, 0.0 )  //specular
+                );
+
+                computeLighting(geometry, material, reflectedLight);
+            
+                vec3 outgoingLight = reflectedLight.diffuse + reflectedLight.specular;
+
+                gl_FragColor = vec4(outgoingLight, diffuseColor.a);
+
+                gl_FragColor = LinearTosRGB(gl_FragColor);
+            }
+        </script>
+
+
+        <script id="vertexShader" type="x-shader/x-vertex">
+            precision highp float;
+            
+            // Three.js built-in uniforms
+            //attribute vec3 position;
+            //attribute vec3 normal;
+            //attribute vec2 uv;
+            
+            varying vec3 vViewPosition;
+            varying vec3 vNormal;
+
+            mat3 transpose(mat3 m) {
+              return mat3(m[0][0], m[1][0], m[2][0],
+                          m[0][1], m[1][1], m[2][1],
+                          m[0][2], m[1][2], m[2][2]);
+            }
+
+            void main(void)
+            {
+              vec4 pos = modelViewMatrix * vec4(position, 1.0);
+              vNormal  = normalMatrix    * normal;
+
+              vViewPosition = pos.xyz;
+
+              gl_Position = projectionMatrix * pos;
+            }
+        </script>
+
+
+        <script>
+            var Options = function () {
+                var MetallicRoughness = function () {
+                    this.baseColor = "#7f7f7f";
+                    this.opacity = 1;
+                    this.metallic = 0;
+                    this.roughness = 0.5;
+                }
+
+                var SpecularGlossiness = function () {
+                    this.diffuse = "#7f7f7f";
+                    this.opacity = 1;
+                    this.specular = "#0a0a0a";
+                    this.glossiness = 0.5;
+                }
+
+                this.autoUpdate = true;
+                this.metallicRoughness = new MetallicRoughness();
+                this.specularGlossiness = new SpecularGlossiness();
+            }
+
+            var options = new Options();
+            var gui = new dat.GUI();
+
+            var container;
+            var camera, scene, renderer;
+
+            var cubeTexIrr, cubeTexEnv;
+
+            init();
+            animate();
+
+            //
+
+            function init()
+            {
+                gui.add(options, 'autoUpdate');
+
+                var metallicRoughnessFolder = gui.addFolder("Metallic-Roughness");
+                gui.addColor(options.metallicRoughness, 'baseColor').onChange(onMetallicRoughnessChange);
+                gui.add(options.metallicRoughness, 'opacity', 0, 1, 0.001).onChange(onMetallicRoughnessChange);
+                gui.add(options.metallicRoughness, 'metallic', 0, 1, 0.001).onChange(onMetallicRoughnessChange);
+                gui.add(options.metallicRoughness, 'roughness', 0, 1, 0.001).onChange(onMetallicRoughnessChange);
+                metallicRoughnessFolder.open();
+
+                var specularGlossinessFolder = gui.addFolder("Specular-Glossiness");
+                gui.addColor(options.specularGlossiness, 'diffuse').onChange(onSpecularGlossinessChange);
+                gui.add(options.specularGlossiness, 'opacity', 0, 1, 0.001).onChange(onSpecularGlossinessChange);
+                gui.addColor(options.specularGlossiness, 'specular', 0, 1, 0.001).onChange(onSpecularGlossinessChange);
+                gui.add(options.specularGlossiness, 'glossiness', 0, 1, 0.001).onChange(onSpecularGlossinessChange);
+                specularGlossinessFolder.open();
+
+                container = document.getElementById('container');
+
+                camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
+                camera.position.z = 20;
+
+                scene = new THREE.Scene();
+
+                var ctIrr = 'images/Uffizi_Gallery_Irradiance_';
+                var ctEnv = 'images/Uffizi_Gallery_Radiance_';
+
+                var cubeTexURLsIrr = [
+                    ctIrr + "PX.png", ctIrr + "NX.png",
+                    ctIrr + "PY.png", ctIrr + "NY.png",
+                    ctIrr + "PZ.png", ctIrr + "NZ.png"
+                ];
+
+                var cubeTexURLsEnv = [
+                    ctEnv + "PX.png", ctEnv + "NX.png",
+                    ctEnv + "PY.png", ctEnv + "NY.png",
+                    ctEnv + "PZ.png", ctEnv + "NZ.png"
+                ];
+
+                cubeTexIrr = new THREE.CubeTextureLoader().load(cubeTexURLsIrr);
+                cubeTexEnv = new THREE.CubeTextureLoader().load(cubeTexURLsEnv);
+
+                cubeTexEnv.generateMipmaps = true;
+                cubeTexEnv.magFilter = THREE.LinearFilter;
+                cubeTexEnv.minFilter = THREE.LinearMipMapLinearFilter;
+
+                const sphereRadius = 2.0;
+                const sphereSegments = 64;
+                var sphereGeometry = new THREE.SphereGeometry(sphereRadius, sphereSegments, sphereSegments);
+
+                var spheresData = {
+                    "Metallic-Roughness": {
+                        material: "MetallicRoughness",
+                        position: [-sphereRadius * 2, 0, 0],
+                        label: {
+                            position: [-sphereRadius * 2, -sphereRadius * 1.5, 0]
+                        }
+                    },
+                    "Specular-Glossiness": {
+                        material: "SpecularGlossiness",
+                        position: [sphereRadius * 2, 0, 0],
+                        label: {
+                            position: [sphereRadius * 2, -sphereRadius * 1.5, 0]
+                        }
+                    }
+                }
+
+                for (var sphereName in spheresData) {
+                    var sphereData = spheresData[sphereName];
+                    var sphere = new THREE.Mesh(sphereGeometry, createMaterial(sphereData.material));
+                    sphere.name = sphereName;
+                    sphere.position.fromArray(sphereData.position);
+                    scene.add(sphere);
+
+                    var customUniforms = sphere.material.uniforms;
+                    customUniforms['irrMap'] = { value: cubeTexIrr };
+                    customUniforms['envMap'] = { value: cubeTexEnv };
+
+                    var label = makeTextSprite(sphereName, 48);
+                    label.position.fromArray(sphereData.label.position);
+                    scene.add(label);
+                }
+
+                onMetallicRoughnessChange();
+
+                renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                renderer.setPixelRatio(window.devicePixelRatio);
+
+                container.appendChild(renderer.domElement);
+
+                onWindowResize();
+
+                window.addEventListener( 'resize', onWindowResize, false );
+            }
+
+            //
+
+            function onWindowResize( event )
+            {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+
+                renderer.setSize( window.innerWidth, window.innerHeight );
+            }
+
+            //
+
+            function animate()
+            {
+                requestAnimationFrame( animate );
+
+                render();
+            }
+
+            //
+
+            function render()
+            {
+                renderer.render( scene, camera );
+            }
+
+            //
+
+            function onMetallicRoughnessChange() {
+                updateMetallicRoughnessMaterial();
+
+                if (options.autoUpdate) {
+                    updateSpecularGlossinessFromMetallicRoughness();
+                    updateSpecularGlossinessMaterial();
+                    updateGUI();
+                }
+            }
+
+            function onSpecularGlossinessChange() {
+                updateSpecularGlossinessMaterial();
+
+                if (options.autoUpdate) {
+                    updateMetallicRoughnessFromSpecularGlossines();
+                    updateMetallicRoughnessMaterial();
+                    updateGUI();
+                }
+            }
+
+            function updateGUI() {
+                for (var i in gui.__controllers) {
+                    gui.__controllers[i].updateDisplay();
+                }
+            }
+
+            function updateSpecularGlossinessFromMetallicRoughness() {
+                var metallicRoughness = {
+                    baseColor: new THREE.Color(options.metallicRoughness.baseColor),
+                    opacity: options.metallicRoughness.opacity,
+                    metallic: options.metallicRoughness.metallic,
+                    roughness: options.metallicRoughness.roughness
+                };
+
+                var specularGlossiness = THREE.PbrUtilities.ConvertToSpecularGlossiness(metallicRoughness);
+
+                options.specularGlossiness.diffuse = "#" + specularGlossiness.diffuse.getHexString();
+                options.specularGlossiness.opacity = specularGlossiness.opacity;
+                options.specularGlossiness.specular = "#" + specularGlossiness.specular.getHexString();
+                options.specularGlossiness.glossiness = specularGlossiness.glossiness;
+            }
+
+            function updateMetallicRoughnessFromSpecularGlossines() {
+                var specularGlossiness = {
+                    diffuse: new THREE.Color(options.specularGlossiness.diffuse),
+                    opacity: options.specularGlossiness.opacity,
+                    specular: new THREE.Color(options.specularGlossiness.specular),
+                    glossiness: options.specularGlossiness.glossiness
+                };
+
+                var metallicRoughness = THREE.PbrUtilities.ConvertToMetallicRoughness(specularGlossiness);
+
+                options.metallicRoughness.baseColor = "#" + metallicRoughness.baseColor.getHexString();
+                options.metallicRoughness.opacity = metallicRoughness.opacity;
+                options.metallicRoughness.metallic = metallicRoughness.metallic;
+                options.metallicRoughness.roughness = metallicRoughness.roughness;
+            }
+
+            function updateMetallicRoughnessMaterial() {
+                var uniforms = scene.getObjectByName('Metallic-Roughness').material.uniforms;
+                var baseColor = new THREE.Color(options.metallicRoughness.baseColor);
+                uniforms.dielectricSpecular = { value: THREE.PbrUtilities.DielectricSpecular };
+                uniforms.baseColorFactor = { value: new THREE.Vector4(baseColor.r, baseColor.g, baseColor.b, options.metallicRoughness.opacity) };
+                uniforms.metallicFactor = { value: options.metallicRoughness.metallic };
+                uniforms.roughnessFactor = { value: options.metallicRoughness.roughness };
+            }
+
+            function updateSpecularGlossinessMaterial() {
+                var uniforms = scene.getObjectByName('Specular-Glossiness').material.uniforms;
+                var diffuse = new THREE.Color(options.specularGlossiness.diffuse);
+                uniforms.diffuseFactor = { value: new THREE.Vector4(diffuse.r, diffuse.g, diffuse.b, options.specularGlossiness.opacity) };
+                uniforms.specularFactor = { value: new THREE.Color(options.specularGlossiness.specular) };
+                uniforms.glossinessFactor = { value: options.specularGlossiness.glossiness };
+            }
+
+            function createMaterial(workflow) {
+                return new THREE.ShaderMaterial({
+                    vertexShader: document.getElementById('vertexShader').textContent,
+                    fragmentShader: document.getElementById('fragmentShader' + workflow).textContent + document.getElementById('fragmentShader').textContent,
+                    transparent: true
+                });
+            }
+
+            function makeTextSprite(message, fontSize) {
+                var font = fontSize + 'px sans-serif';
+                var canvas = document.createElement('canvas');
+                var context = canvas.getContext('2d');
+
+                context.font = font;
+                canvas.width = context.measureText(message).width;
+                canvas.height = fontSize * 1.4;
+
+                context.font = font;
+                context.fillStyle = 'rgba(0, 0, 0, 1)';
+                context.fillText(message, 0, fontSize);
+
+                var texture = new THREE.Texture(canvas)
+                texture.minFilter = THREE.LinearFilter;
+                texture.needsUpdate = true;
+
+                var spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+                var sprite = new THREE.Sprite(spriteMaterial);
+                sprite.scale.x = canvas.width / canvas.height;
+                return sprite;
+            }
+        </script>
+    </body>
+</html>

@@ -60,7 +60,7 @@
         "wrapS": {
             "description": "s wrapping mode.",
             "default": 10497,
-            "gltf_detailedDescription": "s wrapping mode.  All valid values correspond to WebGL enums.",
+            "gltf_detailedDescription": "S (U) wrapping mode.  All valid values correspond to WebGL enums.",
             "gltf_webgl": "`texParameterf()` with pname equal to TEXTURE_WRAP_S",
             "anyOf": [
                 {
@@ -83,7 +83,7 @@
         "wrapT": {
             "description": "t wrapping mode.",
             "default": 10497,
-            "gltf_detailedDescription": "t wrapping mode.  All valid values correspond to WebGL enums.",
+            "gltf_detailedDescription": "T (V) wrapping mode.  All valid values correspond to WebGL enums.",
             "gltf_webgl": "`texParameterf()` with pname equal to TEXTURE_WRAP_T",
             "anyOf": [
                 {

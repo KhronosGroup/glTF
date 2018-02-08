@@ -1,0 +1,36 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "WEB3D_quantized_attributes accessor extension",
+    "type" : "object",
+    "properties" : {
+         "decodeMatrix" : {
+            "type" : "array",
+            "description" : "A homogenous floating-point transformation matrix stored in column-major order. This matrix is used to decode the compressed, quantized data of this accessor.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 4,
+            "maxItems" : 25
+        },
+        "decodedMax" : {
+            "type" : "array",
+            "description" : "Maximum decoded value of each component in this attribute.",
+            "items" : {
+                "type" : "number"
+            },
+            "minItems" : 1,
+            "maxItems" : 4
+        },
+        "decodedMin" : {
+            "type" : "array",
+            "description" : "Minimum decoded value of each component in this attribute.",
+            "items" : {
+                "type" : "number"
+            },
+            "minItems" : 1,
+            "maxItems" : 4
+        }    
+    },
+    "additionalProperties" : false,
+    "required" : ["decodeMatrix", "decodedMax", "decodedMin"]
+}

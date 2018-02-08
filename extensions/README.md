@@ -3,23 +3,24 @@
 ## Extensions for glTF 2.0
 
 #### Khronos extensions
-* [KHR_materials_pbrSpecularGlossiness](Khronos/KHR_materials_pbrSpecularGlossiness/README.md)
+* [KHR_materials_pbrSpecularGlossiness](2.0/Khronos/KHR_materials_pbrSpecularGlossiness/README.md)
 
 #### Draft Khronos extensions
 _Draft Khronos extensions are not ratified yet._
 * [KHR_draco_mesh_compression](Khronos/KHR_draco_mesh_compression/README.md)
-* [KHR_materials_common](Khronos/KHR_materials_common/README.md)
-* [KHR_technique_webgl](Khronos/KHR_technique_webgl/README.md)
+* KHR_materials_common *(in progress)*
+* KHR_technique_webgl *(in progress)*
 
 ## Extensions for glTF 1.0
 
 #### Khronos extensions
-* [KHR_binary_glTF](Khronos/KHR_binary_glTF/README.md)
+* [KHR_binary_glTF](1.0/Khronos/KHR_binary_glTF/README.md)
+* [KHR_materials_common](1.0/Khronos/KHR_materials_common/README.md)
 
 #### Vendor extensions
 
-* [CESIUM_RTC](Vendor/CESIUM_RTC/README.md)
-* [WEB3D_quantized_attributes](Vendor/WEB3D_quantized_attributes/README.md)
+* [CESIUM_RTC](1.0/Vendor/CESIUM_RTC/README.md)
+* [WEB3D_quantized_attributes](1.0/Vendor/WEB3D_quantized_attributes/README.md)
 
 # About glTF Extensions
 

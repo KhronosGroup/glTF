@@ -1,0 +1,32 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "light",
+    "type" : "object",
+    "description" : "An ambient, directional, point, or spot light.",
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties" : {
+        "ambient" : {
+            "allOf" : [ { "$ref" : "light.ambient.schema.json" } ],
+            "description" : "Ambient light source."
+        },
+        "directional" : {
+            "allOf" : [ { "$ref" : "light.directional.schema.json" } ],
+            "description" : "Directional light source."
+        },
+        "point" : {
+            "allOf" : [ { "$ref" : "light.point.schema.json" } ],
+            "description" : "Point light source."
+        },
+        "spot" : {
+            "allOf" : [ { "$ref" : "light.spot.schema.json" } ],
+            "description" : "Spot light source."
+        },
+        "type" : {
+            "type" : "string",
+            "description" : "Specifies the light type.",
+            "enum" : ["ambient", "directional", "point", "spot"]
+        }
+    },
+    "additionalProperties" : false,
+    "required" : ["type"]
+}

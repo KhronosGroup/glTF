@@ -1,0 +1,12 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "KHR_materials_common node extension",
+    "type" : "object",
+    "properties" : {
+        "light" : {
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The id of the light referenced by this node."
+        }
+    },
+    "additionalProperties" : false
+}

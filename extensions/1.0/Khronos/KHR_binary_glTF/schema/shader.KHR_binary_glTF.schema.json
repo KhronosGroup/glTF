@@ -1,0 +1,14 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "KHR_binary_glTF shader extension",
+    "type" : "object",
+    "properties" : {
+        "bufferView" : {
+            "type" : "string",
+            "description" : "The id (JSON property name) of the buffer-view that references the shader source. Use this instead of the shader's uri property.",
+            "minLength" : 1
+        }
+    },
+    "additionalProperties" : false,
+    "required" : ["bufferView"]
+}

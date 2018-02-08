@@ -1,0 +1,19 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "CESIUM_RTC",
+    "type" : "object",
+    "description" : "glTF CESIUM_RTC extension.",
+    "properties" : {
+        "center" : {
+            "type" : "array",
+            "description" : "Center that vertex positions are relative to.",
+            "items" : {
+                "type" : "number"
+            },
+            "minItems" : 3,
+            "maxItems" : 3
+        }
+    },
+    "additionalProperties" : false,
+    "required" : ["center"]
+}

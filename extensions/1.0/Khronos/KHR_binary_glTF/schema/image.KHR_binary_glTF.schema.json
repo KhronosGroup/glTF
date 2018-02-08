@@ -1,0 +1,29 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "KHR_binary_glTF image extension",
+    "type" : "object",
+    "properties" : {
+        "bufferView" : {
+            "type" : "string",
+            "description" : "The id (JSON property name) of the buffer-view that references the image. Use this instead of the image's uri property.",
+            "minLength" : 1
+        },
+        "mimeType" : {
+            "type" : "string",
+            "description" : "The image's MIME type.",
+            "minLength" : 1
+        },
+        "width" : {
+            "type" : "integer",
+            "description" : "The width of the image in pixels.",
+            "minimum" : 0
+        },
+        "height" : {
+            "type" : "integer",
+            "description" : "The height of the image in pixels.",
+            "minimum" : 0
+        }
+    },
+    "additionalProperties" : false,
+    "required" : ["bufferView", "mimeType", "width", "height"]
+}

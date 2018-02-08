@@ -1,0 +1,47 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "light/spot",
+    "type" : "object",
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties" : {
+        "color" : {
+            "type" : "array",
+            "description" : "RGB color of the light source.",
+            "items" : {
+                "type": "number",
+                "minimum" : 0.0,
+                "maximum" : 1.0
+            },
+            "minItems" : 3,
+            "maxItems" : 3,
+            "default" : [1.0, 1.0, 1.0],
+            "gltf_detailedDescription" : "RGB color of the light source.  Each element is floating-point between 0.0 and 1.0.  Element 0 corresponds to R, 1 to G, and 2 to B."
+        },
+        "constantAttenuation" : {
+            "type" : "number",
+            "description" : "Constant attenuation factor.",
+            "default" : 1.0
+        },
+        "fallOffAngle" : {
+            "type" : "number",
+            "description" : "Fall off angle in radians.",
+            "default" : 3.14159265
+        },
+        "fallOffExponent" : {
+            "type" : "number",
+            "description" : "Fall off exponent.",
+            "default" : 0.0
+        },
+        "linearAttenuation" : {
+            "type" : "number",
+            "description" : "Linear attenuation factor.",
+            "default" : 0.0
+        },
+        "quadraticAttenuation" : {
+            "type" : "number",
+            "description" : "Quadratic attenuation factor.",
+            "default" : 0.0
+        }
+    },
+    "additionalProperties" : false
+}
