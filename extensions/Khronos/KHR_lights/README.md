@@ -20,7 +20,7 @@ This extension defines a set of lights for use with glTF 2.0.
 
 Many 3D tools and engines support built-in implementations of light types. Using this extension, tools can export and engines can import these lights. 
 
-This extension defines five light types: `ambient`, `directional`, `point` and `spot`.
+This extension defines four light types: `ambient`, `directional`, `point` and `spot`.
 
 ## Lights
 
