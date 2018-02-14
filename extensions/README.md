@@ -7,7 +7,7 @@
 
 #### Draft Khronos extensions
 _Draft Khronos extensions are not ratified yet._
-* KHR_draco_mesh_compression *(in progress)*
+* [KHR_draco_mesh_compression](Khronos/KHR_draco_mesh_compression/README.md)
 * KHR_materials_common *(in progress)*
 * KHR_technique_webgl *(in progress)*
 
