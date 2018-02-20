@@ -34,17 +34,17 @@ The following picture shows the structure of the schema update.
 ![](figures/structure.png)
 
 The Draco extension points to the `bufferView` that contains the compressed data.
-If the uncompressed version of the asset is not provided, then `KHR_draco_mesh_compression` must be added to `extensionRequired`.
+If the uncompressed version of the asset is not provided, then `KHR_draco_mesh_compression` must be added to `extensionsRequired`.
 ```javascript
 "extensionsRequired" : [
     "KHR_draco_mesh_compression"
 ]
 
 ```
-If the `KHR_draco_mesh_compression` property is set in `extensionRequired` then the primitive must only contain the Draco compressed data.
-If a Draco compressed version of the asset is provided then `KHR_draco_mesh_compression` must be added to `extensionUsed`.
+If the `KHR_draco_mesh_compression` property is set in `extensionsRequired` then the primitive must only contain the Draco compressed data.
+If a Draco compressed version of the asset is provided then `KHR_draco_mesh_compression` must be added to `extensionsUsed`.
 
-Usage of the extension must be listed in the `extensionUsed`. 
+Usage of the extension must be listed in the `extensionsUsed`. 
 
 ```javascript
 "extensionsUsed" : [
@@ -116,8 +116,8 @@ For full details on the `KHR_draco_mesh_compression` extension properties, see t
 
 Below is the recommended process when a loader encounters a glTF asset with the Draco extension set:
 
-* If `KHR_draco_mesh_compression` is in `extensionRequired` and the loader does not support the Draco extension, then the loader must fail loading the asset.
-* If the loader does not support the Draco extension and `KHR_draco_mesh_compression` is not in `extensionRequired`, then load the glTF asset ignoring `KHR_draco_mesh_compression` in `primitive`.
+* If `KHR_draco_mesh_compression` is in `extensionsRequired` and the loader does not support the Draco extension, then the loader must fail loading the asset.
+* If the loader does not support the Draco extension and `KHR_draco_mesh_compression` is not in `extensionsRequired`, then load the glTF asset ignoring `KHR_draco_mesh_compression` in `primitive`.
 * If the loader does support the Draco extension, but will not process `KHR_draco_mesh_compression`, then the loader must load the glTF asset ignoring `KHR_draco_mesh_compression` in `primitive`.
 * If the loader does support the Draco extension, and will process `KHR_draco_mesh_compression` then:
     * The loader must process `KHR_draco_mesh_compression` first. The loader must get the data from `KHR_draco_mesh_compression`'s `bufferView` property and decompress the data using a Draco decoder to a Draco geometry.
