@@ -19,7 +19,10 @@ Please provide spec feedback and community updates by submitting [issues](https:
 
 <p align="center">
 <a href="specification/2.0/figures/gltfOverview-2.0.0a.png"><img src="specification/2.0/figures/gltfOverview-2.0.0a-small.png" /></a>
+  <sup>From <a href=https://github.com/javagl/gltfOverview/>github.com/javagl/gltfOverview/</a></sup><br>
+<a href=https://github.com/randall2835/gltfOverviewJapanese/releases/download/v0.1/gltfOverview2.0-Japanese.png>Japanese translation</a> by <a href=https://github.com/randall2835/gltfOverviewJapanese>Takuto Takahashi</a>
 </p>
+
 
 ### For developers
 
