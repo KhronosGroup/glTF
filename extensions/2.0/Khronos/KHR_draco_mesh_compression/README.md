@@ -53,7 +53,7 @@ Usage of the extension must be listed in the `extensionsUsed`.
 
 ```
 
-Below is an example of what a part of a glTF file my look like if the Draco extension is set. Note that all other nodes stay the same except `primitives`:
+Below is an example of what part of a glTF file will look like if the Draco extension is set. Note that all other nodes stay the same except `primitives`:
 
 ```javascript
 
@@ -65,10 +65,10 @@ Below is an example of what a part of a glTF file my look like if the Draco exte
                 "NORMAL" : 12,
                 "TEXCOORD_0" : 13,
                 "WEIGHTS_0" : 14,
-                "JOINTS_0" : 15,
+                "JOINTS_0" : 15
             },
             "indices" : 10,
-            "mode" : 4
+            "mode" : 4,
             "extensions" : {
                 "KHR_draco_mesh_compression" : {
                     "bufferView" : 5,
@@ -78,10 +78,10 @@ Below is an example of what a part of a glTF file my look like if the Draco exte
                         "TEXCOORD_0" : 2,
                         "WEIGHTS_0" : 3,
                         "JOINTS_0" : 4
-                    },
+                    }
                 }
             }
-        },
+        }
     ]
 }
 
@@ -101,7 +101,7 @@ Below is an example of what a part of a glTF file my look like if the Draco exte
 The `bufferView` property points to the buffer containing compressed data. The data must be passed to a mesh decoder and decompressed to a mesh.
 
 ### attributes
-`attributes` defines the attributes stored in the decompressed geometry. E.g, in the example above, `POSITION`, `NORMAL`, `TEXCOORD_0`, `WEIGHTS_0` and `JOINTS_0`. Each attribute is associated with an attribute id which is its unique id in the compressed data. The `attributes` defined in the extension must be a subset of the attributes of the primitive. To request an attribute, loaders must be able to use the correspondent attribute id specified in the `attributes` to get the attribute from the compressed data.
+`attributes` defines the attributes stored in the decompressed geometry. e.g., in the example above, `POSITION`, `NORMAL`, `TEXCOORD_0`, `WEIGHTS_0` and `JOINTS_0`. Each attribute is associated with an attribute id which is its unique id in the compressed data. The `attributes` defined in the extension must be a subset of the attributes of the primitive. To request an attribute, loaders must be able to use the correspondent attribute id specified in the `attributes` to get the attribute from the compressed data.
 
 #### Restrictions on geometry type
 When using this extension, the `mode` of `primitive` must be either `TRIANGLES` or `TRIANGLE_STRIP` and the mesh data will be decoded accordingly.
