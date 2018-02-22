@@ -20,6 +20,7 @@ Khronos 3D Formats Working Group and Alumni
 * Remi Arnaud, Starbreeze Studios
 * Emiliano Gambaretto, Adobe
 * Gary Hsu, Microsoft
+* Max Limper, Fraunhofer IGD
 * Scott Nagy, Microsoft
 * Marco Hutter, Individual Contributor
 * Uli Klumpp, Individual Contributor
@@ -3801,7 +3802,6 @@ Application-specific data.
 * Scott Hunter, Analytical Graphics, Inc.
 * Brandon Jones, Google
 * Sean Lilley, Cesium
-* Max Limper, Fraunhofer IGD
 * Juan Linietsky, Godot Engine
 * Matthew McMullan
 * Mohamad Moneimne, University of Pennsylvania
