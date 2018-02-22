@@ -7,13 +7,18 @@
     "properties" : {
         "offset": {
             "type": "array",
-            "description": "The offset of the UV coordinate origin as a percentage of the texture dimensions.",
+            "description": "The offset of the UV coordinate origin as a factor of the texture dimensions.",
             "items": {
                 "type": "number"
             },
             "minItems": 2,
             "maxItems": 2,
             "default": [ 0.0, 0.0 ]
+        },
+        "rotation": {
+            "type": "number",
+            "description": "Rotate the UVs by this many radians counter-clockwise around the origin.",
+            "default": 0.0
         },
         "scale": {
             "type": "array",
@@ -27,7 +32,7 @@
         },
         "texCoord": {
             "type": "integer",
-            "description": "Overrides the textureInfo texCoord value if this extension is supported.",
+            "description": "Overrides the textureInfo texCoord value if supplied, and if this extension is supported.",
             "minimum": 0
         },
         "extensions": { },
