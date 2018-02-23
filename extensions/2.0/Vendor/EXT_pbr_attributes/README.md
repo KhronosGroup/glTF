@@ -11,6 +11,7 @@
 * Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)
 * Ocean Quigley, Facebook, [@oceanquigley](https://twitter.com/oceanquigley)
 * Scott Nagy, Microsoft, [@visageofscott](https://twitter.com/visageofscott)
+* Milan Bulat, Foundry, [@speedy_milan](https://twitter.com/speedy_milan)
 
 ## Status
 
@@ -22,7 +23,9 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension defines the metalness-roughness material model from Physically-Based Rendering (PBR) as a per vertex attribute. These additional attributes, together with the already existing albedo (COLOR_0), complete a full PBR workflow representation per vertex.
+This extension improves the definition of metalness-roughness material model from Physically-Based Rendering (PBR), by adding additional PBR material parameters, which reference per vertex attributes. These additional material parameters, allow for a full per vertex PBR workflow representation.
+
+Propsed material property to mesh attribute referencing allows DCC applications to save multiple materials for a single mesh into a glTF file, which then allows real-time engines to switch / blend between them at run-time. It also allows DCC applications to use glTF as a storage format, used for saving and loading artist defined shading configurations, while minimizing data loss and/or shading configuration change / conversion over multiple save and load cycle(s).
 
 ### Example
 ![\[Comparison\]](Figures/vertex_metal_rough_comparison.png)
@@ -45,46 +48,51 @@ Left: per-vertex albedo only. Right: per-vertex albedo attributes extended with 
     ],
     "materials": [
         {
-            "name": "vertexPBRMat",
+            "name": "game_asset_brand_new",
             "pbrMetallicRoughness": {
                 "baseColorFactor": [1, 1, 1, 1],
                 "metallicFactor" : 1,
-                "roughnessFactor": 1
+                "roughnessFactor": 0
             },
             "extensions" : {
                 "EXT_pbr_attributes" : {
-                    "baseColorAttribSpace" : "sRGB"
+                    "attribSpace" : "sRGB",
+                    "baseColorAttrib" : "_BASECOLOR_BRAND_NEW",
+                    "roughnessAttrib" : "_ROUGHNESS_BRAND_NEW",
+                    "metallicAttrib" : "METALLIC",
                 }
             }
-        }
+        },
+        {
+            "name": "game_asset_worn_out",
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [0.8, 0.8, 0.8, 1],
+                "metallicFactor" : 1,
+                "roughnessFactor": 0.8
+            },
+            "extensions" : {
+                "EXT_pbr_attributes" : {
+                    "attribSpace" : "sRGB",
+                    "baseColorAttrib" : "_BASECOLOR_WORN_OUT",
+                    "roughnessAttrib" : "_ROUGHNESS_WORN_OUT",
+                    "metallicAttrib" : "METALLIC",
+                }
+            }
+        }       
     ],
     "meshes": [
         {
-            "name": "myMesh_metallic_roughness",
+            "name": "game_asset_1",
             "primitives": [
                 {
                     "material": 0,
                     "mode": 4,
                     "attributes": {
-                        "ROUGHNESS": 4,
+                        "_BASECOLOR_WORN_OUT": 7,
+                        "_ROUGHNESS_WORN_OUT": 6,
                         "METALLIC": 5,
-                        "COLOR_0": 3,
-                        "NORMAL": 2,
-                        "POSITION": 1
-                    },
-                    "indices": 0
-                }
-            ]
-        },
-        {
-            "name": "myMesh_roughness_only",
-            "primitives": [
-                {
-                    "material": 0,
-                    "mode": 4,
-                    "attributes": {
-                        "ROUGHNESS": 4,
-                        "COLOR_0": 3,
+                        "_ROUGHNESS_BRAND_NEW": 4,
+                        "_BASECOLOR_BRAND_NEW": 3,
                         "NORMAL": 2,
                         "POSITION": 1
                     },
@@ -103,7 +111,11 @@ This extension adds on additional `enum` to the `materials` section.
 
 [Schema for color space selection](Schema/glTF.EXT_pbr_attributes.schema.json)
 
-This enum provides information about the color space interpretation of the baseColor (COLOR_0) vertex attribute. If not present, `"linear"` is assumed. If color space is sRGB, the implementation is required to convert the color to linear space in order to correctly interpolate via the fixed function pipeline.
+This enum provides information about the color space interpretation of the  vertex attributes used. If not present, `"linear"` is assumed. If color space is "sRGB", the implementation is required to convert the color to linear space in order to correctly interpolate via the fixed function pipeline.
+
+If one or more of the attributes are referenced by the material, they must override the respective factor, for example, "roughnessAttrib" overrides "roughnessFactor" of the pbrMetallicRoughness material.
+
+If a relevant texture (for example, metallicRoughnessTexture) is defined in the material, an implementation must multiply the texture values with both attribute value and constant factor.
 
 ### Attributes
 
@@ -114,13 +126,13 @@ Valid accessor type and component type for each attribute semantic property are 
 |----|----------------|-----------------|-----------|
 |`METALLIC`|`"SCALAR"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|PBR Metallic Material Parameter|
 |`ROUGHNESS`|`"SCALAR"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|PBR Roughness Material Parameter|
-
-If one or more of the attributes are present they must replace the respective "metallicFactor" and "roughnessFactor" of the pbrMetallicRoughness material.
-If a metallicRoughnessTexture texture is defined in the referenced material, an implementation must multiply the texture values with both attribute value and constant factor.
+ 
+This extension allows user defined attributes (prefixed with "_") to be used instead of the default ones. User defined attributes need to adhere to the  same type limitations as specified in the above table.
 
 ## Best Practices
 
-The primary motivation of this extension is to allow PBR materials to be represented primarily by vertex attributes. For this use case, both "metallicFactor" and "roughnessFactor" in the material should be set to desired fallback values. Loaders should pay attention to floating point precision such that 1.0 is exactly represented.
+The primary motivation of this extension is to allow PBR materials to be represented by additional vertex based material parameters.
+For this use case, it is recommended to set both "metallicFactor" and "roughnessFactor" to fallback values.
 
 If an exporter implementation chooses to add a metallicRoughnessTexture, the texture values take semantic precedence with regards to being linear shading parameters and the attribute values are interpreted as a factor.
 Such configurations are defined for consistency and flexibility, but are not recommended.
@@ -131,6 +143,13 @@ In case of an implementation not supporting this extension, the resulting fallba
 If sRGB was used for COLOR_0, the resulting color space and interpolation will be off.
 
 Implementations concerned with these potentially undesirable results, maybe choose to add the extension to `"extensionsRequired"`.
+
+For materials which have this extension, to be able to provide for clean separation between meshes and materials, the following two considerations apply:
+
+When COLOR_0 attribute exists in the mesh, and baseColorAttrib is defined, baseColorAttrib has the priority, and automatic usage of COLOR_0 attribute (as per Core specification) is ignored. 
+
+When COLOR_0 attribute exists in the mesh, and baseColorAttrib is not defined, 
+COLOR_0 is again ignored (not automatically applied as per Core specification).
 
 ## Known Implementations
 
