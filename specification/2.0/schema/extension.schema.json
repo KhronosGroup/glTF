@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "extension",
+    "title": "Extension",
     "type": "object",
     "description": "Dictionary object with extension-specific objects.",
     "properties": {

@@ -1,17 +1,17 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "orthographic",
+    "title": "Camera Orthographic",
     "type": "object",
     "description": "An orthographic camera containing properties to create an orthographic projection matrix.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "xmag": {
             "type": "number",
-            "description": "The floating-point horizontal magnification of the view."
+            "description": "The floating-point horizontal magnification of the view. Must not be zero."
         },
         "ymag": {
             "type": "number",
-            "description": "The floating-point vertical magnification of the view."
+            "description": "The floating-point vertical magnification of the view. Must not be zero."
         },
         "zfar": {
             "type": "number",

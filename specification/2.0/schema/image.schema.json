@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "image",
+    "title": "Image",
     "type": "object",
     "description": "Image data used to create a texture. Image can be referenced by URI or `bufferView` index. `mimeType` is required in the latter case.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],

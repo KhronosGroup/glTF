@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "bufferView",
+    "title": "Buffer View",
     "type": "object",
     "description": "A view into a buffer generally representing a subset of the buffer.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],

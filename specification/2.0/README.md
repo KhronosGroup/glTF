@@ -20,6 +20,7 @@ Khronos 3D Formats Working Group and Alumni
 * Remi Arnaud, Starbreeze Studios
 * Emiliano Gambaretto, Adobe
 * Gary Hsu, Microsoft
+* Max Limper, Fraunhofer IGD
 * Scott Nagy, Microsoft
 * Marco Hutter, Individual Contributor
 * Uli Klumpp, Individual Contributor
@@ -120,7 +121,7 @@ glTF assets are JSON files plus supporting external data. Specifically, a glTF a
 
 * A JSON-formatted file (`.gltf`) containing a full scene description: node hierarchy, materials, cameras, as well as descriptor information for meshes, animations, and other constructs
 * Binary files (`.bin`) containing geometry and animation data, and other buffer-based data
-* Image files (`.jpg`, `.png`, etc.) for textures
+* Image files (`.jpg`, `.png`) for textures
 
 Assets defined in other formats, such as images, may be stored in external files referenced via URI, stored side-by-side in GLB container, or embedded directly into the JSON using [data URIs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs).
 
@@ -191,7 +192,7 @@ Client implementations are required to support only embedded resources and relat
 
 <p align="center">
 <img src="figures/dictionary-objects.png" /><br/>
-The top-level arrays in a glTF asset.  See the <a href="#properties">Properties Reference</a>.
+The top-level arrays in a glTF asset.  See the <a href="#properties-reference">Properties Reference</a>.
 </p>
 
 ## Asset
@@ -208,7 +209,7 @@ Each glTF asset must have an `asset` property. In fact, it's the only required t
 }
 ```
 
-> **Implementation Note:** Client implementations should first check whether a `minVersion` property is specified and ensure both major and minor versions can be supported. If no `minVersion` is specified, then clients should check the `version` property and ensure the major version is supported. Clients that load [GLB format](GLB_FORMAT.md) should also check for the `minVersion` and `version` properties in the JSON chunk as the version specified in the GLB header only refers to the GLB container version.
+> **Implementation Note:** Client implementations should first check whether a `minVersion` property is specified and ensure both major and minor versions can be supported. If no `minVersion` is specified, then clients should check the `version` property and ensure the major version is supported. Clients that load [GLB format](#glb-file-format-specification) should also check for the `minVersion` and `version` properties in the JSON chunk as the version specified in the GLB header only refers to the GLB container version.
 
 
 ## Indices and Names
@@ -241,13 +242,22 @@ For property names, glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCas
 
 ## Coordinate System and Units
 
-glTF uses a right-handed coordinate system, that is, the cross product of X and Y yields Z. glTF defines the y axis as up.
+glTF uses a right-handed coordinate system, that is, the cross product of +X and +Y yields +Z. glTF defines +Y as up. The front of a glTF asset faces +Z.
+
+![](figures/coordinate-system.png)
 
 The units for all linear distances are meters.
 
 All angles are in radians.
 
 Positive rotation is counterclockwise.
+
+The [node transformations](#transformations) and [animation channel paths](#animations) are 3D vectors or quaternions with the following data types and semantics:
+
+* translation: A 3D vector containing the translation along the x, y and z axes
+* rotation: A quaternion (x, y, z, w), where w is the scalar
+* scale: A 3D vector containing the scaling factors along the x, y and z axes
+
 
 
 ## Scenes
@@ -450,7 +460,11 @@ Buffers and buffer views do not contain type information. They simply define the
 
 #### GLB-stored Buffer
 
-glTF asset could use GLB file container to pack all resources into one file. glTF Buffer referring to GLB-stored `BIN` chunk, must have `buffer.uri` property undefined, and it must be the first element of `buffers` array. In the following example, the first buffer objects refers to GLB-stored data, while the second points to external resource:
+glTF asset could use GLB file container to pack all resources into one file. glTF Buffer referring to GLB-stored `BIN` chunk, must have `buffer.uri` property undefined, and it must be the first element of `buffers` array; byte length of `BIN` chunk could be up to 3 bytes bigger than JSON-defined `buffer.byteLength` to satisfy GLB padding requirements.
+
+> **Implementation Note:**  Not requiring strict equality of chunk's and buffer's lengths simplifies glTF to GLB conversion a bit: implementations don't need to update `buffer.byteLength` after applying GLB padding.
+
+In the following example, the first buffer objects refers to GLB-stored data, while the second points to external resource:
 
 ```json
 {
@@ -472,7 +486,7 @@ See [GLB File Format Specification](#glb-file-format-specification) for details 
 
 All large data for meshes, skins, and animations is stored in buffers and retrieved via accessors.
 
-An *accessor* defines a method for retrieving data as typed arrays from within a `bufferView`. The accessor specifies a component type (e.g. `5126 (GL_FLOAT)`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the `bufferView` using the properties `byteOffset` and `count`. The latter specifies the number of elements within the `bufferView`, *not* the number of bytes. Elements could be, e.g., vertex indices, vertex attributes, animation keyframes, etc.
+An *accessor* defines a method for retrieving data as typed arrays from within a `bufferView`. The accessor specifies a component type (e.g. `5126 (FLOAT)`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the `bufferView` using the properties `byteOffset` and `count`. The latter specifies the number of elements within the `bufferView`, *not* the number of bytes. Elements could be, e.g., vertex indices, vertex attributes, animation keyframes, etc.
 
 All accessors are stored in the asset's `accessors` array.
 
@@ -517,7 +531,7 @@ The following fragment shows two accessors, the first is a scalar accessor for r
 
 #### Floating-Point Data
 
-Data of `5126 (GL_FLOAT)` componentType must use IEEE-754 single precision format. 
+Data of `5126 (FLOAT)` componentType must use IEEE-754 single precision format. 
 
 Values of `NaN`, `+Infinity`, and `-Infinity` are not allowed.
 
@@ -614,7 +628,7 @@ The following fragment shows an example of `sparse` accessor with 10 elements de
 A sparse accessor differs from a regular one in that `bufferView` property isn't required. When it's omitted, the sparse accessor is initialized as an array of zeros of size `(size of the accessor element) * (accessor.count)` bytes.
 A sparse accessor `min` and `max` properties correspond, respectively, to the minimum and maximum component values once the sparse substitution is applied.
 
-When nor `sparse`, neither `bufferView` is defined, `min` and `max` properties could have any values. This is intended for use cases when binary data is supplied by external means (e.g., via extensions).
+When neither `sparse` nor `bufferView` is defined, `min` and `max` properties could have any values. This is intended for use cases when binary data is supplied by external means (e.g., via extensions).
 
 #### Data Alignment
 
@@ -730,17 +744,19 @@ Valid accessor type and component type for each attribute semantic property are 
 |Name|Accessor Type(s)|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
 |`POSITION`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex positions|
-|`NORMAL`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex normals|
+|`NORMAL`|`"VEC3"`|`5126`&nbsp;(FLOAT)|Normalized XYZ vertex normals|
 |`TANGENT`|`"VEC4"`|`5126`&nbsp;(FLOAT)|XYZW vertex tangents where the *w* component is a sign value (-1 or +1) indicating handedness of the tangent basis|
-|`TEXCOORD_0`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the first set|
-|`TEXCOORD_1`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the second set|
-|`COLOR_0`|`"VEC3"`<br>`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|RGB or RGBA vertex color|
-|`JOINTS_0`|`"VEC4"`|`5120`&nbsp;(UNSIGNED_BYTE)<br>`5123`&nbsp;(UNSIGNED_SHORT)|See [Skinned Mesh Attributes](#skinned-mesh-attributes)|
-|`WEIGHTS_0`|`"VEC4`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|See [Skinned Mesh Attributes](#skinned-mesh-attributes)|
+|`TEXCOORD_0`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the first set|
+|`TEXCOORD_1`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the second set|
+|`COLOR_0`|`"VEC3"`<br>`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|RGB or RGBA vertex color|
+|`JOINTS_0`|`"VEC4"`|`5121`&nbsp;(UNSIGNED_BYTE)<br>`5123`&nbsp;(UNSIGNED_SHORT)|See [Skinned Mesh Attributes](#skinned-mesh-attributes)|
+|`WEIGHTS_0`|`"VEC4`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|See [Skinned Mesh Attributes](#skinned-mesh-attributes)|
 
 `POSITION` accessor **must** have `min` and `max` properties defined.
 
 `TEXCOORD`, `COLOR`, `JOINTS`, and `WEIGHTS` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. Client implementations must support at least two UV texture coordinate sets, one vertex color, and one joints/weights set. Extensions can add additional property names, accessor types, and/or accessor component types.
+
+All indices for indexed attribute semantics, must start with 0 and be continuous: `TEXCOORD_0`, `TEXCOORD_1`, etc.
 
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
 
@@ -751,7 +767,7 @@ Valid accessor type and component type for each attribute semantic property are 
 > **Implementation note:** When normals and tangents are specified, client implementations should compute the bitangent by taking the cross product of the normal and tangent xyz vectors and multiplying against the w component of the tangent: `bitangent = cross(normal, tangent.xyz) * tangent.w`
 
 > **Implementation note:** When the 'mode' property is set to a non-triangular type (such as POINTS or LINES) some additional considerations must be taken while considering the proper rendering technique:
-> > For LINES with with `NORMAL` and `TANGENT` properties can render with standard lighting including normal maps.
+> > For LINES with `NORMAL` and `TANGENT` properties can render with standard lighting including normal maps.
 > > 
 > > For all POINTS or LINES with no `TANGENT` property, render with standard lighting but ignore any normal maps on the material.
 > > 
@@ -880,7 +896,11 @@ The joint hierarchy used for controlling skinned mesh pose is simply the glTF no
 
 **TODO: object-space VS world-space joints**
 
-For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-0.2.0.png).
+For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-2.0.0a.png).
+
+> **Implementation Note:** A node definition does not specify whether the node should be treated as a joint. Client implementations may wish to traverse the `skins` array first, marking each joint node.
+
+> **Implementation Note:** A joint may have regular nodes attached to it, even a complete node sub graph with meshes. It's often used to have an entire geometry attached to a joint without having it being skinned by the joint. (ie. a sword attached to a hand joint). Note that the node transform are the local transform of the node relative to the joint, like any other node in the glTF node hierarchy as describe in the [Transformation](#transformations) section.
 
 ### Instantiation
 
@@ -1011,9 +1031,11 @@ The following example shows an image pointing to an external PNG image file and 
 ```
 > **Implementation Note:** When image data is provided by `uri` and `mimeType` is defined, client implementations should prefer JSON-defined MIME Type over one provided by transport layer.
 
-First image pixel (UV coordinates origin) corresponds to the upper left corner of the image.
-
-> **Implementation Note:** OpenGL-based implementations must flip Y axis to achieve correct texture sampling.
+The origin of the UV coordinates (0, 0) corresponds to the upper left corner of a texture image.
+This is illustrated in the following figure, where the respective UV coordinates are shown for all four corners of a normalized UV space:
+<p align="center">
+<img src="figures/texcoords.jpg" /><br/>
+</p>
 
 Any colorspace information (such as ICC profiles, intents, etc) from PNG or JPEG containers must be ignored.
 
@@ -1021,7 +1043,7 @@ Any colorspace information (such as ICC profiles, intents, etc) from PNG or JPEG
 
 ### Samplers
 
-Samplers are stored in the `samplers` array of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
+Samplers are stored in the `samplers` array of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S (U) and T (V).
 
 
 ```json
@@ -1246,6 +1268,8 @@ glTF 2.0 also supports animation of instantiated Morph Targets in a similar fash
 
 > **Note:** glTF 2.0 defines only animation storage, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc...
 
+> **Implementation Note:** glTF 2.0 does not specifically define how an animation will be used when imported but, as a best practice, it is recommended that each animation is self contained as an action. For example, "Walk" and "Run" animations might each contain multiple channels targeting a model's various bones. The client implementation may choose when to play any of the available animations.
+
 All animations are stored in the `animations` array of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
 
 The following examples show expected animations usage.
@@ -1392,7 +1416,7 @@ The following examples show expected animations usage.
 
 When `node` isn't defined, channel should be ignored. Valid path names are `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
 
-Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating point scalar values representing time in seconds; and a set of vectors or scalars representing animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, `CATMULLROMSPLINE`, and `CUBICSPLINE`. See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
+Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating point scalar values representing linear time in seconds; and a set of vectors or scalars representing animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, and `CUBICSPLINE`. See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
 
 |`channel.path`|Accessor Type|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
@@ -1411,6 +1435,8 @@ Implementations must use following equations to get corresponding floating-point
 | `5123`&nbsp;(UNSIGNED_SHORT)|`f = c / 65535.0`|`c = round(f * 65535.0)`|
 
 Animation Sampler's `input` accessor **must** have `min` and `max` properties defined.
+
+> **Implementation Note:** Animations with non-linear time inputs, such as time warps in Autodesk 3ds Max or Maya, are not directly representable with glTF animations. glTF is a runtime format and non-linear time inputs are expensive to compute at runtime. Exporter implementations should sample a non-linear time animation into linear inputs and outputs for an accurate representation.
 
 A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation.
 
@@ -1455,7 +1481,9 @@ All glTF extensions required to load and/or render an asset must be listed in th
 }
 ```
 
-For more information on glTF extensions, consult the [extensions registry specification](../extensions/README.md).
+`extensionsRequired` is a subset of `extensionsUsed`. All values in `extensionsRequired` must also exist in `extensionsUsed`.
+
+For more information on glTF extensions, consult the [extensions registry specification](../../extensions/README.md).
 
 # GLB File Format Specification
 
@@ -1510,7 +1538,7 @@ uint32 length
 
 * `length` is the total length of the Binary glTF, including Header and all Chunks, in bytes.
 
-> **Implementation Note:** Client implementations that load GLB format should also check for the [asset version properties](readme.md#asset) in the JSON chunk, as the version specified in the GLB header only refers to the GLB container version.
+> **Implementation Note:** Client implementations that load GLB format should also check for the [asset version properties](#asset) in the JSON chunk, as the version specified in the GLB header only refers to the GLB container version.
 
 ### Chunks
 
@@ -1536,8 +1564,8 @@ The start and the end of each chunk must be aligned to 4-byte boundary. See chun
 | 1. | 0x4E4F534A | JSON | Structured JSON content | 1 |
 | 2. | 0x004E4942 | BIN | Binary buffer | 0 or 1 |
 
- Client implementations must ignore chunks with unknown types.
- 
+Client implementations must ignore chunks with unknown types to enable glTF extensions to reference additional chunks with new types following the first two chunks.
+
 #### Structured JSON Content
 
 This chunk holds the structured glTF content description, as it would be provided within a .gltf file.
@@ -1551,6 +1579,8 @@ This chunk must be padded with trailing `Space` chars (`0x20`) to satisfy alignm
 #### Binary buffer
 
 This chunk contains the binary payload for geometry, animation key frames, skins, and images. See glTF specification for details on referencing this chunk from JSON.
+
+This chunk must be the second chunk of the Binary glTF asset.
 
 This chunk must be padded with trailing zeros (`0x00`) to satisfy alignment requirements.
 
@@ -1825,7 +1855,6 @@ Interpolation algorithm.
 * **Allowed values**:
    * `"LINEAR"` The animated values are linearly interpolated between keyframes. When targeting a rotation, spherical linear interpolation (slerp) should be used to interpolate quaternions. The number output of elements must equal the number of input elements.
    * `"STEP"` The animated values remain constant to the output of the first keyframe, until the next keyframe. The number of output elements must equal the number of input elements.
-   * `"CATMULLROMSPLINE"` The animation's interpolation is computed using a uniform Catmull-Rom spline. The number of output elements must equal two more than the number of input elements. The first and last output elements represent the start and end tangents of the spline. There must be at least four keyframes when using this interpolation.
    * `"CUBICSPLINE"` The animation's interpolation is computed using a cubic spline with specified tangents. The number of output elements must equal three times the number of input elements. For each input element, the output stores three elements, an in-tangent, a spline vertex, and an out-tangent. There must be at least two keyframes when using this interpolation.
 
 #### animation sampler.output :white_check_mark: 
@@ -2232,7 +2261,7 @@ The root object for a glTF asset.
 |**extensionsRequired**|`string` `[1-*]`|Names of glTF extensions required to properly load this asset.|No|
 |**accessors**|accessor `[1-*]`|An array of accessors.|No|
 |**animations**|animation `[1-*]`|An array of keyframe animations.|No|
-|**asset**|`object`|Metadata about the glTF asset.|No|
+|**asset**|`object`|Metadata about the glTF asset.|Yes|
 |**buffers**|buffer `[1-*]`|An array of buffers.|No|
 |**bufferViews**|bufferView `[1-*]`|An array of bufferViews.|No|
 |**cameras**|camera `[1-*]`|An array of cameras.|No|
@@ -2250,7 +2279,7 @@ The root object for a glTF asset.
 
 Additional properties are allowed.
 
-* **JSON schema**: [gltf.schema.json](schema/gltf.schema.json)
+* **JSON schema**: [glTF.schema.json](schema/glTF.schema.json)
 
 #### glTF.extensionsUsed
 
@@ -2282,12 +2311,12 @@ An array of keyframe animations.
 * **Type**: animation `[1-*]`
 * **Required**: No
 
-#### glTF.asset
+#### glTF.asset :white_check_mark: 
 
 Metadata about the glTF asset.
 
 * **Type**: `object`
-* **Required**: No
+* **Required**: Yes
 
 #### glTF.buffers
 
@@ -2588,7 +2617,7 @@ A set of parameter values that are used to define the metallic-roughness materia
 
 #### material.normalTexture
 
-A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [1/255 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer. In GLSL, this vector would be unpacked like so: `float3 normalVector = tex2D(normalMap, texCoord) * 2 - 1`.
+A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [1/255 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer. In GLSL, this vector would be unpacked like so: `float3 normalVector = tex2D(normalMap, texCoord) * 2 - 1`. Client implementations should normalize the normal vectors before using them in lighting equations.
 
 * **Type**: `object`
 * **Required**: No
@@ -2719,8 +2748,8 @@ A node in the node hierarchy.  When the node contains [`skin`](#reference-skin),
 |**matrix**|`number` `[16]`|A floating-point 4x4 transformation matrix stored in column-major order.|No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`|
 |**mesh**|`integer`|The index of the mesh in this node.|No|
 |**rotation**|`number` `[4]`|The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar.|No, default: `[0,0,0,1]`|
-|**scale**|`number` `[3]`|The node's non-uniform scale.|No, default: `[1,1,1]`|
-|**translation**|`number` `[3]`|The node's translation.|No, default: `[0,0,0]`|
+|**scale**|`number` `[3]`|The node's non-uniform scale, given as the scaling factors along the x, y, and z axes.|No, default: `[1,1,1]`|
+|**translation**|`number` `[3]`|The node's translation along the x, y, and z axes.|No, default: `[0,0,0]`|
 |**weights**|`number` `[1-*]`|The weights of the instantiated Morph Target. Number of elements must match number of Morph Targets of used mesh.|No|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
@@ -2781,14 +2810,14 @@ The node's unit quaternion rotation in the order (x, y, z, w), where w is the sc
 
 #### node.scale
 
-The node's non-uniform scale.
+The node's non-uniform scale, given as the scaling factors along the x, y, and z axes.
 
 * **Type**: `number` `[3]`
 * **Required**: No, default: `[1,1,1]`
 
 #### node.translation
 
-The node's translation.
+The node's translation along the x, y, and z axes.
 
 * **Type**: `number` `[3]`
 * **Required**: No, default: `[0,0,0]`
@@ -3309,7 +3338,7 @@ Minification filter.  All valid values correspond to WebGL enums.
 
 #### sampler.wrapS
 
-s wrapping mode.  All valid values correspond to WebGL enums.
+S (U) wrapping mode.  All valid values correspond to WebGL enums.
 
 * **Type**: `integer`
 * **Required**: No, default: `10497`
@@ -3321,7 +3350,7 @@ s wrapping mode.  All valid values correspond to WebGL enums.
 
 #### sampler.wrapT
 
-t wrapping mode.  All valid values correspond to WebGL enums.
+T (V) wrapping mode.  All valid values correspond to WebGL enums.
 
 * **Type**: `integer`
 * **Required**: No, default: `10497`
@@ -3551,7 +3580,7 @@ The index of the node and TRS property that an animation channel targets.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**node**|`integer`|The index of the node to target.|No|
-|**path**|`string`|The name of the node's TRS property to modify, or the "weights" of the Morph Targets it instantiates.| :white_check_mark: Yes|
+|**path**|`string`|The name of the node's TRS property to modify, or the "weights" of the Morph Targets it instantiates. For the "translation" property, the values that are provided by the sampler are the translation along the x, y, and z axes. For the "rotation" property, the values are a quaternion in the order (x, y, z, w), where w is the scalar. For the "scale" property, the values are the scaling factors along the x, y, and z axes.| :white_check_mark: Yes|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
@@ -3569,7 +3598,7 @@ The index of the node to target.
 
 #### target.path :white_check_mark: 
 
-The name of the node's TRS property to modify, or the "weights" of the Morph Targets it instantiates.
+The name of the node's TRS property to modify, or the "weights" of the Morph Targets it instantiates. For the "translation" property, the values that are provided by the sampler are the translation along the x, y, and z axes. For the "rotation" property, the values are a quaternion in the order (x, y, z, w), where w is the scalar. For the "scale" property, the values are the scaling factors along the x, y, and z axes.
 
 * **Type**: `string`
 * **Required**: Yes
@@ -3689,7 +3718,7 @@ The index of the texture.
 
 #### textureInfo.texCoord
 
-This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0).
+This integer value is used to construct a string in the format `TEXCOORD_<set index>` which is a reference to a key in mesh.primitives.attributes (e.g. A value of `0` corresponds to `TEXCOORD_0`). Mesh must have corresponding texture coordinate attributes for the material to be applicable to it.
 
 * **Type**: `integer`
 * **Required**: No, default: `0`
@@ -3773,7 +3802,7 @@ Application-specific data.
 * Scott Hunter, Analytical Graphics, Inc.
 * Brandon Jones, Google
 * Sean Lilley, Cesium
-* Max Limper, Fraunhofer IGD
+* Juan Linietsky, Godot Engine
 * Matthew McMullan
 * Mohamad Moneimne, University of Pennsylvania
 * Kai Ninomiya, formerly Cesium
@@ -3794,13 +3823,71 @@ Application-specific data.
 
 # Appendix B: BRDF Implementation
 
-**TODO**
+*This section is non-normative.*
+
+The glTF spec is designed to allow applications to choose different lighting implementations based on their requirements.
+
+An implementation sample is available at https://github.com/KhronosGroup/glTF-WebGL-PBR/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters.
+
+As previously defined
+
+`const dielectricSpecular = rgb(0.04, 0.04, 0.04)`
+<br>
+`const black = rgb(0, 0, 0)`
+
+*c<sub>diff</sub>* = `lerp(baseColor.rgb * (1 - dielectricSpecular.r), black, metallic)`
+<br>
+*F<sub>0</sub>* = `lerp(dieletricSpecular, baseColor.rgb, metallic)`
+<br>
+*&alpha;* = `roughness ^ 2`
+
+Additionally,  
+*V* is the eye vector to the shading location  
+*L* is the vector from the light to the shading location  
+*N* is the surface normal in the same space as the above values  
+*H* is the half vector, where *H* = normalize(*L*+*V*)  
+
+The core lighting equation the sample uses is the Schlick BRDF model from [An Inexpensive BRDF Model for Physically-based Rendering](https://www.cs.virginia.edu/~jdl/bib/appearance/analytic%20models/schlick94b.pdf)
+
+![](figures/lightingSum.PNG)
+
+Below are common implementations for the various terms found in the lighting equation.
+
+### Surface Reflection Ratio (F)
+
+**Fresnel Schlick**
+
+Simplified implementation of Fresnel from [An Inexpensive BRDF Model for Physically based Rendering](https://www.cs.virginia.edu/~jdl/bib/appearance/analytic%20models/schlick94b.pdf) by Christophe Schlick.
+
+![](figures/lightingF.PNG)
+
+### Geometric Occlusion (G)
+
+**Schlick**
+
+Implementation of microfacet occlusion from [An Inexpensive BRDF Model for Physically based Rendering](https://www.cs.virginia.edu/~jdl/bib/appearance/analytic%20models/schlick94b.pdf) by Christophe Schlick.
+
+![](figures/lightingG.PNG)
+
+### Microfaced Distribution (D)
+
+**Trowbridge-Reitz**
+
+Implementation of microfaced distrubtion from [Average Irregularity Representation of a Roughened Surface for Ray Reflection](https://www.osapublishing.org/josa/abstract.cfm?uri=josa-65-5-531) by T. S. Trowbridge, and K. P. Reitz
+
+![](figures/lightingD.PNG)
+
+### Diffuse Term (diffuse)
+
+**Lambert**
+
+Implementation of diffuse from [Lambert's Photometria](https://archive.org/details/lambertsphotome00lambgoog) by Johann Heinrich Lambert
+
+![](figures/lightingDiff.PNG)
 
 # Appendix C: Spline Interpolation
 
-Animations in glTF support two kinds of spline interpolations: `CUBICSPLINE` and `CATMULLROMSPLINE`.
-
-## Cubic Spline
+Animations in glTF support spline interpolation with a cubic spline.
 
 The keyframes of a cubic spline in glTF have input and output values where each input value corresponds to three output values: in-tangent, spline vertex, and out-tangent.
 
@@ -3834,21 +3921,6 @@ When the sampler targets a node's rotation property, the resulting ***p***(*t*) 
 > **Implementation Note:** When writing out rotation output values, exporters should take care to not write out values which can result in an invalid quaternion with all zero values. This can be achieved by ensuring the output values never have both -***q*** and ***q*** in the same spline.
 
 > **Implementation Note:** The first in-tangent ***a***<sub>1</sub> and last out-tangent ***b***<sub>*n*</sub> should be zeros as they are not used in the spline calculations.
-
-## Catmull-Rom Spline
-
-`CATMULLROMSPLINE` splines in glTF are standard Catmull-Rom splines, also known as uniform Catmull-Rom spline. They are different than a cubic spline in that the inner tangents are calculated instead of specified. The first and last output elements define the start and end tangents of the spline.
-
-Given a set of keyframes
-
-&nbsp;&nbsp;&nbsp;&nbsp;Input *t*<sub>*k*</sub> for *k* = 1,...,*n*  
-&nbsp;&nbsp;&nbsp;&nbsp;Output start tangent ***a***, vertex ***v***<sub>*k*</sub> for *k* = 1,...,*n*, and end tangent ***b***  
-
-The tangents are defined as
-
-&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>1</sub> = ***a***  
-&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>*k*</sub> = (***v***<sub>*k*+1</sub> - ***v***<sub>*k*-1</sub>) / (*t*<sub>*k*+1</sub> - *t*<sub>*k*-1</sub>) for *k* = 2,...,*n*-1  
-&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>*n*</sub> = ***b***  
 
 # Appendix D: Full Khronos Copyright Statement
 

@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "occlusionTextureInfo",
+    "title": "Material Occlusion Texture Info",
     "type": "object",
     "allOf": [ { "$ref": "textureInfo.schema.json" } ],
     "properties": {
