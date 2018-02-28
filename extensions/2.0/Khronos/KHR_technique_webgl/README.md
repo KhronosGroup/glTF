@@ -294,20 +294,20 @@ Shader source files are stored in the asset's `shaders` dictionary property, whi
 
 ```json
 {
-	"shaders": [
-      {
-          "type": 35633,
-          "bufferView": 4
-      },
-    	{
-        	"type": 35632,
-        	"uri": "duck0FS.glsl"
-    	},
-    	{
-        	"type": 35633,
-        	"uri": "duck0VS.glsl"
-    	}
-	]
+    "shaders": [
+        {
+            "type": 35633,
+            "bufferView": 4
+        },
+        {
+            "type": 35632,
+            "uri": "duck0FS.glsl"
+        },
+        {
+            "type": 35633,
+            "uri": "duck0VS.glsl"
+        }
+    ]
 }
 ```    
 ### Properties Reference
@@ -426,24 +426,32 @@ A vertex or fragment shader.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**uri**|`string`|The uri of the GLSL source.| :white_check_mark: Yes|
+|**uri**|`string`|The uri of the GLSL source.|No|
+|**bufferView**|`integer`|The bufferView of the GLSL source.|No|
 |**type**|`integer`|The shader stage.| :white_check_mark: Yes|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
-Additional properties are not allowed.
+Exactly one of `uri` or `bufferView` must be provided. Additional properties are not allowed.
 
 * **JSON schema**: [shader.schema.json](schema/shader.schema.json)
 * **Example**: [shaders.json](schema/examples/shaders.json)
 
-### shader.uri :white_check_mark:
+### shader.uri
 
 The uri of the GLSL source.  Relative paths are relative to the .gltf file.  Instead of referencing an external file, the uri can also be a data-uri.
 
 * **Type**: `string`
-* **Required**: Yes
+* **Required**: No
 * **Format**: uri
+
+### shader.bufferView
+
+The index of the bufferView that contains the shader source. Use this instead of the shader's uri property.
+
+* **Type**: `integer`
+* **Required**: No
 
 ### shader.type :white_check_mark:
 
