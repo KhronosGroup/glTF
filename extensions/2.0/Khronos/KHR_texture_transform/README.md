@@ -1,4 +1,4 @@
-# EXT_texture_transform
+# KHR_texture_transform
 
 ## Contributors
 
@@ -40,7 +40,7 @@ This is equivalent to Unity's `Material#SetTextureOffset` and `Material#SetTextu
 
 ## glTF Schema Updates
 
-The `EXT_texture_transform` extension may be defined on `textureInfo` structures. It may contain the following properties:
+The `KHR_texture_transform` extension may be defined on `textureInfo` structures. It may contain the following properties:
 
 | Name       | Type       | Default      | Description
 |------------|------------|--------------|---------------------------------
@@ -55,7 +55,7 @@ Though this extension's values are unbounded, they will only produce sane result
 
 ### JSON Schema
 
-[EXT_texture_transform.textureInfo.schema.json](schema/EXT_texture_transform.textureInfo.schema.json)
+[KHR_texture_transform.textureInfo.schema.json](schema/KHR_texture_transform.textureInfo.schema.json)
 
 ### Example JSON
 
@@ -67,7 +67,7 @@ This example utilizes only the lower left quadrant of the source image, rotated 
     "emissionTexture": {
       "source": 0,
       "extensions": {
-        "EXT_texture_transform": {
+        "KHR_texture_transform": {
           "offset": [0, 1],
           "rotation": 1.57079632679,
           "scale": [0.5, 0.5]
@@ -86,7 +86,7 @@ This example inverts the T axis, effectively defining a bottom-left origin.
     "emissionTexture": {
       "source": 0,
       "extensions": {
-        "EXT_texture_transform": {
+        "KHR_texture_transform": {
           "offset": [0, 1],
           "scale": [1, -1]
         }
