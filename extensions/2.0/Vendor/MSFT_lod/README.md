@@ -35,11 +35,18 @@ The following example shows how the `MSFT_lod` extension can be specified at the
         "mesh": 0,
         "extensions": {
             "MSFT_lod": {
-                "ids": [ 1, 2]
+                "ids": [
+                    1,
+                    2
+                ]
             }
         },
         "extras": {
-            "MSFT_screencoverage": [0.5, 0.2, 0.01]
+            "MSFT_screencoverage": [
+                0.5,
+                0.2,
+                0.01
+            ]
         }
     },
     {
@@ -77,7 +84,10 @@ A similar pattern can be followed to create `material` LODs:
         },
         "extensions": {
             "MSFT_lod": {
-                "ids": [ 1, 2]
+                "ids": [
+                    1,
+                    2
+                ]
             }
         }
     },
