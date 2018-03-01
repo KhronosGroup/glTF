@@ -28,18 +28,19 @@ The extension is added to the `textures` node and specifies a `source` property 
         "source": 0,
         "extensions": {
             "MSFT_texture_dds": {
-                    "source": 1
-                }
+                "source": 1
             }
+        }
     }
-    ],
+],
 "images": [
     {
-      "uri": "defaultTexture.png"
+        "uri": "defaultTexture.png"
     },
     {
-      "uri": "DDSTexture.dds"
+        "uri": "DDSTexture.dds"
     }
+]
 ```
 When used in the glTF Binary (.glb) format the `images` node that points to the DDS file uses the `mimeType` value of *image/vnd-ms.dds*.
 
@@ -49,21 +50,27 @@ When used in the glTF Binary (.glb) format the `images` node that points to the 
         "source": 0,
         "extensions": {
             "MSFT_texture_dds": {
-                    "source": 1
-                }
+                "source": 1
             }
+        }
     }
-    ],
+],
 "images": [
     {
-      "mimeType": "image/png",
-      "bufferView": 1
+        "mimeType": "image/png",
+        "bufferView": 1
     },
     {
-      "mimeType": "image/vnd-ms.dds",
-      "bufferView": 2
+        "mimeType": "image/vnd-ms.dds",
+        "bufferView": 2
     }
+]
 ```
+
+## glTF Schema Updates
+
+* **JSON schema**: [glTF.MSFT_texture_dds.schema.json](schema/glTF.MSFT_texture_dds.schema.json)
+
 ## Known Implementations
 
 This extension is used by Windows Mixed Reality Home and 3D Launchers for Windows Mixed Reality to improve performance by including DDS textures. [glTF-Toolkit](https://github.com/Microsoft/glTF-Toolkit) can be used to generate files that use this extension.

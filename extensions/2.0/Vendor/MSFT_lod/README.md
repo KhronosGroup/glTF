@@ -30,27 +30,27 @@ An implementation of this extension can parse through the `ids` array to create 
 The following example shows how the `MSFT_lod` extension can be specified at the `node` level to create three LOD levels:
 ```json
 "nodes": [
-        {
-            "name": "High_LOD",
-            "mesh": 0,
-            "extensions": {
-                "MSFT_lod": {
-                     "ids": [ 1, 2 ]
-                }
-            },
-            "extras": {
-                    "MSFT_screencoverage": [ 0.5, 0.2 , 0.01]
+    {
+        "name": "High_LOD",
+        "mesh": 0,
+        "extensions": {
+            "MSFT_lod": {
+                "ids": [ 1, 2]
             }
         },
-        {
-            "name": "Medium_LOD",
-            "mesh": 1
-        },
-        {
-            "name": "Low_LOD",
-            "mesh": 2
+        "extras": {
+            "MSFT_screencoverage": [0.5, 0.2, 0.01]
         }
-    ]
+    },
+    {
+        "name": "Medium_LOD",
+        "mesh": 1
+    },
+    {
+        "name": "Low_LOD",
+        "mesh": 2
+    }
+]
  ```
  Since the `MSFT_lod` extension is specified in `node[0]`, it becomes the highest LOD. The first element in the `ids` array is *1*, making `node[1]` the next lower LOD (or the *Medium_LOD*). The second element in the `ids` array is *2*, making `node[2]` the lowest LOD for this sample. 
 
@@ -77,7 +77,7 @@ A similar pattern can be followed to create `material` LODs:
         },
         "extensions": {
             "MSFT_lod": {
-                "ids": [1,2]
+                "ids": [ 1, 2]
             }
         }
     },
@@ -99,7 +99,7 @@ A similar pattern can be followed to create `material` LODs:
         },
         "normalTexture": {
             "index": 5
-        },         
+        },
     }
 ]
 ```

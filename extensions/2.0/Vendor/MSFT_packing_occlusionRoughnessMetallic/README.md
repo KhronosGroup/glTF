@@ -21,8 +21,8 @@ Written against the glTF 2.0 spec.
 This extension adds support for alternate texture packing and is meant to be used for Windows Mixed Reality Home and 3D Launchers for Windows Mixed Reality.
 
 This extension defines three additional properties:
-- `occlusionRoughnessMetallicTexture`: Specifies the index of a texture with the packing Occlusion (R), Roughness  (G), Metallic (B)
-- `roughnessMetallicOcclusionTexture`: Specifies the index of a texture with the packing Roughness (R), Metallic  (G), Occlusion (B)
+- `occlusionRoughnessMetallicTexture`: Specifies the index of a texture with the packing Occlusion (R), Roughness (G), Metallic (B)
+- `roughnessMetallicOcclusionTexture`: Specifies the index of a texture with the packing Roughness (R), Metallic (G), Occlusion (B)
 - `normalTexture`: Specifies the index of a texture which contains two channel (RG) normal map. 
 
 The extension should only be used when creating glTF assets for engines that support this packing and is not meant to be a general purpose packing extension. Any client that does not support this extension can safely ignore these additional packed textures and rely on the default packing in glTF 2.0. This extension can also be used along with other extensions like [MSFT_texture_dds](../MSFT_texture_dds/README.md) to store the packed textures in DDS files. 
@@ -38,7 +38,7 @@ The example below shows how this extension can be used along with the MSFT_textu
                     "index": 0
                 },
                 "roughnessMetallicTexture": {
-                "index": 1
+                    "index": 1
                 },
             },
             "normalTexture": {
@@ -61,8 +61,8 @@ The example below shows how this extension can be used along with the MSFT_textu
     ],
     "textures": [
         {
-            "name":"baseColorTexture",
-            "source":0,
+            "name": "baseColorTexture",
+            "source": 0,
             "extensions": {
                 "MSFT_texture_dds": {
                     "source": 6
@@ -70,19 +70,19 @@ The example below shows how this extension can be used along with the MSFT_textu
             }
         },
         {
-            "name":"roughnessMetallicTexture",
-            "source":1
+            "name": "roughnessMetallicTexture",
+            "source": 1
         },
         {
-            "name":"normalTexture",
-            "source":2
+            "name": "normalTexture",
+            "source": 2
         },
         {
-            "name":"occlusionTexture",
-            "source":3
+            "name": "occlusionTexture",
+            "source": 3
         },
         {
-            "name":"occlusionRoughnessMetallic",
+            "name": "occlusionRoughnessMetallic",
             "extensions": {
                 "MSFT_texture_dds": {
                     "source": 4
@@ -90,7 +90,7 @@ The example below shows how this extension can be used along with the MSFT_textu
             }
         },
         {
-            "name":"normalTexture_RG",
+            "name": "normalTexture_RG",
             "extensions": {
                 "MSFT_texture_dds": {
                     "source": 5
