@@ -135,6 +135,7 @@ Preview tools:
 | [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Web-based 3D platform for architecture and interiors |
 | [Aspose.3D](https://www.aspose.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | File Format APIs for creating, editing, and converting over 100 file formats |
 | [Facebook](https://developers.facebook.com/docs/sharing/3d-posts) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Use .glb files to create 3D Posts |
+| [3D Slash](http://www.3dslash.net) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Web-based and app-based 3D modeling imitating a stonecutter |
 
 ### Loaders and Viewers
 
