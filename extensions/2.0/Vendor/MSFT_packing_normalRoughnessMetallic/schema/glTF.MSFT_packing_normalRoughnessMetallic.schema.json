@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "MSFT_packing_normalRoughnessMetallic extension",
+  "type": "object",
+  "description": "glTF extension the specifies a packing of normal, roughness and metallic in a single texture.",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+  "properties": {
+    "normalRoughnessMetallicTexture": {
+      "type": "object",
+      "description": "A texture with the packing Normal (RG), Roughness (B), Metallic (A).",
+      "properties": {
+        "index": {
+          "allOf": [ { "$ref": "glTFid.schema.json" } ],
+          "description": "The index of the texture."
+        }
+      }
+    },
+    "extensions": {},
+    "extras": {}
+  }
+}
