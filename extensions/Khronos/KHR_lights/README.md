@@ -119,8 +119,8 @@ Spot lights emit light in a cone over a distance. The angle and falloff of the c
 
 | Property | Description | Required |
 |:-----------------------|:------------------------------------------| :--------------------------|
-| `innerConeAngle` | Angle, in radians, from centre of spotlight where falloff begins. Must be greater than `0`, less than `outerConeAngle`. | No, Default: `0` |
-| `outerConeAngle` | Angle, in radians, from centre of spotlight where falloff ends.  Must be greater than `innerConeAngle` and less than `PI / 2.0`. | No, Default: `PI / 4.0` |
+| `innerConeAngle` | Angle, in radians, from centre of spotlight where falloff begins. Must be greater than or equal to `0` and less than `outerConeAngle`. | No, Default: `0` |
+| `outerConeAngle` | Angle, in radians, from centre of spotlight where falloff ends.  Must be greater than `innerConeAngle` and less than or equal to `PI / 2.0`. | No, Default: `PI / 4.0` |
 
 ```javascript
 "extensions": {
