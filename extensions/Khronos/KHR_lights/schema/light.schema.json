@@ -7,7 +7,13 @@
     "properties": {
         "color": {
             "type": "array",
-            "subtype": "number",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
             "description": "Color of the light source.",
             "default": [1, 1, 1]
         },
