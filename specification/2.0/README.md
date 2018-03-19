@@ -78,6 +78,7 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
     * [Alpha Coverage](#alpha-coverage)
     * [Double Sided](#double-sided)
     * [Default Material](#default-material)
+    * [Point and Line Materials](#point-and-line-materials)
   * [Cameras](#cameras)
     * [Projection Matrices](#projection-matrices)
   * [Animations](#animations)
@@ -766,13 +767,6 @@ All indices for indexed attribute semantics, must start with 0 and be continuous
 
 > **Implementation note:** When normals and tangents are specified, client implementations should compute the bitangent by taking the cross product of the normal and tangent xyz vectors and multiplying against the w component of the tangent: `bitangent = cross(normal, tangent.xyz) * tangent.w`
 
-> **Implementation note:** When the 'mode' property is set to a non-triangular type (such as POINTS or LINES) some additional considerations must be taken while considering the proper rendering technique:
-> > For LINES with `NORMAL` and `TANGENT` properties can render with standard lighting including normal maps.
-> > 
-> > For all POINTS or LINES with no `TANGENT` property, render with standard lighting but ignore any normal maps on the material.
-> > 
-> > For POINTS or LINES with no `NORMAL` property, don't calculate lighting and instead output the `COLOR` value for each pixel drawn.
-
 #### Morph Targets
 
 Morph Targets are defined by extending the Mesh concept.
@@ -1192,6 +1186,17 @@ The `doubleSided` property specifies whether the material is double sided. When 
 ### Default Material
 
 The default material, used when a mesh does not specify a material, is defined to be a material with no properties specified. All the default values of [`material`](#reference-material) apply. Note that this material does not emit light and will be black unless some lighting is present in the scene.
+
+### Point and Line Materials
+
+*This section is non-normative.*
+
+This specification does not define size and style of non-triangular primitives (such as POINTS or LINES) at this time, and applications may use various techniques to render these primitives as appropriate. However, the following recommendations are provided for consistency:
+
+* POINTS and LINES should have widths of 1px in screen space.
+* For LINES with `NORMAL` and `TANGENT` properties, render with standard lighting including normal maps.
+* For POINTS or LINES with no `TANGENT` property, render with standard lighting but ignore any normal maps on the material.
+* For POINTS or LINES with no `NORMAL` property, don't calculate lighting and instead output the `COLOR` value for each pixel drawn.
 
 ## Cameras
 
