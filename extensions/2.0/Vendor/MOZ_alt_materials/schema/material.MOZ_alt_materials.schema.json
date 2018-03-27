@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "MOZ_alt_materials glTF extension",
+    "type": "object",
+    "description": "glTF extension for specifying additionally available materials.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "KHR_materials_pbrSpecularGlossiness": {
+          "allOf": [ { "$ref": "glTFid.schema.json" } ],
+          "description": "The index of the KHR_materials_pbrSpecularGlossiness material to use instead of this material."
+        },
+        "KHR_materials_unlit": {
+          "allOf": [ { "$ref": "glTFid.schema.json" } ],
+          "description": "The index of the KHR_materials_unlit material to use instead of this material."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
