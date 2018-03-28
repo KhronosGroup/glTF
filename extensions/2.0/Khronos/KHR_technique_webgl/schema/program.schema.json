@@ -25,6 +25,17 @@
             "description" : "The index of the vertex shader."
         },
         "name" : {},
+        "glExtensions" : {
+            "type" : "array",
+            "description" : "Names of WebGL 1.0 extensions to enable.",
+            "items" : {
+                "type" : "string",
+                "minLength" : 1,
+                "maxLength" : 256
+            },
+            "default" : [],
+            "gltf_webgl" : "`getExtension()`"
+        },
         "extensions" : {},
         "extras" : {}
     },

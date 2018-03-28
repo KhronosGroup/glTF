@@ -1,6 +1,6 @@
 {
   "$schema" : "http://json-schema.org/draft-04/schema",
-  "title" : "KHR_technique_webgl glTF extension",
+  "title" : "KHR_techniques_webgl glTF extension",
   "type" : "object",
   "properties" : {
     "shaders" : {

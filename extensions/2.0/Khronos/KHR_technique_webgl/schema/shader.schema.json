@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "shader",
     "type" : "object",
-    "description" : "A vertex or fragment shader.",
+    "description" : "A vertex or fragment shader. Exactly one of `uri` or `bufferView` must be provided.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
         "uri" : {

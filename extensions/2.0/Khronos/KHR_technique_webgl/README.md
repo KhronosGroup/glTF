@@ -1,4 +1,4 @@
-# KHR_technique_webgl
+# KHR_techniques_webgl
 
 ## Contributors
 
@@ -14,14 +14,52 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-TODO
+This extension allows glTF to define instances of shading techniques with external shader programs along with their parameterized values.  Shading techniques use JSON properties to describe data types and semantics for GLSL vertex and fragment shader programs.  
+
+This extension specification is targeting WebGL 1.0, and can be supported in any WebGL 1.0-based engine if the device supports the necessary WebGL extensions.
 
 ## glTF Schema Updates
 
+`KHR_techniques_webgl` introduces a list of the asset's shading techniques used in `techniques`. The technique and values are specified by adding a `KHR_techniques_webgl` extension to any glTF material.
+
+### Extending Materials
+
+If a `material` contains an `extensions` property and the `extensions` property defines its `KHR_techniques_webgl` property, then the specified shading technique can be used, as specified in the asset's `techniques`.
+
+```json
+"materials": [
+    {
+        "extensions": {
+            "KHR_techniques_webgl": {
+                "technique": 0,
+                "values" : {
+                    "u_light0Color": [
+                        1.0,
+                        0.8,
+                        1.0
+                    ]
+                }
+            }
+        }
+    }
+],
+```
+
+#### Technique
+
+The `technique` property points to the index of a technique listed in the asset's `KHR_techniques_webgl` `techniques` property.
+
+#### Values
+
+The `values` property defines the list of values, each of which is passed to the technique uniform of the same name, and when specified, overrides the corresponding uniform `value`.
+
+## Extensions
+
+`KHR_techniques_webgl` is defined in the asset's top level `extensions` property with the following additional values.
 
 ### Techniques
 
-A technique describes the shading used for a material. The asset's techniques are stored in the `techniques` dictionary property.
+A technique describes the shading used for a material. The list of the asset's techniques are stored in the `techniques` property. Each technique must includes the `program` property and list any attribute or uniforms by name in the `attributes` and `uniforms` dictionary properties which define the objects to be passed as inputs to the program.
 
 The following example shows a technique and the properties it defines. This section describes each property in detail.
 
@@ -29,26 +67,38 @@ The following example shows a technique and the properties it defines. This sect
 {
     "techniques": [
         {
-            "parameters": {
-                "normal": {
-                    "type": 35665
+            "program": 0,
+            "attributes": {
+                "a_normal":  {
+                    "type": 35665,
+                    "semantic": "NORMAL"
                 },
-                "position": {
-                    "type": 35665
+                "a_position": {
+                    "type": 35665,
+                    "semantic": "POSITION"
                 },
-                "texcoord0": {
-                    "type": 35664
+                "a_texcoord0": {
+                    "type": 35664,
+                    "semantic": "TEX_COORD"
+                }
                 },
-                "ambient": {
+            "uniforms": {
+                "u_ambient": {
                     "type": 35666
                 },
-                "diffuse": {
+                "u_diffuse": {
                     "type": 35678
                 },
-                "emission": {
+                "u_emission": {
                     "type": 35666
                 },
-                "light0Color": {
+                "u_shininess": {
+                    "type": 5126
+                },
+                "u_specular": {
+                    "type": 35678
+                },
+                "u_light0Color": {
                     "type": 35665,
                     "value": [
                         1,
@@ -56,80 +106,61 @@ The following example shows a technique and the properties it defines. This sect
                         1
                     ]
                 },
-                "shininess": {
-                    "type": 5126
-                },
-                "specular": {
-                    "type": 35678
-                },
-                "light0Transform": {
+                "u_light0Transform": {
                     "semantic": "MODELVIEW",
                     "node": 1,
                     "type": 35676
                 },
-                "modelViewMatrix": {
+                "u_modelViewMatrix": {
                     "semantic": "MODELVIEW",
                     "type": 35676
                 },
-                "normalMatrix": {
+                "u_normalMatrix": {
                     "semantic": "MODELVIEWINVERSETRANSPOSE",
                     "type": 35676
                 },
-                "projectionMatrix": {
+                "u_projectionMatrix": {
                     "semantic": "PROJECTION",
                     "type": 35676
                 }
-            },
-            "attributes": {
-                "a_normal": "normal",
-                "a_position": "position",
-                "a_texcoord0": "texcoord0"
-            },
-            "program": 0,
-            "uniforms": {
-                "u_ambient": "ambient",
-                "u_diffuse": "diffuse",
-                "u_emission": "emission",
-                "u_shininess": "shininess",
-                "u_specular": "specular",
-                "u_light0Color": "light0Color",
-                "u_light0Transform": "light0Transform",
-                "u_modelViewMatrix": "modelViewMatrix",
-                "u_normalMatrix": "normalMatrix",
-                "u_projectionMatrix": "projectionMatrix"
-            },
-            "states": {
-                "enable": [
-                    2884,
-                    2929
-                ]
             }
         }
     ]
 }
 ```
 
-#### Parameters
+#### Program Instances
 
-Each technique has zero or more parameters; each parameter is defined by a type (GL types such as a floating point number, vector, texture, etc.), a default value, and potentially a semantic describing how the runtime is to interpret the data to pass to the shader. When a material instances a technique, the name of each supplied value in its `values` property corresponds to one of the parameters defined in the technique.
+The `program` property of a technique creates an instance of a shader program. The value of the property is the index of a program defined in the asset's `programs` dictionary object (see next section). A shader program may be instanced multiple times within the glTF asset.
 
-The above example illustrates several parameters. The property `ambient` is defined as a `FLOAT_VEC4` type; `diffuse` is defined as a `SAMPLER_2D`; and `light0color` is defined as a `FLOAT_VEC3` with a default color value of white.
+Attributes and uniforms passed to the program instance's shader code are defined in the `attributes` and `uniforms` properties of the technique, respectively.
 
+#### Attributes
 
-#### Semantics
+The `attributes` dictionary property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's name is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is an [attribute](#reference-technique.attributes) object, where the type (GL types such as a floating point number, vector, texture, etc.) and semantic of the attribute is defined.
 
-Technique parameters may also optionally define a *semantic*, an enumerated value describing how the runtime is to interpret the data to be passed to the shader.
+#### Uniforms
 
-In the above example, the parameter `light0Transform` defines the `MODELVIEW` semantic, which corresponds to the world space position of the node referenced in the property `node`, in this case the node `directionalight1`, which refers to a node that contains a light source.
+The `uniforms` dictionary property specifies the uniform variables that will be passed to the shader. Each uniform's name is a string that corresponds to the uniform name in the GLSL source code. Each uniform's value is a string that references a [uniform](#reference-technique.uniforms) object, where the type (GL types such as a floating point number, vector, texture, etc.) and potentially the semantic and default value of the uniform is defined.
 
-If no `node` property is supplied for a semantic, the semantic is implied in a context-specific manner: either to the node which is being rendered, or in the case of camera-specific semantics, to the current camera. In the following fragment, which defines a parameter named `projectionMatrix` that is derived from the implementation's projection matrix, the semantic would be applied to the camera.
+When a material instances a technique, the name of each supplied value in its `values` property must correspond to one of the uniforms defined in the technique.
+
+The above example illustrates several uniforms. The property `u_ambient` is defined as a `FLOAT_VEC4` type; and `u_light0color` is defined as a `FLOAT_VEC3` with a default color value of white.
+
+##### Semantics
+
+Technique uniforms may also optionally define a *semantic*, an enumerated value describing how the runtime is to interpret the data to be passed to the shader.
+
+In the above example, the uniform `u_light0Transform` defines the `MODELVIEW` semantic, which corresponds to the world space position of the node referenced in the property `node`, in this case the node `1`, which refers to the id of a node that contains a light source.
+
+If no `node` property is supplied for a semantic, the semantic is implied in a context-specific manner: either to the node which is being rendered, or in the case of camera-specific semantics, to the current camera. In the following fragment, which defines a uniform named `u_projectionMatrix` that is derived from the implementation's projection matrix, the semantic would be applied to the camera.
 
 ```json
 {
     "techniques": [
         {
-            "parameters": {
-                "projectionMatrix": {
+            "uniforms": {
+                "u_projectionMatrix": {
                     "semantic": "PROJECTION",
                     "type": 35676
                 }
@@ -157,120 +188,15 @@ Table 1. Uniform Semantics
 | `MODELINVERSETRANSPOSE`      | `FLOAT_MAT3` | The inverse-transpose of `MODEL` without the translation.  This translates normals in model coordinates to world coordinates. |
 | `MODELVIEWINVERSETRANSPOSE`  | `FLOAT_MAT3` | The inverse-transpose of `MODELVIEW` without the translation.  This translates normals in model coordinates to eye coordinates. |
 | `VIEWPORT`                   | `FLOAT_VEC4` | The viewport's x, y, width, and height properties stored in the `x`, `y`, `z`, and `w` components, respectively.  For example, this is used to scale window coordinates to [0, 1]: `vec2 v = gl_FragCoord.xy / viewport.zw;` |
-| `JOINTMATRIX`                | `FLOAT_MAT4[]` | Array parameter; its length (`parameter.count`) must be greater than or equal to the length of `jointNames` array of a skin being used. Each element transforms mesh coordinates for a particular joint for skinning and animation. |
+| `JOINTMATRIX`                | `FLOAT_MAT4[]` | Array parameter; its length (`uniform.count`) must be greater than or equal to the length of `jointNames` array of a skin being used. Each element transforms mesh coordinates for a particular joint for skinning and animation. |
 
 For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_SIMULATION_TIME`.
-
-#### Program Instances
-
-The `program` property of a technique creates an instance of a shader program. The value of the property is the index of a program defined in the asset's `programs` dictionary object (see next section). A shader program may be instanced multiple times within the glTF asset.
-
-Attributes and uniforms passed to the program instance's shader code are defined in the `attributes` and `uniforms` properties of the technique, respectively. The following example shows the definitions for a technique's program instance, attributes and techniques:
-
-
-```json
-{
-    "techniques": [
-        {
-            "parameters": {},
-            "attributes": {
-                "a_normal": "normal",
-                "a_position": "position",
-                "a_texcoord0": "texcoord0"
-            },
-            "program": 0,
-            "uniforms": {
-                "u_ambient": "ambient",
-                "u_diffuse": "diffuse",
-                "u_emission": "emission",
-                "u_light0Color": "light0Color",
-                "u_light0Transform": "light0Transform",
-                "u_modelViewMatrix": "modelViewMatrix",
-                "u_normalMatrix": "normalMatrix",
-                "u_projectionMatrix": "projectionMatrix",
-                "u_shininess": "shininess",
-                "u_specular": "specular"
-            }
-        }
-    ]
-}
-```
-
-The `attributes` property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's name is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the attribute is defined.
-
-The `uniforms` property specifies the uniform variables that will be passed to the shader. Each uniform's name is a string that corresponds to the uniform name in the GLSL source code. Each uniform's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the uniform is defined.
-
-#### Render States
-
-Render states define the fixed-function GL state when a primitive is rendered. The technique's `states` property contains two properties:
-
-* `enable`: an array of integers corresponding to Boolean GL states that should be enabled using GL's `enable` function.
-* `functions`: a dictionary object containing properties corresponding to the names of GL state functions to call.  Each property is an array, where the elements correspond to the arguments of the GL function.
-
-Valid values for elements in the `enable` array are `3042` (`BLEND`), `2884` (`CULL_FACE`), `2929` (`DEPTH_TEST`), `32823` (`POLYGON_OFFSET_FILL`), and `32926` (`SAMPLE_ALPHA_TO_COVERAGE`).  If any of these values are not in the array, the GL state should be disabled (which is the GL default state).  If the `enable` array is not defined in the `states`, all of these Boolean GL states are disabled.
-
-Each property in `functions` indicates a GL function to call and the arguments to provide.  Valid property names are `"blendColor"`, `"blendEquationSeparate"`, `"blendFuncSeparate"`, `"colorMask"`, `"cullFace"`, `"depthFunc"`, `"depthMask"`, `"depthRange"`, `"frontFace"`, `"lineWidth"`, and `"polygonOffset"`.  If a property is not defined, the GL state for that function should be set to the default value(s) shown in the example below.
-
-The following example `states` object indicates to enable all Boolean states (see the `enable` array) and use the default values for all the GL state functions (which could be omitted).
-
-```json
-{
-    "techniques": [
-        {
-            "states": {
-                "enable": [
-                    3042,
-                    2884,
-                    2929,
-                    32823,
-                    32926
-                ],
-                "functions": {
-                    "blendColor": [0.0, 0.0, 0.0, 0.0],
-                    "blendEquationSeparate": [
-                        32774,
-                        32774
-                    ],
-                    "blendFuncSeparate": [1, 0, 1, 0],
-                    "colorMask": [true, true, true, true],
-                    "cullFace": [1029],
-                    "depthFunc": [513],
-                    "depthMask": [true],
-                    "depthRange": [0.0, 1.0],
-                    "frontFace": [2305],
-                    "lineWidth": [1.0],
-                    "polygonOffset": [0.0, 0.0]
-                }
-            }
-        }
-    ]
-}
-```
-
-The following example shows a typical `"states"` object for closed opaque geometry.  Culling and the depth test are enabled, and all other GL states are set to the default value (disabled).
-```json
-{
-    "techniques": [
-        {
-			"states": {
-	    		"enable": [
-	        		2884,
-	        		2929
-	    		]
-			}
-		}
-	]
-}
-```
-
-> **Implementation Note**: It is recommended that a runtime use the minimal number of GL state function calls.  This generally means ordering draw calls by technique, and then making GL state function calls only for the states that vary between techniques.
-
 
 #### Programs
 
 GLSL shader programs are stored in the asset's `programs` property. This property contains one or more objects, one for each program.
 
-Each shader program includes an `attributes` property, which specifies the vertex attributes that will be passed to the shader, and the properties `fragmentShader` and `vertexShader`, which reference the files for the fragment and vertex shader GLSL source code, respectively.
+Each shader program includes an `attributes` property, which specifies the vertex attributes that will be passed to the shader, and the properties `fragmentShader` and `vertexShader`, which reference the files for the fragment and vertex shader GLSL source code, respectively, as defined the id of the item in the `shaders` dictionary property.
 
 ```json
 {
@@ -290,7 +216,7 @@ Each shader program includes an `attributes` property, which specifies the verte
 
 #### Shaders
 
-Shader source files are stored in the asset's `shaders` dictionary property, which contains one or more shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file (or a reference to a bufferView). Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
+Shader source files are stored in the asset's `shaders` dictionary property, which contains one or more shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and either a `uri` to the file or a reference to a bufferView. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset. 
 
 ```json
 {
@@ -310,7 +236,8 @@ Shader source files are stored in the asset's `shaders` dictionary property, whi
     ]
 }
 ```    
-### Properties Reference
+
+## Properties Reference
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
@@ -359,6 +286,7 @@ A shader program, including its vertex and fragment shader, and names of vertex 
 |**fragmentShader**|`string`|The ID of the fragment [`shader`](#reference-shader).| :white_check_mark: Yes|
 |**vertexShader**|`string`|The ID of the vertex [`shader`](#reference-shader).| :white_check_mark: Yes|
 |**name**|`string`|The user-defined name of this object.|No|
+|**glExtensions**|`string[]`|Names of WebGL 1.0 extensions to enable.|No, default: `[]`|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
@@ -398,6 +326,15 @@ The user-defined name of this object.  This is not necessarily unique, e.g., a p
 
 * **Type**: `string`
 * **Required**: No
+
+### program.glExtensions
+
+Names of GLSL 1.0 extensions to enable.
+
+* **Type**: `string[]`
+   * Each element in the array must have length between `1` and `256`.
+* **Required**: No, default: `[]`
+* **Related WebGL functions**: `getExtension()`
 
 ### program.extensions
 
@@ -494,11 +431,9 @@ A template for material appearances.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**parameters**|`object`|A dictionary object of [`technique.parameters`](#reference-technique.parameters) objects.|No, default: `{}`|
-|**attributes**|`object`|A dictionary object of strings that maps GLSL attribute names to technique parameter IDs.|No, default: `{}`|
+|**attributes**|`object`|A dictionary object of [`technique.attributes`](#reference-technique.attributes) objects.|No, default: `{}`|
 |**program**|`string`|The ID of the program.| :white_check_mark: Yes|
-|**uniforms**|`object`|A dictionary object of strings that maps GLSL uniform names to technique parameter IDs.|No, default: `{}`|
-|**states**|[`technique.states`](#reference-technique.states)|Fixed-function rendering states.|No, default: `{}`|
+|**uniforms**|`object`|A dictionary object of  [`technique.uniforms`](#reference-technique.uniforms) objects.|No, default: `{}`|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -508,17 +443,9 @@ Additional properties are not allowed.
 * **JSON schema**: [technique.schema.json](schema/technique.schema.json)
 * **Example**: [techniques.json](schema/examples/techniques.json)
 
-### technique.parameters
-
-A dictionary object of [`technique.parameters`](#reference-technique.parameters) objects.  Each parameter defines an attribute or uniform input, and an optional semantic and value.  Each parameter must be referenced by the attributes or uniforms dictionary properties.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
-
 ### technique.attributes
 
-A dictionary object of strings that maps GLSL attribute names to technique parameter IDs.  Each string must also be in the parameters dictionary object.
+A dictionary object of [`technique.attributes`](#reference-technique.attributes) objects.  Each object defines an attribute input.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -534,18 +461,11 @@ The ID of the program.
 
 ### technique.uniforms
 
-A dictionary object of strings that maps GLSL uniform names to technique parameter IDs.  Each string must also be in the parameters dictionary object.
+A dictionary object of [`technique.uniforms`](#reference-technique.uniforms) objects.  Each object defines a uniform input, and an optional semantic and value.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
 * **Type of each property**: `string`
-
-### technique.states
-
-Fixed-function rendering states.
-
-* **Type**: [`technique.states`](#reference-technique.states)
-* **Required**: No, default: `{}`
 
 ### technique.name
 
@@ -571,70 +491,120 @@ Application-specific data.
 
 
 <!-- ======================================================================= -->
-<a name="reference-technique.parameters"></a>
-## technique.parameters
+<a name="reference-technique.attributes"></a>
+## technique.attributes
 
-An attribute or uniform input to a [`technique`](#reference-technique), and an optional semantic and value.
+An object defining an attribute input to a [`technique`](#reference-technique).
 
 **Properties**
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**count**|`integer`|When defined, the parameter is an array of count elements of the specified type.  Otherwise, the parameter is not an array.|No|
-|**node**|`string`|The id of the [`node`](#reference-node) whose transform is used as the parameter's value.|No|
 |**type**|`integer`|The datatype.| :white_check_mark: Yes|
-|**semantic**|`string`|Identifies a parameter with a well-known meaning.|Depends (see below)|
-|**value**|`number[]`, `boolean[]`, or `string[]`|The value of the parameter.|No|
+|**semantic**|`object`|Identifies an attribute with a well-known meaning.|Yes|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
 Additional properties are not allowed.
 
-**JSON schema**: [technique.parameters.schema.json](schema/technique.parameters.schema.json)
+**JSON schema**: [technique.attribute.schema.json](schema/technique.attribute.schema.json)
 
-### parameter.count
+### attribute.type :white_check_mark:
 
-When defined, the parameter is an array of `count` elements of the specified type.  Otherwise, the parameter is not an array.  When defined, `value`'s length equals to `count`, times the number of components in the `type`, e.g., `3` for `FLOAT_VEC3`.
-
-An array parameter of scalar values is not the same as a vector parameter of the same size; for example, when `count` is `2` and `type` is `5126` (FLOAT), the parameter is an array of two floating-point values, not a `FLOAT_VEC2`.
-
-When a parameter is an attribute, `count` can not be defined since GLSL does not support arrays of attributes.  When a parameter is a uniform and a glTF-defined semantic is used, the semantic must be `JOINTMATRIX`; application-specific parameters can be arrays and, therefore, define `count`.
-
-* **Type**: `integer`
-* **Required**: No
-* **Minimum**: ` >= 1`
-
-### parameter.node
-
-The id of the [`node`](#reference-node) whose transform is used as the parameter's value.  When this is defined, `type` must be `35676` (FLOAT_MAT4), therefore, when the semantic is `"MODELINVERSETRANSPOSE"`, `"MODELVIEWINVERSETRANSPOSE"`, or `"VIEWPORT"`, the `node` property can't be defined.
-
-* **Type**: `string`
-* **Required**: No
-* **Minimum Length**: ` >= 1`
-
-### parameter.type :white_check_mark:
-
-The datatype. All valid values correspond to WebGL enums and depend on whether parameter is attribute or uniform. Allowed values are `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), `5124` (INT), `5125` (UNSIGNED_INT), `5126` (FLOAT), `35664` (FLOAT_VEC2), `35665` (FLOAT_VEC3), `35666` (FLOAT_VEC4), `35667` (INT_VEC2), `35668` (INT_VEC3), `35669` (INT_VEC4), `35670` (BOOL), `35671` (BOOL_VEC2), `35672` (BOOL_VEC3), `35673` (BOOL_VEC4), `35674` (FLOAT_MAT2), `35675` (FLOAT_MAT3), `35676` (FLOAT_MAT4), and `35678` (SAMPLER_2D).
+The datatype. All valid values correspond to WebGL enums. Allowed values are `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), `5124` (INT), `5125` (UNSIGNED_INT), `5126` (FLOAT), `35664` (FLOAT_VEC2), `35665` (FLOAT_VEC3), `35666` (FLOAT_VEC4), `35667` (INT_VEC2), `35668` (INT_VEC3), `35669` (INT_VEC4), `35670` (BOOL), `35671` (BOOL_VEC2), `35672` (BOOL_VEC3), `35673` (BOOL_VEC4), `35674` (FLOAT_MAT2), `35675` (FLOAT_MAT3), `35676` (FLOAT_MAT4), and `35678` (SAMPLER_2D).
 
 * **Type**: `integer`
 * **Required**: Yes
 * **Allowed values**: `5120`, `5121`, `5122`, `5123`, `5124`, `5125`, `5126`, `35664`, `35665`, `35666`, `35667`, `35668`, `35669`, `35670`, `35671`, `35672`, `35673`, `35674`, `35675`, `35676`, `35678`
 
-### parameter.semantic
+### attribute.semantic
 
-Identifies a parameter with a well-known meaning.  Uniform semantics include `"LOCAL"` (FLOAT_MAT4), `"MODEL"` (FLOAT_MAT4), `"VIEW"` (FLOAT_MAT4), `"PROJECTION"` (FLOAT_MAT4), `"MODELVIEW"` (FLOAT_MAT4), `"MODELVIEWPROJECTION"` (FLOAT_MAT4), `"MODELINVERSE"` (FLOAT_MAT4), `"VIEWINVERSE"` (FLOAT_MAT4), `"PROJECTIONINVERSE"` (FLOAT_MAT4), `"MODELVIEWINVERSE"` (FLOAT_MAT4), `"MODELVIEWPROJECTIONINVERSE"` (FLOAT_MAT4), `"MODELINVERSETRANSPOSE"` (FLOAT_MAT3), `"MODELVIEWINVERSETRANSPOSE"` (FLOAT_MAT3), `"VIEWPORT"` (FLOAT_VEC4), `"JOINTMATRIX"` (FLOAT_MAT4[]).  Attribute semantics include `"POSITION"`, `"NORMAL"`, `"TEXCOORD"`, `"COLOR"`, `"JOINT"`, and `"WEIGHT"`.  `"TEXCOORD"` and `"COLOR"` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `"TEXCOORD_0"`, `"TEXCOORD_1"`, `"COLOR_1"` etc.  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
+Identifies a attribute with a well-known meaning.  Attribute semantics include `"POSITION"`, `"NORMAL"`, `"TEXCOORD"`, `"COLOR"`, `"JOINT"`, and `"WEIGHT"`.  `"TEXCOORD"` and `"COLOR"` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `"TEXCOORD_0"`, `"TEXCOORD_1"`, `"COLOR_1"` etc.  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
 
 * **Type**: `string`
-* **Required**: No, except this property is required when the parameter is an attribute, i.e., when the parameter is referenced from [`technique.attributes`](#reference-technique.attributes).
+* **Required**: Yes
 
-### parameter.value
+### attribute.extensions
 
-The value of the parameter. The length is determined by the values of the `type` and `count` (if present) properties.  A [`material`](#reference-material) value with the same name, when specified, overrides this value.  This must be `undefined` when the parameter is an attribute, i.e., it is in [technique.attributes](#reference-technique.attributes).
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### attribute.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
+
+
+<!-- ======================================================================= -->
+<a name="reference-technique.uniforms"></a>
+## technique.uniforms
+
+An object defining a uniform input to a [`technique`](#reference-technique), and an optional semantic and value.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**count**|`integer`|When defined, the uniform is an array of count elements of the specified type.  Otherwise, the uniform is not an array.|No|
+|**node**|`string`|The id of the [`node`](#reference-node) whose transform is used as the uniform's value.|No|
+|**type**|`integer`|The datatype.| :white_check_mark: Yes|
+|**semantic**|`string`|Identifies a uniform with a well-known meaning.|No|
+|**value**|`number[]`, `boolean[]`, or `string[]`|The value of the uniform.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
+**JSON schema**: [technique.uniforms.schema.json](schema/technique.uniforms.schema.json)
+
+### uniform.count
+
+When defined, the uniform is an array of `count` elements of the specified type.  Otherwise, the uniform is not an array.  When defined, `value`'s length equals to `count`, times the number of components in the `type`, e.g., `3` for `FLOAT_VEC3`.
+
+An array uniform of scalar values is not the same as a vector uniform of the same size; for example, when `count` is `2` and `type` is `5126` (FLOAT), the uniform is an array of two floating-point values, not a `FLOAT_VEC2`.
+
+When a uniform is a glTF-defined semantic is used, the semantic must be `JOINTMATRIX`; application-specific uniforms can be arrays and, therefore, define `count`.
+
+* **Type**: `integer`
+* **Required**: No
+* **Minimum**: ` >= 1`
+
+### uniform.node
+
+The id of the [`node`](#reference-node) whose transform is used as the uniform's value.  When this is defined, `type` must be `35676` (FLOAT_MAT4), therefore, when the semantic is `"MODELINVERSETRANSPOSE"`, `"MODELVIEWINVERSETRANSPOSE"`, or `"VIEWPORT"`, the `node` property can't be defined.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**: ` >= 1`
+
+### uniform.type :white_check_mark:
+
+The datatype. All valid values correspond to WebGL enums. Allowed values are `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), `5124` (INT), `5125` (UNSIGNED_INT), `5126` (FLOAT), `35664` (FLOAT_VEC2), `35665` (FLOAT_VEC3), `35666` (FLOAT_VEC4), `35667` (INT_VEC2), `35668` (INT_VEC3), `35669` (INT_VEC4), `35670` (BOOL), `35671` (BOOL_VEC2), `35672` (BOOL_VEC3), `35673` (BOOL_VEC4), `35674` (FLOAT_MAT2), `35675` (FLOAT_MAT3), `35676` (FLOAT_MAT4), and `35678` (SAMPLER_2D).
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Allowed values**: `5120`, `5121`, `5122`, `5123`, `5124`, `5125`, `5126`, `35664`, `35665`, `35666`, `35667`, `35668`, `35669`, `35670`, `35671`, `35672`, `35673`, `35674`, `35675`, `35676`, `35678`
+
+### uniform.semantic
+
+Identifies a uniform with a well-known meaning.  Uniform semantics include `"LOCAL"` (FLOAT_MAT4), `"MODEL"` (FLOAT_MAT4), `"VIEW"` (FLOAT_MAT4), `"PROJECTION"` (FLOAT_MAT4), `"MODELVIEW"` (FLOAT_MAT4), `"MODELVIEWPROJECTION"` (FLOAT_MAT4), `"MODELINVERSE"` (FLOAT_MAT4), `"VIEWINVERSE"` (FLOAT_MAT4), `"PROJECTIONINVERSE"` (FLOAT_MAT4), `"MODELVIEWINVERSE"` (FLOAT_MAT4), `"MODELVIEWPROJECTIONINVERSE"` (FLOAT_MAT4), `"MODELINVERSETRANSPOSE"` (FLOAT_MAT3), `"MODELVIEWINVERSETRANSPOSE"` (FLOAT_MAT3), `"VIEWPORT"` (FLOAT_VEC4), `"JOINTMATRIX"` (FLOAT_MAT4[]).  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
+
+* **Type**: `string`
+* **Required**: No
+
+### uniform.value
+
+The value of the uniform. The length is determined by the values of the `type` and `count` (if present) properties.  A [`material`](#reference-material) value with the same name, when specified, overrides this value.
 
 * **Type of each property**: `number[]`, `boolean[]`, or `string[]`
 * **Required**: No
 
-### parameter.extensions
+### uniform.extensions
 
 Dictionary object with extension-specific objects.
 
@@ -642,207 +612,12 @@ Dictionary object with extension-specific objects.
 * **Required**: No
 * **Type of each property**: `object`
 
-### parameter.extras
+### uniform.extras
 
 Application-specific data.
 
 * **Type**: `any`
 * **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-technique.states"></a>
-## states
-
-Fixed-function rendering states.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**enable**|`integer[]`|WebGL states to enable.|No, default: `[]`|
-|**functions**|[`technique.states.functions`](#reference-technique.states.functions)|Arguments for fixed-function rendering state functions other than `enable()`/`disable()`.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-**JSON schema**: [technique.states.schema.json](schema/technique.states.schema.json)
-
-### states.enable
-
-WebGL states to enable.  States not in the array are disabled.  Valid values for each element correspond to WebGL enums: `3042` (BLEND), `2884` (CULL_FACE), `2929` (DEPTH_TEST), `32823` (POLYGON_OFFSET_FILL), and `32926` (SAMPLE_ALPHA_TO_COVERAGE).
-
-* **Type**: `integer[]`
-   * Each element in the array must be unique.
-   * Each element in the array must be one of the following values: `3042`, `2884`, `2929`, `32823`, `32926`, `3089`.
-* **Required**: No, default: `[]`
-* **Related WebGL functions**: `enable()` and `disable()`
-
-### states.functions
-
-Arguments for fixed-function rendering state functions other than `enable()`/`disable()`.
-
-* **Type**: [`technique.states.functions`](#reference-technique.states.functions)
-* **Required**: No
-
-### states.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### states.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-technique.states.functions"></a>
-## functions
-
-Arguments for fixed-function rendering state functions other than `enable()`/`disable()`.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**blendColor**|`number[4]`|Floating-point values passed to `blendColor()`. [red, green, blue, alpha]|No, default: `[0,0,0,0]`|
-|**blendEquationSeparate**|`integer[2]`|Integer values passed to `blendEquationSeparate()`.|No, default: `[32774,32774]`|
-|**blendFuncSeparate**|`integer[4]`|Integer values passed to `blendFuncSeparate()`.|No, default: `[1,0,1,0]`|
-|**colorMask**|`boolean[4]`|Boolean values passed to `colorMask()`. [red, green, blue, alpha].|No, default: `[true,true,true,true]`|
-|**cullFace**|`integer[1]`|Integer value passed to `cullFace()`.|No, default: `[1029]`|
-|**depthFunc**|`integer[1]`|Integer values passed to `depthFunc()`.|No, default: `[513]`|
-|**depthMask**|`boolean[1]`|Boolean value passed to `depthMask()`.|No, default: `[true]`|
-|**depthRange**|`number[2]`|Floating-point values passed to `depthRange()`. [zNear, zFar]|No, default: `[0,1]`|
-|**frontFace**|`integer[1]`|Integer value passed to `frontFace()`.|No, default: `[2305]`|
-|**lineWidth**|`number[1]`|Floating-point value passed to `lineWidth()`.|No, default: `[1]`|
-|**polygonOffset**|`number[2]`|Floating-point value passed to `polygonOffset()`.  [factor, units]|No, default: `[0,0]`|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-**JSON schema**: [technique.states.functions.schema.json](schema/technique.states.functions.schema.json)
-
-### functions.blendColor
-
-Floating-point values passed to `blendColor()`. [red, green, blue, alpha]
-
-* **Type**: `number[4]`
-   * Each element in the array must be greater than or equal to `0` and less than or equal to `1`.
-* **Required**: No, default: `[0,0,0,0]`
-* **Related WebGL functions**: `blendColor()`
-
-### functions.blendEquationSeparate
-
-Integer values passed to `blendEquationSeparate()`. [rgb, alpha]. Valid values correspond to WebGL enums: `32774` (FUNC_ADD), `32778` (FUNC_SUBTRACT), and `32779` (FUNC_REVERSE_SUBTRACT).
-
-* **Type**: `integer[2]`
-   * Each element in the array must be one of the following values: `32774`, `32778`, `32779`.
-* **Required**: No, default: `[32774,32774]`
-* **Related WebGL functions**: `blendEquationSeparate()`
-
-### functions.blendFuncSeparate
-
-Integer values passed to `blendFuncSeparate()`. [srcRGB, dstRGB, srcAlpha, dstAlpha]. Valid values correspond to WebGL enums: `0` (ZERO), `1` (ONE), `768` (SRC_COLOR), `769` (ONE_MINUS_SRC_COLOR), `774` (DST_COLOR), `775` (ONE_MINUS_DST_COLOR), `770` (SRC_ALPHA), `771` (ONE_MINUS_SRC_ALPHA), `772` (DST_ALPHA), `773` (ONE_MINUS_DST_ALPHA), `32769` (CONSTANT_COLOR), `32770` (ONE_MINUS_CONSTANT_COLOR), `32771` (CONSTANT_ALPHA), `32772` (ONE_MINUS_CONSTANT_ALPHA), and `776` (SRC_ALPHA_SATURATE).
-
-* **Type**: `integer[4]`
-   * Each element in the array must be one of the following values: `0`, `1`, `768`, `769`, `774`, `775`, `770`, `771`, `772`, `773`, `32769`, `32770`, `32771`, `32772`, `776`.
-* **Required**: No, default: `[1,0,1,0]`
-* **Related WebGL functions**: `blendFuncSeparate()`
-
-### functions.colorMask
-
-Boolean values passed to `colorMask()`. [red, green, blue, alpha].
-
-* **Type**: `boolean[4]`
-* **Required**: No, default: `[true,true,true,true]`
-* **Related WebGL functions**: `colorMask()`
-
-### functions.cullFace
-
-Integer value passed to `cullFace()`. Valid values correspond to WebGL enums: `1028` (FRONT), `1029` (BACK), and `1032` (FRONT_AND_BACK).
-
-* **Type**: `integer[1]`
-   * Each element in the array must be one of the following values: `1028`, `1029`, `1032`.
-* **Required**: No, default: `[1029]`
-* **Related WebGL functions**: `cullFace()`
-
-### functions.depthFunc
-
-Integer values passed to `depthFunc()`. Valid values correspond to WebGL enums: `512` (NEVER), `513` (LESS), `515` (LEQUAL), `514` (EQUAL), `516` (GREATER), `517` (NOTEQUAL), `518` (GEQUAL), and `519` (ALWAYS).
-
-* **Type**: `integer[1]`
-   * Each element in the array must be one of the following values: `512`, `513`, `515`, `514`, `516`, `517`, `518`, `519`.
-* **Required**: No, default: `[513]`
-* **Related WebGL functions**: `depthFunc()`
-
-### functions.depthMask
-
-Boolean value passed to `depthMask()`.
-
-* **Type**: `boolean[1]`
-* **Required**: No, default: `[true]`
-* **Related WebGL functions**: `depthMask()`
-
-### functions.depthRange
-
-Floating-point values passed to `depthRange()`. zNear must be less than or equal to zFar. [zNear, zFar]
-
-* **Type**: `number[2]`
-   * Each element in the array must be greater than or equal to `0` and less than or equal to `1`.
-* **Required**: No, default: `[0,1]`
-* **Related WebGL functions**: `depthRange()`
-
-### functions.frontFace
-
-Integer value passed to `frontFace()`.  Valid values correspond to WebGL enums: `2304` (CW) and `2305` (CCW).
-
-* **Type**: `integer[1]`
-   * Each element in the array must be one of the following values: `2304`, `2305`.
-* **Required**: No, default: `[2305]`
-* **Related WebGL functions**: `frontFace()`
-
-### functions.lineWidth
-
-Floating-point value passed to `lineWidth()`.
-
-* **Type**: `number[1]`
-   * Each element in the array must be greater than `0`.
-* **Required**: No, default: `[1]`
-* **Related WebGL functions**: `lineWidth()`
-
-### functions.polygonOffset
-
-Floating-point value passed to `polygonOffset()`.  [factor, units]
-
-* **Type**: `number[2]`
-* **Required**: No, default: `[0,0]`
-* **Related WebGL functions**: `polygonOffset()`
-
-### functions.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### functions.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-
 
 
 ### JSON Schema
@@ -850,10 +625,8 @@ Application-specific data.
 * [`program`](#reference-program)
 * [`shader`](#reference-shader)
 * [`technique`](#reference-technique)
-   * [`parameters`](#reference-technique.parameters)
-   * [`states`](#reference-technique.states)
-      * [`functions`](#reference-technique.states.functions)
-
+   * [`attributes`](#reference-technique.attributes)
+   * [`uniforms`](#reference-technique.uniforms)
 
 ## Known Implementations
 
