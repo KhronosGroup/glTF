@@ -14,7 +14,7 @@
                 "$ref" : "technique.attribute.schema.json"
             },
             "default" : {},
-            "gltf_detailedDescription" : "A dictionary object of technique.attribute objects.  Each object defines an attribute input."
+            "gltf_detailedDescription" : "A dictionary object of technique.attribute objects.  Each object defines an attribute input with a type and a semantic."
         },
         "program" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
@@ -22,14 +22,14 @@
         },
         "uniforms" : {
             "type" : "object",
-            "description" : "A dictionary object of technique.attribute objects.",
+            "description" : "A dictionary object of technique.uniform objects.",
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "technique.uniform.schema.json"
             },
             "default" : {},
-            "gltf_detailedDescription" : "A dictionary object of technique.attribute objects.  Each object defines a uniform input, and an optional semantic and value."
+            "gltf_detailedDescription" : "A dictionary object of technique.uniform objects.  Each object defines a uniform input with a type and an optional semantic and value."
         },
         "name" : {},
         "extensions" : {},
