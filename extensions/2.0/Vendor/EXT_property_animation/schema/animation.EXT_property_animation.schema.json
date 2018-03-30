@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_property_animation glTF extension",
+    "type": "object",
+    "description": "glTF extension for arbitrary animated properties.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "channels": {
+            "type": "array",
+            "description": "An array of channels, each of which targets an animation's sampler at a property. Different channels of the same animation can't have equal targets.",
+            "items": {
+                "$ref": "EXT_property_animation.channel.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
