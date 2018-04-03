@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "MSFT_packing_occlusionRoughnessMetallic extension",
+  "type": "object",
+  "description": "glTF extension the specifies a packing of occlusion, roughness and metallic in a single texture and a two channel normal map.",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+  "properties": {
+    "occlusionRoughnessMetallicTexture": {
+      "type": "object",
+      "description": "A texture with packing Occlusion (R), Roughness (G), Metallic (B).",
+      "properties": {
+        "index": {
+          "allOf": [ { "$ref": "glTFid.schema.json" } ],
+          "description": "The index of the texture."
+        }
+      }
+    },
+    "roughnessMetallicOcclusionTexture": {
+      "type": "object",
+      "description": "A texture with packing Roughness (R), Metallic (G), Occlusion (B).",
+      "properties": {
+        "index": {
+          "allOf": [ { "$ref": "glTFid.schema.json" } ],
+          "description": "The index of the texture."
+        }
+      }
+    },
+    "normalTexture": {
+      "type": "object",
+      "description": "A texture which contains two channel (RG) normal map.",
+      "properties": {
+        "index": {
+          "allOf": [ { "$ref": "glTFid.schema.json" } ],
+          "description": "The index of the texture."
+        }
+      }
+    },
+    "extensions": {},
+    "extras": {}
+  }
+}

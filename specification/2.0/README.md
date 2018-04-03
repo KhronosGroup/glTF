@@ -20,6 +20,7 @@ Khronos 3D Formats Working Group and Alumni
 * Remi Arnaud, Starbreeze Studios
 * Emiliano Gambaretto, Adobe
 * Gary Hsu, Microsoft
+* Max Limper, Fraunhofer IGD
 * Scott Nagy, Microsoft
 * Marco Hutter, Individual Contributor
 * Uli Klumpp, Individual Contributor
@@ -120,7 +121,7 @@ glTF assets are JSON files plus supporting external data. Specifically, a glTF a
 
 * A JSON-formatted file (`.gltf`) containing a full scene description: node hierarchy, materials, cameras, as well as descriptor information for meshes, animations, and other constructs
 * Binary files (`.bin`) containing geometry and animation data, and other buffer-based data
-* Image files (`.jpg`, `.png`, etc.) for textures
+* Image files (`.jpg`, `.png`) for textures
 
 Assets defined in other formats, such as images, may be stored in external files referenced via URI, stored side-by-side in GLB container, or embedded directly into the JSON using [data URIs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs).
 
@@ -485,7 +486,7 @@ See [GLB File Format Specification](#glb-file-format-specification) for details 
 
 All large data for meshes, skins, and animations is stored in buffers and retrieved via accessors.
 
-An *accessor* defines a method for retrieving data as typed arrays from within a `bufferView`. The accessor specifies a component type (e.g. `5126 (GL_FLOAT)`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the `bufferView` using the properties `byteOffset` and `count`. The latter specifies the number of elements within the `bufferView`, *not* the number of bytes. Elements could be, e.g., vertex indices, vertex attributes, animation keyframes, etc.
+An *accessor* defines a method for retrieving data as typed arrays from within a `bufferView`. The accessor specifies a component type (e.g. `5126 (FLOAT)`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the `bufferView` using the properties `byteOffset` and `count`. The latter specifies the number of elements within the `bufferView`, *not* the number of bytes. Elements could be, e.g., vertex indices, vertex attributes, animation keyframes, etc.
 
 All accessors are stored in the asset's `accessors` array.
 
@@ -530,7 +531,7 @@ The following fragment shows two accessors, the first is a scalar accessor for r
 
 #### Floating-Point Data
 
-Data of `5126 (GL_FLOAT)` componentType must use IEEE-754 single precision format. 
+Data of `5126 (FLOAT)` componentType must use IEEE-754 single precision format. 
 
 Values of `NaN`, `+Infinity`, and `-Infinity` are not allowed.
 
@@ -637,7 +638,7 @@ When `byteStride` of referenced `bufferView` is not defined, it means that acces
 
 Each `accessor` must fit its `bufferView`, i.e., `accessor.byteOffset + STRIDE * (accessor.count - 1) + SIZE_OF_ELEMENT` must be less than or equal to `bufferView.length`.
 
-For performance and compatibility reasons, vertex attributes must be aligned to 4-byte boundaries inside `bufferView` (i.e., `accessor.byteOffset` and `bufferView.byteStride` must be multiples of 4). 
+For performance and compatibility reasons, each element of a vertex attribute must be aligned to 4-byte boundaries inside `bufferView` (i.e., `accessor.byteOffset` and `bufferView.byteStride` must be multiples of 4).
 
 Accessors of matrix type have data stored in column-major order; start of each column must be aligned to 4-byte boundaries. To achieve this, three `type`/`componentType` combinations require special layout:
 
@@ -743,7 +744,7 @@ Valid accessor type and component type for each attribute semantic property are 
 |Name|Accessor Type(s)|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
 |`POSITION`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex positions|
-|`NORMAL`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex normals|
+|`NORMAL`|`"VEC3"`|`5126`&nbsp;(FLOAT)|Normalized XYZ vertex normals|
 |`TANGENT`|`"VEC4"`|`5126`&nbsp;(FLOAT)|XYZW vertex tangents where the *w* component is a sign value (-1 or +1) indicating handedness of the tangent basis|
 |`TEXCOORD_0`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the first set|
 |`TEXCOORD_1`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the second set|
@@ -766,7 +767,7 @@ All indices for indexed attribute semantics, must start with 0 and be continuous
 > **Implementation note:** When normals and tangents are specified, client implementations should compute the bitangent by taking the cross product of the normal and tangent xyz vectors and multiplying against the w component of the tangent: `bitangent = cross(normal, tangent.xyz) * tangent.w`
 
 > **Implementation note:** When the 'mode' property is set to a non-triangular type (such as POINTS or LINES) some additional considerations must be taken while considering the proper rendering technique:
-> > For LINES with with `NORMAL` and `TANGENT` properties can render with standard lighting including normal maps.
+> > For LINES with `NORMAL` and `TANGENT` properties can render with standard lighting including normal maps.
 > > 
 > > For all POINTS or LINES with no `TANGENT` property, render with standard lighting but ignore any normal maps on the material.
 > > 
@@ -837,19 +838,45 @@ After applying morph targets to vertex positions and normals, tangent space may 
 
 ### Skins
 
-All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property (which points to an accessor with IBM data), used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property points to node that is the root of a joints hierarchy. 
+All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property (which points to an accessor with IBM data), used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property points to the node that is the root of a joints hierarchy. 
 
-> **Implementation Note:** Matrix, defining how to pose the skin's geometry for use with the joints ("Bind Shape Matrix") should be premultiplied to mesh data or to Inverse Bind Matrices. 
+> **Implementation Note:** The matrix defining how to pose the skin's geometry for use with the joints ("Bind Shape Matrix") should be premultiplied to mesh data or to Inverse Bind Matrices. 
+
+> **Implementation Note:** Client implementations should apply only the transform of the skeleton root node to the skinned mesh while ignoring the transform of the skinned mesh node. In the example below, the position of `node_0` and the scale of `node_1` are applied while the position of `node_3` and rotation of `node_4` are ignored.
 
 ```json
-{    
+{
+    "nodes": [
+        {
+            "name": "node_0",
+            "children": [ 1 ],
+            "position": [ 0.0, 1.0, 0.0 ]
+        },
+        {
+            "name": "node_1",
+            "children": [ 2 ],
+            "scale": [ 0.5, 0.5, 0.5 ]
+        },
+        {
+            "name": "node_2"
+        },
+        {
+            "name": "node_3",
+            "children": [ 4 ],
+            "position": [ 1.0, 0.0, 0.0 ]
+        },
+        {
+            "name": "node_4",
+            "mesh": 0,
+            "rotation": [ 0.0, 1.0, 0.0, 0.0 ],
+            "skin": 0
+        }
+    ],
     "skins": [
         {
-            "inverseBindMatrices": 11,
-            "joints": [
-                1,
-                2
-            ],
+            "name": "skin_0",
+            "inverseBindMatrices": 0,
+            "joints": [ 1, 2 ],
             "skeleton": 1
         }
     ]
@@ -1563,8 +1590,8 @@ The start and the end of each chunk must be aligned to 4-byte boundary. See chun
 | 1. | 0x4E4F534A | JSON | Structured JSON content | 1 |
 | 2. | 0x004E4942 | BIN | Binary buffer | 0 or 1 |
 
- Client implementations must ignore chunks with unknown types.
- 
+Client implementations must ignore chunks with unknown types to enable glTF extensions to reference additional chunks with new types following the first two chunks.
+
 #### Structured JSON Content
 
 This chunk holds the structured glTF content description, as it would be provided within a .gltf file.
@@ -1578,6 +1605,8 @@ This chunk must be padded with trailing `Space` chars (`0x20`) to satisfy alignm
 #### Binary buffer
 
 This chunk contains the binary payload for geometry, animation key frames, skins, and images. See glTF specification for details on referencing this chunk from JSON.
+
+This chunk must be the second chunk of the Binary glTF asset.
 
 This chunk must be padded with trailing zeros (`0x00`) to satisfy alignment requirements.
 
@@ -2614,7 +2643,7 @@ A set of parameter values that are used to define the metallic-roughness materia
 
 #### material.normalTexture
 
-A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [1/255 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer. In GLSL, this vector would be unpacked like so: `float3 normalVector = tex2D(normalMap, texCoord) * 2 - 1`.
+A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [1/255 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer. In GLSL, this vector would be unpacked like so: `vec3 normalVector = tex2D(normalMap, texCoord) * 2 - 1`. Client implementations should normalize the normal vectors before using them in lighting equations.
 
 * **Type**: `object`
 * **Required**: No
@@ -3799,7 +3828,6 @@ Application-specific data.
 * Scott Hunter, Analytical Graphics, Inc.
 * Brandon Jones, Google
 * Sean Lilley, Cesium
-* Max Limper, Fraunhofer IGD
 * Juan Linietsky, Godot Engine
 * Matthew McMullan
 * Mohamad Moneimne, University of Pennsylvania
