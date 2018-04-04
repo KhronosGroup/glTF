@@ -65,7 +65,7 @@ This example utilizes only the lower left quadrant of the source image, rotated 
 {
   "materials": [{
     "emissionTexture": {
-      "source": 0,
+      "index": 0,
       "extensions": {
         "KHR_texture_transform": {
           "offset": [0, 1],
@@ -84,7 +84,7 @@ This example inverts the T axis, effectively defining a bottom-left origin.
 {
   "materials": [{
     "emissionTexture": {
-      "source": 0,
+      "index": 0,
       "extensions": {
         "KHR_texture_transform": {
           "offset": [0, 1],
