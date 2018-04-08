@@ -1193,7 +1193,7 @@ The default material, used when a mesh does not specify a material, is defined t
 
 This specification does not define size and style of non-triangular primitives (such as POINTS or LINES) at this time, and applications may use various techniques to render these primitives as appropriate. However, the following recommendations are provided for consistency:
 
-* POINTS and LINES should have widths of 1px in screen space.
+* POINTS and LINES should have widths of 1px in viewport space.
 * For LINES with `NORMAL` and `TANGENT` properties, render with standard lighting including normal maps.
 * For POINTS or LINES with no `TANGENT` property, render with standard lighting but ignore any normal maps on the material.
 * For POINTS or LINES with no `NORMAL` property, don't calculate lighting and instead output the `COLOR` value for each pixel drawn.
