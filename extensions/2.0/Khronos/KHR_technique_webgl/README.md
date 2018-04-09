@@ -2,7 +2,10 @@
 
 ## Contributors
 
-* TODO: Name, affiliation, and contact info for each contributor
+* Gabby Getz, Cesium, @ggetz
+* Alexey Knyazev, Individual Contributor, @lexaknyazev
+
+Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc. See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
 
@@ -24,7 +27,7 @@ This extension specification is targeting WebGL 1.0, and can be supported in any
 
 ### Extending Materials
 
-If a `material` contains an `extensions` property and the `extensions` property defines its `KHR_techniques_webgl` property, then the specified shading technique can be used, as specified in the asset's `techniques`.
+A shading technique and any corresponding uniform values are specified by adding the `KHR_techniques_webgl` extension to any glTF material. For example, the following defines a material which selects the technique at index `0` from the `techniques` array and specifies a blue color for the `u_light0Color` uniform.
 
 ```json
 "materials": [
@@ -34,7 +37,7 @@ If a `material` contains an `extensions` property and the `extensions` property 
                 "technique": 0,
                 "values" : {
                     "u_light0Color": [
-                        1.0,
+                        0.8,
                         0.8,
                         1.0
                     ]
@@ -51,7 +54,7 @@ The `technique` property points to the index of a technique listed in the asset'
 
 #### Values
 
-The `values` property defines the list of values, each of which is passed to the technique uniform of the same name, and when specified, overrides the corresponding uniform `value`.
+The `values` property defines the list of values, each of which is passed to the technique uniform of the same name, and when specified, overrides the corresponding uniform `value`. This property must be present if no uniform `value` is supplied.
 
 ## Extensions
 
@@ -59,7 +62,7 @@ The `values` property defines the list of values, each of which is passed to the
 
 ### Techniques
 
-A technique describes the shading used for a material. The list of the asset's techniques are stored in the `techniques` property. Each technique must includes the `program` property and list any attribute or uniforms by name in the `attributes` and `uniforms` dictionary properties which define the objects to be passed as inputs to the program.
+One or more techniques are listed in the `techniques` property. A technique describes the shading used for an asset's material. Each technique must include the `program` property and list any attributes or uniforms by their key in the `attributes` and `uniforms` dictionary properties, which defines the objects to be passed as inputs to the program.
 
 The following example shows a technique and the properties it defines. This section describes each property in detail.
 
@@ -79,7 +82,7 @@ The following example shows a technique and the properties it defines. This sect
                 },
                 "a_texcoord0": {
                     "type": 35664,
-                    "semantic": "TEX_COORD"
+                    "semantic": "TEXCOORD_0"
                 }
                 },
             "uniforms": {
@@ -107,7 +110,7 @@ The following example shows a technique and the properties it defines. This sect
                     ]
                 },
                 "u_light0Transform": {
-                    "semantic": "MODELVIEW",
+                    "semantic": "MODEL",
                     "node": 1,
                     "type": 35676
                 },
@@ -131,17 +134,17 @@ The following example shows a technique and the properties it defines. This sect
 
 #### Program Instances
 
-The `program` property of a technique creates an instance of a shader program. The value of the property is the index of a program defined in the asset's `programs` dictionary object (see next section). A shader program may be instanced multiple times within the glTF asset.
+The `program` property of a technique creates an instance of a shader program. The value of the property is the index of a program defined in the asset's `programs` property (see next section). A shader program may be instanced multiple times within the glTF asset.
 
 Attributes and uniforms passed to the program instance's shader code are defined in the `attributes` and `uniforms` properties of the technique, respectively.
 
 #### Attributes
 
-The `attributes` dictionary property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's name is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is an [attribute](#reference-technique.attributes) object, where the type (GL types such as a floating point number, vector, texture, etc.) and semantic of the attribute is defined.
+The `attributes` dictionary property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's key is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is an [attribute](#reference-technique.attributes) object, where the type (GL types such as a floating point number, vector, etc.) and semantic of the attribute is defined.
 
 #### Uniforms
 
-The `uniforms` dictionary property specifies the uniform variables that will be passed to the shader. Each uniform's name is a string that corresponds to the uniform name in the GLSL source code. Each uniform's value is a string that references a [uniform](#reference-technique.uniforms) object, where the type (GL types such as a floating point number, vector, texture, etc.) and potentially the semantic and default value of the uniform is defined.
+The `uniforms` dictionary property specifies the uniform variables that will be passed to the shader. Each uniform's key is a string that corresponds to the uniform name in the GLSL source code. Each uniform's value is a string that references a [uniform](#reference-technique.uniforms) object, where the type (GL types such as a floating point number, vector, etc.) and potentially the semantic and default value of the uniform is defined.
 
 When a material instances a technique, the name of each supplied value in its `values` property must correspond to one of the uniforms defined in the technique.
 
@@ -151,9 +154,9 @@ The above example illustrates several uniforms. The property `u_ambient` is defi
 
 Technique uniforms may also optionally define a *semantic*, an enumerated value describing how the runtime is to interpret the data to be passed to the shader.
 
-In the above example, the uniform `u_light0Transform` defines the `MODELVIEW` semantic, which corresponds to the world space position of the node referenced in the property `node`, in this case the node `1`, which refers to the id of a node that contains a light source.
+In the above example, the uniform `u_light0Transform` defines the `MODEL` semantic, which corresponds to the world space position of the node referenced in the property `node`, in this case the node `1`, which refers to the id of a node that contains a light source.
 
-If no `node` property is supplied for a semantic, the semantic is implied in a context-specific manner: either to the node which is being rendered, or in the case of camera-specific semantics, to the current camera. In the following fragment, which defines a uniform named `u_projectionMatrix` that is derived from the implementation's projection matrix, the semantic would be applied to the camera.
+If no `node` property is supplied for a uniform, the semantic is implied in a context-specific manner: either to the node which is being rendered, or in the case of camera-specific semantics, to the current camera. In the following fragment, which defines a uniform named `u_projectionMatrix` that is derived from the implementation's projection matrix, the semantic would be applied to the camera.
 
 ```json
 {
@@ -196,7 +199,7 @@ For forward-compatibility, application-specific semantics must start with an und
 
 GLSL shader programs are stored in the asset's `programs` property. This property contains one or more objects, one for each program.
 
-Each shader program includes an `attributes` property, which specifies the vertex attributes that will be passed to the shader, and the properties `fragmentShader` and `vertexShader`, which reference the files for the fragment and vertex shader GLSL source code, respectively, as defined the id of the item in the `shaders` dictionary property.
+Each shader program includes an `attributes` property, which specifies the vertex attributes that will be passed to the shader, and the properties `fragmentShader` and `vertexShader`, which reference the index of the shader in the `shaders` property for the fragment and vertex shader GLSL source code, respectively.
 
 ```json
 {
@@ -216,7 +219,7 @@ Each shader program includes an `attributes` property, which specifies the verte
 
 #### Shaders
 
-Shader source files are stored in the asset's `shaders` dictionary property, which contains one or more shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and either a `uri` to the file or a reference to a bufferView. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset. 
+One or more shader source files are listed in the asset's `shaders` property. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and either a `uri` to the file or a reference to a `bufferView`. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset. 
 
 ```json
 {
@@ -239,42 +242,79 @@ Shader source files are stored in the asset's `shaders` dictionary property, whi
 
 ## Properties Reference
 
+# Objects
+* [`KHR_techniques_webgl glTF extension`](#reference-khr_techniques_webgl-gltf-extension) (root object)
+* [`Program`](#reference-program)
+* [`Shader`](#reference-shader)
+* [`Technique`](#reference-technique)
+   * [`Attribute`](#reference-attribute)
+   * [`Uniform`](#reference-uniform)
+
+
+---------------------------------------
+<a name="reference-khr_techniques_webgl-gltf-extension"></a>
+## KHR_techniques_webgl glTF extension
+
+Instances of shading techniques with external shader programs along with their parameterized values.  Shading techniques describe data types and semantics for GLSL vertex and fragment shader programs.
+
+**Properties**
+
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**programs**|`object`|A dictionary object of [`program`](#reference-program) objects.|No, default: `{}`|
-|**shaders**|`object`|A dictionary object of [`shader`](#reference-shader) objects.|No, default: `{}`|
-|**techniques**|`object`|A dictionary object of [`technique`](#reference-technique) objects.|No, default: `{}`|
+|**programs**|Program `[1-*]`|An array of [`Program`](#reference-program) objects.| :white_check_mark: Yes|
+|**shaders**|Shader `[1-*]`|An array of [`Shader`](#reference-shader) objects.| :white_check_mark: Yes|
+|**techniques**|Technique `[1-*]`|An array of [`Technique`](#reference-technique) objects.| :white_check_mark: Yes|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
 
-### glTF.programs
+Additional properties are allowed.
 
-A dictionary object of shader [`program`](#reference-program) objects.  The name of each program is an ID in the global glTF namespace that is used to reference the program.
+* **JSON schema**: [glTF.KHR_technique_webgl.schema.json](schema/glTF.KHR_technique_webgl.schema.json)
+
+### khr_techniques_webgl.programs :white_check_mark: 
+
+An array of [`Program`](#reference-program) objects.
+
+* **Type**: Program `[1-*]`
+* **Required**: Yes
+
+### khr_techniques_webgl.shaders :white_check_mark: 
+
+An array of [`Shader`](#reference-shader) objects.
+
+* **Type**: Shader `[1-*]`
+* **Required**: Yes
+
+### khr_techniques_webgl.techniques :white_check_mark: 
+
+An array of [`Technique`](#reference-technique) objects.  A technique is a template for a material appearance.
+
+* **Type**: Technique `[1-*]`
+* **Required**: Yes
+
+### khr_techniques_webgl.extensions
+
+Dictionary object with extension-specific objects.
 
 * **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
+* **Required**: No
+* **Type of each property**: Extension
 
-### glTF.shaders
+### khr_techniques_webgl.extras
 
-A dictionary object of [`shader`](#reference-shader) objects.  The name of each shader is an ID in the global glTF namespace that is used to reference the shader.
+Application-specific data.
 
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
-
-### glTF.techniques
-
-A dictionary object of [`technique`](#reference-technique) objects.  The name of each technique is an ID in the global glTF namespace that is used to reference the technique.  A technique is a template for a material appearance.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
+* **Type**: `any`
+* **Required**: No
 
 
-<!-- ======================================================================= -->
+
+
+---------------------------------------
 <a name="reference-program"></a>
-## program
+## Program
 
-A shader program, including its vertex and fragment shader, and names of vertex shader attributes.
+A shader program, including its vertex and fragment shaders, and names of vertex shader attributes.
 
 **Related WebGL functions**: `attachShader()`, `bindAttribLocation()`, `createProgram()`, `deleteProgram()`, `getProgramParameter()`, `getProgramInfoLog()`, `linkProgram()`, `useProgram()`, and `validateProgram()`
 
@@ -282,59 +322,58 @@ A shader program, including its vertex and fragment shader, and names of vertex 
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**attributes**|`string[]`|Names of GLSL vertex shader attributes.|No, default: `[]`|
-|**fragmentShader**|`string`|The ID of the fragment [`shader`](#reference-shader).| :white_check_mark: Yes|
-|**vertexShader**|`string`|The ID of the vertex [`shader`](#reference-shader).| :white_check_mark: Yes|
+|**attributes**|`string` `[1-*]`|The names of GLSL vertex shader attributes.|No|
+|**fragmentShader**|`integer`|The index of the fragment shader in `shaders`.| :white_check_mark: Yes|
+|**vertexShader**|`integer`|The index of the vertex shader in `shaders`.| :white_check_mark: Yes|
+|**glExtensions**|`string` `[1-*]`|The names of required WebGL 1.0 extensions.|No|
 |**name**|`string`|The user-defined name of this object.|No|
-|**glExtensions**|`string[]`|Names of WebGL 1.0 extensions to enable.|No, default: `[]`|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
-Additional properties are not allowed.
+Additional properties are allowed.
 
 * **JSON schema**: [program.schema.json](schema/program.schema.json)
-* **Example**: [programs.json](schema/examples/programs.json)
 
 ### program.attributes
 
-Names of GLSL vertex shader attributes.
+The names of GLSL vertex shader attributes.
 
-* **Type**: `string[]`
+* **Type**: `string` `[1-*]`
    * Each element in the array must have length between `1` and `256`.
-* **Required**: No, default: `[]`
+* **Required**: No
 * **Related WebGL functions**: `bindAttribLocation()`
 
-### program.fragmentShader :white_check_mark:
+### program.fragmentShader :white_check_mark: 
 
-The ID of the fragment [`shader`](#reference-shader).
+The index of the fragment shader in `shaders`.
 
-* **Type**: `string`
+* **Type**: `integer`
 * **Required**: Yes
-* **Minimum Length**: ` >= 1`
+* **Minimum**: ` >= 0`
 
-### program.vertexShader :white_check_mark:
+### program.vertexShader :white_check_mark: 
 
-The ID of the vertex [`shader`](#reference-shader).
+The index of the vertex shader in `shaders`.
 
-* **Type**: `string`
+* **Type**: `integer`
 * **Required**: Yes
-* **Minimum Length**: ` >= 1`
-
-### program.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., a program and a buffer could have the same name, or two programs could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
+* **Minimum**: ` >= 0`
 
 ### program.glExtensions
 
-Names of GLSL 1.0 extensions to enable.
+The names of required WebGL 1.0 extensions.
 
-* **Type**: `string[]`
+* **Type**: `string` `[1-*]`
    * Each element in the array must have length between `1` and `256`.
-* **Required**: No, default: `[]`
+* **Required**: No
 * **Related WebGL functions**: `getExtension()`
+
+### program.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
 
 ### program.extensions
 
@@ -342,7 +381,7 @@ Dictionary object with extension-specific objects.
 
 * **Type**: `object`
 * **Required**: No
-* **Type of each property**: `object`
+* **Type of each property**: Extension
 
 ### program.extras
 
@@ -351,11 +390,14 @@ Application-specific data.
 * **Type**: `any`
 * **Required**: No
 
-<!-- ======================================================================= -->
-<a name="reference-shader"></a>
-## shader
 
-A vertex or fragment shader.
+
+
+---------------------------------------
+<a name="reference-shader"></a>
+## Shader
+
+A vertex or fragment shader. Exactly one of `uri` or `bufferView` must be provided for the GLSL source.
 
 **Related WebGL functions**: `createShader()`, `deleteShader()`, `shaderSource()`, `compileShader()`, `getShaderParameter()`, and `getShaderInfoLog()`
 
@@ -364,16 +406,15 @@ A vertex or fragment shader.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**uri**|`string`|The uri of the GLSL source.|No|
-|**bufferView**|`integer`|The bufferView of the GLSL source.|No|
 |**type**|`integer`|The shader stage.| :white_check_mark: Yes|
+|**bufferView**|`integer`|The index of the bufferView that contains the GLSL shader source. Use this instead of the shader's uri property.|No|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
-Exactly one of `uri` or `bufferView` must be provided. Additional properties are not allowed.
+Additional properties are allowed.
 
 * **JSON schema**: [shader.schema.json](schema/shader.schema.json)
-* **Example**: [shaders.json](schema/examples/shaders.json)
 
 ### shader.uri
 
@@ -381,26 +422,29 @@ The uri of the GLSL source.  Relative paths are relative to the .gltf file.  Ins
 
 * **Type**: `string`
 * **Required**: No
-* **Format**: uri
+* **Format**: uriref
 
-### shader.bufferView
+### shader.type :white_check_mark: 
 
-The index of the bufferView that contains the shader source. Use this instead of the shader's uri property.
-
-* **Type**: `integer`
-* **Required**: No
-
-### shader.type :white_check_mark:
-
-The shader stage.  Allowed values are `35632` (FRAGMENT_SHADER) and `35633` (VERTEX_SHADER).
+The shader stage.  All valid values correspond to WebGL enums.
 
 * **Type**: `integer`
 * **Required**: Yes
-* **Allowed values**: `35632`, `35633`
+* **Allowed values**:
+   * `35632` FRAGMENT_SHADER
+   * `35633` VERTEX_SHADER
+
+### shader.bufferView
+
+The index of the bufferView that contains the GLSL shader source. Use this instead of the shader's uri property.
+
+* **Type**: `integer`
+* **Required**: No
+* **Minimum**: ` >= 0`
 
 ### shader.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., a shader and a buffer could have the same name, or two shaders could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
@@ -411,7 +455,7 @@ Dictionary object with extension-specific objects.
 
 * **Type**: `object`
 * **Required**: No
-* **Type of each property**: `object`
+* **Type of each property**: Extension
 
 ### shader.extras
 
@@ -421,9 +465,11 @@ Application-specific data.
 * **Required**: No
 
 
-<!-- ======================================================================= -->
+
+
+---------------------------------------
 <a name="reference-technique"></a>
-## technique
+## Technique
 
 A template for material appearances.
 
@@ -431,45 +477,44 @@ A template for material appearances.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**attributes**|`object`|A dictionary object of [`technique.attributes`](#reference-technique.attributes) objects.|No, default: `{}`|
-|**program**|`string`|The ID of the program.| :white_check_mark: Yes|
-|**uniforms**|`object`|A dictionary object of  [`technique.uniforms`](#reference-technique.uniforms) objects.|No, default: `{}`|
+|**program**|`integer`|The index of the program.| :white_check_mark: Yes|
+|**attributes**|`object`|A dictionary object of `technique.attribute` objects.|No, default: `{}`|
+|**uniforms**|`object`|A dictionary object of `technique.uniform` objects.|No, default: `{}`|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
-Additional properties are not allowed.
+Additional properties are allowed.
 
 * **JSON schema**: [technique.schema.json](schema/technique.schema.json)
-* **Example**: [techniques.json](schema/examples/techniques.json)
+
+### technique.program :white_check_mark: 
+
+The index of the program.
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Minimum**: ` >= 0`
 
 ### technique.attributes
 
-A dictionary object of [`technique.attributes`](#reference-technique.attributes) objects.  Each object defines an attribute input.
+A dictionary object of `technique.attribute` objects.  Each object defines an attribute input with a type and a semantic.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
-* **Type of each property**: `string`
-
-### technique.program :white_check_mark:
-
-The ID of the program.
-
-* **Type**: `string`
-* **Required**: Yes
-* **Minimum Length**: ` >= 1`
+* **Type of each property**: `object`
 
 ### technique.uniforms
 
-A dictionary object of [`technique.uniforms`](#reference-technique.uniforms) objects.  Each object defines a uniform input, and an optional semantic and value.
+A dictionary object of `technique.uniform` objects.  Each object defines a uniform input with a type and an optional semantic and value.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
-* **Type of each property**: `string`
+* **Type of each property**: `object`
 
 ### technique.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., a technique and a buffer could have the same name, or two techniques could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
@@ -480,7 +525,7 @@ Dictionary object with extension-specific objects.
 
 * **Type**: `object`
 * **Required**: No
-* **Type of each property**: `object`
+* **Type of each property**: Extension
 
 ### technique.extras
 
@@ -489,37 +534,56 @@ Application-specific data.
 * **Type**: `any`
 * **Required**: No
 
+---------------------------------------
+<a name="reference-attribute"></a>
+## Attribute
 
-<!-- ======================================================================= -->
-<a name="reference-technique.attributes"></a>
-## technique.attributes
-
-An object defining an attribute input to a [`technique`](#reference-technique).
+An attribute input to a technique, and an optional semantic.
 
 **Properties**
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**type**|`integer`|The datatype.| :white_check_mark: Yes|
-|**semantic**|`object`|Identifies an attribute with a well-known meaning.|Yes|
+|**semantic**|`string`|Identifies a parameter with a well-known meaning.| :white_check_mark: Yes|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
 Additional properties are not allowed.
 
-**JSON schema**: [technique.attribute.schema.json](schema/technique.attribute.schema.json)
+* **JSON schema**: [technique.attribute.schema.json](schema/technique.attribute.schema.json)
 
-### attribute.type :white_check_mark:
+### attribute.type :white_check_mark: 
 
-The datatype. All valid values correspond to WebGL enums. Allowed values are `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), `5124` (INT), `5125` (UNSIGNED_INT), `5126` (FLOAT), `35664` (FLOAT_VEC2), `35665` (FLOAT_VEC3), `35666` (FLOAT_VEC4), `35667` (INT_VEC2), `35668` (INT_VEC3), `35669` (INT_VEC4), `35670` (BOOL), `35671` (BOOL_VEC2), `35672` (BOOL_VEC3), `35673` (BOOL_VEC4), `35674` (FLOAT_MAT2), `35675` (FLOAT_MAT3), `35676` (FLOAT_MAT4), and `35678` (SAMPLER_2D).
+The datatype.  All valid values correspond to WebGL enums.
 
 * **Type**: `integer`
 * **Required**: Yes
-* **Allowed values**: `5120`, `5121`, `5122`, `5123`, `5124`, `5125`, `5126`, `35664`, `35665`, `35666`, `35667`, `35668`, `35669`, `35670`, `35671`, `35672`, `35673`, `35674`, `35675`, `35676`, `35678`
+* **Allowed values**:
+   * `5120` BYTE
+   * `5121` UNSIGNED_BYTE
+   * `5122` SHORT
+   * `5123` UNSIGNED_SHORT
+   * `5124` INT
+   * `5125` UNSIGNED_INT
+   * `5126` FLOAT
+   * `35664` FLOAT_VEC2
+   * `35665` FLOAT_VEC3
+   * `35666` FLOAT_VEC4
+   * `35667` INT_VEC2
+   * `35668` INT_VEC3
+   * `35669` INT_VEC4
+   * `35670` BOOL
+   * `35671` BOOL_VEC2
+   * `35672` BOOL_VEC3
+   * `35673` BOOL_VEC4
+   * `35674` FLOAT_MAT2
+   * `35675` FLOAT_MAT3
+   * `35676` FLOAT_MAT4
 
-### attribute.semantic
+### attribute.semantic :white_check_mark: 
 
-Identifies a attribute with a well-known meaning.  Attribute semantics include `"POSITION"`, `"NORMAL"`, `"TEXCOORD"`, `"COLOR"`, `"JOINT"`, and `"WEIGHT"`.  `"TEXCOORD"` and `"COLOR"` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `"TEXCOORD_0"`, `"TEXCOORD_1"`, `"COLOR_1"` etc.  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
+Identifies a parameter with a well-known meaning.  Attribute semantics include `"POSITION"`, `"NORMAL"`, `"TEXCOORD"`, `"COLOR"`, `"JOINT"`, and `"WEIGHT"`.  `"TEXCOORD"` and `"COLOR"` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `"TEXCOORD_0"`, `"TEXCOORD_1"`, `"COLOR_1"`, etc.  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `"_SIMULATION_TIME"`.
 
 * **Type**: `string`
 * **Required**: Yes
@@ -530,7 +594,7 @@ Dictionary object with extension-specific objects.
 
 * **Type**: `object`
 * **Required**: No
-* **Type of each property**: `object`
+* **Type of each property**: Extension
 
 ### attribute.extras
 
@@ -540,35 +604,32 @@ Application-specific data.
 * **Required**: No
 
 
-<!-- ======================================================================= -->
-<a name="reference-technique.uniforms"></a>
-## technique.uniforms
+---------------------------------------
+<a name="reference-uniform"></a>
+## Uniform
 
-An object defining a uniform input to a [`technique`](#reference-technique), and an optional semantic and value.
+A uniform input to a `technique`, and an optional semantic and value.
 
 **Properties**
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**count**|`integer`|When defined, the uniform is an array of count elements of the specified type.  Otherwise, the uniform is not an array.|No|
-|**node**|`string`|The id of the [`node`](#reference-node) whose transform is used as the uniform's value.|No|
+|**node**|`integer`|The index of the node whose transform is used as the uniform's value.|No|
 |**type**|`integer`|The datatype.| :white_check_mark: Yes|
 |**semantic**|`string`|Identifies a uniform with a well-known meaning.|No|
-|**value**|`number[]`, `boolean[]`, or `string[]`|The value of the uniform.|No|
+|**value**|`number` `[1-*]`|The value of the uniform.|No|
+|**name**|`any`||No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
-Additional properties are not allowed.
+Additional properties are allowed.
 
-**JSON schema**: [technique.uniforms.schema.json](schema/technique.uniforms.schema.json)
+* **JSON schema**: [technique.uniform.schema.json](schema/technique.uniform.schema.json)
 
 ### uniform.count
 
-When defined, the uniform is an array of `count` elements of the specified type.  Otherwise, the uniform is not an array.  When defined, `value`'s length equals to `count`, times the number of components in the `type`, e.g., `3` for `FLOAT_VEC3`.
-
-An array uniform of scalar values is not the same as a vector uniform of the same size; for example, when `count` is `2` and `type` is `5126` (FLOAT), the uniform is an array of two floating-point values, not a `FLOAT_VEC2`.
-
-When a uniform is a glTF-defined semantic is used, the semantic must be `JOINTMATRIX`; application-specific uniforms can be arrays and, therefore, define `count`.
+When defined, the uniform is an array of `count` elements of the specified type.  Otherwise, the uniform is not an array.  When defined, `value`'s length must equal `count`, times the number of components in the `type`, e.g., `3` for `FLOAT_VEC3`.  A uniform array of scalar values is not the same as a uniform vector of the same size; for example, when count is 2 and type is 5126 (FLOAT), the uniform is an array of two floating-point values, not a FLOAT_VEC2. When a glTF-defined semantic is used, the semantic must be `JOINTMATRIX`; application-specific uniforms can be arrays and, therefore, define `count`.
 
 * **Type**: `integer`
 * **Required**: No
@@ -576,32 +637,57 @@ When a uniform is a glTF-defined semantic is used, the semantic must be `JOINTMA
 
 ### uniform.node
 
-The id of the [`node`](#reference-node) whose transform is used as the uniform's value.  When this is defined, `type` must be `35676` (FLOAT_MAT4), therefore, when the semantic is `"MODELINVERSETRANSPOSE"`, `"MODELVIEWINVERSETRANSPOSE"`, or `"VIEWPORT"`, the `node` property can't be defined.
+The index of the node whose transform is used as the uniform's value.  When this is defined, `type` must be `35676` (FLOAT_MAT4), therefore, when the semantic is `"MODELINVERSETRANSPOSE"`, `"MODELVIEWINVERSETRANSPOSE"`, or `"VIEWPORT"`, the node property can't be defined.
 
-* **Type**: `string`
+* **Type**: `integer`
 * **Required**: No
-* **Minimum Length**: ` >= 1`
+* **Minimum**: ` >= 0`
 
-### uniform.type :white_check_mark:
+### uniform.type :white_check_mark: 
 
-The datatype. All valid values correspond to WebGL enums. Allowed values are `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), `5124` (INT), `5125` (UNSIGNED_INT), `5126` (FLOAT), `35664` (FLOAT_VEC2), `35665` (FLOAT_VEC3), `35666` (FLOAT_VEC4), `35667` (INT_VEC2), `35668` (INT_VEC3), `35669` (INT_VEC4), `35670` (BOOL), `35671` (BOOL_VEC2), `35672` (BOOL_VEC3), `35673` (BOOL_VEC4), `35674` (FLOAT_MAT2), `35675` (FLOAT_MAT3), `35676` (FLOAT_MAT4), and `35678` (SAMPLER_2D).
+The datatype.  All valid values correspond to WebGL enums.
 
 * **Type**: `integer`
 * **Required**: Yes
-* **Allowed values**: `5120`, `5121`, `5122`, `5123`, `5124`, `5125`, `5126`, `35664`, `35665`, `35666`, `35667`, `35668`, `35669`, `35670`, `35671`, `35672`, `35673`, `35674`, `35675`, `35676`, `35678`
+* **Allowed values**:
+   * `5120` BYTE
+   * `5121` UNSIGNED_BYTE
+   * `5122` SHORT
+   * `5123` UNSIGNED_SHORT
+   * `5124` INT
+   * `5125` UNSIGNED_INT
+   * `5126` FLOAT
+   * `35664` FLOAT_VEC2
+   * `35665` FLOAT_VEC3
+   * `35666` FLOAT_VEC4
+   * `35667` INT_VEC2
+   * `35668` INT_VEC3
+   * `35669` INT_VEC4
+   * `35670` BOOL
+   * `35671` BOOL_VEC2
+   * `35672` BOOL_VEC3
+   * `35673` BOOL_VEC4
+   * `35674` FLOAT_MAT2
+   * `35675` FLOAT_MAT3
+   * `35676` FLOAT_MAT4
 
 ### uniform.semantic
 
-Identifies a uniform with a well-known meaning.  Uniform semantics include `"LOCAL"` (FLOAT_MAT4), `"MODEL"` (FLOAT_MAT4), `"VIEW"` (FLOAT_MAT4), `"PROJECTION"` (FLOAT_MAT4), `"MODELVIEW"` (FLOAT_MAT4), `"MODELVIEWPROJECTION"` (FLOAT_MAT4), `"MODELINVERSE"` (FLOAT_MAT4), `"VIEWINVERSE"` (FLOAT_MAT4), `"PROJECTIONINVERSE"` (FLOAT_MAT4), `"MODELVIEWINVERSE"` (FLOAT_MAT4), `"MODELVIEWPROJECTIONINVERSE"` (FLOAT_MAT4), `"MODELINVERSETRANSPOSE"` (FLOAT_MAT3), `"MODELVIEWINVERSETRANSPOSE"` (FLOAT_MAT3), `"VIEWPORT"` (FLOAT_VEC4), `"JOINTMATRIX"` (FLOAT_MAT4[]).  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
+Identifies a uniform with a well-known meaning.  Uniform semantics include `"LOCAL"` (`FLOAT_MAT4`), `"MODEL"` (FLOAT_MAT4), `"VIEW"` (FLOAT_MAT4), `"PROJECTION"` (FLOAT_MAT4), `"MODELVIEW"` (FLOAT_MAT4), `"MODELVIEWPROJECTION"` (FLOAT_MAT4), `"MODELINVERSE"` (FLOAT_MAT4), `"VIEWINVERSE"` (FLOAT_MAT4), `"PROJECTIONINVERSE"` (FLOAT_MAT4), `"MODELVIEWINVERSE"` (FLOAT_MAT4), `"MODELVIEWPROJECTIONINVERSE"` (FLOAT_MAT4), `"MODELINVERSETRANSPOSE"` (FLOAT_MAT3), `"MODELVIEWINVERSETRANSPOSE"` (FLOAT_MAT3), `"VIEWPORT"` (FLOAT_VEC4), `"JOINTMATRIX"` (FLOAT_MAT4[]).  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `"_SIMULATION_TIME"`.
 
 * **Type**: `string`
 * **Required**: No
 
 ### uniform.value
 
-The value of the uniform. The length is determined by the values of the `type` and `count` (if present) properties.  A [`material`](#reference-material) value with the same name, when specified, overrides this value.
+The value of the uniform. The length is determined by the values of the `type` and `count` (if present) properties.  A material uniform value with the same name, when specified, overrides this value.
 
-* **Type of each property**: `number[]`, `boolean[]`, or `string[]`
+* **Type**: `number` `[1-*]`
+* **Required**: No
+
+### uniform.name
+
+* **Type**: `any`
 * **Required**: No
 
 ### uniform.extensions
@@ -610,7 +696,7 @@ Dictionary object with extension-specific objects.
 
 * **Type**: `object`
 * **Required**: No
-* **Type of each property**: `object`
+* **Type of each property**: Extension
 
 ### uniform.extras
 
@@ -628,10 +714,23 @@ Application-specific data.
    * [`attributes`](#reference-technique.attributes)
    * [`uniforms`](#reference-technique.uniforms)
 
-## Known Implementations
 
-* TODO: List of known implementations, with links to each if available.
+## References
 
-## Resources
+* [WebGL 1.0 Specification](https://www.khronos.org/registry/webgl/specs/latest/1.0/), Khronos Group
 
-* TODO: Resources, if any.
+## Appendix: Full Khronos Copyright Statement
+
+Copyright 2013-2017 The Khronos Group Inc.
+
+Some parts of this Specification are purely informative and do not define requirements necessary for compliance and so are outside the Scope of this Specification. These parts of the Specification are marked as being non-normative, or identified as Implementation Notes.
+
+Where this Specification includes normative references to external documents, only the specifically identified sections and functionality of those external documents are in Scope. Requirements defined by external documents not created by Khronos may contain contributions from non-members of Khronos not covered by the Khronos Intellectual Property Rights Policy.
+
+This specification is protected by copyright laws and contains material proprietary to Khronos. Except as described by these terms, it or any components may not be reproduced, republished, distributed, transmitted, displayed, broadcast or otherwise exploited in any manner without the express prior written permission of Khronos.
+
+This specification has been created under the Khronos Intellectual Property Rights Policy, which is Attachment A of the Khronos Group Membership Agreement available at www.khronos.org/files/member_agreement.pdf. Khronos grants a conditional copyright license to use and reproduce the unmodified specification for any purpose, without fee or royalty, EXCEPT no licenses to any patent, trademark or other intellectual property rights are granted under these terms. Parties desiring to implement the specification and make use of Khronos trademarks in relation to that implementation, and receive reciprocal patent license protection under the Khronos IP Policy must become Adopters and confirm the implementation as conformant under the process defined by Khronos for this specification; see https://www.khronos.org/adopters.
+
+Khronos makes no, and expressly disclaims any, representations or warranties, express or implied, regarding this specification, including, without limitation: merchantability, fitness for a particular purpose, non-infringement of any intellectual property, correctness, accuracy, completeness, timeliness, and reliability. Under no circumstances will Khronos, or any of its Promoters, Contributors or Members, or their respective partners, officers, directors, employees, agents or representatives be liable for any damages, whether direct, indirect, special or consequential damages for lost revenues, lost profits, or otherwise, arising from or in connection with these materials.
+
+Vulkan is a registered trademark and Khronos, OpenXR, SPIR, SPIR-V, SYCL, WebGL, WebCL, OpenVX, OpenVG, EGL, COLLADA, glTF, NNEF, OpenKODE, OpenKCAM, StreamInput, OpenWF, OpenSL ES, OpenMAX, OpenMAX AL, OpenMAX IL, OpenMAX DL, OpenML and DevU are trademarks of The Khronos Group Inc. ASTC is a trademark of ARM Holdings PLC, OpenCL is a trademark of Apple Inc. and OpenGL and OpenML are registered trademarks and the OpenGL ES and OpenGL SC logos are trademarks of Silicon Graphics International used under license by Khronos. All other product names, trademarks, and/or company names are used solely for identification and belong to their respective owners.
