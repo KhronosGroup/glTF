@@ -20,6 +20,5 @@
         "extensions" : {},
         "extras" : {}
     },
-    "additionalProperties" : false,
     "required" : ["type", "semantic"]
 }

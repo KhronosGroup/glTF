@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "Uniform",
     "type" : "object",
-    "description" : "A uniform input to a `technique`, and an optional semantic and value.",
+    "description" : "A uniform input to a technique, and an optional semantic and value.",
     "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
         "count" : {
@@ -19,8 +19,8 @@
         "type" : {
             "type" : "integer",
             "description" : "The datatype.",
-            "enum" : [5120, 5121, 5122, 5123, 5124, 5125, 5126, 35664, 35665, 35666, 35667, 35668, 35669, 35670, 35671, 35672, 35673, 35674, 35675, 35676],
-            "gltf_enumNames" : ["BYTE", "UNSIGNED_BYTE", "SHORT", "UNSIGNED_SHORT", "INT", "UNSIGNED_INT", "FLOAT", "FLOAT_VEC2", "FLOAT_VEC3", "FLOAT_VEC4", "INT_VEC2", "INT_VEC3", "INT_VEC4", "BOOL", "BOOL_VEC2", "BOOL_VEC3", "BOOL_VEC4", "FLOAT_MAT2", "FLOAT_MAT3", "FLOAT_MAT4"],
+            "enum" : [5120, 5121, 5122, 5123, 5124, 5125, 5126, 35664, 35665, 35666, 35667, 35668, 35669, 35670, 35671, 35672, 35673, 35674, 35675, 35676, 35678],
+            "gltf_enumNames" : ["BYTE", "UNSIGNED_BYTE", "SHORT", "UNSIGNED_SHORT", "INT", "UNSIGNED_INT", "FLOAT", "FLOAT_VEC2", "FLOAT_VEC3", "FLOAT_VEC4", "INT_VEC2", "INT_VEC3", "INT_VEC4", "BOOL", "BOOL_VEC2", "BOOL_VEC3", "BOOL_VEC4", "FLOAT_MAT2", "FLOAT_MAT3", "FLOAT_MAT4", "SAMPLER_2D"],
             "gltf_detailedDescription" : "The datatype.  All valid values correspond to WebGL enums."
         },
         "semantic" : {
@@ -29,12 +29,8 @@
             "gltf_detailedDescription" : "Identifies a uniform with a well-known meaning.  Uniform semantics include `\"LOCAL\"` (`FLOAT_MAT4`), `\"MODEL\"` (FLOAT_MAT4), `\"VIEW\"` (FLOAT_MAT4), `\"PROJECTION\"` (FLOAT_MAT4), `\"MODELVIEW\"` (FLOAT_MAT4), `\"MODELVIEWPROJECTION\"` (FLOAT_MAT4), `\"MODELINVERSE\"` (FLOAT_MAT4), `\"VIEWINVERSE\"` (FLOAT_MAT4), `\"PROJECTIONINVERSE\"` (FLOAT_MAT4), `\"MODELVIEWINVERSE\"` (FLOAT_MAT4), `\"MODELVIEWPROJECTIONINVERSE\"` (FLOAT_MAT4), `\"MODELINVERSETRANSPOSE\"` (FLOAT_MAT3), `\"MODELVIEWINVERSETRANSPOSE\"` (FLOAT_MAT3), `\"VIEWPORT\"` (FLOAT_VEC4), `\"JOINTMATRIX\"` (FLOAT_MAT4[]).  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `\"_SIMULATION_TIME\"`."
         },
         "value" : {
-            "type" : "array",
+            "allOf" : [ { "$ref" : "uniform.value.schema.json" } ],
             "description" : "The value of the uniform.",
-            "items": {
-                "type": "number"
-            },
-            "minItems": 1,
             "gltf_detailedDescription" : "The value of the uniform. The length is determined by the values of the `type` and `count` (if present) properties.  A material uniform value with the same name, when specified, overrides this value."
         },
         "name" : {},
