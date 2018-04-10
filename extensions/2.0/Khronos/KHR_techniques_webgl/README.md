@@ -2,8 +2,8 @@
 
 ## Contributors
 
-* Gabby Getz, Cesium, @ggetz
-* Alexey Knyazev, Individual Contributor, @lexaknyazev
+* Gabby Getz, Cesium, [@ggetz](https://github.com/ggetz)
+* Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
 
 Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc. See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
@@ -21,7 +21,7 @@ This extension allows glTF to define instances of shading techniques with extern
 
 This extension specification is targeting WebGL 1.0, and can be supported in any WebGL 1.0-based engine if the device supports the necessary WebGL extensions.
 
-* **Abridged example glTF**: [sample_techniques.gltf](exmaples/sample_techniques.json)
+* **Abridged example glTF**: [sample_techniques.gltf](examples/sample_techniques.json)
 
 ## glTF Schema Updates
 
@@ -292,7 +292,7 @@ For forward-compatibility, application-specific semantics must start with an und
 
 ## Properties Reference
 
-# JSON Schema
+#### JSON Schemas
 
 * [`KHR_techniques_webgl glTF extension`](#reference-khr_techniques_webgl-gltf-extension) 
     * [`Program`](#reference-program)
@@ -374,8 +374,8 @@ A shader program, including its vertex and fragment shaders, and names of vertex
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**attributes**|`string` `[1-*]`|The names of GLSL vertex shader attributes.|No|
-|**fragmentShader**|`integer`|The index of the fragment shader in `shaders`.| :white_check_mark: Yes|
-|**vertexShader**|`integer`|The index of the vertex shader in `shaders`.| :white_check_mark: Yes|
+|**fragmentShader**|`integer`|The index of the fragment shader.| :white_check_mark: Yes|
+|**vertexShader**|`integer`|The index of the vertex shader in.| :white_check_mark: Yes|
 |**glExtensions**|`string` `[1-*]`|The names of required WebGL 1.0 extensions.|No|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
@@ -396,7 +396,7 @@ The names of GLSL vertex shader attributes.
 
 ### program.fragmentShader :white_check_mark: 
 
-The index of the fragment shader in `shaders`.
+The index of the fragment shader.
 
 * **Type**: `integer`
 * **Required**: Yes
@@ -404,7 +404,7 @@ The index of the fragment shader in `shaders`.
 
 ### program.vertexShader :white_check_mark: 
 
-The index of the vertex shader in `shaders`.
+The index of the vertex shader.
 
 * **Type**: `integer`
 * **Required**: Yes
@@ -469,7 +469,7 @@ Additional properties are allowed.
 
 ### shader.uri
 
-The uri of the GLSL source.  Relative paths are relative to the .gltf file.  Instead of referencing an external file, the uri can also be a data-uri.
+The uri of the GLSL source.  Relative paths are relative to the `.gltf` file.  Instead of referencing an external file, the uri can also be a data-uri.
 
 * **Type**: `string`
 * **Required**: No
@@ -685,7 +685,7 @@ Additional properties are allowed.
 
 ### uniform.count
 
-When defined, the uniform is an array of `count` elements of the specified type.  Otherwise, the uniform is not an array.  When defined, `value`'s length must equal `count`, times the number of components in the `type`, e.g., `3` for `FLOAT_VEC3`.  A uniform array of scalar values is not the same as a uniform vector of the same size; for example, when count is 2 and type is 5126 (FLOAT), the uniform is an array of two floating-point values, not a FLOAT_VEC2. When a glTF-defined semantic is used, the semantic must be `JOINTMATRIX`; application-specific uniforms can be arrays and, therefore, define `count`.
+When defined, the uniform is an array of `count` elements of the specified type.  Otherwise, the uniform is not an array.  When defined, `value`'s length must equal `count`, times the number of components in the `type`, e.g., `3` for `FLOAT_VEC3`.  A uniform array of scalar values is not the same as a uniform vector of the same size; for example, when count is 2 and type is `5126` (`FLOAT`), the uniform is an array of two floating-point values, not a `FLOAT_VEC2`. When a glTF-defined semantic is used, the semantic must be `JOINTMATRIX`; application-specific uniforms can be arrays and, therefore, define `count`.
 
 * **Type**: `integer`
 * **Required**: No
@@ -693,7 +693,7 @@ When defined, the uniform is an array of `count` elements of the specified type.
 
 ### uniform.node
 
-The index of the node whose transform is used as the uniform's value.  When this is defined, `type` must be `35676` (FLOAT_MAT4), therefore, when the semantic is `"MODELINVERSETRANSPOSE"`, `"MODELVIEWINVERSETRANSPOSE"`, or `"VIEWPORT"`, the node property can't be defined.
+The index of the node whose transform is used as the uniform's value.  When this is defined, `type` must be `35676` (`FLOAT_MAT4`), therefore, when the semantic is `"MODELINVERSETRANSPOSE"`, `"MODELVIEWINVERSETRANSPOSE"`, or `"VIEWPORT"`, the node property can't be defined.
 
 * **Type**: `integer`
 * **Required**: No
