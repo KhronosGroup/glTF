@@ -2,6 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "KHR_lights node extension",
     "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "light": {
             "allOf": [

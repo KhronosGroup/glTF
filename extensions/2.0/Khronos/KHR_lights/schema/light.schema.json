@@ -3,7 +3,7 @@
     "title": "light",
     "type": "object",
     "description": "An ambient, directional, point, or spot light.",
-    "allOf" : [ { "$ref" : "../../../../specification/2.0/schema/glTFChildOfRootProperty.schema.json" } ],
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "color": {
             "type": "array",

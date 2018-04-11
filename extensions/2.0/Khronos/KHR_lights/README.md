@@ -26,13 +26,13 @@ This extension defines four light types: `ambient`, `directional`, `point` and `
 
 Lights define light sources within a scene.
 
-`ambient` lights are not transformable and, thus, can only be defined on the scene. All other lights are contained in nodes and inherit the transform of that node.
+`ambient` lights are not transformable and, thus, can only be defined on the scene. All other lights are contained in nodes and inherit the translation and rotation of that node. Note that all lights ignore the scale of a node.
 
 A conforming implementation of this extension must be able to load light data defined in the asset and has to render the asset using those lights. 
 
 ### Defining Lights
 
-Lights are defined within an dictionary property in the glTF manifest file, by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_lights` property with a `lights` array inside it.
+Lights are defined within a dictionary property in the glTF manifest file, by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_lights` property with a `lights` array inside it.
 
 Each light defines a mandatory `type` property that designates the type of light (`ambient`, `directional`, `point` or `spot`). The following example defines a white-colored directional light.
 
@@ -74,7 +74,7 @@ For light types that have a direction (`directional` and `spot` lights), the lig
 
 ### Adding Light Instances to Scenes
 
-Lights that have no transform information can be attached to scenes. `ambient` lights have no position, no orientation and no range. They are therefore global and belong to a scene rather than a node. These lights are attached to the scene by defining the `extensions.KHR_lights` property and, within that, an index into the `lights` array using the `light` property.
+Lights that have no transform information can be attached to scenes. `ambient` lights have no position or orientation and are therefore global and belong to a scene rather than a node. These lights are attached to the scene by defining the `extensions.KHR_lights` property and, within that, an index into the `lights` array using the `light` property.
 
 ```javascript
 "scenes" : [
@@ -98,24 +98,24 @@ All light types share the common set of properties listed below.
 |:-----------------------|:------------------------------------------| :--------------------------|
 | `name` | Name of the light. | No, Default: `""` |
 | `color` | RGB value for light's color in linear space. | No, Default: `[1.0, 1.0, 1.0]` |
-| `intensity` | Brightness of light in. The units that this is defined in depend on the type of light. `point` and `spot` lights use luminous intensity in candela (lm/sr) while `directional` lights use illuminance in lux (lm/m^2) | No, Default: `1.0` |
+| `intensity` | Brightness of light in. The units that this is defined in depend on the type of light. `point` and `spot` lights use luminous intensity in candela (lm/sr) while `directional` and `ambient` lights use illuminance in lux (lm/m^2) | No, Default: `1.0` |
 | `type` | Declares the type of the light. | :white_check_mark: Yes |
 
 #### Ambient
 
-Ambient lights define constant lighting throughout the scene. They are referenced only by a scene object and only 1 can be referenced per scene.
+Ambient lights define constant lighting throughout the scene. They are referenced only by a scene object and only 1 can be referenced per scene. It's intensity is defined in lumens per metre squared, or lux (lm/m^2).
 
 #### Directional
 
-Directional lights are light sources that act as though they are infinitely far away and emit light in the direction of the +z axis. This light type inherits the orientation of the node that it belongs to. Because it is at an infinite distance, the light is not attenuated. It's intensity is defined in lumens per metre squared, or lux (lm/m^2).
+Directional lights are light sources that act as though they are infinitely far away and emit light in the direction of the local +z axis. This light type inherits the orientation of the node that it belongs to but ignores position and scale. Because it is at an infinite distance, the light is not attenuated. It's intensity is defined in lumens per metre squared, or lux (lm/m^2).
 
 #### Point
 
-Point lights emit light in all directions from a position in space. The brightness of the light attenuates in a physically correct manner as distance increases from the light's position (i.e. brightness goes like the inverse square of the distance). Point light intensity is defined in candela, which is lumens per square radian (lm/sr).
+Point lights emit light in all directions from its position in space (and ignore rotation and scale). The brightness of the light attenuates in a physically correct manner as distance increases from the light's position (i.e. brightness goes like the inverse square of the distance). Point light intensity is defined in candela, which is lumens per square radian (lm/sr).
 
 #### Spot
 
-Spot lights emit light in a cone over a distance. The angle and falloff of the cone is defined using two numbers, the `innerConeAngle` and `outerConeAngle`. As with point lights, the brightness also attenuates in a physically correct manner as distance increases from the light's position (i.e. brightness goes like the inverse square of the distance). Spot light intensity refers to the brightness inside the `innerConeAngle` and is defined in candela, which is lumens per square radian (lm/sr). Engines that don't support two angles for spotlights should use `outerConeAngle` as the spotlight angle (leaving `innerConeAngle` to implicitly be `0`).
+Spot lights emit light in a cone in the direction of the local +z axis. The angle and falloff of the cone is defined using two numbers, the `innerConeAngle` and `outerConeAngle`. As with point lights, the brightness also attenuates in a physically correct manner as distance increases from the light's position (i.e. brightness goes like the inverse square of the distance). Spot light intensity refers to the brightness inside the `innerConeAngle` and is defined in candela, which is lumens per square radian (lm/sr). Engines that don't support two angles for spotlights should use `outerConeAngle` as the spotlight angle (leaving `innerConeAngle` to implicitly be `0`).
 
 | Property | Description | Required |
 |:-----------------------|:------------------------------------------| :--------------------------|
