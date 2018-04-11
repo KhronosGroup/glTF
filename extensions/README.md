@@ -8,9 +8,18 @@
 
 #### Draft Khronos extensions
 _Draft Khronos extensions are not ratified yet._
-* [KHR_materials_common](Khronos/KHR_materials_common/README.md)
-* [KHR_technique_webgl](Khronos/KHR_technique_webgl/README.md)
-* [KHR_texture_transform](Khronos/KHR_texture_transform/README.md)
+* KHR_materials_unlit *(in progress)*
+* KHR_lights *(in progress)*
+* KHR_technique_webgl *(in progress)*
+* KHR_texture_transform *(in progress)*
+
+#### Vendor extensions
+
+* [MSFT_lod](2.0/Vendor/MSFT_lod/README.md)
+* [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
+* [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
+* [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
+
 
 ## Extensions for glTF 1.0
 
@@ -29,7 +38,7 @@ glTF extensions extend the base glTF model format.  Extensions can introduce new
 
 ## Extension Mechanics
 
-All glTF object properties (see [glTFProperty.schema.json](https://github.com/KhronosGroup/glTF/blob/master/specification/schema/glTFProperty.schema.json)) have an optional `extensions` object property that can contain new extension-specific properties.  This allows extensions to extend any part of glTF, including geometry, materials, animations, etc.  Extensions can also introduce new parameter semantics, reserved IDs, and new formats containing glTF.
+All glTF object properties (see [glTFProperty.schema.json](../specification/2.0/schema/glTFProperty.schema.json)) have an optional `extensions` object property that can contain new extension-specific properties.  This allows extensions to extend any part of glTF, including geometry, materials, animations, etc.  Extensions can also introduce new parameter semantics, reserved IDs, and new formats containing glTF.
 
 Extensions can't remove existing glTF properties or redefine existing glTF properties to mean something else.
 

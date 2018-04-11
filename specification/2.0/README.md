@@ -78,6 +78,7 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
     * [Alpha Coverage](#alpha-coverage)
     * [Double Sided](#double-sided)
     * [Default Material](#default-material)
+    * [Point and Line Materials](#point-and-line-materials)
   * [Cameras](#cameras)
     * [Projection Matrices](#projection-matrices)
   * [Animations](#animations)
@@ -638,7 +639,7 @@ When `byteStride` of referenced `bufferView` is not defined, it means that acces
 
 Each `accessor` must fit its `bufferView`, i.e., `accessor.byteOffset + STRIDE * (accessor.count - 1) + SIZE_OF_ELEMENT` must be less than or equal to `bufferView.length`.
 
-For performance and compatibility reasons, vertex attributes must be aligned to 4-byte boundaries inside `bufferView` (i.e., `accessor.byteOffset` and `bufferView.byteStride` must be multiples of 4). 
+For performance and compatibility reasons, each element of a vertex attribute must be aligned to 4-byte boundaries inside `bufferView` (i.e., `accessor.byteOffset` and `bufferView.byteStride` must be multiples of 4).
 
 Accessors of matrix type have data stored in column-major order; start of each column must be aligned to 4-byte boundaries. To achieve this, three `type`/`componentType` combinations require special layout:
 
@@ -766,13 +767,6 @@ All indices for indexed attribute semantics, must start with 0 and be continuous
 
 > **Implementation note:** When normals and tangents are specified, client implementations should compute the bitangent by taking the cross product of the normal and tangent xyz vectors and multiplying against the w component of the tangent: `bitangent = cross(normal, tangent.xyz) * tangent.w`
 
-> **Implementation note:** When the 'mode' property is set to a non-triangular type (such as POINTS or LINES) some additional considerations must be taken while considering the proper rendering technique:
-> > For LINES with `NORMAL` and `TANGENT` properties can render with standard lighting including normal maps.
-> > 
-> > For all POINTS or LINES with no `TANGENT` property, render with standard lighting but ignore any normal maps on the material.
-> > 
-> > For POINTS or LINES with no `NORMAL` property, don't calculate lighting and instead output the `COLOR` value for each pixel drawn.
-
 #### Morph Targets
 
 Morph Targets are defined by extending the Mesh concept.
@@ -838,19 +832,45 @@ After applying morph targets to vertex positions and normals, tangent space may 
 
 ### Skins
 
-All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property (which points to an accessor with IBM data), used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property points to node that is the root of a joints hierarchy. 
+All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property (which points to an accessor with IBM data), used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property points to the node that is the root of a joints hierarchy. 
 
-> **Implementation Note:** Matrix, defining how to pose the skin's geometry for use with the joints ("Bind Shape Matrix") should be premultiplied to mesh data or to Inverse Bind Matrices. 
+> **Implementation Note:** The matrix defining how to pose the skin's geometry for use with the joints ("Bind Shape Matrix") should be premultiplied to mesh data or to Inverse Bind Matrices. 
+
+> **Implementation Note:** Client implementations should apply only the transform of the skeleton root node to the skinned mesh while ignoring the transform of the skinned mesh node. In the example below, the position of `node_0` and the scale of `node_1` are applied while the position of `node_3` and rotation of `node_4` are ignored.
 
 ```json
-{    
+{
+    "nodes": [
+        {
+            "name": "node_0",
+            "children": [ 1 ],
+            "position": [ 0.0, 1.0, 0.0 ]
+        },
+        {
+            "name": "node_1",
+            "children": [ 2 ],
+            "scale": [ 0.5, 0.5, 0.5 ]
+        },
+        {
+            "name": "node_2"
+        },
+        {
+            "name": "node_3",
+            "children": [ 4 ],
+            "position": [ 1.0, 0.0, 0.0 ]
+        },
+        {
+            "name": "node_4",
+            "mesh": 0,
+            "rotation": [ 0.0, 1.0, 0.0, 0.0 ],
+            "skin": 0
+        }
+    ],
     "skins": [
         {
-            "inverseBindMatrices": 11,
-            "joints": [
-                1,
-                2
-            ],
+            "name": "skin_0",
+            "inverseBindMatrices": 0,
+            "joints": [ 1, 2 ],
             "skeleton": 1
         }
     ]
@@ -1099,7 +1119,7 @@ The metallic-roughness material model is defined by the following properties:
 
 The base color has two different interpretations depending on the value of metalness. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used. 
 
-The value for each property (`baseColor`, `metallic`, `roughness`) can be defined using factors or textures. The `metallic` and `roughness` properties are packed together in a single texture called `metallicRoughnessTexture`. If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. If both factors and textures are present the factor value acts as a linear multiplier for the corresponding texture values. Texture content must be converted to linear space before it is used for any lighting computations. 
+The value for each property (`baseColor`, `metallic`, `roughness`) can be defined using factors or textures. The `metallic` and `roughness` properties are packed together in a single texture called `metallicRoughnessTexture`. If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. If both factors and textures are present the factor value acts as a linear multiplier for the corresponding texture values. The `baseColorTexture` is in sRGB space and must be converted to linear space before it is used for any computations.
 
 For example, assume a value of `[0.9, 0.5, 0.3, 1.0]` in linear space is obtained from an RGBA `baseColorTexture`, and assume that `baseColorFactor` is given as `[0.2, 1.0, 0.7, 1.0]`.
 Then, the result would be 
@@ -1192,6 +1212,17 @@ The `doubleSided` property specifies whether the material is double sided. When 
 ### Default Material
 
 The default material, used when a mesh does not specify a material, is defined to be a material with no properties specified. All the default values of [`material`](#reference-material) apply. Note that this material does not emit light and will be black unless some lighting is present in the scene.
+
+### Point and Line Materials
+
+*This section is non-normative.*
+
+This specification does not define size and style of non-triangular primitives (such as POINTS or LINES) at this time, and applications may use various techniques to render these primitives as appropriate. However, the following recommendations are provided for consistency:
+
+* POINTS and LINES should have widths of 1px in viewport space.
+* For LINES with `NORMAL` and `TANGENT` properties, render with standard lighting including normal maps.
+* For POINTS or LINES with no `TANGENT` property, render with standard lighting but ignore any normal maps on the material.
+* For POINTS or LINES with no `NORMAL` property, don't calculate lighting and instead output the `COLOR` value for each pixel drawn.
 
 ## Cameras
 
@@ -2617,7 +2648,7 @@ A set of parameter values that are used to define the metallic-roughness materia
 
 #### material.normalTexture
 
-A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [1/255 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer. In GLSL, this vector would be unpacked like so: `float3 normalVector = tex2D(normalMap, texCoord) * 2 - 1`. Client implementations should normalize the normal vectors before using them in lighting equations.
+A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [1/255 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer. In GLSL, this vector would be unpacked like so: `vec3 normalVector = tex2D(normalMap, texCoord) * 2 - 1`. Client implementations should normalize the normal vectors before using them in lighting equations.
 
 * **Type**: `object`
 * **Required**: No

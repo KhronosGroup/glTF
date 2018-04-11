@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "MSFT_texture_dds extension",
+  "type": "object",
+  "description": "glTF extension to specify textures using the DirectDraw Surface file format (DDS).",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+  "properties": {
+    "source": {
+      "allOf": [ { "$ref": "glTFid.schema.json" } ],
+      "description": "The index of the images node which points to a DDS texture file."
+    },
+    "extensions": {},
+    "extras": {}
+  }
+}
