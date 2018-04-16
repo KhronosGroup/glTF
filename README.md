@@ -218,8 +218,8 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | [nvpro-pipeline](https://github.com/nvpro-pipeline/pipeline) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Research rendering pipeline by NVIDIA for minimizing CPU cost |
 | [AssetKit](https://github.com/recp/assetkit) | ? | 3D asset importer/exporter/util library |
 | [libgltf](https://github.com/code4game/libgltf) | ![status](https://img.shields.io/badge/glTF-2%2E0-yellow.svg?style=flat) | glTF 2.0 parser for C++11 |
-| [libgltf_ue4](https://github.com/code4game/libgltf_ue4) | ![status](https://img.shields.io/badge/glTF-2%2E0-yellow.svg?style=flat) | A third-party of UE4.10+ to load the glTF file |
-| [glTF for UE4](https://github.com/code4game/glTFForUE4) | ![status](https://img.shields.io/badge/glTF-2%2E0-yellow.svg?style=flat) | A plugin of UE4.10+ to import the glTF file |
+| [libgltf_ue4](https://github.com/code4game/libgltf_ue4) | ![status](https://img.shields.io/badge/glTF-2%2E0-yellow.svg?style=flat) | A third-party library for UE4.10+ to load glTF files |
+| [glTF for UE4](https://github.com/code4game/glTFForUE4) | ![status](https://img.shields.io/badge/glTF-2%2E0-yellow.svg?style=flat) | A plugin for UE4.10+ to import glTF files |
 
 #### Objective-C
 
