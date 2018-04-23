@@ -12,12 +12,10 @@
         "attributes" : {
             "type" : "object",
             "description" : "A dictionary object of `Attribute` objects.",
-            "properties" : {
-            },
+            "properties" : {},
             "additionalProperties" : {
                 "$ref" : "technique.attribute.schema.json"
             },
-            "default" : {},
             "gltf_detailedDescription" : "A dictionary object of `Attribute` objects.  Each object defines an attribute input with a type and a semantic."
         },
         "uniforms" : {
@@ -28,7 +26,6 @@
             "additionalProperties" : {
                 "$ref" : "technique.uniform.schema.json"
             },
-            "default" : {},
             "gltf_detailedDescription" : "A dictionary object of `Uniform` objects.  Each object defines a uniform input with a type and an optional semantic and value."
         },
         "name" : {},

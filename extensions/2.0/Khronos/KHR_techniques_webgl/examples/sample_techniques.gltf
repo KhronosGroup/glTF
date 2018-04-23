@@ -269,5 +269,11 @@
                 }
             ]
         }
-    }
+    },
+    "extensionsRequired": [
+        "KHR_techniques_webgl"
+    ],
+    "extensionsUsed": [
+        "KHR_techniques_webgl"
+    ]
 }
