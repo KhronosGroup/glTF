@@ -2,14 +2,18 @@
 
 ## Contributors
 
-* Gabby Getz, Cesium, [@ggetz](https://github.com/ggetz)
+* Gabby Getz, Cesium, [@gabbygetz](https://twitter.com/gabbygetz)
 * Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
+* Remi Arnaud, Starbreeze Studios, [@remi_arnaud](https://twitter.com/remi_arnaud)
+* Patrick Cozzi, Cesium, [@pjcozzi](https://twitter.com/pjcozzi)
+* Tony Parisi, Unity, [@auradeluxe](https://twitter.com/auradeluxe)
+* Fabrice Robinet, Individual Contributor, [@fabricerobinet](https://twitter.com/fabricerobinet)
 
 Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc. See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
 
-Stub. DO NOT IMPLEMENT!
+Complete
 
 ## Dependencies
 
@@ -249,7 +253,7 @@ The above example illustrates several uniforms. The property `u_ambient` is defi
 
 Technique uniforms may also optionally define a *semantic*, an enumerated value describing how the runtime is to interpret the data to be passed to the shader.
 
-In the above example, the uniform `u_light0Transform` defines the `MODEL` semantic, which corresponds to the world space position of the node referenced in the property `node`, in this case the node `1`, which refers to the id of a node that contains a light source.
+In the above example, the uniform `u_light0Transform` defines the `MODEL` semantic, which corresponds to the world space position of the node referenced in the property `node`, in this case the node `1`.
 
 If no `node` property is supplied for a uniform, the semantic is implied in a context-specific manner: either to the node which is being rendered, or in the case of camera-specific semantics, to the current camera. In the following fragment, which defines a uniform named `u_projectionMatrix` that is derived from the implementation's projection matrix, the semantic would be applied to the camera.
 
@@ -322,28 +326,28 @@ Additional properties are allowed.
 
 * **JSON schema**: [glTF.KHR_techniques_webgl.schema.json](schema/glTF.KHR_techniques_webgl.schema.json)
 
-### khr_techniques_webgl.gltf.extension.programs :white_check_mark: 
+### programs :white_check_mark: 
 
 An array of [`Program`](#reference-program) objects.
 
 * **Type**: Program `[1-*]`
 * **Required**: Yes
 
-### khr_techniques_webgl.gltf.extension.shaders :white_check_mark: 
+### shaders :white_check_mark: 
 
 An array of [`Shader`](#reference-shader) objects.
 
 * **Type**: Shader `[1-*]`
 * **Required**: Yes
 
-### khr_techniques_webgl.gltf.extension.techniques :white_check_mark: 
+### techniques :white_check_mark: 
 
 An array of [`Technique`](#reference-technique) objects.  A technique is a template for a material appearance.
 
 * **Type**: Technique `[1-*]`
 * **Required**: Yes
 
-### khr_techniques_webgl.gltf.extension.extensions
+### extensions
 
 Dictionary object with extension-specific objects.
 
@@ -351,7 +355,7 @@ Dictionary object with extension-specific objects.
 * **Required**: No
 * **Type of each property**: Extension
 
-### khr_techniques_webgl.gltf.extension.extras
+### extras
 
 Application-specific data.
 

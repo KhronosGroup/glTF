@@ -21,8 +21,7 @@
         "uniforms" : {
             "type" : "object",
             "description" : "A dictionary object of `Uniform` objects.",
-            "properties" : {
-            },
+            "properties" : {},
             "additionalProperties" : {
                 "$ref" : "technique.uniform.schema.json"
             },

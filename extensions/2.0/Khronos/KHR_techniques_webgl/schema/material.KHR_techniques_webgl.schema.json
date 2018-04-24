@@ -12,8 +12,7 @@
         "values" : {
             "type" : "object",
             "description" : "Dictionary object of uniform values.",
-            "properties" : {
-            },
+            "properties" : {},
             "additionalProperties" : {
                 "$ref" : "uniform.value.schema.json"
             },
