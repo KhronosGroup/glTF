@@ -191,11 +191,6 @@
         "KHR_techniques_webgl": {
             "programs": [
                 {
-                    "attributes": [
-                        "a_normal",
-                        "a_position",
-                        "a_texcoord0"
-                    ],
                     "fragmentShader": 0,
                     "vertexShader": 1
                 }

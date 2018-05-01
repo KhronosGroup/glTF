@@ -5,17 +5,6 @@
     "description" : "A shader program, including its vertex and fragment shaders, and names of vertex shader attributes.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
-        "attributes" : {
-            "type" : "array",
-            "description" : "The names of GLSL vertex shader attributes.",
-            "items" : {
-                "type" : "string",
-                "minLength" : 1,
-                "maxLength" : 256
-            },
-            "minItems": 1,
-            "gltf_webgl" : "`bindAttribLocation()`"
-        },
         "fragmentShader" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The index of the fragment shader."

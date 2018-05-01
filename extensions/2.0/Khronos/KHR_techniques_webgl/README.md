@@ -72,9 +72,6 @@ The `KHR_techniques_webgl.values` dictionary property defines the uniform values
         "KHR_techniques_webgl": {
             "programs": [
                 {
-                    "attributes": [
-                        "a_position"
-                    ],
                     "fragmentShader": 0,
                     "vertexShader": 1
                 }
@@ -94,7 +91,6 @@ The `KHR_techniques_webgl.values` dictionary property defines the uniform values
                     "program": 0,
                     "attributes": {
                         "a_position": {
-                            "type": 35665,
                             "semantic": "POSITION"
                         }
                     },
@@ -115,17 +111,12 @@ The `KHR_techniques_webgl.values` dictionary property defines the uniform values
 
 GLSL shader programs are stored in the asset's `KHR_techniques_webgl.programs` property. This property contains one or more objects, one for each program.
 
-Each shader program includes an `attributes` property, which specifies the vertex attributes that will be passed to the shader, and the properties `fragmentShader` and `vertexShader`, which reference the index of the shader in the `KHR_techniques_webgl.shaders` property for the fragment and vertex shader GLSL source code, respectively.
+Each shader program includes the properties `fragmentShader` and `vertexShader`, which reference the index of the shader in the `KHR_techniques_webgl.shaders` property for the fragment and vertex shader GLSL source code, respectively.
 
 ```json
 {
     "programs": [
         {
-            "attributes": [
-                "a_normal",
-                "a_position",
-                "a_texcoord0"
-            ],
             "fragmentShader": 0,
             "vertexShader": 1
         }
@@ -156,6 +147,10 @@ One or more shader source files are listed in the asset's `KHR_techniques_webgl.
 }
 ``` 
 
+##### File Extension and MIME Type
+
+External shader files may have any extension. The preferred MIME type is `text/plain`.
+
 ### Techniques
 
 One or more techniques are listed in the `KHR_techniques_webgl.techniques` property. A technique describes the shading used for an asset's material. Each technique must include the `program` property and define any attributes or uniforms to be passed as inputs to the program by their key in the `attributes` and `uniforms` dictionary properties.
@@ -169,15 +164,12 @@ The following example shows a technique and the properties it defines. This sect
             "program": 0,
             "attributes": {
                 "a_normal":  {
-                    "type": 35665,
                     "semantic": "NORMAL"
                 },
                 "a_position": {
-                    "type": 35665,
                     "semantic": "POSITION"
                 },
                 "a_texcoord0": {
-                    "type": 35664,
                     "semantic": "TEXCOORD_0"
                 }
                 },
@@ -239,7 +231,7 @@ Attributes and uniforms passed to the program instance's shader code are defined
 
 #### Attributes
 
-The `attributes` dictionary property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's key is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is an [attribute](#reference-attribute) object, where the type (GL types such as a floating point number, vector, etc.) and semantic of the attribute is defined.
+The `attributes` dictionary property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's key is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is an [attribute](#reference-attribute) object, where the semantic of the attribute is defined. The semantic corresponds with the mesh attribute semantic specified in the [primitive](../../../../specification/2.0#reference-primitive), the value of which is the index of the accessor containing attribute's data.
 
 #### Uniforms
 
@@ -377,7 +369,6 @@ A shader program, including its vertex and fragment shaders, and names of vertex
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**attributes**|`string` `[1-*]`|The names of GLSL vertex shader attributes.|No|
 |**fragmentShader**|`integer`|The index of the fragment shader.| :white_check_mark: Yes|
 |**vertexShader**|`integer`|The index of the vertex shader.| :white_check_mark: Yes|
 |**glExtensions**|`string` `[1-*]`|The names of required WebGL 1.0 extensions.|No|
@@ -388,15 +379,6 @@ A shader program, including its vertex and fragment shaders, and names of vertex
 Additional properties are allowed.
 
 * **JSON schema**: [program.schema.json](schema/program.schema.json)
-
-### program.attributes
-
-The names of GLSL vertex shader attributes.
-
-* **Type**: `string` `[1-*]`
-   * Each element in the array must have length between `1` and `256`.
-* **Required**: No
-* **Related WebGL functions**: `bindAttribLocation()`
 
 ### program.fragmentShader :white_check_mark: 
 
@@ -595,14 +577,13 @@ Application-specific data.
 <a name="reference-attribute"></a>
 ## Attribute
 
-An attribute input to a technique, and an optional semantic.
+An attribute input to a technique and the corresponding semantic.
 
 **Properties**
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**type**|`integer`|The datatype.| :white_check_mark: Yes|
-|**semantic**|`string`|Identifies a parameter with a well-known meaning.| :white_check_mark: Yes|
+|**semantic**|`string`|Identifies a mesh attribute semantic.| :white_check_mark: Yes|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
@@ -610,37 +591,9 @@ Additional properties are allowed.
 
 * **JSON schema**: [technique.attribute.schema.json](schema/technique.attribute.schema.json)
 
-### attribute.type :white_check_mark: 
+### attribute.semantic :white_check_mark:
 
-The datatype.  All valid values correspond to WebGL enums.
-
-* **Type**: `integer`
-* **Required**: Yes
-* **Allowed values**:
-   * `5120` BYTE
-   * `5121` UNSIGNED_BYTE
-   * `5122` SHORT
-   * `5123` UNSIGNED_SHORT
-   * `5124` INT
-   * `5125` UNSIGNED_INT
-   * `5126` FLOAT
-   * `35664` FLOAT_VEC2
-   * `35665` FLOAT_VEC3
-   * `35666` FLOAT_VEC4
-   * `35667` INT_VEC2
-   * `35668` INT_VEC3
-   * `35669` INT_VEC4
-   * `35670` BOOL
-   * `35671` BOOL_VEC2
-   * `35672` BOOL_VEC3
-   * `35673` BOOL_VEC4
-   * `35674` FLOAT_MAT2
-   * `35675` FLOAT_MAT3
-   * `35676` FLOAT_MAT4
-
-### attribute.semantic :white_check_mark: 
-
-Identifies a parameter with a well-known meaning.  Attribute semantics include `"POSITION"`, `"NORMAL"`, `"TEXCOORD"`, `"COLOR"`, `"JOINT"`, and `"WEIGHT"`.  `"TEXCOORD"` and `"COLOR"` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `"TEXCOORD_0"`, `"TEXCOORD_1"`, `"COLOR_1"`, etc.  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `"_SIMULATION_TIME"`.
+Identifies a mesh attribute semantic.  Attribute semantics include `"POSITION"`, `"NORMAL"`, `"TEXCOORD"`, `"COLOR"`, `"JOINT"`, and `"WEIGHT"`.  `"TEXCOORD"` and `"COLOR"` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `"TEXCOORD_0"`, `"TEXCOORD_1"`, `"COLOR_1"`, etc.  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `"_SIMULATION_TIME"`.
 
 * **Type**: `string`
 * **Required**: Yes
@@ -676,7 +629,7 @@ A uniform input to a technique, and an optional semantic and value.
 |---|----|-----------|--------|
 |**count**|`integer`|When defined, the uniform is an array of count elements of the specified type.  Otherwise, the uniform is not an array.|No|
 |**node**|`integer`|The index of the node whose transform is used as the uniform's value.|No|
-|**type**|`integer`|The datatype.| :white_check_mark: Yes|
+|**type**|`integer`|The uniform type.| :white_check_mark: Yes|
 |**semantic**|`string`|Identifies a uniform with a well-known meaning.|No|
 |**value**|`any`|The value of the uniform.|No|
 |**name**|`string`|The user-defined name of this object.|No|
@@ -705,17 +658,12 @@ The index of the node whose transform is used as the uniform's value.  When this
 
 ### uniform.type :white_check_mark: 
 
-The datatype.  All valid values correspond to WebGL enums.
+The uniform type.  All valid values correspond to WebGL enums.
 
 * **Type**: `integer`
 * **Required**: Yes
 * **Allowed values**:
-   * `5120` BYTE
-   * `5121` UNSIGNED_BYTE
-   * `5122` SHORT
-   * `5123` UNSIGNED_SHORT
    * `5124` INT
-   * `5125` UNSIGNED_INT
    * `5126` FLOAT
    * `35664` FLOAT_VEC2
    * `35665` FLOAT_VEC3
