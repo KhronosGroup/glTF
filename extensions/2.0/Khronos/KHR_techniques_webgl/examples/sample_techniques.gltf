@@ -79,7 +79,8 @@
                     "attributes": {
                         "NORMAL": 1,
                         "POSITION": 2,
-                        "TEXCOORD_0": 3
+                        "TEXCOORD_0": 3,
+                        "_CUSTOM_ATTRIBUTE": 4
                     },
                     "indices": 0,
                     "mode": 4,
@@ -151,6 +152,13 @@
                 0.01996302604675293
             ],
             "type": "VEC2"
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 2399,
+            "type": "SCALAR"
         }
     ],
     "materials": [
@@ -210,16 +218,16 @@
                     "program": 0,
                     "attributes": {
                         "a_normal":  {
-                            "type": 35665,
                             "semantic": "NORMAL"
                         },
                         "a_position": {
-                            "type": 35665,
                             "semantic": "POSITION"
                         },
                         "a_texcoord0": {
-                            "type": 35664,
                             "semantic": "TEXCOORD_0"
+                        },
+                        "a_custom": {
+                            "semantic": "_CUSTOM_ATTRIBUTE"
                         }
                     },
                     "uniforms": {

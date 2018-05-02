@@ -172,7 +172,7 @@ The following example shows a technique and the properties it defines. This sect
                 "a_texcoord0": {
                     "semantic": "TEXCOORD_0"
                 }
-                },
+            },
             "uniforms": {
                 "u_ambient": {
                     "type": 35666
@@ -231,13 +231,17 @@ Attributes and uniforms passed to the program instance's shader code are defined
 
 #### Attributes
 
-The `attributes` dictionary property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's key is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is an [attribute](#reference-attribute) object, where the semantic of the attribute is defined. The semantic corresponds with the mesh attribute semantic specified in the [primitive](../../../../specification/2.0#reference-primitive), the value of which is the index of the accessor containing attribute's data.
+The `attributes` dictionary property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's key is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is an [attribute](#reference-attribute) object, where the semantic of the attribute is defined. The semantic corresponds with the mesh attribute semantic specified in the [primitive](../../../../specification/2.0#reference-primitive), the value of which is the index of the accessor containing attribute's data. It's invalid to specify a semantic that does not exist in the mesh data.
 
 #### Uniforms
 
 The `uniforms` dictionary property specifies the uniform variables that will be passed to the shader. Each uniform's key is a string that corresponds to the uniform name in the GLSL source code. Each uniform's value is a string that references a [uniform](#reference-uniform) object, where the type (GL types such as a floating point number, vector, etc.) and potentially the semantic and default value of the uniform is defined.
 
 When a material instances a technique, the name of each supplied value in its `KHR_techniques_webgl.values` property must correspond to one of the uniforms defined in the technique.
+
+Uniforms which specify the `SAMPLER_2D` type use a [`textureInfo`](../../../../specification/2.0#reference-textureinfo) object as a value to reference a texture.
+
+TODO: Sampler uniforms use textureInfo object. That object could be extended with, e.g., KHR_texture_transform. How should engines handle that (fail to load, patch shaders, resample texures, etc)?
 
 The above example illustrates several uniforms. The property `u_ambient` is defined as a `FLOAT_VEC4` type; and `u_light0Color` is defined as a `FLOAT_VEC3` with a default color value of white.
 
