@@ -17,6 +17,10 @@ Written against the glTF 2.0 spec.
 
 The [glTF coordinate system](../../../../specification/2.0#coordinate-system-and-units) a right-handed 3-axis (x, y, z) Cartesian coordinate system where the positive _y_-axis as up. However, different 3D tools or engines may define different directions for the _y_ and _z_-axis. This extension resolves ambiguity when orienting a _y_-up glTF asset in a pipeline with a coordinate system where the positive _z_-axis is up.
 
+| glTF | glTF with `CESIUM_z_up` |
+|:--:|:---:|
+| ![y-axis up](./figures/y_up.png) | ![z-axis up](./figures/z_up.png) |
+
 There is precedent for a _z_-up coordinate system, in particular for use in a 3D geospatial context. Globe engines and 3D models often use global [earth-centered, earth-fixed (ECEF)](https://www.e-education.psu.edu/geog862/node/1793) reference frame, whose origin is the Earth's center and the _z_-axis is the north pole. Furthermore, when translating from a standard geodetic coordinate system with latitude, longitude, and height (such as [WGS 84](https://epsg.io/4326)) into 3-axis Cartesian coordinate system, the _x_ and _y_ axes are congruent with latitude and longitude, and the _z_-axis with height.
 
 In addition to Cesium, other 3D applications such as 3DS Max, SketchUp, and Unreal engine treat the _z_-axis as up.
