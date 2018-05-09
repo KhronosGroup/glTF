@@ -19,7 +19,7 @@ _Draft Khronos extensions are not ratified yet._
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
-
+* [CESIUM_z_up](2.0/Vendor/CESIUM_z_up/README.md)
 
 ## Extensions for glTF 1.0
 
