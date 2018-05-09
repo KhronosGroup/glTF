@@ -47,7 +47,3 @@ List the `CESIUM_z_up` extension in the asset's top level `extensionsRequired` a
     ]
 }
 ```
-
-## Resources
-
-* [Ohlarik08] Deron Ohlarik. [Precisions, Precisions](http://help.agi.com/AGIComponents/html/BlogPrecisionsPrecisions.htm). 2008.
