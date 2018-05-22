@@ -133,7 +133,7 @@ Below is the recommended process when a loader encounters a glTF asset with the 
 
 To prevent transmission of redundant data, exporters should generally write compressed Draco data into a separate buffer from the uncompressed fallback, and shared data into a third buffer. Loaders may then optimize to request only the necessary buffers.
 
-To satisfy the requirement that `accessors` properties must match the decompressed data, exporters should write the uncompressed fallback primitives from the decompressed data.
+Draco compression may change the order and number of vertices in a mesh. To satisfy the requirement that `accessors` properties be correct for both compressed and uncompressed data, generators should create uncompressed `attributes` and `indices` using data that has been decompressed from the Draco buffer, rather than the original source data.
 
 ## Resources
 
