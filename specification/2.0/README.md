@@ -1449,6 +1449,8 @@ When `node` isn't defined, channel should be ignored. Valid path names are `"tra
 
 Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating point scalar values representing linear time in seconds; and a set of vectors or scalars representing animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, and `CUBICSPLINE`. See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
 
+The inputs of each sampler are relative to `t=0`, defined as the beginning of the parent `animations` entry. Before and after the provided input range, output should be "clamped" to the nearest end of the input range. For example, if the earliest sampler input for an animation is `t=10`, a client implementation should begin playback of that animation at `t=0` with output clamped to the first output value. Samplers within a given animation are _not_ required to have the same inputs.
+
 |`channel.path`|Accessor Type|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
 |`"translation"`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ translation vector|
