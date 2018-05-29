@@ -6,12 +6,15 @@
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "KHR_materials_pbrSpecularGlossiness": {
-          "allOf": [ { "$ref": "glTFid.schema.json" } ],
-          "description": "The index of the KHR_materials_pbrSpecularGlossiness material to use instead of this material."
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the KHR_materials_pbrSpecularGlossiness material to use instead of this material."
         },
         "KHR_materials_unlit": {
-          "allOf": [ { "$ref": "glTFid.schema.json" } ],
-          "description": "The index of the KHR_materials_unlit material to use instead of this material."
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the KHR_materials_unlit material to use instead of this material."
+        },
+        "additionalProperties": {
+            "$ref": "glTFid.schema.json"
         },
         "extensions": { },
         "extras": { }
