@@ -142,7 +142,7 @@ Spot lights emit light in a cone in the direction of the local +z axis. The angl
 
 ## Range Property
 
-The range property (allowed only on point and spot lights) suggests a distance cutoff at which the light's intensity may be considered zero, meaning the light no longer affects the surrounding area. It is recommended — but are not required — that engines ignore the light beyond this range. The range may be defined for asthetic or performance reasons.
+The range property (allowed only on point and spot lights) suggests a distance cutoff at which the light's intensity may be considered zero, meaning the light no longer affects the surrounding area. This can be useful to cull geometry that a light may not visibly affect, potentially having a significant positive impact on rendering performance. It is recommended — but are not required — that rendering engines ignore the light beyond this range.
 
 Within the range of the light, attenuation should follow the inverse square law as closely as possible, although some non-quadratic falloff near the edge of the range may be used to avoid a hard cutoff. A range of 0 implies that no cutoff should be used, attenuating only according to inverse square law.
 
