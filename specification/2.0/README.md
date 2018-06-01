@@ -174,7 +174,7 @@ Major version updates are not expected to be compatible with previous versions.
 To simplify client-side implementation, glTF has additional restrictions on JSON format and encoding.
 
 1. JSON must use UTF-8 encoding without BOM.
-   > **Implementation Note:** Exporters must not add a byte order mark to the beginning of JSON text. In the interests of interoperability, glTF importers may ignore the presence of a byte order mark rather than treating it as an error. See [RFC8259, section 8](https://tools.ietf.org/html/rfc8259#section-8) for more information.
+   > **Implementation Note:** glTF exporters must not add a byte order mark to the beginning of JSON text. In the interests of interoperability, client implementations may ignore the presence of a byte order mark rather than treating it as an error. See [RFC8259, section 8](https://tools.ietf.org/html/rfc8259#section-8) for more information.
 
 2. All strings defined in this spec (properties names, enums) use only ASCII charset and must be written as plain text, e.g., `"buffer"` instead of `"\u0062\u0075\u0066\u0066\u0065\u0072"`.
 
