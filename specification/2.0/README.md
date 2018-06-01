@@ -169,14 +169,16 @@ Major version updates are not expected to be compatible with previous versions.
 * `*.bin` files use `application/octet-stream`
 * Texture files use the official `image/*` type based on the specific image format. For compatibility with modern web browsers, the following image formats are supported: `image/jpeg`, `image/png`.
 
-## JSON encoding
+## JSON Encoding
 
-To simplify client-side implementation, glTF has following restrictions on JSON format and encoding.
+To simplify client-side implementation, glTF has additional restrictions on JSON format and encoding.
 
 1. JSON must use UTF-8 encoding without BOM.
+   > **Implementation Note:** Exporters must not add a byte order mark to the beginning of JSON text. In the interests of interoperability, glTF importers may ignore the presence of a byte order mark rather than treating it as an error. See [RFC8259, section 8](https://tools.ietf.org/html/rfc8259#section-8) for more information.
+
 2. All strings defined in this spec (properties names, enums) use only ASCII charset and must be written as plain text, e.g., `"buffer"` instead of `"\u0062\u0075\u0066\u0066\u0065\u0072"`.
 
-   > **Implementation Note:** This allows generic glTF client implementations to not have full Unicode support. Application-specific strings (e.g., value of `"name"` property) could use any charset.
+   > **Implementation Note:** This allows generic glTF client implementations to not have full Unicode support. Application-specific strings (e.g., values of `"name"` properties or content of `extras` fields) may use any symbols.
 3. Names (keys) within JSON objects must be unique, i.e., duplicate keys aren't allowed.
 
 ## URIs
