@@ -794,6 +794,8 @@ Valid accessor type and component type for each attribute semantic property are 
 
 `POSITION` accessor **must** have `min` and `max` properties defined.
 
+All Morph Target's accessors **must** have the same `count` as the accessors of the original primitive.
+
 A Morph Target may also define an optional `mesh.weights` property that stores the default targets weights. In the absence of a `node.weights` property, the primitives attributes are resolved using these weights. When this property is missing, the default targets weights are assumed to be zero.
 
 The following example extends the Mesh defined in the previous example to a morphable one by adding two Morph Targets:
