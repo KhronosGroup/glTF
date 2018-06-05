@@ -267,6 +267,8 @@ The [node transformations](#transformations) and [animation channel paths](#anim
 
 The glTF asset contains zero or more *scenes*, the set of visual objects to render. Scenes are defined in a `scenes` array. An additional property, `scene` (note singular), identifies which of the scenes in the array is to be displayed at load time.
 
+All nodes listed in `scene.nodes` array must be root nodes (see the next section for details).
+
 When `scene` is undefined, runtime is not required to render anything at load time.
 
 > **Implementation Note:** This allows applications to use glTF assets as libraries of individual entities such as materials or meshes.   
@@ -300,7 +302,7 @@ Nodes have an optional `name` property.
 
 Nodes also have transform properties, as described in the next section.
 
-Nodes are organized in a parent-child hierarchy known informally as the *node hierarchy*.
+Nodes are organized in a parent-child hierarchy known informally as the *node hierarchy*. A node is called a *root node* when it doesn't have a parent.
 
 The node hierarchy is defined using a node's `children` property, as in the following example:
 
@@ -329,7 +331,7 @@ The node hierarchy is defined using a node's `children` property, as in the foll
 
 The node named `Car` has four children. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
 
->For Version 2.0 conformance, the glTF node hierarchy is not a directed acyclic graph (DAG) or *scene graph*, but a strict tree. That is, no node may be a direct or indirect descendant of more than one node. This restriction is meant to simplify implementation and facilitate conformance. The restriction may be lifted later.
+> For Version 2.0 conformance, the glTF node hierarchy is not a directed acyclic graph (DAG) or *scene graph*, but a disjoint union of strict trees. That is, no node may be a direct descendant of more than one node. This restriction is meant to simplify implementation and facilitate conformance.
 
 ### Transformations
 
