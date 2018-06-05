@@ -265,7 +265,7 @@ The [node transformations](#transformations) and [animation channel paths](#anim
 
 The glTF asset contains zero or more *scenes*, the set of visual objects to render. Scenes are defined in a `scenes` array. An additional property, `scene` (note singular), identifies which of the scenes in the array is to be displayed at load time.
 
-All nodes listed in `scene.nodes` array must be the roots of trees in the node forest (see the next section for details).
+All nodes listed in `scene.nodes` array must be root nodes (see the next section for details).
 
 When `scene` is undefined, runtime is not required to render anything at load time.
 
