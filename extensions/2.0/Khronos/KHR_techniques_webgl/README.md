@@ -25,6 +25,8 @@ This extension allows glTF to define instances of shading techniques with extern
 
 This extension specification is targeting WebGL 1.0, and can be supported in any WebGL 1.0-based engine if the device supports the necessary WebGL extensions.
 
+The [conformance](#conformance) section specifies how the extension interacts with the attributes defined in the base specification, as well as how the extension interacts with other extensions.
+
 * **Abridged example glTF**: [sample_techniques.gltf](examples/sample_techniques.gltf)
 
 ## glTF Schema Updates
@@ -239,9 +241,7 @@ The `uniforms` dictionary property specifies the uniform variables that will be 
 
 When a material instances a technique, the name of each supplied value in its `KHR_techniques_webgl.values` property must correspond to one of the uniforms defined in the technique.
 
-Uniforms which specify the `SAMPLER_2D` type use a [`textureInfo`](../../../../specification/2.0#reference-textureinfo) object as a value to reference a texture.
-
-TODO: Sampler uniforms use textureInfo object. That object could be extended with, e.g., KHR_texture_transform. How should engines handle that (fail to load, patch shaders, resample texures, etc)?
+Uniforms which specify the `SAMPLER_2D` type use a [`textureInfo`](../../../../specification/2.0#reference-textureinfo) object as a value to reference a texture, (see [conformance](#conformance) for objects with extended with `KHR_texture_transform`).
 
 The above example illustrates several uniforms. The property `u_ambient` is defined as a `FLOAT_VEC4` type; and `u_light0Color` is defined as a `FLOAT_VEC3` with a default color value of white.
 
@@ -289,6 +289,12 @@ Table 1. Uniform Semantics
 | `JOINTMATRIX`                | `FLOAT_MAT4[]` | Array parameter; its length (`uniform.count`) must be greater than or equal to the length of `jointNames` array of a skin being used. Each element transforms mesh coordinates for a particular joint for skinning and animation. |
 
 For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_SIMULATION_TIME`.   
+
+## Conformance 
+
+Implementations should respect material [`doubleSided`](../../../../specification/2.0/README.md#double-sided), [`alphaMode`](../../../../specification/2.0/README.md#alpha-coverage), and [`alphaCutoff`](../../../../specification/2.0/README.md#alpha-coverage) properties. The default state of the WebGL context should not be assumed.
+
+[`textureInfo`](../../../../specification/2.0/README.md#reference-textureinfo) objects referenced by the `KHR_techniques_webgl` extension may not use the `KHR_texture_transform` extension. The `offset`, `rotation`, and `scale` transforms applied to the texture by using `KHR_texture_transform` can be applied with this extension by providing uniforms for these values and performing the necessary transformations in the supplied GLSL shader code.
 
 ## Properties Reference
 
@@ -774,6 +780,7 @@ Application-specific data.
 
 
 ## References
+_This section is non-normative._
 
 * [WebGL 1.0 Specification](https://www.khronos.org/registry/webgl/specs/latest/1.0/), Khronos Group
 

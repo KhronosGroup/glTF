@@ -5,12 +5,12 @@
 #### Khronos extensions
 * [KHR_materials_pbrSpecularGlossiness](2.0/Khronos/KHR_materials_pbrSpecularGlossiness/README.md)
 * [KHR_draco_mesh_compression](2.0/Khronos/KHR_draco_mesh_compression/README.md)
+* [KHR_techniques_webg](2.0/Khronos/KHR_techniques_webgl/README.md)
 
 #### Draft Khronos extensions
 _Draft Khronos extensions are not ratified yet._
 * KHR_materials_unlit *(in progress)*
 * KHR_lights *(in progress)*
-* [KHR_techniques_webgl](2.0/Khronos/KHR_techniques_webgl/README.md) *(in progress)*
 * KHR_texture_transform *(in progress)*
 
 #### Vendor extensions
