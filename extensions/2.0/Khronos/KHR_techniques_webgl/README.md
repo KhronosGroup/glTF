@@ -292,7 +292,7 @@ For forward-compatibility, application-specific semantics must start with an und
 
 ## Conformance 
 
-Implementations should respect material [`doubleSided`](../../../../specification/2.0/README.md#double-sided), [`alphaMode`](../../../../specification/2.0/README.md#alpha-coverage), and [`alphaCutoff`](../../../../specification/2.0/README.md#alpha-coverage) properties. The default state of the WebGL context should not be assumed.
+Implementations should respect material [`doubleSided`](../../../../specification/2.0/README.md#double-sided), [`alphaMode`](../../../../specification/2.0/README.md#alpha-coverage), and [`alphaCutoff`](../../../../specification/2.0/README.md#alpha-coverage) properties, modifying the supplied GLSL shader code at runtime if necessary. The default state of the WebGL context should not be assumed.
 
 [`textureInfo`](../../../../specification/2.0/README.md#reference-textureinfo) objects referenced by the `KHR_techniques_webgl` extension may not use the `KHR_texture_transform` extension. The `offset`, `rotation`, and `scale` transforms applied to the texture by using `KHR_texture_transform` can be applied with this extension by providing uniforms for these values and performing the necessary transformations in the supplied GLSL shader code.
 
