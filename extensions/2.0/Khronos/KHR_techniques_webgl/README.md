@@ -371,7 +371,7 @@ Application-specific data.
 <a name="reference-program"></a>
 ## Program
 
-A shader program, including its vertex and fragment shaders, and names of vertex shader attributes.
+A shader program, including its vertex and fragment shaders.
 
 **Related WebGL functions**: `attachShader()`, `bindAttribLocation()`, `createProgram()`, `deleteProgram()`, `getProgramParameter()`, `getProgramInfoLog()`, `linkProgram()`, `useProgram()`, and `validateProgram()`
 

@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "Program",
     "type" : "object",
-    "description" : "A shader program, including its vertex and fragment shaders, and names of vertex shader attributes.",
+    "description" : "A shader program, including its vertex and fragment shaders.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
         "fragmentShader" : {
