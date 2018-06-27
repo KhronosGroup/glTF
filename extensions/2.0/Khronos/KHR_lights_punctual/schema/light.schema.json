@@ -33,7 +33,6 @@
             "type": "string",
             "description": "Specifies the light type.",
             "enum": [
-                "ambient",
                 "directional",
                 "point",
                 "spot"

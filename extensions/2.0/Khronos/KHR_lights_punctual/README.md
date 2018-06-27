@@ -20,21 +20,21 @@ This extension defines a set of lights for use with glTF 2.0. Lights define ligh
 
 Many 3D tools and engines support built-in implementations of light types. Using this extension, tools can export and engines can import these lights. 
 
-This extension defines four light types: `ambient`, `directional`, `point` and `spot`.
+This extension defines three "punctual" light types: `directional`, `point` and `spot`. Punctual lights are defined as parameterized, infinitely small points that emit light in well-defined directions and intensities.
 
-`ambient` lights are not transformable and, thus, can only be defined on the scene. All other lights are contained in nodes and inherit the translation and rotation of that node. Note that all lights ignore the scale of a node.
+These lights are referenced by nodes and inherit the transform of that node.
 
 A conforming implementation of this extension must be able to load light data defined in the asset and has to render the asset using those lights. 
 
 ## Defining Lights
 
-Lights are defined within a dictionary property in the glTF manifest file, by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_lights` property with a `lights` array inside it.
+Lights are defined within a dictionary property in the glTF manifest file, by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_lights_punctual` property with a `lights` array inside it.
 
-Each light defines a mandatory `type` property that designates the type of light (`ambient`, `directional`, `point` or `spot`). The following example defines a white-colored directional light.
+Each light defines a mandatory `type` property that designates the type of light (`directional`, `point` or `spot`). The following example defines a white-colored directional light.
 
 ```javascript
 "extensions": {
-    "KHR_lights" : {
+    "KHR_lights_punctual" : {
         "lights": [
             {
                 "color": [
@@ -51,13 +51,13 @@ Each light defines a mandatory `type` property that designates the type of light
 
 ## Adding Light Instances to Nodes
 
-Nodes can have lights attached to them, just like any other objects that have a transform. Only lights of types `directional`, `point`, and `spot` have position and/or orientation so only these light types are allowed. These lights are attached to a node by defining the `extensions.KHR_lights` property and, within that, an index into the `lights` array using the `light` property.
+Lights must be attached to a node by defining the `extensions.KHR_lights_punctual` property and, within that, an index into the `lights` array using the `light` property.
 
 ```javascript
 "nodes" : [
     {
         "extensions" : {
-            "KHR_lights" : {
+            "KHR_lights_punctual" : {
                 "light" : 0
             }
         }
@@ -65,24 +65,8 @@ Nodes can have lights attached to them, just like any other objects that have a 
 ]
 ```
 
-For light types that have a position (`point` and `spot` lights), the light's position is defined as the node's world location.
+The light will inherit the transform of the node. For light types that have a position (`point` and `spot` lights), the light's position is defined as the node's world location.
 For light types that have a direction (`directional` and `spot` lights), the light's direction is defined as the 3-vector `(0.0, 0.0, 1.0)` and the rotation of the node orients the light accordingly.
-
-## Adding Light Instances to Scenes
-
-Because scenes have no transform, only lights that also have no transform information can be attached to them. `ambient` lights have no position, no orientation and are, therefore, the only light type that may be attached to scenes (and cannot be attached to any other object type). A scene may have no more than one ambient light. These lights are attached to the scene by defining the `extensions.KHR_lights` property and, within that, an index into the `lights` array using the `light` property.
-
-```javascript
-"scenes" : [
-    {
-        "extensions" : {
-            "KHR_lights" : {
-                "light" : 0
-            }
-        }
-    }            
-]
-```
 
 ## Light Types
 
@@ -98,9 +82,15 @@ All light types share the common set of properties listed below.
 | `type` | Declares the type of the light. | :white_check_mark: Yes |
 | `range` | Hint defining a distance cutoff at which the light's intensity may be considered to have reached zero. Supported only for `point` and `spot` lights. | No, Default: `0.0` |
 
-### Ambient
+## Range Property
 
-Ambient lights define constant lighting throughout the scene. They are referenced only by a scene object and only 1 can be referenced per scene. It's intensity is defined in lumens per metre squared, or lux (lm/m^2).
+The range property (allowed only on point and spot lights) defines a distance cutoff at which the light's intensity must be considered zero, meaning the light no longer affects the surrounding area. This can be useful to cull geometry that a light may not visibly affect, potentially having a significant positive impact on rendering performance. It is required that, when given a non-zero value, rendering engines ignore the light beyond this range.
+
+Within the range of the light, attenuation should follow the inverse square law as closely as possible, although some non-quadratic falloff near the edge of the range may be used to avoid a hard cutoff. A `range` of 0 implies that no cutoff should be used, attenuating only according to inverse square law.
+
+A recommended implementation for this attenuation with a cutoff range is as follows:
+
+**attenuation = max( min( 1.0 - ( current_distance / range )^4^, 1 ), 0 ) / current_distance^2^**
 
 ### Directional
 
@@ -121,7 +111,7 @@ Spot lights emit light in a cone in the direction of the local +z axis. The angl
 
 ```javascript
 "extensions": {
-    "KHR_lights" : {
+    "KHR_lights_punctual" : {
         "lights": [
             {
                 "spot": {
@@ -140,12 +130,6 @@ Spot lights emit light in a cone in the direction of the local +z axis. The angl
 }
 ```
 
-## Range Property
+## Inner and Outer Cone Angles
 
-The range property (allowed only on point and spot lights) suggests a distance cutoff at which the light's intensity may be considered zero, meaning the light no longer affects the surrounding area. This can be useful to cull geometry that a light may not visibly affect, potentially having a significant positive impact on rendering performance. It is recommended — but are not required — that rendering engines ignore the light beyond this range.
-
-Within the range of the light, attenuation should follow the inverse square law as closely as possible, although some non-quadratic falloff near the edge of the range may be used to avoid a hard cutoff. A range of 0 implies that no cutoff should be used, attenuating only according to inverse square law.
-
-A recommended implementation for this attenuation with a cutoff range is as follows:
-
-**attenuation = max( min( 1.0 - ( current_distance / range )^4^, 1 ), 0 ) / current_distance^2^**
+The attenuation between the `innerConeAngle` and `outerConeAngle` should roughly follow a parabolic decline. i.e. `intensity = -pow2(x) + 1` where x is a 0-1 value representing the percentage of the way between `innerConeAngle` and `outerConeAngle`. This is not physically correct but is an efficient approximation that provides decent results. Runtimes are free to implement their own function.

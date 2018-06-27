@@ -1,20 +1,10 @@
 {
   "extensionsUsed": [
-    "KHR_lights"
+    "KHR_lights_punctual"
   ],
   "extensions": {
-    "KHR_lights": {
+    "KHR_lights_punctual": {
       "lights": [
-        {
-          "color": [
-            0.5,
-            0,
-            0
-          ],
-          "name": "Ambient",
-          "intensity": 0.25,
-          "type": "ambient"
-        },
         {
           "color": [
             1.0,
@@ -185,8 +175,8 @@
   "nodes": [
     {
       "extensions": {
-        "KHR_lights": {
-          "light": 2
+        "KHR_lights_punctual": {
+          "light": 1
         }
       },
       "matrix": [
@@ -212,8 +202,8 @@
     {
       "name": "directional_light",
       "extensions": {
-        "KHR_lights": {
-          "light": 1
+        "KHR_lights_punctual": {
+          "light": 0
         }
       }
     },
@@ -230,12 +220,7 @@
         0,
         1,
         2
-      ],
-      "extensions": {
-        "KHR_lights": {
-          "light": 0
-        }
-      }
+      ]
     }
   ]
 }
