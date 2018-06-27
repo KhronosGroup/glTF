@@ -11,6 +11,7 @@ The following extension prefixes are reserved:
 * `FB` - Facebook
 * `GOOGLE` - Google
 * `KHR` - Ratified or intended-to-be-ratified Khronos
+* `MOZ` - Mozilla
 * `MSFT` - Microsoft
 * `NV` - NVIDIA Corporation
 * `OWLII` - Owlii
@@ -18,4 +19,4 @@ The following extension prefixes are reserved:
 * `SKFB` - Sketchfab
 * `WEB3D` - Web3D Consortium
 
-To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glTF/issues/new) with the name of the requested prefix and the vendor that will be using it.  Assign the `extension` label to the issue.
+To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glTF/issues/new) with the name of the requested prefix and the vendor that will be using it. Assign the `extension` label to the issue.

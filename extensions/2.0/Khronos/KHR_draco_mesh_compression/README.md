@@ -103,6 +103,9 @@ The `bufferView` property points to the buffer containing compressed data. The d
 ### attributes
 `attributes` defines the attributes stored in the decompressed geometry. e.g., in the example above, `POSITION`, `NORMAL`, `TEXCOORD_0`, `WEIGHTS_0` and `JOINTS_0`. Each attribute is associated with an attribute id which is its unique id in the compressed data. The `attributes` defined in the extension must be a subset of the attributes of the primitive. To request an attribute, loaders must be able to use the correspondent attribute id specified in the `attributes` to get the attribute from the compressed data.
 
+### accessors
+The `accessors` properties corresponding to the `attributes` and `indices` of the `primitives` must match the decompressed data.
+
 #### Restrictions on geometry type
 When using this extension, the `mode` of `primitive` must be either `TRIANGLES` or `TRIANGLE_STRIP` and the mesh data will be decoded accordingly.
 
@@ -121,7 +124,7 @@ Below is the recommended process when a loader encounters a glTF asset with the 
 * If the loader does support the Draco extension, but will not process `KHR_draco_mesh_compression`, then the loader must load the glTF asset ignoring `KHR_draco_mesh_compression` in `primitive`.
 * If the loader does support the Draco extension, and will process `KHR_draco_mesh_compression` then:
     * The loader must process `KHR_draco_mesh_compression` first. The loader must get the data from `KHR_draco_mesh_compression`'s `bufferView` property and decompress the data using a Draco decoder to a Draco geometry.
-    * Then the loader must process `attributes` and `indices` properties of the `primitive`. When loading each `accessor`, you must ignore the `bufferView` and go to the previously decoded Draco geometry in the `primitive` to get the data of indices and attributes. A loader must use the decompressed data to fill the `accessors` or render the decompressed Draco geometry directly (e.g. [ThreeJS (non-normative)](https://github.com/mrdoob/three.js/blob/dev/examples/js/loaders/draco/DRACOLoader.js)).
+    * Then the loader must process `attributes` and `indices` properties of the `primitive`. When loading each `accessor`, you must ignore the `bufferView` and `byteOffset` of the `accessor` and go to the previously decoded Draco geometry in the `primitive` to get the data of indices and attributes. A loader must use the decompressed data to fill the `accessors` or render the decompressed Draco geometry directly (e.g. [ThreeJS (non-normative)](https://github.com/mrdoob/three.js/blob/dev/examples/js/loaders/draco/DRACOLoader.js)).
     * If additional attributes are defined in `primitive`'s `attributes`, but not defined in `KHR_draco_mesh_compression`'s `attributes`, then the loader must process the additional attributes as usual.
 
 ## Implementation note
@@ -129,6 +132,8 @@ Below is the recommended process when a loader encounters a glTF asset with the 
 *This section is non-normative.*
 
 To prevent transmission of redundant data, exporters should generally write compressed Draco data into a separate buffer from the uncompressed fallback, and shared data into a third buffer. Loaders may then optimize to request only the necessary buffers.
+
+Draco compression may change the order and number of vertices in a mesh. To satisfy the requirement that `accessors` properties be correct for both compressed and uncompressed data, generators should create uncompressed `attributes` and `indices` using data that has been decompressed from the Draco buffer, rather than the original source data.
 
 ## Resources
 
