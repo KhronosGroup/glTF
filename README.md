@@ -34,7 +34,10 @@ Please provide spec feedback and community updates by submitting [issues](https:
 
 ### For artists
 
-[Blender exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter) for creating and converting models with glTF 2.0.
+- [Blender exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter)
+- [3DS Max exporter](http://doc.babylonjs.com/resources/3dsmax_to_gltf)
+- [Maya exporter](https://github.com/WonderMediaProductions/Maya2glTF)
+- [Other converters and exporters](#converters-and-exporters)
 
 Preview tools:
   - [Sketchfab](https://sketchfab.com/)
@@ -85,6 +88,7 @@ Preview tools:
 | [Verge3D](http://www.soft8soft.com/verge3d/)  | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF 2.0 exporters for Blender and 3ds Max |
 | [COLLADA2GLTF](https://github.com/KhronosGroup/COLLADA2GLTF/) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official command-line converter, with updates for glTF 2.0 in progress |
 | [Cesium drag-and-drop converter](http://cesiumjs.org/convertmodel.html) | `OBJ`, `COLLADA` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Online drag and drop converter |
+| [Maya2glTF](https://github.com/WonderMediaProductions/Maya2glTF) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Export glTF from Autodesk Maya |
 | [batchgltf](https://github.com/feiss/batchgltf) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Batch converter with GUI |
 | [FBX-glTF (Cyrillef)](https://github.com/cyrillef/FBX-glTF) | `FBX` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Plug-in and command-line converter |
 | [jgltf-obj](https://github.com/javagl/JglTF/tree/master/jgltf-obj) | `OBJ` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Java programmatic and command-line converters |
