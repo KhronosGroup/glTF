@@ -1,4 +1,4 @@
-# EXT_blend
+# KHR_blend
 
 ## Contributors
 
@@ -14,15 +14,15 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension defines blending operations on glTF materials. The `EXT_blend`
+This extension defines blending operations on glTF materials. The `KHR_blend`
 extension may be used alongside the default PBR materials, or materials defined
 in glTF extensions. When combined with other materials and techniques, blending
 may be used to achieve effects like fire, steam, or holograms.
 
-For any material with the `EXT_blend` extension, blending must use the
+For any material with the `KHR_blend` extension, blending must use the
 specified blend equation/operation and factors.
 
-For any materials without the `EXT_blend` extension, blending is assumed to be
+For any materials without the `KHR_blend` extension, blending is assumed to be
 off unless otherwise specified.
 
 ### Properties
@@ -78,7 +78,7 @@ Defines parameters to the blending equation.
         "name": "My_Additive_Material",
         "pbrMetallicRoughness": {},
         "extensions": {
-            "EXT_blend": {
+            "KHR_blend": {
                 "blendEquation": [32778, 32778],
                 "blendFactors": [1, 1, 1, 1]
             }

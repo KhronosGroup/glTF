@@ -3,6 +3,7 @@
 ## Extensions for glTF 2.0
 
 #### Khronos extensions
+* [KHR_blend](2.0/Khronos/KHR_blend/README.md)
 * [KHR_materials_pbrSpecularGlossiness](2.0/Khronos/KHR_materials_pbrSpecularGlossiness/README.md)
 * [KHR_materials_unlit](2.0/Khronos/KHR_materials_unlit/README.md)
 * [KHR_draco_mesh_compression](2.0/Khronos/KHR_draco_mesh_compression/README.md)
