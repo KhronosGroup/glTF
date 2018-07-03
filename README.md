@@ -325,6 +325,14 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 ### All Presentations and Articles
 
+* [Get your glTF on with WebGL/WebVR at Microsoft - June 2018](https://www.khronos.org/events/get-your-gltf-on-with-webgl-webvr-at-microsoft)
+  * [Meetup video](https://youtu.be/GuA1mYG0-xE?t=1s)
+  * [Ecosystem update](https://youtu.be/GuA1mYG0-xE?t=47s) by Saurabh Bhatia [(slides)](https://www.khronos.org/assets/uploads/developers/library/2018-gltf-meetup/glTF-Meetup-Ecosystem-Update_June18.pdf)
+  * [3D product displays on the web using glTF](https://youtu.be/GuA1mYG0-xE?t=20m34s) by Matthew Cedeno and Gary Hsu
+  * [Publishing Virtual Worlds with glTF](https://youtu.be/GuA1mYG0-xE?t=38m6s) by Robert Long [(slides)](https://www.khronos.org/assets/uploads/developers/library/2018-gltf-meetup/glTF-Meetup-Publishing-Virtual-Worlds-with-glTF_Jun18.pdf)
+  * [Compressed Texture Transmission Format](https://youtu.be/GuA1mYG0-xE?t=1h21s) by Mark Callow [(slides)](https://www.khronos.org/assets/uploads/developers/library/2018-gltf-meetup/glTF-Meetup-CTTF_Jun18.pdf)
+  * [What's new with Draco 3D compression](https://youtu.be/GuA1mYG0-xE?t=1h21m2s) by Frank Galligan [(slides)](https://www.khronos.org/assets/uploads/developers/library/2018-gltf-meetup/glTF-Meetup-Draco_Jun18.pdf)
+  * [glTF at Adobe](https://youtu.be/GuA1mYG0-xE?t=1h34m50s) by Mike Bond
 * [Building the Metaverse One Standard at a Time](https://www.khronos.org/assets/uploads/developers/library/2018-web3d/Web3D-Keynote-Poznan-2D_Jun18.pdf) by Neil Trevett. Web3D. June 2018
 * [Sketchfab uses glTF to bring a search bar to the world of 3D](https://www.khronos.org/blog/sketchfab-uses-gltf-to-bring-a-search-bar-to-the-world-of-3d). May 2018
 * [Draco Compressed Meshes with glTF and 3D Tiles](https://cesium.com/blog/2018/04/09/draco-compression/) by Gabby Getz. April 2018
