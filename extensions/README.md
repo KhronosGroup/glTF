@@ -6,12 +6,12 @@
 * [KHR_materials_pbrSpecularGlossiness](2.0/Khronos/KHR_materials_pbrSpecularGlossiness/README.md)
 * [KHR_materials_unlit](2.0/Khronos/KHR_materials_unlit/README.md)
 * [KHR_draco_mesh_compression](2.0/Khronos/KHR_draco_mesh_compression/README.md)
+* [KHR_texture_transform](2.0/Khronos/KHR_texture_transform/README.md)
 
 #### Draft Khronos extensions
 _Draft Khronos extensions are not ratified yet._
 * KHR_lights *(in progress)*
 * KHR_technique_webgl *(in progress)*
-* KHR_texture_transform *(in progress)*
 
 #### Vendor extensions
 
@@ -19,7 +19,6 @@ _Draft Khronos extensions are not ratified yet._
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
-
 
 ## Extensions for glTF 1.0
 
