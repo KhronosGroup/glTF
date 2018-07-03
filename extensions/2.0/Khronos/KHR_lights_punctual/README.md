@@ -1,4 +1,4 @@
-# KHR\_lights
+# KHR\_lights\_punctual
 
 ## Contributors
 
