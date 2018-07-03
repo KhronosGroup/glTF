@@ -15,6 +15,11 @@ _Draft Khronos extensions are not ratified yet._
 
 #### Vendor extensions
 
+* [MSFT_lod](2.0/Vendor/MSFT_lod/README.md)
+* [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
+* [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
+* [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
+
 ## Extensions for glTF 1.0
 
 #### Khronos extensions
