@@ -4,14 +4,14 @@
 
 #### Khronos extensions
 * [KHR_materials_pbrSpecularGlossiness](2.0/Khronos/KHR_materials_pbrSpecularGlossiness/README.md)
+* [KHR_materials_unlit](2.0/Khronos/KHR_materials_unlit/README.md)
 * [KHR_draco_mesh_compression](2.0/Khronos/KHR_draco_mesh_compression/README.md)
 * [KHR_techniques_webgl](2.0/Khronos/KHR_techniques_webgl/README.md)
+* [KHR_texture_transform](2.0/Khronos/KHR_texture_transform/README.md)
 
 #### Draft Khronos extensions
 _Draft Khronos extensions are not ratified yet._
-* KHR_materials_unlit *(in progress)*
 * KHR_lights *(in progress)*
-* KHR_texture_transform *(in progress)*
 
 #### Vendor extensions
 
@@ -19,7 +19,6 @@ _Draft Khronos extensions are not ratified yet._
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
-
 
 ## Extensions for glTF 1.0
 
@@ -34,7 +33,7 @@ _Draft Khronos extensions are not ratified yet._
 
 # About glTF Extensions
 
-glTF extensions extend the base glTF model format.  Extensions can introduce new properties (including properties that reference external data, and the extension can define the format of those data), new parameter semantics, reserved IDs, and new container formats.  Extensions are written against a specific version of glTF and may be promoted to core glTF in a later glTF version. 
+glTF extensions extend the base glTF model format.  Extensions can introduce new properties (including properties that reference external data, and the extension can define the format of those data), new parameter semantics, reserved IDs, and new container formats.  Extensions are written against a specific version of glTF and may be promoted to core glTF in a later glTF version.
 
 ## Extension Mechanics
 
@@ -78,7 +77,7 @@ This allows an engine to quickly determine if it supports the extensions needed 
 
 To create a new extension, use the [extension template](Template.md) and open a pull request into this repo.  Make sure to add the extension to the glTF Extension Registry (top of this file).
 
-If lack of extension support prevents proper geometry loading, extension specification _must_ state that (and such extension must be mentioned in `extensionsRequired` top-level glTF property).  
+If lack of extension support prevents proper geometry loading, extension specification _must_ state that (and such extension must be mentioned in `extensionsRequired` top-level glTF property).
 
 Extensions start as a vendor extension, then can become a multi-vendor extensions if there are multiple implementations, and can become a ratified Khronos extension (the multi-vendor extension is an optional step).
 
