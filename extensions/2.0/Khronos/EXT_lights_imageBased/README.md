@@ -72,6 +72,22 @@ https://cseweb.ucsd.edu/~ravir/papers/envmap/envmap.pdf
 *(this section needs more about how the coefficients are used as well as a brief blurb about what SH are)*
 *(also, we should probably just put some shader code in here for using the coefficients)*
 
+## HDR Images
+
+This extension also provides a way to reference HDR data which, up to this point, has not been possible within glTF. The individual images referenced by this extension can either be:
+1. JPEG's - assumed to be regular, LDR, RGB images
+2. PNG's - assumed to be HDR images packed in RGBD format.
+
+### RGBD
+RGBD is a way to pack HDR data so that the alpha channel contains a value that, when the RGB channels are divided by it, can produce values greater than 1. Runtimes can choose to unpack this data to float textures at load time (recommended) or keep it packed on the GPU (and unpack in the shader) to save memory.
+
+RGBD has several advantages over similar packing schemes like RGBM and RGBE.
+
+1. Simple to pack and unpack. Cheaper than RGBE.
+2. Provides better range than RGBM.
+3. Interpolates better than RGBE. Important if the data is kept packed during rendering and filtering is used. Note that the interpolation isn't perfect so visual artifacts may still appear. This is why unpacking to float at load-time is recommended.
+4. Packed PNG doesn't appear as garbled as a one packed with RGBE.
+
 
 ## Adding Light Instances to Scenes
 
