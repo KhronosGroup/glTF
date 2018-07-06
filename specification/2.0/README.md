@@ -844,7 +844,7 @@ All skins are stored in the `skins` array of the asset. Each skin is defined by 
 
 > **Implementation Note:** The matrix defining how to pose the skin's geometry for use with the joints ("Bind Shape Matrix") should be premultiplied to mesh data or to Inverse Bind Matrices. 
 
-> **Implementation Note:** Client implementations should apply only the transform of the skeleton root node to the skinned mesh while ignoring the transform of the skinned mesh node. In the example below, the position of `node_0` and the scale of `node_1` are applied while the position of `node_3` and rotation of `node_4` are ignored.
+> **Implementation Note:** Client implementations should apply only the transform of the skeleton root node to the skinned mesh while ignoring the transform of the skinned mesh node. In the example below, the translation of `node_0` and the scale of `node_1` are applied while the translation of `node_3` and rotation of `node_4` are ignored.
 
 ```json
 {
@@ -852,7 +852,7 @@ All skins are stored in the `skins` array of the asset. Each skin is defined by 
         {
             "name": "node_0",
             "children": [ 1 ],
-            "position": [ 0.0, 1.0, 0.0 ]
+            "translation": [ 0.0, 1.0, 0.0 ]
         },
         {
             "name": "node_1",
@@ -865,7 +865,7 @@ All skins are stored in the `skins` array of the asset. Each skin is defined by 
         {
             "name": "node_3",
             "children": [ 4 ],
-            "position": [ 1.0, 0.0, 0.0 ]
+            "translation": [ 1.0, 0.0, 0.0 ]
         },
         {
             "name": "node_4",
