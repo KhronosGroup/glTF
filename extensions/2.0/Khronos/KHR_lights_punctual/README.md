@@ -1,4 +1,4 @@
-# KHR\_lights
+# KHR\_lights\_punctual
 
 ## Contributors
 
@@ -78,7 +78,7 @@ All light types share the common set of properties listed below.
 |:-----------------------|:------------------------------------------| :--------------------------|
 | `name` | Name of the light. | No, Default: `""` |
 | `color` | RGB value for light's color in linear space. | No, Default: `[1.0, 1.0, 1.0]` |
-| `intensity` | Brightness of light in. The units that this is defined in depend on the type of light. `point` and `spot` lights use luminous intensity in candela (lm/sr) while `directional` and `ambient` lights use illuminance in lux (lm/m^2) | No, Default: `1.0` |
+| `intensity` | Brightness of light in. The units that this is defined in depend on the type of light. `point` and `spot` lights use luminous intensity in candela (lm/sr) while `directional` and `ambient` lights use illuminance in lux (lm/m<sup>2</sup>) | No, Default: `1.0` |
 | `type` | Declares the type of the light. | :white_check_mark: Yes |
 | `range` | Hint defining a distance cutoff at which the light's intensity may be considered to have reached zero. Supported only for `point` and `spot` lights. | No, Default: `0.0` |
 
@@ -90,11 +90,11 @@ Within the range of the light, attenuation should follow the inverse square law 
 
 A recommended implementation for this attenuation with a cutoff range is as follows:
 
-**attenuation = max( min( 1.0 - ( current_distance / range )^4^, 1 ), 0 ) / current_distance^2^**
+**attenuation = max( min( 1.0 - ( current_distance / range )<sup>4</sup>, 1 ), 0 ) / current_distance<sup>2</sup>**
 
 ### Directional
 
-Directional lights are light sources that act as though they are infinitely far away and emit light in the direction of the local +z axis. This light type inherits the orientation of the node that it belongs to but ignores position and scale. Because it is at an infinite distance, the light is not attenuated. Its intensity is defined in lumens per metre squared, or lux (lm/m^2).
+Directional lights are light sources that act as though they are infinitely far away and emit light in the direction of the local +z axis. This light type inherits the orientation of the node that it belongs to but ignores position and scale. Because it is at an infinite distance, the light is not attenuated. Its intensity is defined in lumens per metre squared, or lux (lm/m<sup>2</sup>).
 
 ### Point
 
