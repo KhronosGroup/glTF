@@ -68,6 +68,13 @@ Cube faces are defined in the following order and must be authored with the Y-ax
 
 This extension defines spherical harmonic coefficients up to l=2 for irradiance lighting. This takes the form of a 9x3 array.
 https://cseweb.ucsd.edu/~ravir/papers/envmap/envmap.pdf
+http://graphics.stanford.edu/papers/envmap/
+
+Generating SH Coefficients
+http://graphics.stanford.edu/papers/envmap/prefilter.c
+
+Using SH Coefficients
+http://graphics.stanford.edu/papers/envmap/envmaprender.in
 
 *(this section needs more about how the coefficients are used as well as a brief blurb about what SH are)*
 *(also, we should probably just put some shader code in here for using the coefficients)*
