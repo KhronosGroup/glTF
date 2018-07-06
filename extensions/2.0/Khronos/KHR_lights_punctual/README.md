@@ -132,4 +132,23 @@ Spot lights emit light in a cone in the direction of the local +z axis. The angl
 
 ## Inner and Outer Cone Angles
 
-The attenuation between the `innerConeAngle` and `outerConeAngle` should roughly follow a parabolic decline. i.e. `intensity = -pow2(x) + 1` where x is a 0-1 value representing the percentage of the way between `innerConeAngle` and `outerConeAngle`. This is not physically correct but is an efficient approximation that provides decent results. Runtimes are free to implement their own function.
+There should be a smooth attenuation of brightness between the `innerConeAngle` and `outerConeAngle` angles. In reality, this attenuation is very complex as it depends on the physical size of the spotlight and the shape of the sheath around the bulb. 
+
+Conforming implementations are not required to implement a specific falloff equation but the attenuation should generally follow a steeper decline in brightness before leveling off when moving from the inner to the outer angle.
+
+It is common to model this falloff by interpolating between the cosine of each angle. This is an efficient approximation that provides decent results.
+
+Both Frostbite and Unreal 4 use the following code:
+
+```c++
+// These two values can be calculated on the CPU and passed into the shader
+float lightAngleScale = 1.0f / max(0.001f, cos(innerConeAngle) - cos(outerConeAngle));
+float lightAngleOffset = -cos(outerConeAngle) * lightAngleScale;
+
+// Then, in the shader:
+float cd = dot(spotlightDir, normalizedLightVector);
+float attenuation = saturate(cd * lightAngleScale + lightAngleOffset);
+attenuation *= attenuation;
+```
+
+It is recommended, but not required, that conforming implementations should use this same attenuation logic.
