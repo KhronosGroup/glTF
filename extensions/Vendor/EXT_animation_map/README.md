@@ -20,11 +20,9 @@ This extensions maps optional semantic meaning to animations so that client appl
 Facebook uses it to play animations when a model enters/leaves the feed, or scrubs an animation as the user scrolls the model through the screen.
 It is also used to respond to user events, such as tapping, or horizontal panning
 
-It maps a semantic, which can be any string a client wishes to bind, to an array of animation indices, pointing to a list of gltf Animation.  A semantic can have a list of glTF scene nodes indicating which nodes this trigger acts upon.  For example in the list below, a TRIGGER semantic can have a list of nodes indicating which nodes should be the hit-box, or GAZE can trigger only when certain nodes are gazed at.
+It maps a semantic (which can be any of the string-named events listed below), to an array of animation indices which point to a list of gltf Animations.  A semantic can have a list of glTF scene nodes indicating which nodes this trigger acts upon.  For example in the list below, a TRIGGER semantic can have a list of nodes indicating which nodes should be the hit-box, or GAZE can trigger only when certain nodes are gazed at. If this list of nodes is omitted, the semantic will act on all the nodes in the scene.
 
-##### Example Semantics
-
-These semantics are non-normative but they are the most likely to interoperate well.  They may be formalized in the future.
+##### Formal Semantics
 
 * **ENTER**: Trigger a single shot animation when the object first enters the scene or viewport
 * **LEAVE**: Trigger a single shot animation as the object is leaving the scene or viewport
@@ -32,7 +30,7 @@ These semantics are non-normative but they are the most likely to interoperate w
 
 The following semantics can include a list of glTF Node objects to specify interaction targets.  The event is triggered by acting on any of the nodes listed.  If the nodes are omitted, it can be assumed that the entire glTF Scene is the target.
 
-* **TRIGGER**: A user triggering a single shot animation on Touch, Tap, Click, or any other way of activating
+* **TRIGGER**: A user triggering a single shot animation on Touch, Tap, Click, or any other way of activating the nodes specified.
 * **GRAB**: Triggered when an object is picked up, for example grabbed in vr, or dragged in WebGL.
 * **HELD**: Looped during the entire duration an object is grabbed.
 * **RELEASED**: Triggered when an object is released from a grab.
