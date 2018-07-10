@@ -4,6 +4,7 @@
     "type" : "object",
     "definitions": {
         "semanticBinding": {
+            "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
             "type": "object",
             "properties": {
                 "semantic": {
