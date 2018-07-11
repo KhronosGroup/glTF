@@ -113,7 +113,7 @@ Preview tools:
 
 | Tool | Status | Description |
 |------|--------|-------------|
-| [glTF Validator](https://github.com/KhronosGroup/glTF-Validator) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official command-line and drag-and-top tool to validate glTF assets against the specification |
+| [glTF Validator](https://github.com/KhronosGroup/glTF-Validator) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official command-line and drag-and-drop tool to validate glTF assets against the specification |
 
 ### Editors and Modeling Tools
 
