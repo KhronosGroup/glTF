@@ -13,7 +13,7 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
 
 ## Status
 
-Complete
+Draft (not ratified yet)
 
 ## Dependencies
 
@@ -21,7 +21,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension allows glTF to define instances of shading techniques with external shader programs along with their parameterized values.  Shading techniques use JSON properties to describe data types and semantics for GLSL vertex and fragment shader programs.  
+This extension allows glTF to define instances of shading techniques with external shader programs along with their parameterized values.  Shading techniques use JSON properties to describe data types and semantics for GLSL vertex and fragment shader programs.
 
 This extension specification is targeting WebGL 1.0, and can be supported in any WebGL 1.0-based engine if the device supports the necessary WebGL extensions.
 
@@ -128,7 +128,7 @@ Each shader program includes the properties `fragmentShader` and `vertexShader`,
 
 #### Shaders
 
-One or more shader source files are listed in the asset's `KHR_techniques_webgl.shaders` property. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and either a `uri` to the file or a reference to a `bufferView`. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset. 
+One or more shader source files are listed in the asset's `KHR_techniques_webgl.shaders` property. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and either a `uri` to the file or a reference to a `bufferView`. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
 
 ```json
 {
@@ -147,7 +147,7 @@ One or more shader source files are listed in the asset's `KHR_techniques_webgl.
         }
     ]
 }
-``` 
+```
 
 ##### File Extension and MIME Type
 
@@ -288,9 +288,9 @@ Table 1. Uniform Semantics
 | `VIEWPORT`                   | `FLOAT_VEC4` | The viewport's x, y, width, and height properties stored in the `x`, `y`, `z`, and `w` components, respectively.  For example, this is used to scale window coordinates to [0, 1]: `vec2 v = gl_FragCoord.xy / viewport.zw;` |
 | `JOINTMATRIX`                | `FLOAT_MAT4[]` | Array parameter; its length (`uniform.count`) must be greater than or equal to the length of `jointNames` array of a skin being used. Each element transforms mesh coordinates for a particular joint for skinning and animation. |
 
-For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_SIMULATION_TIME`.   
+For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_SIMULATION_TIME`.
 
-## Conformance 
+## Conformance
 
 Implementations should respect material [`doubleSided`](../../../../specification/2.0/README.md#double-sided), [`alphaMode`](../../../../specification/2.0/README.md#alpha-coverage), and [`alphaCutoff`](../../../../specification/2.0/README.md#alpha-coverage) properties, modifying the supplied GLSL shader code at runtime if necessary. The default state of the WebGL context should not be assumed.
 
@@ -300,7 +300,7 @@ Implementations should respect material [`doubleSided`](../../../../specificatio
 
 #### JSON Schemas
 
-* [`KHR_techniques_webgl glTF extension`](#reference-khr_techniques_webgl-gltf-extension) 
+* [`KHR_techniques_webgl glTF extension`](#reference-khr_techniques_webgl-gltf-extension)
     * [`Program`](#reference-program)
     * [`Shader`](#reference-shader)
     * [`Technique`](#reference-technique)
@@ -328,21 +328,21 @@ Additional properties are allowed.
 
 * **JSON schema**: [glTF.KHR_techniques_webgl.schema.json](schema/glTF.KHR_techniques_webgl.schema.json)
 
-### programs :white_check_mark: 
+### programs :white_check_mark:
 
 An array of [`Program`](#reference-program) objects.
 
 * **Type**: Program `[1-*]`
 * **Required**: Yes
 
-### shaders :white_check_mark: 
+### shaders :white_check_mark:
 
 An array of [`Shader`](#reference-shader) objects.
 
 * **Type**: Shader `[1-*]`
 * **Required**: Yes
 
-### techniques :white_check_mark: 
+### techniques :white_check_mark:
 
 An array of [`Technique`](#reference-technique) objects.  A technique is a template for a material appearance.
 
@@ -390,7 +390,7 @@ Additional properties are allowed.
 
 * **JSON schema**: [program.schema.json](schema/program.schema.json)
 
-### program.fragmentShader :white_check_mark: 
+### program.fragmentShader :white_check_mark:
 
 The index of the fragment shader.
 
@@ -398,7 +398,7 @@ The index of the fragment shader.
 * **Required**: Yes
 * **Minimum**: ` >= 0`
 
-### program.vertexShader :white_check_mark: 
+### program.vertexShader :white_check_mark:
 
 The index of the vertex shader.
 
@@ -471,7 +471,7 @@ The uri of the GLSL source.  Relative paths are relative to the `.gltf` file.  I
 * **Required**: No
 * **Format**: uriref
 
-### shader.type :white_check_mark: 
+### shader.type :white_check_mark:
 
 The shader stage.  All valid values correspond to WebGL enums.
 
@@ -535,7 +535,7 @@ Additional properties are allowed.
 
 * **JSON schema**: [technique.schema.json](schema/technique.schema.json)
 
-### technique.program :white_check_mark: 
+### technique.program :white_check_mark:
 
 The index of the program.
 
@@ -666,7 +666,7 @@ The index of the node whose transform is used as the uniform's value.  When this
 * **Required**: No
 * **Minimum**: ` >= 0`
 
-### uniform.type :white_check_mark: 
+### uniform.type :white_check_mark:
 
 The uniform type.  All valid values correspond to WebGL enums.
 
@@ -745,7 +745,7 @@ Additional properties are allowed.
 
 * **JSON schema**: [material.KHR_techniques_webgl.schema.json](schema/material.KHR_techniques_webgl.schema.json)
 
-### technique :white_check_mark: 
+### technique :white_check_mark:
 
 The index of the technique.
 
