@@ -102,7 +102,7 @@ Point lights emit light in all directions from its position in space (and ignore
 
 ### Spot
 
-Spot lights emit light in a cone in the direction of the local +z axis. The angle and falloff of the cone is defined using two numbers, the `innerConeAngle` and `outerConeAngle`. As with point lights, the brightness also attenuates in a physically correct manner as distance increases from the light's position (i.e. brightness goes like the inverse square of the distance). Spot light intensity refers to the brightness inside the `innerConeAngle` and is defined in candela, which is lumens per square radian (lm/sr). Engines that don't support two angles for spotlights should use `outerConeAngle` as the spotlight angle (leaving `innerConeAngle` to implicitly be `0`).
+Spot lights emit light in a cone in the direction of the local +z axis. The angle and falloff of the cone is defined using two numbers, the `innerConeAngle` and `outerConeAngle`. As with point lights, the brightness also attenuates in a physically correct manner as distance increases from the light's position (i.e. brightness goes like the inverse square of the distance). Spot light intensity refers to the brightness inside the `innerConeAngle` (and at the location of the light) and is defined in candela, which is lumens per square radian (lm/sr). Engines that don't support two angles for spotlights should use `outerConeAngle` as the spotlight angle (leaving `innerConeAngle` to implicitly be `0`).
 
 | Property | Description | Required |
 |:-----------------------|:------------------------------------------| :--------------------------|
@@ -132,9 +132,9 @@ Spot lights emit light in a cone in the direction of the local +z axis. The angl
 
 ## Inner and Outer Cone Angles
 
-There should be a smooth attenuation of brightness between the `innerConeAngle` and `outerConeAngle` angles. In reality, this attenuation is very complex as it depends on the physical size of the spotlight and the shape of the sheath around the bulb. 
+There should be a smooth attenuation of brightness between the `innerConeAngle` and `outerConeAngle` angles. In reality, this "angular" attenuation is very complex as it depends on the physical size of the spotlight and the shape of the sheath around the bulb. 
 
-Conforming implementations will model this attenuation with a curve that follows a steeper decline in brightness before leveling off when moving from the inner to the outer angle.
+Conforming implementations will model this angular attenuation with a curve that follows a steeper decline in brightness before leveling off when moving from the inner to the outer angle.
 
 It is common to model this falloff by interpolating between the cosine of each angle. This is an efficient approximation that provides decent results.
 
@@ -147,7 +147,7 @@ float lightAngleOffset = -cos(outerConeAngle) * lightAngleScale;
 
 // Then, in the shader:
 float cd = dot(spotlightDir, normalizedLightVector);
-float attenuation = saturate(cd * lightAngleScale + lightAngleOffset);
-attenuation *= attenuation;
+float angularAttenuation = saturate(cd * lightAngleScale + lightAngleOffset);
+angularAttenuation *= angularAttenuation;
 ```
 
