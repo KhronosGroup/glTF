@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "light",
     "type": "object",
-    "description": "An ambient, directional, point, or spot light.",
+    "description": "A directional, point, or spot light.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "color": {
