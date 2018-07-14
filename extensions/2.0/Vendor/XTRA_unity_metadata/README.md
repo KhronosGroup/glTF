@@ -104,11 +104,7 @@ An example `node` with metadata that details the **Sphere Collider**, **RigidBod
 ]
 ```
 
-**Custom Script Components**
-
-The exporter support scripts components. Any MonoBehaviour subclass of the Canvas Tools **EditorScriptComponents** gets serialized with is classname and any public serializable properties exposed to the editor script component.
-
-**Unity Engine Components**
+**Unity Editor Components**
 
 * UnityEngine.Light
 * UnityEngine.Camera
@@ -119,6 +115,50 @@ The exporter support scripts components. Any MonoBehaviour subclass of the Canva
 * UnityEngine.AudioListener
 * UnityEngine.ParticleSystem
 * UnityEngine.SpriteRenderer
+
+**Custom Script Components**
+
+The exporter supports custom scripts components. Any `MonoBehaviour` subclass of the [Canvas Tools](https://github.com/MackeyK24/CanvasTools) **EditorScriptComponent** gets serialized with its classname and any public serializable properties exposed to the editor script component.
+
+```csharp
+using System;
+using System.IO;
+
+using UnityEngine;
+using UnityEditor;
+
+namespace PlayCanvasToolkit
+{
+	public class DemoRotator : EditorScriptComponent
+	{
+		public string helloWorld = "Hello World";
+
+		public override void OnExportProperties(Transform transform, ref CanvasTools.GLTFMetaDataExporter exporter)
+		{
+			// Update Complex Export Properties
+		}
+	}
+}
+```
+
+An example [PlayCanvas](https://playcanvas.com) **backing script class** with the same name that gets instantiated by the parser.
+
+```typescript
+/**
+ * Backing Script Class
+ * @class DemoRotator
+ */
+@createScript()
+class DemoRotator extends CanvasScript implements ScriptType {
+    public initialize():void {
+        console.log("Starting demo rotator for: " + this.entity.getName());
+    }
+    public update(delta: number) {
+        let speed = 20 * delta;
+        this.entity.rotate(0, speed, 0);
+    }
+}
+```
 
 ## glTF Schema Updates
 
