@@ -1,8 +1,8 @@
-# XTRA_unity_metadata 
+# CVTOOLS_unity_metadata 
 
 ## Contributors
 
-* Mackey Kinard, Babylon Toolkit
+* Mackey Kinard, Canvas Tools
 
 ## Status
 
@@ -118,7 +118,7 @@ An example `node` with metadata that details the **Sphere Collider**, **RigidBod
 
 **Custom Script Components**
 
-The exporter supports custom scripts components. Any `MonoBehaviour` subclass of the [Babylon Toolkit](https://www.babylontoolkit.com) **EditorScriptComponent** gets serialized with its classname and any public serializable properties exposed to the editor script component.
+The exporter supports custom scripts components. Any `MonoBehaviour` subclass of the **EditorScriptComponent** gets serialized with its classname and any public serializable properties exposed to the editor script component.
 
 ```csharp
 using System;
@@ -127,7 +127,7 @@ using System.IO;
 using UnityEngine;
 using UnityEditor;
 
-namespace BabylonToolkit
+namespace MyProject
 {
 	public class DemoRotator : EditorScriptComponent
 	{
@@ -148,8 +148,9 @@ An example **backing script class** with the same name that gets instantiated by
  * Backing Script Class
  * @class DemoRotator
  */
-class DemoRotator extends BABYLON.ScriptComponent {
-    public start():void {
+@createScript()
+class DemoRotator extends CanvasScript implements ScriptType {
+    public initialize():void {
         console.log("Starting demo rotator for: " + this.entity.getName());
     }
     public update(delta: number) {
@@ -165,4 +166,4 @@ None
 
 ## Known Implementations
 
-This extension is used by the [Babylon Toolkit](https://www.babylontoolkit.com) exporter plugin for Unity to export **extra** scene and node **metadata** from Unity game projects.
+This extension is used by the HTML5 [Canvas Tools](https://github.com/MackeyK24/CanvasTools) exporter plugin for Unity to export **extra** project, scene and node **metadata**.
