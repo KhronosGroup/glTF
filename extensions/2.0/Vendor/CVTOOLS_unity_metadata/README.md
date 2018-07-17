@@ -14,7 +14,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds **extra** Unity game object metadeta for each project, scene and node. An implementation of this extension can use the metadata to create any components it supports.
+This extension adds **extra** Unity game object metadeta for each project, scene and node. Any implementation of this extension can use the metadata to create any components it supports, including script components.
 
 An example `node` with metadata that details the **Sphere Collider**, **RigidBody** and **DemoRotator Script** components attached to the Unity game object. The implementation can then create a **physics state** for the `entity` using the exported metadata during the parse.
 
@@ -141,11 +141,11 @@ namespace MyProject
 }
 ```
 
-An example **backing script class** with the same name that gets instantiated by the parser.
+An example [PlayCanvas](https://www.playcanvas.com) **backing script class**.
 
 ```typescript
 /**
- * Backing Script Class
+ * PlayCanvas Backing Script Class
  * @class DemoRotator
  */
 @createScript()
@@ -156,6 +156,42 @@ class DemoRotator extends CanvasScript implements ScriptType {
     public update(delta: number) {
         let speed = 20 * delta;
         this.entity.rotate(0, speed, 0);
+    }
+}
+```
+
+An example [BabylonJS](https://www.babylonjs.com) **backing script class**.
+
+```typescript
+/**
+ * BabyonJS Backing Script Class
+ * @class DemoRotator
+ */
+class DemoRotator extends BABYLON.CanvasScript {
+    public start():void {
+        console.log("Starting demo rotator for: " + this.entity.name);
+    }
+    public update() {
+        let speed = 20 * this.manager.deltaTime;
+        this.entity.rotation.y += speed;
+    }
+}
+```
+
+An example [ThreeJS](https://threejs.org) **backing script class**.
+
+```typescript
+/**
+ * ThreeJS Backing Script Class
+ * @class DemoRotator
+ */
+class DemoRotator extends THREE.CanvasScript {
+    public start():void {
+        console.log("Starting demo rotator for: " + this.entity.name);
+    }
+    public update() {
+        let speed = 20 * this.manager.deltaTime;
+        this.entity.rotation.y += speed;
     }
 }
 ```
