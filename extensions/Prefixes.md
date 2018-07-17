@@ -7,6 +7,7 @@ The following extension prefixes are reserved:
 * `AVR` - AltspaceVR
 * `BLENDER` - Blender
 * `CESIUM` - Cesium
+* `CVTOOLS` - Canvas Tools
 * `EXT` - Multi-vendor
 * `FB` - Facebook
 * `GOOGLE` - Google
