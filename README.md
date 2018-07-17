@@ -49,12 +49,12 @@ Please provide spec feedback and community updates by submitting [issues](https:
 ## Contents
 
 - [glTF Tools](#gltf-tools)
-    - [Converters and Exporters](#converters-and-exporters)
+    - [Converters, Importers, and Exporters](#converters-importers-and-exporters)
     - [Optimizers](#optimizers)
     - [Validators](#validators)
     - [Viewers and Debugging](#viewers-and-debugging)
     - [Applications](#applications)
-    - [Loaders and Viewers](#loaders-and-viewers)
+    - [Loaders and Engines](#loaders-and-engines)
         - [WebGL Engines](#webgl-engines)
         - [WebGL Sample Code](#webgl-sample-code)
         - [Game and Rendering Engines](#game-and-rendering-engines)
@@ -80,7 +80,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 
 ## glTF Tools
 
-### Converters and Exporters
+### Converters, Importers, and Exporters
 
 | Tool | Input | Output | Description |
 |------|-------|--------|-------------|
@@ -162,7 +162,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Web-based 3D platform for architecture and interiors |
 | [Plex.Earth](https://plexearth.com/) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Connects AutoCAD with Google Earth and the Real World. |
 
-### Loaders and Viewers
+### Loaders and Engines
 
 #### WebGL Engines
 
@@ -198,6 +198,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | Tool | Status | Description |
 |------|--------|-------------|
 | [UnityGLTF](https://github.com/KhronosGroup/UnityGLTF) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Unity3D library for exporting, loading, parsing, and rendering glTF assets |
+| [Unreal](https://forums.unrealengine.com/development-discussion/content-creation/1415582-the-new-gltf-import-supported-in-4-19-preview-is-awesome-experimentation) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Unreal adds glTF import capability |
 | [Godot Game Engine](https://godotengine.org/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Godot 3.0 fully supports glTF import |
 | [jMonkeyEngine](http://jmonkeyengine.org/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | jME 3.2 supports glTF 2.0 |
 | [Ogre_glTF](https://ybalrid.github.io/Ogre_glTF/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF 2.0 loader plugin for Ogre v2-1  |
