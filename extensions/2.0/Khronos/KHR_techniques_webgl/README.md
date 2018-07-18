@@ -149,6 +149,21 @@ One or more shader source files are listed in the asset's `KHR_techniques_webgl.
 }
 ```
 
+##### Shader Requirements
+
+Supplied shaders must respect values of material [`doubleSided`](../../../../specification/2.0/README.md#double-sided), [`alphaMode`](../../../../specification/2.0/README.md#alpha-coverage), and [`alphaCutoff`](../../../../specification/2.0/README.md#alpha-coverage) properties.
+
+> **Implementation Note**: To ensure a fragment shader conforms to the value of a material's `doubleSided` property, the following shader code should be included, where `normal` is the final value of the vertex normal.
+>
+> ```glsl
+> if (!gl_FrontFacing)
+> {
+>     normal = -normal;
+> }
+> ```
+
+The value of a material `alphaCutoff` property should be passed to the technique shaders using a uniform with the semantic `ALPHACUTOFF`. A uniform with this semantic will ignore a supplied default value and the corresponding material uniform value.
+
 ##### File Extension and MIME Type
 
 External shader files may have any extension. The preferred MIME type is `text/plain`.
@@ -268,6 +283,8 @@ If no `node` property is supplied for a uniform, the semantic is implied in a co
 }
 ```
 
+This extension defines the `ALPHACUTOFF` uniform semantic, which corresponds to the value of a material's `alphaCutoff` property, which must be respected by the supplied technique, (see [Shader Requirements](#shader-requirements)). A uniform with this semantic will ignore a supplied default value and the corresponding material uniform value.
+
 Table 1. Uniform Semantics
 
 | Semantic                     | Type         | Description |
@@ -287,12 +304,13 @@ Table 1. Uniform Semantics
 | `MODELVIEWINVERSETRANSPOSE`  | `FLOAT_MAT3` | The inverse-transpose of `MODELVIEW` without the translation.  This transforms normals in model coordinates to eye coordinates. |
 | `VIEWPORT`                   | `FLOAT_VEC4` | The viewport's x, y, width, and height properties stored in the `x`, `y`, `z`, and `w` components, respectively.  For example, this is used to scale window coordinates to [0, 1]: `vec2 v = gl_FragCoord.xy / viewport.zw;` |
 | `JOINTMATRIX`                | `FLOAT_MAT4[]` | Array parameter; its length (`uniform.count`) must be greater than or equal to the length of `jointNames` array of a skin being used. Each element transforms mesh coordinates for a particular joint for skinning and animation. |
+| `ALPHACUTOFF`                | `FLOAT` | The value of the material's [`alphaCutoff`](../../../../specification/2.0/README.md#alpha-coverage) property. |
 
 For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_SIMULATION_TIME`.
 
 ## Conformance
 
-Implementations should respect material [`doubleSided`](../../../../specification/2.0/README.md#double-sided), [`alphaMode`](../../../../specification/2.0/README.md#alpha-coverage), and [`alphaCutoff`](../../../../specification/2.0/README.md#alpha-coverage) properties, modifying the supplied GLSL shader code at runtime if necessary. The default state of the WebGL context should not be assumed.
+Implementations should continue to respect material [`doubleSided`](../../../../specification/2.0/README.md#double-sided), [`alphaMode`](../../../../specification/2.0/README.md#alpha-coverage), and [`alphaCutoff`](../../../../specification/2.0/README.md#alpha-coverage) properties by modifying the render state. The default state of the WebGL context should not be assumed.
 
 [`textureInfo`](../../../../specification/2.0/README.md#reference-textureinfo) objects referenced by the `KHR_techniques_webgl` extension may not use the `KHR_texture_transform` extension. The `offset`, `rotation`, and `scale` transforms applied to the texture by using `KHR_texture_transform` can be applied with this extension by providing uniforms for these values and performing the necessary transformations in the supplied GLSL shader code.
 
