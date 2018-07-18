@@ -72,6 +72,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
         - [TypeScript](#typescript)
         - [Swift](#swift)
     - [Utilities](#utilities)
+    - [Resources](#resources)
 - [Stack Overflow](#stack-overflow)
 - [Presentations and Articles](#presentations-and-articles)
     - [Intros](#intros)
@@ -316,6 +317,10 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 * [gltf-utilities](https://github.com/AnalyticalGraphicsInc/gltf-utilities) - JavaScript utility library to help load glTF
 * [wetzel](https://github.com/AnalyticalGraphicsInc/wetzel) - Generate Markdown documentation from JSON Schema
 * [gltf-enum](http://gltf-enum.com/) - Simple site to help work with all the different enums in glTF spec
+
+### Resources
+
+* [glTF-Generator-Registry](https://github.com/KhronosGroup/glTF-Generator-Registry/) - An open registry of tools that create glTF assets, along with structured metadata such as links to documentation and bug trackers.
 
 ## Stack Overflow
 
