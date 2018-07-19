@@ -22,10 +22,11 @@ This extension adds serialization of Unity game object metadeta for each project
     "files": [
       {
         "bufferView": 12,
-        "mimeType": "audio/wav"
+        "mimeType": "audio/wav",
+        "fileName": "music.wav"
       },
       {
-        "uri": "music.wav"
+        "uri": "skybox.dds"
       }
     ]
   }

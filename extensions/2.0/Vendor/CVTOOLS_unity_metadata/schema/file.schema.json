@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "File",
     "type" : "object",
-    "description" : "Scene asset file resource. Asset files can be referenced by `uri` or `bufferView` index. `mimeType` is required in the latter case.",
+    "description" : "Scene asset file resource. Asset files can be referenced by the `uri` or the `bufferView` index. `mimeType` is required when data is encoded in the binary stream.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
         "uri" : {
@@ -11,6 +11,10 @@
             "format" : "uriref",
             "gltf_detailedDescription" : "The uri of the asset file.  Relative paths are relative to the `.gltf` file.  Instead of referencing an external file, the uri can also be a data-uri.",
             "gltf_uriType" : "file"
+        },
+        "fileName": {
+            "type": "string",
+            "description": "The asset file's DISK name."
         },
         "mimeType": {
             "type": "string",
