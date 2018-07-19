@@ -215,7 +215,7 @@ class DemoRotator extends THREE.CanvasScript {
 
 ## glTF Schema Updates
 
-None
+* **JSON schema**: [CVTOOLS_unity_metadata.schema.json](schema/glTF.CVTOOLS_unity_metadata.schema.json)
 
 ## Known Implementations
 
