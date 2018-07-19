@@ -14,9 +14,25 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds **extra** Unity game object metadeta for each project, scene and node. Any implementation of this extension can use the metadata to create any components it supports, including script components.
+This extension adds serialization of Unity game object metadeta for each project, scene and node. The extension also allows encoding external asset file references. Any implementation of this extension can use the metadata and asset file references to create any components and scripts. As well as load and manage any external asset files.
 
-An example `node` with metadata that details the **Sphere Collider**, **RigidBody** and **DemoRotator Script** components attached to the Unity game object. The implementation can then create a **physics state** for the `entity` using the exported metadata during the parse.
+```json
+"extensions": {
+  "CVTOOLS_unity_metadata": {
+    "files": [
+      {
+        "bufferView": 12,
+        "mimeType": "audio/wav"
+      },
+      {
+        "uri": "music.wav"
+      }
+    ]
+  }
+}
+```
+
+An example `node` with **extra metadata** that details the **Sphere Collider**, **RigidBody** and **DemoRotator Script** components attached to the Unity game object. The implementation can then create a **physics state** for the `entity` using the exported metadata during the parse.
 
 ```json
 "nodes": [

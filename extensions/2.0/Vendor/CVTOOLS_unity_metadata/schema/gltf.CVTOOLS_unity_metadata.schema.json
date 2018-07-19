@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "CVTOOLS_unity_metadata glTF Extension",
+    "type": "object",
+    "description": " A specification for serializing Unity game objects as extra metadeta and managing external scene asset files.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "files": {
+            "type": "array",
+            "items": {
+                "$ref": "file.schema.json"
+            }, 
+            "minItems": 1 
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "additionalProperties": false,
+    "required": [ "files" ]
+}
