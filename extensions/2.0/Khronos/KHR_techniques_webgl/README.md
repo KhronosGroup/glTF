@@ -153,16 +153,9 @@ One or more shader source files are listed in the asset's `KHR_techniques_webgl.
 
 Supplied shaders must respect values of material [`doubleSided`](../../../../specification/2.0/README.md#double-sided), [`alphaMode`](../../../../specification/2.0/README.md#alpha-coverage), and [`alphaCutoff`](../../../../specification/2.0/README.md#alpha-coverage) properties.
 
-> **Implementation Note**: To ensure a fragment shader conforms to the value of a material's `doubleSided` property, the following shader code should be included, where `normal` is the final value of the vertex normal.
->
-> ```glsl
-> if (!gl_FrontFacing)
-> {
->     normal = -normal;
-> }
-> ```
+> **Implementation Note**: TODO: Reference shader implementation notes on `doubleSided` once included in the main spec, including how to account for normal and tangent-space calculations.
 
-The value of a material `alphaCutoff` property should be passed to the technique shaders using a uniform with the semantic `ALPHACUTOFF`. A uniform with this semantic will ignore a supplied default value and the corresponding material uniform value.
+The value of a material's `alphaCutoff` property should be passed to the technique shaders using a uniform with the semantic `ALPHACUTOFF`. A uniform with this semantic will ignore a supplied default value and the corresponding material uniform value.
 
 ##### File Extension and MIME Type
 
