@@ -1,0 +1,26 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "KHR_techniques_webgl material extension",
+    "type" : "object",
+    "description" : "The technique to use for a material and any additional uniform values.",
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties" : {
+        "technique" : {
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The index of the technique."
+        },
+        "values" : {
+            "type" : "object",
+            "description" : "Dictionary object of uniform values.",
+            "properties" : {},
+            "additionalProperties" : {
+                "$ref" : "uniform.value.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "Dictionary object of uniform values. Uniforms with the same name as the technique's uniform must conform to the referenced `type` and `count` (if present) properties, and override the technique's uniform value.  A uniform value must be supplied here if not present in the technique uniforms."
+        },
+        "extensions" : {},
+        "extras" : {}
+    },
+    "required" : ["technique"]
+}
