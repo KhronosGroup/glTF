@@ -910,8 +910,7 @@ The number of joints that influence one vertex is limited to 4, so referenced ac
 * **`JOINTS_0`**: `UNSIGNED_BYTE` or `UNSIGNED_SHORT`
 * **`WEIGHTS_0`**: `FLOAT`, or normalized `UNSIGNED_BYTE`, or normalized `UNSIGNED_SHORT`
 
-The joint weights for each vertex must be >= 0, sorted in descending order, and normalized to have
-a linear sum of one. No joint may have more than one non-zero weight for a given vertex.
+The joint weights for each vertex must be >= 0, and normalized to have a linear sum of one. No joint may have more than one non-zero weight for a given vertex.
 
 #### Joint Hierarchy
 
