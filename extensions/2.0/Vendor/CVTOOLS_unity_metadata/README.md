@@ -14,21 +14,23 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds serialization of Unity game object metadeta for each project, scene and node. The extension also allows encoding external asset file references. Any implementation of this extension can use the metadata and asset file references to create any components and scripts. As well as load and manage any external asset files.
+This extension adds serialization of Unity game object metadeta for each project, scene and node. The extension also allows encoding external asset file references. Any implementation of this extension can use the **extra metadata** and **file references** to create any components and scripts. As well as load and manage any external asset files. An example root `node` with asset file details.
 
 ```json
-"extensions": {
-  "CVTOOLS_unity_metadata": {
-    "files": [
-      {
-        "bufferView": 12,
-        "mimeType": "audio/wav",
-        "fileName": "music.wav"
-      },
-      {
-        "uri": "skybox.dds"
-      }
-    ]
+"root" {
+  "extras": {
+    "metadata": {
+      "files": [
+        {
+          "bufferView": 12,
+          "mimeType": "audio/wav",
+          "fileName": "music.wav"
+        },
+        {
+          "uri": "skybox.dds"
+        }
+      ]
+    }
   }
 }
 ```
@@ -126,6 +128,7 @@ An example `node` with **extra metadata** that details the **Sphere Collider**, 
 * UnityEngine.Light
 * UnityEngine.Camera
 * UnityEngine.Animator
+* UnityEngine.Renderers
 * UnityEngine.Colliders
 * UnityEngine.Rigidbody
 * UnityEngine.AudioSource
@@ -215,8 +218,8 @@ class DemoRotator extends THREE.CanvasScript {
 
 ## glTF Schema Updates
 
-* **JSON schema**: [CVTOOLS_unity_metadata.schema.json](schema/gltf.CVTOOLS_unity_metadata.schema.json)
+None
 
 ## Known Implementations
 
-This extension is used by the HTML5 [Canvas Tools](https://github.com/MackeyK24/CanvasTools) exporter plugin for Unity to export **extra** project, scene and node **metadata**.
+This extension is used by the WebGL [Canvas Tools](https://github.com/MackeyK24/CanvasTools) exporter plugin for Unity to export **extra** project, scene and node **metadata**.
