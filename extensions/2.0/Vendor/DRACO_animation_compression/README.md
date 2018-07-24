@@ -17,13 +17,26 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension defines a schema to use [Draco compression library (non-normative)](https://github.com/google/draco) in glTF format. This allows glTF to support streaming compressed animation data instead of the raw data.
+This extension defines a schema to use [Draco compression library (non-normative)](https://github.com/google/draco) to compress `animations` in glTF format. This allows glTF to support streaming compressed animation data instead of the raw data.
 
 The [conformance](#conformance) section specifies what an implementation must do when encountering this extension, and how the extension interacts with the attributes defined in the base specification.
 
 ## glTF Schema Updates
 
-If the root object of a glTF asset contains `extensions` property and the `extensions` property defines its `Draco_animation_compression` property, then the Draco animation compression must be used. Usage of the extension must be listed in the `extensionUsed` and `extensionRequired`.
+If the root object of a glTF asset contains `extensions` property and the `extensions` property defines its `Draco_animation_compression` property, then the Draco animation compression must be used.
+
+If a Draco compressed version of one or more `animations` is provided then `Draco_animation_compression` must be added to `extensionsUsed`.
+
+```javascript
+"extensionsUsed" : [
+    "Draco_animation_compression"
+]
+
+If the uncompressed version of one or more `animations` are not provided, then `Draco_animation_compression` must be added to `extensionsRequired`.
+```javascript
+"extensionsRequired" : [
+    "Draco_animation_compression"
+]
 
 The extension defines a property `compressedAnimations` consists of an array of
 compressed keyframe animation data which must be used in `animations`. Each
