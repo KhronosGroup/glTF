@@ -31,12 +31,14 @@ If a Draco compressed version of one or more `animations` is provided then `Drac
 "extensionsUsed" : [
     "Draco_animation_compression"
 ]
+```
 
 If the uncompressed version of one or more `animations` are not provided, then `Draco_animation_compression` must be added to `extensionsRequired`.
 ```javascript
 "extensionsRequired" : [
     "Draco_animation_compression"
 ]
+```
 
 The extension defines a property `compressedAnimations` consists of an array of
 compressed keyframe animation data which must be used in `animations`. Each
