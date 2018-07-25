@@ -23,8 +23,6 @@ The [conformance](#conformance) section specifies what an implementation must do
 
 ## glTF Schema Updates
 
-If the root object of a glTF asset contains `extensions` property and the `extensions` property defines its `Draco_animation_compression` property, then the Draco animation compression must be used.
-
 If a Draco compressed version of one or more `animations` is provided then `Draco_animation_compression` must be added to `extensionsUsed`.
 
 ```javascript
@@ -40,21 +38,26 @@ If the uncompressed version of one or more `animations` are not provided, then `
 ]
 ```
 
-The extension defines a property `compressedAnimations` consists of an array of
-compressed keyframe animation data which must be used in `animations`. Each
-object in `compressedAnimations` have the following properties:
+If the root object of a glTF asset contains `extensions` property and the
+`extensions` property defines its `Draco_animation_compression` property, then
+the Draco animation compression must be used. If there are any compressed
+animations then the `Draco_animation_compression` must define the
+`compressedAnimations` property.The `compressedAnimations` property consists of an array of
+compressed animation objects. Each element in `compressedAnimations` must have the following properties:
 
 #### input
-The `input` property defines a single `input` of this animation.
+The `input` property defines a single `input` of a compressed animation. The
+`input` corresponds to a `samplers` element's `input`.
 
-### outputs 
+### outputs
 The `outputs` property defines an array of `output` of sharing the same `input`.
+Each element of `outputs` corresponds to a `samplers` element's `output`.
 
 ### attributeId
-The `attributeId` defines the unique id of each `output` in the above `outputs`. The unique id is used to locate the correspondent attribute in the compressed data.
+The `attributeId` defines the unique id of each element in `outputs`. The unique id is used to locate the correspondent data in the compressed data.
 
 #### bufferView
-The `bufferView` contains the compressed data for the `compressedAnimation` object.
+The `bufferView` contains the compressed data.
 
 
 Below is an example of what a part of a glTF file my look like if the Draco extension is set:
@@ -87,7 +90,7 @@ Below is an example of what a part of a glTF file my look like if the Draco exte
     },
     "nodes" : [
       ...
-    ], 
+    ],
     "animations" : [
         {
             "channels" : [
@@ -188,14 +191,14 @@ Below is an example of what a part of a glTF file my look like if the Draco exte
         // Contains data for the first compressed animation.
         {
             "buffer" : 10,
-            "byteOffset" : 1024,
+            "byteOffset" : 0,
             "byteLength" : 10000
         },
         // Contains data for the second compressed animation.
         {
             "buffer" : 10,
-            "byteOffset" : 1024,
-            "byteLength" : 10000
+            "byteOffset" : 10000,
+            "byteLength" : 6000
         },
         ...
     ]
@@ -206,7 +209,7 @@ Below is an example of what a part of a glTF file my look like if the Draco exte
 
 ### JSON Schema
 
-## Conformance 
+## Conformance
 
 ## Implementation note
 
