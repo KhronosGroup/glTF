@@ -210,6 +210,15 @@ For full details on the `Draco_animation_compression` extension properties, see 
 
 ## Conformance
 
+Below is the recommended process when a loader encounters a glTF asset with the Draco animation extension set:
+
+* If `Draco_animation_compression` is in `extensionsRequired` and the loader does not support the Draco animation extension, then the loader must fail loading the asset.
+* If the loader does not support the Draco animation extension and `Draco_animation_compression` is not in `extensionsRequired`, then load the glTF asset ignoring `Draco_animation_compression` in `extensions`.
+* If the loader does support the Draco animation extension, but will not process `Draco_animation_compression`, then the loader must load the glTF asset ignoring `Draco_animation_compression` in `extensions`.
+* If the loader does support the Draco animation extension, and will process `Draco_animation_compression` then:
+    * The loader must process `Draco_animation_compression` first. The loader must get the data from `Draco_animation_compression`'s `bufferView` property and decompress the data using a Draco animation decoder to a Draco animation.
+    * Then the loader must process `samplers` properties of the `animations`. When loading each element of `samplers`, you must ignore the `bufferView` and go to the previously decoded Draco animation from `compressedAnimations` to get the data of `input` and `outputs`. A loader must use the decompressed animation data to fill the `accessors` (e.g. [ThreeJS (non-normative)](https://github.com/FrankGalligan/three.js/blob/add_draco_animation_compression/examples/js/loaders/DRACOLoader.js)).
+
 ## Implementation note
 
 *This section is non-normative.*
