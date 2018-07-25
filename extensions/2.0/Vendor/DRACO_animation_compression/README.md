@@ -223,12 +223,14 @@ Below is the recommended process when a loader encounters a glTF asset with the 
 
 *This section is non-normative.*
 
+To prevent transmission of redundant data, exporters should generally write compressed Draco animation data into a separate buffer from the uncompressed fallback, and shared data into a third buffer. Loaders may then optimize to request only the necessary buffers.
+
 ## Resources
 
 *This section is non-normative.*
 
 * [Draco Open Source Library](https://github.com/google/draco)
+* [Creation
+  gltf-pipeline](https://github.com/FrankGalligan/gltf-pipeline/tree/add_draco_animation_compression)
 * [ThreeJS
-  Loader](https://github.com/mrdoob/three.js/blob/dev/examples/js/loaders/draco/DRACOLoader.js)
-  and
-  [example](https://github.com/mrdoob/three.js/blob/dev/examples/webgl_loader_draco.html)
+  Loader](https://github.com/FrankGalligan/three.js/blob/add_draco_animation_compression/examples/js/loaders/DRACOLoader.js)
