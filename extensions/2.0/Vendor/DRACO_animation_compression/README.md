@@ -38,12 +38,7 @@ If the uncompressed version of one or more `animations` are not provided, then `
 ]
 ```
 
-If the root object of a glTF asset contains `extensions` property and the
-`extensions` property defines its `Draco_animation_compression` property, then
-the Draco animation compression must be used. If there are any compressed
-animations then the `Draco_animation_compression` must define the
-`compressedAnimations` property.The `compressedAnimations` property consists of an array of
-compressed animation objects. Each element in `compressedAnimations` must have the following properties:
+If the root object of a glTF asset contains `extensions` property and the `extensions` property defines its `Draco_animation_compression` property, then the Draco animation compression must be used. If there are any compressed animations then the `Draco_animation_compression` must define the `compressedAnimations` property. The `compressedAnimations` property consists of an array of compressed animation objects. Each element in `compressedAnimations` must have the following properties:
 
 #### input
 The `input` property defines a single `input` of a compressed animation. The
