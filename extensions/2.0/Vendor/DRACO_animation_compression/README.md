@@ -206,7 +206,7 @@ Below is an example of what a part of a glTF file my look like if the Draco exte
 
 For full details on the `Draco_animation_compression` extension properties, see the schema:
 
-* [extension property (the entirety of this specification is normative and included in Scope)](schema/node.Draco_animation_compression.schema.json)
+* [extension property (the entirety of this specification is normative and included in Scope)](schema/node.DRACO_animation_compression.schema.json)
 
 ## Conformance
 
