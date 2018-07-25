@@ -14,10 +14,10 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds serialization of Unity game object metadeta for each project, scene and node. The extension also allows encoding external asset file references. Any implementation of this extension can use the **extra metadata** and **file references** to create any components and scripts. As well as load and manage any external asset files. An example root `node` with asset file details.
+This extension adds serialization of Unity game object metadeta for each project, scene and node. The extension also allows encoding external asset file references. Any implementation of this extension can use the **extra metadata** and **file references** to create any components and scripts. As well as load and manage any external asset files. An example scene `node` with asset file details.
 
 ```json
-"root" {
+"scene" {
   "extras": {
     "metadata": {
       "files": [
