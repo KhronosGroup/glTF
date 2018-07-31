@@ -18,6 +18,7 @@ The following extension prefixes are reserved:
 * `NV` - NVIDIA Corporation
 * `OWLII` - Owlii
 * `S8S` - Soft8Soft
+* `SI` - Smithsonian Institution
 * `SKFB` - Sketchfab
 * `WEB3D` - Web3D Consortium
 
