@@ -3932,32 +3932,34 @@ Implementation of diffuse from [Lambert's Photometria](https://archive.org/detai
 
 Animations in glTF support spline interpolation with a cubic spline.
 
-The keyframes of a cubic spline in glTF have input and output values where each input value corresponds to three output values: in-tangent, spline vertex, and out-tangent.
+The keyframes of a cubic spline in glTF have input and output values where each input value corresponds to three output values of the same type: in-tangent, data tuple, and out-tangent.
 
 Given a set of keyframes
 
-&nbsp;&nbsp;&nbsp;&nbsp;Input *t*<sub>*k*</sub> and output in-tangent ***a***<sub>k</sub>, vertex ***v***<sub>*k*</sub>, and out-tangent ***b***<sub>k</sub> for *k* = 1,...,*n*
+&nbsp;&nbsp;&nbsp;&nbsp;Input *t*<sub>*k*</sub> with Output in-tangent ***a***<sub>k</sub>, tuple ***v***<sub>*k*</sub>, and out-tangent ***b***<sub>k</sub> for *k* = 1,...,*n*
 
-A spline segment between two keyframes is represented in a cubic Hermite spline form
+a spline segment between two keyframes is represented in a cubic Hermite spline form:
 
-&nbsp;&nbsp;&nbsp;&nbsp;***p***(*t*) = (2*t*<sup>3</sup> - 3*t*<sup>2</sup> + 1)***p***<sub>0</sub> + (*t<sup>3</sup>* - 2*t*<sup>2</sup> + *t*)***m***<sub>0</sub> + (-2*t*<sup>3</sup> + 3*t*<sup>2</sup>)***p***<sub>1</sub> + (*t*<sup>3</sup> - *t*<sup>2</sup>)***m***<sub>1</sub>
+&nbsp;&nbsp;&nbsp;&nbsp;***p***(*t*) = (2*t*<sup>3</sup> - 3*t*<sup>2</sup> + 1) ***p***<sub>0</sub> + (*t<sup>3</sup>* - 2*t*<sup>2</sup> + *t*) ***m***<sub>0</sub> + (-2*t*<sup>3</sup> + 3*t*<sup>2</sup>) ***p***<sub>1</sub> + (*t*<sup>3</sup> - *t*<sup>2</sup>) ***m***<sub>1</sub>
 
-Where
+where
 
 &nbsp;&nbsp;&nbsp;&nbsp;*t* is a value between 0 and 1  
-&nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>0</sub> is the starting vertex at *t* = 0  
-&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>0</sub> is the starting tangent at *t* = 0  
-&nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>1</sub> is the ending vertex at *t* = 1  
-&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>1</sub> is the ending tangent at *t* = 1  
-&nbsp;&nbsp;&nbsp;&nbsp;***p***(*t*) is the resulting value  
+&nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>0</sub> is the starting point at *t* = 0  
+&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>0</sub> is the scaled starting tangent at *t* = 0  
+&nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>1</sub> is the ending point at *t* = 1  
+&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>1</sub> is the scaled ending tangent at *t* = 1  
+&nbsp;&nbsp;&nbsp;&nbsp;***p***(*t*) is the resulting tuple value  
 
-Where at input offset *t*<sub>*current*</sub> with keyframe index *k*
+and where at input offset *t*<sub>*current*</sub> with keyframe index *k*
 
 &nbsp;&nbsp;&nbsp;&nbsp;*t* = (*t*<sub>*current*</sub> - *t*<sub>*k*</sub>) / (*t*<sub>*k*+1</sub> - *t*<sub>*k*</sub>)  
 &nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>0</sub> = ***v***<sub>*k*</sub>  
-&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>0</sub> = (*t*<sub>*k*+1</sub> - *t*<sub>*k*</sub>)***b***<sub>k</sub>  
+&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>0</sub> = (*t*<sub>*k*+1</sub> - *t*<sub>*k*</sub>) ***b***<sub>k</sub>  
 &nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>1</sub> = ***v***<sub>*k*+1</sub>  
-&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>1</sub> = (*t*<sub>*k*+1</sub> - *t*<sub>*k*</sub>)***a***<sub>k+1</sub>  
+&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>1</sub> = (*t*<sub>*k*+1</sub> - *t*<sub>*k*</sub>) ***a***<sub>k+1</sub>  
+
+The scalar-tuple multplications are per tuple component.
 
 When the sampler targets a node's rotation property, the resulting ***p***(*t*) quaternion must be normalized before applying the result to the node's rotation.
 
