@@ -16,7 +16,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds several categories of extra metadata to the glTF model: Articulations, Stages, Pointing Vectors, Attach Points, and Solar Panel Groups.  These metadata are designed to be a 1:1 match with existing features of the product STK (Systems Tool Kit), produced by Analytical Graphics, Inc.
+This extension adds several categories of extra metadata to the glTF model: [Articulations](#articulations), [Stages](#stages), [Pointing Vectors](#pointing-vectors), [Attach Points](#attach-points), and [Solar Panel Groups](#solar-panel-groups).  These metadata are designed to be a 1:1 match with existing features of the product STK (Systems Tool Kit), produced by Analytical Graphics, Inc.
 
 ### Articulations
 
