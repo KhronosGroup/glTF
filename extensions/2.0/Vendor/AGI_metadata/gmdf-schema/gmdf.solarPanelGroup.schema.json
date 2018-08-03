@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Solar Panel Group",
+    "type": "object",
+    "description": "A solar panel group definition.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "pattern": "^[^\\s]+$",
+            "description": "The name of this solar panel group.  The group name must be unique within this model, and may not contain spaces.",
+            "minLength": 1
+        },
+        "efficiency": {
+            "type": "number",
+            "description": "The percentage, from 0.0 to 100.0, of how efficiently the solar cells convert solar to electrical energy.",
+            "minimum": 0.0,
+            "maximum": 100.0
+        },
+        "modelNodes": {
+            "type": "array",
+            "description": "An array of node names that contain solar panels in this group.  If multiple glTF nodes share the same name, and that name matches one in this list, then all of those matching nodes are part of this group.  This field is only valid in a gmdf external file.  For embedded metadata, use node.AGI_metdata.solarPanelGroupName instead.",
+            "items": {
+                "type": "string"
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "name", "efficiency", "modelNodes" ]
+}

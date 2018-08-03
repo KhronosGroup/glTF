@@ -1,0 +1,13 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "AGI_metadata GMDF Ancillary File",
+    "type": "object",
+    "description": "A glTF Metadata File (or gmdf) lives in the same folder as the main glTF or glb file, with the same base filename.  It allows the glTF to be regenerated without destrying the metadata.",
+    "properties": {
+        "AGI_metadata": {
+            "$ref": "gmdf.AGI_metadata.schema.json",
+            "description": "An instance of the AGI_metadata."
+        }
+    },
+    "required": [ "AGI_metadata" ]
+}

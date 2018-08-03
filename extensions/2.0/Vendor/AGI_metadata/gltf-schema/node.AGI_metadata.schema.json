@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "AGI_metadata glTF extension",
+    "type": "object",
+    "description": "glTF Extension for an individual node in a glTF model, to associate it with the model's root AGI_metadata object.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "isAttachPoint": {
+            "type": "boolean",
+            "description": "Set to true to indicate that this node's origin and orientation act as an attach point for external objects, analysis, or effects."
+        },
+        "articulationName": {
+            "type": "string",
+            "pattern": "^[^\\s]+$",
+            "description": "The name of an Articulation that applies to this node.",
+            "gltf_detailedDescription": "The name of an Articulation that applies to this node.  Articulations are defined in the glTF root extension.  A single articulation may apply to more than one node, and its stage values set the transform for all assigned nodes simultaneously."
+        },
+        "solarPanelGroupName": {
+            "type": "string",
+            "pattern": "^[^\\s]+$",
+            "description": "The name of a Solar Panel Group that includes this node.",
+            "gltf_detailedDescription": "The name of a Solar Panel Group that includes this node.  Solar Panel Groups are defined in the glTF root extension."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
