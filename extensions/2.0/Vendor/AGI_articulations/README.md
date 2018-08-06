@@ -1,4 +1,4 @@
-# AGI\_metadata
+# AGI\_articulations
 
 ## Contributors
 
@@ -16,15 +16,12 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds several categories of extra metadata to the glTF model:
+This extension adds articulations, attach points, and related metadata to the glTF model:
 
 - [Articulations](#articulations)
-- [Stages](#stages)
-- [Pointing Vectors](#pointing-vectors)
+    - [Stages](#stages)
+    - [Pointing Vectors](#pointing-vectors)
 - [Attach Points](#attach-points)
-- [Solar Panel Groups](#solar-panel-groups)
-
-These metadata are designed to be a 1:1 match with existing features of the product STK (Systems Tool Kit), produced by Analytical Graphics, Inc.
 
 ### Articulations
 
@@ -40,7 +37,7 @@ The glTF node that contains the example radio dish could ask for an articulation
 "nodes": [
     {
         "extensions": {
-            "AGI_metadata": {
+            "AGI_articulations": {
                 "articulationName": "Radio_Dish"
             }
         },
@@ -54,7 +51,7 @@ Multiple glTF nodes can all reference the same articulation name, such that a si
 At the root level extensions object of the glTF, the extension must define articulations matching all of the articulation names requested by nodes in the model:
 
 ```json
-"AGI_metadata": {
+"AGI_articulations": {
     "articulations": [
         {
             "name": "Radio_Dish",
@@ -90,7 +87,7 @@ Note that while most of these stages are axis-aligned, they are aligned to the l
 Here's an example showing two rotations applied to the example radio dish from the previous section.
 
 ```json
-"AGI_metadata": {
+"AGI_articulations": {
     "articulations": [
         {
             "name": "Radio_Dish",
@@ -124,7 +121,7 @@ The pointing is clamped at the limits of the specified rotation articulation(s).
 The following example shows a radio dish with a +Z pointing vector.  The glTF specification defines that the front or "forward" side of a model faces +Z, and "up" is +Y.  But individual nodes may have their own local concept of "forward" within the node's local transform, which might not have any correlation with the global glTF axes or the glTF specification's advice on orientation.  For example, the radio dish may be mounted on the top of a truck, or the side of a satellite, and may not face "forward" relative to the larger model.  Thus, the Pointing Vector should be expressed in the node's local coordinate system, and should indicate which direction that particular node is facing.
 
 ```json
-"AGI_metadata": {
+"AGI_articulations": {
     "articulations": [
         {
             "name": "Radio_Dish",
@@ -165,7 +162,7 @@ For example, a model with a radio dish may have an attach point at the end of th
     {
         "name": "ParticleSystem1",
         "extensions": {
-            "AGI_metadata": {
+            "AGI_articulations": {
                 "isAttachPoint": true
             }
         }
@@ -173,98 +170,14 @@ For example, a model with a radio dish may have an attach point at the end of th
 ]
 ```
 
-### Solar Panel Groups
-
-All mesh geometry contained in nodes assigned to a Solar Panel Group is considered to be the surface of light-receiving material.  The back, sides, and other supporting structures should be in separate node(s) from the actual solar cells.  Multiple glTF nodes can belong to a single group of solar panels.  This allows the STK Solar Power Tool to analyze which portions of a model are exposed to light and are generating power.  Each group has an `efficiency` rating, as a percentage from 0.0 to 100.0, that indicates how efficiently the solar cells convert solar to electrical energy.
-
-This example shows a glTF root extension object defining a solar panel group at 14% power efficiency:
-
-```json
-"AGI_metadata": {
-    "solarPanelGroups": [
-        {
-            "name": "Geo1",
-            "efficiency": 14.0
-        }
-    ]
-}
-```
-
-A given glTF model node that defines the geometry for the light-receiving surface of the solar panel could add itself to this group with the following:
-
-```json
-"nodes": [
-    {
-        "extensions": {
-            "AGI_metadata": {
-                "solarPanelGroupName": "Geo1"
-            }
-        },
-        "mesh": // etc...
-    }
-]
-```
-
-## The ancillary file: *.gmdf
-
-As an alternative to supplying all of the above metadata as an extension within a glTF file, the same metadata can also be supplied in an external file with the `*.gmdf` file extension, with the same path and base filename as the associated `*.gltf` or `*.glb` file.  One purpose of this is to allow the model author to iterate on their model, re-exporting it from a DCC tool or content pipeline to produce new versions of the model without overwriting the existing metadata.  Optionally, once the model is finalized, the metadata can then be moved into the glTF's JSON structure as an extension, and the external file deleted.
-
-In the case where an external file and embedded metadata both exist for the same model, the embedded metadata are ignored and only the external file is used.  This allows an analyst to adjust or override metadata without needing to edit a glb file that may itself already contain metadata.
-
-When the external file is used, an extra property `modelNodes` becomes available to articulations and solar panel groups, to associate the contents of the file with named glTF nodes.  In the case of attach points, the node names are called out directly with a list of strings, as shown below.
-
-Nodes are referenced by name, not index number as is typical within a glTF file's internals.  This means that the normally optional node names are required for this external-file usage pattern.  But the advantage is that it allows the model to be modified and retrace its steps through the content production pipeline, possibly re-ordering and re-indexing the contained nodes, without breaking the association with articulations, attach points, and solar panel groups.
-
-The following is an example of the contents of a `*.gmdf` file, that would be valid when placed next to a `*.gltf` or `*.glb` file of the same base filename, when that model contains at least one glTF node named `"Facility-Node"` and another named `"Antenna-Node"`.
-
-```json
-{
-    "AGI_metadata": {
-        "attachPoints": [
-            "Antenna-Node"
-        ],
-        "articulations": [
-            {
-                "name": "Facility",
-                "modelNodes": [
-                    "Facility-Node"
-                ],
-                "stages": [
-                    {
-                        "name": "MoveX",
-                        "type": "xTranslate",
-                        "minimumValue": -1000.0,
-                        "maximumValue": 1000.0,
-                        "initialValue": 0.0
-                    },
-                    {
-                        "name": "Size",
-                        "type": "uniformScale",
-                        "minimumValue": 0.0,
-                        "maximumValue": 1.0,
-                        "initialValue": 1.0
-                    }
-                ]
-            }
-        ]
-    }
-}
-```
-
 ## Optional vs. Required
 
 Generally, this extension is considered optional, meaning it should be placed in the glTF root's `extensionsUsed` list, but not in the `extensionsRequired` list.  The only exception to this is if a model is so reliant on one or more articulation `initialValue` settings being non-zero that the model just doesn't look right when loaded without considering the metadata.  In that case, the extension can be placed in both `extensionsUsed` and `extensionsRequired`, such that it cannot be loaded without the articulations.  But this is not recommended.
 
-The external `*.gmdf` file exists outside the normal glTF extension system, and as such is not expected to appear anywhere in the glTF file, and is considered optional.
-
 ## glTF Schema Updates
 
-- **glTF root extension JSON schema**: [gltf.AGI_metadata.schema.json](gltf-schema/gltf.AGI_metadata.schema.json)
-- **glTF node extension JSON schema**: [node.AGI_metadata.schema.json](gltf-schema/node.AGI_metadata.schema.json)
-
-## gmdf Ancillary File Schema
-
-- **gmdf external file JSON schema**: [gmdf.schema.json](gmdf-schema/gmdf.schema.json)
+- **glTF root extension JSON schema**: [gltf.AGI_articulations.schema.json](schema/gltf.AGI_articulations.schema.json)
+- **glTF node extension JSON schema**: [node.AGI_articulations.schema.json](schema/node.AGI_articulations.schema.json)
 
 ## Known Implementations
 
