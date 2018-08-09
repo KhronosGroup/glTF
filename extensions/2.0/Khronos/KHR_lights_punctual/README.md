@@ -3,8 +3,9 @@
 ## Contributors
 
 * Norbert Nopper, UX3D, <mailto:nopper@ux3d.io>
-* Thomas Kress, UX3D, <mailto:kress@ux3d.io>
-* Mike Bond, Adobe, <mailto:mbond@adobe.com>
+* Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)
+* Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
+* Mike Bond, Adobe, [@MiiBond](https://twitter.com/MiiBond)
 
 ## Status
 
