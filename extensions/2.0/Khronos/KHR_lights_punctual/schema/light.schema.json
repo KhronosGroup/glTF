@@ -44,8 +44,7 @@
             "minimum": 0,
             "dependencies": {
                 "type": ["spot", "point"]
-            },
-            "default": 0.0
+            }
         },
         "name": { },
         "extensions": { },
