@@ -54,7 +54,8 @@
 | [jgltf-obj](https://github.com/javagl/JglTF/tree/master/jgltf-obj) | `OBJ` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Java programmatic and command-line converters |
 | [Docker collada2gltf](https://hub.docker.com/r/winsent/collada2gltf/) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Docker container for Python web service, built on COLLADA2GLTF |
 | [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Node.js web service, built on COLLADA2GLTF |
-| [cqparts](https://github.com/fragmuffin/cqparts) | `STEP` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Python CAD for programmers ([import / export doc](https://fragmuffin.github.io/cqparts/doc/cqparts/import-export.html)) ([GLTFExporter](https://fragmuffin.github.io/cqparts/doc/api/cqparts.codec.html#cqparts.codec.gltf.GLTFExporter)) |
+| [cqparts](https://github.com/fragmuffin/cqparts) | `STEP` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Python CAD for programmers ([import / export doc](https://fragmuffin.github.io/cqparts/doc/cqparts/import-export.html)) ([GLTFExporter](https://fragmuffin.github.io/cqparts/doc/api/cqparts.codec.html#cqparts.codec.gltf.GLTFExporter)) | |
+[gltf-to-usdz](https://github.com/TimvanScherpenzeel/gltf-to-usdz) | `USDZ` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF to USDZ Converter |
 
 ### Optimizers
 
@@ -239,6 +240,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 * [gltf-utilities](https://github.com/AnalyticalGraphicsInc/gltf-utilities) - JavaScript utility library to help load glTF
 * [wetzel](https://github.com/AnalyticalGraphicsInc/wetzel) - Generate Markdown documentation from JSON Schema
 * [gltf-enum](http://gltf-enum.com/) - Simple site to help work with all the different enums in glTF spec
+* [gltf-SDK](https://github.com/Microsoft/glTF-SDK/) -  A C++ Deserializer/Serializer for glTF compatible with Windows, macOS and Android
 
 ## Stack Overflow
 
