@@ -63,7 +63,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
         - [C++](#c)
         - [Objective-C](#objective-c)
         - [C](#c)
-        - [C](#c-1)
+        - [C#](#c-1)
         - [Go](#go)
         - [Rust](#rust)
         - [Haxe](#haxe)
