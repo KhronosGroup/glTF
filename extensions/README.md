@@ -39,8 +39,6 @@ but may still change before they are complete._
 | [EXT_lights_imageBased](https://github.com/KhronosGroup/glTF/pull/1377) | In development. |
 | HDR textures ([#1220](https://github.com/KhronosGroup/glTF/issues/1220), [#1365](https://github.com/KhronosGroup/glTF/issues/1365)) | Planned. |
 | Advanced PBR materials ([#1221](https://github.com/KhronosGroup/glTF/issues/1221), [#1079](https://github.com/KhronosGroup/glTF/issues/1079), ...) | Planned. |
-* 
-* KHR_lights *(in progress)*
 
 ## Extensions for glTF 1.0
 
