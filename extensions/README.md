@@ -33,7 +33,7 @@ but may still change before they are complete._
 | Extension | Status |
 |-----------|--------|
 | [KHR_techniques_webgl](2.0/Khronos/KHR_techniques_webgl/README.md) | Feature-complete, seeking feedback. |
-| [KHR_lights_punctual](https://github.com/KhronosGroup/glTF/pull/1302) | Feature-complete, seeking feedback. |
+| [KHR_lights_punctual](https://github.com/KhronosGroup/glTF/pull/1223) | Feature-complete, seeking feedback. |
 | KHR_compressed_texture_transmission | In development. |
 | [KHR_blend](https://github.com/KhronosGroup/glTF/pull/1302) | In development. |
 | [EXT_lights_imageBased](https://github.com/KhronosGroup/glTF/pull/1377) | In development. |
