@@ -67,7 +67,7 @@ Lights must be attached to a node by defining the `extensions.KHR_lights_punctua
 ```
 
 The light will inherit the transform of the node. For light types that have a position (`point` and `spot` lights), the light's position is defined as the node's world location.
-For light types that have a direction (`directional` and `spot` lights), the light's direction is defined as the 3-vector `(0.0, 0.0, 1.0)` and the rotation of the node orients the light accordingly.
+For light types that have a direction (`directional` and `spot` lights), the light's direction is defined as the 3-vector `(0.0, 0.0, -1.0)` and the rotation of the node orients the light accordingly. That is, an untransformed light points down the -Z axis.
 
 ## Light Types
 
