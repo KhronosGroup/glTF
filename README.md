@@ -37,7 +37,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 - [Blender exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter)
 - [3DS Max exporter](http://doc.babylonjs.com/resources/3dsmax_to_gltf)
 - [Maya exporter](https://github.com/WonderMediaProductions/Maya2glTF)
-- [Other converters and exporters](#converters-and-exporters)
+- [Other converters and exporters](#converters-importers-and-exporters)
 
 ### Preview tools
 
