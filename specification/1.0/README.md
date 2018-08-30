@@ -6,14 +6,22 @@
 
 The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
+GL传输格式(简称glTF)是一种针对GL(WebGL，OpenGL ES以及OpenGL)接口的运行时资产(asset)。在3D内容的传输和加载中，glTF通过提供一种高效，易扩展，可协作的格式，填补了3D建模工具和现代GL应用之间的空白。
+
 Last Updated: November 3, 2016
 
 Editors
 
+编辑
+
 * Patrick Cozzi, Cesium
 * Tony Parisi, WEVR
+* 帕特里克·科齐(Patrick Cozzi), Cesium
+* 托尼·帕里西(Tony Parisi), WEVR
 
 Contributors
+
+
 
 * Fabrice Robinet, Individual Contributor (Previous Editor and Incubator)
 * Remi Arnaud, Starbreeze Studios
@@ -43,37 +51,78 @@ Copyright (C) 2013-2016 The Khronos Group Inc. All Rights Reserved. glTF is a tr
 * [Acknowledgements](#acknowledgements)
 * [Appendix A: Default Material](#appendix-a)
 * [Appendix B: Full Khronos Trademark Statement](#appendix-b)
+* [简介](#introduction)
+  * [动机](#motivation)
+  * [glTF基础](#glTFbasics)
+  * [设计目标](#designgoals)
+  * [文件扩展和MIME类型](#mimetypes)
+* [概念](#concepts)
+  * [ID和名字](#ids-and-names)
+  * [场景](#scenes)
+  * [访问二进制数据](#accessing-binary-data)
+  * [几何对象(Geometry)和网格(Mesh)](#geometry-and-meshes)
+  * [材质和着色器](#materials-and-shading)
+  * [相机](#cameras)
+  * [动画](#animations)
+  * [元数据](#metadata)
+  * [扩展的具体说明](#specifying-extensions)
+* [属性参考](#properties)
+* [感谢](#acknowledgements)
+* [附录 A: 默认材质](#appendix-a)
+* [附录 B: Full Khronos Trademark Statement](#appendix-b)
 
 <a name="introduction"></a>
 # Introduction
+# 简介
 
 *This section is non-normative.*
+*本章节内容与其他章节无关*
 
 The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
+GL传输格式(简称glTF)是一种针对GL(WebGL，OpenGL ES以及OpenGL)接口的运行时资产(asset)。在3D内容的传输和加载中，glTF通过提供一种高效，易扩展，可协作的格式，填补了3D建模工具和现代GL应用之间的空白。s
+
 <a name="motivation"></a>
 ## Motivation
+## 动机
 
 Traditional 3D modeling formats have been designed to store data for offline use, primarily to support authoring workflows on desktop systems. Industry-standard 3D interchange formats allow for sharing assets between different modeling tools, and within the content pipeline in general. However, neither of these types of formats is optimized for download speed or fast loading at runtime. Files tend to grow very large, and applications need to do a significant amount of processing to load such assets into GL-based applications.
 
+传统三维模型格式的设计是为了离线情况下的数据存储，首要支持桌面系统下的制作工作流。通常在素材管线中，工业标准的3D交互格式允许不同建模工具之间的数据共享。尽管如此，这些类型格式都没有考虑运行时下载速度和快速加载的优化。文件通过会越来越大，运行程序需要相当程度的处理才能将该数据加载并处理为基于GL应用（的可用形式）。
+
 Applications seeking high performance rarely load modeling formats directly; instead, they process models offline as part of a custom content pipeline, converting the assets into a proprietary format optimized for their runtime application.  This has led to a fragmented market of incompatible proprietary runtime formats and duplicated efforts in the content creation pipeline. 3D assets exported for one application cannot be reused in another application without going back to the original modeling, tool-specific source and performing another proprietary export step.
+
+追求高性能的应用程序很少直接加载建模数据格式；相反，他们会在离线情况下提前将模型数据处理成自定义的素材管线的一部分，将数据转化为某种私有格式，从而优化运行时应用。这些私有的运行时格式各不兼容，在素材管线的构建中也有很多重复工作，导致了市场的碎片化。将3D数据导出到（满足）一种应用程序的格式，就不能在另一个应用中重用，除非返回到原始的模型数据，使用特定的工具，执行另一个导出到私有格式的步骤。
 
 With the advent of mobile- and web-based 3D computing, new classes of applications have emerged that require fast, dynamic loading of standardized 3D assets. Digital marketing solutions, e-commerce product visualizations, and online model-sharing sites are just a few of the connected 3D applications being built today using WebGL or OpenGL ES. Beyond the need for efficient delivery, many of these online applications can benefit from a standard, interoperable format to enable sharing and reuse of assets between users, between applications, and within heterogeneous, distributed content pipelines.
 
+随着移动和Web三维计算的出现,涌现出一些全新的应用，他们需要快速，动态的加载标准的三维数据。如今，通过使用WebGL或OpenGL ES技术，数字市场解决方案，电商产品可视化以及在线模型分享网站都是3D应用的一部分。如果能有一个标准的，可协作的三维模型格式，既可以满足高效传输的需求，也能在不同素材管线之间和不同的应用和用户之间分享和重用三维数据，那这些在线应用都可以从中受益。
+
 glTF solves these problems by providing a vendor- and runtime-neutral format that can be loaded and rendered with minimal processing. The format combines an easily parseable JSON scene description with one or more binary files representing geometry, animations, and other rich data. Binary data is stored in such a way that it can be loaded directly into GL buffers without additional parsing or other manipulation. Using this approach, glTF is able to faithfully preserve full hierarchical scenes with nodes, meshes, cameras, materials, and animations, while enabling efficient delivery and fast loading.
+
+通过提供中立于厂商的，基于运行时的格式，同时降低加载和渲染的资源消耗，glTF解决了这些问题。该格式包括一个易于解析，用于描述场景信息的json格式，还有一个或多个二进制文件，用来表示几何对象，动画等丰富的数据信息。二进制数据的存储形式都符合GL规范，不需要额外的解析和操作，可以直接加载到GL显卡缓存中。通过该策略，glTF可以真实的保留场景树的全部内容，包括节点，网格(Mesh)，相机，材质和动画，并保证传输高效和加载速度。
 
 <a name="glTFbasics"></a>
 
 ## glTF Basics
+## glTF基础
 
 glTF assets are JSON files plus supporting external data. Specifically, a glTF asset is represented by:
 
+glTF数据是一些json文件和一些额外的外部数据。具体而言，一个glTF数据主要有：
+
 * A JSON-formatted file (`.gltf`) containing a full scene description: node hierarchy, materials, cameras, as well as descriptor information for meshes, shaders, animations, and other constructs
+* json格式的文件形式(`.gltf`)包括一个完整的场景描述：节点关系，材质，相机以及描述信息（包括网格，着色器，动画和其他结构）
 * Binary files (`.bin`) containing geometry and animation data, and other buffer-based data
+* 二进制文件(`.bin`) 包括几何对象，动画数据和其他缓存数据
 * Image files (`.jpg`, `.png`, etc.) for textures
+* 用于纹理的栅格文件(`.jpg`, `.png`等等)
 * GLSL text files (`.glsl`) for GLSL shader source code
+* 用于着色器的脚本文件 (`.glsl`)
 
 Assets defined in other formats, such as images and GLSL shader source code, may be stored in external files referenced via URI or embedded directly into the JSON using  [data URIs](https://developer.mozilla.org/en/data_URIs).
+
+三维数据也可以以其他格式定义，比如栅格图片和着色器脚本，可以以外部文件的形式存储，通过URI引用，或者直接以[data URIs](https://developer.mozilla.org/en/data_URIs)的形式内嵌到JSON中。
 
 <p align="center">
 <img src="figures/files.png" width="50%" />
@@ -82,56 +131,86 @@ Assets defined in other formats, such as images and GLSL shader source code, may
 <a name="designgoals"></a>
 
 ## Design Goals
+## 设计目标
 
 glTF has been designed to meet the following goals:
+glTF的设计目标如下：
 
 * *Compact file sizes.* While web developers like to work with clear text as much as possible, clear text encoding is simply not practical for transmitting 3D data due to sheer size. The glTF JSON file itself is clear text, but it is compact and rapid to parse. All large data such as geometry and animations are stored in binary files that are much smaller than equivalent text representations.
+*文件紧凑。尽管Web开发者喜欢尽可能采用文本格式，但文本类型太大，不适合3D数据的传输。glTF的json文件本身是文本类型，但它是紧凑并易于解析。而几何数据，动画这类较大数据则以二进制文件存储，相比文本类型，占的空间小很多。
 * *Fast loading.* glTF data structures have been designed to mirror the GL API data as closely as possible, both in the JSON and binary files, to reduce load times. For example, binary data for meshes can be loaded directly into WebGL typed arrays with a simple data copy; no parsing or further processing is required.
+*快速加载。不论是json还是二进制文件，glTF的数据结构尽可能和GL接口保持一致，这样可以减少加载时间。比如，网格的二进制数据可以通过简单的数据拷贝，不需要解析和进一步的处理，直接加载到WebGL的数据类型。
 * *Runtime-independence.* glTF makes no assumptions about the target application or 3D engine. glTF specifies no runtime behaviors other than rendering and animation.
+*运行时独立。glTF并不假定终端应用或3D引擎。除了渲染和动画外，glTF并不指定任何运行时行为。
 * *Complete 3D scene representation.* Exporting single objects from a modeling package is not sufficient for many applications. Often, authors want to load entire scenes, including nodes, transformations, transform hierarchy, meshes, materials, cameras, and animations into their applications. glTF strives to preserve all of this information for use in the downstream application.
+*3D场景的完整描述。在很多应用中，只是从一个建模数据包中带出单一对象，这并不充分。通常需要在应用中加载整个场景，包括节点，变换矩阵，变换的层级关系，网格，材质，相机和动画。glTF试图保存所有信息，方便下流应用的使用。
 * *Extensibility.* While the initial base specification supports a rich feature set, there will be many opportunities for growth and improvement. glTF defines a mechanism that allows the addition of both general-purpose and vendor-specific extensions.
+*扩展性。通过最初这些基本规格的出台，glTF支持很多特性集合，也很会有很多发展和改进的机会。glTF定义了一套机制，允许增加一些多用途扩展或特定厂商的扩展能力
 
 The design of glTF takes a pragmatic approach. The format is meant to mirror the GL APIs as closely as possible, but if it did only that, there would be no cameras, animations, or other features typically found in both modeling tools and runtime systems, and much semantic information would be lost in the translation. By supporting these common constructs, glTF content can not only load and render, but it can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
 
+glTF的设计是从实用的角度出发。从格式的命名就可以看出它是GL接口的镜像，尽可能保持相同，但如果只是如此，就不会有相机，动画以及其他特性，通常在建模工具和运行时系统中都需要这些特性，而且那些语义信息也会在数据转换中丢失。通过支持这些常见结构，glTF的内容不仅仅是加载和渲染，在更多应用中也立刻具备可用性，在素材管线中也尽可能减少重复拷贝。
+
 The following are outside the scope of the initial design of glTF:
+如下内容已经超出glTF最初设计的范畴：
 
 * *glTF is not a streaming format.* The binary data in glTF is inherently streamable, and the buffer design allows for fetching data incrementally. But there are no other streaming constructs in the format, and no conformance requirements for an implementation to stream data versus downloading it in its entirety before rendering.
+* *glTF并不是一个二进制流格式。内建的二进制数据是流式的，缓存的设计也允许递增的获取数据。但其他数据结构并不是流式的，在流数据的应用中，相比在渲染前需要下载整个数据的情况，glTF并不无一致性的要求。
 * *glTF is not intended to be human-readable,* though by virtue of being represented in JSON, it is developer-friendly.
-
+* *glTF并没有考虑可读性，当然是以json形式来表述，所以对开发人员是友好的。
 Version 1.0 of glTF does not define compression for geometry and other rich data. However, the design team believes that compression is a very important part of a transmission standard, and there is already work underway to define compression extensions.
+1.0版本的glTF并没有考虑对几何数据和其他大块数据的压缩。尽管如此，设计团队认为压缩在传输标准中是一个非常重要的部分，所以在定义压缩的扩展方面一直有所努力。
 
 > The 3D Formats Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs.
 
+> 3D格式工作组一直在发展伙伴关系，一起制定几何数据压缩的编解码器选项。 glTF定义了节点关联，材质，动画和几何对象，也涉及外部压缩说明
+
 <a name="mimetypes"></a>
 ## File Extensions and MIME Types
+## 文件扩展和MIME类型
 
 * `*.gltf` files use `model/gltf+json`
+* `*.gltf` 文件使用 `model/gltf+json`
 * `*.bin` files use `application/octet-stream`
+* `*.bin` 文件使用 `application/octet-stream`
 * `*.glsl` files use `text/plain`
+* `*.glsl` 文件使用 `text/plain`
 * Texture files use the official `image/*` type based on the specific image format. For compatibility with modern web browsers, the following image formats are supported: .jpg, .png, .bmp, and .gif.
+* 具体到某个图片格式，纹理文件使用官方的`image/*`类型。考虑到对现代浏览器的兼容性，支持如下的格式：.jpg, .png, .bmp, and .gif。
 
 ## URIs
 
 glTF uses URIs to reference buffers, shaders, and image resources. These URIs may point to external files or be data URIs that embed resources in the JSON. Embedded resources are base64 encoded using [RFC-4648](https://tools.ietf.org/html/rfc4648) so they can easily be decoded with JavaScript's `atob`.
 
+glTF使用URI来指定缓存，着色器和图片资源。这些URI可能指向一个外部文件或以数据URI的形式内嵌在json中。内嵌资源使用[RFC-4648](https://tools.ietf.org/html/rfc4648)标准的Base64编码，所以在JavaScript中可以很方便的通过`atob`解码。
+
 This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, textures, or shaders, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading.
+
+这允许应用程序来决定分发的最佳策略：如果不同的数据之间会共享很多相同的几何数据，动画，纹理或着色器，这样独立文件的形式可以减少请求的整体数据量。如果是独立文件，应用程序可以逐步加载数据，对于模型不可见的部分，则不需要加载其数据。如果一个应用程序更关心单个文件的分发，数据内嵌或许是更加选择，尽管因为base64编码导致文件整体变大，同时也无法支持按需加载。
 
 <a name="concepts"></a>
 # Concepts
+# 概念
 
 *This section is non-normative.*
+*该部分为非正式内容。*
 
 <p align="center">
 <img src="figures/dictionary-objects.png" /><br/>
 The top-level dictionary objects in a glTF asset.  See the <a href="#properties">Properties Reference</a>.
+
+glTF文件的第一层节点。 详见<a href="#properties">属性参考</a>.
 </p>
 
 <a name="file-structure"></a>
 
 <a name="ids-and-names"></a>
 ## IDs and Names
+## 索引和名称
 
 _IDs_ are internal string identifiers used to reference parts of a glTF asset, e.g., a `bufferView` refers to a `buffer` by specifying the buffer's ID.  For example:
+
+_IDs_是内部字符串标识，用来指定glTF数据的某些部分。比如，一个`bufferView`指向一个具体的缓存`buffer` 对应的ID：
 
 ```javascript
 "buffers": {
@@ -152,9 +231,15 @@ _IDs_ are internal string identifiers used to reference parts of a glTF asset, e
 
 In this example, `"a-buffer-id"` and `"a-bufferView-id"` are IDs.  The bufferView refers to the buffer using the buffer's ID: `"buffer": "a-buffer-id"`.
 
+在这个例子中，`"a-buffer-id"`和`"a-bufferView-id"`都是索引ID。bufferView则指向一个ID为`"buffer": "a-buffer-id"`的缓存。
+
 IDs for top-level glTF dictionary objects (`accessors`, `animations`, `buffers`, `bufferViews`, `cameras`, `images`, `materials`, `meshes`, `nodes`, `programs`, `samplers`, `scenes`, `shaders`, `skins`, `techniques`, and `textures`) are in the same namespace and are unique.
 
+在glTF第一层字典对象中（`accessors`, `animations`, `buffers`, `bufferViews`, `cameras`, `images`, `materials`, `meshes`, `nodes`, `programs`, `samplers`, `scenes`, `shaders`, `skins`, `techniques`, and `textures`），索引ID都在同一个命名空间，并且都是唯一的。
+
 For example, the following is **not** allowed:
+
+比如，下面情况是**不**允许的：
 
 ```javascript
 "buffers": {
@@ -163,13 +248,16 @@ For example, the following is **not** allowed:
     }
 },
 "bufferViews": {
-    "an-id": { // Not allowed since this ID is already used
+    "an-id": { // 已经使用该ID
         // ...
     }
 }
 ```
 
 IDs for non top-level glTF dictionary objects (e.g., `animation.samplers`) are each in their own namespace.  IDs are unique within the object as enforced by JSON.  For example, the following **is** allowed:
+
+在glTF字典中，非顶层对象的索引ID（比如`animation.samplers`）在各自的命名空间。JSON规范只要求对象内部的ID保证唯一。比如，下面的情况**是**允许的： 
+
 
 ```javascript
 "animations": {
@@ -184,7 +272,7 @@ IDs for non top-level glTF dictionary objects (e.g., `animation.samplers`) are e
     "animation-1": {
         // ...
         "samplers": {
-            "animation-sampler-id": { // Does not collide with the sampler ID in the other animation
+            "animation-sampler-id": { // 在另一个动画对象中，相同id的samplers并不冲突
                 // ...
             }
         }
@@ -194,16 +282,27 @@ IDs for non top-level glTF dictionary objects (e.g., `animation.samplers`) are e
 
 Whereas IDs are used for internal glTF references, _names_ are used for application-specific uses such as display.  glTF objects that are commonly accessed from an application have a `name` string property for this purpose.  These property values are not guaranteed to be unique as they are intended to contain values created when the asset was authored.
 
+在应用程序中，当索引ID用于内部glTF引用时，_names_则侧重于显示。 为此，一个应用程序可访问的glTF对象往往都会有一个`name`字符串属性。当编辑数据时，这些属性值并不保证唯一。
+
 For property names, glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  Camel case is a common naming convention in JSON and WebGL.
+
+对于属性命名，glTF采用[camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`. Camel命名是JSON和WebGL中常用的命名方式。
 
 It is recommended that container formats reference a glTF object by ID by concatenating the asset's path, `#`, and the ID, e.g., `asset.gltf#material_id`.
 
+通常，对glTF对象中ID的命名，我们推荐采用`#`来连接其路径和ID，比如：`asset.gltf#material_id`。
+
 <a name="scenes"></a>
 ## Scenes
+## 场景
 
 The glTF asset contains one or more *scenes*, the set of visual objects to render. Scenes are defined in a dictionary object `scenes`. An additional property, `scene` (note singular), identifies which of the scenes in the dictionary is to be displayed at load time.
 
+glTF数据包含一个或多个*场景*，包含用于渲染的可见对象集合。场景定义在字典对象`scenes`中。一个额外属性`scene`(注意是单数)，用来标识加载时显示scenes字典中哪一个场景。
+
 The following example defines a glTF asset with a single scene, `defaultScene`, that contains a single node, `node_1`.
+
+如下的例子，定义了glTF数据中一个场景`defaultScene`，其中包含一个节点`node_1`。
 
 ```javascript
 "scene": "defaultScene",
@@ -217,18 +316,31 @@ The following example defines a glTF asset with a single scene, `defaultScene`, 
 ```
 
 ### Nodes and Hierarchy
+### 节点和层级关系
 
 The glTF asset defines one or more *nodes*, that is, the objects comprising the scene to render.
 
+glTF数据定义了一个或多个*节点*，组成了场景中的渲染对象
+
 Each node can contain one or more meshes, a skin instance, a joint name, or a camera, defined in the `meshes`, `skeletons`, `skin`, `jointName`, and `camera` properties, respectively.
+
+每个节点包含一个或多个网格，一个蒙皮实例，一个关节名或一个相机，他们分别对应在`meshes`, `skeletons`, `skin`, `jointName`和 `camera`属性中。
 
 Nodes have an optional `name` property.
 
+节点有一个可选的`name`属性。
+
 Nodes also have transform properties, as described in the next section.
+
+节点都有一个变换属性，会在下节描述。
 
 Nodes are organized in a parent-child hierarchy known informally as the *node hierarchy*.
 
+节点间通过父子关系组织，术语称为节点层级。
+
 The node hierarchy is defined using a node's `children` property, as in the following example:
+
+如下，定义了节点层级的子节点属性：
 
 ```javascript
     "node-box": {
@@ -242,18 +354,31 @@ The node hierarchy is defined using a node's `children` property, as in the foll
 
 The node `node-box` has two children, `node_1` and `node-camera_1`. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
 
+`node-box`节点有两个孩子`node_1`和`node-camera_1`。每个子节点也可以有自己的孩子，从而建立节点树层级。
+
 >For Version 1.0 conformance, the glTF node hierarchy is not a directed acyclic graph (DAG) or *scene graph*, but a strict tree. That is, no node may be a direct or indirect descendant of more than one node. This restriction is meant to simplify implementation and facilitate conformance. The restriction may be lifted after Version 1.0.
+
+>在第一版中，glTF的节点层级不是一个直接的非循环图（DAG）或*场景图*，而是一个严格的树。换句话说，一个节点只是直接或间接是另一个节点（而不是多个）的后代。这个限制可以简化应用，方便一致性。在以后的版本中可能会取消该限制。
 
 
 ### Transforms
+### 变换
 
 Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). `translation` and `scale` are `FLOAT_VEC3` values in the local coordinate system. `rotation` is a `FLOAT_VEC4` unit quaternion value, `(x, y, z, w)`, in the local coordinate system.
 
+任何节点都可以顶一个一个本地空间的变换，可以是一个矩阵`matrix`属性，或者是`translation`, `rotation`和 `scale`中的任意属性 (简称为*TRS属性*)。在本地坐标系统中，`translation`和`scale`是`FLOAT_VEC3`值。
+
 TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation.
+
+TRS属性可以转化为矩阵，或者通过`T * R * S`乘法顺序组合成变换矩阵；先是缩放，接着是旋转，最后是平移。
 
 When a node is targeted for animation (referenced by an [`animation.channel.target`](#reference-animation.channel.target)), only TRS properties may be present; `matrix` will not be present. 
 
+如果一个节点是用于动画（参考[`animation.channel.target`](#reference-animation.channel.target)），则只能使用TRS属性来展现，`matrix`无效。
+
 In the example below, `node-box` defines non-default rotation and translation.
+
+如下例子中，`node-box`定义了一个无默认的旋转和平移。
 
 ```javascript
     "node-box": {
@@ -283,6 +408,8 @@ In the example below, `node-box` defines non-default rotation and translation.
 
 The next example defines the transformation for a camera node using the `matrix` property rather than using the individual TRS values:
 
+下面这个例子，通过`matrix`属性，而不是单个的TRS属性值，来定义一个相机节点的变换：
+
 ```javascript
     "node-camera_1": {
         "camera": "camera_1",
@@ -310,29 +437,50 @@ The next example defines the transformation for a camera node using the `matrix`
 ```
 
 ### Coordinate System and Units
+### 坐标系和单位
 
 glTF uses a right-handed coordinate system, that is, the cross product of x and y yields z. glTF defines the y axis as up.
 
+glTF使用右手坐标系，x和y的叉乘产生了z。glTF定义y轴向上。
+
 The units for all linear distances are meters.
+
+所有线性距离的单位都是米。
 
 All angles are in radians.
 
+所有角度都以弧度表示。
+
 <a name="accessing-binary-data"></a>
 ## Accessing Binary Data
+## 访问二进制数据
 
 
 ### Buffers and Buffer Views
+### 缓存和缓存视图
 
 A *buffer* is data stored as a binary blob. The buffer can contain a combination of geometry, animation, and skins.
+
+缓存是存储数据的一个二进制块。缓存包含一个几何对象，动画和蒙皮的组合。
+
+
 
 Binary blobs allow efficient creation of GL buffers and
 textures since they require no additional parsing, except perhaps decompression. An asset can have any number of buffer files for flexibility for a wide array of applications.
 
+除了可能的解压缩，二进制块不需要额外的解析，因此可以高效的创建GL缓存和纹理。一个数据可以有多个缓存文件，使得应用在更广泛的应用场景中具有更好的灵活性。
+
 Buffer data is little endian.
+
+缓存数据是低字节排序。
 
 All buffers are stored in the asset's `buffers` dictionary property.
 
+所有的缓存都保存在数据的`buffers`字典属性中。
+
 The following example defines a buffer. The `byteLength` property specifies the size of the buffer file. The `type` property specifies how the data is stored, either as a binary array buffer or text. The `uri` property is the URI to the buffer data. Buffer data may also be stored within the glTF file as base64-encoded data and reference via data URI.
+
+下面的范例定义了一个缓存。`byteLength`属性标识该缓存文件的大小。`type`属性标识该数据的存储方式，是一个二进制数组还是一个文件。`uri`属性是一个指向缓存数据的URI。缓存数据可以以base64编码的数据形式保存在glTF文件中，也可以通过数据URI引用获得。
 
 ```javascript
     "buffers": {
@@ -346,7 +494,11 @@ The following example defines a buffer. The `byteLength` property specifies the 
 
 A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer specified in the `byteOffset` property, a `byteLength` property to specify length of the buffer view. The bufferView also defines a `target` property to indicate the target data type, either ARRAY_BUFFER, ELEMENT_ARRAY_BUFFER, or an object describing animation or skinning target data. This enables the implementation to readily create and populate the buffers in memory.
 
+一个*缓存视图*标识缓存中数据的一个子集，`byteOffset`属性是一个整数值，表示在该缓存中的偏移量，`byteLength`表示该视图具体的数据块的长度。缓存视图也定义了一个`target`属性，用来表示目标数据类型，可以是顶点数据，顶点索引数据或者描述动画或蒙皮对象的目标数据。在应用中可以以只读的方式在内存中创建并填充。
+
 The following example defines two buffer views: an ELEMENT_ARRAY_BUFFER view `bufferView_29`, which holds the indices for an indexed triangle set, and `bufferView_30`, an ARRAY_BUFFER that holds the vertex data for the triangle set.
+
+下面的例子定义了两个缓存视图：一个ELEMENT_ARRAY_BUFFER视图`bufferView_29`，是一个三角形集合的索引，还有一个ARRAY_BUFFER视图`bufferView_30`,是一个三角形集合的顶点数据。
 
 
 ```javascript
@@ -368,16 +520,27 @@ The following example defines two buffer views: an ELEMENT_ARRAY_BUFFER view `bu
 
 buffers and bufferViews do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) never access buffers or bufferViews directly, but rather via *accessors*.
 
+缓存和缓存视图并不包含类型信息。他们只是简单定义从文件中取出的原始数据。glTF文件中的对象（网格，蒙皮，动画）都不会直接访问缓存或缓存视图，而是通过*访问器*
+
 
 ### Accessors
+### 访问器
 
 All large data for meshes, skins, and animations is stored in buffers and retrieved via accessors.
 
+网格，蒙皮和动画这类的大块数据都存储在缓存中，并通过访问器读取。
+
 An *accessor* defines a method for retrieving data as typed arrays from within a bufferView. The accessor specifies a component type (e.g. `FLOAT`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the bufferView using the properties `byteOffset` and `count`. count specifies the number of attributes within the bufferView, *not* the number of bytes.
+
+每个*访问器*定义了从缓存视图获取类型数组形式数据的方法。访问器声明了变量类型（比如float）和数据类型（比如vec3），当数据合并时，可以用来定义整个数组元素的数据类型。在缓存视图中，通过`byteOffset`偏移量和`count`长度两个属性，访问其也声明了起始位置和数据长度。`count`长度是指缓存视图中属性的长度，*不是*字节长度。
 
 All accessors are stored in the asset's `accessors` dictionary property.
 
+所有访问器都保存在`accessors`字典属性中。
+
 The following fragment shows two accessors, a scalar accessor for retrieving a primitive's indices and a 3-float-component vector accessor for retrieving the primitive's position data.
+
+下面的片段展示了两个访问器，一个是scalar标量访问器，用来读取图元的顶点索引，一个是VEC3（xyz三个float类型的）向量访问器，用来读取图元的位置数据。
 
 ```javascript
 "accessors": {
@@ -411,7 +574,11 @@ The following fragment shows two accessors, a scalar accessor for retrieving a p
 
 #### Accessor Attribute Size
 
+### 访问器属性大小
+
 The following tables can be used to compute the size of an accessor's attribute type.
+
+下表可以用来计算一个访问器的属性大小。
 
 | `componentType` | Size in bytes |
 |:-:|:-:|
@@ -434,7 +601,11 @@ The following tables can be used to compute the size of an accessor's attribute 
 The size of an accessor's attribute type, in bytes, is
 `(size in bytes of the 'componentType') * (number of components defined by 'type')`.
 
+一个访问器属性的字节大小是`('componentType'的字节长度) * ('type'定义的成员变量的个数)`。
+
 For example:
+
+比如：
 
 ```javascript
 "accessor_1": {
@@ -449,13 +620,23 @@ For example:
 
 In this accessor, the `componentType` is `5126` (FLOAT), so each component is four bytes.  The `type` is `"VEC3"`, so there are three components.  The size of the attribute type is 12 bytes (`4 * 3`).
 
+在这个访问器中，`componentType`是`5126` (FLOAT)，所以每一个成员变量占四个字节。`type`是`"VEC3"`类型，所以有三个成员变量。该属性类型的大小就是12个字节(`4 * 3`)。
+
 #### BufferView and Accessor Byte Alignment
+
+###缓存试图和访问器字节对齐
 
 The offset of an `accessor` into a `bufferView` (i.e., `accessor.byteOffset`) and the offset of an `accessor` into a `buffer` (i.e., `accessor.byteOffset + bufferView.byteOffset`) must be a multiple of the size of the accessor's attribute type.
 
+一个访问器`accessor`在缓存视图`bufferView`中的偏移量（比如`accessor.byteOffset`属性）和一个访问器`accessor`在缓存`buffer`的偏移量（也就是`accessor.byteOffset + bufferView.byteOffset`）必须是该访问器属性类型字节大小的整数倍。
+
 > **Implementation Note:** This allows a runtime to efficiently create a single arraybuffer from a glTF `buffer` or an arraybuffer per `bufferView`, and then use an `accessor` to turn a typed array view (e.g., `Float32Array`) into an arraybuffer without copying it because the byte offset of the typed array view is a multiple of the size of the type (e.g., `4` for `Float32Array`).
 
+> **备注：** 当我们从一个glTF缓存或缓存视图对应的arraybuffer中创建一个单一的arraybuffer时，这种要求可以允许运行时下的高效，可以通过访问器将一个类型化的array view(比如Float32Array)引用到一个arraybuffer中，因为该array view的偏移量是其对应类型的整数倍（比如，4是Float32Array的整数倍）而不需要拷贝。
+
 Consider the following example:
+
+考虑下面这个例子：
 
 ```javascript
 "bufferView_1": {
@@ -475,18 +656,30 @@ Consider the following example:
 ```
 The size of the accessor attribute type is two bytes (the `componentType` is unsigned short and the `type` is scalar).  The accessor's `byteOffset` is also divisible by two.  Likewise, the accessor's offset into `buffer_1` is `5228 ` (`620 + 4608`), which is divisible by two.
 
+该访问器属性类型占两个字节（`componentType`为无符号short，`type`是scalar标量类型）。访问器的偏移量`byteOffset`也能够被2整除。同样`buffer_1`对应的访问器偏移量是`5228 ` (`620 + 4608`)，也能被2整除。
+
 
 <a name="geometry-and-meshes"></a>
 
 ## Geometry and Meshes
 
+## 几何对象和网格
+
 Any node can contain one or more meshes, defined in its `meshes` property. Any node can contain one skinned mesh instance, defined using a combination of the properties `meshes`, `skeletons`, and `skin`. A node can either contain meshes or a single skinned mesh instance, but not both.
+
+任何一个节点都可以包含一个或多个网格，定义在该节点的`meshes`属性中。任何一个节点可能包含一个骨骼蒙皮实例，定义在`meshes`, `skeletons` 和`skin`属性组合中。一个节点可以要么包含多个网格，要么包含一个单独的骨骼蒙皮实例，但不能两者都包含。
 
 ### Meshes
 
+### 网格
+
 In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to the data required for GL draw calls. Primitives specify one or more `attributes`, corresponding to the vertex attributes used in the draw calls. Indexed primitives also define an `indices` property. Attributes and indices are defined as accessors. Each primitive also specifies a material and a primitive type that corresponds to the GL primitive type (e.g., triangle set).
 
+在glTF中，网格定义为图元数组*primitives*。图元对应的是GL渲染引擎所需要调用的数据。图元声明了一个或多个`attributes`属性，对应渲染中所需要的顶点属性。有索引信息的图元也会定义`indices`顶点索引属性。属性和索引都以访问器的形式定义。每一个图元也会声明一个材质和图元类型，对应GL的图元类型（比如三角形集合）。
+
 The following example defines a mesh containing one triangle set primitive:
+
+如下范例定义了一个网格，包括一个三角形集合的图元：
 
 ```javascript
     "primitives": [
@@ -505,15 +698,25 @@ The following example defines a mesh containing one triangle set primitive:
 
 Each attribute is defined as a property of the `attributes` object. The name of the property corresponds to an enumerated value identifying the vertex attribute, such as `POSITION`. This value will be mapped to a specific named attribute within the GLSL shader for the mesh, as defined in the material technique's `parameters` dictionary property (see Materials and Shading, below). The value of the property is the ID  of an accessor that contains the data.
 
+每一个属性都以一个`attributes`属性对象的形式定义。属性名对应一个枚举值，用来标识对应的顶点属性，比如`POSITION`。在该网格对应的GLSL着色器代码中，该值会对应其中的一个属性变量。而着色器代码则对应在材质technique的`parameters`字典属性中(查看下面的材质和着色器部分)。属性值是包含该数据的访问器ID。
+
 Valid attribute semantic property names include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, and `WEIGHT`.  Attribute semantic property names can be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, etc.
 
+语法上有效的属性名称包括`POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, and `WEIGHT`。属性名可以是如下形式：`[semantic]_[set_index]`，比如`TEXCOORD_0`, `TEXCOORD_1`。
+
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
+
+> **备注：**每一个图元对应一个WebGL渲染调用（当然也包括批次渲染调用）。如果该图元有顶点索引，通过引用一个访问器来使用索引数据，同时使用GL的`drawElements`方法。如果没有定义`indices`属性，则调用GL的`drawArrays`方法，同时任何引用`attributes`属性的访问器所用的属性数目都相同（对一个给定图元，它们是均等的）。
 
 
 
 ### Skins
 
+### 蒙皮
+
 All skins are stored in the `skins` dictionary property of the asset, by name. Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. The order of joints is defined in the `skin.jointNames` array and it must match the order of `inverseBindMatrices` data. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
+
+所有的蒙皮都是通过名称，保存在三维数据中的`skins`字典数据中。每一个蒙皮都定义了`bindShapeMatrix`属性，描述如何通过关节来摆放该蒙皮几何对象的姿势；`inverseBindMatrices`属性用来说明在同一个空间中，每一个关节的坐标位置；`jointNames`是一个数组属属性，列举了用于演示蒙皮动画的所有关节。关节的顺序则保存在`skin.jointNames`数组中，它必须匹配`inverseBindMatrices`数据的顺序。通过节点的`jointName`属性，每一个关节的名字都必须对应节点层级中其中一个节点的关节。
 
 
 ```javascript
@@ -548,7 +751,11 @@ All skins are stored in the `skins` dictionary property of the asset, by name. E
 
 #### Skin Instances
 
+### 蒙皮实例
+
 A skin is instanced within a node using a combination of the node's `meshes`, `skeletons`, and `skin` properties. The meshes for a skin instance are defined in the `meshes` property. The `skeletons` property contains one or more skeletons, each of which is the root of a node hierarchy. The `skin` property contains the ID of the skin to instance. The example below defines a skin instance that uses a single mesh and skeleton.
+
+如果一个节点包含`meshes`, `skeletons`和 `skin`属性，该蒙皮是一个实例化属性。该蒙皮实例对应的网格定义在meshes`属性。`skeletons`属性包含一个或多个骨骼，每一个都是一个节点层级的根节点。`skin`属性则包含该蒙皮对应实例的ID。如下定义了一个蒙皮实例，以及它所用到的一个网格和骨骼。
 
 ```javascript
     "node_1": {
@@ -564,7 +771,11 @@ A skin is instanced within a node using a combination of the node's `meshes`, `s
 
 #### Skinned Mesh Attributes
 
+###骨骼蒙皮属性
+
 The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The `JOINT` attribute data contains the indices of the joints from corresponding `jointNames` array that should affect the vertex. The `WEIGHT` attribute data defines the weights indicating how strongly the joint should influence the vertex. The following mesh skin defines `JOINT` and `WEIGHT` vertex attributes for a triangle mesh primitive:
+
+一个蒙皮会有一个网格顶点，里面定义了该蒙皮的顶点属性，在顶点着色器中用于蒙皮计算。`JOINT`属性中的数据包含了对应`jointNames`数组的关节索引，这会影响顶点数据值。`WEIGHT`属性数据则定义了该关节影响顶点属性值的权重大小。如下是一个骨骼蒙皮，定义了一个三角形网格图元的`JOINT`和`WEIGHT`顶点数据。
 
 ```javascript
     "meshes": {
@@ -590,10 +801,14 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
 
 > **Implementation note:** The number of joints that influence one vertex is usually limited to 4, so that the joint indices and weights can be stored in __vec4__ elements.
 
+> **备注：**影响一个顶点数据的关节数目通常都限制在4个以内，所以关节索引和权重可以存储在__vec4__元素中。
 
-#### Joint Hierarchy
+
+#### 关节层次
 
 The joint hierarchy used in animation is simply the glTF node hierarchy, with each node designated as a joint using the `jointName` property. Any joints listed in the skin's `jointNames` property must correspond to a node that has the same `jointName` property. The following example defines a joint hierarchy of two joints with `root-node` at the root, identified as a joint using the joint name `Bone1`.
+
+简单说，在动画中用到的关节层级就是glTF中的节点层次，每一个节点通过定义`jointName`属性来标识。蒙皮的`jointNames`属性列出的所有关节必须和具有相同`jointName`属性的节点一一对应。如下的例子，定义了一个关节层次，该层次中包含`root-node`根关节和`Bone1`关节。
 
 ```javascript
     "nodes": {
@@ -645,13 +860,19 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
 
 For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-0.2.0.png).
 
+关于蒙皮顶点更详细的介绍，可以参考[glTF Overview](figures/gltfOverview-0.2.0.png)。
+
 
 <a name="materials-and-shading"></a>
-## Materials and Shading
+## 材质和着色器
 
 A material is defined as an instance of a shading technique along with parameterized values, e.g., light colors, specularity, or shininess. Shading techniques use JSON properties to describe data types and semantics for GLSL vertex and fragment shader programs.
 
+我们以阴影技术实例的形式来定义一个材质，该实例中有一些参数化的值，比如灯光颜色，镜面反射，反射度等。着色器技术使用JSON属性来描述GLSL顶点和片段着色器中的语义和数据类型。
+
 Materials are stored in the assets `materials` dictionary property, which contains one or more material definitions. The following example shows a Blinn shader with ambient color, diffuse texture, emissive color, shininess, and specular color.
+
+材质存储在数据中`materials`字典属性下，包含一个或多个材质定义。如下是一个Blinn光照模型定义的着色器，包括环境光，漫反射纹理，发射光颜色，反射度和镜面反射颜色。
 
 ```javascript
 "materials": {
@@ -686,13 +907,21 @@ Materials are stored in the assets `materials` dictionary property, which contai
 
 The `technique` property is optional; if it is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  See [Appendix A](#appendix-a).
 
+`technique`属性是可选的；如果没有提供，则不会定义材质的扩展属性，这时该对象会以默认材质的形式来渲染，发射光颜色为50%灰。可以查看[附录 A](#appendix-a)。
+
 **non-normative**: In practice, most assets will have a `technique` property or an extension that defines material properties.  The default material simply allows an asset to not have to define an explicit technique when an extension is used.
+
+**非正式内容**：实际上，多数数据都有一个`technique`或材质属性的扩展定义。简单说，当使用一个扩展材质时，默认的材质允许一个数据不用定义一个明确的technique。
 
 ### Techniques
 
 A technique describes the shading used for a material. The asset's techniques are stored in the `techniques` dictionary property.
 
+一个technique描述了一个材质所使用的着色器。三维数据的techniques保存在`techniques`字典属性中。
+
 The following example shows a technique and the properties it defines. This section describes each property in detail.
+
+下面的例子显示了一个technique以及它所定义的属性。
 
 ```javascript
 "techniques": {
@@ -749,20 +978,30 @@ The following example shows a technique and the properties it defines. This sect
 
 ```
 
-#### Parameters
+#### 参数
 
 Each technique has zero or more parameters; each parameter is defined by a type (GL types such as a floating point number, vector, texture, etc.), a default value, and potentially a semantic describing how the runtime is to interpret the data to pass to the shader. When a material instances a technique, the name of each supplied value in its `values` property corresponds to one of the parameters defined in the technique.
 
+每一个technique可能会有几个参数；每一个参数都有一个类型（GL类型，比如浮点型，向量，纹理等），一个默认值和可能的语义描述（说明在运行时，如果讲这些数据传递到着色器）。当一个材质例举了一个technique，每一个值都通过`values`属性对应的名字映射到technique定义的参数中。
+
 The above example illustrates several parameters. The property `ambient` is defined as a `FLOAT_VEC4` type; `diffuse` is defined as a `SAMPLER_2D`; and `light0color` is defined as a `FLOAT_VEC3` with a default color value of white.
 
+上面的例子用到了几个参数。`ambient`属性是一个`FLOAT_VEC4`类型，`diffuse`是`SAMPLER_2D`，`light0color`是`FLOAT_VEC3`，默认颜色是白色。
 
-#### Semantics
+
+#### 语义
 
 Technique parameters may also optionally define a *semantic*, an enumerated value describing how the runtime is to interpret the data to be passed to the shader.
 
+technique参数可选，以*semantic*形式定义的枚举值，用于描述在运行时中，如何解析参入到shader的数值。
+
 In the above example, the parameter `light0Transform` defines the `MODELVIEW` semantic, which corresponds to the world space position of the node referenced in the property `node`, in this case the node `directionalight1`, which refers to a node that contains a light source.
 
+上面例子中，`light0Transform`参数定义了`MODELVIEW`，对应该节点在世界坐标系下的位置，在该范例中，节点属性`directionalLight1`表明该节点包含一光源。
+
 If no `node` property is supplied for a semantic, the semantic is implied in a context-specific manner: either to the node which is being rendered, or in the case of camera-specific semantics, to the current camera. In the following fragment, which defines a parameter named `projectionMatrix` that is derived from the implementation's projection matrix, the semantic would be applied to the camera.
+
+如果没有提供节点属性则是内容相关的：要么对应一个要被渲染的节点，或者跟当前相机相关的语义。在下面的片段中定义了`projectionMatrix`参数，表明是相机中的投影矩阵。
 
 ```javascript
 "projectionMatrix": {
@@ -775,27 +1014,31 @@ Table 1. Uniform Semantics
 
 | Semantic                     | Type         | Description |
 |:----------------------------:|:------------:|-------------|
-| `LOCAL`                      | `FLOAT_MAT4` | Transforms from the node's coordinate system to its parent's.  This is the node's matrix property (or derived matrix from translation, rotation, and scale properties). |
-| `MODEL`                      | `FLOAT_MAT4` | Transforms from model to world coordinates using the transform's node and all of its ancestors. |
-| `VIEW`                       | `FLOAT_MAT4` | Transforms from world to view coordinates using the active camera node. |
-| `PROJECTION`                 | `FLOAT_MAT4` | Transforms from view to clip coordinates using the active camera node. |
-| `MODELVIEW`                  | `FLOAT_MAT4` | Combined `MODEL` and `VIEW`. |
-| `MODELVIEWPROJECTION`        | `FLOAT_MAT4` | Combined `MODEL`, `VIEW`, and `PROJECTION`. |
-| `MODELINVERSE`               | `FLOAT_MAT4` | Inverse of `MODEL`. |
-| `VIEWINVERSE`                | `FLOAT_MAT4` | Inverse of `VIEW`. |
-| `PROJECTIONINVERSE`          | `FLOAT_MAT4` | Inverse of `PROJECTION`. |
-| `MODELVIEWINVERSE`           | `FLOAT_MAT4` | Inverse of `MODELVIEW`. |
-| `MODELVIEWPROJECTIONINVERSE` | `FLOAT_MAT4` | Inverse of `MODELVIEWPROJECTION`. |
+| `LOCAL`                      | `FLOAT_MAT4` | 从父节点到该节点的变换矩阵。  这是该节点的矩阵属性（旋转，平移，缩放）。 |
+| `MODEL`                      | `FLOAT_MAT4` | 模型矩阵：通过该节点以及所有父节点的变换矩阵，实现模型到世界坐标系的变换。 |
+| `VIEW`                       | `FLOAT_MAT4` | 视图矩阵 |
+| `PROJECTION`                 | `FLOAT_MAT4` | 投影矩阵 |
+| `MODELVIEW`                  | `FLOAT_MAT4` | 模型视图矩阵 |
+| `MODELVIEWPROJECTION`        | `FLOAT_MAT4` | 模型视图投影矩阵 |
+| `MODELINVERSE`               | `FLOAT_MAT4` | 模型逆矩阵 |
+| `VIEWINVERSE`                | `FLOAT_MAT4` | 视图逆矩阵 |
+| `PROJECTIONINVERSE`          | `FLOAT_MAT4` | 投影逆矩阵 |
+| `MODELVIEWINVERSE`           | `FLOAT_MAT4` | 模型视图逆矩阵 |
+| `MODELVIEWPROJECTIONINVERSE` | `FLOAT_MAT4` | 模型视图投影逆矩阵 |
 | `MODELINVERSETRANSPOSE`      | `FLOAT_MAT3` | The inverse-transpose of `MODEL` without the translation.  This translates normals in model coordinates to world coordinates. |
 | `MODELVIEWINVERSETRANSPOSE`  | `FLOAT_MAT3` | The inverse-transpose of `MODELVIEW` without the translation.  This translates normals in model coordinates to eye coordinates. |
-| `VIEWPORT`                   | `FLOAT_VEC4` | The viewport's x, y, width, and height properties stored in the `x`, `y`, `z`, and `w` components, respectively.  For example, this is used to scale window coordinates to [0, 1]: `vec2 v = gl_FragCoord.xy / viewport.zw;` |
+| `VIEWPORT`                   | `FLOAT_VEC4` | viewport,x,y,width,height |
 | `JOINTMATRIX`                | `FLOAT_MAT4` | Transforms mesh coordinates for a particular joint for skinning and animation. |
 
-#### Program Instances
+#### Program实例
 
 The `program` property of a technique creates an instance of a shader program. The value of the property is the ID of a program defined in the asset's `programs` dictionary object (see next section). A shader program may be instanced multiple times within the glTF asset.
 
+一个technique的`program`属性创建了一个着色器代码的实例。属性值是该代码的ID，定义在`programs`字典对象中。在glTF中一个着色器代码可能会多次实例化。
+
 Attributes and uniforms passed to the program instance's shader code are defined in the `attributes` and `uniforms` properties of the technique, respectively. The following example shows the definitions for a technique's program instance, attributes and techniques:
+
+传递到Shader的Attributes和uniforms分别定义在technique的`attributes` 和 `uniforms`属性中。下面这个例子说明了如何定义一个technique的program实例，attributes和techniques。
 
 
 ```javascript
@@ -821,20 +1064,32 @@ Attributes and uniforms passed to the program instance's shader code are defined
 
 The `attributes` property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's name is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the attribute is defined.
 
+`attributes`属性就是传递到着色器数据中的顶点属性。每一个属性名都是一个字符串，对应GLSL中的属性名。每一个attribute值也是一个字符串，对应该technique中的`parameters`属性，定义了该属性对应的类型和语义。
+
 The `uniforms` property specifies the uniform variables that will be passed to the shader. Each uniform's name is a string that corresponds to the uniform name in the GLSL source code. Each uniform's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the uniform is defined.
 
-#### Render States
+`uniforms`属性是攒底到着色器中的uniform变量。每一个uniform名是一个字符串，对应GLSL代码中的uniform名。每一个uniform值是一个字符串，对应technique中的`parameters`属性，定义了该属性对应的类型和语义。
+
+#### 渲染状态（Render states）
 
 Render states define the fixed-function GL state when a primitive is rendered. The technique's `states` property contains two properties:
 
-* `enable`: an array of integers corresponding to Boolean GL states that should be enabled using GL's `enable` function.
-* `functions`: a dictionary object containing properties corresponding to the names of GL state functions to call.  Each property is an array, where the elements correspond to the arguments of the GL function.
+当渲染图元时，Render states定义了一些GL状态的固定函数。一个technique的`states`包括两个属性：
+
+* `enable`：整数数组，对应GL状态的布尔值，是否开启该函数。
+* `functions`：一个字典对象，对应要调用的GL状态函数的名称。每一个属性都是一个数组，其中的元素对应该GL方法的参数。
 
 Valid values for elements in the `enable` array are `3042` (`BLEND`), `2884` (`CULL_FACE`), `2929` (`DEPTH_TEST`), `32823` (`POLYGON_OFFSET_FILL`), `32926` (`SAMPLE_ALPHA_TO_COVERAGE`), and `3089` (`SCISSOR_TEST`).  If any of these values are not in the array, the GL state should be disabled (which is the GL default state).  If the `enable` array is not defined in the `states`, all of these Boolean GL states are disabled.
 
+`enable`数组中有效的元素值是`3042` (`BLEND`), `2884` (`CULL_FACE`), `2929` (`DEPTH_TEST`), `32823` (`POLYGON_OFFSET_FILL`), `32926` (`SAMPLE_ALPHA_TO_COVERAGE`), and `3089` (`SCISSOR_TEST`)。上述元素如果有缺省的，则对应的GL状态无效（采用GL的默认状态）。如果`enable`数组没有定义，则所有GL的布尔状态都不可用。
+
 Each property in `functions` indicates a GL function to call and the arguments to provide.  Valid property names are `"blendColor"`, `"blendEquationSeparate"`, `"blendFuncSeparate"`, `"colorMask"`, `"cullFace"`, `"depthFunc"`, `"depthMask"`, `"depthRange"`, `"frontFace"`, `"lineWidth"`, `"polygonOffset"`, and `"scissor"`.  If a property is not defined, the GL state for that function should be set to the default value(s) shown in the example below.
 
+`functions`中的每一个属性都指向一个GL方法，并提供了对应的参数。有效的属性名是`"blendColor"`, `"blendEquationSeparate"`, `"blendFuncSeparate"`, `"colorMask"`, `"cullFace"`, `"depthFunc"`, `"depthMask"`, `"depthRange"`, `"frontFace"`, `"lineWidth"`, `"polygonOffset"`, and `"scissor"`。如果一个属性没有定义，如下所示，则采用默认值。
+
 The following example `states` object indicates to enable all Boolean states (see the `enable` array) and use the default values for all the GL state functions (which could be omitted).
+
+下面这个例子，`states`对象声明所有布尔状态都可用（详见`enable`数组），并且对所有GL状态方法采用默认值（这部分可以省略）。
 
 ```javascript
 "states": {
@@ -872,6 +1127,9 @@ The following example `states` object indicates to enable all Boolean states (se
 ```
 
 The following example shows a typical `"states"` object for closed opaque geometry.  Culling and the depth test are enabled, and all other GL states are set to the default value (disabled).
+
+下面这个例子是闭合不透明几何体对应的一个典型`"states"`对象。剔除和深度检测可用，其他GL状态则采用默认值（不可用）。
+
 ```javascript
 	"states": {
 	    "enable": [
@@ -883,12 +1141,17 @@ The following example shows a typical `"states"` object for closed opaque geomet
 
 > **Implementation Note**: It is recommended that a runtime use the minimal number of GL state function calls.  This generally means ordering draw calls by technique, and then making GL state function calls only for the states that vary between techniques.
 
+> **应用注意**:建议在运行时中尽可能少的调用GL状态方法，也就是让technique来控制渲染顺序，只有techniques之间状态变化的时候菜调用这些GL状态方法。
 
-#### Programs
+#### 着色器代码
 
 GLSL shader programs are stored in the asset's `programs` property. This property contains one or more objects, one for each program.
 
+GLSL着色器代码保存在`programs`属性中。该属性包含一个或多个对象，每个对象对应一份着色器代码。
+
 Each shader program includes an `attributes` property, which specifies the vertex attributes that will be passed to the shader, and the properties `fragmentShader` and `vertexShader`, which reference the files for the fragment and vertex shader GLSL source code, respectively.
+
+每个着色器代码包括一个`attributes`属性，具体到传入到着色器中的顶点属性，还有`fragmentShader` 和 `vertexShader`属性，分别对应片元着色器和顶点着色器。
 
 ```javascript
     "programs": {
@@ -904,9 +1167,11 @@ Each shader program includes an `attributes` property, which specifies the verte
     },
 ```
 
-#### Shaders
+#### 着色器
 
 Shader source files are stored in the asset's `shaders` dictionary property, which contains one or more shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
+
+着色器代码存在在`shaders`字典属性中，包含一个或多个着色器文件。每一个着色器对应一个`type` (以GL中定义的枚举值为准，顶点或片元)，还有一个`uri`映射到对应的文件。着色器的URIs可以指定一个外部文件，也可以是一个数据URIs，允许内嵌一个base64编码的数据。
 
 ```javascript
 "shaders": {
@@ -921,9 +1186,11 @@ Shader source files are stored in the asset's `shaders` dictionary property, whi
 },
 ```    
 
-#### Textures
+#### 纹理
 
 Textures can be used as uniform inputs to shaders. The following material definition specifies a diffuse texture using the `diffuse` parameter.
+
+纹理可以作为一个uniform传入到着色器中。如下所定义的材质，`diffuse`参数对应一张纹理。
 
 ```javascript
 "materials": {
@@ -940,6 +1207,8 @@ Textures can be used as uniform inputs to shaders. The following material defini
 
 All textures are stored in the asset's `textures` dictionary property. A texture is defined by an image file, denoted by the `source` property; `format` and `internalFormat` specifiers, corresponding to the GL texture format types; a `target` type for the sampler; a sampler identifier (`sampler`), and a `type` property defining the internal data format. Refer to the GL definition of `texImage2D()` for more details.
 
+所有的纹理都保存在`textures`字典属性中。通过`source`属性，以一张图片文件的形式保存纹理；`format`和`internalFormat`对应GL中纹理类型；`target`类型对应采样；一个sampler标识符(`sampler`)，还有一个`type`属性定义了数据的内部格式。详情参考GL对`texImage2D()`定义。
+
 ```javascript
 "textures": {
     "texture_file2": {
@@ -953,9 +1222,11 @@ All textures are stored in the asset's `textures` dictionary property. A texture
 }
 ```
 
-#### Images
+#### 影像
 
 Images referred to by textures are stored in the `images` dictionary property of the asset. Each image contains a URI to an external file in one of the supported images formats. Image data may also be stored within the glTF file as base64-encoded data and referenced via data URI. For example:
+
+纹理对应的影像都保存在`images`字典属性中。每一张影像包含一个URI，指向一个指定格式的外部文件。影像数据也可以以Base64编码的形式，通过URI引用内嵌在glTF文件。如下例所示：
 
 ```javascript
 "images": {
@@ -966,10 +1237,14 @@ Images referred to by textures are stored in the `images` dictionary property of
 ```
 > **Implementation Note**: With WebGL API, the first pixel transferred from the `TexImageSource` (i.e., HTML Image object) to the WebGL implementation corresponds to the upper left corner of the source. Non-WebGL runtimes may need to flip Y axis to achieve correct texture rendering.
 
+> **使用注意**: WebGL API中， `TexImageSource`（比如 HTML中的影像对象）的第一个像素对应WebGL纹理的左上角。非WebGL的运行时对应的Y轴可能相反。
+
 #### Samplers
 
 Samplers are stored in the `samplers` dictionary property of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
 
+
+Samplers保存在`samplers`字典属性中。每一个sampler包括filter和wrapping选项，和GL类型相互对应，下面的例子是一个线性的magFilter，线性的mipmap和重复的wrapS和wrapT。
 
 ```javascript
 "samplers": {
@@ -984,17 +1259,23 @@ Samplers are stored in the `samplers` dictionary property of the asset. Each sam
 
 > **Mipmapping Implementation Note**: When a sampler's minification filter (`minFilter`) uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`), any texture referencing the sampler needs to have mipmaps, e.g., by calling GL's `generateMipmap()` function.
 
+> **Mipmapping使用注意**: 当`minFilter`采用mipmapping(`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`)时，纹理也需要是mipmaps的，可以调用GL的`generateMipmap()`方法。
 
 > **Non-Power-Of-Two Texture Implementation Note**: glTF does not guarantee that a texture's dimensions are a power-of-two.  At runtime, if a texture's width or height is not a power-of-two, the texture needs to be resized so its dimensions are powers-of-two if the `sampler` the texture references
-> * Has a wrapping mode (either `wrapS` or `wrapT`) equal to `REPEAT` or `MIRRORED_REPEAT`, or
-> * Has a minification filter (`minFilter`) that uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`).
+> **纹理非二的整数次幂使用注意**: glTF不保证纹理的维度是二的整数次幂.  运行状态下，如果一个纹理的高宽不是二的整数次幂时，在如下条件综合那个，需要重新调整纹理的大小，使其是整数次幂：
+> * wrapping类型( `wrapS` 或 `wrapT`) 是`REPEAT` 或 `MIRRORED_REPEAT`, 或者
+> * minification filter (`minFilter`) 使用了mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, 或 `LINEAR_MIPMAP_LINEAR`).
 
 <a name="cameras"></a>
-## Cameras
+## 相机
 
 A camera defines the projection matrix that transforms from view to clip coordinates. The projection can be perspective or orthographic. Cameras are contained in nodes and thus can be transformed. Their world-space positions can be used in shader calculations, and their projection matrices can be used in shader semantics such as PROJECTION.
 
+相机定义了从窗口到裁剪坐标的投影矩阵。投影矩阵可以是透视的，也可以是正交投影。相机保存在节点中，相互可以转换。他们在世界坐标系中的位置可以用于着色器中的计算，投影矩阵则以PROJECTION的语义在着色器中使用。
+
 Cameras are stored in the asset's `cameras` dictionary property. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
+
+相机存在在`cameras`字典属性中。每一个相机 定义了一个`type`属性，声明投影类型（正交或透视），`perspective` 或 `orthographic`属性定义具体的参数。
 
 The following example defines a perspective camera with supplied values for Y field of view, aspect ratio, and near and far clipping planes.
 
@@ -1013,15 +1294,23 @@ The following example defines a perspective camera with supplied values for Y fi
 ```
 
 <a name="animations"></a>
-## Animations
+## 动画
 
 glTF supports articulated and skinned animation via key frame animations of nodes' transforms. Key frame data is stored in buffers and referenced in animations using accessors.
 
+通过节点转换对应的关键帧，glTF支持关节和蒙皮动画。关键帧保存在缓存中，并通过动画中所用到的访问器引用。
+
 > Note: glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
+
+> 注意: glTF 1.0只支持节点变换的动画。后续版本可能会支持关节属性的动画，比如材质颜色或纹理变换矩阵等。
 
 All animations are stored in the `animations` dictionary property of the asset. An animation is defined as a set of channels (the `channels` property), a set of parameterized inputs (`parameters`) representing the key frame data, and samplers that interpolate between the key frames (the `samplers` property). All parameters must have the same number of elements.
 
+所有的动画都保存在`animations`字典属性中。如下，定义了一个动画：一个channels集合（`channels`属性），一个参数化的输入（`parameters`），用于描述关键帧，以及关键帧之间的插值（`samplers`属性）。所有参数的元素数必须一致。
+
 The following example defines an animating camera node.
+
+如下定义了一个相机节点的动画。
 
 ```javascript
         "animation_0": {
@@ -1076,27 +1365,44 @@ The following example defines an animating camera node.
 
 *Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the ID of one of the samplers present in the containing animation's `samplers` property. The `target` property is an object that identifies which node to animate using its `id` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale."`
 
+在节点树上，*Channels*连接节点在关键帧的输出值 。一个channel的`sampler`属性包含当前samplers的ID，保存在动画的`samplers`属性。`target`属性标识具体使用该`id`属性的节点和节点中具体哪个属性（`path`属性）来进行动画效果。有效的path为`"translation"`, `"rotation"`, 和 `"scale."`
+
 The animation's *parameters* define the inputs to the animation: a set of floating point scalar values representing time (the `"TIME"` input); and sets of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation. Each of these inputs is stored in a buffer and accessed via an accessor.
+
+动画的*parameters*定义了输入值：浮点数集合表示事件（`"TIME"`输入）；浮点型向量几何，描述平移，缩放，或旋转。值都保存在缓存中并通过访问器来使用。
 
 Interpolation between keys is defined using *samplers*, which take an input value, such as time, and generate an output value based on the inputs defined in the `parameters` property, using the interpolation formula specified in the `interpolation` property.
 
+关键帧之间以*samplers*定义，包括一个输入时间，基于输入，通过定义在`parameters`属性值得到一个输出值，具体的插值方式则通过`interpolation`属性指定。
+
 > Note: glTF 1.0 animation samplers support only linear interpolation.
+
+> 注意:  glTF 1.0版本的动画插值仅支持线性插值。
 
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarachy. (See the section on Skins above.)
 
+glTF动画可以用于驱动关节和蒙皮动画。蒙皮动画则是通过皮肤关节的动态效果实现而成。
+
 
 <a name="metadata"></a>
-## Metadata
+## 元数据
 
 Asset metadata is described in the `asset` property. The asset metadata contains the following properties:
 
-* a `copyright` property denoting authorship
-* a `generator` property describing the tool, if any, that generated the asset
-* a `premultipliedAlpha` property specifying if the shaders were generated with premultiplied alpha (see WebGL `getContext()` with premultipliedAlpha)
-* a profile designation
-* a `version` property denoting the specification version
+元数据描述在`asset`属性中。元数据包含如下属性：
 
-Only the `version` property is required. For example,
+* a `copyright` property denoting authorship
+* 一个`copyright`属性，用于使用授权
+* a `generator` property describing the tool, if any, that generated the asset
+* `generator`描述信息，描述生成该数据的工具。
+* a `premultipliedAlpha` property specifying if the shaders were generated with premultiplied alpha (see WebGL `getContext()` with premultipliedAlpha)
+* 如果着色器中有alphha通道，则声明 `premultipliedAlpha`属性（WebGL中的有alpha通道的`getContext()`）。
+* a profile designation
+* 配置文件
+* a `version` property denoting the specification version
+* `version`属性，描述具体的版本信息
+
+只有`version`属性是必须的. 如下,
 
 ```javascript
 "asset": {
@@ -1114,9 +1420,11 @@ Only the `version` property is required. For example,
 ```
 
 <a name="specifying-extensions"></a>
-## Specifying Extensions
+## 具体扩展
 
 glTF defines an extension mechanism that allows the base format to be extended with new capabilities. Any glTF object can have an optional `extensions` property, as in the following example:
+
+glTF定义了一套扩展机制，可以基于基本规范来扩展一些新的特性。任何glTF对象都可以有一个可选的`extensions`属性，如下所示：
 
 ```javascript
 "a_shader": {
@@ -1130,6 +1438,8 @@ glTF defines an extension mechanism that allows the base format to be extended w
 
 All extensions used in a model are listed in the top-level `extensionsUsed` dictionary object, e.g.,
 
+模型中使用的所有扩展都要在`extensionsUsed`字典对象中声明，如下，
+
 ```javascript
 "extensionsUsed": [
    "KHR_binary_glTF"
@@ -1137,6 +1447,9 @@ All extensions used in a model are listed in the top-level `extensionsUsed` dict
 ```
 
 For more information on glTF extensions, consult the [extensions registry specification](../extensions/README.md).
+
+
+关于扩展的更多信息，可以查看[extensions registry specification](../extensions/README.md)。
 
 <a name="properties"></a>
 # Properties Reference
