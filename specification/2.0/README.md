@@ -2499,7 +2499,7 @@ The uri of the image.  Relative paths are relative to the .gltf file.  Instead o
 
 #### image.mimeType
 
-The image's MIME type.
+The image's MIME type. Required if `bufferView` is defined.
 
 * **Type**: `string`
 * **Required**: No
