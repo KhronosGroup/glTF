@@ -1,4 +1,4 @@
-# EXT_lights_imageBased
+# EXT_lights_image_based
 
 ## Contributors
 
@@ -25,11 +25,11 @@ A conforming implementation of this extension must be able to load the image-bas
 
 ## Defining an Image-Based Light
 
-The EXT_lights_imageBased extension defines an array of image-based lights at the root of the glTF and then each scene can reference one. Each image-based light definition consists of a single cubemap that describes the specular radiance of the scene, the l=2 spherical harmonics coefficients for diffuse irradiance and rotation and intensity values.
+The EXT_lights_image_based extension defines an array of image-based lights at the root of the glTF and then each scene can reference one. Each image-based light definition consists of a single cubemap that describes the specular radiance of the scene, the l=2 spherical harmonics coefficients for diffuse irradiance and rotation and intensity values.
 
 ```javascript
 "extensions": {
-    "EXT_lights_imageBased" : {
+    "EXT_lights_image_based" : {
         "lights": [
             {
                 "intensity": 1.0,
@@ -98,13 +98,13 @@ RGBD has several advantages over similar packing schemes like RGBM and RGBE.
 
 ## Adding Light Instances to Scenes
 
-Esch scene can have a single IBL light attached to it by defining the `extensions.EXT_lights_imageBased` property and, within that, an index into the `lights` array using the `light` property.
+Esch scene can have a single IBL light attached to it by defining the `extensions.EXT_lights_image_based` property and, within that, an index into the `lights` array using the `light` property.
 
 ```javascript
 "scenes" : [
     {
         "extensions" : {
-            "EXT_lights_imageBased" : {
+            "EXT_lights_image_based" : {
                 "light" : 0
             }
         }
