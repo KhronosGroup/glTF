@@ -10,7 +10,7 @@
                 "type": "object",
                 "$ref": "light.schema.json"
             },
-            "default": []
+            "minItems": 1
         }
     },
     "additionalProperties": false

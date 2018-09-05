@@ -29,7 +29,7 @@ A conforming implementation of this extension must be able to load light data de
 
 ## Defining Lights
 
-Lights are defined within a dictionary property in the glTF manifest file, by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_lights_punctual` property with a `lights` array inside it.
+Lights are defined within a dictionary property in the glTF scene description file, by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_lights_punctual` property with a `lights` array inside it.
 
 Each light defines a mandatory `type` property that designates the type of light (`directional`, `point` or `spot`). The following example defines a white-colored directional light.
 
