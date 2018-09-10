@@ -344,6 +344,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 ### All Presentations and Articles
 
+* [glTF and Construction – Part 1: Secrets of the Cloud](https://constructingdata.wordpress.com/2018/09/07/gltf-and-construction-part-1-secrets-of-the-cloud/) by Tim Davies. September 2018
 * [glTF 2.0 – Status and Outlook](https://www.khronos.org/developers/library/2018-webinar-gltf-2) by Norbert Nopper. July 2018
 * [TurboSquid adds glTF to supported formats for its StemCell initiative](https://www.khronos.org/blog/turbosquid-adds-gltf-to-supported-formats-for-its-stemcell-initiative). July 2018
 * [Why glTF 2.0 is awesome!](https://blog.ybalrid.info/2018/07/16/why-gltf-2-0-is-awesome/) by Arthur Brainville. July 2018
