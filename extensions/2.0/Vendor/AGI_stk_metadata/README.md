@@ -50,9 +50,33 @@ A given glTF model node that defines the geometry for the light-receiving surfac
 ]
 ```
 
+## No-Obscuration Nodes
+
+Mesh geometry contained in "No-Obscuration" nodes will not affect the calculations of STK's Sensor Obscuration Tool.  The geometry of such marked nodes will be invisible to the sensors for the purpose of this calculation, as if the sensor is able to see through, unobscured.
+
+To assign this property, place the extension on the desired node(s) and set the following value:
+
+```json
+"nodes": [
+    {
+        "extensions": {
+            "AGI_stk_metadata": {
+                "noObscuration": true
+            }
+        },
+        "mesh": // etc...
+    }
+]
+```
+
 ## Optional vs. Required
 
 This extension is optional, meaning it should be placed in the glTF root's `extensionsUsed` list, but not in the `extensionsRequired` list.
+
+## See Also
+
+- The [AGI_articulations](../AGI_articulations/) extension
+- The [GMDF Schema](https://github.com/AnalyticalGraphicsInc/gmdf) for keeping this data separate from glTF.
 
 ## glTF Schema Updates
 

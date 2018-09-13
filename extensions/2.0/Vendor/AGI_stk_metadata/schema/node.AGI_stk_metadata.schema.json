@@ -11,6 +11,10 @@
             "description": "The name of a Solar Panel Group that includes this node.",
             "gltf_detailedDescription": "The name of a Solar Panel Group that includes this node.  Solar Panel Groups are defined in the glTF root extension."
         },
+        "noObscuration": {
+            "type": "boolean",
+            "description": "Set to true to indicate that this node's geometry does not obscure any sensors' view in the STK Sensor Obscuration tool."
+        },
         "extensions": { },
         "extras": { }
     }

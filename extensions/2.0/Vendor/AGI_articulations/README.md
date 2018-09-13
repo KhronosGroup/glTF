@@ -174,6 +174,11 @@ For example, a model with a radio dish may have an attach point at the end of th
 
 Generally, this extension is considered optional, meaning it should be placed in the glTF root's `extensionsUsed` list, but not in the `extensionsRequired` list.  The only exception to this is if a model is so reliant on one or more articulation `initialValue` settings being non-zero that the model just doesn't look right when loaded without considering the metadata.  In that case, the extension can be placed in both `extensionsUsed` and `extensionsRequired`, such that it cannot be loaded without the articulations.  But this is not recommended.
 
+## See Also
+
+- The [AGI_stk_metadata](../AGI_stk_metadata/) extension
+- The [GMDF Schema](https://github.com/AnalyticalGraphicsInc/gmdf) for keeping this data separate from glTF.
+
 ## glTF Schema Updates
 
 - **glTF root extension JSON schema**: [gltf.AGI_articulations.schema.json](schema/gltf.AGI_articulations.schema.json)
