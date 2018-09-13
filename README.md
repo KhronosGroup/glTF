@@ -37,7 +37,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 - [Blender exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter)
 - [3DS Max exporter](http://doc.babylonjs.com/resources/3dsmax_to_gltf)
 - [Maya exporter](https://github.com/WonderMediaProductions/Maya2glTF)
-- [Other converters and exporters](#converters-and-exporters)
+- [Other converters and exporters](#converters-importers-and-exporters)
 
 ### Preview tools
 
@@ -63,7 +63,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
         - [C++](#c)
         - [Objective-C](#objective-c)
         - [C](#c)
-        - [C](#c-1)
+        - [C#](#c-1)
         - [Go](#go)
         - [Rust](#rust)
         - [Haxe](#haxe)
@@ -113,6 +113,8 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [Docker collada2gltf](https://hub.docker.com/r/winsent/collada2gltf/) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Docker container for Python web service, built on COLLADA2GLTF |
 | [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Node.js web service, built on COLLADA2GLTF |
 | [cqparts](https://github.com/fragmuffin/cqparts) | `STEP` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Python CAD for programmers ([import / export doc](https://fragmuffin.github.io/cqparts/doc/cqparts/import-export.html)) ([GLTFExporter](https://fragmuffin.github.io/cqparts/doc/api/cqparts.codec.html#cqparts.codec.gltf.GLTFExporter)) |
+| [FME Desktop](https://www.safe.com/fme/fme-desktop/) | [Multiple](https://www.safe.com/integrate/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | FME lets you move data between 400+ formats and applications using a drag-and-drop interface while preserving data quality throughout the conversion process. |
+| [UModel (UE Viewer)](https://github.com/gildor2/UModel)| `Unreal engine` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | UModel allows you to view static and animated mesh assets from [Unreal engine games](http://www.gildor.org/projects/umodel/compat), and then export them into several formats including glTF 2.0
 
 ### Optimizers
 
@@ -121,7 +123,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [gltf-import-export](https://github.com/najadojo/gltf-import-export) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | NPM package to convert between glb and gltf files |
 | [makeglb](https://github.com/sbtron/makeglb) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Drag and drop browser tool to convert gltf to self contained binary glb |
 | [gltf-toolkit](https://github.com/microsoft/gltf-toolkit) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Collection of tools and libraries to modify and optimize glTF assets for Windows Mixed Reality home |
-| [glTF Pipeline](https://github.com/AnalyticalGraphicsInc/gltf-pipeline) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Official Node.js command-line tool for optimizing glTF assets |
+| [glTF Pipeline](https://github.com/AnalyticalGraphicsInc/gltf-pipeline) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official Node.js command-line tool for optimizing glTF assets |
 | [gltf2glb](https://github.com/Geopipe/gltf2glb) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Python tool to convert glTF to Binary glTF |
 | [binary-gltf-utils](https://github.com/Qantas94Heavy/binary-gltf-utils) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Node.js tool to convert glTF to Binary glTF |
 
@@ -145,7 +147,8 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [GLTFQuickLook](https://github.com/magicien/GLTFQuickLook) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | macOS QuickLook plugin for glTF files |
 | [glTF Viewer](https://www.8thwall.com/gltf/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Android and iOS apps for glTF 2.0 viewing and link sharing: supports embedded glTF 2.0 files and links |
 | [DirectX glTF Viewer](https://github.com/Microsoft/glTF-DXViewer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | DirectX11, C++ desktop app for loading and rendering glTF files |
-
+| [glTFShowcase](https://www.vispolygon.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Android app for viewing glTF 2.0 asset from local files (gltf/glb): supports environment lighting change. |
+| [Hilo3d glTF Viewer](https://hiloteam.github.io/Hilo3d/examples/glTFViewer/index.html) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Drag-and-drop glTF2.0 viewer for model preview, using Hilo3d |
 ### Applications
 
 | Application | Status | Description |
@@ -342,6 +345,10 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 ### All Presentations and Articles
 
+* [glTF and Construction – Part 1: Secrets of the Cloud](https://constructingdata.wordpress.com/2018/09/07/gltf-and-construction-part-1-secrets-of-the-cloud/) by Tim Davies. September 2018
+* [glTF and Construction – Part 2: 3D for Everyone](https://constructingdata.wordpress.com/2018/09/08/gltf-and-construction-part-2-3d-for-everyone/) by Tim Davies. September 2018
+* [glTF 2.0 – Status and Outlook](https://www.khronos.org/developers/library/2018-webinar-gltf-2) by Norbert Nopper. July 2018
+* [TurboSquid adds glTF to supported formats for its StemCell initiative](https://www.khronos.org/blog/turbosquid-adds-gltf-to-supported-formats-for-its-stemcell-initiative). July 2018
 * [Why glTF 2.0 is awesome!](https://blog.ybalrid.info/2018/07/16/why-gltf-2-0-is-awesome/) by Arthur Brainville. July 2018
 * [Get your glTF on with WebGL/WebVR at Microsoft - June 2018](https://www.khronos.org/events/get-your-gltf-on-with-webgl-webvr-at-microsoft)
   * [Meetup video](https://youtu.be/GuA1mYG0-xE?t=1s)

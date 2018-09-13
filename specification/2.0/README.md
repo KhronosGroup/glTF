@@ -183,11 +183,13 @@ To simplify client-side implementation, glTF has additional restrictions on JSON
 
 ## URIs
 
-glTF uses URIs to reference buffers and image resources. These URIs may point to external resources or be data URIs that embed resources in the JSON. Embedded resources use "data" URI scheme ([RFC2397](https://tools.ietf.org/html/rfc2397)).
- 
- > **Implementation Note:** Data URIs could be [decoded with JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding) or consumed directly by web browsers in HTML tags.
+glTF uses URIs to reference buffers and image resources. Clients must support at least these two URI types:
 
-Client implementations are required to support only embedded resources and relative external references (in a sense of [RFC3986](https://tools.ietf.org/html/rfc3986#section-4.2)). Clients are free to support other schemes (such as `http://`) depending on expected usage.
+- **Data URIs** that embed resources in the JSON. They use syntax defined by [RFC&nbsp;2397](https://tools.ietf.org/html/rfc2397).
+  > **Implementation Note:** Data URIs could be [decoded with JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding) or consumed directly by web browsers in HTML tags.
+
+- **Relative URI paths** — or `path-noscheme` as defined by RFC&nbsp;3986, [Section 4.2](https://tools.ietf.org/html/rfc3986#section-4.2) — without scheme, authority, or parameters. Reserved characters must be percent-encoded, per RFC&nbsp;3986, [Section 2.2](https://tools.ietf.org/html/rfc3986#section-2.2).
+  > **Implementation Note:** Clients can optionally support additional URI components. For example `http://` or `file://` schemes, authorities/hostnames, absolute paths, and query or fragment parameters. Assets containing these additional URI components may be less portable.
 
  > **Implementation Note:** This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, or textures, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading. Alternatively, an asset could use GLB container to store JSON and binary data in one file without base64 encoding. See [GLB File Format Specification](#glb-file-format-specification) for details.
 
@@ -764,6 +766,8 @@ Valid accessor type and component type for each attribute semantic property are 
 All indices for indexed attribute semantics, must start with 0 and be continuous: `TEXCOORD_0`, `TEXCOORD_1`, etc.
 
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
+
+> **Implementation note:** When positions are not specified, client implementations should skip primitive's rendering unless its positions are provided by other means (e.g., by extension). This applies to both indexed and non-indexed geometry.
 
 > **Implementation note:** When normals are not specified, client implementations should calculate flat normals.
 
@@ -2497,7 +2501,7 @@ The uri of the image.  Relative paths are relative to the .gltf file.  Instead o
 
 #### image.mimeType
 
-The image's MIME type.
+The image's MIME type. Required if `bufferView` is defined.
 
 * **Type**: `string`
 * **Required**: No
@@ -2935,7 +2939,7 @@ This integer value is used to construct a string in the format TEXCOORD_<set ind
 
 #### normalTextureInfo.scale
 
-The scalar multiplier applied to each normal vector of the texture. This value scales the normal vector using the formula: `scaledNormal =  normalize((normalize(<sampled normal texture value>) * 2.0 - 1.0) * vec3(<normal scale>, <normal scale>, 1.0))`. This value is ignored if normalTexture is not specified. This value is linear.
+The scalar multiplier applied to each normal vector of the texture. This value scales the normal vector using the formula: `scaledNormal =  normalize((<sampled normal texture value> * 2.0 - 1.0) * vec3(<normal scale>, <normal scale>, 1.0))`. This value is ignored if normalTexture is not specified. This value is linear.
 
 * **Type**: `number`
 * **Required**: No, default: `1`
@@ -3932,32 +3936,34 @@ Implementation of diffuse from [Lambert's Photometria](https://archive.org/detai
 
 Animations in glTF support spline interpolation with a cubic spline.
 
-The keyframes of a cubic spline in glTF have input and output values where each input value corresponds to three output values: in-tangent, spline vertex, and out-tangent.
+The keyframes of a cubic spline in glTF have input and output values where each input value corresponds to three output values of the same type: in-tangent, data point, and out-tangent.
 
 Given a set of keyframes
 
-&nbsp;&nbsp;&nbsp;&nbsp;Input *t*<sub>*k*</sub> and output in-tangent ***a***<sub>k</sub>, vertex ***v***<sub>*k*</sub>, and out-tangent ***b***<sub>k</sub> for *k* = 1,...,*n*
+&nbsp;&nbsp;&nbsp;&nbsp;Input *t*<sub>*k*</sub> with Output in-tangent ***a***<sub>k</sub>, point ***v***<sub>*k*</sub>, and out-tangent ***b***<sub>k</sub> for *k* = 1,...,*n*
 
-A spline segment between two keyframes is represented in a cubic Hermite spline form
+a spline segment between two keyframes is represented in a cubic Hermite spline form:
 
 &nbsp;&nbsp;&nbsp;&nbsp;***p***(*t*) = (2*t*<sup>3</sup> - 3*t*<sup>2</sup> + 1)***p***<sub>0</sub> + (*t<sup>3</sup>* - 2*t*<sup>2</sup> + *t*)***m***<sub>0</sub> + (-2*t*<sup>3</sup> + 3*t*<sup>2</sup>)***p***<sub>1</sub> + (*t*<sup>3</sup> - *t*<sup>2</sup>)***m***<sub>1</sub>
 
-Where
+where
 
 &nbsp;&nbsp;&nbsp;&nbsp;*t* is a value between 0 and 1  
-&nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>0</sub> is the starting vertex at *t* = 0  
-&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>0</sub> is the starting tangent at *t* = 0  
-&nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>1</sub> is the ending vertex at *t* = 1  
-&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>1</sub> is the ending tangent at *t* = 1  
-&nbsp;&nbsp;&nbsp;&nbsp;***p***(*t*) is the resulting value  
+&nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>0</sub> is the starting point at *t* = 0  
+&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>0</sub> is the scaled starting tangent at *t* = 0  
+&nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>1</sub> is the ending point at *t* = 1  
+&nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>1</sub> is the scaled ending tangent at *t* = 1  
+&nbsp;&nbsp;&nbsp;&nbsp;***p***(*t*) is the resulting point value  
 
-Where at input offset *t*<sub>*current*</sub> with keyframe index *k*
+and where at input offset *t*<sub>*current*</sub> with keyframe index *k*
 
 &nbsp;&nbsp;&nbsp;&nbsp;*t* = (*t*<sub>*current*</sub> - *t*<sub>*k*</sub>) / (*t*<sub>*k*+1</sub> - *t*<sub>*k*</sub>)  
 &nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>0</sub> = ***v***<sub>*k*</sub>  
 &nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>0</sub> = (*t*<sub>*k*+1</sub> - *t*<sub>*k*</sub>)***b***<sub>k</sub>  
 &nbsp;&nbsp;&nbsp;&nbsp;***p***<sub>1</sub> = ***v***<sub>*k*+1</sub>  
 &nbsp;&nbsp;&nbsp;&nbsp;***m***<sub>1</sub> = (*t*<sub>*k*+1</sub> - *t*<sub>*k*</sub>)***a***<sub>k+1</sub>  
+
+The scalar-point multiplications are per point component.
 
 When the sampler targets a node's rotation property, the resulting ***p***(*t*) quaternion must be normalized before applying the result to the node's rotation.
 
