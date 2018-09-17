@@ -24,7 +24,7 @@
                     "type": "string"
                 }
             ],
-            "description": "The image's MIME type."
+            "description": "The image's MIME type. Required if `bufferView` is defined."
         },
         "bufferView": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],

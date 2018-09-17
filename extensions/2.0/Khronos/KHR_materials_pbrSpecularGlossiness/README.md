@@ -67,7 +67,7 @@ The specular property from specular-glossiness material model is the same as the
 
 The value for each property (`diffuse`, `specular`, `glossiness`) can be defined using factors or textures. The `specular` and `glossiness` properties are packed together in a single texture called `specularGlossinessTexture`.  If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. The factors (`diffuseFactor`, `specularFactor`, `glossinessFactor`) scale, in linear space, the components given in the respective textures (`diffuseTexture`, `specularGlossinessTexture`). Both textures are in sRGB space and must be converted to linear space before they are used for any computations.
 
-The following equations show how to calculate bidirectional reflectance distribution function (BRDF) inputs (*c<sub>diff</sub>*, *F<sub>0</sub>*, *&alpha;*) from the metallic-roughness material properties. In addition to the material properties, if a primitive specifies a vertex color using the attribute semantic property `COLOR_0`, then this value acts as an additional linear multiplier to `diffuse`.
+The following equations show how to calculate bidirectional reflectance distribution function (BRDF) inputs (*c<sub>diff</sub>*, *F<sub>0</sub>*, *&alpha;*) from the specular-glossiness material properties. In addition to the material properties, if a primitive specifies a vertex color using the attribute semantic property `COLOR_0`, then this value acts as an additional linear multiplier to `diffuse`.
 
 *c<sub>diff</sub>* = `diffuse.rgb * (1 - max(specular.r, specular.g, specular.b))`
 <br>

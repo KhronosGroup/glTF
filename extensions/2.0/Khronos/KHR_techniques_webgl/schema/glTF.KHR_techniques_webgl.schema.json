@@ -1,0 +1,37 @@
+{
+  "$schema" : "http://json-schema.org/draft-04/schema",
+  "title" : "KHR_techniques_webgl glTF extension",
+  "type" : "object",
+  "description": "Instances of shading techniques with external shader programs along with their parameterized values.  Shading techniques describe data types and semantics for GLSL vertex and fragment shader programs.",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+  "properties" : {
+    "programs" : {
+      "type" : "array",
+      "description" : "An array of `Program` objects.",
+      "items" : {
+        "$ref" : "program.schema.json"
+      },
+      "minItems": 1
+    },
+    "shaders" : {
+      "type" : "array",
+      "description" : "An array of `Shader` objects.",
+      "items" : {
+        "$ref" : "shader.schema.json"
+      },
+      "minItems": 1
+    },
+    "techniques" : {
+      "type" : "array",
+      "description" : "An array of `Technique` objects.",
+      "items" : {
+        "$ref" : "technique.schema.json"
+      },
+      "minItems": 1,
+      "gltf_detailedDescription" : "An array of `Technique` objects.  A technique is a template for a material appearance."
+    },
+    "extensions" : {},
+    "extras" : {}
+  },
+  "required" : ["programs", "shaders", "techniques"]
+}

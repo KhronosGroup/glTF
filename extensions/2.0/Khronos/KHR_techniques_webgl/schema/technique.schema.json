@@ -1,0 +1,35 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "Technique",
+    "type" : "object",
+    "description" : "A template for material appearances.",
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "program" : {
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The index of the program."
+        },
+        "attributes" : {
+            "type" : "object",
+            "description" : "A dictionary object of `Attribute` objects.",
+            "properties" : {},
+            "additionalProperties" : {
+                "$ref" : "technique.attribute.schema.json"
+            },
+            "gltf_detailedDescription" : "A dictionary object of `Attribute` objects.  Each object defines an attribute input with a type and a semantic."
+        },
+        "uniforms" : {
+            "type" : "object",
+            "description" : "A dictionary object of `Uniform` objects.",
+            "properties" : {},
+            "additionalProperties" : {
+                "$ref" : "technique.uniform.schema.json"
+            },
+            "gltf_detailedDescription" : "A dictionary object of `Uniform` objects.  Each object defines a uniform input with a type and an optional semantic and value."
+        },
+        "name" : {},
+        "extensions" : {},
+        "extras" : {}
+    },
+    "required" : ["program"]
+}
