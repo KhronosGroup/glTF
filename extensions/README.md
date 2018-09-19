@@ -8,17 +8,37 @@
 * [KHR_draco_mesh_compression](2.0/Khronos/KHR_draco_mesh_compression/README.md)
 * [KHR_texture_transform](2.0/Khronos/KHR_texture_transform/README.md)
 
-#### Draft Khronos extensions
-_Draft Khronos extensions are not ratified yet._
-* [KHR_techniques_webgl](2.0/Khronos/KHR_techniques_webgl/README.md) *(not ratified yet)*
-* KHR_lights *(in progress)*
-
 #### Vendor extensions
 
 * [MSFT_lod](2.0/Vendor/MSFT_lod/README.md)
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
+
+#### In progress Khronos and multi-vendor extensions
+
+This section tracks the status of Khronos and multi-vendor extensions that are either already in development,
+or that we feel show enough consensus to be highly likely for future development. We welcome feedback for these
+and all other extensions (see [GitHub issues](https://github.com/KhronosGroup/glTF/issues?q=is%3Aopen+is%3Aissue+label%3Aextension)). This list is intended to give a general sense of 
+current priorities and direction.
+
+For features that are not listed here but may be important for different uses, we encourage the community to
+begin with vendor extensions (which do not require review), reach out for feedback and collaborators, and as
+consensus forms we may consider the best way to bring a vendor extension into the broader ecosystem: via multi-vendor
+extensions, Khronos extensions, or inclusion in a future version of the glTF specification.
+
+_Draft Khronos (KHR) extensions are not ratified yet. Multi-vendor extensions do not require ratification,
+but may still change before they are complete._
+
+| Extension | Status |
+|-----------|--------|
+| [KHR_techniques_webgl](2.0/Khronos/KHR_techniques_webgl/README.md) | Feature-complete, seeking feedback. |
+| [KHR_lights_punctual](https://github.com/KhronosGroup/glTF/pull/1223) | Feature-complete, seeking feedback. |
+| KHR_compressed_texture_transmission | In development. |
+| [KHR_blend](https://github.com/KhronosGroup/glTF/pull/1302) | In development. |
+| [EXT_lights_image_based](https://github.com/KhronosGroup/glTF/pull/1377) | In development. |
+| HDR textures ([#1220](https://github.com/KhronosGroup/glTF/issues/1220), [#1365](https://github.com/KhronosGroup/glTF/issues/1365)) | Planned. |
+| Advanced PBR materials ([#1221](https://github.com/KhronosGroup/glTF/issues/1221), [#1079](https://github.com/KhronosGroup/glTF/issues/1079), ...) | Planned. |
 
 ## Extensions for glTF 1.0
 
