@@ -15,7 +15,7 @@
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
 
-### In progress Khronos and multi-vendor extensions
+#### In progress Khronos and multi-vendor extensions
 
 This section tracks the status of Khronos and multi-vendor extensions that are either already in development,
 or that we feel show enough consensus to be highly likely for future development. We welcome feedback for these
