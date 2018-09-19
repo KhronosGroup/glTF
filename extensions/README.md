@@ -3,6 +3,7 @@
 ## Extensions for glTF 2.0
 
 #### Khronos extensions
+
 * [KHR_materials_pbrSpecularGlossiness](2.0/Khronos/KHR_materials_pbrSpecularGlossiness/README.md)
 * [KHR_materials_unlit](2.0/Khronos/KHR_materials_unlit/README.md)
 * [KHR_draco_mesh_compression](2.0/Khronos/KHR_draco_mesh_compression/README.md)
@@ -10,6 +11,8 @@
 
 #### Vendor extensions
 
+* [AGI_articulations](2.0/Vendor/AGI_articulations/README.md)
+* [AGI_stk_metadata](2.0/Vendor/AGI_stk_metadata/README.md)
 * [MSFT_lod](2.0/Vendor/MSFT_lod/README.md)
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
@@ -19,7 +22,7 @@
 
 This section tracks the status of Khronos and multi-vendor extensions that are either already in development,
 or that we feel show enough consensus to be highly likely for future development. We welcome feedback for these
-and all other extensions (see [GitHub issues](https://github.com/KhronosGroup/glTF/issues?q=is%3Aopen+is%3Aissue+label%3Aextension)). This list is intended to give a general sense of 
+and all other extensions (see [GitHub issues](https://github.com/KhronosGroup/glTF/issues?q=is%3Aopen+is%3Aissue+label%3Aextension)). This list is intended to give a general sense of
 current priorities and direction.
 
 For features that are not listed here but may be important for different uses, we encourage the community to
