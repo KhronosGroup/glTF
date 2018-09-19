@@ -36,7 +36,7 @@ but may still change before they are complete._
 | [KHR_lights_punctual](https://github.com/KhronosGroup/glTF/pull/1223) | Feature-complete, seeking feedback. |
 | KHR_compressed_texture_transmission | In development. |
 | [KHR_blend](https://github.com/KhronosGroup/glTF/pull/1302) | In development. |
-| [EXT_lights_imageBased](https://github.com/KhronosGroup/glTF/pull/1377) | In development. |
+| [EXT_lights_image_based](https://github.com/KhronosGroup/glTF/pull/1377) | In development. |
 | HDR textures ([#1220](https://github.com/KhronosGroup/glTF/issues/1220), [#1365](https://github.com/KhronosGroup/glTF/issues/1365)) | Planned. |
 | Advanced PBR materials ([#1221](https://github.com/KhronosGroup/glTF/issues/1221), [#1079](https://github.com/KhronosGroup/glTF/issues/1079), ...) | Planned. |
 
