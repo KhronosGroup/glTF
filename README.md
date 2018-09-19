@@ -149,6 +149,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [DirectX glTF Viewer](https://github.com/Microsoft/glTF-DXViewer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | DirectX11, C++ desktop app for loading and rendering glTF files |
 | [glTFShowcase](https://www.vispolygon.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Android app for viewing glTF 2.0 asset from local files (gltf/glb): supports environment lighting change. |
 | [Hilo3d glTF Viewer](https://hiloteam.github.io/Hilo3d/examples/glTFViewer/index.html) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Drag-and-drop glTF2.0 viewer for model preview, using Hilo3d |
+| [MeshViewer](https://github.com/jing-interactive/MeshViewer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | OBJ / glTF2 mesh viewer for Windows and macOS|
 ### Applications
 
 | Application | Status | Description |
