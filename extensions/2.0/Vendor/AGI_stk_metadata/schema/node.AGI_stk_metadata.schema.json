@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "AGI_stk_metadata glTF Node extension",
+    "type": "object",
+    "description": "glTF Extension for an individual node in a glTF model, to associate it with the model's root AGI_stk_metadata object.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "solarPanelGroupName": {
+            "type": "string",
+            "pattern": "^[^\\s]+$",
+            "description": "The name of a Solar Panel Group that includes this node.",
+            "gltf_detailedDescription": "The name of a Solar Panel Group that includes this node.  Solar Panel Groups are defined in the glTF root extension."
+        },
+        "noObscuration": {
+            "type": "boolean",
+            "description": "Set to true to indicate that this node's geometry does not obscure any sensors' view in the STK Sensor Obscuration tool."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
