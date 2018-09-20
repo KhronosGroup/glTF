@@ -9,7 +9,7 @@
             "type": "array",
             "description": "An array of solar panel groups.",
             "items": {
-                "$ref": "articulation.schema.json"
+                "$ref": "solarPanelGroup.schema.json"
             },
             "minItems": 1
         },
