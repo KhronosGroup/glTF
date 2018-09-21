@@ -2292,7 +2292,9 @@ Additional properties are allowed.
 
 Application-specific data.
 
-
+> **Implementation Note:** Although extras may have any type, it is common for applications to
+store and access custom data as key/value pairs. As best practice, extras should be an Object
+rather than a primitive value for best portability.
 
 ---------------------------------------
 <a name="reference-gltf"></a>
