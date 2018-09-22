@@ -114,7 +114,8 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Node.js web service, built on COLLADA2GLTF |
 | [cqparts](https://github.com/fragmuffin/cqparts) | `STEP` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Python CAD for programmers ([import / export doc](https://fragmuffin.github.io/cqparts/doc/cqparts/import-export.html)) ([GLTFExporter](https://fragmuffin.github.io/cqparts/doc/api/cqparts.codec.html#cqparts.codec.gltf.GLTFExporter)) |
 | [FME Desktop](https://www.safe.com/fme/fme-desktop/) | [Multiple](https://www.safe.com/integrate/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | FME lets you move data between 400+ formats and applications using a drag-and-drop interface while preserving data quality throughout the conversion process. |
-| [UModel (UE Viewer)](https://github.com/gildor2/UModel)| `Unreal engine` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | UModel allows you to view static and animated mesh assets from [Unreal engine games](http://www.gildor.org/projects/umodel/compat), and then export them into several formats including glTF 2.0
+| [UModel (UE Viewer)](https://github.com/gildor2/UModel)| `Unreal engine` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | UModel allows you to view static and animated mesh assets from [Unreal engine games](http://www.gildor.org/projects/umodel/compat), and then export them into several formats including glTF 2.0 |
+| [VECTARY](https://vectary.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat), `OBJ`, `COLLADA`, `STL` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Online 3D content creation tool |
 
 ### Optimizers
 
@@ -166,6 +167,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [3D Slash](http://www.3dslash.net) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Web-based and app-based 3D modeling imitating a stonecutter |
 | [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Web-based 3D platform for architecture and interiors |
 | [Plex.Earth](https://plexearth.com/) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Connects AutoCAD with Google Earth and the Real World. |
+| [VECTARY](https://vectary.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Online 3D content creation tool |
 
 ### Loaders and Engines
 
