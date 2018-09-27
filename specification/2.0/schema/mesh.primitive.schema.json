@@ -29,31 +29,38 @@
             "anyOf": [
                 {
                     "enum": [ 0 ],
-                    "description": "POINTS"
+                    "description": "POINTS",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 1 ],
-                    "description": "LINES"
+                    "description": "LINES",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 2 ],
-                    "description": "LINE_LOOP"
+                    "description": "LINE_LOOP",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 3 ],
-                    "description": "LINE_STRIP"
+                    "description": "LINE_STRIP",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 4 ],
-                    "description": "TRIANGLES"
+                    "description": "TRIANGLES",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 5 ],
-                    "description": "TRIANGLE_STRIP"
+                    "description": "TRIANGLE_STRIP",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 6 ],
-                    "description": "TRIANGLE_FAN"
+                    "description": "TRIANGLE_FAN",
+                    "type": "integer"
                 },
                 {
                     "type": "integer"

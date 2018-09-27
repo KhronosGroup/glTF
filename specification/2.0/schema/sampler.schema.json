@@ -12,11 +12,13 @@
             "anyOf": [
                 {
                     "enum": [ 9728 ],
-                    "description": "NEAREST"
+                    "description": "NEAREST",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 9729 ],
-                    "description": "LINEAR"
+                    "description": "LINEAR",
+                    "type": "integer"
                 },
                 {
                     "type": "integer"
@@ -30,27 +32,33 @@
             "anyOf": [
                 {
                     "enum": [ 9728 ],
-                    "description": "NEAREST"
+                    "description": "NEAREST",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 9729 ],
-                    "description": "LINEAR"
+                    "description": "LINEAR",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 9984 ],
-                    "description": "NEAREST_MIPMAP_NEAREST"
+                    "description": "NEAREST_MIPMAP_NEAREST",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 9985 ],
-                    "description": "LINEAR_MIPMAP_NEAREST"
+                    "description": "LINEAR_MIPMAP_NEAREST",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 9986 ],
-                    "description": "NEAREST_MIPMAP_LINEAR"
+                    "description": "NEAREST_MIPMAP_LINEAR",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 9987 ],
-                    "description": "LINEAR_MIPMAP_LINEAR"
+                    "description": "LINEAR_MIPMAP_LINEAR",
+                    "type": "integer"
                 },
                 {
                     "type": "integer"
@@ -65,15 +73,18 @@
             "anyOf": [
                 {
                     "enum": [ 33071 ],
-                    "description": "CLAMP_TO_EDGE"
+                    "description": "CLAMP_TO_EDGE",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 33648 ],
-                    "description": "MIRRORED_REPEAT"
+                    "description": "MIRRORED_REPEAT",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 10497 ],
-                    "description": "REPEAT"
+                    "description": "REPEAT",
+                    "type": "integer"
                 },
                 {
                     "type": "integer"
@@ -88,15 +99,18 @@
             "anyOf": [
                 {
                     "enum": [ 33071 ],
-                    "description": "CLAMP_TO_EDGE"
+                    "description": "CLAMP_TO_EDGE",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 33648 ],
-                    "description": "MIRRORED_REPEAT"
+                    "description": "MIRRORED_REPEAT",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 10497 ],
-                    "description": "REPEAT"
+                    "description": "REPEAT",
+                    "type": "integer"
                 },
                 {
                     "type": "integer"
