@@ -17,5 +17,6 @@
         "extensions": { },
         "extras": { }
     },
-    "gltf_webgl": "`createTexture()`, `deleteTexture()`, `bindTexture()`, `texImage2D()`, and `texParameterf()`"
+    "gltf_webgl": "`createTexture()`, `deleteTexture()`, `bindTexture()`, `texImage2D()`, and `texParameterf()`",
+    "required": [ "source" ]
 }
