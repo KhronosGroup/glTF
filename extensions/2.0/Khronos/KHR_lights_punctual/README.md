@@ -67,7 +67,7 @@ Lights must be attached to a node by defining the `extensions.KHR_lights_punctua
 ```
 
 The light will inherit the transform of the node. For light types that have a position (`point` and `spot` lights), the light's position is defined as the node's world location.
-For light types that have a direction (`directional` and `spot` lights), the light's direction is defined as the 3-vector `(0.0, 0.0, -1.0)` and the rotation of the node orients the light accordingly. That is, an untransformed light points down the -Z axis.
+For light types that have a direction (`directional` and `spot` lights), the light's direction is defined as the 3-vector `(0.0, 0.0, -1.0)` and the rotation of the node orients the light accordingly. That is, an untransformed light points down the -Z axis. The light's transform is affected by the node's world scale, but all properties of the light (such as `range` and `intensity`) are unaffected.
 
 ## Light Types
 
@@ -83,6 +83,8 @@ All light types share the common set of properties listed below.
 | `type` | Declares the type of the light. | :white_check_mark: Yes |
 | `range` | Hint defining a distance cutoff at which the light's intensity may be considered to have reached zero. Supported only for `point` and `spot` lights. Must be > 0. When undefined, range is assumed to be infinite. | No |
 
+Light properties are unaffected by node transforms — for example, `range` and `intensity` do not change with scale.
+
 ## Range Property
 
 The range property (allowed only on point and spot lights) defines a distance cutoff at which the light's intensity must be considered zero, meaning the light no longer affects the surrounding area. This can be useful to cull geometry that a light may not visibly affect, potentially having a significant positive impact on rendering performance. It is required that, when given a non-zero value, rendering engines ignore the light beyond this range.
@@ -95,15 +97,17 @@ A recommended implementation for this attenuation with a cutoff range is as foll
 
 ### Directional
 
-Directional lights are light sources that act as though they are infinitely far away and emit light in the direction of the local +z axis. This light type inherits the orientation of the node that it belongs to but ignores position and scale. Because it is at an infinite distance, the light is not attenuated. Its intensity is defined in lumens per metre squared, or lux (lm/m<sup>2</sup>).
+Directional lights are light sources that act as though they are infinitely far away and emit light in the direction of the local +z axis. This light type inherits the orientation of the node that it belongs to; position and scale are ignored except for their effect on the inherited node orientation. Because it is at an infinite distance, the light is not attenuated. Its intensity is defined in lumens per metre squared, or lux (lm/m<sup>2</sup>).
 
 ### Point
 
-Point lights emit light in all directions from its position in space (and ignore rotation and scale). The brightness of the light attenuates in a physically correct manner as distance increases from the light's position (i.e. brightness goes like the inverse square of the distance). Point light intensity is defined in candela, which is lumens per square radian (lm/sr).
+Point lights emit light in all directions from their position in space; rotation and scale are ignored except for their effect on the inherited node position. The brightness of the light attenuates in a physically correct manner as distance increases from the light's position (i.e. brightness goes like the inverse square of the distance). Point light intensity is defined in candela, which is lumens per square radian (lm/sr).
 
 ### Spot
 
 Spot lights emit light in a cone in the direction of the local +z axis. The angle and falloff of the cone is defined using two numbers, the `innerConeAngle` and `outerConeAngle`. As with point lights, the brightness also attenuates in a physically correct manner as distance increases from the light's position (i.e. brightness goes like the inverse square of the distance). Spot light intensity refers to the brightness inside the `innerConeAngle` (and at the location of the light) and is defined in candela, which is lumens per square radian (lm/sr). Engines that don't support two angles for spotlights should use `outerConeAngle` as the spotlight angle (leaving `innerConeAngle` to implicitly be `0`).
+
+A spot light's position and orientation are inherited from its node transform. Inherited scale does not affect cone shape, and is ignored except for its effect on position and orientation.
 
 | Property | Description | Required |
 |:-----------------------|:------------------------------------------| :--------------------------|
