@@ -59,6 +59,8 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [BabylonJS Sandbox](https://www.babylonjs.com/sandbox/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Drag-and-drop online viewer for model preview and debugging, using BabylonJS |
 | [three.js](https://threejs.org/) ([loader](https://threejs.org/docs/index.html#examples/loaders/GLTFLoader)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | All | [`<gltf-model/>` component](https://github.com/mrdoob/model-tag) |
 
+### [All Tools](ReadmeTools.md)
+
 ## Stack Overflow
 
 * [glTF tagged](http://stackoverflow.com/questions/tagged/gltf) questions
