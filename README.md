@@ -32,7 +32,8 @@ Please provide spec feedback and community updates by submitting [issues](https:
 * [glTF Tool Highlights](#gltf-tools-highlights)
   *  [Artists](#artists)
   * [Developers](#developers)
-  * [General](#general) 
+  * [General](#general)
+  * [All Tools](#all-tools) 
 * [Stack Overflow](#stack-overflow)
 * [Presentations and Articles](#presentations-and-articles)
   * [Intros](#intros)
@@ -45,6 +46,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | Tool | Status | Description |
 |------|--------|-------------|
 | [Blender Importer](https://github.com/ksons/gltf-blender-importer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Blender importer for glTF 2.0 (alpha) |
+
 ### Developers
 | Tool | Status | Description |
 |------|--------|-------------|
@@ -59,7 +61,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [BabylonJS Sandbox](https://www.babylonjs.com/sandbox/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Drag-and-drop online viewer for model preview and debugging, using BabylonJS |
 | [three.js](https://threejs.org/) ([loader](https://threejs.org/docs/index.html#examples/loaders/GLTFLoader)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | All | [`<gltf-model/>` component](https://github.com/mrdoob/model-tag) |
 
-### [All Tools]
+### All Tools
 A list of all tools can be found [here](ReadmeTools.md)
 
 ## Stack Overflow
