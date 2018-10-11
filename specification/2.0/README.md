@@ -151,9 +151,7 @@ The following are outside the scope of the initial design of glTF:
 * *glTF is not a streaming format.* The binary data in glTF is inherently streamable, and the buffer design allows for fetching data incrementally. But there are no other streaming constructs in the format, and no conformance requirements for an implementation to stream data versus downloading it in its entirety before rendering.
 * *glTF is not intended to be human-readable,* though by virtue of being represented in JSON, it is developer-friendly.
 
-Version 2.0 of glTF does not define compression for geometry and other rich data. However, the design team believes that compression is a very important part of a transmission standard, and there is already work underway to define compression extensions.
-
-> The 3D Formats Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs.
+While version 2.0 of glTF does not define compression for geometry and other rich data, the [KHR_draco_mesh_compression extension](https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_draco_mesh_compression/README.md) provides that option. Future extensions may include compression methods for textures and animation data.
 
 ## Versioning
 
