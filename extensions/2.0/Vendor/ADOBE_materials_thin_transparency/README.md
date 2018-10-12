@@ -29,15 +29,15 @@ A transparent material is defined by adding the `ADOBE_materials_thin_transparen
 
 ```json
 materials: [
-  { 
-    "extensions": [ 
-       "ADOBE_materials_thin_transparency": { 
-         "transmissionFactor": 0.8, 
-         "transmissionTexture": 0, 
-         "ior": 1.0 
-       } 
-    ] 
-  } 
+  {
+    "extensions": {
+       "ADOBE_materials_thin_transparency": {
+         "transmissionFactor": 0.8,
+         "transmissionTexture": 0,
+         "ior": 1.0
+       }
+    }
+  }
 ]
 ```
 
