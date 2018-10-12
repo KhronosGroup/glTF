@@ -34,7 +34,7 @@ The EXT_lights_image_based extension defines an array of image-based lights at t
             {
                 "intensity": 1.0,
                 "rotation": [0, 0, 0, 1],
-                "irradianceCoefficients": [3x9 array of floats],
+                "irradianceCoefficients": [...3 x 9 array of floats...],
                 "specularImageSize": 256,
                 "specularImages": [
                     [... 6 cube faces for mip 0 ...],
@@ -95,6 +95,8 @@ RGBD has several advantages over similar packing schemes like RGBM and RGBE.
 3. Interpolates better than RGBE. Important if the data is kept packed during rendering and filtering is used. Note that the interpolation isn't perfect so visual artifacts may still appear. This is why unpacking to float at load-time is recommended.
 4. Packed PNG doesn't appear as garbled as a one packed with RGBE.
 
+### Future HDR Image Support
+Because this extension just references regular textures, any future support added by glTF for HDR formats will automatically be supported by this extension. e.g. CTTF formats.
 
 ## Adding Light Instances to Scenes
 
