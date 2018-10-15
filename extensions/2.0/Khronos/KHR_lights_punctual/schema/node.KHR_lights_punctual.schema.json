@@ -13,5 +13,8 @@
             "description": "The id of the light referenced by this node."
         }
     },
-    "additionalProperties": false
+    "additionalProperties": false,
+    "required": [
+        "light"
+    ]
 }
