@@ -114,6 +114,8 @@ A spot light's position and orientation are inherited from its node transform. I
 | `innerConeAngle` | Angle, in radians, from centre of spotlight where falloff begins. Must be greater than or equal to `0` and less than `outerConeAngle`. | No, Default: `0` |
 | `outerConeAngle` | Angle, in radians, from centre of spotlight where falloff ends.  Must be greater than `innerConeAngle` and less than or equal to `PI / 2.0`. | No, Default: `PI / 4.0` |
 
+When the `spot` property is omitted, a spot light must use default values for `innerConeAngle` and `outerConeAngle`.
+
 ```javascript
 "extensions": {
     "KHR_lights_punctual" : {
