@@ -790,7 +790,7 @@ primitives[i].attributes.POSITION +
   weights[1] * primitives[i].targets[1].POSITION +
   weights[2] * primitives[i].targets[2].POSITION + ...
 ```
-Morph Targets are implemented via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to an accessor containing Morph Target displacement data, currently only three attributes (`POSITION`, `NORMAL`, and `TANGENT`) are supported. If morph targets contain application-specific semantics, their names must be prefixed with an underscore (e.g. `_TEMPERATURE`) like the associated attribute semantic. All primitives are required to list the same number of `targets` in the same order.
+Morph Targets are implemented via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to an accessor containing Morph Target displacement data. Currently only three attributes — `POSITION`, `NORMAL`, and `TANGENT` — are commonly supported. If morph targets contain application-specific semantics, their names must be prefixed with an underscore (e.g. `_TEMPERATURE`) like the associated attribute semantic. All primitives are required to list the same number of `targets` in the same order.
 
 Valid accessor type and component type for each attribute semantic property are defined below. Note that the *w* component for handedness is omitted when targeting `TANGENT` data since handedness cannot be displaced.
 
