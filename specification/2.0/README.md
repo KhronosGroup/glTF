@@ -1483,7 +1483,11 @@ Animation Sampler's `input` accessor **must** have `min` and `max` properties de
 
 > **Implementation Note:** Animations with non-linear time inputs, such as time warps in Autodesk 3ds Max or Maya, are not directly representable with glTF animations. glTF is a runtime format and non-linear time inputs are expensive to compute at runtime. Exporter implementations should sample a non-linear time animation into linear inputs and outputs for an accurate representation.
 
-A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation.
+A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation. When used with `CUBICSPLINE` interpolation, tangents (a<sub>k</sub>, b<sub>k</sub>) and values (v<sub>k</sub>) are grouped within keyframes:
+
+a<sub>1</sub>,a<sub>2</sub>,...a<sub>n</sub>,v<sub>1</sub>,v<sub>2</sub>,...v<sub>n</sub>,b<sub>1</sub>,b<sub>2</sub>,...b<sub>n</sub>
+
+See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
 
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
 
