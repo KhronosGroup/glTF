@@ -1489,6 +1489,8 @@ A Morph Target animation frame is defined by a sequence of scalars of length equ
 
 a<sub>1</sub>,a<sub>2</sub>,...a<sub>n</sub>,v<sub>1</sub>,v<sub>2</sub>,...v<sub>n</sub>,b<sub>1</sub>,b<sub>2</sub>,...b<sub>n</sub>
 
+See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
+
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
 
 ## Specifying Extensions
