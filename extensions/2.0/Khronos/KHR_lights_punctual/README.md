@@ -109,12 +109,12 @@ Spot lights emit light in a cone in the direction of the local -z axis. The angl
 
 A spot light's position and orientation are inherited from its node transform. Inherited scale does not affect cone shape, and is ignored except for its effect on position and orientation.
 
+When a light's `type` is `spot`, the `spot` property on the light is required. Its properties (below) are optional.
+
 | Property | Description | Required |
 |:-----------------------|:------------------------------------------| :--------------------------|
 | `innerConeAngle` | Angle, in radians, from centre of spotlight where falloff begins. Must be greater than or equal to `0` and less than `outerConeAngle`. | No, Default: `0` |
 | `outerConeAngle` | Angle, in radians, from centre of spotlight where falloff ends.  Must be greater than `innerConeAngle` and less than or equal to `PI / 2.0`. | No, Default: `PI / 4.0` |
-
-When the `spot` property is omitted, a spot light must use default values for `innerConeAngle` and `outerConeAngle`.
 
 ```javascript
 "extensions": {
