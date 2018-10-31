@@ -7,7 +7,7 @@
 
 ## Status
 
-Draft (not ratified yet)
+Multi-Vendor - Currently supported by Microsoft's Babylon.js and Adobe's Dimension CC 2.0 exporter.
 
 ## Dependencies
 
@@ -19,9 +19,9 @@ This extension provides the ability to define image-based lights in a glTF scene
 
 Many 3D tools and engines support image-based global illumination but the exact technique and data formats employed vary. Using this extension, tools can export and engines can import image-based lights and the result should be highly consistent. 
 
-This extension specifies exactly one way to format and reference the environment map to be used as well as one format for HDR image encoding. The goals of this are two-fold. First, it makes implementing support for this extension easier. Secondly, it ensures that rendering of the image-based lighting is consistent across runtimes.
+This extension specifies exactly one way to format and reference the environment map to be used. The goals of this are two-fold. First, it makes implementing support for this extension easier. Secondly, it ensures that rendering of the image-based lighting is consistent across runtimes.
 
-A conforming implementation of this extension must be able to load the image-based environment data and render the PBR materials using this lighting. 
+A conforming implementation of this extension must be able to load the image-based environment data and render the PBR materials using this lighting.
 
 ## Defining an Image-Based Light
 
@@ -54,9 +54,7 @@ The cubemap used for specular radiance is defined along with its prefiltered mip
 
 The entire mip chain of images should not be provided. Instead, the lowest-resolution mip should have sufficient size to represent the maximally-blurred radiance map (say, 16x16) corresponding to roughness=1. The `specularImageSize` value defines the largest dimension of mip 0 and, taken together with the number of defined mips, should give the loading runtime the information it needs to generate the remainder of the mip chain and sample the appropriate mip level in the shader.
 
-*(say something about tooling for generating these mips)*
-
-Cube faces are defined in the following order and must be authored with the Y-axis inverted: 
+Cube faces are defined in the following order and adhere to the standard orientations as shown in the image bellow.
 1. Positive X
 1. Negative X
 1. Positive Y
@@ -64,9 +62,20 @@ Cube faces are defined in the following order and must be authored with the Y-ax
 1. Positive Z
 1. Negative Z
 
+<figure>
+<img src="./figures/Cube_map.svg"/>
+<figcaption><em>Cube map orientation reference.<br>Image by <a href="//commons.wikimedia.org/w/index.php?title=User:Microwerx&amp;action=edit&amp;redlink=1" class="new" title="User:Microwerx (page does not exist)">Microwerx</a> - <span class="int-own-work" lang="en">Own work</span>, <a href="https://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0">CC BY-SA 4.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=48935423">Link</a></em></figcaption>
+</figure>
+
+Note that for this extension, each saved image must be flipped about its vertical axis to correspond with the way <a href="https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#images">glTF references texture space</a>.
+
+https://en.wikipedia.org/wiki/Cube_mapping
+
+
 ## Irradiance Coefficients
 
-This extension defines spherical harmonic coefficients up to l=2 for irradiance lighting. This takes the form of a 9x3 array.
+This extension uses spherical harmonic coefficients to define irradiance used for diffuse lighting. Coefficients are calculated for the first 3 SH bands (l=2) and take the form of a 9x3 array.
+https://metashapes.com/blog/realtime-image-based-lighting-using-spherical-harmonics/
 https://cseweb.ucsd.edu/~ravir/papers/envmap/envmap.pdf
 http://graphics.stanford.edu/papers/envmap/
 
@@ -76,8 +85,6 @@ http://graphics.stanford.edu/papers/envmap/prefilter.c
 Using SH Coefficients
 http://graphics.stanford.edu/papers/envmap/envmaprender.in
 
-*(this section needs more about how the coefficients are used as well as a brief blurb about what SH are)*
-*(also, we should probably just put some shader code in here for using the coefficients)*
 
 ## HDR Images
 
@@ -95,12 +102,14 @@ RGBD has several advantages over similar packing schemes like RGBM and RGBE.
 3. Interpolates better than RGBE. Important if the data is kept packed during rendering and filtering is used. Note that the interpolation isn't perfect so visual artifacts may still appear. This is why unpacking to float at load-time is recommended.
 4. Packed PNG doesn't appear as garbled as a one packed with RGBE.
 
+If the referenced image is a 4-channel PNG (i.e. with transparency), it will be assumed to contain RGBD data. If the image is only 3 channels, it will be assumed to contain LDR lighting data.
+
 ### Future HDR Image Support
-Because this extension just references regular textures, any future support added by glTF for HDR formats will automatically be supported by this extension. e.g. CTTF formats.
+This extension expects 4-channel PNG's to contain RGBD data. However, this should not interfere in any future glTF extensions that provide HDR support. e.g. if there is an extension that defines RGBE packing for PNG's that is in use for the texture/image, that should override the assumed RGBD packing. Support for other HDR file types (e.g. CTTF formats or .hdr/.exr files) should not interfere either as they won't be PNG's.
 
 ## Adding Light Instances to Scenes
 
-Esch scene can have a single IBL light attached to it by defining the `extensions.EXT_lights_image_based` property and, within that, an index into the `lights` array using the `light` property.
+Each scene can have a single IBL light attached to it by defining the `extensions.EXT_lights_image_based` property and, within that, an index into the `lights` array using the `light` property.
 
 ```javascript
 "scenes" : [
