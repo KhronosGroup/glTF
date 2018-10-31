@@ -1,0 +1,226 @@
+{
+  "extensionsUsed": [
+    "KHR_lights_punctual"
+  ],
+  "extensions": {
+    "KHR_lights_punctual": {
+      "lights": [
+        {
+          "color": [
+            1.0,
+            0.9,
+            0.7
+          ],
+          "name": "Directional",
+          "intensity": 3.0,
+          "type": "directional"
+        },
+        {
+          "color": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "name": "Point",
+          "intensity": 20.0,
+          "type": "point"
+        },
+        {
+          "color": [
+            0.3,
+            0.7,
+            1.0
+          ],
+          "name": "Spot",
+          "intensity": 40.0,
+          "type": "spot",
+          "spot": {
+            "innerConeAngle": 0.785398163397448,
+            "outerConeAngle": 1.57079632679
+          }
+        }
+      ]
+    }
+  },
+  "accessors": [
+    {
+      "bufferView": 0,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 3456,
+      "max": [
+        10,
+        19.949111938476562,
+        10
+      ],
+      "min": [
+        -10,
+        -0.050886999815702438,
+        -10
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 3456,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 0,
+      "componentType": 5125,
+      "count": 5172,
+      "max": [
+        3455
+      ],
+      "min": [
+        0
+      ],
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "copyright": "2017 (c) Adobe Corp",
+    "minVersion": "2.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 41472,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 1,
+      "byteLength": 41472,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 2,
+      "byteLength": 20688,
+      "byteOffset": 0,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 41472,
+      "uri": "MODEL_ROUNDED_CUBE_PART_1/positions.bin"
+    },
+    {
+      "byteLength": 41472,
+      "uri": "MODEL_ROUNDED_CUBE_PART_1/normals.bin"
+    },
+    {
+      "byteLength": 20688,
+      "uri": "MODEL_ROUNDED_CUBE_PART_1/indices.bin"
+    }
+  ],
+  "cameras": [
+    {
+      "name": "render_camera",
+      "perspective": {
+        "aspectRatio": 1.3333333730697632,
+        "yfov": 0.58904862403869629,
+        "zfar": 100,
+        "znear": 9.9999997473787516e-05
+      },
+      "type": "perspective"
+    },
+    {
+      "name": "render_camera2",
+      "perspective": {
+        "aspectRatio": 1.3333333730697632,
+        "yfov": 0.58904862403869629,
+        "zfar": 100,
+        "znear": 9.9999997473787516e-05
+      },
+      "type": "perspective"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "Rounded Cube Material",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.63075679540634155,
+          0.63075679540634155,
+          0.63075679540634155,
+          1
+        ],
+        "metallicFactor": 0,
+        "roughnessFactor": 0.50300002098083496
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "MODEL_ROUNDED_CUBE_PART_1",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0
+          },
+          "indices": 2,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "extensions": {
+        "KHR_lights_punctual": {
+          "light": 1
+        }
+      },
+      "matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        22,
+        0,
+        1
+      ],
+      "name": "point_light"
+    },
+    {
+      "name": "directional_light",
+      "extensions": {
+        "KHR_lights_punctual": {
+          "light": 0
+        }
+      }
+    },
+    {
+      "mesh": 0,
+      "name": "MODEL_ROUNDED_CUBE_PART_1model_N3D"
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "scene",
+      "nodes": [
+        0,
+        1,
+        2
+      ]
+    }
+  ]
+}

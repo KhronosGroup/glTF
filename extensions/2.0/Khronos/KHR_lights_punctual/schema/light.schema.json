@@ -1,0 +1,57 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "light",
+    "type": "object",
+    "description": "A directional, point, or spot light.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "color": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "description": "Color of the light source.",
+            "default": [1, 1, 1]
+        },
+        "intensity": {
+            "type": "number",
+            "description": "Intensity of the light source. `point` and `spot` lights use luminous intensity in candela (lm/sr) while `directional` lights use illuminance in lux (lm/m^2)",
+            "default": 1.0
+        },
+        "spot": {
+            "type": "object",
+            "dependencies": {
+                "type": ["spot"]
+            },
+            "$ref": "light.spot.schema.json"
+        },
+        "type": {
+            "type": "string",
+            "description": "Specifies the light type.",
+            "enum": [
+                "directional",
+                "point",
+                "spot"
+            ]
+        },
+        "range": {
+            "type": "number",
+            "description": "A distance cutoff at which the light's intensity may be considered to have reached zero.",
+            "minimum": 0,
+            "dependencies": {
+                "type": ["spot", "point"]
+            }
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "additionalProperties": false,
+    "required": [
+        "type"
+    ]
+}
