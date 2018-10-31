@@ -6,7 +6,7 @@
 
 ## Status
 
-Draft
+Adobe Vendor Extension - Currently supported only in the web-publish feature of Adobe Dimension CC 2.0.
 
 ## Dependencies
 
@@ -82,8 +82,6 @@ Absorption is usually defined as an amount of light at each frequency that is ab
 <figcaption><em>The baseColor of the material is used to tint the light being transmitted.</em></figcaption>
 </figure>
 
-The orientation of the surface will also lead to greater absorption due to the longer distance traveled within the surface. This factor scales like 1 / dot(N, V) regardless of the thickness of the surface so it still applies to us, even though we're treating the surface to have zero thickness.
-
 ### Implementing Absorption ###
 
 Modeling absorption is relatively straightforward. From the [glTF BRDF](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#appendix-b-brdf-implementation), we have:
@@ -95,19 +93,11 @@ Modeling absorption is relatively straightforward. From the [glTF BRDF](https://
 So,
 *f* = mix(*f*<sub>*diffuse*</sub>, *f*<sub>*specular*</sub>, *F*), where *F* is the Surface Reflection Ratio.
 
-Optical transparency does not require any changes whatsoever to the specular term so we essentially want to replace *f*<sub>*diffuse*</sub> with the transmitted light, *L*<sub>transmitted</sub>, modulated by a factor *M*.
+Optical transparency does not require any changes whatsoever to the specular term so we essentially want to replace *f*<sub>*diffuse*</sub> with the transmitted light, *L*<sub>transmitted</sub>.
 
 *f* = mix(mix(**f**<sub>*diffuse*</sub>, *L*<sub>transmitted</sub> * *M*, *T*), *f*<sub>*specular*</sub>, *F*)
 
 Where **L**<sub>transmitted</sub> is the colour of light coming through the material, towards the eye, and already has refraction and scattering taken into account (as discussed below). *T* is the transmission value defined by this extension.
-
-At normal incidence, the modulation factor, *M*, is just the `baseColor` of the material. However, at other orientations, we must account for the longer distance the light travels through the surface (this factor is present regardless of how arbitrarily thin a material is). The `baseColor` will be taken to an exponent to account for the greater distance traveled through the material.
-
-At normal incidence, this exponent is just 1. As the incidence changes, the thickness is scaled like 1 / dot(N, V).
-
-*M* = baseColor<sup>1/dot(N, V)</sup>;
-
-Obviously, for surfaces perfectly parallel to the viewer, the distance through the surface must be clamped at the actual dimensions of the surface to avoid an infinity. In practice, you may choose to clamp the exponent to a constant.
 
  
 ### Modeling Scattering
