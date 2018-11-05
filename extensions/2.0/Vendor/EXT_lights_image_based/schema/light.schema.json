@@ -42,7 +42,7 @@
             "items": {
                 "type": "array",
                 "items": {
-                    "type": "number",
+                    "type": "integer",
                     "minimum": 0
                 },
                 "minItems": 6,

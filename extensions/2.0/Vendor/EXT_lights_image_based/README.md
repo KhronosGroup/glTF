@@ -50,7 +50,7 @@ The EXT_lights_image_based extension defines an array of image-based lights at t
 
 ## Prefiltered Specular Radiance Cubemaps
 
-The cubemap used for specular radiance is defined along with its prefiltered mipmaps with each face of the cube defined as separate images. The various mip levels evenly map to roughness values from 0 to 1 in the PBR material and should be generated with a principled multi-scatter GGX normal distribution. The data in the maps represents illuminance in lux (lm/m^2).
+The cubemap used for specular radiance is defined along with its prefiltered mipmaps with each face of the cube defined as separate images. The images must all be square, have power-of-two dimensions and conform to the usual requirements for mip images. That is, each mip level below the source image will correspond to halving the width and height resolution. The various mip levels evenly map to roughness values from 0 to 1 in the PBR material and should be generated with a principled multi-scatter GGX normal distribution. The data in the maps represents illuminance in lux (lm/m^2).
 
 The entire mip chain of images should not be provided. Instead, the lowest-resolution mip should have sufficient size to represent the maximally-blurred radiance map (say, 16x16) corresponding to roughness=1. The `specularImageSize` value defines the largest dimension of mip 0 and, taken together with the number of defined mips, should give the loading runtime the information it needs to generate the remainder of the mip chain and sample the appropriate mip level in the shader.
 
@@ -75,16 +75,8 @@ https://en.wikipedia.org/wiki/Cube_mapping
 ## Irradiance Coefficients
 
 This extension uses spherical harmonic coefficients to define irradiance used for diffuse lighting. Coefficients are calculated for the first 3 SH bands (l=2) and take the form of a 9x3 array.
-https://metashapes.com/blog/realtime-image-based-lighting-using-spherical-harmonics/
-https://cseweb.ucsd.edu/~ravir/papers/envmap/envmap.pdf
-http://graphics.stanford.edu/papers/envmap/
-
-Generating SH Coefficients
-http://graphics.stanford.edu/papers/envmap/prefilter.c
-
-Using SH Coefficients
-http://graphics.stanford.edu/papers/envmap/envmaprender.in
-
+[Realtime Image Based Lighting using Spherical Harmonics](https://metashapes.com/blog/realtime-image-based-lighting-using-spherical-harmonics/)
+[An Efficient Representation for Irradiance Environment Maps](http://graphics.stanford.edu/papers/envmap/)
 
 ## HDR Images
 
@@ -127,10 +119,10 @@ Each scene can have a single IBL light attached to it by defining the `extension
 
 | Property | Description | Required |
 |:-----------------------|:------------------------------------------| :--------------------------|
-| `name` | Name of the light. | No, Default: `""` |
+| `name` | Name of the light. | No |
 | `rotation` | Quaternion that represents the rotation of the IBL environment. | No, Default: `[0.0, 0.0, 0.0, 1.0]` |
 | `intensity` | Brightness multiplier for environment. | No, Default: `1.0` |
 | `irradianceCoefficients` | Declares spherical harmonic coefficients for irradiance up to l=2. This is a 9x3 array. | :white_check_mark: Yes |
 | `specularImages` | Declares an array of the first N mips of the prefiltered cubemap. Each mip is, in turn, defined with an array of 6 images, one for each cube face. i.e. this is an Nx6 array. | :white_check_mark: Yes |
-| `specularImageSize` | The maximum dimension (in pixels) of the first specular mip. This is needed to determine, pre-load, the total number of mips needed. | :white_check_mark: Yes |
+| `specularImageSize` | The dimension (in pixels) of the first specular mip. This is needed to determine, pre-load, the total number of mips needed. | :white_check_mark: Yes |
 

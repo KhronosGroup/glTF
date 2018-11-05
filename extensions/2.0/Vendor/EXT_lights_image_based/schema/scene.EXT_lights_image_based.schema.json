@@ -12,5 +12,8 @@
             "description": "The id of the light referenced by this scene."
         }
     },
+    "required":[
+        "light"
+    ],
     "additionalProperties": false
 }
