@@ -25,7 +25,7 @@ This extension allows an LOD to be defined at the geometry `node` or the `materi
 
 The `MSFT_lod` extension is added to the highest LOD level. The extensions defines an `ids` property which is an array containing the indices of the lower LOD levels. Each value in the array points to a LOD level that is lower in quality than the previous level. For example, if the extension is defined at the `node` level then the `node` object with the extension is the highest LOD level. Every value specified in the `ids` array of the extension points to the index of another `node` object which should be used as the lower LOD level. 
 
-An implementation of this extension can parse through the `ids` array to create the list of LOD levels available for an asset. If an asset containing this extension is loaded in a client that doesnt implement the extension, then the highest LOD level will be loaded and all lower LODs will be ignored. 
+An implementation of this extension can parse through the `ids` array to create the list of LOD levels available for an asset. If an asset containing this extension is loaded in a client that doesn't implement the extension, then the highest LOD level will be loaded and all lower LODs will be ignored. 
 
 The following example shows how the `MSFT_lod` extension can be specified at the `node` level to create three LOD levels:
 ```json

@@ -95,7 +95,7 @@ All extensions used in a model are listed as strings in the top-level `extension
   ]
 }
 ```
-This allows an engine to quickly determine if it supports the extensions needed to render the model without inspecting the the `extensions` property of all objects.
+This allows an engine to quickly determine if it supports the extensions needed to render the model without inspecting the `extensions` property of all objects.
 
 ## Creating Extensions
 
@@ -120,7 +120,7 @@ Vendor extensions are not covered by the Khronos IP framework.
 
 ### Multi-Vendor Extensions
 
-When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix.  To promote a vendor extension to a multi-vendor extension, open a pull request labled `extension` that contains a new copy of the extension (even if there aren't any changes) with the new name using the `EXT` prefix, e.g., `KHR_binary_glTF`.
+When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix.  To promote a vendor extension to a multi-vendor extension, open a pull request labeled `extension` that contains a new copy of the extension (even if there aren't any changes) with the new name using the `EXT` prefix, e.g., `KHR_binary_glTF`.
 
 Multi-vendor extensions are not covered by the Khronos IP framework.
 
