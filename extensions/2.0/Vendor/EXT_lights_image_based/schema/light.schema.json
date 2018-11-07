@@ -3,7 +3,7 @@
     "title": "light",
     "type": "object",
     "description": "An image-based lighting environment.",
-    "allOf" : [ { "$ref" : "../../../../specification/2.0/schema/glTFChildOfRootProperty.schema.json" } ],
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
         "rotation": {
             "type": "array",
