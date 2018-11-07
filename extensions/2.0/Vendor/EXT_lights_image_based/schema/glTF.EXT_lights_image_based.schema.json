@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_lights_image_based glTF extension",
+    "type": "object",
+    "properties": {
+        "lights": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "light.schema.json"
+            },
+            "minItems": 1
+        }
+    },
+    "required":[
+        "lights"
+    ],
+    "additionalProperties": false
+}
