@@ -116,6 +116,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [FME Desktop](https://www.safe.com/fme/fme-desktop/) | [Multiple](https://www.safe.com/integrate/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | FME lets you move data between 400+ formats and applications using a drag-and-drop interface while preserving data quality throughout the conversion process. |
 | [UModel (UE Viewer)](https://github.com/gildor2/UModel)| `Unreal engine` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | UModel allows you to view static and animated mesh assets from [Unreal engine games](http://www.gildor.org/projects/umodel/compat), and then export them into several formats including glTF 2.0 |
 | [OPEN CASCADE CAD Assistant](https://www.opencascade.com/content/cad-assistant)| [Multiple](https://www.opencascade.com/content/cad-assistant "STEP, IGES, OBJ, PLY, STL") | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Freeware multi-platform 3D Viewer and converter for 3D/CAD models with glTF 2.0 export support |
+| [Adobe Dimension](https://www.adobe.com/products/dimension.html)| `FBX`, `STL`, `SKP`, `OBJ` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Share and Publish feature lets users export to glTF to view on the web. [Prerelease](https://www.adobeprerelease.com) build has explicit export option for glTF and GLB.|
 
 ### Optimizers
 
