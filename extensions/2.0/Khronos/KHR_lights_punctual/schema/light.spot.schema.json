@@ -2,6 +2,7 @@
     "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "light/spot",
     "type" : "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties" : {
         "innerConeAngle" : {
             "type" : "number",
