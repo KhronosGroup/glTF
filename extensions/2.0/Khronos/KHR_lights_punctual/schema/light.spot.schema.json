@@ -12,9 +12,10 @@
         "outerConeAngle" : {
             "type" : "number",
             "description" : "Angle in radians from centre of spotlight where falloff ends.",
-            "default" : 0.785398163397448,
+            "default" : 0.7853981633974483,
             "minimum": 0,
-            "maximum": 1.570796326794897
+            "maximum": 1.5707963267948966,
+            "exclusiveMinimum": true
         }
     },
     "additionalProperties" : false
