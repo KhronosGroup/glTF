@@ -193,7 +193,7 @@ glTF uses URIs to reference buffers and image resources. Clients must support at
 
 Applications should consider applying syntax-based normalization to URIs as defined by [RFC&nbsp;3986, Section&nbsp;6.2.2.](https://tools.ietf.org/html/rfc3986#section-6.2.2), [RFC&nbsp;3987, Section&nbsp;5.3.2.](https://tools.ietf.org/html/rfc3987#section-5.3.2), and applicable schema rules (e.g., [RFC&nbsp;7230, Section&nbsp;2.7.3.](https://tools.ietf.org/html/rfc7230#section-2.7.3) for HTTP) on export and/or import.
 
-> **Implementation Note:** While the spec does not explicitly disallow non-normalized URIs, their usage may lead to unwanted side-effects such as security warnings or cache misses on some platforms.
+> **Implementation Note:** While the spec does not explicitly disallow non-normalized URIs, their use may be unsupported or lead to unwanted side-effects — such as security warnings or cache misses — on some platforms.
 
 # Concepts
 
