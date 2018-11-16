@@ -152,6 +152,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [glTFShowcase](https://www.vispolygon.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Android app for viewing glTF 2.0 asset from local files (gltf/glb): supports environment lighting change. |
 | [Hilo3d glTF Viewer](https://hiloteam.github.io/Hilo3d/examples/glTFViewer/index.html) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Drag-and-drop glTF2.0 viewer for model preview, using Hilo3d |
 | [MeshViewer](https://github.com/jing-interactive/MeshViewer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | OBJ / glTF2 mesh viewer for Windows and macOS|
+
 ### Applications
 
 | Application | Status | Description |
@@ -211,6 +212,15 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | [jMonkeyEngine](http://jmonkeyengine.org/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | jME 3.2 supports glTF 2.0 |
 | [Ogre_glTF](https://ybalrid.github.io/Ogre_glTF/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF 2.0 loader plugin for Ogre v2-1  |
 | [G3D Innovation Engine](https://casual-effects.com/g3d/www/index.html) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF 2.0 import |
+
+#### Embeddable Viewers
+
+| Tool                                                                         | Author    | Type        | Description                                                                                                                                                                      |
+|------------------------------------------------------------------------------|-----------|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Babylon.js Viewer](https://doc.babylonjs.com/extensions/the_babylon_viewer) | BabylonJS | self-hosted | HTML web component for viewing self-hosted glTF models.                                                                                                                          |
+| [&lt;model-viewer>](https://github.com/GoogleWebComponents/model-viewer)     | Google    | self-hosted | HTML web component for viewing self-hosted glTF models.                                                                                                                          |
+| [Poly](https://poly.google.com/)                                             | Google    | service     | glTF models hosted on Poly may be embedded in an iframe on any site.                                                                                                             |
+| [Sketchfab](https://sketchfab.com/)                                          | Sketchfab | service     | glTF models hosted on Sketchfab may be embedded in an iframe on any site, using the [embed models](https://help.sketchfab.com/hc/en-us/articles/203509907-Embed-Models) feature. |
 
 ### Languages
 
