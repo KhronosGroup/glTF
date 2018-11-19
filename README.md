@@ -58,6 +58,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
         - [WebGL Engines](#webgl-engines)
         - [WebGL Sample Code](#webgl-sample-code)
         - [Game and Rendering Engines](#game-and-rendering-engines)
+        - [Embeddable Viewers](#embeddable-viewers)
     - [Languages](#languages)
         - [JavaScript / Node.js](#javascript--nodejs)
         - [C++](#c)
