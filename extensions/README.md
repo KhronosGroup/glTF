@@ -4,9 +4,10 @@
 
 #### Khronos extensions
 
+* [KHR_draco_mesh_compression](2.0/Khronos/KHR_draco_mesh_compression/README.md)
+* [KHR_lights_punctual](2.0/Khronos/KHR_lights_punctual/README.md)
 * [KHR_materials_pbrSpecularGlossiness](2.0/Khronos/KHR_materials_pbrSpecularGlossiness/README.md)
 * [KHR_materials_unlit](2.0/Khronos/KHR_materials_unlit/README.md)
-* [KHR_draco_mesh_compression](2.0/Khronos/KHR_draco_mesh_compression/README.md)
 * [KHR_texture_transform](2.0/Khronos/KHR_texture_transform/README.md)
 
 #### Vendor extensions
@@ -28,7 +29,6 @@ but may still change before they are complete._
 | Extension | Status |
 |-----------|--------|
 | [KHR_techniques_webgl](2.0/Khronos/KHR_techniques_webgl/README.md) | Feature-complete, seeking feedback. |
-| [KHR_lights_punctual](2.0/Khronos/KHR_lights_punctual/README.md) | Feature-complete, seeking feedback. |
 | KHR_compressed_texture_transmission | In development. |
 | [KHR_blend](https://github.com/KhronosGroup/glTF/pull/1302) | In development. |
 | HDR textures ([#1220](https://github.com/KhronosGroup/glTF/issues/1220), [#1365](https://github.com/KhronosGroup/glTF/issues/1365)) | Planned. |
