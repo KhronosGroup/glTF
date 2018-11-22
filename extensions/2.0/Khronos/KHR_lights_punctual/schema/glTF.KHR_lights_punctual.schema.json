@@ -11,9 +11,10 @@
                 "$ref": "light.schema.json"
             },
             "minItems": 1
-        }
+        },
+        "extensions": { },
+        "extras": { }
     },
-    "additionalProperties": false,
     "required": [
         "lights"
     ]

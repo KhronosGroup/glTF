@@ -17,7 +17,8 @@
             "minimum": 0,
             "maximum": 1.5707963267948966,
             "exclusiveMinimum": true
-        }
-    },
-    "additionalProperties" : false
+        },
+        "extensions": { },
+        "extras": { }
+    }
 }
