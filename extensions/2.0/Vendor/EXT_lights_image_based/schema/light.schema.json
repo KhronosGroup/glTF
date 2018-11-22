@@ -51,15 +51,15 @@
             "minItems": 1
         },
         "specularImageSize": {
-            "type": "number",
-            "description": "The maximum dimension (in pixels) of the first specular mip. This is needed to determine, pre-load, the total number of mips needed.",
-            "minimum": 0
+            "type": "integer",
+            "description": "The dimension (in pixels) of the first specular mip. This is needed to determine, pre-load, the total number of mips needed.",
+            "minimum": 0,
+            "exclusiveMinimum": true
         },
         "name": { },
         "extensions": { },
         "extras": { }
     },
-    "additionalProperties": false,
     "required": [
         "irradianceCoefficients",
         "specularImages",
