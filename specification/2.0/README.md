@@ -3012,7 +3012,7 @@ This integer value is used to construct a string in the format TEXCOORD_<set ind
 
 #### occlusionTextureInfo.strength
 
-A scalar multiplier controlling the amount of occlusion applied. A value of 0.0 means no occlusion. A value of 1.0 means full occlusion. This value affects the resulting color using the formula: `occludedColor = lerp(color, color * <sampled occlusion texture value>, <occlusion strength>)`. This value is ignored if the corresponding texture is not specified. This value is linear.
+A scalar multiplier controlling the amount of occlusion applied. A value of 0.0 means no occlusion. A value of 1.0 means full occlusion. This value affects diffuse color using the formula: <code>occludedColor = lerp(c<sub><i>diff</i></sub>, c<sub><i>diff</i></sub> * &lt;sampled occlusion texture value>, &lt;occlusion strength>)</code>. This value is linear, and is ignored if the corresponding texture is not specified. Note that because occlusion is a multiplier against diffuse color (not base color), it occludes only indirect light.
 
 * **Type**: `number`
 * **Required**: No, default: `1`
