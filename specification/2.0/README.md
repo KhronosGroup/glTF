@@ -418,6 +418,8 @@ A *buffer* is data stored as a binary blob. The buffer can contain a combination
 
 Binary blobs allow efficient creation of GPU buffers and textures since they require no additional parsing, except perhaps decompression. An asset can have any number of buffer files for flexibility for a wide array of applications.
 
+> **Implementation Note:** While there's no upper limit on buffer's size, implementations should be aware that JSON parsers may support integers only up to 2<sup>53</sup> when running on certain platforms. Also there's an implicit limit of 2<sup>32</sup>-1 bytes when a buffer is stored as [GLB](#glb-file-format-specification) binary chunk.
+
 Buffer data is little endian.
 
 All buffers are stored in the asset's `buffers` array.
