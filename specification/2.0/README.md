@@ -940,7 +940,7 @@ For more details of vertex skinning, refer to [glTF Overview](figures/gltfOvervi
 
 > **Implementation Note:** A node definition does not specify whether the node should be treated as a joint. Client implementations may wish to traverse the `skins` array first, marking each joint node.
 
-> **Implementation Note:** A joint may have regular nodes attached to it, even a complete node sub graph with meshes. It's often used to have an entire geometry attached to a joint without having it being skinned by the joint. (ie. a sword attached to a hand joint). Note that the node transform are the local transform of the node relative to the joint, like any other node in the glTF node hierarchy as describe in the [Transformation](#transformations) section.
+> **Implementation Note:** A joint may have regular nodes attached to it, even a complete node sub graph with meshes. It's often used to have an entire geometry attached to a joint without having it being skinned by the joint. (ie. a sword attached to a hand joint). Note that the node transform is the local transform of the node relative to the joint, like any other node in the glTF node hierarchy as described in the [Transformation](#transformations) section.
 
 ### Instantiation
 
