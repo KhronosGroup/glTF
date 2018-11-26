@@ -437,7 +437,7 @@ The following example defines a buffer. The `byteLength` property specifies the 
 }
 ```
 
-A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer specified in the `byteOffset` property and a `byteLength` property to specify length of the buffer view.
+A *bufferView* represents a subset of data in a buffer, defined by a byte offset into the buffer specified in the `byteOffset` property and a total byte length specified by the `byteLength` property of the buffer view.
 
 When a buffer view contain vertex indices or attributes, they must be its only content, i.e., it's invalid to have more than one kind of data in the same buffer view.
 
@@ -465,7 +465,7 @@ The following example defines two buffer views: the first is an ELEMENT_ARRAY_BU
 }
 ```
 
-Buffer view could have `byteStride` property. It means byte-distance between consequential elements. This field  is defined only for buffer views that contain vertex attributes.
+When a buffer view is used for vertex attribute data, it may have a `byteStride` property. This property defines the stride in bytes between each vertex.
 
 Buffers and buffer views do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) access buffers or buffer views via *accessors*.
 
@@ -2018,7 +2018,7 @@ A buffer points to binary geometry, animation, or skins.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**uri**|`string`|The uri of the buffer.|No|
-|**byteLength**|`integer`|The length of the buffer in bytes.| :white_check_mark: Yes|
+|**byteLength**|`integer`|The total byte length of the buffer view.| :white_check_mark: Yes|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -2037,7 +2037,7 @@ The uri of the buffer.  Relative paths are relative to the .gltf file.  Instead 
 
 #### buffer.byteLength :white_check_mark: 
 
-The length of the buffer in bytes.
+The total byte length of the buffer view.
 
 * **Type**: `integer`
 * **Required**: Yes
