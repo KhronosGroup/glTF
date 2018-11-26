@@ -437,7 +437,7 @@ The following example defines a buffer. The `byteLength` property specifies the 
 }
 ```
 
-A *bufferView* represents a subset of data in a buffer, defined by an integer byte offset into the buffer specified in the `byteOffset` property and the `byteLength` property specifying the total byte length of the buffer view.
+A *bufferView* represents a subset of data in a buffer, defined by a byte offset into the buffer specified in the `byteOffset` property and a total byte length specified by the `byteLength` property of the buffer view.
 
 When a buffer view contain vertex indices or attributes, they must be its only content, i.e., it's invalid to have more than one kind of data in the same buffer view.
 
@@ -465,7 +465,7 @@ The following example defines two buffer views: the first is an ELEMENT_ARRAY_BU
 }
 ```
 
-When a buffer view is used for vertex attribute data, it may have `byteStride` property. It means the stride in bytes between each vertex.
+When a buffer view is used for vertex attribute data, it may have a `byteStride` property. This property defines the stride in bytes between each vertex.
 
 Buffers and buffer views do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) access buffers or buffer views via *accessors*.
 
