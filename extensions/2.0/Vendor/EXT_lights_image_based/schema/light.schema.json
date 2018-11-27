@@ -53,8 +53,7 @@
         "specularImageSize": {
             "type": "integer",
             "description": "The dimension (in pixels) of the first specular mip. This is needed to determine, pre-load, the total number of mips needed.",
-            "minimum": 0,
-            "exclusiveMinimum": true
+            "minimum": 1
         },
         "name": { },
         "extensions": { },
