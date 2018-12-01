@@ -157,6 +157,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 
 | Application | Status | Description |
 |-------------|--------|-------------|
+| [Blender 2.80](https://www.blender.org/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Khronos glTF importer/exporter ships with Blender 2.80 and higher |
 | [Paint 3D](https://www.microsoft.com/en-us/store/p/paint-3d/9nblggh5fv99) by Microsoft | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | 3D creation tool |
 | [Remix 3D](https://www.remix3d.com) by Microsoft | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Share and print 3D creations |
 | [Facebook](https://developers.facebook.com/docs/sharing/3d-posts) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Use .glb files to create 3D Posts |
