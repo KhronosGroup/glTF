@@ -34,7 +34,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 
 ### For artists
 
-- [Blender exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter)
+- [Blender importer/exporter](https://github.com/KhronosGroup/glTF-Blender-IO)
 - [3DS Max exporter](http://doc.babylonjs.com/resources/3dsmax_to_gltf)
 - [Maya exporter](https://github.com/WonderMediaProductions/Maya2glTF)
 - [Other converters and exporters](#converters-importers-and-exporters)
@@ -86,7 +86,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 
 | Tool | Input | Output | Description |
 |------|-------|--------|-------------|
-| [Khronos Group Blender Exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official exporter for Blender |
+| [Khronos Group Blender Importer/Exporter](https://github.com/KhronosGroup/glTF-Blender-IO) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official importer/exporter, included with Blender 2.80 and higher |
 | [3DS Max Exporter](http://doc.babylonjs.com/resources/3dsmax_to_gltf) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Export glTF files using [BabylonJS plugin](http://doc.babylonjs.com/resources/3dsmax#how-to-install-the-3ds-max-plugin) for 3DS Max 2015 or later |
 | [Maya Exporter](http://doc.babylonjs.com/resources/maya_to_gltf) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Export glTF files using [BabylonJS plugin](http://doc.babylonjs.com/resources/maya) for Maya 2018 or later |
 | [Unity Exporter (Sketchfab fork)](https://github.com/sketchfab/Unity-glTF-Exporter) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Unity editor wizard that exports to glTF Format |
@@ -96,7 +96,6 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [obj2gltf](https://github.com/AnalyticalGraphicsInc/OBJ2GLTF)  | `OBJ` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Command-line converter |
 | [Kupoman blendergltf](https://github.com/Kupoman/blendergltf) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF exporter for Blender aimed at streaming scenes to other applications |
 | [ksons Blender Importer](https://github.com/ksons/gltf-blender-importer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | — | Blender importer for glTF 2.0 (alpha) |
-| [julienduroure Blender Importer](https://github.com/julienduroure/gltf2-blender-importer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | — | glTF 2.0 Blender Importer |
 | [BlackThread.io converter](https://blackthread.io/gltf-converter/) | [Multiple](https://blackthread.io/gltf-converter/#supported-formats) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Online drag and drop converter powered by three.js |
 | [Assimp](http://www.assimp.org/) | [Multiple](https://github.com/assimp/assimp#supported-file-formats) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | General-purpose online conversion pipeline |
 | [PiXYZ Studio](https://www.pixyz-software.com/studio/) | [Multiple](https://docs.google.com/spreadsheets/d/1aWdeBOvZsbnwHfbyhuVS4vBDwevsT2Bz65hEhc0CtnU/pubhtml?gid=786960864) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Interactively prepare & optimize any CAD data |
@@ -158,6 +157,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 
 | Application | Status | Description |
 |-------------|--------|-------------|
+| [Blender 2.80](https://www.blender.org/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Khronos glTF importer/exporter ships with Blender 2.80 and higher |
 | [Paint 3D](https://www.microsoft.com/en-us/store/p/paint-3d/9nblggh5fv99) by Microsoft | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | 3D creation tool |
 | [Remix 3D](https://www.remix3d.com) by Microsoft | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Share and print 3D creations |
 | [Facebook](https://developers.facebook.com/docs/sharing/3d-posts) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Use .glb files to create 3D Posts |
