@@ -20,7 +20,8 @@
         "intensity": {
             "type": "number",
             "description": "Brightness multiplier for environment.",
-            "default": 1.0
+            "default": 1.0,
+            "minimum": 0.0
         },
         "irradianceCoefficients": {
             "description": "Declares spherical harmonic coefficients for irradiance up to l=2. This is a 9x3 array.",
