@@ -2,6 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "EXT_lights_imageBased scene extension",
     "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "light": {
             "allOf": [
@@ -10,10 +11,11 @@
                 }
             ],
             "description": "The id of the light referenced by this scene."
-        }
+        },
+        "extensions": { },
+        "extras": { }
     },
     "required":[
         "light"
-    ],
-    "additionalProperties": false
+    ]
 }
