@@ -19,7 +19,7 @@
         },
         "intensity": {
             "type": "number",
-            "description": "Intensity of the light source. \"point\" and \"spot\" lights use luminous intensity in candela (lm/sr) while \"directional\" lights use illuminance in lux (lm/m^2)",
+            "description": "Intensity of the light source. `point` and `spot` lights use luminous intensity in candela (lm/sr) while `directional` lights use illuminance in lux (lm/m^2)",
             "default": 1.0,
             "minimum": 0
         },
