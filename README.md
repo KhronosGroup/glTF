@@ -171,6 +171,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Web-based 3D platform for architecture and interiors |
 | [Plex.Earth](https://plexearth.com/) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Connects AutoCAD with Google Earth and the Real World. |
 | [VECTARY](https://vectary.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Online 3D content creation tool |
+| [Visual Studio Code](https://code.visualstudio.com) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Preview, validate, inspect, and debug glTF files |
 
 ### Loaders and Engines
 
