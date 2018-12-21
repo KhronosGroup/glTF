@@ -171,6 +171,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Web-based 3D platform for architecture and interiors |
 | [Plex.Earth](https://plexearth.com/) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Connects AutoCAD with Google Earth and the Real World. |
 | [VECTARY](https://vectary.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Online 3D content creation tool |
+| [Visual Studio Code](https://code.visualstudio.com) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Preview, validate, inspect, and debug glTF files |
 
 ### Loaders and Engines
 
@@ -367,6 +368,18 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 * [If you build it (together), they will come...Mozilla and the Khronos Group collaborate to bring glTF capabilities to Blender](https://medium.com/mozilla-open-innovation/gltf-import-export-tool-ca0932b0ce76) by Rosana Ardila. October 2018
 * [glTF and Construction – Part 1: Secrets of the Cloud](https://constructingdata.wordpress.com/2018/09/07/gltf-and-construction-part-1-secrets-of-the-cloud/) by Tim Davies. September 2018
 * [glTF and Construction – Part 2: 3D for Everyone](https://constructingdata.wordpress.com/2018/09/08/gltf-and-construction-part-2-3d-for-everyone/) by Tim Davies. September 2018
+* SIGGRAPH 2018 glTF BOF [video](https://youtu.be/FCAM-3aAzXg?t=3472) and [materials](https://www.khronos.org/developers/library/2018-siggraph). August 2018
+   * Ecosystem update: Patrick Cozzi, Cesium
+   * glTF for artists: Patrick Ryan, Microsoft
+   * TurboSquid: Beau Perschall
+   * Facebook: Pär Winzell
+   * Microsoft: Gary Hsu and Cedric Caillaud
+   * STK: Alex Wood, AGI
+   * VSCode: Ed Mackey, AGI
+   * Industrial AR with glTF: Johannes Beh, Fraunhofer
+   * Google Draco: Jamieson Brettle
+   * Texture transmission: Mark Callow
+   * IKEA: Martin Enthed
 * [glTF 2.0 – Status and Outlook](https://www.khronos.org/developers/library/2018-webinar-gltf-2) by Norbert Nopper. July 2018
 * [TurboSquid adds glTF to supported formats for its StemCell initiative](https://www.khronos.org/blog/turbosquid-adds-gltf-to-supported-formats-for-its-stemcell-initiative). July 2018
 * [Why glTF 2.0 is awesome!](https://blog.ybalrid.info/2018/07/16/why-gltf-2-0-is-awesome/) by Arthur Brainville. July 2018
