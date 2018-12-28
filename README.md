@@ -117,6 +117,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [UModel (UE Viewer)](https://github.com/gildor2/UModel)| `Unreal engine` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | UModel allows you to view static and animated mesh assets from [Unreal engine games](http://www.gildor.org/projects/umodel/compat), and then export them into several formats including glTF 2.0 |
 | [OPEN CASCADE CAD Assistant](https://www.opencascade.com/content/cad-assistant)| [Multiple](https://www.opencascade.com/content/cad-assistant "STEP, IGES, OBJ, PLY, STL") | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Freeware multi-platform 3D Viewer and converter for 3D/CAD models with glTF 2.0 export support |
 | [Adobe Dimension](https://www.adobe.com/products/dimension.html)| `FBX`, `STL`, `SKP`, `OBJ` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Share and Publish feature lets users export to glTF to view on the web. [Prerelease](https://www.adobeprerelease.com) build has explicit export option for glTF and GLB.|
+| [RapidCompact](https://www.rapidcompact.com)| [Multiple](https://www.rapidcompact.com/doc/cli/00-overview/index.html#import) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Optimizes and converts 3D assets for efficient online presentation. |
 
 ### Optimizers
 
@@ -128,6 +129,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [glTF Pipeline](https://github.com/AnalyticalGraphicsInc/gltf-pipeline) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official Node.js command-line tool for optimizing glTF assets |
 | [gltf2glb](https://github.com/Geopipe/gltf2glb) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Python tool to convert glTF to Binary glTF |
 | [binary-gltf-utils](https://github.com/Qantas94Heavy/binary-gltf-utils) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Node.js tool to convert glTF to Binary glTF |
+| [RapidCompact](https://www.rapidcompact.com)| ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Optimizes and converts 3D assets for efficient online presentation. |
 
 ### Validators
 
