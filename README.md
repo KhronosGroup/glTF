@@ -363,6 +363,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 ### All Presentations and Articles
 
 * [SIGGRAPH Asia glTF Overview and CTTF Update](https://www.khronos.org/developers/library/2018-siggraph-asia) by Khronos. December 2018
+* [droidcon SF 2018 - The JPEG of 3D: Bringing 3D scenes and objects into your 2D Android app with glTF](https://www.youtube.com/watch?v=EGSR8qrpEq4) by Pierre LaFayette. November 2018
 * [Using the Babylon.js viewer with WebVR and Windows Mixed Reality home](https://medium.com/@babylonjs/using-the-babylon-js-viewer-with-webvr-and-windows-mixed-reality-home-fd1e6af46137) by Saurabh Bhatia. November 2018
 * [Behind the Scenes with Adobe Dimension Engineers: How We Built the 3D Publish Feature](https://theblog.adobe.com/behind-the-scenes-with-adobe-dimension-engineers-how-we-built-the-3d-publish-feature/) by Mike Bond. November 2018
 * [OGC and Khronos Form a Liaison to Improve Interoperability within the Geospatial and 3D Graphics Communities](https://www.khronos.org/news/press/ogc-and-khronos-form-a-liaison-to-improve-interoperability-within-the-geospatial-and-3d-graphics-communities). October 2018
