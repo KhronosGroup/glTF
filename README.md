@@ -362,6 +362,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 ### All Presentations and Articles
 
+* [glTF Debugging in Visual Studio Code](https://medium.com/@babylonjs/gltf-debugging-in-visual-studio-code-a89805bda3cd) by Gary Hsu. January 2019
 * [SIGGRAPH Asia glTF Overview and CTTF Update](https://www.khronos.org/developers/library/2018-siggraph-asia) by Khronos. December 2018
 * [droidcon SF 2018 - The JPEG of 3D: Bringing 3D scenes and objects into your 2D Android app with glTF](https://www.youtube.com/watch?v=EGSR8qrpEq4) by Pierre LaFayette. November 2018
 * [Using the Babylon.js viewer with WebVR and Windows Mixed Reality home](https://medium.com/@babylonjs/using-the-babylon-js-viewer-with-webvr-and-windows-mixed-reality-home-fd1e6af46137) by Saurabh Bhatia. November 2018
