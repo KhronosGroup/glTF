@@ -3907,8 +3907,8 @@ As previously defined
 *&alpha;* = `roughness ^ 2`
 
 Additionally,  
-*V* is the eye vector to the shading location  
-*L* is the vector from the light to the shading location  
+*V* is the normalized vector from the shading location to the eye  
+*L* is the normalized vector from the shading location to the light  
 *N* is the surface normal in the same space as the above values  
 *H* is the half vector, where *H* = normalize(*L*+*V*)  
 
