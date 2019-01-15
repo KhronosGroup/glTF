@@ -15,7 +15,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension allows glTF models to use WebP as a valid image format by extending the Image property. A client that does not implement this extension can ignore the provided WebP image and continue to rely on the PNG and JPG textures available in the base specification. The [best practices](#best-practices) section describes the expected behavior when using this extension without a fallback texture.
+This extension allows glTF models to use WebP as a valid image format by extending the Image property. A client that does not implement this extension can ignore the provided WebP image and continue to rely on the PNG and JPG textures available in the base specification. Defining a fallback texture is optional. The [best practices](#best-practices) section describes the expected behavior when using this extension without a fallback texture.
 
 WebP is an image format developed and maintained by Google that provides superior lossless and lossy compression rates for images on the web. It is typically 26% smaller in size compared to PNGs and 25-34% smaller than comparable JPEG images - [source](https://developers.google.com/speed/webp/).  
 
