@@ -15,44 +15,60 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension allows glTF models to use WebP as a valid image format by extending the Image property. A client that does not implement this extension can ignore the provided WebP image and continue to rely on the PNG and JPG textures available in the base specification. Defining a fallback texture is optional. The [best practices](#best-practices) section describes the expected behavior when using this extension without a fallback texture.
+This extension allows glTF models to use WebP as a valid image format. A client that does not implement this extension can ignore the provided WebP image and continue to rely on the PNG and JPG textures available in the base specification. Defining a fallback texture is optional. The [best practices](#best-practices) section describes the intended use case of this extension and the expected behavior when using it without a fallback texture.
 
 WebP is an image format developed and maintained by Google that provides superior lossless and lossy compression rates for images on the web. It is typically 26% smaller in size compared to PNGs and 25-34% smaller than comparable JPEG images - [source](https://developers.google.com/speed/webp/).  
 
 ## glTF Schema Updates
 
-The `EXT_image_webp` extension may be defined on `image` structures. Its schema mirrors that of the the base Image property to simplify implementation.
+The `EXT_image_webp` extension is added to the `textures` node and specifies a `source` property that points to the index of the `images` node which in turn points to the WebP image.
 
 The following glTF will load `image.webp` in clients that support this extension, and otherwise fall back to `image.png`.
 
 ```
-"images": [
+"textures": [
     {
-        "uri": "image.png",
+        "source": 0,
         "extensions": {
             "EXT_image_webp": {
-                "uri": "image.webp"
+                "source": 1
             }
         }
+    }
+],
+"images": [
+    {
+        "uri": "image.png"
+    },
+    {
+        "uri": "image.webp"
     }
 ]
 ```
 
-It can also be used with a `bufferView` instead just like the Image property in the base specification:
+When used in the glTF Binary (.glb) format the `images` node that points to the WebP image uses the `mimeType` value of `image/webp`. 
 
 ```
+"textures": [
+    {
+        "source": 0,
+        "extensions": {
+            "EXT_image_webp": {
+                "source": 1
+            }
+        }
+    }
+],
 "images": [
     {
-      "extensions": {
-        "EXT_image_webp": {
-          "bufferView": 3,
-          "mimeType": "image/webp"
-        }
-      },
-      "bufferView": 4,
-      "mimeType": "image/png"
+        "mimeType": "image/png",
+        "bufferView": 1
+    },
+    {
+        "mimeType": "image/webp",
+        "bufferView": 2
     }
-  ]
+]
 ```
 
 ### JSON Schema
@@ -61,26 +77,27 @@ It can also be used with a `bufferView` instead just like the Image property in 
 
 ## Best Practices
 
-It is recommended to provide a fallback PNG or JPEG image for clients that do not support this extension. When a fallback image is defined, this extension should be defined in `extensionsUsed`. This will allow all clients to render the glTF correctly, and those that support this extension will request the optimized WebP version of the textures.
+Since WebP is not as widely supported as JPEG and PNG, it is recommended to use this extension only when transmission size is a significant bottleneck. For example, in geospatial applications the total texture payload can range from gigabytes to terabytes of data. In those situations, WebP textures can be used without a fallback to improve storage and transmission.
+
+When a fallback image is defined, this extension should be defined in `extensionsUsed`. This will allow all clients to render the glTF correctly, and those that support this extension can request the optimized WebP version of the textures.
 
 ### Using Without a Fallback
 
-To use WebP images without a fallback, define `EXT_image_webp` in `extensionsRequired`. The `uri` of the base image object can then be set to an empty string.
+To use WebP images without a fallback, define `EXT_image_webp` in `extensionsRequired`. The `texture` node will then have only an `extensions` property as shown below.
 
 ```
-"images": [
+"textures": [
     {
-        "uri": "",
         "extensions": {
-        	"EXT_image_webp": {
-        		"uri": "image.webp"
-        	}
+            "EXT_image_webp": {
+                "source": 1
+            }
         }
     }
 ]
 ```
 
-Not all browsers currently support WebP. If a glTF contains a WebP with no fallback texture and the browser does not support WebP, the client should either display an error or decode the WebP image at runtime.
+If a glTF contains a WebP with no fallback texture and the browser does not support WebP, the client should either display an error or decode the WebP image at runtime (see [resource](#resources) for decoding libraries).
 
 ## Known Implementations
 
