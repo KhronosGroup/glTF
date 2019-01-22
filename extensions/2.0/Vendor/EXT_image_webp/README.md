@@ -3,7 +3,7 @@
 ## Contributors
 
 * Omar Shehata, Cesium, [@OmarShehata](https://github.com/OmarShehata)
-* TBA, Google
+* Pascal Massimino, Google, [@Skal65535](https://github.com/skal65535)
 
 ## Status
 
@@ -83,7 +83,7 @@ When a fallback image is defined, this extension should be defined in `extension
 
 ### Using Without a Fallback
 
-To use WebP images without a fallback, define `EXT_image_webp` in `extensionsRequired`. The `texture` node will then have only an `extensions` property as shown below.
+To use WebP images without a fallback, define `EXT_image_webp` in both `extensionsUsed` and `extensionsRequired`. The `texture` node will then have only an `extensions` property as shown below.
 
 ```
 "textures": [
@@ -107,4 +107,4 @@ CesiumJS uses it to significantly cut load times for massive models that contain
 
 Google's [WebP developer page](https://developers.google.com/speed/webp/) provides information about the format as well as [pre-compiled and source code versions](https://developers.google.com/speed/webp/download) of an encoder and a decoder.
 
-The library [libwebpjs](http://libwebpjs.appspot.com) decodes WebP images in JavaScript for browsers that do not natively support it. [Sharp](http://sharp.pixelplumbing.com/en/stable/) is a NodeJS library for fast encode/decode of WebP (built on top of Google's implementation above).
+For browsers that do not natively support WebP, the libraries [libwebpjs](http://libwebpjs.appspot.com) and [webp_js](https://webmproject.github.io/libwebp-demo/webp_js/index.html) decode WebP images in JavaScript. [Sharp](http://sharp.pixelplumbing.com/en/stable/) is a NodeJS library for fast encode/decode of WebP using native modules (built on top of Google's implementation above).
