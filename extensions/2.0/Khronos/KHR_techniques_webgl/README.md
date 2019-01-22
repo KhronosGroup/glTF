@@ -221,7 +221,7 @@ The following example shows a technique and the properties it defines. This sect
                 },
                 "u_normalMatrix": {
                     "semantic": "MODELVIEWINVERSETRANSPOSE",
-                    "type": 35676
+                    "type": 35675
                 },
                 "u_projectionMatrix": {
                     "semantic": "PROJECTION",
