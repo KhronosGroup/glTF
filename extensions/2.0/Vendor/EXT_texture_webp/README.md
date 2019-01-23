@@ -1,4 +1,4 @@
-# EXT_image_webp
+# EXT_texture_webp
 
 ## Contributors
 
@@ -21,7 +21,7 @@ WebP is an image format developed and maintained by Google that provides superio
 
 ## glTF Schema Updates
 
-The `EXT_image_webp` extension is added to the `textures` node and specifies a `source` property that points to the index of the `images` node which in turn points to the WebP image.
+The `EXT_texture_webp` extension is added to the `textures` node and specifies a `source` property that points to the index of the `images` node which in turn points to the WebP image.
 
 The following glTF will load `image.webp` in clients that support this extension, and otherwise fall back to `image.png`.
 
@@ -30,7 +30,7 @@ The following glTF will load `image.webp` in clients that support this extension
     {
         "source": 0,
         "extensions": {
-            "EXT_image_webp": {
+            "EXT_texture_webp": {
                 "source": 1
             }
         }
@@ -53,7 +53,7 @@ When used in the glTF Binary (.glb) format the `images` node that points to the 
     {
         "source": 0,
         "extensions": {
-            "EXT_image_webp": {
+            "EXT_texture_webp": {
                 "source": 1
             }
         }
@@ -73,7 +73,7 @@ When used in the glTF Binary (.glb) format the `images` node that points to the 
 
 ### JSON Schema
 
-[glTF.EXT_image_webp.schema.json](schema/glTF.EXT_image_webp.schema.json)
+[glTF.EXT_texture_webp.schema.json](schema/glTF.EXT_texture_webp.schema.json)
 
 ## Best Practices
 
@@ -83,13 +83,13 @@ When a fallback image is defined, this extension should be defined in `extension
 
 ### Using Without a Fallback
 
-To use WebP images without a fallback, define `EXT_image_webp` in both `extensionsUsed` and `extensionsRequired`. The `texture` node will then have only an `extensions` property as shown below.
+To use WebP images without a fallback, define `EXT_texture_webp` in both `extensionsUsed` and `extensionsRequired`. The `texture` node will then have only an `extensions` property as shown below.
 
 ```
 "textures": [
     {
         "extensions": {
-            "EXT_image_webp": {
+            "EXT_texture_webp": {
                 "source": 1
             }
         }

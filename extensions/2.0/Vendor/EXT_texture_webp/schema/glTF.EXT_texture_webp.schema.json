@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "EXT_image_webp glTF extension",
+    "title": "EXT_texture_webp glTF extension",
     "type": "object",
     "description": "glTF extension to specify textures using the WebP image format.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
