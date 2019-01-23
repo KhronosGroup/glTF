@@ -1491,7 +1491,9 @@ Animation Sampler's `input` accessor **must** have `min` and `max` properties de
 
 > **Implementation Note:** Animations with non-linear time inputs, such as time warps in Autodesk 3ds Max or Maya, are not directly representable with glTF animations. glTF is a runtime format and non-linear time inputs are expensive to compute at runtime. Exporter implementations should sample a non-linear time animation into linear inputs and outputs for an accurate representation.
 
-A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation. When used with `CUBICSPLINE` interpolation, tangents (a<sub>k</sub>, b<sub>k</sub>) and values (v<sub>k</sub>) are grouped within keyframes:
+A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. These scalar sequences must lie end-to-end as a single stream in the output accessor, whose final size will equal the number of Morph Targets times the number of animation frames.
+
+Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation. When used with `CUBICSPLINE` interpolation, tangents (a<sub>k</sub>, b<sub>k</sub>) and values (v<sub>k</sub>) are grouped within keyframes:
 
 a<sub>1</sub>,a<sub>2</sub>,...a<sub>n</sub>,v<sub>1</sub>,v<sub>2</sub>,...v<sub>n</sub>,b<sub>1</sub>,b<sub>2</sub>,...b<sub>n</sub>
 
