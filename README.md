@@ -281,6 +281,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | Tool | Status | Description |
 |------|--------|-------------|
 | [AssetKit](https://github.com/recp/assetkit) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | 3D asset importer, exporter library. |
+| [cgltf](https://github.com/jkuhlmann/cgltf) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Single-header C glTF loader. |
 
 #### Go
 
