@@ -930,6 +930,8 @@ The joint weights for each vertex must be >= 0, and normalized to have a linear 
 
 In the event that of any of the vertices are influenced by more than four joints, the additional joint and weight information will be found in subsequent sets. For example `JOINTS_1` and `WEIGHTS_1` if present will reference the accessor for up to 4 additional joints that influence the vertices. Note that client implementations are only required to support a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the model's animation.
 
+All joint values must be within the range of joints in the skin. Unused joint values (i.e. joints with a weight of zero) should be set to zero.
+
 #### Joint Hierarchy
 
 The joint hierarchy used for controlling skinned mesh pose is simply the glTF node hierarchy, with each node designated as a joint. The following example defines a joint hierarchy of two joints.
