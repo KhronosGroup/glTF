@@ -99,10 +99,6 @@ To use WebP images without a fallback, define `EXT_texture_webp` in both `extens
 
 If a glTF contains a WebP with no fallback texture and the browser does not support WebP, the client should either display an error or decode the WebP image at runtime (see [resource](#resources) for decoding libraries).
 
-### Compression & Quality
-
-To avoid JPEG-like artifacts, it is recommended to use lossless WebP compression for cases such as normal maps and occlusion maps. Using the [cwebp](https://developers.google.com/speed/webp/docs/cwebp) encoding tool this can be done with the `-lossless` and `-noalpha` flags.
-
 ## Known Implementations
 
 CesiumJS uses it to significantly cut load times for massive models that contain gigabytes of texture data (see [implementation and sample model](https://github.com/AnalyticalGraphicsInc/cesium/pull/7486)). 
