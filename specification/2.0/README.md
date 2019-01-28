@@ -696,7 +696,7 @@ Consider the following example:
             "byteOffset": 4608,
             "componentType": 5123,
             "count": 5232,
-            "type": "SCALAR"
+            "type": "VEC2"
         }
     ]
 }
@@ -704,7 +704,16 @@ Consider the following example:
 Accessing binary data defined by example above could be done like this:
 
 ```js
-var typedView = new Uint16Array(buffer, accessor.byteOffset + accessor.bufferView.byteOffset, accessor.count);
+const accessorTypeToNumComponentsMap = {
+		'SCALAR': 1,
+		'VEC2': 2,
+		'VEC3': 3,
+		'VEC4': 4,
+		'MAT2': 4,
+		'MAT3': 9,
+		'MAT4': 16
+};
+var typedView = new Uint16Array(buffer, accessor.byteOffset + accessor.bufferView.byteOffset, accessor.count * accessorTypeToNumComponentsMap[accessor.type]);
 ```
 
 The size of the accessor component type is two bytes (the `componentType` is unsigned short). The accessor's `byteOffset` is also divisible by two. Likewise, the accessor's offset into buffer `0` is `5228 ` (`620 + 4608`), which is divisible by two.
