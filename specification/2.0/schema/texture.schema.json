@@ -11,7 +11,7 @@
         },
         "source": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the image used by this texture."
+            "description": "The index of the image used by this texture. When undefined, an extension must supply an alternate texture source."
         },
         "name": { },
         "extensions": { },
