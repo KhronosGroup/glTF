@@ -16,6 +16,7 @@
 * [AGI_articulations](2.0/Vendor/AGI_articulations/README.md)
 * [AGI_stk_metadata](2.0/Vendor/AGI_stk_metadata/README.md)
 * [EXT_lights_image_based](2.0/Vendor/EXT_lights_image_based/README.md)
+* [EXT_texture_webp](2.0/Vendor/EXT_texture_webp/README.md)
 * [MSFT_lod](2.0/Vendor/MSFT_lod/README.md)
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
