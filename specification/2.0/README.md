@@ -3717,7 +3717,7 @@ A texture and its sampler.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**sampler**|`integer`|The index of the sampler used by this texture. When undefined, a sampler with repeat wrapping and auto filtering should be used.|No|
-|**source**|`integer`|The index of the image used by this texture. When undefined, an extension must supply an alternate texture source.|No|
+|**source**|`integer`|The index of the image used by this texture. When undefined, it is expected that an extension or other mechanism will supply an alternate texture source.|No|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -3736,7 +3736,7 @@ The index of the sampler used by this texture. When undefined, a sampler with re
 
 #### texture.source
 
-The index of the image used by this texture. When undefined, an extension must supply an alternate texture source.
+The index of the image used by this texture. When undefined, it is expected that an extension or other mechanism will supply an alternate texture source.
 
 * **Type**: `integer`
 * **Required**: No
