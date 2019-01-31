@@ -9,6 +9,7 @@
 * [KHR_materials_pbrSpecularGlossiness](2.0/Khronos/KHR_materials_pbrSpecularGlossiness/README.md)
 * [KHR_materials_unlit](2.0/Khronos/KHR_materials_unlit/README.md)
 * [KHR_texture_transform](2.0/Khronos/KHR_texture_transform/README.md)
+* [KHR_XMP](2.0/Khronos/KHR_XMP/README.md)
 
 #### Vendor extensions
 
