@@ -16,15 +16,14 @@ Written against the glTF 2.0 spec.
 
 
 ## Overview
-This extension adds support for [XMP](https://github.com/adobe/xmp-docs) metadata to glTF. 
-XMP (Extensible Metadata Platform) is a technology for embedding metadata into documents. 
-[XMP is an ISO standard](https://www.iso.org/news/2012/03/Ref1525.html).
-XMP Metadata extension can apply to several glTF concepts: `asset`, `scene`, `mesh`, `material`, `image`.
+This extension adds support for [XMP (Extensible Metadata Platform)](https://github.com/adobe/xmp-docs) metadata to glTF.
+XMP is a technology for embedding metadata into documents and [is an ISO standard since 2012](https://www.iso.org/news/2012/03/Ref1525.html).
+XMP applies to several glTF concepts: `asset`, `scene`, `mesh`, `material`, `image`, `texture`.
 
 
 ## XMP Properties
 XMP properties are grouped in namespace. 
-This extension focuses on the properties defined in the [Dublin Core namespace](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/dc.md).
+This extension focuses on the properties defined in the [DCMI (Dublic Core Metadata Initative) namespace](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/dc.md).
 The properties below have been adapted from XMP (that is currently based on XML) to fit glTF json manifest.
 
 | Property | DCMI definition | Description  | Type |
@@ -42,11 +41,11 @@ The properties below have been adapted from XMP (that is currently based on XML)
 | `dc:rights`|Information about rights held in and over the resource| We recommend using an [SPDX](https://spdx.org/licenses/) identifier when appropriate, alternative can be a list of informal right statements or URLs | Language Alternative *|
 | `dc:source`|A related resource from which the described resource is derived. |When possible prefer a URL. |Text|
 | `dc:subject`|The topic of the resource|A list of descriptive phrases or keywords that specify the content of the resource (open ended) | Unordered array of text |
-|`dc:title`| A name given to the resource. | Text | Language Alternative |
+|`dc:title`| A name given to the resource. | The asset title. | Language Alternative |
 |`dc:type`| The nature or genre of the resource | Refer to the DCMITYPE vocabulary when possible | Unordered array of text|
 
 ### Language Alternative
-A language alternative is a dictionary mapping a language (RFC 3066 language string) to a text. Example:
+A language alternative is a dictionary mapping a language (RFC 3066 language string) to text. Example:
 ```
 "dc:title" : { 
     "en-us" : "MyModel",
@@ -54,7 +53,7 @@ A language alternative is a dictionary mapping a language (RFC 3066 language str
 },
 ```
 
-In order to include machine-readable [SPDX](https://spdx.org/licenses/) to the `dc:rights` property. The `dc:rights` Language Alternative was extended to accept the "SPDX" key.
+The `dc:rights` Language Alternative was extended to accept the "SPDX" key in order to include the machine-readable [SPDX](https://spdx.org/) tag.
 
 
 
