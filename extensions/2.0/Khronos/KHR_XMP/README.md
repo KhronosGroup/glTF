@@ -40,9 +40,9 @@ The properties below have been adapted from XMP (that is currently based on XML)
 | `dc:relation` | A related resource. Recommended best practice is to identify the related resource by means of a string conforming to a formal identification system | A list of URLS | Unordered array of text |
 | `dc:rights`|Information about rights held in and over the resource| We recommend using an [SPDX](https://spdx.org/licenses/) identifier when appropriate, alternative can be a list of informal right statements or URLs | Language Alternative *|
 | `dc:source`|A related resource from which the described resource is derived. |When possible prefer a URL. |Text|
-| `dc:subject`|The topic of the resource|A list of descriptive phrases or keywords that specify the content of the resource (open ended) | Unordered array of text |
+| `dc:subject`|The topic of the resource|A list of descriptive phrases or keywords that specify the content of the resource| Unordered array of text |
 |`dc:title`| A name given to the resource. | The asset title. | Language Alternative |
-|`dc:type`| The nature or genre of the resource | Refer to the DCMITYPE vocabulary when possible | Unordered array of text|
+|`dc:type`| The nature or genre of the resource | Refer to the [DCMITYPE](http://dublincore.org/documents/dcmi-type-vocabulary/) vocabulary when possible | Unordered array of text|
 
 ### Language Alternative
 A language alternative is a dictionary mapping a language (RFC 3066 language string) to text. Example:
