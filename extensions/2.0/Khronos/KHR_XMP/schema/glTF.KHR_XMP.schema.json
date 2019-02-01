@@ -1,0 +1,111 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title" : "KHR_XMP",
+    "type": "object",
+    "description": "Metadata about the glTF asset.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "dc:contributor": {
+            "type" : "array",
+            "description" : "Array of names and email addresses",
+            "items" : {
+                "type": "string"
+            },
+            "gltf_detailedDescription" : "Array of names, email addresses in the form `<email@email.com>` or both in the form `name<email@email.com>`",
+        },
+        "dc:coverage": {
+            "type" : "string",
+            "description" : "Spatial or temporal metadata.",
+            "gltf_detailedDescription" : "The spatial or temporal topic of the resource, the spatial applicability of the resource, or the jurisdiction under which the resource is relevant.",
+        },
+        "dc:creator": {
+            "type" : "array",
+            "description" : "Array of entities primarily responsible for making the resource.",
+            "items" : {
+                "type": "string"
+            },
+            "gltf_detailedDescription" : "Array of entities primarily responsible for making the resource. Examples of a creator include a person, an organization, or a service. Entities should be listed in order of decreasing precedence, if such order is significant.",
+        },
+        "dc:date": {
+            "type" : "string",
+            "format" : "date-time",
+            "description" : "A point or period of time associated with an event in the life cycle of the resource.",
+        },
+        "dc:description": {
+            "type" : "object",
+            "description" : "A dictionary object, where each key corresponds to a RFC 3066 language code and each value correspond to text in the corresponding language.",
+            "additionalProperties": {
+                "type" : "string",
+            }
+        },
+        "dc:format": {
+            "type": "string",
+            "description" : "The file format, physical medium, or dimensions of the resource.",
+            "gltf_detailedDescription" : "The file format, physical medium, or dimensions of the resource.Prefer using a mediatype when available."
+        },
+        "dc:identifier": {
+            "type": "string",
+            "description" : "An unambiguous reference to the resource within a given context.Can be in the form of URN or text.",
+        },
+        "dc:language": {
+            "type" : "array",
+            "description" : "The language of the resource, array of RFC 3066 language code",
+            "items" : {
+                "type": "string"
+            },
+        },
+        "dc:publisher": {
+            "type" : "array",
+            "description" : "An entity responsible for making the resource available",
+            "items" : {
+                "type": "string"
+            },
+        },
+        "dc:relation": {
+            "type" : "array",
+            "description" : "List or related resources",
+            "items" : {
+                "type": "string",
+                "format": "uri",
+            },
+        },
+        "dc:rights": {
+            "type" : "object",
+            "description" : "A dictionary object providing information about rights held in and over the resource.",
+            "properties": {
+                 "SPDX": { "type": "string" },
+            },
+            "additionalProperties": {
+                "type" : "string",
+            },
+            "gltf_detailedDescription" : "A dictionary object, where each key corresponds to a RFC 3066 language code and each value correspond to text in the corresponding language providing information about rights held in and over the resource."
+        },
+        "dc:source": {
+            "type" : "string",
+            "format" : "uri",
+            "description" : "A related resource from which the described resource is derived.",
+        },
+        "dc:subject": {
+            "type" : "array",
+            "description" : "A list of descriptive phrases or keywords that specify the content of the resource ",
+            "items" : {
+                "type" : "string",
+            },
+        },
+        "dc:title": {
+            "type" : "object",
+            "description" : "A dictionary object, where each key corresponds to a RFC 3066 language code and each value correspond to the name given to the resource in the corresponding language.",
+            "additionalProperties": {
+                "type" : "string",
+            }
+        },
+        "dc:type": {
+            "type" : "array",
+            "description" : "The nature or genre of the resource.Refer to the DCMITYPE vocabulary when possible",
+            "items" : {
+                "type" : "string",
+            },
+        },
+    },
+    "required": [ ]
+}
