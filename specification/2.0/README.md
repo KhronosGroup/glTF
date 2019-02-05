@@ -3920,8 +3920,8 @@ As previously defined
 *&alpha;* = `roughness ^ 2`
 
 Additionally,  
-*V* is the eye vector to the shading location  
-*L* is the vector from the light to the shading location  
+*V* is the normalized vector from the shading location to the eye  
+*L* is the normalized vector from the shading location to the light  
 *N* is the surface normal in the same space as the above values  
 *H* is the half vector, where *H* = normalize(*L*+*V*)  
 
@@ -3947,11 +3947,11 @@ Implementation of microfacet occlusion from [An Inexpensive BRDF Model for Physi
 
 ![](figures/lightingG.PNG)
 
-### Microfaced Distribution (D)
+### Microfacet Distribution (D)
 
 **Trowbridge-Reitz**
 
-Implementation of microfaced distrubtion from [Average Irregularity Representation of a Roughened Surface for Ray Reflection](https://www.osapublishing.org/josa/abstract.cfm?uri=josa-65-5-531) by T. S. Trowbridge, and K. P. Reitz
+Implementation of microfacet distrubtion from [Average Irregularity Representation of a Roughened Surface for Ray Reflection](https://www.osapublishing.org/josa/abstract.cfm?uri=josa-65-5-531) by T. S. Trowbridge, and K. P. Reitz
 
 ![](figures/lightingD.PNG)
 
