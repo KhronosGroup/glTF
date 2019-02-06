@@ -345,6 +345,10 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 * [glTF-Generator-Registry](https://github.com/KhronosGroup/glTF-Generator-Registry/) - An open registry of tools that create glTF assets, along with structured metadata such as links to documentation and bug trackers.
 
+## Fomats built on glTF
+
+* [3D Tiles](https://github.com/AnalyticalGraphicsInc/3d-tiles) - An open standard for streaming and rendering massive heterogenous 3D content.
+
 ## Stack Overflow
 
 * [glTF tagged](http://stackoverflow.com/questions/tagged/gltf) questions
