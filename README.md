@@ -74,6 +74,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
         - [Swift](#swift)
     - [Utilities](#utilities)
     - [Resources](#resources)
+- [Formats Built on glTF](#formats-built-on-gltf)
 - [Stack Overflow](#stack-overflow)
 - [Presentations and Articles](#presentations-and-articles)
     - [Intros](#intros)
