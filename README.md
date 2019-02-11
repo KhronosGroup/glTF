@@ -150,7 +150,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [GLTFQuickLook](https://github.com/magicien/GLTFQuickLook) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | macOS QuickLook plugin for glTF files |
 | [glTF Viewer](https://www.8thwall.com/gltf/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Android and iOS apps for glTF 2.0 viewing and link sharing: supports embedded glTF 2.0 files and links |
 | [DirectX glTF Viewer](https://github.com/Microsoft/glTF-DXViewer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | DirectX11, C++ desktop app for loading and rendering glTF files |
-| [glTFShowcase](https://www.vispolygon.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Android app for viewing glTF 2.0 asset from local files (gltf/glb): supports environment lighting change. |
+| [glTFShowcase](https://www.vispolygon.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Android and iOS app for viewing glTF 2.0 asset from local files (gltf/glb/zip): supports environment lighting change. |
 | [Hilo3d glTF Viewer](https://hiloteam.github.io/Hilo3d/examples/glTFViewer/index.html) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Drag-and-drop glTF2.0 viewer for model preview, using Hilo3d |
 | [MeshViewer](https://github.com/jing-interactive/MeshViewer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | OBJ / glTF2 mesh viewer for Windows and macOS|
 
