@@ -74,6 +74,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
         - [Swift](#swift)
     - [Utilities](#utilities)
     - [Resources](#resources)
+- [Formats Built on glTF](#formats-built-on-gltf)
 - [Stack Overflow](#stack-overflow)
 - [Presentations and Articles](#presentations-and-articles)
     - [Intros](#intros)
@@ -344,6 +345,10 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 ### Resources
 
 * [glTF-Generator-Registry](https://github.com/KhronosGroup/glTF-Generator-Registry/) - An open registry of tools that create glTF assets, along with structured metadata such as links to documentation and bug trackers.
+
+## Formats Built on glTF
+
+* [3D Tiles](https://github.com/AnalyticalGraphicsInc/3d-tiles) - An open standard for streaming and rendering massive heterogenous 3D content.
 
 ## Stack Overflow
 
