@@ -9,7 +9,6 @@
 * [KHR_materials_pbrSpecularGlossiness](2.0/Khronos/KHR_materials_pbrSpecularGlossiness/README.md)
 * [KHR_materials_unlit](2.0/Khronos/KHR_materials_unlit/README.md)
 * [KHR_texture_transform](2.0/Khronos/KHR_texture_transform/README.md)
-* [KHR_XMP](2.0/Khronos/KHR_XMP/README.md)
 
 #### Vendor extensions
 
@@ -35,6 +34,7 @@ but may still change before they are complete._
 | [KHR_blend](https://github.com/KhronosGroup/glTF/pull/1302) | In development. |
 | HDR textures ([#1220](https://github.com/KhronosGroup/glTF/issues/1220), [#1365](https://github.com/KhronosGroup/glTF/issues/1365)) | Planned. |
 | Advanced PBR materials ([#1221](https://github.com/KhronosGroup/glTF/issues/1221), [#1079](https://github.com/KhronosGroup/glTF/issues/1079), ...) | Planned. |
+| [KHR_XMP](2.0/Khronos/KHR_XMP/README.md) | In development. |
 
 This section tracks the status of Khronos and multi-vendor extensions that are either already in development,
 or that we feel show enough consensus to be highly likely for future development. We welcome feedback for these
