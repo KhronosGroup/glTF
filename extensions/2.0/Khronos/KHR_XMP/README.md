@@ -19,42 +19,53 @@ Written against the glTF 2.0 spec.
 This extension adds support for [XMP (Extensible Metadata Platform)](https://github.com/adobe/xmp-docs) metadata to glTF.
 XMP is a technology for embedding metadata into documents and [is an ISO standard since 2012](https://www.iso.org/news/2012/03/Ref1525.html).
 XMP applies to several glTF concepts: `asset`, `scene`, `mesh`, `material`, `image`, `texture`.
+XMP metadata is organized in namespaces.
+We refer to the [XMP namespaces documentation](https://github.com/adobe/xmp-docs/tree/master/XMPNamespaces) for a detailed description of XMP properties.
+We define below the XMP - `glTF` namespace.
 
 
-## XMP Properties
-XMP properties are grouped in namespace. 
-This extension focuses on the properties defined in the [DCMI (Dublic Core Metadata Initative) namespace](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/dc.md).
-The properties below have been adapted from XMP (that is currently based on XML) to fit glTF json manifest.
+## XMP data types
+This section describes how [XMP data types](https://github.com/adobe/xmp-docs/tree/master/XMPNamespaces/XMPDataTypes) shall be encoded in a glTF JSON.
 
-| Property | DCMI definition | Description  | Type |
-| --------- | --------------- |-------------|-------|
-| `dc:contributor` | An entity responsible for making contributions to the resource. | Can be a Name, an email address, or both in the form `Name<email@email.com>` |  Ordered array of text |
-| `dc:coverage`   | The spatial or temporal topic of the resource, the spatial applicability of the resource, or the jurisdiction under which the resource is relevant. | Open ended | Text |
-| `dc:creator`   | An entity primarily responsible for making the resource | Can be a Name, an email address, or both in the form `Name<email@email.com>`| Ordered array of text |
-| `dc:date` | A point or period of time associated with an event in the life cycle of the resource | date-time specified as ISO 8601 | Text ISO 8601  |
-| `dc:description` | An account of the resource | Textual descriptions of the content of the resource. | Language Alternative |
-| `dc:format` | The file format, physical medium, or dimensions of the resource. | Prefer using a mediatype when available. | Text mediatype |
-| `dc:identifier` | An unambiguous reference to the resource within a given context | Can be in the form of URN or text. | URN or Text |
-| `dc:language` | A language of the resource | RFC 3066  language code | Array of RFC 3066 codes |
-| `dc:publisher` | An entity responsible for making the resource available | A list of Names or urls.| Unordered array of text|
-| `dc:relation` | A related resource. Recommended best practice is to identify the related resource by means of a string conforming to a formal identification system | A list of URLS | Unordered array of text |
-| `dc:rights`|Information about rights held in and over the resource| We recommend using an [SPDX](https://spdx.org/licenses/) identifier when appropriate, alternative can be a list of informal right statements or URLs | Language Alternative *|
-| `dc:source`|A related resource from which the described resource is derived. |When possible prefer a URL. |Text|
-| `dc:subject`|The topic of the resource|A list of descriptive phrases or keywords that specify the content of the resource| Unordered array of text |
-|`dc:title`| A name given to the resource. | The asset title. | Language Alternative |
-|`dc:type`| The nature or genre of the resource | Refer to the [DCMITYPE](http://dublincore.org/documents/dcmi-type-vocabulary/) vocabulary when possible | Unordered array of text|
+### XMP Core Properties
+The following table describes how [XMP Core Properties](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md) are encoded in the glTF manifest.
+| XMP Property Type | JSON Type |
+| ----------------- | --------- |
+| Boolean           | Boolean   |
+| Date              | String formatted as described in the XMP documentation |
+| Integer           | Number    |
+| Real              | Number    |
+| Agent Name        | String formatted as described in the XMP documentation |
+| Choice            | String    |
+| Language Alternative | A language alternative is a dictionary mapping a language (RFC 3066 language code) to text. See property `dc:title` in the example below|
+| GUID              | String formatted as described in the XMP documentation |
+| Locale            | String formatted as described in the XMP documentation |
+| MIMEType          | String formatted as described in the XMP documentation |
+| ProperName        | String formatted as described in the XMP documentation |
+| RenditionClass    | String formatted as described in the XMP documentation |
+| URI               | String formatted as described in the XMP documentation |
+| ResourceRef       | Object, we refer to the XMP documentation for a description of its properties |
+| URL               | String formatted as described in the XMP documentation |
+| Rational          | String formatted as described in the XMP documentation |
+| FrameRate         | String formatted as described in the XMP documentation |
+| FrameCount        | String formatted as described in the XMP documentation |
+| Part              | String formatted as described in the XMP documentation |
 
-### Language Alternative
-A language alternative is a dictionary mapping a language (RFC 3066 language string) to text. Example:
-```
-"dc:title" : { 
-    "en-us" : "MyModel",
-    "it-IT" : "Mio Modello",
-},
-```
+### Additional Properties
 
-The `dc:rights` Language Alternative was extended to accept the "SPDX" key in order to include the machine-readable [SPDX](https://spdx.org/) tag.
+| XMP Property Type | JSON Type |
+| ----------------- | --------- |
+| Array             | Array     |
+| [ResourceEvent](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/ResourceEvent.md)| Object, we refer to the XMP documentation for a description of its properties |
 
+
+## The XMP gltf Namespace
+The `gltf` namespace is used to extend `XMP` to include metadata of interest to the glTF working group.
+The table below describes the properties in the `gltf` namespace.
+
+| Property Name  | Desrcription | JSON Type    |
+| -------------- | ------------ | ------------ |
+| spdx           | A [SPDX](https://spdx.org/licenses/) license identifier   | string |
 
 
 ## Example
@@ -75,11 +86,12 @@ The following example shows a glTF Mesh with embedded XMP metadata.
                 "dc:language" : ["en"],
                 "dc:publisher" : ["Company"],
                 "dc:relation" : ["https://www.khronos.org/"],
-                "dc:rights" : {"en-us": "BSD", "SPDX": "BSD-Protection"},
+                "dc:rights" : {"en-us": "BSD"},
                 "dc:source" : "http://related_resource.org/derived_from_this.gltf",
                 "dc:subject" : ["architecture"],
-                "dc:title" : { "en-us" : "MyModel"},
+                "dc:title" : { "en-us" : "MyModel", "it-IT" : "Mio Modello"},
                 "dc:type" : ["Physical Object"],
+                "gltf:spdx" : "BSD-Protection",
             }
         },
         "primitives": [
