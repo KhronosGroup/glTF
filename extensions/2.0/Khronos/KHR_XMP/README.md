@@ -29,6 +29,7 @@ This section describes how [XMP data types](https://github.com/adobe/xmp-docs/tr
 
 ### XMP Core Properties
 The following table describes how [XMP Core Properties](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md) are encoded in the glTF manifest.
+
 | XMP Property Type | JSON Type |
 | ----------------- | --------- |
 | Boolean           | Boolean   |
