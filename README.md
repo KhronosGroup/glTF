@@ -219,6 +219,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | [Ogre_glTF](https://ybalrid.github.io/Ogre_glTF/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF 2.0 loader plugin for Ogre v2-1  |
 | [G3D Innovation Engine](https://casual-effects.com/g3d/www/index.html) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF 2.0 import |
 | [LÖVR](https://lovr.org) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | A framework for creating VR with Lua |
+| [LibGDX glTF](https://github.com/mgsx-dev/gdx-gltf) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | [LibGDX](https://libgdx.badlogicgames.com/) library for loading and rendering glTF assets |
 
 #### Embeddable Viewers
 
