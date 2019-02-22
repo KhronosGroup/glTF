@@ -292,6 +292,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | Tool | Status | Description |
 |------|--------|-------------|
 | [gltf](https://github.com/sturfeeinc/glTF) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | go library for marshaling and unmarshaling glTF |
+| [gltf 2.0](https://github.com/qmuntal/gltf) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | A Go glTF 2.0 writer, reader and validator |
 
 #### Rust
 
