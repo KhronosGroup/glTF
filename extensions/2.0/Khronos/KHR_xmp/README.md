@@ -26,6 +26,8 @@ We define below the XMP - `glTF` namespace.
 
 ## XMP data types
 This section describes how [XMP data types](https://github.com/adobe/xmp-docs/tree/master/XMPNamespaces/XMPDataTypes) shall be encoded in a glTF JSON.
+XMP supports three classes of data types: simple, structure and array. XMP structures are encoded via JSON objects. XMP arrays are encoded via JSON arrays.
+XMP simple values are generally encoded via JSON strings with the exception of `Boolean`, `Integer` and `Real` that are ecoded as described below.
 
 ### XMP Core Properties
 The following table describes how [XMP Core Properties](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md) are encoded in the glTF manifest.
@@ -56,7 +58,6 @@ The following table describes how [XMP Core Properties](https://github.com/adobe
 
 | XMP Property Type | JSON Type |
 | ----------------- | --------- |
-| Array             | Array     |
 | [ResourceEvent](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/ResourceEvent.md)| Object, we refer to the XMP documentation for a description of its properties |
 
 
