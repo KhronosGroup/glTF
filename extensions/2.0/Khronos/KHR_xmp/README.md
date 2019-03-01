@@ -71,13 +71,13 @@ The table below describes the properties in the `gltf` namespace.
 
 ## Defining XMP Metadata
 An indirection level is introduced to avoid replicating the same XMP metadata in multiple glTF nodes.
-XMP metadatas are defined within a dictionary property in the glTF scene description file, by adding an extensions property to the top-level glTF 2.0 object and defining a KHR_xmp property with a `xmps` array inside it.
+XMP metadatas are defined within a dictionary property in the glTF scene description file, by adding an extensions property to the top-level glTF 2.0 object and defining a KHR_xmp property with a `packets` array inside it.
 The following example defines a glTF scene with a sample XMP metadata.
 
 ```
 "extensions": {
     "KHR_xmp" : {
-        "xmps" : [
+        "packets" : [
             {
                 "dc:contributor" : [ "Creator1Name", "Creator2Email@email.com", "Creator3Name<Email@email.com>"],
                 "dc:coverage" : "Bay Area, California, United States",
@@ -103,7 +103,7 @@ The following example defines a glTF scene with a sample XMP metadata.
 
 
 ## Instantiating XMP metadata
-Metadata can be instantiate in a node by defining the extensions.KHR_xmp property and, within that, an index into the `xmps` array using the `xmp` property.
+Metadata can be instantiate in a node by defining the extensions.KHR_xmp property and, within that, an index into the `packets` array using the `packet` property.
 The following example shows a glTF Mesh instantiating the XMP metadata at index `0`.
 
 ```
@@ -112,7 +112,7 @@ The following example shows a glTF Mesh instantiating the XMP metadata at index 
       {
         extensions : {
             "KHR_xmp": {
-                "xmp" : 0,
+                "packet" : 0,
             }
         },
         "primitives": [
