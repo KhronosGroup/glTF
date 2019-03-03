@@ -105,7 +105,7 @@ This allows an engine to quickly determine if it supports the extensions needed 
 
 To create a new extension, use the [extension template](Template.md) and open a pull request into this repo.  Make sure to add the extension to the glTF Extension Registry (top of this file).
 
-If the extension adds a new top-level array, its elements should inherit all properties of `glTFChildOfRootProperty.schema.json`. Other objects introduced by the extension should inherit all properties of `glTFProperty.schema.json`. By glTF 2.0 conventions, schemas should allow additional properties. See [`KHR_lights_punctual`](2.0/Khronos/KHR_lights_punctual) as an example.
+If the extension adds a new top-level array (by extending the root glTF object), its elements should inherit all properties of `glTFChildOfRootProperty.schema.json`. Other objects introduced by the extension should inherit all properties of `glTFProperty.schema.json`. By glTF 2.0 conventions, schemas should allow additional properties. See [`KHR_lights_punctual`](2.0/Khronos/KHR_lights_punctual) as an example.
 
 If lack of extension support prevents proper geometry loading, extension specification _must_ state that (and such extension must be mentioned in `extensionsRequired` top-level glTF property).
 
@@ -142,7 +142,7 @@ All glTF object properties allow adding new properties to an `extras` object sub
 ```json
 {
   "asset": {
-    "verion": 2.0,
+    "version": 2.0,
     "extras": {
       "guid": "9abb92a3-39cf-4986-a758-c43d4bb4ab58",
     }
