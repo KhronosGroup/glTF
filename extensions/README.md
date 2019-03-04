@@ -84,9 +84,7 @@ Examples include:
   }]
 }
 ```
-* **New parameter semantics**: `CESIUM_RTC` introduces the `CESIUM_RTC_MODELVIEW` semantic.
-* **Reserved IDs (glTF 1.0 only)**: `KHR_binary_glTF` introduces an explicitly named `buffer` called `binary_glTF`.
-* **New container formats**: `KHR_binary_glTF` introduces a binary format that contains the glTF JSON and geometry, textures, etc.
+Extensions may add new properties and values, such as attribute semantics or texture mime types. In all Khronos (KHR) extensions, and as best practice for vendor extensions, these feature additions are designed to allow safe fallback consumption in tools that do not recognize an extension in the `extensionsUsed` array.
 
 All extensions used in a model are listed as strings in the top-level `extensionsUsed` array; all _required_ extensions are listed as strings in the top-level `extensionsRequired` array, e.g.,
 ```json
