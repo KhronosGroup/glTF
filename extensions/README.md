@@ -67,32 +67,33 @@ All glTF object properties (see [glTFProperty.schema.json](../specification/2.0/
 Extensions can't remove existing glTF properties or redefine existing glTF properties to mean something else.
 
 Examples include:
-* **New properties**: `KHR_binary_glTF` introduces a `bufferView` property for shaders, e.g.,
+* **New properties**: `KHR_texture_transform` introduces a set of texture transformation properties, e.g.,
 ```json
 {
-  "shaders": {
-    "a_shader": {
+  "materials": [{
+    "emissiveTexture": {
+      "index": 0,
       "extensions": {
-        "KHR_binary_glTF": {
-          "bufferView": "a_shader_bufferView"
+        "KHR_texture_transform": {
+          "offset": [0, 1],
+          "rotation": 1.57079632679,
+          "scale": [0.5, 0.5]
         }
       }
     }
-  }
+  }]
 }
 ```
-* **New parameter semantics**: `CESIUM_RTC` introduces the `CESIUM_RTC_MODELVIEW` semantic.
-* **Reserved IDs**: `KHR_binary_glTF` introduces an explicitly named `buffer` called `binary_glTF`.
-* **New container formats**: `KHR_binary_glTF` introduces a binary format that contains the glTF JSON and geometry, textures, etc.
+Extensions may add new properties and values, such as attribute semantics or texture mime types. In all Khronos (KHR) extensions, and as best practice for vendor extensions, these feature additions are designed to allow safe fallback consumption in tools that do not recognize an extension in the `extensionsUsed` array.
 
 All extensions used in a model are listed as strings in the top-level `extensionsUsed` array; all _required_ extensions are listed as strings in the top-level `extensionsRequired` array, e.g.,
 ```json
 {
   "extensionsUsed": [
-    "KHR_binary_glTF", "VENDOR_physics"
+    "KHR_materials_pbrSpecularGlossiness", "VENDOR_physics"
   ],
   "extensionsRequired": [
-    "KHR_binary_glTF"
+    "KHR_materials_pbrSpecularGlossiness"
   ]
 }
 ```
@@ -101,6 +102,8 @@ This allows an engine to quickly determine if it supports the extensions needed 
 ## Creating Extensions
 
 To create a new extension, use the [extension template](Template.md) and open a pull request into this repo.  Make sure to add the extension to the glTF Extension Registry (top of this file).
+
+If the extension adds a new top-level array (by extending the root glTF object), its elements should inherit all properties of `glTFChildOfRootProperty.schema.json`. Other objects introduced by the extension should inherit all properties of `glTFProperty.schema.json`. By glTF 2.0 conventions, schemas should allow additional properties. See [`KHR_lights_punctual`](2.0/Khronos/KHR_lights_punctual) as an example.
 
 If lack of extension support prevents proper geometry loading, extension specification _must_ state that (and such extension must be mentioned in `extensionsRequired` top-level glTF property).
 
@@ -113,7 +116,7 @@ Extensions start as a vendor extension, then can become a multi-vendor extension
 A list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any vendor, not just Khronos members, can request an extension prefix by submitting an [issue on GitHub](https://github.com/KhronosGroup/glTF/issues/new) requesting one.  Requests should include:
 * The name of the prefix.
 * The name of the vendor using the prefix.
-* The `extension` GitHub label.
+* Vendor's contact information (optionally).
 
 Vendor extension names start with the prefix followed by an underscore, e.g., `CESIUM_`.
 
@@ -136,14 +139,10 @@ In addition to extensions, the `extras` object can also be used to extend glTF. 
 All glTF object properties allow adding new properties to an `extras` object sub-property, e.g.,
 ```json
 {
-  "shaders": {
-    "a-vertex-shader-id": {
-      "name": "user-defined-name",
-      "uri" : "vertex-shader.glsl",
-      "type": 35633,
-      "extras" : {
-        "precompiled_binary" : "path_to_precompiled_shader"
-      }
+  "asset": {
+    "version": 2.0,
+    "extras": {
+      "guid": "9abb92a3-39cf-4986-a758-c43d4bb4ab58",
     }
   }
 }
