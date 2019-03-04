@@ -4,6 +4,7 @@ The following extension prefixes are reserved:
 
 * `ADOBE` - Adobe Systems Inc.
 * `AGI` - Analytical Graphics, Inc.
+* `AGT` - Augment
 * `ALI` - Alibaba
 * `AMZN` - Amazon
 * `AVR` - AltspaceVR
