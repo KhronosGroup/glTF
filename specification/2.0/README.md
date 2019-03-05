@@ -943,7 +943,7 @@ All joint values must be within the range of joints in the skin. Unused joint va
 
 #### Joint Hierarchy
 
-The joint hierarchy used for controlling skinned mesh pose is simply the glTF node hierarchy, with each node designated as a joint. When a skin is referenced by a node within a scene, all joints used by the skin must belong to the same scene. Joint nodes must have a common root that may or may not be a joint node itself.
+The joint hierarchy used for controlling skinned mesh pose is simply the glTF node hierarchy, with each node designated as a joint. Each skin's joints must have a common root, which may or may not be a joint node itself. When a skin is referenced by a node within a scene, the common root must belong to the same scene.
 
 For more details of vertex skinning implementation, refer to [glTF Overview](figures/gltfOverview-2.0.0b.png).
 
@@ -2848,7 +2848,7 @@ The indices of this node's children.
 
 #### node.skin
 
-The index of the skin referenced by this node.
+The index of the skin referenced by this node. When a skin is referenced by a node within a scene, all joints used by the skin must belong to the same scene.
 
 * **Type**: `integer`
 * **Required**: No
@@ -3521,7 +3521,7 @@ Joints and matrices defining a skin.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**inverseBindMatrices**|`integer`|The index of the accessor containing the floating-point 4x4 inverse-bind matrices.  The default is that each matrix is a 4x4 identity matrix, which implies that inverse-bind matrices were pre-applied.|No|
-|**skeleton**|`integer`|The index of the node used as a skeleton root. When undefined, joints transforms resolve to scene root.|No|
+|**skeleton**|`integer`|The index of the node used as a skeleton root.|No|
 |**joints**|`integer` `[1-*]`|Indices of skeleton nodes, used as joints in this skin.| :white_check_mark: Yes|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
@@ -3541,7 +3541,7 @@ The index of the accessor containing the floating-point 4x4 inverse-bind matrice
 
 #### skin.skeleton
 
-The index of the node used as a skeleton root. When undefined, joints transforms resolve to scene root.
+The index of the node used as a skeleton root. The node must be the closest common root of the joints hierarchy or a direct or indirect parent node of the closest common root.
 
 * **Type**: `integer`
 * **Required**: No
