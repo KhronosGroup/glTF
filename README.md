@@ -119,6 +119,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [OPEN CASCADE CAD Assistant](https://www.opencascade.com/content/cad-assistant)| [Multiple](https://www.opencascade.com/content/cad-assistant "STEP, IGES, OBJ, PLY, STL") | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Freeware multi-platform 3D Viewer and converter for 3D/CAD models with glTF 2.0 export support |
 | [Adobe Dimension](https://www.adobe.com/products/dimension.html)| `FBX`, `STL`, `SKP`, `OBJ` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Share and Publish feature lets users export to glTF to view on the web. [Prerelease](https://www.adobeprerelease.com) build has explicit export option for glTF and GLB.|
 | [RapidCompact](https://www.rapidcompact.com)| [Multiple](https://www.rapidcompact.com/doc/cli/00-overview/index.html#import) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Optimizes and converts 3D assets for efficient online presentation. |
+| [Cinema 4D Exporter](https://labs.maxon.net/?p=3360)| — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Export glTF from MAXON Cinema 4D |
 
 ### Optimizers
 
