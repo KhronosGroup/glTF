@@ -178,6 +178,10 @@ To simplify client-side implementation, glTF has additional restrictions on JSON
 
    > **Implementation Note:** This allows generic glTF client implementations to not have full Unicode support. Application-specific strings (e.g., values of `"name"` properties or content of `extras` fields) may use any symbols.
 3. Names (keys) within JSON objects must be unique, i.e., duplicate keys aren't allowed.
+4. Numbers defined as integers in the schema must be written without fractional part (i.e., `.0`). Exporters should not produce integer values greater than 2<sup>53</sup> because some client implementations will not be able to read them correctly.
+5. Floating-point numbers must be written in a way that preserves original values when these numbers are read back.
+
+   > **Implementation Note:** This is typically achieved with algorithms like Grisu2 used by common JSON libraries. This restriction enables efficient and predictable data round-trip with binary JSON representations such as UBJSON.
 
 ## URIs
 
