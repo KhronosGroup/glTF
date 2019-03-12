@@ -15,7 +15,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension annotates glTF `scene` objects with a summary of the cumulative geometric complexity and world-space extents of the scene's associated scene graph. Each recursively referenced mesh is enumerated for total vertex and primitive count, and each individual vertex is transformed into world-space for a perfectly computed bounding box.
+This extension annotates glTF `scene` objects with a summary of the cumulative geometric complexity and scene-space extents of the scene's associated scene graph. Each recursively referenced mesh is enumerated for total vertex and primitive count, and each individual vertex is transformed into scene-space for a perfectly computed bounding box.
 
 Some proven real-world applications for this information:
 - When a viewer needs to make a quick, high-level decision which `scene` to display. This is perhaps most meaningful e.g. when `scenes` are used to represent different variants (e.g. LoD levels) of a model.
@@ -30,7 +30,7 @@ The summary data is defined as an optional extension to a glTF `scene`, by addin
     "FB_geometry_metadata" : {
         "vertexCount": 28727,
         "primitiveCount": 15451,
-        "worldBounds": {
+        "sceneBounds": {
             "min": [
                 -3.0651053919852,
                 0,
@@ -47,7 +47,7 @@ The summary data is defined as an optional extension to a glTF `scene`, by addin
 ```
 
 ## Limitations
-All these values should be computed with disregard for animation: an morph targets are inactive, all `node` transforms are in their static form, unaffected by any animation. Consequiently, any application that parses the model should interpret the values the same way.
+All these values should be computed with disregard for animation: all morph targets are inactive, all `node` transforms are in their static form and unaffected by any animation. Consequently, an application that parses the model should interpret the values the same way.
 
 ## Computing the data
 

@@ -13,7 +13,7 @@
             "items": {
                 "type": "number"
             },
-            "description": "The bounding box corner with the numerically lowest world-space coordinates",
+            "description": "The bounding box corner with the numerically lowest scene-space coordinates",
             "minItems": 3,
             "maxItems": 3
         },
@@ -22,7 +22,7 @@
             "items": {
                 "type": "number"
             },
-            "description": "The bounding box corner with the numerically highest world-space coordinates",
+            "description": "The bounding box corner with the numerically highest scene-space coordinates",
             "minItems": 3,
             "maxItems": 3
         },

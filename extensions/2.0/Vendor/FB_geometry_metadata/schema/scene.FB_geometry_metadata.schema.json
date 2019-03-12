@@ -20,11 +20,11 @@
             "default": 0,
             "minimum": 0
         },
-        "worldBounds": {
-            "description": "The bounding box of this scene, in static geometry world space coordinates.",
+        "sceneBounds": {
+            "description": "The bounding box of this scene, in static geometry scene-space coordinates.",
             "allOf": [
                 {
-                    "$ref": "worldBounds.schema.json"
+                    "$ref": "sceneBounds.schema.json"
                 }
             ]
         },
