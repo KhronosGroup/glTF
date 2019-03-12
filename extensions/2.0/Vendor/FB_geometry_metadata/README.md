@@ -47,7 +47,7 @@ The summary data is defined as an optional extension to a glTF `scene`, by addin
 ```
 
 ## Limitations
-This extension completely disregards animation: the static transforms, as supplied on each `node`, are taken at face value. No skeletal animations are applied, nor any morph targets.
+All these values should be computed with disregard for animation: an morph targets are inactive, all `node` transforms are in their static form, unaffected by any animation. Consequiently, any application that parses the model should interpret the values the same way.
 
 ## Computing the data
 
