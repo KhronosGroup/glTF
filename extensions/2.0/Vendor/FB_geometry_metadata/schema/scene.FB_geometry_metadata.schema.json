@@ -2,27 +2,33 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "FB_geometry_metadata scene extension",
     "type": "object",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
-    "properties" : {
-	"vertexCount": {
-            "type" : "number",
-            "description" : "The number of distinct vertices recursively contained in this scene.",
-            "default" : 0,
-            "minimum": 0,
-            "exclusiveMaximum": true
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "vertexCount": {
+            "type": "number",
+            "description": "The number of distinct vertices recursively contained in this scene.",
+            "default": 0,
+            "minimum": 0
         },
-	"primitiveCount": {
-            "type" : "number",
-            "description" : "The number of distinct primitives recursively contained in this scene.",
-            "default" : 0,
-            "minimum": 0,
-            "exclusiveMaximum": true
+        "primitiveCount": {
+            "type": "number",
+            "description": "The number of distinct primitives recursively contained in this scene.",
+            "default": 0,
+            "minimum": 0
         },
-	"worldBounds": {
-            "description" : "The bounding box of this scene, in static geometry world space coordinates.",
-            "allOf": [ { "$ref": "worldBounds.schema.json" } ],
+        "worldBounds": {
+            "description": "The bounding box of this scene, in static geometry world space coordinates.",
+            "allOf": [
+                {
+                    "$ref": "worldBounds.schema.json"
+                }
+            ]
         },
-        "extensions": { },
-        "extras": { }
+        "extensions": {},
+        "extras": {}
     }
 }

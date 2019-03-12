@@ -2,30 +2,35 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "minimum and maximum bounding box extent",
     "type": "object",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
-    "properties" : {
-	"min": {
-            "type" : "array",
-	    "items" {
-		"type": "number",
-	    }
-            "description" : "The bounding box corner with the numerically lowest world-space coordinates",
-	    "minItems": 3,
-	    "maxItems": 3
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "min": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "description": "The bounding box corner with the numerically lowest world-space coordinates",
+            "minItems": 3,
+            "maxItems": 3
         },
-	"max": {
-            "type" : "array",
-	    "items" {
-		"type": "number",
-	    }
-            "description" : "The bounding box corner with the numerically highest world-space coordinates",
-	    "minItems": 3,
-	    "maxItems": 3
+        "max": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "description": "The bounding box corner with the numerically highest world-space coordinates",
+            "minItems": 3,
+            "maxItems": 3
         },
-        "extensions": { },
-        "extras": { }
+        "extensions": {},
+        "extras": {}
     },
     "required": [
-        "min", "max"
+        "min",
+        "max"
     ]
 }
