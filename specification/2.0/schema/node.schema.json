@@ -79,8 +79,8 @@
                 "type": "number"
             }
         },
-        "name": { },
-        "extensions": { },
+        "name": { "type": "string" },
+        "extensions": { "type": "object" },
         "extras": { }
     },
     "dependencies": {

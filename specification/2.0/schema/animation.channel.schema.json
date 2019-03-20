@@ -14,7 +14,7 @@
             "allOf": [ { "$ref": "animation.channel.target.schema.json" } ],
             "description": "The index of the node and TRS property to target."
         },
-        "extensions": { },
+        "extensions": { "type": "object" },
         "extras": { }
     },
     "required": [ "sampler", "target" ]

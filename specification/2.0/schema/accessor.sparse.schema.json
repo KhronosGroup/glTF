@@ -19,7 +19,7 @@
             "allOf": [ { "$ref": "accessor.sparse.values.schema.json" } ],
             "description": "Array of size `count` times number of components, storing the displaced accessor attributes pointed by `indices`. Substituted values must have the same `componentType` and number of components as the base accessor."
         },
-        "extensions": { },
+        "extensions": { "type": "object" },
         "extras": { }
     },
     "required": [ "count", "indices", "values" ]

@@ -80,7 +80,7 @@
             },
             "minItems": 1
         },
-        "extensions": { },
+        "extensions": { "type": "object" },
         "extras": { }
     },
     "gltf_webgl": "`drawElements()` and `drawArrays()`",

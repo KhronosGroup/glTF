@@ -30,8 +30,8 @@
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The index of the bufferView that contains the image. Use this instead of the image's uri property."
         },
-        "name": { },
-        "extensions": { },
+        "name": { "type": "string" },
+        "extensions": { "type": "object" },
         "extras": { }
     },
     "dependencies": {

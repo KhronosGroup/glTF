@@ -17,8 +17,8 @@
             "description": "The length of the buffer in bytes.",
             "minimum": 1
         },
-        "name": { },
-        "extensions": { },
+        "name": { "type": "string" },
+        "extensions": { "type": "object" },
         "extras": { }
     },
     "required": [ "byteLength" ]

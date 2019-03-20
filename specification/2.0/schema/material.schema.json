@@ -5,8 +5,8 @@
     "description": "The material appearance of a primitive.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
-        "name": { },
-        "extensions": { },
+        "name": { "type": "string" },
+        "extensions": { "type": "object" },
         "extras": { },
         "pbrMetallicRoughness": {
             "allOf": [ { "$ref": "material.pbrMetallicRoughness.schema.json" } ],

@@ -21,8 +21,8 @@
             },
             "minItems": 1
         },
-        "name": { },
-        "extensions": { },
+        "name": { "type": "string" },
+        "extensions": { "type": "object" },
         "extras": { }
     },
     "required": [ "channels", "samplers" ]

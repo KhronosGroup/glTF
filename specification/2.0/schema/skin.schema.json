@@ -24,8 +24,8 @@
             "minItems": 1,
             "gltf_detailedDescription": "Indices of skeleton nodes, used as joints in this skin.  The array length must be the same as the `count` property of the `inverseBindMatrices` accessor (when defined)."
         },
-        "name": { },
-        "extensions": { },
+        "name": { "type": "string" },
+        "extensions": { "type": "object" },
         "extras": { }
     },
     "required": [ "joints" ]

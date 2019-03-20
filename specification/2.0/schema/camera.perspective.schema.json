@@ -32,7 +32,7 @@
             "exclusiveMinimum": true,
             "gltf_detailedDescription": "The floating-point distance to the near clipping plane."
         },
-        "extensions": { },
+        "extensions": { "type": "object" },
         "extras": { }
     },
     "required": [ "yfov", "znear" ]

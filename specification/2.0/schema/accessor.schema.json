@@ -124,8 +124,8 @@
             "allOf": [ { "$ref": "accessor.sparse.schema.json" } ],
             "description": "Sparse storage of attributes that deviate from their initialization value."
         },
-        "name": { },
-        "extensions": { },
+        "name": { "type": "string" },
+        "extensions": { "type": "object" },
         "extras": { }
     },
     "dependencies": {

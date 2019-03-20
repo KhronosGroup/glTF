@@ -39,7 +39,7 @@
                 }
             ]
         },
-        "extensions": { },
+        "extensions": { "type": "object" },
         "extras": { }
     },
     "required": [ "bufferView", "componentType" ]
