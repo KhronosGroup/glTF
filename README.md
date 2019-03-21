@@ -3,6 +3,7 @@
 </p>
 
 [![Join the Slack group](https://img.shields.io/badge/chat-on%20slack-blue.svg)](https://www.khronos.org/news/permalink/khronos-developer-slack-5bfc62eb261764.20435008)
+[![Join the forums](https://img.shields.io/badge/discuss-in%20forums-blue.svg)](https://community.khronos.org/c/gltf-general)
 
 glTF™ (GL Transmission Format) is a royalty-free specification for the efficient transmission and loading of 3D scenes and models by applications. glTF minimizes both the size of 3D assets, and the runtime processing needed to unpack and use those assets. glTF defines an extensible, common publishing format for 3D content tools and services that streamlines authoring workflows and enables interoperable use of content across the industry.
 
@@ -11,7 +12,7 @@ glTF™ (GL Transmission Format) is a royalty-free specification for the efficie
 * [glTF Specification, 2.0](specification/2.0/README.md) (or [all specification versions](specification/README.md))
 * [glTF Extension Registry](extensions/README.md)
 
-Please provide spec feedback and community updates by submitting [issues](https://github.com/KhronosGroup/glTF/issues).  For quick questions, use the `#gltf` channel in the Khronos Group [Slack](https://www.khronos.org/news/permalink/khronos-developer-slack-5bfc62eb261764.20435008).
+Please provide spec feedback by submitting [issues](https://github.com/KhronosGroup/glTF/issues). For technical or art workflow questions, or to showcase your work, [join the glTF forum](https://community.khronos.org/c/gltf-general). For quick questions, use the `#gltf` channel in the Khronos Group [Slack](https://www.khronos.org/news/permalink/khronos-developer-slack-5bfc62eb261764.20435008).
 
 ## Quickstart
 
