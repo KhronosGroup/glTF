@@ -3935,9 +3935,9 @@ Simplified implementation of Fresnel from [An Inexpensive BRDF Model for Physica
 
 ### Geometric Occlusion (G)
 
-**Schlick**
+**Smith GGX**
 
-Implementation of microfacet occlusion from [An Inexpensive BRDF Model for Physically based Rendering](https://www.cs.virginia.edu/~jdl/bib/appearance/analytic%20models/schlick94b.pdf) by Christophe Schlick.
+Implementation of microfacet occlusion from [Geometrical shadowing of a random rough surface](https://ieeexplore.ieee.org/document/1138991) by Bruce G. Smith.
 
 ![](figures/lightingG.PNG)
 
