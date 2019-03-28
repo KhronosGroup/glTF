@@ -81,7 +81,7 @@ Since WebP is not as widely supported as JPEG and PNG, it is recommended to use 
 
 When a fallback image is defined, this extension should not be present in `extensionsRequired`. This will allow all clients to render the glTF correctly, and those that support this extension can request the optimized WebP version of the textures.
 
-WebP images using extended file format should not contain animations or color profile information.
+WebP images using [extended file format](https://developers.google.com/speed/webp/docs/riff_container#extended_file_format) should not contain animations or color profile information.
 
 ### Using Without a Fallback
 
