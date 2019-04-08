@@ -288,6 +288,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | [C# glTF loader](https://github.com/KhronosGroup/glTF-CSharp-Loader) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | C# reference loader for glTF |
 | [Aspose.3D for .NET](http://www.aspose.com/products/3d/net) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat)| Import, export, and convert glTF |
 | [MixedRealityToolkit-Unity](https://github.com/Microsoft/MixedRealityToolkit-Unity) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | A collection of scripts and components intended to accelerate development of applications targeting Microsoft HoloLens and Windows Mixed Reality headsets. |
+| [SharpGLTF](https://github.com/VPenades/SharpGLTF) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | C# toolkit for reading and writing glTF files. |
 
 #### C
 
