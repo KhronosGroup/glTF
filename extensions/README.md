@@ -17,10 +17,11 @@
 * [AGI_stk_metadata](2.0/Vendor/AGI_stk_metadata/README.md)
 * [EXT_lights_image_based](2.0/Vendor/EXT_lights_image_based/README.md)
 * [EXT_texture_webp](2.0/Vendor/EXT_texture_webp/README.md)
+* [FB_geometry_metadata](2.0/Vendor/FB_geometry_metadata/README.md)
 * [MSFT_lod](2.0/Vendor/MSFT_lod/README.md)
-* [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
+* [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 
 #### In progress Khronos and multi-vendor extensions
 
