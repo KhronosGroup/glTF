@@ -18,7 +18,7 @@ Written against the glTF 2.0 spec.
 ## Overview
 This extension adds support for [XMP (Extensible Metadata Platform)](https://github.com/adobe/xmp-docs) metadata to glTF.
 XMP is a technology for embedding metadata into documents and [is an ISO standard since 2012](https://www.iso.org/news/2012/03/Ref1525.html).
-XMP applies to several glTF concepts: `asset`, `scene`, `mesh`, `material`, `image`, `texture`.
+XMP metadata is embedded in a top-level extension and can be referenced by any JSON object in the glTF scene description JSON.
 XMP metadata is organized in namespaces.
 We refer to the [XMP namespaces documentation](https://github.com/adobe/xmp-docs/tree/master/XMPNamespaces) for a detailed description of XMP properties.
 We define below the XMP - `glTF` namespace.
