@@ -21,6 +21,7 @@
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
+* [DRACO_animation_compression](2.0/Vendor/DRACO_animation_compression/README.md)
 
 #### In progress Khronos and multi-vendor extensions
 

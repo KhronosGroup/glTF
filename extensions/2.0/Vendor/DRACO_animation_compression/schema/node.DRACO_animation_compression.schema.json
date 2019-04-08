@@ -1,0 +1,40 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "DRACO_animation_compression extension",
+    "type": "object",
+    "description": "glTF extension for compressing animation data.",
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties": {
+        "compressedAnimations": {
+	    "type" : "array",
+            "description": "Draco compressed version of one or more animations.",
+	    "items": {
+	        "type": "object",
+		"properties": {
+		    "input": {
+			"allOf": [ { "$ref": "glTFid.schema.json" } ],
+                        "description": "The index of the samplers.input."
+                    },
+		    "outputs": {
+                        "type": "array",
+			"items": {
+			    "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                            "description": "The index of the samplers.output."
+			}
+                    },
+		    "attributeId": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+		    "bufferView": {
+                        "allOf": [ { "$ref" : "glTFid.schema.json" } ],
+                        "description": "The index of the bufferView."
+                    }
+	        }
+            },
+	    "minItems" : 1
+        }
+    }
+}
