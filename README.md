@@ -383,6 +383,13 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 ### All Presentations and Articles
 
+* [GDC 2019 Khronos Developer Days - WebGL & glTF video](https://youtu.be/mCJoBGOCTwk?t=868). March 2019 ([slides](https://www.khronos.org/developers/library/2019-gdc))
+   * Khronos: Patrick Cozzi - Overview
+   * Microsoft: Saurabh Bhatia - Ecosystem and SDK Update
+   * Google: Chris Joel - `<model-viewer>` Fidelity Testing
+   * Adobe: Mike Bond - Adobe Dimension
+   * Mozilla: Robert Long - Publishing Virtual Worlds with glTF
+   * Facebook: Susie Su - An On-Demand, Optimizing glTF Backend
 * [glTF Debugging in Visual Studio Code](https://medium.com/@babylonjs/gltf-debugging-in-visual-studio-code-a89805bda3cd) by Gary Hsu. January 2019
 * [SIGGRAPH Asia glTF Overview and CTTF Update](https://www.khronos.org/developers/library/2018-siggraph-asia) by Khronos. December 2018
 * [droidcon SF 2018 - The JPEG of 3D: Bringing 3D scenes and objects into your 2D Android app with glTF](https://www.youtube.com/watch?v=EGSR8qrpEq4) by Pierre LaFayette. November 2018
