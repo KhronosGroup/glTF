@@ -3899,7 +3899,7 @@ Application-specific data.
 
 The glTF spec is designed to allow applications to choose different lighting implementations based on their requirements.
 
-An implementation sample is available at https://github.com/KhronosGroup/glTF-WebGL-PBR/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters.
+An implementation sample is available at https://github.com/KhronosGroup/glTF-Sample-Viewer/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters.
 
 As previously defined
 
