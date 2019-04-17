@@ -113,7 +113,7 @@ The following example shows a glTF Mesh instantiating the XMP metadata at index 
 {
     "meshes": [
       {
-        extensions : {
+        "extensions" : {
             "KHR_xmp": {
                 "packet" : 0,
             }
@@ -138,7 +138,181 @@ The following example shows a glTF Mesh instantiating the XMP metadata at index 
 
 ### Notes:
 
-####Overriding Rule
-A glTF scene might reference assets already containing XMP metadata.
+#### Overriding Rule
+A glTF scene might reference resources already containing XMP metadata.
 A relevant example would be an image node referencing a `png` file with embedded XMP metadata.
 When this happens the XMP metadata specified in the glTF manifest takes precedence over the metadata embedded in the referenced resource.
+
+
+#### Transferring and merging metadata
+When a glTF object (for example a Mesh) is copied from a glTF file to another, the associated KHR_xmp metadata should be copied as well.
+Copying metadata requires adding the source object metadata packet to the `KHR_xmp.packets` extension of the copied glTF and reference it from the copied object `KHR_xmp.packet` extension.
+In the following example two glTFs containing a mesh with KHR_xmp metadata are copied into a third glTF.
+
+
+glTF containing the first mesh:
+
+```
+{
+    "meshes": [
+      {
+        "extensions" : { "KHR_xmp": { "packet" : 0 } },
+        ...
+      }
+    ],
+    "extensions": { "KHR_xmp" : { "packets" : [
+      {
+        "dc:title" : { "en-us" : "My first mesh"},
+        ...
+      },
+    ]}},
+}
+```
+
+glTF containing the second mesh:
+
+```
+{
+    "meshes": [
+      {
+        "extensions" : { "KHR_xmp": { "packet" : 0 } },
+        ...
+      }
+    ],
+    "extensions": { "KHR_xmp" : { "packets" : [
+      {
+        "dc:title" : { "en-us" : "My second mesh"},
+        ...
+      },
+    ]}},
+}
+```
+
+glTF containing copies of both meshes:
+
+```
+{
+    "meshes": [
+      {
+        "extensions" : { "KHR_xmp": { "packet" : 0 } },
+        ...
+      },
+      {
+        "extensions" : { "KHR_xmp": { "packet" : 1 } },
+        ...
+      }
+    ],
+    "extensions": { "KHR_xmp" : { "packets" : [
+      {
+        "dc:title" : { "en-us" : "My first mesh"},
+        ...
+      },
+      {
+        "dc:title" : { "en-us" : "My second mesh"},
+        ...
+      },
+    ]}},
+}
+```
+
+
+The [xmpMM](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/xmpMM.md) namespaces introduces mechanisms such as Pantry-Ingredient to handle the case when a glTF file is generated via derivation or composition of 1 or more source documents.
+The following example illustrates how KHR_xmp metadata can be computed in the case of two glTFs, both containing `asset` metadata, that are processed together to obtain a new composited glTF document.
+
+First glTF document:
+
+```
+{
+    "asset": {
+        "extensions" : {
+            "KHR_xmp": {
+                "packet" : 0,
+            }
+        },
+        ...
+    },
+    "extensions": {
+        "KHR_xmp" : {
+            "packets" : [
+              {
+                "dc:title" : { "en-us" : "My first glTF"},
+                ...
+              }
+            ]
+        }
+    }
+}
+```
+
+Second glTF document:
+
+```
+{
+    "asset": {
+        "extensions" : {
+            "KHR_xmp": {
+                "packet" : 0,
+            }
+        },
+        ...
+    },
+    "extensions": {
+        "KHR_xmp" : {
+            "packets" : [
+              {
+                "dc:title" : { "en-us" : "My second glTF"},
+                ...
+              }
+            ]
+        }
+    }
+}
+```
+
+Derived glTF document metadata:
+
+```
+{
+    "asset": {
+        "extensions" : {
+            "KHR_xmp": {
+                "packet" : 0,
+            }
+        },
+        ...
+    },
+    "extensions": {
+        "KHR_xmp" : {
+            "packets" : [
+              {
+                "dc:title" : { "en-us" : "My composed glTF."},
+                "xmpMM:Pantry" : [
+                  {
+                    "xmpMM:DocumentID" : "62bc2623-968e-4b09-8174-02dc53d6b856",
+                    "xmpMM:InstanceID" : "1a33a91f-7351-471e-9b6c-24bca3213d2a",
+                    "dc:title" : { "en-us" : "My first glTF"},
+                    ...
+                  },
+                  {
+                    "xmpMM:DocumentID" : "6d70a25e-129e-42d8-9d63-93bd9eb0298b",
+                    "xmpMM:InstanceID" : "235b5571-e6a9-48fd-8d6b-b88276f37ee3",
+                    "dc:title" : { "en-us" : "My second glTF"},
+                    ...
+                  }
+                ],
+                "xmpMM:Ingredients" : [
+                  {
+                    "xmpMM:DocumentID" : "62bc2623-968e-4b09-8174-02dc53d6b856",
+                    "xmpMM:InstanceID" : "1a33a91f-7351-471e-9b6c-24bca3213d2a"
+                  },
+                  {
+                    "xmpMM:DocumentID" : "6d70a25e-129e-42d8-9d63-93bd9eb0298b",
+                    "xmpMM:InstanceID" : "235b5571-e6a9-48fd-8d6b-b88276f37ee3"
+                  }
+                ]
+              }
+            ]
+        }
+    }
+}
+```
