@@ -129,6 +129,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 | [Adobe Dimension](https://www.adobe.com/products/dimension.html)| `FBX`, `STL`, `SKP`, `OBJ` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Share and Publish feature lets users export to glTF to view on the web. [Prerelease](https://www.adobeprerelease.com) build has explicit export option for glTF and GLB.|
 | [RapidCompact](https://www.rapidcompact.com)| [Multiple](https://www.rapidcompact.com/doc/cli/00-overview/index.html#import) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Optimizes and converts 3D assets for efficient online presentation. |
 | [Cinema 4D Exporter](https://labs.maxon.net/?p=3360)| — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Export glTF from MAXON Cinema 4D |
+| [Revit glTF Exporter add-in](https://apps.autodesk.com/RVT/en/Detail/Index?id=8451869436709222290)| — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Paid add-in to export glTF from Autodesk Revit 2019 or later |
 
 ### Optimizers
 
