@@ -387,6 +387,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 ### All Presentations and Articles
 
+* [glTF: Everything You Need to Know!](https://www.threekit.com/blog/gltf-everything-you-need-to-know) by Ben Houston. April 2019
 * [GDC 2019 Khronos Developer Days - WebGL & glTF video](https://youtu.be/mCJoBGOCTwk?t=868). March 2019 ([slides](https://www.khronos.org/developers/library/2019-gdc))
    * Khronos: Patrick Cozzi - Overview
    * Microsoft: Saurabh Bhatia - Ecosystem and SDK Update
