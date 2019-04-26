@@ -3,7 +3,7 @@
 ## Contributors
 
 * Jaswant Singh Ranawat, Adobe(ranawat@adobe.com)
-* Mike Bond, Adobe, @miibond
+* Mike Bond, Adobe, [@miibond](https://twitter.com/miibond)
 
 ## Status
 
