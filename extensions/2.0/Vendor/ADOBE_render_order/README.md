@@ -19,12 +19,14 @@ To avoid Z-fighting in two coplanar meshes render order is needed with depth wri
 ## glTF Schema Updates
 
 It may contain the following properties:
-| Name       | Type       | Default      | Description
-|------------|------------|--------------|---------------------------------
-| `group`   | `boolean` | `false` | specifies whether node is a group or not.
-| `renderOrder`   | `integer` | `0` | The render order of the node in the parent group.
-| `depthTest` | `boolean`   | `true`        | specifies whether to perform depth test or not.
-| `depthWrite`    | `boolean` | `true` | specifies whether to perform depth write or not.
+
+| Name       | Type       | Default      | Description |
+|----------|------------|--------------|--------------------------------- |
+| `group`   | `boolean` | `false` | specifies whether node is a group or not. |
+| `renderOrder`   | `integer` | `0` | The render order of the node in the parent group. |
+| `depthTest` | `boolean`   | `true`        | specifies whether to perform depth test or not. |
+| `depthWrite`    | `boolean` | `true` | specifies whether to perform depth write or not. |
+
 
 if none of the parent is specified as group and renderOrder is provided then scene node is considered as group. Marking leaf nodes as group will have no impact.
 
