@@ -83,6 +83,7 @@ if none of the parent is specified as group and renderOrder is provided then sce
                 "ADOBE_render_order": {
                 "renderOrder": 1,
                 "depthTest" : true,
+                "depthFunc" : "LESS",
                 "depthWrite" : false
                 }
             }
@@ -93,7 +94,9 @@ if none of the parent is specified as group and renderOrder is provided then sce
                 "ADOBE_render_order": {
                 "renderOrder": 1,
                 "depthTest" : true,
-                "depthWrite" : false
+                "depthFunc" : "LESS",
+                "depthWrite" : false,
+                "colorWrite" : false
                 }
             }
         }
