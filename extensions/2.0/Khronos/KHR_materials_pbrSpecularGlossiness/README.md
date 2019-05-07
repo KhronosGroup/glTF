@@ -65,7 +65,7 @@ The diffuse value represents the reflected diffuse color of the material. The sp
 
 The specular property from specular-glossiness material model is the same as the base color value from the metallic-roughness material model for metals. The glossiness property from specular-glossiness material model is related with the roughness property from the metallic-roughness material model and is defined as `glossiness = 1 - roughness`. See [appendix](#appendix) for more details on how you can convert between these two material models.
 
-The value for each property (`diffuse`, `specular`, `glossiness`) can be defined using factors or textures. The `specular` and `glossiness` properties are packed together in a single texture called `specularGlossinessTexture`.  If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. The factors (`diffuseFactor`, `specularFactor`, `glossinessFactor`) scale, in linear space, the components given in the respective textures (`diffuseTexture`, `specularGlossinessTexture`). Both textures are in sRGB space and must be converted to linear space before they are used for any computations.
+The value for each property (`diffuse`, `specular`, `glossiness`) can be defined using factors or textures. The `specular` and `glossiness` properties are packed together in a single texture called `specularGlossinessTexture`.  If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. The factors (`diffuseFactor`, `specularFactor`, `glossinessFactor`) scale, in linear space, the components given in the respective textures (`diffuseTexture`, `specularGlossinessTexture`). Both textures are encoded with the sRGB transfer function and must be converted to linear space before they are used for any computations.
 
 The following equations show how to calculate bidirectional reflectance distribution function (BRDF) inputs (*c<sub>diff</sub>*, *F<sub>0</sub>*, *&alpha;*) from the specular-glossiness material properties. In addition to the material properties, if a primitive specifies a vertex color using the attribute semantic property `COLOR_0`, then this value acts as an additional linear multiplier to `diffuse`.
 
@@ -101,7 +101,7 @@ The RGBA components of the reflected diffuse color of the material. Metals have 
 
 ### diffuseTexture
 
-The diffuse texture. This texture contains RGB(A) components of the reflected diffuse color of the material in sRGB color space. If the fourth component (A) is present, it represents the alpha coverage of the material. Otherwise, an alpha of 1.0 is assumed. The `alphaMode` property specifies how alpha is interpreted. The stored texels must not be premultiplied.
+The diffuse texture. This texture contains RGB components of the reflected diffuse color of the material encoded with the sRGB transfer function. If the fourth component (A) is present, it represents the linear alpha coverage of the material. Otherwise, an alpha of 1.0 is assumed. The `alphaMode` property specifies how alpha is interpreted. The stored texels must not be premultiplied.
 
 * **Type**: [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)  
 * **Required**: No
@@ -125,7 +125,7 @@ The glossiness or smoothness of the material. A value of 1.0 means the material 
 
 ### specularGlossinessTexture
 
-The specular-glossiness texture is a RGBA texture, containing the specular color (RGB) in sRGB space and the glossiness value (A) in linear space.
+The specular-glossiness texture is an RGBA texture, containing the specular color (RGB) encoded with the sRGB transfer function and the linear glossiness value (A).
 
 * **Type**: [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) 
 * **Required**: No

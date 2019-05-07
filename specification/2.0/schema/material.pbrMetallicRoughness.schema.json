@@ -21,7 +21,7 @@
         "baseColorTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The base color texture.",
-            "gltf_detailedDescription": "The base color texture. This texture contains RGB(A) components in sRGB color space. The first three components (RGB) specify the base color of the material. If the fourth component (A) is present, it represents the alpha coverage of the material. Otherwise, an alpha of 1.0 is assumed. The `alphaMode` property specifies how alpha is interpreted. The stored texels must not be premultiplied."
+            "gltf_detailedDescription": "The base color texture. The first three components (RGB) are encoded with the sRGB transfer function. They specify the base color of the material. If the fourth component (A) is present, it represents the linear alpha coverage of the material. Otherwise, an alpha of 1.0 is assumed. The `alphaMode` property specifies how alpha is interpreted. The stored texels must not be premultiplied."
         },
         "metallicFactor": {
             "type": "number",

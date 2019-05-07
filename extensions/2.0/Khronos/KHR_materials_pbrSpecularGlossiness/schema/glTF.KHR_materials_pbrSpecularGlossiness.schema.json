@@ -21,7 +21,7 @@
         "diffuseTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The diffuse texture.",
-            "gltf_detailedDescription": "The diffuse texture. This texture contains RGB(A) components of the reflected diffuse color of the material in sRGB color space. If the fourth component (A) is present, it represents the alpha coverage of the material. Otherwise, an alpha of 1.0 is assumed. The `alphaMode` property specifies how alpha is interpreted. The stored texels must not be premultiplied."
+            "gltf_detailedDescription": "The diffuse texture. This texture contains RGB components of the reflected diffuse color of the material encoded with the sRGB transfer function. If the fourth component (A) is present, it represents the linear alpha coverage of the material. Otherwise, an alpha of 1.0 is assumed. The `alphaMode` property specifies how alpha is interpreted. The stored texels must not be premultiplied."
         },
         "specularFactor": {
             "type": "array",
@@ -47,7 +47,7 @@
         "specularGlossinessTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The specular-glossiness texture.",
-            "gltf_detailedDescription": "The specular-glossiness texture is RGBA texture, containing the specular color of the material (RGB components) and its glossiness (A component). The values are in sRGB space."
+            "gltf_detailedDescription": "The specular-glossiness texture is an RGBA texture, containing the specular color (RGB) encoded with the sRGB transfer function and the linear glossiness value (A)."
         },
         "extensions": { },
         "extras": { }
