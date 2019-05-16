@@ -104,8 +104,9 @@ finalSampledColor = sampledColor * brightnessFactor + brightnessOffset;
 
 ## Image Encoding
 
-### Restrictions on KTX2 Images
+### Texture Restrictions
 
+- A glTF `texture` used for IBL cannot have a `KHR_texture_transform` extension defined.
 - `specularEnvironmentTexture` and `diffuseEnvironmentTexture` (when used) must refer to a texture referrring to a KTX2 image of **Cubemap** type as defined in KTX2, Section 4.3. Namely:
   - `pixelHeight` must be greater than 0.
   - `pixelDepth` must be 0.
@@ -113,6 +114,7 @@ finalSampledColor = sampledColor * brightnessFactor + brightnessOffset;
   - `numberOfFaces` must be 6.
 - The image must contain mip levels.
 - The transfer function for all image formats must be linear.
+- Cubemaps orientation must be aligned with [glTF coordinate system](../../../../specification/2.0#coordinate-system-and-units). 
 
 ### Normal Quality
 

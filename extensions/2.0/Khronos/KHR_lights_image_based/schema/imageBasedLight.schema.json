@@ -13,7 +13,7 @@
             },
             "minItems": 4,
             "maxItems": 4,
-            "description": "Quaternion that represents the rotation of the IBL environment.",
+            "description": "Quaternion that represents the rotation of the IBL environment. It applies to both the specular and diffuse part.",
             "default": [0, 0, 0, 1]
         },
         "brightnessFactor": {
