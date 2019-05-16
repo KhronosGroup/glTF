@@ -32,7 +32,14 @@
             "index": {
                 "allOf": [ { "$ref": "glTFid.schema.json" } ],
                 "description": "The index of the texture."
-            }        
+            }
+        },
+        "diffuseEnvironmentTexture": {
+            "description": "The prefiltered diffuse environment map.",
+            "index": {
+                "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                "description": "The index of the texture."
+            }
         },
         "diffuseSphericalHarmonics": {
             "description": "Spherical harmonics coefficients to approximate the prefiltered diffuse environment map.",
@@ -52,8 +59,18 @@
         "extensions": {},
         "extras": {}
     },
-    "required": [
-        "specularEnvironmentTexture",
-        "diffuseSphericalHarmonics"
+    "oneOf":[
+        {
+            "required": [
+                "specularEnvironmentTexture",
+                "diffuseSphericalHarmonics"
+            ]
+        },
+        {
+            "required": [
+                "specularEnvironmentTexture",
+                "diffuseEnvironmentTexture"
+            ]
+        }
     ]
 }

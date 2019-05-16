@@ -28,7 +28,9 @@ A conforming implementation of this extension must be able to load the image-bas
 
 ## Defining an Image-Based Light
 
-The `KHR_lights_image_based` extension defines a array of image-based lights at the root of the glTF and then each scene can reference one. Each image-based light definition consists of a single cubemap that describes the specular radiance of the scene, the l=2 spherical harmonics coefficients for diffuse irradiance and rotation, brighness factor and offset values.
+The `KHR_lights_image_based` extension defines a array of image-based lights at the root of the glTF and then each scene can reference one. Each image-based light definition consists of a single cubemap that describes the specular radiance of the scene, the l=2 spherical harmonics coefficients or another cubemap for diffuse irradiance, and also rotation, brighness factor, and offset values.
+
+An example using SH for diffuse irradiance:
 
 ```json
 "extensions": {
@@ -50,13 +52,31 @@ The `KHR_lights_image_based` extension defines a array of image-based lights at 
 }
 ```
 
+An example using a cubemap for diffuse irradiance:
+
+```json
+"extensions": {
+    "KHR_lights_image_based" : {
+        "imageBasedLights": [
+            {
+                "rotation": [0, 0, 0, 1],
+                "brightnessFactor": 1.0,
+                "brightnessOffset": 0.0,
+                "specularEnvironmentTexture": 0,
+                "diffuseEnvironmentTexture": 1
+            }
+        ]
+    }
+}
+```
+
 ## Specular BRDF integration and Irradiance Coefficients
 
 This extension uses a prefiltered environment map to define the specular lighting utilizing the split sum approximation. More information:
 - [Specular BRDF integration in Google Filament](https://google.github.io/filament/Filament.md.html#lighting/imagebasedlights/processinglightprobes)
 - [Pre-Filtered Environment Map in Unreal Engine 4](https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf)
 
-This extension uses spherical harmonic coefficients to define irradiance used for diffuse lighting. Coefficients are calculated for the first 3 SH bands (l=2) and take the form of a 9x3 array. More information:
+This extension can use spherical harmonic coefficients to define irradiance used for diffuse lighting. Coefficients are calculated for the first 3 SH bands (l=2) and take the form of a 9x3 array. More information:
 - [Realtime Image Based Lighting using Spherical Harmonics](https://metashapes.com/blog/realtime-image-based-lighting-using-spherical-harmonics/)
 - [An Efficient Representation for Irradiance Environment Maps](http://graphics.stanford.edu/papers/envmap/)
 
@@ -86,7 +106,7 @@ finalSampledColor = sampledColor * brightnessFactor + brightnessOffset;
 
 ### Restrictions on KTX2 Images
 
-- `specularEnvironmentTexture` must refer to a texture referrring to a KTX2 image of **Cubemap** type as defined in KTX2, Section 4.3. Namely:
+- `specularEnvironmentTexture` and `diffuseEnvironmentTexture` (when used) must refer to a texture referrring to a KTX2 image of **Cubemap** type as defined in KTX2, Section 4.3. Namely:
   - `pixelHeight` must be greater than 0.
   - `pixelDepth` must be 0.
   - `numberOfArrayElements` must be 0.
