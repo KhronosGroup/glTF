@@ -1,0 +1,59 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_lights_image_based glTF extension",
+    "type": "object",
+    "allOf": [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "rotation": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            "minItems": 4,
+            "maxItems": 4,
+            "description": "Quaternion that represents the rotation of the IBL environment.",
+            "default": [0, 0, 0, 1]
+        },
+        "brightnessFactor": {
+            "type": "number",
+            "description": "Brightness multiplier for both the specular and diffuse part.",
+            "default": 1.0,
+            "minimum": 0.0
+        },
+        "brightnessOffset": {
+            "type": "number",
+            "description": "Brightness offset for both the specular and diffuse part. Offset is applied after the factor.",
+            "default": 0.0
+        },
+        "specularEnvironmentTexture": {
+            "description": "The prefiltered specular environment map.",
+            "index": {
+                "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                "description": "The index of the texture."
+            }        
+        },
+        "diffuseSphericalHarmonics": {
+            "description": "Spherical harmonics coefficients to approximate the prefiltered diffuse environment map.",
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+            },
+            "minItems": 9,
+            "maxItems": 9
+        },
+        "name": {},
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "specularEnvironmentTexture",
+        "diffuseSphericalHarmonics"
+    ]
+}

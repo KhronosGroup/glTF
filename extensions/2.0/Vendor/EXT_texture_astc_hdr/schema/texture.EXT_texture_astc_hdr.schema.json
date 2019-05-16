@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_texture_astc_hdr glTF extension",
+    "type": "object",
+    "description": "glTF extension to specify textures using the ASTC HDR encoding in KTX2 image format.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "source": {
+          "allOf": [ { "$ref": "glTFid.schema.json" } ],
+          "description": "The index of the images node which points to a KTX2 image with ASTC HDR payload."
+        },
+        "extensions": {},
+        "extras": {}
+      }
+}

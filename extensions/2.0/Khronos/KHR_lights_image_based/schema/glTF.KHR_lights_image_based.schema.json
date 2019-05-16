@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_lights_image_based glTF extension",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "imageBasedLights": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "imageBasedLight.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "imageBasedLights"
+    ]
+}

@@ -1,0 +1,145 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_image_ktx2",
+    "type": "object",
+    "description": "KTX2 file format header",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "vkFormat": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+        },
+        "pixelWidth": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "pixelHeight": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+        },
+        "pixelDepth": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+        },
+        "arrayElements": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+        },
+        "faces": {
+            "type": "integer",
+            "enum": [
+                1,
+                6
+            ],
+            "default": 1
+        },
+        "supercompressionScheme": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+        },
+        "dfdByteOffset": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "dfdByteLength": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "sgdByteOffset": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+        },
+        "sgdByteLength": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+        },
+        "generateMipmaps": {
+            "type": "boolean",
+            "default": false
+        },
+        "levels": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "byteOffset": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "byteLength": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "byteLengthUncompressed": {
+                        "type": "integer",
+                        "minimum": 0
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "offset",
+                    "bytesOfImages"
+                ]
+            }
+        },
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "KTXcubemapIncomplete": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 63
+                },
+                "KTXorientation": {
+                    "type": "string",
+                    "pattern": "^[rl]([du]|[du][oi])?$"
+                },
+                "KTXglFormat": {
+                    "type": "array",
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "items": {
+                        "type": "integer",
+                        "minimum": 0
+                    }
+                },
+                "KTXdxgiFormat__": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "KTXmetalPixelFormat": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "KTXswizzle": {
+                    "type": "string",
+                    "pattern": "^[rgba01]{4}$"
+                },
+                "KTXwriter": {
+                    "type": "string"
+                },
+                "KTXastcDecodeRGB9E5": {
+                    "type": "boolean",
+                    "enum": [
+                        true
+                    ]
+                }
+            }
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["pixelWidth", "dfdByteOffset", "dfdByteLength", "levels"]
+}

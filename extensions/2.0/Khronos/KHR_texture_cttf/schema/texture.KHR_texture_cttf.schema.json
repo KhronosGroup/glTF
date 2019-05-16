@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_texture_cttf glTF extension",
+    "type": "object",
+    "description": "glTF extension to specify textures using the CTTF image format.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "source": {
+          "allOf": [ { "$ref": "glTFid.schema.json" } ],
+          "description": "The index of the images node which points to a CTTF image."
+        },
+        "extensions": {},
+        "extras": {}
+      }
+}
