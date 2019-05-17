@@ -39,6 +39,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
    * [100,000+ models](https://sketchfab.com/models?features=downloadable&sort_by=-likeCount) under Creative Commons license on Sketchfab (check license for individual models).
 * [Drag-and-drop validator](http://github.khronos.org/glTF-Validator/) for verifying correctness of existing glTF files.
 * [glTF Tutorial Series](https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/README.md)
+* [Khronos glTF Sample Viewer](http://github.khronos.org/glTF-Sample-Viewer/) with WebGL PBR shaders. ([source code](https://github.com/KhronosGroup/glTF-Sample-Viewer))
 
 ### For artists
 
@@ -128,6 +129,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 | [Adobe Dimension](https://www.adobe.com/products/dimension.html)| `FBX`, `STL`, `SKP`, `OBJ` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Share and Publish feature lets users export to glTF to view on the web. [Prerelease](https://www.adobeprerelease.com) build has explicit export option for glTF and GLB.|
 | [RapidCompact](https://www.rapidcompact.com)| [Multiple](https://www.rapidcompact.com/doc/cli/00-overview/index.html#import) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Optimizes and converts 3D assets for efficient online presentation. |
 | [Cinema 4D Exporter](https://labs.maxon.net/?p=3360)| — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Export glTF from MAXON Cinema 4D |
+| [Revit glTF Exporter add-in](https://apps.autodesk.com/RVT/en/Detail/Index?id=8451869436709222290)| — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Paid add-in to export glTF from Autodesk Revit 2019 or later |
 
 ### Optimizers
 
@@ -215,7 +217,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 | Sample | Status | Description |
 |--------|--------|-------------|
-| [Sample glTF loader with WebGL PBR shader](http://github.khronos.org/glTF-Sample-Viewer/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Engine-agnostic reference implementation for PBR shading with WebGL in glTF 2.0 ([source code](https://github.com/KhronosGroup/glTF-Sample-Viewer)) |
+| [Khronos glTF Sample Viewer](http://github.khronos.org/glTF-Sample-Viewer/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Engine-agnostic sample viewer with WebGL PBR shader for glTF 2.0 ([source code](https://github.com/KhronosGroup/glTF-Sample-Viewer)) |
 
 #### Game and Rendering Engines
 
@@ -290,6 +292,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | [Aspose.3D for .NET](http://www.aspose.com/products/3d/net) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat)| Import, export, and convert glTF |
 | [MixedRealityToolkit-Unity](https://github.com/Microsoft/MixedRealityToolkit-Unity) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | A collection of scripts and components intended to accelerate development of applications targeting Microsoft HoloLens and Windows Mixed Reality headsets. |
 | [SharpGLTF](https://github.com/VPenades/SharpGLTF) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | C# toolkit for reading and writing glTF files. |
+| [DEM.Net](https://github.com/dem-net/DEM.Net) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | C# toolkit for Digital Elevation Models, exporting models with textures and normal maps to glTF files. |
 
 #### C
 
@@ -384,6 +387,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 ### All Presentations and Articles
 
+* [glTF: Everything You Need to Know!](https://www.threekit.com/blog/gltf-everything-you-need-to-know) by Ben Houston. April 2019
 * [GDC 2019 Khronos Developer Days - WebGL & glTF video](https://youtu.be/mCJoBGOCTwk?t=868). March 2019 ([slides](https://www.khronos.org/developers/library/2019-gdc))
    * Khronos: Patrick Cozzi - Overview
    * Microsoft: Saurabh Bhatia - Ecosystem and SDK Update
