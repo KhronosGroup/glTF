@@ -2,6 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "KHR_draco_mesh_compression extension",
     "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "bufferView": {
             "allOf": [ { "$ref" : "glTFid.schema.json" } ],
@@ -14,8 +15,9 @@
                 "$ref": "glTFid.schema.json"
             },
             "description": "A dictionary object, where each key corresponds to an attribute and its unique attribute id stored in the compressed geometry."
-        }
+        },
+        "extensions": { },
+        "extras": { }
     },
-    "additionalProperties": false,
     "required": [ "bufferView", "attributes" ]
 }

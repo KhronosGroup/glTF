@@ -151,9 +151,7 @@ The following are outside the scope of the initial design of glTF:
 * *glTF is not a streaming format.* The binary data in glTF is inherently streamable, and the buffer design allows for fetching data incrementally. But there are no other streaming constructs in the format, and no conformance requirements for an implementation to stream data versus downloading it in its entirety before rendering.
 * *glTF is not intended to be human-readable,* though by virtue of being represented in JSON, it is developer-friendly.
 
-Version 2.0 of glTF does not define compression for geometry and other rich data. However, the design team believes that compression is a very important part of a transmission standard, and there is already work underway to define compression extensions.
-
-> The 3D Formats Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs.
+While version 2.0 of glTF does not define compression for geometry and other rich data, the [KHR_draco_mesh_compression extension](https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_draco_mesh_compression/README.md) provides that option. Future extensions may include compression methods for textures and animation data.
 
 ## Versioning
 
@@ -192,6 +190,10 @@ glTF uses URIs to reference buffers and image resources. Clients must support at
   > **Implementation Note:** Clients can optionally support additional URI components. For example `http://` or `file://` schemes, authorities/hostnames, absolute paths, and query or fragment parameters. Assets containing these additional URI components may be less portable.
 
  > **Implementation Note:** This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, or textures, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading. Alternatively, an asset could use GLB container to store JSON and binary data in one file without base64 encoding. See [GLB File Format Specification](#glb-file-format-specification) for details.
+
+Applications should consider applying syntax-based normalization to URIs as defined by [RFC&nbsp;3986, Section&nbsp;6.2.2.](https://tools.ietf.org/html/rfc3986#section-6.2.2), [RFC&nbsp;3987, Section&nbsp;5.3.2.](https://tools.ietf.org/html/rfc3987#section-5.3.2), and applicable schema rules (e.g., [RFC&nbsp;7230, Section&nbsp;2.7.3.](https://tools.ietf.org/html/rfc7230#section-2.7.3) for HTTP) on export and/or import.
+
+> **Implementation Note:** While the spec does not explicitly disallow non-normalized URIs, their use may be unsupported or lead to unwanted side-effects — such as security warnings or cache misses — on some platforms.
 
 # Concepts
 
@@ -416,6 +418,8 @@ A *buffer* is data stored as a binary blob. The buffer can contain a combination
 
 Binary blobs allow efficient creation of GPU buffers and textures since they require no additional parsing, except perhaps decompression. An asset can have any number of buffer files for flexibility for a wide array of applications.
 
+> **Implementation Note:** While there's no upper limit on buffer's size, implementations should be aware that JSON parsers may support integers only up to 2<sup>53</sup> when running on certain platforms. Also there's an implicit limit of 2<sup>32</sup>-1 bytes when a buffer is stored as [GLB](#glb-file-format-specification) binary chunk.
+
 Buffer data is little endian.
 
 All buffers are stored in the asset's `buffers` array.
@@ -433,7 +437,7 @@ The following example defines a buffer. The `byteLength` property specifies the 
 }
 ```
 
-A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer specified in the `byteOffset` property and a `byteLength` property to specify length of the buffer view.
+A *bufferView* represents a subset of data in a buffer, defined by a byte offset into the buffer specified in the `byteOffset` property and a total byte length specified by the `byteLength` property of the buffer view.
 
 When a buffer view contain vertex indices or attributes, they must be its only content, i.e., it's invalid to have more than one kind of data in the same buffer view.
 
@@ -461,7 +465,7 @@ The following example defines two buffer views: the first is an ELEMENT_ARRAY_BU
 }
 ```
 
-Buffer view could have `byteStride` property. It means byte-distance between consequential elements. This field  is defined only for buffer views that contain vertex attributes.
+When a buffer view is used for vertex attribute data, it may have a `byteStride` property. This property defines the stride in bytes between each vertex.
 
 Buffers and buffer views do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) access buffers or buffer views via *accessors*.
 
@@ -692,7 +696,7 @@ Consider the following example:
             "byteOffset": 4608,
             "componentType": 5123,
             "count": 5232,
-            "type": "SCALAR"
+            "type": "VEC2"
         }
     ]
 }
@@ -700,7 +704,16 @@ Consider the following example:
 Accessing binary data defined by example above could be done like this:
 
 ```js
-var typedView = new Uint16Array(buffer, accessor.byteOffset + accessor.bufferView.byteOffset, accessor.count);
+const accessorTypeToNumComponentsMap = {
+		'SCALAR': 1,
+		'VEC2': 2,
+		'VEC3': 3,
+		'VEC4': 4,
+		'MAT2': 4,
+		'MAT3': 9,
+		'MAT4': 16
+};
+var typedView = new Uint16Array(buffer, accessor.byteOffset + accessor.bufferView.byteOffset, accessor.count * accessorTypeToNumComponentsMap[accessor.type]);
 ```
 
 The size of the accessor component type is two bytes (the `componentType` is unsigned short). The accessor's `byteOffset` is also divisible by two. Likewise, the accessor's offset into buffer `0` is `5228 ` (`620 + 4608`), which is divisible by two.
@@ -757,13 +770,13 @@ Valid accessor type and component type for each attribute semantic property are 
 |`TEXCOORD_1`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the second set|
 |`COLOR_0`|`"VEC3"`<br>`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|RGB or RGBA vertex color|
 |`JOINTS_0`|`"VEC4"`|`5121`&nbsp;(UNSIGNED_BYTE)<br>`5123`&nbsp;(UNSIGNED_SHORT)|See [Skinned Mesh Attributes](#skinned-mesh-attributes)|
-|`WEIGHTS_0`|`"VEC4`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|See [Skinned Mesh Attributes](#skinned-mesh-attributes)|
+|`WEIGHTS_0`|`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|See [Skinned Mesh Attributes](#skinned-mesh-attributes)|
 
 `POSITION` accessor **must** have `min` and `max` properties defined.
 
 `TEXCOORD`, `COLOR`, `JOINTS`, and `WEIGHTS` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. Client implementations must support at least two UV texture coordinate sets, one vertex color, and one joints/weights set. Extensions can add additional property names, accessor types, and/or accessor component types.
 
-All indices for indexed attribute semantics, must start with 0 and be continuous: `TEXCOORD_0`, `TEXCOORD_1`, etc.
+All indices for indexed attribute semantics must start with 0 and be continuous positive integers: `TEXCOORD_0`, `TEXCOORD_1`, etc. Indices must not use leading zeroes to pad the number of digits, and clients are not required to support more indexed semantics than described above.
 
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
 
@@ -790,7 +803,7 @@ primitives[i].attributes.POSITION +
   weights[1] * primitives[i].targets[1].POSITION +
   weights[2] * primitives[i].targets[2].POSITION + ...
 ```
-Morph Targets are implemented via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to an accessor containing Morph Target displacement data, currently only three attributes (`POSITION`, `NORMAL`, and `TANGENT`) are supported. All primitives are required to list the same number of `targets` in the same order.
+Morph Targets are implemented via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to an accessor containing Morph Target displacement data. Currently only three attributes — `POSITION`, `NORMAL`, and `TANGENT` — are commonly supported. If morph targets contain application-specific semantics, their names must be prefixed with an underscore (e.g. `_TEMPERATURE`) like the associated attribute semantic. All primitives are required to list the same number of `targets` in the same order.
 
 Valid accessor type and component type for each attribute semantic property are defined below. Note that the *w* component for handedness is omitted when targeting `TANGENT` data since handedness cannot be displaced.
 
@@ -844,7 +857,7 @@ After applying morph targets to vertex positions and normals, tangent space may 
 
 ### Skins
 
-All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property (which points to an accessor with IBM data), used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property points to the node that is the root of a joints hierarchy. 
+All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property (which points to an accessor with IBM data), used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property (if present) points to the node that is the common root of a joints hierarchy or to a direct or indirect parent node of the common root.
 
 > **Implementation Note:** The matrix defining how to pose the skin's geometry for use with the joints ("Bind Shape Matrix") should be premultiplied to mesh data or to Inverse Bind Matrices. 
 
@@ -917,24 +930,26 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
 }
 ```
 
-The number of joints that influence one vertex is limited to 4, so referenced accessors must have `VEC4` type and following component formats:
+The number of joints that influence one vertex is limited to 4 per set, so referenced accessors must have `VEC4` type and following component formats:
 
 * **`JOINTS_0`**: `UNSIGNED_BYTE` or `UNSIGNED_SHORT`
 * **`WEIGHTS_0`**: `FLOAT`, or normalized `UNSIGNED_BYTE`, or normalized `UNSIGNED_SHORT`
 
-The joint weights for each vertex must be >= 0, and normalized to have a linear sum of one. No joint may have more than one non-zero weight for a given vertex.
+The joint weights for each vertex must be non-negative, and normalized to have a linear sum of `1.0`. No joint may have more than one non-zero weight for a given vertex.
+
+In the event that of any of the vertices are influenced by more than four joints, the additional joint and weight information will be found in subsequent sets. For example `JOINTS_1` and `WEIGHTS_1` if present will reference the accessor for up to 4 additional joints that influence the vertices. Note that client implementations are only required to support a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the model's animation.
+
+All joint values must be within the range of joints in the skin. Unused joint values (i.e. joints with a weight of zero) should be set to zero.
 
 #### Joint Hierarchy
 
-The joint hierarchy used for controlling skinned mesh pose is simply the glTF node hierarchy, with each node designated as a joint. The following example defines a joint hierarchy of two joints.
+The joint hierarchy used for controlling skinned mesh pose is simply the glTF node hierarchy, with each node designated as a joint. Each skin's joints must have a common root, which may or may not be a joint node itself. When a skin is referenced by a node within a scene, the common root must belong to the same scene.
 
-**TODO: object-space VS world-space joints**
-
-For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-2.0.0a.png).
+For more details of vertex skinning implementation, refer to [glTF Overview](figures/gltfOverview-2.0.0b.png).
 
 > **Implementation Note:** A node definition does not specify whether the node should be treated as a joint. Client implementations may wish to traverse the `skins` array first, marking each joint node.
 
-> **Implementation Note:** A joint may have regular nodes attached to it, even a complete node sub graph with meshes. It's often used to have an entire geometry attached to a joint without having it being skinned by the joint. (ie. a sword attached to a hand joint). Note that the node transform are the local transform of the node relative to the joint, like any other node in the glTF node hierarchy as describe in the [Transformation](#transformations) section.
+> **Implementation Note:** A joint may have regular nodes attached to it, even a complete node sub graph with meshes. It's often used to have an entire geometry attached to a joint without having it being skinned by the joint. (ie. a sword attached to a hand joint). Note that the node transform is the local transform of the node relative to the joint, like any other node in the glTF node hierarchy as described in the [Transformation](#transformations) section.
 
 ### Instantiation
 
@@ -1485,7 +1500,13 @@ Animation Sampler's `input` accessor **must** have `min` and `max` properties de
 
 > **Implementation Note:** Animations with non-linear time inputs, such as time warps in Autodesk 3ds Max or Maya, are not directly representable with glTF animations. glTF is a runtime format and non-linear time inputs are expensive to compute at runtime. Exporter implementations should sample a non-linear time animation into linear inputs and outputs for an accurate representation.
 
-A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation.
+A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. These scalar sequences must lie end-to-end as a single stream in the output accessor, whose final size will equal the number of Morph Targets times the number of animation frames.
+
+Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation. When used with `CUBICSPLINE` interpolation, tangents (a<sub>k</sub>, b<sub>k</sub>) and values (v<sub>k</sub>) are grouped within keyframes:
+
+a<sub>1</sub>,a<sub>2</sub>,...a<sub>n</sub>,v<sub>1</sub>,v<sub>2</sub>,...v<sub>n</sub>,b<sub>1</sub>,b<sub>2</sub>,...b<sub>n</sub>
+
+See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
 
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
 
@@ -2008,7 +2029,7 @@ A buffer points to binary geometry, animation, or skins.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**uri**|`string`|The uri of the buffer.|No|
-|**byteLength**|`integer`|The length of the buffer in bytes.| :white_check_mark: Yes|
+|**byteLength**|`integer`|The total byte length of the buffer view.| :white_check_mark: Yes|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -2027,7 +2048,7 @@ The uri of the buffer.  Relative paths are relative to the .gltf file.  Instead 
 
 #### buffer.byteLength :white_check_mark: 
 
-The length of the buffer in bytes.
+The total byte length of the buffer view.
 
 * **Type**: `integer`
 * **Required**: Yes
@@ -2292,7 +2313,9 @@ Additional properties are allowed.
 
 Application-specific data.
 
-
+> **Implementation Note:** Although extras may have any type, it is common for applications to
+store and access custom data as key/value pairs. As best practice, extras should be an Object
+rather than a primitive value for best portability.
 
 ---------------------------------------
 <a name="reference-gltf"></a>
@@ -2825,7 +2848,7 @@ The indices of this node's children.
 
 #### node.skin
 
-The index of the skin referenced by this node.
+The index of the skin referenced by this node. When a skin is referenced by a node within a scene, all joints used by the skin must belong to the same scene.
 
 * **Type**: `integer`
 * **Required**: No
@@ -3281,6 +3304,8 @@ A dictionary object, where each key corresponds to mesh attribute semantic and e
 
 The index of the accessor that contains mesh indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`.  When defined, the accessor must contain indices: the [`bufferView`](#reference-bufferview) referenced by the accessor should have a [`target`](#reference-target) equal to 34963 (ELEMENT_ARRAY_BUFFER); `componentType` must be 5121 (UNSIGNED_BYTE), 5123 (UNSIGNED_SHORT) or 5125 (UNSIGNED_INT), the latter may require enabling additional hardware support; `type` must be `"SCALAR"`. For triangle primitives, the front face has a counter-clockwise (CCW) winding order.
 
+Values of the index accessor must not include the maximum value for the given component type, which triggers primitive restart in several graphics APIs and would require client implementations to rebuild the index buffer. Primitive restart values are disallowed and all index values must refer to actual vertices. As a result, the index accessor's values must not exceed the following maxima: BYTE `< 255`, UNSIGNED_SHORT `< 65535`, UNSIGNED_INT `< 4294967295`.
+
 * **Type**: `integer`
 * **Required**: No
 * **Minimum**: ` >= 0`
@@ -3496,7 +3521,7 @@ Joints and matrices defining a skin.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**inverseBindMatrices**|`integer`|The index of the accessor containing the floating-point 4x4 inverse-bind matrices.  The default is that each matrix is a 4x4 identity matrix, which implies that inverse-bind matrices were pre-applied.|No|
-|**skeleton**|`integer`|The index of the node used as a skeleton root. When undefined, joints transforms resolve to scene root.|No|
+|**skeleton**|`integer`|The index of the node used as a skeleton root.|No|
 |**joints**|`integer` `[1-*]`|Indices of skeleton nodes, used as joints in this skin.| :white_check_mark: Yes|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
@@ -3516,7 +3541,7 @@ The index of the accessor containing the floating-point 4x4 inverse-bind matrice
 
 #### skin.skeleton
 
-The index of the node used as a skeleton root. When undefined, joints transforms resolve to scene root.
+The index of the node used as a skeleton root. The node must be the closest common root of the joints hierarchy or a direct or indirect parent node of the closest common root.
 
 * **Type**: `integer`
 * **Required**: No
@@ -3686,7 +3711,7 @@ A texture and its sampler.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**sampler**|`integer`|The index of the sampler used by this texture. When undefined, a sampler with repeat wrapping and auto filtering should be used.|No|
-|**source**|`integer`|The index of the image used by this texture.|No|
+|**source**|`integer`|The index of the image used by this texture. When undefined, it is expected that an extension or other mechanism will supply an alternate texture source, otherwise behavior is undefined.|No|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -3705,7 +3730,7 @@ The index of the sampler used by this texture. When undefined, a sampler with re
 
 #### texture.source
 
-The index of the image used by this texture.
+The index of the image used by this texture. When undefined, it is expected that an extension or other mechanism will supply an alternate texture source, otherwise behavior is undefined.
 
 * **Type**: `integer`
 * **Required**: No
@@ -3874,7 +3899,7 @@ Application-specific data.
 
 The glTF spec is designed to allow applications to choose different lighting implementations based on their requirements.
 
-An implementation sample is available at https://github.com/KhronosGroup/glTF-WebGL-PBR/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters.
+An implementation sample is available at https://github.com/KhronosGroup/glTF-Sample-Viewer/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters.
 
 As previously defined
 
@@ -3889,8 +3914,8 @@ As previously defined
 *&alpha;* = `roughness ^ 2`
 
 Additionally,  
-*V* is the eye vector to the shading location  
-*L* is the vector from the light to the shading location  
+*V* is the normalized vector from the shading location to the eye  
+*L* is the normalized vector from the shading location to the light  
 *N* is the surface normal in the same space as the above values  
 *H* is the half vector, where *H* = normalize(*L*+*V*)  
 
@@ -3910,17 +3935,17 @@ Simplified implementation of Fresnel from [An Inexpensive BRDF Model for Physica
 
 ### Geometric Occlusion (G)
 
-**Schlick**
+**Smith Joint GGX**
 
-Implementation of microfacet occlusion from [An Inexpensive BRDF Model for Physically based Rendering](https://www.cs.virginia.edu/~jdl/bib/appearance/analytic%20models/schlick94b.pdf) by Christophe Schlick.
+[Understanding the Masking-Shadowing Function in Microfacet-Based BRDFs](http://jcgt.org/published/0003/02/03/paper.pdf) by Eric Heitz.
 
 ![](figures/lightingG.PNG)
 
-### Microfaced Distribution (D)
+### Microfacet Distribution (D)
 
 **Trowbridge-Reitz**
 
-Implementation of microfaced distrubtion from [Average Irregularity Representation of a Roughened Surface for Ray Reflection](https://www.osapublishing.org/josa/abstract.cfm?uri=josa-65-5-531) by T. S. Trowbridge, and K. P. Reitz
+Implementation of microfacet distrubtion from [Average Irregularity Representation of a Roughened Surface for Ray Reflection](https://www.osapublishing.org/josa/abstract.cfm?uri=josa-65-5-531) by T. S. Trowbridge, and K. P. Reitz
 
 ![](figures/lightingD.PNG)
 

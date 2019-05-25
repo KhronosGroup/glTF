@@ -2,7 +2,8 @@
 <img src="specification/figures/gltf.png" />
 </p>
 
-[![Join the chat at https://gitter.im/KhronosGroup/glTF](https://badges.gitter.im/KhronosGroup/glTF.svg)](https://gitter.im/KhronosGroup/glTF)
+[![Join the Slack group](https://img.shields.io/badge/chat-on%20slack-blue.svg)](https://www.khronos.org/news/permalink/khronos-developer-slack-5bfc62eb261764.20435008)
+[![Join the forums](https://img.shields.io/badge/discuss-in%20forums-blue.svg)](https://community.khronos.org/c/gltf-general)
 
 glTF™ (GL Transmission Format) is a royalty-free specification for the efficient transmission and loading of 3D scenes and models by applications. glTF minimizes both the size of 3D assets, and the runtime processing needed to unpack and use those assets. glTF defines an extensible, common publishing format for 3D content tools and services that streamlines authoring workflows and enables interoperable use of content across the industry.
 
@@ -11,16 +12,23 @@ glTF™ (GL Transmission Format) is a royalty-free specification for the efficie
 * [glTF Specification, 2.0](specification/2.0/README.md) (or [all specification versions](specification/README.md))
 * [glTF Extension Registry](extensions/README.md)
 
-Please provide spec feedback and community updates by submitting [issues](https://github.com/KhronosGroup/glTF/issues).  For quick questions, use [gitter](https://gitter.im/KhronosGroup/glTF).
+Please provide spec feedback by submitting [issues](https://github.com/KhronosGroup/glTF/issues). For technical or art workflow questions, or to showcase your work, [join the glTF forum](https://community.khronos.org/c/gltf-general). For quick questions, use the `#gltf` channel in the Khronos Group [Slack](https://www.khronos.org/news/permalink/khronos-developer-slack-5bfc62eb261764.20435008).
 
 ## Quickstart
 
 ### Overview
 
 <p align="center">
-<a href="specification/2.0/figures/gltfOverview-2.0.0a.png"><img src="specification/2.0/figures/gltfOverview-2.0.0a-small.png" /></a>
-  <sup>From <a href=https://github.com/javagl/gltfOverview/>github.com/javagl/gltfOverview/</a></sup><br>
-<a href=https://github.com/randall2835/gltfOverviewJapanese/releases/download/v0.1/gltfOverview2.0-Japanese.png>Japanese translation</a> by <a href=https://github.com/randall2835/gltfOverviewJapanese>Takuto Takahashi</a>
+<a href="specification/2.0/figures/gltfOverview-2.0.0b.png"><img src="specification/2.0/figures/gltfOverview-2.0.0b-small.png" /></a>
+  <sup>
+    From <a href=https://github.com/javagl/gltfOverview/>github.com/javagl/gltfOverview/</a> |
+    <a href="https://www.khronos.org/files/gltf20-reference-guide.pdf">PDF</a> |
+    <a href="https://www.lulu.com/shop/khronos-group/gltf-20-quick-reference/paperback/product-23977667.html">hardcopy</a> |
+    <a href="https://www.khronos.org/developers/reference-cards/">Khronos reference cards</a>
+  </sup><br>
+  <sup>
+    <a href=https://github.com/randall2835/gltfOverviewJapanese/releases/download/v0.1/gltfOverview2.0-Japanese.png>Japanese translation</a> by <a href=https://github.com/randall2835/gltfOverviewJapanese>Takuto Takahashi</a>
+  </sup>
 </p>
 
 
@@ -31,10 +39,11 @@ Please provide spec feedback and community updates by submitting [issues](https:
    * [100,000+ models](https://sketchfab.com/models?features=downloadable&sort_by=-likeCount) under Creative Commons license on Sketchfab (check license for individual models).
 * [Drag-and-drop validator](http://github.khronos.org/glTF-Validator/) for verifying correctness of existing glTF files.
 * [glTF Tutorial Series](https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/README.md)
+* [Khronos glTF Sample Viewer](http://github.khronos.org/glTF-Sample-Viewer/) with WebGL PBR shaders. ([source code](https://github.com/KhronosGroup/glTF-Sample-Viewer))
 
 ### For artists
 
-- [Blender exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter)
+- [Blender importer/exporter](https://github.com/KhronosGroup/glTF-Blender-IO)
 - [3DS Max exporter](http://doc.babylonjs.com/resources/3dsmax_to_gltf)
 - [Maya exporter](https://github.com/WonderMediaProductions/Maya2glTF)
 - [Other converters and exporters](#converters-importers-and-exporters)
@@ -58,6 +67,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
         - [WebGL Engines](#webgl-engines)
         - [WebGL Sample Code](#webgl-sample-code)
         - [Game and Rendering Engines](#game-and-rendering-engines)
+        - [Embeddable Viewers](#embeddable-viewers)
     - [Languages](#languages)
         - [JavaScript / Node.js](#javascript--nodejs)
         - [C++](#c)
@@ -73,6 +83,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
         - [Swift](#swift)
     - [Utilities](#utilities)
     - [Resources](#resources)
+- [Formats Built on glTF](#formats-built-on-gltf)
 - [Stack Overflow](#stack-overflow)
 - [Presentations and Articles](#presentations-and-articles)
     - [Intros](#intros)
@@ -85,7 +96,7 @@ Please provide spec feedback and community updates by submitting [issues](https:
 
 | Tool | Input | Output | Description |
 |------|-------|--------|-------------|
-| [Khronos Group Blender Exporter](https://github.com/KhronosGroup/glTF-Blender-Exporter) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official exporter for Blender |
+| [Khronos Group Blender Importer/Exporter](https://github.com/KhronosGroup/glTF-Blender-IO) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official importer/exporter, included with Blender 2.80 and higher |
 | [3DS Max Exporter](http://doc.babylonjs.com/resources/3dsmax_to_gltf) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Export glTF files using [BabylonJS plugin](http://doc.babylonjs.com/resources/3dsmax#how-to-install-the-3ds-max-plugin) for 3DS Max 2015 or later |
 | [Maya Exporter](http://doc.babylonjs.com/resources/maya_to_gltf) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Export glTF files using [BabylonJS plugin](http://doc.babylonjs.com/resources/maya) for Maya 2018 or later |
 | [Unity Exporter (Sketchfab fork)](https://github.com/sketchfab/Unity-glTF-Exporter) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Unity editor wizard that exports to glTF Format |
@@ -95,7 +106,6 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [obj2gltf](https://github.com/AnalyticalGraphicsInc/OBJ2GLTF)  | `OBJ` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Command-line converter |
 | [Kupoman blendergltf](https://github.com/Kupoman/blendergltf) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF exporter for Blender aimed at streaming scenes to other applications |
 | [ksons Blender Importer](https://github.com/ksons/gltf-blender-importer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | — | Blender importer for glTF 2.0 (alpha) |
-| [julienduroure Blender Importer](https://github.com/julienduroure/gltf2-blender-importer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | — | glTF 2.0 Blender Importer |
 | [BlackThread.io converter](https://blackthread.io/gltf-converter/) | [Multiple](https://blackthread.io/gltf-converter/#supported-formats) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Online drag and drop converter powered by three.js |
 | [Assimp](http://www.assimp.org/) | [Multiple](https://github.com/assimp/assimp#supported-file-formats) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | General-purpose online conversion pipeline |
 | [PiXYZ Studio](https://www.pixyz-software.com/studio/) | [Multiple](https://docs.google.com/spreadsheets/d/1aWdeBOvZsbnwHfbyhuVS4vBDwevsT2Bz65hEhc0CtnU/pubhtml?gid=786960864) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Interactively prepare & optimize any CAD data |
@@ -112,9 +122,15 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [jgltf-obj](https://github.com/javagl/JglTF/tree/master/jgltf-obj) | `OBJ` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Java programmatic and command-line converters |
 | [Docker collada2gltf](https://hub.docker.com/r/winsent/collada2gltf/) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Docker container for Python web service, built on COLLADA2GLTF |
 | [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Node.js web service, built on COLLADA2GLTF |
-| [cqparts](https://github.com/fragmuffin/cqparts) | `STEP` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Python CAD for programmers ([import / export doc](https://fragmuffin.github.io/cqparts/doc/cqparts/import-export.html)) ([GLTFExporter](https://fragmuffin.github.io/cqparts/doc/api/cqparts.codec.html#cqparts.codec.gltf.GLTFExporter)) |
+| [cqparts](https://github.com/cqparts/cqparts) | `STEP` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Python CAD for programmers ([import / export doc](https://cqparts.github.io/cqparts/doc/cqparts/import-export.html)) ([GLTFExporter](https://cqparts.github.io/cqparts/doc/api/cqparts.codec.html#cqparts.codec.gltf.GLTFExporter)) |
 | [FME Desktop](https://www.safe.com/fme/fme-desktop/) | [Multiple](https://www.safe.com/integrate/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | FME lets you move data between 400+ formats and applications using a drag-and-drop interface while preserving data quality throughout the conversion process. |
-| [UModel (UE Viewer)](https://github.com/gildor2/UModel)| `Unreal engine` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | UModel allows you to view static and animated mesh assets from [Unreal engine games](http://www.gildor.org/projects/umodel/compat), and then export them into several formats including glTF 2.0
+| [UModel (UE Viewer)](https://github.com/gildor2/UModel)| `Unreal engine` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | UModel allows you to view static and animated mesh assets from [Unreal engine games](http://www.gildor.org/projects/umodel/compat), and then export them into several formats including glTF 2.0 |
+| [OPEN CASCADE CAD Assistant](https://www.opencascade.com/content/cad-assistant)| [Multiple](https://www.opencascade.com/content/cad-assistant "STEP, IGES, OBJ, PLY, STL") | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Freeware multi-platform 3D Viewer and converter for 3D/CAD models with glTF 2.0 export support |
+| [Adobe Dimension](https://www.adobe.com/products/dimension.html)| `FBX`, `STL`, `SKP`, `OBJ` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Share and Publish feature lets users export to glTF to view on the web. [Prerelease](https://www.adobeprerelease.com) build has explicit export option for glTF and GLB.|
+| [RapidCompact](https://www.rapidcompact.com)| [Multiple](https://www.rapidcompact.com/doc/cli/00-overview/index.html#import) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Optimizes and converts 3D assets for efficient online presentation. |
+| [Cinema 4D Exporter](https://labs.maxon.net/?p=3360)| — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Export glTF from MAXON Cinema 4D |
+| [Revit glTF Exporter add-in](https://apps.autodesk.com/RVT/en/Detail/Index?id=8451869436709222290)| — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Paid add-in to export glTF from Autodesk Revit 2019 or later |
+| [Adobe Animate](https://www.adobe.com/products/animate.html)| — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Publish 2D animations to glTF/glb using Animate 2019 or later. Also create 360 degree VR content and embed 3D glb assets in the scene. |
 
 ### Optimizers
 
@@ -147,12 +163,17 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [GLTFQuickLook](https://github.com/magicien/GLTFQuickLook) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | macOS QuickLook plugin for glTF files |
 | [glTF Viewer](https://www.8thwall.com/gltf/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Android and iOS apps for glTF 2.0 viewing and link sharing: supports embedded glTF 2.0 files and links |
 | [DirectX glTF Viewer](https://github.com/Microsoft/glTF-DXViewer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | DirectX11, C++ desktop app for loading and rendering glTF files |
-| [glTFShowcase](https://www.vispolygon.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Android app for viewing glTF 2.0 asset from local files (gltf/glb): supports environment lighting change. |
+| [glTFShowcase](https://www.vispolygon.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Android and iOS app for viewing glTF 2.0 asset from local files (gltf/glb/zip): supports environment lighting change. |
 | [Hilo3d glTF Viewer](https://hiloteam.github.io/Hilo3d/examples/glTFViewer/index.html) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Drag-and-drop glTF2.0 viewer for model preview, using Hilo3d |
+| [MeshViewer](https://github.com/jing-interactive/MeshViewer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | OBJ / glTF2 mesh viewer for Windows and macOS|
+| [Diligent GLTF Viewer](https://github.com/DiligentGraphics/DiligentSamples/tree/master/Samples/GLTFViewer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Cross-platform GLTF PBR viewer with multiple rendering back-ends|
+
+
 ### Applications
 
 | Application | Status | Description |
 |-------------|--------|-------------|
+| [Blender 2.80](https://www.blender.org/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Khronos glTF importer/exporter ships with Blender 2.80 and higher |
 | [Paint 3D](https://www.microsoft.com/en-us/store/p/paint-3d/9nblggh5fv99) by Microsoft | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | 3D creation tool |
 | [Remix 3D](https://www.remix3d.com) by Microsoft | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Share and print 3D creations |
 | [Facebook](https://developers.facebook.com/docs/sharing/3d-posts) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Use .glb files to create 3D Posts |
@@ -165,6 +186,8 @@ Please provide spec feedback and community updates by submitting [issues](https:
 | [3D Slash](http://www.3dslash.net) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Web-based and app-based 3D modeling imitating a stonecutter |
 | [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Web-based 3D platform for architecture and interiors |
 | [Plex.Earth](https://plexearth.com/) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Connects AutoCAD with Google Earth and the Real World. |
+| [VECTARY](https://vectary.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Online 3D content creation tool |
+| [Visual Studio Code](https://code.visualstudio.com) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Preview, validate, inspect, and debug glTF files |
 
 ### Loaders and Engines
 
@@ -174,7 +197,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 | Engine | Status | Scope | Related |
 |--------|--------|-------|-------------|
-| [three.js](https://threejs.org/) ([loader](https://threejs.org/docs/index.html#examples/loaders/GLTFLoader)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | All | [`<gltf-model/>` component](https://github.com/mrdoob/model-tag) |
+| [three.js](https://threejs.org/) ([loader](https://threejs.org/docs/index.html#examples/loaders/GLTFLoader)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | All | [`<model-viewer/>` component](https://github.com/GoogleWebComponents/model-viewer/), [drag-and-drop viewer](https://gltf-viewer.donmccurdy.com/) |
 | [BabylonJS](https://www.babylonjs.com/) ([loader](https://github.com/BabylonJS/Babylon.js/tree/master/loaders/src/glTF)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | All | [Viewer component](http://doc.babylonjs.com/extensions/the_babylon_viewer)|
 | [Cesium](http://cesiumjs.org/) ([loader](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | All | [Drag-and-drop viewer](https://www.virtualgis.io/gltfviewer/), [tutorial](https://cesiumjs.org/tutorials/3D-Models-Tutorial/) |
 | [OSG.JS](http://osgjs.org/) ([loader](https://github.com/cedricpinson/osgjs/blob/master/sources/osgPlugins/ReaderWriterGLTF.js)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | All | |
@@ -190,23 +213,37 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | [GLBoost](https://github.com/emadurandal/GLBoost) ([loader](https://github.com/emadurandal/GLBoost/blob/master/src/js/middle_level/loader/GLTFLoader.js)) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | ? | [Examples](https://gitcdn.xyz/repo/emadurandal/GLBoost/master/examples/index.html) |
 | [xml3d.js](http://xml3d.org) ([loader](https://github.com/xml3d/xml3d-gltf-plugin)) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Geometry and materials | |
 | [X3DOM](http://x3dom.org/) ([loader](https://github.com/x3dom/x3dom/blob/master/src/util/glTF/glTFLoader.js)) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Geometry and materials | |
+| [RedGL](https://github.com/redcamel/RedGL2/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | All | [Examples](https://redcamel.github.io/RedGL2/example) |
+| [Ashes](https://github.com/but0n/Ashes) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | All | [Examples](https://codepen.io/but0n/pen/jddYoX) |
 
 #### WebGL Sample Code
 
 | Sample | Status | Description |
 |--------|--------|-------------|
-| [Sample glTF loader with WebGL PBR shader](http://github.khronos.org/glTF-WebGL-PBR/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Engine-agnostic reference implementation for PBR shading with WebGL in glTF 2.0 ([source code](https://github.com/KhronosGroup/glTF-WebGL-PBR)) |
+| [Khronos glTF Sample Viewer](http://github.khronos.org/glTF-Sample-Viewer/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Engine-agnostic sample viewer with WebGL PBR shader for glTF 2.0 ([source code](https://github.com/KhronosGroup/glTF-Sample-Viewer)) |
 
 #### Game and Rendering Engines
 
 | Tool | Status | Description |
 |------|--------|-------------|
 | [UnityGLTF](https://github.com/KhronosGroup/UnityGLTF) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Unity3D library for exporting, loading, parsing, and rendering glTF assets |
+| [GLTFUtility](https://github.com/Siccity/GLTFUtility) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF 2.0 loader plugin for Unity3D |
 | [Unreal](https://docs.unrealengine.com/en-us/Studio/Unreal-Datasmith/Datasmith-Supported-Software-and-File-Types#formatssupportedbyunrealenginedirectly) ([forum](https://forums.unrealengine.com/development-discussion/content-creation/1415582-the-new-gltf-import-supported-in-4-19-preview-is-awesome-experimentation) / [notes](https://docs.unrealengine.com/en-us/Builds/4_19)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Unreal adds glTF import capability |
 | [Godot Game Engine](https://godotengine.org/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Godot 3.0 fully supports glTF import |
 | [jMonkeyEngine](http://jmonkeyengine.org/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | jME 3.2 supports glTF 2.0 |
 | [Ogre_glTF](https://ybalrid.github.io/Ogre_glTF/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF 2.0 loader plugin for Ogre v2-1  |
 | [G3D Innovation Engine](https://casual-effects.com/g3d/www/index.html) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF 2.0 import |
+| [LÖVR](https://lovr.org) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | A framework for creating VR with Lua |
+| [LibGDX glTF](https://github.com/mgsx-dev/gdx-gltf) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | [LibGDX](https://libgdx.badlogicgames.com/) library for loading and rendering glTF assets |
+
+#### Embeddable Viewers
+
+| Tool                                                                         | Author    | Type        | Description                                                                                                                                                                      |
+|------------------------------------------------------------------------------|-----------|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Babylon.js Viewer](https://doc.babylonjs.com/extensions/the_babylon_viewer) | BabylonJS | self-hosted | HTML web component for viewing self-hosted glTF models.                                                                                                                          |
+| [&lt;model-viewer>](https://github.com/GoogleWebComponents/model-viewer)     | Google    | self-hosted | HTML web component for viewing self-hosted glTF models.                                                                                                                          |
+| [Poly](https://poly.google.com/)                                             | Google    | service     | glTF models hosted on Poly may be embedded in an iframe on any site.                                                                                                             |
+| [Sketchfab](https://sketchfab.com/)                                          | Sketchfab | service     | glTF models hosted on Sketchfab may be embedded in an iframe on any site, using the [embed models](https://help.sketchfab.com/hc/en-us/articles/203509907-Embed-Models) feature. |
 
 ### Languages
 
@@ -219,7 +256,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | [THREE.GLTFLoader](https://threejs.org/docs/#examples/loaders/GLTFLoader) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Loads glTF assets into a three.js scene. |
 | [THREE.GLTFExporter](https://threejs.org/docs/#examples/exporters/GLTFExporter) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Exports three.js scenes to a glTF asset |
 | [gltf-walker](https://github.com/ksons/gltf-walker) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Convenience library for processing glTF |
-| [RedCube.js](https://github.com/Reon90/redcube) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | glTF viewer without dependencies |
+| [RedCube.js](https://github.com/Reon90/redcube) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF viewer without dependencies |
 | [gltf-bounding-box](https://github.com/wanadev/gltf-bounding-box) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Computes the global bounding box of a gltf model |
 
 #### C++
@@ -243,6 +280,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | [libgltf](https://github.com/code4game/libgltf) | ![status](https://img.shields.io/badge/glTF-2%2E0-yellow.svg?style=flat) | glTF 2.0 parser for C++11 |
 | [libgltf_ue4](https://github.com/code4game/libgltf_ue4) | ![status](https://img.shields.io/badge/glTF-2%2E0-yellow.svg?style=flat) | A third-party library for UE4.10+ to load glTF files |
 | [glTF for UE4](https://github.com/code4game/glTFForUE4) | ![status](https://img.shields.io/badge/glTF-2%2E0-yellow.svg?style=flat) | A plugin for UE4.10+ to import glTF files |
+| [Diligent Engine](https://github.com/DiligentGraphics/DiligentEngine) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | A modern cross-platform low-level graphics libarary and rendering framework |
 
 #### Objective-C
 
@@ -257,18 +295,22 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | [C# glTF loader](https://github.com/KhronosGroup/glTF-CSharp-Loader) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | C# reference loader for glTF |
 | [Aspose.3D for .NET](http://www.aspose.com/products/3d/net) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat)| Import, export, and convert glTF |
 | [MixedRealityToolkit-Unity](https://github.com/Microsoft/MixedRealityToolkit-Unity) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | A collection of scripts and components intended to accelerate development of applications targeting Microsoft HoloLens and Windows Mixed Reality headsets. |
+| [SharpGLTF](https://github.com/VPenades/SharpGLTF) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | C# toolkit for reading and writing glTF files. |
+| [DEM.Net](https://github.com/dem-net/DEM.Net) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | C# toolkit for Digital Elevation Models, exporting models with textures and normal maps to glTF files. |
 
 #### C
 
 | Tool | Status | Description |
 |------|--------|-------------|
 | [AssetKit](https://github.com/recp/assetkit) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | 3D asset importer, exporter library. |
+| [cgltf](https://github.com/jkuhlmann/cgltf) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Single-header C glTF loader. |
 
 #### Go
 
 | Tool | Status | Description |
 |------|--------|-------------|
 | [gltf](https://github.com/sturfeeinc/glTF) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | go library for marshaling and unmarshaling glTF |
+| [gltf 2.0](https://github.com/qmuntal/gltf) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | A Go glTF 2.0 writer, reader and validator |
 
 #### Rust
 
@@ -326,6 +368,10 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 * [glTF-Generator-Registry](https://github.com/KhronosGroup/glTF-Generator-Registry/) - An open registry of tools that create glTF assets, along with structured metadata such as links to documentation and bug trackers.
 
+## Formats Built on glTF
+
+* [3D Tiles](https://github.com/AnalyticalGraphicsInc/3d-tiles) - An open standard for streaming and rendering massive heterogenous 3D content.
+
 ## Stack Overflow
 
 * [glTF tagged](http://stackoverflow.com/questions/tagged/gltf) questions
@@ -345,8 +391,36 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 ### All Presentations and Articles
 
+* [Exporting glTF from Animate](https://theblog.adobe.com/exporting-gltf-from-animate/) by Ram Kulkarni. April 2019
+* [glTF: Everything You Need to Know!](https://www.threekit.com/blog/gltf-everything-you-need-to-know) by Ben Houston. April 2019
+* [GDC 2019 Khronos Developer Days - WebGL & glTF video](https://youtu.be/mCJoBGOCTwk?t=868). March 2019 ([slides](https://www.khronos.org/developers/library/2019-gdc))
+   * Khronos: Patrick Cozzi - Overview
+   * Microsoft: Saurabh Bhatia - Ecosystem and SDK Update
+   * Google: Chris Joel - `<model-viewer>` Fidelity Testing
+   * Adobe: Mike Bond - Adobe Dimension
+   * Mozilla: Robert Long - Publishing Virtual Worlds with glTF
+   * Facebook: Susie Su - An On-Demand, Optimizing glTF Backend
+* [glTF Debugging in Visual Studio Code](https://medium.com/@babylonjs/gltf-debugging-in-visual-studio-code-a89805bda3cd) by Gary Hsu. January 2019
+* [SIGGRAPH Asia glTF Overview and CTTF Update](https://www.khronos.org/developers/library/2018-siggraph-asia) by Khronos. December 2018
+* [droidcon SF 2018 - The JPEG of 3D: Bringing 3D scenes and objects into your 2D Android app with glTF](https://www.youtube.com/watch?v=EGSR8qrpEq4) by Pierre LaFayette. November 2018
+* [Using the Babylon.js viewer with WebVR and Windows Mixed Reality home](https://medium.com/@babylonjs/using-the-babylon-js-viewer-with-webvr-and-windows-mixed-reality-home-fd1e6af46137) by Saurabh Bhatia. November 2018
+* [Behind the Scenes with Adobe Dimension Engineers: How We Built the 3D Publish Feature](https://theblog.adobe.com/behind-the-scenes-with-adobe-dimension-engineers-how-we-built-the-3d-publish-feature/) by Mike Bond. November 2018
+* [OGC and Khronos Form a Liaison to Improve Interoperability within the Geospatial and 3D Graphics Communities](https://www.khronos.org/news/press/ogc-and-khronos-form-a-liaison-to-improve-interoperability-within-the-geospatial-and-3d-graphics-communities). October 2018
+* [If you build it (together), they will come...Mozilla and the Khronos Group collaborate to bring glTF capabilities to Blender](https://medium.com/mozilla-open-innovation/gltf-import-export-tool-ca0932b0ce76) by Rosana Ardila. October 2018
 * [glTF and Construction – Part 1: Secrets of the Cloud](https://constructingdata.wordpress.com/2018/09/07/gltf-and-construction-part-1-secrets-of-the-cloud/) by Tim Davies. September 2018
 * [glTF and Construction – Part 2: 3D for Everyone](https://constructingdata.wordpress.com/2018/09/08/gltf-and-construction-part-2-3d-for-everyone/) by Tim Davies. September 2018
+* SIGGRAPH 2018 glTF BOF [video](https://youtu.be/FCAM-3aAzXg?t=3472) and [materials](https://www.khronos.org/developers/library/2018-siggraph). August 2018
+   * Ecosystem update: Patrick Cozzi, Cesium
+   * glTF for artists: Patrick Ryan, Microsoft
+   * TurboSquid: Beau Perschall
+   * Facebook: Pär Winzell
+   * Microsoft: Gary Hsu and Cedric Caillaud
+   * STK: Alex Wood, AGI
+   * VSCode: Ed Mackey, AGI
+   * Industrial AR with glTF: Johannes Beh, Fraunhofer
+   * Google Draco: Jamieson Brettle
+   * Texture transmission: Mark Callow
+   * IKEA: Martin Enthed
 * [glTF 2.0 – Status and Outlook](https://www.khronos.org/developers/library/2018-webinar-gltf-2) by Norbert Nopper. July 2018
 * [TurboSquid adds glTF to supported formats for its StemCell initiative](https://www.khronos.org/blog/turbosquid-adds-gltf-to-supported-formats-for-its-stemcell-initiative). July 2018
 * [Why glTF 2.0 is awesome!](https://blog.ybalrid.info/2018/07/16/why-gltf-2-0-is-awesome/) by Arthur Brainville. July 2018

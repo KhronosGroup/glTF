@@ -205,7 +205,7 @@ Using the Cesium [aircraft model](https://github.com/AnalyticalGraphicsInc/cesiu
 
 ![](BenchData/thumb/Cesium_Air.jpg)
 
-Using the 1200 12th Ave model (thanks to [Cube Cities](http://cubecities.com/)), which contians 30,235 triangles with 21 textures and no animations, statistics and results for the common glTF setups are:
+Using the 1200 12th Ave model (thanks to [Cube Cities](http://cubecities.com/)), which contains 30,235 triangles with 21 textures and no animations, statistics and results for the common glTF setups are:
 
 | 1200 12th Ave                         | # files |     size | size (gzip\*) |  load time | 
 | :------------------------------------ | ------: | -------: | ------------: | ---------: | 

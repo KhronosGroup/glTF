@@ -82,7 +82,7 @@ Color is calculated as:
 color = <baseColorTerm>
 ```
 
-`<baseColorTerm>` is defined by the [core glTF material specification](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#metallic-roughness-material).
+`<baseColorTerm>` is the product of `baseColorFactor`, `baseColorTexture`, and vertex color (if any), as defined by the [core glTF material specification](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#metallic-roughness-material).
 
 ### Example
 

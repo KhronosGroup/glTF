@@ -1,0 +1,26 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "light/spot",
+    "type" : "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties" : {
+        "innerConeAngle" : {
+            "type" : "number",
+            "description" : "Angle in radians from centre of spotlight where falloff begins.",
+            "default" : 0.0,
+            "minimum": 0,
+            "maximum": 1.5707963267948966,
+            "exclusiveMaximum": true
+        },
+        "outerConeAngle" : {
+            "type" : "number",
+            "description" : "Angle in radians from centre of spotlight where falloff ends.",
+            "default" : 0.7853981633974483,
+            "minimum": 0,
+            "maximum": 1.5707963267948966,
+            "exclusiveMinimum": true
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

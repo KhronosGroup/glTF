@@ -33,7 +33,6 @@
             "description" : "The value of the uniform.",
             "gltf_detailedDescription" : "The value of the uniform. The length is determined by the values of the `type` and `count` (if present) properties.  A material uniform value with the same name, when specified, overrides this value."
         },
-        "name" : {},
         "extensions" : {},
         "extras" : {}
     },

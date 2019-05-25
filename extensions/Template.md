@@ -10,7 +10,7 @@ TODO: Draft or Stable
 
 ## Dependencies
 
-Written against the glTF draft 1.0 spec.
+Written against the glTF 2.0 spec.
 
 ## Overview
 

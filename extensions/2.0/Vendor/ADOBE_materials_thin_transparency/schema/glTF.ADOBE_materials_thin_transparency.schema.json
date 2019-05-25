@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "ADOBE_materials_thin_transparency glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines properties to model physically plausible optical transparency.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "transmissionFactor": {
+            "type": "number",
+            "description": "The base percentage of light transmitted through the surface.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The base percentage of non-specularly reflected light that is transmitted through the surface. i.e. of the light that penetrates a surface (isn't specularly reflected), what percentage is transmitted and not diffusely re-emitted from the surface?"
+        },
+        "transmissionTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "A greyscale texture that defines the transmission percentage of the surface. This will be multiplied by transmissionFactor.",
+            "gltf_detailedDescription": "The percentage of non-specularly reflected light that is transmitted through the surface. i.e. of the light that penetrates a surface (isn't specularly reflected), what percentage is transmitted and not diffusely re-emitted from the surface? This will be multiplied by the transmissionFactor."
+        },
+        "ior": {
+            "type": "number",
+            "description": "The index of refraction of the material.",
+            "default": 1.33,
+            "minimum": 1.0,
+            "maximum": 4.0,
+            "gltf_detailedDescription": "The average index of refraction of the material, ignoring differences between frequencies of light. Default of 1.33 is for liquid water."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

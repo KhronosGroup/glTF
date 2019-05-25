@@ -1,0 +1,35 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Articulation",
+    "type": "object",
+    "description": "A model articulation definition.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "pattern": "^[^\\s]+$",
+            "description": "The name of this articulation.  The articulation name must be unique within this model.  Articulation names may not contain spaces.",
+            "minLength": 1
+        },
+        "stages": {
+            "type": "array",
+            "description": "An array of stages, each of which defines a degree of freedom of movement.",
+            "items": {
+                "$ref": "articulation.stage.schema.json"
+            },
+            "minItems": 1
+        },
+        "pointingVector": {
+            "type": "array",
+            "description": "The local forward vector for the associated node, for the purpose of pointing at a target or other object.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "name", "stages" ]
+}

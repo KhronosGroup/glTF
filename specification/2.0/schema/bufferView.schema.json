@@ -17,7 +17,7 @@
         },
         "byteLength": {
             "type": "integer",
-            "description": "The length of the bufferView in bytes.",
+            "description": "The total byte length of the buffer view.",
             "minimum": 1
         },
         "byteStride": {
@@ -35,11 +35,13 @@
             "anyOf": [
                 {
                     "enum": [ 34962 ],
-                    "description": "ARRAY_BUFFER"
+                    "description": "ARRAY_BUFFER",
+                    "type": "integer"
                 },
                 {
                     "enum": [ 34963 ],
-                    "description": "ELEMENT_ARRAY_BUFFER"
+                    "description": "ELEMENT_ARRAY_BUFFER",
+                    "type": "integer"
                 },
                 {
                     "type": "integer"
