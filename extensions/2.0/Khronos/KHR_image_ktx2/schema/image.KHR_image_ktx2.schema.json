@@ -89,8 +89,8 @@
                 },
                 "additionalProperties": false,
                 "required": [
-                    "offset",
-                    "bytesOfImages"
+                    "byteOffset",
+                    "byteLength"
                 ]
             }
         },

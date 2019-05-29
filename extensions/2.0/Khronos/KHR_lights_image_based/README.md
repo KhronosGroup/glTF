@@ -107,7 +107,7 @@ finalSampledColor = sampledColor * brightnessFactor + brightnessOffset;
 ### Texture Restrictions
 
 - A glTF `texture` used for IBL cannot have a `KHR_texture_transform` extension defined.
-- `specularEnvironmentTexture` and `diffuseEnvironmentTexture` (when used) must refer to a texture referrring to a KTX2 image of **Cubemap** type as defined in KTX2, Section 4.3. Namely:
+- `specularEnvironmentTexture` and `diffuseEnvironmentTexture` (when used) must refer to a texture referring to a KTX2 image of **Cubemap** type as defined in KTX2, Section 4.3. Namely:
   - `pixelHeight` must be greater than 0.
   - `pixelDepth` must be 0.
   - `numberOfArrayElements` must be 0.
