@@ -71,7 +71,8 @@ On a pragmatic ecosystem note, we must also remember that glTF 2.0 normally allo
 
 ## Known Implementations
 
-* Facebook AR/VR asset delivery
+* [FBX2glTF](https://github.com/facebookincubator/FBX2glTF) (shortly)
+* Internal Facebook AR/VR development
 
 ## Resources
 
