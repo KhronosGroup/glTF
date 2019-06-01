@@ -179,7 +179,7 @@ The following example shows how the same material can be defined using both meta
                 "KHR_materials_pbrSpecularGlossiness": {
                     "diffuseFactor": [ 0.0, 0.0, 0.0, 1.0 ],
                     "specularFactor": [ 1.0, 0.766, 0.336 ],
-                    "glossinessFactor": [ 0.9 ]
+                    "glossinessFactor": 0.9
                 }
             }
         }
