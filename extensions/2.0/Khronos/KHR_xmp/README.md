@@ -1,9 +1,13 @@
 # KHR_xmp
 
 ## Contributors
-
-TODO
-
+* Emiliano Gambaretto, Adobe, <mailto:emiliano@adobe.com>
+* Mike Bond, Adobe, [@MiiBond](https://twitter.com/MiiBond)
+* Robert Long, Mozilla, [@arobertlong](https://twitter.com/arobertlong)
+* Don McCurdy, Google, [@donmccurdy](https://twitter.com/donrmccurdy)
+* Andreas Plesch, Individual Contributor,[@andreasplesch](https://github.com/andreasplesch)
+* Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
+* Ed Mackey, Analytical Graphics, Inc.
 
 ## Status
 
