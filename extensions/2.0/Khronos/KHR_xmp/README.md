@@ -110,7 +110,7 @@ The following example defines a glTF scene with a sample XMP metadata.
 
 
 ## Instantiating XMP metadata
-Metadata can be instantiate in a node by defining the extensions.KHR_xmp property and, within that, an index into the `packets` array using the `packet` property.
+Metadata can be instantiated in a node by defining the `extensions.KHR_xmp` property and, within that, an index into the `packets` array using the `packet` property.
 The following example shows a glTF Mesh instantiating the XMP metadata at index `0`.
 
 ```
