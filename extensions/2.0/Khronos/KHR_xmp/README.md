@@ -144,7 +144,7 @@ The following example shows a glTF Mesh instantiating the XMP metadata at index 
 
 #### Overriding Rule
 A glTF scene might reference resources already containing XMP metadata.
-A relevant example would be an image node referencing a `png` file with embedded XMP metadata.
+A relevant example would be an image node referencing a PNG file with embedded XMP metadata.
 When this happens the XMP metadata specified in the glTF manifest takes precedence over the metadata embedded in the referenced resource.
 
 
