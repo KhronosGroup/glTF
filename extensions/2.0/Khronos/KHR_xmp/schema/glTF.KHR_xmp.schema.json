@@ -11,7 +11,8 @@
                 "type": "object",
                 "additionalProperties": true,
                 "description": "Dictionary of XMP metadata properties. Property names take the form `xmp_namespace:property_name`",
-            }
+            },
+            "minItems": 1
         },
         "extensions": { },
         "extras": { }
