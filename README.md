@@ -391,6 +391,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 ### All Presentations and Articles
 
+* [Uber’s vis.gl brings glTF to geospatial data visualization](https://www.khronos.org/blog/ubers-vis.gl-brings-gltf-to-geospatial-data-visualization) by Georgios Karnas, Ib Green, Travis Gorkin and and Xintong Xia. June 2019
 * [Exporting glTF from Animate](https://theblog.adobe.com/exporting-gltf-from-animate/) by Ram Kulkarni. April 2019
 * [glTF: Everything You Need to Know!](https://www.threekit.com/blog/gltf-everything-you-need-to-know) by Ben Houston. April 2019
 * [GDC 2019 Khronos Developer Days - WebGL & glTF video](https://youtu.be/mCJoBGOCTwk?t=868). March 2019 ([slides](https://www.khronos.org/developers/library/2019-gdc))
