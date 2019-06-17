@@ -265,7 +265,9 @@ The [node transformations](#transformations) and [animation channel paths](#anim
 * rotation: A quaternion (x, y, z, w), where w is the scalar
 * scale: A 3D vector containing the scaling factors along the x, y and z axes
 
-RGB color values use sRGB (Rec. 709) color primaries.
+RGB color values use sRGB color primaries.
+
+> **Implementation Note:** Color primaries define the interpretation of each color channel of the color model, particularly with respect to the RGB color model. In the context of a typical display, color primaries describe the color of the red, green and blue phosphors or filters. The same primaries are also defined in Recommendation ITU-R BT.709. Since the overwhelming majority of currently used consumer displays are using the same primaries as default, client implementations usually do not need to convert color values. Future specification versions or extensions may allow other color primaries (such as P3) or even provide a way of embedding custom color profiles.
 
 ## Scenes
 
