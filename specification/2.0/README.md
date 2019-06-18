@@ -854,6 +854,46 @@ After applying morph targets to vertex positions and normals, tangent space may 
 
 > **Implementation note:** The number of morph targets is not limited in glTF. A conformant client implementation must support at least eight morphed attributes. This means that it has to support at least eight morph targets that contain a `POSITION` attribute, or four morph targets that contain a `POSITION` and a `NORMAL` attribute, or two morph targets that contain `POSITION`, `NORMAL` and `TANGENT` attributes. For assets that contain a higher number of morphed attributes, renderers may choose to either fully support them (for example, by performing the morph computations in software), or to only use the eight attributes of the morph targets with the highest weights. 
 
+> **Implementation note:** *(the following note is non-normative)* Although morph target are referenced by their position in the `mesh.primitives[].targets` array, many tools and application can use and benefit for having an associated name to a morph target. This functionality is not currently  supported by the glTF 2.0 file format. 
+> In practice however, many current implementation will check for the presence of an array of strings in `mesh.extras.targetNames` of the same size as the morph target array. 
+> Each string of this array, if present, is a hint about the name of the morph target that can be presented in an user interface. See content of `extras` property in the example below :
+> This practice is not standard. A future version of the glTF file format may include a standard way to store morph target names.
+
+```json
+
+"meshes": [{
+	"extras": {
+		"targetNames": [
+			"ExpressionSmile",
+			"ExpressionCry"
+		]
+	},
+	"weights": [
+		0,
+		0
+	],
+	"primitives": [{
+		"attributes": {
+			"POSITION": 0,
+			"NORMAL": 1
+		},
+		"targets": [{
+				"POSITION": 2,
+				"NORMAL": 3
+			},
+			{
+				"POSITION": 4,
+				"NORMAL": 5
+			}
+		],
+		"indices": 6
+	}]
+}]
+
+```
+
+*(end of non-normative note about naming morph-targets)*
+
 
 ### Skins
 
