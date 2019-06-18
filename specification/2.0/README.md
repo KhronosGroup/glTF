@@ -265,7 +265,9 @@ The [node transformations](#transformations) and [animation channel paths](#anim
 * rotation: A quaternion (x, y, z, w), where w is the scalar
 * scale: A 3D vector containing the scaling factors along the x, y and z axes
 
+RGB color values use sRGB color primaries.
 
+> **Implementation Note:** Color primaries define the interpretation of each color channel of the color model, particularly with respect to the RGB color model. In the context of a typical display, color primaries describe the color of the red, green and blue phosphors or filters. The same primaries are also defined in Recommendation ITU-R BT.709. Since the overwhelming majority of currently used consumer displays are using the same primaries as default, client implementations usually do not need to convert color values. Future specification versions or extensions may allow other color primaries (such as P3) or even provide a way of embedding custom color profiles.
 
 ## Scenes
 
@@ -1086,7 +1088,7 @@ This is illustrated in the following figure, where the respective UV coordinates
 <img src="figures/texcoords.jpg" /><br/>
 </p>
 
-Any colorspace information (such as ICC profiles, intents, etc) from PNG or JPEG containers must be ignored.
+Any colorspace information (such as ICC profiles, intents, etc) from PNG or JPEG containers must be ignored. Effective transfer function is defined by a glTF object that refers to the image.
 
 > **Implementation Note:** This increases portability of an asset, since not all image decoding libraries fully support custom color conversions. To achieve correct rendering, WebGL runtimes must disable such conversions by setting `UNPACK_COLORSPACE_CONVERSION_WEBGL` flag to `NONE`.
 
@@ -1148,7 +1150,7 @@ The metallic-roughness material model is defined by the following properties:
 
 The base color has two different interpretations depending on the value of metalness. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used. 
 
-The value for each property (`baseColor`, `metallic`, `roughness`) can be defined using factors or textures. The `metallic` and `roughness` properties are packed together in a single texture called `metallicRoughnessTexture`. If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. If both factors and textures are present the factor value acts as a linear multiplier for the corresponding texture values. The `baseColorTexture` is in sRGB space and must be converted to linear space before it is used for any computations.
+The value for each property (`baseColor`, `metallic`, `roughness`) can be defined using factors or textures. The `metallic` and `roughness` properties are packed together in a single texture called `metallicRoughnessTexture`. If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. If both factors and textures are present the factor value acts as a linear multiplier for the corresponding texture values. The `baseColorTexture` uses the sRGB transfer function and must be converted to linear space before it is used for any computations.
 
 For example, assume a value of `[0.9, 0.5, 0.3, 1.0]` in linear space is obtained from an RGBA `baseColorTexture`, and assume that `baseColorFactor` is given as `[0.2, 1.0, 0.7, 1.0]`.
 Then, the result would be 
@@ -2701,7 +2703,7 @@ The occlusion map texture. The occlusion values are sampled from the R channel. 
 
 #### material.emissiveTexture
 
-The emissive map controls the color and intensity of the light being emitted by the material. This texture contains RGB components in sRGB color space. If a fourth component (A) is present, it is ignored.
+The emissive map controls the color and intensity of the light being emitted by the material. This texture contains RGB components encoded with the sRGB transfer function. If a fourth component (A) is present, it is ignored.
 
 * **Type**: `object`
 * **Required**: No
@@ -3149,7 +3151,7 @@ The RGBA components of the base color of the material. The fourth component (A) 
 
 #### pbrMetallicRoughness.baseColorTexture
 
-The base color texture. This texture contains RGB(A) components in sRGB color space. The first three components (RGB) specify the base color of the material. If the fourth component (A) is present, it represents the alpha coverage of the material. Otherwise, an alpha of 1.0 is assumed. The `alphaMode` property specifies how alpha is interpreted. The stored texels must not be premultiplied.
+The base color texture. The first three components (RGB) are encoded with the sRGB transfer function. They specify the base color of the material. If the fourth component (A) is present, it represents the linear alpha coverage of the material. Otherwise, an alpha of 1.0 is assumed. The `alphaMode` property specifies how alpha is interpreted. The stored texels must not be premultiplied.
 
 * **Type**: `object`
 * **Required**: No
