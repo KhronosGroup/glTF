@@ -82,8 +82,8 @@ When a CTTF image is used as a texture for glTF 2.0 core materials, it must be o
 
 - `pixelHeight` must be greater than 0.
 - `pixelDepth` must be 0.
-- `numberOfArrayElements` must be 0.
-- `numberOfFaces` must be 1.
+- `layerCount` must be 0.
+- `faceCount` must be 1.
 
 Other use cases may impose different restrictions on CTTF image type.
 

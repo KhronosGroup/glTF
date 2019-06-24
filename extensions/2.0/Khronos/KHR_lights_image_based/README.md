@@ -110,8 +110,8 @@ finalSampledColor = sampledColor * brightnessFactor + brightnessOffset;
 - `specularEnvironmentTexture` and `diffuseEnvironmentTexture` (when used) must refer to a texture referring to a KTX2 image of **Cubemap** type as defined in KTX2, Section 4.3. Namely:
   - `pixelHeight` must be greater than 0.
   - `pixelDepth` must be 0.
-  - `numberOfArrayElements` must be 0.
-  - `numberOfFaces` must be 6.
+  - `layerCount` must be 0.
+  - `faceCount` must be 6.
 - The image must contain mip levels.
 - The transfer function for all image formats must be linear.
 - Cubemaps orientation must be aligned with [glTF coordinate system](../../../../specification/2.0#coordinate-system-and-units). 
@@ -165,7 +165,7 @@ Assets expected to be publicly released should always provide a normal quality (
                     "supercompressionScheme": -1, // TBD, CTTF
                     "pixelWidth": 512,
                     "pixelHeight": 512,
-                    "faces": 6,
+                    "faceCount": 6,
                     "levels": [
                         {
                             "byteOffset": 1024,
@@ -182,7 +182,7 @@ Assets expected to be publicly released should always provide a normal quality (
                     "vkFormat": 144, // VK_FORMAT_BC6H_SFLOAT_BLOCK
                     "pixelWidth": 512,
                     "pixelHeight": 512,
-                    "faces": 6,
+                    "faceCount": 6,
                     "levels": [
                         {
                             "byteOffset": 1024,
@@ -199,7 +199,7 @@ Assets expected to be publicly released should always provide a normal quality (
                     "vkFormat": -1, // Vulkan ASTC HDR, TBD
                     "pixelWidth": 512,
                     "pixelHeight": 512,
-                    "faces": 6,
+                    "faceCount": 6,
                     "levels": [
                         {
                             "byteOffset": 1024,

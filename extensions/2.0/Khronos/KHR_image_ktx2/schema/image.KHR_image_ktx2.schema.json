@@ -28,12 +28,12 @@
             "minimum": 0,
             "default": 0
         },
-        "arrayElements": {
+        "layerCount": {
             "type": "integer",
             "minimum": 0,
             "default": 0
         },
-        "faces": {
+        "faceCount": {
             "type": "integer",
             "enum": [
                 1,
@@ -82,7 +82,7 @@
                         "type": "integer",
                         "minimum": 0
                     },
-                    "byteLengthUncompressed": {
+                    "uncompressedByteLength": {
                         "type": "integer",
                         "minimum": 0
                     }

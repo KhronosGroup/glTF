@@ -55,7 +55,7 @@ The following glTF will load `image_hi.ktx2` in clients that support this GPU fo
                     "supercompressionScheme": -1, // TBD, CTTF
                     "pixelWidth": 512,
                     "pixelHeight": 512,
-                    "faces": 6,
+                    "faceCount": 6,
                     "levels": [
                         {
                             "byteOffset": 1024,
@@ -72,7 +72,7 @@ The following glTF will load `image_hi.ktx2` in clients that support this GPU fo
                     "vkFormat": -1, // Vulkan ASTC HDR, TBD
                     "pixelWidth": 512,
                     "pixelHeight": 512,
-                    "faces": 6,
+                    "faceCount": 6,
                     "levels": [
                         {
                             "byteOffset": 1024,
