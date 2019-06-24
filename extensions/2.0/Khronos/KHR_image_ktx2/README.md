@@ -20,7 +20,7 @@ This extension adds the ability to specify images using the [KTX2 file format](h
 
 When the extension is used, it's allowed to use value `image/ktx2` for the `image.mimeType` property.
 
-A JSON form of the KTX2 header is provided in the extension object, so implementations can check whether the image is compatible with the GPU and allocate memory before fetching the actual image data. Also, this allows immediately requesting needed parts (e.g., mip levels) of the KTX2 file by skipping the binary KTX2 header.
+Optionally, a JSON form of the KTX2 header may be provided in the extension object, so implementations can check whether the image is compatible with the GPU and allocate memory before fetching the actual image data. Also, this allows immediately requesting needed parts (e.g., mip levels) of the KTX2 file by skipping the binary KTX2 header.
 
 Because of glTF compatibility requirements, the image cannot be used directly from any glTF core object, so additional extensions are required to use KTX2 images with glTF textures. The following example shows a complete glTF 2.0 asset containing only an uncompressed RGBA8 2D image with BGRA swizzling metadata and without precomputed mip levels.
 
@@ -56,7 +56,7 @@ Because of glTF compatibility requirements, the image cannot be used directly fr
 
 ### Validation and implementation notes
 
-The information in the extension object must exactly match KTX2 header.
+If present, the information in the extension object must exactly match KTX2 header.
 
 JSON type of each metadata entry depends on the type of the original value. The JSON-Schema provides types for metadata keys defined in the KTX2 specification.
 
