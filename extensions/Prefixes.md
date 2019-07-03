@@ -16,6 +16,7 @@ The following extension prefixes are reserved:
 * `GOOGLE` - Google
 * `KHR` - Ratified or intended-to-be-ratified Khronos
 * `LLQ` - Lifeliqe
+* `MESHOPT` - Meshoptimizer
 * `MOZ` - Mozilla
 * `MSFT` - Microsoft
 * `NV` - NVIDIA Corporation
