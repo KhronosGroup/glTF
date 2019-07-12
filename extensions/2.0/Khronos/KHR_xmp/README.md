@@ -21,9 +21,9 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 This extension adds support for [XMP (Extensible Metadata Platform)](https://github.com/adobe/xmp-docs) metadata to glTF.
-XMP is a technology for embedding metadata into documents and [is an ISO standard since 2012](https://www.iso.org/news/2012/03/Ref1525.html).
+XMP is a technology for embedding metadata into documents and has been [an ISO standard since 2012](https://www.iso.org/news/2012/03/Ref1525.html).
 XMP metadata is embedded in a top-level glTF extension as an array of metadata packets.
-Any JSON object in the glTF scene description can reference matadata packets with the exception of the root object.
+Any JSON object in the glTF can reference metadata packets with the exception of the root object.
 XMP metadata referenced by the glTF top level property `asset` applies to the entire glTF file.
 XMP metadata is organized in namespaces.
 We refer to the [XMP namespaces documentation](https://github.com/adobe/xmp-docs/tree/master/XMPNamespaces) for a detailed description of XMP properties.
@@ -68,7 +68,7 @@ The following table describes how [XMP Core Properties](https://github.com/adobe
 
 
 ## The XMP gltf Namespace
-The `gltf` namespace is used to extend `XMP` to include metadata of interest to the glTF working group.
+The `gltf` namespace is used to extend `XMP` to include metadata of specific relevance to glTF.
 The table below describes the properties in the `gltf` namespace.
 
 | Property Name  | Desrcription | JSON Type    |
@@ -78,7 +78,7 @@ The table below describes the properties in the `gltf` namespace.
 
 ## Defining XMP Metadata
 An indirection level is introduced to avoid replicating the same XMP metadata in multiple glTF nodes.
-XMP metadatas are defined within a dictionary property in the glTF scene description file, by adding an extensions property to the top-level glTF 2.0 object and defining a KHR_xmp property with a `packets` array inside it.
+XMP metadatas are defined within a dictionary property in the glTF scene description file by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_xmp` property with a `packets` array inside it.
 The following example defines a glTF scene with a sample XMP metadata.
 
 ```
@@ -149,9 +149,9 @@ When this happens the XMP metadata specified in the glTF manifest takes preceden
 
 
 #### Transferring and merging metadata
-When a glTF object (for example a Mesh) is copied from a glTF file to another, the associated KHR_xmp metadata should be copied as well.
-Copying metadata requires adding the source object metadata packet to the `KHR_xmp.packets` extension of the copied glTF and reference it from the copied object `KHR_xmp.packet` extension.
-In the following example two glTFs containing a mesh with KHR_xmp metadata are copied into a third glTF.
+When a glTF object (for example a Mesh) is copied from a glTF file to another, the associated `KHR_xmp` metadata should be copied as well.
+Copying metadata requires adding the source object's metadata packets to the destination glTF's `KHR_xmp.packets` array.
+In the following example two glTFs containing a mesh with `KHR_xmp` metadata are copied into a third glTF.
 
 
 glTF containing the first mesh:
@@ -221,7 +221,7 @@ glTF containing copies of both meshes:
 
 
 The [xmpMM](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/xmpMM.md) namespaces introduces mechanisms such as Pantry-Ingredient to handle the case when a glTF file is generated via derivation or composition of one or more source documents.
-The following example illustrates how KHR_xmp metadata can be computed in the case of two glTFs, both containing `asset` metadata, that are processed together to obtain a new composited glTF document.
+The following example illustrates how `KHR_xmp` metadata can be computed in the case of two glTFs, both containing `asset` metadata, that are processed together to obtain a new composited glTF document.
 
 First glTF document:
 
