@@ -40,25 +40,26 @@ The following table describes how [XMP Core Properties](https://github.com/adobe
 
 | XMP Property Type | JSON Type |
 | ----------------- | --------- |
-| Boolean           | Boolean   |
-| Date              | String formatted as described in the XMP documentation |
-| Integer           | Number    |
-| Real              | Number    |
-| Agent Name        | String formatted as described in the XMP documentation |
-| Choice            | String    |
-| Language Alternative | A language alternative is a dictionary mapping a language (RFC 3066 language code) to text. See property `dc:title` in the example below|
-| GUID              | String formatted as described in the XMP documentation |
-| Locale            | String formatted as described in the XMP documentation |
-| MIMEType          | String formatted as described in the XMP documentation |
-| ProperName        | String formatted as described in the XMP documentation |
-| RenditionClass    | String formatted as described in the XMP documentation |
-| URI               | String formatted as described in the XMP documentation |
-| ResourceRef       | Object, we refer to the XMP documentation for a description of its properties |
-| URL               | String formatted as described in the XMP documentation |
-| Rational          | String formatted as described in the XMP documentation |
-| FrameRate         | String formatted as described in the XMP documentation |
-| FrameCount        | String formatted as described in the XMP documentation |
-| Part              | String formatted as described in the XMP documentation |
+| [Boolean](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#boolean)              | Boolean   |
+| [Date](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#date)                    | String formatted as described in the XMP documentation |
+| [Integer](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#integer)              | Number    |
+| [Real](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#real)                    | Number    |
+| [Text](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#text)                    | String |
+| [Agent Name](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#agent-name)        | String formatted as described in the XMP documentation |
+| [Choice](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#choice)                | String    |
+| [Language Alternative](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#language-alternative) | A language alternative is a dictionary mapping a language (RFC 3066 language code) to text. See property `dc:title` in the example below|
+| [GUID](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#guid)                    | String formatted as described in the XMP documentation |
+| [Locale](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#locale)                | String formatted as described in the XMP documentation |
+| [MIMEType](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#mimetype)            | String formatted as described in the XMP documentation |
+| [ProperName](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#propername)        | String formatted as described in the XMP documentation |
+| [RenditionClass](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#renditionclass)    | String formatted as described in the XMP documentation |
+| [URI](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#uri)                      | String formatted as described in the XMP documentation |
+| [ResourceRef](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#resourceref)      | Object, we refer to the XMP documentation for a description of its properties |
+| [URL](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#url)                      | String formatted as described in the XMP documentation |
+| [Rational](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#rational)            | String formatted as described in the XMP documentation |
+| [FrameRate](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#framerate)          | String formatted as described in the XMP documentation |
+| [FrameCount](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#framecount)        | String formatted as described in the XMP documentation |
+| [Part](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#part)                    | String formatted as described in the XMP documentation |
 
 ### Additional Properties
 
