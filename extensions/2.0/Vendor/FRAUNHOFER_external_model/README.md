@@ -19,14 +19,14 @@ State representation containing domain related payload and links to further reso
 
 Those links allow a natural distribution of 3d data into more than one resource which support different change rates, reuse and logical packaging. 
 
-Unfortunately referencing external models is not provided by the current glTF Specifictaion. With our FRAUNHOFER_external_model extension we want to propose a simple way to support this.
+Unfortunately referencing external models is not provided by the current glTF Specification. With our FRAUNHOFER_external_model extension we want to propose a simple way to support this.
 
 Client implementations of the FRAUNHOFER_external_model extension must support at least one glTF format but can support and negotiate any number of glTF and non-glTF encodings as long as those follow
 * the abstract model definition RFC2077 [1],
 * provide a registered content type (e.g model/gltf+json) [2]
 * and can be determinate with some form of content negotiation [3].
 
-Figure 1 shows a screenshot of our public available FRAUNHOFER_external_model [example](http://localhost/x3dom-examples/FRAUNHOFER_external_model/).
+Figure 1 shows a screenshot of our public available FRAUNHOFER_external_model [example](https://examples.x3dom.org/FRAUNHOFER_external_model/).
 
 <figure>
 <img src="./figures/figure0.png">
