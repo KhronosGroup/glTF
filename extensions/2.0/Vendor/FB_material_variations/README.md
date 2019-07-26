@@ -1,4 +1,4 @@
-# FB\_asset\_variants
+# FB\_material\_variations
 
 ## Contributors
 
@@ -56,6 +56,6 @@ The tag-based approach allows highly selective material switching, e.g. changing
 
 ## Implications for Applications and APIs
 
-How does an application communicate to a glTF engine what the initial variant state should be? How does it submit a runtime request for a different configuration? It's out of scope for this extension to constrain or mandate an engine's public API, but a useful implementation of this spec will require something of the sort.
+How does an application communicate to a glTF engine what the initial variation state should be? How does it submit a runtime request for a different configuration? It's out of scope for this extension to constrain or mandate an engine's public API, but a useful implementation of this spec will require something of the sort.
 
-A basic implementation of this extension could simply re-parse the whole model whenever the configuration changes. It's expected that more sophisticated viewers will do upfront work in order to optimise for low-latency switching between variants.
+A basic implementation of this extension could simply re-parse the whole model whenever the configuration changes. It's expected that more sophisticated viewers will do upfront work in order to optimise for low-latency switching between variations.
