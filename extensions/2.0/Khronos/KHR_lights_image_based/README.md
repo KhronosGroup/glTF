@@ -14,7 +14,7 @@ Draft
 
 ## Dependencies
 
-Written against the glTF 2.0 spec, requires `KHR_texture_cttf` extension, interacts with `EXT_texture_bc6h` extension.
+Written against the glTF 2.0 spec, requires `KHR_texture_basisu` extension, interacts with `EXT_texture_bc6h` and `EXT_texture_astc_hdr` extensions.
 
 ## Overview
 
@@ -118,7 +118,7 @@ finalSampledColor = sampledColor * brightnessFactor + brightnessOffset;
 
 ### Normal Quality
 
-Data must be stored as a CTTF image with alpha channel conforming to RGBD (or RGBE, **TBD**) encoding.
+Data must be stored as a KTX2 image with Basis Universal supercompression and with alpha channel conforming to RGBD (or RGBE, **TBD**) encoding.
 
 ### High Quality (Optional)
 
@@ -126,7 +126,7 @@ Data can be stored as a KTX2 image with BC6H or ASTC HDR payload and linked via 
 
 Future extensions may allow additional formats by extending `texture` objects in a similar way.
 
-Assets expected to be publicly released should always provide a normal quality (CTTF) fallback.
+Assets expected to be publicly released should always provide a normal quality fallback.
 
 ### Example with three encodings for the same texture
 
@@ -136,16 +136,16 @@ Assets expected to be publicly released should always provide a normal quality (
         "version": "2.0"
     },
     "extensionsUsed": [
-        "KHR_lights_image_based", "KHR_texture_cttf", "KHR_image_ktx2", "EXT_texture_bc6h", "EXT_texture_astc_hdr"
+        "KHR_lights_image_based", "KHR_texture_basisu", "KHR_image_ktx2", "EXT_texture_bc6h", "EXT_texture_astc_hdr"
     ],
     "extensionsRequired": [
-        "KHR_lights_image_based", "KHR_texture_cttf", "KHR_image_ktx2"
+        "KHR_lights_image_based", "KHR_texture_basisu", "KHR_image_ktx2"
     ],
     "textures": [
         {
             "name": "Specular Environment Texture",
             "extensions": {
-                "KHR_texture_cttf": {
+                "KHR_texture_basisu": {
                     "source": 0
                 },
                 "EXT_texture_bc6h": {
@@ -159,55 +159,13 @@ Assets expected to be publicly released should always provide a normal quality (
     ],
     "images": [
         {
-            "uri": "image_cttf.ktx2",
-            "extensions": {
-                "KHR_image_ktx2": {
-                    "supercompressionScheme": -1, // TBD, CTTF
-                    "pixelWidth": 512,
-                    "pixelHeight": 512,
-                    "faceCount": 6,
-                    "levels": [
-                        {
-                            "byteOffset": 1024,
-                            "byteLength": 10485,
-                        }
-                    ]
-                }
-            }
+            "uri": "image_basisu.ktx2"
         },
         {
-            "uri": "image_bc6h.ktx2",
-            "extensions": {
-                "KHR_image_ktx2": {
-                    "vkFormat": 144, // VK_FORMAT_BC6H_SFLOAT_BLOCK
-                    "pixelWidth": 512,
-                    "pixelHeight": 512,
-                    "faceCount": 6,
-                    "levels": [
-                        {
-                            "byteOffset": 1024,
-                            "byteLength": 10485,
-                        }
-                    ]
-                }
-            }
+            "uri": "image_bc6h.ktx2"
         },
         {
-            "uri": "image_astc.ktx2",
-            "extensions": {
-                "KHR_image_ktx2": {
-                    "vkFormat": -1, // Vulkan ASTC HDR, TBD
-                    "pixelWidth": 512,
-                    "pixelHeight": 512,
-                    "faceCount": 6,
-                    "levels": [
-                        {
-                            "byteOffset": 1024,
-                            "byteLength": 10485,
-                        }
-                    ]
-                }
-            }
+            "uri": "image_astc.ktx2"
         }
     ]
 }

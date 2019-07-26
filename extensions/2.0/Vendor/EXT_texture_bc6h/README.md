@@ -21,7 +21,7 @@ Written against the glTF 2.0 spec. Requires `KHR_image_ktx2` extension.
 
 The `EXT_texture_bc6h` extension is added to the `textures` node and specifies a `source` property that points to the index of the `images` node which defines a reference to the KTX2 image with BC6H payload.
 
-The following glTF will load `image_hi.ktx2` in clients that support this GPU format, and otherwise fall back to CTTF `image_lo.ktx2`.
+The following glTF will load `image_bc6h.ktx2` in clients that support BC6H format, and otherwise fall back to `image_basisu.ktx2`.
 
 ```json
 {
@@ -29,16 +29,16 @@ The following glTF will load `image_hi.ktx2` in clients that support this GPU fo
         "version": "2.0"
     },
     "extensionsUsed": [
-        "KHR_texture_cttf", "KHR_image_ktx2", "EXT_texture_bc6h"
+        "KHR_texture_basisu", "KHR_image_ktx2", "EXT_texture_bc6h"
     ],
     "extensionsRequired": [
-        "KHR_texture_cttf", "KHR_image_ktx2"
+        "KHR_texture_basisu", "KHR_image_ktx2"
     ],
     "textures": [
         {
             "name": "Cubemap IBL texture",
             "extensions": {
-                "KHR_texture_cttf": {
+                "KHR_texture_basisu": {
                     "source": 0
                 },
                 "EXT_texture_bc6h": {
@@ -49,38 +49,10 @@ The following glTF will load `image_hi.ktx2` in clients that support this GPU fo
     ],
     "images": [
         {
-            "uri": "image_cttf.ktx2",
-            "extensions": {
-                "KHR_image_ktx2": {
-                    "supercompressionScheme": -1, // TBD, CTTF
-                    "pixelWidth": 512,
-                    "pixelHeight": 512,
-                    "faceCount": 6,
-                    "levels": [
-                        {
-                            "byteOffset": 1024,
-                            "byteLength": 10485,
-                        }
-                    ]
-                }
-            }
+            "uri": "image_basisu.ktx2"
         },
         {
-            "uri": "image_bc6h.ktx2",
-            "extensions": {
-                "KHR_image_ktx2": {
-                    "vkFormat": 144, // VK_FORMAT_BC6H_SFLOAT_BLOCK
-                    "pixelWidth": 512,
-                    "pixelHeight": 512,
-                    "faceCount": 6,
-                    "levels": [
-                        {
-                            "byteOffset": 1024,
-                            "byteLength": 10485,
-                        }
-                    ]
-                }
-            }
+            "uri": "image_bc6h.ktx2"
         }
     ]
 }

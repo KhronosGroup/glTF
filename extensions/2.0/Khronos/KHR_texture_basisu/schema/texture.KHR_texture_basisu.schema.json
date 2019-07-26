@@ -1,13 +1,13 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_texture_cttf glTF extension",
+    "title": "KHR_texture_basisu glTF extension",
     "type": "object",
-    "description": "glTF extension to specify textures using the CTTF image format.",
+    "description": "glTF extension to specify textures using the KTX2 images with Basis Universal supercompression.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "source": {
           "allOf": [ { "$ref": "glTFid.schema.json" } ],
-          "description": "The index of the images node which points to a CTTF image."
+          "description": "The index of the images node which points to a KTX2 image with Basis Universal supercompression."
         },
         "extensions": {},
         "extras": {}
