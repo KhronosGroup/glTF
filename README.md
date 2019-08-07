@@ -391,6 +391,17 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 ### All Presentations and Articles
 
+* [SIGGRAPH 2019 glTF BOF Video](https://youtu.be/WPsf2NWPu_Y?t=1h2m33s) and [slides](https://www.khronos.org/developers/library/2019-siggraph)
+   * Khronos: Ed Mackey - glTF Overview
+   * Facebook: Renee Rashid - Spark AR, glTF at Facebook
+   * Cesium: Omar Shehata - 3D Tiles, Basis Universal
+   * DGG: Max Limper - Automating the 3D Processing Pipeline
+   * Uber: Georgios Karnas - glTF in Big Data Visualization
+   * UX3D: Fabian Wahlster and Moritz Becher - glTF Editor and Tools
+   * Esri: David Körner - glTF with Esri JS API
+   * Sketchfab: Alban Denoyel - Publish & Find 3D Models Online
+   * Google: Adrian Perez - AR Search at Google
+   * Wayfair: Shrenik Sadalgi - Khronos 3D Commerce Working Group introduction
 * [How to make a PBR 3D model for the web](https://unboring.net/workflows/how-to-make-pbr-web/) by Arturo Paracuellos. June 2019
 * [Uber’s vis.gl brings glTF to geospatial data visualization](https://www.khronos.org/blog/ubers-vis.gl-brings-gltf-to-geospatial-data-visualization) by Georgios Karnas, Ib Green, Travis Gorkin, and Xintong Xia. June 2019
 * [Exporting glTF from Animate](https://theblog.adobe.com/exporting-gltf-from-animate/) by Ram Kulkarni. April 2019
