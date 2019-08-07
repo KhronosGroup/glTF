@@ -2,7 +2,7 @@
 
 ## Contributors
 
-* Pär Winzell, Facebook, [zell@fb.com](mailto:garyhsu@microsoft.com)
+* Pär Winzell, Facebook, [zell@fb.com](mailto:zell@fb.com)
 * Michael Bunnell, Facebook
 
 ## Status
