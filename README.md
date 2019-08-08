@@ -391,7 +391,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 
 ### All Presentations and Articles
 
-* [SIGGRAPH 2019 glTF BOF Video](https://youtu.be/WPsf2NWPu_Y?t=1h2m33s) and [slides](https://www.khronos.org/developers/library/2019-siggraph)
+* [SIGGRAPH 2019 glTF BOF Video](https://youtu.be/_MOp_SfGJx8) and [slides](https://www.khronos.org/developers/library/2019-siggraph)
    * Khronos: Ed Mackey - glTF Overview
    * Facebook: Renee Rashid - Spark AR, glTF at Facebook
    * Cesium: Omar Shehata - 3D Tiles, Basis Universal
