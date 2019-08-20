@@ -1,0 +1,35 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "lightmap properties",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "index": {
+            "type": "number",
+            "description": "The texture index of which this lightmap refers to",
+            "minimum": 0,
+            "minItems": 1,
+            "maxItems": 1
+        },
+        "texCoord": {
+            "description": "The texture coordinate (uv set) that this lightmap texture uses",
+            "type": "number",
+            "items": {
+                "type": "number"
+            },
+            "default": 0,
+            "minimum": 0,
+            "minItems": 1,
+            "maxItems": 1
+        },
+        "extensions": {},
+        "extras": {},
+        "required" : [
+            "index"
+        ]
+    },
+}

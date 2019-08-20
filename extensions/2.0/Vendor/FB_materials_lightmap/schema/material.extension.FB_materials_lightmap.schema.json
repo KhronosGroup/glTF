@@ -1,0 +1,35 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "FB_materials_lightmap material extension",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "lightmapTexture": {
+            "description": "The texture information for the lightmap.",
+            "allOf": [
+                {
+                    "$ref": "lightmap.schema.json"
+                }
+            ]
+        },
+        "lightmapFactor": {
+            "description": "The rgb component-wise factor that should be applied to the lightmap before applying to the base color",
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "default": [1, 1, 1],
+            "minItems": 3,
+            "maxItems": 3
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "lightmapTexture"
+    ]
+}
