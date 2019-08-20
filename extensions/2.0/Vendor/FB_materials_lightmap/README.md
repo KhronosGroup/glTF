@@ -24,13 +24,7 @@ Some proven real-world applications for this information:
 
 ## Color
 
-### RGB
-
-Color is stored in the RGB channels, with no accommodation for an alpha channel. No restriction is placed on the the values.
-
-### Color Space
-
-We'll refer to Unity's guidelines regarding Color Space: "When Linear Color Space is used, the lightmap texture is marked as sRGB and the final value used by the shaders (after sampling and decoding) will be in Linear Color Space. When Gamma Color Space is used, the final value will be in Gamma Color Space."
+Lightmap texture values use the sRGB color primaries and the sRGB transfer function.
 
 ## Specifying Material extension
 
