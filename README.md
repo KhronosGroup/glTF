@@ -185,6 +185,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 | [Marmoset Toolbag](https://www.marmoset.co/toolbag/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | 3D real-time rendering, animation, and baking suite |
 | [Aspose.3D](https://www.aspose.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | File Format APIs for creating, editing, and converting over 100 file formats |
 | [3D Slash](http://www.3dslash.net) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Web-based and app-based 3D modeling imitating a stonecutter |
+| [Scapic](https://scapic.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Scapic is the easiest platform to build VR, AR, 360° and 3D experience, all drag & drop with no coding required. |
 | [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Web-based 3D platform for architecture and interiors |
 | [Plex.Earth](https://plexearth.com/) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Connects AutoCAD with Google Earth and the Real World. |
 | [VECTARY](https://vectary.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Online 3D content creation tool |
@@ -245,6 +246,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | [&lt;model-viewer>](https://github.com/GoogleWebComponents/model-viewer)     | Google    | self-hosted | HTML web component for viewing self-hosted glTF models.                                                                                                                          |
 | [Poly](https://poly.google.com/)                                             | Google    | service     | glTF models hosted on Poly may be embedded in an iframe on any site.                                                                                                             |
 | [Sketchfab](https://sketchfab.com/)                                          | Sketchfab | service     | glTF models hosted on Sketchfab may be embedded in an iframe on any site, using the [embed models](https://help.sketchfab.com/hc/en-us/articles/203509907-Embed-Models) feature. |
+| [Scapic](https://scapic.com/)                                          | Scapic | service     | glTF models hosted on Sketchfab may be embedded in an iframe on any site, using the iframe code generated on each template when you share it. |
 
 ### Languages
 
