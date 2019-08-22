@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "FB_materials_lightmap material extension",
+    "title": "FB_materials_modmap material extension",
     "type": "object",
     "allOf": [
         {
@@ -8,16 +8,16 @@
         }
     ],
     "properties": {
-        "lightmapTexture": {
-            "description": "The texture information for the lightmap.",
+        "modmapTexture": {
+            "description": "The texture information for the modmap.",
             "allOf": [
                 {
-                    "$ref": "lightmap.schema.json"
+                    "$ref": "textureInfo.schema.json"
                 }
             ]
         },
-        "lightmapFactor": {
-            "description": "The rgb component-wise factor that should be applied to the lightmap before applying to the base color",
+        "modmapFactor": {
+            "description": "The rgb component-wise factor that should be applied to the modmap before applying to the base color",
             "type": "array",
             "items": {
                 "type": "number"
@@ -30,6 +30,6 @@
         "extras": {}
     },
     "required": [
-        "lightmapTexture"
+        "modmapTexture"
     ]
 }

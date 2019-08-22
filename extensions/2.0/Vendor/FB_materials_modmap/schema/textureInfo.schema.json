@@ -10,13 +10,13 @@
     "properties": {
         "index": {
             "type": "number",
-            "description": "The texture index of which this lightmap refers to",
+            "description": "The texture index of which this modmap refers to",
             "minimum": 0,
             "minItems": 1,
             "maxItems": 1
         },
         "texCoord": {
-            "description": "The texture coordinate (uv set) that this lightmap texture uses",
+            "description": "The texture coordinate (uv set) that this modmap texture uses",
             "type": "number",
             "items": {
                 "type": "number"
