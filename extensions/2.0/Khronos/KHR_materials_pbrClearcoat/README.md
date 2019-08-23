@@ -30,7 +30,7 @@ For example, the following defines a material like varnish using clearcoat param
         {
             "name": "varnish",
             "extensions": {
-                "KHR_materials_pbrClearCoat": {
+                "KHR_materials_pbrClearcoat": {
                     "clearcoatFactor": 1.0
                 }
             }
