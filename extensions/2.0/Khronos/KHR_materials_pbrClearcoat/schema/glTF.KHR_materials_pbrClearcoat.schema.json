@@ -1,0 +1,54 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_pbrClearcoat glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the clearcoat material layer.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "clearcoatFactor": {
+            "type": "number",
+            "description": "The clearcoat layer intensity of the material.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The clearcoat layer intensity of the material. A value of 0.0 means the material has no clearcoat layer enabled."
+        },        
+        "clearcoatTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The clearcoat intensity texture.",
+            "gltf_detailedDescription": "The clearcoat texture. Stored in channel R with default value 1.0."
+        },
+        "clearcoatRoughnessFactor": {
+            "type": "number",
+            "description": "The clearcoat layer roughness of the material.",
+            "default": 0.5,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The clearcoat layer roughness of the material. A value of 0.0 means IOR 0.0 and 1.0 means IOR 0.08. Default is so 0.04."
+        },        
+        "clearcoatRoughnessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The clearcoat roughness texture.",
+            "gltf_detailedDescription": "The clearcoat roughness texture. Stored in channel G with default value 1.0."
+        },
+        "clearcoatUseMaterialRoughness": {
+            "type": "boolean",
+            "default": false,
+            "description": "Specifies whether the roughness comes from the material's roughness or the clearcoat roughness.",
+            "gltf_detailedDescription": "If true, the roughness from the underlying material is used and the clearcoat roughness ignored."
+        },
+        "clearcoatNormalTexture": {
+            "allOf": [ { "$ref": "material.normalTextureInfo.schema.json" } ],
+            "description": "The clearcoat normal map texture.",
+            "gltf_detailedDescription": "A tangent space normal map for the clearcoat layer."
+        },
+        "clearcoatUseMaterialNormal": {
+            "type": "boolean",
+            "default": false,
+            "description": "Specifies whether the normal comes from the material's normal or the clearcoat normal.",
+            "gltf_detailedDescription": "If true, the normal from the underlying material is used and the clearcoat normal ignored."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
