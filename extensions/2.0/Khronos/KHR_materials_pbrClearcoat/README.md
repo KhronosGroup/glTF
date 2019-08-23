@@ -21,7 +21,40 @@ Written against the glTF 2.0 spec.
 
 ## Extending Materials
 
+The PBR clearcoat materials are defined by adding the `KHR_materials_pbrClearcoat` extension to any glTF material. 
+For example, the following defines a material like varnish using clearcoat parameters.
+
+```json
+{
+    "materials": [
+        {
+            "name": "varnish",
+            "extensions": {
+                "KHR_materials_pbrClearCoat": {
+                    "clearcoatFactor": 1.0
+                }
+            }
+        }
+    ]
+}
+```
+
 ### Clearcoat
+
+All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [appendix](/specification/2.0/README.md#appendix-b-brdf-implementation) for more details on the BRDF calculations.
+
+|                                  | Type                                                                | Description                            | Required             |
+|----------------------------------|---------------------------------------------------------------------|----------------------------------------|----------------------|
+|**clearcoatFactor**               | `number`                                                            | The clearcoat layer intensity.         | No, default: `0.0`   |
+|**clearcoatTexture**              | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The clearcoat layer intensity texture. | No                   |
+|**clearcoatRoughnessFactor**      | `number`                                                            | The clearcoat layer roughness.         | No, default: `0.5`   |
+|**clearcoatRoughnessTexture**     | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The clearcoat layer roughness texture. | No                   |
+|**clearcoatUseMaterialRoughness** | `boolean`                                                           | Flag, if material's roughness is used. | No, default: `false` |
+|**clearcoatNormalTexture**        | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The clearcoat normal map texture.      | No                   |
+|**clearcoatUseMaterialNormal**    | `boolean`                                                           | Flag, if material's normal is used.    | No, default: `false` |
+
+The clearcoat formula is the same as the specular part from the Metallic-Roughness Material.  
+In this case, F0 is 0.04 for dielectrics using `clearcoatRoughnessFactor` default value 0.5.
 
 ## Appendix
 

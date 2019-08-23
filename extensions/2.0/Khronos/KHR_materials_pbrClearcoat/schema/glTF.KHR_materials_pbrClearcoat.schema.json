@@ -7,7 +7,7 @@
     "properties": {
         "clearcoatFactor": {
             "type": "number",
-            "description": "The clearcoat layer intensity of the material.",
+            "description": "The clearcoat layer intensity.",
             "default": 0.0,
             "minimum": 0.0,
             "maximum": 1.0,
@@ -15,12 +15,12 @@
         },        
         "clearcoatTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "The clearcoat intensity texture.",
+            "description": "The clearcoat layer intensity texture.",
             "gltf_detailedDescription": "The clearcoat texture. Stored in channel R with default value 1.0."
         },
         "clearcoatRoughnessFactor": {
             "type": "number",
-            "description": "The clearcoat layer roughness of the material.",
+            "description": "The clearcoat layer roughness.",
             "default": 0.5,
             "minimum": 0.0,
             "maximum": 1.0,
@@ -28,13 +28,13 @@
         },        
         "clearcoatRoughnessTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "The clearcoat roughness texture.",
+            "description": "The clearcoat layer roughness texture.",
             "gltf_detailedDescription": "The clearcoat roughness texture. Stored in channel G with default value 1.0."
         },
         "clearcoatUseMaterialRoughness": {
             "type": "boolean",
             "default": false,
-            "description": "Specifies whether the roughness comes from the material's roughness or the clearcoat roughness.",
+            "description": "Flag, if material's roughness is used.",
             "gltf_detailedDescription": "If true, the roughness from the underlying material is used and the clearcoat roughness ignored."
         },
         "clearcoatNormalTexture": {
@@ -45,7 +45,7 @@
         "clearcoatUseMaterialNormal": {
             "type": "boolean",
             "default": false,
-            "description": "Specifies whether the normal comes from the material's normal or the clearcoat normal.",
+            "description": "Flag, if material's normal is used.",
             "gltf_detailedDescription": "If true, the normal from the underlying material is used and the clearcoat normal ignored."
         },
         "extensions": { },
