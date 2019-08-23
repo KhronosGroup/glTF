@@ -50,7 +50,7 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 |**clearcoatRoughnessFactor**      | `number`                                                            | The clearcoat layer roughness.         | No, default: `0.5`   |
 |**clearcoatRoughnessTexture**     | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The clearcoat layer roughness texture. | No                   |
 |**clearcoatUseMaterialRoughness** | `boolean`                                                           | Flag, if material's roughness is used. | No, default: `false` |
-|**clearcoatNormalTexture**        | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The clearcoat normal map texture.      | No                   |
+|**clearcoatNormalTexture**        | `normalTextureInfo`                                                 | The clearcoat normal map texture.      | No                   |
 |**clearcoatUseMaterialNormal**    | `boolean`                                                           | Flag, if material's normal is used.    | No, default: `false` |
 
 The clearcoat formula is the same as the specular part from the Metallic-Roughness Material.  

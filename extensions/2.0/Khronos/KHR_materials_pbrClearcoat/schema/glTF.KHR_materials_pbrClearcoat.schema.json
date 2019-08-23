@@ -16,7 +16,7 @@
         "clearcoatTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The clearcoat layer intensity texture.",
-            "gltf_detailedDescription": "The clearcoat texture. Stored in channel R with default value 1.0."
+            "gltf_detailedDescription": "The clearcoat texture. Stored in channel R with default linear value 1.0."
         },
         "clearcoatRoughnessFactor": {
             "type": "number",
@@ -29,13 +29,13 @@
         "clearcoatRoughnessTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The clearcoat layer roughness texture.",
-            "gltf_detailedDescription": "The clearcoat roughness texture. Stored in channel G with default value 1.0."
+            "gltf_detailedDescription": "The clearcoat roughness texture. Stored in channel G with default linear value 1.0."
         },
         "clearcoatUseMaterialRoughness": {
             "type": "boolean",
             "default": false,
             "description": "Flag, if material's roughness is used.",
-            "gltf_detailedDescription": "If true, the roughness from the underlying material is used and the clearcoat roughness ignored."
+            "gltf_detailedDescription": "If true, the roughness from the underlying material is used and the clearcoat roughness texture and factor ignored."
         },
         "clearcoatNormalTexture": {
             "allOf": [ { "$ref": "material.normalTextureInfo.schema.json" } ],
@@ -46,7 +46,7 @@
             "type": "boolean",
             "default": false,
             "description": "Flag, if material's normal is used.",
-            "gltf_detailedDescription": "If true, the normal from the underlying material is used and the clearcoat normal ignored."
+            "gltf_detailedDescription": "If true, the normal from the underlying material is used and the clearcoat normal texture and factor ignored."
         },
         "extensions": { },
         "extras": { }
