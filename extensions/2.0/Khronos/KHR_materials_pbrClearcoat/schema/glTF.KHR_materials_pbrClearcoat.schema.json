@@ -31,22 +31,10 @@
             "description": "The clearcoat layer roughness texture.",
             "gltf_detailedDescription": "The clearcoat roughness texture. Stored in channel G with default linear value 1.0."
         },
-        "clearcoatUseMaterialRoughness": {
-            "type": "boolean",
-            "default": false,
-            "description": "Flag, if material's roughness is used.",
-            "gltf_detailedDescription": "If true, the roughness from the underlying material is used and the clearcoat roughness texture and factor ignored."
-        },
         "clearcoatNormalTexture": {
             "allOf": [ { "$ref": "material.normalTextureInfo.schema.json" } ],
             "description": "The clearcoat normal map texture.",
             "gltf_detailedDescription": "A tangent space normal map for the clearcoat layer."
-        },
-        "clearcoatUseMaterialNormal": {
-            "type": "boolean",
-            "default": false,
-            "description": "Flag, if material's normal is used.",
-            "gltf_detailedDescription": "If true, the normal from the underlying material is used and the clearcoat normal texture and factor ignored."
         },
         "extensions": { },
         "extras": { }
