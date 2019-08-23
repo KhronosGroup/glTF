@@ -2,8 +2,9 @@
 
 ## Khronos 3D Formats Working Group
 
+* Alexey Knyazev
+* Ed Mackey
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
-* TODO: Add names
 
 ## Acknowledgments
 
@@ -52,7 +53,9 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 |**clearcoatNormalTexture**        | `normalTextureInfo`                                                 | The clearcoat normal map texture.      | No                   |
 
 The clearcoat formula is the same as the specular part from the Metallic-Roughness Material.  
-In this case, F0 is 0.04 for dielectrics using `clearcoatRoughnessFactor` default value 0.5.
+In this case, F0 is 0.04 for dielectrics using `clearcoatRoughnessFactor` default value 0.5. So a roughness factor of 0.0 maps to F0 of 0.0 and a roughness factor of 1.0 to F0 of 1.0.
+
+If textures are not set, the default values of the clearcoat textures are used and the values are not inherited from the underlying material. If one wants to have the same textures, one have to explicitly set the same texture index.
 
 ## Appendix
 
