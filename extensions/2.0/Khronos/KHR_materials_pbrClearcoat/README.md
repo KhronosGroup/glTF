@@ -65,7 +65,9 @@ If textures are not set, the default values of the clearcoat textures are used a
 
 [Allegorithmic PBR Guide Part 2](https://academy.substance3d.com/courses/the-pbr-guide-part-2)  
 [Disney BRDF from BRDF Explorer](https://github.com/wdas/brdf/blob/master/src/brdfs/disney.brdf)    
-[Physically-Based Shading at Disney](https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf)    
+[Physically-Based Shading at Disney](https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf)
+[Dassault Clearcoat](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec.md.html#components/clearcoat)  
+[Autodesk Clearcoat](https://autodesk.github.io/standard-surface/#closures/coating)  
 
 ### Exisiting Implementations
 
