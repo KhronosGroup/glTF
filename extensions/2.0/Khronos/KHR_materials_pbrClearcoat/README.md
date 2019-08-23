@@ -5,6 +5,7 @@
 * Alexey Knyazev
 * Ed Mackey
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+* Romain Guy
 
 ## Acknowledgments
 
@@ -52,10 +53,22 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 |**clearcoatRoughnessTexture**     | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The clearcoat layer roughness texture. | No                   |
 |**clearcoatNormalTexture**        | `normalTextureInfo`                                                 | The clearcoat normal map texture.      | No                   |
 
-The clearcoat formula is the same as the specular part from the Metallic-Roughness Material.
-F0 is 0.04.
+The clearcoat formula is the same as the specular term from the Metallic-Roughness material.
+Using F0 equal 0.04:  
+  
+```
+blendFactor = clearcoatFactor * fresnel(0.04, NdotV)
+f = (f_emissive + f_diffuse) * (1.0 - blendFactor) + mix(f_specular, f_clearcoat, blendFactor)
+```
+(see `pbr-coated.glsl` from Substance Painter)  
 
-If textures are not set, the default values of the clearcoat textures are used and the values are not inherited from the underlying material. If one wants to have the same textures, one have to explicitly set the same texture index.
+If `clearcoatFactor = 0` the clearcoat layer is disabled and the material is behaving like the "pure" Metallic-Roughness material:
+
+```
+f = f_emissive + f_diffuse + f_specular
+```
+  
+If textures are not set, the default values of the clearcoat layer textures are used and the values are not inherited from the underlying Metallic-Roughness material. If one wants to have the same textures, one have to explicitly set the same texture source.
 
 ## Appendix
 
@@ -64,13 +77,13 @@ If textures are not set, the default values of the clearcoat textures are used a
 ### Theory and Documentation
 
 [Allegorithmic PBR Guide Part 2](https://academy.substance3d.com/courses/the-pbr-guide-part-2)  
+[Autodesk Clearcoat](https://autodesk.github.io/standard-surface/#closures/coating)  
+[Dassault Clearcoat](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec.md.html#components/clearcoat)  
 [Disney BRDF from BRDF Explorer](https://github.com/wdas/brdf/blob/master/src/brdfs/disney.brdf)    
 [Physically-Based Shading at Disney](https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf)
-[Dassault Clearcoat](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec.md.html#components/clearcoat)  
-[Autodesk Clearcoat](https://autodesk.github.io/standard-surface/#closures/coating)  
 [Unreal Clearcoat](https://docs.unrealengine.com/en-US/Engine/Rendering/Materials/MaterialInputs/index.html#clearcoat)  
 
-### Exisiting Implementations
+### Different Implementations
 
 [Blender](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/principled.html)  
 [Filament](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/clearcoat)  

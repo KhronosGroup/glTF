@@ -11,12 +11,12 @@
             "default": 0.0,
             "minimum": 0.0,
             "maximum": 1.0,
-            "gltf_detailedDescription": "The clearcoat layer intensity of the material. A value of 0.0 means the material has no clearcoat layer enabled."
+            "gltf_detailedDescription": "The clearcoat layer intensity (aka opacity) of the material. A value of 0.0 means the material has no clearcoat layer enabled."
         },        
         "clearcoatTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The clearcoat layer intensity texture.",
-            "gltf_detailedDescription": "The clearcoat texture. Stored in channel R with default linear value 1.0."
+            "gltf_detailedDescription": "The clearcoat layer intensity texture. Stored in channel R with default linear value 1.0."
         },
         "clearcoatRoughnessFactor": {
             "type": "number",
@@ -29,7 +29,7 @@
         "clearcoatRoughnessTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The clearcoat layer roughness texture.",
-            "gltf_detailedDescription": "The clearcoat roughness texture. Stored in channel G with default linear value 1.0."
+            "gltf_detailedDescription": "The clearcoat layer roughness texture. Stored in channel G with default linear value 1.0."
         },
         "clearcoatNormalTexture": {
             "allOf": [ { "$ref": "material.normalTextureInfo.schema.json" } ],
