@@ -21,10 +21,10 @@
         "clearcoatRoughnessFactor": {
             "type": "number",
             "description": "The clearcoat layer roughness.",
-            "default": 0.5,
+            "default": 0.0,
             "minimum": 0.0,
             "maximum": 1.0,
-            "gltf_detailedDescription": "The clearcoat layer roughness of the material. A value of 0.0 means IOR 0.0 and 1.0 means IOR 0.08. Default is so 0.04."
+            "gltf_detailedDescription": "The clearcoat layer roughness of the material."
         },        
         "clearcoatRoughnessTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
