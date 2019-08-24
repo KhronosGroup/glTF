@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_materials_pbrClearcoat glTF extension",
+    "title": "KHR_materials_clearcoat glTF extension",
     "type": "object",
     "description": "glTF extension that defines the clearcoat material layer.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
