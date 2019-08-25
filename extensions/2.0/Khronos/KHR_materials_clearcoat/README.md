@@ -10,7 +10,7 @@
 
 ## Acknowledgments
 
-* TODO: Add names
+* TODO
 
 ## Status
 
@@ -65,13 +65,13 @@ f = (f_emissive + f_diffuse + f_specular) * (1.0 - blendFactor) + f_clearcoat * 
 ```
 (see `pbr-coated.glsl` from Substance Painter)  
 
-If `clearcoatFactor = 0` the clearcoat layer is disabled and the material is behaving like the core Metallic-Roughness material:
+If `clearcoatFactor = 0`, the clearcoat layer is disabled and the material is behaving like the core Metallic-Roughness material:
 
 ```
 f = f_emissive + f_diffuse + f_specular
 ```
   
-If textures are not set, the default values of the clearcoat layer textures are used and the values are not inherited from the underlying Metallic-Roughness material. If one wants to have the same textures, one have to explicitly set the same texture source.
+If textures are not set, the default values of the clearcoat layer textures are used and the values are not inherited from the underlying Metallic-Roughness material. If one wants to have the same textures, one have to explicitly set the same texture sources.
 
 ## Appendix
 
@@ -79,18 +79,15 @@ TODO
 
 ## Reference
 
-### Theory and Documentation
+### Theory, Documentation and Implementations
 
+[Allegorithmic PBR Guide Part 1](https://academy.substance3d.com/courses/the-pbr-guide-part-1)  
 [Allegorithmic PBR Guide Part 2](https://academy.substance3d.com/courses/the-pbr-guide-part-2)  
 [Autodesk Clearcoat](https://autodesk.github.io/standard-surface/#closures/coating)  
-[Dassault Clearcoat](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec.md.html#components/clearcoat)  
-[Disney BRDF from BRDF Explorer](https://github.com/wdas/brdf/blob/master/src/brdfs/disney.brdf)    
-[Physically-Based Shading at Disney](https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf)
-[Unreal Clearcoat](https://docs.unrealengine.com/en-US/Engine/Rendering/Materials/MaterialInputs/index.html#clearcoat)  
-
-### Different Implementations
-
 [Blender](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/principled.html)  
-[Filament](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/clearcoat)  
+[Dassault Clearcoat](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec.md.html#components/clearcoat)  
+[Disney BRDF from BRDF Explorer](https://github.com/wdas/brdf/blob/master/src/brdfs/disney.brdf)  
+[Filament](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/clearcoat)   
+[Physically-Based Shading at Disney](https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf)  
 [Substance Painter](https://docs.substance3d.com/spdoc/version-2018-3-172823522.html#Version2018.3-UpdatedClearCoatShader)  
-  
+[Unreal Clearcoat](https://docs.unrealengine.com/en-US/Engine/Rendering/Materials/MaterialInputs/index.html#clearcoat)  
