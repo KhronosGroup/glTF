@@ -7,6 +7,7 @@
 * Ed Mackey
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
 * Romain Guy
+* Tobias Haeussler
 
 ## Acknowledgments
 
