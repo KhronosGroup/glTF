@@ -59,10 +59,10 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 The clearcoat formula is the same as the specular term from the Metallic-Roughness material, using F0 equal 0.04:  
   
 ```
-blendFactor = clearcoatFactor * fresnel(0.04, NdotV)
-f = (f_emissive + f_diffuse + f_specular) * (1.0 - blendFactor) + f_clearcoat * blendFactor
+mulMetallicRoughness = (1.0 - clearcoatFactor * fresnel(0.04, NdotV)) * (1.0 - clearcoatFactor * fresnel(0.04, NdotL))
+mulClearcoat = clearcoatFactor * fresnel(0.04, HdotV)
+f = (f_emissive + f_diffuse + f_specular) * mulMetallicRoughness + f_clearcoat * mulClearcoat
 ```
-(see `pbr-coated.glsl` from Substance Painter)  
 
 If `clearcoatFactor = 0`, the clearcoat layer is disabled and the material is behaving like the core Metallic-Roughness material:
 
@@ -81,6 +81,7 @@ TODO
 ### Theory, Documentation and Implementations
 
 [Autodesk Standard Surface - Coating](https://autodesk.github.io/standard-surface/#closures/coating)  
+[AxF - Appearance exchange Format](https://www.xrite.com/-/media/xrite/files/whitepaper_pdfs/axf/axf_whitepaper_en.pdf)  
 [Blender Principled BSDF](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/principled.html)  
 [Disney BRDF Explorer - disney.brdf](https://github.com/wdas/brdf/blob/master/src/brdfs/disney.brdf)  
 [Enterprise PBR Shading Model - Clearcoat](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec.md.html#components/clearcoat)  
