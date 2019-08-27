@@ -60,9 +60,9 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 The clearcoat formula is the same as the specular term from the Metallic-Roughness material, using F0 equal 0.04:  
   
 ```
-mulMetallicRoughness = (1.0 - clearcoatFactor * fresnel(0.04, NdotV)) * (1.0 - clearcoatFactor * fresnel(0.04, NdotL))
-mulClearcoat = clearcoatFactor * fresnel(0.04, HdotV)
-f = (f_emissive + f_diffuse + f_specular) * mulMetallicRoughness + f_clearcoat * mulClearcoat
+factor0 = (1.0 - clearcoatFactor * fresnel(0.04, NdotV)) * (1.0 - clearcoatFactor * fresnel(0.04, NdotL))
+factor1 = clearcoatFactor * fresnel(0.04, HdotV)
+f = (f_emissive + f_diffuse + f_specular) * factor0 + f_clearcoat * factor1
 ```
 
 If `clearcoatFactor = 0`, the clearcoat layer is disabled and the material is behaving like the core Metallic-Roughness material:
