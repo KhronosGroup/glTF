@@ -57,7 +57,8 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 |**clearcoatRoughnessTexture**     | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The clearcoat layer roughness texture. | No                   |
 |**clearcoatNormalTexture**        | [`normalTextureInfo`](/specification/2.0/README.md#reference-normaltextureinfo) | The clearcoat normal map texture.      | No                   |
   
-The clearcoat formula is the same as the specular term from the Metallic-Roughness material, using F0 equal 0.04:  
+The clearcoat formula `f_clearcoat` is the same as the specular term from the Metallic-Roughness material, using F0 equal 0.04.
+The following abstract code describes how the base and clearcoat layers should be blended together:  
   
 ```
 factor0 = (1.0 - clearcoatFactor * fresnel(0.04, NdotV)) * (1.0 - clearcoatFactor * fresnel(0.04, NdotL))
