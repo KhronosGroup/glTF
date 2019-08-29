@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_specular glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the specular channel for the Metallic-Roughness layer.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "specularFactor": {
+            "type": "number",
+            "description": "The specular channel.",
+            "default": 0.5,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": ""
+        },        
+        "specularTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The specular channel texture.",
+            "gltf_detailedDescription": "The specular channel texture. Stored in channel A with default linear value 1.0 of the AO-Roughness-Metallic texture."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
