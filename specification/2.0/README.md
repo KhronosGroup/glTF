@@ -6,7 +6,7 @@
 
 The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern 3D applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
-Last Updated: June 9, 2017
+Last Updated: September 1, 2019
 
 Editors
 
@@ -65,8 +65,9 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
       * [Tangent-space definition](#tangent-space-definition)
       * [Morph Targets](#morph-targets)
     * [Skins](#skins)
-      * [Skinned Mesh Attributes](#skinned-mesh-attributes)
       * [Joint Hierarchy](#joint-hierarchy)
+      * [Joint Hierarchy Examples](#joint-hierarchy-examples)
+      * [Skinned Mesh Attributes](#skinned-mesh-attributes)
     * [Instantiation](#instantiation)
   * [Texture Data](#texture-data)
     * [Textures](#textures)
@@ -862,7 +863,13 @@ After applying morph targets to vertex positions and normals, tangent space may 
 
 ### Skins
 
-All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property (which points to an accessor with IBM data), used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property (if present) points to the node that is the common root of a joints hierarchy or to a direct or indirect parent node of the common root.
+All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property (which points to an accessor with IBM data), used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data.
+
+All joints defined in a skin must form a connected subtree within the node hierarchy, and the highest order node is the `skin parent`. If a skin contains multiple distinct subtrees (multi-rooted, a joint is not defined which connects them) then the "roots" of the distict subtrees must be siblings in the node hierarchy, and their comment parent is the `skin parent` (note that in this case, the `skin parent` may not be a joint).
+
+A node may only be defined as a joint by a single skin.
+
+Exporters must localize/apply any transformations of skinned meshes to that of the `skin parent`. Client implementations will ignore any transforms present on the skinned mesh.
 
 > **Implementation Note:** The matrix defining how to pose the skin's geometry for use with the joints ("Bind Shape Matrix") should be premultiplied to mesh data or to Inverse Bind Matrices. 
 
@@ -900,12 +907,27 @@ All skins are stored in the `skins` array of the asset. Each skin is defined by 
         {
             "name": "skin_0",
             "inverseBindMatrices": 0,
-            "joints": [ 1, 2 ],
-            "skeleton": 1
+            "joints": [ 1, 2 ]
         }
     ]
 }
 ```
+
+#### Joint Hierarchy
+
+The joint hierarchy used for controlling skinned mesh pose is simply the glTF node hierarchy, with each node designated as a joint. Each skin must have a `skin parent`, which may or may not be a joint node itself. When a skin is referenced by a node within a scene, the common root must belong to the same scene.
+
+For more details of vertex skinning implementation, refer to [glTF Overview](figures/gltfOverview-2.0.0b.png).
+
+> **Implementation Note:** A node definition does not specify whether the node should be treated as a joint. Client implementations may wish to traverse the `skins` array first, marking each joint node.
+
+> **Implementation Note:** A joint may have regular nodes or even a complete node sub graph with meshes attached to it. It's often used to have an entire geometry attached to a joint without having it being skinned by the joint. (ie. a sword attached to a hand joint). Note that the node transform is the local transform of the node relative to the joint, like any other node in the glTF node hierarchy as described in the [Transformation](#transformations) section.
+
+#### Joint Hierarchy Examples
+
+<p align="center">
+<img src="figures/skins.png" /><br/>
+</p>
 
 #### Skinned Mesh Attributes
 
@@ -945,16 +967,6 @@ The joint weights for each vertex must be non-negative, and normalized to have a
 In the event that of any of the vertices are influenced by more than four joints, the additional joint and weight information will be found in subsequent sets. For example `JOINTS_1` and `WEIGHTS_1` if present will reference the accessor for up to 4 additional joints that influence the vertices. Note that client implementations are only required to support a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the model's animation.
 
 All joint values must be within the range of joints in the skin. Unused joint values (i.e. joints with a weight of zero) should be set to zero.
-
-#### Joint Hierarchy
-
-The joint hierarchy used for controlling skinned mesh pose is simply the glTF node hierarchy, with each node designated as a joint. Each skin's joints must have a common root, which may or may not be a joint node itself. When a skin is referenced by a node within a scene, the common root must belong to the same scene.
-
-For more details of vertex skinning implementation, refer to [glTF Overview](figures/gltfOverview-2.0.0b.png).
-
-> **Implementation Note:** A node definition does not specify whether the node should be treated as a joint. Client implementations may wish to traverse the `skins` array first, marking each joint node.
-
-> **Implementation Note:** A joint may have regular nodes attached to it, even a complete node sub graph with meshes. It's often used to have an entire geometry attached to a joint without having it being skinned by the joint. (ie. a sword attached to a hand joint). Note that the node transform is the local transform of the node relative to the joint, like any other node in the glTF node hierarchy as described in the [Transformation](#transformations) section.
 
 ### Instantiation
 
