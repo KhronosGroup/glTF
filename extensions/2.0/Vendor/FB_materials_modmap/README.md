@@ -15,7 +15,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds an additional annotation to a material, providing a means to introduce a texture map to be applied multiplicatively.
+This extension adds an additional annotation to a material, providing a means to introduce a texture map to be applied suggestively as multiplicative operation.
 
 Some proven real-world applications for this information:
 1. Having multiple variations of lighting scenarios without having to bake lighting into a single, original base color/texture.
@@ -28,7 +28,7 @@ Modmap texture values use the sRGB color primaries and the sRGB transfer functio
 
 ## Specifying Material extension
 
-The data is defined as an optional extension to a glTF `materials`, by adding an `extensions` property and defining a `FB_materials_modmap` property with a `modmapTexture` node inside it:
+The data is defined as an optional extension to a glTF `materials`, by adding an `extensions` property and defining a `FB_materials_modmap` property with a `modmapTexture` node as a child:
 
 ```javascript
 "materials" : [
@@ -42,7 +42,6 @@ The data is defined as an optional extension to a glTF `materials`, by adding an
 		},
 		"alphaMode" : "OPAQUE",
 		"extensions" : {
-			"oculus_write_alpha" : true,
 			"FB_materials_modmap" : {
 				"modmapTexture" : {
 					"index" : 1,
