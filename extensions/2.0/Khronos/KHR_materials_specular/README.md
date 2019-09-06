@@ -22,7 +22,7 @@ TODO
 
 ## Extending Materials
 
-The PBR clearcoat materials are defined by adding the `KHR_materials_specular` extension to any glTF material. 
+The specular materials are defined by adding the `KHR_materials_specular` extension to any glTF material. 
 
 ```json
 {
