@@ -80,3 +80,14 @@ It is up to the encoder to determine the optimal range and format, along with th
 > **Implementation Note:** It is possible to determine the range of the attribute for each mesh individually, and pick the 8-bit or 16-bit storage format accordingly; this minimizes the error for each individual mesh, but may prevent sharing for some scene elements (such as reusing a material across multiple meshes with different texture coordinate ranges) and may result in the same vertex being quantized differently, causing visible gaps.
 
 > **Implementation Note:** It is also possible to determine the range of all attributes of all meshes in the scene and use a shared dequantization transform; this can eliminate the gaps between different meshes but can increase the quantization error.
+
+Implementations should assume following equations are used to get corresponding floating-point value `f` from a normalized integer `c` and should use the specified equations to encode floating-point values to integers after range normalization:
+
+|`accessor.componentType`|int-to-float|float-to-int|
+|-----------------------------|--------|----------------|
+| `5120`&nbsp;(BYTE)          |`f = max(c / 127.0, -1.0)`|`c = round(f * 127.0)`|
+| `5121`&nbsp;(UNSIGNED_BYTE) |`f = c / 255.0`|`c = round(f * 255.0)`|
+| `5122`&nbsp;(SHORT)         |`f = max(c / 32767.0, -1.0)`|`c = round(f * 32767.0)`|
+| `5123`&nbsp;(UNSIGNED_SHORT)|`f = c / 65535.0`|`c = round(f * 65535.0)`|
+
+> **Implementation Note:** Due to OpenGL ES 2.0 / WebGL 1.0 restrictions, some implementations may decode signed normalized integers to floating-point values differently. While the difference is unlikely to be significant for normal/tangent data, implementations may want to use unsigned normalized or signed non-normalized formats to avoid the discrepancy in position data.
