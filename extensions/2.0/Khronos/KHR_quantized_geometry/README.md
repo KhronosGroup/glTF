@@ -3,6 +3,7 @@
 ## Contributors
 
 * Arseny Kapoulkine, [@zeuxcg](https://twitter.com/zeuxcg)
+* Alexey Knyazev, [@lexaknyazev](https://github.com/lexaknyazev)
 
 ## Status
 
@@ -37,9 +38,9 @@ When `KHR_quantized_geometry` extension is supported, the set of types used for 
 |`TANGENT`|`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized|XYZW vertex tangents where the *w* component is a sign value (-1 or +1) indicating handedness of the tangent basis|
 |`TEXCOORD_n`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for set #n|
 
-Note that to comply with alignment rules for accessors, `"VEC3"` accessors need to be aligned to 4-byte boundaries; for example, a `BYTE` normal is expected to have a stride of 4, not 3.
+Note that to comply with alignment rules for accessors, each element needs to be aligned to 4-byte boundaries; for example, a `BYTE` normal is expected to have a stride of 4, not 3.
 
-For `POSITION` and `TEXCOORD` attributes, the application is free to choose normalized or unnormalized storage, as well as signed or unsigned. When normalized storage is used, often the data doesn't have to be dequantized (which eliminates the need for a dequantization transform); however, if the data is not in `[0..1]` or `[-1..1]` range, using integer storage can reduce precision loss as standard glTF normalization factors such as `1/255` and `1/65535` are not repersentable exactly as floating-point numbers.
+For `POSITION` and `TEXCOORD` attributes, the application is free to choose normalized or unnormalized storage, as well as signed or unsigned. When normalized storage is used, often the data doesn't have to be dequantized (which eliminates the need for a dequantization transform); however, if the data is not in `[0..1]` or `[-1..1]` range, using integer storage can reduce precision loss as standard glTF normalization factors such as `1/255` and `1/65535` are not representable exactly as floating-point numbers.
 
 > **Implementation Note:** As quantization may introduce a non-negligible error, quantized normal and tangent vectors are typically not exactly unit length. Applications are expected to normalize the vectors before using them in lighting equations; this typically can be done after transforming them using the normal matrix. Even if quantization is not used, normal matrix can contain scale/skew so normalization is typically required anyway.
 
@@ -71,7 +72,7 @@ In both cases, to preserve the direction of normal/tangent vectors, it is recomm
 
 For `TEXCOORD` attribute, the transform can be specified using the `offset`/`scale` supplied by `KHR_texture_transform` extension.
 
-For morph target data, it's expected that deltas are quantized using the same transform as the base positions. Extra care must be taken to ensure that the quantization accomodates for large displacements, if present.
+For morph target data, it's expected that deltas are quantized using the same transform as the base positions. Extra care must be taken to ensure that the quantization accommodates for large displacements, if present.
 
 ## Encoding Quantized Data
 
