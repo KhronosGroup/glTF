@@ -24,11 +24,12 @@ It also prevents the loss of joint data on export of specific skinned meshes:
 Unlike the base glTF 2.0 spec, the `joints` in the scene graph are no longer defined by a `skin`, they are now defined by the `skeleton`.
 Joints are unique to skeletons, and cannot be reused. While multiple skins can still use joints, the node ids in the skins `joints` array must all be nodes which belong to the skeletons `joints` array.
 
-This extension is meant to be *optional*. The current definitions allow imorters which do not care about skeletons to fall back to their default skin-only implementation.
+This extension is meant to be *optional*. The current definitions allow importers which do not care about skeletons to fall back to their default skin-only implementation.
 
 ## Nodes and Joints
 
 A node is a `joint` if the `skeleton` property is marked, and its value is the Id in the array of `skeletons` for which the joint is a member of.
+A `joint` must only contain transformation data. It cannot be a mesh, camera, or other entity.
 
 ```json
 "nodes" : [
@@ -100,11 +101,13 @@ The `skeleton` can also contain `inverseBindMatrices` which behave in the exact 
 * The `skeleton_owner` property in `extensions` is marked with the skeleton id the current skin belongs to.
 * All `joints` in the skin are `joints` (`nodes` with the `skeleton` property).
 * All `joints` in the skin belong to the same skeleton.
-* The `skeleton` optional property is now required and its value is the skeletons `root` joint.
+* The `skeleton` optional property is now required and its value is the *parent* of the skeleton `root` joint.
+
+> **Note:** The `skeleton` property is crucial for maintaning backwards compatability when importers disregard the extension. This allows for zero ambiguity for which scene transform the `mesh instance` inherits.
 
 > **Implementation Note:** If the `inverseBindMatrices` are present in a skin and different that the IBM's defined in the skeleton, they *override* the default bind pose of the skeleton. If the inverse bind matrices are *not* present, the binds are derived from the scene (not the skeletons default bind pose).
 
-> **Note:** The below json refers to the json in the skeleton definition. The `skeleton` *property* is the `root` of the skeleton. The `skeleton_owner` property is the id of the `skeleton`. All joints are also members of the skeltons joints.
+> **Note:** The below json refers to the json in the skeleton definition. The `skeleton` *property* is the parent of the `root` in the skeleton. The `skeleton_owner` property is the id of the `skeleton`. All joints are also members of the skeltons joints.
 
 ```json
 "skins": [
@@ -123,3 +126,11 @@ The `skeleton` can also contain `inverseBindMatrices` which behave in the exact 
 ```
 
 * **JSON schema**: [skin.STAIK_skeletons.schema.json](schema/skin.STAIK_skeletons.schema.json)
+
+## Implementation Diagram
+
+<p align="center">
+<img src="figures/implementation.png" />
+</p>
+
+> **Note:** In order to prevent backwards compatability, meshes cannot bind directly to the skeleton and must remain bound to a skin, even if the inverseBindMatrices are identical.
