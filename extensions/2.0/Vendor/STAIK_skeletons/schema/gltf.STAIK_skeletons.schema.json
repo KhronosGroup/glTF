@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "STAIK_skeletons glTF extension",
+    "type": "object",
+    "description": "glTF Extension that defines skeleton trees.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "skeletons": {
+            "type": "array",
+            "items": {
+                "$ref": "skeleton.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

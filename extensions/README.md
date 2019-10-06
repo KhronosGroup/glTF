@@ -22,6 +22,7 @@
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
+* [STAIK_skeletons](2.0/Vendor/STAIK_skeletons/README.md)
 
 #### In progress Khronos and multi-vendor extensions
 

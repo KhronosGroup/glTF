@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "STAIK_skeletons glTF Node extension",
+    "type": "object",
+    "description": "glTF Extension for an individual node in a glTF model, to associate it with a skeleton.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "skeleton": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The skeleton id this joint belongs to."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
