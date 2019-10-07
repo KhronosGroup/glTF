@@ -3,7 +3,7 @@
 ## Contributors
 
 - Pär Winzell, Facebook, [@zellski](https://twitter.com/zellski)
-- Renee Rashid, Facebook, @debuggrl
+- Renee Rashid, Facebook, [@debuggrl](https://github.com/debuggrl)
 
 ## Status
 
