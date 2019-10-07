@@ -3,7 +3,7 @@
 ## Contributors
 
 - Pär Winzell, Facebook, [@zellski](https://twitter.com/zellski)
-- Renee Rashid, Oculus
+- Renee Rashid, Facebook, @debuggrl
 
 ## Status
 
@@ -15,13 +15,13 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension allows for a compact glTF representation of multiple variants of an asset, structured to allow low-latency switching between them at runtime.
+This extension allows for a compact glTF representation of multiple material variants of an asset, structured to allow low-latency switching at runtime.
 
 A typical use case is digital commerce, where a user might be presented with e.g. a pair of sneakers and the ability to switch between different colours.
 
 ## Defining Tagged Variants
 
-We introduce a simple tag-based extension scheme, that allows for high-level runtime swapping between which `material` is used to shade a given `mesh primitive`: the extension root contains a manbdatory `mapping` property, which is an array of objects, each one associating some set of tags with a material reference.
+We introduce a simple tag-based extension scheme, that allows for high-level runtime swapping between which `material` is used to shade a given `mesh primitive`: the extension root contains a mandatory `mapping` property, which is an array of objects, each one associating some set of tags with a material reference.
 
 The currently active `material` for a `mesh primitive` is found by stepping through this array of mappings, and selecting the first one which contains one of the currently active tag. If none match, fall back on vanilla glTF behaviour.
 
