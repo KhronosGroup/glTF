@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "FB_material_variants mesh primitive extension",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "glTFProperty.schema.json"
+    }
+  ],
+  "properties": {
+    "tags": {
+      "type": "array",
+      "description": "An array of variational tags.",
+      "items": {
+        "$ref": "glTFid.schema.json"
+      },
+      "minItems": 1,
+      "gltf_detailedDescription": "An array of variational tags, all of which map to the associated material."
+    },
+    "material": {
+      "allOf": [{ "$ref": "glTFid.schema.json" }],
+      "description": "The mapped material.",
+      "gltf_detailedDescription": "A reference to the material associated with the given array of tags."
+    },
+    "extensions": {},
+    "extras": {}
+  },
+  "required": ["tags", "material"]
+}
