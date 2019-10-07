@@ -81,6 +81,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
         - [Ada](#ada)
         - [TypeScript](#typescript)
         - [Swift](#swift)
+        - [Python](#python)
     - [Utilities](#utilities)
     - [Resources](#resources)
 - [Formats Built on glTF](#formats-built-on-gltf)
@@ -184,7 +185,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 | [Marmoset Toolbag](https://www.marmoset.co/toolbag/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | 3D real-time rendering, animation, and baking suite |
 | [Aspose.3D](https://www.aspose.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | File Format APIs for creating, editing, and converting over 100 file formats |
 | [3D Slash](http://www.3dslash.net) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Web-based and app-based 3D modeling imitating a stonecutter |
-| [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Web-based 3D platform for architecture and interiors |
+| [Archilogic](https://github.com/archilogic-com/aframe-gblock/issues/5)| ![status](https://img.shields.io/badge/glTF-2%2E0-yellow.svg?style=flat) | Web-based 3D platform for architecture and interiors |
 | [Plex.Earth](https://plexearth.com/) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Connects AutoCAD with Google Earth and the Real World. |
 | [VECTARY](https://vectary.com/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Online 3D content creation tool |
 | [Visual Studio Code](https://code.visualstudio.com) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Preview, validate, inspect, and debug glTF files |
@@ -357,6 +358,12 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | Tool | Status | Description |
 |------|--------|-------------|
 | [GLTFSceneKit](https://github.com/magicien/GLTFSceneKit) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF loader for SceneKit |
+
+#### Python
+
+| Tool | Status | Description |
+|------|--------|-------------|
+| [trimesh](https://github.com/mikedh/trimesh) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Python library for importing and exporting glTF and numerous other triangular mesh formats. |
 
 ### Utilities
 
