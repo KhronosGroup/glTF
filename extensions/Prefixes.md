@@ -16,10 +16,12 @@ The following extension prefixes are reserved:
 * `GOOGLE` - Google
 * `KHR` - Ratified or intended-to-be-ratified Khronos
 * `LLQ` - Lifeliqe
+* `MESHOPT` - Meshoptimizer
 * `MOZ` - Mozilla
 * `MSFT` - Microsoft
 * `NV` - NVIDIA Corporation
 * `OWLII` - Owlii
+* `POLUTROPON` - Polutropon Games
 * `S8S` - Soft8Soft
 * `SI` - Smithsonian Institution
 * `SKFB` - Sketchfab

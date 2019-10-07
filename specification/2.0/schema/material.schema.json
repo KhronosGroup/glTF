@@ -25,7 +25,7 @@
         "emissiveTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The emissive map texture.",
-            "gltf_detailedDescription": "The emissive map controls the color and intensity of the light being emitted by the material. This texture contains RGB components in sRGB color space. If a fourth component (A) is present, it is ignored."
+            "gltf_detailedDescription": "The emissive map controls the color and intensity of the light being emitted by the material. This texture contains RGB components encoded with the sRGB transfer function. If a fourth component (A) is present, it is ignored."
         },
         "emissiveFactor": {
             "type": "array",
