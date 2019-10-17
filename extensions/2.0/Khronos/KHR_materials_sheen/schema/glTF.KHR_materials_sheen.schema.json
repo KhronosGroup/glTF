@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_sheen glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the sheen material model.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "sheenFactor": {
+            "type": "number",
+            "description": "The sheen layer intensity.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The sheen layer intensity of the material. A value of 0.0 means the material has no sheen layer enabled."
+        },
+        "sheenColor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "description": "Color of the sheen layer.",
+            "default": [1, 1, 1]
+        },
+        "sheenTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The sheen layer texture.",
+            "gltf_detailedDescription": "The sheen layer texture. Stored in channel RGB the sheen color in Gamma and in A the linear factor."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
