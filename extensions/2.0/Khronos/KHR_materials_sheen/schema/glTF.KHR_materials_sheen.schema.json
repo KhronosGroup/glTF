@@ -28,7 +28,7 @@
         "sheenTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The sheen layer texture.",
-            "gltf_detailedDescription": "The sheen layer texture. Stored in channel RGB the sheen color in Gamma and in A the linear factor."
+            "gltf_detailedDescription": "The sheen layer texture. Stored in channel RGB the sheen color in sRGB transfer function and in A the linear factor."
         },
         "extensions": { },
         "extras": { }
