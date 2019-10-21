@@ -30,24 +30,24 @@ Draco String | `uint8[5]` | Must equal "DRACO"
 Major version | `uint8` | Bitstream major version number
 Minor version | `uint8` | Bitstream minor version number
 Encoder type | `uint8` | `0`: Point cloud, `1`: Triangular mesh
-Encoder method | `uint8` | `0` Sequential encoding, `1` Mesh edgebreaker encoding
-Flags | `uint16` | `0` No flag, `0x8000` Metadata present
+Encoder method | `uint8` | `0` Sequential encoding, `1` Mesh edge breaker encoding 
+Flags | `uint16` | `0` No flag, `0x8000` Meta data present 
 
-## Metadata
+## Meta data
 
 This section is only present if `DracoHeader.Flags` contains the flag `0x8000`.
-It contains a list of metadata records which relate to specific attributes and a global metadata record. Each metadata record contains a name-value pair list together with a list of sub metadata records, forming a metadata record tree. Each sub metadata record is a name-metadata pair. The `i`'th  attribute metadata record relates the attribute referenced by the `i`'th attribute metadata id.
+It contains a list of meta-data records which relate to specific attributes and a global meta data record. Each meta data record contains a name-value pair list together with a list of sub meta data records, forming a meta data record tree. Each sub meta data record is a name-meta-data pair. The `i`'th  attribute meta data record relates the attribute referenced by the `i`'th attribute meta data id.
 
-To avoid ambiguities, each id inside the attribute metadata id array must be unique. Otherwise, multiple metadata records would relate to the same attribute.
+To avoid ambiguities, each id inside the attribute meta data id array must be unique. Otherwise, multiple meta data records would relate to the same attribute.
 
 Name | Type
 -|-
-Count of metadata records | `var32`
-Array of attribute metadata ids | `var32[]`
-Array of attribute metadata records | `Metadata[]`
-Global metadata | `Metadata`
+Count of meta data records | `var32`
+Array of attribute meta data ids | `var32[]`
+Array of attribute meta data records | `Metadata[]`
+Global meta data | `Metadata`
 
-`Metadata` designates a single metadata record. Each record can contain zero or more name-value entries. `Metadata` is a recursive type as it can contain zero or more sub metadata records where each sub metadata record is a name-metadata pair.
+`Metadata` designates a single meta data record. Each record can contain zero or more name-value entries. `Metadata` is a recursive type as it can contain zero or more sub meta data records where each sub meta data record is a name-meta data pair.
 
 `Metadata`:
 
@@ -57,11 +57,11 @@ Global metadata | `Metadata`
 	- Name: `int8[]`
 	- Value size: `uint8`
 	- Value: `int8[]`
-- Count of sub metadata records: `var32`
-- Sub metadata array:
+- Count of sub meta data records: `var32`
+- Sub meta data array:
 	- Name size: `uint8`
 	- Name: `int8[]`
-	- Sub metadata: `Metadata` (Here, the type recurses. This is not a reference or index.)
+	- Sub meta data: `Metadata` (Here, the type recurses. This is not a reference or index.)
 
 ## Connectivity
 
@@ -89,7 +89,7 @@ The attribute section contains the attribute header, followed by one or more uni
 Attributes layout description:
 
 - Count of attributes types: `uint8`
-- An array of descriptions for each attribute type to define decoding parameters if edgebreaker is the used encoding method. Each array entry  contains:
+- An array of descriptions for each attribute type to define decoding parameters if edge breaker is the used encoding method. Each array entry  contains:
 	- Data id: `uint8`
 	- Decoder type: `uint8`
 	`0` Vertex attribute, `1` Corner attribute
@@ -137,7 +137,7 @@ Attribute:
 - Flag whether values are compressed: `uint8`
 - If compression flag is set:
 	- Scheme: `uint8`
-		- `0` Tagged: Each symbol is preceeded by a fix-length (5-bit?) bit-length variable defining the bit length of the actual value following the tag.
+		- `0` Tagged: Each symbol is preceded by a fix-length (5-bit?) bit-length variable defining the bit length of the actual value following the tag.
 		TODO: byte aligned?
 		- `1` Raw: Each symbol value has the same fixed bit-length. Accepted bit length are `[1, 18]`.
 
