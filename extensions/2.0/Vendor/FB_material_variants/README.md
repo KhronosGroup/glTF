@@ -19,15 +19,32 @@ This extension allows for a compact glTF representation of multiple material var
 
 A typical use case is digital commerce, where a user might be presented with e.g. a pair of sneakers and the ability to switch between different colours.
 
-## Defining Tagged Variants
+## Tagged Variants
 
 We introduce a simple tag-based extension scheme, that allows for high-level runtime swapping between which `material` is used to shade a given `mesh primitive`: the extension root contains a mandatory `mapping` property, which is an array of objects, each one associating some set of tags with a material reference.
 
-The currently active `material` for a `mesh primitive` is found by stepping through this array of mappings, and selecting the first one which contains one of the currently active tag. If none match, fall back on vanilla glTF behaviour.
+Imagine a sneaker with shoelace holes that are made from materials that depend on the overall shoe colour in non-obvious ways:
+
+| Tags                               | Material                        |
+| ---------------------------------- | ------------------------------- |
+| `sneaker_yellow`, `sneaker_orange` | `shoelace_hole_material_brown`  |
+| `sneaker_red`                      | `shoelace_hole_material_purple` |
+| `sneaker_black`                    | `shoelace_hole_material_yellow` |
+
+(_the authors of this spec are not product designer, apologies for the dubious colour choices_)
+
+The currently active `material` for a `mesh primitive` is found by stepping through this array of mappings, and selecting the first one which contains any one of the currently active tag. If none match, fall back on vanilla glTF behaviour.
+
+In other words, **this is not a literal mapping** in its glTF form – exporters, take note.
+
+## The variant mapping as glTF JSON
+
+A snippet of a mesh implementing shoe holes which uses this extension might look like:
 
 ```javascript
 "meshes": [
     {
+        "name": "shoelace_hole",
         "primitives": [
             {
                 "attributes": {
@@ -40,23 +57,31 @@ The currently active `material` for a `mesh primitive` is found by stepping thro
                     "FB_material_variants" : {
                         "mapping": [
                             {
-                                "tags": [ "sneaker_yellow" ],
-                                "material": 0,
+                                "tags": [ "sneaker_yellow", "sneaker_orange" ],
+                                "material": 7,
                             },
                             {
                                 "tags": [ "sneaker_red" ],
-                                "material": 1,
+                                "material": 8,
+                            },
+                            {
+                                "tags": [ "sneaker_black" ],
+                                "material": 9,
                             },
                         ],
                     }
                 }
-            }
+            },
+            // ... more primitives ...
         ]
-    }
+    },
+    // ... more meshes ...
 ]
 ```
 
-The tag-based approach allows highly selective material switching, e.g. changing the colour of shoe laces only, or wholesale changes across diverse geometry, by reusing the same tags in switches across many distinct mesh primitives. In the typical case, many tags will be active, e.g. `['sneaker_red', 'laces_gold']`.
+The tag-based approach allows highly selective material switching, e.g. changing the colour of shoe laces only, or wholesale changes across diverse geometry, by reusing the same tags in switches across many distinct mesh primitives.
+
+In the typical case, many tags will be active, e.g. `['sneaker_red', 'laces_gold']`.
 
 Composition also works well with tags: if a scene were built from several different variational models, each with their own set of tags, then it's easy to imagine an API call on the entire scene that takes a set of tags and passes them on to each constituent model, recursively.
 
