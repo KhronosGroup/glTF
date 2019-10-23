@@ -2,13 +2,8 @@
 
 ## Khronos 3D Formats Working Group
 
-* Alexey Knyazev
-* Don McCurdy
-* Ed Mackey
-* Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
-* Romain Guy
-* Tobias Haeussler
 * John Cooke
+* TODO
 
 ## Acknowledgments
 
