@@ -2,12 +2,12 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "KHR_instancing glTF extension",
     "type": "object",
-    "description": "glTF extension defines per mesh instance attributes for a node mesh.",
+    "description": "glTF extension defines instance attributes for a node with a mesh.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "attributes": {
             "type": "object",
-            "description": "A dictionary object, where each key corresponds to mesh attribute semantic and each value is the index of the accessor containing attribute's data (current valid attribs are TRANSFORM4x3, ID).",
+            "description": "A dictionary object, where each key corresponds to mesh attribute semantic and each value is the index of the accessor containing attribute's data (current valid attribs are TRANSFORM, ID).",
             "minProperties": 1,
             "additionalProperties": {
                 "$ref": "glTFid.schema.json"
