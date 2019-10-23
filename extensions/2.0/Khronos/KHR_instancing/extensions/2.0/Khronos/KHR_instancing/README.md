@@ -19,7 +19,9 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-TODO  
+This extension is specfically designed to enable GPU instancing which renders many copies of a single mesh at once using a small number of draw calls.  The data consists of 
+a transform and an instance id.  The transforms allow the mesh to be displayed at many different locations with different rotations and scales.  The id can be used to alter
+other parameters based on the run-time inplementation.
 
 ## Extending Nodes with per instance attributes
 
