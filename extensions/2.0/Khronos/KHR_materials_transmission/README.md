@@ -8,7 +8,7 @@
 
 Work in Progress
 
-## Dependencies
+## DependenciesI
 
 Written against the glTF 2.0 spec.
 
@@ -57,15 +57,20 @@ Only two properties are introduced with this extension and combine to describe a
 
 ### transmissionFactor 
 
-The amount of light that is transmitted by the surface rather than diffusely re-emitted. This is a percentage of all the light that penetrates a surface (i.e. isn’t specularly reflected) rather than a percentage of the total light that hits a surface. A value of 1.0 means that 100% of the light that penetrates the surface is transmitted through. 
+The amount of light that is transmitted by the surface rather than diffusely re-emitted. This is a percentage of all the light that penetrates a surface (i.e. isn’t specularly reflected) rather than a percentage of the total light that hits a surface. A value of 1.0 means that 100% of the light that penetrates the surface is transmitted through. This is the default.
+
+<figure>
+  <img src="./figures/ConstantTransmission.png"/>
+<figcaption><em>Defaulting to 1.0 allows making a material transparent by simple defining the extension.</em></figcaption>
+</figure>
 
 ### transmissionTexture 
 
 A greyscale texture that defines the amount of light that is transmitted by the surface rather than absorbed and re-emitted. A value of 1.0 means that 100% of the light that penetrates the surface (i.e. isn’t specularly reflected) is transmitted through. The value is linear and is multiplied by the transmissionFactor to determine the total transmission value. Note that use of transmission values does not disallow usage of alpha coverage (via `baseColor.a`).
 
 <figure>
-  <img src="./figures/coverage_and_transparency.png"/>
-<figcaption><em>Alpha coverage and optical transparency can be used at the same time so that some areas of a surface are transparent while others disappear entirely.</em></figcaption>
+  <img src="./figures/TransmissionTexture.png"/>
+<figcaption><em>Controlling transmission amount with transmissionTexture.</em></figcaption>
 </figure>
 
 ## Implementing Transmission ##
@@ -81,16 +86,29 @@ Modeling transmission is relatively straightforward. From the [glTF BRDF](https:
 
 Optical transparency does not require any changes whatsoever to the specular term so we only want to modify the diffuse term to account for transmitted light as well. We can do this by blending *f*<sub>*diffuse*</sub> with the transmitted light, **L**<sub>transmitted</sub>, based on the `transmission` values.
 
-*f* = mix(**f**<sub>*diffuse*</sub>, **L**<sub>transmitted</sub>, **T**) + *f*<sub>*specular*</sub>
+*f* = mix(**f**<sub>*diffuse*</sub>, **L**<sub>transmitted</sub> * `baseColor`, **T**) + *f*<sub>*specular*</sub>
 
 Where **L**<sub>transmitted</sub> is the colour of light coming through the material, towards the eye. It is tinted (multiplied) by the `baseColor`, and already has refraction taken into account (as discussed below). *T* is the transmission value defined by this extension.
+
+## A Note about Blend Mode
+
+Although the math here is straightforward, it doesn't consist of a single blend equation and so, in practice, can't be rendered in a single draw call. Also note that alpha coverage still needs to work as it did before, blending between the destination framebuffer and this material. Therefore, `blendMode` should, in general, be set to "OPAQUE" unless alpha coverage is used.
+
+<figure>
+  <img src="./figures/TransmissionWithMask.png"/>
+<figcaption><em>Alpha coverage and optical transparency can be used at the same time so that some areas of a surface are transparent while others disappear entirely.</em></figcaption>
+</figure>
+
+## Transparent Metals
+
+The metallic parameter of a glTF material effectively scales the `baseColor` of the material toward black while, at the same time scaling the F0 (reflectivity) value towards 1.0. This effectively makes the material opaque for metallic values of 1.0 because transmitted light is attenuated out by absorption. This leaves only the specular component.
 
 ## Modeling Absorption
 
 Absorption is usually defined as an amount of light at each frequency that is absorbed over a given distance through a medium (usually described by Beer’s Law). However, since this extension deals exclusively with very thin surfaces, we can treat absorption as a constant. In fact, rather than absorbed light, we can talk about its inverse: transmitted light. The `baseColor` of the material serves this purpose as it already defines how the light that penetrates the surface is colored by the material. In this model, the transmitted light will be modulated by this color as it passes through.
 
 <figure>
-  <img src="./figures/surface_tint.png"/>
+  <img src="./figures/ConstantTransmission.png"/>
 <figcaption><em>The baseColor of the material is used to tint the light being transmitted.</em></figcaption>
 </figure>
 
@@ -102,11 +120,7 @@ Implementations of this are expected to vary widely, especially in real-time eng
 
 
 <figure>
-  <img src="./figures/surface_roughness_dimension.png"/>
-<figcaption><em>Roughness of 0, 0.5 and 1.0 using renderer in Adobe Dimension. Note that an issue in Dimension at the time of writing is causing rough surfaces to appear too dark.</em></figcaption>
+  <img src="./figures/Roughness.png"/>
+<figcaption><em>Refraction due to surface roughness.</em></figcaption>
 </figure>
 
-<figure>
-  <img src="./figures/surface_roughness_babylon.png"/>
-<figcaption><em>Simple implementation using Babylon.js engine. This implementation uses the mip levels of the captured opaque scene to approximate refraction of transmitted light.</em></figcaption>
-</figure>
