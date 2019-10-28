@@ -17,8 +17,8 @@ Written against the glTF 2.0 spec.
 Many optically transparent materials are impossible to represent in a physically plausible manner with the core glTF 2.0 PBR material. Alpha coverage (exposed via the alpha channel of `baseColorTexture`) is useful for transparent materials such as gauze that don’t reflect, refract, absorb or scatter light. However, most physical materials don’t fit into this category. Transparent glass and plastics are great examples of this. In the simplest case, specular reflections off the surface of the glass should still be visible on a fully transparent mesh. Using alpha coverage of 0% would make the reflections invisible as well.
 
 <figure>
-<img src="./figures/coverage_vs_transparency.png"/>
-<figcaption><em>Alpha coverage of 20% (left) vs 100% optical transparency (right). Note that alpha coverage can't make the surface colourless, nor can it leave the specular reflections unaffected.</em></figcaption>
+<img src="./figures/OpacityComparison.png"/>
+<figcaption><em>Alpha coverage of 20% (left) vs 80% optical transparency (right). Note that alpha coverage can't make the surface colourless nor can it produce any absorption effects. It also attenuates the specular reflections, making them disappear completely when opacity is 0.0.</em></figcaption>
 </figure>
 
 This extension provides a way to define glTF 2.0 materials that are transparent to light in a physically plausible way. That is, it enables the creation of transparent materials that absorb, reflect and transmit light depending on the incident angle and the wavelength of light. Common uses cases for thin-surface transmissive materials include plastics and glass.
