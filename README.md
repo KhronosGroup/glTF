@@ -343,6 +343,10 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
       * [jgltf-viewer-lwjgl](https://github.com/javagl/JglTF/tree/master/jgltf-viewer-lwjgl) - glTF viewer based on [LWJGL version 2](http://legacy.lwjgl.org/)
   * [jgltf-browser](https://github.com/javagl/JglTF/tree/master/jgltf-browser) - Application combining the above libraries
   * [jgltf-validator](https://github.com/javagl/JglTF/tree/master/jgltf-validator) - Simple glTF validator, only intended for internal use
+  
+| Tool | Status | Description |
+|------|--------|-------------|
+| [JglTF-mesh](https://github.com/chadj2/jgltf-mesh) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Generate glTF meshes and geometry in Java |
 
 #### Ada
 
