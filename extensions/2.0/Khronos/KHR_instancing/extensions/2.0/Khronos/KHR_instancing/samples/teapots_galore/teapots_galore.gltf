@@ -1,0 +1,995 @@
+{
+    "accessors": [
+        {
+            "bufferView": 0,
+            "componentType": 5126,
+            "count": 12096,
+            "extras": {
+                "arrayIndex": 0
+            },
+            "max": [
+                3.433150053024292,
+                3.1500000953674316,
+                2.0
+            ],
+            "min": [
+                -3.0,
+                0.0,
+                -2.0
+            ],
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 1,
+            "componentType": 5126,
+            "count": 12096,
+            "extras": {
+                "arrayIndex": 1
+            },
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 2,
+            "componentType": 5125,
+            "count": 12096,
+            "extras": {
+                "arrayIndex": 2
+            },
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 3,
+            "componentType": 5126,
+            "count": 958,
+            "extras": {
+                "arrayIndex": 3
+            },
+            "type": "MAT4x3"
+        },
+        {
+            "bufferView": 4,
+            "componentType": 5126,
+            "count": 12096,
+            "extras": {
+                "arrayIndex": 4
+            },
+            "max": [
+                3.433150053024292,
+                3.1500000953674316,
+                2.0
+            ],
+            "min": [
+                -3.0,
+                0.0,
+                -2.0
+            ],
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 5,
+            "componentType": 5126,
+            "count": 12096,
+            "extras": {
+                "arrayIndex": 5
+            },
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 6,
+            "componentType": 5125,
+            "count": 12096,
+            "extras": {
+                "arrayIndex": 6
+            },
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 7,
+            "componentType": 5126,
+            "count": 941,
+            "extras": {
+                "arrayIndex": 7
+            },
+            "type": "MAT4x3"
+        },
+        {
+            "bufferView": 8,
+            "componentType": 5126,
+            "count": 4,
+            "extras": {
+                "arrayIndex": 8
+            },
+            "max": [
+                1.0,
+                0.0,
+                1.0
+            ],
+            "min": [
+                -1.0,
+                0.0,
+                -1.0
+            ],
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 9,
+            "componentType": 5126,
+            "count": 4,
+            "extras": {
+                "arrayIndex": 9
+            },
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 10,
+            "componentType": 5126,
+            "count": 4,
+            "extras": {
+                "arrayIndex": 10
+            },
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 11,
+            "componentType": 5125,
+            "count": 6,
+            "extras": {
+                "arrayIndex": 11
+            },
+            "type": "SCALAR"
+        }
+    ],
+    "asset": {
+        "generator": "OTOYFbxGltfConverters Version:0.3",
+        "version": "2.0"
+    },
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 145152,
+            "extras": {
+                "arrayIndex": 0
+            }
+        },
+        {
+            "buffer": 0,
+            "byteLength": 145152,
+            "byteOffset": 145152,
+            "extras": {
+                "arrayIndex": 1
+            }
+        },
+        {
+            "buffer": 0,
+            "byteLength": 48384,
+            "byteOffset": 290304,
+            "extras": {
+                "arrayIndex": 2
+            }
+        },
+        {
+            "buffer": 1,
+            "byteLength": 45984,
+            "extras": {
+                "arrayIndex": 3
+            }
+        },
+        {
+            "buffer": 2,
+            "byteLength": 145152,
+            "extras": {
+                "arrayIndex": 4
+            }
+        },
+        {
+            "buffer": 2,
+            "byteLength": 145152,
+            "byteOffset": 145152,
+            "extras": {
+                "arrayIndex": 5
+            }
+        },
+        {
+            "buffer": 2,
+            "byteLength": 48384,
+            "byteOffset": 290304,
+            "extras": {
+                "arrayIndex": 6
+            }
+        },
+        {
+            "buffer": 1,
+            "byteLength": 45168,
+            "byteOffset": 45984,
+            "extras": {
+                "arrayIndex": 7
+            }
+        },
+        {
+            "buffer": 3,
+            "byteLength": 48,
+            "extras": {
+                "arrayIndex": 8
+            }
+        },
+        {
+            "buffer": 3,
+            "byteLength": 48,
+            "byteOffset": 48,
+            "extras": {
+                "arrayIndex": 9
+            }
+        },
+        {
+            "buffer": 3,
+            "byteLength": 32,
+            "byteOffset": 96,
+            "extras": {
+                "arrayIndex": 10
+            }
+        },
+        {
+            "buffer": 3,
+            "byteLength": 24,
+            "byteOffset": 128,
+            "extras": {
+                "arrayIndex": 11
+            }
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 338688,
+            "extras": {
+                "arrayIndex": 0
+            },
+            "uri": "mesh.bin"
+        },
+        {
+            "byteLength": 91152,
+            "extras": {
+                "arrayIndex": 1
+            },
+            "uri": "transforms.bin"
+        },
+        {
+            "byteLength": 338688,
+            "extras": {
+                "arrayIndex": 2
+            },
+            "uri": "mesh_2.bin"
+        },
+        {
+            "byteLength": 152,
+            "extras": {
+                "arrayIndex": 3
+            },
+            "uri": "mesh_3.bin"
+        }
+    ],
+    "cameras": [
+        {
+            "extensions": {
+                "OctaneCamera": {
+                    "Aperture": [
+                        0.0
+                    ],
+                    "FocusDist": [
+                        10.0
+                    ],
+                    "FovX": [
+                        1.0471975803375244
+                    ],
+                    "Pos": [
+                        0.0,
+                        20.0,
+                        0.0
+                    ],
+                    "Target": [
+                        0.0,
+                        17.0,
+                        -10.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            "extras": {
+                "arrayIndex": 0
+            },
+            "name": "Thin lens camera",
+            "perspective": {
+                "aspectRatio": 1.3333333730697632,
+                "yfov": 0.8172757029533386,
+                "zfar": 10000000000.0,
+                "znear": 9.999999747378752e-05
+            },
+            "type": "perspective"
+        }
+    ],
+    "extensions": {
+        "SceneData": {
+            "136 P_POST_PROCESSING": {
+                "61 NT_POSTPROCESSING": {
+                    "124 P_ON_OFF": false,
+                    "14 P_BLOOM_POWER": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "62 P_GLARE_ANGLE": [
+                        14.491999626159668,
+                        0.0,
+                        0.0
+                    ],
+                    "64 P_GLARE_POWER": [
+                        2.700000047683716,
+                        0.0,
+                        0.0
+                    ],
+                    "65 P_GLARE_RAY_AMOUNT": [
+                        3,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "19 P_CAMERA": {
+                "13 NT_CAM_THINLENS": {
+                    "116 P_NEAR_CLIP_DEPTH": [
+                        9.999999747378752e-05,
+                        0.0,
+                        0.0
+                    ],
+                    "12 P_AUTOFOCUS": false,
+                    "133 P_POSITION": [
+                        0.0,
+                        20.0,
+                        0.0
+                    ],
+                    "235 P_TARGET": [
+                        0.0,
+                        17.0,
+                        -10.0
+                    ],
+                    "248 P_UP": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "315 P_FAR_CLIP_DEPTH": [
+                        10000000000.0,
+                        0.0,
+                        0.0
+                    ],
+                    "51 P_FOCAL_DEPTH": [
+                        10.0,
+                        0.0,
+                        0.0
+                    ],
+                    "53 P_FOV": [
+                        60.0,
+                        0.0,
+                        0.0
+                    ],
+                    "8 P_APERTURE": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            },
+            "311 P_FILM_SETTINGS": {
+                "100 NT_FILM_SETTINGS": {
+                    "198 P_RESOLUTION": [
+                        1024,
+                        768,
+                        0
+                    ]
+                }
+            },
+            "43 P_ENVIRONMENT": {
+                "14 NT_ENV_DAYLIGHT": {
+                    "114 P_MODEL": 1,
+                    "120 P_NORTHOFFSET": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "138 P_POWER": [
+                        1.6666699647903442,
+                        0.0,
+                        0.0
+                    ],
+                    "217 P_SKY_COLOR": [
+                        0.05000000074505806,
+                        0.30000001192092896,
+                        1.0
+                    ],
+                    "231 P_SUN_DIR": [
+                        -0.9366989731788635,
+                        0.0912325382232666,
+                        0.3380410373210907
+                    ],
+                    "232 P_SUNSET_COLOR": [
+                        0.6000000238418579,
+                        0.11999999731779099,
+                        0.019999999552965164
+                    ],
+                    "233 P_SUN_SIZE": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "246 P_TURBIDITY": [
+                        2.200000047683716,
+                        0.0,
+                        0.0
+                    ],
+                    "269 P_MEDIUM_RADIUS": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "317 P_VISIBLE_ENVIRONMENT_BACKPLATE": false,
+                    "318 P_VISIBLE_ENVIRONMENT_REFLECTIONS": false,
+                    "319 P_VISIBLE_ENVIRONMENT_REFRACTIONS": false,
+                    "330 P_GROUND_BLEND_ANGLE": [
+                        5.0,
+                        0.0,
+                        0.0
+                    ],
+                    "331 P_GROUND_COLOR": [
+                        0.03192820027470589,
+                        0.13043400645256042,
+                        0.5572919845581055
+                    ],
+                    "332 P_GROUND_START_ANGLE": [
+                        90.0,
+                        0.0,
+                        0.0
+                    ],
+                    "79 P_IMPORTANCE_SAMPLING": true
+                }
+            },
+            "78 P_IMAGER": {
+                "15 NT_IMAGER_CAMERA": {
+                    "199 P_RESPONSE": 105,
+                    "208 P_SATURATION": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "252 P_VIGNETTING": [
+                        0.30000001192092896,
+                        0.0,
+                        0.0
+                    ],
+                    "255 P_WHITE_BALANCE": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "45 P_EXPOSURE": [
+                        0.5902360081672668,
+                        0.0,
+                        0.0
+                    ],
+                    "57 P_GAMMA": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "73 P_HIGHLIGHT_COMPRESSION": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            },
+            "89 P_KERNEL": {
+                "24 NT_KERN_DIRECTLIGHTING": {
+                    "108 P_MAX_SAMPLES": [
+                        5000,
+                        0,
+                        0
+                    ],
+                    "129 P_PATH_TERM_POWER": [
+                        0.30000001192092896,
+                        0.0,
+                        0.0
+                    ],
+                    "144 P_RAY_EPSILON": [
+                        9.999999747378752e-05,
+                        0.0,
+                        0.0
+                    ],
+                    "2 P_ALPHA_CHANNEL": false,
+                    "221 P_SPECULAR_DEPTH": [
+                        5,
+                        0,
+                        0
+                    ],
+                    "223 P_STATIC_NOISE": false,
+                    "25 P_COHERENT_RATIO": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "263 P_DEEP_ENABLE": false,
+                    "264 P_DEPTH_TOLERANCE": [
+                        0.05000000074505806,
+                        0.0,
+                        0.0
+                    ],
+                    "266 P_MAX_DEPTH_SAMPLES": [
+                        8,
+                        0,
+                        0
+                    ],
+                    "267 P_MAX_TILE_SAMPLES": [
+                        16,
+                        0,
+                        0
+                    ],
+                    "270 P_MINIMIZE_NET_TRAFFIC": true,
+                    "273 P_PARALLEL_SAMPLES": [
+                        8,
+                        0,
+                        0
+                    ],
+                    "29 P_DIFFUSE_DEPTH": [
+                        2,
+                        0,
+                        0
+                    ],
+                    "3 P_ALPHA_SHADOWS": true,
+                    "347 P_ADAPTIVE_SAMPLING": false,
+                    "349 P_NOISE_THRESHOLD": [
+                        0.019999999552965164,
+                        0.0,
+                        0.0
+                    ],
+                    "350 P_ADAPTIVE_SAMPLING_PIXEL_GROUP": 2,
+                    "351 P_MIN_ADAPTIVE_SAMPLES": [
+                        512,
+                        0,
+                        0
+                    ],
+                    "353 P_ADAPTIVE_SAMPLING_EXPOSURE": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "368 P_TOON_SHADOW_AMBIENT": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "381 P_IRRADIANCE": false,
+                    "384 P_AI_LIGHT_UPDATE": true,
+                    "386 P_AI_LIGHT": false,
+                    "433 P_LIGHT_PASS_MASK": 0,
+                    "434 P_GLOBAL_LIGHT_ID_MASK": 0,
+                    "435 P_GLOBAL_LIGHT_ID_MASK_ACTION": 1,
+                    "446 P_DEEP_ENABLE_PASSES": false,
+                    "448 P_OLD_VOLUME_BEHAVIOR": true,
+                    "50 P_FILTERSIZE": [
+                        1.2000000476837158,
+                        0.0,
+                        0.0
+                    ],
+                    "61 P_GI_MODE": 3,
+                    "66 P_GLOSSY_DEPTH": [
+                        2,
+                        0,
+                        0
+                    ],
+                    "7 P_AO_DISTANCE": [
+                        3.0,
+                        0.0,
+                        0.0
+                    ],
+                    "86 P_KEEP_ENVIRONMENT": false
+                }
+            }
+        }
+    },
+    "extensionsUsed": [
+        "SceneData"
+    ],
+    "materials": [
+        {
+            "extensions": {
+                "OctaneMaterial": {
+                    "17 NT_MAT_DIFFUSE": {
+                        "102 P_MATTE": false,
+                        "125 P_OPACITY": 1.0,
+                        "18 P_BUMP": 0.0,
+                        "204 P_ROUGHNESS": 0.0,
+                        "218 P_SMOOTH": true,
+                        "30 P_DIFFUSE": [
+                            0.7808316946029663,
+                            0.8144435286521912,
+                            0.8997662663459778
+                        ],
+                        "39 P_EDGES_ROUNDING": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    }
+                },
+                "UniversalMaterial": {
+                    "Albedo": [
+                        0.7808316946029663,
+                        0.8144435286521912,
+                        0.8997662663459778
+                    ],
+                    "NodeType": [
+                        17
+                    ],
+                    "Opacity": [
+                        1.0
+                    ],
+                    "Roughness": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            },
+            "extras": {
+                "arrayIndex": 0
+            },
+            "name": "cube"
+        },
+        {
+            "extensions": {
+                "OctaneMaterial": {
+                    "17 NT_MAT_DIFFUSE": {
+                        "102 P_MATTE": false,
+                        "125 P_OPACITY": 1.0,
+                        "18 P_BUMP": 0.0,
+                        "204 P_ROUGHNESS": 0.0,
+                        "218 P_SMOOTH": true,
+                        "30 P_DIFFUSE": [
+                            0.7454485893249512,
+                            0.0006854146486148238,
+                            0.057160817086696625
+                        ],
+                        "39 P_EDGES_ROUNDING": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    }
+                },
+                "UniversalMaterial": {
+                    "Albedo": [
+                        0.7454485893249512,
+                        0.0006854146486148238,
+                        0.057160817086696625
+                    ],
+                    "NodeType": [
+                        17
+                    ],
+                    "Opacity": [
+                        1.0
+                    ],
+                    "Roughness": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            },
+            "extras": {
+                "arrayIndex": 1
+            },
+            "name": "cube_1"
+        },
+        {
+            "extensions": {
+                "OctaneMaterial": {
+                    "16 NT_MAT_GLOSSY": {
+                        "125 P_OPACITY": 1.0,
+                        "18 P_BUMP": 0.0,
+                        "203 P_ROTATION": 0.0,
+                        "204 P_ROUGHNESS": 0.13469399511814117,
+                        "218 P_SMOOTH": false,
+                        "222 P_SPECULAR": 0.11500000208616257,
+                        "30 P_DIFFUSE": [
+                            0.15800000727176666,
+                            0.10700000077486038,
+                            0.09399999678134918
+                        ],
+                        "357 P_BRDF": 0,
+                        "358 P_ANISOTROPY": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "377 P_SHEEN": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "387 P_SHEEN_ROUGHNESS": 0.13469399511814117,
+                        "39 P_EDGES_ROUNDING": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "48 P_FILM_INDEX": [
+                            1.4500000476837158,
+                            0.0,
+                            0.0
+                        ],
+                        "49 P_FILM_WIDTH": 0.0,
+                        "80 P_INDEX": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    }
+                },
+                "UniversalMaterial": {
+                    "Albedo": [
+                        0.15800000727176666,
+                        0.10700000077486038,
+                        0.09399999678134918
+                    ],
+                    "NodeType": [
+                        16
+                    ],
+                    "Opacity": [
+                        1.0
+                    ],
+                    "RefractIndex": [
+                        0.0
+                    ],
+                    "Roughness": [
+                        0.13469399511814117,
+                        0.13469399511814117,
+                        0.13469399511814117
+                    ],
+                    "Specular": [
+                        0.11500000208616257,
+                        0.11500000208616257,
+                        0.11500000208616257
+                    ]
+                }
+            },
+            "extras": {
+                "arrayIndex": 2
+            },
+            "name": "cube_2"
+        }
+    ],
+    "meshes": [
+        {
+            "extras": {
+                "arrayIndex": 0
+            },
+            "name": "teapot",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 1,
+                        "POSITION": 0
+                    },
+                    "indices": 2,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": {
+                "arrayIndex": 1
+            },
+            "name": "teapot0",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 5,
+                        "POSITION": 4
+                    },
+                    "indices": 6,
+                    "material": 1,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": {
+                "arrayIndex": 2
+            },
+            "name": "plane",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 9,
+                        "POSITION": 8,
+                        "TEXCOORD_0": 10
+                    },
+                    "indices": 11,
+                    "material": 2,
+                    "mode": 4
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "children": [
+                1,
+                2,
+                3,
+                4
+            ],
+            "extras": {
+                "arrayIndex": 0
+            },
+            "name": "teapots_galore"
+        },
+        {
+            "camera": 0,
+            "extras": {
+                "arrayIndex": 1
+            },
+            "matrix": [
+                1.0,
+                -0.0,
+                0.0,
+                -0.0,
+                -0.0,
+                0.9578263163566589,
+                -0.2873478829860687,
+                0.0,
+                -0.0,
+                0.2873478829860687,
+                0.9578263163566589,
+                -0.0,
+                -0.0,
+                20.000001907348633,
+                -0.0,
+                1.0
+            ],
+            "name": "Thin lens camera"
+        },
+        {
+            "children": [
+                5
+            ],
+            "extras": {
+                "arrayIndex": 2
+            },
+            "matrix": [
+                0.7071068286895752,
+                0.0,
+                -0.7071067690849304,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.7071067690849304,
+                0.0,
+                0.7071068286895752,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "name": "Placement"
+        },
+        {
+            "extensions": {
+                "Transforms": 3
+            },
+            "extras": {
+                "arrayIndex": 3
+            },
+            "matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.2999999523162842,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "mesh": 0,
+            "name": "teapot"
+        },
+        {
+            "extensions": {
+                "Transforms": 7
+            },
+            "extras": {
+                "arrayIndex": 4
+            },
+            "matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.2999999523162842,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "mesh": 1,
+            "name": "teapot0"
+        },
+        {
+            "children": [
+                6
+            ],
+            "extras": {
+                "arrayIndex": 5
+            },
+            "matrix": [
+                240.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                240.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                240.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "name": "Placement_3"
+        },
+        {
+            "extras": {
+                "arrayIndex": 6
+            },
+            "mesh": 2,
+            "name": "plane"
+        }
+    ],
+    "scene": 0,
+    "scenes": [
+        {
+            "extras": {
+                "arrayIndex": 0
+            },
+            "name": "teapots_galore",
+            "nodes": [
+                0
+            ]
+        }
+    ]
+}
