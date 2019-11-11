@@ -25,7 +25,7 @@ To simplify implementation requirements, the extension relies on existing ways t
 
 As an example, a static PBR-ready mesh typically requires `POSITION` (12 bytes), `TEXCOORD` (8 bytes), `NORMAL` (12 bytes) and `TANGENT` (16 bytes) for each vertex, for a total of 48 bytes. With this extension, it is possible to use `SHORT` to store position and texture coordinate data (8 and 4 bytes, respectively) and `BYTE` to store normal and tangent data (4 bytes each), for a total of 20 bytes per vertex with often negligible quality impact.
 
-Because the extension does not provide a way to specify both `FLOAT` and quantized versions of the data, files that use the extension should specify it in `extensionsRequired` list - the extension is not optional.
+Because the extension does not provide a way to specify both `FLOAT` and quantized versions of the data, files that use the extension must specify it in `extensionsRequired` array - the extension is not optional.
 
 ## Extending Mesh Attributes
 
@@ -91,4 +91,4 @@ Implementations should assume following equations are used to get corresponding 
 | `5122`&nbsp;(SHORT)         |`f = max(c / 32767.0, -1.0)`|`c = round(f * 32767.0)`|
 | `5123`&nbsp;(UNSIGNED_SHORT)|`f = c / 65535.0`|`c = round(f * 65535.0)`|
 
-> **Implementation Note:** Due to OpenGL ES 2.0 / WebGL 1.0 restrictions, some implementations may decode signed normalized integers to floating-point values differently. While the difference is unlikely to be significant for normal/tangent data, implementations may want to use unsigned normalized or signed non-normalized formats to avoid the discrepancy in position data.
+> **Implementation Note:** Due to OpenGL ES 2.0 / WebGL 1.0 platform differences, some implementations may decode signed normalized integers to floating-point values differently. While the difference is unlikely to be significant for normal/tangent data, implementations may want to use unsigned normalized or signed non-normalized formats to avoid the discrepancy in position data.
