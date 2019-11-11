@@ -70,7 +70,7 @@ For `POSITION` attribute, the transform can be specified in one of two ways:
 
 In both cases, to preserve the direction of normal/tangent vectors, it is recommended that the quantization scale specified in the transform is uniform across X/Y/Z axes.
 
-For `TEXCOORD` attribute, the transform can be specified using the `offset`/`scale` supplied by `KHR_texture_transform` extension.
+For `TEXCOORD` attribute, the transform can be specified using the `offset`/`scale` supplied by `KHR_texture_transform` extension. Note that this requires merging existing `offset`/`scale` values, if present, with the dequantization transform.
 
 For morph target data, it's expected that deltas are quantized using the same transform as the base positions. Extra care must be taken to ensure that the quantization accommodates for large displacements, if present.
 
