@@ -142,6 +142,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 | [glTF Pipeline](https://github.com/AnalyticalGraphicsInc/gltf-pipeline) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official Node.js command-line tool for optimizing glTF assets |
 | [gltf2glb](https://github.com/Geopipe/gltf2glb) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Python tool to convert glTF to Binary glTF |
 | [binary-gltf-utils](https://github.com/Qantas94Heavy/binary-gltf-utils) | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Node.js tool to convert glTF to Binary glTF |
+| [gltfpack](https://github.com/zeux/meshoptimizer#gltfpack) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | C++ tool for optimizing glTF assets for rendering performance and transmission size |
 
 ### Validators
 
