@@ -93,11 +93,35 @@ If a fallback buffer doesn't have a URI and doesn't refer to the GLB binary chun
 
 ## Compressing geometry data
 
-TODO
+The codecs used by this extension can represent geometry exactly, replicating both vertex and index data without changes in contents or order. However, to get optimal compression, it's necessary to pre-process the data.
+
+To get optimal compression, encoders should optimize vertex and index data for locality of reference. Specifically:
+
+- Triangle order should be optimized to maximize the recency of previously encountered vertices; this is similar to optimizing meshes for vertex reuse aka post-transform cache in GPU hardware.
+- Vertex order should be linearized in the order that vertices appear in the index stream to get optimal index compression
+
+When index data is not available (e.g. point data sets) or represents topology with a lot of seams (e.g. each triangle has unique vertex indices because it specifies flat-shaded normal), encoders should additionally optimize vertex data for spatial locality, so that vertices close together in the vertex stream are close together in space.
+
+Vertex data should be quantized using the appropriate representation; this extension cleanly interacts with KHR\_quantized\_geometry by compressing already quantized data.
+
+Morph targets can be treated identically to other vertex attributes, as long as vertex order optimization is performed on all target streams at the same time. It is recommended to use quantized storage for morph target deltas, possibly with a narrower type than that used for baseline values.
+
+When storing vertex data, mode 0 (attributes) should be used; for index data, mode 1 (indices) should be used instead. Mode 1 only supports triangle list storage; indices of other topology types can be stored uncompressed or using mode 0 (attributes). The use of triangle strip topology is not recommended since it's more efficient to store triangle lists using mode 1.
+
+TODO: normal & tangent unit filters
 
 ## Compressing animation data
 
-TODO
+To minimize the size of animation data, it is recommended that encoders resample animations before compression. This serves two purposes:
+
+- After resampling, all animation channels can share the same input accessor that carries the time data once
+- Varying sample frequency allows one to trade off quality of animations for size
+
+After resampling, rotation data should be additionally quantized for maximum efficiency - using 16-bit components should provide enough precision to store most rotations.
+
+After pre-processing, both input and output data should be stored using mode 0 (attributes).
+
+TODO: quaternion unit filter
 
 ## Bitstream mode 0 - attributes
 
