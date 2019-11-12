@@ -1,47 +1,286 @@
 
-## 0 Abstract
+# 0 Abstract
 
 
-## 1 Scope
+# 1 Scope
 
 
-## 2 Conventions
+# 2 Conventions
 
 
-### 2.1 Draco File Format
+## 2.1 Draco File Format
+
+All Draco encoded mesh files are comprised of four main sections. This first section is the header. The second section contains the metadata. This section is optional. The third section contains the connectivity data. The fourth section contains the attribute data.
+
+<figure>
+  <img alt="" src="figures/DracoFileFormat.svg">
+  <figcaption>Figure 1. Draco file format.</figcaption>
+</figure>
 
 
-### 2.2 Draco Conventions
+The header must be decoded first, then the metadata section (if present), then the connectivity section, and then the attribute section.
+
+### 2.1.1 Draco Header
+
+Name | Type | Description
+-|-|-
+Draco String | `uint8[5]` | Must equal "DRACO"
+Major version | `uint8` | Bitstream major version number
+Minor version | `uint8` | Bitstream minor version number
+Encoder type | `uint8` | `0`: Point cloud, `1`: Triangular mesh
+Encoder method | `uint8` | `0` Sequential encoding, `1` Mesh edge breaker encoding 
+Flags | `uint16` | `0` No flag, `0x8000` Meta data present
+
+### 2.1.2 Metadata
+
+This section is only present if `DracoHeader.Flags` contains the flag `0x8000`.
+It contains a list of meta-data records which relate to specific attributes and a global meta data record. Each meta data record contains a name-value pair list together with a list of sub meta data records, forming a meta data record tree. Each sub meta data record is a name-meta-data pair. The `i`'th  attribute meta data record relates the attribute referenced by the `i`'th attribute meta data id.
+
+To avoid ambiguities, each id inside the attribute meta data id array must be unique. Otherwise, multiple meta data records would relate to the same attribute.
+
+Name | Type
+-|-
+Count of meta data records | `var32`
+Array of attribute meta data ids | `var32[]`
+Array of attribute meta data records | `Metadata[]`
+Global meta data | `Metadata`
+
+`Metadata` designates a single meta data record. Each record can contain zero or more name-value entries. `Metadata` is a recursive type as it can contain zero or more sub meta data records where each sub meta data record is a name-meta data pair.
+
+`Metadata`:
+
+- Count of entries: `var32`
+- Entry array:
+	- Name size: `uint8`
+	- Name: `int8[]`
+	- Value size: `uint8`
+	- Value: `int8[]`
+- Count of sub meta data records: `var32`
+- Sub meta data array:
+	- Name size: `uint8`
+	- Name: `int8[]`
+	- Sub meta data: `Metadata` (Here, the type recurses. This is not a reference or index.)
+
+### 2.1.3 Sequential Connectivity
+
+The sequential connectivity is comprised of two sections. The first section is the connectivity header. The second section is the indices data.
+
+<figure>
+  <img alt="" src="figures/SequentialConnectivity.svg">
+  <figcaption>Figure 2. Sequential connectivity format.</figcaption>
+</figure>
+
+Name | Type
+-|-
+Number Count of faces | `var32`
+Number of points | `var32`
+Connectivity method | `0` Compressed indices, `1` Uncompressed indices
 
 
-### 2.3 General Conventions
+### 2.1.4 EdgeBreaker Connectivity
+
+The EdgeBreaker connectivity section is composed of five sections. The first section is the connectivity header. The second section is the encoded split data. The third section is the encoded EdgeBreaker symbol data. The fourth section is the encoded start face configuration data. The fifth section is the attribute connectivity data.
 
 
-### 2.4 Arithmetic operators
+<figure>
+  <img alt="" src="figures/edgebreakerConnectivity.svg">
+  <figcaption>Figure 3. EdgeBreaker connectivity format.</figcaption>
+</figure>
+
+### 2.1.5 Valence EdgeBreaker Connectivity
+
+The valence EdgeBreaker connectivity adds two sections after the attribute connectivity data. The first additional section is the EdgeBreaker valence header. The second additional section is the context data for the valence prediction.
+
+<figure>
+  <img alt="" src="figures/valenceEdgebreakerConnectivity.svg">
+  <figcaption>Figure 4. Valence EdgeBreaker connectivity format.</figcaption>
+</figure>
+
+## 2.1.6 Attributes
+
+The attributes data contains two sections. The first section is the attribute header. The second section is comprised of one or more attribute types, such as positions, texture coordinates, normals… Each attribute type section is comprised of one or more unique attributes.
+
+<figure>
+  <img alt="" src="figures/attributes.svg">
+  <figcaption>Figure 5. Attribute data format.</figcaption>
+</figure>
 
 
-### 2.5 Logical operators
+## 2.2 Draco Conventions
+
+* f[n]
+  * Unsigned n-bit number appearing directly in the bitstream. The bits are read from high to low order.
+  * When bit reading is finished it will always pad the read to the current byte. ResetBitReader() will signify when the bit reading is finished.
+* I16, UI16, I32, UI32, I64, UI64, and Float values must be little endian.
+* Float is IEEE 754 Single precision.
+* varUI32 and varUI64 types must be decoded by the LEB128() function.
+*  varUI32 can represent values in the range 0 to 2^32 - 1.
+  * E.g. 0x10000000 will be stored using 5 bytes.
+* varUI64 can represent values in the range 0 to 2^64 - 1.
+  * E.g. 0x100000000000000 will be stored using 9 bytes.
+* Metadata keys per metadata element must be unique.
+* att_metadata_id values must be unique.
+* All values of att_metadata_id must equal a value stored in att_dec_unique_id.
+* When parsing a value, that value can be assigned to a variable after the value has been parsed.
+  * E.g. sz = buffer_size varUI32
+  * buffer UI8[sz]
+* All uninitialized elements of opposite_corners_ shall be set to kInvalidCornerIndex.
 
 
-### 2.6 Relational operators
+
+## 2.3 General Conventions
+The mathematical operators and their precedence rules used to describe this Specification are similar to those used in the C programming language.
+
+Assignment of an array is represented using the normal notation `A = B` and is specified to mean the same as doing both the individual assignments `A[ 0 ] = B[ 0 ]` and `A[ 1 ] = B[ 1 ]`. Equality testing of 2 arrays is represented using the notation `A == B` and is specified to mean the same as `(A[ 0 ] == B[ 0 ] && A[ 1 ] == B[ 1 ])`. Inequality testing is defined as `A != B` and is specified to mean the same as `(A[ 0 ] != B[ 0 ] || A[ 1 ] != B[ 1 ])`.
+
+Unless otherwise noted, array element assignment will increase the size of the array to include the element. Any remaining new elements will be uninitialized.
+
+The functions `assign`, `back`, `empty`, `pop_back`, `push_back`, and `size` behave similarly on arrays as it is defined for c++ std::vector.
+
+When a variable is said to be representable by a signed integer with `x` bits, it means that the variable is greater than or equal to `-(1 << (x-1))`, and that the variable is less than or equal to `(1 << (x-1))-1`.
+
+The function ReadBits(X), reads the next X bits from an array.
 
 
-### 2.7 Bitwise operators
+## 2.4 Arithmetic operators
+
+|          |         |
+|:--------:| ------- |
+| `+`      | Addition
+| `–`      | Subtraction (as a binary operator) or negation (as a unary prefix operator)
+| `*`      | Multiplication
+| `/`      | Division
+| `a % b`  |  Remainder from division of `a` by `b`. Both `a` and `b` are positive integers.
+
+## 2.5 Logical operators
+
+|          |         |
+|:--------:| ------- |
+| `a && b` | Logical AND operation between `a` and `b`
+| `a || b` | Logical OR operation between `a` and `b`
+| `!`      | Logical NOT operation.
 
 
-### 2.8 Assignment
+
+## 2.6 Relational operators
 
 
-### 2.9 Mathematical functions
+|          |         |
+|:--------:| ------- |
+| `>`      | Greater than
+| `>=`     | Greater than or equal to
+| `<`      | Less than
+| `<=`     | Less than or equal to
+| `==`     | Equal to
+| `!=`     | Not equal to
+
+## 2.7 Bitwise operators
 
 
-### 2.10 Method of describing bitstream syntax
+|          |         |
+|:--------:| ------- |
+| `&`      | AND operation
+| `|`      | OR operation
+| `~`      | Negation operation
+| `a >> b` | Shift `a` in 2's complement binary integer representation format to the right by `b` bit positions. This operator is only used with `b` being a non-negative integer. Bits shifted into the MSBs as a result of the right shift have a value equal to the MSB of `a` prior to the shift operation.
+| `a << b` | Shift `a` in 2's complement binary integer representation format to the left by `b` bit positions. This operator is only used with `b` being a non-negative integer. Bits shifted into the LSBs as a result of the left shift have a value equal to `0`.
 
 
-## 3 Draco Decoder
+## 2.8 Assignment
+
+|          |         |
+|:--------:| ------- |
+| `=`      | Assignment operator
+| `++`     | Increment, `x++` is equivalent to `x = x + 1`. When this operator is used for an array index, the variable value is obtained before the auto increment operation
+| `--`     | Decrement, i.e. `x--` is equivalent to `x = x - 1`. When this operator is used for an array index, the variable value is obtained before the auto decrement operation
+| `+=`     | Addition assignment operator, for example `x += 3` corresponds to `x = x + 3`
+| `-=`     | Subtraction assignment operator, for example `x -= 3` corresponds to `x = x - 3`
 
 
-### 3.1 Decode()
+## 2.9 Mathematical functions
+
+
+The following mathematical functions (Abs, Min, and Max)
+are defined as follows:
+
+<script type="math/asciimath">
+"Abs"(x)={[x;,x >= 0],[-x;,x<0]}
+</script>
+
+<br>
+
+<script type="math/asciimath">
+"Min"(x,y)={[x;,x<=y],[y;,x>y]}
+</script>
+
+<br>
+
+<script type="math/asciimath">
+"Max"(x,y)={[x;,x>=y],[y;,x<y]}
+</script>
+
+
+## 2.10 Method of describing bitstream syntax
+
+Each syntax element is described by its name (using only lower case letters
+with underscore characters) and a descriptor for its method of coded
+representation. The decoding process behaves according to the value of the
+syntax element and to the values of previously decoded syntax elements.
+
+In some cases the syntax tables may use the values of other variables derived
+from syntax elements values.
+
+{% comment %}
+
+The description style of the syntax is similar to the C++ programming language.
+Syntax elements in the bitstream are represented in bold type. Each syntax
+element is described by its name (using only lower case letters with
+underscore characters) and a descriptor for its method of coded
+representation. The decoding process behaves according to the value of the
+syntax element and to the values of previously decoded syntax elements. When a
+value of a syntax element is used in the syntax tables or the text, it appears
+in regular (i.e. not bold) type. If the value of a syntax element is being
+computed (e.g. being written with a default value instead of being coded in
+the bitstream), it also appears in regular type.
+
+In some cases the syntax tables may use the values of other variables derived
+from syntax elements values. Such variables appear in the syntax tables, or
+text, named by a mixture of lower case and upper case letter and without any
+underscore characters. Variables starting with an upper case letter are
+derived for the decoding of the current syntax structure and all depending
+syntax structures. These variables may be used in the decoding process for
+later syntax structures. Variables starting with a lower case letter are only
+used within the process from which they are derived.
+
+Constant values appear in all upper case letters with underscore characters.
+
+Constant lookup tables appear in all lower case letters with underscore
+characters.
+
+Hexadecimal notation, indicated by prefixing the hexadecimal number by `0x`,
+may be used when the number of bits is an integer multiple of 4. For example,
+`0x1a` represents a bit string `0001 1010`.
+
+Binary notation is indicated by prefixing the binary number by `0b`. For
+example, `0b00011010` represents a bit string `0001 1010`. Binary numbers may
+include underscore characters to enhance readability. If present, the
+underscore characters appear every 4 binary digits starting from the LSB. For
+example, `0b11010` may also be written as `0b1_1010`.
+
+A value equal to 0 represents a FALSE condition in a test statement. The
+value TRUE is represented by any value not equal to 0.
+
+The following table lists examples of the syntax specification format. When
+`syntax_element` appears (with bold face font), it specifies that this syntax
+element is parsed from the bitstream.
+
+{% endcomment %}
+
+
+# 3 Draco Decoder
+
+
+## 3.1 Decode()
 
 ```c++
 void Decode() {
@@ -53,7 +292,7 @@ void Decode() {
 }
 ```
 
-### 3.2 ParseHeader()
+## 3.2 ParseHeader()
 
 ```c++
 ParseHeader() {
@@ -66,10 +305,10 @@ ParseHeader() {
 }
 ```
 
-## 4 Metadata Decoder
+# 4 Metadata Decoder
 
 
-### 4.1 DecodeMetadata()
+## 4.1 DecodeMetadata()
 
 ```c++
 void DecodeMetadata() {
@@ -82,7 +321,7 @@ void DecodeMetadata() {
 }
 ```
 
-### 4.2 ParseMetadataCount()
+## 4.2 ParseMetadataCount()
 
 ```c++
 void ParseMetadataCount() {
@@ -90,7 +329,7 @@ void ParseMetadataCount() {
 }
 ```
 
-### 4.3 ParseAttributeMetadataId()
+## 4.3 ParseAttributeMetadataId()
 
 ```c++
 void ParseAttributeMetadataId(index) {
@@ -98,7 +337,7 @@ void ParseAttributeMetadataId(index) {
 }
 ```
 
-### 4.4 ParseMetadataElement()
+## 4.4 ParseMetadataElement()
 
 ```c++
 void ParseMetadataElement(metadata) {
@@ -113,7 +352,7 @@ void ParseMetadataElement(metadata) {
 }
 ```
 
-### 4.5 ParseSubMetadataKey()
+## 4.5 ParseSubMetadataKey()
 
 ```c++
 void ParseSubMetadataKey(metadata, index) {
@@ -122,7 +361,7 @@ void ParseSubMetadataKey(metadata, index) {
 }
 ```
 
-### 4.6 DecodeMetadataElement()
+## 4.6 DecodeMetadataElement()
 
 ```c++
 void DecodeMetadataElement(metadata) {
@@ -134,10 +373,10 @@ void DecodeMetadataElement(metadata) {
 }
 ```
 
-## 5 Connectivity Decoder
+# 5 Connectivity Decoder
 
 
-### 5.1 DecodeConnectivityData()
+## 5.1 DecodeConnectivityData()
 
 ```c++
 void DecodeConnectivityData() {
@@ -149,10 +388,10 @@ void DecodeConnectivityData() {
 
 ```
 
-## 6 Sequential Connectivity Decoder
+# 6 Sequential Connectivity Decoder
 
 
-### 6.1 ParseSequentialConnectivityData()
+## 6.1 ParseSequentialConnectivityData()
 
 ```c++
 void ParseSequentialConnectivityData() {
@@ -162,7 +401,7 @@ void ParseSequentialConnectivityData() {
 }
 ```
 
-### 6.2 ParseSequentialIndicesUI8()
+## 6.2 ParseSequentialIndicesUI8()
 
 ```c++
 void ParseSequentialIndicesUI8() {
@@ -174,7 +413,7 @@ void ParseSequentialIndicesUI8() {
 }
 ```
 
-### 6.3 ParseSequentialIndicesUI16()
+## 6.3 ParseSequentialIndicesUI16()
 
 ```c++
 void ParseSequentialIndicesUI16() {
@@ -186,7 +425,7 @@ void ParseSequentialIndicesUI16() {
 }
 ```
 
-### 6.4 ParseSequentialIndicesVarUI32()
+## 6.4 ParseSequentialIndicesVarUI32()
 
 ```c++
 void ParseSequentialIndicesVarUI32() {
@@ -198,7 +437,7 @@ void ParseSequentialIndicesVarUI32() {
 }
 ```
 
-### 6.5 ParseSequentialIndicesUI32()
+## 6.5 ParseSequentialIndicesUI32()
 
 ```c++
 void ParseSequentialIndicesUI32() {
@@ -210,7 +449,7 @@ void ParseSequentialIndicesUI32() {
 }
 ```
 
-### 6.6 DecodeSequentialIndices()
+## 6.6 DecodeSequentialIndices()
 
 ```c++
 void DecodeSequentialIndices() {
@@ -226,7 +465,7 @@ void DecodeSequentialIndices() {
 }
 ```
 
-### 6.7 DecodeSequentialCompressedIndices()
+## 6.7 DecodeSequentialCompressedIndices()
 
 ```c++
 void DecodeSequentialCompressedIndices() {
@@ -246,7 +485,7 @@ void DecodeSequentialCompressedIndices() {
 }
 ```
 
-### 6.8 DecodeSequentialConnectivityData()
+## 6.8 DecodeSequentialConnectivityData()
 
 ```c++
 void DecodeSequentialConnectivityData() {
@@ -259,10 +498,10 @@ void DecodeSequentialConnectivityData() {
 }
 ```
 
-## 7 EdgeBreaker Decoder
+# 7 EdgeBreaker Decoder
 
 
-### 7.1 ParseEdgebreakerConnectivityData()
+## 7.1 ParseEdgebreakerConnectivityData()
 
 ```c++
 void ParseEdgebreakerConnectivityData() {
@@ -275,7 +514,7 @@ void ParseEdgebreakerConnectivityData() {
 }
 ```
 
-### 7.2 ParseTopologySplitEvents()
+## 7.2 ParseTopologySplitEvents()
 
 ```c++
 void ParseTopologySplitEvents() {
@@ -291,7 +530,7 @@ void ParseTopologySplitEvents() {
 }
 ```
 
-### 7.3 DecodeEdgebreakerConnectivityData()
+## 7.3 DecodeEdgebreakerConnectivityData()
 
 ```c++
 void DecodeEdgebreakerConnectivityData() {
@@ -304,7 +543,7 @@ void DecodeEdgebreakerConnectivityData() {
 }
 ```
 
-### 7.4 GetNumComponents()
+## 7.4 GetNumComponents()
 
 ```c++
 int GetNumComponents() {
@@ -319,7 +558,7 @@ int GetNumComponents() {
 }
 ```
 
-### 7.5 ProcessSplitData()
+## 7.5 ProcessSplitData()
 
 ```c++
 void ProcessSplitData() {
@@ -332,7 +571,7 @@ void ProcessSplitData() {
 }
 ```
 
-### 7.6 DecodeTopologySplitEvents()
+## 7.6 DecodeTopologySplitEvents()
 
 ```c++
 void DecodeTopologySplitEvents() {
@@ -341,7 +580,7 @@ void DecodeTopologySplitEvents() {
 }
 ```
 
-### 7.7 IsTopologySplit()
+## 7.7 IsTopologySplit()
 
 ```c++
 bool IsTopologySplit(encoder_symbol_id, out_face_edge,
@@ -355,7 +594,7 @@ bool IsTopologySplit(encoder_symbol_id, out_face_edge,
 }
 ```
 
-### 7.8 ReplaceVerts()
+## 7.8 ReplaceVerts()
 
 ```c++
 void ReplaceVerts(from, to) {
@@ -373,7 +612,7 @@ void ReplaceVerts(from, to) {
 }
 ```
 
-### 7.9 UpdateCornersAfterMerge()
+## 7.9 UpdateCornersAfterMerge()
 
 ```c++
 void UpdateCornersAfterMerge(c, v) {
@@ -388,7 +627,7 @@ void UpdateCornersAfterMerge(c, v) {
 }
 ```
 
-### 7.10 NewActiveCornerReached()
+## 7.10 NewActiveCornerReached()
 
 ```c++
 void NewActiveCornerReached(new_corner, symbol_id) {
@@ -561,7 +800,7 @@ void NewActiveCornerReached(new_corner, symbol_id) {
 }
 ```
 
-### 7.11 ParseEdgebreakerStandardSymbol()
+## 7.11 ParseEdgebreakerStandardSymbol()
 
 ```c++
 void ParseEdgebreakerStandardSymbol() {
@@ -575,7 +814,7 @@ void ParseEdgebreakerStandardSymbol() {
 }
 ```
 
-### 7.12 EdgebreakerDecodeSymbol()
+## 7.12 EdgebreakerDecodeSymbol()
 
 ```c++
 void EdgebreakerDecodeSymbol() {
@@ -587,7 +826,7 @@ void EdgebreakerDecodeSymbol() {
 }
 ```
 
-### 7.13 DecodeEdgeBreakerConnectivity()
+## 7.13 DecodeEdgeBreakerConnectivity()
 
 ```c++
 void DecodeEdgeBreakerConnectivity() {
@@ -602,7 +841,7 @@ void DecodeEdgeBreakerConnectivity() {
 }
 ```
 
-### 7.14 ProcessInteriorEdges()
+## 7.14 ProcessInteriorEdges()
 
 ```c++
 void ProcessInteriorEdges() {
@@ -648,10 +887,10 @@ void ProcessInteriorEdges() {
 }
 ```
 
-## 8 EdgeBreaker Traversal
+# 8 EdgeBreaker Traversal
 
 
-### 8.1 ParseEdgebreakerTraversalStandardSymbolData()
+## 8.1 ParseEdgebreakerTraversalStandardSymbolData()
 
 ```c++
 void ParseEdgebreakerTraversalStandardSymbolData() {
@@ -660,7 +899,7 @@ void ParseEdgebreakerTraversalStandardSymbolData() {
 }
 ```
 
-### 8.2 ParseEdgebreakerTraversalStandardFaceData()
+## 8.2 ParseEdgebreakerTraversalStandardFaceData()
 
 ```c++
 void ParseEdgebreakerTraversalStandardFaceData() {
@@ -670,7 +909,7 @@ void ParseEdgebreakerTraversalStandardFaceData() {
 }
 ```
 
-### 8.3 ParseEdgebreakerTraversalStandardAttributeConnectivityData()
+## 8.3 ParseEdgebreakerTraversalStandardAttributeConnectivityData()
 
 ```c++
 void ParseEdgebreakerTraversalStandardAttributeConnectivityData() {
@@ -682,7 +921,7 @@ void ParseEdgebreakerTraversalStandardAttributeConnectivityData() {
 }
 ```
 
-### 8.4 DecodeEdgebreakerTraversalStandardData()
+## 8.4 DecodeEdgebreakerTraversalStandardData()
 
 ```c++
 void DecodeEdgebreakerTraversalStandardData() {
@@ -692,7 +931,7 @@ void DecodeEdgebreakerTraversalStandardData() {
 }
 ```
 
-### 8.5 EdgebreakerTraversalStart()
+## 8.5 EdgebreakerTraversalStart()
 
 ```c++
 void EdgebreakerTraversalStart() {
@@ -706,7 +945,7 @@ void EdgebreakerTraversalStart() {
 }
 ```
 
-### 8.6 IsFaceVisited()
+## 8.6 IsFaceVisited()
 
 ```c++
 bool IsFaceVisited(face_id) {
@@ -716,7 +955,7 @@ bool IsFaceVisited(face_id) {
 }
 ```
 
-### 8.7 OnNewVertexVisited()
+## 8.7 OnNewVertexVisited()
 
 ```c++
 void OnNewVertexVisited(vertex, corner) {
@@ -727,7 +966,7 @@ void OnNewVertexVisited(vertex, corner) {
 }
 ```
 
-### 8.8 EdgeBreakerTraverser_ProcessCorner()
+## 8.8 EdgeBreakerTraverser_ProcessCorner()
 
 ```c++
 void EdgeBreakerTraverser_ProcessCorner(corner_id) {
@@ -793,7 +1032,7 @@ void EdgeBreakerTraverser_ProcessCorner(corner_id) {
 }
 ```
 
-### 8.9 EdgeBreakerAttributeTraverser_ProcessCorner()
+## 8.9 EdgeBreakerAttributeTraverser_ProcessCorner()
 
 ```c++
 void EdgeBreakerAttributeTraverser_ProcessCorner(corner_id) {
@@ -862,10 +1101,10 @@ void EdgeBreakerAttributeTraverser_ProcessCorner(corner_id) {
 }
 ```
 
-## 9 EdgeBreaker Traversal Valence
+# 9 EdgeBreaker Traversal Valence
 
 
-### 9.1 ParseValenceContextCounters()
+## 9.1 ParseValenceContextCounters()
 
 ```c++
 void ParseValenceContextCounters(index) {
@@ -873,7 +1112,7 @@ void ParseValenceContextCounters(index) {
 }
 ```
 
-### 9.2 EdgeBreakerTraversalValenceStart()
+## 9.2 EdgeBreakerTraversalValenceStart()
 
 ```c++
 void EdgeBreakerTraversalValenceStart() {
@@ -889,7 +1128,7 @@ void EdgeBreakerTraversalValenceStart() {
 }
 ```
 
-### 9.3 EdgebreakerValenceDecodeSymbol()
+## 9.3 EdgebreakerValenceDecodeSymbol()
 
 ```c++
 void EdgebreakerValenceDecodeSymbol() {
@@ -903,10 +1142,10 @@ void EdgebreakerValenceDecodeSymbol() {
 }
 ```
 
-## 10 EdgeBreaker Traversal Prediction Degree
+# 10 EdgeBreaker Traversal Prediction Degree
 
 
-### 10.1 AddCornerToTraversalStack()
+## 10.1 AddCornerToTraversalStack()
 
 ```c++
 void AddCornerToTraversalStack(ci, priority) {
@@ -916,7 +1155,7 @@ void AddCornerToTraversalStack(ci, priority) {
 }
 ```
 
-### 10.2 ComputePriority()
+## 10.2 ComputePriority()
 
 ```c++
 int ComputePriority(corner_id) {
@@ -932,7 +1171,7 @@ int ComputePriority(corner_id) {
 }
 ```
 
-### 10.3 PopNextCornerToTraverse()
+## 10.3 PopNextCornerToTraverse()
 
 ```c++
 int PopNextCornerToTraverse() {
@@ -947,7 +1186,7 @@ int PopNextCornerToTraverse() {
 }
 ```
 
-### 10.4 PredictionDegree_TraverseFromCorner()
+## 10.4 PredictionDegree_TraverseFromCorner()
 
 ```c++
 void PredictionDegree_TraverseFromCorner(corner_id) {
@@ -1011,10 +1250,10 @@ void PredictionDegree_TraverseFromCorner(corner_id) {
 }
 ```
 
-## 11 Attributes Decoder
+# 11 Attributes Decoder
 
 
-### 11.1 ParseAttributeDecodersData()
+## 11.1 ParseAttributeDecodersData()
 
 ```c++
 void ParseAttributeDecodersData() {
@@ -1042,7 +1281,7 @@ void ParseAttributeDecodersData() {
 }
 ```
 
-### 11.2 DecodeAttributeData()
+## 11.2 DecodeAttributeData()
 
 ```c++
 void DecodeAttributeData() {
@@ -1086,7 +1325,7 @@ void DecodeAttributeData() {
 }
 ```
 
-### 11.3 RecomputeVerticesInternal()
+## 11.3 RecomputeVerticesInternal()
 
 ```c++
 void RecomputeVerticesInternal() {
@@ -1131,7 +1370,7 @@ void RecomputeVerticesInternal() {
 }
 ```
 
-### 11.4 Attribute_AssignPointsToCorners()
+## 11.4 Attribute_AssignPointsToCorners()
 
 ```c++
 void Attribute_AssignPointsToCorners() {
@@ -1191,7 +1430,7 @@ void Attribute_AssignPointsToCorners() {
 }
 ```
 
-### 11.5 SequentialGenerateSequence()
+## 11.5 SequentialGenerateSequence()
 
 ```c++
 void SequentialGenerateSequence() {
@@ -1201,7 +1440,7 @@ void SequentialGenerateSequence() {
 }
 ```
 
-### 11.6 EdgebreakerGenerateSequence()
+## 11.6 EdgebreakerGenerateSequence()
 
 ```c++
 void EdgebreakerGenerateSequence() {
@@ -1222,7 +1461,7 @@ void EdgebreakerGenerateSequence() {
 }
 ```
 
-### 11.7 GenerateSequence()
+## 11.7 GenerateSequence()
 
 ```c++
 void GenerateSequence() {
@@ -1233,7 +1472,7 @@ void GenerateSequence() {
 }
 ```
 
-### 11.8 UpdatePointToAttributeIndexMapping()
+## 11.8 UpdatePointToAttributeIndexMapping()
 
 ```c++
 void UpdatePointToAttributeIndexMapping() {
@@ -1251,7 +1490,7 @@ void UpdatePointToAttributeIndexMapping() {
 }
 ```
 
-### 11.9 TransformAttributesToOriginalFormat_StoreValues()
+## 11.9 TransformAttributesToOriginalFormat_StoreValues()
 
 ```c++
 void TransformAttributesToOriginalFormat_StoreValues() {
@@ -1267,7 +1506,7 @@ void TransformAttributesToOriginalFormat_StoreValues() {
 }
 ```
 
-### 11.10 TransformAttributesToOriginalFormat()
+## 11.10 TransformAttributesToOriginalFormat()
 
 ```c++
 void TransformAttributesToOriginalFormat() {
@@ -1285,10 +1524,10 @@ void TransformAttributesToOriginalFormat() {
 }
 ```
 
-## 12 Sequential Integer Attribute Decoder
+# 12 Sequential Integer Attribute Decoder
 
 
-### 12.1 ConvertSymbolToSignedInt()
+## 12.1 ConvertSymbolToSignedInt()
 
 ```c++
 int ConvertSymbolToSignedInt(val) {
@@ -1302,7 +1541,7 @@ int ConvertSymbolToSignedInt(val) {
 }
 ```
 
-### 12.2 ConvertSymbolsToSignedInts()
+## 12.2 ConvertSymbolsToSignedInts()
 
 ```c++
 void ConvertSymbolsToSignedInts() {
@@ -1314,7 +1553,7 @@ void ConvertSymbolsToSignedInts() {
 }
 ```
 
-### 12.3 SequentialIntegerAttributeDecoder_DecodeIntegerValues()
+## 12.3 SequentialIntegerAttributeDecoder_DecodeIntegerValues()
 
 ```c++
 void SequentialIntegerAttributeDecoder_DecodeIntegerValues() {
@@ -1345,10 +1584,10 @@ void SequentialIntegerAttributeDecoder_DecodeIntegerValues() {
 }
 ```
 
-## 13 Boundary Decoder
+# 13 Boundary Decoder
 
 
-### 13.1 DecodeAttributeSeams()
+## 13.1 DecodeAttributeSeams()
 
 ```c++
 void DecodeAttributeSeams() {
@@ -1401,7 +1640,7 @@ void DecodeAttributeSeams() {
 }
 ```
 
-### 13.2 IsVertexOnAttributeSeam()
+## 13.2 IsVertexOnAttributeSeam()
 
 ```c++
 bool IsVertexOnAttributeSeam(attr, vert) {
@@ -1415,7 +1654,7 @@ bool IsVertexOnAttributeSeam(attr, vert) {
 }
 ```
 
-### 13.3 IsCornerOnSeam()
+## 13.3 IsCornerOnSeam()
 
 ```c++
 bool IsCornerOnSeam(corner) {
@@ -1424,7 +1663,7 @@ bool IsCornerOnSeam(corner) {
 }
 ```
 
-### 13.4 IsCornerOnAttributeSeam()
+## 13.4 IsCornerOnAttributeSeam()
 
 ```c++
 bool IsCornerOnAttributeSeam(att_dec, attr, corner) {
@@ -1433,7 +1672,7 @@ bool IsCornerOnAttributeSeam(att_dec, attr, corner) {
 }
 ```
 
-### 13.5 IsCornerOppositeToSeamEdge()
+## 13.5 IsCornerOppositeToSeamEdge()
 
 ```c++
 bool IsCornerOppositeToSeamEdge(corner) {
@@ -1442,7 +1681,7 @@ bool IsCornerOppositeToSeamEdge(corner) {
 }
 ```
 
-### 13.6 IsOnPositionBoundary()
+## 13.6 IsOnPositionBoundary()
 
 ```c++
 bool IsOnPositionBoundary(vert_id) {
@@ -1455,7 +1694,7 @@ bool IsOnPositionBoundary(vert_id) {
 }
 ```
 
-### 13.7 IsOnAttributeBoundary()
+## 13.7 IsOnAttributeBoundary()
 
 ```c++
 bool IsOnAttributeBoundary(vert) {
@@ -1466,7 +1705,7 @@ bool IsOnAttributeBoundary(vert) {
 }
 ```
 
-### 13.8 IsOnBoundary()
+## 13.8 IsOnBoundary()
 
 ```c++
 bool IsOnBoundary(att_dec, vert_id) {
@@ -1477,10 +1716,10 @@ bool IsOnBoundary(att_dec, vert_id) {
 }
 ```
 
-## 14 Prediction Decoder
+# 14 Prediction Decoder
 
 
-### 14.1 ParsePredictionData()
+## 14.1 ParsePredictionData()
 
 ```c++
 void ParsePredictionData() {
@@ -1492,7 +1731,7 @@ void ParsePredictionData() {
 }
 ```
 
-### 14.2 DecodePortableAttributes()
+## 14.2 DecodePortableAttributes()
 
 ```c++
 void DecodePortableAttributes() {
@@ -1506,7 +1745,7 @@ void DecodePortableAttributes() {
 }
 ```
 
-### 14.3 DecodeDataNeededByPortableTransforms()
+## 14.3 DecodeDataNeededByPortableTransforms()
 
 ```c++
 void DecodeDataNeededByPortableTransforms() {
@@ -1523,7 +1762,7 @@ void DecodeDataNeededByPortableTransforms() {
 }
 ```
 
-### 14.4 ParseWrapTransformData()
+## 14.4 ParseWrapTransformData()
 
 ```c++
 void ParseWrapTransformData() {
@@ -1532,7 +1771,7 @@ void ParseWrapTransformData() {
 }
 ```
 
-### 14.5 ParseNormalOctahedronCanonicalizedTransformData()
+## 14.5 ParseNormalOctahedronCanonicalizedTransformData()
 
 ```c++
 void ParseNormalOctahedronCanonicalizedTransformData() {
@@ -1541,7 +1780,7 @@ void ParseNormalOctahedronCanonicalizedTransformData() {
 }
 ```
 
-### 14.6 DecodeTransformData()
+## 14.6 DecodeTransformData()
 
 ```c++
 void DecodeTransformData() {
@@ -1555,7 +1794,7 @@ void DecodeTransformData() {
 }
 ```
 
-### 14.7 ParsePredictionRansData()
+## 14.7 ParsePredictionRansData()
 
 ```c++
 void ParsePredictionRansData() {
@@ -1565,7 +1804,7 @@ void ParsePredictionRansData() {
 }
 ```
 
-### 14.8 ParseConstrainedMultiNumFlags()
+## 14.8 ParseConstrainedMultiNumFlags()
 
 ```c++
 void ParseConstrainedMultiNumFlags() {
@@ -1573,7 +1812,7 @@ void ParseConstrainedMultiNumFlags() {
 }
 ```
 
-### 14.9 DecodePredictionData_ConstrainedMulti()
+## 14.9 DecodePredictionData_ConstrainedMulti()
 
 ```c++
 void DecodePredictionData_ConstrainedMulti() {
@@ -1593,7 +1832,7 @@ void DecodePredictionData_ConstrainedMulti() {
 }
 ```
 
-### 14.10 ParseTexCoordsNumOrientations()
+## 14.10 ParseTexCoordsNumOrientations()
 
 ```c++
 void ParseTexCoordsNumOrientations() {
@@ -1601,7 +1840,7 @@ void ParseTexCoordsNumOrientations() {
 }
 ```
 
-### 14.11 DecodePredictionData_TexCoords()
+## 14.11 DecodePredictionData_TexCoords()
 
 ```c++
 void DecodePredictionData_TexCoords() {
@@ -1620,7 +1859,7 @@ void DecodePredictionData_TexCoords() {
 }
 ```
 
-### 14.12 DecodePredictionData_GeometricNormal()
+## 14.12 DecodePredictionData_GeometricNormal()
 
 ```c++
 void DecodePredictionData_GeometricNormal() {
@@ -1636,7 +1875,7 @@ void DecodePredictionData_GeometricNormal() {
 }
 ```
 
-### 14.13 DecodePredictionData()
+## 14.13 DecodePredictionData()
 
 ```c++
 void DecodePredictionData(method) {
@@ -1654,7 +1893,7 @@ void DecodePredictionData(method) {
 }
 ```
 
-### 14.14 PredictionSchemeTransform_ComputeOriginalValue()
+## 14.14 PredictionSchemeTransform_ComputeOriginalValue()
 
 ```c++
 void PredictionSchemeTransform_ComputeOriginalValue(pred_vals, corr_vals,
@@ -1671,7 +1910,7 @@ void PredictionSchemeTransform_ComputeOriginalValue(pred_vals, corr_vals,
 }
 ```
 
-### 14.15 PredictionSchemeDifference_ComputeOriginalValues()
+## 14.15 PredictionSchemeDifference_ComputeOriginalValues()
 
 ```c++
 void PredictionSchemeDifference_ComputeOriginalValues(num_values) {
@@ -1690,7 +1929,7 @@ void PredictionSchemeDifference_ComputeOriginalValues(num_values) {
 }
 ```
 
-### 14.16 PredictionScheme_ComputeOriginalValues()
+## 14.16 PredictionScheme_ComputeOriginalValues()
 
 ```c++
 void PredictionScheme_ComputeOriginalValues(method, num_values) {
@@ -1709,10 +1948,10 @@ void PredictionScheme_ComputeOriginalValues(method, num_values) {
 }
 ```
 
-## 15 Sequential Quantization Attribute Decoder
+# 15 Sequential Quantization Attribute Decoder
 
 
-### 15.1 ParseQuantizationBits()
+## 15.1 ParseQuantizationBits()
 
 ```c++
 void ParseQuantizationBits() {
@@ -1720,7 +1959,7 @@ void ParseQuantizationBits() {
 }
 ```
 
-### 15.2 ParseQuantizationData()
+## 15.2 ParseQuantizationData()
 
 ```c++
 void ParseQuantizationData() {
@@ -1733,7 +1972,7 @@ void ParseQuantizationData() {
 }
 ```
 
-### 15.3 DequantizeFloat()
+## 15.3 DequantizeFloat()
 
 ```c++
 float DequantizeFloat(val, max_quantized_value_factor_, range_) {
@@ -1748,7 +1987,7 @@ float DequantizeFloat(val, max_quantized_value_factor_, range_) {
 }
 ```
 
-### 15.4 SequentialQuantizationAttributeDecoder_DequantizeValues()
+## 15.4 SequentialQuantizationAttributeDecoder_DequantizeValues()
 
 ```c++
 void SequentialQuantizationAttributeDecoder_DequantizeValues() {
@@ -1774,10 +2013,10 @@ void SequentialQuantizationAttributeDecoder_DequantizeValues() {
 }
 ```
 
-## 16 Sequential Normal Attribute Decoder
+# 16 Sequential Normal Attribute Decoder
 
 
-### 16.1 MostSignificantBit()
+## 16.1 MostSignificantBit()
 
 ```c++
 int MostSignificantBit(n) {
@@ -1790,7 +2029,7 @@ int MostSignificantBit(n) {
 }
 ```
 
-### 16.2 OctaherdalCoordsToUnitVector()
+## 16.2 OctaherdalCoordsToUnitVector()
 
 ```c++
 void OctaherdalCoordsToUnitVector(in_s, in_t, out_vector) {
@@ -1837,7 +2076,7 @@ void OctaherdalCoordsToUnitVector(in_s, in_t, out_vector) {
 }
 ```
 
-### 16.3 QuantizedOctaherdalCoordsToUnitVector()
+## 16.3 QuantizedOctaherdalCoordsToUnitVector()
 
 ```c++
 void QuantizedOctaherdalCoordsToUnitVector(in_s, in_t, out_vector) {
@@ -1851,7 +2090,7 @@ void QuantizedOctaherdalCoordsToUnitVector(in_s, in_t, out_vector) {
 }
 ```
 
-### 16.4 TransformAttributesToOriginalFormat_Normal()
+## 16.4 TransformAttributesToOriginalFormat_Normal()
 
 ```c++
 void TransformAttributesToOriginalFormat_Normal() {
@@ -1870,10 +2109,10 @@ void TransformAttributesToOriginalFormat_Normal() {
 }
 ```
 
-## 17 TexCoords Prediction Decoder
+# 17 TexCoords Prediction Decoder
 
 
-### 17.1 IntSqrt()
+## 17.1 IntSqrt()
 
 ```c++
 uint64_t IntSqrt(number) {
@@ -1892,7 +2131,7 @@ uint64_t IntSqrt(number) {
 }
 ```
 
-### 17.2 GetPositionForEntryId()
+## 17.2 GetPositionForEntryId()
 
 ```c++
 void GetPositionForEntryId(entry_id, pos) {
@@ -1906,7 +2145,7 @@ void GetPositionForEntryId(entry_id, pos) {
 }
 ```
 
-### 17.3 GetTexCoordForEntryId()
+## 17.3 GetTexCoordForEntryId()
 
 ```c++
 void GetTexCoordForEntryId(entry_id, data, tex_coords) {
@@ -1916,7 +2155,7 @@ void GetTexCoordForEntryId(entry_id, data, tex_coords) {
 }
 ```
 
-### 17.4 MeshPredictionSchemeTexCoordsPortablePredictor_ComputePredictedValue()
+## 17.4 MeshPredictionSchemeTexCoordsPortablePredictor_ComputePredictedValue()
 
 ```c++
 void MeshPredictionSchemeTexCoordsPortablePredictor_ComputePredictedValue(
@@ -1991,7 +2230,7 @@ void MeshPredictionSchemeTexCoordsPortablePredictor_ComputePredictedValue(
 }
 ```
 
-### 17.5 MeshPredictionSchemeTexCoordsPortableDecoder_ComputeOriginalValues()
+## 17.5 MeshPredictionSchemeTexCoordsPortableDecoder_ComputeOriginalValues()
 
 ```c++
 void MeshPredictionSchemeTexCoordsPortableDecoder_ComputeOriginalValues(num_values)
@@ -2012,10 +2251,10 @@ void MeshPredictionSchemeTexCoordsPortableDecoder_ComputeOriginalValues(num_valu
 }
 ```
 
-## 18 Normal Prediction Decoder
+# 18 Normal Prediction Decoder
 
 
-### 18.1 GetPositionForDataId()
+## 18.1 GetPositionForDataId()
 
 ```c++
 void GetPositionForDataId(data_id, pos) {
@@ -2029,7 +2268,7 @@ void GetPositionForDataId(data_id, pos) {
 }
 ```
 
-### 18.2 GetPositionForCorner()
+## 18.2 GetPositionForCorner()
 
 ```c++
 void GetPositionForCorner(ci, pos) {
@@ -2039,7 +2278,7 @@ void GetPositionForCorner(ci, pos) {
 }
 ```
 
-### 18.3 MeshPredictionSchemeGeometricNormalPredictorArea_ComputePredictedValue()
+## 18.3 MeshPredictionSchemeGeometricNormalPredictorArea_ComputePredictedValue()
 
 ```c++
 void MeshPredictionSchemeGeometricNormalPredictorArea_ComputePredictedValue(
@@ -2091,7 +2330,7 @@ void MeshPredictionSchemeGeometricNormalPredictorArea_ComputePredictedValue(
 }
 ```
 
-### 18.4 CanonicalizeIntegerVector()
+## 18.4 CanonicalizeIntegerVector()
 
 ```c++
 void CanonicalizeIntegerVector(vec, center_value_) {
@@ -2110,7 +2349,7 @@ void CanonicalizeIntegerVector(vec, center_value_) {
 }
 ```
 
-### 18.5 CanonicalizeOctahedralCoords()
+## 18.5 CanonicalizeOctahedralCoords()
 
 ```c++
 void CanonicalizeOctahedralCoords(s, t, out_s,
@@ -2133,7 +2372,7 @@ void CanonicalizeOctahedralCoords(s, t, out_s,
 }
 ```
 
-### 18.6 IntegerVectorToQuantizedOctahedralCoords()
+## 18.6 IntegerVectorToQuantizedOctahedralCoords()
 
 ```c++
 void IntegerVectorToQuantizedOctahedralCoords(
@@ -2157,7 +2396,7 @@ void IntegerVectorToQuantizedOctahedralCoords(
 }
 ```
 
-### 18.7 MeshPredictionSchemeGeometricNormalDecoder_ComputeOriginalValues()
+## 18.7 MeshPredictionSchemeGeometricNormalDecoder_ComputeOriginalValues()
 
 ```c++
 void MeshPredictionSchemeGeometricNormalDecoder_ComputeOriginalValues(num_values) {
@@ -2191,10 +2430,10 @@ void MeshPredictionSchemeGeometricNormalDecoder_ComputeOriginalValues(num_values
 }
 ```
 
-## 19 Prediction Normal Transform
+# 19 Prediction Normal Transform
 
 
-### 19.1 ModMax()
+## 19.1 ModMax()
 
 ```c++
 int32_t ModMax(x, center_value_, max_quantized_value_) {
@@ -2206,7 +2445,7 @@ int32_t ModMax(x, center_value_, max_quantized_value_) {
 }
 ```
 
-### 19.2 InvertDiamond()
+## 19.2 InvertDiamond()
 
 ```c++
 void InvertDiamond(s, t, center_value_) {
@@ -2240,7 +2479,7 @@ void InvertDiamond(s, t, center_value_) {
 }
 ```
 
-### 19.3 GetRotationCount()
+## 19.3 GetRotationCount()
 
 ```c++
 void GetRotationCount(pred, count) {
@@ -2272,7 +2511,7 @@ void GetRotationCount(pred, count) {
 }
 ```
 
-### 19.4 RotatePoint()
+## 19.4 RotatePoint()
 
 ```c++
 void RotatePoint(p, rotation_count, out_p) {
@@ -2297,7 +2536,7 @@ void RotatePoint(p, rotation_count, out_p) {
 }
 ```
 
-### 19.5 IsInBottomLeft()
+## 19.5 IsInBottomLeft()
 
 ```c++
 bool IsInBottomLeft(p) {
@@ -2307,7 +2546,7 @@ bool IsInBottomLeft(p) {
 }
 ```
 
-### 19.6 PredictionSchemeNormalOctahedronCanonicalizedDecodingTransform_ComputeOriginalValue2()
+## 19.6 PredictionSchemeNormalOctahedronCanonicalizedDecodingTransform_ComputeOriginalValue2()
 
 ```c++
 void PredictionSchemeNormalOctahedronCanonicalizedDecodingTransform_ComputeOriginalValue2(
@@ -2344,7 +2583,7 @@ void PredictionSchemeNormalOctahedronCanonicalizedDecodingTransform_ComputeOrigi
 }
 ```
 
-### 19.7 PredictionSchemeNormalOctahedronCanonicalizedDecodingTransform_ComputeOriginalValue()
+## 19.7 PredictionSchemeNormalOctahedronCanonicalizedDecodingTransform_ComputeOriginalValue()
 
 ```c++
 void PredictionSchemeNormalOctahedronCanonicalizedDecodingTransform_ComputeOriginalValue(
@@ -2367,10 +2606,10 @@ void PredictionSchemeNormalOctahedronCanonicalizedDecodingTransform_ComputeOrigi
 }
 ```
 
-## 20 Prediction Wrap Transform
+# 20 Prediction Wrap Transform
 
 
-### 20.1 PredictionSchemeWrapTransformBase_ClampPredictedValue()
+## 20.1 PredictionSchemeWrapTransformBase_ClampPredictedValue()
 
 ```c++
 void PredictionSchemeWrapTransformBase_ClampPredictedValue(predicted_val,
@@ -2389,7 +2628,7 @@ void PredictionSchemeWrapTransformBase_ClampPredictedValue(predicted_val,
 }
 ```
 
-### 20.2 PredictionSchemeWrapDecodingTransform_ComputeOriginalValue()
+## 20.2 PredictionSchemeWrapDecodingTransform_ComputeOriginalValue()
 
 ```c++
 void PredictionSchemeWrapDecodingTransform_ComputeOriginalValue(
@@ -2410,10 +2649,10 @@ void PredictionSchemeWrapDecodingTransform_ComputeOriginalValue(
 }
 ```
 
-## 21 Parallelogram Prediction Decoder
+# 21 Parallelogram Prediction Decoder
 
 
-### 21.1 GetParallelogramEntries()
+## 21.1 GetParallelogramEntries()
 
 ```c++
 void GetParallelogramEntries(ci, opp_entry,
@@ -2425,7 +2664,7 @@ void GetParallelogramEntries(ci, opp_entry,
 }
 ```
 
-### 21.2 ComputeParallelogramPrediction()
+## 21.2 ComputeParallelogramPrediction()
 
 ```c++
 bool ComputeParallelogramPrediction(data_entry_id, ci, in_data,
@@ -2449,7 +2688,7 @@ bool ComputeParallelogramPrediction(data_entry_id, ci, in_data,
 }
 ```
 
-### 21.3 MeshPredictionSchemeParallelogramDecoder_ComputeOriginalValues()
+## 21.3 MeshPredictionSchemeParallelogramDecoder_ComputeOriginalValues()
 
 ```c++
 void MeshPredictionSchemeParallelogramDecoder_ComputeOriginalValues(num_values) {
@@ -2478,10 +2717,10 @@ void MeshPredictionSchemeParallelogramDecoder_ComputeOriginalValues(num_values) 
 }
 ```
 
-## 22 Multi Parallelogram Prediction Decoder
+# 22 Multi Parallelogram Prediction Decoder
 
 
-### 22.1 MeshPredictionSchemeConstrainedMultiParallelogramDecoder_ComputeOriginalValues()
+## 22.1 MeshPredictionSchemeConstrainedMultiParallelogramDecoder_ComputeOriginalValues()
 
 ```c++
 void MeshPredictionSchemeConstrainedMultiParallelogramDecoder_ComputeOriginalValues(
@@ -2556,10 +2795,10 @@ void MeshPredictionSchemeConstrainedMultiParallelogramDecoder_ComputeOriginalVal
 
 ```
 
-## 23 Rans Decoding
+# 23 Rans Decoding
 
 
-### 23.1 DecodeSymbols()
+## 23.1 DecodeSymbols()
 
 ```c++
 void DecodeSymbols(num_symbols, num_components, out_values) {
@@ -2572,7 +2811,7 @@ void DecodeSymbols(num_symbols, num_components, out_values) {
 }
 ```
 
-### 23.2 DecodeTaggedSymbols
+## 23.2 DecodeTaggedSymbols
 
 ```c++
 void DecodeTaggedSymbols(num_values, num_components, out_values) {
@@ -2593,7 +2832,7 @@ void DecodeTaggedSymbols(num_values, num_components, out_values) {
 }
 ```
 
-### 23.3 DecodeRawSymbols
+## 23.3 DecodeRawSymbols
 
 ```c++
 void DecodeRawSymbols(num_values, out_values) {
@@ -2618,7 +2857,7 @@ void DecodeRawSymbols(num_values, out_values) {
 }
 ```
 
-### 23.4 BuildSymbolTables
+## 23.4 BuildSymbolTables
 
 ```c++
 void BuildSymbolTables(num_symbols_, lut_table_, probability_table_) {
@@ -2647,7 +2886,7 @@ void BuildSymbolTables(num_symbols_, lut_table_, probability_table_) {
 }
 ```
 
-### 23.5 rans_build_look_up_table
+## 23.5 rans_build_look_up_table
 
 ```c++
 void rans_build_look_up_table(
@@ -2666,7 +2905,7 @@ void rans_build_look_up_table(
 }
 ```
 
-### 23.6 RansInitDecoder
+## 23.6 RansInitDecoder
 
 ```c++
 void RansInitDecoder(ans, buf, offset, l_rans_base) {
@@ -2689,7 +2928,7 @@ void RansInitDecoder(ans, buf, offset, l_rans_base) {
 }
 ```
 
-### 23.7 RansRead
+## 23.7 RansRead
 
 ```c++
 void RansRead(ans, l_rans_base, rans_precision,
@@ -2705,7 +2944,7 @@ void RansRead(ans, l_rans_base, rans_precision,
 }
 ```
 
-### 23.8 fetch_sym
+## 23.8 fetch_sym
 
 ```c++
 void fetch_sym(sym, rem, lut_table_, probability_table_) {
@@ -2716,7 +2955,7 @@ void fetch_sym(sym, rem, lut_table_, probability_table_) {
 }
 ```
 
-### 23.9 RabsDescRead
+## 23.9 RabsDescRead
 
 ```c++
 void RabsDescRead(ans, p0, out_val) {
@@ -2738,10 +2977,10 @@ void RabsDescRead(ans, p0, out_val) {
 }
 ```
 
-## 24 Corners
+# 24 Corners
 
 
-### 24.1 Next()
+## 24.1 Next()
 
 ```c++
 int Next(corner) {
@@ -2751,7 +2990,7 @@ int Next(corner) {
 }
 ```
 
-### 24.2 Previous()
+## 24.2 Previous()
 
 ```c++
 int Previous(corner) {
@@ -2761,7 +3000,7 @@ int Previous(corner) {
 }
 ```
 
-### 24.3 PosOpposite()
+## 24.3 PosOpposite()
 
 ```c++
 int PosOpposite(c) {
@@ -2771,7 +3010,7 @@ int PosOpposite(c) {
 }
 ```
 
-### 24.4 AttrOpposite()
+## 24.4 AttrOpposite()
 
 ```c++
 int AttrOpposite(attr, corner) {
@@ -2781,7 +3020,7 @@ int AttrOpposite(attr, corner) {
 }
 ```
 
-### 24.5 Opposite()
+## 24.5 Opposite()
 
 ```c++
 int Opposite(att_dec, c) {
@@ -2791,7 +3030,7 @@ int Opposite(att_dec, c) {
 }
 ```
 
-### 24.6 GetLeftCorner()
+## 24.6 GetLeftCorner()
 
 ```c++
 int GetLeftCorner(corner_id) {
@@ -2801,7 +3040,7 @@ int GetLeftCorner(corner_id) {
 }
 ```
 
-### 24.7 GetRightCorner()
+## 24.7 GetRightCorner()
 
 ```c++
 int GetRightCorner(corner_id) {
@@ -2811,7 +3050,7 @@ int GetRightCorner(corner_id) {
 }
 ```
 
-### 24.8 SwingRight()
+## 24.8 SwingRight()
 
 ```c++
 int SwingRight(attr_dec, corner) {
@@ -2819,7 +3058,7 @@ int SwingRight(attr_dec, corner) {
 }
 ```
 
-### 24.9 SwingLeft()
+## 24.9 SwingLeft()
 
 ```c++
 int SwingLeft(attr_dec, corner) {
@@ -2827,7 +3066,7 @@ int SwingLeft(attr_dec, corner) {
 }
 ```
 
-### 24.10 CornerToVert()
+## 24.10 CornerToVert()
 
 ```c++
 int CornerToVert(att_dec, corner_id) {
@@ -2836,7 +3075,7 @@ int CornerToVert(att_dec, corner_id) {
 }
 ```
 
-### 24.11 CornerToVertsInternal()
+## 24.11 CornerToVertsInternal()
 
 ```c++
 void CornerToVertsInternal(ftv, corner_id, v, n, p) {
@@ -2858,7 +3097,7 @@ void CornerToVertsInternal(ftv, corner_id, v, n, p) {
 }
 ```
 
-### 24.12 CornerToVerts()
+## 24.12 CornerToVerts()
 
 ```c++
 void CornerToVerts(att_dec, corner_id, v, n, p) {
@@ -2875,7 +3114,7 @@ void CornerToVerts(att_dec, corner_id, v, n, p) {
 }
 ```
 
-### 24.13 SetOppositeCorners()
+## 24.13 SetOppositeCorners()
 
 ```c++
 void SetOppositeCorners(c, opp_c) {
@@ -2884,7 +3123,7 @@ void SetOppositeCorners(c, opp_c) {
 }
 ```
 
-### 24.14 MapCornerToVertex()
+## 24.14 MapCornerToVertex()
 
 ```c++
 void MapCornerToVertex(corner_id, vert_id) {
@@ -2895,7 +3134,7 @@ void MapCornerToVertex(corner_id, vert_id) {
 }
 ```
 
-### 24.15 UpdateVertexToCornerMap()
+## 24.15 UpdateVertexToCornerMap()
 
 ```c++
 void UpdateVertexToCornerMap(vert) {
@@ -2914,10 +3153,10 @@ void UpdateVertexToCornerMap(vert) {
 }
 ```
 
-## 25 Vectors
+# 25 Vectors
 
 
-### 25.1 Dot()
+## 25.1 Dot()
 
 ```c++
 void Dot(vec_x, vec_y, dot) {
@@ -2928,7 +3167,7 @@ void Dot(vec_x, vec_y, dot) {
 }
 ```
 
-### 25.2 AbsSum()
+## 25.2 AbsSum()
 
 ```c++
 void AbsSum(vec, abs_sum) {
@@ -2940,7 +3179,7 @@ void AbsSum(vec, abs_sum) {
 }
 ```
 
-### 25.3 MultiplyScalar()
+## 25.3 MultiplyScalar()
 
 ```c++
 void MultiplyScalar(vec, value, out) {
@@ -2950,7 +3189,7 @@ void MultiplyScalar(vec, value, out) {
 }
 ```
 
-### 25.4 DivideScalar()
+## 25.4 DivideScalar()
 
 ```c++
 void DivideScalar(vec, value, out) {
@@ -2960,7 +3199,7 @@ void DivideScalar(vec, value, out) {
 }
 ```
 
-### 25.5 AddVectors()
+## 25.5 AddVectors()
 
 ```c++
 void AddVectors(a, b, c) {
@@ -2970,7 +3209,7 @@ void AddVectors(a, b, c) {
 }
 ```
 
-### 25.6 SubtractVectors()
+## 25.6 SubtractVectors()
 
 ```c++
 void SubtractVectors(a, b, c) {
@@ -2980,7 +3219,7 @@ void SubtractVectors(a, b, c) {
 }
 ```
 
-### 25.7 CrossProduct()
+## 25.7 CrossProduct()
 
 ```c++
 void CrossProduct(u, v, r) {
@@ -2990,10 +3229,10 @@ void CrossProduct(u, v, r) {
 }
 ```
 
-## 26 Core Functions
+# 26 Core Functions
 
 
-### 26.1 LEB128
+## 26.1 LEB128
 
 ```c++
 uint64_t LEB128() {
@@ -3010,7 +3249,7 @@ uint64_t LEB128() {
 }
 ```
 
-### 26.2 mem_get_le16
+## 26.2 mem_get_le16
 
 ```c++
 uint32_t mem_get_le16(mem) {
@@ -3020,7 +3259,7 @@ uint32_t mem_get_le16(mem) {
 }
 ```
 
-### 26.3 mem_get_le24
+## 26.3 mem_get_le24
 
 ```c++
 uint32_t mem_get_le24(mem) {
@@ -3031,7 +3270,7 @@ uint32_t mem_get_le24(mem) {
 }
 ```
 
-### 26.4 mem_get_le32
+## 26.4 mem_get_le32
 
 ```c++
 uint32_t mem_get_le32(mem) {
@@ -3043,11 +3282,11 @@ uint32_t mem_get_le32(mem) {
 }
 ```
 
-## 27 Descriptions
+# 27 Descriptions
 
 
-### 27.1 Constants
+## 27.1 Constants
 
 
-### 27.2 Variables
+## 27.2 Variables
 
