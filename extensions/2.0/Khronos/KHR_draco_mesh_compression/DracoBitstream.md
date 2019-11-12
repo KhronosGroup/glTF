@@ -1,34 +1,18 @@
 # Draco Bitstream Specification
 
-Contributors:
-- Jim Eckerlein
-- ...
-- 
 
-# File Format Overview
+# Draco File Format
 
-- Draco Header
-- Metadata (optional)
-- Connectivity
-- Attributes
+All Draco encoded mesh files are comprised of four main sections. This first section is the header. The second section contains the metadata. This section is optional. The third section contains the connectivity data. The fourth section contains the attribute data.
 
-# Conventions
-
-## Variable Types
-
-All integer and floating point formats are little endian.
-- `float` is IEEE 754 Single precision.
-- `var32` is an unsigned 32-bit integer encoded using LEB128.
-- `var64` is an unsigned 64-bit integer encoded using LEB128.
-- `f{n}` is an unsigned `n`-bit number with decreasing digit place value. The number is appended by padding bits to the next byte so that data remains byte-aligned.
+<figure>
+  <img alt="" src="figures/DracoFileFormat.svg">
+  <figcaption>Figure 1. Draco file format.</figcaption>
+</figure>
 
 
+The header must be decoded first, then the metadata section (if present), then the connectivity section, and then the attribute section.
 
-## Functions 
-
-- stack push 
-- LEB128
-- 
 
  
 # Draco Header
@@ -43,35 +27,39 @@ Encoder method | `uint8` | `0` Sequential encoding, `1` Mesh edge breaker encodi
 Flags | `uint16` | `0` No flag, `0x8000` Meta data present 
 
 
-## Meta data
+# Metadata
 
 This section is only present if `DracoHeader.Flags` contains the flag `0x8000`.
-It contains a list of meta-data records which relate to specific attributes and a global meta data record. Each meta data record contains a name-value pair list together with a list of sub meta data records, forming a meta data record tree. Each sub meta data record is a name-meta-data pair. The `i`'th  attribute meta data record relates the attribute referenced by the `i`'th attribute meta data id.
+It contains a list of metadata records which relate to specific attributes and a global metadata record. 
+Each meta data record contains a name-value pair list together with a list of sub metadata records, forming a metadata record tree. 
+Each sub metadata record is a name-metadata pair. 
+The `i`'th  attribute metadata record relates the attribute referenced by the `i`'th attribute metadata id.
 
 To avoid ambiguities, each id inside the attribute meta data id array must be unique. Otherwise, multiple meta data records would relate to the same attribute.
 
 Name | Type
 -|-
-Count of meta data records | `var32`
+Count of metadata records | `var32`
 Array of attribute meta data ids | `var32[]`
 Array of attribute meta data records | `Metadata[]`
-Global meta data | `Metadata`
+Global metadata | `Metadata`
 
-`Metadata` designates a single meta data record. Each record can contain zero or more name-value entries. `Metadata` is a recursive type as it can contain zero or more sub meta data records where each sub meta data record is a name-meta data pair.
+`Metadata` designates a single metadata record. Each record can contain zero or more name-value entries. 
+`Metadata` is a recursive type as it can contain zero or more sub metadata records where each sub metadata record is a name-metadata pair.
 
 `Metadata`:
 
-- Count of entries: `var32`
+- Number of entries: `var32`
 - Entry array:
 	- Name size: `uint8`
 	- Name: `int8[]`
 	- Value size: `uint8`
 	- Value: `int8[]`
-- Count of sub meta data records: `var32`
+- Number of sub metadata records: `var32`
 - Sub meta data array:
 	- Name size: `uint8`
 	- Name: `int8[]`
-	- Sub meta data: `Metadata` (Here, the type recurses. This is not a reference or index.)
+	- Sub metadata: `Metadata` (Here, the type recurses. This is not a reference or index.)
 
 
 
@@ -79,62 +67,56 @@ Global meta data | `Metadata`
 # Connectivity  
 
 
-[ToDo] where is underlying point data stored?
-->attributes data contains positions, normals, texCoords
-->varying kinds of attributes are stored separately
-->does this hold for edge breaker?
 
-In general, this format stores connectivity and geometry information separately. 
-In this section, it is shown how connectivity information is stored and how this connectivity information is used to construct faces.
+In general, the Draco file format stores connectivity and geometry information separately. 
+In this section, it is shown how connectivity information is stored and how this connectivity information is used to construct individual faces.
 
-Sequential connectivity methods preserve the underlying connectivity order, whereas usually higher compression rates cen be expected when using the EdgeBreaker algorithm.
+Sequential connectivity encoding methods preserve the underlying connectivity order, whereas usually higher compression rates cen be expected when using the EdgeBreaker algorithm.
  
 
-There are two options for storing the connectivity, defined in encoder_method (located in the draco header):
+There are two options for storing the connectivity, defined in `encoder_method` (located in the draco header):
 
 Based on this, the correct connectivity encoder or decoder has to be chosen:
 * `MESH_SEQUENTIAL_ENCODING`: Sequential Connectivity 
 * `MESH_EDGEBREAKER_ENCODING`:  Edgebreaker Connectivity 
 
-Sequential Connectivity stores indices of faces subsequently while the EdgeBreaker connectivity uses a sophisticated traversing scheme to construct faces. 
-The following chart shows different possibilities of storing connectivity information that can be used in *DRACO* compressed files.
+If the encoder used the sequential connectivity method, indices of faces are stored subsequently whereas the EdgeBreaker connectivity requires a specialized traversing scheme to reconstruct the connectivitiy of vertices. 
+The following chart shows an overview of possible connectivity encoding formats that can be used in Draco compressed files.
 
-![alt text](figures/ConnectivityOverview.svg "Connectivity Overview")
+<figure>
+  <img alt="" src="figures/ConnectivityOverview.svg">
+  <figcaption></figcaption>
+</figure>
+
+## Sequential Connectivity
+
+The sequential connectivity block starts with a preceding header. 
+The header defines the encoding and the number of elements contained in the subsequent index block. 
+
+<figure>
+  <img alt="" src="figures/SequentialConnectivity.svg">
+  <figcaption>Sequential connectivity format.</figcaption>
+</figure>
 
 
 
-# Sequential Connectivity
+The header block of sequential connectivity information contains a fixed number of variables.
 
-The sequential connectivity block starts with a preceding header. The header defines the encoding and the number of elements contained in the subsequent index block. 
-
-## Header Block
-
-| Variable        | Data Type           | |
+| Variable        | Data Type           | Description|
 | ------------- |:-------------:|:-------------:|  
-|  num_faces       |          `var32`          | Stores the overall number of faces |
+| num_faces      |          `var32`          | Stores the overall number of faces |
 |  num_points       |           `var32`          | Stores the overall number of points |
-|  connectivity_method |               `uint8`          |Sequential compressed (0) or uncompressed (1) indices  |
+|  connectivity_method  |               `uint8`          |`0` Compressed indices, `1` Uncompressed indices |
  
 
-
-
-## Index Block
-
-The index block can be either compressed or uncompressed. 
- 
-This is defined by the connectivity flag, which can have these values:
-
-*  0: `SEQUENTIAL_COMPRESSED_INDICES`
-*  1: `SEQUENTIAL_UNCOMPRESSED_INDICES`
+This information is used to interpret the index block, which can be either compressed (`connectivity_method` equals 0) or uncompressed (`connectivity_method` equals 1). 
 
 
 
+#### Uncompressed Sequential Indices
 
-### Uncompressed Sequential Indices()
-
-The data type of index elements is dependent on the number of overall points. 
-
-Hence, before parsing sequential indices, the element data type of one index element has to be evaluated depending on the maximum number of points (num_points) that have to be referenced in order to use a minimum viable size. 
+The data type of index elements is dependent on the overall number of points that have to be addressed. 
+Hence, before parsing sequential indices, the data type of one index element has to be evaluated depending on the maximum number of points (num_points) in order to use a minimum viable size. 
 The size of the data type is one to four bytes. Given the overall number of points, the following table shows the related data type format.
 
 
@@ -146,46 +128,22 @@ The size of the data type is one to four bytes. Given the overall number of poin
 | 2^32 (4294967296) |  4                 |             `uint32`         | 
  
 With this information, the size of the uncompressed sequential index block is given by the size of one index element data type and the number of faces:
-sequential_index_block_size = sizeof(index_element) * num_faces * 3
+		
+	sequential_index_block_size = sizeof(index_element) * num_faces * 3
 
 
 One face is defined by exactly three point indices, hence, forming a triangle when substituting respective indices with point data. 
-
 Three indices forming one face are stored subsequently. 
 
-Face[i]IndexA 
+
 
 ![alt text](figures/IndexDiagram.svg "Index Diagram")
 
 
 
-Face0[VertexIDA, VertexIDB, VertexIDC] Face1[VertexIDA, VertexIDB, VertexIDC]
 
 
-One face is consisting of 3 indices:
-face_to_vertex[0][i]
-face_to_vertex[1][i]
-face_to_vertex[2][i]
-
-
-Parse sequential indices depending on evaluated index element size (UI8, UI16, varUI32, or UI32)
-
-void ParseSequentialIndices() 
-{
-  for (i = 0; i < num_faces; ++i) 
-  {
-    for (j = 0; j < 3; ++j) 
-	{
-      face_to_vertex[j][i]                                                  uint8    uint16    var32  uint32
-    }
-  }
-}
-
-
-
-
-
-### Compressed Sequential Indices 
+#### Compressed Sequential Indices 
 
 
 
@@ -195,7 +153,7 @@ https://arxiv.org/pdf/1311.2540.pdf
 
 Specifically, the range variant (rANS) is used for compression, which is suitable for large coding alphabets. 
 
-The decompressed data of size num_faces * 3 * sizeof(`uint32`) stores index differences, for what reason the uint32 has to be reinterpreted to a signed value.
+The decompressed data of size *num_faces * 3 * sizeof(`uint32`)* stores index differences, for what reason the uint32 has to be reinterpreted to a signed value.
 The conversion from raw buffer values to signed integer values is done by shifting the bits to the right by one digit. The consumed rightmost bit determines the sign of the value respectively (1 represents a negative value, 0 represents a positive value). 
 
 Obtained signed integer values represent the differences of subsequent indices. This means, an additional interim stage is needed to generate index values by stepping through the buffer and summing up the values. At each buffer position, the current sum represents the final index value.
@@ -252,7 +210,7 @@ ABCD >> 1 ==  AABC ??
 
 
 
-# EdgeBreaker Connectivity
+## EdgeBreaker Connectivity
 
 Where can we find information?
 
@@ -296,12 +254,12 @@ Master function: DecodeEdgebreakerConnectivityData
 * =mesh_edgebreaker_decoder_impl.h ???
 
 
-## Header Block
+### EdgeBreaker Header Block
 
 
 
 
-| Variable        | Data Type           | |
+| Variable        | Data Type           | Description |
 | ------------- |:-------------:|:-------------:|  
 | edgebreaker_traversal_type | `uint8`| STANDARD_EDGEBREAKER, VALENCE_EDGEBREAKER
 |  num_encoded_vertices       |          `var32`          |  Number of encoded vertices  |
@@ -310,11 +268,9 @@ Master function: DecodeEdgebreakerConnectivityData
 |  num_encoded_symbols       |          `var32`          | Number of encoded EdgeBreaker symbols, which form the sequence   |
 |  num_encoded_split_symbols       |           `var32`          | Number of encoded EdgeBreaker split symbols  |
 
-edgebreaker_traversal_type:
-*  STANDARD_EDGEBREAKER -> ParseEdgebreakerStandardSymbol
-*  VALENCE_EDGEBREAKER -> EdgebreakerValenceDecodeSymbol
+Based on `edgebreaker_traversal_type`, the correct EdgeBreaker decoding method has to be chosen.
 
-## Topology Split Events
+### Topology Split Events
 
 
 Topological split events that can not be reconstructed via standard EdgeBreaker symbols are stored separately. 
@@ -354,25 +310,9 @@ Overall, the following data is provided for EdgeBreaker traversal and connectivi
 * `source_edge_bit[num_topology_splits]` 
 
 
-ToDo: Define IsTopologySplit here or in traversal???
-	
-	
-    bool IsTopologySplit(encoder_symbol_id, out_face_edge, out_encoder_split_symbol_id) 
-	{
-	  if (source_symbol_id.back() != encoder_symbol_id)
-		return false;
- 
-	  out_face_edge = source_edge_bit.pop_back();
-	  out_encoder_split_symbol_id = split_symbol_id.pop_back();
-	  source_symbol_id.pop_back();
- 
-	 return true;
-	}
 
 
-
-
-## EdgeBreaker Traversal Data
+### EdgeBreaker Traversal Data
 
 Dependent on the EdgeBreaker header attribute `edgebreaker_traversal_type`, either standard traversal or valence EdgeBreaker traversal is accomplished.
 Before the connectivity can be reconstructed, traversal type dependent data has to be loaded as shown in the next sections. 
@@ -381,18 +321,10 @@ Before the connectivity can be reconstructed, traversal type dependent data has 
 * If `edgebreaker_traversal_type` is `VALENCE_EDGEBREAKER`, data is loaded as described in section *Valence EdgeBreaker Traversal Data*.
 
 
-   
-[//]: # (   see Sec. 8.5 EdgeBreaker traversal type is controlled by attribute edgebreaker_traversal_type )
-[//]: # (  STANDARD_EDGEBREAKER DecodeEdgebreakerTraversalStandardData)
-[//]: # (  VALENCE_EDGEBREAKER EdgeBreakerTraversalValenceStart)
-
-Furthermore:
- last_symbol_ = -1;
- active_context_ = -1;
 
 
 
-### Standard EdgeBreaker Traversal Data
+#### Standard EdgeBreaker Traversal Data
 
 [//]: # (8.4. DecodeEdgebreakerTraversalStandardData)
 
@@ -437,12 +369,12 @@ These buffers are used to decode the attribute seams.
 [//]: # ( see 13.1 DecodeAttributeSeams) 
 
 
-### Valence EdgeBreaker Traversal Data 
+#### Valence EdgeBreaker Traversal Data 
 
 [ToDo]
 
 
-## Decode EdgeBreaker Connectivity
+### Decode EdgeBreaker Connectivity
 
 	 is_vert_hole_.assign(num_encoded_vertices + num_encoded_split_symbols, true);
 	 last_vert_added = -1;
@@ -478,40 +410,6 @@ If this bit equals *0*, the current symbol is of type `TOPOLOGY_C` and no additi
 
 For each decoded symbol, the current symbol ID, i.e., a counter that is incremented for each decoded symbol, and the ID of the active corner (the current symbol ID multiplied by 3) are processed together with the decoded topology symbol in the following way:
 
-### NewActiveCornerReached
-Input: topology symbol, symbol ID, corner ID
-
-
-
-[ToDo] VALENCE_EDGEBREAKER
-
-
-Afterwards, interior edges have to be processed.
-
-
-
-
-	 for (i = 0; i < num_encoded_symbols; ++i) 
-	 {
-		EdgebreakerDecodeSymbol();	 // decoded symbol is written to variable last_symbol_ 
-
-
-		corner = 3 * i;
-		NewActiveCornerReached(corner, i);
-
-	// -> handles last_symbol_
-	// -> 
-	  }
-	  ProcessInteriorEdges();
-
-
-
-
-### Process Interior Edges
-
-
-
-
 
 
 
@@ -519,12 +417,22 @@ Afterwards, interior edges have to be processed.
 
 # Attributes
 
-The attribute section contains the attribute header, followed by one or more unique attribute types such as positions or normals. Each attribute type contains one or more unique attributes.
+The attributes data contains two sections. The first section is the attribute header. The second section is comprised of one or more attribute types, such as positions, texture coordinates, normals… Each attribute type section is comprised of one or more unique attributes.
+
+<figure>
+  <img alt="" src="figures/attributes.svg">
+  <figcaption>Figure 5. Attribute data format.</figcaption>
+</figure>
+
+
+
 
 Attributes layout description:
 
 - Count of attributes types: `uint8`
-- An array of descriptions for each attribute type to define decoding parameters if edge breaker is the used encoding method. Each array entry  contains:
+- An array of descriptions for each attribute type to define decoding parameters if EdgeBreaker is the used encoding method. 
+	
+    Each array entry  contains:
 	- Data id: `uint8`
 	- Decoder type: `uint8`
 	`0` Vertex attribute, `1` Corner attribute
@@ -608,17 +516,113 @@ j: att_dec_num_attributes[i]
 
 
 
-## EdgeBreaker Handling
-DecodeAttributeSeams  
-UpdateVertexToCornerMap
 
-## Assign Points To Corners
+# Decoding Algorithm
 
-## Generate Sequence
+The following section describes the complete decoding process of a Draco encoded file.
+
+## Conventions
+
+### Variable Types
+
+All integer and floating point formats are little endian.
+- `float` is IEEE 754 Single precision.
+- `var32` is an unsigned 32-bit integer encoded using LEB128.
+- `var64` is an unsigned 64-bit integer encoded using LEB128.
+- `f{n}` is an unsigned `n`-bit number with decreasing digit place value. The number is appended by padding bits to the next byte so that data remains byte-aligned.
 
 
 
-# Algorithm
+### Operations 
+
+
+#### Arithmetic operators
+
+|          |         |
+|:--------:| ------- |
+| `+`      | Addition
+| `–`      | Subtraction (as a binary operator) or negation (as a unary prefix operator)
+| `*`      | Multiplication
+| `/`      | Division
+| `a % b`  |  Remainder from division of `a` by `b`. Both `a` and `b` are positive integers.
+
+#### Logical operators
+
+|          |         |
+|:--------:| ------- |
+| `a && b` | Logical AND operation between `a` and `b`
+| `a || b` | Logical OR operation between `a` and `b`
+| `!`      | Logical NOT operation.
+
+
+
+#### Relational operators
+
+
+|          |         |
+|:--------:| ------- |
+| `>`      | Greater than
+| `>=`     | Greater than or equal to
+| `<`      | Less than
+| `<=`     | Less than or equal to
+| `==`     | Equal to
+| `!=`     | Not equal to
+
+#### Bitwise operators
+
+
+|          |         |
+|:--------:| ------- |
+| `&`      | AND operation
+| `|`      | OR operation
+| `~`      | Negation operation
+| `a >> b` | Shift `a` in 2's complement binary integer representation format to the right by `b` bit positions. This operator is only used with `b` being a non-negative integer. Bits shifted into the MSBs as a result of the right shift have a value equal to the MSB of `a` prior to the shift operation.
+| `a << b` | Shift `a` in 2's complement binary integer representation format to the left by `b` bit positions. This operator is only used with `b` being a non-negative integer. Bits shifted into the LSBs as a result of the left shift have a value equal to `0`.
+
+
+#### Assignment
+
+|          |         |
+|:--------:| ------- |
+| `=`      | Assignment operator
+| `++`     | Increment, `x++` is equivalent to `x = x + 1`. When this operator is used for an array index, the variable value is obtained before the auto increment operation
+| `--`     | Decrement, i.e. `x--` is equivalent to `x = x - 1`. When this operator is used for an array index, the variable value is obtained before the auto decrement operation
+| `+=`     | Addition assignment operator, for example `x += 3` corresponds to `x = x + 3`
+| `-=`     | Subtraction assignment operator, for example `x -= 3` corresponds to `x = x - 3`
+
+
+#### Mathematical functions
+
+
+The following mathematical functions (Abs, Min, and Max)
+are defined as follows:
+
+<script type="math/asciimath">
+"Abs"(x)={[x;,x >= 0],[-x;,x<0]}
+</script>
+
+<br>
+
+<script type="math/asciimath">
+"Min"(x,y)={[x;,x<=y],[y;,x>y]}
+</script>
+
+<br>
+
+<script type="math/asciimath">
+"Max"(x,y)={[x;,x>=y],[y;,x<y]}
+</script>
+
+
+#### Method of describing bitstream syntax
+
+Each syntax element is described by its name (using only lower case letters
+with underscore characters) and a descriptor for its method of coded
+representation. The decoding process behaves according to the value of the
+syntax element and to the values of previously decoded syntax elements.
+
+In some cases the syntax tables may use the values of other variables derived
+from syntax elements values.
 
 
 
