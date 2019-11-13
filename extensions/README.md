@@ -110,6 +110,14 @@ If lack of extension support prevents proper geometry loading, extension specifi
 
 Extensions start as a vendor extension, then can become a multi-vendor extensions if there are multiple implementations, and can become a ratified Khronos extension (the multi-vendor extension is an optional step).
 
+### Naming
+
+All extension names begin with a prefix followed by an underscore. Prefixes are `KHR_` for [Khronos extensions](#khronos-extensions-2), `EXT_` for [Multi-vendor extensions](#multi-vendor-extensions), and others may be reserved for [Vendor extensions](#vendor-extensions-2).
+
+Following the prefix, names must use lowercase snake-case, e.g. `KHR_materials_unlit`. As a general recommendation, extensions should first consider names of the form: `<PREFIX>_<scope>_<feature>`, where "scope" is an existing glTF concept (mesh, texture, image, material) and "feature" describes the functionality being added within that scope. No recommendation is made regarding plural vs. singular (e.g. "materials" vs "material"), but names should strive for a balance of readability and consistency with official Khronos extensions. Use of `<scope>_<feature>` convention is recommended but not required.
+
+> **NOTE:** For historical reasons, older extensions may not follow these naming guidelines.
+
 ## Promoting Extensions
 
 ### Vendor Extensions
@@ -118,8 +126,6 @@ A list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any vend
 * The name of the prefix.
 * The name of the vendor using the prefix.
 * Vendor's contact information (optionally).
-
-Vendor extension names start with the prefix followed by an underscore, e.g., `CESIUM_`.
 
 Vendor extensions are not covered by the Khronos IP framework.
 
