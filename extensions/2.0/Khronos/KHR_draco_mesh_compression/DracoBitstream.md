@@ -1,17 +1,30 @@
 # Draco Bitstream Specification
 
+Present document structure here?
+
+This document is structured as follows. 
+The first part describes the individual data blocks of a Draco compressed file. 
+
+The second part shows the algorithmic details by giving a C++ like pseudocode listing. 
+
 
 # Draco File Format
 
-All Draco encoded mesh files are comprised of four main sections. This first section is the header. The second section contains the metadata. This section is optional. The third section contains the connectivity data. The fourth section contains the attribute data.
+All Draco encoded mesh files are comprised of four main sections. 
+The first section is the header. 
+An optional second section contains metadata. 
+The third section contains the connectivity data. 
+The fourth section contains the attribute data. 
+Note, that each section has its own additional header to store specific data needed for the actual decoding algorithm.
+Named sections are dependent upon each other. This means, they have to be decoded in sequence.
+
 
 <figure>
   <img alt="" src="figures/DracoFileFormat.svg">
-  <figcaption>Figure 1. Draco file format.</figcaption>
+  <figcaption></figcaption>
 </figure>
 
 
-The header must be decoded first, then the metadata section (if present), then the connectivity section, and then the attribute section.
 
 
  
@@ -23,8 +36,8 @@ Draco String | `uint8[5]` | Must equal "DRACO"
 Major version | `uint8` | Bitstream major version number
 Minor version | `uint8` | Bitstream minor version number
 Encoder type | `uint8` | `0`: Point cloud, `1`: Triangular mesh
-Encoder method | `uint8` | `0` Sequential encoding, `1` Mesh edge breaker encoding 
-Flags | `uint16` | `0` No flag, `0x8000` Meta data present 
+Encoder method | `uint8` | `0`: Sequential encoding, `1`: Mesh EdgeBreaker encoding 
+Flags | `uint16` | `0`: No flag, `0x8000`: Metadata present 
 
 
 # Metadata
@@ -71,17 +84,17 @@ Global metadata | `Metadata`
 In general, the Draco file format stores connectivity and geometry information separately. 
 In this section, it is shown how connectivity information is stored and how this connectivity information is used to construct individual faces.
 
-Sequential connectivity encoding methods preserve the underlying connectivity order, whereas usually higher compression rates cen be expected when using the EdgeBreaker algorithm.
+Draco files support multiple encoding methods. 
+Sequential connectivity encoding methods preserve the order of the underlying data, whereas usually higher compression rates can be expected when using the EdgeBreaker algorithm.
  
+Which algorithm was used to encode the connectivity is defined by `encoder_method` (stored in the Draco header):
 
-There are two options for storing the connectivity, defined in `encoder_method` (located in the draco header):
-
-Based on this, the correct connectivity encoder or decoder has to be chosen:
+Based on this, the correct connectivity decoder has to be chosen:
 * `MESH_SEQUENTIAL_ENCODING`: Sequential Connectivity 
 * `MESH_EDGEBREAKER_ENCODING`:  Edgebreaker Connectivity 
 
-If the encoder used the sequential connectivity method, indices of faces are stored subsequently whereas the EdgeBreaker connectivity requires a specialized traversing scheme to reconstruct the connectivitiy of vertices. 
-The following chart shows an overview of possible connectivity encoding formats that can be used in Draco compressed files.
+If the sequential connectivity method was used to encode the data, indices of faces are stored subsequently whereas the EdgeBreaker connectivity requires a specialized traversing scheme to reconstruct the connectivitiy of vertices. 
+The following chart shows an overview of possible connectivity encoding formats that are used in Draco compressed files.
 
 <figure>
   <img alt="" src="figures/ConnectivityOverview.svg">
@@ -90,8 +103,7 @@ The following chart shows an overview of possible connectivity encoding formats 
 
 ## Sequential Connectivity
 
-The sequential connectivity block starts with a preceding header. 
-The header defines the encoding and the number of elements contained in the subsequent index block. 
+The sequential connectivity block starts with a preceding header that defines the encoding and the number of elements contained in the subsequent index block. 
 
 <figure>
   <img alt="" src="figures/SequentialConnectivity.svg">
@@ -106,7 +118,7 @@ The header block of sequential connectivity information contains a fixed number 
 | ------------- |:-------------:|:-------------:|  
 | num_faces      |          `var32`          | Stores the overall number of faces |
 |  num_points       |           `var32`          | Stores the overall number of points |
-|  connectivity_method  |               `uint8`          |`0` Compressed indices, `1` Uncompressed indices |
+|  connectivity_method  |               `uint8`          |`0`: Compressed indices, `1`: Uncompressed indices |
  
 
 This information is used to interpret the index block, which can be either compressed (`connectivity_method` equals 0) or uncompressed (`connectivity_method` equals 1). 
@@ -137,26 +149,32 @@ Three indices forming one face are stored subsequently.
 
 
 
-![alt text](figures/IndexDiagram.svg "Index Diagram")
-
-
+<figure>
+  <img alt="" src="figures/IndexDiagram.svg">
+  <figcaption></figcaption>
+</figure>
 
 
 
 #### Compressed Sequential Indices 
-
-
+<!---
+Simplify this section?
+-->
 
 The compression of sequential indices is based on the algorithm shown by Jarek Duda in
 *Asymmetric numeral systems: entropy coding combining speed of Huffman coding with compression rate of arithmetic coding* (2014):
 https://arxiv.org/pdf/1311.2540.pdf
-
 Specifically, the range variant (rANS) is used for compression, which is suitable for large coding alphabets. 
 
-The decompressed data of size *num_faces * 3 * sizeof(`uint32`)* stores index differences, for what reason the uint32 has to be reinterpreted to a signed value.
-The conversion from raw buffer values to signed integer values is done by shifting the bits to the right by one digit. The consumed rightmost bit determines the sign of the value respectively (1 represents a negative value, 0 represents a positive value). 
+The decompressed data of size *num_faces * 3 * sizeof( uint32 )* stores index differences, for what reason the uint32 value has to be reinterpreted to a signed value.
+The conversion from raw buffer values to signed integer values is done by shifting the bits to the right by one digit. 
+The consumed rightmost bit determines the sign of the value respectively (1 represents a negative value, 0 represents a positive value). 
+Obtained signed integer values represent the differences of subsequent indices. 
+This means, an additional interim stage is needed to generate index values by stepping through the buffer and summing up the values. 
+At each buffer position, the current sum represents the absolute index value.
 
-Obtained signed integer values represent the differences of subsequent indices. This means, an additional interim stage is needed to generate index values by stepping through the buffer and summing up the values. At each buffer position, the current sum represents the final index value.
+
+<!---
 
 1) Decompress -> Buffer of uint32[num_faces*3]
 2) uint32 -> int32 (by consuming rightmost bit)
@@ -165,9 +183,10 @@ Obtained signed integer values represent the differences of subsequent indices. 
 The compression comprises two steps. 
 At first, the index difference is calculated. This is based on the idea of usually encountering small differences between subsequent indices. 
 
-Decoded Index Element in C++ == uint32
 
+Comment:
 
+Decoded Index Element in draco source code C++  == uint32      
 Meaning of Rightshift operation (>>)?
 From C++ Code:
 uint32_t encoded_val = indices_buffer[vertex_index++];
@@ -202,42 +221,31 @@ ABCD >> 1 ==  AABC ??
 	}
 
 
+-->
 
 
-
-![Sequential Compressed Index Diagram](figures/SequentialCompressedIndexDiagram.svg "Sequential Compressed Index Diagram")
-
+<figure>
+  <img alt="" src="figures/SequentialCompressedIndexDiagram.svg">
+  <figcaption></figcaption>
+</figure>
 
 
 
 ## EdgeBreaker Connectivity
-
+<!---
 Where can we find information?
-
 Section 7  ->  EdgeBreaker Decoder
-
-Section 8  -> EdgeBreaker Traversal
-
-Section 9 ->  EdgeBreaker Traversal Valence
-
+Section 8  ->  EdgeBreaker Traversal
+Section 9  ->  EdgeBreaker Traversal Valence
 Section 10 ->  EdgeBreaker Traversal Prediction Degree
-
-------
-
-Overview
-
 
 Master function: DecodeEdgebreakerConnectivityData
 1) Header Block 
 * ParseEdgebreakerConnectivityData 
   
-	
-
 2) Topology Split Events 
 * ParseTopologySplitEvents
 * ProcessSplitData();
-
-
 
 3)  EdgebreakerTraversalStart 
 
@@ -246,31 +254,53 @@ Master function: DecodeEdgebreakerConnectivityData
   * DecodeEdgebreakerTraversalStandardData()
   * EdgeBreakerTraversalValenceStart()
 
-
 4)  DecodeEdgeBreakerConnectivity
 
 	In this section, the actual connectivity is constructed. 
 * =spirale reversi paper algortihm????
 * =mesh_edgebreaker_decoder_impl.h ???
 
+-->
 
-### EdgeBreaker Header Block
+Overview
+
+
+
+The EdgeBreaker connectivity section is composed of five sections. 
+The first section is the connectivity header. 
+The second section is the encoded topology split data.
+The third section is the encoded EdgeBreaker symbol data. 
+The fourth section is the encoded start face configuration data. 
+The fifth section is the attribute connectivity data.
+
+
+<figure>
+  <img alt="" src="figures/edgebreakerConnectivity.svg">
+  <figcaption>EdgeBreaker connectivity format.</figcaption>
+</figure>
 
 
 
 
-| Variable        | Data Type           | Description |
+
+
+#### EdgeBreaker Header Block
+
+
+
+
+| Variable						| Data Type     | Description |
 | ------------- |:-------------:|:-------------:|  
-| edgebreaker_traversal_type | `uint8`| STANDARD_EDGEBREAKER, VALENCE_EDGEBREAKER
-|  num_encoded_vertices       |          `var32`          |  Number of encoded vertices  |
-|  num_faces       |           `var32`          | Number of encoded faces  |
-|  num_attribute_data |               `uint8`          |  Number of encoded attributes |
-|  num_encoded_symbols       |          `var32`          | Number of encoded EdgeBreaker symbols, which form the sequence   |
-|  num_encoded_split_symbols       |           `var32`          | Number of encoded EdgeBreaker split symbols  |
+|  edgebreaker_traversal_type	|   `uint8`		| STANDARD_EDGEBREAKER, VALENCE_EDGEBREAKER
+|  num_encoded_vertices			|   `var32`	    |  Number of encoded vertices  |
+|  num_faces					|   `var32`	    | Number of encoded faces  |
+|  num_attribute_data			|   `uint8`	    |  Number of encoded attributes |
+|  num_encoded_symbols			|   `var32`	    | Number of encoded EdgeBreaker symbols, which form the sequence   |
+|  num_encoded_split_symbols    |   `var32`	    | Number of encoded EdgeBreaker split symbols  |
 
 Based on `edgebreaker_traversal_type`, the correct EdgeBreaker decoding method has to be chosen.
 
-### Topology Split Events
+#### Topology Split Data
 
 
 Topological split events that can not be reconstructed via standard EdgeBreaker symbols are stored separately. 
@@ -310,7 +340,7 @@ Overall, the following data is provided for EdgeBreaker traversal and connectivi
 * `source_edge_bit[num_topology_splits]` 
 
 
-
+<!---
 
 ### EdgeBreaker Traversal Data
 
@@ -332,21 +362,22 @@ The standard EdgeBreaker algorithm requires the following data:
 * Symbol data (`eb_symbol_buffer`)
 * Face data (`eb_start_face_buffer`)
 * Attribute connectivity data (for each attribute one `attribute_connectivity_decoders_buffer`)
-
+-->
 
 #### Symbol Data
 [//]: # ( 8.1 ParseEdgebreakerTraversalStandardSymbolData )
-
 [//]: # ( -> initializes eb_symbol_buffer of size [eb_symbol_buffer_size])  
 
 To load the symbols required for the EdgeBreaker traversal, at first, a var64 value is loaded that defines the number of symbols. 
 Afterwards, that number of symbols of type uint8 is loaded into the buffer `eb_symbol_buffer`.
 
-
+<!---
+[ToDo] Pseudocode and implementation do not read symbol data in case of edgebreaker_traversal_type==VALENCE_EDGEBREAKER. 
+->Valence edgebreaker figure is wrong?
+-->
 
 #### Face Data
 [//]: # ( 8.2 ParseEdgebreakerTraversalStandardFaceData )
- 
 [//]: # (  initializes eb_start_face_buffer of size [eb_start_face_buffer_size])
 
 To load the face data required for the EdgeBreaker traversal, at first, a uint8 value is loaded into `eb_start_face_buffer_prob_zero`.
@@ -369,23 +400,16 @@ These buffers are used to decode the attribute seams.
 [//]: # ( see 13.1 DecodeAttributeSeams) 
 
 
-#### Valence EdgeBreaker Traversal Data 
-
-[ToDo]
-
 
 ### Decode EdgeBreaker Connectivity
-
-	 is_vert_hole_.assign(num_encoded_vertices + num_encoded_split_symbols, true);
-	 last_vert_added = -1;
 
 
 The previous sections have defined, how data has to be loaded. 
 In this section, the interpretation of the data is described based on the EdgeBreaker algorithm to decode the actual connectivity.
-
+<!---
 Additionally, a global array `is_vert_hole_` of size `num_encoded_vertices` + `num_encoded_split_symbols` and type bool is filled in this section to detect vertices that are located at the surface boundary. 
 Initially, for all entries of that array are set to *true*.
-
+-->
 
 The number of EdgeBreaker symbols `num_encoded_symbols` is specified in the EdgeBreaker header.
 The actual symbols are stored in eb_symbol_buffer with a specific bit pattern. This is why the size of encoded symbols is not directly related to the size of the symbol buffer (`eb_symbol_buffer`). 
@@ -412,16 +436,29 @@ For each decoded symbol, the current symbol ID, i.e., a counter that is incremen
 
 
 
+#### Valence EdgeBreaker Connectivity
+
+The valence EdgeBreaker connectivity adds two sections after the attribute connectivity data. 
+The first additional section is the EdgeBreaker valence header. 
+The second additional section is the context data for the valence prediction.
+
+<figure>
+  <img alt="" src="figures/valenceEdgebreakerConnectivity.svg">
+  <figcaption>Valence EdgeBreaker connectivity format.</figcaption>
+</figure>
+
 
 
 
 # Attributes
 
-The attributes data contains two sections. The first section is the attribute header. The second section is comprised of one or more attribute types, such as positions, texture coordinates, normals… Each attribute type section is comprised of one or more unique attributes.
+The attributes data contains two sections. The first section is the attribute header. 
+The second section is comprised of one or more attribute types, such as positions, texture coordinates, normals.
+Each attribute type section is comprised of one or more unique attributes.
 
 <figure>
   <img alt="" src="figures/attributes.svg">
-  <figcaption>Figure 5. Attribute data format.</figcaption>
+  <figcaption>Attribute data format.</figcaption>
 </figure>
 
 
@@ -460,33 +497,32 @@ Attributes layout description:
 		`0` Generic, `1` Integer, `2` Quantization, `3` Normals
 
 Attributes data itself has to be decoded.
-
+<!---[ToDo]: remove deprecated?--->
 Attribute:
 - Prediction scheme: `int8`
 	- `-2` None: There is no attribute data
 	- `0` Difference: Implies that the attribute entries have two components.
 	- `1` Parallelogram
 	- `2` Multi parallelogram
-	- `3` Texture coordinates (deprecated) [TODO: remove?]
+	- `3` Texture coordinates (deprecated)
 	- `4` Constrained multi parallelogram
-	- `5` Texture coordinates portable [TODO: what is portable?]
+	- `5` Texture coordinates portable 
 	- `6` Geometric normal
 - Prediction transform type, if the prediction scheme is not *None*.
 	- `-1` None
-	- `0` Delta: ...
-	- `1` Wrap: ... (currently the only supported prediction transform by github.com/google/draco)
-	- `2` Normal octahedron: ...
-	- `3` Canonicalized normal octahedron: ...
+	- `0` Delta
+	- `1` Wrap: (currently the only supported prediction transform type by github.com/google/draco)
+	- `2` Normal octahedron
+	- `3` Canonicalized normal octahedron
 - Flag whether values are compressed: `uint8`
 - If compression flag is set:
 	- Scheme: `uint8`
 		- `0` Tagged: Each symbol is preceded by a fix-length (5-bit?) bit-length variable defining the bit length of the actual value following the tag.
-		TODO: byte aligned?
 		- `1` Raw: Each symbol value has the same fixed bit-length. Accepted bit length are `[1, 18]`.
 
 
-11.2
 
+<!---
 ## Parse Attribute Decoders Data
 Loading data from file
 
@@ -512,7 +548,7 @@ j: att_dec_num_attributes[i]
 	seq_att_dec_decoder_type[i][j]                                                  UI8 
 	
 	
-
+-->
 
 
 
@@ -541,7 +577,7 @@ All integer and floating point formats are little endian.
 |          |         |
 |:--------:| ------- |
 | `+`      | Addition
-| `–`      | Subtraction (as a binary operator) or negation (as a unary prefix operator)
+| `â€“`      | Subtraction (as a binary operator) or negation (as a unary prefix operator)
 | `*`      | Multiplication
 | `/`      | Division
 | `a % b`  |  Remainder from division of `a` by `b`. Both `a` and `b` are positive integers.
@@ -594,8 +630,9 @@ All integer and floating point formats are little endian.
 #### Mathematical functions
 
 
-The following mathematical functions (Abs, Min, and Max)
-are defined as follows:
+The following mathematical functions are defined as follows:
+
+[ToDo: use images in MarkDown for math formulas?]
 
 <script type="math/asciimath">
 "Abs"(x)={[x;,x >= 0],[-x;,x<0]}
@@ -623,6 +660,10 @@ syntax element and to the values of previously decoded syntax elements.
 
 In some cases the syntax tables may use the values of other variables derived
 from syntax elements values.
+
+### Constants
+
+[ToDo]
 
 
 
