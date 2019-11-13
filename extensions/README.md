@@ -25,16 +25,25 @@
 
 #### In progress Khronos and multi-vendor extensions
 
-_Draft Khronos (KHR) extensions are not ratified yet. Multi-vendor extensions do not require ratification,
+_Draft Khronos (KHR) extensions are not ratified yet. Multi-vendor (EXT) extensions do not require ratification,
 but may still change before they are complete._
 
 | Extension | Status |
 |-----------|--------|
-| [KHR_techniques_webgl](2.0/Khronos/KHR_techniques_webgl/README.md) | Feature-complete, seeking feedback. |
-| KHR_compressed_texture_transmission | In development. |
-| [KHR_blend](https://github.com/KhronosGroup/glTF/pull/1302) | In development. |
-| HDR textures ([#1220](https://github.com/KhronosGroup/glTF/issues/1220), [#1365](https://github.com/KhronosGroup/glTF/issues/1365)) | Planned. |
-| Advanced PBR materials ([#1221](https://github.com/KhronosGroup/glTF/issues/1221), [#1079](https://github.com/KhronosGroup/glTF/issues/1079), ...) | Planned. |
+| [KHR_image_ktx2](https://github.com/KhronosGroup/glTF/pull/1612) | Ready for implementation  and feedback. |
+| [KHR_texture_basisu](https://github.com/KhronosGroup/glTF/pull/1612) | Ready for implementation  and feedback. |
+| [KHR_quantized_geometry](https://github.com/KhronosGroup/glTF/pull/1673) | Ready for implementation and feedback. |
+| [KHR_materials_clearcoat](https://github.com/KhronosGroup/glTF/pull/1677) | Ready for implementation and feedback. |
+| [KHR_materials_specular](https://github.com/KhronosGroup/glTF/pull/1677) | Ready for implementation and feedback. |
+| [KHR_materials_sheen](https://github.com/KhronosGroup/glTF/pull/1688) | Ready for implementation and feedback. |
+| [KHR_materials_transmission](https://github.com/KhronosGroup/glTF/pull/1698) | In development. |
+| [KHR_xmp](https://github.com/KhronosGroup/glTF/pull/1553) | In development. |
+| [KHR_lights_image_based](https://github.com/KhronosGroup/glTF/pull/1612) | In development. |
+| [EXT_texture_bc6h](https://github.com/KhronosGroup/glTF/pull/1612) | In development. |
+| [EXT_texture_astc_hdr](https://github.com/KhronosGroup/glTF/pull/1612) | In development. |
+| [KHR_instancing](https://github.com/KhronosGroup/glTF/pull/1691) | Early discussions. |
+| [KHR_blend](https://github.com/KhronosGroup/glTF/pull/1302) | Tabled. |
+| [KHR_techniques_webgl](2.0/Khronos/KHR_techniques_webgl/README.md) | Tabled. |
 
 This section tracks the status of Khronos and multi-vendor extensions that are either already in development,
 or that we feel show enough consensus to be highly likely for future development. We welcome feedback for these
