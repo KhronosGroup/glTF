@@ -1,4 +1,4 @@
-# KHR\_quantized\_geometry
+# KHR\_mesh\_quantization
 
 ## Contributors
 
@@ -29,7 +29,7 @@ Because the extension does not provide a way to specify both `FLOAT` and quantiz
 
 ## Extending Mesh Attributes
 
-When `KHR_quantized_geometry` extension is supported, the set of types used for storing geometry attributes is expanded according to the table below.
+When `KHR_mesh_quantization` extension is supported, the set of types used for storing geometry attributes is expanded according to the table below.
 
 |Name|Accessor Type(s)|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
@@ -46,7 +46,7 @@ For `POSITION` and `TEXCOORD` attributes, the application is free to choose norm
 
 ## Extending Morph Target Attributes
 
-When `KHR_quantized_geometry` extension is supported, the set of types used for storing morph target attributes is expanded according to the table below.
+When `KHR_mesh_quantization` extension is supported, the set of types used for storing morph target attributes is expanded according to the table below.
 
 |Name|Accessor Type(s)|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
