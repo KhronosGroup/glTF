@@ -17,7 +17,7 @@ Written against the glTF 2.0 spec. Depends on `KHR_texture_transform` for textur
 
 Vertex attributes are usually stored using `FLOAT` component type. However, this can result in excess precision and increased memory consumption and transmission size, as well as reduced rendering performance.
 
-This extension expands the set of allowed component types for geometry storage to provide a memory/precision tradeoff - depending on the application needs, 16-bit or 8-bit storage can be sufficient.
+This extension expands the set of allowed component types for mesh attribute storage to provide a memory/precision tradeoff - depending on the application needs, 16-bit or 8-bit storage can be sufficient.
 
 Using 16-bit or 8-bit storage typically requires transforming the original floating point values to fit a uniform 3D or 2D grid; the process is commonly known as quantization.
 
@@ -29,7 +29,7 @@ Because the extension does not provide a way to specify both `FLOAT` and quantiz
 
 ## Extending Mesh Attributes
 
-When `KHR_mesh_quantization` extension is supported, the set of types used for storing geometry attributes is expanded according to the table below.
+When `KHR_mesh_quantization` extension is supported, the set of types used for storing mesh attributes is expanded according to the table below.
 
 |Name|Accessor Type(s)|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
