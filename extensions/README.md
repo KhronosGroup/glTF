@@ -30,12 +30,12 @@ but may still change before they are complete._
 
 | Extension | Status |
 |-----------|--------|
-| [KHR_image_ktx2](https://github.com/KhronosGroup/glTF/pull/1612) | Ready for implementation and feedback. |
 | [KHR_texture_basisu](https://github.com/KhronosGroup/glTF/pull/1612) | Ready for implementation and feedback. |
 | [KHR_mesh_quantization](https://github.com/KhronosGroup/glTF/pull/1673) | Ready for implementation and feedback. |
 | [KHR_materials_clearcoat](https://github.com/KhronosGroup/glTF/pull/1677) | Ready for implementation and feedback. |
 | [KHR_materials_specular](https://github.com/KhronosGroup/glTF/pull/1677) | Ready for implementation and feedback. |
 | [KHR_materials_sheen](https://github.com/KhronosGroup/glTF/pull/1688) | Ready for implementation and feedback. |
+| [KHR_image_ktx2](https://github.com/KhronosGroup/glTF/pull/1612) | In development. |
 | [KHR_materials_transmission](https://github.com/KhronosGroup/glTF/pull/1698) | In development. |
 | [KHR_xmp](https://github.com/KhronosGroup/glTF/pull/1553) | In development. |
 | [KHR_lights_image_based](https://github.com/KhronosGroup/glTF/pull/1612) | In development. |
