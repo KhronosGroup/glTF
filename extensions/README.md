@@ -32,7 +32,7 @@ but may still change before they are complete._
 |-----------|--------|
 | [KHR_image_ktx2](https://github.com/KhronosGroup/glTF/pull/1612) | Ready for implementation  and feedback. |
 | [KHR_texture_basisu](https://github.com/KhronosGroup/glTF/pull/1612) | Ready for implementation and feedback. |
-| [KHR_quantized_geometry](https://github.com/KhronosGroup/glTF/pull/1673) | Ready for implementation and feedback. |
+| [KHR_mesh_quantization](https://github.com/KhronosGroup/glTF/pull/1673) | Ready for implementation and feedback. |
 | [KHR_materials_clearcoat](https://github.com/KhronosGroup/glTF/pull/1677) | Ready for implementation and feedback. |
 | [KHR_materials_specular](https://github.com/KhronosGroup/glTF/pull/1677) | Ready for implementation and feedback. |
 | [KHR_materials_sheen](https://github.com/KhronosGroup/glTF/pull/1688) | Ready for implementation and feedback. |
