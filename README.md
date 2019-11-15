@@ -132,6 +132,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 | [Cinema 4D Exporter](https://labs.maxon.net/?p=3360)| — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Export glTF from MAXON Cinema 4D |
 | [Revit glTF Exporter add-in](https://apps.autodesk.com/RVT/en/Detail/Index?id=8451869436709222290)| — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Paid add-in to export glTF from Autodesk Revit 2019 or later |
 | [Adobe Animate](https://www.adobe.com/products/animate.html)| — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Publish 2D animations to glTF/glb using Animate 2019 or later. Also create 360 degree VR content and embed 3D glb assets in the scene. |
+| [Datakit CrossManager converter](https://www.datakit.com/en/cross_manager.php) | `ACIS`, `CADDS`, `CATIA V4`, `CATIA V5`, `CATIA V6 / 3DEXPERIENCE`, `Creo Parametric`, `IGES`, `Inventor`, `JT`, `NX`, `Parasolid`, `Pro/Engineer`, `Rhino`, `Solid Edge`, `SOLIDWORKS`, `STEP`, `UNIGRAPHICS`, `VDA` [Details](https://www.datakit.com/en/cross_manager.php#combinaisons3D) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | File converter. Supports multiple 3D formats inputs and outputs, including glTF output. Graphical interface or command-line |
 
 ### Optimizers
 
