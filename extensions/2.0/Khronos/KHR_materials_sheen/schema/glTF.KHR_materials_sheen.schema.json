@@ -5,7 +5,7 @@
     "description": "glTF extension that defines the sheen material model.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "sheenFactor": {
+        "intensityFactor": {
             "type": "number",
             "description": "The sheen layer intensity.",
             "default": 0.0,
@@ -13,7 +13,7 @@
             "maximum": 1.0,
             "gltf_detailedDescription": "The sheen layer intensity of the material. A value of 0.0 means the material has no sheen layer enabled."
         },
-        "sheenColor": {
+        "colorFactor": {
             "type": "array",
             "items": {
                 "type": "number",
@@ -25,10 +25,10 @@
             "description": "Color of the sheen layer.",
             "default": [1, 1, 1]
         },
-        "sheenTexture": {
+        "colorIntensityTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The sheen layer texture.",
-            "gltf_detailedDescription": "The sheen layer texture. Stored in channel RGB the sheen color in sRGB transfer function and in A the linear factor."
+            "gltf_detailedDescription": "The sheen layer texture. Stored in channel RGB the sheen color in sRGB transfer function and in A the intensity linear factor."
         },
         "extensions": { },
         "extras": { }

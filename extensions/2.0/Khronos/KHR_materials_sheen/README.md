@@ -46,12 +46,19 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 
 |                                  | Type                                                                            | Description                            | Required                       |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|--------------------------------|
-|**sheenFactor**                   | `number`                                                                        | The sheen intensity.                   | No, default: `1.0`             |
-|**sheenColor**                    | `array`                                                                         | The sheen color.                       | No, default: `[1.0, 1.0, 1.0]` |
-|**sheenTexture**                  | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The sheen color and intensity texture. | No                             |
-|
+|**intensityFactor**               | `number`                                                                        | The sheen intensity.                   | No, default: `1.0`             |
+|**colorFactor**                   | `array`                                                                         | The sheen color.                       | No, default: `[1.0, 1.0, 1.0]` |
+|**colorIntensityTexture**         | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The sheen color (RGB) and intensity (Alpha) texture. | No               |
+
 
 The sheen roughness is identical to the material roughness to simplify the configuration. `sheenRoughness = materialRoughness`
+
+If a texture is defined: 
+* The sheen intensity is computed with : `sheenIntensity = intensityFactor * sample(colorIntensityTexture).a`.
+
+* The sheen color is computed with : `sheenColor = colorFactor * sampleLinear(colorIntensityTexture).rgb`.
+
+Otherwise, `sheenIntensity = intensityFactor` and `sheenColor = colorFactor`
 
 The sheen formula `f_sheen` is different from the specular and clear coat BRDF.
 ```
