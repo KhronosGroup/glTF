@@ -156,9 +156,7 @@ Three indices forming one face are stored subsequently.
 
 
 #### Compressed Sequential Indices 
-<!---
-Simplify this section?
--->
+
 
 The compression of sequential indices is based on the algorithm shown by Jarek Duda in
 *Asymmetric numeral systems: entropy coding combining speed of Huffman coding with compression rate of arithmetic coding* (2014):
@@ -175,18 +173,10 @@ At each buffer position, the current sum represents the absolute index value.
 
 <!---
 
-1) Decompress -> Buffer of uint32[num_faces*3]
-2) uint32 -> int32 (by consuming rightmost bit)
-3) Index Differences -> Indices
-
-The compression comprises two steps. 
-At first, the index difference is calculated. This is based on the idea of usually encountering small differences between subsequent indices. 
-
-
-Comment:
 
 Decoded Index Element in draco source code C++  == uint32      
 Meaning of Rightshift operation (>>)?
+
 From C++ Code:
 uint32_t encoded_val = indices_buffer[vertex_index++];
 int32_t index_diff = (encoded_val >> 1);
@@ -194,30 +184,10 @@ int32_t index_diff = (encoded_val >> 1);
 ABCD >> 1 ==  0ABC ??
 
 vs
+
 From Spec: 
 "Bits shifted into the MSBs as a result of the right shift have a value equal to the MSB of a prior to the shift operation."
 ABCD >> 1 ==  AABC ??
-
-
-
-	void DecodeSequentialCompressedIndices() 
-	{
-	  DecodeSymbols(num_faces * 3, 1, &decoded_symbols); //num_symbols, num_components, out_values
-	  last_index_value = 0;
-	  for (i = 0; i < num_faces; ++i) 
-	  {
-		for (j = 0; j < 3; ++j) 
-		{
-		  encoded_val = decoded_symbols[i * 3 + j];
-		  index_diff = (encoded_val >> 1); //shift to the right. first bit is thrown away in this step? see rightshift definition mismatch
-		  if (encoded_val & 1)
-			index_diff = -index_diff;
-		  val = index_diff + last_index_value;
-		  face_to_vertex[j][i] = val;
-		  last_index_value = val;
-		}
-	  }
-	}
 
 
 -->
@@ -231,34 +201,6 @@ ABCD >> 1 ==  AABC ??
 
 
 ## EdgeBreaker Connectivity
-<!---
-Where can we find information?
-Section 7  ->  EdgeBreaker Decoder
-Section 8  ->  EdgeBreaker Traversal
-Section 9  ->  EdgeBreaker Traversal Valence
-Section 10 ->  EdgeBreaker Traversal Prediction Degree
-
-Master function: DecodeEdgebreakerConnectivityData
-1) Header Block 
-* ParseEdgebreakerConnectivityData 
-  
-2) Topology Split Events 
-* ParseTopologySplitEvents
-* ProcessSplitData();
-
-3)  EdgebreakerTraversalStart 
-
-	Traversal data is loaded in this section
-* 8.5 EdgebreakerTraversalStart:
-  * DecodeEdgebreakerTraversalStandardData()
-  * EdgeBreakerTraversalValenceStart()
-
-4)  DecodeEdgeBreakerConnectivity
-
-	In this section, the actual connectivity is constructed. 
-* =spirale reversi paper algortihm????
-* =mesh_edgebreaker_decoder_impl.h ???
--->
 
 Another possibility to describe the connectivity of vertices is a sequence of symbols that describe a traversal scheme, which is specialized for meshes. 
 An efficient decompression algorithm is described by Isenburg and Snoeyink in *Spirale Reversi: Reverse decoding of the Edgebreaker encoding* in 2001.
@@ -344,85 +286,26 @@ The following loaded arrays are used to calculate absolute IDs: `source_id_delta
 For all values in the array `source_id_delta` an entry in the array `source_symbol_id` is created by accumulating all values until that entry:
 
     source_symbol_id[i] = source_id_delta[0] + ... + source_id_delta[i]  // for all i in [0 .. num_topology_splits]
-<!---
-7.5.ProcessSplitData   
-  
-Note, that these sums can be calculated by using a helper variable that is accumulated in a loop that assigns respective values.
--->
+
 
 The split symbol IDs in the array `split_symbol_id` are calculated by subtracting loaded `split_id_delta` values from previously calculated `source_symbol_id` values:
 
     split_symbol_id[i] = source_symbol_id[i]  - split_id_delta[i];  // for all i in [0 .. num_topology_splits]
 
 
-<!---
-
-Overall, the following data is provided for EdgeBreaker traversal and connectivity decoding: 
-
-* `source_symbol_id[num_topology_splits]` 
-* `split_symbol_id[num_topology_splits]` 
-* `source_edge_bit[num_topology_splits]` 
--->
-
-<!---
-
-### EdgeBreaker Traversal Data
-
-Dependent on the EdgeBreaker header attribute `edgebreaker_traversal_type`, either standard traversal or valence EdgeBreaker traversal is accomplished.
-Before the connectivity can be reconstructed, traversal type dependent data has to be loaded as shown in the next sections. 
-
-* If `edgebreaker_traversal_type` is `STANDARD_EDGEBREAKER`, data is loaded as described in section *Standard EdgeBreaker Traversal Data*.
-* If `edgebreaker_traversal_type` is `VALENCE_EDGEBREAKER`, data is loaded as described in section *Valence EdgeBreaker Traversal Data*.
-
-
-#### Standard EdgeBreaker Traversal Data
-
-[//]: # (8.4. DecodeEdgebreakerTraversalStandardData)
-
-The standard EdgeBreaker algorithm requires the following data:
-* Symbol data (`eb_symbol_buffer`)
-* Face data (`eb_start_face_buffer`)
-* Attribute connectivity data (for each attribute one `attribute_connectivity_decoders_buffer`)
--->
-
 
 #### Standard Symbol Data
-<!---
-[//]: # ( 8.1 ParseEdgebreakerTraversalStandardSymbolData )
-[//]: # ( -> initializes eb_symbol_buffer of size [eb_symbol_buffer_size])  
--->
 
 To load the symbols required for the EdgeBreaker traversal, at first, a var64 value is loaded that defines the size of the symbol buffer in bytes. 
 Afterwards, that number of bytes is loaded into the buffer `eb_symbol_buffer`.
 
-<!---
-[ToDo] Pseudocode and implementation do not read symbol data in case of edgebreaker_traversal_type==VALENCE_EDGEBREAKER. 
-->Valence edgebreaker figure is wrong?
-
--->
-
-<!---
- 
-The previous sections have defined, how data has to be loaded. 
-In this section, the interpretation of the data is described based on the EdgeBreaker algorithm to decode the actual connectivity.
-
-Additionally, a global array `is_vert_hole_` of size `num_encoded_vertices` + `num_encoded_split_symbols` and type bool is filled in this section to detect vertices that are located at the surface boundary. 
-Initially, for all entries of that array are set to *true*.
--->
 
 
 The actual symbols are stored in `eb_symbol_buffer` with a specific bit pattern. 
 This is why the size of encoded symbols is not directly related to the size of the symbol buffer (`eb_symbol_buffer`). 
 The number of actual EdgeBreaker symbols `num_encoded_symbols` is specified in the EdgeBreaker header.
 
-<!---
-With respect to the selected traversal type `edgebreaker_traversal_type`, which is also specified in the EdgeBreaker header, the symbol is decoded for the valence EdgeBreaker or the standard EdgeBreaker algorithm.
 
-edgebreaker_traversal_type is VALENCE_EDGEBREAKER or STANDARD_EDGEBREAKER 
-
-In this routine, one symbol after the other is loaded until `num_encoded_symbols` have been decoded. 
-In the case of standard EdgeBreaker traversal, i.e., `edgebreaker_traversal_type` is `STANDARD_EDGEBREAKER`, 
--->
 
 The decoding of individual symbols consists of two steps.
 At first, one bit is read from `eb_symbol_buffer`. 
@@ -439,16 +322,10 @@ The following table shows the mapping of these 3 read bits to a topology symbol 
 |  TOPOLOGY_R	|   101         |3
 |  TOPOLOGY_E   |   111         |4
 
-<!---
-For each decoded symbol, the current symbol ID, i.e., a counter that is incremented for each decoded symbol, and the ID of the active corner (the current symbol ID multiplied by 3) are processed together with the decoded topology symbol in the following way:
--->
 
 
 #### Start Face Data
-<!---
-8.2 ParseEdgebreakerTraversalStandardFaceData )
-  initializes eb_start_face_buffer of size [eb_start_face_buffer_size])
--->
+
 To load the face data required for the EdgeBreaker traversal, at first, a uint8 value is loaded into `eb_start_face_buffer_prob_zero`.
 Then, a var32 value is loaded that defines the number of start face IDs. 
 That number of start face IDs of type uint8 is loaded into the buffer `eb_start_face_buffer`.
@@ -456,21 +333,13 @@ That number of start face IDs of type uint8 is loaded into the buffer `eb_start_
 
 
 #### Attribute Connectivity Data
-<!---
-8.3 ParseEdgebreakerTraversalStandardAttributeConnectivityData )
--> for  i = 0; i < num_attribute_data; ++i) 
--> initializes attribute_connectivity_decoders_buffer[i] with size specified in attribute_connectivity_decoders_size[i])
--->
+
 The number of attribute connectivity data that has to be loaded is defined in the EdgeBreaker header by the variable `num_attribute_data`.
 For each attribute data element `i`, i.e., `num_attribute_data` times, a porobability value of type uint8 is loaded into `attribute_connectivity_decoders_prob_zero[i]`, 
 a var32 value is loaded that indicates the number of connectivity decoders (`attribute_connectivity_decoders_size[i]`), 
 and that number of uint8 values is loaded into `attribute_connectivity_decoders_buffer[i]`.
 
 These buffers are used to decode the attribute seams.
-
-<!---
- see 13.1 DecodeAttributeSeams)
--->
 
 #### Valence Context Data
 
@@ -480,39 +349,6 @@ The number of unique valences is predefined in a constant `NUM_UNIQUE_VALENCES` 
 For each unique valence, at first, a `var32` is loaded that specifies the number of valence context symbols (`ebv_context_counters[i]`).
 Then, that number of symbols is obtained by decoding a __rANS__ encoded data block.  
  
-<!---
-[ToDo] Add figure?
---->
-
-<!---
-
-constant:  NUM_UNIQUE_VALENCES = 6
- 
-for (i = 0; i < NUM_UNIQUE_VALENCES; ++i)
-{
-	ebv_context_counters[i]  = load  var32
-
-	if (ebv_context_counters[i] > 0) 
-	{
-		DecodeSymbols(ebv_context_counters[i], 1, &ebv_context_symbols[i]);
-	}
-}
---
-void DecodeSymbols(num_symbols, num_components, out_values) 
-{
- scheme                                                                              uint8
- if (scheme == TAGGED_SYMBOLS) 
- {
-    DecodeTaggedSymbols(num_symbols, num_components, out_values);
- } 
- else if (scheme == RAW_SYMBOLS) 
- {
-    DecodeRawSymbols(num_symbols, out_values);
- }
-}
-
--->
-
 
 
 # Attributes
@@ -585,46 +421,6 @@ Finally, for each attribute, an array that describes the encoding of the individ
 |  seq_att_dec_decoder_type  	|   `uint8`		| 	`0`: Generic, `1`: Integer, `2`: Quantization, `3`: Normals|
 
 
-<!---
-Attributes layout description:
-
-- Number of attributes types: `uint8`
-- An array of descriptions for each attribute type to define decoding parameters if EdgeBreaker is the used encoding method. 
-	
-    Each array entry  contains:
-	- Data ID: `uint8`
-	- Decoder type: `uint8`
-	`0` Vertex attribute, `1` Corner attribute
-	- Traversal mode: `uint8`
-	`0` Depth first traversal, `1` Prediction degree traversal
-
-- The attribute type array.
-	- Number of attributes for current type: `var32`
-	- The attribute array.
-		- Attribute type: `uint8`
-		`0` Position, `1` Normal, `2` Color, `3` Texture coordinate, `4` Generic
-		- Data type: `uint8`
-		`1` signed 8-bit, `2` unsigned 8-bit,
-		`3` signed 16-bit, `4` unsigned 16-bit,
-		`5` signed 32-bit, `6` unsigned 32-bit,
-		`7` signed 64-bit, `8` signed 64-bit,
-		`9` 32-bit single precision floating point,
-		`10` 64-bit double precision floating point,
-		`11` 8-bit Boolean
-		- Number of components: `uint8`
-		- Normalized: `uint8`
-		- Attribute ID: `var32`
-		Must uniquely identify this attribute across all attributes of all attribute types.
-	- Array of sequential attribute encoding for each attribute.
-		- Sequential attribute encoding: `uint8`
-		`0` Generic, `1` Integer, `2` Quantization, `3` Normals
-
- 
-Attributes data itself has to be decoded.
-
-[ToDo]: remove deprecated?
---->
-
 -------
 
 #### Prediction Data
@@ -650,45 +446,6 @@ If the prediction scheme is not  `-2` (*None*), the prediction type is more spec
 
  
 -------
-
-<!---
--------
-- If compression flag is set:
-	- Scheme: `uint8`
-		- `0`: Tagged: Each symbol is preceded by a fix-length (5-bit?) bit-length variable defining the bit length of the actual value following the tag.
-		- `1`: Raw: Each symbol value has the same fixed bit-length. Accepted bit length are `[1, 18]`.
-
--->
-
-<!---
-## Parse Attribute Decoders Data
-Loading data from file
-
-EdgeBreaker data:
-
-i: num_attributes_decoders
-
-	att_dec_data_id[i]                                                              uint8
-	att_dec_decoder_type[i]                                                         uint8
-	att_dec_traversal_method[i]                                                     uint8
-
-General attribute data:
-
-i: num_attributes_decoders  
-j: att_dec_num_attributes[i]
-
-	att_dec_num_attributes[i]                                                       var32
-	att_dec_att_type[i][j]                                                          uint8
-	att_dec_data_type[i][j]                                                         uint8
-	att_dec_num_components[i][j]                                                    uint8
-	att_dec_normalized[i][j]                                                        uint8
-	att_dec_unique_id[i][j]                                                         var32
-	seq_att_dec_decoder_type[i][j]                                                  uint8 
-	
-	
--->
-
-
 
 
 # Decoding Algorithm
