@@ -500,7 +500,7 @@ for (i = 0; i < NUM_UNIQUE_VALENCES; ++i)
 --
 void DecodeSymbols(num_symbols, num_components, out_values) 
 {
- scheme                                                                              UI8
+ scheme                                                                              uint8
  if (scheme == TAGGED_SYMBOLS) 
  {
     DecodeTaggedSymbols(num_symbols, num_components, out_values);
@@ -668,22 +668,22 @@ EdgeBreaker data:
 
 i: num_attributes_decoders
 
-	att_dec_data_id[i]                                                              UI8
-	att_dec_decoder_type[i]                                                         UI8
-	att_dec_traversal_method[i]                                                     UI8
+	att_dec_data_id[i]                                                              uint8
+	att_dec_decoder_type[i]                                                         uint8
+	att_dec_traversal_method[i]                                                     uint8
 
 General attribute data:
 
 i: num_attributes_decoders  
 j: att_dec_num_attributes[i]
 
-	att_dec_num_attributes[i]                                                       varUI32
-	att_dec_att_type[i][j]                                                          UI8
-	att_dec_data_type[i][j]                                                         UI8
-	att_dec_num_components[i][j]                                                    UI8
-	att_dec_normalized[i][j]                                                        UI8
-	att_dec_unique_id[i][j]                                                         varUI32
-	seq_att_dec_decoder_type[i][j]                                                  UI8 
+	att_dec_num_attributes[i]                                                       var32
+	att_dec_att_type[i][j]                                                          uint8
+	att_dec_data_type[i][j]                                                         uint8
+	att_dec_num_components[i][j]                                                    uint8
+	att_dec_normalized[i][j]                                                        uint8
+	att_dec_unique_id[i][j]                                                         var32
+	seq_att_dec_decoder_type[i][j]                                                  uint8 
 	
 	
 -->
@@ -906,12 +906,12 @@ void Decode() {
 
 ```c++
 ParseHeader() {
-  draco_string                                                                       | UI8[5]
-  major_version                                                                      | UI8
-  minor_version                                                                      | UI8
-  encoder_type                                                                       | UI8
-  encoder_method                                                                     | UI8
-  flags                                                                              | UI16
+  draco_string                                                                       | uint8[5]
+  major_version                                                                      | uint8
+  minor_version                                                                      | uint8
+  encoder_type                                                                       | uint8
+  encoder_method                                                                     | uint8
+  flags                                                                              | uint16
 }
 ```
 
@@ -935,7 +935,7 @@ void DecodeMetadata() {
 
 ```c++
 void ParseMetadataCount() {
-  num_att_metadata                                                                   | varUI32
+  num_att_metadata                                                                   | var32
 }
 ```
 
@@ -943,7 +943,7 @@ void ParseMetadataCount() {
 
 ```c++
 void ParseAttributeMetadataId(index) {
-  att_metadata_id[index]                                                             | varUI32
+  att_metadata_id[index]                                                             | var32
 }
 ```
 
@@ -951,14 +951,14 @@ void ParseAttributeMetadataId(index) {
 
 ```c++
 void ParseMetadataElement(metadata) {
-  metadata.num_entries                                                               | varUI32
+  metadata.num_entries                                                               | var32
   for (i = 0; i < metadata.num_entries; ++i) {
-    sz = metadata.key_size[i]                                                        | UI8
-    metadata.key[i]                                                                  | I8[sz]
-    sz = metadata.value_size[i]                                                      | UI8
-    metadata.value[i]                                                                | I8[sz]
+    sz = metadata.key_size[i]                                                        | uint8
+    metadata.key[i]                                                                  | int8[sz]
+    sz = metadata.value_size[i]                                                      | uint8
+    metadata.value[i]                                                                | int8[sz]
   }
-  metadata.num_sub_metadata                                                          | varUI32
+  metadata.num_sub_metadata                                                          | var32
 }
 ```
 
@@ -966,8 +966,8 @@ void ParseMetadataElement(metadata) {
 
 ```c++
 void ParseSubMetadataKey(metadata, index) {
-  sz = metadata.sub_metadata_key_size[index]                                         | UI8
-  metadata.sub_metadata_key[index]                                                   | I8[sz]
+  sz = metadata.sub_metadata_key_size[index]                                         | uint8
+  metadata.sub_metadata_key[index]                                                   | int8[sz]
 }
 ```
 
@@ -1005,9 +1005,9 @@ void DecodeConnectivityData() {
 
 ```c++
 void ParseSequentialConnectivityData() {
-  num_faces                                                                          | varUI32
-  num_points                                                                         | varUI32
-  connectivity_method                                                                | UI8
+  num_faces                                                                          | var32
+  num_points                                                                         | var32
+  connectivity_method                                                                | uint8
 }
 ```
 
@@ -1017,7 +1017,7 @@ void ParseSequentialConnectivityData() {
 void ParseSequentialIndicesUI8() {
   for (i = 0; i < num_faces; ++i) {
     for (j = 0; j < 3; ++j) {
-      face_to_vertex[j][i]                                                           | UI8
+      face_to_vertex[j][i]                                                           | uint8
     }
   }
 }
@@ -1029,7 +1029,7 @@ void ParseSequentialIndicesUI8() {
 void ParseSequentialIndicesUI16() {
   for (i = 0; i < num_faces; ++i) {
     for (j = 0; j < 3; ++j) {
-      face_to_vertex[j][i]                                                           | UI16
+      face_to_vertex[j][i]                                                           | uint16
     }
   }
 }
@@ -1041,7 +1041,7 @@ void ParseSequentialIndicesUI16() {
 void ParseSequentialIndicesVarUI32() {
   for (i = 0; i < num_faces; ++i) {
     for (j = 0; j < 3; ++j) {
-      face_to_vertex[j][i]                                                           | varUI32
+      face_to_vertex[j][i]                                                           | var32
     }
   }
 }
@@ -1053,7 +1053,7 @@ void ParseSequentialIndicesVarUI32() {
 void ParseSequentialIndicesUI32() {
   for (i = 0; i < num_faces; ++i) {
     for (j = 0; j < 3; ++j) {
-      face_to_vertex[j][i]                                                           | UI32
+      face_to_vertex[j][i]                                                           | uint32
     }
   }
 }
@@ -1115,12 +1115,12 @@ void DecodeSequentialConnectivityData() {
 
 ```c++
 void ParseEdgebreakerConnectivityData() {
-  edgebreaker_traversal_type                                                         | UI8
-  num_encoded_vertices                                                               | varUI32
-  num_faces                                                                          | varUI32
-  num_attribute_data                                                                 | UI8
-  num_encoded_symbols                                                                | varUI32
-  num_encoded_split_symbols                                                          | varUI32
+  edgebreaker_traversal_type                                                         | uint8
+  num_encoded_vertices                                                               | var32
+  num_faces                                                                          | var32
+  num_attribute_data                                                                 | uint8
+  num_encoded_symbols                                                                | var32
+  num_encoded_split_symbols                                                          | var32
 }
 ```
 
@@ -1128,10 +1128,10 @@ void ParseEdgebreakerConnectivityData() {
 
 ```c++
 void ParseTopologySplitEvents() {
-  num_topology_splits                                                                | varUI32
+  num_topology_splits                                                                | var32
   for (i = 0; i < num_topology_splits; ++i) {
-    source_id_delta[i]                                                               | varUI32
-    split_id_delta[i]                                                                | varUI32
+    source_id_delta[i]                                                               | var32
+    split_id_delta[i]                                                                | var32
   }
   for (i = 0; i < num_topology_splits; ++i) {
     source_edge_bit[i]                                                               | f[1]
@@ -1504,8 +1504,8 @@ void ProcessInteriorEdges() {
 
 ```c++
 void ParseEdgebreakerTraversalStandardSymbolData() {
-  sz = eb_symbol_buffer_size                                                         | varUI64
-  eb_symbol_buffer                                                                   | UI8[sz]
+  sz = eb_symbol_buffer_size                                                         | var64
+  eb_symbol_buffer                                                                   | uint8[sz]
 }
 ```
 
@@ -1513,9 +1513,9 @@ void ParseEdgebreakerTraversalStandardSymbolData() {
 
 ```c++
 void ParseEdgebreakerTraversalStandardFaceData() {
-  eb_start_face_buffer_prob_zero                                                     | UI8
-  sz = eb_start_face_buffer_size                                                     | varUI32
-  eb_start_face_buffer                                                               | UI8[sz]
+  eb_start_face_buffer_prob_zero                                                     | uint8
+  sz = eb_start_face_buffer_size                                                     | var32
+  eb_start_face_buffer                                                               | uint8[sz]
 }
 ```
 
@@ -1524,9 +1524,9 @@ void ParseEdgebreakerTraversalStandardFaceData() {
 ```c++
 void ParseEdgebreakerTraversalStandardAttributeConnectivityData() {
   for (i = 0; i < num_attribute_data; ++i) {
-    attribute_connectivity_decoders_prob_zero[i]                                     | UI8
-    sz = attribute_connectivity_decoders_size[i]                                     | varUI32
-    attribute_connectivity_decoders_buffer[i]                                        | UI8[sz]
+    attribute_connectivity_decoders_prob_zero[i]                                     | uint8
+    sz = attribute_connectivity_decoders_size[i]                                     | var32
+    attribute_connectivity_decoders_buffer[i]                                        | uint8[sz]
   }
 }
 ```
@@ -1718,7 +1718,7 @@ void EdgeBreakerAttributeTraverser_ProcessCorner(corner_id) {
 
 ```c++
 void ParseValenceContextCounters(index) {
-  ebv_context_counters[index]                                                        | varUI32
+  ebv_context_counters[index]                                                        | var32
 }
 ```
 
@@ -1867,25 +1867,25 @@ void PredictionDegree_TraverseFromCorner(corner_id) {
 
 ```c++
 void ParseAttributeDecodersData() {
-  num_attributes_decoders                                                            | UI8
+  num_attributes_decoders                                                            | uint8
   if (encoder_method == MESH_EDGEBREAKER_ENCODING) {
     for (i = 0; i < num_attributes_decoders; ++i) {
-      att_dec_data_id[i]                                                             | UI8
-      att_dec_decoder_type[i]                                                        | UI8
-      att_dec_traversal_method[i]                                                    | UI8
+      att_dec_data_id[i]                                                             | uint8
+      att_dec_decoder_type[i]                                                        | uint8
+      att_dec_traversal_method[i]                                                    | uint8
     }
   }
   for (i = 0; i < num_attributes_decoders; ++i) {
-    att_dec_num_attributes[i]                                                        | varUI32
+    att_dec_num_attributes[i]                                                        | var32
     for (j = 0; j < att_dec_num_attributes[i]; ++j) {
-      att_dec_att_type[i][j]                                                         | UI8
-      att_dec_data_type[i][j]                                                        | UI8
-      att_dec_num_components[i][j]                                                   | UI8
-      att_dec_normalized[i][j]                                                       | UI8
-      att_dec_unique_id[i][j]                                                        | varUI32
+      att_dec_att_type[i][j]                                                         | uint8
+      att_dec_data_type[i][j]                                                        | uint8
+      att_dec_num_components[i][j]                                                   | uint8
+      att_dec_normalized[i][j]                                                       | uint8
+      att_dec_unique_id[i][j]                                                        | var32
     }
     for (j = 0; j < att_dec_num_attributes[i]; ++j) {
-      seq_att_dec_decoder_type[i][j]                                                 | UI8
+      seq_att_dec_decoder_type[i][j]                                                 | uint8
     }
   }
 }
@@ -2333,10 +2333,10 @@ bool IsOnBoundary(att_dec, vert_id) {
 
 ```c++
 void ParsePredictionData() {
-  seq_att_dec_prediction_scheme[curr_att_dec][curr_att]                              | I8
+  seq_att_dec_prediction_scheme[curr_att_dec][curr_att]                              | int8
   if (seq_att_dec_prediction_scheme[curr_att_dec][curr_att] != PREDICTION_NONE) {
-    seq_att_dec_prediction_transform_type[curr_att_dec][curr_att]                    | I8
-    seq_int_att_dec_compressed[curr_att_dec][curr_att]                               | UI8
+    seq_att_dec_prediction_transform_type[curr_att_dec][curr_att]                    | int8
+    seq_int_att_dec_compressed[curr_att_dec][curr_att]                               | uint8
   }
 }
 ```
@@ -2376,8 +2376,8 @@ void DecodeDataNeededByPortableTransforms() {
 
 ```c++
 void ParseWrapTransformData() {
-  pred_trasnform_wrap_min[curr_att_dec][curr_att]                                    | I32
-  pred_trasnform_wrap_max[curr_att_dec][curr_att]                                    | I32
+  pred_trasnform_wrap_min[curr_att_dec][curr_att]                                    | int32
+  pred_trasnform_wrap_max[curr_att_dec][curr_att]                                    | int32
 }
 ```
 
@@ -2385,8 +2385,8 @@ void ParseWrapTransformData() {
 
 ```c++
 void ParseNormalOctahedronCanonicalizedTransformData() {
-  pred_trasnform_normal_max_q_val[curr_att_dec][curr_att]                            | I32
-  unused_center_value                                                                | I32
+  pred_trasnform_normal_max_q_val[curr_att_dec][curr_att]                            | int32
+  unused_center_value                                                                | int32
 }
 ```
 
@@ -2408,9 +2408,9 @@ void DecodeTransformData() {
 
 ```c++
 void ParsePredictionRansData() {
-  prediction_rans_prob_zero                                                          | UI8
-  sz = prediction_rans_data_size                                                     | varUI32
-  prediction_rans_data_buffer                                                        | UI8[sz]
+  prediction_rans_prob_zero                                                          | uint8
+  sz = prediction_rans_data_size                                                     | var32
+  prediction_rans_data_buffer                                                        | uint8[sz]
 }
 ```
 
@@ -2418,7 +2418,7 @@ void ParsePredictionRansData() {
 
 ```c++
 void ParseConstrainedMultiNumFlags() {
-  constrained_multi_num_flags                                                        | varUI32
+  constrained_multi_num_flags                                                        | var32
 }
 ```
 
@@ -2446,7 +2446,7 @@ void DecodePredictionData_ConstrainedMulti() {
 
 ```c++
 void ParseTexCoordsNumOrientations() {
-  tex_coords_num_orientations                                                        | UI32
+  tex_coords_num_orientations                                                        | uint32
 }
 ```
 
@@ -2565,7 +2565,7 @@ void PredictionScheme_ComputeOriginalValues(method, num_values) {
 
 ```c++
 void ParseQuantizationBits() {
-  quantized_data_quantization_bits[curr_att_dec][curr_att]                           | UI8
+  quantized_data_quantization_bits[curr_att_dec][curr_att]                           | uint8
 }
 ```
 
@@ -2575,9 +2575,9 @@ void ParseQuantizationBits() {
 void ParseQuantizationData() {
   num_components = GetNumComponents();
   for (j = 0; j < num_components; ++j) {
-    quantized_data_min_values[curr_att_dec][curr_att][i]                             | Float
+    quantized_data_min_values[curr_att_dec][curr_att][i]                             | float
   }
-  quantized_data_max_value_df[curr_att_dec][curr_att]                                | Float
+  quantized_data_max_value_df[curr_att_dec][curr_att]                                | float
   ParseQuantizationBits();
 }
 ```
@@ -3412,7 +3412,7 @@ void MeshPredictionSchemeConstrainedMultiParallelogramDecoder_ComputeOriginalVal
 
 ```c++
 void DecodeSymbols(num_symbols, num_components, out_values) {
-  scheme                                                                             | UI8
+  scheme                                                                             | uint8
   if (scheme == TAGGED_SYMBOLS) {
     DecodeTaggedSymbols(num_symbols, num_components, out_values);
   } else if (scheme == RAW_SYMBOLS) {
@@ -3425,10 +3425,10 @@ void DecodeSymbols(num_symbols, num_components, out_values) {
 
 ```c++
 void DecodeTaggedSymbols(num_values, num_components, out_values) {
-  num_symbols_                                                                       | varUI32
+  num_symbols_                                                                       | var32
   BuildSymbolTables(num_symbols_, lut_table_, probability_table_);
-  size                                                                               | varUI64
-  encoded_data                                                                       | UI8[size]
+  size                                                                               | var64
+  encoded_data                                                                       | uint8[size]
   RansInitDecoder(ans_decoder_, &encoded_data[0], size, TAGGED_RANS_BASE);
   for (i = 0; i < num_values; i += num_components) {
     RansRead(ans_decoder_, TAGGED_RANS_BASE, TAGGED_RANS_PRECISION,
@@ -3446,8 +3446,8 @@ void DecodeTaggedSymbols(num_values, num_components, out_values) {
 
 ```c++
 void DecodeRawSymbols(num_values, out_values) {
-  max_bit_length                                                                     | UI8
-  num_symbols_                                                                       | varUI32
+  max_bit_length                                                                     | uint8
+  num_symbols_                                                                       | var32
   rans_precision_bits  = (3 * max_bit_length) / 2;
   if (rans_precision_bits > 20)
     rans_precision_bits = 20;
@@ -3456,8 +3456,8 @@ void DecodeRawSymbols(num_values, out_values) {
   rans_precision = 1 << rans_precision_bits;
   l_rans_base = rans_precision * 4;
   BuildSymbolTables(num_symbols_, lut_table_, probability_table_);
-  size                                                                               | varUI64
-  buffer                                                                             | UI8[size]
+  size                                                                               | var64
+  buffer                                                                             | uint8[size]
   RansInitDecoder(ans_decoder_, &buffer[0], size, l_rans_base);
   for (i = 0; i < num_values; ++i) {
     RansRead(ans_decoder_, l_rans_base, rans_precision,
@@ -3474,7 +3474,7 @@ void BuildSymbolTables(num_symbols_, lut_table_, probability_table_) {
   for (i = 0; i < num_symbols_; ++i) {
     // Decode the first byte and extract the number of extra bytes we need to
     // get, or the offset to the next symbol with non-zero probability.
-    prob_data                                                                        | UI8
+    prob_data                                                                        | uint8
     token = prob_data & 3;
     if (token == 3) {
       offset = prob_data >> 2;
@@ -3485,7 +3485,7 @@ void BuildSymbolTables(num_symbols_, lut_table_, probability_table_) {
     } else {
       prob = prob_data >> 2;
       for (j = 0; j < token; ++j) {
-        eb                                                                           | UI8
+        eb                                                                           | uint8
         prob = prob | (eb << (8 * (j + 1) - 2));
       }
       token_probs[i] = prob;
@@ -3849,7 +3849,7 @@ uint64_t LEB128() {
   result = 0;
   shift = 0;
   while(true) {
-    in                                                                               | UI8
+    in                                                                               | uint8
     result |= (low order 7 bits of in) << shift;
     if (high order bit of in == 0)
       break;
