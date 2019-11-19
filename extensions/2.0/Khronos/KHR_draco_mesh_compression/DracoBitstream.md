@@ -169,7 +169,7 @@ The decompressed data of size *num_faces * 3 * sizeof( uint32 )* stores index di
 The conversion from raw buffer values to signed integer values is done by shifting the bits to the right by one digit. 
 The consumed rightmost bit determines the sign of the value respectively (1 represents a negative value, 0 represents a positive value). 
 Obtained signed integer values represent the differences of subsequent indices. 
-This means, an additional interim stage is needed to generate index values by stepping through the buffer and summing up the values. 
+This means, an additional interim stage is required to generate index values by stepping through the buffer and summing up the values. 
 At each buffer position, the current sum represents the absolute index value.
 
 
@@ -258,8 +258,8 @@ Master function: DecodeEdgebreakerConnectivityData
 	In this section, the actual connectivity is constructed. 
 * =spirale reversi paper algortihm????
 * =mesh_edgebreaker_decoder_impl.h ???
-
 -->
+
 Another possibility to describe the connectivity of vertices is a sequence of symbols that describe a traversal scheme, which is specialized for meshes. 
 An efficient decompression algorithm is described by Isenburg and Snoeyink in *Spirale Reversi: Reverse decoding of the Edgebreaker encoding* in 2001.
 This algorithm, however, traverses the symbols in reverse order. 
@@ -519,27 +519,85 @@ void DecodeSymbols(num_symbols, num_components, out_values)
 
 The attributes data contains two sections. The first section is the attribute header. 
 The second section is comprised of one or more attribute types, such as positions, texture coordinates, normals.
-Each attribute type section is comprised of one or more unique attributes.
+The attribute type is defining the decoder for the underlying attribute sets. 
+Each attribute type/decoder section is comprised of one or more unique attributes, e.g., the position attribute type can be composed of individual position attributes.
 
 <figure>
   <img alt="" src="figures/attributes.svg">
-  <figcaption>Attribute data format.</figcaption>
+  <figcaption></figcaption>
 </figure>
 
 
 
+#### Common Attribute Header
 
+At first, a common attribute header is given that specifies the number of encoded attribute types:
+
+| Variable						| Data Type     | Description									|
+| ----------------------------- |:-------------:|:---------------------------------------------:|  
+|  num_attributes_decoders  	|   `uint8`		| Number of attribute types defining the number of attribute decoders |
+
+
+
+#### Attribute Type EdgeBreaker Information
+If EdgeBreaker is the used encoding method, an array of descriptions is given for each attribute decoder:
+
+ 
+
+| Variable						| Data Type     | Description									|
+| ----------------------------- |:-------------:|:---------------------------------------------:|  
+|  att_dec_data_id  			|   `uint8`		| Data ID of attribute type										|
+|  att_dec_decoder_type			|   `uint8`		|`0`: Vertex attribute, `1`: Corner attribute		|
+|  att_dec_traversal_method  	|   `uint8`		|`0`: Depth first traversal, `1`: Prediction degree traversal	|
+
+
+#### Attribute Type Header
+
+Afterwards, for each attribute decoder, at first, a variable is read that defines the number of attributes contained:
+ 
+
+| Variable						| Data Type     | Description									|
+| ----------------------------- |:-------------:|:---------------------------------------------:|  
+|  att_dec_num_attributes  		|   `uint8`		| Number of attributes contained in one attribute type/decoder 
+
+
+#### Attribute Header
+
+Then, a descriptive attribute header is following for each attribute:
+
+
+
+| Variable						| Data Type     | Description									|
+| ----------------------------- |:-------------:|:---------------------------------------------:|  
+|  att_dec_att_type  			|   `uint8`		| `0`: Position, `1`: Normal, `2`: Color, `3`: Texture coordinate, `4`: Generic	|
+|  att_dec_data_type  			|   `uint8`		| `1`: signed 8-bit, `2`: unsigned 8-bit,`3`: signed 16-bit, `4`: unsigned 16-bit,`5`: signed 32-bit, `6`: unsigned 32-bit, 	`7`: signed 64-bit, `8`: signed 64-bit,		`9`: 32-bit single precision floating point,	`10`: 64-bit double precision floating point,		`11`: 8-bit Boolean	|
+|  att_dec_num_components  		|   `uint8`		| Number of components							|
+|  att_dec_normalized			|   `uint8`		| Normalized or unnormalized values									|
+|  att_dec_unique_id			|   `var32`		| ID that uniquely identifys this attribute across all attributes |
+
+
+#### Attribute Decode Information
+
+Finally, for each attribute, an array that describes the encoding of the individual attributes is following:
+
+| Variable						| Data Type     | Description									|
+| ----------------------------- |:-------------:|:---------------------------------------------:|  
+|  seq_att_dec_decoder_type  	|   `uint8`		| 	`0`: Generic, `1`: Integer, `2`: Quantization, `3`: Normals|
+
+
+<!---
 Attributes layout description:
 
 - Number of attributes types: `uint8`
 - An array of descriptions for each attribute type to define decoding parameters if EdgeBreaker is the used encoding method. 
 	
     Each array entry  contains:
-	- Data id: `uint8`
+	- Data ID: `uint8`
 	- Decoder type: `uint8`
 	`0` Vertex attribute, `1` Corner attribute
 	- Traversal mode: `uint8`
 	`0` Depth first traversal, `1` Prediction degree traversal
+
 - The attribute type array.
 	- Number of attributes for current type: `var32`
 	- The attribute array.
@@ -555,40 +613,52 @@ Attributes layout description:
 		`11` 8-bit Boolean
 		- Number of components: `uint8`
 		- Normalized: `uint8`
-		- Attribute id: `var32`
+		- Attribute ID: `var32`
 		Must uniquely identify this attribute across all attributes of all attribute types.
 	- Array of sequential attribute encoding for each attribute.
 		- Sequential attribute encoding: `uint8`
 		`0` Generic, `1` Integer, `2` Quantization, `3` Normals
 
-<!---
+ 
 Attributes data itself has to be decoded.
 
 [ToDo]: remove deprecated?
 --->
-Attribute:
-- Prediction scheme: `int8`
-	- `-2` None: There is no attribute data
-	- `0` Difference: Implies that the attribute entries have two components.
-	- `1` Parallelogram
-	- `2` Multi parallelogram
-	- `3` Texture coordinates (deprecated)
-	- `4` Constrained multi parallelogram
-	- `5` Texture coordinates portable 
-	- `6` Geometric normal
-- Prediction transform type, if the prediction scheme is not *None*.
-	- `-1` None
-	- `0` Delta
-	- `1` Wrap: (currently the only supported prediction transform type by github.com/google/draco)
-	- `2` Normal octahedron
-	- `3` Canonicalized normal octahedron
-- Flag whether values are compressed: `uint8`
+
+-------
+
+#### Prediction Data
+
+For each attribute, additional prediction data is given:
+ 
+
+| Variable						| Data Type     | Description									|
+| ----------------------------- |:-------------:|:---------------------------------------------:|  
+|  seq_att_dec_prediction_scheme  	|   `int8`		| `-2`: None, `0`: Difference: Implies that the attribute entries have two components, `1`: Parallelogram, `2`: Multi parallelogram, `3`: Texture coordinates (deprecated), `4`: Constrained multi parallelogram, `5`: Texture coordinates portable , `6`: Geometric normal|
+
+
+
+
+If the prediction scheme is not  `-2` (*None*), the prediction type is more specifically detailed by following values:
+
+
+| Variable						| Data Type     | Description									|
+| ----------------------------- |:-------------:|:---------------------------------------------:|  
+|  seq_att_dec_prediction_transform_type  	|   `int8`		|`-1`: None, `0`: Delta, `1`: Wrap: (currently the only supported prediction transform type by github.com/google/draco), `2`: Normal octahedron, `3`: Canonicalized normal octahedron |
+|  seq_int_att_dec_compressed  	|   `uint8`		|Flag whether values are compressed |
+
+
+ 
+-------
+
+<!---
+-------
 - If compression flag is set:
 	- Scheme: `uint8`
-		- `0` Tagged: Each symbol is preceded by a fix-length (5-bit?) bit-length variable defining the bit length of the actual value following the tag.
-		- `1` Raw: Each symbol value has the same fixed bit-length. Accepted bit length are `[1, 18]`.
+		- `0`: Tagged: Each symbol is preceded by a fix-length (5-bit?) bit-length variable defining the bit length of the actual value following the tag.
+		- `1`: Raw: Each symbol value has the same fixed bit-length. Accepted bit length are `[1, 18]`.
 
-
+-->
 
 <!---
 ## Parse Attribute Decoders Data
@@ -624,6 +694,7 @@ j: att_dec_num_attributes[i]
 # Decoding Algorithm
 
 The following section describes the complete decoding process of a Draco encoded file.
+For this, we use a notation similar to C++. Relevant conventions and used constants are stated in the following.
 
 ## Conventions
 
@@ -639,6 +710,19 @@ All integer and floating point formats are little endian.
 - `f{n}` is an unsigned `n`-bit number with decreasing digit place value. The number is appended by padding bits to the next byte so that data remains byte-aligned.
 
 ### Operations 
+
+The functions `assign`, `back`, `empty`, `op_back`, `push_back`, and `size` behave similarly on arrays as it is defined for C++ std::vector.
+
+The function `ReadBits(X)`, reads the next X bits from an array.
+
+Read operations from the bitstream are indicated by separating the respective variable type on the right side of the code listing.
+E.g., the following code listing writes an `uint16` value to the variable `num` and uses this variable to write `num` times `uint8` values to an array named `buffer`.    
+	
+	num				| uint16
+	buffer				| uint8[num]
+
+Afterwards, the array `buffer` contains `num` elements of type `uint8`.
+ 
 
 
 #### Arithmetic operators
@@ -788,6 +872,13 @@ from syntax elements values.
   * 3: TOPOLOGY_L
   * 5: TOPOLOGY_R
   * 7: TOPOLOGY_E
+
+* Edgebreaker symbol lookup Array:
+  * edge_breaker_symbol_to_topology_id[0]  = TOPOLOGY_C
+  * edge_breaker_symbol_to_topology_id[1]  = TOPOLOGY_S
+  * edge_breaker_symbol_to_topology_id[2]  = TOPOLOGY_L
+  * edge_breaker_symbol_to_topology_id[3]  = TOPOLOGY_R
+  * edge_breaker_symbol_to_topology_id[4]  = TOPOLOGY_E
 
 * Valence EdgeBreaker constants
   * 2: MIN_VALENCE
