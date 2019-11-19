@@ -4,7 +4,7 @@
 This document defines the bitstream format and decoding process for the _Draco 3D Data Compression_ scheme.
 The document is structured as follows. 
 The first part describes the individual data blocks of a Draco compressed file. 
-The second part shows the algorithmic details by giving pseudocode listing. 
+The second part shows the algorithmic details by giving a pseudocode listing. 
 
 
 # Draco File Format
@@ -35,28 +35,27 @@ Draco String | `uint8[5]` | Must equal "DRACO"
 Major version | `uint8` | Bitstream major version number
 Minor version | `uint8` | Bitstream minor version number
 Encoder type | `uint8` | `0`: Point cloud, `1`: Triangular mesh
-Encoder method | `uint8` | `0`: Sequential encoding, `1`: Mesh EdgeBreaker encoding 
+Encoder method | `uint8` | `0`: Sequential connectivity, `1`: EdgeBreaker connectivity 
 Flags | `uint16` | `0`: No flag, `0x8000`: Metadata present 
 
 
 # Metadata
 
 This section is only present if `DracoHeader.Flags` contains the flag `0x8000`.
-It contains a list of metadata records which relate to specific attributes and a global metadata record. 
-Each meta data record contains a name-value pair list together with a list of sub metadata records, forming a metadata record tree. 
-Each sub metadata record is a name-metadata pair. 
-The `i`'th  attribute metadata record relates the attribute referenced by the `i`'th attribute metadata id.
 
-To avoid ambiguities, each id inside the attribute meta data id array must be unique. Otherwise, multiple meta data records would relate to the same attribute.
+
+It contains a variable that specifies the number of encoded metadata elements followed by a list of metadata attribute IDs and a list of metadata attribute records.
+Finally, a single metadata record is encoded that refers to the file itself. 
+This structure is depicted in the following: 
 
 Name | Type
 -|-
-Count of metadata records | `var32`
-Array of attribute meta data ids | `var32[]`
-Array of attribute meta data records | `Metadata[]`
-Global metadata | `Metadata`
+Number of metadata records | `var32`
+Array of attribute metadata IDs | `var32[]`
+Array of attribute metadata records | `Metadata[]`
+File metadata | `Metadata`
 
-`Metadata` designates a single metadata record. Each record can contain zero or more name-value entries. 
+`Metadata` denotes a single metadata record. Each record can contain zero or more name-value entries. 
 `Metadata` is a recursive type as it can contain zero or more sub metadata records where each sub metadata record is a name-metadata pair.
 
 `Metadata`:
@@ -68,12 +67,19 @@ Global metadata | `Metadata`
 	- Value size: `uint8`
 	- Value: `int8[]`
 - Number of sub metadata records: `var32`
-- Sub meta data array:
+- Sub metadata array:
 	- Name size: `uint8`
 	- Name: `int8[]`
 	- Sub metadata: `Metadata` (Here, the type recurses. This is not a reference or index.)
 
 
+
+Each metadata record contains a name-value pair list together with a list of sub metadata records, forming a metadata record tree. 
+Each sub metadata record is a name-metadata pair, again. 
+The `i`'th  attribute metadata record relates to the attribute referenced by the `i`'th attribute metadata ID.
+
+To avoid ambiguities, each ID inside the attribute metadata ID array must be unique. 
+Otherwise, multiple metadata records would relate to the same attribute.
 
 
 # Connectivity  
@@ -83,7 +89,7 @@ Global metadata | `Metadata`
 In general, the Draco file format stores connectivity and geometry information separately. 
 In this section, it is shown how connectivity information is stored and how this connectivity information is used to construct individual faces.
 
-Draco files support multiple encoding methods. 
+Draco files support multiple connectivity encoding methods. 
 Sequential connectivity encoding methods preserve the order of the underlying data, whereas usually higher compression rates can be expected when using the EdgeBreaker algorithm.
  
 Which algorithm was used to encode the connectivity is defined by `encoder_method` (stored in the Draco header):
@@ -202,14 +208,15 @@ ABCD >> 1 ==  AABC ??
 
 ## EdgeBreaker Connectivity
 
-Another possibility to describe the connectivity of vertices is a sequence of symbols that describe a traversal scheme, which is specialized for meshes. 
-An efficient decompression algorithm is described by Isenburg and Snoeyink in *Spirale Reversi: Reverse decoding of the Edgebreaker encoding* in 2001.
+Another possibility to describe the connectivity of vertices is given by a sequence of symbols that represent a traversal scheme, which is specialized for meshes. 
+An efficient decompression algorithm for this symbol sequence is described by Isenburg and Snoeyink in *Spirale Reversi: Reverse decoding of the Edgebreaker encoding* in 2001.
 This algorithm, however, traverses the symbols in reverse order. 
 To speed up decoding, all symbols in Draco files are encoded in reverse order, i.e., they can be used directly for constructing the connectivity without prior reordering.
 Draco encoded files feature two different EdgeBreaker traversal types, that require specific data blocks. 
 The used EdgeBreaker traversal type is denoted in the EdgeBreaker header data block. 
-In the following, required data blocks and their respective order used for standard EdgeBreaker traversal and valence EdgeBreaker traversal are shown. 
-Afterwards, contained data blocks are described in detail. 
+
+At first, an overview over required data blocks and their respecive position is given for the standard EdgeBreaker traversal algorithm and the valence EdgeBreaker traversal algorithm.
+Afterwards, these data blocks are described in detail. 
 
 
 
@@ -234,7 +241,7 @@ The fifth section is the attribute connectivity data.
  
 The valence EdgeBreaker connectivity adds one section after the attribute connectivity data. 
 This section provides context data for the valence prediction (_Valence Context Data_).
-The symbol data block, however, is removed compared to the standard EdgeBreaker data structure. 
+
 
 
 <figure>
@@ -310,17 +317,17 @@ The number of actual EdgeBreaker symbols `num_encoded_symbols` is specified in t
 The decoding of individual symbols consists of two steps.
 At first, one bit is read from `eb_symbol_buffer`. 
 If this bit equals *0*, the current symbol is of type `TOPOLOGY_C` and no additional bits have to be read to decode this symbol. 
-If the bit equals *1*, two additional bits are read. 
-The following table shows the mapping of these 3 read bits to a topology symbol and symbol ID:
+If the bit equals *1*, two additional bits have to be read. 
+The following table shows the mapping of these 3 read bits to a topology symbol:
 
 
-|Topology Symbol| Bit Pattern   | Topology ID |
-| ------------- |:-------------:|:---------:|  
-|  TOPOLOGY_C	|   0			|0
-|  TOPOLOGY_S   |   100			|1
-|  TOPOLOGY_L   |   110			|2
-|  TOPOLOGY_R	|   101         |3
-|  TOPOLOGY_E   |   111         |4
+|Topology Symbol| Bit Pattern   | 
+| ------------- |:-------------:|
+|  C			|	0			|
+|  S			|   100			|
+|  L			|   110			|
+|  R			|   101			|
+|  E			|   111			|
 
 
 
@@ -335,7 +342,7 @@ That number of start face IDs of type uint8 is loaded into the buffer `eb_start_
 #### Attribute Connectivity Data
 
 The number of attribute connectivity data that has to be loaded is defined in the EdgeBreaker header by the variable `num_attribute_data`.
-For each attribute data element `i`, i.e., `num_attribute_data` times, a porobability value of type uint8 is loaded into `attribute_connectivity_decoders_prob_zero[i]`, 
+For each attribute data element `i`, i.e., `num_attribute_data` times, a probability value of type uint8 is loaded into `attribute_connectivity_decoders_prob_zero[i]`, 
 a var32 value is loaded that indicates the number of connectivity decoders (`attribute_connectivity_decoders_size[i]`), 
 and that number of uint8 values is loaded into `attribute_connectivity_decoders_buffer[i]`.
 
@@ -353,10 +360,11 @@ Then, that number of symbols is obtained by decoding a __rANS__ encoded data blo
 
 # Attributes
 
-The attributes data contains two sections. The first section is the attribute header. 
+The attributes data contains two sections. 
+The first section is the attribute header. 
 The second section is comprised of one or more attribute types, such as positions, texture coordinates, normals.
 The attribute type is defining the decoder for the underlying attribute sets. 
-Each attribute type/decoder section is comprised of one or more unique attributes, e.g., the position attribute type can be composed of individual position attributes.
+Each attribute type/decoder section is comprised of one or more unique attributes, e.g., the position attribute type can be composed of individual position attributes (used in different meshes).
 
 <figure>
   <img alt="" src="figures/attributes.svg">
@@ -407,9 +415,9 @@ Then, a descriptive attribute header is following for each attribute:
 | ----------------------------- |:-------------:|:---------------------------------------------:|  
 |  att_dec_att_type  			|   `uint8`		| `0`: Position, `1`: Normal, `2`: Color, `3`: Texture coordinate, `4`: Generic	|
 |  att_dec_data_type  			|   `uint8`		| `1`: signed 8-bit, `2`: unsigned 8-bit,`3`: signed 16-bit, `4`: unsigned 16-bit,`5`: signed 32-bit, `6`: unsigned 32-bit, 	`7`: signed 64-bit, `8`: signed 64-bit,		`9`: 32-bit single precision floating point,	`10`: 64-bit double precision floating point,		`11`: 8-bit Boolean	|
-|  att_dec_num_components  		|   `uint8`		| Number of components							|
-|  att_dec_normalized			|   `uint8`		| Normalized or unnormalized values									|
-|  att_dec_unique_id			|   `var32`		| ID that uniquely identifys this attribute across all attributes |
+|  att_dec_num_components  		|   `uint8`		| Number of components													|
+|  att_dec_normalized			|   `uint8`		| Flag whether values are normalized 								|
+|  att_dec_unique_id			|   `var32`		| ID that uniquely identifys this attribute across all attributes		|
 
 
 #### Attribute Decode Information
@@ -548,15 +556,7 @@ are defined as follows:
   <figcaption></figcaption>
 </figure>
 
-#### Method of describing bitstream syntax
 
-Each syntax element is described by its name (using only lower case letters
-with underscore characters) and a descriptor for its method of coded
-representation. The decoding process behaves according to the value of the
-syntax element and to the values of previously decoded syntax elements.
-
-In some cases the syntax tables may use the values of other variables derived
-from syntax elements values.
 
 ### Constants
 
