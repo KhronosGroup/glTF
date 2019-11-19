@@ -783,26 +783,13 @@ Afterwards, the array `buffer` contains `num` elements of type `uint8`.
 #### Mathematical functions
 
 
-The following mathematical functions are defined as follows:
+The following mathematical functions (Abs, Min, and Max)
+are defined as follows:
 
-[ToDo: use images in MarkDown for math formulas?]
-
-<script type="math/asciimath">
-"Abs"(x)={[x;,x >= 0],[-x;,x<0]}
-</script>
-
-<br>
-
-<script type="math/asciimath">
-"Min"(x,y)={[x;,x<=y],[y;,x>y]}
-</script>
-
-<br>
-
-<script type="math/asciimath">
-"Max"(x,y)={[x;,x>=y],[y;,x<y]}
-</script>
-
+<figure>
+  <img alt="" src="figures/mathFormulas.svg">
+  <figcaption></figcaption>
+</figure>
 
 #### Method of describing bitstream syntax
 

@@ -203,21 +203,11 @@ The function ReadBits(X), reads the next X bits from an array.
 The following mathematical functions (Abs, Min, and Max)
 are defined as follows:
 
-<script type="math/asciimath">
-"Abs"(x)={[x;,x >= 0],[-x;,x<0]}
-</script>
+<figure>
+  <img alt="" src="figures/mathFormulas.svg">
+  <figcaption>Figure 6. Mathematical functions.</figcaption>
+</figure>
 
-<br>
-
-<script type="math/asciimath">
-"Min"(x,y)={[x;,x<=y],[y;,x>y]}
-</script>
-
-<br>
-
-<script type="math/asciimath">
-"Max"(x,y)={[x;,x>=y],[y;,x<y]}
-</script>
 
 
 ## 2.10 Method of describing bitstream syntax
