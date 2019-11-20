@@ -112,7 +112,7 @@ Extensions start as a vendor extension, then can become a multi-vendor extension
 
 ### Naming
 
-> **NOTE:** For historical reasons, older extensions may not follow these naming guidelines. All future extensions should strive to do so.
+> **NOTE:** For historical reasons, older extensions may not follow these guidelines. Future extensions should do so.
 
 1. Names MUST begin with a prefix, followed by an underscore. Prefixes are `KHR_` for [Khronos extensions](#khronos-extensions-2), `EXT_` for [Multi-vendor extensions](#multi-vendor-extensions), and others may be reserved for [Vendor extensions](#vendor-extensions-2).
 2. Names MUST use lowercase snake-case following the prefix, e.g. `KHR_materials_unlit`.
