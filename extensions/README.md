@@ -112,11 +112,12 @@ Extensions start as a vendor extension, then can become a multi-vendor extension
 
 ### Naming
 
-All extension names begin with a prefix followed by an underscore. Prefixes are `KHR_` for [Khronos extensions](#khronos-extensions-2), `EXT_` for [Multi-vendor extensions](#multi-vendor-extensions), and others may be reserved for [Vendor extensions](#vendor-extensions-2).
+> **NOTE:** For historical reasons, older extensions may not follow these naming guidelines. All future extensions should strive to do so.
 
-Following the prefix, names must use lowercase snake-case, e.g. `KHR_materials_unlit`. As a general recommendation, extensions should first consider names of the form: `<PREFIX>_<scope>_<feature>`, where "scope" is an existing glTF concept (mesh, texture, image, material) and "feature" describes the functionality being added within that scope. No recommendation is made regarding plural vs. singular (e.g. "materials" vs "material"), but names should strive for a balance of readability and consistency with official Khronos extensions. Use of `<scope>_<feature>` convention is recommended but not required.
-
-> **NOTE:** For historical reasons, older extensions may not follow these naming guidelines.
+1. Names MUST begin with a prefix, followed by an underscore. Prefixes are `KHR_` for [Khronos extensions](#khronos-extensions-2), `EXT_` for [Multi-vendor extensions](#multi-vendor-extensions), and others may be reserved for [Vendor extensions](#vendor-extensions-2).
+2. Names MUST use lowercase snake-case following the prefix, e.g. `KHR_materials_unlit`.
+3. Names SHOULD be structured as `<PREFIX>_<scope>_<feature>`, where *scope* is an existing glTF concept (e.g. mesh, texture, image) and *feature* describes the functionality being added within that scope. This structure is recommended, but not required.
+4. Scope SHOULD be singular (e.g. mesh, texture), except where this would be inconsistent with an existing Khronos extension (e.g. materials, lights).
 
 ## Promoting Extensions
 
