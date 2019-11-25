@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.2" width="135mm" height="54.8mm" viewBox="981 873 13500 5480" preserveAspectRatio="xMidYMid" fill-rule="evenodd" stroke-width="28.222" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" xmlns:ooo="http://xml.openoffice.org/svg/export" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:presentation="http://sun.com/xmlns/staroffice/presentation" xmlns:smil="http://www.w3.org/2001/SMIL20/" xmlns:anim="urn:oasis:names:tc:opendocument:xmlns:animation:1.0" xml:space="preserve">
+<svg version="1.2" width="135mm" height="72.58mm" viewBox="981 238 13500 7258" preserveAspectRatio="xMidYMid" fill-rule="evenodd" stroke-width="28.222" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" xmlns:ooo="http://xml.openoffice.org/svg/export" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:presentation="http://sun.com/xmlns/staroffice/presentation" xmlns:smil="http://www.w3.org/2001/SMIL20/" xmlns:anim="urn:oasis:names:tc:opendocument:xmlns:animation:1.0" xml:space="preserve">
  <defs>
   <font id="EmbeddedFont_1" horiz-adv-x="2048">
    <font-face font-family="Liberation Sans embedded" units-per-em="2048" font-weight="normal" font-style="normal" ascent="1852" descent="441"/>
@@ -26,11 +26,9 @@
    <glyph unicode="c" horiz-adv-x="883" d="M 275,546 C 275,402 298,295 343,226 388,157 457,122 548,122 612,122 666,139 709,174 752,209 778,262 788,334 L 970,322 C 956,218 912,135 837,73 762,11 668,-20 553,-20 402,-20 286,28 207,124 127,219 87,359 87,542 87,724 127,863 207,959 287,1054 402,1102 551,1102 662,1102 754,1073 827,1016 900,959 945,880 964,779 L 779,765 C 770,825 746,873 708,908 670,943 616,961 546,961 451,961 382,929 339,866 296,803 275,696 275,546 Z"/>
    <glyph unicode="b" horiz-adv-x="936" d="M 1053,546 C 1053,169 920,-20 655,-20 573,-20 505,-5 451,25 396,54 352,102 318,168 L 316,168 C 316,147 315,116 312,74 309,31 307,7 306,0 L 132,0 C 136,36 138,110 138,223 L 138,1484 318,1484 318,1061 C 318,1018 317,967 314,908 L 318,908 C 351,977 396,1027 451,1057 506,1087 574,1102 655,1102 792,1102 892,1056 957,964 1021,872 1053,733 1053,546 Z M 864,540 C 864,691 844,800 804,865 764,930 699,963 609,963 508,963 434,928 388,859 341,790 318,680 318,529 318,387 341,282 386,215 431,147 505,113 607,113 698,113 763,147 804,214 844,281 864,389 864,540 Z"/>
    <glyph unicode="a" horiz-adv-x="1060" d="M 414,-20 C 305,-20 224,9 169,66 114,123 87,202 87,302 87,414 124,500 198,560 271,620 390,652 554,656 L 797,660 797,719 C 797,807 778,870 741,908 704,946 645,965 565,965 484,965 426,951 389,924 352,897 330,853 323,793 L 135,810 C 166,1005 310,1102 569,1102 705,1102 807,1071 876,1009 945,946 979,856 979,738 L 979,272 C 979,219 986,179 1000,152 1014,125 1041,111 1080,111 1097,111 1117,113 1139,118 L 1139,6 C 1094,-5 1047,-10 1000,-10 933,-10 885,8 855,43 824,78 807,132 803,207 L 797,207 C 751,124 698,66 637,32 576,-3 501,-20 414,-20 Z M 455,115 C 521,115 580,130 631,160 682,190 723,231 753,284 782,336 797,390 797,445 L 797,534 600,530 C 515,529 451,520 408,504 364,488 330,463 307,430 284,397 272,353 272,299 272,240 288,195 320,163 351,131 396,115 455,115 Z"/>
-   <glyph unicode="U" horiz-adv-x="1165" d="M 731,-20 C 616,-20 515,1 429,43 343,85 276,146 229,226 182,306 158,401 158,512 L 158,1409 349,1409 349,528 C 349,399 382,302 447,235 512,168 607,135 730,135 857,135 955,170 1026,239 1096,308 1131,408 1131,541 L 1131,1409 1321,1409 1321,530 C 1321,416 1297,318 1249,235 1200,152 1132,89 1044,46 955,2 851,-20 731,-20 Z"/>
    <glyph unicode="S" horiz-adv-x="1183" d="M 1272,389 C 1272,259 1221,158 1120,87 1018,16 875,-20 690,-20 347,-20 148,99 93,338 L 278,375 C 299,290 345,228 414,189 483,149 578,129 697,129 820,129 916,150 983,193 1050,235 1083,297 1083,379 1083,425 1073,462 1052,491 1031,520 1001,543 963,562 925,581 880,596 827,609 774,622 716,635 652,650 541,675 456,699 399,724 341,749 295,776 262,807 229,837 203,872 186,913 168,954 159,1000 159,1053 159,1174 205,1267 298,1332 390,1397 522,1430 694,1430 854,1430 976,1406 1061,1357 1146,1308 1205,1224 1239,1106 L 1051,1073 C 1030,1148 991,1202 933,1236 875,1269 795,1286 692,1286 579,1286 493,1267 434,1230 375,1193 345,1137 345,1063 345,1020 357,984 380,956 403,927 436,903 479,884 522,864 609,840 738,811 781,801 825,791 868,781 911,770 952,758 991,744 1030,729 1067,712 1102,693 1136,674 1166,650 1191,622 1216,594 1236,561 1251,523 1265,485 1272,440 1272,389 Z"/>
    <glyph unicode="N" horiz-adv-x="1165" d="M 1082,0 L 328,1200 333,1103 338,936 338,0 168,0 168,1409 390,1409 1152,201 C 1144,332 1140,426 1140,485 L 1140,1409 1312,1409 1312,0 1082,0 Z"/>
    <glyph unicode="L" horiz-adv-x="936" d="M 168,0 L 168,1409 359,1409 359,156 1071,156 1071,0 168,0 Z"/>
-   <glyph unicode="I" horiz-adv-x="213" d="M 189,0 L 189,1409 380,1409 380,0 189,0 Z"/>
    <glyph unicode="H" horiz-adv-x="1165" d="M 1121,0 L 1121,653 359,653 359,0 168,0 168,1409 359,1409 359,813 1121,813 1121,1409 1312,1409 1312,0 1121,0 Z"/>
    <glyph unicode="F" horiz-adv-x="1024" d="M 359,1253 L 359,729 1145,729 1145,571 359,571 359,0 168,0 168,1409 1169,1409 1169,1253 359,1253 Z"/>
    <glyph unicode="E" horiz-adv-x="1112" d="M 168,0 L 168,1409 1237,1409 1237,1253 359,1253 359,801 1177,801 1177,647 359,647 359,156 1278,156 1278,0 168,0 Z"/>
@@ -83,44 +81,44 @@
  <g class="Page">
   <g class="com.sun.star.drawing.TextShape">
    <g id="id3">
-    <rect class="BoundingBox" stroke="none" fill="none" x="982" y="5301" width="1942" height="1052"/>
-    <path fill="none" stroke="rgb(0,0,0)" stroke-width="35" stroke-linejoin="round" d="M 1953,6334 L 1000,6334 1000,5319 2905,5319 2905,6334 1953,6334 Z"/>
-    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="1343" y="5652"><tspan fill="rgb(0,0,0)" stroke="none">Edgebreaker </tspan></tspan><tspan class="TextPosition" x="1314" y="5890"><tspan fill="rgb(0,0,0)" stroke="none">traversal type</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="1650" y="6128"><tspan fill="rgb(0,0,0)" stroke="none">(</tspan><tspan fill="rgb(114,159,207)" stroke="none">uint8</tspan><tspan fill="rgb(0,0,0)" stroke="none">)</tspan></tspan></tspan></text>
+    <rect class="BoundingBox" stroke="none" fill="none" x="982" y="5301" width="1942" height="2195"/>
+    <path fill="none" stroke="rgb(0,0,0)" stroke-width="35" stroke-linejoin="round" d="M 1953,7477 L 1000,7477 1000,5319 2905,5319 2905,7477 1953,7477 Z"/>
+    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="1527" y="5749"><tspan fill="rgb(0,0,0)" stroke="none">Edge-</tspan></tspan><tspan class="TextPosition" x="1411" y="6105"><tspan fill="rgb(0,0,0)" stroke="none">breaker </tspan></tspan><tspan class="TextPosition" x="1339" y="6461"><tspan fill="rgb(0,0,0)" stroke="none">traversal </tspan></tspan><tspan class="TextPosition" x="1650" y="6817"><tspan fill="rgb(0,0,0)" stroke="none">type</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="1500" y="7173"><tspan fill="rgb(0,0,0)" stroke="none">(</tspan><tspan fill="rgb(114,159,207)" stroke="none">uint8</tspan><tspan fill="rgb(0,0,0)" stroke="none">)</tspan></tspan></tspan></text>
    </g>
   </g>
   <g class="com.sun.star.drawing.TextShape">
    <g id="id4">
-    <rect class="BoundingBox" stroke="none" fill="none" x="2887" y="5300" width="1942" height="1053"/>
-    <path fill="none" stroke="rgb(0,0,0)" stroke-width="35" stroke-linejoin="round" d="M 3858,6334 L 2905,6334 2905,5318 4810,5318 4810,6334 3858,6334 Z"/>
-    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="3195" y="5651"><tspan fill="rgb(0,0,0)" stroke="none">Num encoded </tspan></tspan><tspan class="TextPosition" x="3492" y="5889"><tspan fill="rgb(0,0,0)" stroke="none">vertices</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="3413" y="6127"><tspan fill="rgb(0,0,0)" stroke="none">(</tspan><tspan fill="rgb(114,159,207)" stroke="none">varUI32</tspan><tspan fill="rgb(0,0,0)" stroke="none">)</tspan></tspan></tspan></text>
+    <rect class="BoundingBox" stroke="none" fill="none" x="2887" y="5300" width="1942" height="2196"/>
+    <path fill="none" stroke="rgb(0,0,0)" stroke-width="35" stroke-linejoin="round" d="M 3858,7477 L 2905,7477 2905,5318 4810,5318 4810,7477 3858,7477 Z"/>
+    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="3523" y="5748"><tspan fill="rgb(0,0,0)" stroke="none">Num </tspan></tspan><tspan class="TextPosition" x="3244" y="6104"><tspan fill="rgb(0,0,0)" stroke="none">encoded </tspan></tspan><tspan class="TextPosition" x="3305" y="6460"><tspan fill="rgb(0,0,0)" stroke="none">vertices</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="3352" y="6816"><tspan fill="rgb(0,0,0)" stroke="none">(</tspan><tspan fill="rgb(114,159,207)" stroke="none">var32</tspan><tspan fill="rgb(0,0,0)" stroke="none">)</tspan></tspan></tspan></text>
    </g>
   </g>
   <g class="com.sun.star.drawing.TextShape">
    <g id="id5">
-    <rect class="BoundingBox" stroke="none" fill="none" x="4792" y="5300" width="1688" height="1053"/>
-    <path fill="none" stroke="rgb(0,0,0)" stroke-width="35" stroke-linejoin="round" d="M 5636,6334 L 4810,6334 4810,5318 6461,5318 6461,6334 5636,6334 Z"/>
-    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="5128" y="5651"><tspan fill="rgb(0,0,0)" stroke="none">Num faces</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="5191" y="5889"><tspan fill="rgb(0,0,0)" stroke="none">(</tspan><tspan fill="rgb(114,159,207)" stroke="none">varUI32</tspan><tspan fill="rgb(0,0,0)" stroke="none">)</tspan></tspan></tspan></text>
+    <rect class="BoundingBox" stroke="none" fill="none" x="4792" y="5300" width="1688" height="2196"/>
+    <path fill="none" stroke="rgb(0,0,0)" stroke-width="35" stroke-linejoin="round" d="M 5636,7477 L 4810,7477 4810,5318 6461,5318 6461,7477 5636,7477 Z"/>
+    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="5301" y="5748"><tspan fill="rgb(0,0,0)" stroke="none">Num </tspan></tspan><tspan class="TextPosition" x="5253" y="6104"><tspan fill="rgb(0,0,0)" stroke="none">faces</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="5130" y="6460"><tspan fill="rgb(0,0,0)" stroke="none">(</tspan><tspan fill="rgb(114,159,207)" stroke="none">var32</tspan><tspan fill="rgb(0,0,0)" stroke="none">)</tspan></tspan></tspan></text>
    </g>
   </g>
   <g class="com.sun.star.drawing.TextShape">
    <g id="id6">
-    <rect class="BoundingBox" stroke="none" fill="none" x="6443" y="5300" width="1942" height="1053"/>
-    <path fill="none" stroke="rgb(0,0,0)" stroke-width="35" stroke-linejoin="round" d="M 7414,6334 L 6461,6334 6461,5318 8366,5318 8366,6334 7414,6334 Z"/>
-    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="6775" y="5651"><tspan fill="rgb(0,0,0)" stroke="none">Num attribute </tspan></tspan><tspan class="TextPosition" x="7206" y="5889"><tspan fill="rgb(0,0,0)" stroke="none">data</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="7111" y="6127"><tspan fill="rgb(0,0,0)" stroke="none">(</tspan><tspan fill="rgb(114,159,207)" stroke="none">uint8</tspan><tspan fill="rgb(0,0,0)" stroke="none">)</tspan></tspan></tspan></text>
+    <rect class="BoundingBox" stroke="none" fill="none" x="6443" y="5300" width="1942" height="2196"/>
+    <path fill="none" stroke="rgb(0,0,0)" stroke-width="35" stroke-linejoin="round" d="M 7414,7477 L 6461,7477 6461,5318 8366,5318 8366,7477 7414,7477 Z"/>
+    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="7079" y="5748"><tspan fill="rgb(0,0,0)" stroke="none">Num </tspan></tspan><tspan class="TextPosition" x="6836" y="6104"><tspan fill="rgb(0,0,0)" stroke="none">attribute </tspan></tspan><tspan class="TextPosition" x="7103" y="6460"><tspan fill="rgb(0,0,0)" stroke="none">data</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="6961" y="6816"><tspan fill="rgb(0,0,0)" stroke="none">(</tspan><tspan fill="rgb(114,159,207)" stroke="none">uint8</tspan><tspan fill="rgb(0,0,0)" stroke="none">)</tspan></tspan></tspan></text>
    </g>
   </g>
   <g class="com.sun.star.drawing.TextShape">
    <g id="id7">
-    <rect class="BoundingBox" stroke="none" fill="none" x="8348" y="5300" width="1942" height="1053"/>
-    <path fill="none" stroke="rgb(0,0,0)" stroke-width="35" stroke-linejoin="round" d="M 9319,6334 L 8366,6334 8366,5318 10271,5318 10271,6334 9319,6334 Z"/>
-    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="8656" y="5651"><tspan fill="rgb(0,0,0)" stroke="none">Num encoded </tspan></tspan><tspan class="TextPosition" x="8929" y="5889"><tspan fill="rgb(0,0,0)" stroke="none">symbols</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="8874" y="6127"><tspan fill="rgb(0,0,0)" stroke="none">(</tspan><tspan fill="rgb(114,159,207)" stroke="none">varUI32</tspan><tspan fill="rgb(0,0,0)" stroke="none">)</tspan></tspan></tspan></text>
+    <rect class="BoundingBox" stroke="none" fill="none" x="8348" y="5300" width="1942" height="2196"/>
+    <path fill="none" stroke="rgb(0,0,0)" stroke-width="35" stroke-linejoin="round" d="M 9319,7477 L 8366,7477 8366,5318 10271,5318 10271,7477 9319,7477 Z"/>
+    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="8984" y="5748"><tspan fill="rgb(0,0,0)" stroke="none">Num </tspan></tspan><tspan class="TextPosition" x="8705" y="6104"><tspan fill="rgb(0,0,0)" stroke="none">encoded </tspan></tspan><tspan class="TextPosition" x="8732" y="6460"><tspan fill="rgb(0,0,0)" stroke="none">symbols</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="8813" y="6816"><tspan fill="rgb(0,0,0)" stroke="none">(</tspan><tspan fill="rgb(114,159,207)" stroke="none">var32</tspan><tspan fill="rgb(0,0,0)" stroke="none">)</tspan></tspan></tspan></text>
    </g>
   </g>
   <g class="com.sun.star.drawing.TextShape">
    <g id="id8">
-    <rect class="BoundingBox" stroke="none" fill="none" x="10253" y="5300" width="1942" height="1053"/>
-    <path fill="none" stroke="rgb(0,0,0)" stroke-width="35" stroke-linejoin="round" d="M 11224,6334 L 10271,6334 10271,5318 12176,5318 12176,6334 11224,6334 Z"/>
-    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="10561" y="5651"><tspan fill="rgb(0,0,0)" stroke="none">Num encoded </tspan></tspan><tspan class="TextPosition" x="10834" y="5889"><tspan fill="rgb(0,0,0)" stroke="none">symbols</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="10779" y="6127"><tspan fill="rgb(0,0,0)" stroke="none">(</tspan><tspan fill="rgb(114,159,207)" stroke="none">varUI32</tspan><tspan fill="rgb(0,0,0)" stroke="none">)</tspan></tspan></tspan></text>
+    <rect class="BoundingBox" stroke="none" fill="none" x="10253" y="5300" width="1942" height="2196"/>
+    <path fill="none" stroke="rgb(0,0,0)" stroke-width="35" stroke-linejoin="round" d="M 11224,7477 L 10271,7477 10271,5318 12176,5318 12176,7477 11224,7477 Z"/>
+    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="10889" y="5748"><tspan fill="rgb(0,0,0)" stroke="none">Num </tspan></tspan><tspan class="TextPosition" x="10610" y="6104"><tspan fill="rgb(0,0,0)" stroke="none">encoded </tspan></tspan><tspan class="TextPosition" x="10637" y="6460"><tspan fill="rgb(0,0,0)" stroke="none">symbols</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="10718" y="6816"><tspan fill="rgb(0,0,0)" stroke="none">(</tspan><tspan fill="rgb(114,159,207)" stroke="none">var32</tspan><tspan fill="rgb(0,0,0)" stroke="none">)</tspan></tspan></tspan></text>
    </g>
   </g>
   <g class="com.sun.star.drawing.TextShape">
@@ -161,14 +159,14 @@
   </g>
   <g class="com.sun.star.drawing.TextShape">
    <g id="id14">
-    <rect class="BoundingBox" stroke="none" fill="none" x="1889" y="1035" width="2033" height="728"/>
-    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="2139" y="1351"><tspan fill="rgb(0,0,0)" stroke="none">18-byte header</tspan></tspan></tspan></text>
+    <rect class="BoundingBox" stroke="none" fill="none" x="2016" y="619" width="2033" height="964"/>
+    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="2266" y="1032"><tspan fill="rgb(0,0,0)" stroke="none">18-byte </tspan></tspan><tspan class="TextPosition" x="2266" y="1388"><tspan fill="rgb(0,0,0)" stroke="none">header</tspan></tspan></tspan></text>
    </g>
   </g>
   <g class="com.sun.star.drawing.TextShape">
    <g id="id15">
-    <rect class="BoundingBox" stroke="none" fill="none" x="4302" y="908" width="1779" height="728"/>
-    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="4611" y="1224"><tspan fill="rgb(0,0,0)" stroke="none">varying-byte </tspan></tspan><tspan class="TextPosition" x="4865" y="1462"><tspan fill="rgb(0,0,0)" stroke="none">Length</tspan></tspan></tspan></text>
+    <rect class="BoundingBox" stroke="none" fill="none" x="4358" y="244" width="1779" height="1320"/>
+    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="4678" y="657"><tspan fill="rgb(0,0,0)" stroke="none">varying-</tspan></tspan><tspan class="TextPosition" x="4945" y="1013"><tspan fill="rgb(0,0,0)" stroke="none">byte </tspan></tspan><tspan class="TextPosition" x="4758" y="1369"><tspan fill="rgb(0,0,0)" stroke="none">Length</tspan></tspan></tspan></text>
    </g>
   </g>
   <g class="com.sun.star.drawing.LineShape">
@@ -224,20 +222,20 @@
   </g>
   <g class="com.sun.star.drawing.TextShape">
    <g id="id23">
-    <rect class="BoundingBox" stroke="none" fill="none" x="6080" y="908" width="1779" height="728"/>
-    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="6389" y="1224"><tspan fill="rgb(0,0,0)" stroke="none">varying-byte </tspan></tspan><tspan class="TextPosition" x="6643" y="1462"><tspan fill="rgb(0,0,0)" stroke="none">Length</tspan></tspan></tspan></text>
+    <rect class="BoundingBox" stroke="none" fill="none" x="6080" y="238" width="1779" height="1320"/>
+    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="6400" y="651"><tspan fill="rgb(0,0,0)" stroke="none">varying-</tspan></tspan><tspan class="TextPosition" x="6667" y="1007"><tspan fill="rgb(0,0,0)" stroke="none">byte </tspan></tspan><tspan class="TextPosition" x="6480" y="1363"><tspan fill="rgb(0,0,0)" stroke="none">Length</tspan></tspan></tspan></text>
    </g>
   </g>
   <g class="com.sun.star.drawing.TextShape">
    <g id="id24">
-    <rect class="BoundingBox" stroke="none" fill="none" x="8366" y="873" width="1779" height="728"/>
-    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="8675" y="1189"><tspan fill="rgb(0,0,0)" stroke="none">varying-byte </tspan></tspan><tspan class="TextPosition" x="8929" y="1427"><tspan fill="rgb(0,0,0)" stroke="none">Length</tspan></tspan></tspan></text>
+    <rect class="BoundingBox" stroke="none" fill="none" x="8366" y="238" width="1779" height="1320"/>
+    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="8686" y="651"><tspan fill="rgb(0,0,0)" stroke="none">varying-</tspan></tspan><tspan class="TextPosition" x="8953" y="1007"><tspan fill="rgb(0,0,0)" stroke="none">byte </tspan></tspan><tspan class="TextPosition" x="8766" y="1363"><tspan fill="rgb(0,0,0)" stroke="none">Length</tspan></tspan></tspan></text>
    </g>
   </g>
   <g class="com.sun.star.drawing.TextShape">
    <g id="id25">
-    <rect class="BoundingBox" stroke="none" fill="none" x="11541" y="873" width="1779" height="728"/>
-    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="212px" font-weight="400"><tspan class="TextPosition" x="11850" y="1189"><tspan fill="rgb(0,0,0)" stroke="none">varying-byte </tspan></tspan><tspan class="TextPosition" x="12104" y="1427"><tspan fill="rgb(0,0,0)" stroke="none">Length</tspan></tspan></tspan></text>
+    <rect class="BoundingBox" stroke="none" fill="none" x="11541" y="238" width="1779" height="1320"/>
+    <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="11861" y="651"><tspan fill="rgb(0,0,0)" stroke="none">varying-</tspan></tspan><tspan class="TextPosition" x="12128" y="1007"><tspan fill="rgb(0,0,0)" stroke="none">byte </tspan></tspan><tspan class="TextPosition" x="11941" y="1363"><tspan fill="rgb(0,0,0)" stroke="none">Length</tspan></tspan></tspan></text>
    </g>
   </g>
  </g>

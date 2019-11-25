@@ -229,7 +229,6 @@ The third section is the encoded EdgeBreaker symbol data.
 The fourth section is the encoded start face configuration data. 
 The fifth section is the attribute connectivity data.
 
-
 <figure>
   <img alt="" src="figures/edgebreakerConnectivity.svg">
   <figcaption></figcaption>
