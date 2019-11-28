@@ -6,6 +6,15 @@ The document is structured as follows.
 The first part describes the individual data blocks of a Draco compressed file. 
 The second part shows the algorithmic details by giving a pseudocode listing. 
 
+#### Outline
+- Draco File Format
+- Draco Header
+- Metadata
+- Connectivity
+  - Sequential Connectivity
+  - Edgebreaker Connectivity
+- Attributes
+- Decoding Algorithm
 
 # Draco File Format
 
@@ -18,13 +27,28 @@ Note, that each section has its own additional header to store specific data nee
 Named sections are dependent upon each other, i.e., they have to be decoded in sequence.
 
 
+
+
 <figure>
   <img alt="" src="figures/DracoFileFormat.svg">
   <figcaption></figcaption>
 </figure>
 
 
+#### Variable Types
 
+Variable types are defined as following.
+All integer and floating point formats are little endian.
+
+- `uint8`: unsigned 8-bit integer 
+- `uint16`: unsigned 16-bit integer 
+- `int16`: signed 16-bit integer 
+- `uint32`: unsigned 32-bit integer 
+- `int32`: signed 32-bit integer 
+- `float`: IEEE 754 single precision
+- `var32`: unsigned 32-bit integer encoded using LEB128
+- `var64`: unsigned 64-bit integer encoded using LEB128
+- `f{n}`: unsigned n-bit number with decreasing digit place value. The number is appended by padding bits to the next byte so that data remains byte-aligned.
 
  
 # Draco Header
@@ -464,14 +488,6 @@ For this, we use a notation similar to C++. Relevant conventions and used consta
 
 
 
-### Variable Types
-
-All integer and floating point formats are little endian.
-
-- `float` is IEEE 754 Single precision.
-- `var32` is an unsigned 32-bit integer encoded using LEB128.
-- `var64` is an unsigned 64-bit integer encoded using LEB128.
-- `f{n}` is an unsigned `n`-bit number with decreasing digit place value. The number is appended by padding bits to the next byte so that data remains byte-aligned.
 
 ### Operations 
 
