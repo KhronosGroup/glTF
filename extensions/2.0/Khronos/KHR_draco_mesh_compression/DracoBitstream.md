@@ -494,9 +494,10 @@ Afterwards, the array `buffer` contains `num` elements of type `uint8`.
 |          |         |
 |:--------:| ------- |
 | `a && b` | Logical AND operation between `a` and `b`
-| `a || b` | Logical OR operation between `a` and `b`
+| a \|\| b | Logical OR operation between `a` and `b` 
 | `!`      | Logical NOT operation.
 
+<!--- rendering of | is broken https://github.com/facebook/docusaurus/issues/376 --->
 
 #### Relational operators
 
@@ -515,7 +516,7 @@ Afterwards, the array `buffer` contains `num` elements of type `uint8`.
 |          |         |
 |:--------:| ------- |
 | `&`      | AND operation
-| `|`      | OR operation
+| \|      | OR operation
 | `~`      | Negation operation
 | `a >> b` | Shift `a` in 2's complement binary integer representation format to the right by `b` bit positions. This operator is only used with `b` being a non-negative integer. Bits shifted into the MSBs as a result of the right shift have a value equal to the MSB of `a` prior to the shift operation.
 | `a << b` | Shift `a` in 2's complement binary integer representation format to the left by `b` bit positions. This operator is only used with `b` being a non-negative integer. Bits shifted into the LSBs as a result of the left shift have a value equal to `0`.
