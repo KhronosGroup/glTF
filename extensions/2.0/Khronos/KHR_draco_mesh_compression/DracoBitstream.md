@@ -1,10 +1,10 @@
 # Draco Bitstream Specification
 
-
 This document defines the bitstream format and decoding process for the _Draco 3D Data Compression_ scheme.
 The document is structured as follows. 
 The first part describes the individual data blocks of a Draco compressed file. 
 The second part shows the algorithmic details by giving a pseudocode listing. 
+
 
 #### Outline
 - Draco File Format
@@ -16,6 +16,7 @@ The second part shows the algorithmic details by giving a pseudocode listing.
 - Attributes
 - Decoding Algorithm
 
+
 # Draco File Format
 
 All Draco encoded mesh files are comprised of four main sections. 
@@ -25,8 +26,6 @@ The third section contains the connectivity data.
 The fourth section contains the attribute data. 
 Note, that each section has its own additional header to store specific data needed for the actual decoding algorithm.
 Named sections are dependent upon each other, i.e., they have to be decoded in sequence.
-
-
 
 
 <figure>
@@ -46,8 +45,8 @@ All integer and floating point formats are little endian.
 - `uint32`: unsigned 32-bit integer 
 - `int32`: signed 32-bit integer 
 - `float`: IEEE 754 single precision
-- `var32`: unsigned 32-bit integer encoded using LEB128
-- `var64`: unsigned 64-bit integer encoded using LEB128
+- `var32`: variable-length value that represents unsigned 32-bit integer values (has to be decoded by the LEB128 function)
+- `var64`: variable-length value that represents unsigned 64-bit integer values (has to be decoded by the LEB128 function)
 - `f{n}`: unsigned n-bit number with decreasing digit place value. The number is appended by padding bits to the next byte so that data remains byte-aligned.
 
  
@@ -66,7 +65,6 @@ Flags | `uint16` | `0`: No flag, `0x8000`: Metadata present
 # Metadata
 
 This section is only present if `DracoHeader.Flags` contains the flag `0x8000`.
-
 
 It contains a variable that specifies the number of encoded metadata elements followed by a list of metadata attribute IDs and a list of metadata attribute records.
 Finally, a single metadata record is encoded that refers to the file itself. 
@@ -97,7 +95,6 @@ File metadata | `Metadata`
 	- Sub metadata: `Metadata` (Here, the type recurses. This is not a reference or index.)
 
 
-
 Each metadata record contains a name-value pair list together with a list of sub metadata records, forming a metadata record tree. 
 Each sub metadata record is a name-metadata pair, again. 
 The `i`'th  attribute metadata record relates to the attribute referenced by the `i`'th attribute metadata ID.
@@ -107,8 +104,6 @@ Otherwise, multiple metadata records would relate to the same attribute.
 
 
 # Connectivity  
-
-
 
 In general, the Draco file format stores connectivity and geometry information separately. 
 In this section, it is shown how connectivity information is stored and how this connectivity information is used to construct individual faces.
@@ -129,6 +124,7 @@ The following chart shows an overview of possible connectivity encoding formats 
   <img alt="" src="figures/ConnectivityOverview.svg">
   <figcaption></figcaption>
 </figure>
+
 
 ## Sequential Connectivity
 
@@ -153,7 +149,6 @@ The header block of sequential connectivity information contains a fixed number 
 This information is used to interpret the index block, which can be either compressed (`connectivity_method` equals 0) or uncompressed (`connectivity_method` equals 1). 
 
 
-
 #### Uncompressed Sequential Indices
 
 The data type of index elements is dependent on the overall number of points that have to be addressed. 
@@ -161,12 +156,12 @@ Hence, before parsing sequential indices, the data type of one index element has
 The size of the data type is one to four bytes. Given the overall number of points, the following table shows the related data type format.
 
 
-|  num_points       |    Required Bytes  |    Index Element Data Type    | 
-| ----------------- |:------------------:| :----------------------------:| 
-| 2^8     (256)     |  1                 |             `uint8`          | 
-| 2^16    (65536)   |  2                 |             `uint16`         | 
-| 2^21  (2097152)   |  3                 |             `var32`          | 
-| 2^32 (4294967296) |  4                 |             `uint32`         | 
+| up to num_points  |     Index Element Data Type   | 
+| ----------------- | :----------------------------:| 
+| 2^8     (256)     |             `uint8`          | 
+| 2^16    (65536)   |             `uint16`         | 
+| 2^21  (2097152)   |             `var32`          | 
+| 2^32 (4294967296) |             `uint32`         | 
  
 With this information, the size of the uncompressed sequential index block is given by the size of one index element data type and the number of faces:
 		
@@ -176,50 +171,44 @@ With this information, the size of the uncompressed sequential index block is gi
 One face is defined by exactly three point indices, hence, forming a triangle when substituting respective indices with point data. 
 Three indices forming one face are stored subsequently. 
 
-
-
 <figure>
   <img alt="" src="figures/IndexDiagram.svg">
   <figcaption></figcaption>
 </figure>
 
 
-
 #### Compressed Sequential Indices 
-
 
 The compression of sequential indices is based on the algorithm shown by Jarek Duda in
 *Asymmetric numeral systems: entropy coding combining speed of Huffman coding with compression rate of arithmetic coding* (2014):
 https://arxiv.org/pdf/1311.2540.pdf
 Specifically, the range variant (__rANS__) is used for compression, which is suitable for large coding alphabets. 
 
-The decompressed data of size *num_faces * 3 * sizeof( uint32 )* stores index differences, for what reason the uint32 value has to be reinterpreted to a signed value.
+The decompressed data of size *num_faces * 3 * sizeof( uint32 )* stores index differences.
+This is why the uint32 value has to be reinterpreted to a signed value.
+<!---
 The conversion from raw buffer values to signed integer values is done by shifting the bits to the right by one digit. 
 The consumed rightmost bit determines the sign of the value respectively (1 represents a negative value, 0 represents a positive value). 
+-->
 Obtained signed integer values represent the differences of subsequent indices. 
 This means, an additional interim stage is required to generate index values by stepping through the buffer and summing up the values. 
 At each buffer position, the current sum represents the absolute index value.
 
 
 <!---
-
-
-Decoded Index Element in draco source code C++  == uint32      
+Decoded Index Element in draco source code (C++) uint32      
 Meaning of Rightshift operation (>>)?
 
-From C++ Code:
+C++ Code:
 uint32_t encoded_val = indices_buffer[vertex_index++];
 int32_t index_diff = (encoded_val >> 1);
-
 ABCD >> 1 ==  0ABC ??
 
 vs
 
-From Spec: 
+Spec: 
 "Bits shifted into the MSBs as a result of the right shift have a value equal to the MSB of a prior to the shift operation."
 ABCD >> 1 ==  AABC ??
-
-
 -->
 
 
@@ -248,10 +237,10 @@ Afterwards, these data blocks are described in detail.
 
 The EdgeBreaker connectivity section is composed of five sections. 
 The first section is the connectivity header. 
-The second section is the encoded topology split data.
-The third section is the encoded EdgeBreaker symbol data. 
-The fourth section is the encoded start face configuration data. 
-The fifth section is the attribute connectivity data.
+The second section is the encoded topology split data, which gives information on how to handle EdgeBreaker topology split symbols.
+The third section is the encoded EdgeBreaker symbol data, describing the traversal along the mesh. 
+The fourth section is the encoded start face configuration data, which is required to distinguish between interior faces and faces that are connected to an open boundary. 
+The fifth section is the attribute connectivity data, which decodes the attribute seams.
 
 <figure>
   <img alt="" src="figures/edgebreakerConnectivity.svg">
@@ -261,11 +250,8 @@ The fifth section is the attribute connectivity data.
 
 ####  Valence EdgeBreaker 
 
- 
 The valence EdgeBreaker connectivity adds one section after the attribute connectivity data. 
 This section provides context data for the valence prediction (_Valence Context Data_).
-
-
 
 <figure>
   <img alt="" src="figures/valenceEdgebreakerConnectivity.svg">
@@ -273,13 +259,7 @@ This section provides context data for the valence prediction (_Valence Context 
 </figure>
 
 
-
-
-
 #### EdgeBreaker Header
-
-
-
 
 | Variable						| Data Type     | Description									|
 | ----------------------------- |:-------------:|:---------------------------------------------:|  
@@ -296,12 +276,11 @@ Note, that different data blocks have to be loaded for standard and valence Edge
 
 #### Split Data
 
-
 Topological split events that can not be reconstructed via EdgeBreaker symbols are stored separately. 
 At first,  one var32 value (`num_topology_splits`) is loaded that determines the number of topological split events . 
 Using this value, delta values of split IDs (var32) and source IDs (var32) are loaded, i.e., one `source_id_delta` value and one `split_id_delta` value is loaded interleaved `num_topology_splits` times as shown in the following figure.  
 Afterwards, `num_topology_splits` bits are read from the file that are stored in the array `source_edge_bit`. 
-After reading those bits, the file reader is padded to the following byte. 
+After reading those bits, the file reader is padded to the following byte to ensure byte alignment for subsequent read operations. 
 
 <figure>
   <img alt="" src="figures/ParseTopologySplitEvents.svg">
@@ -330,11 +309,9 @@ To load the symbols required for the EdgeBreaker traversal, at first, a var64 va
 Afterwards, that number of bytes is loaded into the buffer `eb_symbol_buffer`.
 
 
-
 The actual symbols are stored in `eb_symbol_buffer` with a specific bit pattern. 
 This is why the size of encoded symbols is not directly related to the size of the symbol buffer (`eb_symbol_buffer`). 
 The number of actual EdgeBreaker symbols `num_encoded_symbols` is specified in the EdgeBreaker header.
-
 
 
 The decoding of individual symbols consists of two steps.
@@ -361,7 +338,6 @@ Then, a var32 value is loaded that defines the number of start face IDs.
 That number of start face IDs of type uint8 is loaded into the buffer `eb_start_face_buffer`.
 
 
-
 #### Attribute Connectivity Data
 
 The number of attribute connectivity data that has to be loaded is defined in the EdgeBreaker header by the variable `num_attribute_data`.
@@ -371,6 +347,7 @@ and that number of uint8 values is loaded into `attribute_connectivity_decoders_
 
 These buffers are used to decode the attribute seams.
 
+
 #### Valence Context Data
 
 Valence context data contains for each unique valence a number of symbols, stored in separate arrays. 
@@ -379,7 +356,6 @@ The number of unique valences is predefined in a constant `NUM_UNIQUE_VALENCES` 
 For each unique valence, at first, a `var32` is loaded that specifies the number of valence context symbols (`ebv_context_counters[i]`).
 Then, that number of symbols is obtained by decoding a __rANS__ encoded data block.  
  
-
 
 # Attributes
 
@@ -487,8 +463,6 @@ For this, we use a notation similar to C++. Relevant conventions and used consta
 ## Conventions
 
 
-
-
 ### Operations 
 
 The functions `assign`, `back`, `empty`, `op_back`, `push_back`, and `size` behave similarly on arrays as it is defined for C++ std::vector.
@@ -504,7 +478,6 @@ E.g., the following code listing writes an `uint16` value to the variable `num` 
 Afterwards, the array `buffer` contains `num` elements of type `uint8`.
  
 
-
 #### Arithmetic operators
 
 |          |         |
@@ -515,6 +488,7 @@ Afterwards, the array `buffer` contains `num` elements of type `uint8`.
 | `/`      | Division
 | `a % b`  |  Remainder from division of `a` by `b`. Both `a` and `b` are positive integers.
 
+
 #### Logical operators
 
 |          |         |
@@ -524,9 +498,7 @@ Afterwards, the array `buffer` contains `num` elements of type `uint8`.
 | `!`      | Logical NOT operation.
 
 
-
 #### Relational operators
-
 
 |          |         |
 |:--------:| ------- |
@@ -537,8 +509,8 @@ Afterwards, the array `buffer` contains `num` elements of type `uint8`.
 | `==`     | Equal to
 | `!=`     | Not equal to
 
-#### Bitwise operators
 
+#### Bitwise operators
 
 |          |         |
 |:--------:| ------- |
@@ -555,16 +527,14 @@ Afterwards, the array `buffer` contains `num` elements of type `uint8`.
 |:--------:| ------- |
 | `=`      | Assignment operator
 | `++`     | Increment, `x++` is equivalent to `x = x + 1`. When this operator is used for an array index, the variable value is obtained before the auto increment operation
-| `--`     | Decrement, i.e. `x--` is equivalent to `x = x - 1`. When this operator is used for an array index, the variable value is obtained before the auto decrement operation
+| `--`     | Decrement, i.e., `x--` is equivalent to `x = x - 1`. When this operator is used for an array index, the variable value is obtained before the auto decrement operation
 | `+=`     | Addition assignment operator, for example `x += 3` corresponds to `x = x + 3`
 | `-=`     | Subtraction assignment operator, for example `x -= 3` corresponds to `x = x - 3`
 
 
 #### Mathematical functions
 
-
-The following mathematical functions (Abs, Min, and Max)
-are defined as follows:
+The following mathematical functions (Abs, Min, and Max) are defined as follows:
 
 <figure>
   <img alt="" src="figures/mathFormulas.svg">
@@ -572,9 +542,7 @@ are defined as follows:
 </figure>
 
 
-
 ### Constants
-
 
 * Mesh encoding methods
   * 0: MESH_SEQUENTIAL_ENCODING
