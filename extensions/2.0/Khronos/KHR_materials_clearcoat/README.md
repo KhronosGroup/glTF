@@ -61,9 +61,8 @@ The clearcoat formula `f_clearcoat` is the same as the specular term from the Me
 The following abstract code describes how the base and clearcoat layers should be blended together:  
   
 ```
-factor0 = (1.0 - clearcoatFactor * fresnel(0.04, NdotV)) * (1.0 - clearcoatFactor * fresnel(0.04, NdotL))
-factor1 = clearcoatFactor * fresnel(0.04, HdotV)
-f = (f_emissive + f_diffuse + f_specular) * factor0 + f_clearcoat * factor1
+blendFactor = clearcoatFactor * fresnel(0.04, NdotV)
+f = (f_emissive + f_diffuse) * (1.0 - blendFactor) + mix(f_specular, f_clearcoat, blendFactor)
 ```
 
 If `clearcoatFactor = 0`, the clearcoat layer is disabled and the material is behaving like the core Metallic-Roughness material:
