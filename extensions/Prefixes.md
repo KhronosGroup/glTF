@@ -14,6 +14,7 @@ The following extension prefixes are reserved:
 * `CVTOOLS` - Canvas Tools
 * `EXT` - Multi-vendor
 * `FB` - Facebook
+* `FX` - Foxit Software
 * `GOOGLE` - Google
 * `KHR` - Ratified or intended-to-be-ratified Khronos
 * `LLQ` - Lifeliqe
