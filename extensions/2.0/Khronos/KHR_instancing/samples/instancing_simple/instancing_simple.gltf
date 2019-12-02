@@ -150,9 +150,9 @@
         },
         {
             "extensions": {
-                "KHR_instancing": {
+                "KHR_mesh_instancing": {
                     "attributes": {
-                        "TRANSFORM": 3
+                        "_TRANSFORM": 3
                     }
                 }
             },

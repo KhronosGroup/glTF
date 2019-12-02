@@ -1,4 +1,4 @@
-# KHR\_instancing
+# KHR\_mesh\_instancing
 
 ## Khronos 3D Formats Working Group
 
@@ -27,7 +27,8 @@ can be used to alter other parameters based on the run-time inplementation.
 
 Instancing is defined by adding the `KHR_instancing` extension to any glTF node that has a mesh.  Instancing only applies to mesh nodes, there is no defined behavior for a node 
 with this extension that doesn't also have a mesh.  Applying to nodes rather than meshes allows the same mesh to be used by several nodes, instanced or otherwise.  The attributes 
-section contains accessor ids for the new TRANSFORM and ID attribute buffers.  For example, the following defines some instancing attributes to a node with mesh.  
+section contains accessor ids for the POSITION, ROTATION, and SCALE attribute buffers, all of which are optional.  For example, the following defines some instancing attributes 
+to a node with mesh.  
 
 ```json
 {
@@ -36,10 +37,11 @@ section contains accessor ids for the new TRANSFORM and ID attribute buffers.  F
             "mesh": 0,
             "name": "teapot",
             "extensions": {
-                "KHR_instancing": {
+                "KHR_mesh_instancing": {
                     "attributes": {
-                        "TRANSFORM": 0,
-                        "ID": 1
+                        "POSITION": 0,
+                        "ROTATION": 1,
+                        "SCALE": 2,
                     },
                 }
             }
