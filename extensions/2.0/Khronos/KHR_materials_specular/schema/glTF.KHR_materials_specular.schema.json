@@ -1,0 +1,37 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_specular glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the strength of the specular reflection.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "specularFactor": {
+            "type": "number",
+            "description": "The strength of the specular reflection.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "This parameter scales the amount of specular reflection on non-metallic surfaces. It has no effect on metals."
+        },
+        "specularColorFactor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "description": "The F0 RGB color of the specular reflection.",
+            "default": [ 1.0, 1.0, 1.0 ],
+            "minItems": 3,
+            "maxItems": 3,
+            "gltf_detailedDescription": "This is an additional RGB color parameter that tints the specular reflection of non-metallic surfaces. At grazing angles, the reflection still blends to white, and the parameter has not effect on metals. The value is linear."
+        },
+        "specularTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "An RGBA texture that defines the F0 color of the specular reflection and the specular factor.",
+            "gltf_detailedDescription": "Either a 4-channel texture that defines the specular color in the RGB channels and the specular factor in the alpha channel, a 3-channel texture that defines only the specular color, or a grayscale texture that defines only the specular factor. Will be multiplied by specularFactor and/or specularColorFactor."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
