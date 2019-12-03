@@ -8,6 +8,14 @@
 * Kai Ninomiya, Google, <mailto:kainino@google.com>
 * Patrick Cozzi, Cesium, [@pjcozzi](https://twitter.com/pjcozzi)
 
+#### Bitstream
+
+* Mathias Kanzler, UX3D, <mailto:kanzler@ux3d.io>
+* Moritz Becher, UX3D, <mailto:becher@ux3d.io>
+* Phillip Hohenester, UX3D, <mailto:hohenester@ux3d.io>
+* Jim Eckerlein, UX3D, <mailto:eckerlein@ux3d.io>
+
+
 Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 ## Status
