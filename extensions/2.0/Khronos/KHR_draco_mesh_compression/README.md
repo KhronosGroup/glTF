@@ -28,7 +28,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension defines a schema to use [Draco geometry compression (non-normative)](https://github.com/google/draco) libraries in glTF format. This allows glTF to support streaming compressed geometry data instead of the raw data. This extension specification is based on [Draco bitstream version 2.2 (the entirety of this specification is normative and included in Scope)](https://google.github.io/draco/spec/).
+This extension defines a schema to use [Draco geometry compression (non-normative)](https://github.com/google/draco) libraries in glTF format. This allows glTF to support streaming compressed geometry data instead of the raw data. This extension specification is based on [Draco bitstream version 2.2 (the entirety of this specification is normative and included in Scope)](https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_draco_mesh_compression/DracoBitstream.md).
 
 The [conformance](#conformance) section specifies what an implementation must do when encountering this extension, and how the extension interacts with the attributes defined in the base specification.
 
