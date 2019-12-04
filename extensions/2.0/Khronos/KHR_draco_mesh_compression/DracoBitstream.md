@@ -6,15 +6,15 @@ The first part describes the individual data blocks of a Draco compressed file.
 The second part shows the algorithmic details by giving a pseudocode listing. 
 
 
-#### Outline
-- Draco File Format
-- Draco Header
-- Metadata
-- Connectivity
-  - Sequential Connectivity
-  - Edgebreaker Connectivity
-- Attributes
-- Decoding Algorithm
+#### Contents
+- [Draco File Format](#Draco-File-Format)
+- [Draco Header](#Draco-Header)
+- [Metadata](#Metadata)
+- [Connectivity](#Connectivity)
+  - [Sequential Connectivity](#Sequential-Connectivity)
+  - [Edgebreaker Connectivity](#Edgebreaker-Connectivity)
+- [Attributes](#Attributes)
+- [Decoding Algorithm](#Decoding-Algorithm)
 
 
 # Draco File Format
