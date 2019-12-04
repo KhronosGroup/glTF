@@ -194,24 +194,6 @@ Obtained signed integer values represent the differences of subsequent indices.
 This means, an additional interim stage is required to generate index values by stepping through the buffer and summing up the values. 
 At each buffer position, the current sum represents the absolute index value.
 
-
-<!---
-Decoded Index Element in draco source code (C++) uint32      
-Meaning of Rightshift operation (>>)?
-
-C++ Code:
-uint32_t encoded_val = indices_buffer[vertex_index++];
-int32_t index_diff = (encoded_val >> 1);
-ABCD >> 1 ==  0ABC ??
-
-vs
-
-Spec: 
-"Bits shifted into the MSBs as a result of the right shift have a value equal to the MSB of a prior to the shift operation."
-ABCD >> 1 ==  AABC ??
--->
-
-
 <figure>
   <img alt="" src="figures/SequentialCompressedIndexDiagram.svg">
   <figcaption></figcaption>
