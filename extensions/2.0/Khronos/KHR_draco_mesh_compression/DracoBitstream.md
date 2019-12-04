@@ -2099,8 +2099,8 @@ void DecodeDataNeededByPortableTransforms() {
 
 ```c++
 void ParseWrapTransformData() {
-  pred_trasnform_wrap_min[curr_att_dec][curr_att]                                    | int32
-  pred_trasnform_wrap_max[curr_att_dec][curr_att]                                    | int32
+  pred_transform_wrap_min[curr_att_dec][curr_att]                                    | int32
+  pred_transform_wrap_max[curr_att_dec][curr_att]                                    | int32
 }
 ```
 
