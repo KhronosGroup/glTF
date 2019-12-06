@@ -1,0 +1,39 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_volume glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the parameters for the volume of a material.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "sigmaT": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0
+            },
+            "description": "The attenuation coefficient in inverse scene units.",
+            "default": [ 1.0, 1.0, 1.0, 1.0 ],
+            "minItems": 3,
+            "maxItems": 3
+        },
+        "albedo": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "description": "Single-scattering albedo.",
+            "default": [ 1.0, 1.0, 1.0, 1.0 ],
+            "minItems": 3,
+            "maxItems": 3
+        },
+        "g": {
+            "type": "number",
+            "minimum": -1.0,
+            "maximum": 1.0,
+            "description": "Anisotropy of the phase function.",
+            "default": [ 0.0 ]
+        }
+    }
+}
