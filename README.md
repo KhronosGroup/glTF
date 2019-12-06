@@ -233,7 +233,6 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | Tool | Status | Description |
 |------|--------|-------------|
 | [UnityGLTF](https://github.com/KhronosGroup/UnityGLTF) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Unity3D library for exporting, loading, parsing, and rendering glTF assets |
-| [glTFast](https://github.com/atteneder/glTFast) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Unity package for glTF 2.0 runtime loading |
 | [GLTFUtility](https://github.com/Siccity/GLTFUtility) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF 2.0 loader plugin for Unity3D |
 | [Unreal](https://docs.unrealengine.com/en-us/Studio/Unreal-Datasmith/Datasmith-Supported-Software-and-File-Types#formatssupportedbyunrealenginedirectly) ([forum](https://forums.unrealengine.com/development-discussion/content-creation/1415582-the-new-gltf-import-supported-in-4-19-preview-is-awesome-experimentation) / [notes](https://docs.unrealengine.com/en-us/Builds/4_19)) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Unreal adds glTF import capability |
 | [Godot Game Engine](https://godotengine.org/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Godot 3.0 fully supports glTF import |
@@ -242,6 +241,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | [G3D Innovation Engine](https://casual-effects.com/g3d/www/index.html) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF 2.0 import |
 | [LÖVR](https://lovr.org) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | A framework for creating VR with Lua |
 | [LibGDX glTF](https://github.com/mgsx-dev/gdx-gltf) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | [LibGDX](https://libgdx.badlogicgames.com/) library for loading and rendering glTF assets |
+| [glTFast](https://github.com/atteneder/glTFast) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Unity package for glTF 2.0 runtime loading |
 
 #### Embeddable Viewers
 
