@@ -28,7 +28,7 @@
             "minItems": 3,
             "maxItems": 3
         },
-        "g": {
+        "anisotropy": {
             "type": "number",
             "minimum": -1.0,
             "maximum": 1.0,

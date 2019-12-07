@@ -16,9 +16,9 @@ Written against the glTF 2.0 spec. Needs to be combined with `KHR_materials_tran
 
 This extension adds material parameters to configure the volume beneath the surface of closed meshes, providing effects like absorption and subsurface scattering. The transparency of the surface is controlled by `KHR_materials_transmission`.
 
-Light hitting an object will first interact with the surface according the BSDF. The BSDF determines how much and in which direction the incident light is reflected and transmitted. Light that is transmitted enters the volume, where it is absorbed or scattered by particles inside the medium. Finally, the light hits the surface again from the backside, evaluating the BSDF a second time to leave the object.
+Light hitting an object will first interact with the surface according the BSDF. The BSDF determines how much and in which direction the incident light is reflected and transmitted. Light that is transmitted enters the volume, where it is absorbed or scattered by particles inside the medium. After bouncing several times inside the object, the light will eventually hit the surface again. The BSDF is evaluated a second time, the light may now leave the object or be kept inside it if total internal reflection occurs.
 
-The light rays are reflected or refracted at the micro-facets, taking the roughness of the material into account. The index of refraction used for computing the refraction direction is taken from the BSDF, potentially set by `KHR_materials_ior`.
+The light rays are reflected or refracted at the micro-facets on the surface, taking the roughness of the material into account. The index of refraction used for computing the refraction direction is taken from the BSDF, potentially set by `KHR_materials_ior`.
 
 <figure style="text-align:center">
 <img src="./figures/volume.svg"/>
@@ -36,7 +36,7 @@ materials: [
             "KHR_materials_volume": {
                 "sigmaT": [ 78.03, 17.83, 126.29 ],
                 "albedo": [ 0.29, 0.82, 0.99 ],
-                "g": 0.0
+                "anisotropy": 0.0
             }
         }
     }
@@ -53,7 +53,7 @@ The extension provides two parameters to describe the medium and one parameter t
 |-|------|-------------|----------|
 | **sigmaT** | `number[3]` | Attenuation coefficient in inverse scene units. | No, default: `[0.0, 0.0, 0.0]` |
 | **albedo** | `number[3]` | Single-scattering albedo. | No, default: `[0.0, 0.0, 0.0]` |
-| **g** | `number` | Anisotropy of the phase function in range [-1, 1] | No, default: `0` | 
+| **anisotropy** | `number` | Anisotropy of the phase function in range [-1, 1] | No, default: `0` |
 
 ### Conversions
 
@@ -70,17 +70,49 @@ Sometimes the mean free path length **mfp** is given:
 sigmaT = 1 / mfp
 ```
 
-The attenuation color is a 3-channel value that goes up to infinity. By splitting it into two values, an RGB attenuation color and a distance, the color is easier to control:
+The attenuation color is a 3-channel value that goes up to infinity. By splitting it into two values, an RGB attenuation color and a distance, the color is easier to set up. In the following equation, **attenuationColor** defines the remaining, wavelength-dependent energy of a ray of white light after travelling a certain distance (**attenuationDistance**) through the medium.
 
 ```
-sigmaT = -log(attenuationColor) / attenuationDistance
+sigmaT = -ln(attenuationColor) / attenuationDistance
 ```
 
-A more user-friendly parametrization for albedo is proposed in [Kulla and Conty (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf). It shows how to map from the overall color of the material to single-scattering albedo:
+A more user-friendly parametrization for albedo is proposed in [Kulla and Conty (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf). As the light may interact multiple times with particles in the medium, the overall color of the material is different from the color of a single scattering event. Assuming a white light source, it is possible to predict the overall material color from the single-scattering albedo. By inverting the prediction it is possible to map from the user-defined overall **color** to single-scattering albedo:
 
 ```
 s = 4.09712 + 4.20863 * color - sqrt(9.59217 + 41.68086 * color + 17.7126 * color^2)
-albedo = (1 - s^2) / (1 - gs^2)
+albedo = (1 - s^2) / (1 - anisoptropy * s^2)
+```
+
+## Implementation
+
+### BTDF
+
+The extension replaces the thin microfacet BTDF defined in `KHR_materials_transmission` by a microfacet BTDF that takes refraction into account, see [Walter B., Marschner S., Li H., Torrance K. (2007): Microfacet Models for Refraction through Rough Surfaces](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf).
+
+```
+                   abs(LdotH) * abs(VdotH)                 ior_o^2 * G * D
+microfacet_btdf = ------------------------- * ----------------------------------------
+                   abs(LdotN) * abs(VdotN)      (ior_i * (LdotH) + ior_o * (VdotH))^2
+```
+
+`ior_i` and `ior_o` denote the index of refraction of the incident and transmitted side of the surface, respectively. Using Snell's law, the half vector is computed as follows:
+
+```
+H = -normalize(ior_i * LdotN + ior_o * VdotN)
+```
+
+Incident and transmitted index of refraction have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through multiple nested dielectrics is described in [Schmidt C., Budge B. (2002): Simple Nested Dielectrics in Ray Traced Images](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.125.5212&rep=rep1&type=pdf).
+
+*TODO* Nested dielectrics need a priority value per shape.
+
+### Phase Function
+
+The Henyey-Greenstein phase function with parameter **anisotropy**, ranging from -1 (back-scattering) over 0 (isotropic scattering) to 1 (forward-scattering), is the following:
+
+```
+                  1                     1 - anisotropy^2
+phase_function = ---- * -------------------------------------------------------
+                 4*pi    (1 + anisotropy^2 + 2 * aniostropy * cos(VdotL))^(3/2)
 ```
 
 ## Known Implementations
