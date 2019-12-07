@@ -14,7 +14,7 @@ Written against the glTF 2.0 spec. Needs to be combined with `KHR_materials_tran
 
 ## Overview
 
-This extension adds material parameters to configure the volume beneath the surface of closed meshes, providing effects like absorption and subsurface scattering. The transparency of the surface is controlled by `KHR_materials_transmission`.
+This extension adds material parameters to configure the volume beneath the surface of closed meshes, providing effects like refraction, absorption and subsurface scattering. The transparency of the surface is controlled by `KHR_materials_transmission`.
 
 Light hitting an object will first interact with the surface according the BSDF. The BSDF determines how much and in which direction the incident light is reflected and transmitted. Light that is transmitted enters the volume, where it is absorbed or scattered by particles inside the medium. After bouncing several times inside the object, the light will eventually hit the surface again. The BSDF is evaluated a second time, the light may now leave the object or be kept inside it if total internal reflection occurs.
 
@@ -51,13 +51,13 @@ The extension provides two parameters to describe the medium and one parameter t
 
 | | Type | Description | Required |
 |-|------|-------------|----------|
-| **sigmaT** | `number[3]` | Attenuation coefficient in inverse scene units. | No, default: `[0.0, 0.0, 0.0]` |
+| **sigmaT** | `number[3]` | Attenuation coefficient in inverse meters. | No, default: `[0.0, 0.0, 0.0]` |
 | **albedo** | `number[3]` | Single-scattering albedo. | No, default: `[0.0, 0.0, 0.0]` |
 | **anisotropy** | `number` | Anisotropy of the phase function in range [-1, 1] | No, default: `0` |
 
 ### Conversions
 
-Alternatively, subsurface scattering can be parametrized with absorption coefficient **sigmaA** and scattering coefficient **sigmaT**. These are converted as follows:
+Alternatively, subsurface scattering can be parametrized with absorption coefficient **sigmaA** and scattering coefficient **sigmaS**. These are converted as follows:
 
 ```
 sigmaT = sigmaS + sigmaA
@@ -90,9 +90,28 @@ albedo = (1 - s^2) / (1 - anisoptropy * s^2)
 The extension replaces the thin microfacet BTDF defined in `KHR_materials_transmission` by a microfacet BTDF that takes refraction into account, see [Walter B., Marschner S., Li H., Torrance K. (2007): Microfacet Models for Refraction through Rough Surfaces](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf).
 
 ```
+transparent_dielectric_bsdf =
+  microfacet_btdf(alpha) * (1.0 - fresnel(HdotV, f0)) +
+  microfacet_brdf(alpha) * fresnel(HdotV, f0) +
+  multiscatter_microfacet_brdf(alpha) * multiscatter_fresnel(f0)
+
+dielectric_bsdf = mix(
+  dielectric_brdf(baseColor, alpha),
+  transparent_dielectric_bsdf(baseColor, alpha),
+  transmission)
+
+material = mix(
+  dielectric_bsdf(baseColor, roughness^2, transmission),
+  metal_brdf(baseColor, roughness^2),
+  metallic)
+```
+
+The microfacet BTDF uses the same terms for G and D as the microfacet BRDF.
+
+```
                    abs(LdotH) * abs(VdotH)                 ior_o^2 * G * D
 microfacet_btdf = ------------------------- * ----------------------------------------
-                   abs(LdotN) * abs(VdotN)      (ior_i * (LdotH) + ior_o * (VdotH))^2
+                   abs(LdotN) * abs(VdotN)      (ior_i * LdotH + ior_o * VdotH)^2
 ```
 
 `ior_i` and `ior_o` denote the index of refraction of the incident and transmitted side of the surface, respectively. Using Snell's law, the half vector is computed as follows:
@@ -101,9 +120,9 @@ microfacet_btdf = ------------------------- * ----------------------------------
 H = -normalize(ior_i * LdotN + ior_o * VdotN)
 ```
 
-Incident and transmitted index of refraction have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through multiple nested dielectrics is described in [Schmidt C., Budge B. (2002): Simple Nested Dielectrics in Ray Traced Images](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.125.5212&rep=rep1&type=pdf).
+Incident and transmitted index of refraction have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through overlapping objects is described in [Schmidt C., Budge B. (2002): Simple Nested Dielectrics in Ray Traced Images](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.125.5212&rep=rep1&type=pdf).
 
-*TODO* Nested dielectrics need a priority value per shape.
+*TODO* Nested dielectrics need a priority value per object. Maybe as part of a node that instantiates a mesh?
 
 ### Phase Function
 
