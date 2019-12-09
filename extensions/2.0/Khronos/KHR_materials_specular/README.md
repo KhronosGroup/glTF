@@ -38,7 +38,7 @@ The specular materials are defined by adding the `KHR_materials_specular` extens
 }
 ```
 
-### Clearcoat
+### Specular
 
 All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [appendix](/specification/2.0/README.md#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
