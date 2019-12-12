@@ -111,13 +111,15 @@ The microfacet BTDF uses the same terms for G and D as the microfacet BRDF.
 ```
                    abs(LdotH) * abs(VdotH)                 ior_o^2 * G * D
 microfacet_btdf = ------------------------- * ----------------------------------------
-                   abs(LdotN) * abs(VdotN)      (ior_i * LdotH + ior_o * VdotH)^2
+                   abs(LdotN) * abs(VdotN)      (ior_i * VdotH + ior_o * LdotH)^2
 ```
 
-`ior_i` and `ior_o` denote the index of refraction of the incident and transmitted side of the surface, respectively. Using Snell's law, the half vector is computed as follows:
+`ior_i` and `ior_o` denote the index of refraction of the incident and transmitted side of the surface, respectively. `V` is the vector pointing to the camera, `L` points to the light. In a path tracer that starts rays at the camera, `V` corresponds to the incident side of the surface, which is the side of the medium  with `ior_i`.
+
+Using Snell's law, the half vector is computed as follows:
 
 ```
-H = -normalize(ior_i * LdotN + ior_o * VdotN)
+H = -normalize(ior_i * VdotH + ior_o * LdotN)
 ```
 
 Incident and transmitted index of refraction have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through overlapping objects is described in [Schmidt C., Budge B. (2002): Simple Nested Dielectrics in Ray Traced Images](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.125.5212&rep=rep1&type=pdf).
