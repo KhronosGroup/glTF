@@ -51,7 +51,7 @@ The extension provides two parameters to describe the medium and one parameter t
 
 | | Type | Description | Required |
 |-|------|-------------|----------|
-| **sigmaT** | `number[3]` | Attenuation coefficient in inverse meters. | No, default: `[0.0, 0.0, 0.0]` |
+| **sigmaT** | `number[3]` | Attenuation coefficient (also called extinction coefficient) in inverse meters. | No, default: `[0.0, 0.0, 0.0]` |
 | **albedo** | `number[3]` | Single-scattering albedo. | No, default: `[0.0, 0.0, 0.0]` |
 | **anisotropy** | `number` | Anisotropy of the phase function in range [-1, 1] | No, default: `0` |
 
