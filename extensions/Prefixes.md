@@ -16,6 +16,7 @@ The following extension prefixes are reserved:
 * `FB` - Facebook
 * `FOXIT` - Foxit Software
 * `GOOGLE` - Google
+* `KDAB` - The KDAB Group
 * `KHR` - Ratified or intended-to-be-ratified Khronos
 * `LLQ` - Lifeliqe
 * `MESHOPT` - Meshoptimizer
