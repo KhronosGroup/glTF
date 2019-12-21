@@ -3903,28 +3903,39 @@ Application-specific data.
 
 # Appendix B: BRDF Implementation
 
-*This section is non-normative.*
-
 The metallic-roughness material model is a linear blend of two BRDFs, a metallic BRDF and a dielectric BRDF. The blending factor `metallic` describes the metalness of the material. The BRDFs share the parameters for roughness and base color, following [Burley (2012): Physically-Based Shading at Disney](https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf).
 
 ```
-material = mix(
-  dielectric_brdf(baseColor, roughness^2),
-  metal_brdf(baseColor, roughness^2),
-  metallic)
+material = mix(dielectric_brdf, metal_brdf, metallic)
 ```
 
-The metal BRDF is based on a microfacet model. The base color modifies the color at normal incidence. The roughness is squared to make it perceptually linear to allow interpolation between rough and smooth materials.
+The metal BRDF is based on a microfacet model which describes the orientation of microfacets on the surface as a statistical distribution. The distribution is controlled by a parameter called `roughness`, varying between 0 (smooth surface) and 1 (rough surface). For most microfacet distributions the blending between the two extremes does not behave linear, making it necessary to square the material's `roughness` parameter before using it as the distribution's roughness.
 
-The dielectric BRDF is a Fresnel-weighted combination of a diffuse BRDF and a microfacet BRDF. The Fresnel term uses a fixed index of refraction of 1.5, which is a good compromise for the majority of opaque, dielectric materials.
+Most metallic surfaces reflect back most of the illumination, only a small portion of the light is absorbed by the material. This effect is described by the Fresnel term with the wavelength-dependent refractive index and extinction coefficient. To make parameterization simple, the metallic-roughness material combines the two quantities into a single, user-defined color value `baseColor` that defines the reflection color at normal incidence, also referred to as `f0`.
+
+```
+metal_brdf =
+  conductor_fresnel(
+    f0 = baseColor,
+    f90 = 1,
+    bsdf = specular_brdf(roughness^2))
+```
+
+Unlike metals, dielectric materials transmit most of the incident illumination into the interior of the object and the Fresnel term is parameterized only by the refractive index. This makes dielectrics like glass, oil, water or air transparent. Other dielectrics, like the majority of plastic materials, are filled with particles that absorb or scatter most or all of the transmitted light, reducing the transparency and giving the surface its colorful appearance.
+
+As a result, dielectric materials are modeled as a Fresnel-weighted combination of a microfacet BRDF, simulating the reflection at the surface, and a diffuse BRDF, simulating the transmitted portion of the light that is absorbed and scattered inside the object. The reflection roughness is given by the squared `roughness` of the material. The color of the diffuse BRDF comes from the `baseColor`. The amount of reflection compared to transmission is directional-dependent and as such determined by the Fresnel term. Its index of refraction is set to a fixed value of 1.5, a good compromise for the majority of opaque, dielectric materials.
 
 ```
 dielectric_brdf =
   fresnel_mix(
-    diffuse_brdf(baseColor),
-    microfacet_brdf(roughness^2),
+    base = diffuse_brdf(baseColor),
+    layer = specular_brdf(roughness^2),
     ior = 1.5)
 ```
+
+The BRDFs and mixing operators used in the metallic-roughness material are summarized in the following image.
+
+![](figures/pbr.png)
 
 The glTF spec is designed to allow applications to choose different lighting implementations based on their requirements. Some implementations may focus on an accurate simulation of light transport, others may choose to deliver real-time performance. Therefore, any implementation that adheres to the rules for mixing BRDFs is compliant to the glTF spec.
 
@@ -3932,7 +3943,11 @@ In a physically-accurate light simulation, the BRDFs have to follow some basic p
 
 The unbiased light simulation with physically realistic BRDFs will be the ground-truth for approximations in real-time renderers that are often biased, but still give visually pleasing results. Usually, these renderers take short-cuts to solve the rendering equation, like the split-sum approximation for image based lighting, or simplify the math to save instructions and reduce register pressure. However, there are many ways to achieve good approximations, depending on the constraints of the platform (mobile or web applications, desktop applications on low or high-end hardware, VR), and the constraints change over time.
 
-## Metal BRDF
+## Implementation
+
+*This section is non-normative.*
+
+### Metal BRDF
 
 The metallic reflection is modeled as a GGX microfacet BRDF with Schlick Fresnel term to configure the complex index of refraction via the `baseColor` of the material. The microfacet model lacks multiple scattering, resulting in high energy-loss with increased roughness. Accurate models to simulate multiple scattering are costly to compute. [Kulla and Conty (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf) introduces an easy approximation of the effect that does not violate the mathematical properties of a BRDF and, thus, can be used in unbiased ray tracing and real-time rasterizatiom.
 
@@ -3983,7 +3998,7 @@ multiscatter_fresnel = -------------------------
 
 Although it is possible to compute the multi-scattering approximation in real-time (see [McAuley (2019): A Journey Through Implementing Multiscattering BRDFs and Area Lights](http://i3dsymposium.github.io/2019/keynotes/I3D2019_keynote_StephenMcAuley.pdf)), implementations may omit it to improve performance.
 
-## Dielectric BRDF
+### Dielectric BRDF
 
 Dielectric materials like plastics are modeled as a GGX microfacet BRDF coupled with a diffuse BRDF via the Schlick Fresnel term in the `fresnel_mix` operation. Microfacet BRDF and multi-scattering approximation are the same as in the metal BRDF. The diffuse reflection is modeled with a Lambertian BRDF.
 
@@ -4025,7 +4040,7 @@ diffuse_weight = -----------------------------------------
 
 There are several options to simplify this method for real-time rendering, like omitting `E(LdotN)`, replacing the `diffuse_weight` by `1 - fresnel`, or replacing it by 1. Note that this will violate certain physical properties of BRDFs.
 
-*TODO: typesetting equations, images for BRDFs, white furnace test showing difference between albedo scaling and real-time weightings*
+*TODO: clean-up and typeset equations, images for BRDFs, white furnace test showing difference between albedo scaling and real-time weightings*
 
 # Appendix C: Spline Interpolation
 
