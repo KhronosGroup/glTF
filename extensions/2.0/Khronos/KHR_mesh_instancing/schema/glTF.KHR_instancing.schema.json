@@ -7,7 +7,7 @@
     "properties": {
         "attributes": {
             "type": "object",
-            "description": "A dictionary object, where each key corresponds to mesh attribute semantic and each value is the index of the accessor containing attribute's data (defined optional attribs are POSITION, ROTATION, SCALE).",
+            "description": "A dictionary object, where each key corresponds to mesh attribute semantic and each value is the index of the accessor containing attribute's data (defined optional attribs are TRANSLATION, ROTATION, SCALE).",
             "minProperties": 1,
             "additionalProperties": {
                 "$ref": "glTFid.schema.json"
