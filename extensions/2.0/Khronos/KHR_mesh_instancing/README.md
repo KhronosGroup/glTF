@@ -4,6 +4,7 @@
 
 * John Cooke
 * Don McCurdy
+* Arseny Kapoulkine 
 
 ## Acknowledgments
 
@@ -27,9 +28,8 @@ Custom attributes can use the underscore mechanism to achieve other effects (i.e
 
 Instancing is defined by adding the `KHR_mesh_instancing` extension to any glTF node that has a mesh.  Instancing only applies to mesh nodes, there is no defined behavior for a node 
 with this extension that doesn't also have a mesh.  Applying to nodes rather than meshes allows the same mesh to be used by several nodes, instanced or otherwise.  The attributes 
-section contains accessor ids for the POSITION, ROTATION, and SCALE attribute buffers, all of which are optional.  Note that the attributes specify a world transform, even though the
-node can exist anywhere within the node tree no parent transforms are applied to the attributes (because the attributes are uploaded directy to the gpu). For example, the following 
-defines some instancing attributes to a node with mesh.  
+section contains accessor ids for the TRANSLATION, ROTATION, and SCALE attribute buffers, all of which are optional.  The attributes specify an object space transform that should be 
+multipled by the node's world transform in the shader to produce the final world transform for the instance. For example, the following defines some instancing attributes to a node with mesh.  
 
 ```json
 {
