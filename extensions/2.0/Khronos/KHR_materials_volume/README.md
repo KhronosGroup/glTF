@@ -118,27 +118,35 @@ Subsurface scattering inside the volume is enabled by modifying the albedo param
 <figcaption>Volume with colored albedo and greyscale attenuation. The index of refraction is set to 1 and roughness is 0, light rays pass through the boundary without being bent.</figcaption>
 </figure>
 
-## Implementation
-
-### BTDF
+### Layering
 
 The extension replaces the thin microfacet BTDF defined in `KHR_materials_transmission` by a microfacet BTDF that takes refraction into account, see [Walter B., Marschner S., Li H., Torrance K. (2007): Microfacet Models for Refraction through Rough Surfaces](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf).
 
 ```
-transparent_dielectric_bsdf =
-  microfacet_btdf(alpha) * (1.0 - fresnel(HdotV, f0)) +
-  microfacet_brdf(alpha) * fresnel(HdotV, f0) +
-  multiscatter_microfacet_brdf(alpha) * multiscatter_fresnel(f0)
-
-dielectric_bsdf = mix(
-  dielectric_brdf(baseColor, alpha),
-  transparent_dielectric_bsdf(baseColor, alpha),
+dielectric_base_bsdf = mix(
+  diffuse_brdf(baseColor),
+  specular_btdf(roughness^2),
   transmission)
 
-material = mix(
-  dielectric_bsdf(baseColor, roughness^2, transmission),
-  metal_brdf(baseColor, roughness^2),
-  metallic)
+dielectric_bsdf =
+  fresnel_mix(
+    base = dielectric_base_bsdf,
+    layer = specular_brdf(roughness^2),
+    ior = 1.5)
+```
+
+## Implementation
+
+*This section is non-normative.*
+
+Substituting `mix` and `fresnel_mix` with the concrete Fresnel equations and incorporating the multiple-scattering approximation for specular reflections leads to the following expression for the `dielectric_brdf`:
+
+```
+dielectric_brdf =
+  diffuse_brdf() * diffuse_weight(VdotN, LdotN, f0) * (1.0 - transmission) +
+  microfacet_btdf(alpha) * (1.0 - fresnel(HdotV, f0)) * transmission +
+  microfacet_brdf(alpha) * fresnel(HdotV, f0) +
+  multiscatter_microfacet_brdf(alpha) * multiscatter_fresnel(f0)
 ```
 
 The microfacet BTDF uses the same terms for G and D as the microfacet BRDF.
