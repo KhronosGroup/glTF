@@ -54,6 +54,9 @@ The extension provides two parameters to describe the medium and one parameter t
 | **sigmaT** | `number[3]` | Attenuation coefficient (also called extinction coefficient) in inverse meters. | No, default: `[0.0, 0.0, 0.0]` |
 | **albedo** | `number[3]` | Single-scattering albedo. | No, default: `[0.0, 0.0, 0.0]` |
 | **anisotropy** | `number` | Anisotropy of the phase function in range [-1, 1] | No, default: `0` |
+| **thicknessTexture** | `textureInfo` | A grayscale texture that defines the thickness of the volume beneath the surface. May be used by renderers that are not able to infer the thickness from the geometry. | No |
+| **minThickness** | `float` | When using a thickness texture, a texture value of 0.0 is interpreted to be `minThickness`. When a constant thickness is used, the thickness will be `minThickness`. | No, default: `0` |
+| **maxThickness** | `float` | When using a thickness texture, a texture value of 1.0 is interpreted to be `maxThickness`. Values between 0.0 and 1.0 are linearly scaled between minThickness and `maxThickness`. | No, default: `0` |
 
 ### Conversions
 
@@ -108,6 +111,10 @@ Base color and absorption both have an effect on the final color of a volumetric
 <img src="./figures/absorption.png"/>
 <figcaption>Base color changes the amount of light passing through the volume boundary (left). The overall color of the object is the same everywhere, as if the object is covered with a colored, semi-transparent foil. Absorption changes the amount of light traveling through the volume (right). The overall color depends on the distance the light traveled through it; at small distances (top) almost nothing was absorbed and the color is white, whereas long distances make the light darker (bottom)</figcaption>
 </figure>
+
+### Thickness Texture
+
+The thickness of a closed volume is typically quite difficult to compute in a rasterizer. Since glTF is primarily used with real-time rasterizers, this extension allows for the thickness of the volume to be explicitly defined, either via a greyscale texture value or as a constant. However, deriving the thickness along a ray from the actual geometry is the preferred approach. Path-traced renderers as well as more sophisticated raster techniques should ignore the thickness texture.
 
 ### Subsurface Scattering
 
