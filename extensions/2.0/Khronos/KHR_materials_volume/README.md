@@ -91,14 +91,12 @@ albedo = (1 - s^2) / (1 - anisoptropy * s^2)
 Without this extension, the glTF geometry defines a two-sided object enclosing an infinitely thin volume. If the extension is enabled, the geometry represents a volume boundary. The index of refraction will bend light rays traveling through the boundary into the volume.
 
 <figure style="text-align:center">
-<img src="./figures/thin.png"/>
-<img src="./figures/refraction.png"/>
+<img src="./figures/thin-volumetric.png"/>
 <figcaption>Left: The geometry describes an infinitely thin volume (red). Right: The geometry describes the boundary of a volume.</figcaption>
 </figure>
 
 <figure style="text-align:center">
-<img src="./figures/rough-thin.png"/>
-<img src="./figures/rough-refraction.png"/>
+<img src="./figures/thin-volumetric-rough.png"/>
 <figcaption>Surface roughness affects BRDF and BTDF, thin-walled (left) and volumetric objects (right).</figcaption>
 </figure>
 
@@ -107,8 +105,7 @@ Without this extension, the glTF geometry defines a two-sided object enclosing a
 Base color and absorption both have an effect on the final color of a volumetric object, but the behavior is different. Base color will change the color of light passing through the surface, i.e., the boundary of the volume. Absorption will occur while the light is traveling through the volume. Depending on the distance the light travels through the volume, more or less of it is absorbed, making the overall color of the object dependent on its shape.
 
 <figure style="text-align:center">
-<img src="./figures/base-color.png"/>
-<img src="./figures/absorption.png"/>
+<img src="./figures/base-color-absorption.png"/>
 <figcaption>Base color changes the amount of light passing through the volume boundary (left). The overall color of the object is the same everywhere, as if the object is covered with a colored, semi-transparent foil. Absorption changes the amount of light traveling through the volume (right). The overall color depends on the distance the light traveled through it; at small distances (top) almost nothing was absorbed and the color is white, whereas long distances make the light darker (bottom)</figcaption>
 </figure>
 
