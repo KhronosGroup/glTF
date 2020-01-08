@@ -33,7 +33,28 @@
             "minimum": -1.0,
             "maximum": 1.0,
             "description": "Anisotropy of the phase function.",
-            "default": [ 0.0 ]
+            "default": 0.0
+        },
+        "thicknessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "A grayscale texture that defines the thickness of the volume beneath the surface.",
+            "gltf_detailedDescription": "A grayscale texture that defines the thickness of the volume beneath the surface. May be used by renderers that are not able to derive the thickness from the actual geometry, otherwise it should be ignored."
+        },
+        "minThickness": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 0.0,
+            "description": "Minimum thickness of the volume, corresponds to a texture value of 0.0.",
+            "gltf_detailedDescription": "When using a thickness texture, a texture value of 0.0 is interpreted to be minThickness. When a constant thickness is used, the thickness will be minThickness."
+        },
+        "maxThickness": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 1.0,
+            "description": "Maximum thickness of the volume, corresponds to a texture value of 1.0.",
+            "gltf_detailedDescription": "When using a thickness texture, a texture value of 1.0 is interpreted to be maxThickness. Values between 0.0 and 1.0 are linearly scaled between minThickness and maxThickness."
         }
     }
 }
