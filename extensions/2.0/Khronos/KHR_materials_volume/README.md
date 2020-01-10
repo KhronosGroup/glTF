@@ -16,7 +16,7 @@ Written against the glTF 2.0 spec. Needs to be combined with `KHR_materials_tran
 
 This extension adds material parameters to configure the volume beneath the surface of closed meshes, providing effects like refraction, absorption and subsurface scattering. The transparency of the surface is controlled by `KHR_materials_transmission`.
 
-Light hitting an object will first interact with the surface according the BSDF. The BSDF determines how much and in which direction the incident light is reflected and transmitted. Light that is transmitted enters the volume, where it is absorbed or scattered by particles inside the medium. After bouncing several times inside the object, the light will eventually hit the surface again. The BSDF is evaluated a second time, the light may now leave the object or be kept inside it if total internal reflection occurs.
+Light hitting an object will first interact with the surface according the BSDF. The BSDF determines how much and in which direction the incident light is reflected and transmitted. Light that is transmitted enters the volume, where it is absorbed or scattered by particles inside the medium. After bouncing several times inside the object, the light will eventually hit the surface again. The BSDF is evaluated a second time and a part of the light may now leave the object, the rest is kept inside.
 
 The light rays are reflected or refracted at the micro-facets on the surface, taking the roughness of the material into account. The index of refraction used for computing the refraction direction is taken from the BSDF, potentially set by `KHR_materials_ior`.
 
