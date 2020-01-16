@@ -1175,6 +1175,12 @@ The following equations show how to calculate bidirectional reflectance distribu
 
 All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix B](#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
+#### Extensions
+
+glTF 2.0 defines several optional extensions that make the metallic-roughness material more flexible. The following image shows the complete material including all extensions. The default values for parameters introduced in extensions are chosen in a way that they do not affect the material if the extension is not used.
+
+![](figures/pbrext.png)
+
 ### Additional Maps
 
 The material definition also provides for additional maps that can also be used with the metallic-roughness material model as well as other material models which could be provided via glTF extensions.
