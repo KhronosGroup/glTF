@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_thinfilm glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the thin film effect.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "thinfilmFactor": {
+            "type": "number",
+            "description": "The thin film intensity.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": ""
+        },        
+        "thinfilmTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The thin film intensity texture.",
+            "gltf_detailedDescription": "The thin film intensity texture. Stored in channel R with default linear value 1.0 of the thin film texture."
+        },
+        "thinfilmThicknessMinimum": {
+            "type": "number",
+            "description": "The thin film minimum thickness.",
+            "default": 400.0,
+            "minimum": 0.0,
+            "gltf_detailedDescription": ""
+        },        
+        "thinfilmThicknessMaximum": {
+            "type": "number",
+            "description": "The thin film maximum thickness.",
+            "default": 1200.0,
+            "maximum": 1200.0,
+            "gltf_detailedDescription": ""
+        },        
+        "thinfilmThicknessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The thin film thickness texture.",
+            "gltf_detailedDescription": "The thin film thickness texture. Stored in channel G with default linear value 1.0 of the thin film texture."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
