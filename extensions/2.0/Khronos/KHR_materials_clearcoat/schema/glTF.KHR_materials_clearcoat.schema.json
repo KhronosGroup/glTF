@@ -1,0 +1,42 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_clearcoat glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the clearcoat material layer.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "clearcoatFactor": {
+            "type": "number",
+            "description": "The clearcoat layer intensity.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The clearcoat layer intensity (aka opacity) of the material. A value of 0.0 means the material has no clearcoat layer enabled."
+        },        
+        "clearcoatTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The clearcoat layer intensity texture.",
+            "gltf_detailedDescription": "The clearcoat layer intensity texture. Stored in channel R with default linear value 1.0."
+        },
+        "clearcoatRoughnessFactor": {
+            "type": "number",
+            "description": "The clearcoat layer roughness.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The clearcoat layer roughness of the material."
+        },        
+        "clearcoatRoughnessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The clearcoat layer roughness texture.",
+            "gltf_detailedDescription": "The clearcoat layer roughness texture. Stored in channel G with default linear value 1.0."
+        },
+        "clearcoatNormalTexture": {
+            "allOf": [ { "$ref": "material.normalTextureInfo.schema.json" } ],
+            "description": "The clearcoat normal map texture.",
+            "gltf_detailedDescription": "A tangent space normal map for the clearcoat layer."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
