@@ -27,8 +27,8 @@ The data size extension is defined at the root level of the glTF asset.
                     "1024_max": 12345,
                     "2048_max": 12345,
                     "KHR_basis": {
-                        "1024": 12345, 
-                        "2048": 12345
+                        "1024_max": 12345, 
+                        "2048_max": 12345
                     }
                 },
                 "geometry": { 
@@ -46,12 +46,12 @@ The data size extension is defined at the root level of the glTF asset.
             "memory": {
                 "images": { 
                     "KHR_basis": {
-                        "1024": 12345, 
-                        "2048": 12345
+                        "1024_max": 12345, 
+                        "2048_max": 12345
                     },
                     "default": {
-                        "1024": 12345,
-                        "2048": 12345
+                        "1024_max": 12345,
+                        "2048_max": 12345
                     }
                 },
                 "geometry": 12345,
