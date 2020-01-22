@@ -34,3 +34,14 @@ Client implementations may choose to require that glTF assets containing one or 
 * A joint node *must not* define any other functional role, such as `node.mesh`, `node.camera`, `node.weights`, or `node.skin`.
 
 > **NOTE:** A node is considered a joint for a skin if and only if the node is included in the skin's `joints` list.
+
+## Extending assets
+
+The `KHR_skin_strict` extension is listed in `extensionsUsed`, but has no other explicit presence in the schema.
+
+```json
+{
+    "extensionsUsed": ["KHR_skin_strict"],
+    ...
+}
+```
