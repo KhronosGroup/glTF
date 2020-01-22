@@ -1260,7 +1260,7 @@ This specification does not define size and style of non-triangular primitives (
 
 ## Cameras
 
-A camera defines the projection matrix that transforms from view to clip coordinates. The projection can be perspective or orthographic. Cameras are contained in nodes and thus can be transformed. Their world-space transformation matrix is used for calculating view-space transformation. The camera is defined such that the local +X axis is to the right, the lens looks towards the local -Z axis, and the top of the camera is aligned with the local +Y axis. If no transformation is specified, the location of the camera is at the origin.
+A camera defines the projection matrix that transforms from view to clip coordinates. The projection can be perspective or orthographic. Cameras are referenced in nodes (see `node.camera`) and thus can be transformed and animated (only one node can reference a particular camera). Their world-space transformation matrix is used for calculating the view-space transformation. The camera is defined such that the local +X axis is to the right, the lens looks towards the local -Z axis, and the top of the camera is aligned with the local +Y axis. If no transformation is specified, the location of the camera is at the origin.
 
 Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
 
