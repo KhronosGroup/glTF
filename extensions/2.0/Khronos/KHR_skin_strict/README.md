@@ -26,12 +26,9 @@ Client implementations may choose to require that glTF assets containing one or 
 
 * All skins *must* define the `skeleton` property.
 * The `skeleton` node for a skin *must* be a joint, and the direct parent of the entire joint subtree for that skin.
-* All joints in a skin *must* define a single fully-connected subtree, sharing a single root joint.
-* A non-joint node *must not* be both an ancestor and a descendant of a joint node.
-    * `node ⊃ joint ⊃ joint ⊃ node` is valid.
-    * `node ⊃ joint ⊃ node ⊃ joint` is invalid, regardless of whether the two joints are part of the same skin.
+* All joints in a skin *must* define a single fully-connected subtree, sharing a single root joint, with no non-joint nodes coming between the joints of the tree.
 * A joint node *must* belong only to a single skin.
-* A joint node *must not* define any other functional role, such as `node.mesh`, `node.camera`, `node.weights`, or `node.skin`.
+* A joint node *must not* define any other functional role, such as `node.mesh`, `node.camera`, or `node.skin`. Likewise, joint nodes cannot use extensions that instantiate resources in the scene (like `KHR_lights_punctual`).
 
 > **NOTE:** A node is considered a joint for a skin if and only if the node is included in the skin's `joints` list.
 
