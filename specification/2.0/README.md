@@ -942,9 +942,15 @@ The number of joints that influence one vertex is limited to 4 per set, so refer
 
 The joint weights for each vertex must be non-negative. No joint may have more than one non-zero weight for a given vertex.
 
-When the weights are stored using `FLOAT` component type, their linear sum must be as close as possible to `1.0` for a given vertex. When the weights are stored using `UNSIGNED_BYTE` or `UNSIGNED_SHORT` component types, their linear sum before normalization must be `255` or `65535` respectively.
+When the weights are stored using `FLOAT` component type, glTF exporters should produce weights with linear sum as close as reasonably possible to `1.0` for a given vertex.
 
-> **Implementation Note:** Otherwise, vertices would be deformed very significantly because the weight error would get multiplied by the joint position. So an error of `1/255` in the weight sum is actually unacceptably large.
+> **Implementation Note:** The threshold in the official validation tool is set to `2e-7` times the number of non-zero weights per vertex.
+
+When the weights are stored using `UNSIGNED_BYTE` or `UNSIGNED_SHORT` component types, their linear sum before normalization must be `255` or `65535` respectively.
+
+> **Implementation Note:** Since the allowed threshold is much lower than minimum possible step for quantized component types, exporters should just renormalize weight sum after quantization.
+
+Without these requirements, vertices would be deformed significantly because the weight error would get multiplied by the joint position. For example, an error of `1/255` in the weight sum would result in an unacceptably large difference in the joint position.
 
 In the event that of any of the vertices are influenced by more than four joints, the additional joint and weight information will be found in subsequent sets. For example `JOINTS_1` and `WEIGHTS_1` if present will reference the accessor for up to 4 additional joints that influence the vertices. Note that client implementations are only required to support a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the model's animation.
 
