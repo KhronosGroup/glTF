@@ -39,45 +39,46 @@ Named sections are dependent upon each other, i.e., they have to be decoded in s
 Variable types are defined as following.
 All integer and floating point formats are little endian.
 
+- `char`: ASCII character
 - `uint8`: unsigned 8-bit integer 
 - `uint16`: unsigned 16-bit integer 
-- `int16`: signed 16-bit integer 
 - `uint32`: unsigned 32-bit integer 
+- `int8`: signed 8-bit integer 
 - `int32`: signed 32-bit integer 
 - `float`: IEEE 754 single precision
 - `var32`: variable-length value that represents unsigned 32-bit integer values (has to be decoded by the LEB128 function)
 - `var64`: variable-length value that represents unsigned 64-bit integer values (has to be decoded by the LEB128 function)
 - `f{n}`: unsigned n-bit number with decreasing digit place value. The number is appended by padding bits to the next byte so that data remains byte-aligned.
 
- 
+
 # Draco Header
 
 Name | Type | Description
 -|-|-
-Draco String | `uint8[5]` | Must equal "DRACO"
-Major version | `uint8` | Bitstream major version number
-Minor version | `uint8` | Bitstream minor version number
+Draco String | `char[5]` | Must equal `DRACO`
+Major version | `uint8` | Bitstream major version number, must equal `2`
+Minor version | `uint8` | Bitstream minor version number, must equal `2`
 Encoder type | `uint8` | `0`: Point cloud, `1`: Triangular mesh
-Encoder method | `uint8` | `0`: Sequential connectivity, `1`: EdgeBreaker connectivity 
-Flags | `uint16` | `0`: No flag, `0x8000`: Metadata present 
+Encoder method | `uint8` | `0`: Sequential connectivity, `1`: EdgeBreaker connectivity
+Flags | `uint16` | `0`: No flag, `0x8000`: Metadata present
 
 
 # Metadata
 
 This section is only present if `DracoHeader.Flags` contains the flag `0x8000`.
 
-It contains a variable that specifies the number of encoded metadata elements followed by a list of metadata attribute IDs and a list of metadata attribute records.
-Finally, a single metadata record is encoded that refers to the file itself. 
+It contains a variable that specifies the number of encoded attribute metadata records followed by a list of metadata attribute IDs and a list of metadata attribute records.
+Finally, a single metadata record is encoded that refers to the file itself.
 This structure is depicted in the following: 
 
 Name | Type
 -|-
-Number of metadata records | `var32`
+Number of attribute metadata records | `var32`
 Array of attribute metadata IDs | `var32[]`
 Array of attribute metadata records | `Metadata[]`
 File metadata | `Metadata`
 
-`Metadata` denotes a single metadata record. Each record can contain zero or more name-value entries. 
+`Metadata` denotes a single metadata record. Each record can contain zero or more name-value entries.
 `Metadata` is a recursive type as it can contain zero or more sub metadata records where each sub metadata record is a name-metadata pair.
 
 `Metadata`:
@@ -85,21 +86,21 @@ File metadata | `Metadata`
 - Number of entries: `var32`
 - Entry array:
 	- Name size: `uint8`
-	- Name: `int8[]`
+	- Name: `char[]`
 	- Value size: `uint8`
 	- Value: `int8[]`
 - Number of sub metadata records: `var32`
 - Sub metadata array:
 	- Name size: `uint8`
-	- Name: `int8[]`
+	- Name: `char[]`
 	- Sub metadata: `Metadata` (Here, the type recurses. This is not a reference or index.)
 
+Each metadata record contains a name-value pair list together with a list of sub metadata records, forming a metadata record tree.
+Each sub metadata record is a name-metadata pair, again.
+In the case where there are duplicate names within an entries array, lexically preceding values for the same name shall be overwritten.
 
-Each metadata record contains a name-value pair list together with a list of sub metadata records, forming a metadata record tree. 
-Each sub metadata record is a name-metadata pair, again. 
-The `i`'th  attribute metadata record relates to the attribute referenced by the `i`'th attribute metadata ID.
-
-To avoid ambiguities, each ID inside the attribute metadata ID array must be unique. 
+The `i`'th attribute metadata record relates to the attribute referenced by the `i`'th attribute metadata ID.
+To avoid ambiguities, each ID inside the attribute metadata ID array must be unique.
 Otherwise, multiple metadata records would relate to the same attribute.
 
 
@@ -139,12 +140,12 @@ The sequential connectivity block starts with a preceding header that defines th
 
 The header block of sequential connectivity information contains a fixed number of variables.
 
-| Variable        | Data Type           | Description|
-| ------------- |:-------------:|:-------------:|  
-| num_faces      |          `var32`          | Stores the overall number of faces |
-|  num_points       |           `var32`          | Stores the overall number of points |
-|  connectivity_method  |               `uint8`          |`0`: Compressed indices, `1`: Uncompressed indices |
- 
+| Variable              | Data Type | Description |
+| --------------------- |:---------:|:-------------:|
+| `num_faces`           |  `var32`  | Stores the overall number of faces. Must be less than or equal to `1431655765` |
+| `num_points`          |  `var32`  | Stores the overall number of points. Must be less than or equal to `num_faces * 3` |
+| `connectivity_method` |  `uint8`  |`0`: Compressed indices, `1`: Uncompressed indices |
+
 
 This information is used to interpret the index block, which can be either compressed (`connectivity_method` equals 0) or uncompressed (`connectivity_method` equals 1). 
 
@@ -156,17 +157,21 @@ Hence, before parsing sequential indices, the data type of one index element has
 The size of the data type is one to four bytes. Given the overall number of points, the following table shows the related data type format.
 
 
-| up to num_points  |     Index Element Data Type   | 
-| ----------------- | :----------------------------:| 
-| 2^8     (256)     |             `uint8`          | 
-| 2^16    (65536)   |             `uint16`         | 
-| 2^21  (2097152)   |             `var32`          | 
-| 2^32 (4294967296) |             `uint32`         | 
- 
-With this information, the size of the uncompressed sequential index block is given by the size of one index element data type and the number of faces:
-		
-	sequential_index_block_size = sizeof(index_element) * num_faces * 3
+| Up to `num_points`          |    Index Element Data Type   |
+| --------------------------- |:----------------------------:|
+| 2<sup>8</sup>  (256)        |             `uint8`          |
+| 2<sup>16</sup> (65536)      |             `uint16`         |
+| 2<sup>21</sup> (2097152)    |             `var32`          |
+| 2<sup>32</sup> (4294967296) |             `uint32`         |
 
+With this information, the size of the uncompressed sequential index block for fixed-width data types
+is given by the size of one index element data type and the number of faces:
+
+```c
+sequential_index_block_size = sizeof(index_element) * num_faces * 3
+```
+
+For `var32` indices, the uncompressed sequential index block has variable length.
 
 One face is defined by exactly three point indices, hence, forming a triangle when substituting respective indices with point data. 
 Three indices forming one face are stored subsequently. 
@@ -180,16 +185,15 @@ Three indices forming one face are stored subsequently.
 #### Compressed Sequential Indices 
 
 The compression of sequential indices is based on the algorithm shown by Jarek Duda in
-*Asymmetric numeral systems: entropy coding combining speed of Huffman coding with compression rate of arithmetic coding* (2014):
-https://arxiv.org/pdf/1311.2540.pdf
-Specifically, the range variant (__rANS__) is used for compression, which is suitable for large coding alphabets. 
+[Asymmetric numeral systems: entropy coding combining speed of Huffman coding with compression rate of arithmetic coding (2014)](https://arxiv.org/pdf/1311.2540.pdf).
+Specifically, the range variant (__rANS__) is used for compression, which is suitable for large coding alphabets.
+See `DecodeSymbols` function in this specification for implementation details.
 
-The decompressed data of size *num_faces * 3 * sizeof( uint32 )* stores index differences.
-This is why the uint32 value has to be reinterpreted to a signed value.
-<!---
-The conversion from raw buffer values to signed integer values is done by shifting the bits to the right by one digit. 
-The consumed rightmost bit determines the sign of the value respectively (1 represents a negative value, 0 represents a positive value). 
--->
+The decompressed data of size `num_faces * 3 * sizeof( uint32 )` stores index differences encoded as unsigned 32-bit integers.
+These values have to be reinterpreted as signed values as follows:
+- The least significant bit determines the sign: (`0`: positive, `1`: negative). The remaining bits shifted to the right determine the absolute value.
+- The values can be decoded as `decoded = (value >>> 1) * (value & 1 ? -1 : 1)`.
+
 Obtained signed integer values represent the differences of subsequent indices. 
 This means, an additional interim stage is required to generate index values by stepping through the buffer and summing up the values. 
 At each buffer position, the current sum represents the absolute index value.
@@ -629,7 +633,7 @@ void Decode() {
 
 ```c++
 ParseHeader() {
-  draco_string                                                                       | uint8[5]
+  draco_string                                                                       | char[5]
   major_version                                                                      | uint8
   minor_version                                                                      | uint8
   encoder_type                                                                       | uint8
@@ -677,7 +681,7 @@ void ParseMetadataElement(metadata) {
   metadata.num_entries                                                               | var32
   for (i = 0; i < metadata.num_entries; ++i) {
     sz = metadata.key_size[i]                                                        | uint8
-    metadata.key[i]                                                                  | int8[sz]
+    metadata.key[i]                                                                  | char[sz]
     sz = metadata.value_size[i]                                                      | uint8
     metadata.value[i]                                                                | int8[sz]
   }
@@ -690,7 +694,7 @@ void ParseMetadataElement(metadata) {
 ```c++
 void ParseSubMetadataKey(metadata, index) {
   sz = metadata.sub_metadata_key_size[index]                                         | uint8
-  metadata.sub_metadata_key[index]                                                   | int8[sz]
+  metadata.sub_metadata_key[index]                                                   | char[sz]
 }
 ```
 
