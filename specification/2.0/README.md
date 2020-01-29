@@ -3971,17 +3971,17 @@ fresnel = baseColor + (1 - baseColor) * (1 - HdotV)^5
 The multi-scattering approximation uses the directional albedo `E_m` and average albedo `E_mavg` of the single-scattering model. These values are typically precomputed and fetched from a lookup table during rendering. The average Fresnel `F_mavg` for Schlick can be computed analytically.
 
 ```
-                                (1 - E_m(VdotN)) * (1 - E_m(LdotN))
-multiscatter_microfacet_brdf =  -----------------------------------
-                                         pi * (1 - E_mavg)
+                                (1 - E_m(VdotN, alpha)) * (1 - E_m(LdotN, alpha))
+multiscatter_microfacet_brdf =  --------------------------------------------------
+                                            pi * (1 - E_mavg(alpha))
 
            1                 20
 F_mavg = ---- * baseColor + ----
           21                 21
 
-                             F_mavg^2 E_mavg
-multiscatter_fresnel = -------------------------
-                       1 - F_mavg * (1 - E_mavg)
+                             F_mavg^2 E_mavg(alpha)
+multiscatter_fresnel = ---------------------------------
+                       1 - F_mavg * (1 - E_mavg(alpha))
 ```
 
 Although it is possible to compute the multi-scattering approximation in real-time (see [McAuley (2019): A Journey Through Implementing Multiscattering BRDFs and Area Lights](http://i3dsymposium.github.io/2019/keynotes/I3D2019_keynote_StephenMcAuley.pdf)), implementations may omit it to improve performance.
@@ -4021,9 +4021,9 @@ dielectric_brdf =
 `diffuse_weight` is derived from the albedo of the BRDFs involved in the mixing. The directional albedo `E` and average albedo `Eavg` of the microfacet BRDF (including multiple scattering) are measured and used to scale the diffuse BRDF such that it scatters the remaining energy of the microfacet BRDF equally in all directions.
 
 ```
-                  (1 - E(VdotN, f0)) * (1 - E(LdotN, f0))
-diffuse_weight = -----------------------------------------
-                               1 - Eavg(f0)
+                  (1 - E(VdotN, alpha, f0)) * (1 - E(LdotN, alpha, f0))
+diffuse_weight = -------------------------------------------------------
+                                  1 - Eavg(alpha, f0)
 ```
 
 There are several options to simplify this method for real-time rendering, like omitting `E(LdotN)`, replacing the `diffuse_weight` by `1 - fresnel`, or replacing it by 1. Note that this will violate certain physical properties of BRDFs.
