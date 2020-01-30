@@ -4013,7 +4013,7 @@ The `fresnel_mix` operation weights the (multi-scatter) microfacet BRDF with the
 
 ```
 dielectric_brdf =
-  diffuse_brdf() * diffuse_weight(VdotN, LdotN, f0) +
+  diffuse_brdf() * diffuse_weight(VdotN, LdotN, f0) * baseColor +
   microfacet_brdf(alpha) * fresnel(HdotV, f0) +
   multiscatter_microfacet_brdf(alpha) * multiscatter_fresnel(f0)
 ```
