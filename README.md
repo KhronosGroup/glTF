@@ -288,7 +288,6 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | [libgltf_ue4](https://github.com/code4game/libgltf_ue4) | ![status](https://img.shields.io/badge/glTF-2%2E0-yellow.svg?style=flat) | A third-party library for UE4.10+ to load glTF files |
 | [glTF for UE4](https://github.com/code4game/glTFForUE4) | ![status](https://img.shields.io/badge/glTF-2%2E0-yellow.svg?style=flat) | A plugin for UE4.10+ to import glTF files |
 | [Diligent Engine](https://github.com/DiligentGraphics/DiligentEngine) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | A modern cross-platform low-level graphics libarary and rendering framework |
-| [Datakit CrossCad/Ware SDK](https://www.datakit.com/en/crosscad_ware.php) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | A library to write glTF or glb files. Can also read and write multiple 3D formats |
 
 #### Objective-C
 
