@@ -375,6 +375,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | Tool | Status | Description |
 |------|--------|-------------|
 | [trimesh](https://github.com/mikedh/trimesh) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Python library for importing and exporting glTF and numerous other triangular mesh formats. |
+| [pygltflib](https://gitlab.com/dodgyville/pygltflib) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Python library for reading, writing and converting glTF 2.0 files. |
 
 ### Utilities
 
