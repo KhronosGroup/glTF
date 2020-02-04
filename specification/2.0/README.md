@@ -3975,9 +3975,9 @@ The multi-scattering approximation uses the directional albedo `E_m` and average
 multiscatter_microfacet_brdf =  --------------------------------------------------
                                             pi * (1 - E_mavg(alpha))
 
-           1                 20
-F_mavg = ---- * baseColor + ----
-          21                 21
+           1     20
+F_mavg = ---- + ---- * baseColor
+          21     21
 
                              F_mavg^2 E_mavg(alpha)
 multiscatter_fresnel = ---------------------------------
@@ -4002,9 +4002,9 @@ The Fresnel term in the mixing operation and its multi-scattering equivalent are
 f0 = ((1-ior)/(1+ior))^2 = 0.04
 fresnel = f0 + (1 - f0) * (1 - HdotV)^5
 
-           1          20
-F_mavg = ---- * f0 + ----
-          21          21
+           1     20
+F_mavg = ---- + ---- * f0
+          21     21
 ```
 
 An energy-conserving and energy-preserving coupling can be achieved via the same albedo-scaling technique as in the metal BRDF, as shown in [Kulla and Conty (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf). 
