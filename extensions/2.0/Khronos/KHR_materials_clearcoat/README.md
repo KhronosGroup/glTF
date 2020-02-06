@@ -2,20 +2,18 @@
 
 ## Khronos 3D Formats Working Group
 
-* Alexey Knyazev
-* Don McCurdy
-* Ed Mackey
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
-* Romain Guy
-* Tobias Haeussler
-
-## Acknowledgments
-
-* TODO
+* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
+* Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)
+* Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
+* Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
+* Romain Guy, Google [@romainguy](https://twitter.com/romainguy)
+* Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
+* Alex Wood, AGI [@abwood](https://twitter.com/abwood)
 
 ## Status
 
-Experimental
+Draft
 
 ## Dependencies
 
@@ -23,7 +21,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-TODO  
+This extension defines a clear coating that can be layered on top of an existing glTF material definition.  A clear coat is a common technique used in Physically-Based Rendering to represent a protective layer applied to a base material.  See [Theory, Documentation and Implementations](#theory-documentation-and-implementations)
 
 ## Extending Materials
 
@@ -47,7 +45,7 @@ For example, the following defines a material like varnish using clearcoat param
 
 ### Clearcoat
 
-All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [appendix](/specification/2.0/README.md#appendix-b-brdf-implementation) for more details on the BRDF calculations.
+All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
 |                                  | Type                                                                            | Description                            | Required             |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|----------------------|
@@ -57,25 +55,23 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 |**clearcoatRoughnessTexture**     | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The clearcoat layer roughness texture. | No                   |
 |**clearcoatNormalTexture**        | [`normalTextureInfo`](/specification/2.0/README.md#reference-normaltextureinfo) | The clearcoat normal map texture.      | No                   |
   
-The clearcoat formula `f_clearcoat` is the same as the specular term from the Metallic-Roughness material, using F0 equal 0.04.
-The following abstract code describes how the base and clearcoat layers should be blended together:  
+The clearcoat formula `f_clearcoat` is computed using the specular term from the glTF 2.0 Metallic-Roughness material, defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation).  Use F0 equal 0.04, and the clearcoat roughness value defined in this extension as follows:
+
+```
+clearcoatRoughness = clearcoatRoughnessFactor * clearcoatRoughnessTexture.g
+```
+
+The following abstract code describes how the base and clearcoat layers should be blended together:
   
 ```
-blendFactor = clearcoatFactor * fresnel(0.04, NdotV)
-f = (f_emissive + f_diffuse) * (1.0 - blendFactor) + mix(f_specular, f_clearcoat, blendFactor)
+clearcoatWeight = clearcoatTexture.r * clearcoatFactor * fresnel(0.04, NdotV)
+
+f = (f_emissive + f_diffuse) * (1.0 - clearcoatWeight) + mix(f_specular, f_clearcoat, clearcoatWeight)
 ```
 
-If `clearcoatFactor = 0`, the clearcoat layer is disabled and the material is behaving like the core Metallic-Roughness material:
+If `clearcoatFactor = 0`, the clearcoat layer is disabled.
 
-```
-f = f_emissive + f_diffuse + f_specular
-```
-  
-If textures are not set, the default values of the clearcoat layer textures are used and the values are not inherited from the underlying Metallic-Roughness (or other) material. If one wants to have the same textures, one have to explicitly set the same texture sources.
-
-## Appendix
-
-TODO
+The values for clearcoat layer intensity and clearcoat roughness can be defined using factors, textures, or both. If the `clearcoatTexture` or `clearcoatRoughnessTexture` is not given, respective texture components are assumed to have a value of 1.0. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values.
 
 ## Reference
 
