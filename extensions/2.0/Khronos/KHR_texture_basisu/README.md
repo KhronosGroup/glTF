@@ -16,7 +16,7 @@ Written against the glTF 2.0 spec.
 
 This extension adds the ability to specify textures using KTX2 images with Basis Universal supercompression. An implementation of this extension can use such images as an alternative to the PNG or JPEG images available in glTF 2.0 for more efficient asset transmission and reducing GPU memory footprint. Furthermore, specifying mip map levels is possible.
 
-When the extension is used, it's allowed to use value `image/ktx2` for the `image.mimeType` property.
+When the extension is used, it's allowed to use value `image/ktx2` for the `mimeType` property of images that are referenced by the `source` property of `KHR_texture_basisu` texture extension object.
 
 ## glTF Schema Updates
 
@@ -131,6 +131,7 @@ When used with glTF 2.0, KTX2 images with Basis Universal supercompression must 
 - Colorspace information in the DFD must match the expected usage, namely:
   - Color primaries must be set to `KHR_DF_PRIMARIES_BT709`.
   - Transfer function must be either `KHR_DF_TRANSFER_LINEAR` or `KHR_DF_TRANSFER_SRGB`.
+- When a texture refers to a sampler with mipmap minification or when the sampler is undefined, the KTX2 image must contain a full mip pyramid.
 
 ### Using KTX2 Images with Basis Universal Supercompression for Material Textures
 
@@ -140,8 +141,6 @@ When a texture referencing a KTX2 image with Basis Universal supercompression is
 - `pixelDepth` must be 0.
 - `layerCount` must be 0.
 - `faceCount` must be 1.
-
-In general, a KTX2 image used for material texture should contain a full mip pyramid.
 
 Other use cases (defined by other extensions) may impose different restrictions.
 
