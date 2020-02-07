@@ -126,6 +126,7 @@ To use KTX2 image with Basis Universal supercompression without a fallback, defi
 
 When used with glTF 2.0, KTX2 images with Basis Universal supercompression must conform to these additional restrictions:
 
+- Supercompression scheme must be Basis Universal as defined by the KTX2 specification, other schemes are not allowed.
 - Swizzling metadata (`KTXswizzle`) must be `rgba` or omitted.
 - Orientation metadata (`KTXorientation`) must be `rd` or omitted.
 - Colorspace information in the DFD must match the expected usage, namely:
