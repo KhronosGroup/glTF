@@ -96,7 +96,8 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
 * [Appendix A: Tangent Space Recalculation](#appendix-a-tangent-space-recalculation)
 * [Appendix B: BRDF Implementation](#appendix-b-brdf-implementation)
 * [Appendix C: Spline Interpolation](#appendix-c-spline-interpolation)
-* [Appendix D: Full Khronos Copyright Statement](#appendix-d-full-khronos-copyright-statement)
+* [Appendix D: Image-based Lighting](#appendix-d-image-based-lighting)
+* [Appendix E: Full Khronos Copyright Statement](#appendix-e-full-khronos-copyright-statement)
 
 # Introduction
 
@@ -4001,7 +4002,17 @@ When the sampler targets a node's rotation property, the resulting ***p***(*t*) 
 
 > **Implementation Note:** The first in-tangent ***a***<sub>1</sub> and last out-tangent ***b***<sub>*n*</sub> should be zeros as they are not used in the spline calculations.
 
-# Appendix D: Full Khronos Copyright Statement
+# Appendix D: Image-based Lighting
+
+Image-based Lighting (IBL) is often used in conjunction with glTF to represent an environment or skybox and to create reflections. Whether this image is packed in the glTF via an extension or delivered on a side channel, it is important to have consistency in how it is interpreted. If represented in KTX2 as a cube map, its orientation is already specified, but if the more common equirectangular format is used, the following guidelines should be adhered to. 
+
+Equirectangular textures are aspect ratio 2, representing the 360 degrees of longitude by the 180 degrees of latitude. The center of the image is where the +X axis points, the top of the image is where the +Y axis points, and moving left in the image is equivalent to a positive rotation about the Y axis.
+
+When converting equirectangular textures to cube maps, it is best to sample an *n*x*n* cube map from a 4*n*x2*n* equirectangular image, e.g. a 1024x512 equirectangular images becomes a 256x256 cube map. 
+
+Note that unlike a skybox, if an image is meant for IBL, properly capturing the high dynamic range of most lighting environments is critical to realistic rendering. Therefore, it is advisable to use RGBE via the .hdr image format, or some equivalent method that ensures the image is not clamped even when the dynamic range is orders of magnitude beyond what an HDR TV is capable of. 
+
+# Appendix E: Full Khronos Copyright Statement
 
 Copyright 2013-2017 The Khronos Group Inc. 
 
