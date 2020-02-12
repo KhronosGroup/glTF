@@ -30,20 +30,18 @@ but may still change before they are complete._
 
 | Extension | Status |
 |-----------|--------|
-| [KHR_texture_basisu](https://github.com/KhronosGroup/glTF/pull/1751) | Ready for implementation and feedback. |
+| [KHR_mesh_instancing](https://github.com/KhronosGroup/glTF/pull/1691) | Early discussions. |
 | [KHR_mesh_quantization](https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_mesh_quantization/README.md) | Ready for implementation and feedback. |
-| [KHR_materials_clearcoat](https://github.com/KhronosGroup/glTF/pull/1677) | Ready for implementation and feedback. |
-| [KHR_materials_specular](https://github.com/KhronosGroup/glTF/pull/1677) | Ready for implementation and feedback. |
-| [KHR_materials_sheen](https://github.com/KhronosGroup/glTF/pull/1688) | Ready for implementation and feedback. |
-| [KHR_image_ktx2](https://github.com/KhronosGroup/glTF/pull/1612) | In development. |
+| [KHR_materials_clearcoat](https://github.com/KhronosGroup/glTF/pull/1756) | Ready for implementation and feedback. |
+| [KHR_materials_ior](https://github.com/KhronosGroup/glTF/pull/1718) | In development. |
+| KHR_materials_thinfilm | In development. Two proposals in [#1742](https://github.com/KhronosGroup/glTF/pull/1742) and 
+[#1221](https://github.com/KhronosGroup/glTF/issues/1221). |
 | [KHR_materials_transmission](https://github.com/KhronosGroup/glTF/pull/1698) | In development. |
+| [KHR_materials_sheen](https://github.com/KhronosGroup/glTF/pull/1688) | Ready for implementation and feedback. |
+| KHR_materials_specular | Ready for implementation and feedback. Two proposals in [#1719](https://github.com/KhronosGroup/glTF/pull/1719) and [#1741](https://github.com/KhronosGroup/glTF/pull/1741). |
+| [KHR_materials_volume](https://github.com/KhronosGroup/glTF/pull/1726) | In development. |
+| [KHR_texture_basisu](https://github.com/KhronosGroup/glTF/pull/1751) | Ready for implementation and feedback. |
 | [KHR_xmp](https://github.com/KhronosGroup/glTF/pull/1553) | In development. |
-| [KHR_lights_image_based](https://github.com/KhronosGroup/glTF/pull/1612) | In development. |
-| [EXT_texture_bc6h](https://github.com/KhronosGroup/glTF/pull/1612) | In development. |
-| [EXT_texture_astc_hdr](https://github.com/KhronosGroup/glTF/pull/1612) | In development. |
-| [KHR_instancing](https://github.com/KhronosGroup/glTF/pull/1691) | Early discussions. |
-| [KHR_blend](https://github.com/KhronosGroup/glTF/pull/1302) | Tabled. |
-| [KHR_techniques_webgl](2.0/Khronos/KHR_techniques_webgl/README.md) | Tabled. |
 
 This section tracks the status of Khronos and multi-vendor extensions that are either already in development,
 or that we feel show enough consensus to be highly likely for future development. We welcome feedback for these
