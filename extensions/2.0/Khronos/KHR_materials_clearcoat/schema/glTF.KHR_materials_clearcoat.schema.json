@@ -34,7 +34,7 @@
         "clearcoatNormalTexture": {
             "allOf": [ { "$ref": "material.normalTextureInfo.schema.json" } ],
             "description": "The clearcoat normal map texture.",
-            "gltf_detailedDescription": "A tangent space normal map for the clearcoat layer."
+            "gltf_detailedDescription": "A tangent space normal map for the clearcoat layer.  If desired, this may be a reference to the same normal map used by the base material.  If not supplied, no normal mapping is applied to the clear coat layer."
         },
         "extensions": { },
         "extras": { }

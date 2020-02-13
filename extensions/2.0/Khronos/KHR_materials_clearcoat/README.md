@@ -73,6 +73,8 @@ If `clearcoatFactor = 0`, the clearcoat layer is disabled.
 
 The values for clearcoat layer intensity and clearcoat roughness can be defined using factors, textures, or both. If the `clearcoatTexture` or `clearcoatRoughnessTexture` is not given, respective texture components are assumed to have a value of 1.0. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values.
 
+If `clearcoatNormalTexture` is not given, no normal mapping is applied to the clear coat layer, even if normal mapping is applied to the base material.  Otherwise, `clearcoatNormalTexture` may be a reference to the same normal map used by the base material, or any other compatible normal map.
+
 ## Reference
 
 ### Theory, Documentation and Implementations
