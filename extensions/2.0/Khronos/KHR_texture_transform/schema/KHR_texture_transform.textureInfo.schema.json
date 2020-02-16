@@ -17,7 +17,7 @@
         },
         "rotation": {
             "type": "number",
-            "description": "Rotate the UVs by this many radians counter-clockwise around the origin.",
+            "description": "Rotate the UV coordinates counter-clockwise (in U-right, V-down space) by this many radians around the origin. This is equivalent to a similar rotation of the image clockwise.",
             "default": 0.0
         },
         "scale": {
