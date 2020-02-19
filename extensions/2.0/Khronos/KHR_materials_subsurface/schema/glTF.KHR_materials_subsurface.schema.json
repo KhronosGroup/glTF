@@ -1,0 +1,74 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_subsurface glTF extension",
+    "type": "object",
+    "description": "glTF extension for subsurface scattering.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+
+    "properties": {
+        "scale": {
+            "type": "number",
+            "description": "Scaling factor for the direct subsurface scattering back-diffuse.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "gltf_detailedDescription": ""
+        },
+
+        "distortion": {
+            "type": "number",
+            "description": "Amount of scattering distortion that occurs inside this material.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": ""
+        },
+
+        "power": {
+            "type": "number",
+            "description": "Attenuation power factor for subsurface scattering contributions.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "exclusiveMinimum": true,
+            "gltf_detailedDescription": ""
+        },
+
+        "colorFactor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+
+            "description": "Diffuse color of the inner (non-translucent) parts of the material",
+            "default": [ 1.0, 1.0, 1.0 ],
+            "minItems": 3,
+            "maxItems": 3,
+            "gltf_detailedDescription": ""
+        },
+
+        "colorTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "Diffuse color of the inner (non-translucent) parts of the material",
+            "gltf_detailedDescription": ""
+        },
+
+        "thicknessFactor": {
+            "type": "number",
+            "description": "Modulates direct translucency of the material.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": ""
+        },
+        
+        "thicknessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "Texture describing the local thickness of the material; 0 is thin.",
+            "gltf_detailedDescription": "Should be generated offline by flipping the normals of the mesh and computing the ambient occlusion map. This texture is a grayscale, where darker areas imply the material is locally thinner there, while brighter areas are locally thicker. There are many free and paid tools for baking these thickness maps."
+        },
+
+        "extras": { },
+        "extensions": { }
+    }
+}
