@@ -55,7 +55,7 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 |**clearcoatRoughnessTexture**     | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The clearcoat layer roughness texture. | No                   |
 |**clearcoatNormalTexture**        | [`normalTextureInfo`](/specification/2.0/README.md#reference-normaltextureinfo) | The clearcoat normal map texture.      | No                   |
   
-The clearcoat formula `f_clearcoat` is computed using the specular term from the glTF 2.0 Metallic-Roughness material, defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation).  Use F0 equal 0.04, and the clearcoat roughness value defined in this extension as follows:
+The clearcoat formula `f_clearcoat` is computed using the specular term from the glTF 2.0 Metallic-Roughness material, defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation).  Use F0 equal `0.04`, base color white `1.0, 1.0, 1.0`, metallic value `0.0`, and the clearcoat roughness value defined in this extension as follows:
 
 ```
 clearcoatRoughness = clearcoatRoughnessFactor * clearcoatRoughnessTexture.g
@@ -66,7 +66,7 @@ The following abstract code describes how the base and clearcoat layers should b
 ```
 clearcoatWeight = clearcoatTexture.r * clearcoatFactor * fresnel(0.04, NdotV)
 
-f = (f_emissive + f_diffuse) * (1.0 - clearcoatWeight) + mix(f_specular, f_clearcoat, clearcoatWeight)
+f = mix(f_emissive + f_diffuse + f_specular, f_clearcoat, clearcoatWeight)
 ```
 
 If `clearcoatFactor = 0`, the clearcoat layer is disabled.
