@@ -30,8 +30,7 @@ This extension defines a clear coating that can be layered on top of an existing
 
 ## Extending Materials
 
-The PBR clearcoat materials are defined by adding the `KHR_materials_clearcoat` extension to any glTF material. 
-For example, the following defines a material like varnish using clearcoat parameters.
+The PBR clearcoat materials are defined by adding the `KHR_materials_clearcoat` extension to any compatible glTF material (excluding those listed above).  For example, the following defines a material like varnish using clearcoat parameters.
 
 ```json
 {
