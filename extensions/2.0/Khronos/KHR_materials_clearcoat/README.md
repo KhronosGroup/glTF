@@ -19,6 +19,11 @@ Draft
 
 Written against the glTF 2.0 spec.
 
+## Exclusions
+
+* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+* This extension must not be used on a material that also uses `KHR_materials_unlit`.
+
 ## Overview
 
 This extension defines a clear coating that can be layered on top of an existing glTF material definition.  A clear coat is a common technique used in Physically-Based Rendering to represent a protective layer applied to a base material.  See [Theory, Documentation and Implementations](#theory-documentation-and-implementations)
