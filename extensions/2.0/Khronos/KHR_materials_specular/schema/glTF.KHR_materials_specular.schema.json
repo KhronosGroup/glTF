@@ -10,7 +10,6 @@
             "description": "The specular channel.",
             "default": 0.5,
             "minimum": 0.0,
-            "maximum": 1.0,
             "gltf_detailedDescription": ""
         },        
         "specularTexture": {
