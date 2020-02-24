@@ -68,12 +68,12 @@ clearcoatRoughness = clearcoatRoughnessFactor * clearcoatRoughnessTexture.g
 The following abstract code describes how the base and clearcoat layers should be blended together:
   
 ```
-clearcoatWeight = clearcoatTexture.r * clearcoatFactor * fresnel(0.04, NdotV)
+clearcoatBlendFactor = clearcoatTexture.r * clearcoatFactor * fresnel(0.04, NdotV)
 
-f = mix(f_emissive + f_diffuse + f_specular, f_clearcoat, clearcoatWeight)
+color = mix(f_emissive + f_diffuse + f_specular, f_clearcoat, clearcoatBlendFactor)
 ```
 
-If `clearcoatFactor = 0`, the clearcoat layer is disabled.
+If `clearcoatFactor` is zero, the clearcoat layer is disabled.
 
 The values for clearcoat layer intensity and clearcoat roughness can be defined using factors, textures, or both. If the `clearcoatTexture` or `clearcoatRoughnessTexture` is not given, respective texture components are assumed to have a value of 1.0. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values.
 
@@ -87,7 +87,7 @@ If `clearcoatNormalTexture` is not given, no normal mapping is applied to the cl
 [AxF - Appearance exchange Format](https://www.xrite.com/-/media/xrite/files/whitepaper_pdfs/axf/axf_whitepaper_en.pdf)  
 [Blender Principled BSDF](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/principled.html)  
 [Disney BRDF Explorer - disney.brdf](https://github.com/wdas/brdf/blob/master/src/brdfs/disney.brdf)  
-[Enterprise PBR Shading Model - Clearcoat](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec.md.html#components/clearcoat)  
+[Enterprise PBR Shading Model - Clearcoat](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2020x.md.html#components/clearcoat)  
 [Filament Material models - Clear coat](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/clearcoat)   
 [Physically-Based Shading at Disney](https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf)  
 [Substance Painter - Updated Clear Coat Shader](https://docs.substance3d.com/spdoc/version-2018-3-172823522.html#Version2018.3-UpdatedClearCoatShader)  
