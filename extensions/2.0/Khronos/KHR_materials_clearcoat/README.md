@@ -73,7 +73,7 @@ clearcoatBlendFactor = clearcoatTexture.r * clearcoatFactor * fresnel(0.04, Ndot
 color = mix(f_emissive + f_diffuse + f_specular, f_clearcoat, clearcoatBlendFactor)
 ```
 
-If `clearcoatFactor` is zero, the clearcoat layer is disabled.
+If `clearcoatFactor` (in the extension) is zero, the whole clearcoat layer is disabled.
 
 The values for clearcoat layer intensity and clearcoat roughness can be defined using factors, textures, or both. If the `clearcoatTexture` or `clearcoatRoughnessTexture` is not given, respective texture components are assumed to have a value of 1.0. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values.
 
