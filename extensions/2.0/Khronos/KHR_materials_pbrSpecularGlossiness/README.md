@@ -1,6 +1,7 @@
 # KHR\_materials\_pbrSpecularGlossiness
 
-## Khronos 3D Formats Working Group
+## Contributors
+
 * Saurabh Bhatia, Microsoft [@iamsbtron](https://twitter.com/iamsbtron)
 * Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
 * Patrick Cozzi, Cesium, [@pjcozzi](https://twitter.com/pjcozzi)
@@ -21,6 +22,13 @@ Complete
 ## Dependencies
 
 Written against the glTF 2.0 spec.
+
+## Exclusions
+
+This extension must not be used on a material that also uses any of the following extensions:
+
+- `KHR_materials_clearcoat`
+- `KHR_materials_unlit`
 
 ## Overview
 

@@ -18,6 +18,13 @@ Complete
 
 Written against the glTF 2.0 spec.
 
+## Exclusions
+
+This extension must not be used on a material that also uses any of the following extensions:
+
+- `KHR_materials_clearcoat`
+- `KHR_materials_pbrSpecularGlossiness`
+
 ## Overview
 
 This extension defines an unlit shading model for use in glTF 2.0
