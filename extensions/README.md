@@ -32,7 +32,7 @@ but may still change before they are complete._
 |-----------|--------|
 | [KHR_mesh_instancing](https://github.com/KhronosGroup/glTF/pull/1691) | Early discussions. |
 | [KHR_mesh_quantization](https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_mesh_quantization/README.md) | Ready for implementation and feedback. |
-| [KHR_materials_clearcoat](https://github.com/KhronosGroup/glTF/pull/1756) | Ready for implementation and feedback. |
+| [KHR_materials_clearcoat](2.0/Khronos/KHR_materials_clearcoat/README.md) | Ready for implementation. Awaiting ratification. |
 | [KHR_materials_ior](https://github.com/KhronosGroup/glTF/pull/1718) | In development. |
 | [KHR_materials_thinfilm](https://github.com/KhronosGroup/glTF/pull/1742) | In development. |
 | [KHR_materials_transmission](https://github.com/KhronosGroup/glTF/pull/1698) | In development. |
