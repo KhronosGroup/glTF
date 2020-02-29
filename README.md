@@ -193,6 +193,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 | [Visual Studio Code](https://code.visualstudio.com) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Preview, validate, inspect, and debug glTF files |
 | [Esri CityEngine](https://www.esri.com/en-us/arcgis/products/esri-cityengine/overview) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Advanced 3D city design software supports glTF to [import](https://doc.arcgis.com/en/cityengine/latest/help/help-import-gltf.htm) and [export](https://doc.arcgis.com/en/cityengine/latest/help/help-export-gltf.htm) |
 | [ArcGIS Pro](https://pro.arcgis.com) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Desktop GIS for 2D and 3D and supports usage of [glTF content](https://pro.arcgis.com/en/pro-app/help/mapping/layer-properties/gltf-markers.htm) as markers in 3D. |
+| [Gestaltor](https://gestaltor.io/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Native application for viewing, inspecting, editing, composing and optimizing glTF. |
 
 ### Loaders and Engines
 
