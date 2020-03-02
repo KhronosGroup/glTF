@@ -68,9 +68,10 @@ clearcoatRoughness = clearcoatRoughnessFactor * clearcoatRoughnessTexture.g
 The following abstract code describes how the base and clearcoat layers should be blended together:
   
 ```
-clearcoatBlendFactor = clearcoatTexture.r * clearcoatFactor * fresnel(0.04, NdotV)
+clearcoatBlendFactor = clearcoatTexture.r * clearcoatFactor
+clearcoatFresnel = fresnel(0.04, NdotV)
 
-color = mix(f_emissive + f_diffuse + f_specular, f_clearcoat, clearcoatBlendFactor)
+color = (f_emissive + f_diffuse + f_specular) * (1.0 - clearcoatBlendFactor * clearcoatFresnel) + f_clearcoat * clearcoatBlendFactor
 ```
 
 If `clearcoatFactor` (in the extension) is zero, the whole clearcoat layer is disabled.
