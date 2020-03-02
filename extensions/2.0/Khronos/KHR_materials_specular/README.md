@@ -55,6 +55,17 @@ Factor and texture are combined by multiplication to describe a single value.
 | **specularColorFactor** | `number[3]` | The F0 color of the specular reflection (RGB). | No, default: `[1.0, 1.0, 1.0]`|
 | **specularColorTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A 3-channel texture that defines the F0 color of the specular reflection. Will be multiplied by specularColorFactor. | No |
 
+### Conversions
+
+Material models that define f0 in terms of reflectance at normal incidence (with 0 meaning 0%, 0.5 meaning 4%, and 1 meaning 8%) can be converted to `specularColorFactor` and `specularColorTexture` as follows:
+
+```
+specularColorFactor = 2 * reflectanceFactor
+specularColorTexture = reflectanceTexture
+```
+
+Alternatively, the index of refraction defined in `KHR_materials_ior` can be set to the value 1.788789, resulting in a f0 scale factor of 0.08.
+
 ## Implementation
 
 The specular factor scales the microfacet BRDF in the dielectric BRDF. It also affects the diffuse BRDF; the less energy is reflected by the microfacet BRDF, the more can be shifted to the diffuse BRDF.
@@ -64,18 +75,26 @@ The specular color changes the F0 color of the Fresnel that is multiplied to the
 ```
 dielectric_brdf =
   fresnel_mix(
-    diffuse_brdf(baseColor, specular, specularColor),
-    microfacet_brdf(roughness^2) * specular,
-    ior = 1.5,
-    f0 = ((1-ior)/(1+ior))^2 * specularColor)
+    diffuse_brdf(baseColor),
+    microfacet_brdf(roughness^2),
+    f0 = 0.04 * specular * specularColor,
+    f90 = specular)
 ```
 
-This makes `f0` wavelength-dependent, i.e., it is now a 3-channel RGB value. For the directional albedo `E` and average albedo `Eavg`, this is reduced to 1 channel by taking the maximum of the RGB channels, This avoids unexpected color shifts caused by the subtraction.
+Based on [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation), the modified `fresnel_mix` operation is defined as follows:
 
 ```
-                1           (1 - E(VdotN, max(f0))) * (1 - E(LdotN, max(f0)))
-diffuse_brdf = -- * mix(1, ---------------------------------------------------, specular)
-               pi                                1 - Eavg
+fresnel_mix(base, layer, ior) = base * (1 - fr(ior)) + layer * fr(ior)
+fr(ior) = f0 + (f90 - f0) * (1 - cos)^5
+f0 = 0.04 * specular * specularColor
+f90 = specular
 ```
 
-The specular color does not affect the index of refraction that may also be used in `KHR_materials_transmission` to refract light rays going through the surface.
+If `KHR_materials_ior` is used in combination with `KHR_materials_specular`, the constant `0.04` is replaced by the value computed from the IOR:
+
+```
+f0 = ((ior - outside_ior) / (ior + outside_ior))^2 * specular * specularColor
+f90 = specular
+```
+
+The specular factor and specular color do not affect the index of refraction of the volume below the surface, defined in `KHR_materials_volume`. As a result, `specular` and `specularColor` do not take part in computing the outgoing direction for refraction.

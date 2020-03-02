@@ -15,8 +15,8 @@
         },
         "specularTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "A grayscale texture that defines the strength of the specular reflection.",
-            "gltf_detailedDescription": "A grayscale texture that defines the strength of the specular reflection. Will be multiplied by specularFactor."
+            "description": "A 1-channel luminance texture that defines the strength of the specular reflection.",
+            "gltf_detailedDescription": "A 1-channel luminance texture that defines the strength of the specular reflection. Will be multiplied by specularFactor."
         },
         "specularColorFactor": {
             "type": "array",
