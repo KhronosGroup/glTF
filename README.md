@@ -193,6 +193,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 | [Visual Studio Code](https://code.visualstudio.com) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Preview, validate, inspect, and debug glTF files |
 | [Esri CityEngine](https://www.esri.com/en-us/arcgis/products/esri-cityengine/overview) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Advanced 3D city design software supports glTF to [import](https://doc.arcgis.com/en/cityengine/latest/help/help-import-gltf.htm) and [export](https://doc.arcgis.com/en/cityengine/latest/help/help-export-gltf.htm) |
 | [ArcGIS Pro](https://pro.arcgis.com) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Desktop GIS for 2D and 3D and supports usage of [glTF content](https://pro.arcgis.com/en/pro-app/help/mapping/layer-properties/gltf-markers.htm) as markers in 3D. |
+| [Gestaltor](https://gestaltor.io/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Native application for viewing, inspecting, editing, composing and optimizing glTF. |
 
 ### Loaders and Engines
 
@@ -288,6 +289,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | [libgltf_ue4](https://github.com/code4game/libgltf_ue4) | ![status](https://img.shields.io/badge/glTF-2%2E0-yellow.svg?style=flat) | A third-party library for UE4.10+ to load glTF files |
 | [glTF for UE4](https://github.com/code4game/glTFForUE4) | ![status](https://img.shields.io/badge/glTF-2%2E0-yellow.svg?style=flat) | A plugin for UE4.10+ to import glTF files |
 | [Diligent Engine](https://github.com/DiligentGraphics/DiligentEngine) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | A modern cross-platform low-level graphics libarary and rendering framework |
+| [Datakit CrossCad/Ware SDK](https://www.datakit.com/en/crosscad_ware.php) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | A library to write glTF or glb files. Can also read and write multiple 3D formats |
 
 #### Objective-C
 
@@ -374,6 +376,7 @@ To compare WebGL-based glTF loaders, see [gltf-test](https://github.com/cx20/glt
 | Tool | Status | Description |
 |------|--------|-------------|
 | [trimesh](https://github.com/mikedh/trimesh) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Python library for importing and exporting glTF and numerous other triangular mesh formats. |
+| [pygltflib](https://gitlab.com/dodgyville/pygltflib) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Python library for reading, writing and converting glTF 2.0 files. |
 
 ### Utilities
 

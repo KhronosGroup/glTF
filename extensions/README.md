@@ -2,7 +2,7 @@
 
 ## Extensions for glTF 2.0
 
-#### Khronos extensions
+#### Ratified Khronos Extensions
 
 * [KHR_draco_mesh_compression](2.0/Khronos/KHR_draco_mesh_compression/README.md)
 * [KHR_lights_punctual](2.0/Khronos/KHR_lights_punctual/README.md)
@@ -10,40 +10,40 @@
 * [KHR_materials_unlit](2.0/Khronos/KHR_materials_unlit/README.md)
 * [KHR_texture_transform](2.0/Khronos/KHR_texture_transform/README.md)
 
-#### Vendor extensions
+#### Multi-Vendor Extensions
+
+* [EXT_lights_image_based](2.0/Vendor/EXT_lights_image_based/README.md)
+* [EXT_texture_webp](2.0/Vendor/EXT_texture_webp/README.md)
+
+#### Vendor Extensions
 
 * [ADOBE_materials_thin_transparency](2.0/Vendor/ADOBE_materials_thin_transparency/README.md)
 * [AGI_articulations](2.0/Vendor/AGI_articulations/README.md)
 * [AGI_stk_metadata](2.0/Vendor/AGI_stk_metadata/README.md)
-* [EXT_lights_image_based](2.0/Vendor/EXT_lights_image_based/README.md)
-* [EXT_texture_webp](2.0/Vendor/EXT_texture_webp/README.md)
 * [FB_geometry_metadata](2.0/Vendor/FB_geometry_metadata/README.md)
 * [MSFT_lod](2.0/Vendor/MSFT_lod/README.md)
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 
-#### In progress Khronos and multi-vendor extensions
+#### In-progress Khronos and multi-vendor extensions
 
 _Draft Khronos (KHR) extensions are not ratified yet. Multi-vendor (EXT) extensions do not require ratification,
 but may still change before they are complete._
 
 | Extension | Status |
 |-----------|--------|
-| [KHR_texture_basisu](https://github.com/KhronosGroup/glTF/pull/1612) | Ready for implementation and feedback. |
-| [KHR_mesh_quantization](https://github.com/KhronosGroup/glTF/pull/1673) | Ready for implementation and feedback. |
-| [KHR_materials_clearcoat](https://github.com/KhronosGroup/glTF/pull/1677) | Ready for implementation and feedback. |
-| [KHR_materials_specular](https://github.com/KhronosGroup/glTF/pull/1677) | Ready for implementation and feedback. |
-| [KHR_materials_sheen](https://github.com/KhronosGroup/glTF/pull/1688) | Ready for implementation and feedback. |
-| [KHR_image_ktx2](https://github.com/KhronosGroup/glTF/pull/1612) | In development. |
+| [KHR_mesh_instancing](https://github.com/KhronosGroup/glTF/pull/1691) | Early discussions. |
+| [KHR_mesh_quantization](https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_mesh_quantization/README.md) | Ready for implementation and feedback. |
+| [KHR_materials_clearcoat](2.0/Khronos/KHR_materials_clearcoat/README.md) | Ready for implementation. Awaiting ratification. |
+| [KHR_materials_ior](https://github.com/KhronosGroup/glTF/pull/1718) | In development. |
+| [KHR_materials_thinfilm](https://github.com/KhronosGroup/glTF/pull/1742) | In development. |
 | [KHR_materials_transmission](https://github.com/KhronosGroup/glTF/pull/1698) | In development. |
+| [KHR_materials_sheen](https://github.com/KhronosGroup/glTF/pull/1688) | Ready for implementation and feedback. |
+| KHR_materials_specular | Ready for implementation and feedback. Two proposals in [#1719](https://github.com/KhronosGroup/glTF/pull/1719) and [#1741](https://github.com/KhronosGroup/glTF/pull/1741). |
+| [KHR_materials_volume](https://github.com/KhronosGroup/glTF/pull/1726) | In development. |
+| [KHR_texture_basisu](https://github.com/KhronosGroup/glTF/pull/1751) | Ready for implementation and feedback. |
 | [KHR_xmp](https://github.com/KhronosGroup/glTF/pull/1553) | In development. |
-| [KHR_lights_image_based](https://github.com/KhronosGroup/glTF/pull/1612) | In development. |
-| [EXT_texture_bc6h](https://github.com/KhronosGroup/glTF/pull/1612) | In development. |
-| [EXT_texture_astc_hdr](https://github.com/KhronosGroup/glTF/pull/1612) | In development. |
-| [KHR_instancing](https://github.com/KhronosGroup/glTF/pull/1691) | Early discussions. |
-| [KHR_blend](https://github.com/KhronosGroup/glTF/pull/1302) | Tabled. |
-| [KHR_techniques_webgl](2.0/Khronos/KHR_techniques_webgl/README.md) | Tabled. |
 
 This section tracks the status of Khronos and multi-vendor extensions that are either already in development,
 or that we feel show enough consensus to be highly likely for future development. We welcome feedback for these

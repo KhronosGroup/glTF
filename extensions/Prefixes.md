@@ -31,6 +31,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `LLQ` | Lifeliqe, Inc. | https://www.lifeliqe.com/ | [#1414](https://github.com/KhronosGroup/glTF/issues/1414) |
 | `MESHOPT` | meshoptimizer | https://meshoptimizer.org/ | [#1634](https://github.com/KhronosGroup/glTF/issues/1634) |
 | `MOZ` | Mozilla Corporation | https://www.mozilla.org/ | [#1349](https://github.com/KhronosGroup/glTF/issues/1349) |
+| `MPEG` | The Moving Picture Experts Group | https://mpeg.chiariglione.org/standards/mpeg-i | [#1754](https://github.com/KhronosGroup/glTF/issues/1754) |
 | `MSFT` | Microsoft Corporation | https://www.microsoft.com/ | [#1164](https://github.com/KhronosGroup/glTF/pull/1164) |
 | `NV` | NVIDIA Corporation | https://www.nvidia.com | [#1211](https://github.com/KhronosGroup/glTF/issues/1211) |
 | `OWLII` | Owlii, Inc. | https://www.owlii.com/ | [#1093](https://github.com/KhronosGroup/glTF/issues/1093) |
