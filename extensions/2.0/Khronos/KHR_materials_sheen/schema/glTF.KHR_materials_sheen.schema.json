@@ -22,13 +22,21 @@
             },
             "minItems": 3,
             "maxItems": 3,
-            "description": "Color of the sheen layer.",
+            "description": "Color of the sheen layer (in linear space).",
             "default": [1, 1, 1]
         },
         "colorIntensityTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The sheen layer texture.",
-            "gltf_detailedDescription": "The sheen layer texture. Stored in channel RGB the sheen color in sRGB transfer function and in A the intensity linear factor."
+            "gltf_detailedDescription": "The sheen layer texture. Stored in channel RGB the sheen color in sRGB transfer function and in A the linear factor."
+        },
+        "roughnessFactor": {
+            "type": "number",
+            "description": "The sheen layer roughness.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The sheen layer roughness of the material."
         },
         "extensions": { },
         "extras": { }
