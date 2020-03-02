@@ -12,19 +12,6 @@
             "minimum": 1.0,
             "gltf_detailedDescription": "The index of refraction (IOR) is a measured physical number usually in the range between 1 and 2 that determines how much the path of light is bent, or refracted, when entering a material. It also influences the ratio between reflected and transmitted light, calculated from the Fresnel equations."
         },
-        "f0Texture": {
-            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "A 1-channel luminance texture that defines the index of refraction in terms of the reflectance at normal incidence f0.",
-            "gltf_detailedDescription": "The texture stores the index of refraction in terms of the reflectance at normal incidence, a value in the range 0..1: f0 = ((ior - 1) / (ior + 1))^2. If the texture is enabeld, the ior property is ignored."
-        },
-        "maxF0": {
-            "type": "number",
-            "description": "Maximum F0 value, corresponds to a texture value of 1.0.",
-            "default": 0.08,
-            "minimum": 0.0,
-            "maximum": 1.0,
-            "gltf_detailedDescription": "The maximum F0 value acts as a multiplier for the value fetched from the f0 texture. The default of 0.08 maps the texture value 0.5 (128) to an index of refraction of 1.5."
-        },
         "extensions": { },
         "extras": { }
     }

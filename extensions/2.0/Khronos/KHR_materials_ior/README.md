@@ -49,24 +49,11 @@ Typical values for the index of refraction range from 1 to 2. In rare cases valu
 | Sapphire     | 1.76                |
 | Diamond      | 2.42                |
 
-The index of refraction (IOR) can be defined either as a scalar value (`ior`) or as a texture (`f0Texture`). If both are given at the same time, `f0Texture` overrides `ior`.
+In case `KHR_materials_volume` is enabled, the `ior` determines the refractive index of the volume below the surface. Light rays passing through the transmissive surface are bent according to the index of refraction of the outside and inside medium (refraction). As the volume cannot be parametrized with a 2-dimensional texture in UV space, the index of refraction (IOR) is a scalar, uniform value (`ior`).
 
 | |Type|Description|Required|
 |-|----|-----------|--------|
 | **ior** | `number` | The index of refraction. | No, default: `1.5`|
-| **f0Texture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A 1-channel luminance texture that defines the index of refraction in terms of the reflectance at normal incidence f0. | No |
-| **maxF0** | `number` | When using `f0Texture`, a texture value of 1.0 is interpret as `maxF0`. Values between 0 and 1 are linearly scaled between 0 and `maxF0`. | No, default: `0.08` |
-
-The texture stores the IOR in terms of the reflectance at normal incidence, a value in the range 0..1. The mapping works as follows:
-
-```
-f0 = ((ior - 1) / (ior + 1))^2
-ior = 2 / (1 - sqrt(f0)) - 1
-```
-
-As f0 usually is a small value (IOR in range 1..2 corresponds to f0 in range 0..0.08), an optional scale factor can be applied to the texture via `maxF0`.
-
-In case `KHR_materials_volume` is enabled, the `ior` affects the bending of light rays (refraction) passing through the transparent surface and it determines the refractive index of the volume below the surface. As the volume cannot be parametrized with a 2-dimensional texture in UV space, `f0Texture` and `maxF0` are ignored.
 
 ## Implementation
 
@@ -85,15 +72,7 @@ dielectric_brdf =
 ```
 fresnel_mix(base, layer, ior) = base * (1 - fr(ior)) + layer * fr(ior)
 fr(ior) = f0 + (1 - f0) * (1 - cos)^5
-f0 = ((ior - 1) / (ior + 1))^2
+f0 = ((ior - outside_ior) / (ior + outside_ior))^2
 ```
 
-with `ior = 1.5`, corresponding to `f0 = 0.04`. The following pseudo-code shows how to compute `f0` from `ior`, `f0Texture` and `maxF0`:
-
-```
-if (f0Texture is enabled) {
-  f0 = fetch(f0Texture, uv) * maxF0;
-} else {
-  f0 = ((ior - 1) / (ior + 1))^2
-}
-```
+with `ior = 1.5`, corresponding to `f0 = 0.04`. The `outside_ior` determines the index of refraction of the medium on the outside. If the renderer does not track the IOR when traversing nested dielectrics, it can assume `outside_ior = 1`.
