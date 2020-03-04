@@ -66,6 +66,16 @@ specularColorTexture = reflectanceTexture
 
 Alternatively, the index of refraction defined in `KHR_materials_ior` can be set to the value 1.788789, resulting in a f0 scale factor of 0.08.
 
+In addition, it is possible to convert specular-glossiness materials (`KHR_materials_pbrSpecularGlossiness`) to metallic-roughness by combining `KHR_materials_specular` and `KHR_materials_ior`. The conversion is lossless and makes effects like sheen (`KHR_materials_sheen`) and clearcoat (`KHR_materials_clearcoat`) available to specular-glossiness materials.
+
+```
+ior = inf
+specularColorFactor = specularFactor_specgloss
+specularColorTexture = specularGlossinessTexture_specgloss[0:2]
+```
+
+The conversion is not compatible with transmissive materials defined via `KHR_materials_transmission` and `KHR_materials_volume`.
+
 ## Implementation
 
 The specular factor scales the microfacet BRDF in the dielectric BRDF. It also affects the diffuse BRDF; the less energy is reflected by the microfacet BRDF, the more can be shifted to the diffuse BRDF.
