@@ -3,7 +3,7 @@
         {
             "bufferView": 0,
             "componentType": 5126,
-            "count": 12096,
+            "count": 2204,
             "extras": {
                 "arrayIndex": 0
             },
@@ -22,7 +22,7 @@
         {
             "bufferView": 1,
             "componentType": 5126,
-            "count": 12096,
+            "count": 2204,
             "extras": {
                 "arrayIndex": 1
             },
@@ -53,7 +53,7 @@
             "extras": {
                 "arrayIndex": 4
             },
-            "type": "VEC3"
+            "type": "VEC4"
         },
         {
             "bufferView": 5,
@@ -80,7 +80,7 @@
             "extras": {
                 "arrayIndex": 7
             },
-            "type": "VEC3"
+            "type": "VEC4"
         },
         {
             "bufferView": 8,
@@ -145,15 +145,15 @@
     "bufferViews": [
         {
             "buffer": 0,
-            "byteLength": 145152,
+            "byteLength": 26448,
             "extras": {
                 "arrayIndex": 0
             }
         },
         {
             "buffer": 0,
-            "byteLength": 145152,
-            "byteOffset": 145152,
+            "byteLength": 26448,
+            "byteOffset": 26448,
             "extras": {
                 "arrayIndex": 1
             }
@@ -161,7 +161,7 @@
         {
             "buffer": 0,
             "byteLength": 48384,
-            "byteOffset": 290304,
+            "byteOffset": 52896,
             "extras": {
                 "arrayIndex": 2
             }
@@ -175,7 +175,7 @@
         },
         {
             "buffer": 1,
-            "byteLength": 11496,
+            "byteLength": 15328,
             "byteOffset": 11496,
             "extras": {
                 "arrayIndex": 4
@@ -184,7 +184,7 @@
         {
             "buffer": 1,
             "byteLength": 11496,
-            "byteOffset": 22992,
+            "byteOffset": 26824,
             "extras": {
                 "arrayIndex": 5
             }
@@ -192,15 +192,15 @@
         {
             "buffer": 1,
             "byteLength": 11292,
-            "byteOffset": 34488,
+            "byteOffset": 38320,
             "extras": {
                 "arrayIndex": 6
             }
         },
         {
             "buffer": 1,
-            "byteLength": 11292,
-            "byteOffset": 45780,
+            "byteLength": 15056,
+            "byteOffset": 49612,
             "extras": {
                 "arrayIndex": 7
             }
@@ -208,7 +208,7 @@
         {
             "buffer": 1,
             "byteLength": 11292,
-            "byteOffset": 57072,
+            "byteOffset": 64668,
             "extras": {
                 "arrayIndex": 8
             }
@@ -247,14 +247,14 @@
     ],
     "buffers": [
         {
-            "byteLength": 338688,
+            "byteLength": 101280,
             "extras": {
                 "arrayIndex": 0
             },
             "uri": "mesh.bin"
         },
         {
-            "byteLength": 68364,
+            "byteLength": 75960,
             "extras": {
                 "arrayIndex": 1
             },
@@ -303,12 +303,12 @@
                     0,
                     0
                 ]
-              },
-              "name": "cube"
-          },
-          {
-              "pbrMetallicRoughness": {
-                  "pbrMetallicRoughness": {
+            },
+            "name": "cube"
+        },
+        {
+            "pbrMetallicRoughness": {
+                "pbrMetallicRoughness": {
                       "baseColorFactor": [
                           0.7,
                           0.7,
@@ -324,25 +324,25 @@
                 ]
             },
             "name": "cube_1"
-          },
-          {
-              "pbrMetallicRoughness": {
-                  "pbrMetallicRoughness": {
-                      "baseColorFactor": [
-                          0.4,
-                          0.4,
-                          0.4,
-                          1
-                      ],
-                      "metallicFactor": 0
-                  },
-                  "emissiveFactor": [
-                      0,
-                      0,
-                      0
-                  ]
-              },
-              "name": "cube_2"
+        },
+        {
+            "pbrMetallicRoughness": {
+                "pbrMetallicRoughness": {
+                    "baseColorFactor": [
+                        0.4,
+                        0.4,
+                        0.4,
+                        1
+                    ],
+                    "metallicFactor": 0
+                },
+                "emissiveFactor": [
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "name": "cube_2"
         }
     ],
     "meshes": [
