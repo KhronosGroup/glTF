@@ -50,14 +50,14 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 |**thinfilmThicknessMaximum** | `number`                                                            | The thin film maximum thickness. | No, default: `1200.0` |
 |**thinfilmThicknessTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The thin film thickness texture. | No                    |
 
-```
+```glsl
 float thinfilmThickness = mix(thinfilmThicknessMinimum, thinfilmThicknessMaximum, thinfilmTexture.g) / 1200.0;
 float thinfilmIntensity = thinfilmTexture.r * thinfilmFactor;
 ```
 
 The thin film effect is overwriting the F (Surface Reflection Ratio) from the specular glossiness effect.
 
-```
+```glsl
 vec3 thinfilmSpecularReflection(vec3 F0, float VdotH, float thinfilmIntensity, float thinfilmThicknessNormalized)
 {
     vec3 F = fresnelReflection(F0, VdotH);
