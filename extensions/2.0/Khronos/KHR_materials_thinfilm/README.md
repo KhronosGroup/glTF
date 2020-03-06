@@ -51,7 +51,7 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 |**thinfilmThicknessTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The thin film thickness texture. | No                    |
 
 ```
-float thinfilmThicknessNormalized = (thinfilmTexture.g * (thinfilmThicknessMaximum - thinfilmThicknessMinimum) + thinfilmThicknessMinimum) / 1200.0;  
+float thinfilmThickness = mix(thinfilmThicknessMinimum, thinfilmThicknessMaximum, thinfilmTexture.g) / 1200.0;
 float thinfilmIntensity = thinfilmTexture.r * thinfilmFactor;
 ```
 
