@@ -1,6 +1,6 @@
 
 --- Name -----------Property    ----- Description ----------------------------
-[verticecount]      Scene       Total number of vertices used by a model in a scene
+[vertexcount]       Scene       Total number of vertices used by a model in a scene
 [nodecount]         Scene       Max nodecount in scene (add upp all nodes in a scene)
 [primitivecount]    Scene       Total number of referenced primitives (per scene)
                                 This figure is the un-batched number of primitives, engines may optimize if primitives and meshes share textures.
