@@ -22,7 +22,7 @@ TODO
 
 ## Extending Materials
 
-The thin film materials are defined by adding the `KHR_materials_thinfilm` extension to any glTF material. 
+The thin film materials are defined by adding the `KHR_materials_thinfilm` extension to any glTF material.
 
 ```json
 {
@@ -56,6 +56,7 @@ float thinfilmIntensity = thinfilmTexture.r * thinfilmFactor;
 ```
 
 The thin film effect is overwriting the F (Surface Reflection Ratio) from the specular glossiness effect.
+
 ```
 vec3 thinfilmSpecularReflection(vec3 F0, float VdotH, float thinfilmIntensity, float thinfilmThicknessNormalized)
 {
@@ -67,13 +68,10 @@ vec3 thinfilmSpecularReflection(vec3 F0, float VdotH, float thinfilmIntensity, f
     }
 
     vec3 lutSample = texture(lutTexture, thinfilmThicknessNormalized, VdotH)).rgb - 0.5;
-
-	vec3 intensity = thinfilmIntensity * 4.0 * F0 * (1.0 - F0);
-	
-	return clamp(lutSample * intensity + F, 0.0, 1.0);    
+    vec3 intensity = thinfilmIntensity * 4.0 * F0 * (1.0 - F0);
+    return clamp(lutSample * intensity + F, 0.0, 1.0);    
 }
 ```
-
 
 ## Appendix
 
@@ -83,5 +81,5 @@ TODO
 
 ### Theory, Documentation and Implementations
 
-[A Practical Extension to Microfacet Theory for the Modeling of Varying Iridescence](https://belcour.github.io/blog/research/2017/05/01/brdf-thin-film.html)  
-[Practical Multilayered Materials - Call of Duty - page 62](https://blog.selfshadow.com/publications/s2017-shading-course/drobot/s2017_pbs_multilayered.pdf)  
+[A Practical Extension to Microfacet Theory for the Modeling of Varying Iridescence](https://belcour.github.io/blog/research/2017/05/01/brdf-thin-film.html)
+[Practical Multilayered Materials - Call of Duty - page 62](https://blog.selfshadow.com/publications/s2017-shading-course/drobot/s2017_pbs_multilayered.pdf)
