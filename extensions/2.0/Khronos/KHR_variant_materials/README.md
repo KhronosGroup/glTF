@@ -1,4 +1,4 @@
-# FB_material_variants
+# KHR_variant_materials
 
 ## Contributors
 
@@ -54,7 +54,7 @@ A snippet of a mesh implementing shoe holes which uses this extension might look
                 "indices": 2,
                 "material": 0,
                 "extensions": {
-                    "FB_material_variants" : {
+                    "KHR_variant_materials" : {
                         "mapping": [
                             {
                                 "tags": [ "sneaker_yellow", "sneaker_orange" ],
