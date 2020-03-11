@@ -19,6 +19,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `ALCM` | Alchemisten AG | https://alchemisten.ag/<br>`viktor.spadi at alchemisten.ag` | [#1708](https://github.com/KhronosGroup/glTF/issues/1708) |
 | `ALI` | Alibaba Group | https://www.alibaba.com/ | [#1160](https://github.com/KhronosGroup/glTF/pull/1160) |
 | `AMZN` | Amazon | https://www.amazon.com/<br>`jasoncan at amazon.com` | [#1233](https://github.com/KhronosGroup/glTF/issues/1233) |
+| `ANIMECH` | Animech AB | http://animech.com/ | [#1780](https://github.com/KhronosGroup/glTF/issues/1780) |
 | `AVR` | AltspaceVR, Inc. | https://altvr.com/ | [#1009](https://github.com/KhronosGroup/glTF/issues/1009) |
 | `BLENDER` | Blender Foundation | https://www.blender.org/ | [#865](https://github.com/KhronosGroup/glTF/issues/865) |
 | `CAPTURE` | Capture Visualisation AB | https://www.capture.se/ | [#1732](https://github.com/KhronosGroup/glTF/issues/1732) |
