@@ -68,8 +68,6 @@ The clearcoat formula `f_clearcoat` is computed using the specular term from the
 clearcoatRoughness = clearcoatRoughnessFactor * clearcoatRoughnessTexture.g
 ```
 
-The resulting `f_clearcoat` color is expected to have a Fresnel term blended into it as a result of the above.
-
 The following abstract code describes how the base and clearcoat layers should be blended together:
   
 ```
