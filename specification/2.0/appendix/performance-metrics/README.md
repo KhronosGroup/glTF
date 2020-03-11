@@ -1,13 +1,36 @@
+# Runtime Performance Metrics 
 
-|                      |                           |                                           | 
-|----------------------|---------------------------|-------------------------------------------|
-| Name |Property   |Description  |
-|[vertexcount]       |Scene       |Total number of vertices used by a model in a scene|  
-|[nodecount]         |Scene       |Max nodecount in scene (add upp all nodes in a scene)|  
-|[primitivecount]    |Scene       |Total number of referenced primitives (per scene).  This figure is the un-batched number of primitives, engines may optimize if primitives and meshes share textures.  |  
-|[textures]          |Scene       |Flags specifying presence of materials and it's texture usage, this is the aggregated max usage. BASECOLOR, METALLICROUGHNESS, NORMAL, OCCLUSION, EMISSIVE, (SPECULARGLOSS)  
+The goal of these metrics is to asses the runtime performance needs of glTF assets.  
+By runtime we mean the cpu/gp, bandwitdh and memory resources needed to render the model in realtime.  
+These performance metrics are divided in two major categories - `complexity` and `memory`
 
-# Scene #
+## Performance Metric Categories
+
+### Complexity  
+
+The `complexity`category provides metrics to calculate cpu/gpu and memory bandwidth target requirements - larger numbers will mean a more powerful target device is needed.  
+These metrics do not provide a mapping to target device performance, this mapping must be done by users of the metrics.  
+
+### Memory  
+
+The `memory` category provides metrics to calculate the runtime memory (size) needs of the model.  
+Using these metrics an estimate of target memory can be calculated - however keep in mind that the exact memory requirements will vary with viewer implementations.  
+
+
+
+|                 |             |          |                                                                | 
+|-----------------|-------------|----------|----------------------------------------------------------------|
+| Name            | Category    | Property |Description                                                     |
+|[vertexcount]    | Complexity  |Scene     |Total number of vertices used by a model in a scene             |  
+|[nodecount]      | Complexity  |Scene     |Max nodecount in scene (add upp all nodes in a scene)           |  
+|[primitivecount] | Complexity  |Scene     |Total number of referenced primitives (per scene).  This figure is the un-batched number of primitives, engines may optimize if primitives and meshes share textures. |  
+|[textures]       | Complexity  |Scene     |Flags specifying presence of materials and it's texture usage, this is the aggregated max usage. BASECOLOR, METALLICROUGHNESS, NORMAL, OCCLUSION, EMISSIVE, (SPECULARGLOSS) |  
+|[attributes]     | Memory      | Asset    | The total memory footprint, in bytes, for the models attribute buffer storage |  
+|[texturesizes]  | Memory      | Asset    | The sizes of defined textures in the Asset. |  
+
+
+# Scene #  
+
 Metrics that describe properties of a scene.  
 glTF models may contain multiple scenes, only one scene will be visible at a time.  
 To accomodate this the following metrics are calculated on a per-scene basis.  
@@ -34,9 +57,21 @@ This is the max value from the most 'complex' primitive that will be referenced 
 The goal of this metric is to provide a worst case texture usage where texturecount and complexity is known.  
 Ie it is known if a texture is BASECOLOR or if part of PBR such as METALICROUGHNESS and now many texture sources that are used.  
 
+[attributes]  
+This value represent the total attribute buffer usage of the model. This value is calculated by adding up the size, in bytes, of all buffer objects in the Asset.  
+This may give an indication of the runtime memory footprint of the buffers needed for the model.  
+
+[texturesizes]
+The total size of textures, without mipmaps, that are defined in the Asset.  
+This is calculated by iterating the texture array and adding up the size of indexed images.  
+The max texture size can be determined from these values.  
+Some target devices may have a smaller (4096 * 4096) max texture size in which case the backend can choose to deliver another model.  
 
 # JSON #  
 This is how the output would be formatted using JSON  
 
 "scene" : [ { "verticecount" : 4300, "nodecount" : 20, "primitivecount" : 50 ,
-              "textures" : ["BASECOLOR", "METALLICROUGHNESS"]} ]  
+              "textures" : ["BASECOLOR", "METALLICROUGHNESS"]} ],  
+"asset" : { "attributes" : 345234 }, { "texturesizes" : ["2048 * 2048", "512 * 512", "128 * 100"] }  
+
+
