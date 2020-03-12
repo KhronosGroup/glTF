@@ -1,7 +1,7 @@
 # Runtime Performance Metrics 
 
 The goal of these metrics is to asses the runtime performance needs of glTF assets.  
-By runtime we mean the cpu/gp, bandwitdh and memory resources needed to render the model in realtime.  
+By runtime we mean the cpu/gpu, bandwidth and memory resources needed to render the model in realtime.  
 These performance metrics are divided in two major categories - `complexity` and `memory`
 
 ## Performance Metric Categories
