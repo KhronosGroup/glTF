@@ -213,7 +213,6 @@
             "doubleSided": true,
             "extensions": {
                 "KHR_materials_transmission": {
-                    "ior": 1.7999999523162842,
                     "transmissionTexture": {
                         "index": 1
                     }
@@ -236,7 +235,6 @@
             "doubleSided": true,
             "extensions": {
                 "KHR_materials_transmission": {
-                    "ior": 1.7999999523162842,
                     "transmissionFactor": 1
                 }
             }
@@ -273,7 +271,6 @@
             "doubleSided": true,
             "extensions": {
                 "KHR_materials_transmission": {
-                    "ior": 1.7999999523162842,
                     "transmissionTexture": {
                         "index": 1
                     }
@@ -299,7 +296,6 @@
             "doubleSided": true,
             "extensions": {
                 "KHR_materials_transmission": {
-                    "ior": 1.7999999523162842,
                     "transmissionFactor": 1
                 }
             }
@@ -335,7 +331,6 @@
             "doubleSided": true,
             "extensions": {
                 "KHR_materials_transmission": {
-                    "ior": 1.7999999523162842,
                     "transmissionTexture": {
                         "index": 1
                     }
@@ -373,7 +368,6 @@
             "doubleSided": true,
             "extensions": {
                 "KHR_materials_transmission": {
-                    "ior": 1.7999999523162842,
                     "transmissionFactor": 1
                 }
             }
@@ -425,7 +419,6 @@
             "doubleSided": true,
             "extensions": {
                 "KHR_materials_transmission": {
-                    "ior": 1.7999999523162842,
                     "transmissionTexture": {
                         "index": 1
                     }
@@ -451,7 +444,6 @@
             "doubleSided": true,
             "extensions": {
                 "KHR_materials_transmission": {
-                    "ior": 1.7999999523162842,
                     "transmissionFactor": 1
                 }
             }
@@ -487,7 +479,6 @@
             "doubleSided": true,
             "extensions": {
                 "KHR_materials_transmission": {
-                    "ior": 1.7999999523162842,
                     "transmissionTexture": {
                         "index": 1
                     }
@@ -525,7 +516,6 @@
             "doubleSided": true,
             "extensions": {
                 "KHR_materials_transmission": {
-                    "ior": 1.7999999523162842,
                     "transmissionFactor": 1
                 }
             }
@@ -564,7 +554,6 @@
             "doubleSided": true,
             "extensions": {
                 "KHR_materials_transmission": {
-                    "ior": 1.7999999523162842,
                     "transmissionFactor": 1
                 }
             }
@@ -616,7 +605,6 @@
             "doubleSided": true,
             "extensions": {
                 "KHR_materials_transmission": {
-                    "ior": 1.7999999523162842,
                     "transmissionTexture": {
                         "index": 1
                     }
