@@ -8,17 +8,22 @@
 
 Work in Progress
 
-## DependenciesI
+## Dependencies
 
 Written against the glTF 2.0 spec.
 
 ## Overview
 
-Many optically transparent materials are impossible to represent in a physically plausible manner with the core glTF 2.0 PBR material. Alpha coverage (exposed via the alpha channel of `baseColorTexture`) is useful for transparent materials such as gauze that don’t reflect, refract, absorb or scatter light. However, most physical materials don’t fit into this category. Transparent glass and plastics are great examples of this. In the simplest case, specular reflections off the surface of the glass should still be visible on a fully transparent mesh. Using alpha coverage of 0% would make the reflections invisible as well.
+Many optically transparent materials are impossible to represent in a physically plausible manner with the core glTF 2.0 PBR material. This is because the core specification only includes the concept of "alpha as coverage" (exposed via the alpha channel of `baseColorTexture`). Many common materials like glass and plastic require significantly different modeling.
+
+## Limitations of Alpha as Coverage
+Alpha-as-coverage can basically be thought of as describing whether the surface exists or not. When alpha is 0, nothing is rendered. It's most useful for materials such as gauze or burlap that partially obscure light passing through them. These materials contain lots of small holes where the light can pass through so, strictly speaking, the light isn't actually entering the material itself (i.e. the surface isn't there). For other materials, like clear glass, a photon of light might actually enter the surface and be transmitted through. In this case, the light can be reflected, refracted, absorbed or scattered. Simple alpha-as-coverage cannot represent any of these effects and so we need very different logic to render them correctly.
+
+As a simple comparison, a fully transparent glass material is still visible due to refraction and reflection of light. However, a material using purely alpha as coverage is not visible at all when alpha = 0 (because the surface effectively doesn't exist).
 
 <figure>
 <img src="./figures/OpacityComparison.png"/>
-<figcaption><em>Alpha coverage of 20% (left) vs 80% optical transparency (right). Note that alpha coverage can't make the surface colourless nor can it produce any absorption effects. It also attenuates the specular reflections, making them disappear completely when opacity is 0.0.</em></figcaption>
+<figcaption><em>White sphere with alpha coverage of 25% (left) vs the same sphere with 100% optical transparency (right). Note that alpha coverage of 25% is shown because 0% would be completely invisible. Also note that alpha-as-coverage reflects light in proportion to its opacity. i.e. the more transparent it is, the weaker the reflections will appear.</em></figcaption>
 </figure>
 
 This extension provides a way to define glTF 2.0 materials that are transparent to light in a physically plausible way. That is, it enables the creation of transparent materials that absorb, reflect and transmit light depending on the incident angle and the wavelength of light. Common uses cases for thin-surface transmissive materials include plastics and glass.
@@ -62,7 +67,7 @@ The amount of light that is transmitted by the surface rather than diffusely re-
 
 ### transmissionTexture 
 
-A greyscale texture that defines the amount of light that is transmitted by the surface rather than absorbed and re-emitted. A value of 1.0 means that 100% of the light that penetrates the surface (i.e. isn’t specularly reflected) is transmitted through. The value is linear and is multiplied by the transmissionFactor to determine the total transmission value. Note that use of transmission values does not disallow usage of alpha coverage (via `baseColor.a`).
+A greyscale texture that defines the amount of light that is transmitted by the surface rather than diffusely re-emitted. A value of 1.0 means that 100% of the light that penetrates the surface (i.e. isn’t specularly reflected) is transmitted through. The value is linear and is multiplied by the transmissionFactor to determine the total transmission value. Note that use of transmission values does not disallow usage of alpha coverage (via `baseColor.a`).
 
 <figure>
   <img src="./figures/TransmissionTexture.png"/>
@@ -88,7 +93,10 @@ where *T* is the transmission percentage defined by this extension's `transmissi
 Light that penetrates a surface and is transmitted will not be diffusely reflected so we also need to modify the diffuse calculation to account for this.
 *f*<sub>*diffuse*</sub> = (1 - *F*) * (1 - *T*) * *diffuse*
 
-Optical transparency does not require any changes whatsoever to the specular term.
+Optical transparency does not require any changes whatsoever to the specular term. So this can all be rearranged so that the transmitted light amounts to a modifaction of the diffuse lobe.
+*f* = (1 - *F*) * (*T* * *D<sub>T</sub>* + (1 - *T*) * *diffuse*) + *f*<sub>*specular*</sub>
+
+
 
 ## Transparent Metals
 
@@ -122,11 +130,12 @@ Some rasterizer implementations may opt to sample prefiltered IBL or dynamic lig
 <figcaption><em>Refraction due to surface roughness.</em></figcaption>
 </figure>
 
-**TODO** - *This is fine for raytracers or for rasterizers that just sample the existing IBL for refracted light. However, what about rasterizers that want to cheaply render transmission in screen-space (I think this is pretty common)? Typically, the refractive blurring is done by sampling mips or manually-blurred versions of the background scene. This can be eye-balled by an implementation but is there a slightly more mathematically rigorous version that we could recommend?*
+**TODO** - *This is fine for raytracers or for rasterizers that just sample the existing IBL for refracted light. However, what about rasterizers that want to cheaply render transmission in screen-space (I think this is pretty common)? Typically, the refractive blurring is done by sampling mips or manually-blurred versions of the background scene. This can be eye-balled by an implementation but is there a slightly more mathematically-rigorous version that we could recommend?*
 
 ### Blending
 
-Although the math here is straightforward, it doesn't consist of a single blend equation and so, in practice, can't be rendered in a single draw call with blending enabled. Also note that alpha coverage still needs to work as it does with the core glTF material spec; blending between the destination framebuffer and this surface material. Therefore, `blendMode` should, in general, be set to "OPAQUE" unless alpha coverage is used.
+The glTF `blendMode` is used for alpha-as-coverage, NOT for physically-based transparency (i.e. this extension). If alpha-as-coverage is not being used, the blend mode of the material should be set to "OPAQUE" even though it is transparent. Again, it's helpful to think of alpha-as-coverage as whether the physical surface is there or not. `transmission` applies to the surface material that exists.
+Note that alpha-as-coverage can still be used along with transmission.
 
 <figure>
   <img src="./figures/TransmissionWithMask.png"/>
@@ -135,4 +144,4 @@ Although the math here is straightforward, it doesn't consist of a single blend 
 
 ### Multiple Layers
 
-Rendering transparency in an efficient manner is a difficult problem, especially when an arbitrary number of transparent polygons may be overlapping in view. This is because the rendering is order-dependent (i.e. we see background objects through forground objects). It may not be possible on the target platform to render every transparent polygon in the correct order in a reasonable time. Therefore, correct ordering is not an absolute requirement when implementing this extension in realtime renderers (offline renderers are assumed to not have this ordering issue). However, it is expected that reflected and transmitted light are blended in the way defined by this extension.
+Rendering transparency in an efficient manner is a difficult problem, especially when an arbitrary number of transparent polygons may be overlapping in view. This is because the rendering is order-dependent (i.e. we see background objects through foreground objects). It may not be possible on the target platform to render every transparent polygon in the correct order in a reasonable time. Therefore, correct ordering is not an absolute requirement when implementing this extension in realtime renderers (path-traced renderers are assumed to not have this ordering issue). However, it is expected that reflected and transmitted light are blended in the way defined by this extension.
