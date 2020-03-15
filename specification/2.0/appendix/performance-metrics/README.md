@@ -1,6 +1,6 @@
 # Runtime Performance Metrics 
 
-The goal of these metrics is to asses the runtime performance needs of glTF assets.  
+The goal of these metrics is to assess the runtime performance needs of glTF assets.  
 By runtime we mean the cpu/gpu, bandwidth and memory resources needed to render the model in realtime.  
 These performance metrics are divided in two major categories - `complexity` and `memory`
 
@@ -18,15 +18,17 @@ Using these metrics an estimate of target memory can be calculated - however kee
 
 
 
-|                 |             |          |                                                                | 
-|-----------------|-------------|----------|----------------------------------------------------------------|
-| Name            | Category    | Property |Description                                                     |
-|[vertexcount]    | Complexity  |Scene     |Total number of vertices used by a model in a scene             |  
-|[nodecount]      | Complexity  |Scene     |Max nodecount in scene (add upp all nodes in a scene)           |  
-|[primitivecount] | Complexity  |Scene     |Total number of referenced primitives (per scene).  This figure is the un-batched number of primitives, engines may optimize if primitives and meshes share textures. |  
-|[textures]       | Complexity  |Scene     |Flags specifying presence of materials and it's texture usage, this is the aggregated max usage. BASECOLOR, METALLICROUGHNESS, NORMAL, OCCLUSION, EMISSIVE, (SPECULARGLOSS) |  
-|[attributes]     | Memory      | Asset    | The total memory footprint, in bytes, for the models attribute buffer storage |  
-|[texturesizes]  | Memory      | Asset    | The sizes of defined textures in the Asset. |  
+|                 |             |          |                                                                |             |
+|-----------------|-------------|-------------|----------|----------------------------------------------------------------|
+| Name            | Type        | Category    | Property |Description                                                     |
+|[vertexCount]    | Integer     | Complexity  |Scene     |Total number of vertices used by the Nodes in a scene           |  
+|[nodeCount]      | Integer     | Complexity  |Scene     |Max nodecount in scene (add upp all nodes in a scene)           |  
+|[primitiveCount] | Integer     | Complexity  |Scene     |Total number of referenced primitives (per scene).  This figure is the un-batched number of primitives, engines may optimize if primitives and meshes share textures. |  
+|[textures]       | Integer     | Complexity  |Scene     |Flags specifying presence of materials and it's texture usage, this is the aggregated max usage. BASECOLOR, METALLICROUGHNESS, NORMAL, OCCLUSION, EMISSIVE, (SPECULARGLOSS) |  
+|[attributes]     | Integer     | Memory      | Asset    | The total memory footprint, in bytes, for the models attribute buffer storage |  
+|[textureSizes]  |Dimension    | Memory      | Asset    | The width and height of defined textures in the Asset. |  
+
+Dimension is an Integer[2] containing width and height  
 
 
 # Scene #  
@@ -37,16 +39,16 @@ To accomodate this the following metrics are calculated on a per-scene basis.
 It is possible to reference different meshes (nodes) using different scenes, this makes it possible to have the same texture assets but reference different primitives that use alternative materials (textures).  
 Ie one model could have 3 different scenes, where the same accessors (position, uv) are used but different primitives that reference materials with varying number of texture channels.  
 
-[nodecount]  
+[nodeCount]  
 This represent the number of traversed nodes in a scene.  
 This is calculated by traversing nodes in each scene (depth or breadth first does not matter) - for each node increase the nodecount.  
 
-[verticecount]  
+[vertexCount]  
 This represents the number of drawn vertices for each scene in the model.  
 This is calculated by traversing the nodes in each scene.  
 For each mesh use the POSITION attribute in each primitive, get the Accessor and add up the count field.  
 
-[primitivecount]  
+[primitiveCount]  
 This represents the number of primitives for each scene  
 Each primitive references a material with 0 or more texture sources, has attributes and accessors.  
 
@@ -61,7 +63,7 @@ Ie it is known if a texture is BASECOLOR or if part of PBR such as METALICROUGHN
 This value represent the total attribute buffer usage of the model. This value is calculated by adding up the size, in bytes, of all buffer objects in the Asset.  
 This may give an indication of the runtime memory footprint of the buffers needed for the model.  
 
-[texturesizes]
+[textureSizes]
 The total size of textures, without mipmaps, that are defined in the Asset.  
 This is calculated by iterating the texture array and adding up the size of indexed images.  
 The max texture size can be determined from these values.  
@@ -70,8 +72,8 @@ Some target devices may have a smaller (4096 * 4096) max texture size in which c
 # JSON #  
 This is how the output would be formatted using JSON  
 
-"scene" : [ { "verticecount" : 4300, "nodecount" : 20, "primitivecount" : 50 ,
+`"scene" : [ { "verticeCount" : 4300, "nodecount" : 20, "primitiveCount" : 50 ,
               "textures" : ["BASECOLOR", "METALLICROUGHNESS"]} ],  
-"asset" : { "attributes" : 345234 }, { "texturesizes" : ["2048 * 2048", "512 * 512", "128 * 100"] }  
+"asset" : { "attributes" : 345234 }, { "textureSizes" : [{ "dimension" : [2048,2048]}, { "dimension" : [512,512]}, { "dimension" : [256,200]}] } ` 
 
 
