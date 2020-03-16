@@ -72,8 +72,29 @@ Some target devices may have a smaller (4096 * 4096) max texture size in which c
 # JSON #  
 This is how the output would be formatted using JSON  
 
-`"scene" : [ { "verticeCount" : 4300, "nodecount" : 20, "primitiveCount" : 50 ,
-              "textures" : ["BASECOLOR", "METALLICROUGHNESS"]} ],  
-"asset" : { "attributes" : 345234 }, { "textureSizes" : [{ "dimension" : [2048,2048]}, { "dimension" : [512,512]}, { "dimension" : [256,200]}] } ` 
-
-
+```json
+{
+    "scene" : [
+        {
+            "vertexCount" : 4300,
+            "nodeCount" : 20,
+            "primitiveCount" : 50,
+            "textures" : ["BASECOLOR", "METALLICROUGHNESS"]
+        }
+    ],
+    "asset" : {
+        "attributes" : 345234,
+        "textureSizes" : [
+            {
+                "dimension" : [2048,2048]
+            },
+            {
+                "dimension" : [512,512]
+            },
+            {
+                "dimension" : [256,200]
+            }
+        ]
+    }
+}
+```
