@@ -55,11 +55,11 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
     * [Buffers and Buffer Views](#buffers-and-buffer-views)
       * [GLB-stored Buffer](#glb-stored-buffer)
     * [Accessors](#accessors)
-        * [Floating-Point Data](#floating-point-data)
-        * [Accessor Element Size](#accessor-element-size)
-        * [Accessors Bounds](#accessors-bounds)
-        * [Sparse Accessors](#sparse-accessors)
-    * [Data Alignment](#data-alignment)   
+      * [Floating-Point Data](#floating-point-data)
+      * [Accessor Element Size](#accessor-element-size)
+      * [Accessors Bounds](#accessors-bounds)
+      * [Sparse Accessors](#sparse-accessors)
+      * [Data Alignment](#data-alignment)   
   * [Geometry](#geometry)
     * [Meshes](#meshes)
       * [Tangent-space definition](#tangent-space-definition)
@@ -265,7 +265,9 @@ The [node transformations](#transformations) and [animation channel paths](#anim
 * rotation: A quaternion (x, y, z, w), where w is the scalar
 * scale: A 3D vector containing the scaling factors along the x, y and z axes
 
+RGB color values use sRGB color primaries.
 
+> **Implementation Note:** Color primaries define the interpretation of each color channel of the color model, particularly with respect to the RGB color model. In the context of a typical display, color primaries describe the color of the red, green and blue phosphors or filters. The same primaries are also defined in Recommendation ITU-R BT.709. Since the overwhelming majority of currently used consumer displays are using the same primaries as default, client implementations usually do not need to convert color values. Future specification versions or extensions may allow other color primaries (such as P3) or even provide a way of embedding custom color profiles.
 
 ## Scenes
 
@@ -471,7 +473,7 @@ Buffers and buffer views do not contain type information. They simply define the
 
 #### GLB-stored Buffer
 
-glTF asset could use GLB file container to pack all resources into one file. glTF Buffer referring to GLB-stored `BIN` chunk, must have `buffer.uri` property undefined, and it must be the first element of `buffers` array; byte length of `BIN` chunk could be up to 3 bytes bigger than JSON-defined `buffer.byteLength` to satisfy GLB padding requirements.
+glTF asset could use GLB file container to pack all resources into one file. glTF Buffer referring to GLB-stored `BIN` chunk, must have `buffer.uri` property undefined, and it must be the first element of `buffers` array; byte length of `BIN` chunk could be up to 3 bytes bigger than JSON-defined `buffer.byteLength` to satisfy GLB padding requirements. Any glTF Buffer with undefined `buffer.uri` property that is not the first element of `buffers` array does not refer to the GLB-stored BIN chunk, and the behavior of such buffers is left undefined to accommodate future extensions and specification versions.
 
 > **Implementation Note:**  Not requiring strict equality of chunk's and buffer's lengths simplifies glTF to GLB conversion a bit: implementations don't need to update `buffer.byteLength` after applying GLB padding.
 
@@ -855,9 +857,12 @@ After applying morph targets to vertex positions and normals, tangent space may 
 > **Implementation note:** The number of morph targets is not limited in glTF. A conformant client implementation must support at least eight morphed attributes. This means that it has to support at least eight morph targets that contain a `POSITION` attribute, or four morph targets that contain a `POSITION` and a `NORMAL` attribute, or two morph targets that contain `POSITION`, `NORMAL` and `TANGENT` attributes. For assets that contain a higher number of morphed attributes, renderers may choose to either fully support them (for example, by performing the morph computations in software), or to only use the eight attributes of the morph targets with the highest weights. 
 
 
+> **Implementation note:** A significant number of authoring and client implementations associate names with morph targets. While the glTF 2.0 specification currently does not provide a way to specify names, most tools use an array of strings, `mesh.extras.targetNames`, for this purpose. The `targetNames` array and all primitive `targets` arrays must have the same length.
+
+
 ### Skins
 
-All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property (which points to an accessor with IBM data), used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property points to the node that is the root of a joints hierarchy. 
+All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property (which points to an accessor with IBM data), used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property (if present) points to the node that is the common root of a joints hierarchy or to a direct or indirect parent node of the common root.
 
 > **Implementation Note:** The matrix defining how to pose the skin's geometry for use with the joints ("Bind Shape Matrix") should be premultiplied to mesh data or to Inverse Bind Matrices. 
 
@@ -935,7 +940,7 @@ The number of joints that influence one vertex is limited to 4 per set, so refer
 * **`JOINTS_0`**: `UNSIGNED_BYTE` or `UNSIGNED_SHORT`
 * **`WEIGHTS_0`**: `FLOAT`, or normalized `UNSIGNED_BYTE`, or normalized `UNSIGNED_SHORT`
 
-The joint weights for each vertex must be >= 0, and normalized to have a linear sum of one. No joint may have more than one non-zero weight for a given vertex.
+The joint weights for each vertex must be non-negative, and normalized to have a linear sum of `1.0`. No joint may have more than one non-zero weight for a given vertex.
 
 In the event that of any of the vertices are influenced by more than four joints, the additional joint and weight information will be found in subsequent sets. For example `JOINTS_1` and `WEIGHTS_1` if present will reference the accessor for up to 4 additional joints that influence the vertices. Note that client implementations are only required to support a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the model's animation.
 
@@ -943,11 +948,9 @@ All joint values must be within the range of joints in the skin. Unused joint va
 
 #### Joint Hierarchy
 
-The joint hierarchy used for controlling skinned mesh pose is simply the glTF node hierarchy, with each node designated as a joint. The following example defines a joint hierarchy of two joints.
+The joint hierarchy used for controlling skinned mesh pose is simply the glTF node hierarchy, with each node designated as a joint. Each skin's joints must have a common root, which may or may not be a joint node itself. When a skin is referenced by a node within a scene, the common root must belong to the same scene.
 
-**TODO: object-space VS world-space joints**
-
-For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-2.0.0b.png).
+For more details of vertex skinning implementation, refer to [glTF Overview](figures/gltfOverview-2.0.0b.png).
 
 > **Implementation Note:** A node definition does not specify whether the node should be treated as a joint. Client implementations may wish to traverse the `skins` array first, marking each joint node.
 
@@ -1088,7 +1091,7 @@ This is illustrated in the following figure, where the respective UV coordinates
 <img src="figures/texcoords.jpg" /><br/>
 </p>
 
-Any colorspace information (such as ICC profiles, intents, etc) from PNG or JPEG containers must be ignored.
+Any colorspace information (such as ICC profiles, intents, etc) from PNG or JPEG containers must be ignored. Effective transfer function is defined by a glTF object that refers to the image.
 
 > **Implementation Note:** This increases portability of an asset, since not all image decoding libraries fully support custom color conversions. To achieve correct rendering, WebGL runtimes must disable such conversions by setting `UNPACK_COLORSPACE_CONVERSION_WEBGL` flag to `NONE`.
 
@@ -1150,7 +1153,7 @@ The metallic-roughness material model is defined by the following properties:
 
 The base color has two different interpretations depending on the value of metalness. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used. 
 
-The value for each property (`baseColor`, `metallic`, `roughness`) can be defined using factors or textures. The `metallic` and `roughness` properties are packed together in a single texture called `metallicRoughnessTexture`. If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. If both factors and textures are present the factor value acts as a linear multiplier for the corresponding texture values. The `baseColorTexture` is in sRGB space and must be converted to linear space before it is used for any computations.
+The value for each property (`baseColor`, `metallic`, `roughness`) can be defined using factors or textures. The `metallic` and `roughness` properties are packed together in a single texture called `metallicRoughnessTexture`. If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. If both factors and textures are present the factor value acts as a linear multiplier for the corresponding texture values. The `baseColorTexture` uses the sRGB transfer function and must be converted to linear space before it is used for any computations.
 
 For example, assume a value of `[0.9, 0.5, 0.3, 1.0]` in linear space is obtained from an RGBA `baseColorTexture`, and assume that `baseColorFactor` is given as `[0.2, 1.0, 0.7, 1.0]`.
 Then, the result would be 
@@ -1929,7 +1932,7 @@ Interpolation algorithm.
 
 #### animation sampler.output :white_check_mark: 
 
-The index of an accessor containing keyframe output values. When targeting TRS target, the `accessor.componentType` of the output values must be `FLOAT`. When targeting morph weights, the `accessor.componentType` of the output values must be `FLOAT` or normalized integer where each output element stores values with a count equal to the number of morph targets.
+The index of an accessor containing keyframe output values. When targeting translation or scale paths, the `accessor.componentType` of the output values must be `FLOAT`. When targeting rotation or morph weights, the `accessor.componentType` of the output values must be `FLOAT` or normalized integer. For weights, each output element stores `SCALAR` values with a count equal to the number of morph targets.
 
 * **Type**: `integer`
 * **Required**: Yes
@@ -2703,7 +2706,7 @@ The occlusion map texture. The occlusion values are sampled from the R channel. 
 
 #### material.emissiveTexture
 
-The emissive map controls the color and intensity of the light being emitted by the material. This texture contains RGB components in sRGB color space. If a fourth component (A) is present, it is ignored.
+The emissive map controls the color and intensity of the light being emitted by the material. This texture contains RGB components encoded with the sRGB transfer function. If a fourth component (A) is present, it is ignored.
 
 * **Type**: `object`
 * **Required**: No
@@ -2850,7 +2853,7 @@ The indices of this node's children.
 
 #### node.skin
 
-The index of the skin referenced by this node.
+The index of the skin referenced by this node. When a skin is referenced by a node within a scene, all joints used by the skin must belong to the same scene.
 
 * **Type**: `integer`
 * **Required**: No
@@ -3151,7 +3154,7 @@ The RGBA components of the base color of the material. The fourth component (A) 
 
 #### pbrMetallicRoughness.baseColorTexture
 
-The base color texture. This texture contains RGB(A) components in sRGB color space. The first three components (RGB) specify the base color of the material. If the fourth component (A) is present, it represents the alpha coverage of the material. Otherwise, an alpha of 1.0 is assumed. The `alphaMode` property specifies how alpha is interpreted. The stored texels must not be premultiplied.
+The base color texture. The first three components (RGB) are encoded with the sRGB transfer function. They specify the base color of the material. If the fourth component (A) is present, it represents the linear alpha coverage of the material. Otherwise, an alpha of 1.0 is assumed. The `alphaMode` property specifies how alpha is interpreted. The stored texels must not be premultiplied.
 
 * **Type**: `object`
 * **Required**: No
@@ -3306,15 +3309,11 @@ A dictionary object, where each key corresponds to mesh attribute semantic and e
 
 The index of the accessor that contains mesh indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`.  When defined, the accessor must contain indices: the [`bufferView`](#reference-bufferview) referenced by the accessor should have a [`target`](#reference-target) equal to 34963 (ELEMENT_ARRAY_BUFFER); `componentType` must be 5121 (UNSIGNED_BYTE), 5123 (UNSIGNED_SHORT) or 5125 (UNSIGNED_INT), the latter may require enabling additional hardware support; `type` must be `"SCALAR"`. For triangle primitives, the front face has a counter-clockwise (CCW) winding order.
 
-Values of the index accessor must not include the maximum value for the given component type, which triggers primitive restart in several graphics APIs and would require client implementations to rebuild the index buffer. Primitive restart values are disallowed and all index values must refer to actual vertices.
+Values of the index accessor must not include the maximum value for the given component type, which triggers primitive restart in several graphics APIs and would require client implementations to rebuild the index buffer. Primitive restart values are disallowed and all index values must refer to actual vertices. As a result, the index accessor's values must not exceed the following maxima: BYTE `< 255`, UNSIGNED_SHORT `< 65535`, UNSIGNED_INT `< 4294967295`.
 
 * **Type**: `integer`
 * **Required**: No
 * **Minimum**: ` >= 0`
-* **Maximum**:
-   * BYTE `< 255`
-   * UNSIGNED_SHORT `< 65535`
-   * UNSIGNED_INT `< 4294967295`
 
 #### primitive.material
 
@@ -3527,7 +3526,7 @@ Joints and matrices defining a skin.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**inverseBindMatrices**|`integer`|The index of the accessor containing the floating-point 4x4 inverse-bind matrices.  The default is that each matrix is a 4x4 identity matrix, which implies that inverse-bind matrices were pre-applied.|No|
-|**skeleton**|`integer`|The index of the node used as a skeleton root. When undefined, joints transforms resolve to scene root.|No|
+|**skeleton**|`integer`|The index of the node used as a skeleton root.|No|
 |**joints**|`integer` `[1-*]`|Indices of skeleton nodes, used as joints in this skin.| :white_check_mark: Yes|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
@@ -3547,7 +3546,7 @@ The index of the accessor containing the floating-point 4x4 inverse-bind matrice
 
 #### skin.skeleton
 
-The index of the node used as a skeleton root. When undefined, joints transforms resolve to scene root.
+The index of the node used as a skeleton root. The node must be the closest common root of the joints hierarchy or a direct or indirect parent node of the closest common root.
 
 * **Type**: `integer`
 * **Required**: No
@@ -3717,7 +3716,7 @@ A texture and its sampler.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**sampler**|`integer`|The index of the sampler used by this texture. When undefined, a sampler with repeat wrapping and auto filtering should be used.|No|
-|**source**|`integer`|The index of the image used by this texture.|No|
+|**source**|`integer`|The index of the image used by this texture. When undefined, it is expected that an extension or other mechanism will supply an alternate texture source, otherwise behavior is undefined.|No|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -3736,7 +3735,7 @@ The index of the sampler used by this texture. When undefined, a sampler with re
 
 #### texture.source
 
-The index of the image used by this texture.
+The index of the image used by this texture. When undefined, it is expected that an extension or other mechanism will supply an alternate texture source, otherwise behavior is undefined.
 
 * **Type**: `integer`
 * **Required**: No
@@ -3905,7 +3904,7 @@ Application-specific data.
 
 The glTF spec is designed to allow applications to choose different lighting implementations based on their requirements.
 
-An implementation sample is available at https://github.com/KhronosGroup/glTF-WebGL-PBR/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters.
+An implementation sample is available at https://github.com/KhronosGroup/glTF-Sample-Viewer/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters.
 
 As previously defined
 
@@ -3920,8 +3919,8 @@ As previously defined
 *&alpha;* = `roughness ^ 2`
 
 Additionally,  
-*V* is the eye vector to the shading location  
-*L* is the vector from the light to the shading location  
+*V* is the normalized vector from the shading location to the eye  
+*L* is the normalized vector from the shading location to the light  
 *N* is the surface normal in the same space as the above values  
 *H* is the half vector, where *H* = normalize(*L*+*V*)  
 
@@ -3941,17 +3940,17 @@ Simplified implementation of Fresnel from [An Inexpensive BRDF Model for Physica
 
 ### Geometric Occlusion (G)
 
-**Schlick**
+**Smith Joint GGX**
 
-Implementation of microfacet occlusion from [An Inexpensive BRDF Model for Physically based Rendering](https://www.cs.virginia.edu/~jdl/bib/appearance/analytic%20models/schlick94b.pdf) by Christophe Schlick.
+[Understanding the Masking-Shadowing Function in Microfacet-Based BRDFs](http://jcgt.org/published/0003/02/03/paper.pdf) by Eric Heitz.
 
 ![](figures/lightingG.PNG)
 
-### Microfaced Distribution (D)
+### Microfacet Distribution (D)
 
 **Trowbridge-Reitz**
 
-Implementation of microfaced distrubtion from [Average Irregularity Representation of a Roughened Surface for Ray Reflection](https://www.osapublishing.org/josa/abstract.cfm?uri=josa-65-5-531) by T. S. Trowbridge, and K. P. Reitz
+Implementation of microfacet distrubtion from [Average Irregularity Representation of a Roughened Surface for Ray Reflection](https://www.osapublishing.org/josa/abstract.cfm?uri=josa-65-5-531) by T. S. Trowbridge, and K. P. Reitz
 
 ![](figures/lightingD.PNG)
 

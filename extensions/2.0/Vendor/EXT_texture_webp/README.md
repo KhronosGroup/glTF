@@ -7,7 +7,7 @@
 
 ## Status
 
-Draft
+Complete
 
 ## Dependencies
 
@@ -80,6 +80,8 @@ When used in the glTF Binary (.glb) format the `images` node that points to the 
 Since WebP is not as widely supported as JPEG and PNG, it is recommended to use this extension only when transmission size is a significant bottleneck. For example, in geospatial applications the total texture payload can range from gigabytes to terabytes of data. In those situations, WebP textures can be used without a fallback to improve storage and transmission.
 
 When a fallback image is defined, this extension should not be present in `extensionsRequired`. This will allow all clients to render the glTF correctly, and those that support this extension can request the optimized WebP version of the textures.
+
+WebP images using [extended file format](https://developers.google.com/speed/webp/docs/riff_container#extended_file_format) should not contain animations or color profile information.
 
 ### Using Without a Fallback
 
