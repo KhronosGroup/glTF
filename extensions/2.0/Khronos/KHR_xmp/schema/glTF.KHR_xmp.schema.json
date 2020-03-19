@@ -5,12 +5,17 @@
     "description": "Metadata about the glTF asset.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
+        "namespaces" : {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Dictionary mapping XMP namespace names to the URI where they are defined",
+        }
         "packets": {
             "type" : "array",
             "items": {
                 "type": "object",
                 "additionalProperties": true,
-                "description": "Dictionary of XMP metadata properties. Property names take the form `xmp_namespace:property_name`",
+                "description": "Dictionary of XMP metadata properties. Property names take the form `xmp_namespace_name:property_name`",
             },
             "minItems": 1
         },

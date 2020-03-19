@@ -70,12 +70,19 @@ The following table describes how [XMP Core Properties](https://github.com/adobe
 ## Defining XMP Metadata
 
 An indirection level is introduced to avoid replicating the same XMP metadata in multiple glTF nodes.
-XMP metadatas are defined within a dictionary property in the glTF scene description file by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_xmp` property with a `packets` array inside it.
+XMP metadatas are defined within a dictionary property in the glTF scene description file by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_xmp` object. The `KHR_xmp` object defines two properties:
+
+* `namespaces` : a dictionary mapping XMP [namespaces](https://github.com/adobe/xmp-docs/blob/master/Namespaces.md) to the URI where they are defined.
+* `packets`: an array of metadata packets referencing the namespaces defined in the `namespaces` dictionary.
+
 The following example defines a glTF scene with a sample XMP metadata.
 
 ```json
 "extensions": {
     "KHR_xmp" : {
+        "namespaces" : {
+            "dc" : "http://purl.org/dc/elements/1.1/"
+        },
         "packets" : [
             {
                 "dc:contributor" : [ "Creator1Name", "Creator2Email@email.com", "Creator3Name<Email@email.com>"],
@@ -155,12 +162,15 @@ glTF containing the first mesh:
         ...
       }
     ],
-    "extensions": { "KHR_xmp" : { "packets" : [
-      {
-        "dc:title" : { "en-us" : "My first mesh"},
-        ...
-      },
-    ]}},
+    "extensions": {
+        "KHR_xmp" : {
+            "namespaces" : { "dc" : "http://purl.org/dc/elements/1.1/" },
+            "packets" : [{
+                "dc:title" : { "en-us" : "My first mesh"},
+                ...
+            }]
+        }
+    }
 }
 ```
 
@@ -174,12 +184,15 @@ glTF containing the second mesh:
         ...
       }
     ],
-    "extensions": { "KHR_xmp" : { "packets" : [
-      {
-        "dc:title" : { "en-us" : "My second mesh"},
-        ...
-      },
-    ]}},
+    "extensions": {
+        "KHR_xmp" : {
+            "namespaces" : { "dc" : "http://purl.org/dc/elements/1.1/" },
+            "packets" : [{
+                "dc:title" : { "en-us" : "My second mesh"},
+                ...
+            }]
+        }
+    }
 }
 ```
 
@@ -197,16 +210,21 @@ glTF containing copies of both meshes:
         ...
       }
     ],
-    "extensions": { "KHR_xmp" : { "packets" : [
-      {
-        "dc:title" : { "en-us" : "My first mesh"},
-        ...
-      },
-      {
-        "dc:title" : { "en-us" : "My second mesh"},
-        ...
-      },
-    ]}},
+    "extensions": {
+        "KHR_xmp" : {
+            "namespaces" : { "dc" : "http://purl.org/dc/elements/1.1/" },
+            "packets" : [
+              {
+                "dc:title" : { "en-us" : "My first mesh"},
+                ...
+              },
+              {
+                "dc:title" : { "en-us" : "My second mesh"},
+                ...
+              }
+            ]
+        }
+    }
 }
 ```
 
@@ -227,6 +245,7 @@ First glTF document:
     },
     "extensions": {
         "KHR_xmp" : {
+            "namespaces" : { "dc" : "http://purl.org/dc/elements/1.1/" },
             "packets" : [
               {
                 "dc:title" : { "en-us" : "My first glTF"},
@@ -252,6 +271,7 @@ Second glTF document:
     },
     "extensions": {
         "KHR_xmp" : {
+            "namespaces" : { "dc" : "http://purl.org/dc/elements/1.1/" },
             "packets" : [
               {
                 "dc:title" : { "en-us" : "My second glTF"},
@@ -277,6 +297,11 @@ Derived glTF document metadata:
     },
     "extensions": {
         "KHR_xmp" : {
+            "namespaces" :
+              {
+                "dc" : "http://purl.org/dc/elements/1.1/",
+                "xmpMM" : "http://ns.adobe.com/xap/1.0/mm/",
+              },
             "packets" : [
               {
                 "dc:title" : { "en-us" : "My composed glTF."},
