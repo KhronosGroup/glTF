@@ -1,0 +1,23 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_thickness glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the geometry thickness.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "thickness": {
+            "type": "number",
+            "description": "The thickness factor.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "gltf_detailedDescription": "A material-wide thickness factor."
+        },
+        "thicknessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The thickness texture.",
+            "gltf_detailedDescription": "The thickness for each surface point."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
