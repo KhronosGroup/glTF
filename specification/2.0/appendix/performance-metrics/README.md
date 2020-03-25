@@ -11,6 +11,11 @@ These performance metrics are divided in two major categories - `complexity` and
 The `complexity`category provides metrics to calculate cpu/gpu and memory bandwidth target requirements - larger numbers will mean a more powerful target device is needed.  
 These metrics do not provide a mapping to target device performance, this mapping must be done by users of the metrics.  
 
+### Screen space coverage
+
+The metrics do not include screen space coverage, it is advised that clients shall know how large the render area will be before requesting a model (from the backend)  
+It is up to the backend to take screen coverage into account when providing a suitable model to the client, for instance by taking width + height as parameters.  
+
 ### Memory  
 
 The `memory` category provides metrics to calculate the runtime memory (size) needs of the model.  
@@ -25,6 +30,7 @@ Using these metrics an estimate of target memory can be calculated - however kee
 |[nodeCount]      | Integer     | Complexity  |Scene     |Max nodecount in scene (add upp all nodes in a scene)           |  
 |[primitiveCount] | Integer     | Complexity  |Scene     |Total number of referenced primitives (per scene).  This figure is the un-batched number of primitives, engines may optimize if primitives and meshes share textures. |  
 |[textures]       | Integer     | Complexity  |Scene     |Flags specifying presence of materials and it's texture usage, this is the aggregated max usage. BASECOLOR, METALLICROUGHNESS, NORMAL, OCCLUSION, EMISSIVE, (SPECULARGLOSS) |  
+|[maxNodeDepth]   | Integer     | Memory      | Scene    | The max node depth of the scene, ie the max number of parent/child relations. This number will represent the max stack depth needed when traversing the nodegraph |
 |[attributes]     | Integer     | Memory      | Asset    | The total memory footprint, in bytes, for the models attribute buffer storage |  
 |[textureSizes]  |Dimension    | Memory      | Asset    | The width and height of defined textures in the Asset. |  
 
@@ -79,7 +85,8 @@ This is how the output would be formatted using JSON
             "vertexCount" : 4300,
             "nodeCount" : 20,
             "primitiveCount" : 50,
-            "textures" : ["BASECOLOR", "METALLICROUGHNESS"]
+            "textures" : ["BASECOLOR", "METALLICROUGHNESS"],
+            "maxNodeDepth" : 7
         }
     ],
     "asset" : {
