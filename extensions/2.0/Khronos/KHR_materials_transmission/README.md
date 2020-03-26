@@ -17,7 +17,6 @@ Draft
 Written against the glTF 2.0 spec.
 
 * This extension optionally depends on `KHR_materials_ior`.
-* This extension optionally depends on `KHR_materials_thickness`.
 
 ## Exclusions
 
@@ -56,8 +55,7 @@ The `transmission` value determines how much of the transmission is visible. The
 
 Because the specular BRDF distribution is used to compute the transmitted color similar to computing the reflected color, an effect like etched glass can be achived.
 
-* When an index of refraction is defined, refraction is taken into account when computing the transmitted color.
-* When a thickness is defined, it can be taken into account when computing the refracted ray, depending on the approximation model used in an implementation.
+When an index of refraction is defined, refraction is taken into account when computing the transmitted color.
 
 ## Schema
 
