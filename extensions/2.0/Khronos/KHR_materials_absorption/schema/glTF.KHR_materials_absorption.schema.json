@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_thickness glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the geometry thickness.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "absorptionColor": {
+            "type": "array",
+            "description": "The absorption color.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [ 0.0, 0.0, 0.0 ]
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
