@@ -1,5 +1,4 @@
-Gltf output: C:/otoyla/exports/octane/teapots_galore_TRS/teapots_galore_TRS.gltf
-FreeImage 3.16.0
+Gltf output: C:/otoyla/exports/octane/teapots_galore/teapots_galore.gltf
 Node : Thin lens camera
 node setTransforms Thin lens camera 1
 node addNode Thin lens camera
@@ -13,6 +12,7 @@ node addNode Scatter
 Node : Placement_1
 node setTransforms Placement_1 1
 node addNode Placement_1
+getMaterialChannelColor diffuse 0.700000,0.700000,0.700000
 getMaterialChannelColor specular 1.000000,1.000000,1.000000
 getMaterialChannelColor opacity 1.000000,1.000000,1.000000
 getMaterialChannelColor index 0.000000,0.000000,0.000000
@@ -43,6 +43,7 @@ node addNode Scatter_1
 Node : Placement_2
 node setTransforms Placement_2 1
 node addNode Placement_2
+getMaterialChannelColor diffuse 0.700000,0.000644,0.033537
 getMaterialChannelColor specular 1.000000,1.000000,1.000000
 getMaterialChannelColor opacity 1.000000,1.000000,1.000000
 getMaterialChannelColor index 0.000000,0.000000,0.000000

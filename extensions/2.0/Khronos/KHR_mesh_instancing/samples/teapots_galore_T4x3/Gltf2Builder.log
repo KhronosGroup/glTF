@@ -12,6 +12,7 @@ node addNode Scatter
 Node : Placement_1
 node setTransforms Placement_1 1
 node addNode Placement_1
+getMaterialChannelColor diffuse 0.700000,0.700000,0.700000
 getMaterialChannelColor specular 1.000000,1.000000,1.000000
 getMaterialChannelColor opacity 1.000000,1.000000,1.000000
 getMaterialChannelColor index 0.000000,0.000000,0.000000
@@ -28,10 +29,10 @@ material   0 = cube
 maximum_index = 0
 IN  MESH 0 = teapot:cube
 OUT MESH teapot
-OUT PRIM 0 = (null)
-OPTIMIZED mesh teapot 12096 = 0
-  verts = 12096
-  norms = 12096
+OUT PRIM 0 = teapot:cube
+OPTIMIZED mesh  2204 = 0
+  verts = 2204
+  norms = 2204
   uvws  = 0
 mesh material cube
 node addNode teapot
@@ -42,6 +43,7 @@ node addNode Scatter_1
 Node : Placement_2
 node setTransforms Placement_2 1
 node addNode Placement_2
+getMaterialChannelColor diffuse 0.700000,0.000644,0.033537
 getMaterialChannelColor specular 1.000000,1.000000,1.000000
 getMaterialChannelColor opacity 1.000000,1.000000,1.000000
 getMaterialChannelColor index 0.000000,0.000000,0.000000
@@ -73,9 +75,9 @@ material   0 = cube_2
 maximum_index = 0
 IN  MESH 0 = plane:cube_2
 OUT MESH plane
-OUT PRIM 0 = (null)
+OUT PRIM 0 = plane:cube_2
 BUILD NORMALS
-OPTIMIZED mesh plane 4 = 0
+OPTIMIZED mesh  4 = 0
   verts = 4
   norms = 4
   uvws  = 4

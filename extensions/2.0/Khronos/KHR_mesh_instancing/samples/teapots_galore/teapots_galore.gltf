@@ -139,7 +139,7 @@
         }
     ],
     "asset": {
-        "generator": "OTOYFbxGltfConverters Version:0.3",
+        "generator": "OctaneGltfExporter Version:2.2",
         "version": "2.0"
     },
     "bufferViews": [
@@ -284,65 +284,54 @@
         }
     ],
     "extensionsUsed": [
-        "KHR_mesh_instancing"
+        "EXT_mesh_gpu_instancing"
     ],
     "materials": [
         {
-            "pbrMetallicRoughness": {
-                "pbrMetallicRoughness": {
-                    "baseColorFactor": [
-                        0.7,
-                        0.0,
-                        0.0,
-                        1
-                    ],
-                    "metallicFactor": 0
-                },
-                "emissiveFactor": [
-                    0,
-                    0,
-                    0
-                ]
+            "extras": {
+                "arrayIndex": 0
             },
-            "name": "cube"
+            "name": "cube",
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.699999988079071,
+                    0.699999988079071,
+                    0.699999988079071,
+                    1.0
+                ],
+                "roughnessFactor": 0.06319999694824219
+            }
         },
         {
-            "pbrMetallicRoughness": {
-                "pbrMetallicRoughness": {
-                      "baseColorFactor": [
-                          0.7,
-                          0.7,
-                          0.7,
-                          1
-                      ],
-                      "metallicFactor": 0
-                },
-                "emissiveFactor": [
-                    0,
-                    0,
-                    0
-                ]
+            "extras": {
+                "arrayIndex": 1
             },
-            "name": "cube_1"
+            "name": "cube_1",
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.7000000476837158,
+                    0.0006436262046918273,
+                    0.03353740647435188,
+                    1.0
+                ],
+                "roughnessFactor": 0.06319999694824219
+            }
         },
         {
-            "pbrMetallicRoughness": {
-                "pbrMetallicRoughness": {
-                    "baseColorFactor": [
-                        0.4,
-                        0.4,
-                        0.4,
-                        1
-                    ],
-                    "metallicFactor": 0
-                },
-                "emissiveFactor": [
-                    0,
-                    0,
-                    0
-                ]
+            "extras": {
+                "arrayIndex": 2
             },
-            "name": "cube_2"
+            "name": "cube_2",
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.15800000727176666,
+                    0.10700000077486038,
+                    0.09399999678134918,
+                    1.0
+                ],
+                "metallicFactor": 0.11500000208616257,
+                "roughnessFactor": 0.13469399511814117
+            }
         }
     ],
     "meshes": [
@@ -393,7 +382,7 @@
             "extras": {
                 "arrayIndex": 0
             },
-            "name": "teapots_galore_TRS"
+            "name": "teapots_galore"
         },
         {
             "camera": 0,
@@ -449,7 +438,7 @@
         },
         {
             "extensions": {
-                "KHR_mesh_instancing": {
+                "EXT_mesh_gpu_instancing": {
                     "attributes": {
                         "ROTATION": 4,
                         "SCALE": 5,
@@ -483,7 +472,7 @@
         },
         {
             "extensions": {
-                "KHR_mesh_instancing": {
+                "EXT_mesh_gpu_instancing": {
                     "attributes": {
                         "ROTATION": 7,
                         "SCALE": 8,
@@ -556,7 +545,7 @@
             "extras": {
                 "arrayIndex": 0
             },
-            "name": "teapots_galore_TRS",
+            "name": "teapots_galore",
             "nodes": [
                 0
             ]
