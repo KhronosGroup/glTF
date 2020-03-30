@@ -15,7 +15,8 @@ These metrics do not provide a mapping to target device performance, this mappin
 
 The metrics do not include screen space coverage.  
 However, implementations should generally consider the size of the render area in addition to performance metrics of the model.  
-A higher performance budget may be acceptable when screen space coverage is higher.
+A higher performance budget may be acceptable when screen space coverage is higher.  
+For most usecases it's best to assume a worst case where all or most of the screen space is filled with rendered pixels.  
 
 
 ### Memory  
@@ -31,12 +32,14 @@ Using these metrics an estimate of target memory can be calculated - however kee
 |[vertexCount]    | Integer     | Complexity  |Scene     |Total number of vertices used by the Nodes in a scene           |  
 |[nodeCount]      | Integer     | Complexity  |Scene     |Max nodecount in scene (add upp all nodes in a scene)           |  
 |[primitiveCount] | Integer     | Complexity  |Scene     |Total number of referenced primitives (per scene).  This figure is the un-batched number of primitives, engines may optimize if primitives and meshes share textures. |  
-|[textures]       | Integer     | Complexity  |Scene     |Flags specifying presence of materials and it's texture usage, this is the aggregated max usage. BASECOLOR, METALLICROUGHNESS, NORMAL, OCCLUSION, EMISSIVE, (SPECULARGLOSS) |  
+|[textures]       | Integer     | Complexity  |Scene     |Flags specifying presence of materials texture usage, this is the aggregated most complex usage. BASECOLOR, METALLICROUGHNESS, NORMAL, OCCLUSION, EMISSIVE, SPECULARGLOSS, DIFFUSE, CLEARCOAT |  
+|[materials]      | Integer     | Complexity  |Scene     | Flags specifying presence of materials, this is the aggregated most complex usage.  |
 |[maxNodeDepth]   | Integer     | Memory      | Scene    | The max node depth of the scene, ie the max number of parent/child relations. This number will represent the max stack depth needed when traversing the nodegraph |
-|[attributes]     | Integer     | Memory      | Asset    | The total memory footprint, in bytes, for the models attribute buffer storage |  
-|[textureSizes]  |Dimension    | Memory      | Asset    | The width and height of defined textures in the Asset. |  
+|[accessors]     | Accessor     | Memory      | Asset    | Total number and format of vertex accessors, this can be used to calculate vertex buffer memory requirements |  
+|[textureSize]  |Integer    | Memory      | Asset    | The size and format of textures |  
 
 Dimension is an Integer[2] containing width and height  
+Accessor is an object containing count, componentType and type, componentType and type is taken from glTF Accessor  
 
 
 # Scene #  
@@ -60,22 +63,68 @@ For each mesh use the POSITION attribute in each primitive, get the Accessor and
 This represents the number of primitives for each scene  
 Each primitive references a material with 0 or more texture sources, has attributes and accessors.  
 
-
 [textures]  
 This value represents the texture sources that are used by a scene.  
 This is the max value from the most 'complex' primitive that will be referenced by a Node in the scene.  
-The goal of this metric is to provide a worst case texture usage where texturecount and complexity is known.  
-Ie it is known if a texture is BASECOLOR or if part of PBR such as METALICROUGHNESS and now many texture sources that are used.  
+The goal of this metric is to provide a worst case texture usage cost for rendering a pixel.  
 
-[attributes]  
-This value represent the total attribute buffer usage of the model. This value is calculated by adding up the size, in bytes, of all buffer objects in the Asset.  
+`textures`  
+1 BASECOLOR
+2 METALLICROUGHNESS  
+3 NORMAL  
+4 OCCLUSION  
+5 EMISSIVE  
+6 SPECULARGLOSS  
+7 DIFFUSE  
+8 CLEARCOAT  
+
+
+[materials]  
+This value represents the materials used by a scene.  
+This is the max value from the most 'complex' primitive that will be referenced by a Node in the scene.  
+The goal of this metric is to provide a worst case computational cost for rendering a pixel.  
+  
+1 PBR
+2 SPECULARGLOSS (KHR_materials_pbrSpecularGlossiness)
+2 UNLIT (KHR_materials_unlit) 
+
+
+[accessors]  
+This value represent the total vertex accessor usage of the model.  
+It is calculated by adding upp the accessors in the model, storing count, componentType and type.  
 This may give an indication of the runtime memory footprint of the buffers needed for the model.  
+componentType and type are taken from glTF specification for Accessor object.  
+`componentType`  
+5120 BYTE  
+5121 UNSIGNED_BYTE  
+5122 SHORT  
+5123 UNSIGNED_SHORT  
+5125 UNSIGNED_INT  
+5126 FLOAT  
 
-[textureSizes]
-The total size of textures, without mipmaps, that are defined in the Asset.  
-This is calculated by iterating the texture array and adding up the size of indexed images.  
-The max texture size can be determined from these values.  
-Some target devices may have a smaller (4096 * 4096) max texture size in which case the backend can choose to deliver another model.  
+`type`  
+"SCALAR"  
+"VEC2"  
+"VEC3"  
+"VEC4"  
+"MAT2"  
+"MAT3"  
+"MAT4"  
+
+
+[textureSize]  
+The size and format of textures, without mipmaps, that are defined in the Asset.  
+This is calculated by iterating the texture array and adding the size and format of indexed images.  
+Formats are as follows [4, 3, 2, 1] :
+4 component, eg (RGBA)    
+3 component, eg (RGB)    
+2 component, eg (MR)    
+1 component, eg (O)  
+
+It is up to the client to calculate the actual memory requirements on the target device as this may vary depending on hardware and (future) compressed format support.
+
+The client can use these values to get the max texture size.  
+Some target devices may have a smaller (4096 * 4096) max texture size in which case the client can choose to deliver another model.  
 
 # JSON #  
 This is how the output would be formatted using JSON  
@@ -88,20 +137,30 @@ This is how the output would be formatted using JSON
             "nodeCount" : 20,
             "primitiveCount" : 50,
             "textures" : ["BASECOLOR", "METALLICROUGHNESS"],
+            "materials" : ["PBR", "SPECULARGLOSS"],
             "maxNodeDepth" : 7
         }
     ],
     "asset" : {
-        "attributes" : 345234,
-        "textureSizes" : [
+        "accessors" : [
             {
-                "dimension" : [2048,2048]
+                "count" : 4980,
+                "componentType" : 5125,
+                "type" : "VEC3"
+            }
+        ],
+        "textureSize" : [
+            {
+                "dimension" : [2048,2048],
+                "format" : 4
             },
             {
-                "dimension" : [512,512]
+                "dimension" : [512,512],
+                "format" : 1
             },
             {
-                "dimension" : [256,200]
+                "dimension" : [256,200],
+                "format" : 3
             }
         ]
     }
