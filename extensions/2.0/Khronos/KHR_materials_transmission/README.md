@@ -51,9 +51,7 @@ The transmission materials are defined by adding the `KHR_materials_transmission
 
 The approximation used to compute the transmission color is implementation dependant.
 
-The `transmission` value determines how much of the transmission is visible. The transmission color is weighted together with the diffuse color: `transmission * f_transmission + (1 - transmission) * f_diffuse`. This linear combination is used as the new diffuse color. The transmitted color is computed using the specular BRDF distribution for the current material.
-
-Because the specular BRDF distribution is used to compute the transmitted color similar to computing the reflected color, an effect like etched glass can be achived.
+The `transmission` value determines how much of the transmission is visible. The transmission color is weighted together with the diffuse color: `transmission * f_transmission + (1 - transmission) * f_diffuse = mix(f_transmission, f_diffuse, transmission)`. This linear combination is used as the new diffuse color.
 
 When an index of refraction is defined, refraction is taken into account when computing the transmitted color.
 
