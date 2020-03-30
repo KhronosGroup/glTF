@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_mesh_instancing glTF extension",
+    "title": "EXT_mesh_gpu_instancing glTF extension",
     "type": "object",
     "description": "glTF extension defines instance attributes for a node with a mesh.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
