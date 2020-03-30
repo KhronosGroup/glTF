@@ -13,8 +13,10 @@ These metrics do not provide a mapping to target device performance, this mappin
 
 ### Screen space coverage
 
-The metrics do not include screen space coverage, it is advised that clients shall know how large the render area will be before requesting a model (from the backend)  
-It is up to the backend to take screen coverage into account when providing a suitable model to the client, for instance by taking width + height as parameters.  
+The metrics do not include screen space coverage.  
+However, implementations should generally consider the size of the render area in addition to performance metrics of the model.  
+A higher performance budget may be acceptable when screen space coverage is higher.
+
 
 ### Memory  
 
