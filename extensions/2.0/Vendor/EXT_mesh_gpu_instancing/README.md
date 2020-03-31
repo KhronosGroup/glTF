@@ -1,4 +1,4 @@
-# KHR\_mesh\_instancing
+# EXT\_mesh\_gpu\_instancing
 
 ## Khronos 3D Formats Working Group
 
@@ -7,8 +7,6 @@
 * Arseny Kapoulkine 
 
 ## Acknowledgments
-
-* TODO
 
 ## Status
 
@@ -26,7 +24,7 @@ Custom attributes can use the underscore mechanism to achieve other effects (i.e
 
 ## Extending Nodes with per instance attributes
 
-Instancing is defined by adding the `KHR_mesh_instancing` extension to any glTF node that has a mesh.  Instancing only applies to mesh nodes, there is no defined behavior for a node 
+Instancing is defined by adding the `EXT_mesh_gpu_instancing` extension to any glTF node that has a mesh.  Instancing only applies to mesh nodes, there is no defined behavior for a node 
 with this extension that doesn't also have a mesh.  Applying to nodes rather than meshes allows the same mesh to be used by several nodes, instanced or otherwise.  The attributes 
 section contains accessor ids for the TRANSLATION, ROTATION, and SCALE attribute buffers, all of which are optional.  The attributes specify an object space transform that should be 
 multipled by the node's world transform in the shader to produce the final world transform for the instance. For example, the following defines some instancing attributes to a node with mesh.  
@@ -38,11 +36,12 @@ multipled by the node's world transform in the shader to produce the final world
             "mesh": 0,
             "name": "teapot",
             "extensions": {
-                "KHR_mesh_instancing": {
+                "EXT_mesh_gpu_instancing": {
                     "attributes": {
                         "TRANSLATION": 0,
                         "ROTATION": 1,
                         "SCALE": 2,
+                        "_ID" : 3
                     },
                 }
             }
@@ -53,12 +52,8 @@ multipled by the node's world transform in the shader to produce the final world
 
 ## Appendix
 
-TODO
 
 ## Reference
 
-TODO
 
 ### Theory, Documentation and Implementations
-
-TODO
