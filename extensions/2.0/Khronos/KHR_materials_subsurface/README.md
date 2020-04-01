@@ -22,6 +22,8 @@ Draft
 
 Written against the glTF 2.0 and the `KHR_lights_punctual` extension specification.
 
+* Requires the `KHR_materials_thickness` extension.
+
 ## Overview
 
 This extension defines the subsurface scattering material to simulate translucency of objects with varying thickness resulting in view and light-dependant attenuation.
@@ -38,11 +40,13 @@ This extension defines the subsurface scattering material to simulate translucen
                     "scale": 3.0,
                     "distortion": 0.8,
                     "power": 2.0,
-                    "color": [0,1,0],
+                    "color": [0,1,0]
+                },
+                "KHR_materials_thickness": {
+                    "thicknessFactor": 1.0,
                     "thicknessTexture": {
                         "index": 0
                     },
-                    "thicknessFactor": 1.0
                 }
             }
         }
@@ -60,15 +64,13 @@ The subsurface scattering (SSS) material model is defined by the following prope
 
 * `thickness` - local thickness of the object to approximate light transport inside the shape
 * `distortion` - view oriented distortion shifting surface normal
-* `power` - view dependent power of direct translucency 
+* `power` - view dependent power of direct translucency
 * `color` - color visible from all angles (simulates global effects)
 * `scale` - view oriented scale
 
-The proposed extension is largely based on pre-computed local thickness maps where a value of `0.0` simulate translucency and a value of `1.0` simulates opacity. There are different ways to compute local thickness, one involves shooting rays through the object, measuring the distance between entry and exit-points. Another approach is to invert surface normals and render ambient occlusion to approximate thickness.
+The proposed extension is largely based on pre-computed local thickness maps where a value of `0.0` simulate translucency and a value of `1.0` simulates opacity.
 
-This technique works well for static convex objects, concavities however, are not taken into account when computing local thickness. Animated objects (skeletal or morphing) cannot be approximated with this technique as the thickness changes over time.
-
-The values of some properties (`thickness`, `color`) can be defined using factors and textures. If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. The factors (`colorFactor`, `thicknessFactor`) scale, in linear space, the components given in the respective textures (`colorTexture`, `thicknessTexture`). `colorTexture` is in sRGB space and must be converted to linear space before being used for any computations.
+The `color` value can be defined using factors and textures. If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. The value `colorFactor` scales the components given in the respective texture `colorTexture` linearly. `colorTexture` is in sRGB space and must be converted to linear space before being used for any computations.
 
 #### Scale
 
@@ -109,26 +111,6 @@ The RGB color of the material. This value is linear.
 #### Color Texture
 
 The color texture is a RGB texture containing the color visible from all angles in sRGB space.
-
-* **Type:** [`textureInfo`](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#reference-textureInfo)
-* **Required:** no
-
-#### Thickness Factor
-
-The intensity used to modulate effect of SSS. A value of 1.0 means the material is attenuated with computed scattering approximation. A value of 0.0 means the material is opaque. This value is linear.
-
-* **Type:** `number`
-* **Range:** [0, 1]
-* **Default:** 1.0
-* **Required:** no
-
-#### Thickness Texture
-
-<p align="left">
-<img width="512" src="figures/thickness.png"/>
-</p>
-
-The local thickness map describes the expected thickness at a surface point. A value close to 0.0 means the surface point is thin, and lets a lot of light through the medium, while a value close to 1.0 means the surface point is thick, and means most of the light will be transmitted inside the material.
 
 * **Type:** [`textureInfo`](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#reference-textureInfo)
 * **Required:** no
