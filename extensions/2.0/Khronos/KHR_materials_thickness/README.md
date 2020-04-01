@@ -46,12 +46,18 @@ The thickness texture can be defined per material by adding the `KHR_materials_t
 
 ### Thickness
 
+<p align="left">
+<img width="512" src="figures/thickness.png"/>
+</p>
+
 |                                  | Type                                                                            | Description                 | Required             |
 |----------------------------------|---------------------------------------------------------------------------------|-----------------------------|----------------------|
 |**thicknessFactor**               | `number`                                                                        | The thickness factor.       | No, default: `1.0`   |
-|**thicknessTexture**              | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The thickness texture.      | No.                  |
+|**thicknessTexture**              | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The thickness texture.      | No, default: `1.0`.  |
 
 The final thickness for a given surface point is the result of the scalar multiplication of the material-wide `thickness` and the texture fetch from `thicknessTexture`.
+
+The local thickness map describes the expected thickness at a surface point. A value close to 0.0 means the surface point is thin, and lets a lot of light through the medium, while a value close to 1.0 means the surface point is thick, and means most of the light will be transmitted inside the material.
 
 ## Schema
 
@@ -61,6 +67,9 @@ The final thickness for a given surface point is the result of the scalar multip
 
 ### Theory, Documentation and Implementations
 
+There are different ways to compute local thickness, one involves shooting rays through the object, measuring the distance between entry and exit-points. Another approach is to invert surface normals and render ambient occlusion to approximate thickness.
+
+This technique works well for static convex objects, concavities however, are not taken into account when computing local thickness. Animated objects (skeletal or morphing) cannot be approximated with this technique as the thickness changes over time.
 
 ## Appendix: Full Khronos Copyright Statement
 

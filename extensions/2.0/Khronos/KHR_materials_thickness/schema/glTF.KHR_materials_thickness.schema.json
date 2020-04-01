@@ -5,18 +5,22 @@
     "description": "glTF extension that defines the geometry thickness.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
+
         "thicknessFactor": {
             "type": "number",
-            "description": "The thickness factor.",
-            "default": 0.0,
+            "description": "Modulates direct translucency of the material.",
+            "default": 1.0,
             "minimum": 0.0,
-            "gltf_detailedDescription": "A material-wide thickness factor."
+            "maximum": 1.0,
+            "gltf_detailedDescription": ""
         },
+
         "thicknessTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "The thickness texture.",
-            "gltf_detailedDescription": "The thickness for each surface point. Can only contain values from 0 to 1."
+            "description": "Texture describing the local thickness of the material; 0 is thin.",
+            "gltf_detailedDescription": "Should be generated offline by flipping the normals of the mesh and computing the ambient occlusion map. This texture is a grayscale, where darker areas imply the material is locally thinner there, while brighter areas are locally thicker. There are many free and paid tools for baking these thickness maps."
         },
+
         "extensions": { },
         "extras": { }
     }
