@@ -68,6 +68,8 @@ f_transmission *= exp(-absorptionColor * distance);
 
 The `distance` variable signifies the distance of the light ray travelling through the material, therefore controlling the color fall-off.
 
+The required `KHR_materials_transmission` extension optionally depends on the `KHR_materials_ior` extension. If an index of refraction is therefore defined, it should be taken into account when computing the refracted light's travel distance through the medium.
+
 ## Schema
 
 - [glTF.KHR_materials_absorption.schema.json](schema/glTF.KHR_materials_absorption.schema.json)
