@@ -1,4 +1,4 @@
-# KHR\_materials\_transmission
+# KHR\_materials\_refraction
 
 ## Contributors
 
@@ -16,17 +16,16 @@ Draft
 
 Written against the glTF 2.0 spec.
 
-* This extension optionally depends on `KHR_materials_ior`.
+* This extension depends on [`KHR_materials_transmission`](https://github.com/MiiBond/glTF/tree/KHR_materials_transmission_v1/extensions/2.0/Khronos/KHR_materials_transmission).
+* This extension depends on [`KHR_materials_ior`](https://github.com/DassaultSystemes-Technology/glTF/tree/KHR_materials_ior/extensions/2.0/Khronos/KHR_materials_ior).
 
 ## Exclusions
 
 ## Overview
 
-This extension defines a transmission weight used to mix diffuse and transmission colors, allowing for translucent materials.
+This extension combines transmission and index of refraction properties to achive refractive, transmissive materials.
 
 ## Extending Materials
-
-The transmission materials are defined by adding the `KHR_materials_transmission` extension to any compatible glTF material (excluding those listed above).  For example, the following defines a material like tinted glass using transmission parameters.
 
 ```json
 {
@@ -34,8 +33,13 @@ The transmission materials are defined by adding the `KHR_materials_transmission
         {
             "name": "tinted_glass",
             "extensions": {
+                "KHR_materials_refraction": {
+                },
+                "KHR_materials_ior": {
+                    "ior": 1.8
+                },
                 "KHR_materials_transmission": {
-                    "transmission": 0.8
+                    "transmissionFactor": 1.0
                 }
             }
         }
@@ -43,23 +47,11 @@ The transmission materials are defined by adding the `KHR_materials_transmission
 }
 ```
 
-### Transmission
-
-|                                  | Type                                                                            | Description                 | Required             |
-|----------------------------------|---------------------------------------------------------------------------------|-----------------------------|----------------------|
-|**transmission**                  | `number`                                                                        | The transmission intensity. | No, default: `0.0`   |
-
-The approximation used to compute the transmission color is implementation dependant.
-
-The `transmission` value determines how much of the transmission is visible. The transmission color is weighted together with the diffuse color: `transmission * f_transmission + (1 - transmission) * f_diffuse = mix(f_transmission, f_diffuse, transmission)`. This linear combination is used as the new diffuse color.
-
-When an index of refraction is defined, it is taken into account when computing the transmitted color.
-
-Differentiation to the existing transparency based on the `alphaMode` property: Unlike blending the final color with an existing framebuffer color, the `transmission` property defines a weight between the transmission color and the diffuse color. The specular color remains unaffected.
+### Refraction
 
 ## Schema
 
-- [glTF.KHR_materials_transmission.schema.json](schema/glTF.KHR_materials_transmission.schema.json)
+- [glTF.KHR_materials_refraction.schema.json](schema/glTF.KHR_materials_refraction.schema.json)
 
 ## Reference
 
