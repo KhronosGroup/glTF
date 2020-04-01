@@ -5,7 +5,7 @@
     "description": "glTF extension that defines the geometry thickness.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "thickness": {
+        "thicknessFactor": {
             "type": "number",
             "description": "The thickness factor.",
             "default": 0.0,
@@ -15,7 +15,7 @@
         "thicknessTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The thickness texture.",
-            "gltf_detailedDescription": "The thickness for each surface point."
+            "gltf_detailedDescription": "The thickness for each surface point. Can only contain values from 0 to 1."
         },
         "extensions": { },
         "extras": { }

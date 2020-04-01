@@ -48,7 +48,7 @@ The thickness texture can be defined per material by adding the `KHR_materials_t
 
 |                                  | Type                                                                            | Description                 | Required             |
 |----------------------------------|---------------------------------------------------------------------------------|-----------------------------|----------------------|
-|**thickness**                     | `number`                                                                        | The thickness factor.       | No, default: `1.0`   |
+|**thicknessFactor**               | `number`                                                                        | The thickness factor.       | No, default: `1.0`   |
 |**thicknessTexture**              | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The thickness texture.      | No.                  |
 
 The final thickness for a given surface point is the result of the scalar multiplication of the material-wide `thickness` and the texture fetch from `thicknessTexture`.
