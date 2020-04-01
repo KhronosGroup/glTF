@@ -22,7 +22,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension defines a transmission weight used to mix diffuse and transission colors, allowing for translucent materials.
+This extension defines a transmission weight used to mix diffuse and transmission colors, allowing for translucent materials.
 
 ## Extending Materials
 
@@ -53,7 +53,9 @@ The approximation used to compute the transmission color is implementation depen
 
 The `transmission` value determines how much of the transmission is visible. The transmission color is weighted together with the diffuse color: `transmission * f_transmission + (1 - transmission) * f_diffuse = mix(f_transmission, f_diffuse, transmission)`. This linear combination is used as the new diffuse color.
 
-When an index of refraction is defined, refraction is taken into account when computing the transmitted color.
+When an index of refraction is defined, it is taken into account when computing the transmitted color.
+
+Differentiation to the existing transparency based on the `alphaMode` property: Unlike blending the final color with an existing framebuffer color, the `transmission` property defines a weight between the transmission color and the diffuse color. The specular color remains unaffected.
 
 ## Schema
 
