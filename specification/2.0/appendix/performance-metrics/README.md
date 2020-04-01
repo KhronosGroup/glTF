@@ -17,6 +17,14 @@ The metrics do not include screen space coverage.
 However, implementations should generally consider the size of the render area in addition to performance metrics of the model.  
 A higher performance budget may be acceptable when screen space coverage is higher.  
 For most usecases it's best to assume a worst case where all or most of the screen space is filled with rendered pixels.  
+Here `screen space coverage` is defined as the number of pixels rendered in the output framebuffer.  
+
+### Bounding volume
+
+A bounding volume, on each scene, is included as a measurement of the world space that the model occupies.  
+The intention of this is to be able to estimate the screen space size of the model in for instance AR/VR usecases.  
+glTF units are equal to metric meters [1.0 = 1.0m] meaning that using the bounding volume the client can estimate the portion of the visible display it will occupy.  
+A volume with dimensions [0.5,0.5,0.5] viewed at 50 cm will cover a large portion of the screen and a volume with dimensions [0.05,0.05,0.05] viewed at 50 cm will cover only a small portion.  
 
 
 ### Memory  
@@ -34,13 +42,14 @@ Using these metrics an estimate of target memory can be calculated - however kee
 |[primitiveCount] | Integer     | Complexity  |Scene     |Total number of referenced primitives (per scene).  This figure is the un-batched number of primitives, engines may optimize if primitives and meshes share textures. |  
 |[textures]       | Integer     | Complexity  |Scene     |Flags specifying presence of materials texture usage, this is the aggregated most complex usage. BASECOLOR, METALLICROUGHNESS, NORMAL, OCCLUSION, EMISSIVE, SPECULARGLOSS, DIFFUSE, CLEARCOAT |  
 |[materials]      | Integer     | Complexity  |Scene     | Flags specifying presence of materials, this is the aggregated most complex usage.  |
+|[bounds]         | Bounds      | Complexity  | Scene    | The static 3D bounds for each scene, can be used to estimate world space size of model. |
 |[maxNodeDepth]   | Integer     | Memory      | Scene    | The max node depth of the scene, ie the max number of parent/child relations. This number will represent the max stack depth needed when traversing the nodegraph |
 |[accessors]     | Accessor     | Memory      | Asset    | Total number and format of vertex accessors, this can be used to calculate vertex buffer memory requirements |  
 |[textureSize]  |Integer    | Memory      | Asset    | The size and format of textures |  
 
 Dimension is an Integer[2] containing width and height  
 Accessor is an object containing count, componentType and type, componentType and type is taken from glTF Accessor  
-
+Bounds is an object containing min and max values.    
 
 # Scene #  
 
@@ -87,6 +96,13 @@ The goal of this metric is to provide a worst case computational cost for render
 1 PBR
 2 SPECULARGLOSS (KHR_materials_pbrSpecularGlossiness)
 2 UNLIT (KHR_materials_unlit) 
+
+
+[bounds]  
+This value represents the static (non animated) bounding volume for the scene.  
+It is calculated by traversing the nodes in each scene, applying node transform to primitive's MinMax values and updating the result.  
+The resulting MinMax will contain the total transformed volume the model occupies, ie concatenated MinMax of all primitives as they are transformed.  
+This will include translation, meaning that the bounds will not be centered.  
 
 
 [accessors]  
@@ -138,6 +154,16 @@ This is how the output would be formatted using JSON
             "primitiveCount" : 50,
             "textures" : ["BASECOLOR", "METALLICROUGHNESS"],
             "materials" : ["PBR", "SPECULARGLOSS"],
+            "bounds" : "min": [
+                -0.9999999403953552,
+                -1.0,
+                -1.0
+             ],
+             "max": [
+                0.9999999403953552,
+                1.0,
+                1.0
+            ]
             "maxNodeDepth" : 7
         }
     ],
