@@ -69,7 +69,7 @@ The following table describes how [XMP Core Properties](https://github.com/adobe
 
 ## Defining XMP Metadata
 
-An indirection level is introduced to avoid replicating the same XMP metadata in multiple glTF nodes.
+An indirection level is introduced to avoid replicating the same XMP metadata in multiple glTF objects.
 XMP metadatas are defined within a dictionary property in the glTF scene description file by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_xmp` object. The `KHR_xmp` object defines two properties:
 
 * `@context` : a dictionary mapping XMP [namespaces](https://github.com/adobe/xmp-docs/blob/master/Namespaces.md) to the URI where they are defined.
@@ -108,7 +108,7 @@ The following example defines a glTF scene with a sample XMP metadata.
 
 ## Instantiating XMP metadata
 
-Metadata can be instantiated in a node by defining the `extensions.KHR_xmp` property and, within that, an index into the `packets` array using the `packet` property.
+Metadata can be instantiated in a gltf object by defining the `extensions.KHR_xmp` property and, within that, an index into the `packets` array using the `packet` property.
 The following example shows a glTF Mesh instantiating the XMP metadata at index `0`.
 
 ```json
@@ -143,7 +143,7 @@ The following example shows a glTF Mesh instantiating the XMP metadata at index 
 #### Overriding Rule
 
 A glTF scene might reference resources already containing XMP metadata.
-A relevant example would be an image node referencing a PNG file with embedded XMP metadata.
+A relevant example would be an image object referencing a PNG file with embedded XMP metadata.
 When this happens the XMP metadata specified in the glTF manifest takes precedence over the metadata embedded in the referenced resource.
 
 #### Transferring and merging metadata
