@@ -25,7 +25,7 @@ XMP is a technology for embedding metadata into documents and has been [an ISO s
 XMP metadata is embedded in a top-level glTF extension as an array of metadata packets.
 Any JSON object in the glTF can reference metadata packets with the exception of the root object.
 XMP metadata referenced by the glTF top level property `asset` applies to the entire glTF file.
-XMP metadata is organized in namespaces.
+XMP metadata is organized in namespaces. This extension enables any XMP metadata namespace to be embedded in a glTF asset.
 We refer to the [XMP namespaces documentation](https://github.com/adobe/xmp-docs/tree/master/XMPNamespaces) for a detailed description of XMP properties.
 
 ## XMP data types
