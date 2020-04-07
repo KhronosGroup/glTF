@@ -32,7 +32,7 @@ We refer to the [XMP namespaces documentation](https://github.com/adobe/xmp-docs
 
 This section describes how [XMP data types](https://github.com/adobe/xmp-docs/tree/master/XMPNamespaces/XMPDataTypes) shall be encoded in a glTF JSON.
 XMP supports three classes of data types: simple, structure and array. XMP structures are encoded via JSON objects. XMP arrays are encoded via JSON arrays.
-XMP simple values are generally encoded via JSON strings with the exception of `Boolean`, `Integer` and `Real` that are ecoded as described below.
+XMP simple values are generally encoded via JSON strings with the exception of `Boolean`, `Integer` and `Real` that are encoded as described below.
 
 ### XMP Core Properties
 
