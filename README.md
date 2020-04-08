@@ -94,8 +94,8 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 
 <!-- These are invisible anchors based on the original titles -->
 <!-- They are added here to keep existing links intact  -->
-[](#gltf-tools)
-[](#converters-importers-and-exporters)
+[&nbsp;](#gltf-tools)
+[&nbsp;](#converters-importers-and-exporters)
 
 The tables that have been shown here have been replaced with the [glTF Project Explorer](http://github.khronos.org/glTF-Project-Explorer/). 
 
