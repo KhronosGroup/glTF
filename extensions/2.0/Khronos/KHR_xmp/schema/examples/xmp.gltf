@@ -4,6 +4,9 @@
   ],
   "extensions": {
     "KHR_xmp": {
+      "@context" : {
+        "dc" : "http://purl.org/dc/elements/1.1/",
+      },
       "packets": [
         {
           "dc:contributor" : [ "Creator1Name", "Creator2Email@email.com", "Creator3Name<Email@email.com>"],
