@@ -91,48 +91,14 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
     - [Tutorials](#tutorials)
     - [All Presentations and Articles](#all-presentations-and-articles)
 
-## glTF Tools
 
-### Converters, Importers, and Exporters
+<!-- These are invisible anchors based on the original titles -->
+<!-- They are added here to keep existing links intact  -->
+[](#gltf-tools)
+[](#converters-importers-and-exporters)
 
-| Tool | Input | Output | Description |
-|------|-------|--------|-------------|
-| [Khronos Group Blender Importer/Exporter](https://github.com/KhronosGroup/glTF-Blender-IO) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official importer/exporter, included with Blender 2.80 and higher |
-| [3DS Max Exporter](http://doc.babylonjs.com/resources/3dsmax_to_gltf) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Export glTF files using [BabylonJS plugin](http://doc.babylonjs.com/resources/3dsmax#how-to-install-the-3ds-max-plugin) for 3DS Max 2015 or later |
-| [Maya Exporter](http://doc.babylonjs.com/resources/maya_to_gltf) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Export glTF files using [BabylonJS plugin](http://doc.babylonjs.com/resources/maya) for Maya 2018 or later |
-| [Unity Exporter (Sketchfab fork)](https://github.com/sketchfab/Unity-glTF-Exporter) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Unity editor wizard that exports to glTF Format |
-| Unity COLLADA & glTF Exporter [Unity 5](https://www.assetstore.unity3d.com/#!/content/40946) & [Unity 2017](https://www.assetstore.unity3d.com/#!/content/99793) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Commercial unity asset store editor extension to export COLLADA and glTF via collada2gltf |
-| Sketchup [export](http://extensions.sketchup.com/en/content/gltf-exporter) and [import](http://extensions.sketchup.com/en/content/gltf-import) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Separate extensions for export and import |
-| [PBR extension for SketchUp](https://github.com/SamuelTS/SketchUp-PBR-Plugin) | `SKP` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | PBR Material Editor, glTF Exporter, PBR Viewport |
-| [obj2gltf](https://github.com/AnalyticalGraphicsInc/OBJ2GLTF)  | `OBJ` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Command-line converter |
-| [Kupoman blendergltf](https://github.com/Kupoman/blendergltf) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF exporter for Blender aimed at streaming scenes to other applications |
-| [ksons Blender Importer](https://github.com/ksons/gltf-blender-importer) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | — | Blender importer for glTF 2.0 (alpha) |
-| [BlackThread.io converter](https://blackthread.io/gltf-converter/) | [Multiple](https://blackthread.io/gltf-converter/#supported-formats) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Online drag and drop converter powered by three.js |
-| [Assimp](http://www.assimp.org/) | [Multiple](https://github.com/assimp/assimp#supported-file-formats) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | General-purpose online conversion pipeline |
-| [PiXYZ Studio](https://www.pixyz-software.com/studio/) | [Multiple](https://docs.google.com/spreadsheets/d/1aWdeBOvZsbnwHfbyhuVS4vBDwevsT2Bz65hEhc0CtnU/pubhtml?gid=786960864) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Interactively prepare & optimize any CAD data |
-| [FBX2glTF (Facebook)](https://github.com/facebookincubator/FBX2glTF)  | `FBX` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Command-line converter |
-| [FBX2glTF (ClayGL)](https://github.com/pissang/clay-viewer#converter)  | `FBX`, `COLLADA`, `OBJ` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Python tool to convert models to glTF2.0 format, model is parsed by FBX SDK. |
-| [glTF API](https://github.com/headjack-dev/gltf-api)  | `FBX`, `COLLADA`, `OBJ` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Web API to convert OBJ, FBX and COLLADA files to glTF or GLB |
-| [Simplygon Cloud](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/simplygon.simplygon)  | [Multiple](https://simplygonclouddoc.simplygon.com/tutorials/firstprocessing.html#asset) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Cloud based asset optimization pipeline |
-| [Verge3D](http://www.soft8soft.com/verge3d/)  | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | glTF 2.0 exporters for Blender and 3ds Max |
-| [COLLADA2GLTF](https://github.com/KhronosGroup/COLLADA2GLTF/) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Official command-line converter, with updates for glTF 2.0 in progress |
-| [Cesium drag-and-drop converter](http://cesiumjs.org/convertmodel.html) | `OBJ`, `COLLADA` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Online drag and drop converter |
-| [Maya2glTF](https://github.com/WonderMediaProductions/Maya2glTF) | — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Export glTF from Autodesk Maya |
-| [batchgltf](https://github.com/feiss/batchgltf) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Batch converter with GUI |
-| [FBX-glTF (Cyrillef)](https://github.com/cyrillef/FBX-glTF) | `FBX` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Plug-in and command-line converter |
-| [jgltf-obj](https://github.com/javagl/JglTF/tree/master/jgltf-obj) | `OBJ` | ![status](https://img.shields.io/badge/glTF-1%2E0-yellow.svg?style=flat) | Java programmatic and command-line converters |
-| [Docker collada2gltf](https://hub.docker.com/r/winsent/collada2gltf/) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Docker container for Python web service, built on COLLADA2GLTF |
-| [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) | `COLLADA` | ![status](https://img.shields.io/badge/glTF-%3F-lightgrey.svg?style=flat) | Node.js web service, built on COLLADA2GLTF |
-| [cqparts](https://github.com/cqparts/cqparts) | `STEP` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Python CAD for programmers ([import / export doc](https://cqparts.github.io/cqparts/doc/cqparts/import-export.html)) ([GLTFExporter](https://cqparts.github.io/cqparts/doc/api/cqparts.codec.html#cqparts.codec.gltf.GLTFExporter)) |
-| [FME Desktop](https://www.safe.com/fme/fme-desktop/) | [Multiple](https://www.safe.com/integrate/) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | FME lets you move data between 400+ formats and applications using a drag-and-drop interface while preserving data quality throughout the conversion process. |
-| [UModel (UE Viewer)](https://github.com/gildor2/UModel)| `Unreal engine` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | UModel allows you to view static and animated mesh assets from [Unreal engine games](http://www.gildor.org/projects/umodel/compat), and then export them into several formats including glTF 2.0 |
-| [OPEN CASCADE CAD Assistant](https://www.opencascade.com/content/cad-assistant)| [Multiple](https://www.opencascade.com/content/cad-assistant "STEP, IGES, OBJ, PLY, STL") | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Freeware multi-platform 3D Viewer and converter for 3D/CAD models with glTF 2.0 export support |
-| [Adobe Dimension](https://www.adobe.com/products/dimension.html)| `FBX`, `STL`, `SKP`, `OBJ`, `glTF`, `GLB` | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Dimension allows users to easily build and render photo-real scenes. Export to glTF/GLB or use the Publish feature to share your scene on the web. |
-| [RapidCompact](https://www.rapidcompact.com)| [Multiple](https://www.rapidcompact.com/doc/cli/00-overview/index.html#import) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Optimizes and converts 3D assets for efficient online presentation. |
-| [Cinema 4D Exporter](https://labs.maxon.net/?p=3360)| — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Export glTF from MAXON Cinema 4D |
-| [Revit glTF Exporter add-in](https://apps.autodesk.com/RVT/en/Detail/Index?id=8451869436709222290)| — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Paid add-in to export glTF from Autodesk Revit 2019 or later |
-| [Adobe Animate](https://www.adobe.com/products/animate.html)| — | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | Publish 2D animations to glTF/glb using Animate 2019 or later. Also create 360 degree VR content and embed 3D glb assets in the scene. |
-| [Datakit CrossManager converter](https://www.datakit.com/en/cross_manager.php) | [Multiple](https://www.datakit.com/en/cross_manager.php#combinaisons3D) | ![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat) | File converter. Supports multiple 3D formats inputs and outputs, including glTF output. Graphical interface or command-line |
+The tables that have been shown here have been replaced with the [glTF Project Explorer](http://github.khronos.org/glTF-Project-Explorer/). 
+
 
 ### Optimizers
 
