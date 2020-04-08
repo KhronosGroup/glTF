@@ -170,7 +170,7 @@ Tools, applications and libraries for working with glTF can be found in the [glT
    * IKEA: Martin Enthed
 * [glTF 2.0 – Status and Outlook](https://www.khronos.org/developers/library/2018-webinar-gltf-2) by Norbert Nopper. July 2018
 * [TurboSquid adds glTF to supported formats for its StemCell initiative](https://www.khronos.org/blog/turbosquid-adds-gltf-to-supported-formats-for-its-stemcell-initiative). July 2018
-* [Why glTF 2.0 is awesome!](https://blog.ybalrid.info/2018/07/16/why-gltf-2-0-is-awesome/) by Arthur Brainville. July 2018
+* [Why glTF 2.0 is awesome!](https://dev.to/ybalrid/why-gltf-20-is-awesome-2khp) by Arthur Brainville. July 2018
 * [Get your glTF on with WebGL/WebVR at Microsoft - June 2018](https://www.khronos.org/events/get-your-gltf-on-with-webgl-webvr-at-microsoft)
   * [Meetup video](https://youtu.be/GuA1mYG0-xE?t=1s)
   * [Ecosystem update](https://youtu.be/GuA1mYG0-xE?t=47s) by Saurabh Bhatia [(slides)](https://www.khronos.org/assets/uploads/developers/library/2018-gltf-meetup/glTF-Meetup-Ecosystem-Update_June18.pdf)
@@ -198,7 +198,6 @@ Tools, applications and libraries for working with glTF can be found in the [glT
 * [Call for Participation: glTF Creating a Compressed Texture Extension](https://www.khronos.org/blog/call-for-participation-gltf-creating-a-compressed-texture-extension) by Khronos. December 2017
 * [Using glTF Models with A-Frame](https://blog.mozvr.com/using-gltf-models-with-a-frame/) by Josh Marinacci. December 2017
 * [Creating animated glTF Characters with Mixamo and Blender](https://medium.com/@donmccurdy/creating-animated-gltf-characters-with-mixamo-and-blender-728dc120e678) by Don McCurdy. November 2017
-* [glTF - Seattle Khronos Group Meetup](https://drive.google.com/drive/folders/0BybLPh8Iz_rebnVtbUxLVUswZVE) by Saurabh Bhatia. September 2017
 * [State of glTF 2.0 for WebVR Devs](https://gist.github.com/donmccurdy/de7ff6c44ecd76fddf1ecad170a114a8) by Don McCurdy, Google. September 2017
 * [glTF Exporter in three.js and A-Frame](https://blog.mozvr.com/gltf-exporter-in-three-js-and-a-frame/) by Fernando Serrano. August 2017
 * SIGGRAPH 2017 glTF BOF [video](https://www.youtube.com/watch?v=UMN6rh-5nPg). August 2017
