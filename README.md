@@ -66,8 +66,6 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
     - [Tutorials](#tutorials)
     - [All Presentations and Articles](#all-presentations-and-articles)
 
-# glTF Tools
-
 <!-- These are added here to keep existing links intact  -->
 <a id="user-content-converters-importers-and-exporters" class="anchor" aria-hidden="true" href="#converters-importers-and-exporters"></a>
 <a id="user-content-optimizers" class="anchor" aria-hidden="true" href="#optimizers"></a>
@@ -94,6 +92,8 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 <a id="user-content-swift" class="anchor" aria-hidden="true" href="#swift"></a>
 <a id="user-content-python" class="anchor" aria-hidden="true" href="#python"></a>
 <a id="user-content-utilities" class="anchor" aria-hidden="true" href="#utilities"></a>
+
+## glTF Tools
 
 Tools, applications and libraries for working with glTF can be found in the [glTF Project Explorer](http://github.khronos.org/glTF-Project-Explorer/). 
 
