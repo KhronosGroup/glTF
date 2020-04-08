@@ -93,8 +93,8 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 
 
 <!-- These are added here to keep existing links intact  -->
-[glTF Tools](#gltf-tools)
-[Converters, Importers, and Exporters](#converters-importers-and-exporters)
+<a id="user-content-gltf-tools" class="anchor" aria-hidden="true" href="#gltf-tools"></a>
+<a id="user-content-converters-importers-and-exporters" class="anchor" aria-hidden="true" href="#converters-importers-and-exporters"></a>
 
 The tables that have been shown here have been replaced with the [glTF Project Explorer](http://github.khronos.org/glTF-Project-Explorer/). 
 
