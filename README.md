@@ -58,31 +58,6 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 ## Contents
 
 - [glTF Tools](#gltf-tools)
-    - [Converters, Importers, and Exporters](#converters-importers-and-exporters)
-    - [Optimizers](#optimizers)
-    - [Validators](#validators)
-    - [Viewers and Debugging](#viewers-and-debugging)
-    - [Applications](#applications)
-    - [Loaders and Engines](#loaders-and-engines)
-        - [WebGL Engines](#webgl-engines)
-        - [WebGL Sample Code](#webgl-sample-code)
-        - [Game and Rendering Engines](#game-and-rendering-engines)
-        - [Embeddable Viewers](#embeddable-viewers)
-    - [Languages](#languages)
-        - [JavaScript / Node.js](#javascript--nodejs)
-        - [C++](#c)
-        - [Objective-C](#objective-c)
-        - [C](#c)
-        - [C#](#c-1)
-        - [Go](#go)
-        - [Rust](#rust)
-        - [Haxe](#haxe)
-        - [Java](#java)
-        - [Ada](#ada)
-        - [TypeScript](#typescript)
-        - [Swift](#swift)
-        - [Python](#python)
-    - [Utilities](#utilities)
     - [Resources](#resources)
 - [Formats Built on glTF](#formats-built-on-gltf)
 - [Stack Overflow](#stack-overflow)
@@ -91,9 +66,9 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
     - [Tutorials](#tutorials)
     - [All Presentations and Articles](#all-presentations-and-articles)
 
+# glTF Tools
 
 <!-- These are added here to keep existing links intact  -->
-<a id="user-content-gltf-tools" class="anchor" aria-hidden="true" href="#gltf-tools"></a>
 <a id="user-content-converters-importers-and-exporters" class="anchor" aria-hidden="true" href="#converters-importers-and-exporters"></a>
 <a id="user-content-optimizers" class="anchor" aria-hidden="true" href="#optimizers"></a>
 <a id="user-content-validators" class="anchor" aria-hidden="true" href="#validators"></a>
@@ -120,7 +95,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 <a id="user-content-python" class="anchor" aria-hidden="true" href="#python"></a>
 <a id="user-content-utilities" class="anchor" aria-hidden="true" href="#utilities"></a>
 
-The tables that have been shown here have been replaced with the [glTF Project Explorer](http://github.khronos.org/glTF-Project-Explorer/). 
+Tools, applications and libraries for working with glTF can be found in the [glTF Project Explorer](http://github.khronos.org/glTF-Project-Explorer/). 
 
 ### Resources
 
