@@ -87,7 +87,7 @@ Compression mode specifies the bitstream layout and the algorithm used to decomp
 
 In all three modes, the resulting compressed byte sequence is typically noticably smaller than the buffer view length, *and* can be additionally compressed by using a general purpose compression algorithm such as Deflate for the resulting glTF file (.glb/.bin).
 
-The format of the bitstream is specified in Bitstream section.
+The format of the bitstream is specified in Appendix A (Bitstream).
 
 When using attribute encoding, for some types of data exploiting the redundancy between consecutive elements is not enough to achieve good compression ratio; quantization can help but isn't always sufficient either. To that end, when using mode 0, this extension allows a further use of a compression filter, that transforms each element stored in the buffer view to make it more compressible with the attribute codec and often allows to trade precision for compressed size. Filters don't change the size of the output data, they merely improve the compressed size by reducing entropy; note that the use of a compression filter restricts `byteStride` which effectively prohibits storing interleaved data.
 
@@ -98,7 +98,7 @@ Filter specifies the algorithm used to transform the data after decompression, a
 - Filter 2: quaternion. Suitable for storing rotation data for animations or instancing as 8-byte values with variable precision max-component encoding.
 - Filter 3: exponential. Suitable for storing floating point data as 4-byte values with variable mantissa precision.
 
-The filters are detailed further in Bitstream section.
+The filters are detailed further in Appendix B (Filters).
 
 When using filters, the expectation is that the filter is applied after the attribute decoder on the contents of the resulting bufferView; the resulting data can then be used according to the referencing accessors without further modifications.
 
@@ -167,9 +167,9 @@ To reduce the size of each keyframe, rotation data should be quantized using 16-
 
 After pre-processing, both input and output data should be stored using mode 0 (attributes).
 
-# Appendix: Bitstream
+# Appendix A: Bitstream
 
-The following sections specify the format of the bitstream for compressed data for various modes and filters.
+The following sections specify the format of the bitstream for compressed data for various modes.
 
 ## Mode 0: attributes
 
@@ -182,6 +182,10 @@ TODO
 ## Mode 2: indices
 
 TODO
+
+# Appendix B: Filters
+
+Filters are functions that transform each encoded attribute. For each filter, this document specifies the transformation used for decoding the data; it's up to the encoder to pick the parameters of the encoding for each element to balance quality and precision.
 
 ## Filter 1: octahedral
 
