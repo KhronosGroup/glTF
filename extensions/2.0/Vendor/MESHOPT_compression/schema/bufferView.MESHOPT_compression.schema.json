@@ -1,0 +1,85 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "MESHOPT_compression bufferView extension",
+    "type": "object",
+    "description": "Compressed data for bufferView.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "buffer": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the buffer with compressed data."
+        },
+        "byteOffset": {
+            "type": "integer",
+            "description": "The offset into the buffer in bytes.",
+            "minimum": 0,
+            "default": 0
+        },
+        "byteLength": {
+            "type": "integer",
+            "description": "The length of the compressed data in bytes.",
+            "minimum": 1
+        },
+        "byteStride": {
+            "type": "integer",
+            "description": "The stride, in bytes.",
+            "minimum": 4,
+            "maximum": 252,
+            "multipleOf": 4,
+        },
+        "count": {
+            "type": "integer",
+            "description": "The number of elements.",
+            "minimum": 1,
+        },
+        "mode": {
+            "description": "The compression mode.",
+            "anyOf": [
+                {
+                    "enum": [ 0 ],
+                    "description": "attributes",
+                    "type": "integer"
+                },
+                {
+                    "enum": [ 1 ],
+                    "description": "triangles",
+                    "type": "integer"
+                },
+                {
+                    "enum": [ 2 ],
+                    "description": "indices",
+                    "type": "integer"
+                }
+            ]
+        },
+        "filter": {
+            "description": "The compression filter.",
+            "anyOf": [
+                {
+                    "enum": [ 0 ],
+                    "description": "none",
+                    "type": "integer"
+                },
+                {
+                    "enum": [ 1 ],
+                    "description": "octahedral",
+                    "type": "integer"
+                },
+                {
+                    "enum": [ 2 ],
+                    "description": "quaternion",
+                    "type": "integer"
+                },
+                {
+                    "enum": [ 3 ],
+                    "description": "exponential",
+                    "type": "integer"
+                }
+            ]
+        },
+        "extras": { }
+    },
+    "required": [
+        "buffer", "byteLength", "byteStride", "count", "mode"
+    ]
+}

@@ -50,7 +50,21 @@ As explained in the overview, this extension operates on bufferViews. This allow
 
 In this example, the uncompressed buffer contents is stored in buffer 1 (this can be used by loaders that don't implement this extension). The compressed data is stored in a separate buffer, specifying a separate byte range (with compressed data). Note that for compressors to work, they need to know the compression `mode`, `filter` (for `mode 0`), and additionally the layout of the encoded data - `count` elements with `byteStride` bytes each. This data is specified in the extension JSON; while in some cases `byteStride` is available on the parent `bufferView` declaration, JSON schema prohibits specifying this for some types of storage such as index data.
 
-For the extension JSON to be valid, the following must hold:
+## JSON schema updates
+
+Each `bufferView` can contain an extension object with the following properties:
+
+| Property | Type | Description | Required |
+|:---------|:--------------|:------------------------------------------| :--------------------------|
+| `buffer` | `integer` | The index of the buffer with compressed data. | :white_check_mark: Yes |
+| `byteOffset` | `integer` | The offset into the buffer in bytes. | No, default: `0` |
+| `byteLength` | `integer` | The length of the compressed data in bytes. | :white_check_mark: Yes |
+| `byteStride` | `integer` | The stride, in bytes. | :white_check_mark: Yes |
+| `count` | `integer` | The number of elements. | :white_check_mark: Yes |
+| `mode` | `integer` | The compression mode. | :white_check_mark: Yes |
+| `filter` | `integer` | The compression filter. | No, default: `0` |
+
+For the extension object to be valid, the following must hold:
 
 - When parent `bufferView` has `byteStride` defined, it matches `byteStride` in the extension JSON
 - Buffer view length is equal to `byteStride` times `count`
@@ -149,6 +163,6 @@ To reduce the number of keyframes, encoders can either selectively remove keyfra
 
 Additionally it's important to identify tracks with the same output value and use a single keyframe for these.
 
-To reduce the size of each keyframe, rotation data should be quantized using 16-bit normalized components; for additional compression, the use of filter 2 (quaternion) is recommended. Translation/scale data can be compressed using filter 3 (exponent) with the same exponent used for all three vector components.
+To reduce the size of each keyframe, rotation data should be quantized using 16-bit normalized components; for additional compression, the use of filter 2 (quaternion) is recommended. Translation/scale data can be compressed using filter 3 (exponential) with the same exponent used for all three vector components.
 
 After pre-processing, both input and output data should be stored using mode 0 (attributes).
