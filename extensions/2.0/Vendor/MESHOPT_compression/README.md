@@ -173,7 +173,60 @@ The following sections specify the format of the bitstream for compressed data f
 
 ## Mode 0: attributes
 
-TODO
+Attribute compression exploits similarity between consecutive elements of the buffer by encoding deltas. The deltas are stored for each separate byte which makes the codec more versatile since it can work with components of various sizes. Additionally, the elements are stored with bytes deinterleaved, which means that sequences of deltas are more easily compressible by some general purpose compressors that may run on the resulting data.
+
+To facilitate efficient decompression, deinterleaving and delta encoding are performed on attribute blocks instead of on the entire buffer; within each block, elements are processed in groups of 16.
+
+The encoded stream structure is as follows:
+
+- Header byte, which must be equal to `0xa0`
+- Attribute blocks, detailed below
+- Tail block, which consists of a baseline element stored verbatim, padded to 32 bytes
+
+Each attribute block stores a sequence of deltas, with the first element in the first block using the deltas from the baseline element stored in the tail block. The attribute block always stores an integer number of elements, with that number computed as follows:
+
+```
+count = min((8192 / byteStride) & ~15, 256)
+```
+
+The attribute block structure consists of `byteStride` blocks (one for each byte of the element) with the following structure:
+
+- Header bits, 2 bits for each group of 16 elements (count/16 2-bit values), padded to a byte
+- Delta blocks, with variable number of bytes stored for each group of 16 elements
+
+Header bits are stored from least significant to most significant bit - header bits for 4 consecutive groups of 16 elements are packed in a byte together as follows:
+
+```
+bits0 | (bits1 << 2) | (bits2 << 4) | (bits3 << 6)
+```
+
+The header bits establish the delta encoding mode (0-3) for each group of 16 elements that follows:
+
+- bits 0: All 16 byte deltas are 0; the size of the encoded block is 0
+- bits 1: Deltas are using 2-bit sentinel encoding; the size of the encoded block is [4..20]
+- bits 2: Deltas are using 4-bit sentinel encoding; the size of the encoded block is [8..24]
+- bits 3: All 16 byte deltas are stored verbatim; the size of the encoded block is 16
+
+Byte deltas are stored as zigzag-encoded differences between the byte values of the element and the byte values of the previous element in the same position; the zigzag encoding scheme works as follows:
+
+```
+encode(uint8_t v) = ((v & 0x80) != 0) ? ~(v << 1) : (v << 1)
+decode(uint8_t v) = ((v & 1) != 0) ? ~(v >> 1) : (v >> 1)
+```
+
+When using the sentinel encoding, each delta is stored as a 2-bit or 4-bit value in a single 4-byte or 8-byte block, with deltas stored from most significant to least significant bit inside the byte (e.g. two 4-bit deltas are stored as `0xAB` where 0xA is the zigzag encoding of the first delta, and 0xB is the zigzag encoding of the second delta). The encoded value of the delta that has all bits set to 1 (corresponds to `3` for 2-bit deltas and `15` for 4-bit deltas, which, when decoded, represents `-2` and `-8` respectively) indicates that the real delta value is outside of the 2-bit or 4-bit range and is stored as a full byte after the bit deltas for this group. For example, for 4-bit deltas, the following byte sequence:
+
+```
+0x17 0x5F 0xF0 0xBC 0x77 0xA9 0x21 0x00 0x34 0xB5
+```
+
+Encodes 16 deltas, where the first 8 bytes of the sequence specifies the 4-bit deltas, and the last 2 bytes of the sequence specify the explicit delta values encoded for elements 3 and 4 in the sequence, so the decoded deltas (after zigzag decoding) look like
+
+```
+-1 -4 -3 26 -91 0 -6 6 -4 -4 5 -5 1 -1 0 0
+```
+
+Finally, note that the deltas are computed in 8-bit integer space with wrap-around two-complement arithmetic; for example, if the values of the first byte of two consecutive elements are 0x00 and 0xFF, the byte delta that is stored is `-1` (`1` after zigzag encoding).
 
 ## Mode 1: triangles
 
