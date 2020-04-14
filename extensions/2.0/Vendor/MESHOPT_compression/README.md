@@ -187,14 +187,92 @@ TODO
 
 Filters are functions that transform each encoded attribute. For each filter, this document specifies the transformation used for decoding the data; it's up to the encoder to pick the parameters of the encoding for each element to balance quality and precision.
 
+For performance reasons the results of the decoding process are specified to one unit in last place (ULP) in terms of the decoded data, e.g. if a filter results in a 16-bit signed normalized integer, decoding may produce results within 1/32767 of specifed value.
+
 ## Filter 1: octahedral
 
-TODO
+Octahedral filter allows to encode unit length 3D vectors (normals/tangents) using octahedral encoding, which results in a more optimal quality vs precision tradeoff compared to storing raw components.
+
+The input to the filter is four 8-bit or 16-bit components, where the first two specify the X and Y components in octahedral encoding encoded as signed normalized K-bit integers, the third component explicitly encodes 1.0 as a K-bit integer, and the last component may contain arbitrary data (which is useful for tangents).
+
+The output of the filter is three decoded unit vector components, stored as 8-bit or 16-bit normalized integers, and the last input component verbatim.
+
+```
+void decode(intN_t input[4], intN_t output[4]) {
+	// input[2] encodes a K-bit representation of 1.0
+	float32_t one = input[3];
+
+	float32_t x = input[0] / one;
+	float32_t y = input[1] / one;
+	float32_t z = 1.0 - abs(x) - abs(y);
+
+	// octahedral fixup for negative hemisphere
+	float32_t t = min(z, 0.0);
+
+	x += copysign(t, x);
+	y += copysign(t, y);
+
+	// renormalize (x, y, z)
+	float32_t l = sqrt(x * x + y * y + z * z);
+
+	x /= l;
+	y /= l;
+	z /= l;
+
+	output[0] = round(x * INTN_MAX);
+	output[1] = round(y * INTN_MAX);
+	output[2] = round(z * INTN_MAX);
+	output[3] = input[3];
+}
+```
 
 ## Filter 2: quaternion
 
-TODO
+Quaternion filter allows to encode unit length quaternions using normalized 16-bit integers for all components, but allows control over the precision used for the components and provides better quality compared to naively encoding each component one by one.
+
+The input to the filter is three quaternion components, excluding the component with the largest magnitude, encoded as signed normalized K-bit integers (K <= 16), and an index of the largest component that is omitted in the encoding. The largest component is assumed to always be positive (which is possible due to quaternion double-cover). To allow per-element control over K, the last input element explicitly encodes 1.0 as a K-bit integer, except for the least significant 2 bits that store the index of the maximum component.
+
+The output of the filter is four decoded quaternion components, stored as 16-bit normalized integers.
+
+After eliminating the maximum component, the maximum magnitude of the remaining components is 1/sqrt(2). Because of this the input components store the original component value scaled by sqrt(2.0) to increase precision.
+
+```
+void decode(int16_t input[4], int16_t output[4]) {
+	float32_t range = 1.0 / sqrt(2.0);
+
+	// input[3] encodes a K-bit representation of 1.0 except for bottom two bits
+	float32_t one = input[3] | 3;
+
+	float32_t x = input[0] / one * range;
+	float32_t y = input[1] / one * range;
+	float32_t z = input[2] / one * range;
+
+	float32_t w = sqrt(max(0, 1 - x * x - y * y - z * z));
+
+	int maxcomp = input[3] & 3;
+
+	// maxcomp specifies a cyclic rotation of the quaternion components
+	output[(maxcomp + 1) % 4] = round(x * 32767);
+	output[(maxcomp + 2) % 4] = round(y * 32767);
+	output[(maxcomp + 3) % 4] = round(z * 32767);
+	output[ maxcomp         ] = round(w * 32767);
+}
+```
 
 ## Filter 3: exponential
 
-TODO
+Exponential filter allows to encode floating point values with a range close to the full range of a 32-bit floating point value, but allows more control over the exponent/mantissa to trade quality for precision, and has a bit structure that is more optimally aligned to the byte boundary.
+
+The input to the filter is a sequence of 32-bit little endian integers, with the most significant 8 bits specifying a (signed) exponent value, and the remaining 24 bits specifying a (signed) mantissa value. The integers are stored in two-complement format.
+
+The result of the filter is 2^e * m:
+
+```
+float32_t decode(int32_t input) {
+	int32_t e = input >> 24;
+	int32_t m = (input << 8) >> 8;
+	return pow(2.0, e) * m;
+}
+```
+
+The valid range of `e` is [-100, +100], which facilitates performant implementations.
