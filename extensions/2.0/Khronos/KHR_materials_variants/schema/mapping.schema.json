@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "KHR_variant_materials mesh primitive extension",
+  "title": "KHR_materials_variants mesh primitive extension",
   "type": "object",
   "allOf": [
     {
