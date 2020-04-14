@@ -230,7 +230,7 @@ void decode(intN_t input[4], intN_t output[4]) {
 
 Quaternion filter allows to encode unit length quaternions using normalized 16-bit integers for all components, but allows control over the precision used for the components and provides better quality compared to naively encoding each component one by one.
 
-The input to the filter is three quaternion components, excluding the component with the largest magnitude, encoded as signed normalized K-bit integers (K <= 16), and an index of the largest component that is omitted in the encoding. The largest component is assumed to always be positive (which is possible due to quaternion double-cover). To allow per-element control over K, the last input element explicitly encodes 1.0 as a K-bit integer, except for the least significant 2 bits that store the index of the maximum component.
+The input to the filter is three quaternion components, excluding the component with the largest magnitude, encoded as signed normalized K-bit integers (4 <= K <= 16), and an index of the largest component that is omitted in the encoding. The largest component is assumed to always be positive (which is possible due to quaternion double-cover). To allow per-element control over K, the last input element explicitly encodes 1.0 as a K-bit integer, except for the least significant 2 bits that store the index of the maximum component.
 
 The output of the filter is four decoded quaternion components, stored as 16-bit normalized integers.
 
@@ -247,15 +247,15 @@ void decode(int16_t input[4], int16_t output[4]) {
 	float32_t y = input[1] / one * range;
 	float32_t z = input[2] / one * range;
 
-	float32_t w = sqrt(max(0, 1 - x * x - y * y - z * z));
+	float32_t w = sqrt(max(0.0, 1.0 - x * x - y * y - z * z));
 
 	int maxcomp = input[3] & 3;
 
 	// maxcomp specifies a cyclic rotation of the quaternion components
-	output[(maxcomp + 1) % 4] = round(x * 32767);
-	output[(maxcomp + 2) % 4] = round(y * 32767);
-	output[(maxcomp + 3) % 4] = round(z * 32767);
-	output[ maxcomp         ] = round(w * 32767);
+	output[(maxcomp + 1) % 4] = round(x * 32767.0);
+	output[(maxcomp + 2) % 4] = round(y * 32767.0);
+	output[(maxcomp + 3) % 4] = round(z * 32767.0);
+	output[(maxcomp + 0) % 4] = round(w * 32767.0);
 }
 ```
 
