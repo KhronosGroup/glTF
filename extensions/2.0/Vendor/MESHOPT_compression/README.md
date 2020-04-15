@@ -339,8 +339,6 @@ Vertex a is pushed to vertex FIFO.
 Vertex b is pushed to vertex FIFO if `Z == 0` or `Z == 0xf`.
 Vertex c is pushed to vertex FIFO if `W == 0` or `W == 0xf`.
 
-The triangle (a, b, c) is emitted to the output.
-
 At the end of the decoding, `data` is expected to be fully read by all the triangle codes and not contain any extra bytes.
 
 ## Mode 2: indices
