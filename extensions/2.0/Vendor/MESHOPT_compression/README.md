@@ -236,7 +236,39 @@ TODO
 
 ## Mode 2: indices
 
-TODO
+Index compression exploits similarity between consecutive indices. Note that, unlike the triangle index compression (mode 1), this mode doesn't assume a specific topology and as such is less efficient in terms of the resulting size. However, unlike mode 1, this mode can be used to compress triangle strips, line lists and other types of mesh index data, and can additionally be used to compress non-mesh index data such as sparse indices for accessors.
+
+The encoded stream structure is as follows:
+
+- Header byte, which must be equal to `0xd1`
+- A sequence of index deltas, with encoding specified below
+- Tail block, which consists of 4 bytes that are reserved and should be set to 0
+
+Instead of simply encoding deltas vs the previous index, the decoder tracks *two* baseline index values, that start at 0. Each delta is specified in relation to one of these values and updates it so that the next delta that references the same baseline uses the encoded index value as a reference. This encoding is more efficient at handling some types of bimodal sequences where two independent monotonic sequences are spliced together, which can occur for some common cases of triangle strips or line lists.
+
+To specify the index delta, the varint-7 encoding scheme is used, which encodes an integer as one or more bytes, with the byte with the 0 most significant bit terminating the sequence:
+
+```
+0x7F => 0x7F
+0x81 0x04 => 0x201
+0xFF 0xA0 0x05 => 0x1FD005
+```
+
+When decoding the deltas, the 32-bit value is read using the varint encoding. The least significant bit of the value indicates one of the baseline values; the remaining bits specify a zigzag-encoded signed delta and can be decoded as follows:
+
+```
+uint32_t decode(uint32_t v) {
+	int32_t baseline = v & 1;
+	int32_t delta = (v & 2) != 0 ? ~(v >> 2) : (v >> 2);
+
+	last[baseline] += delta;
+	return last[baseline];
+}
+```
+
+It's up to the encoder to determine the optimal selection of the baseline for each index; this encoding scheme can be used to do basic delta encoding (with baseline bit always set to 0) as well as more complex bimodal encodings.
+
+Note that the zigzag-encoded delta must fit in a 31-bit integer; as such, deltas are limited to [-2^30..2^30-1].
 
 # Appendix B: Filters
 
