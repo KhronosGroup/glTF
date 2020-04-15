@@ -180,10 +180,10 @@ To facilitate efficient decompression, deinterleaving and delta encoding are per
 The encoded stream structure is as follows:
 
 - Header byte, which must be equal to `0xa0`
-- Attribute blocks, detailed below
+- One or more attribute blocks, detailed below
 - Tail block, which consists of a baseline element stored verbatim, padded to 32 bytes
 
-Each attribute block stores a sequence of deltas, with the first element in the first block using the deltas from the baseline element stored in the tail block. The attribute block always stores an integer number of elements, with that number computed as follows:
+Each attribute block stores a sequence of deltas, with the first element in the first block using the deltas from the baseline element stored in the tail block, and each subsequent element using the deltas from the previous element. The attribute block always stores an integer number of elements, with that number computed as follows:
 
 ```
 count = min((8192 / byteStride) & ~15, 256)
@@ -194,6 +194,8 @@ The attribute block structure consists of `byteStride` blocks (one for each byte
 - Header bits, 2 bits for each group of 16 elements (count/16 2-bit values), padded to a byte
 - Delta blocks, with variable number of bytes stored for each group of 16 elements
 
+Each group always contains 16 elements; when the number of elements that needs to be encoded isn't divisible by 16, it gets rounded up and the remaining elements are ignored after decoding.
+
 Header bits are stored from least significant to most significant bit - header bits for 4 consecutive groups of 16 elements are packed in a byte together as follows:
 
 ```
@@ -202,10 +204,10 @@ bits0 | (bits1 << 2) | (bits2 << 4) | (bits3 << 6)
 
 The header bits establish the delta encoding mode (0-3) for each group of 16 elements that follows:
 
-- bits 0: All 16 byte deltas are 0; the size of the encoded block is 0
-- bits 1: Deltas are using 2-bit sentinel encoding; the size of the encoded block is [4..20]
-- bits 2: Deltas are using 4-bit sentinel encoding; the size of the encoded block is [8..24]
-- bits 3: All 16 byte deltas are stored verbatim; the size of the encoded block is 16
+- bits 0: All 16 byte deltas are 0; the size of the encoded block is 0 bytes
+- bits 1: Deltas are using 2-bit sentinel encoding; the size of the encoded block is [4..20] bytes
+- bits 2: Deltas are using 4-bit sentinel encoding; the size of the encoded block is [8..24] bytes
+- bits 3: All 16 byte deltas are stored verbatim; the size of the encoded block is 16 bytes
 
 Byte deltas are stored as zigzag-encoded differences between the byte values of the element and the byte values of the previous element in the same position; the zigzag encoding scheme works as follows:
 
