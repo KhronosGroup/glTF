@@ -1,5 +1,7 @@
 # CESIUM_primitive_outline
 
+`Add image of nicely rendered outlines`
+
 ## Contributors
 
 - Kevin Ring, Cesium, [@kring](https://github.com/kring)
@@ -11,8 +13,6 @@ Cesium Vendor Extension - Currently supported in [CesiumJS](https://cesium.com/c
 ## Dependencies
 
 Written against the glTF 2.0 spec.
-
-`Add image of nicely rendered outlines`
 
 ## Overview
 
