@@ -1,0 +1,50 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_anisotropy glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines anisotropy.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "anisotropyIntensityFactor": {
+            "type": "number",
+            "description": "The anisotropy intensity.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": ""
+        },
+        "anisotropyIntensityTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The anisotropy intensity texture.",
+            "gltf_detailedDescription": ""
+        },
+        "anisotropyFactor": {
+            "type": "number",
+            "description": "The anisotropy.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": ""
+        },
+        "anisotropyTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The anisotropy texture.",
+            "gltf_detailedDescription": ""
+        },
+        "anisotropyRotationFactor": {
+            "type": "number",
+            "description": "The anisotropy rotation.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": ""
+        },
+        "anisotropyRotationTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The anisotropy rotation texture.",
+            "gltf_detailedDescription": ""
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
