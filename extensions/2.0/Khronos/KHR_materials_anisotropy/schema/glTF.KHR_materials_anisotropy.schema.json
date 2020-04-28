@@ -5,22 +5,9 @@
     "description": "glTF extension that defines anisotropy.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "anisotropyIntensityFactor": {
+        "anisotropy": {
             "type": "number",
-            "description": "The anisotropy intensity.",
-            "default": 0.0,
-            "minimum": 0.0,
-            "maximum": 1.0,
-            "gltf_detailedDescription": ""
-        },
-        "anisotropyIntensityTexture": {
-            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "The anisotropy intensity texture.",
-            "gltf_detailedDescription": ""
-        },
-        "anisotropyFactor": {
-            "type": "number",
-            "description": "The anisotropy.",
+            "description": "Amount of anisotropy.",
             "default": 0.0,
             "minimum": 0.0,
             "maximum": 1.0,
