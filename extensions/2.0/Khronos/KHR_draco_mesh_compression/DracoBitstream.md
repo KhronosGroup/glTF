@@ -1949,10 +1949,8 @@ void DecodeAttributeSeams() {
     is_edge_on_seam_[a].assign(face_to_vertex[0].size() * 3, false);
   }
 
-  for (j = 0; j < num_faces; ++j) {
-    face_id = j;
+  for (face_id = 0; face_id < num_faces; ++face_id) {
     for (k = 0; k < 3; ++k) {
-      local = k;
       corner = (j * 3) + k;
       CornerToVerts(0, corner, v, n, p);
       opp_corner = PosOpposite(corner);
