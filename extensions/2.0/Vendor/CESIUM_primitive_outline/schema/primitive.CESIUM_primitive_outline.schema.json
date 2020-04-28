@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "CESIUM_primitive_outline glTF primitive extension",
+    "type": "object",
+    "description": "glTF extension for indicating that some edges of a primitive's triangles should be outlined.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "indices": {
+            "type": "integer",
+            "description": "The index of the accessor providing the list of highlighted lines at the edge of this primitive's triangles."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
