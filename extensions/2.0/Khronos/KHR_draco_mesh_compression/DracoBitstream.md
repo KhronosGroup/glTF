@@ -1598,6 +1598,9 @@ void ParseAttributeDecodersData() {
   if (encoder_method == MESH_EDGEBREAKER_ENCODING) {
     for (i = 0; i < num_attributes_decoders; ++i) {
       att_dec_data_id[i]                                                             | uint8
+      if (att_dec_data_id[i] == 255) {
+        att_dec_data_id[i] = 0;
+      }
       att_dec_decoder_type[i]                                                        | uint8
       att_dec_traversal_method[i]                                                    | uint8
     }
@@ -1632,14 +1635,20 @@ void DecodeAttributeData() {
         UpdateVertexToCornerMap(i);
       }
     }
-    for (i = 1; i < num_attributes_decoders; ++i) {
-      curr_att_dec = i;
-      RecomputeVerticesInternal();
+    for (i = 0; i < num_attributes_decoders; ++i) {
+      curr_att_dec = att_dec_data_id[i];
+      if (curr_att_dec > 0) {
+        RecomputeVerticesInternal();
+      }
     }
     Attribute_AssignPointsToCorners();
   }
   for (i = 0; i < num_attributes_decoders; ++i) {
-    curr_att_dec = i;
+    if (encoder_method == MESH_EDGEBREAKER_ENCODING) {
+      curr_att_dec = att_dec_data_id[i];
+    } else {
+      curr_att_dec = i;
+    }
     is_face_visited_.assign(num_faces, false);
     is_vertex_visited_.assign(num_faces * 3, false);
     GenerateSequence();
@@ -1654,7 +1663,11 @@ void DecodeAttributeData() {
     }
   }
   for (i = 0; i < num_attributes_decoders; ++i) {
-    curr_att_dec = i;
+    if (encoder_method == MESH_EDGEBREAKER_ENCODING) {
+      curr_att_dec = att_dec_data_id[i];
+    } else {
+      curr_att_dec = i;
+    }
     DecodePortableAttributes();
     DecodeDataNeededByPortableTransforms();
     TransformAttributesToOriginalFormat();
