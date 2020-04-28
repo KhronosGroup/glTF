@@ -465,7 +465,9 @@ E.g., the following code listing writes an `uint16` value to the variable `num` 
 	buffer				| uint8[num]
 
 Afterwards, the array `buffer` contains `num` elements of type `uint8`.
- 
+
+The variable type is specified by the read operation or by assigning specific values. Newly introduced variables resulting from operations deduce that variable type, respectively.
+
 
 #### Arithmetic operators
 
