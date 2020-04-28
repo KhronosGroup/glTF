@@ -1,6 +1,9 @@
 # CESIUM_primitive_outline
 
-`Add image of nicely rendered outlines`
+<figure>
+<img src="./figures/with-extension.png"/>
+<figcaption><em>Edges rendered on solid buildings using this extension. The buildings are derived from OpenStreetMap data in New York.</em></figcaption>
+</figure>
 
 ## Contributors
 
@@ -16,9 +19,12 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-Non-photorealistic 3D objects, such as untextured buildings, are often more visually compelling when their edges are outlined. A simple approach to adding outlines to a glTF model is to add an additional primitive of type `LINES` to the model, drawing lines along the edges to be outlined. Unfortunately, the visual quality of such an approach is quite poor, because the lines depth fight with the solid geometry. The rasterization of the lines does not match the rasterization of the edges of the triangles.
+Non-photorealistic 3D objects, such as untextured buildings, are often more visually compelling when their edges are outlined. A simple approach to adding outlines to a glTF model is to add an additional primitive of type `LINES` to the model, drawing lines along the edges to be outlined. Unfortunately, the visual quality of such an approach is quite poor, because the lines depth fight with the triangles. The rasterization of the lines does not match the rasterization of the edges of the triangles.
 
-`Add image of line depth fighting`
+<figure>
+<img src="./figures/depth-fighting.png"/>
+<figcaption><em>Stipling caused by depth fighting between separately-rendered lines and triangles.</em></figcaption>
+</figure>
 
 The traditional way to avoid this depth fighting is to use `glPolygonOffset` or similar. glTF 2.0, however, does not support specifying a polygon offset. Even if it did - or an extension were defined to support it - it's very difficult to get high quality rendering with this approach. Depending on the polygon offset values chosen, lines on the back-face may "bleed through" to the front because of too much depth bias, or lines may have a stipled look due to too little depth bias. Even with careful tuning of the polygon offset values, it's usually possible to detect both problems simultaneously in a single scene.
 
@@ -45,8 +51,7 @@ Edge outlining is requested by adding the `CESIUM_primitive_outline` extension t
                 "mode": 4,
                 "extensions": {
                     "CESIUM_primitive_outline": {
-                        "indices": 4,
-                        "color": [0.0, 0.0, 0.0]
+                        "indices": 4
                     }
                 }
             }
@@ -57,14 +62,14 @@ Edge outlining is requested by adding the `CESIUM_primitive_outline` extension t
 
 The `indices` property specifies the ID of an accessor with the locations of the edges. The accessor must contain an even number of elements of `componentType` `UNSIGNED_SHORT` (5123) or `UNSIGNED_INT` (5125) representing vertex indices on the primitive containing this extension. Each pair of indices specifies the endpoint vertices of an edge to be highlighted. These two vertices must also be two of the three vertices of one or more triangles; otherwise, the line will not be drawn at all.
 
-The `color` property indicates the color of the outlines. Because this extension is primarily used for non-photorealistic rendering, it currently does not provide a separate material definition for the edges, and it assumes that the edges are unlit. They faces are rendered normally according to the glTF material description.
-
 ## Implementation Notes
 
-This extension does not dictate any specific rendering technique; it only requires that the outlines be drawn and that they avoid depth fighting with the solid geometry. However, most implementations will find it convenient to use a single-pass approach that renders the outlines as part of the solid geometry. For example, [Fast and versatile texture-based wireframe rendering](https://www.researchgate.net/publication/220067637_Fast_and_versatile_texture-based_wireframe_rendering) describes a technique that uses a mipmapped 1D texture and three sets of 1D texture coordinates to render high-quality, anti-aliased lines on the edges of triangles. This is the approach used in CesiumJS.
+This extension does not dictate any specific rendering technique; it only requires that the outlines be drawn and that they avoid depth fighting with the solid geometry. However, most implementations will find it convenient to use a single-pass approach that renders the outlines as part of the triangles. For example, [Fast and versatile texture-based wireframe rendering](https://www.researchgate.net/publication/220067637_Fast_and_versatile_texture-based_wireframe_rendering) describes a technique that uses a mipmapped 1D texture and three sets of 1D texture coordinates to render high-quality, anti-aliased lines on the edges of triangles. This is the approach used in CesiumJS.
+
+A fully-functional, open-source implementation of this extension was added to CesiumJS in [this pull request](https://github.com/CesiumGS/cesium/pull/8776).
 
 ## Justification
 
 Strictly speaking, this extension is not required. A rendering engine could inspect all LINES primitives to see if they share vertices with a TRIANGLES primitive and, if so, use a different rendering technique to render lines that are coincident with triangle edges. However, this would add a significant runtime cost to match lines to triangle edges, and the cost would be imposed on all models that use lines, even those that would not benefit from this rendering technique. Therefore, this extension is primarily an optimization, allowing models to opt-in to single-pass, non-photorealistic edge rendering.
 
-Using this extension also means that lines will not be drawn at all in rendering engines that do not support this extension. This is desirable because depth-fighting lines on solid geometry look very bad; we're probably better off not rendering the lines at all.
+Using this extension also means that lines will not be drawn at all in rendering engines that do not support this extension. This is desirable because depth-fighting between lines and triangles looks very bad; we're probably better off not rendering the lines at all.
