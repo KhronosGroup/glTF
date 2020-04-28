@@ -8,16 +8,15 @@
 
         "thicknessFactor": {
             "type": "number",
-            "description": "Modulates direct translucency of the material.",
+            "description": "Modulates the thickness.",
             "default": 1.0,
             "minimum": 0.0,
-            "maximum": 1.0,
             "gltf_detailedDescription": ""
         },
 
         "thicknessTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "Texture describing the local thickness of the material; 0 is thin.",
+            "description": "Texture describing the local thickness of the material. 0 is thin and 1 is thick.",
             "gltf_detailedDescription": "Should be generated offline by flipping the normals of the mesh and computing the ambient occlusion map. This texture is a grayscale, where darker areas imply the material is locally thinner there, while brighter areas are locally thicker. There are many free and paid tools for baking these thickness maps."
         },
 
