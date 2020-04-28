@@ -1173,6 +1173,7 @@ void EdgebreakerDecodeSymbol() {
 ```c++
 void DecodeEdgeBreakerConnectivity() {
   is_vert_hole_.assign(num_encoded_vertices + num_encoded_split_symbols, true);
+  opposite_corners_.assign(num_faces * 3, kInvalidCornerIndex);
   last_vert_added = -1;
   for (i = 0; i < num_encoded_symbols; ++i) {
     EdgebreakerDecodeSymbol();
