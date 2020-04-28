@@ -453,6 +453,9 @@ For this, we use a notation similar to C++. Relevant conventions and used consta
 
 The functions `assign`, `back`, `empty`, `op_back`, `push_back`, and `size` behave similarly on arrays as it is defined for C++ std::vector.
 
+If no specific values are set, all uninitialized elements of arrays shall be set to `-1`.
+Assignments at specific positions in arrays require that the array is able to hold elements up to that position.
+
 The function `ReadBits(X)`, reads the next X bits from an array.
 
 Read operations from the bitstream are indicated by separating the respective variable type on the right side of the code listing.
