@@ -3363,7 +3363,7 @@ int PosOpposite(c) {
 ### 22.4 AttrOpposite()
 
 ```c++
-int AttrOpposite(attr, corner) {
+int AttrOpposite(corner) {
   if (IsCornerOppositeToSeamEdge(corner))
     return -1;
   return PosOpposite(corner);
@@ -3376,7 +3376,7 @@ int AttrOpposite(attr, corner) {
 int Opposite(att_dec, c) {
   if (att_dec == 0 || att_dec_decoder_type[att_dec] == MESH_VERTEX_ATTRIBUTE)
     return PosOpposite(c);
-  return AttrOpposite(att_dec - 1, c);
+  return AttrOpposite(c);
 }
 ```
 
