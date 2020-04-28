@@ -1951,7 +1951,7 @@ void DecodeAttributeSeams() {
 
   for (face_id = 0; face_id < num_faces; ++face_id) {
     for (k = 0; k < 3; ++k) {
-      corner = (j * 3) + k;
+      corner = (face_id * 3) + k;
       CornerToVerts(0, corner, v, n, p);
       opp_corner = PosOpposite(corner);
       boundary_edge = opp_corner < 0;
