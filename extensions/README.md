@@ -25,6 +25,7 @@
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
+* [CESIUM_primitive_outline](2.0/Vendor/CESIUM_primitive_outline/README.md)
 
 #### In-progress Khronos and multi-vendor extensions
 
