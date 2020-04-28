@@ -1963,13 +1963,11 @@ void DecodeAttributeSeams() {
             RabsDescRead(ans_decoders[a],
                          attribute_connectivity_decoders_prob_zero[a], &val);
             if (val) {
-              att_connectivity_seam_opp[a].push_back(v);
               att_connectivity_seam_src[a].push_back(n);
               att_connectivity_seam_dest[a].push_back(p);
               is_edge_on_seam_[a][corner] = true;
               if (opp_corner >= 0) {
                 CornerToVerts(curr_att_dec, opp_corner, &opp_v, &opp_n, &opp_p);
-                att_connectivity_seam_opp[a].push_back(opp_v);
                 att_connectivity_seam_src[a].push_back(opp_n);
                 att_connectivity_seam_dest[a].push_back(opp_p);
                 is_edge_on_seam_[a][opp_corner] = true;
@@ -1979,7 +1977,6 @@ void DecodeAttributeSeams() {
         }
       } else {
         for (a = 0; a < num_attributes_decoders - 1; ++a) {
-          att_connectivity_seam_opp[a].push_back(v);
           att_connectivity_seam_src[a].push_back(n);
           att_connectivity_seam_dest[a].push_back(p);
           is_edge_on_seam_[a][corner] = true;
