@@ -23,7 +23,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension combines transmission and index of refraction properties to achive refractive, transmissive materials.
+This extension combines transmission and index of refraction properties to achieve refractive, transmissive materials.
 
 ## Extending Materials
 
