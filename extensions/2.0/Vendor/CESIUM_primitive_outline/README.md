@@ -8,7 +8,7 @@
 ## Contributors
 
 - Kevin Ring, Cesium, [@kring](https://github.com/kring)
-- Sean Lilley, Cesium, [@lilleyse}(https://github.com/lilleyse)
+- Sean Lilley, Cesium, [@lilleyse](https://github.com/lilleyse)
 
 ## Status
 
