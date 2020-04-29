@@ -2060,7 +2060,7 @@ bool IsOnAttributeBoundary(vert) {
 
 ```c++
 bool IsOnBoundary(att_dec, vert_id) {
-  if (att_dec == 0 || att_dec_decoder_type[att_dec] == MESH_VERTEX_ATTRIBUTE)
+  if (att_dec_decoder_type[att_dec] == MESH_VERTEX_ATTRIBUTE)
     return IsOnPositionBoundary(vert_id);
   else
     return IsOnAttributeBoundary(vert_id);
@@ -3375,7 +3375,7 @@ int AttrOpposite(corner) {
 
 ```c++
 int Opposite(att_dec, c) {
-  if (att_dec == 0 || att_dec_decoder_type[att_dec] == MESH_VERTEX_ATTRIBUTE)
+  if (att_dec_decoder_type[att_dec] == MESH_VERTEX_ATTRIBUTE)
     return PosOpposite(c);
   return AttrOpposite(c);
 }
