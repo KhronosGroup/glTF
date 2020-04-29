@@ -41,5 +41,6 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `SI` | Smithsonian Institution | https://www.si.edu/ | [#1410](https://github.com/KhronosGroup/glTF/issues/1410) |
 | `SKFB` | Sketchfab, Inc. | https://sketchfab.com/ | [#1239](https://github.com/KhronosGroup/glTF/issues/1239) |
 | `SKYLINE` | Skyline Software Systems, Inc. | https://www.skylinesoft.com/ | [#1704](https://github.com/KhronosGroup/glTF/issues/1704) |
+| `SPECTRUM` | Spectrum | https://spectrumcustomizer.com/ | [#1804](https://github.com/KhronosGroup/glTF/issues/1804) |
 | `TRYON` | TRYON Technology Ltd. | https://tryon.technology | [#1785](https://github.com/KhronosGroup/glTF/issues/1785) |
 | `WEB3D` | The Web3D Consortium, Inc. | https://www.web3d.org/ |  |
