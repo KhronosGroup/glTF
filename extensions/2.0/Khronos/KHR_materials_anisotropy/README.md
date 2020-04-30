@@ -49,7 +49,7 @@ Sample values:
 ## Anisotropy
 
 Two new material properties are introduced: an explicit anisotropy parameter and the direction in which the specular reflection elongates relative to the surface tangents.
-The anisotropy parameter is a dimensionaless number in `[-1, 1]` and forms an injective relation to the roughness distribution along two orthogonal directions, one of which is the direction parameter and the other the result of the crossing the direction and the geometric normal.
+The anisotropy parameter is a dimensionaless number in `[-1, 1]` and forms an injective relation to the roughness distribution along two orthogonal directions, one of which is the direction parameter and the other the result of crossing the direction and the geometric normal.
 
 An anisotropy of `1` means that the specular reflection will elongate along the given direction,
 while a value of `-1` will elongate it along the computed orthogonal direction.
