@@ -68,7 +68,7 @@ To achieve certain surface finishes, it is possible to define the anisotropy and
 
 ## Implementation
 
-While uniform and textured anisotropy are multiplied, uniform and textured direction defintions are mutual exclusive and the latter overrides the former. (While it is surely possible to add both directions in terms of their complex argument, the computional overhead may not justify the additional editorial convenience).
+While uniform and textured anisotropy are multiplied, uniform and textured direction defintions are mutual exclusive and the latter overrides the former. (While it is surely possible to add both directions in terms of their complex argument, the computional overhead may not justify the additional editorial convenience.)
 
 ```glsl
 float anisotropy = u_Anisotropy;
