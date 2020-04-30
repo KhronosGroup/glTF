@@ -62,10 +62,13 @@ To achieve certain surface finishes, it is possible to define the anisotropy and
 While uniform and textured anisotropy are multiplied, uniform and textured direction defintions are mutual exclusive and the latter overrides the former.
 
 ```glsl
-float anisotropy = u_Anisotropy * texture(uv, u_AnisotropySampler).r;
+float anisotropy = u_Anisotropy;
+#if HAS_ANISOTROPY_MAP
+anisotropy *= texture(uv, u_AnisotropySampler).r * 2.0 - 1.0;
+#endif
 
 #if HAS_ANISOTROPY_DIRECTION_MAP
-vec3 direction = texture(uv, u_AnisotropyDirectionSampler).xyz;
+vec3 direction = texture(uv, u_AnisotropyDirectionSampler).xyz * 2.0 - vec3(1.0);
 #else
 vec3 direction = u_AnisotropyDirection;
 #endif
