@@ -61,7 +61,7 @@ To achieve certain surface finishes, it is possible to define the anisotropy and
 
 While uniform and textured anisotropy are multiplicative, uniform and textured direction defintions are mutual exclusive and the latter overrides the former.
 
-```c
+```glsl
 float anisotropy = u_Anisotropy * texture(uv, u_AnisotropySampler).r;
 
 #if HAS_ANISOTROPY_DIRECTION_MAP
@@ -85,7 +85,7 @@ f_specular += intensity * NdotL * BRDF_specularAnisotropicGGX(f0, f90, alphaRoug
 
 The anisotropic GGX is defined as follows:
 
-```c
+```glsl
 vec3 BRDF_specularAnisotropicGGX(vec3 f0, vec3 f90, float alphaRoughness,
     float VdotH, float NdotL, float NdotV, float NdotH, float BdotV, float TdotV,
     float TdotL, float BdotL, float TdotH, float BdotH, float anisotropy)
