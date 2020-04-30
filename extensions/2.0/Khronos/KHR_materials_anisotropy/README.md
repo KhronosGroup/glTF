@@ -37,8 +37,6 @@ that is where the material is fully anisotropic, as opposed to be fully isotropi
 }
 ```
 
-### Definition
-
 ## Anisotropy
 
 Two new material properties are introduced: an explicit anisotropy parameter and the direction in which the specular reflection elongates relative to the surface tangents.
@@ -59,10 +57,72 @@ To achieve certain surface finishes, it is possible to define the anisotropy and
 | ![Fig. 7](figures/fig7.jpg) | ![Fig. 8](figures/fig8.jpg) |
 | ![Fig. 9](figures/fig9.jpg) | ![Fig. 10](figures/fig10.jpg) |
 
+## Implementation
 
+While uniform and textured anisotropy are multiplicative, uniform and textured direction defintions are mutual exclusive and the latter overrides the former.
 
-### Reference
+```c
+float anisotropy = u_Anisotropy * texture(uv, u_AnisotropySampler).r;
 
-[Google Filament - Anisotropic model](https://google.github.io/filament/Filament.md.html#materialsystem/anisotropicmodel)
-[Google Filament Materials Guide - Anisotropic model](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/anisotropy)
-[Blender Principled BSDF](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/principled.html)
+#if HAS_ANISOTROPY_DIRECTION_MAP
+vec3 direction = texture(uv, u_AnisotropyDirectionSampler).xyz;
+#else
+vec3 direction = u_AnisotropyDirection;
+#endif
+
+vec3 anisotropicT = normalize(TBN * direction);
+vec3 anisotropicB = normalize(cross(normal_geometric, anisotropicT));
+
+float TdotL = dot(anisotropicT, l);
+float BdotL = dot(anisotropicB, l);
+float TdotH = dot(anisotropicT, h);
+float BdotH = dot(anisotropicB, h);
+
+f_specular += intensity * NdotL * BRDF_specularAnisotropicGGX(f0, f90, alphaRoughness,
+    VdotH, NdotL, NdotV, NdotH,
+    BdotV, TdotV, TdotL, BdotL, TdotH, BdotH, anisotropy);
+```
+
+The anisotropic GGX is defined as follows:
+
+```c
+vec3 BRDF_specularAnisotropicGGX(vec3 f0, vec3 f90, float alphaRoughness,
+    float VdotH, float NdotL, float NdotV, float NdotH, float BdotV, float TdotV,
+    float TdotL, float BdotL, float TdotH, float BdotH, float anisotropy)
+{
+    float at = max(alphaRoughness * (1.0 + anisotropy), 0.00001);
+    float ab = max(alphaRoughness * (1.0 - anisotropy), 0.00001);
+
+    vec3 F = F_Schlick(f0, f90, VdotH);
+    float V = V_GGX_anisotropic(NdotL, NdotV, BdotV, TdotV, TdotL, BdotL, anisotropy, at, ab);
+    float D = D_GGX_anisotropic(NdotH, TdotH, BdotH, anisotropy, at, ab);
+
+    return F * V * D;
+}
+
+float D_GGX_anisotropic(float NdotH, float TdotH, float BdotH, float anisotropy, float at, float ab)
+{
+    float a2 = at * ab;
+    vec3 f = vec3(ab * TdotH, at * BdotH, a2 * NdotH);
+    float w2 = a2 / dot(f, f);
+    return a2 * w2 * w2 / M_PI;
+}
+
+float V_GGX_anisotropic(float NdotL, float NdotV, float BdotV, float TdotV, float TdotL, float BdotL,
+    float anisotropy, float at, float ab)
+{
+    float GGXV = NdotL * length(vec3(at * TdotV, ab * BdotV, NdotV));
+    float GGXL = NdotV * length(vec3(at * TdotL, ab * BdotL, NdotL));
+    float v = 0.5 / (GGXV + GGXL);
+    return clamp(v, 0.0, 1.0);
+}
+```
+
+The parametrization of `at` and `ab`, denoting roughness values along both anisotropic directions, is taken from [4].
+
+## Reference
+
+1. [Google Filament - Anisotropic model](https://google.github.io/filament/Filament.md.html#materialsystem/anisotropicmodel)
+2. [Google Filament Materials Guide - Anisotropic model](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/anisotropy)
+3. [Blender Principled BSDF](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/principled.html)
+4. [Christopher Kulla and Alejandro Conty. 2017. Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf)
