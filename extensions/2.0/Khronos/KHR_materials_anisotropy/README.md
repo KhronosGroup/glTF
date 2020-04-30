@@ -53,7 +53,7 @@ while a value of `-1` will elongate it along the computed orthogonal direction.
 To achieve certain surface finishes, it is possible to define the anisotropy and its direction using a texture.
 
 | Anisotropy | Direction |
-| --- | --- |
+|:---:|:---:|
 | ![Fig. 7](figures/fig7.jpg) | ![Fig. 8](figures/fig8.jpg) |
 | ![Fig. 9](figures/fig9.jpg) | ![Fig. 10](figures/fig10.jpg) |
 
