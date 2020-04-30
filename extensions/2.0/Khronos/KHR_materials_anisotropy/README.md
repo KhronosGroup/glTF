@@ -22,6 +22,8 @@ that is where the material is fully anisotropic, as opposed to be fully isotropi
 
 ## Extending Materials
 
+Sample values:
+
 ```json
 {
     "materials": [
@@ -36,6 +38,13 @@ that is where the material is fully anisotropic, as opposed to be fully isotropi
     ]
 }
 ```
+
+|                               | Type                                                                 | Description                       | Required                       |
+|-------------------------------|----------------------------------------------------------------------|-----------------------------------|--------------------------------|
+|**anisotropy**                 | `number`                                                             | The anisotropy.                   | No, default: `0.0`             |
+|**anisotropyTexture**          | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)  | The anisotropy texture.           | No                             |
+|**anisotropyDirection**        | `array`                                                              | The anisotropy direction.         | No, default: `[1.0, 0.0, 0.0]` |
+|**anisotropyDirectionTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)  | The anisotropy direction texture. | No                             |
 
 ## Anisotropy
 

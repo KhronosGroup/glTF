@@ -9,27 +9,32 @@
             "type": "number",
             "description": "Amount of anisotropy.",
             "default": 0.0,
-            "minimum": 0.0,
+            "minimum": -1.0,
             "maximum": 1.0,
             "gltf_detailedDescription": ""
         },
         "anisotropyTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "The anisotropy texture.",
-            "gltf_detailedDescription": ""
+            "description": "Anisotropy texture",
+            "gltf_detailedDescription": "The uniform and per pixel anisotropy values are multiplied."
         },
-        "anisotropyRotationFactor": {
-            "type": "number",
-            "description": "The anisotropy rotation.",
-            "default": 0.0,
-            "minimum": 0.0,
-            "maximum": 1.0,
-            "gltf_detailedDescription": ""
+        "anisotropyDirection": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "description": "Anisotropic direction",
+            "gltf_detailedDescription": "The direction of the anisotropy. Does not need to be normalized.",
+            "default": [1, 0, 0]
         },
-        "anisotropyRotationTexture": {
+        "anisotropyDirectionTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "The anisotropy rotation texture.",
-            "gltf_detailedDescription": ""
+            "description": "Anisotropy direction texture",
+            "gltf_detailedDescription": "When defined, these per pixel direction values override the uniform direction value."
         },
         "extensions": { },
         "extras": { }
