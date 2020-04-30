@@ -50,8 +50,8 @@ while a value of `-1` will elongate it along the computed orthogonal direction.
 
 | | 0.5 | 0.0 | -0.5 |
 | --- | --- | --- | --- |
-| `[1.0, 0.0, 0.0]` | ![Fig. 1](figures/fig1.jpg) | ![Fig. 2](figures/fig2.jpg) | ![Fig. 3](figures/fig3.jpg)
-| `[1.0, 1.0, 0.0]` | ![Fig. 4](figures/fig4.jpg) | ![Fig. 5](figures/fig5.jpg) | ![Fig. 6](figures/fig6.jpg)
+| `[1.0, 0.0, 0.0]` | ![Fig. 3](figures/fig3.jpg) | ![Fig. 2](figures/fig2.jpg) | ![Fig. 1](figures/fig1.jpg)
+| `[1.0, 1.0, 0.0]` | ![Fig. 6](figures/fig6.jpg) | ![Fig. 5](figures/fig5.jpg) | ![Fig. 4](figures/fig4.jpg)
 
 ### Reference
 
