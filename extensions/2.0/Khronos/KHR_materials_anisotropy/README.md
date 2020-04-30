@@ -42,8 +42,7 @@ that is where the material is fully anisotropic, as opposed to be fully isotropi
 ## Anisotropy
 
 Two new material properties are introduced: an explicit anisotropy parameter and the direction in which the specular reflection elongates relative to the surface tangents.
-The anisotropy parameter is a dimensionaless number in `[-1, 1]` and forms a bijection to the roughness distribution along two orthogonal directions,
-one of which is the direction parameter and the other the result of the crossing the direction and the geometric normal.
+The anisotropy parameter is a dimensionaless number in `[-1, 1]` and forms a bijection to the roughness distribution along two orthogonal directions, one of which is the direction parameter and the other the result of the crossing the direction and the geometric normal.
 
 A anisotropy of `1` means that the specular reflection will elongate along the given direction,
 while a value of `-1` will elongate it along the computed orthogonal direction.
@@ -52,6 +51,14 @@ while a value of `-1` will elongate it along the computed orthogonal direction.
 | --- | --- | --- | --- |
 | `[1.0, 0.0, 0.0]` | ![Fig. 3](figures/fig3.jpg) | ![Fig. 2](figures/fig2.jpg) | ![Fig. 1](figures/fig1.jpg)
 | `[1.0, 1.0, 0.0]` | ![Fig. 6](figures/fig6.jpg) | ![Fig. 5](figures/fig5.jpg) | ![Fig. 4](figures/fig4.jpg)
+
+To achieve certain surface finishes, it is possible to define the anisotropy and its direction using a texture.
+
+| Anisotropy | Direction |
+| --- | --- |
+| ![Fig. 7](figures/fig7.jpg) | ![Fig. 8](figures/fig8.jpg) |
+
+
 
 ### Reference
 
