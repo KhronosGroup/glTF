@@ -36,9 +36,9 @@ The strength of the specular reflection is defined by adding the `KHR_materials_
             "extensions": {
                 "KHR_materials_specular": {
                     "specularFactor": 1.0,
-                    "specularTexture": 0,
                     "specularColorFactor": [1.0, 1.0, 1.0],
-                    "specularColorTexture": 0
+                    "specularTexture": 0,
+                    "specularTextureType": "specularcolor3_specular1"
                 }
             }
         }
@@ -53,7 +53,17 @@ Factor and texture are combined by multiplication to describe a single value.
 | **specularFactor** | `number` | The strength of the specular reflection. | No, default: `1.0`|
 | **specularTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A grayscale texture that defines the specular factor. Will be multiplied by specularFactor. | No |
 | **specularColorFactor** | `number[3]` | The F0 color of the specular reflection (RGB). | No, default: `[1.0, 1.0, 1.0]`|
-| **specularColorTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A 1-channel luminance or 3-channel RGB texture that defines the F0 color of the specular reflection. Will be multiplied by specularColorFactor. | No |
+| **specularColorTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the F0 color of the specular reflection (RGB channels, encoded in sRGB) and the specular factor (A). Will be multiplied by specularFactor and specularColorFactor. | No |
+| **specularTextureType** | `string` | Type of the `specularColorTexture`. One of `specularcolor3_specular1` (4 channels), `specularcolor3` (3 channels), `specularcolor1_specular1` (2 channels), `specularcolor1` | No |
+
+The number of channels in the `specularColorTexture` depends on the type.
+
+|                            | Channels | specularColorFactor | specularFactor |
+|----------------------------|----------|---------------------|----------------|
+| `specularcolor3_specular1` | 4        | RGB                 | A              |
+| `specularcolor3`           | 3        | RGB                 | -              |
+| `specularcolor1_specular1` | 2        | L                   | A              |
+| `specularcolor1`           | 1        | L                   | -              |
 
 The specular factor scales the microfacet BRDF in the dielectric BRDF. It also affects the diffuse BRDF; the less energy is reflected by the microfacet BRDF, the more can be shifted to the diffuse BRDF. The following image shows specular factor increasing from 0 to 1.
 
@@ -66,8 +76,8 @@ The specular color changes the F0 color of the Fresnel that is multiplied to the
 The extension changes the computation of the Fresnel term defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) to the following:
 
 ```
-dielectricSpecularF0 = 0.04 * specularFactor * specularTexture * specularColorFactor * specularColorTexture
- dielectricSpecularF90 = specularFactor * specularTexture
+dielectricSpecularF0 = 0.04 * specularFactor * specularTexture.a * specularColorFactor * specularColorTexture.rgb
+ dielectricSpecularF90 = specularFactor * specularTexture.a
 
 F0  = lerp(dielectricSpecularF0, baseColor.rgb, metallic)
 F90 = lerp(dielectricSpecularF90, 1, metallic)
@@ -78,8 +88,8 @@ F = F0 + (F90 - F0) * (1 - VdotH)^5
 If `KHR_materials_ior` is used in combination with `KHR_materials_specular`, the constant `0.04` is replaced by the value computed from the IOR:
 
 ```
-dielectricSpecularF0 = ((ior - outside_ior) / (ior + outside_ior))^2 * specularFactor * specularTexture * specularColorFactor * specularColorTexture
-dielectricSpecularF90 = specularFactor * specularTexture
+dielectricSpecularF0 = ((ior - outside_ior) / (ior + outside_ior))^2 * specularFactor * specularTexture.a * specularColorFactor * specularColorTexture.rgb
+dielectricSpecularF90 = specularFactor * specularTexture.a
 ```
 
 If `KHR_materials_volume` is used in combination with `KHR_materials_specular`, specular factor and specular color have no effect on the refraction angle. The direction of the refracted light ray is only based on the index of refraction defined in `KHR_materials_ior`.
@@ -109,7 +119,8 @@ As shown in the table, the constant 0.08 corresponds to an index of refraction o
             "extensions": {
                 "KHR_materials_specular": {
                     "specularColorFactor": <reflectanceFactor>,
-                    "specularColorTexture": <reflectanceTexture>
+                    "specularTexture": <reflectanceTexture>,
+                    "specularTextureType": "specularcolor1"
                 },
                 "KHR_materials_ior": {
                     "ior": 1.788789
@@ -132,8 +143,9 @@ Materials that use the specular-glossiness workflow (`KHR_materials_pbrSpecularG
                 "KHR_materials_specular": {
                     "specularColorFactor":
                         <KHR_materials_pbrSpecularGlossiness__specularFactor>,
-                    "specularColorTexture":
-                        <KHR_materials_pbrSpecularGlossiness__specularGlossinessTexture.rgb>
+                    "specularTexture":
+                        <KHR_materials_pbrSpecularGlossiness__specularGlossinessTexture.rgb>,
+                    "specularTextureType": "specularcolor3"
                 },
                 "KHR_materials_ior": {
                     "ior": 0

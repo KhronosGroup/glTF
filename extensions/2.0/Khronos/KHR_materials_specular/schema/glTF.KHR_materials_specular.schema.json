@@ -13,11 +13,6 @@
             "maximum": 1.0,
             "gltf_detailedDescription": "This parameter scales the amount of specular reflection on non-metallic surfaces. It has no effect on metals."
         },
-        "specularTexture": {
-            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "A 1-channel luminance texture that defines the strength of the specular reflection.",
-            "gltf_detailedDescription": "A 1-channel luminance texture that defines the strength of the specular reflection. Will be multiplied by specularFactor."
-        },
         "specularColorFactor": {
             "type": "array",
             "items": {
@@ -31,10 +26,32 @@
             "maxItems": 3,
             "gltf_detailedDescription": "This is an additional RGB color parameter that tints the specular reflection of non-metallic surfaces. At grazing angles, the reflection still blends to white, and the parameter has not effect on metals. The value is linear."
         },
-        "specularColorTexture": {
+        "specularTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "An 1-channel luminance or 3-channel RGB texture that defines the F0 color of the specular reflection.",
-            "gltf_detailedDescription": "A luminance or RGB texture that defines the F0 color of the specular reflection. Will be multiplied by specularColorFactor."
+            "description": "An RGBA texture that defines the F0 color of the specular reflection encoded in sRGB and the specular factor.",
+            "gltf_detailedDescription": "Either a 4-channel texture that defines the specular color in the RGB channels and the specular factor in the alpha channel, a 3-channel texture that defines only the specular color, a 2-channel texture that defines a grayscale specular color and specular factor, or a 1-channel texture that defines a grayscale specular color. Will be multiplied by specularFactor and/or specularColorFactor."
+        },
+        "specularTextureType": {
+            "type": "string",
+            "description": "Defines the type of the specular texture",
+            "anyOf": [
+                {
+                    "enum": [ "specularcolor3_specular1"],
+                    "description": "The specular texture has 4 channels. The specular color factor is stored in the RGB channels. The specular factor is stored in the A channel."
+                },
+                {
+                    "enum": [ "specularcolor3"],
+                    "description": "The specular texture has 3 channels and stores the specular color factor."
+                },
+                {
+                    "enum": [ "specularcolor1_specular1"],
+                    "description": "The specular texture has 2 channels. The grayscale specular color factor is stored in the L channel. The specular factor is stored in the A channel."
+                },
+                {
+                    "enum": [ "specularcolor1"],
+                    "description": "The specular texture has 1 channel and stores a grayscale specular color factor."
+                }
+            ]
         },
         "extensions": { },
         "extras": { }
