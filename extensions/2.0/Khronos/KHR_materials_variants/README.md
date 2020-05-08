@@ -31,9 +31,9 @@ Imagine a sneaker with shoelace holes that are made from materials that depend o
 | `sneaker_red`                      | `shoelace_hole_material_purple` |
 | `sneaker_black`                    | `shoelace_hole_material_yellow` |
 
-(_the authors of this spec are not product designer, apologies for the dubious colour choices_)
+(_the authors of this spec are not product designers, apologies for the dubious colour choices_)
 
-The currently active `material` for a `mesh primitive` is found by stepping through this array of mappings, and selecting the first one which contains any one of the currently active tag. If none match, fall back on vanilla glTF behaviour.
+Application-specific logic defines the concept of a set of active tags, which may be empty.  The currently active `material` for a `mesh primitive` is found by stepping through this array of mappings in order, and selecting the first one which contains somewhere in its list of tags any one of the currently active tags. The corresponding material is assigned to the mesh.  If none match, fall back on vanilla glTF behaviour.
 
 In other words, **this is not a literal mapping** in its glTF form – exporters, take note.
 
@@ -81,18 +81,20 @@ A snippet of a mesh implementing shoe holes which uses this extension might look
 
 The tag-based approach allows highly selective material switching, e.g. changing the colour of shoe laces only, or wholesale changes across diverse geometry, by reusing the same tags in switches across many distinct mesh primitives.
 
-In the typical case, many tags will be active, e.g. `['sneaker_red', 'laces_gold']`.
+In the typical case, many tags may be active in the application, e.g. `{'sneaker_red', 'laces_gold'}`.
 
 Composition also works well with tags: if a scene were built from several different variational models, each with their own set of tags, then it's easy to imagine an API call on the entire scene that takes a set of tags and passes them on to each constituent model, recursively.
 
 ## Interaction with existing glTF functionality
 
-The primary purpose of this extension is to simply formalise the idea of configurability, so that members of the ecosystem can meaningfully communicate: those who produce asset and those who ingest them, and all the tooling inbetween.
+_This section is non-normative._
 
-Beyond that, it's also a compression scheme: a way to compactly represent multiple assets that have a lot in common (e.g. most geometry, some textures). In this respect, it's most meaningful for the self-contained binary format GLB, where the asset file contains all its data up-front, both that which is shared between variants and that which differs.
+The primary purpose of this extension is to simply formalise the idea of configurability, so that members of the ecosystem can meaningfully communicate: those who produce assets and those who ingest them, and all the tooling in between.
 
-If we also allow external references, i.e. images and buffers to source from URLs,then we can additionally come up with sophisticated mechanisms where geometry and textures are loaded separately, dynamically. There's pragmatic pros and cons to going down this route, all beyond the scope of this document. Each application will make its own decisions there; meawhile, the extension proposed works well regardless.
+As a secondary effect, material variants allow multiple assets — with shared geometry but different materials — to be stored more compactly, particularly relevant for the self-contained binary format GLB. When using external URIs as references to textures, applications may (optionally) process geometry only once and lazily request texture assets only when needed for a particular variant.
 
 ## Implications for Applications and APIs
+
+_This section is non-normative._
 
 How does an application communicate to a glTF engine what the initial variant state should be? How does it submit a runtime request for a different configuration? It's out of scope for this extension to constrain or mandate an engine's public API, but a useful implementation will require something of the sort.
