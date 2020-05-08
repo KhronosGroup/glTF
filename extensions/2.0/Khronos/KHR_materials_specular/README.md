@@ -54,7 +54,7 @@ Factor and texture are combined by multiplication to describe a single value.
 | **specularTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A grayscale texture that defines the specular factor. Will be multiplied by specularFactor. | No |
 | **specularColorFactor** | `number[3]` | The F0 color of the specular reflection (RGB). | No, default: `[1.0, 1.0, 1.0]`|
 | **specularColorTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the F0 color of the specular reflection (RGB channels, encoded in sRGB) and the specular factor (A). Will be multiplied by specularFactor and specularColorFactor. | No |
-| **specularTextureType** | `string` | Type of the `specularColorTexture`. One of `specularcolor3_specular1` (4 channels), `specularcolor3` (3 channels), `specularcolor1_specular1` (2 channels), `specularcolor1` | No |
+| **specularTextureType** | `string` | Type of the `specularColorTexture`. One of `specularcolor3_specular1` (4 channels), `specularcolor3` (3 channels), `specularcolor1_specular1` (2 channels), `specularcolor1` | Yes, if `specularColorTexture` is set. Otherwise not required. |
 
 The number of channels in the `specularColorTexture` depends on the type.
 
