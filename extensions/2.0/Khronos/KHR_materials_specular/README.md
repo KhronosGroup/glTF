@@ -84,7 +84,9 @@ dielectricSpecularF90 = specularFactor * specularTexture
 
 If `KHR_materials_volume` is used in combination with `KHR_materials_specular`, specular factor and specular color have no effect on the refraction angle. The direction of the refracted light ray is only based on the index of refraction defined in `KHR_materials_ior`.
 
-### Conversions
+## Conversions
+
+### Materials with reflectance parameter
 
 Material models that define F0 in terms of reflectance at normal incidence can be converted with the help of `KHR_materials_ior`. Typically, the reflectance ranges from 0% to 8%, given as a value between 0 and 1, with 0.5 (=4%) being the default. This default corresponds to an IOR of 1.5. F0 is then computed from the `reflectanceFactor` in range 0..1 in the following way:
 
@@ -117,6 +119,32 @@ As shown in the table, the constant 0.08 corresponds to an index of refraction o
     ]
 }
 ```
+
+### Specular-glossiness materials
+
+Materials that use the specular-glossiness workflow (`KHR_materials_pbrSpecularGlossiness`) can be converted with help of the `KHR_materials_ior`. The `ior` parameter has to be set to 0 or inf. In JSON:
+
+```json
+{
+    "materials": [
+        {
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularColorFactor":
+                        <KHR_materials_pbrSpecularGlossiness__specularFactor>,
+                    "specularColorTexture":
+                        <KHR_materials_pbrSpecularGlossiness__specularGlossinessTexture.rgb>
+                },
+                "KHR_materials_ior": {
+                    "ior": 0
+                }
+            }
+        }
+    ]
+}
+```
+
+This makes it possible to add advanced effects like clearcoat (`KHR_materials_clearcoat`) and sheen (`KHR_materials_sheen`) to traditional specular-glossiness materials.
 
 ## Schema
 
