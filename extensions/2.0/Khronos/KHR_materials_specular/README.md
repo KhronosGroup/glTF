@@ -65,13 +65,14 @@ The number of channels in the `specularColorTexture` depends on the type.
 | `specularcolor1_specular1` | 2        | L                   | A              |
 | `specularcolor1`           | 1        | L                   | -              |
 
-The specular factor scales the microfacet BRDF in the dielectric BRDF. It also affects the diffuse BRDF; the less energy is reflected by the microfacet BRDF, the more can be shifted to the diffuse BRDF. The following image shows specular factor increasing from 0 to 1.
+The specular factor scales the microfacet BRDF in the dielectric BRDF independent of the direction. It also affects the diffuse BRDF; the less energy is reflected by the microfacet BRDF, the more can be shifted to the diffuse BRDF. The following image shows specular factor increasing from 0 to 1.
 
 ![](figures/specular.png)
 
-The specular color changes the F0 color of the Fresnel that is multiplied to the microfacet BRDF. The color at grazing angles (F90) is not changed. The following image shows specular color increasing from [0,0,0] to [1,1,1].
+The specular color changes the F0 color of the Fresnel that is multiplied to the microfacet BRDF. The color at grazing angles (F90) is not changed. The following images show specular color increasing from [0,0,0] to [1,1,1] (top) and from [0,0,0] to [1,0,0] (bottom).
 
 ![](figures/specular-color.png)
+![](figures/specular-color-2.png)
 
 The extension changes the computation of the Fresnel term defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) to the following:
 
@@ -92,7 +93,23 @@ dielectricSpecularF0 = ((ior - outside_ior) / (ior + outside_ior))^2 * specularF
 dielectricSpecularF90 = specularFactor * specularTexture.a
 ```
 
-If `KHR_materials_volume` is used in combination with `KHR_materials_specular`, specular factor and specular color have no effect on the refraction angle. The direction of the refracted light ray is only based on the index of refraction defined in `KHR_materials_ior`.
+If `KHR_materials_transmission` is used in combination with `KHR_materials_specular`, the ratio of transmission and reflection computed from the Fresnel term also depends on `dielectricSpecularF0` and `dielectricSpecularF90`. The following images show a thin, transmissive material.
+
+Specular from 0 to 1:
+![](figures/specular-thin.png)
+
+Specular color from [0,0,0] to [1,1,1] (top) and [0,0,0] to [1,0,0]:
+![](figures/specular-color-thin.png)
+![](figures/specular-color-thin-2.png)
+
+If `KHR_materials_transmission` and `KHR_materials_volume` are used in combination with `KHR_materials_specular`, specular factor and specular color have no effect on the refraction angle. The direction of the refracted light ray is only based on the index of refraction defined in `KHR_materials_ior`. The ratio of transmission and reflection computed from the Fresnel term still depends on `dielectricSpecularF0` and `dielectricSpecularF90`. The following images show a refractive material.
+
+Specular from 0 to 1:
+![](figures/specular-refraction.png)
+
+Specular color from [0,0,0] to [1,1,1] (top) and [0,0,0] to [1,0,0]:
+![](figures/specular-color-refraction.png)
+![](figures/specular-color-refraction-2.png)
 
 ## Conversions
 
