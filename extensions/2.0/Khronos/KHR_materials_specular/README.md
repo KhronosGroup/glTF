@@ -55,56 +55,69 @@ Factor and texture are combined by multiplication to describe a single value.
 | **specularColorFactor** | `number[3]` | The F0 color of the specular reflection (RGB). | No, default: `[1.0, 1.0, 1.0]`|
 | **specularColorTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A 1-channel luminance or 3-channel RGB texture that defines the F0 color of the specular reflection. Will be multiplied by specularColorFactor. | No |
 
-### Conversions
+The specular factor scales the microfacet BRDF in the dielectric BRDF. It also affects the diffuse BRDF; the less energy is reflected by the microfacet BRDF, the more can be shifted to the diffuse BRDF. The following image shows specular factor increasing from 0 to 1.
 
-Material models that define f0 in terms of reflectance at normal incidence (with 0 meaning 0%, 0.5 meaning 4%, and 1 meaning 8%) can be converted to `specularColorFactor` and `specularColorTexture` as follows:
+![](figures/specular.png)
 
-```
-specularColorFactor = 2 * reflectanceFactor
-specularColorTexture = reflectanceTexture
-```
+The specular color changes the F0 color of the Fresnel that is multiplied to the microfacet BRDF. The color at grazing angles (F90) is not changed. The following image shows specular color increasing from [0,0,0] to [1,1,1].
 
-Alternatively, the index of refraction defined in `KHR_materials_ior` can be set to the value 1.788789, resulting in a f0 scale factor of 0.08.
+![](figures/specular-color.png)
 
-In addition, it is possible to convert specular-glossiness materials (`KHR_materials_pbrSpecularGlossiness`) to metallic-roughness by combining `KHR_materials_specular` and `KHR_materials_ior`. The conversion is lossless and makes effects like sheen (`KHR_materials_sheen`) and clearcoat (`KHR_materials_clearcoat`) available to specular-glossiness materials.
+The extension changes the computation of the Fresnel term defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) to the following:
 
 ```
-ior = inf
-specularColorFactor = specularFactor_specgloss
-specularColorTexture = specularGlossinessTexture_specgloss[0:2]
-```
+dielectricSpecularF0 = 0.04 * specularFactor * specularTexture * specularColorFactor * specularColorTexture
+ dielectricSpecularF90 = specularFactor * specularTexture
 
-The conversion is not compatible with transmissive materials defined via `KHR_materials_transmission` and `KHR_materials_volume`.
+F0  = lerp(dielectricSpecularF0, baseColor.rgb, metallic)
+F90 = lerp(dielectricSpecularF90, 1, metallic)
 
-## Implementation
-
-The specular factor scales the microfacet BRDF in the dielectric BRDF. It also affects the diffuse BRDF; the less energy is reflected by the microfacet BRDF, the more can be shifted to the diffuse BRDF.
-
-The specular color changes the F0 color of the Fresnel that is multiplied to the microfacet BRDF. The color at grazing angles (F90) is not changed.
-
-```
-dielectric_brdf =
-  fresnel_mix(
-    diffuse_brdf(baseColor),
-    microfacet_brdf(roughness^2),
-    f0 = 0.04 * specular * specularColor,
-    f90 = specular)
-```
-
-Based on [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation), the modified `fresnel_mix` operation is defined as follows:
-
-```
-fresnel_mix(base, layer, ior) = base * (1 - fr(ior)) + layer * fr(ior)
-fr(ior) = f0 + (f90 - f0) * (1 - cos)^5
-f0 = 0.04 * specular * specularColor
-f90 = specular
+F = F0 + (F90 - F0) * (1 - VdotH)^5
 ```
 
 If `KHR_materials_ior` is used in combination with `KHR_materials_specular`, the constant `0.04` is replaced by the value computed from the IOR:
 
 ```
-f0 = ((ior - outside_ior) / (ior + outside_ior))^2 * specular * specularColor
-f90 = specular
+dielectricSpecularF0 = ((ior - outside_ior) / (ior + outside_ior))^2 * specularFactor * specularTexture * specularColorFactor * specularColorTexture
+dielectricSpecularF90 = specularFactor * specularTexture
 ```
 
-The specular factor and specular color do not affect the index of refraction of the volume below the surface, defined in `KHR_materials_volume`. As a result, `specular` and `specularColor` do not take part in computing the outgoing direction for refraction.
+If `KHR_materials_volume` is used in combination with `KHR_materials_specular`, specular factor and specular color have no effect on the refraction angle. The direction of the refracted light ray is only based on the index of refraction defined in `KHR_materials_ior`.
+
+### Conversions
+
+Material models that define F0 in terms of reflectance at normal incidence can be converted with the help of `KHR_materials_ior`. Typically, the reflectance ranges from 0% to 8%, given as a value between 0 and 1, with 0.5 (=4%) being the default. This default corresponds to an IOR of 1.5. F0 is then computed from the `reflectanceFactor` in range 0..1 in the following way:
+
+```
+dielectricSpecularF0 = 0.08 * reflectanceFactor
+```
+
+| reflectance | reflectanceFactor | IOR      |
+|-------------|-------------------|----------|
+| 0%          | 0                 | 1.0      |
+| 4%          | 0.5               | 1.5      |
+| 8%          | 1                 | 1.788789 |
+
+As shown in the table, the constant 0.08 corresponds to an index of refraction of 1.788789. By setting `ior` in `KHR_materials_ior` to this value, the behavior of `specularColorFactor` becomes identical to `reflectanceFactor`. In JSON:
+
+```json
+{
+    "materials": [
+        {
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularColorFactor": <reflectanceFactor>,
+                    "specularColorTexture": <reflectanceTexture>
+                },
+                "KHR_materials_ior": {
+                    "ior": 1.788789
+                }
+            }
+        }
+    ]
+}
+```
+
+## Schema
+
+- [glTF.KHR_materials_specular.schema.json](schema/glTF.KHR_materials_specular.schema.json)
