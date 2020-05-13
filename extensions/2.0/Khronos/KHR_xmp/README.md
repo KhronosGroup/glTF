@@ -2,13 +2,16 @@
 
 ## Contributors
 
-* Emiliano Gambaretto, Adobe, <mailto:emiliano@adobe.com>
+* Emiliano Gambaretto, Adobe, [@emilian0](https://github.com/emilian0)
 * Mike Bond, Adobe, [@MiiBond](https://twitter.com/MiiBond)
-* Robert Long, Mozilla, [@arobertlong](https://twitter.com/arobertlong)
+* Leonard Rosenthol, [@lrosenthol](https://github.com/lrosenthol)
+* Ed Mackey, Analytical Graphics, Inc.
 * Don McCurdy, Google, [@donmccurdy](https://twitter.com/donrmccurdy)
+* Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
+* Robert Long, Mozilla, [@arobertlong](https://twitter.com/arobertlong)
+* Adam Morris, Target, [@weegeekps](https://github.com/weegeekps)
 * Andreas Plesch, Individual Contributor,[@andreasplesch](https://github.com/andreasplesch)
 * Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
-* Ed Mackey, Analytical Graphics, Inc.
 
 ## Status
 
