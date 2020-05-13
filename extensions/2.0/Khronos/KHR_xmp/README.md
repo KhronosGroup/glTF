@@ -334,3 +334,19 @@ Derived glTF document metadata:
     }
 }
 ```
+
+### Implementation note
+
+*This section is non-normative.*
+
+glTF viewers are free to chose which metadata in the glTF to display.
+Our reccomandation for viewers that choose to display XMP metadata is to include the metadata in the glTF `asset` object.
+
+XMP is an extensible metadata format by design. In order to achieve better readibility and interoperability across the industry, we recommand glTF creators to use the following preferred list of namespace prefixes and URIs.
+
+| Namespace prefix  | Namespace URI                         |
+|:----------------- |:------------------------------------- |
+| `dc`              | `http://purl.org/dc/elements/1.1/`    |
+| `xmp`             | `http://ns.adobe.com/xap/1.0/`        |
+| `xmpMM`           | `http://ns.adobe.com/xap/1.0/mm/`     |
+| `xmpRights`       | `http://ns.adobe.com/xap/1.0/rights/` |
