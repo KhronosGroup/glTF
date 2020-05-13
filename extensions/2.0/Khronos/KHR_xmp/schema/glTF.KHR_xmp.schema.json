@@ -22,5 +22,5 @@
         "extensions": { },
         "extras": { }
     },
-    "required": ["packets"]
+    "required": ["packets", "@context"]
 }
