@@ -343,9 +343,9 @@ Derived glTF document metadata:
 *This section is non-normative.*
 
 glTF viewers are free to chose which metadata in the glTF to display.
-Our reccomandation for viewers that choose to display XMP metadata is to include the metadata in the glTF `asset` object.
+Our recommendation for viewers that choose to display XMP metadata is to include the metadata in the glTF `asset` object.
 
-XMP is an extensible metadata format by design. In order to achieve better readibility and interoperability across the industry, we recommand glTF creators to use the following preferred list of namespace prefixes and URIs.
+XMP is an extensible metadata format by design. In order to achieve better readability and interoperability across the industry, we recommend glTF creators to use the following preferred list of namespace prefixes and URIs.
 
 | Namespace prefix  | Namespace URI                         |
 |:----------------- |:------------------------------------- |
