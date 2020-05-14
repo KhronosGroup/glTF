@@ -13,9 +13,9 @@
                 "maximum": 1.0
             },
             "description": "The transmittance of the clearcoat layer.",
-            "default": [ 1.0, 1.0, 1.0, 1.0 ],
-            "minItems": 4,
-            "maxItems": 4,
+            "default": [ 1.0, 1.0, 1.0 ],
+            "minItems": 3,
+            "maxItems": 3,
             "gltf_detailedDescription": "The colour of light allowed to be transmitted through the clearcoat layer of the material. A value of black means no light passes through. A value of white means all light passes through."
         },
         "clearcoatTintTexture": {
