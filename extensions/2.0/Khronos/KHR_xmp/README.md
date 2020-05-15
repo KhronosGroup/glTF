@@ -4,7 +4,7 @@
 
 * Emiliano Gambaretto, Adobe, [@emilian0](https://github.com/emilian0)
 * Mike Bond, Adobe, [@MiiBond](https://twitter.com/MiiBond)
-* Leonard Rosenthol, [@lrosenthol](https://github.com/lrosenthol)
+* Leonard Rosenthol, Adobe, [@lrosenthol](https://github.com/lrosenthol)
 * Ed Mackey, Analytical Graphics, Inc.
 * Don McCurdy, Google, [@donmccurdy](https://twitter.com/donrmccurdy)
 * Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
