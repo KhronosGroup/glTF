@@ -89,3 +89,7 @@ F = F0 + (F90 - F0) * (1 - VdotH)^5
 ```
 
 If `KHR_materials_volume` is used in combination with `KHR_materials_ior`, the `ior` affects not only the Fresnel term, but also determines the refractive index of the volume below the surface. Light rays passing through the transmissive surface are bent according to the index of refraction of the outside and inside medium (refraction). As the volume cannot be parametrized with a 2-dimensional texture in UV space, the index of refraction (IOR) is a scalar, uniform value (`ior`).
+
+## Schema
+
+- [glTF.KHR_materials_specular.schema.json](schema/glTF.KHR_materials_specular.schema.json)
