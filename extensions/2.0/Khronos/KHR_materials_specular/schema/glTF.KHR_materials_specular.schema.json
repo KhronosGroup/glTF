@@ -28,30 +28,8 @@
         },
         "specularTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "An RGBA texture that defines the F0 color of the specular reflection encoded in sRGB and the specular factor.",
-            "gltf_detailedDescription": "Either a 4-channel texture that defines the specular color in the RGB channels and the specular factor in the alpha channel, a 3-channel texture that defines only the specular color, a 2-channel texture that defines a grayscale specular color and specular factor, or a 1-channel texture that defines a grayscale specular color. Will be multiplied by specularFactor and/or specularColorFactor."
-        },
-        "specularTextureType": {
-            "type": "string",
-            "description": "Defines the type of the specular texture",
-            "anyOf": [
-                {
-                    "enum": [ "specularcolor3_specular1"],
-                    "description": "The specular texture has 4 channels. The specular color factor is stored in the RGB channels. The specular factor is stored in the A channel."
-                },
-                {
-                    "enum": [ "specularcolor3"],
-                    "description": "The specular texture has 3 channels and stores the specular color factor."
-                },
-                {
-                    "enum": [ "specularcolor1_specular1"],
-                    "description": "The specular texture has 2 channels. The grayscale specular color factor is stored in the L channel. The specular factor is stored in the A channel."
-                },
-                {
-                    "enum": [ "specularcolor1"],
-                    "description": "The specular texture has 1 channel and stores a grayscale specular color factor."
-                }
-            ]
+            "description": "An texture that defines the F0 color of the specular reflection and the specular factor.",
+            "gltf_detailedDescription": "A 4-channel texture that defines the specular color in the RGB channels (encoded in sRGB) and the specular factor in the alpha channel. Will be multiplied by specularColorFactor and specularFactor."
         },
         "extensions": { },
         "extras": { }
