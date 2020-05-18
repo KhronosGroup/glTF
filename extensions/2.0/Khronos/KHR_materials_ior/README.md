@@ -38,6 +38,10 @@ The index of refraction of a material is configured by adding the `KHR_materials
 }
 ```
 
+| |Type|Description|Required|
+|-|----|-----------|--------|
+| **ior** | `number` | The index of refraction. | No, default: `1.5`|
+
 Typical values for the index of refraction range from 1 to 2. In rare cases values greater than 2 are possible. The following table shows some materials and their index of refraction:
 
 | Material     | Index of Refraction |
@@ -49,30 +53,39 @@ Typical values for the index of refraction range from 1 to 2. In rare cases valu
 | Sapphire     | 1.76                |
 | Diamond      | 2.42                |
 
-In case `KHR_materials_volume` is enabled, the `ior` determines the refractive index of the volume below the surface. Light rays passing through the transmissive surface are bent according to the index of refraction of the outside and inside medium (refraction). As the volume cannot be parametrized with a 2-dimensional texture in UV space, the index of refraction (IOR) is a scalar, uniform value (`ior`).
-
-| |Type|Description|Required|
-|-|----|-----------|--------|
-| **ior** | `number` | The index of refraction. | No, default: `1.5`|
-
-## Implementation
-
-The index of refraction affects the Fresnel term in the dielectric BRDF:
+The reflectance at normal incidence (F0) of dielectric materials is computed from the IOR as follows:
 
 ```
-dielectric_brdf =
-  fresnel_mix(
-    diffuse_brdf(baseColor),
-    microfacet_brdf(roughness^2),
-    ior)
-```
-
-[Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) defines the `fresnel_mix` operation as
-
-```
-fresnel_mix(base, layer, ior) = base * (1 - fr(ior)) + layer * fr(ior)
-fr(ior) = f0 + (1 - f0) * (1 - cos)^5
 f0 = ((ior - outside_ior) / (ior + outside_ior))^2
 ```
 
-with `ior = 1.5`, corresponding to `f0 = 0.04`. The `outside_ior` determines the index of refraction of the medium on the outside. If the renderer does not track the IOR when traversing nested dielectrics, it can assume `outside_ior = 1`.
+The `outside_ior` determines the index of refraction of the medium on the outside. If the renderer does not track the IOR when traversing nested dielectrics, it can assume `outside_ior = 1`.
+
+For `ior = 1.5` and `outside_ior = 1`, the result is `f0 = 0.04`. This is the fixed value used in the glTF 2.0 metallic-roughness material. The extension makes this value configurable.
+
+
+## Implementation
+
+*This section is non-normative*
+
+The extension changes the computation of the Fresnel term defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) to the following:
+
+```
+dielectricSpecular = ((ior - 1)/(ior + 1))^2
+```
+
+## Interaction with other extensions
+
+If `KHR_materials_ior` is used in combination with `KHR_materials_specular`, the constant `0.04` is replaced by the value computed from the IOR.
+
+```
+dielectricSpecularF0 = ((ior - outside_ior) / (ior + outside_ior))^2 * specularFactor * specularTexture.a * specularColorFactor * specularColorTexture.rgb
+dielectricSpecularF90 = specularFactor * specularTexture.a
+
+F0  = lerp(dielectricSpecularF0, baseColor.rgb, metallic)
+F90 = lerp(dielectricSpecularF90, 1, metallic)
+
+F = F0 + (F90 - F0) * (1 - VdotH)^5
+```
+
+If `KHR_materials_volume` is used in combination with `KHR_materials_ior`, the `ior` affects not only the Fresnel term, but also determines the refractive index of the volume below the surface. Light rays passing through the transmissive surface are bent according to the index of refraction of the outside and inside medium (refraction). As the volume cannot be parametrized with a 2-dimensional texture in UV space, the index of refraction (IOR) is a scalar, uniform value (`ior`).
