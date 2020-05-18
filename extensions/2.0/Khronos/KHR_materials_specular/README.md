@@ -63,6 +63,10 @@ The specular color changes the F0 color of the Fresnel that is multiplied to the
 ![](figures/specular-color.png)
 ![](figures/specular-color-2.png)
 
+## Implementation
+
+*This section is non-normative.*
+
 The extension changes the computation of the Fresnel term defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) to the following:
 
 ```
@@ -75,6 +79,8 @@ F90 = lerp(dielectricSpecularF90, 1, metallic)
 
 F = F0 + (F90 - F0) * (1 - VdotH)^5
 ```
+
+## Interaction with other extensions
 
 If `KHR_materials_ior` is used in combination with `KHR_materials_specular`, the constant `0.04` is replaced by the value computed from the IOR.
 
