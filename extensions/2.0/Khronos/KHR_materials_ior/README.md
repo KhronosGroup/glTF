@@ -76,7 +76,7 @@ dielectricSpecular = ((ior - 1)/(ior + 1))^2
 
 ## Interaction with other extensions
 
-If `KHR_materials_ior` is used in combination with `KHR_materials_specular`, the constant `0.04` is replaced by the value computed from the IOR.
+If `KHR_materials_ior` is used in combination with `KHR_materials_specular`, f0 computed from IOR is multiplied by f0 computed from the specular parameters.
 
 ```
 dielectricSpecularF0 = ((ior - outside_ior) / (ior + outside_ior))^2 * specularFactor * specularTexture.a * specularColorFactor * specularColorTexture.rgb
