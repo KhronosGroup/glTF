@@ -78,7 +78,7 @@ dielectricSpecular = ((ior - 1)/(ior + 1))^2
 
 If `KHR_materials_specular` is used in combination with `KHR_materials_ior`, f0 computed from IOR is multiplied by f0 computed from the specular parameters. See [`KHR_materials_specular`](../KHR_materials_specular/README.md) for more information.
 
-If `KHR_materials_volume` is used in combination with `KHR_materials_ior`, the `ior` affects not only the Fresnel term, but also determines the refractive index of the volume below the surface. Light rays passing through the transmissive surface are bent according to the index of refraction of the outside and inside medium (refraction). As the volume cannot be parametrized with a 2-dimensional texture in UV space, the index of refraction (IOR) is a scalar, uniform value (`ior`).
+If `KHR_materials_transmission` is used in combination with `KHR_materials_ior`, the `ior` affects the strength of the transmission effect according to the Fresnel term. See [`KHR_materials_transmission`](../KHR_materials_transmission/README.md) for more information. If `KHR_materials_specular` is used in addition, the rules for multiplying f0 from `ior` and f0 from the specular parameters apply as defined in `KHR_materials_specular`.
 
 If `KHR_materials_volume` is used in combination with `KHR_materials_ior`, the `ior` affects the refraction effect. See [`KHR_materials_volume`](../KHR_materials_volume/README.md) for more information.
 
