@@ -28,7 +28,7 @@
         },
         "specularTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "An texture that defines the F0 color of the specular reflection and the specular factor.",
+            "description": "A texture that defines the F0 color of the specular reflection and the specular factor.",
             "gltf_detailedDescription": "A 4-channel texture that defines the specular color in the RGB channels (encoded in sRGB) and the specular factor in the alpha channel. Will be multiplied by specularColorFactor and specularFactor."
         },
         "extensions": { },

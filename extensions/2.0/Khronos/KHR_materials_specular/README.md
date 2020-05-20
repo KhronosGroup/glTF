@@ -50,9 +50,8 @@ Factor and texture are combined by multiplication to describe a single value.
 | |Type|Description|Required|
 |-|----|-----------|--------|
 | **specularFactor** | `number` | The strength of the specular reflection. | No, default: `1.0`|
-| **specularTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A grayscale texture that defines the specular factor. Will be multiplied by specularFactor. | No |
 | **specularColorFactor** | `number[3]` | The F0 color of the specular reflection (RGB). | No, default: `[1.0, 1.0, 1.0]`|
-| **specularColorTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the F0 color of the specular reflection (RGB channels, encoded in sRGB) and the specular factor (A). Will be multiplied by specularFactor and specularColorFactor. | No |
+| **specularTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A 4-channel texture that defines the F0 color of the specular reflection (RGB channels, encoded in sRGB) and the specular factor (A). Will be multiplied by specularFactor and specularColorFactor. | No |
 
 The specular factor scales the microfacet BRDF in the dielectric BRDF. It also affects the diffuse BRDF; the less energy is reflected by the microfacet BRDF, the more can be shifted to the diffuse BRDF. The following image shows specular factor increasing from 0 to 1.
 
@@ -71,7 +70,7 @@ The extension changes the computation of the Fresnel term defined in [Appendix B
 
 ```
 dielectricSpecularF0 = 0.04 * specularFactor * specularTexture.a *
-                              specularColorFactor * specularColorTexture.rgb
+                              specularColorFactor * specularTexture.rgb
 dielectricSpecularF90 = specularFactor * specularTexture.a
 
 F0  = lerp(dielectricSpecularF0, baseColor.rgb, metallic)
@@ -85,7 +84,7 @@ F = F0 + (F90 - F0) * (1 - VdotH)^5
 If `KHR_materials_ior` is used in combination with `KHR_materials_specular`, the constant `0.04` is replaced by the value computed from the IOR.
 
 ```
-dielectricSpecularF0 = ((ior - outside_ior) / (ior + outside_ior))^2 * specularFactor * specularTexture.a * specularColorFactor * specularColorTexture.rgb
+dielectricSpecularF0 = ((ior - outside_ior) / (ior + outside_ior))^2 * specularFactor * specularTexture.a * specularColorFactor * specularTexture.rgb
 dielectricSpecularF90 = specularFactor * specularTexture.a
 ```
 
