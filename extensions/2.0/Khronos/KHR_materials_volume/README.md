@@ -43,7 +43,7 @@ materials: [
 ]
 ```
 
-Note that there are no textures in this extension, the medium is homogeneous. If a texture is defined in `KHR_materials_ior`, it is ignored if `KHR_materials_volume` is active.
+Note that there are no textures in this extension, the medium is homogeneous.
 
 ## Properties
 
