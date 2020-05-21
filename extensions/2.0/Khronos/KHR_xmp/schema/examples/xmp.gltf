@@ -20,7 +20,7 @@
           "dc:title" : { "en-us" : "Sample glTF with XMP metadata"}
         },
         {
-          "dc:title" : { "en-us" : "My Cube Mesh"},
+          "dc:title" : { "en-us" : "My Cube Mesh"}
         }
       ]
     }
