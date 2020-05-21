@@ -17,7 +17,7 @@
           "dc:format" : "model/gltf+json",
           "dc:language" : ["en"],
           "dc:publisher" : ["Khronos"],
-          "dc:title" : { "en-us" : "Sample glTF with XMP metadata"},
+          "dc:title" : { "en-us" : "Sample glTF with XMP metadata"}
         },
         {
           "dc:title" : { "en-us" : "My Cube Mesh"},
