@@ -106,28 +106,6 @@
       "uri": "MODEL_ROUNDED_CUBE_PART_1/indices.bin"
     }
   ],
-  "cameras": [
-    {
-      "name": "render_camera",
-      "perspective": {
-        "aspectRatio": 1.3333333730697632,
-        "yfov": 0.58904862403869629,
-        "zfar": 100,
-        "znear": 9.9999997473787516e-05
-      },
-      "type": "perspective"
-    },
-    {
-      "name": "render_camera2",
-      "perspective": {
-        "aspectRatio": 1.3333333730697632,
-        "yfov": 0.58904862403869629,
-        "zfar": 100,
-        "znear": 9.9999997473787516e-05
-      },
-      "type": "perspective"
-    }
-  ],
   "materials": [
     {
       "doubleSided": true,
@@ -167,35 +145,6 @@
   ],
   "nodes": [
     {
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        22,
-        0,
-        1
-      ],
-      "name": "point_light"
-    },
-    {
-      "name": "directional_light",
-      "extensions": {
-        "KHR_lights_punctual": {
-          "light": 0
-        }
-      }
-    },
-    {
       "mesh": 0,
       "name": "MODEL_ROUNDED_CUBE_PART_1model_N3D"
     }
@@ -204,11 +153,7 @@
   "scenes": [
     {
       "name": "scene",
-      "nodes": [
-        0,
-        1,
-        2
-      ]
+      "nodes": [ 0 ]
     }
   ]
 }
