@@ -146,7 +146,7 @@ The following example shows a glTF Mesh instantiating the XMP metadata at index 
 #### Precedence
 
 Metadata applied to JSON objects in the top level arrays ( `scenes`, `nodes`, `meshes`, `materials`, `images`, `animations`) has precedence over the metadata specified in the `asset` property of a glTF.
-A glTF might reference resources already containing XMP metadata. A relevant example would be an image object referencing a PNG/JPG file with embedded XMP metadata. The metadata embedded in the referenced resource takes precedence over the metadata specified in the glTF manifest. Note that glTF clients and viewers may ignore the metadata embedded in the referenced resources (for instance PNG/JPG images).
+A glTF might reference resources already containing XMP metadata. A relevant example would be an image object referencing a PNG/JPG file with embedded XMP metadata. Note that glTF clients and viewers may ignore the metadata embedded in the referenced resources (for instance PNG/JPG images).
 
 #### Transferring and merging metadata
 
