@@ -1,8 +1,8 @@
 # EXT\_mesh\_gpu\_instancing
 
-## Khronos 3D Formats Working Group
+## Contributors
 
-* John Cooke
+* John Cooke, OTOY, <mailto:john.cooke@otoy.com>
 * Don McCurdy
 * Arseny Kapoulkine 
 
