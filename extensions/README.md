@@ -15,6 +15,7 @@
 #### Multi-Vendor Extensions
 
 * [EXT_lights_image_based](2.0/Vendor/EXT_lights_image_based/README.md)
+* [EXT_mesh_gpu_instancing](2.0/Vendor/EXT_mesh_gpu_instancing/README.md)
 * [EXT_texture_webp](2.0/Vendor/EXT_texture_webp/README.md)
 
 #### Vendor Extensions
@@ -36,7 +37,6 @@ but may still change before they are complete._
 
 | Extension | Status |
 |-----------|--------|
-| [KHR_mesh_instancing](https://github.com/KhronosGroup/glTF/pull/1691) | Early discussions. |
 | [KHR_materials_ior](https://github.com/KhronosGroup/glTF/pull/1718) | In development. |
 | [KHR_materials_thinfilm](https://github.com/KhronosGroup/glTF/pull/1742) | In development. |
 | [KHR_materials_transmission](https://github.com/KhronosGroup/glTF/pull/1698) | In development. |
