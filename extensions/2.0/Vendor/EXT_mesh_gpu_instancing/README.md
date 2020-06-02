@@ -4,9 +4,7 @@
 
 * John Cooke, OTOY, <mailto:john.cooke@otoy.com>
 * Don McCurdy
-* Arseny Kapoulkine 
-
-## Acknowledgments
+* Arseny Kapoulkine, [@zeuxcg](https://twitter.com/zeuxcg)
 
 ## Status
 
@@ -20,13 +18,13 @@ Written against the glTF 2.0 spec.
 
 This extension is specfically designed to enable GPU instancing which renders many copies of a single mesh at once using a small number of draw calls.  It's useful for things 
 like trees, grass, road signs, etc.  The TRANSLATION, ROTATION, and SCALE attributes allows the mesh to be displayed at many different locations with different rotations and scales.  
-Custom attributes can use the underscore mechanism to achieve other effects (i.e. _ID, _TRANSFORM4x3, etc.).
+Custom attributes can use the underscore mechanism to achieve other effects (i.e. _ID, _COLOR, etc.).
 
-## Extending Nodes with per instance attributes
+## Extending Nodes With Instance Attributes
 
-Instancing is defined by adding the `EXT_mesh_gpu_instancing` extension to any glTF node that has a mesh.  Instancing only applies to mesh nodes, there is no defined behavior for a node 
-with this extension that doesn't also have a mesh.  Applying to nodes rather than meshes allows the same mesh to be used by several nodes, instanced or otherwise.  The attributes 
-section contains accessor ids for the TRANSLATION, ROTATION, and SCALE attribute buffers, all of which are optional.  The attributes specify an object space transform that should be 
+Instancing is defined by adding the `EXT_mesh_gpu_instancing` extension to any glTF node that has a mesh. Instancing only applies to mesh nodes, there is no defined behavior for a node 
+with this extension that doesn't also have a mesh. Applying to nodes rather than meshes allows the same mesh to be used by several nodes, instanced or otherwise. The attributes 
+section contains accessor ids for the TRANSLATION, ROTATION, and SCALE attribute buffers, all of which are optional. The attributes specify an object space transform that should be 
 multipled by the node's world transform in the shader to produce the final world transform for the instance. For example, the following defines some instancing attributes to a node with mesh.  
 
 ```json
@@ -50,10 +48,14 @@ multipled by the node's world transform in the shader to produce the final world
 }
 ```
 
-## Appendix
+Valid accessor type and component type for each attribute semantic property are defined below.
 
+|Name|Accessor Type|Component Type(s)|Description|
+|----|----------------|-----------------|-----------|
+|`"TRANSLATION"`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ translation vector|
+|`"ROTATION"`|`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized|XYZW rotation quaternion|
+|`"SCALE"`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ scale vector|
 
-## Reference
+All attribute accessors in a given node **must** have the same `count`.
 
-
-### Theory, Documentation and Implementations
+> **Implementation Note:** When instancing is used on the node, the non-instanced version of the mesh should not be rendered.

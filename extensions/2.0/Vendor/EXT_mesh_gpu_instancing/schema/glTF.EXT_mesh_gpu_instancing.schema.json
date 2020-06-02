@@ -7,7 +7,7 @@
     "properties": {
         "attributes": {
             "type": "object",
-            "description": "A dictionary object, where each key corresponds to mesh attribute semantic and each value is the index of the accessor containing attribute's data (defined optional attribs are TRANSLATION, ROTATION, SCALE.  For \"translation\" the values are FLOAT_VEC3's specifying translation along the x, y, and z axes. For \"rotation\" the values are quaternion FLOAT_VEC4's in the order (x, y, z, w), where w is the scalar. For \"scale\" the values are FLOAT_VEC3's specifying scaling factors along the x, y, and z axes.)",
+            "description": "A dictionary object, where each key corresponds to instance attribute and each value is the index of the accessor containing attribute's data. Attributes TRANSLATION, ROTATION, SCALE define instance transformation. For \"TRANSLATION\" the values are FLOAT_VEC3's specifying translation along the x, y, and z axes. For \"ROTATION\" the values are VEC4's specifying rotation as a quaternion in the order (x, y, z, w), where w is the scalar, with component type `FLOAT` or normalized integer. For \"scale\" the values are FLOAT_VEC3's specifying scaling factors along the x, y, and z axes.",
             "minProperties": 1,
             "additionalProperties": {
                 "$ref": "glTFid.schema.json"
