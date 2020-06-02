@@ -59,3 +59,19 @@ Valid accessor type and component type for each attribute semantic property are 
 All attribute accessors in a given node **must** have the same `count`.
 
 > **Implementation Note:** When instancing is used on the node, the non-instanced version of the mesh should not be rendered.
+
+## Transformation Order
+
+When using instancing, the instance transform matrix is constructed by multiplying translation (if present), rotation (if present), and scale in the same order as they are for nodes:
+
+    InstanceXform = Translation * Rotation * Scale
+    
+The node's world transform matrix is constructed by multiplying the node's local transform matrix from the root of the tree up until (and including) the node itself:
+
+    NodeWorldXform = RootXform * ... * ParentLocalXform * NodeLocalXform
+    
+The resulting transforms are applied to mesh positions/normals/etc., with instance transformation applied first:
+
+    WorldPosition = NodeWorldXform * InstanceXform * VertexPosition
+    
+> Note: the construction above assumes column vectors; for row vectors, the matrix multiplication order should be reversed
