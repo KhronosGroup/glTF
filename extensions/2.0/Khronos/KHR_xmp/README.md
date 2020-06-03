@@ -80,6 +80,7 @@ An indirection level is introduced to avoid replicating the same XMP metadata in
 XMP metadatas are defined within a dictionary property in the glTF scene description file by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_xmp` object. The `KHR_xmp` object defines two properties:
 
 * `@context` : a dictionary mapping XMP [namespaces](https://github.com/adobe/xmp-docs/blob/master/Namespaces.md) to the URI where they are defined.
+Please note that the context definition conforms with [JSON-LD](https://www.w3.org/2018/jsonld-cg-reports/json-ld/#the-context).
 * `packets`: an array of metadata packets referencing the namespaces defined in the `namespaces` dictionary.
 
 The following example defines a glTF scene with a sample XMP metadata.
