@@ -26,7 +26,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds support for [XMP (Extensible Metadata Platform)](https://github.com/adobe/xmp-docs) metadata to glTF.
+This extension adds support for [XMP (Extensible Metadata Platform)](https://www.iso.org/standard/75163.html) metadata to glTF.
 Metadata is used to transmit information (such as attribution, licensing, creation date) about the glTF asset. Metadata has no normative effect on the glTF asset appearence and rendering.
 XMP is a technology for embedding metadata into documents and has been [an ISO standard since 2012](https://www.iso.org/files/live/sites/isoorg/files/news/magazine/ISO%20Focus+%20(2010-2013)/en/2012/ISO%20Focus+,%20May%202012.pdf).
 XMP metadata is embedded in a top-level glTF extension as an array of metadata packets.
