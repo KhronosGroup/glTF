@@ -93,7 +93,7 @@ GPU instancing is a common optimization technique, and may be enabled by client 
 
 One tradeoff that any engine must make when considering instancing is in regard to frustum culling. Instances are by definition drawn as a batch, and may (in the worst case) perform worse as a result than if they had been drawn individually, where only a few instances are actually within the visible area. For this reason, the best use of instancing is often an application-specific optimization — for a simple viewer, as single large batch may be appropriate. For a large game world, instances should be grouped into colocated cells (each represented as a node extended with `EXT_mesh_gpu_instancing`) and culled by node bounds. This extension aims to provide the flexibility to optimize data for these different use cases, without prescribing a single solution.
 
-As a result, instancing should be considered a last-mile optimization, similar to compression. The technique is useful to improve runtime performance, but may reduce portability across tools and lose some information (like node hierarchies) from the original asset. For archival purposes, the *data instancing* techniques enabled by the core glTF 2.0 specification should be used instead.
+The technique is useful to improve runtime performance, but may reduce portability across tools and lose some information (like node hierarchies) from the original asset. For archival purposes, the *data instancing* techniques enabled by the core glTF 2.0 specification should be used instead.
 
 ### Current Limitations
 
