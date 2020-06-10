@@ -26,62 +26,52 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds support for [XMP (Extensible Metadata Platform)](https://www.iso.org/standard/75163.html) metadata to glTF.
+This extension adds support for [XMP (Extensible Metadata Platform) (ISO 16684-1)](https://www.iso.org/standard/75163.html) metadata to glTF.
 Metadata is used to transmit information (such as attribution, licensing, creation date) about the glTF asset. Metadata has no normative effect on the glTF asset appearence and rendering.
 XMP is a technology for embedding metadata into documents and has been [an ISO standard since 2012](https://www.iso.org/files/live/sites/isoorg/files/news/magazine/ISO%20Focus+%20(2010-2013)/en/2012/ISO%20Focus+,%20May%202012.pdf).
+An instance of the XMP data model is called an XMP packet (ISO 16684-1$6.1).
 XMP metadata is embedded in a top-level glTF extension as an array of metadata packets.
 XMP metadata packets can then be referenced from glTF objects of type: `asset`, `scene`, `node`, `mesh`, `material`, `image`, `animation`.
 XMP metadata referenced by the glTF top level object `asset` applies to the entire glTF asset.
-XMP metadata is organized in namespaces. This extension enables any XMP metadata namespace to be embedded in a glTF asset.
-We refer to the [XMP namespaces documentation](https://github.com/adobe/xmp-docs/tree/master/XMPNamespaces) for a detailed description of XMP properties.
+XMP metadata is organized in namespaces (ISO 16684-1$6.2). This extension enables any XMP metadata namespace to be embedded in a glTF asset.
 
 ## XMP data types
 
-This section describes how [XMP data types](https://github.com/adobe/xmp-docs/tree/master/XMPNamespaces/XMPDataTypes) shall be encoded in a glTF JSON.
+This section describes how [XMP data types (ISO 16684-1$6.3)](https://github.com/adobe/xmp-docs/tree/master/XMPNamespaces/XMPDataTypes) shall be encoded in a glTF JSON.
 XMP supports three classes of data types: simple, structure and array. XMP structures are encoded via JSON objects. XMP arrays are encoded via JSON arrays.
 XMP simple values are generally encoded via JSON strings with the exception of `Boolean`, `Integer` and `Real` that are encoded as described below.
 
 ### XMP Core Properties
 
-The following table describes how [XMP Core Properties](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md) are encoded in the glTF manifest.
+The following table describes how [XMP Core Properties (ISO 16684-1$8.2)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md) are encoded in the glTF manifest.
 
 | XMP Property Type | JSON Type |
 | ----------------- | --------- |
-| [Boolean](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#boolean)              | Boolean   |
-| [Date](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#date)                    | String formatted as described in the XMP documentation |
-| [Integer](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#integer)              | Number    |
-| [Real](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#real)                    | Number    |
-| [Text](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#text)                    | String |
-| [Agent Name](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#agent-name)        | String formatted as described in the XMP documentation |
-| [Choice](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#choice)                | A value chosen from a vocabulary of values of a specific type. |
-| [Language Alternative](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#language-alternative) | A language alternative is a dictionary that maps a language code, specified via a lower-case [BCP-47](https://tools.ietf.org/html/bcp47) string, to text. See property `dc:title` in the example below|
-| [GUID](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#guid)                    | String formatted as described in the XMP documentation |
-| [Locale](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#locale)                | String formatted as described in the XMP documentation |
-| [MIMEType](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#mimetype)            | String formatted as described in the XMP documentation |
-| [ProperName](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#propername)        | String formatted as described in the XMP documentation |
-| [RenditionClass](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#renditionclass)    | String formatted as described in the XMP documentation |
-| [URI](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#uri)                      | String formatted as described in the XMP documentation |
-| [ResourceRef](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#resourceref)      | Object, we refer to the XMP documentation for a description of its properties |
-| [URL](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#url)                      | String formatted as described in the XMP documentation |
-| [Rational](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#rational)            | String formatted as described in the XMP documentation |
-| [FrameRate](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#framerate)          | String formatted as described in the XMP documentation |
-| [FrameCount](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#framecount)        | String formatted as described in the XMP documentation |
-| [Part](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#part)                    | String formatted as described in the XMP documentation |
-
-### Additional Properties
-
-| XMP Property Type | JSON Type |
-| ----------------- | --------- |
-| [ResourceEvent](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/ResourceEvent.md)| Object, we refer to the XMP documentation for a description of its properties |
+| [Boolean (ISO 16684-1$8.2.1.1)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#boolean)              | Boolean   |
+| [Date (ISO 16684-1$8.2.1.2)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#date)                    | String formatted as described in the XMP documentation |
+| [Integer (ISO 16684-1$8.2.1.3)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#integer)              | Number    |
+| [Real (ISO 16684-1$8.2.1.4)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#real)                    | Number    |
+| [Text (ISO 16684-1$8.2.1.5](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#text)                    | String |
+| [Agent Name (ISO 16684-1$8.2.2.1)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#agent-name)        | String formatted as described in the XMP documentation |
+| [Choice (ISO 16684-1$8.2.2.2)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#choice)                | A value chosen from a vocabulary of values of a specific type. |
+| [GUID (ISO 16684-1$8.2.2.3)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#guid)                    | String formatted as described in the XMP documentation |
+| [Language Alternative (ISO 16684-1$8.2.2.4)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#language-alternative) | A language alternative is a dictionary that maps a language code, specified via a lower-case [BCP-47](https://tools.ietf.org/html/bcp47) string, to text. See property `dc:title` in the example below|
+| [Locale (ISO 16684-1$8.2.2.5)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#locale)                | String formatted as described in the XMP documentation |
+| [MIMEType (ISO 16684-1$8.2.2.6)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#mimetype)            | String formatted as described in the XMP documentation |
+| [Rational (ISO 16684-1$8.2.2.7)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#rational)            | String formatted as described in the XMP documentation |
+| [RenditionClass (ISO 16684-1$8.2.2.8)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#renditionclass)    | String formatted as described in the XMP documentation |
+| [ResourceRef  (ISO 16684-1$8.2.2.9)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#resourceref)      | Object, we refer to the XMP documentation for a description of its properties |
+| [URI (ISO 16684-1$8.2.2.10)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#uri)                      | String formatted as described in the XMP documentation |
+| [URL (ISO 16684-1$8.2.2.11)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#url)                      | String formatted as described in the XMP documentation |
 
 ## Defining XMP Metadata
 
 An indirection level is introduced to avoid replicating the same XMP metadata in multiple glTF objects.
 XMP metadatas are defined within a dictionary property in the glTF scene description file by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_xmp` object. The `KHR_xmp` object defines two properties:
 
-* `@context` : a dictionary mapping XMP [namespaces](https://github.com/adobe/xmp-docs/blob/master/Namespaces.md) to the URI where they are defined.
+* `@context` : a dictionary mapping XMP namespaces to the URI where they are defined.
 Please note that the context definition conforms with [JSON-LD](https://www.w3.org/2018/jsonld-cg-reports/json-ld/#the-context).
-* `packets`: an array of metadata packets referencing the namespaces defined in the `namespaces` dictionary.
+* `packets`: an array of metadata packets referencing the namespaces defined in the `@context` dictionary.
 
 The following example defines a glTF scene with a sample XMP metadata.
 
@@ -235,7 +225,7 @@ glTF containing copies of both meshes:
 }
 ```
 
-The [xmpMM](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/xmpMM.md) namespaces introduces mechanisms such as Pantry-Ingredient to handle the case when a glTF file is generated via derivation or composition of one or more source documents.
+The [xmpMM (ISO 16684-1$8.6)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/xmpMM.md) namespaces introduces mechanisms such as Pantry-Ingredient to handle the case when a glTF file is generated via derivation or composition of one or more source documents.
 The following example illustrates how `KHR_xmp` metadata can be computed in the case of two glTFs, both containing `asset` metadata, that are processed together to obtain a new composited glTF document.
 
 First glTF document:
