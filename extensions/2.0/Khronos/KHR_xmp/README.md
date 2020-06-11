@@ -364,6 +364,14 @@ Scope. Requirements defined by external documents not created by Khronos may con
 contributions from non-members of Khronos not covered by the Khronos Intellectual
 Property Rights Policy.
 
+In particular, the referenced paragraphs of ISO 16684-1:2019 are normative and so are
+INCLUDED in the Scope of this Specification and may contain contributions from non-members
+of Khronos that are not covered by the Khronos Intellectual Property Rights Policy.
+The links to https://github.com/adobe/xmp-docs are purely informative and so are EXCLUDED
+from the Scope of this Specification, but are provided for convenience.
+The references to ISO 16684-1:2019 shall remain normative if there are differences to
+information provided at any informative links.
+
 This specification is protected by copyright laws and contains material proprietary
 to Khronos. Except as described by these terms, it or any components
 may not be reproduced, republished, distributed, transmitted, displayed, broadcast
