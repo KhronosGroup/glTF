@@ -1181,7 +1181,7 @@ The material definition also provides for additional maps that can also be used 
 
 Materials define the following additional maps:
 - **normal** : A tangent space normal map.
-- **occlusion** : The occlusion map indicating areas of indirect lighting.
+- **occlusion** : The occlusion map indicates areas that receive less diffuse lighting from ambient sources. Direct lighting is not affected.
 - **emissive** : The emissive map controls the color and intensity of the light being emitted by the material.
 
 The following examples shows a material that is defined using `pbrMetallicRoughness` parameters as well as additional texture maps:
