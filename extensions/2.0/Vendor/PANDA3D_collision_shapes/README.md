@@ -89,9 +89,7 @@ The first has a `CAPSULE` shape, and the second has a `MESH` shape.
                     "shapeType": "CAPSULE",
                     "primaryAxis": "Z"
                 }
-            ],
-            "mass": 1.0,
-            "static": false
+            ]
         }
     },
     "mesh": 0,
@@ -131,8 +129,6 @@ The first has a `CAPSULE` shape, and the second has a `MESH` shape.
                     "mesh": 0
                 }
             ]
-            "mass": 1.0,
-            "static": false
         }
     },
     "matrix": [
