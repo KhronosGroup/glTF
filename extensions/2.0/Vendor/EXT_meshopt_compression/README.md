@@ -41,14 +41,14 @@ As explained in the overview, this extension operates on bufferViews. This allow
 			"byteOffset": 1024,
 			"byteLength": 347,
 			"byteStride": 16,
-			"mode": 0,
+			"mode": "ATTRIBUTES",
 			"count": 148
 		}
 	}
 }
 ```
 
-In this example, the uncompressed buffer contents is stored in buffer 1 (this can be used by loaders that don't implement this extension). The compressed data is stored in a separate buffer, specifying a separate byte range (with compressed data). Note that for compressors to work, they need to know the compression `mode`, `filter` (for `mode 0`), and additionally the layout of the encoded data - `count` elements with `byteStride` bytes each. This data is specified in the extension JSON; while in some cases `byteStride` is available on the parent `bufferView` declaration, JSON schema prohibits specifying this for some types of storage such as index data.
+In this example, the uncompressed buffer contents is stored in buffer 1 (this can be used by loaders that don't implement this extension). The compressed data is stored in a separate buffer, specifying a separate byte range (with compressed data). Note that for compressors to work, they need to know the compression `mode`, `filter` (for `"ATTRIBUTES"` mode), and additionally the layout of the encoded data - `count` elements with `byteStride` bytes each. This data is specified in the extension JSON; while in some cases `byteStride` is available on the parent `bufferView` declaration, JSON schema prohibits specifying this for some types of storage such as index data.
 
 ## JSON schema updates
 
@@ -61,19 +61,23 @@ Each `bufferView` can contain an extension object with the following properties:
 | `byteLength` | `integer` | The length of the compressed data in bytes. | :white_check_mark: Yes |
 | `byteStride` | `integer` | The stride, in bytes. | :white_check_mark: Yes |
 | `count` | `integer` | The number of elements. | :white_check_mark: Yes |
-| `mode` | `integer` | The compression mode. | :white_check_mark: Yes |
-| `filter` | `integer` | The compression filter. | No, default: `0` |
+| `mode` | `string` | The compression mode. | :white_check_mark: Yes |
+| `filter` | `string` | The compression filter. | No, default: `"NONE"` |
+
+`mode` represents the compression mode using an enumerated value that must be one of `"ATTRIBUTES"`, `"TRIANGLES"`, `"INDICES"`.
+
+`filter` represents the post-decompression filter using an enumerated value that must be one of `"NONE"`, `"OCTAHEDRAL"`, `"QUATERNION"`, `"EXPONENTIAL"`.
 
 For the extension object to be valid, the following must hold:
 
 - When parent `bufferView` has `byteStride` defined, it matches `byteStride` in the extension JSON
 - Buffer view length is equal to `byteStride` times `count`
-- When `mode` is 0 (attributes), `byteStride` must be divisible by 4 and must be <= 256.
-- When `mode` is 1 (triangles), `count` must be divisible by 3
-- When `mode` is 1 (triangles) or 2 (indices), `byteStride` must be equal to 2 or 4
-- When `mode` is 1 (triangles) or 2 (indices), `filter` must be equal to `0` or omitted
-- When `filter` is 1 (octahedral), `byteStride` must be equal to 4 or 8
-- When `filter` is 2 (quaternion), `byteStride` must be equal to 8
+- When `mode` is `"ATTRIBUTES"`, `byteStride` must be divisible by 4 and must be <= 256.
+- When `mode` is `"TRIANGLES"`, `count` must be divisible by 3
+- When `mode` is `"TRIANGLES"` or `"INDICES"`, `byteStride` must be equal to 2 or 4
+- When `mode` is `"TRIANGLES"` or `"INDICES"`, `filter` must be equal to `"NONE"` or omitted
+- When `filter` is `"OCTAHEDRAL"`, `byteStride` must be equal to 4 or 8
+- When `filter` is `"QUATERNION"`, `byteStride` must be equal to 8
 
 The type of compressed data must match the bitstream specification (note that each `mode` specifies a different bitstream format).
 
@@ -186,12 +190,12 @@ The encoded stream structure is as follows:
 Each attribute block stores a sequence of deltas, with the first element in the first block using the deltas from the baseline element stored in the tail block, and each subsequent element using the deltas from the previous element. The attribute block always stores an integer number of elements, with that number computed as follows:
 
 ```
-count = min((8192 / byteStride) & ~15, 256)
+blockSize = min((8192 / byteStride) & ~15, 256)
 ```
 
 The attribute block structure consists of `byteStride` blocks (one for each byte of the element) with the following structure:
 
-- Header bits, 2 bits for each group of 16 elements (count/16 2-bit values), padded to a byte
+- Header bits, 2 bits for each group of 16 elements (`blockSize`/16 2-bit values), padded to a byte
 - Delta blocks, with variable number of bytes stored for each group of 16 elements
 
 Each group always contains 16 elements; when the number of elements that needs to be encoded isn't divisible by 16, it gets rounded up and the remaining elements are ignored after decoding.

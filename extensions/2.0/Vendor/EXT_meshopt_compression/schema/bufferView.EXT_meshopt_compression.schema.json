@@ -33,49 +33,14 @@
             "minimum": 1,
         },
         "mode": {
+            "type": "string",
             "description": "The compression mode.",
-            "anyOf": [
-                {
-                    "enum": [ 0 ],
-                    "description": "attributes",
-                    "type": "integer"
-                },
-                {
-                    "enum": [ 1 ],
-                    "description": "triangles",
-                    "type": "integer"
-                },
-                {
-                    "enum": [ 2 ],
-                    "description": "indices",
-                    "type": "integer"
-                }
-            ]
+            "enum": [ "ATTRIBUTES", "TRIANGLES", "INDICES" ]
         },
         "filter": {
+            "type": "string",
             "description": "The compression filter.",
-            "anyOf": [
-                {
-                    "enum": [ 0 ],
-                    "description": "none",
-                    "type": "integer"
-                },
-                {
-                    "enum": [ 1 ],
-                    "description": "octahedral",
-                    "type": "integer"
-                },
-                {
-                    "enum": [ 2 ],
-                    "description": "quaternion",
-                    "type": "integer"
-                },
-                {
-                    "enum": [ 3 ],
-                    "description": "exponential",
-                    "type": "integer"
-                }
-            ]
+            "enum": [ "NONE", "OCTAHEDRAL", "QUATERNION", "EXPONENTIAL" ]
         },
         "extras": { }
     },
