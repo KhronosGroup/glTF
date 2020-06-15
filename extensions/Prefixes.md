@@ -19,6 +19,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `ALCM` | Alchemisten AG | https://alchemisten.ag/<br>`viktor.spadi at alchemisten.ag` | [#1708](https://github.com/KhronosGroup/glTF/issues/1708) |
 | `ALI` | Alibaba Group | https://www.alibaba.com/ | [#1160](https://github.com/KhronosGroup/glTF/pull/1160) |
 | `AMZN` | Amazon | https://www.amazon.com/<br>`jasoncan at amazon.com` | [#1233](https://github.com/KhronosGroup/glTF/issues/1233) |
+| `ANIMECH` | Animech AB | http://animech.com/ | [#1780](https://github.com/KhronosGroup/glTF/issues/1780) |
 | `AVR` | AltspaceVR, Inc. | https://altvr.com/ | [#1009](https://github.com/KhronosGroup/glTF/issues/1009) |
 | `BLENDER` | Blender Foundation | https://www.blender.org/ | [#865](https://github.com/KhronosGroup/glTF/issues/865) |
 | `CAPTURE` | Capture Visualisation AB | https://www.capture.se/ | [#1732](https://github.com/KhronosGroup/glTF/issues/1732) |
@@ -35,9 +36,12 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `MSFT` | Microsoft Corporation | https://www.microsoft.com/ | [#1164](https://github.com/KhronosGroup/glTF/pull/1164) |
 | `NV` | NVIDIA Corporation | https://www.nvidia.com | [#1211](https://github.com/KhronosGroup/glTF/issues/1211) |
 | `OWLII` | Owlii, Inc. | https://www.owlii.com/ | [#1093](https://github.com/KhronosGroup/glTF/issues/1093) |
+| `PANDA3D` | Panda3D | https://www.panda3d.org/ | [#1828](https://github.com/KhronosGroup/glTF/pull/1828) |
 | `POLUTROPON` | Polutropon Games | https://polutropon.games/<br>`ybalrid at polutropon.games` | [#1632](https://github.com/KhronosGroup/glTF/issues/1632) |
 | `S8S` | Soft8Soft | https://www.soft8soft.com/ | [#1240](https://github.com/KhronosGroup/glTF/issues/1240) |
 | `SI` | Smithsonian Institution | https://www.si.edu/ | [#1410](https://github.com/KhronosGroup/glTF/issues/1410) |
 | `SKFB` | Sketchfab, Inc. | https://sketchfab.com/ | [#1239](https://github.com/KhronosGroup/glTF/issues/1239) |
 | `SKYLINE` | Skyline Software Systems, Inc. | https://www.skylinesoft.com/ | [#1704](https://github.com/KhronosGroup/glTF/issues/1704) |
+| `SPECTRUM` | Spectrum | https://spectrumcustomizer.com/ | [#1804](https://github.com/KhronosGroup/glTF/issues/1804) |
+| `TRYON` | TRYON Technology Ltd. | https://tryon.technology | [#1785](https://github.com/KhronosGroup/glTF/issues/1785) |
 | `WEB3D` | The Web3D Consortium, Inc. | https://www.web3d.org/ |  |
