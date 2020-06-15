@@ -36,7 +36,7 @@ For example, the following defines a material like velvet.
             "name": "velvet",
             "extensions": {
                 "KHR_materials_sheen": {
-                    "intensityFactor": 0.9
+                    "sheenColorFactor": [0.9, 0.9, 0.9]
                 }
             }
         }
@@ -50,24 +50,23 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 
 |                                  | Type                                                                            | Description                            | Required                       |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|--------------------------------|
-|**intensityFactor**               | `number`                                                                        | The sheen intensity.                   | No, default: `1.0`             |
-|**colorFactor**                   | `array`                                                                         | The sheen color in linear space        | No, default: `[1.0, 1.0, 1.0]` |
-|**colorIntensityTexture**         | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The sheen color (RGB) and intensity (Alpha) texture.<br> The sheen color is in sRGB transfer function | No               |
-|**roughnessFactor**               | `number`                                                                        | The sheen roughness.                   | No, default: `0.0`             |
+|**sheenColorFactor**                   | `array`                                                                         | The sheen color in linear space        | No, default: `[0.0, 0.0, 0.0]` |
+|**sheenTexture**         | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The sheen color (RGB) and roughness (Alpha) texture.<br> The sheen color is in sRGB transfer function | No               |
+|**sheenRoughnessFactor**               | `number`                                                                        | The sheen roughness.                   | No, default: `0.0`             |
 
 The sheen roughness is independent from the material roughness to allow materials like this one, with high material roughness and small sheen roughness:
 
 ![Cushion](./figures/cushion.png)
 
 If a texture is defined: 
-* The sheen intensity is computed with : `sheenIntensity = intensityFactor * sample(colorIntensityTexture).a`.
-* The sheen color is computed with : `sheenColor = colorFactor * sampleLinear(colorIntensityTexture).rgb`.
+* The sheen color is computed with : `sheenColor = sheenColorFactor * sampleLinear(sheenTexture).rgb`.
+* The sheen roughness is computed with : `sheenRoughness = sheenRoughnessFactor * sample(sheenTexture).a`.
 
-Otherwise, `sheenIntensity = intensityFactor` and `sheenColor = colorFactor`
+Otherwise, `sheenColor = sheenColorFactor` and `sheenRoughness = sheenRoughnessFactor`
 
 The sheen formula `f_sheen` is a new BRDF, different from the specular and clear coat BRDF:
 ```glsl
-sheenTerm = sheenColor * sheenIntensity * sheenDistribution * sheenVisibility;
+sheenTerm = sheenColor * sheenDistribution * sheenVisibility;
 ```
 
 As you notice, there is no fresnel term for the sheen layer.
@@ -120,7 +119,7 @@ The sheen layer can be combined with the base layer with an albedo-scaling techn
 ```glsl
 float max3(vec3 v) { return max(max(v.x, v.y), v.z); }
 
-albedoScaling = min(1.0 - sheenIntensity * max3(sheenColor) * E(VdotN), 1.0 - sheenIntensity * max3(sheenColor) * E(LdotN))
+albedoScaling = min(1.0 - max3(sheenColor) * E(VdotN), 1.0 - max3(sheenColor) * E(LdotN))
 
 f = f_sheen + f_base * albedoScaling
 ```
@@ -129,7 +128,7 @@ The values `E(x)` can be looked up in a table which can be found in section 6.2.
 
 If you want to trade a bit of accuracy for more performance, you can use the `VdotN` term only and thus avoid doing multiple lookups for `LdotN`. The albedo scaling term is simplified to:
 ```glsl
-albedoScaling = 1.0 - sheenIntensity * max3(sheenColor) * E(VdotN)
+albedoScaling = 1.0 - max3(sheenColor) * E(VdotN)
 ```
 
 In this simplified form, it can be used to scale the base layer for both direct and indirect lights:
