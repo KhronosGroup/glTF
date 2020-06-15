@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "MESHOPT_compression bufferView extension",
+    "title": "EXT_meshopt_compression bufferView extension",
     "type": "object",
     "description": "Compressed data for bufferView.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

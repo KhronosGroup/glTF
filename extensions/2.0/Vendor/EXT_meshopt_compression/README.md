@@ -1,4 +1,4 @@
-# MESHOPT\_compression
+# EXT\_meshopt\_compression
 
 ## Contributors
 
@@ -26,7 +26,7 @@ This is beneficial for typical Web delivery scenarios, where all files are usual
 
 ## Specifying compressed views
 
-As explained in the overview, this extension operates on bufferViews. This allows the loaders to directly decompress data into GPU memory and minimizes the JSON size impact of specifying compressed data. To specify the compressed representation, `MESHOPT_compression` extension section overrides the source buffer index as well as specifying the buffer parameters and a compression mode/filter (detailed later in the specification):
+As explained in the overview, this extension operates on bufferViews. This allows the loaders to directly decompress data into GPU memory and minimizes the JSON size impact of specifying compressed data. To specify the compressed representation, `EXT_meshopt_compression` extension section overrides the source buffer index as well as specifying the buffer parameters and a compression mode/filter (detailed later in the specification):
 
 ```json
 {
@@ -36,7 +36,7 @@ As explained in the overview, this extension operates on bufferViews. This allow
 	"byteStride": 16,
 	"target": 34962,
 	"extensions": {
-		"MESHOPT_compression": {
+		"EXT_meshopt_compression": {
 			"buffer": 0,
 			"byteOffset": 1024,
 			"byteLength": 347,
@@ -120,7 +120,7 @@ This extension allows buffers to be tagged as fallback by using the `fallback` a
 {
 	"byteLength": 1432878,
 	"extensions": {
-		"MESHOPT_compression": {
+		"EXT_meshopt_compression": {
 			"fallback": true
 		}
 	}
@@ -131,10 +131,10 @@ This is useful to avoid confusion, and can also be used by loaders that support 
 
 When a buffer is marked as a fallback buffer, the following must hold:
 
-- All references to the buffer must come from `bufferView`s that have a `MESHOPT_compression` extension specified
-- No references to the buffer may come from `MESHOPT_compression` extension JSON
+- All references to the buffer must come from `bufferView`s that have a `EXT_meshopt_compression` extension specified
+- No references to the buffer may come from `EXT_meshopt_compression` extension JSON
 
-If a fallback buffer doesn't have a URI and doesn't refer to the GLB binary chunk, it follows that `MESHOPT_compression` must be a required extension.
+If a fallback buffer doesn't have a URI and doesn't refer to the GLB binary chunk, it follows that `EXT_meshopt_compression` must be a required extension.
 
 ## Compressing geometry data
 
