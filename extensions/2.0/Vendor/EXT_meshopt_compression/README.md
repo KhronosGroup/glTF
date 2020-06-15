@@ -248,7 +248,7 @@ There are two limitations on the structure of the 16-byte lookup table:
 
 During the decoding process, decoder maintains four variables:
 
-- `next`: an integer referring to the expected next index (also known as high-watermark), starts at 0
+- `next`: an integer referring to the expected next unique index (also known as high-watermark), starts at 0
 - `last`: an integer referring to the last encoded index, starts at 0
 - `edgefifo`: a 16-entry FIFO with two vertex indices in each entry; initial contents is undefined
 - `vertexfifo`: a 16-entry FIFO with a vertex index in each entry; initial contents is undefined
