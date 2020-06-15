@@ -15,10 +15,6 @@
 Copyright (C) 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
-## Acknowledgments
-
-* TODO
-
 ## Status
 
 Experimental
