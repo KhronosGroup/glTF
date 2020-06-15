@@ -68,7 +68,7 @@ For the extension object to be valid, the following must hold:
 
 - When parent `bufferView` has `byteStride` defined, it matches `byteStride` in the extension JSON
 - Buffer view length is equal to `byteStride` times `count`
-- When `mode` is 0 (attributes), `byteStride` must be divisible by 4
+- When `mode` is 0 (attributes), `byteStride` must be divisible by 4 and must be <= 256.
 - When `mode` is 1 (triangles), `count` must be divisible by 3
 - When `mode` is 1 (triangles) or 2 (indices), `byteStride` must be equal to 2 or 4
 - When `mode` is 1 (triangles) or 2 (indices), `filter` must be equal to `0` or omitted
