@@ -5,7 +5,7 @@
     "description": "glTF extension that defines the parameters for the volume of a material.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "sigmaT": {
+        "attenuationCoefficient": {
             "type": "array",
             "items": {
                 "type": "number",
@@ -16,7 +16,7 @@
             "minItems": 3,
             "maxItems": 3
         },
-        "albedo": {
+        "volumeAlbedo": {
             "type": "array",
             "items": {
                 "type": "number",
@@ -28,7 +28,7 @@
             "minItems": 3,
             "maxItems": 3
         },
-        "anisotropy": {
+        "subsurfaceAnisotropy": {
             "type": "number",
             "minimum": -1.0,
             "maximum": 1.0,

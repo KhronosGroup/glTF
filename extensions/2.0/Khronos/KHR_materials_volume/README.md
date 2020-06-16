@@ -34,9 +34,9 @@ materials: [
     {
         "extensions": {
             "KHR_materials_volume": {
-                "sigmaT": [ 78.03, 17.83, 126.29 ],
-                "albedo": [ 0.29, 0.82, 0.99 ],
-                "anisotropy": 0.0
+                "attenuationCoefficient": [ 78.03, 17.83, 126.29 ],
+                "volumeAlbedo": [ 0.29, 0.82, 0.99 ],
+                "subsurfaceAnisotropy": 0.0
             }
         }
     }
@@ -51,9 +51,9 @@ The extension provides two parameters to describe the medium and one parameter t
 
 | | Type | Description | Required |
 |-|------|-------------|----------|
-| **sigmaT** | `number[3]` | Attenuation coefficient (also called extinction coefficient) in inverse meters. | No, default: `[0.0, 0.0, 0.0]` |
-| **albedo** | `number[3]` | Single-scattering albedo. | No, default: `[0.0, 0.0, 0.0]` |
-| **anisotropy** | `number` | Anisotropy of the phase function in range [-1, 1] | No, default: `0` |
+| **attenuationCoefficient** | `number[3]` | Attenuation coefficient (also called extinction coefficient) in inverse meters. | No, default: `[0.0, 0.0, 0.0]` |
+| **volumeAlbedo** | `number[3]` | Single-scattering albedo inside the volume. | No, default: `[0.0, 0.0, 0.0]` |
+| **subsurfaceAnisotropy** | `number` | Anisotropy of the phase function in range [-1, 1] | No, default: `0` |
 | **thicknessTexture** | `textureInfo` | A grayscale texture that defines the thickness of the volume beneath the surface. May be used by renderers that are not able to derive the thickness from the actual geometry, otherwise it should be ignored. | No |
 | **minThickness** | `float` | When using a thickness texture, a texture value of 0.0 is interpreted to be `minThickness`. When a constant thickness is used, the thickness will be `minThickness`. | No, default: `0` |
 | **maxThickness** | `float` | When using a thickness texture, a texture value of 1.0 is interpreted to be `maxThickness`. Values between 0.0 and 1.0 are linearly scaled between minThickness and `maxThickness`. | No, default: `1` |
@@ -63,27 +63,27 @@ The extension provides two parameters to describe the medium and one parameter t
 Alternatively, subsurface scattering can be parametrized with absorption coefficient **sigmaA** and scattering coefficient **sigmaS**. These are converted as follows:
 
 ```
-sigmaT = sigmaS + sigmaA
-albedo = sigmaS / (sigmaS + sigmaA)
+attenuationCoefficient = sigmaS + sigmaA
+volumeAlbedo = sigmaS / (sigmaS + sigmaA)
 ```
 
 Sometimes the mean free path length **mfp** is given:
 
 ```
-sigmaT = 1 / mfp
+attenuationCoefficient = 1 / mfp
 ```
 
 The attenuation color is a 3-channel value that goes up to infinity. By splitting it into two values, an RGB attenuation color and a distance, the color is easier to set up. In the following equation, **attenuationColor** defines the remaining, wavelength-dependent energy of a ray of white light after travelling a certain distance (**attenuationDistance**) through the medium.
 
 ```
-sigmaT = -ln(attenuationColor) / attenuationDistance
+attenuationCoefficient = -ln(attenuationColor) / attenuationDistance
 ```
 
 A more user-friendly parametrization for albedo is proposed in [Kulla and Conty (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf). As the light may interact multiple times with particles in the medium, the overall color of the material is different from the color of a single scattering event. Assuming a white light source, it is possible to predict the overall material color from the single-scattering albedo. By inverting the prediction it is possible to map from the user-defined overall **color** to single-scattering albedo:
 
 ```
 s = 4.09712 + 4.20863 * color - sqrt(9.59217 + 41.68086 * color + 17.7126 * color^2)
-albedo = (1 - s^2) / (1 - anisoptropy * s^2)
+volumeAlbedo = (1 - s^2) / (1 - anisoptropy * s^2)
 ```
 
 ### Thin Transparency and Refraction
@@ -175,12 +175,12 @@ Incident and transmitted index of refraction have to be correctly set by the ren
 
 ### Phase Function
 
-The Henyey-Greenstein phase function with parameter **anisotropy**, ranging from -1 (back-scattering) over 0 (isotropic scattering) to 1 (forward-scattering), is the following:
+The Henyey-Greenstein phase function with parameter **subsurfaceAnisotropy** a, ranging from -1 (back-scattering) over 0 (isotropic scattering) to 1 (forward-scattering), is the following:
 
 ```
-                  1                     1 - anisotropy^2
-phase_function = ---- * -------------------------------------------------------
-                 4*pi    (1 + anisotropy^2 + 2 * aniostropy * cos(VdotL))^(3/2)
+                  1                  1 - a^2
+phase_function = ---- * -------------------------------------
+                 4*pi    (1 + a^2 + 2 * a * cos(VdotL))^(3/2)
 ```
 
 ## Known Implementations
