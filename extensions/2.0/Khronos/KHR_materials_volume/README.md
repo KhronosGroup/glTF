@@ -34,6 +34,7 @@ materials: [
     {
         "extensions": {
             "KHR_materials_volume": {
+                "thinWalled": false,
                 "attenuationCoefficient": [ 78.03, 17.83, 126.29 ],
                 "volumeAlbedo": [ 0.29, 0.82, 0.99 ],
                 "subsurfaceAnisotropy": 0.0
@@ -47,10 +48,11 @@ Note that there are no textures in this extension, the medium is homogeneous.
 
 ## Properties
 
-The extension provides two parameters to describe the medium and one parameter to control the phase function.
+The extension provides a Boolean parameter to switch between thin-walled and volumetric behavior. In addition, it defines parameters to describe the medium and the phase function inside the volume.
 
 | | Type | Description | Required |
 |-|------|-------------|----------|
+| **thinWalled** | `Boolean` | Material describes either a two-sided surface enclosing an infinitely thin volume (true, the default) or a one-sided surface with a volume below it, defined by the mesh geometry (false). | No, default: `true` |
 | **attenuationCoefficient** | `number[3]` | Attenuation coefficient (also called extinction coefficient) in inverse meters. | No, default: `[0.0, 0.0, 0.0]` |
 | **volumeAlbedo** | `number[3]` | Single-scattering albedo inside the volume. | No, default: `[0.0, 0.0, 0.0]` |
 | **subsurfaceAnisotropy** | `number` | Anisotropy of the phase function in range [-1, 1] | No, default: `0` |

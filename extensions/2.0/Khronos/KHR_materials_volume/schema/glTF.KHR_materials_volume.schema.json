@@ -5,6 +5,12 @@
     "description": "glTF extension that defines the parameters for the volume of a material.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
+        "thinWalled": {
+            "type": "boolean",
+            "description": "Material is thin-walled.",
+            "gltf_detailedDescription": "The material describes either a two-sided surface enclosing an infinitely thin volume (true, the default) or a one-sided surface with a volume below it, defined by the mesh geometry (false).",
+            "default": true
+        },
         "attenuationCoefficient": {
             "type": "array",
             "items": {
