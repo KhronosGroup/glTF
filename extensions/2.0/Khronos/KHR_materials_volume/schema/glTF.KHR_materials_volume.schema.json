@@ -37,8 +37,8 @@
         },
         "thicknessTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "A grayscale texture that defines the thickness of the volume beneath the surface.",
-            "gltf_detailedDescription": "A grayscale texture that defines the thickness of the volume beneath the surface. May be used by renderers that are not able to derive the thickness from the actual geometry, otherwise it should be ignored."
+            "description": "A 1-channel texture that defines the thickness of the volume beneath the surface.",
+            "gltf_detailedDescription": "A 1-channel texture that defines the thickness of the volume beneath the surface. May be used by renderers that are not able to derive the thickness from the actual geometry, otherwise it should be ignored."
         },
         "minThickness": {
             "type": "number",
