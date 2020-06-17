@@ -8,7 +8,7 @@
         "transmissionFactor": {
             "type": "number",
             "description": "The base percentage of light transmitted through the surface.",
-            "default": 1.0,
+            "default": 0.0,
             "minimum": 0.0,
             "maximum": 1.0,
             "gltf_detailedDescription": "The base percentage of non-specularly reflected light that is transmitted through the surface. i.e. of the light that penetrates a surface (isn't specularly reflected), this is the percentage that is transmitted and not diffusely re-emitted."
