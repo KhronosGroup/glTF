@@ -88,7 +88,7 @@ If `KHR_materials_volume` is used in combination with `KHR_materials_ior`, the `
 
 ## Schema
 
-- [glTF.KHR_materials_specular.schema.json](schema/glTF.KHR_materials_specular.schema.json)
+- [glTF.KHR_materials_ior.schema.json](schema/glTF.KHR_materials_ior.schema.json)
 
 ## Appendix: Full Khronos Copyright Statement
 
