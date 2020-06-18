@@ -52,8 +52,8 @@ Only two properties are introduced with this extension and combine to describe a
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**transmissionFactor** | `number` | The base percentage of light that is transmitted through the surface.| No, Default: `0.0` |
-|**transmissionTexture** | [`textureInfo`] | A greyscale texture that defines the transmission percentage of the surface. This will be multiplied by `transmissionFactor`. | No |
+|**transmissionFactor** | `number` | The base percentage of light that is transmitted through the surface.| No, Default: `0.0 ` |
+|**transmissionTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the transmission percentage of the surface, stored in the `R` channel. This will be multiplied by `transmissionFactor`. | No |
 
 ### transmissionFactor 
 The amount of light that is transmitted by the surface rather than diffusely re-emitted. This is a percentage of all the light that penetrates a surface (i.e. isn’t specularly reflected) rather than a percentage of the total light that hits a surface. A value of 1.0 means that 100% of the light that penetrates the surface is transmitted through. This is the default.
@@ -64,7 +64,7 @@ The amount of light that is transmitted by the surface rather than diffusely re-
 </figure>
 
 ### transmissionTexture 
-A greyscale texture that defines the amount of light that is transmitted by the surface rather than diffusely re-emitted. A value of 1.0 means that 100% of the light that penetrates the surface (i.e. isn’t specularly reflected) is transmitted through. The value is linear and is multiplied by the transmissionFactor to determine the total transmission value.
+The `R` channel of this texture defines the amount of light that is transmitted by the surface rather than diffusely re-emitted. A value of 1.0 in the red channel means that 100% of the light that penetrates the surface (i.e. isn’t specularly reflected) is transmitted through. The value is linear and is multiplied by the transmissionFactor to determine the total transmission value.
 
 <figure>
   <img src="./figures/TransmissionTexture.png"/>
