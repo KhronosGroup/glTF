@@ -19,8 +19,8 @@
         },
         "sheenTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "The sheen layer texture.",
-            "gltf_detailedDescription": "The sheen layer texture. Stored in channel RGB the sheen color in sRGB transfer function and in A the linear factor."
+            "description": "The sheen color (RGB) and roughness (Alpha) texture.",
+            "gltf_detailedDescription": "The sheen color (RGB) and roughness (Alpha) texture. Stored in channel RGB the sheen color in sRGB transfer function and in A the linear factor."
         },
         "sheenRoughnessFactor": {
             "type": "number",
