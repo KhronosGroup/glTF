@@ -102,12 +102,15 @@ The metallic parameter of a glTF material effectively scales the `baseColor` of 
 From the core [glTF BRDF](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#appendix-b-brdf-implementation), we have:
 
 *f* = *f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub>
+
 *f*<sub>*diffuse*</sub> = (1 - *F*) * *diffuse*
+
 *f*<sub>*specular*</sub> = *F* * *G* * *D* / (4 * dot(*N*, *L*) * dot(*N*, *V*)), where *F* is the Surface Reflection Ratio.
 
 We will now add an additional term for the transmitted light:
 
 *f* = *f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub> + *f*<sub>*transmission*</sub>
+
 *f*<sub>*transmission*</sub> = (1 - *F*) * *T* * *D<sub>T</sub>* * *baseColor*
 
 where *T* is the transmission percentage defined by this extension's `transmission` and `transmissionTexture` properties and *D<sub>T</sub>* is the distribution function for the transmitted light. The distribution function is the same Trowbridge-Reitz model used by specular reflection except sampled along the view vector rather than the reflection. The *baseColor* factor causes the transmitted light to be tinted by the surface.
