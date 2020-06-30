@@ -56,7 +56,7 @@ The extension provides a Boolean parameter to switch between thin-walled and vol
 | **attenuationCoefficient** | `number[3]` | Attenuation coefficient (also called extinction coefficient) in inverse meters. | No, default: `[0.0, 0.0, 0.0]` |
 | **volumeAlbedo** | `number[3]` | Single-scattering albedo inside the volume. | No, default: `[0.0, 0.0, 0.0]` |
 | **subsurfaceAnisotropy** | `number` | Anisotropy of the phase function in range [-1, 1] | No, default: `0` |
-| **thicknessTexture** | `textureInfo` | A 1-channel texture that defines the thickness of the volume beneath the surface. May be used by renderers that are not able to derive the thickness from the actual geometry, otherwise it should be ignored. | No |
+| **thicknessTexture** | `textureInfo` | A texture that defines the thickness of the volume beneath the surface. The values are sampled from the G channel. May be used by renderers that are not able to derive the thickness from the actual geometry, otherwise it should be ignored. | No |
 | **minThickness** | `float` | When using a thickness texture, a texture value of 0.0 is interpreted to be `minThickness`. When a constant thickness is used, the thickness will be `minThickness`. | No, default: `0` |
 | **maxThickness** | `float` | When using a thickness texture, a texture value of 1.0 is interpreted to be `maxThickness`. Values between 0.0 and 1.0 are linearly scaled between minThickness and `maxThickness`. | No, default: `1` |
 
