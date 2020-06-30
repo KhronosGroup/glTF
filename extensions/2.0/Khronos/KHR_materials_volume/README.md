@@ -10,11 +10,11 @@ Draft
 
 ## Dependencies
 
-Written against the glTF 2.0 spec. Needs to be combined with `KHR_materials_transmission`.
+Written against the glTF 2.0 spec. Needs to be combined with `KHR_materials_transmission` or `KHR_materials_translucency`.
 
 ## Overview
 
-This extension adds material parameters to configure the volume beneath the surface of closed meshes, providing effects like refraction, absorption and subsurface scattering. The transparency of the surface is controlled by `KHR_materials_transmission`.
+This extension adds material parameters to configure the volume beneath the surface of closed meshes, providing effects like refraction, absorption and subsurface scattering. The transparency of the surface is controlled by `KHR_materials_transmission` or `KHR_materials_translucency`.
 
 Light hitting an object will first interact with the surface according the BSDF. The BSDF determines how much and in which direction the incident light is reflected and transmitted. Light that is transmitted enters the volume, where it is absorbed or scattered by particles inside the medium. After bouncing several times inside the object, the light will eventually hit the surface again. The BSDF is evaluated a second time and a part of the light may now leave the object, the rest is kept inside.
 
@@ -92,6 +92,10 @@ volumeAlbedo = (1 - s^2) / (1 - anisoptropy * s^2)
 
 Without this extension, the glTF geometry defines a two-sided object enclosing an infinitely thin volume. If the extension is enabled, the geometry represents a volume boundary. The index of refraction will bend light rays traveling through the boundary into the volume.
 
+If the extension is combined with `KHR_materials_transmission`, the thin microfacet BTDF is replaced by a microfacet BTDF that takes refraction into account.
+
+If the extension is combined with `KHR_materials_translucency`, the translucent BTDF remains unchanged.
+
 <figure style="text-align:center">
 <img src="./figures/thin-volumetric.png"/>
 <figcaption>Left: The geometry describes an infinitely thin volume (red). Right: The geometry describes the boundary of a volume.</figcaption>
@@ -99,7 +103,7 @@ Without this extension, the glTF geometry defines a two-sided object enclosing a
 
 <figure style="text-align:center">
 <img src="./figures/thin-volumetric-rough.png"/>
-<figcaption>Surface roughness affects BRDF and BTDF, thin-walled (left) and volumetric objects (right).</figcaption>
+<figcaption>Surface roughness affects microfacet BRDF and microfacet BTDF, thin-walled (left) and volumetric objects (right).</figcaption>
 </figure>
 
 ### Base Color and Absorption
@@ -124,46 +128,22 @@ Subsurface scattering inside the volume is enabled by modifying the albedo param
 <figcaption>Volume with colored albedo and greyscale attenuation. The index of refraction is set to 1 and roughness is 0, light rays pass through the boundary without being bent.</figcaption>
 </figure>
 
-### Layering
-
-The extension replaces the thin microfacet BTDF defined in `KHR_materials_transmission` by a microfacet BTDF that takes refraction into account, see [Walter B., Marschner S., Li H., Torrance K. (2007): Microfacet Models for Refraction through Rough Surfaces](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf).
-
-```
-dielectric_base_bsdf = mix(
-  diffuse_brdf(baseColor),
-  specular_btdf(roughness^2),
-  transmission)
-
-dielectric_bsdf =
-  fresnel_mix(
-    base = dielectric_base_bsdf,
-    layer = specular_brdf(roughness^2),
-    ior = 1.5)
-```
-
 ## Implementation
 
 *This section is non-normative.*
 
-Substituting `mix` and `fresnel_mix` with the concrete Fresnel equations and incorporating the multiple-scattering approximation for specular reflections leads to the following expression for the `dielectric_brdf`:
+### Surface BSDF
+
+The microfacet BTDF f<sub>transmission</sub> defined in `KHR_materials_transmission` now takes refraction into account.
 
 ```
-dielectric_brdf =
-  diffuse_brdf() * diffuse_weight(VdotN, LdotN, f0) * (1.0 - transmission) +
-  microfacet_btdf(alpha) * (1.0 - fresnel(HdotV, f0)) * transmission +
-  microfacet_brdf(alpha) * fresnel(HdotV, f0) +
-  multiscatter_microfacet_brdf(alpha) * multiscatter_fresnel(f0)
-```
-
-The microfacet BTDF uses the same terms for G and D as the microfacet BRDF.
+                  abs(LdotH) * abs(VdotH)                 ior_o^2 * G * D
+f_transmission = ------------------------- * ----------------------------------------
+                  abs(LdotN) * abs(VdotN)      (ior_i * VdotH + ior_o * LdotH)^2
 
 ```
-                   abs(LdotH) * abs(VdotH)                 ior_o^2 * G * D
-microfacet_btdf = ------------------------- * ----------------------------------------
-                   abs(LdotN) * abs(VdotN)      (ior_i * VdotH + ior_o * LdotH)^2
-```
 
-`ior_i` and `ior_o` denote the index of refraction of the incident and transmitted side of the surface, respectively. `V` is the vector pointing to the camera, `L` points to the light. In a path tracer that starts rays at the camera, `V` corresponds to the incident side of the surface, which is the side of the medium  with `ior_i`.
+`ior_i` and `ior_o` denote the index of refraction of the incident and transmitted side of the surface, respectively. `V` is the vector pointing to the camera, `L` points to the light. In a path tracer that starts rays at the camera, `V` corresponds to the incident side of the surface, which is the side of the medium  with `ior_i`. See [Walter B., Marschner S., Li H., Torrance K. (2007): Microfacet Models for Refraction through Rough Surfaces](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf) for more details.
 
 Using Snell's law, the half vector is computed as follows:
 
@@ -172,8 +152,6 @@ H = -normalize(ior_i * VdotH + ior_o * LdotN)
 ```
 
 Incident and transmitted index of refraction have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through overlapping objects is described in [Schmidt C., Budge B. (2002): Simple Nested Dielectrics in Ray Traced Images](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.125.5212&rep=rep1&type=pdf).
-
-*TODO* Nested dielectrics need a priority value per object. Maybe as part of a node that instantiates a mesh?
 
 ### Phase Function
 
@@ -191,4 +169,4 @@ phase_function = ---- * -------------------------------------
 
 ## Resources
 
-* TODO: Resources, if any.
+* [1] [Walter B., Marschner S., Li H., Torrance K. (2007): Microfacet Models for Refraction through Rough Surfaces](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf)
