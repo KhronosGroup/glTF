@@ -64,7 +64,7 @@ The following parameters are contributed by the `KHR_materials_clearcoat` extens
 
 ## Implementation Notes
 
-__This section is non-normative.__
+*This section is non-normative.*
 
 All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
