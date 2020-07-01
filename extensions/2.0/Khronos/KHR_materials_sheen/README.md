@@ -54,13 +54,19 @@ For example, the following defines a material like velvet.
 
 ### Sheen
 
-All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [appendix](/specification/2.0/README.md#appendix-b-brdf-implementation) for more details on the BRDF calculations.
+The following parameters are contributed by the `KHR_materials_sheen` extension:
 
 |                                  | Type                                                                            | Description                            | Required                       |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|--------------------------------|
 |**sheenColorFactor**                   | `array`                                                                         | The sheen color in linear space        | No, default: `[0.0, 0.0, 0.0]` |
 |**sheenTexture**         | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The sheen color (RGB) and roughness (Alpha) texture.<br> The sheen color is in sRGB transfer function | No               |
 |**sheenRoughnessFactor**               | `number`                                                                        | The sheen roughness.                   | No, default: `0.0`             |
+
+## Implementation Notes
+
+*This section is non-normative.*
+
+All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
 The sheen roughness is independent from the material roughness to allow materials like this one, with high material roughness and small sheen roughness:
 
@@ -179,14 +185,6 @@ specifically identified sections and functionality of those external documents a
 Scope. Requirements defined by external documents not created by Khronos may contain
 contributions from non-members of Khronos not covered by the Khronos Intellectual
 Property Rights Policy.
-
-In particular, the referenced paragraphs of ISO 16684-1:2019 are normative and so are
-INCLUDED in the Scope of this Specification and may contain contributions from non-members
-of Khronos that are not covered by the Khronos Intellectual Property Rights Policy.
-The links to https://github.com/adobe/xmp-docs are purely informative and so are EXCLUDED
-from the Scope of this Specification, but are provided for convenience.
-The references to ISO 16684-1:2019 shall remain normative if there are differences to
-information provided at any informative links.
 
 This specification is protected by copyright laws and contains material proprietary
 to Khronos. Except as described by these terms, it or any components
