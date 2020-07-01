@@ -62,6 +62,10 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 |**clearcoatRoughnessTexture**     | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The clearcoat layer roughness texture. | No                   |
 |**clearcoatNormalTexture**        | [`normalTextureInfo`](/specification/2.0/README.md#reference-normaltextureinfo) | The clearcoat normal map texture.      | No                   |
   
+### BRDF implementation  
+
+*This section is non-normative.*  
+
 The clearcoat formula `f_clearcoat` is computed using the specular term from the glTF 2.0 Metallic-Roughness material, defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation).  Use specular F0 equal `0.04`, base color black `0.0, 0.0, 0.0`, metallic value `0.0`, and the clearcoat roughness value defined in this extension as follows:
 
 ```
