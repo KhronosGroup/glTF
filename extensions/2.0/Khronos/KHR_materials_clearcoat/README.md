@@ -62,11 +62,17 @@ The following parameters are contributed by the `KHR_materials_clearcoat` extens
 |**clearcoatRoughnessTexture**     | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The clearcoat layer roughness texture. | No                   |
 |**clearcoatNormalTexture**        | [`normalTextureInfo`](/specification/2.0/README.md#reference-normaltextureinfo) | The clearcoat normal map texture.      | No                   |
 
+The clearcoat BRDF is layered on top of the glTF 2.0 Metallic-Roughness material, including emission and all extensions. The `clearcoatFactor` determines the view-independent intensity of the clearcoat BRDF. If `clearcoatFactor` (in the extension) is zero, the whole clearcoat layer is disabled. Implementations of the BRDF itself can vary based on device performance and resource constraints. As in the specular term of the glTF 2.0 Metallic-Roughness material, the roughness input is squared to make it perceptually linear, and the Fresnel term uses a fixed refractive index of 1.5, corresponding to a F0 of 0.04.
+
+The values for clearcoat layer intensity and clearcoat roughness can be defined using factors, textures, or both. If the `clearcoatTexture` or `clearcoatRoughnessTexture` is not given, respective texture components are assumed to have a value of 1.0. All clearcoat textures contain RGB components in linear space. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values.
+
+If `clearcoatNormalTexture` is not given, no normal mapping is applied to the clear coat layer, even if normal mapping is applied to the base material.  Otherwise, `clearcoatNormalTexture` may be a reference to the same normal map used by the base material, or any other compatible normal map.
+
 ## Implementation Notes
 
 *This section is non-normative.*
 
-All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) for more details on the BRDF calculations.
+All implementations should use the same calculations for the BRDF inputs. See [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
 The clearcoat formula `f_clearcoat` is computed using the specular term from the glTF 2.0 Metallic-Roughness material, defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation).  Use specular F0 equal `0.04`, base color black `0.0, 0.0, 0.0`, metallic value `0.0`, and the clearcoat roughness value defined in this extension as follows:
 
@@ -83,12 +89,6 @@ clearcoatFresnel = fresnel(0.04, NdotV)
 color = (f_emissive + f_diffuse + f_specular) * (1.0 - clearcoatBlendFactor * clearcoatFresnel) +
         f_clearcoat * clearcoatBlendFactor
 ```
-
-If `clearcoatFactor` (in the extension) is zero, the whole clearcoat layer is disabled.
-
-The values for clearcoat layer intensity and clearcoat roughness can be defined using factors, textures, or both. If the `clearcoatTexture` or `clearcoatRoughnessTexture` is not given, respective texture components are assumed to have a value of 1.0. All clearcoat textures contain RGB components in linear space. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values.
-
-If `clearcoatNormalTexture` is not given, no normal mapping is applied to the clear coat layer, even if normal mapping is applied to the base material.  Otherwise, `clearcoatNormalTexture` may be a reference to the same normal map used by the base material, or any other compatible normal map.
 
 ## Schema
 
