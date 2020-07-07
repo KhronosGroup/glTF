@@ -166,6 +166,7 @@ Major version updates are not expected to be compatible with previous versions.
 * `*.gltf` files use `model/gltf+json`
 * `*.bin` files use `application/octet-stream`
 * Texture files use the official `image/*` type based on the specific image format. For compatibility with modern web browsers, the following image formats are supported: `image/jpeg`, `image/png`.
+   > **Implementation Note:** Implementations should use the image type pattern matching algorithm from the [MIME Sniffing Standard](https://mimesniff.spec.whatwg.org/#matching-an-image-type-pattern) to detect PNG and JPEG images as file extensions may be unavailable in some contexts.  
 
 ## JSON Encoding
 
