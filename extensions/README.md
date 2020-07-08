@@ -2,39 +2,49 @@
 
 ## Extensions for glTF 2.0
 
-#### Khronos extensions
+#### Ratified Khronos Extensions
 
 * [KHR_draco_mesh_compression](2.0/Khronos/KHR_draco_mesh_compression/README.md)
 * [KHR_lights_punctual](2.0/Khronos/KHR_lights_punctual/README.md)
+* [KHR_materials_clearcoat](2.0/Khronos/KHR_materials_clearcoat/README.md)
 * [KHR_materials_pbrSpecularGlossiness](2.0/Khronos/KHR_materials_pbrSpecularGlossiness/README.md)
 * [KHR_materials_unlit](2.0/Khronos/KHR_materials_unlit/README.md)
+* [KHR_mesh_quantization](2.0/Khronos/KHR_mesh_quantization/README.md)
 * [KHR_texture_transform](2.0/Khronos/KHR_texture_transform/README.md)
 
-#### Vendor extensions
+#### Multi-Vendor Extensions
+
+* [EXT_lights_image_based](2.0/Vendor/EXT_lights_image_based/README.md)
+* [EXT_mesh_gpu_instancing](2.0/Vendor/EXT_mesh_gpu_instancing/README.md)
+* [EXT_texture_webp](2.0/Vendor/EXT_texture_webp/README.md)
+
+#### Vendor Extensions
 
 * [ADOBE_materials_thin_transparency](2.0/Vendor/ADOBE_materials_thin_transparency/README.md)
 * [AGI_articulations](2.0/Vendor/AGI_articulations/README.md)
 * [AGI_stk_metadata](2.0/Vendor/AGI_stk_metadata/README.md)
-* [EXT_lights_image_based](2.0/Vendor/EXT_lights_image_based/README.md)
-* [EXT_texture_webp](2.0/Vendor/EXT_texture_webp/README.md)
+* [CESIUM_primitive_outline](2.0/Vendor/CESIUM_primitive_outline/README.md)
 * [FB_geometry_metadata](2.0/Vendor/FB_geometry_metadata/README.md)
 * [MSFT_lod](2.0/Vendor/MSFT_lod/README.md)
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 
-#### In progress Khronos and multi-vendor extensions
+#### In-progress Khronos and multi-vendor extensions
 
-_Draft Khronos (KHR) extensions are not ratified yet. Multi-vendor extensions do not require ratification,
+_Draft Khronos (KHR) extensions are not ratified yet. Multi-vendor (EXT) extensions do not require ratification,
 but may still change before they are complete._
 
 | Extension | Status |
 |-----------|--------|
-| [KHR_techniques_webgl](2.0/Khronos/KHR_techniques_webgl/README.md) | Feature-complete, seeking feedback. |
-| KHR_compressed_texture_transmission | In development. |
-| [KHR_blend](https://github.com/KhronosGroup/glTF/pull/1302) | In development. |
-| HDR textures ([#1220](https://github.com/KhronosGroup/glTF/issues/1220), [#1365](https://github.com/KhronosGroup/glTF/issues/1365)) | Planned. |
-| Advanced PBR materials ([#1221](https://github.com/KhronosGroup/glTF/issues/1221), [#1079](https://github.com/KhronosGroup/glTF/issues/1079), ...) | Planned. |
+| [KHR_materials_ior](https://github.com/KhronosGroup/glTF/pull/1718) | In development. |
+| [KHR_materials_thinfilm](https://github.com/KhronosGroup/glTF/pull/1742) | In development. |
+| [KHR_materials_transmission](https://github.com/KhronosGroup/glTF/pull/1698) | In development. |
+| [KHR_materials_sheen](https://github.com/KhronosGroup/glTF/pull/1688) | Ready for implementation and feedback. |
+| KHR_materials_specular | Ready for implementation and feedback. Two proposals in [#1719](https://github.com/KhronosGroup/glTF/pull/1719) and [#1741](https://github.com/KhronosGroup/glTF/pull/1741). |
+| [KHR_materials_volume](https://github.com/KhronosGroup/glTF/pull/1726) | In development. |
+| [KHR_texture_basisu](https://github.com/KhronosGroup/glTF/pull/1751) | Ready for implementation and feedback. |
+| [KHR_xmp](https://github.com/KhronosGroup/glTF/pull/1553) | In development. |
 
 This section tracks the status of Khronos and multi-vendor extensions that are either already in development,
 or that we feel show enough consensus to be highly likely for future development. We welcome feedback for these
@@ -110,6 +120,15 @@ If lack of extension support prevents proper geometry loading, extension specifi
 
 Extensions start as a vendor extension, then can become a multi-vendor extensions if there are multiple implementations, and can become a ratified Khronos extension (the multi-vendor extension is an optional step).
 
+### Naming
+
+> **NOTE:** For historical reasons, older extensions may not follow these guidelines. Future extensions should do so.
+
+1. Names MUST begin with an UPPERCASE prefix, followed by an underscore. Prefixes are `KHR` for [Khronos extensions](#khronos-extensions-2), `EXT` for [Multi-vendor extensions](#multi-vendor-extensions), and others may be reserved for [Vendor extensions](#vendor-extensions-2).
+2. Names MUST use lowercase snake-case following the prefix, e.g. `KHR_materials_unlit`.
+3. Names SHOULD be structured as `<PREFIX>_<scope>_<feature>`, where *scope* is an existing glTF concept (e.g. mesh, texture, image) and *feature* describes the functionality being added within that scope. This structure is recommended, but not required.
+4. Scope SHOULD be singular (e.g. mesh, texture), except where this would be inconsistent with an existing Khronos extension (e.g. materials, lights).
+
 ## Promoting Extensions
 
 ### Vendor Extensions
@@ -118,8 +137,6 @@ A list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any vend
 * The name of the prefix.
 * The name of the vendor using the prefix.
 * Vendor's contact information (optionally).
-
-Vendor extension names start with the prefix followed by an underscore, e.g., `CESIUM_`.
 
 Vendor extensions are not covered by the Khronos IP framework.
 

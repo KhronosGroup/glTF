@@ -55,11 +55,11 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
     * [Buffers and Buffer Views](#buffers-and-buffer-views)
       * [GLB-stored Buffer](#glb-stored-buffer)
     * [Accessors](#accessors)
-        * [Floating-Point Data](#floating-point-data)
-        * [Accessor Element Size](#accessor-element-size)
-        * [Accessors Bounds](#accessors-bounds)
-        * [Sparse Accessors](#sparse-accessors)
-    * [Data Alignment](#data-alignment)   
+      * [Floating-Point Data](#floating-point-data)
+      * [Accessor Element Size](#accessor-element-size)
+      * [Accessors Bounds](#accessors-bounds)
+      * [Sparse Accessors](#sparse-accessors)
+      * [Data Alignment](#data-alignment)   
   * [Geometry](#geometry)
     * [Meshes](#meshes)
       * [Tangent-space definition](#tangent-space-definition)
@@ -166,6 +166,7 @@ Major version updates are not expected to be compatible with previous versions.
 * `*.gltf` files use `model/gltf+json`
 * `*.bin` files use `application/octet-stream`
 * Texture files use the official `image/*` type based on the specific image format. For compatibility with modern web browsers, the following image formats are supported: `image/jpeg`, `image/png`.
+   > **Implementation Note:** Implementations should use the image type pattern matching algorithm from the [MIME Sniffing Standard](https://mimesniff.spec.whatwg.org/#matching-an-image-type-pattern) to detect PNG and JPEG images as file extensions may be unavailable in some contexts.  
 
 ## JSON Encoding
 
@@ -473,7 +474,7 @@ Buffers and buffer views do not contain type information. They simply define the
 
 #### GLB-stored Buffer
 
-glTF asset could use GLB file container to pack all resources into one file. glTF Buffer referring to GLB-stored `BIN` chunk, must have `buffer.uri` property undefined, and it must be the first element of `buffers` array; byte length of `BIN` chunk could be up to 3 bytes bigger than JSON-defined `buffer.byteLength` to satisfy GLB padding requirements.
+glTF asset could use GLB file container to pack all resources into one file. glTF Buffer referring to GLB-stored `BIN` chunk, must have `buffer.uri` property undefined, and it must be the first element of `buffers` array; byte length of `BIN` chunk could be up to 3 bytes bigger than JSON-defined `buffer.byteLength` to satisfy GLB padding requirements. Any glTF Buffer with undefined `buffer.uri` property that is not the first element of `buffers` array does not refer to the GLB-stored BIN chunk, and the behavior of such buffers is left undefined to accommodate future extensions and specification versions.
 
 > **Implementation Note:**  Not requiring strict equality of chunk's and buffer's lengths simplifies glTF to GLB conversion a bit: implementations don't need to update `buffer.byteLength` after applying GLB padding.
 
