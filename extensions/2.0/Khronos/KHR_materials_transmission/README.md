@@ -1,16 +1,33 @@
-# KHR\_materials\_transmission
+# KHR\_materials\_transmission <!-- omit in toc -->
 
-## Contributors
+## Contributors <!-- omit in toc -->
 
 * Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
 
-## Status
+## Status <!-- omit in toc -->
 
 Work in Progress
 
-## Dependencies
+## Dependencies <!-- omit in toc -->
 
 Written against the glTF 2.0 spec.
+
+## Table of Contents <!-- omit in toc -->
+- [Overview](#overview)
+- [Limitations of Alpha as Coverage](#limitations-of-alpha-as-coverage)
+- [Extending Materials](#extending-materials)
+- [Properties](#properties)
+  - [transmissionFactor](#transmissionfactor)
+  - [transmissionTexture](#transmissiontexture)
+- [Tinting](#tinting)
+- [Refraction](#refraction)
+- [Blend Mode](#blend-mode)
+- [Transparent Metals](#transparent-metals)
+- [Transmission BTDF](#transmission-btdf)
+- [Implementation Notes](#implementation-notes)
+- [Schema](#schema)
+- [Reference](#reference)
+- [Appendix: Full Khronos Copyright Statement](#appendix-full-khronos-copyright-statement)
 
 ## Overview
 
@@ -71,22 +88,22 @@ The `R` channel of this texture defines the amount of light that is transmitted 
 <figcaption><em>Controlling transmission amount with transmissionTexture.</em></figcaption>
 </figure>
 
-## Tint
-You may notice that the transparent materials show above are tinted. i.e. they aren't actually transmitting 100% of the non-reflected light. This is because `KHR_materials_transmission` specifies that the `baseColor` of the material be used to model the absorption of light by the surface. This allows materials like stained glass to be easily represented with this extension.
+## Tinting
+You may notice that the transparent materials shown above are tinted. i.e. they aren't actually transmitting 100% of the non-reflected light. This is because `KHR_materials_transmission` specifies that the `baseColor` of the material be used to model the absorption of light by the surface. This allows materials like stained glass to be easily represented with this extension.
 Absorption is usually defined as an amount of light at each frequency that is absorbed over a given distance through a medium (usually described by Beer’s Law). However, since this extension deals exclusively with infinitely thin surfaces, we can treat absorption as a constant. In fact, rather than absorbed light, we can talk about its inverse: transmitted light. The `baseColor` of the material serves this purpose as it already defines how the light that penetrates the surface is colored by the material. In this model, the transmitted light will be modulated by this color as it passes through.
 <figure>
   <img src="./figures/ConstantTransmission.png"/>
 <figcaption><em>The baseColor of the material (yellow, in this example) is used to tint the light being transmitted.</em></figcaption>
 </figure>
 
-## Refractive Blurring
+## Refraction
 Since the surface is considered to be infinitely thin, we will ignore macroscopic refraction caused by the orientation of the surface. However, microfacets on either side of the thin surface will cause light to be refracted in random directions, effectively blurring the transmitted light. That is, the roughness of the surface directly causes the transmitted light to become blurred. This microfacet lobe is exactly the same as the specular lobe except sampled along the line of sight through the surface.
 <figure>
   <img src="./figures/Roughness.png"/>
 <figcaption><em>Refraction due to surface roughness.</em></figcaption>
 </figure>
 
-## Blending
+## Blend Mode
 The glTF `blendMode` is used for alpha-as-coverage, NOT for physically-based transparency (i.e. this extension). If alpha-as-coverage is not being used, the blend mode of the material should be set to "OPAQUE" even though it is transparent. Again, it's helpful to think of alpha-as-coverage as whether the physical surface is there or not. `transmission` applies to the surface material that exists.
 Note that alpha-as-coverage can still be used along with transmission as shown in the example below.
 <figure>
@@ -98,7 +115,7 @@ Note that alpha-as-coverage can still be used along with transmission as shown i
 Metals effectively absorb all refracted light (light that isn't reflected), preventing transmission.
 The metallic parameter of a glTF material effectively scales the `baseColor` of the material toward black while, at the same time scaling the F0 (reflectivity) value towards 1.0. This makes the material opaque for metallic values of 1.0 because transmitted light is attenuated out by absorption. Therefore, for a material with `metallicFactor=1.0`, the value of `transmissionFactor` doesn't matter.
 
-## Implementing Transmission ##
+## Transmission BTDF ##
 From the core [glTF BRDF](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#appendix-b-brdf-implementation), we have:
 
 *f* = *f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub>
@@ -127,3 +144,69 @@ Rendering transparency in a real-time rasterizer in an efficient manner is a dif
 <img src="./figures/Multi-layer Transparency.png"/>
 <figcaption><em>On the left, only opaque objects are visible through the sphere. Each subsequent image shows an additional layer of transparency visible through the front-most transparent surface. The minimum expectation for a compliant renderer is to render only opaque objects (i.e. like the first image). Additional transparent layers may be rendered but are not required.</em></figcaption>
 </figure>
+
+## Schema
+
+- [glTF.KHR_materials_transmission.schema.json](schema/glTF.KHR_materials_transmission.schema.json)
+
+## Reference
+
+[Autodesk Standard Surface - Specular Transmission](https://autodesk.github.io/standard-surface/#closures/speculartransmission)  
+[Blender Transparent BSDF](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/transparent.html#transparent-bsdf)  
+[Enterprise PBR Shading Model - Transparency](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2020x.md.html)  
+[Filament Material models - Transmission](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/transmission)  
+[Unreal Engine 4 Material - Refraction](https://docs.unrealengine.com/en-US/Engine/Rendering/Materials/MaterialInputs/index.html#refraction)
+[Adobe Standard Material - Interior Properties](https://helpx.adobe.com/dimension/using/standard-materials.html#InteriorProperties)
+
+## Appendix: Full Khronos Copyright Statement
+
+Copyright 2018-2020 The Khronos Group Inc.
+
+Some parts of this Specification are purely informative and do not define requirements
+necessary for compliance and so are outside the Scope of this Specification. These
+parts of the Specification are marked as being non-normative, or identified as
+**Implementation Notes**.
+
+Where this Specification includes normative references to external documents, only the
+specifically identified sections and functionality of those external documents are in
+Scope. Requirements defined by external documents not created by Khronos may contain
+contributions from non-members of Khronos not covered by the Khronos Intellectual
+Property Rights Policy.
+
+This specification is protected by copyright laws and contains material proprietary
+to Khronos. Except as described by these terms, it or any components
+may not be reproduced, republished, distributed, transmitted, displayed, broadcast
+or otherwise exploited in any manner without the express prior written permission
+of Khronos.
+
+This specification has been created under the Khronos Intellectual Property Rights
+Policy, which is Attachment A of the Khronos Group Membership Agreement available at
+www.khronos.org/files/member_agreement.pdf. Khronos grants a conditional
+copyright license to use and reproduce the unmodified specification for any purpose,
+without fee or royalty, EXCEPT no licenses to any patent, trademark or other
+intellectual property rights are granted under these terms. Parties desiring to
+implement the specification and make use of Khronos trademarks in relation to that
+implementation, and receive reciprocal patent license protection under the Khronos
+IP Policy must become Adopters and confirm the implementation as conformant under
+the process defined by Khronos for this specification;
+see https://www.khronos.org/adopters.
+
+Khronos makes no, and expressly disclaims any, representations or warranties,
+express or implied, regarding this specification, including, without limitation:
+merchantability, fitness for a particular purpose, non-infringement of any
+intellectual property, correctness, accuracy, completeness, timeliness, and
+reliability. Under no circumstances will Khronos, or any of its Promoters,
+Contributors or Members, or their respective partners, officers, directors,
+employees, agents or representatives be liable for any damages, whether direct,
+indirect, special or consequential damages for lost revenues, lost profits, or
+otherwise, arising from or in connection with these materials.
+
+Vulkan is a registered trademark and Khronos, OpenXR, SPIR, SPIR-V, SYCL, WebGL,
+WebCL, OpenVX, OpenVG, EGL, COLLADA, glTF, NNEF, OpenKODE, OpenKCAM, StreamInput,
+OpenWF, OpenSL ES, OpenMAX, OpenMAX AL, OpenMAX IL, OpenMAX DL, OpenML and DevU are
+trademarks of The Khronos Group Inc. ASTC is a trademark of ARM Holdings PLC,
+OpenCL is a trademark of Apple Inc. and OpenGL and OpenML are registered trademarks
+and the OpenGL ES and OpenGL SC logos are trademarks of Silicon Graphics
+International used under license by Khronos. All other product names, trademarks,
+and/or company names are used solely for identification and belong to their
+respective owners.
