@@ -118,7 +118,7 @@ While the extension JSON specifies a separate buffer to source compressed data f
 
 When stored in a GLB file, the dummy buffer should have index 1 or above, to avoid conflicts with GLB binary buffer.
 
-This extension allows buffers to be tagged as fallback by using the `fallback` attribute as follows:
+This extension allows buffers to be optionally tagged as fallback by using the `fallback` attribute as follows:
 
 ```json
 {
@@ -131,7 +131,7 @@ This extension allows buffers to be tagged as fallback by using the `fallback` a
 }
 ```
 
-This is useful to avoid confusion, and can also be used by loaders that support the extension to skip loading of these buffers.
+This is useful to avoid confusion, and may also be used by loaders that support the extension to skip loading of these buffers.
 
 When a buffer is marked as a fallback buffer, the following must hold:
 
@@ -141,6 +141,8 @@ When a buffer is marked as a fallback buffer, the following must hold:
 If a fallback buffer doesn't have a URI and doesn't refer to the GLB binary chunk, it follows that `EXT_meshopt_compression` must be a required extension.
 
 ## Compressing geometry data
+
+> This section is non-normative.
 
 The codecs used by this extension can represent geometry exactly, replicating both vertex and index data without changes in contents or order. However, to get optimal compression, it's necessary to pre-process the data.
 
@@ -160,6 +162,8 @@ When storing vertex data, mode 0 (attributes) should be used; for index data, mo
 Using filter 1 (octahedral) for normal/tangent data may improve compression ratio further.
 
 ## Compressing animation data
+
+> This section is non-normative.
 
 To minimize the size of animation data, it is important to reduce the number of stored keyframes and reduce the size of each keyframe.
 
