@@ -64,7 +64,7 @@ The specular factor scales the microfacet BRDF in the dielectric BRDF. It also a
 
 ![](figures/specular.png)
 
-The specular color changes the F0 color of the Fresnel that is multiplied to the microfacet BRDF. The color at grazing angles (F90) is not changed. As with specular factor, the diffuse BRDF will take the remaining energy, but in this case it is directional-dependent. The following images show specular color increasing from [0,0,0] to [1,1,1] (top) and from [0,0,0] to [1,0,0] (bottom).
+The specular color changes the F0 color of the Fresnel that is multiplied to the microfacet BRDF. The color at grazing angles (F90) is not changed. As with specular factor, the diffuse BRDF will be weighted with the directional-dependent remaining energy according to the Fresnel. The weight is an RGB color, involving the complementary to specular color. To make it easy to use and ensure energy conservation, the RGB color is converted to scalar via `max(r, g, b)`. The following images show specular color increasing from [0,0,0] to [1,1,1] (top) and from [0,0,0] to [1,0,0] (bottom).
 
 ![](figures/specular-color.png)
 ![](figures/specular-color-2.png)
@@ -84,6 +84,14 @@ F0  = lerp(dielectricSpecularF0, baseColor.rgb, metallic)
 F90 = lerp(dielectricSpecularF90, 1, metallic)
 
 F = F0 + (F90 - F0) * (1 - VdotH)^5
+```
+
+As the Fresnel term `F` is now an RGB value, the diffuse component is also affected:
+
+```
+c_diff = lerp(baseColor.rgb * (1 - max(F0.r, F0.g, F0.b)), black, metallic)
+diffuse = c_diff / PI
+f_diffuse = (1 - max(F.r, F.g, F.b)) * diffuse
 ```
 
 ## Interaction with other extensions
