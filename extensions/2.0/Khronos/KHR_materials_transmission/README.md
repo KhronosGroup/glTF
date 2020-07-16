@@ -13,6 +13,7 @@ Work in Progress
 Written against the glTF 2.0 spec.
 
 ## Table of Contents <!-- omit in toc -->
+- [Exclusions](#exclusions)
 - [Overview](#overview)
 - [Limitations of Alpha as Coverage](#limitations-of-alpha-as-coverage)
 - [Extending Materials](#extending-materials)
@@ -29,6 +30,11 @@ Written against the glTF 2.0 spec.
 - [Reference](#reference)
 - [Appendix: Full Khronos Copyright Statement](#appendix-full-khronos-copyright-statement)
 
+## Exclusions
+
+* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+* This extension must not be used on a material that also uses `KHR_materials_unlit`. 
+
 ## Overview
 
 Many optically transparent materials are impossible to represent in a physically plausible manner with the core glTF 2.0 PBR material. This is because the core specification only includes the concept of "alpha as coverage" (exposed via the alpha channel of `baseColorFactor` and `baseColorTexture`). Many common materials like glass and plastic require significantly different rendering techniques.
@@ -40,7 +46,7 @@ The most important of these features is surely reflection. Even a completely tra
 
 <figure>
 <img src="./figures/OpacityComparison.png"/>
-<figcaption><em>White sphere with alpha coverage of 25% (left) vs the same sphere with 100% optical transparency (right). Note that alpha coverage of 25% is shown because 0% would be completely invisible. Also note that alpha-as-coverage reflects light in proportion to its opacity. i.e. the more transparent it is, the weaker the reflections will appear.</em></figcaption>
+<figcaption><em>White sphere with alpha coverage of 50% (left) vs the same sphere with 100% optical transparency (right). Note that alpha coverage of 50% is shown because 0% would be completely invisible. Also note that alpha-as-coverage reflects light in proportion to its opacity. i.e. the more transparent it is, the weaker the reflections will appear.</em></figcaption>
 </figure>
 
 The `KHR_materials_transmission` extension provides a way to define glTF 2.0 materials that are transparent to light in a physically plausible way. That is, it enables the creation of transparent materials that absorb, reflect and transmit light depending on the incident angle and the wavelength of light. Common uses cases for thin-surface transmissive materials include plastics and glass.
@@ -77,7 +83,7 @@ The amount of light that is transmitted by the surface rather than diffusely re-
 
 <figure>
   <img src="./figures/ConstantTransmission.png"/>
-<figcaption><em>baseColor or yellow with transmissionFactor = 1.0.</em></figcaption>
+<figcaption><em>Yellow baseColor with transmissionFactor = 1.0.</em></figcaption>
 </figure>
 
 ### transmissionTexture 
