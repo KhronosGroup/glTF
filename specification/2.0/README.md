@@ -3899,7 +3899,7 @@ material = mix(dielectric_brdf, metal_brdf, metallic)
 
 The metal BRDF is based on a microfacet model which describes the orientation of microfacets on the surface as a statistical distribution. The distribution is controlled by a parameter called `roughness`, varying between 0 (smooth surface) and 1 (rough surface). As the blending between the two extremes does not behave linearly, like most microfacet distributions, the material's `roughness` parameter is squared before using it as the distribution's roughness.
 
-Most metallic surfaces reflect back most of the illumination, only a small portion of the light is absorbed by the material. This effect is described by the Fresnel term with the wavelength-dependent refractive index and extinction coefficient. To make parameterization simple, the metallic-roughness material combines the two quantities into a single, user-defined color value `baseColor` that defines the reflection color at normal incidence, also referred to as `f0`.
+Metallic surfaces reflect back most of the illumination, only a small portion of the light is absorbed by the material. This effect is described by the Fresnel term with the wavelength-dependent refractive index and extinction coefficient. To make parameterization simple, the metallic-roughness material combines the two quantities into a single, user-defined color value `baseColor` that defines the reflection color at normal incidence, also referred to as `f0`.
 
 ```
 metal_brdf =
@@ -3929,7 +3929,7 @@ The glTF spec is designed to allow applications to choose different lighting imp
 
 In a physically-accurate light simulation, the BRDFs have to follow some basic principles: the BRDF has to be positive, reciprocal and energy conserving. This ensures that the visual output of the simulation is independent of the underlying rendering algorithm, as long as it is unbiased. The specification will provide a mathematical model that allows implementations to achieve an exact result in an unbiased renderer. Note that unbiased renderers may still decide to deviate from the specification to achieve better visual quality.
 
-The unbiased light simulation with physically realistic BRDFs will be the ground-truth for approximations in real-time renderers that are often biased, but still give visually pleasing results. Usually, these renderers take shortcuts to solve the rendering equation, like the split-sum approximation for image based lighting, or simplify the math to save instructions and reduce register pressure. However, there are many ways to achieve good approximations, depending on the constraints of the platform (mobile or web applications, desktop applications on low or high-end hardware, VR), and the constraints change over time.
+The unbiased light simulation with physically realistic BRDFs will be the ground-truth for approximations in real-time renderers that are often biased, but still give visually pleasing results. Usually, these renderers take shortcuts to solve the rendering equation, like the split-sum approximation for image based lighting, or simplify the math to save instructions and reduce register pressure. However, there are many ways to achieve good approximations, depending on the platform (mobile or web applications, desktop applications on low or high-end hardware, VR) different constraints have to be taken into account.
 
 ## Implementation
 
@@ -3937,7 +3937,7 @@ The unbiased light simulation with physically realistic BRDFs will be the ground
 
 ### Metal BRDF
 
-The metallic reflection is modeled as a GGX microfacet BRDF with Schlick Fresnel term to configure the complex index of refraction via the `baseColor` of the material. The microfacet model lacks multiple scattering, resulting in high energy-loss with increased roughness. Accurate models to simulate multiple scattering are costly to compute. [Kulla and Conty (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf) introduces an easy approximation of the effect that does not violate the mathematical properties of a BRDF and, thus, can be used in unbiased ray tracing and real-time rasterizatiom.
+The metallic reflection is modeled as a GGX microfacet BRDF with Schlick Fresnel term to configure the complex index of refraction via the `baseColor` of the material. The microfacet model lacks multiple scattering, resulting in high energy-loss with increased roughness. Accurate models to simulate multiple scattering are costly to compute. [Kulla and Conty (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf) introduces an easy approximation of the effect that does not violate the mathematical properties of a BRDF and, thus, can be used in unbiased ray tracing and real-time rasterization.
 
 ```
 metal_brdf =
@@ -4027,8 +4027,6 @@ diffuse_weight = -------------------------------------------------------
 ```
 
 There are several options to simplify this method for real-time rendering, like omitting `E(LdotN)`, replacing the `diffuse_weight` by `1 - fresnel`, or replacing it by 1. Note that this will violate certain physical properties of BRDFs. An implementation sample is available at https://github.com/KhronosGroup/glTF-Sample-Viewer/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters. 
-
-*TODO: clean-up and typeset equations, images for BRDFs, white furnace test showing difference between albedo scaling and real-time weightings*
 
 # Appendix C: Spline Interpolation
 
