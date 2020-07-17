@@ -74,9 +74,11 @@ https://en.wikipedia.org/wiki/Cube_mapping
 
 ## Irradiance Coefficients
 
-This extension uses spherical harmonic coefficients to define irradiance used for diffuse lighting. Coefficients are calculated for the first 3 SH bands (l=2) and take the form of a 9x3 array.
-[Realtime Image Based Lighting using Spherical Harmonics](https://metashapes.com/blog/realtime-image-based-lighting-using-spherical-harmonics/)
-[An Efficient Representation for Irradiance Environment Maps](http://graphics.stanford.edu/papers/envmap/)
+This extension uses spherical harmonic coefficients to define irradiance used for diffuse lighting. Coefficients are calculated for the first 3 SH bands (l=2) and take the form of a 9x3 array.  
+
+[Using irradiance coefficients in your shader](https://google.github.io/filament/Filament.md.html#lighting/imagebasedlights/distantlightprobes)  
+[Realtime Image Based Lighting using Spherical Harmonics](https://metashapes.com/blog/realtime-image-based-lighting-using-spherical-harmonics/)  
+[An Efficient Representation for Irradiance Environment Maps](http://graphics.stanford.edu/papers/envmap/)  
 
 ## HDR Images
 
