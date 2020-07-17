@@ -3935,98 +3935,63 @@ The unbiased light simulation with physically realistic BRDFs will be the ground
 
 *This section is non-normative.*
 
-### Metal BRDF
+An implementation sample is available at https://github.com/KhronosGroup/glTF-Sample-Viewer/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters.
 
-The metallic reflection is modeled as a GGX microfacet BRDF with Schlick Fresnel term to configure the complex index of refraction via the `baseColor` of the material. The microfacet model lacks multiple scattering, resulting in high energy-loss with increased roughness. Accurate models to simulate multiple scattering are costly to compute. [Kulla and Conty (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf) introduces an easy approximation of the effect that does not violate the mathematical properties of a BRDF and, thus, can be used in unbiased ray tracing and real-time rasterization.
+As previously defined
 
-```
-metal_brdf =
-  microfacet_brdf(alpha) * fresnel(HdotV, baseColor) +
-  multiscatter_microfacet_brdf(alpha) * multiscatter_fresnel(baseColor)
-```
+`const dielectricSpecular = rgb(0.04, 0.04, 0.04)`
+<br>
+`const black = rgb(0, 0, 0)`
 
-The microfacet BRDF uses the GGX distribution and Smith height-correlated masking-shadowing term ([Heitz 2014: Understanding the Masking-Shadowing Function in Microfacet-Based BRDFs](http://jcgt.org/published/0003/02/03/paper.pdf)).
+*c<sub>diff</sub>* = `lerp(baseColor.rgb * (1 - dielectricSpecular.r), black, metallic)`
+<br>
+*F<sub>0</sub>* = `lerp(dieletricSpecular, baseColor.rgb, metallic)`
+<br>
+*&alpha;* = `roughness ^ 2`
 
-```
-     1            alpha^2
-D = -- --------------------------------
-    pi   (HdotN^2 * (alpha^2-1) + 1)^2
+Additionally,  
+*V* is the normalized vector from the shading location to the eye  
+*L* is the normalized vector from the shading location to the light  
+*N* is the surface normal in the same space as the above values  
+*H* is the half vector, where *H* = normalize(*L*+*V*)  
 
-                                           2 * NdotV * NdotL
-G = ----------------------------------------------------------------------------------------------
-    NdotL * sqrt(NdotV^2 * (1-alpha^2) + alpha^2) + NdotV * sqrt(NdotL^2 * (1-alpha^2) + alpha^2))
+The core lighting equation the sample uses is the Schlick BRDF model from [An Inexpensive BRDF Model for Physically-based Rendering](https://www.cs.virginia.edu/~jdl/bib/appearance/analytic%20models/schlick94b.pdf)
 
+![](figures/lightingSum.PNG)
 
-                         G * D
-microfacet_brdf = --------------------
-                    4 * NdotL * NdotV
-```
+Below are common implementations for the various terms found in the lighting equation.
 
-The Schlick Fresnel is computed via the reflection half vector `H = normalize(V + L)`.
+### Surface Reflection Ratio (F)
 
-```
-fresnel = baseColor + (1 - baseColor) * (1 - HdotV)^5
-```
+**Fresnel Schlick**
 
-The multi-scattering approximation uses the directional albedo `E_m` and average albedo `E_mavg` of the single-scattering model. These values are typically precomputed and fetched from a lookup table during rendering. The average Fresnel `F_mavg` for Schlick can be computed analytically.
+Simplified implementation of Fresnel from [An Inexpensive BRDF Model for Physically based Rendering](https://www.cs.virginia.edu/~jdl/bib/appearance/analytic%20models/schlick94b.pdf) by Christophe Schlick.
 
-```
-                                (1 - E_m(VdotN, alpha)) * (1 - E_m(LdotN, alpha))
-multiscatter_microfacet_brdf =  --------------------------------------------------
-                                            pi * (1 - E_mavg(alpha))
+![](figures/lightingF.PNG)
 
-           1     20
-F_mavg = ---- + ---- * baseColor
-          21     21
+### Geometric Occlusion (G)
 
-                             F_mavg^2 E_mavg(alpha)
-multiscatter_fresnel = ---------------------------------
-                       1 - F_mavg * (1 - E_mavg(alpha))
-```
+**Smith Joint GGX**
 
-Although it is possible to compute the multi-scattering approximation in real-time (see [McAuley (2019): A Journey Through Implementing Multiscattering BRDFs and Area Lights](http://i3dsymposium.github.io/2019/keynotes/I3D2019_keynote_StephenMcAuley.pdf)), implementations may omit it to improve performance.
+[Understanding the Masking-Shadowing Function in Microfacet-Based BRDFs](http://jcgt.org/published/0003/02/03/paper.pdf) by Eric Heitz.
 
-### Dielectric BRDF
+![](figures/lightingG.PNG)
 
-Dielectric materials like plastics are modeled as a GGX microfacet BRDF coupled with a diffuse BRDF via the Schlick Fresnel term in the `fresnel_mix` operation. Microfacet BRDF and multi-scattering approximation are the same as in the metal BRDF. The diffuse reflection is modeled with a Lambertian BRDF.
+### Microfacet Distribution (D)
 
-```
-                 1
-diffuse_brdf = ----
-                pi
-```
+**Trowbridge-Reitz**
 
-The Fresnel term in the mixing operation and its multi-scattering equivalent are now computed with the index of refraction, which is fixed at 1.5.
+Implementation of microfacet distrubtion from [Average Irregularity Representation of a Roughened Surface for Ray Reflection](https://www.osapublishing.org/josa/abstract.cfm?uri=josa-65-5-531) by T. S. Trowbridge, and K. P. Reitz
 
-```
-f0 = ((1-ior)/(1+ior))^2 = 0.04
-fresnel = f0 + (1 - f0) * (1 - HdotV)^5
+![](figures/lightingD.PNG)
 
-           1     20
-F_mavg = ---- + ---- * f0
-          21     21
-```
+### Diffuse Term (diffuse)
 
-An energy-conserving and energy-preserving coupling can be achieved via the same albedo-scaling technique as in the metal BRDF, as shown in [Kulla and Conty (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf). 
+**Lambert**
 
-The `fresnel_mix` operation weights the (multi-scatter) microfacet BRDF with the Fresnel term, and the diffuse BRDF  with `diffuse_weight`.
+Implementation of diffuse from [Lambert's Photometria](https://archive.org/details/lambertsphotome00lambgoog) by Johann Heinrich Lambert
 
-```
-dielectric_brdf =
-  diffuse_brdf() * diffuse_weight(VdotN, LdotN, f0) * baseColor +
-  microfacet_brdf(alpha) * fresnel(HdotV, f0) +
-  multiscatter_microfacet_brdf(alpha) * multiscatter_fresnel(f0)
-```
-
-`diffuse_weight` is derived from the albedo of the BRDFs involved in the mixing. The directional albedo `E` and average albedo `Eavg` of the microfacet BRDF (including multiple scattering) are measured and used to scale the diffuse BRDF such that it scatters the remaining energy of the microfacet BRDF equally in all directions.
-
-```
-                  (1 - E(VdotN, alpha, f0)) * (1 - E(LdotN, alpha, f0))
-diffuse_weight = -------------------------------------------------------
-                                  1 - Eavg(alpha, f0)
-```
-
-There are several options to simplify this method for real-time rendering, like omitting `E(LdotN)`, replacing the `diffuse_weight` by `1 - fresnel`, or replacing it by 1. Note that this will violate certain physical properties of BRDFs. An implementation sample is available at https://github.com/KhronosGroup/glTF-Sample-Viewer/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters. 
+![](figures/lightingDiff.PNG)
 
 # Appendix C: Spline Interpolation
 
