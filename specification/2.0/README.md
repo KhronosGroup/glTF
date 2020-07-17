@@ -3897,7 +3897,7 @@ The metallic-roughness material model is a linear blend of two BRDFs, a metallic
 material = mix(dielectric_brdf, metal_brdf, metallic)
 ```
 
-The metal BRDF is based on a microfacet model which describes the orientation of microfacets on the surface as a statistical distribution. The distribution is controlled by a parameter called `roughness`, varying between 0 (smooth surface) and 1 (rough surface). For most microfacet distributions the blending between the two extremes does not behave linear, making it necessary to square the material's `roughness` parameter before using it as the distribution's roughness.
+The metal BRDF is based on a microfacet model which describes the orientation of microfacets on the surface as a statistical distribution. The distribution is controlled by a parameter called `roughness`, varying between 0 (smooth surface) and 1 (rough surface). As the blending between the two extremes does not behave linearly, like most microfacet distributions, the material's `roughness` parameter is squared before using it as the distribution's roughness.
 
 Most metallic surfaces reflect back most of the illumination, only a small portion of the light is absorbed by the material. This effect is described by the Fresnel term with the wavelength-dependent refractive index and extinction coefficient. To make parameterization simple, the metallic-roughness material combines the two quantities into a single, user-defined color value `baseColor` that defines the reflection color at normal incidence, also referred to as `f0`.
 
@@ -3925,11 +3925,11 @@ The BRDFs and mixing operators used in the metallic-roughness material are summa
 
 ![](figures/pbr.png)
 
-The glTF spec is designed to allow applications to choose different lighting implementations based on their requirements. Some implementations may focus on an accurate simulation of light transport, others may choose to deliver real-time performance. Therefore, any implementation that adheres to the rules for mixing BRDFs is compliant to the glTF spec.
+The glTF spec is designed to allow applications to choose different lighting implementations based on their requirements. Some implementations may focus on an accurate simulation of light transport while others may choose to deliver real-time performance. Therefore, any implementation that adheres to the rules for mixing BRDFs is conformant to the glTF spec.
 
 In a physically-accurate light simulation, the BRDFs have to follow some basic principles: the BRDF has to be positive, reciprocal and energy conserving. This ensures that the visual output of the simulation is independent of the underlying rendering algorithm, as long as it is unbiased. The specification will provide a mathematical model that allows implementations to achieve an exact result in an unbiased renderer. Note that unbiased renderers may still decide to deviate from the specification to achieve better visual quality.
 
-The unbiased light simulation with physically realistic BRDFs will be the ground-truth for approximations in real-time renderers that are often biased, but still give visually pleasing results. Usually, these renderers take short-cuts to solve the rendering equation, like the split-sum approximation for image based lighting, or simplify the math to save instructions and reduce register pressure. However, there are many ways to achieve good approximations, depending on the constraints of the platform (mobile or web applications, desktop applications on low or high-end hardware, VR), and the constraints change over time.
+The unbiased light simulation with physically realistic BRDFs will be the ground-truth for approximations in real-time renderers that are often biased, but still give visually pleasing results. Usually, these renderers take shortcuts to solve the rendering equation, like the split-sum approximation for image based lighting, or simplify the math to save instructions and reduce register pressure. However, there are many ways to achieve good approximations, depending on the constraints of the platform (mobile or web applications, desktop applications on low or high-end hardware, VR), and the constraints change over time.
 
 ## Implementation
 
@@ -4026,7 +4026,7 @@ diffuse_weight = -------------------------------------------------------
                                   1 - Eavg(alpha, f0)
 ```
 
-There are several options to simplify this method for real-time rendering, like omitting `E(LdotN)`, replacing the `diffuse_weight` by `1 - fresnel`, or replacing it by 1. Note that this will violate certain physical properties of BRDFs.
+There are several options to simplify this method for real-time rendering, like omitting `E(LdotN)`, replacing the `diffuse_weight` by `1 - fresnel`, or replacing it by 1. Note that this will violate certain physical properties of BRDFs. An implementation sample is available at https://github.com/KhronosGroup/glTF-Sample-Viewer/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters. 
 
 *TODO: clean-up and typeset equations, images for BRDFs, white furnace test showing difference between albedo scaling and real-time weightings*
 
