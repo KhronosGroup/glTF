@@ -8,22 +8,34 @@
     }
   ],
   "properties": {
-    "tags": {
+    "variants": {
       "type": "array",
-      "description": "An array of variational tags.",
+      "description": "An array of variational identifiers.",
       "items": {
-        "$ref": "glTFid.schema.json"
+        "type": "string"
       },
       "minItems": 1,
-      "gltf_detailedDescription": "An array of variational tags, all of which map to the associated material."
+      "gltf_detailedDescription": "An array of variational identifiers, all of which map to the associated material."
     },
     "material": {
-      "allOf": [{ "$ref": "glTFid.schema.json" }],
+      "allOf": [
+        {
+          "$ref": "glTFid.schema.json"
+        }
+      ],
       "description": "The mapped material.",
       "gltf_detailedDescription": "A reference to the material associated with the given array of tags."
+    },
+    "name": {
+      "type": "string",
+      "description": "The user-defined name of this variant material mapping.",
+      "gltf_detailedDescription": "The optional user-defined name of this variant material mapping.  This is not necessarily unique."
     },
     "extensions": {},
     "extras": {}
   },
-  "required": ["tags", "material"]
+  "required": [
+    "variants",
+    "material"
+  ]
 }

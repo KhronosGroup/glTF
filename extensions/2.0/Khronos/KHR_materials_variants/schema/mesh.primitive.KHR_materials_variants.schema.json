@@ -15,7 +15,7 @@
         "$ref": "mapping.schema.json"
       },
       "minItems": 0,
-      "gltf_detailedDescription": "An array of mapping entries, each associating a set of tags with a material."
+      "gltf_detailedDescription": "An array of mapping entries, each associating a set of variants with a material."
     },
     "extensions": {},
     "extras": {}
