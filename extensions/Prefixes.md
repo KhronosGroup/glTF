@@ -39,6 +39,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `PANDA3D` | Panda3D | https://www.panda3d.org/ | [#1828](https://github.com/KhronosGroup/glTF/pull/1828) |
 | `POLUTROPON` | Polutropon Games | https://polutropon.games/<br>`ybalrid at polutropon.games` | [#1632](https://github.com/KhronosGroup/glTF/issues/1632) |
 | `S8S` | Soft8Soft | https://www.soft8soft.com/ | [#1240](https://github.com/KhronosGroup/glTF/issues/1240) |
+| `SEIN` | Hiloteam | https://seinjs.com/ | [#1840](https://github.com/KhronosGroup/glTF/issues/1840) |
 | `SI` | Smithsonian Institution | https://www.si.edu/ | [#1410](https://github.com/KhronosGroup/glTF/issues/1410) |
 | `SKFB` | Sketchfab, Inc. | https://sketchfab.com/ | [#1239](https://github.com/KhronosGroup/glTF/issues/1239) |
 | `SKYLINE` | Skyline Software Systems, Inc. | https://www.skylinesoft.com/ | [#1704](https://github.com/KhronosGroup/glTF/issues/1704) |
