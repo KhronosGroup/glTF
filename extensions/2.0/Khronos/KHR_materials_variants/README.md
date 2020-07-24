@@ -122,8 +122,8 @@ _This section is non-normative._
 
 For reference, we provide several simple examples of variants, both represented as distinct constituent GLB files without the extension and as multi-variant GLB files leveraging this extension.  We also include the respective net size of the individual variant GLB files and the size of the single combined multi-variant GLB, for comparison.
 
-| Model                                          | Screenshot                              | Description               | Net Size (MB) | Combined Size (MB) |
-|------------------------------------------------|-----------------------------------------|---------------------------|---------------|--------------------|
-| [Shoes](examples/shoes)              | ![](examples/shoes/photo.png)           | A simple variant commerce example with a single mesh primitive | 15 | 5.1 |
-| [Chair](examples/chair)             | ![](examples/chair/chairs.jpg)          | A more complex commerce example, involving multi-dimensional variants - flattened into four distinct variants | 7.0 | 1.8 |
-| [Helmet](examples/helmet) | ![](examples/helmet/helmets.jpg)        | Gaming example, with wet and dry variants of a helmet          | 8.8 | 5.0 |
+| Model                     | Screenshot                         | Description                                                                                                   | Net Size (MB) | Combined Size (MB) |
+|---------------------------|------------------------------------|---------------------------------------------------------------------------------------------------------------|---------------|--------------------|
+| [Shoes](examples/shoes)   | ![](examples/shoes/photo.png)      | A simple variant commerce example with a single mesh primitive                                                | 15            | 7.5                |
+| [Chair](examples/chair)   | ![](examples/chair/chairs.jpg)     | A more complex commerce example, involving multi-dimensional variants - flattened into four distinct variants | 7.0           | 1.7                |
+| [Helmet](examples/helmet) | ![](examples/helmet/helmets.jpg)   | Gaming example, with wet and dry variants of a helmet                                                         | 8.8           | 5.0                |
