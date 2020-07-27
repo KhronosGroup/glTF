@@ -6,7 +6,7 @@
 * Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
 * Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
 * Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
-* Emmett Lalish, Google
+* Emmett Lalish, Google [@elalish](https://github.com/elalish)
 * Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
 * Alex Wood, AGI [@abwood](https://twitter.com/abwood)
 * Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
