@@ -3,6 +3,14 @@
 ## Contributors <!-- omit in toc -->
 
 * Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
+* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
+* Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
+* Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
+* Emmett Lalish, Google
+* Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
+* Alex Wood, AGI [@abwood](https://twitter.com/abwood)
+* Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
+* Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
 
 ## Status <!-- omit in toc -->
 
