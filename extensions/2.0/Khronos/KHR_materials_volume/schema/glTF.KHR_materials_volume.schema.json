@@ -5,62 +5,45 @@
     "description": "glTF extension that defines the parameters for the volume of a material.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "thinWalled": {
-            "type": "boolean",
-            "description": "Material is thin-walled.",
-            "gltf_detailedDescription": "The material describes either a two-sided surface enclosing an infinitely thin volume (true, the default) or a one-sided surface with a volume below it, defined by the mesh geometry (false).",
-            "default": true
+        "thicknessFactor": {
+            "type": "number",
+            "minimum": 0.0,
+            "default": 0.0,
+            "description": "Thickness of the volume in meters.",
+            "gltf_detailedDescription": "The thickness of the volume beneath the surface in meters. The value is relative to the local coordinate system of the mesh's node. A value greater than 0 turns the mesh into a volume with a homogeneous medium, enabling refraction, absorption and subsurface scattering. The actual value may be ignored by renderers that are able to derive the thickness from the mesh (ray tracer)."
         },
-        "attenuationCoefficient": {
+        "thicknessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "Texture that defines the thickness of the volume, stored in the G channel.",
+            "gltf_detailedDescription": "A texture that defines the thickness of the volume, stored in the G channel. Will be multiplied by thicknessFactor."
+        },
+        "attenuationDistance": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "Average distance in meters that light travels in the medium before interacting with a particle. The value is given in world space. When undefined, the value is assumed to be infinite."
+        },
+        "attenuationColor": {
             "type": "array",
             "items": {
                 "type": "number",
                 "minimum": 0.0
             },
-            "description": "The attenuation coefficient in inverse scene units.",
+            "description": "Color that white light turns into due to absorption when reaching the attenuation distance.",
             "default": [ 1.0, 1.0, 1.0, 1.0 ],
             "minItems": 3,
             "maxItems": 3
         },
-        "volumeAlbedo": {
+        "subsurfaceColor": {
             "type": "array",
             "items": {
                 "type": "number",
                 "minimum": 0.0,
                 "maximum": 1.0
             },
-            "description": "Single-scattering albedo.",
+            "description": "Color perceived at the surface due to subsurface scattering.",
             "default": [ 1.0, 1.0, 1.0, 1.0 ],
             "minItems": 3,
             "maxItems": 3
-        },
-        "subsurfaceAnisotropy": {
-            "type": "number",
-            "minimum": -1.0,
-            "maximum": 1.0,
-            "description": "Anisotropy of the phase function.",
-            "default": 0.0
-        },
-        "thicknessTexture": {
-            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "A texture that defines the thickness of the volume beneath the surface in the G channel.",
-            "gltf_detailedDescription": "A texture that defines the thickness of the volume beneath the surface. The values are sampled from the G channel. May be used by renderers that are not able to derive the thickness from the actual geometry, otherwise it should be ignored."
-        },
-        "minThickness": {
-            "type": "number",
-            "minimum": 0.0,
-            "maximum": 1.0,
-            "default": 0.0,
-            "description": "Minimum thickness of the volume, corresponds to a texture value of 0.0.",
-            "gltf_detailedDescription": "When using a thickness texture, a texture value of 0.0 is interpreted to be minThickness. When a constant thickness is used, the thickness will be minThickness."
-        },
-        "maxThickness": {
-            "type": "number",
-            "minimum": 0.0,
-            "maximum": 1.0,
-            "default": 1.0,
-            "description": "Maximum thickness of the volume, corresponds to a texture value of 1.0.",
-            "gltf_detailedDescription": "When using a thickness texture, a texture value of 1.0 is interpreted to be maxThickness. Values between 0.0 and 1.0 are linearly scaled between minThickness and maxThickness."
         }
     }
 }
