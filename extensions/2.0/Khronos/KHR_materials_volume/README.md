@@ -119,7 +119,7 @@ In the next step, we map from our subsurface color parameter ρ<sub>ms</sub> to 
 
 ρ<sub>ss</sub> = 1 - (4.09712 + 4.20863 ρ<sub>ms</sub> - sqrt(9.59217 + 41.6808 ρ<sub>ms</sub> + 17.7126 ρ<sub>ms</sub><sup>2</sup>))<sup>2</sup>
 
-The single-scattering albedo is the color at each particle in the medium. Light that is scattered by a particle will be tinted with this color. Note that scattering will happen many times in the medium until the light leaves the volume, so the overall color ρ<sub>ms</sub> will differ significantly from the albedo of the particles ρ<sub>ss</sub>. Via the mapping users can control the albedo of surface, i.e., the color that an object appears to have in the final rendering. The mapping was introduced in [1].
+The single-scattering albedo is the color at each particle in the medium. Light that is scattered by a particle will be tinted with this color. Note that scattering will happen many times in the medium until the light leaves the volume, so the overall color ρ<sub>ms</sub> will differ significantly from the albedo of the particles ρ<sub>ss</sub>. Via the mapping users can control the albedo of surface, i.e., the color that an object appears to have in the final rendering. The mapping was introduced by [Kulla and Conty (2017)](#KullaConty2017).
 
 Now that we have computed σ<sub>t</sub> and ρ<sub>ss</sub>, we can finally derive σ<sub>a</sub> and σ<sub>s</sub> as follows:
 
@@ -183,7 +183,7 @@ f_transmission = ------------------------- * -----------------------------------
 
 ```
 
-`ior_i` and `ior_o` denote the index of refraction of the incident and transmitted side of the surface, respectively. `V` is the vector pointing to the camera, `L` points to the light. In a path tracer that starts rays at the camera, `V` corresponds to the incident side of the surface, which is the side of the medium  with `ior_i`. See [2] for more details.
+`ior_i` and `ior_o` denote the index of refraction of the incident and transmitted side of the surface, respectively. `V` is the vector pointing to the camera, `L` points to the light. In a path tracer that starts rays at the camera, `V` corresponds to the incident side of the surface, which is the side of the medium  with `ior_i`. See [Walter et al. (2007)](#Walter2007) for more details.
 
 Using Snell's law, the half vector is computed as follows:
 
@@ -191,17 +191,17 @@ Using Snell's law, the half vector is computed as follows:
 H = -normalize(ior_i * VdotH + ior_o * LdotN)
 ```
 
-Incident and transmitted index of refraction have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through overlapping objects is described by in [3].
+Incident and transmitted index of refraction have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through overlapping objects is described by in [Schmidt and Budge (2002)](#SchmidtBudge2002).
 
 ## Schema
 
 - [glTF.KHR_materials_volume.schema.json](schema/glTF.KHR_materials_volume.schema.json)
 
-## Reference
+## References
 
-* [1]: [Kulla C., Conty A. (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf)
-* [2]: [Walter B., Marschner S., Li H., Torrance K. (2007): Microfacet Models for Refraction through Rough Surfaces](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf)
-* [3]: [Schmidt C., Budge C. (2002): Simple Nested Dielectrics in Ray Traced Images](https://www.researchgate.net/profile/Brian_Budge/publication/247523037_Simple_Nested_Dielectrics_in_Ray_Traced_Images/links/00b7d52e001e1b88a3000000/Simple-Nested-Dielectrics-in-Ray-Traced-Images.pdf)
+* [Kulla C., Conty A. (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf)<a name="KullaConty2017"></a>
+* [Walter B., Marschner S., Li H., Torrance K. (2007): Microfacet Models for Refraction through Rough Surfaces](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf)<a name="Walter2007"></a>
+* [Schmidt C., Budge B. (2002): Simple Nested Dielectrics in Ray Traced Images](https://www.researchgate.net/profile/Brian_Budge/publication/247523037_Simple_Nested_Dielectrics_in_Ray_Traced_Images/links/00b7d52e001e1b88a3000000/Simple-Nested-Dielectrics-in-Ray-Traced-Images.pdf)<a name="SchmidtBudge2002"></a>
 
 ## Appendix: Full Khronos Copyright Statement
 
