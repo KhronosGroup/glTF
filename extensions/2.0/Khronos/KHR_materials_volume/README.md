@@ -39,15 +39,15 @@ By default, a glTF 2.0 material describes the scattering properties of a surface
 <figure style="text-align:center">
 <img src="./figures/thin-thick-rendering.png"><br/>
 <img src="./figures/thin-thick.png">
-<figcaption>Renderings of various objects (top) and corresponding top-down slice through the scene (bottom). The solid line represents the mesh. The gray area represents the volume. Thin-walled materials can be applied to open (left) and closed meshes (middle). The dashed line indicates the imaginary bounds of the infinitely thin volume. The volumetric material can only be applied to closed meshes (right), resulting in volumetric effects like refraction.</figcaption>
+<figcaption><em>Renderings of various objects (top) and corresponding top-down slice through the scene (bottom). The solid line represents the mesh. The gray area represents the volume. Thin-walled materials can be applied to open (left) and closed meshes (middle). The dashed line indicates the imaginary bounds of the infinitely thin volume. The volumetric material can only be applied to closed meshes (right), resulting in volumetric effects like refraction.</em></figcaption>
 </figure>
 
 The volume extension has to be combined with `KHR_materials_transmission` or `KHR_materials_translucency`. Light that falls onto the volume boundary may enter the volume, depending on the transmission or translucency of the surface's BSDF. Inside the volume, light might be absorbed or scattered by particles in the medium, and eventually hit some surface from inside the volume. It can be a different surface and will most probably be a different point in space compared to the entrance point. At this exit point, if the material properties allow, light may leave the volume.
 
 <figure style="text-align:center">
 <img src="./figures/volume.svg"/>
-<figcaption>Interaction of light rays inside the volume and at the boundaries. The volume is homogeneous and has an index of refraction of 1.5.</figcaption>
-</figure>
+<figcaption><em>Interaction of light rays inside the volume and at the boundaries. The volume is homogeneous and has an index of refraction of 1.5.</figcaption>
+</em></figure>
 
 When light interacts with the surface, it is reflected or refracted at microfacets, taking the roughness of the material into account. The index of refraction is taken from `KHR_materials_ior`.
 
@@ -94,7 +94,7 @@ Light rays falling through the volume boundary are refracted according to the in
 
 <figure style="text-align:center">
 <img src="./figures/ior.png"/>
-<figcaption>Transmissive sphere with varying index of refraction. From left to right: 1.1, 1.5, 1.9.</figcaption>
+<figcaption><em>Transmissive sphere with varying index of refraction. From left to right: 1.1, 1.5, 1.9.</em></figcaption>
 </figure>
 
 ## Absorption and Subsurface Scattering
@@ -129,7 +129,7 @@ Now that we have computed σ<sub>t</sub> and ρ<sub>ss</sub>, we can finally der
 
 <figure style="text-align:center">
 <img src="./figures/diffuse-sss.png"/>
-<figcaption>A simple, diffuse-only material (left) and a material that makes use of subsurface scattering (right). The base color of the diffuse material is set to the same color as the subsurface color of the subsurface scattering material. Due to the albedo mapping the final color of the object is very similar.</figcaption>
+<figcaption><em>A simple, diffuse-only material (left) and a material that makes use of subsurface scattering (right). The base color of the diffuse material is set to the same color as the subsurface color of the subsurface scattering material. Due to the albedo mapping the final color of the object is very similar.</em></figcaption>
 </figure>
 
 ## Phase Function
@@ -142,7 +142,7 @@ Base color and absorption both have an effect on the final color of a volumetric
 
 <figure style="text-align:center">
 <img src="./figures/base-color-absorption.png"/>
-<figcaption>Base color changes the amount of light passing through the volume boundary (left). The overall color of the object is the same everywhere, as if the object is covered with a colored, transparent foil. Absorption changes the amount of light traveling through the volume (right). The overall color depends on the distance the light traveled through it; at small distances (tail of the dragon) less light is absorbed and the color is brighter than at large distances.</figcaption>
+<figcaption><em>Base color changes the amount of light passing through the volume boundary (left). The overall color of the object is the same everywhere, as if the object is covered with a colored, transparent foil. Absorption changes the amount of light traveling through the volume (right). The overall color depends on the distance the light traveled through it; at small distances (tail of the dragon) less light is absorbed and the color is brighter than at large distances.</em></figcaption>
 </figure>
 
 ## Transmission and Translucency
@@ -153,21 +153,21 @@ If the extension is combined with `KHR_materials_transmission`, the refraction o
 
 <figure style="text-align:center">
 <img src="./figures/transmissive-roughness.png"/>
-<figcaption>Transmissive sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</figcaption>
+<figcaption><em>Transmissive sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption>
 </figure>
 
 If the extension is combined with `KHR_materials_translucency`, the translucent BTDF remains unchanged.
 
 <figure style="text-align:center">
 <img src="./figures/translucent-roughness.png"/>
-<figcaption>Translucent sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</figcaption>
+<figcaption><em>Translucent sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption>
 </figure>
 
 For best results, we recommend using translucency in case the medium exhibits strong subsurface scattering (small scattering distance, high subsurface color). Real-time implementations may use translucency as a cue to switch to approximations for subsurface scattering that work well for materials like skin or candle wax. For these dense materials, the visual difference between transmission and translucency is small, as the path a light travels is dominated by volume scattering. The scattering interaction at the volume boundary has only a small effect on the final result. In some cases it might even be possible to fake subsurface scattering with translucency and a thin-walled material.
 
 <figure style="text-align:center">
 <img src="./figures/transmission-translucency.png"/>
-<figcaption>Comparison of combining subsurface scattering with either transmission or translucency. Left: Rough transmission and subsurface scattering. Middle: Translucency and subsurface scattering. Right: Translucency without subsurface scattering using a thin-walled material. Colors are adjusted manually so that they look similar in the three configurations. This adjustment is needed in order to account for differences in distances and to minimize the impact of energy loss from the rough microfacet BTDF.</figcaption>
+<figcaption><em>Comparison of combining subsurface scattering with either transmission or translucency. Left: Rough transmission and subsurface scattering. Middle: Translucency and subsurface scattering. Right: Translucency without subsurface scattering using a thin-walled material. Colors are adjusted manually so that they look similar in the three configurations. This adjustment is needed in order to account for differences in distances and to minimize the impact of energy loss from the rough microfacet BTDF.</em></figcaption>
 </figure>
 
 ## Implementation
