@@ -55,6 +55,8 @@ Application-specific logic defines, for a given instance of a glTF asset, a sing
 
 In other words, **this is not a literal mapping** in its glTF form – exporters, take note.
 
+Implicitly, if the application has no active variant, it should also fall back on vanilla glTF behavior.  For most use cases, we recommend that one of the variants always corresponds to the default vanilla glTF material for each primitive, so that there exists some one-to-one with viewers which do not support the extension, but this is not a strict requirement. The decision of whether to include a separate option to switch to the no active variant case is left as a decision to compliant applications based on their respective use cases.
+
 ## The variant mapping as glTF JSON
 
 A snippet of a mesh implementing shoe holes which uses this extension might look like:
