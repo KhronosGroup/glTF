@@ -88,7 +88,7 @@ The thickness of a volume enclosed by the mesh is typically quite difficult to c
 
 ## Refraction
 
-Light rays falling through the volume boundary are refracted according to the index of refraction given in `KHR_materials_ior`. The index of refraction determines the refraction angle.
+Light rays falling through the volume boundary are refracted according to the index of refraction given in `KHR_materials_ior`. The index of refraction determines the refraction angle. If `KHR_materials_ior` is not available, the index of refraction is 1.5.
 
 <figure style="text-align:center">
 <img src="./figures/ior.png"/>
