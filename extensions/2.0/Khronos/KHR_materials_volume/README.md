@@ -38,7 +38,7 @@ By default, a glTF 2.0 material describes the scattering properties of a surface
 
 <figure style="text-align:center">
 <img src="./figures/thin-thick-rendering.png"><br/>
-<img src="./figures/thin-thick.png">
+<img src="./figures/thin-thick.svg">
 <figcaption><em>Renderings of various objects (top) and corresponding top-down slice through the scene (bottom). The solid line represents the mesh. The gray area represents the volume. Thin-walled materials can be applied to open (left) and closed meshes (middle). The dashed line indicates the imaginary bounds of the infinitely thin volume. The volumetric material can only be applied to closed meshes (right), resulting in volumetric effects like refraction.</em></figcaption>
 </figure>
 
