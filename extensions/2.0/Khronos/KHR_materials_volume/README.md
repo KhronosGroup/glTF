@@ -186,7 +186,7 @@ f_transmission = ------------------------- * -----------------------------------
 Using Snell's law, the half vector is computed as follows:
 
 ```
-H = -normalize(ior_i * VdotH + ior_o * LdotN)
+H = -normalize(ior_i * V + ior_o * L)
 ```
 
 Incident and transmitted index of refraction have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through overlapping objects is described by in [Schmidt and Budge (2002)](#SchmidtBudge2002).
