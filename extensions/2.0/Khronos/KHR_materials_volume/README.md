@@ -53,7 +53,7 @@ When light interacts with the surface, it is reflected or refracted at microface
 
 ## Extending Materials
 
-The volumetric properties are defined by adding the `KHR_materials_volume` extension to any glTF material.
+The volumetric properties are defined by adding the `KHR_materials_volume` extension to any glTF material. A non-zero thickness switches from thin-walled to volumetric behavior. This requires a manifold/closed mesh. The properties of the medium are not texturable, it is assumed to be homogeneous.
 
 ```json
 materials: [
@@ -70,11 +70,9 @@ materials: [
 ]
 ```
 
-Note that there are no textures in this extension, the medium is homogeneous.
-
 ## Properties
 
-The extension provides a Boolean parameter to switch between thin-walled and volumetric behavior. In addition, it defines parameters to describe the medium and the phase function inside the volume.
+The extension defines the following parameters to describe the volume.
 
 | | Type | Description | Required |
 |-|------|-------------|----------|
