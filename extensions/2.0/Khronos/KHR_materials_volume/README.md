@@ -123,7 +123,7 @@ Now that we have computed σ<sub>t</sub> and ρ<sub>ss</sub>, we can finally der
 
 σ<sub>a</sub> = σ<sub>t</sub> (1 - ρ<sub>ss</sub>)
 
-σ<sub>s</sub> = σ<sub>t</sub> ρ<sub>ss</sub> = σ<sub>a</sub> - σ<sub>s</sub>
+σ<sub>s</sub> = σ<sub>t</sub> ρ<sub>ss</sub> = σ<sub>t</sub> - σ<sub>a</sub>
 
 <figure style="text-align:center">
 <img src="./figures/diffuse-sss.png"/>
