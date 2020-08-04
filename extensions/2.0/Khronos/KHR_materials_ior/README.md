@@ -20,6 +20,11 @@ Experimental
 
 Written against the glTF 2.0 spec.
 
+## Exclusions
+
+* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+* This extension must not be used on a material that also uses `KHR_materials_unlit`.
+
 ## Overview
 
 The dielectric BRDF of the metallic-roughness material in glTF uses a fixed value of 1.5 for the index of refraction. This is a good fit for many plastics and glass, but not for other materials like water or asphalt, sapphire or diamond. This extensions allows users to set the index of refraction to a certain value.
