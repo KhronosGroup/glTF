@@ -62,6 +62,16 @@ diffuse = (c_diff/pi) * lerp(diffuseBRDF, diffuseBTDF, translucency)
 
 The `diffuseBRDF` is 1 if view and light direction point into the same hemisphere wrt. the normal direction, and 0 otherwise. The `diffuseBTDF` is 1 if view and light direction point into different hemispheres wrt. the normal direction, and 0 otherwise.
 
+```
+diffuseBRDF = dot(N, V) * dot(N, L) >= 0 ? 1 : 0
+diffuseBTDF = dot(N, V) * dot(N, L) <  0 ? 1 : 0
+```
+
+<figure style="text-align:center">
+<img src="./figures/bsdf.svg"/>
+<figcaption><em>Left: Diffuse BRDF. Right: Diffuse BTDF (translucency).</em></figcaption>
+</figure>
+
 ## Interaction with other extensions
 
 If `KHR_materials_transmission` is used in combination with `KHR_materials_translucency`, the transmission effect overrides the tanslucency effect. The calculation given in `KHR_materials_translucency` still holds, but uses the modified diffuse term defined above: *f*<sub>*diffuse*</sub> = (1 - *F*) * (1 - *T*) * *diffuse*.

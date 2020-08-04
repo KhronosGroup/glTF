@@ -1,0 +1,933 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="bsdf.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   id="svg1550"
+   version="1.1"
+   viewBox="0 0 174.625 52.916669"
+   height="200"
+   width="660">
+  <defs
+     id="defs1544">
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker9471"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path9469"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker9461"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path9459"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker9451"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path9449"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker9441"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path9439"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker9431"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path9429"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker9421"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path9419"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker9411"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path9409"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker9401"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path9399"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker9391"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path9389"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker9381"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path9379"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(0.4,0,0,0.4,4,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker9371"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path9369"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(0.4,0,0,0.4,4,0)" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker8989"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mstart">
+      <path
+         transform="matrix(0.4,0,0,0.4,4,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path8987" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker8823"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lstart">
+      <path
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path8821" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="Arrow1Mstart"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mstart">
+      <path
+         transform="matrix(0.4,0,0,0.4,4,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path2577" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker8427"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path8425" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker8417"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path8415" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker8407"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path8405" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker8397"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path8395" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker8387"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path8385" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker8377"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path8375" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker8367"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path8365" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker8357"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path8355" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4357"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4355"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4347"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4345"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker4337"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend">
+      <path
+         transform="scale(-0.6)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         id="path4335" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4327"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4325"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker4317"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend">
+      <path
+         transform="scale(-0.6)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         id="path4315" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4307"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4305"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker4297"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend">
+      <path
+         transform="scale(-0.6)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         id="path4295" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4287"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4285"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker4277"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend">
+      <path
+         transform="scale(-0.6)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         id="path4275" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker4257"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lstart">
+      <path
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path4255" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3123"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path3121"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(0.8,0,0,0.8,10,0)" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker10546"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend">
+      <path
+         transform="scale(-0.6)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         id="path10544" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1201"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path1199"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     inkscape:window-maximized="1"
+     inkscape:window-y="-8"
+     inkscape:window-x="1912"
+     inkscape:window-height="1027"
+     inkscape:window-width="1920"
+     inkscape:object-paths="true"
+     inkscape:snap-text-baseline="true"
+     inkscape:guide-bbox="true"
+     showguides="true"
+     units="px"
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="px"
+     inkscape:cy="101.80896"
+     inkscape:cx="271.66734"
+     inkscape:zoom="1.979899"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base" />
+  <metadata
+     id="metadata1547">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1">
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path10342"
+       d="M 43.675662,32.501853 56.10686,21.787953"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker10546)"
+       inkscape:transform-center-x="-6.1932418"
+       inkscape:transform-center-y="-5.486719"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-ydpi="99.167648" />
+    <path
+       sodipodi:arc-type="slice"
+       style="fill:#97d1f4;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       id="path6646"
+       sodipodi:type="arc"
+       sodipodi:cx="43.464901"
+       sodipodi:cy="32.504749"
+       sodipodi:rx="16.914434"
+       sodipodi:ry="16.914434"
+       sodipodi:start="3.1415927"
+       sodipodi:end="0"
+       d="M 26.550467,32.504749 A 16.914434,16.914434 0 0 1 43.464901,15.590315 16.914434,16.914434 0 0 1 60.379335,32.504749 H 43.464901 Z"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-ydpi="99.167648" />
+    <path
+       inkscape:transform-center-y="-7.189624"
+       inkscape:transform-center-x="-4.0950818"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker8377)"
+       d="m 43.635042,32.515974 8.316119,-14.14795"
+       id="path10344"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-ydpi="99.167648" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path6640"
+       d="M 23.594665,10.027732 43.721423,32.502033"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.500063;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-start:url(#marker8989);paint-order:normal"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-ydpi="99.167648" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path8788"
+       d="m 43.476764,32.502033 -15.34711,-5.81278"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker8427)"
+       inkscape:transform-center-x="7.6969577"
+       inkscape:transform-center-y="-3.035979"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-ydpi="99.167648" />
+    <path
+       inkscape:transform-center-y="-5.486719"
+       inkscape:transform-center-x="6.1932417"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker8417)"
+       d="M 43.522524,32.501853 31.091325,21.787953"
+       id="path9052"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-ydpi="99.167648" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path9334"
+       d="M 43.563145,32.515974 35.247027,18.368024"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker8407)"
+       inkscape:transform-center-x="4.0950817"
+       inkscape:transform-center-y="-7.189624"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-ydpi="99.167648" />
+    <path
+       inkscape:transform-center-y="-8.159694"
+       inkscape:transform-center-x="1.3710617"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker8397)"
+       d="M 43.599093,32.544705 40.659115,16.399153"
+       id="path9598"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-ydpi="99.167648" />
+    <path
+       inkscape:transform-center-y="-3.035979"
+       inkscape:transform-center-x="-7.6969578"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker8357)"
+       d="m 43.721423,32.502033 15.34711,-5.81278"
+       id="path10340"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-ydpi="99.167648" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path10346"
+       d="M 43.599093,32.544705 46.539069,16.399153"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker8387)"
+       inkscape:transform-center-x="-1.3710618"
+       inkscape:transform-center-y="-8.159694"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-ydpi="99.167648" />
+    <rect
+       inkscape:export-ydpi="99.309998"
+       inkscape:export-xdpi="99.309998"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       rx="0"
+       ry="0"
+       y="32.504749"
+       x="5.8089471"
+       height="1.58751"
+       width="76.729156"
+       id="rect12084"
+       style="fill:#97999b;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:1, 0.499999;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path6638"
+       d="M 5.808947,32.504753 H 82.538106"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.499999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-ydpi="99.167648" />
+    <path
+       inkscape:export-ydpi="99.167648"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path2931"
+       d="M 43.675662,32.501853 56.10686,21.787953"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker8367)"
+       inkscape:transform-center-x="-6.1932421"
+       inkscape:transform-center-y="-5.486719" />
+    <text
+       id="text3047"
+       y="14.252726"
+       x="17.597237"
+       style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-size:4.93889px;stroke-width:0.264583"
+         y="14.252726"
+         x="17.597237"
+         id="tspan3045"
+         sodipodi:role="line">V</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="60.429565"
+       y="27.857704"
+       id="text3051"><tspan
+         sodipodi:role="line"
+         id="tspan3049"
+         x="60.429565"
+         y="27.857704"
+         style="font-size:4.93889px;stroke-width:0.264583">L</tspan></text>
+    <path
+       inkscape:export-ydpi="99.167648"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.500063;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-start:url(#Arrow1Mstart);paint-order:normal"
+       d="M 43.602907,3.8106957 43.721423,32.502033"
+       id="path3253"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="37.458218"
+       y="6.4927473"
+       id="text3425"><tspan
+         sodipodi:role="line"
+         id="tspan3423"
+         x="37.458218"
+         y="6.4927473"
+         style="font-size:4.93889px;stroke-width:0.264583">N</tspan></text>
+    <path
+       inkscape:export-ydpi="99.167648"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.500063;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-start:url(#marker9381);paint-order:normal"
+       d="m 107.88336,10.027732 20.12675,22.474301"
+       id="path9335"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="fill:#97999b;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:1, 0.499999;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       id="rect9349"
+       width="76.729156"
+       height="1.58751"
+       x="90.097641"
+       y="32.504749"
+       ry="0"
+       rx="0"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:export-xdpi="99.309998"
+       inkscape:export-ydpi="99.309998" />
+    <path
+       inkscape:export-ydpi="99.167648"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.499999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 90.097639,32.504753 H 166.8268"
+       id="path9351"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="101.88593"
+       y="14.252726"
+       id="text9357"><tspan
+         sodipodi:role="line"
+         id="tspan9355"
+         x="101.88593"
+         y="14.252726"
+         style="font-size:4.93889px;stroke-width:0.264583">V</tspan></text>
+    <text
+       id="text9361"
+       y="40.913284"
+       x="144.71826"
+       style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-size:4.93889px;stroke-width:0.264583"
+         y="40.913284"
+         x="144.71826"
+         id="tspan9359"
+         sodipodi:role="line">L</tspan></text>
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path9363"
+       d="m 127.8916,3.8106957 0.11851,28.6913373"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.500063;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-start:url(#marker9371);paint-order:normal"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-ydpi="99.167648" />
+    <text
+       id="text9367"
+       y="6.4927473"
+       x="121.74691"
+       style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-size:4.93889px;stroke-width:0.264583"
+         y="6.4927473"
+         x="121.74691"
+         id="tspan9365"
+         sodipodi:role="line">N</tspan></text>
+    <path
+       inkscape:export-ydpi="99.167648"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:transform-center-y="5.4867191"
+       inkscape:transform-center-x="-6.1932418"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker9471)"
+       d="m 127.96435,32.502213 12.4312,10.7139"
+       id="path9329"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       transform="scale(1,-1)"
+       inkscape:export-ydpi="99.167648"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       d="m 110.83916,-32.499317 a 16.914434,16.914434 0 0 1 16.91443,-16.914435 16.914434,16.914434 0 0 1 16.91444,16.914435 h -16.91444 z"
+       sodipodi:end="0"
+       sodipodi:start="3.1415927"
+       sodipodi:ry="16.914434"
+       sodipodi:rx="16.914434"
+       sodipodi:cy="-32.499317"
+       sodipodi:cx="127.75359"
+       sodipodi:type="arc"
+       id="path9331"
+       style="fill:#97d1f4;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       sodipodi:arc-type="slice" />
+    <path
+       inkscape:export-ydpi="99.167648"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path9333"
+       d="m 127.92373,32.488092 8.31612,14.14795"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker9461)"
+       inkscape:transform-center-x="-4.0950818"
+       inkscape:transform-center-y="7.1896241" />
+    <path
+       inkscape:export-ydpi="99.167648"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:transform-center-y="3.0359791"
+       inkscape:transform-center-x="7.6969577"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker9451)"
+       d="m 127.76546,32.502033 -15.34711,5.81278"
+       id="path9337"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       inkscape:export-ydpi="99.167648"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path9339"
+       d="m 127.81122,32.502213 -12.4312,10.7139"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker9441)"
+       inkscape:transform-center-x="6.1932417"
+       inkscape:transform-center-y="5.4867191" />
+    <path
+       inkscape:export-ydpi="99.167648"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:transform-center-y="7.1896241"
+       inkscape:transform-center-x="4.0950817"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker9431)"
+       d="m 127.85184,32.488092 -8.31612,14.14795"
+       id="path9341"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       inkscape:export-ydpi="99.167648"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path9343"
+       d="m 127.88778,32.459361 -2.93997,16.145552"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker9421)"
+       inkscape:transform-center-x="1.3710617"
+       inkscape:transform-center-y="8.1596941" />
+    <path
+       inkscape:export-ydpi="99.167648"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path9345"
+       d="m 128.01011,32.502033 15.34711,5.81278"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker9411)"
+       inkscape:transform-center-x="-7.6969578"
+       inkscape:transform-center-y="3.0359791" />
+    <path
+       inkscape:export-ydpi="99.167648"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:transform-center-y="8.1596941"
+       inkscape:transform-center-x="-1.3710618"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker9401)"
+       d="m 127.88778,32.459361 2.93998,16.145552"
+       id="path9347"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       inkscape:transform-center-y="5.4867191"
+       inkscape:transform-center-x="-6.1932421"
+       style="fill:#093b59;fill-opacity:1;fill-rule:evenodd;stroke:#093b59;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker9391)"
+       d="m 127.96435,32.502213 12.4312,10.7139"
+       id="path9353"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="e:\evisupbr\img\bsdf_opaque_dielectric.png"
+       inkscape:export-xdpi="99.167648"
+       inkscape:export-ydpi="99.167648" />
+  </g>
+</svg>
