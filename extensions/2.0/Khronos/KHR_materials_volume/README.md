@@ -172,24 +172,19 @@ For best results, we recommend using translucency in case the medium exhibits st
 
 *This section is non-normative.*
 
-The microfacet BTDF f<sub>transmission</sub> defined in `KHR_materials_transmission` now takes refraction into account.
+The microfacet BTDF f<sub>transmission</sub> defined in `KHR_materials_transmission` now takes refraction into account. That means that we to use Snell's law to compute the modified half vector:
 
-```
-                  abs(LdotH) * abs(VdotH)                 ior_o^2 * G * D
-f_transmission = ------------------------- * ----------------------------------------
-                  abs(LdotN) * abs(VdotN)      (ior_i * VdotH + ior_o * LdotH)^2
+H = -normalize(*ior<sub>i</sub>* * *V* + *ior<sub>o</sub>* * *L*)
 
-```
-
-`ior_i` and `ior_o` denote the index of refraction of the incident and transmitted side of the surface, respectively. `V` is the vector pointing to the camera, `L` points to the light. In a path tracer that starts rays at the camera, `V` corresponds to the incident side of the surface, which is the side of the medium  with `ior_i`. See [Walter et al. (2007)](#Walter2007) for more details.
-
-Using Snell's law, the half vector is computed as follows:
-
-```
-H = -normalize(ior_i * V + ior_o * L)
-```
+*ior<sub>i</sub>* and *ior<sub>o</sub>* denote the index of refraction of the incident and transmitted side of the surface, respectively. *V* is the vector pointing to the camera, *L* points to the light. In a path tracer that starts rays at the camera, *V* corresponds to the incident side of the surface, which is the side of the medium with *ior<sub>i</sub>*.
 
 Incident and transmitted index of refraction have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through overlapping objects is described by in [Schmidt and Budge (2002)](#SchmidtBudge2002).
+
+The microfacet BTDF also makes use of the modified half vector and the indices of refraction.
+
+f<sub>transmission</sub> = *T* * *baseColor* * (1 - *F<sub>R</sub>*) * (abs(dot(*L*, *H*)) * abs(dot(*V*, *H*))) / (abs(dot(*L*, *N*)) * abs(dot(*V*, *N*))) * (*ior<sub>o</sub>*<sup>2</sup> * *G<sub>R</sub>* * *D<sub>R</sub>*) / (*ior<sub>i</sub>* * dot(*V*, *H*) + *ior<sub>o</sub>* * dot(*L*, *H*))
+
+where *T* is the transmission percentage defined by `KHR_materials_transmission`. The F<sub>R</sub>, D<sub>R</sub>, and G<sub>R</sub> terms are the same as in the specular reflection except using the modified half vector *H* calculated from the refraction direction. See [Walter et al. (2007)](#Walter2007) for details.
 
 ## Schema
 
