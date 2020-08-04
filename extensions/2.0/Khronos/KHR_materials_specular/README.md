@@ -23,6 +23,11 @@ Experimental
 
 Written against the glTF 2.0 spec.
 
+## Exclusions
+
+* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+* This extension must not be used on a material that also uses `KHR_materials_unlit`.
+
 ## Overview
 
 This extension adds two parameters to the metallic-roughness material: `specular` and `specularColor`.
@@ -30,7 +35,6 @@ This extension adds two parameters to the metallic-roughness material: `specular
 `specular` allows users to configure the strength of the specular reflection in the dielectric BRDF. A value of zero disables the specular reflection, resulting in a pure diffuse material. The metal BRDF is not affected by the parameter.
 
 `specularColor` changes the F0 color of the specular reflection in the dielectric BRDF, allowing artists to use effects known from the specular-glossiness material (`KHR_materials_pbrSpecularGlossiness`) in the metallic-roughness material.
-
 
 ## Extending Materials
 
@@ -44,7 +48,6 @@ The strength of the specular reflection is defined by adding the `KHR_materials_
                 "KHR_materials_specular": {
                     "specularFactor": 1.0,
                     "specularColorFactor": [1.0, 1.0, 1.0],
-                    "specularTexture": 0,
                 }
             }
         }
@@ -151,7 +154,7 @@ As shown in the table, the constant 0.08 corresponds to an index of refraction o
         {
             "extensions": {
                 "KHR_materials_specular": {
-                    "specularColorFactor": <reflectanceFactor>,
+                    "specularColorFactor": [reflectanceFactor],
                 },
                 "KHR_materials_ior": {
                     "ior": 1.788789
@@ -173,7 +176,7 @@ Materials that use the specular-glossiness workflow (`KHR_materials_pbrSpecularG
             "extensions": {
                 "KHR_materials_specular": {
                     "specularColorFactor":
-                        <KHR_materials_pbrSpecularGlossiness__specularFactor>,
+                        [KHR_materials_pbrSpecularGlossiness__specularFactor],
                 },
                 "KHR_materials_ior": {
                     "ior": 0
