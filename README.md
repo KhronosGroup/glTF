@@ -51,6 +51,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 ### Preview tools
 
   - [Sketchfab](https://sketchfab.com/)
+  - [PlayCanvas Viewer](https://playcanvas.com/viewer)
   - [BabylonJS Sandbox](https://www.babylonjs.com/sandbox/)
   - [Drag-and-drop viewer](https://gltf-viewer.donmccurdy.com/)
   - [glTF VSCode Extension](https://marketplace.visualstudio.com/items?itemName=cesium.gltf-vscode) 3D previews, glTF validation, conversion to/from GLB
