@@ -1,0 +1,78 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Articulation Stage",
+    "type": "object",
+    "description": "One stage of a model articulation definition.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "pattern": "^[^\\s]+$",
+            "description": "The name of this articulation stage.  The articulation stage name must be unique only within the containing articulation.  Articulation Stage names may not contain spaces.",
+            "minLength": 1
+        },
+        "type": {
+            "description": "The type of motion applied by this articulation stage.",
+            "anyOf": [
+                {
+                    "enum": [ "xTranslate" ],
+                    "description": "The stage value is a translation along the node's X axis."
+                },
+                {
+                    "enum": [ "yTranslate" ],
+                    "description": "The stage value is a translation along the node's Y axis."
+                },
+                {
+                    "enum": [ "zTranslate" ],
+                    "description": "The stage value is a translation along the node's Z axis."
+                },
+                {
+                    "enum": [ "xRotate" ],
+                    "description": "The stage value is a counter-clockwise rotation in degrees about the node's +X axis."
+                },
+                {
+                    "enum": [ "yRotate" ],
+                    "description": "The stage value is a counter-clockwise rotation in degrees about the node's +Y axis."
+                },
+                {
+                    "enum": [ "zRotate" ],
+                    "description": "The stage value is a counter-clockwise rotation in degrees about the node's +Z axis."
+                },
+                {
+                    "enum": [ "xScale" ],
+                    "description": "The stage value is a scaling factor to multiply along the node's X axis."
+                },
+                {
+                    "enum": [ "yScale" ],
+                    "description": "The stage value is a scaling factor to multiply along the node's Y axis."
+                },
+                {
+                    "enum": [ "zScale" ],
+                    "description": "The stage value is a scaling factor to multiply along the node's Z axis."
+                },
+                {
+                    "enum": [ "uniformScale" ],
+                    "description": "The stage value is uniform scaling factor to apply to the node."
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "minimumValue": {
+            "type": "number",
+            "description": "The minimum value for the range of motion of this articulation stage."
+        },
+        "maximumValue": {
+            "type": "number",
+            "description": "The maximum value for the range of motion of this articulation stage."
+        },
+        "initialValue": {
+            "type": "number",
+            "description": "The initial value for this articulation stage."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "name", "type", "minimumValue", "maximumValue", "initialValue" ]
+}

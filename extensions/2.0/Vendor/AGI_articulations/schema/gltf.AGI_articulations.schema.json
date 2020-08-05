@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "AGI_articulations glTF extension",
+    "type": "object",
+    "description": "glTF Extension that defines metadata for applying external analysis or effects to a model.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "articulations": {
+            "type": "array",
+            "description": "An array of articulations.",
+            "items": {
+                "$ref": "articulation.schema.json"
+            },
+            "minItems": 1,
+            "gltf_detailedDescription": "An array of articulations.  An articulation indicates a named range of motion available to one or more nodes within the model."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

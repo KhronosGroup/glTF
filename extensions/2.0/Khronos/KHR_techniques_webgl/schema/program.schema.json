@@ -1,0 +1,33 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "Program",
+    "type" : "object",
+    "description" : "A shader program, including its vertex and fragment shaders.",
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "fragmentShader" : {
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The index of the fragment shader."
+        },
+        "vertexShader" : {
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The index of the vertex shader."
+        },
+        "glExtensions" : {
+            "type" : "array",
+            "description" : "The names of required WebGL 1.0 extensions.",
+            "items" : {
+                "type" : "string",
+                "minLength" : 1,
+                "maxLength" : 256
+            },
+            "minItems": 1,
+            "gltf_webgl" : "`getExtension()`"
+        },
+        "name" : {},
+        "extensions" : {},
+        "extras" : {}
+    },
+    "required": ["fragmentShader", "vertexShader"],
+    "gltf_webgl" : "`attachShader()`, `bindAttribLocation()`, `createProgram()`, `deleteProgram()`, `getProgramParameter()`, `getProgramInfoLog()`, `linkProgram()`, `useProgram()`, and `validateProgram()`"
+}

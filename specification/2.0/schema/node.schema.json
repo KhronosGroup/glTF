@@ -20,7 +20,8 @@
         },
         "skin": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the skin referenced by this node."
+            "description": "The index of the skin referenced by this node.",
+            "gltf_detailedDescription": "The index of the skin referenced by this node. When a skin is referenced by a node within a scene, all joints used by the skin must belong to the same scene."
         },
         "matrix": {
             "type": "array",

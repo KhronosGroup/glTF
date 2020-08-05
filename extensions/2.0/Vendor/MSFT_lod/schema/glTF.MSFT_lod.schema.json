@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "MSFT_lod glTF extension",
+    "type": "object",
+    "description": "glTF extension for specifying levels of detail (LOD).",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "ids": {
+            "type": "array",
+            "items": {
+                "type": "integer"
+            },
+            "description": "Array containing the indices of progressively lower LOD nodes.",
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

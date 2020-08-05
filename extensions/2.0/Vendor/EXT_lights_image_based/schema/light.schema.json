@@ -1,0 +1,68 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "light",
+    "type": "object",
+    "description": "An image-based lighting environment.",
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "rotation": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            "minItems": 4,
+            "maxItems": 4,
+            "description": "Quaternion that represents the rotation of the IBL environment.",
+            "default": [0, 0, 0, 1]
+        },
+        "intensity": {
+            "type": "number",
+            "description": "Brightness multiplier for environment.",
+            "default": 1.0,
+            "minimum": 0.0
+        },
+        "irradianceCoefficients": {
+            "description": "Declares spherical harmonic coefficients for irradiance up to l=2. This is a 9x3 array.",
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+            },
+            "minItems": 9,
+            "maxItems": 9
+        },
+        "specularImages": {
+            "description": "Declares an array of the first N mips of the prefiltered cubemap. Each mip is, in turn, defined with an array of 6 images, one for each cube face. i.e. this is an Nx6 array.",
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "minItems": 6,
+                "maxItems": 6
+            },
+            "minItems": 1
+        },
+        "specularImageSize": {
+            "type": "integer",
+            "description": "The dimension (in pixels) of the first specular mip. This is needed to determine, pre-load, the total number of mips needed.",
+            "minimum": 1
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "irradianceCoefficients",
+        "specularImages",
+        "specularImageSize"
+    ]
+}
