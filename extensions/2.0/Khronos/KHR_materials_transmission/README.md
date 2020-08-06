@@ -14,7 +14,7 @@
 
 ## Status <!-- omit in toc -->
 
-Work in Progress
+Draft
 
 ## Dependencies <!-- omit in toc -->
 
@@ -103,7 +103,7 @@ The `R` channel of this texture defines the amount of light that is transmitted 
 </figure>
 
 ## Tinting
-The `baseColor` of the material, as defined in the [Metallic-Roughness Material](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#metallic-roughness-material) section of the glTF specification, defines the amount of light at each frequency that is transmitted (not absorbed) by the material. Absorption is usually defined as an amount of light at each frequency that is absorbed over a given distance through a medium (usually described by Beer’s Law). However, since this extension deals exclusively with infinitely thin surfaces, we can treat absorption as a constant. Therefore, its inverse, `baseColor` transmission, can also be constant.  This provides the color tinting effect in the materials shown above and is useful for real-world materials like stained glass and tinted plastics. Note that because `baseColor` is defined as sRGB, it must be converted to linear before being used in this calculation.
+The `baseColor` of the material, as defined in the [Metallic-Roughness Material](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#metallic-roughness-material) section of the glTF specification, defines the amount of light at each frequency that is transmitted (not absorbed) by the material. Absorption is usually defined as an amount of light at each frequency that is absorbed over a given distance through a medium (usually described by Beer’s Law). However, since this extension deals exclusively with infinitely thin surfaces, we can treat absorption as a constant. Therefore, its inverse, `baseColor` transmission, can also be constant.  This provides the color tinting effect in the materials shown above and is useful for real-world materials like stained glass and tinted plastics.
 <figure>
   <img src="./figures/ConstantTransmission.png"/>
 <figcaption><em>The baseColor of the material (yellow, in this example) is used to tint the light being transmitted.</em></figcaption>
@@ -141,7 +141,7 @@ We will now add an additional term for the transmitted light:
 
 *f* = *f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub> + *f*<sub>*transmission*</sub>
 
-*f*<sub>*transmission*</sub> = (1 - *F*) * *T* * *D<sub>T</sub>* * *baseColor*
+*f*<sub>*transmission*</sub> = (1 - *F*) * *T* * *baseColor* * *D<sub>T</sub>* * *D<sub>G</sub>* / *(4 * abs(dot(N, L))* * *abs(dot(N, V)))*
 
 where *T* is the transmission percentage defined by this extension's `transmission` and `transmissionTexture` properties and *D<sub>T</sub>* is the distribution function for the transmitted light. The distribution function is the same Trowbridge-Reitz model used by specular reflection except sampled along the view vector rather than the reflection. The *baseColor* factor causes the transmitted light to be tinted by the surface.
 
