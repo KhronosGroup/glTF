@@ -16,7 +16,7 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status
 
-Draft
+Complete
 
 ## Dependencies
 
@@ -52,7 +52,7 @@ The PBR clearcoat materials are defined by adding the `KHR_materials_clearcoat` 
 
 ### Clearcoat
 
-All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) for more details on the BRDF calculations.
+The following parameters are contributed by the `KHR_materials_clearcoat` extension:
 
 |                                  | Type                                                                            | Description                            | Required             |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|----------------------|
@@ -61,7 +61,19 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 |**clearcoatRoughnessFactor**      | `number`                                                                        | The clearcoat layer roughness.         | No, default: `0.0`   |
 |**clearcoatRoughnessTexture**     | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The clearcoat layer roughness texture. | No                   |
 |**clearcoatNormalTexture**        | [`normalTextureInfo`](/specification/2.0/README.md#reference-normaltextureinfo) | The clearcoat normal map texture.      | No                   |
-  
+
+The clearcoat BRDF is layered on top of the glTF 2.0 Metallic-Roughness material, including emission and all extensions. The `clearcoatFactor` determines the view-independent intensity of the clearcoat BRDF. If `clearcoatFactor` (in the extension) is zero, the whole clearcoat layer is disabled. Implementations of the BRDF itself can vary based on device performance and resource constraints. As in the specular term of the glTF 2.0 Metallic-Roughness material, the roughness input is squared to make it perceptually linear, and the Fresnel term uses a fixed refractive index of 1.5, corresponding to a F0 of 0.04.
+
+The values for clearcoat layer intensity and clearcoat roughness can be defined using factors, textures, or both. If the `clearcoatTexture` or `clearcoatRoughnessTexture` is not given, respective texture components are assumed to have a value of 1.0. All clearcoat textures contain RGB components in linear space. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values.
+
+If `clearcoatNormalTexture` is not given, no normal mapping is applied to the clear coat layer, even if normal mapping is applied to the base material.  Otherwise, `clearcoatNormalTexture` may be a reference to the same normal map used by the base material, or any other compatible normal map.
+
+## Implementation Notes
+
+*This section is non-normative.*
+
+All implementations should use the same calculations for the BRDF inputs. See [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) for more details on the BRDF calculations.
+
 The clearcoat formula `f_clearcoat` is computed using the specular term from the glTF 2.0 Metallic-Roughness material, defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation).  Use specular F0 equal `0.04`, base color black `0.0, 0.0, 0.0`, metallic value `0.0`, and the clearcoat roughness value defined in this extension as follows:
 
 ```
@@ -77,12 +89,6 @@ clearcoatFresnel = fresnel(0.04, NdotV)
 color = (f_emissive + f_diffuse + f_specular) * (1.0 - clearcoatBlendFactor * clearcoatFresnel) +
         f_clearcoat * clearcoatBlendFactor
 ```
-
-If `clearcoatFactor` (in the extension) is zero, the whole clearcoat layer is disabled.
-
-The values for clearcoat layer intensity and clearcoat roughness can be defined using factors, textures, or both. If the `clearcoatTexture` or `clearcoatRoughnessTexture` is not given, respective texture components are assumed to have a value of 1.0. All clearcoat textures contain RGB components in linear space. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values.
-
-If `clearcoatNormalTexture` is not given, no normal mapping is applied to the clear coat layer, even if normal mapping is applied to the base material.  Otherwise, `clearcoatNormalTexture` may be a reference to the same normal map used by the base material, or any other compatible normal map.
 
 ## Schema
 
@@ -147,12 +153,11 @@ employees, agents or representatives be liable for any damages, whether direct,
 indirect, special or consequential damages for lost revenues, lost profits, or
 otherwise, arising from or in connection with these materials.
 
-Vulkan is a registered trademark and Khronos, OpenXR, SPIR, SPIR-V, SYCL, WebGL,
-WebCL, OpenVX, OpenVG, EGL, COLLADA, glTF, NNEF, OpenKODE, OpenKCAM, StreamInput,
-OpenWF, OpenSL ES, OpenMAX, OpenMAX AL, OpenMAX IL, OpenMAX DL, OpenML and DevU are
-trademarks of The Khronos Group Inc. ASTC is a trademark of ARM Holdings PLC,
-OpenCL is a trademark of Apple Inc. and OpenGL and OpenML are registered trademarks
-and the OpenGL ES and OpenGL SC logos are trademarks of Silicon Graphics
-International used under license by Khronos. All other product names, trademarks,
-and/or company names are used solely for identification and belong to their
-respective owners.
+Khronos® and Vulkan® are registered trademarks, and ANARI™, WebGL™, glTF™, NNEF™, OpenVX™,
+SPIR™, SPIR-V™, SYCL™, OpenVG™ and 3D Commerce™ are trademarks of The Khronos Group Inc.
+OpenXR™ is a trademark owned by The Khronos Group Inc. and is registered as a trademark in
+China, the European Union, Japan and the United Kingdom. OpenCL™ is a trademark of Apple Inc.
+and OpenGL® is a registered trademark and the OpenGL ES™ and OpenGL SC™ logos are trademarks
+of Hewlett Packard Enterprise used under license by Khronos. ASTC is a trademark of
+ARM Holdings PLC. All other product names, trademarks, and/or company names are used solely
+for identification and belong to their respective owners.
