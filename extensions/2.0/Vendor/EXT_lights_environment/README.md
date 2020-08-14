@@ -95,7 +95,7 @@ This implies, that by default, the `+X` direction is the front side. By defining
 
 The directions are based on the glTF [coordinate system](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#coordinate-system-and-units).
 
-`TODO: Define units: candela (lm/sr) vs. lux (lm/m2)`
+The environment light is expressed as Luminance which is [Candela per meter squared](https://docs.unrealengine.com/en-US/Engine/Rendering/LightingAndShadows/PhysicalLightUnits/index.html) (cd/m2).
 
 ### Using the environment light
 
@@ -125,7 +125,3 @@ The environment light is utilized by a scene.
 ## Known Implementations
 
 * `TODO: Add implementations`
-
-## Reference
-
-* `TODO: Add references`

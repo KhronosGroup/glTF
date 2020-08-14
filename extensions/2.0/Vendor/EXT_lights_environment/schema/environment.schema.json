@@ -6,11 +6,11 @@
     "properties": {
         "source": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the image used by this environment."
+            "description": "The index of the image used by this environment. Color information is in linear space."
         },
         "intensity": {
             "type": "number",
-            "description": "Intensity of the light source. TODO: Define units.",
+            "description": "Intensity of the light source in linear space. Luminance expressed as Candela per meter squared (cd/m2).",
             "default": 1.0,
             "minimum": 0
         },
