@@ -16,11 +16,12 @@ Written against the glTF 2.0 spec.
 
 This extension provides the ability to define an environment light (also known as [sky light](https://docs.unrealengine.com/en-US/Engine/Rendering/LightingAndShadows/LightTypes/SkyLight/index.html)) in a glTF scene. In general, this environment is used for image based lighting in rasterizers and pathtracers.  
 
-To environment light is defined by a panorama image (also know as [equirectangular image](https://docs.blender.org/manual/en/latest/render/lights/world.html)). For encoding the panorama image and for supporting [High-dynamic-range rendering](https://en.wikipedia.org/wiki/High-dynamic-range_rendering), the widely used [RGBE image format](https://en.wikipedia.org/wiki/RGBE_image_format) is used as a `.hdr` file:  
+The environment light is defined by a panorama image (also know as [equirectangular image](https://docs.blender.org/manual/en/latest/render/lights/world.html)). For encoding the panorama image and for supporting [High-dynamic-range rendering](https://en.wikipedia.org/wiki/High-dynamic-range_rendering), the widely used [RGBE image format](https://en.wikipedia.org/wiki/RGBE_image_format) is used as a `.hdr` file:  
 The panorama image and `.hdr` file format is supported in paint tools like Gimp or Photoshop, 3D modelling tools like Blender or 3ds Max, Game Engines like Unity or Unreal Engine and Web Engines like Babylon.js or three.js.  
 In general, this format is already used to define environment lights in todays 3D engines.  
 
-How to pre-filter and/or sample the panorma image is implicitly definded by the [materials BRDF](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#appendix-b-brdf-implementation). 
+The pre-filtering modules already exist in these engines, which is required for this extension.
+Pre-filtering and/or sampling the panorma image is implicitly definded by the [materials BRDF](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#appendix-b-brdf-implementation). 
 
 ### Why no pre-filtering (also known as pre-sampling)?
 
@@ -49,7 +50,7 @@ The `EXT_lights_environment` extension requires to extend the following glTF sch
     "uri": "any_other_image.png"
   },
   {
-    "uri": "dodge2.hdr"
+    "uri": "doge2.hdr"
   }
 ]
 ```
@@ -90,7 +91,9 @@ This implies, that by default, the `+X` direction is the front side. By defining
 
 * Adapt sampling by using offsets into the panorama image
 * Swap X and Z cube map sides accordingly plus rotate Y cube map sides
-* Rotate the sampling vector during runtime 
+* Rotate the sampling vector during runtime
+
+The directions are based on the glTF [coordinate system](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#coordinate-system-and-units).
 
 `TODO: Define units: candela (lm/sr) vs. lux (lm/m2)`
 
