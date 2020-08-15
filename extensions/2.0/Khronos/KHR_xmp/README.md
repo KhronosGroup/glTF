@@ -1,4 +1,4 @@
-# KHR_xmp
+# KHR\_xmp
 
 ## Contributors
 
@@ -6,7 +6,7 @@
 * Mike Bond, Adobe, [@MiiBond](https://twitter.com/MiiBond)
 * Leonard Rosenthol, Adobe, [@lrosenthol](https://github.com/lrosenthol)
 * Ed Mackey, Analytical Graphics, Inc.
-* Don McCurdy, Google, [@donmccurdy](https://twitter.com/donrmccurdy)
+* Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)
 * Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
 * Robert Long, Mozilla, [@arobertlong](https://twitter.com/arobertlong)
 * Adam Morris, Target, [@weegeekps](https://github.com/weegeekps)
@@ -18,7 +18,7 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status
 
-Draft
+Complete
 
 ## Dependencies
 

@@ -11,6 +11,7 @@
 * [KHR_materials_unlit](2.0/Khronos/KHR_materials_unlit/README.md)
 * [KHR_mesh_quantization](2.0/Khronos/KHR_mesh_quantization/README.md)
 * [KHR_texture_transform](2.0/Khronos/KHR_texture_transform/README.md)
+* [KHR_xmp](2.0/Khronos/KHR_xmp/README.md)
 
 #### Multi-Vendor Extensions
 
