@@ -781,6 +781,8 @@ Valid accessor type and component type for each attribute semantic property are 
 
 All indices for indexed attribute semantics must start with 0 and be continuous positive integers: `TEXCOORD_0`, `TEXCOORD_1`, etc. Indices must not use leading zeroes to pad the number of digits, and clients are not required to support more indexed semantics than described above.
 
+All attribute accessors for a given primitive must have the same `count`; when `indices` property is not defined, it indicates the number of vertices to render; when `indices` property is defined, it indicates the upper (exclusive) bound on the index values in the `indices` accessor.
+
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
 
 > **Implementation note:** When positions are not specified, client implementations should skip primitive's rendering unless its positions are provided by other means (e.g., by extension). This applies to both indexed and non-indexed geometry.
@@ -1182,7 +1184,7 @@ The material definition also provides for additional maps that can also be used 
 
 Materials define the following additional maps:
 - **normal** : A tangent space normal map.
-- **occlusion** : The occlusion map indicating areas of indirect lighting.
+- **occlusion** : The occlusion map indicates areas that receive less diffuse lighting from ambient sources. Direct lighting is not affected.
 - **emissive** : The emissive map controls the color and intensity of the light being emitted by the material.
 
 The following examples shows a material that is defined using `pbrMetallicRoughness` parameters as well as additional texture maps:
