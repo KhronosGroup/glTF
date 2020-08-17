@@ -12,6 +12,9 @@
 * Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
 
+Copyright (C) 2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
+
 ## Status <!-- omit in toc -->
 
 Draft
@@ -179,7 +182,7 @@ Various techniques are available to trade off physical accuracy against realtime
 
 ## Appendix: Full Khronos Copyright Statement
 
-Copyright 2018-2020 The Khronos Group Inc.
+Copyright 2020 The Khronos Group Inc.
 
 Some parts of this Specification are purely informative and do not define requirements
 necessary for compliance and so are outside the Scope of this Specification. These
@@ -220,12 +223,11 @@ employees, agents or representatives be liable for any damages, whether direct,
 indirect, special or consequential damages for lost revenues, lost profits, or
 otherwise, arising from or in connection with these materials.
 
-Vulkan is a registered trademark and Khronos, OpenXR, SPIR, SPIR-V, SYCL, WebGL,
-WebCL, OpenVX, OpenVG, EGL, COLLADA, glTF, NNEF, OpenKODE, OpenKCAM, StreamInput,
-OpenWF, OpenSL ES, OpenMAX, OpenMAX AL, OpenMAX IL, OpenMAX DL, OpenML and DevU are
-trademarks of The Khronos Group Inc. ASTC is a trademark of ARM Holdings PLC,
-OpenCL is a trademark of Apple Inc. and OpenGL and OpenML are registered trademarks
-and the OpenGL ES and OpenGL SC logos are trademarks of Silicon Graphics
-International used under license by Khronos. All other product names, trademarks,
-and/or company names are used solely for identification and belong to their
-respective owners.
+Khronos® and Vulkan® are registered trademarks, and ANARI™, WebGL™, glTF™, NNEF™, OpenVX™,
+SPIR™, SPIR-V™, SYCL™, OpenVG™ and 3D Commerce™ are trademarks of The Khronos Group Inc.
+OpenXR™ is a trademark owned by The Khronos Group Inc. and is registered as a trademark in
+China, the European Union, Japan and the United Kingdom. OpenCL™ is a trademark of Apple Inc.
+and OpenGL® is a registered trademark and the OpenGL ES™ and OpenGL SC™ logos are trademarks
+of Hewlett Packard Enterprise used under license by Khronos. ASTC is a trademark of
+ARM Holdings PLC. All other product names, trademarks, and/or company names are used solely
+for identification and belong to their respective owners.
