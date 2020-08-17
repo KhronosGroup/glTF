@@ -144,15 +144,15 @@ We will now add an additional term for the transmitted light:
 
 *f* = *f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub> + *f*<sub>*transmission*</sub>
 
-*f*<sub>*transmission*</sub> = (1 - *F*) * *T* * *baseColor* * *D<sub>T</sub>* * *D<sub>G</sub>* / *(4 * abs(dot(N, L))* * *abs(dot(N, V)))*
+*f*<sub>*transmission*</sub> = (1 - *F*) * *T* * *baseColor* * *D<sub>T</sub>* * *G<sub>T</sub>* / *(4 * abs(dot(N, L))* * *abs(dot(N, V)))*
 
-where *T* is the transmission percentage defined by this extension's `transmission` and `transmissionTexture` properties and *D<sub>T</sub>* is the distribution function for the transmitted light. The distribution function is the same Trowbridge-Reitz model used by specular reflection except sampled along the view vector rather than the reflection. The *baseColor* factor causes the transmitted light to be tinted by the surface.
+where *T* is the transmission percentage defined by this extension's `transmission` and `transmissionTexture` properties and *D<sub>T</sub>* is the distribution function for the transmitted light. The distribution function is the same Trowbridge-Reitz model used by specular reflection except sampled along the view vector rather than the reflection. *G<sub>T</sub>* is the geometric occlusion function for transmission. The *baseColor* factor causes the transmitted light to be tinted by the surface.
 
 Light that penetrates a surface and is transmitted will not be diffusely reflected so we also need to modify the diffuse calculation to account for this.
 *f*<sub>*diffuse*</sub> = (1 - *F*) * (1 - *T*) * *diffuse*
 
-Optical transparency does not require any changes whatsoever to the specular term. So this can all be rearranged so that the transmitted light amounts to a modifaction of the diffuse lobe.
-*f* = (1 - *F*) * (*T* * *D<sub>T</sub>* + (1 - *T*) * *diffuse*) + *f*<sub>*specular*</sub>
+Optical transparency does not require any changes whatsoever to the specular term. So this can all be rearranged so that the transmitted light amounts to a modification of the diffuse lobe.
+*f* = (1 - *F*) * (*T* * *D<sub>T</sub>* * *G<sub>T</sub>* / *(4 * abs(dot(N, L))* * *abs(dot(N, V)))* + (1 - *T*) * *diffuse*) + *f*<sub>*specular*</sub>
 
 ## Implementation Notes
 
