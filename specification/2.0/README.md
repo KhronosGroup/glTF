@@ -3891,15 +3891,22 @@ Application-specific data.
 
 # Appendix B: BRDF Implementation
 
-The metallic-roughness material model is a linear blend of two BRDFs, a metallic BRDF and a dielectric BRDF. The blending factor `metallic` describes the metalness of the material. The BRDFs share the parameters for roughness and base color, following [Burley (2012): Physically-Based Shading at Disney](https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf).
+The metallic-roughness material model is a linear blend of two bidirectional scattering distribution functions (BRDF), a metallic BRDF and a dielectric BRDF, as introduced by [Burley (2012)](#Burley2012). The BRDFs share the parameters for roughness and base color. The blending factor `metallic` describes the metalness of the material.
 
 ```
 material = mix(dielectric_brdf, metal_brdf, metallic)
+         = (1 - metallic) * dielectric_brdf + metallic * metal_brdf
 ```
 
-The metal BRDF is based on a microfacet model which describes the orientation of microfacets on the surface as a statistical distribution. The distribution is controlled by a parameter called `roughness`, varying between 0 (smooth surface) and 1 (rough surface). As the blending between the two extremes does not behave linearly, like most microfacet distributions, the material's `roughness` parameter is squared before using it as the distribution's roughness.
+Usually, a material is either metallic or dielectric. A texture provided for `metallic` with either 1 or 0 separates metallic from dielectric regions on the mesh. There are situations in which there is no clear separation. It may happen that due to anti-alising or mip-mapping there is a portion of metal and a portion of dielectric within a texel. Futhermore, a material composed of several semi-transparent layers may be represented as a blend between several single-layered materials (layering via parameter blending).
 
-Metallic surfaces reflect back most of the illumination, only a small portion of the light is absorbed by the material. This effect is described by the Fresnel term with the wavelength-dependent refractive index and extinction coefficient. To make parameterization simple, the metallic-roughness material combines the two quantities into a single, user-defined color value `baseColor` that defines the reflection color at normal incidence, also referred to as `f0`.
+In this chapter, we will first sketch the logical structure of the material. We use an abstract notation that describes the material as a directed acyclic graph (DAG). The vertices correspond to the basic building blocks of the material model: BRDFs, mixing operators, input parameters, and constants. In the second part we will provide a sample implementation as a set of equations and source code for the BRDFs and mixing operators. In contrast to the logical structure the implementation is not normative.
+
+## Material Structure 
+
+### Metals
+
+Metallic surfaces reflect back most of the illumination, only a small portion of the light is absorbed by the material ([Pharr et al. (2018)](#Pharr2018)). This effect is described by the Fresnel term `conductor_fresnel` with the wavelength-dependent refractive index and extinction coefficient. To make parameterization simple, the metallic-roughness material combines the two quantities into a single, user-defined color value `baseColor` that defines the reflection color at normal incidence, also referred to as `f0`. The reflection color at grazing incidence is called `f90`. It is set to 1 because the grazing angle reflectance for any material approaches pure white in the limit. The conductor Fresnel term modulates the contribution of a specular BRDF parameterized by the `roughness` parameter.
 
 ```
 metal_brdf =
@@ -3909,9 +3916,11 @@ metal_brdf =
     bsdf = specular_brdf(roughness^2))
 ```
 
-Unlike metals, dielectric materials transmit most of the incident illumination into the interior of the object and the Fresnel term is parameterized only by the refractive index. This makes dielectrics like glass, oil, water or air transparent. Other dielectrics, like the majority of plastic materials, are filled with particles that absorb or scatter most or all of the transmitted light, reducing the transparency and giving the surface its colorful appearance.
+### Dielectrics
 
-As a result, dielectric materials are modeled as a Fresnel-weighted combination of a microfacet BRDF, simulating the reflection at the surface, and a diffuse BRDF, simulating the transmitted portion of the light that is absorbed and scattered inside the object. The reflection roughness is given by the squared `roughness` of the material. The color of the diffuse BRDF comes from the `baseColor`. The amount of reflection compared to transmission is directional-dependent and as such determined by the Fresnel term. Its index of refraction is set to a fixed value of 1.5, a good compromise for the majority of opaque, dielectric materials.
+Unlike metals, dielectric materials transmit most of the incident illumination into the interior of the object and the Fresnel term is parameterized only by the refractive index ([Pharr et al. (2018)](#Pharr2018)). This makes dielectrics like glass, oil, water or air transparent. Other dielectrics, like the majority of plastic materials, are filled with particles that absorb or scatter most or all of the transmitted light, reducing the transparency and giving the surface its colorful appearance.
+
+As a result, dielectric materials are modeled as a Fresnel-weighted combination of a specular BRDF, simulating the reflection at the surface, and a diffuse BRDF, simulating the transmitted portion of the light that is absorbed and scattered inside the object. The reflection roughness is given by the squared `roughness` of the material. The color of the diffuse BRDF comes from the `baseColor`. The amount of reflection compared to transmission is directional-dependent and as such determined by the Fresnel term. Its index of refraction is set to a fixed value of 1.5, a good compromise for the majority of opaque, dielectric materials.
 
 ```
 dielectric_brdf =
@@ -3921,13 +3930,25 @@ dielectric_brdf =
     ior = 1.5)
 ```
 
+### Microfacet Surfaces
+
+The metal BRDF and the dielectric BRDF are based on a microfacet model. The theory behind microfacet models was developed in early works by [Torrance and Sparrow (1967)](#TorranceSparrow1967), [Cook and Torrance (1982)](#CookTorrance1982), and others. A microfacet model describes the orientation of tiny facets (microfacets) on the surface as a statistical distribution. The distribution determines the orientation of the facets as a random perturbation around the normal direction of the surface. The perturbation strength depends on the `roughness` parameter and varies between 0 (smooth surface) and 1 (rough surface). A number of distribution functions have been proposed in the last decades. We use the Trowbridge-Reitz distribution first described by [Trowbridge and Reitz (1975)](#TrowbridgeReitz1975). Later [Walter et al. (2007)](#Walter2007) independently developed the same distribution and called it "GGX". They show that it is a better fit for measured data than the Beckmann distribution used by [Cook and Torrance (1982)](#CookTorrance1982) due to its stronger tails.
+
+The Trowbridge-Reitz/GGX microfacet distribution describes the microsurface as being composed of perfectly specular, infinitesimal oblate ellipsoids, whose half-height in the normal direction is α times the radius in the tangent plane. α = 1 gives spheres, which results in uniform reflection in all directions. This reflection behavior corresponds to a rough surface. α = 0 gives a perfectly specular surface. As suggested by [Burley (2012)](#Burley2012) we use the mapping α = `roughness`^2 which results in more perceptually linear changes in the roughness. 
+
+The distribution only describes the proportion of each normal on the microsurface. It does not describe how the normals are organized. For this we need a microsurface profile. The difference between distribution and profile is detailed by [Heitz (2014)](#Heitz2014), where he in addition provides an extensive study of common microfacet profiles. Based on this work, we suggest using the Smith microsurface profile (originally developed by [Smith (1967)](#Smith1967)) and its corresponding masking-shadowing function. Heitz describes the Smith profile as the most accurate model for reflection from random height fields. It assumes that height and normal between neighboring points are not correlated, implying a random set of microfacets instead of a continuous surface.
+
+Microfacet models often do not consider multiple scattering. The shadowing term suppresses light that intersects the microsurface a second time. [Heitz et al. (2016)](#Heitz2016) extended the Smith-based microfacet models to include a multiple scattering component, which significantly improves accuracy of predictions of the model. We suggest to incorporate multiple scattering whenever possible, either by making use of the unbiased stochastic evaluation introduced by Heitz, or one of the approximations presented later, for example by [Kulla and Conty (2017)](#KullaConty2017) or [Turquin (2019)](#Turquin2019).
+
+### Complete Model
+
 The BRDFs and mixing operators used in the metallic-roughness material are summarized in the following image.
 
 ![](figures/pbr.png)
 
 The glTF spec is designed to allow applications to choose different lighting implementations based on their requirements. Some implementations may focus on an accurate simulation of light transport while others may choose to deliver real-time performance. Therefore, any implementation that adheres to the rules for mixing BRDFs is conformant to the glTF spec.
 
-In a physically-accurate light simulation, the BRDFs have to follow some basic principles: the BRDF has to be positive, reciprocal and energy conserving. This ensures that the visual output of the simulation is independent of the underlying rendering algorithm, as long as it is unbiased. The specification will provide a mathematical model that allows implementations to achieve an exact result in an unbiased renderer. Note that unbiased renderers may still decide to deviate from the specification to achieve better visual quality.
+In a physically-accurate light simulation, the BRDFs have to follow some basic principles: the BRDF has to be positive, reciprocal and energy conserving. This ensures that the visual output of the simulation is independent of the underlying rendering algorithm, as long as it is unbiased.
 
 The unbiased light simulation with physically realistic BRDFs will be the ground-truth for approximations in real-time renderers that are often biased, but still give visually pleasing results. Usually, these renderers take shortcuts to solve the rendering equation, like the split-sum approximation for image based lighting, or simplify the math to save instructions and reduce register pressure. However, there are many ways to achieve good approximations, depending on the platform (mobile or web applications, desktop applications on low or high-end hardware, VR) different constraints have to be taken into account.
 
@@ -3935,7 +3956,7 @@ The unbiased light simulation with physically realistic BRDFs will be the ground
 
 *This section is non-normative.*
 
-An implementation sample is available at https://github.com/KhronosGroup/glTF-Sample-Viewer/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters.
+An implementation sample is available at https://github.com/KhronosGroup/glTF-Sample-Viewer/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters. In order to achieve high performance in real-time applications, this implementation takes some short-cuts and uses non-physical simplifications that break energy-conservation and reciprocity.
 
 As previously defined
 
@@ -3992,6 +4013,20 @@ Implementation of microfacet distrubtion from [Average Irregularity Representati
 Implementation of diffuse from [Lambert's Photometria](https://archive.org/details/lambertsphotome00lambgoog) by Johann Heinrich Lambert
 
 ![](figures/lightingDiff.PNG)
+
+## References
+
+* [Burley, B. (2012): Physically-Based Shading at Disney.](https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf)<a name="Burley2012"></a>
+* [Cook, R. L., and K. E. Torrance (1982): A Reflectance Model for Computer Graphics](https://graphics.pixar.com/library/ReflectanceModel/paper.pdf)<a name="CookTorrance1982"></a>
+* [Heitz, E. (2014): Understanding the Masking-Shadowing Function in Microfacet-Based BRDFs](http://jcgt.org/published/0003/02/03/paper.pdf)<a name="Heitz2014"></a>
+* [Heitz, E., J. Hanika, E. d'Eon, and C. Dachsbacher (2016): Multiple-Scattering Microfacet BSDFs with the Smith Model](https://eheitzresearch.wordpress.com/240-2/)<a name="Heitz2016"></a>
+* [Kulla C., and A. Conty (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf)<a name="KullaConty2017"></a>
+* [Pharr, M., W. Jakob, and G. Humphreys (2016): Physically Based Rendering: From Theory To Implementation, 3rd edition, chapter 8.2.](http://www.pbr-book.org/)<a name="Pharr2018"></a>
+* Smith, B. (1967):  Geometrical shadowing of a random rough surface<a name="Smith1967"></a>
+* [Torrance, K. E., E. M. Sparrow (1967): Theory for Off-Specular Reflection From Roughened Surfaces.](http://www.graphics.cornell.edu/~westin/pubs/TorranceSparrowJOSA1967.pdf)<a name="TorranceSparrow1967"></a>
+* Trowbridge, T., and K. P. Reitz (1975): Average irregularity representation of a rough surface for ray reflection. Journal of the Optical Society of America 57 (9), 1105–14.<a name="TrowbridgeReitz1975"></a>
+* [Turquin E. (2019): Practical multiple scattering compensation for microfacet models](https://blog.selfshadow.com/publications/turquin/ms_comp_final.pdf)<a name="Turquin2019"></a>
+* [Walter, B., S. Marschner, H. Li, and K. Torrance (2007): Microfacet models for refraction through rough surfaces.](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.html)<a name="Walter2007"></a>
 
 # Appendix C: Spline Interpolation
 
