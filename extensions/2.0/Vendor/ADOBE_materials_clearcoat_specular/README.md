@@ -1,4 +1,4 @@
-# ADOBE\_materials\_clearcoat\_ior
+# ADOBE\_materials\_clearcoat\_specular
 
 ## Contributors
 
