@@ -56,7 +56,7 @@ As with the core glTF 2.0 spec, all coloured textures are assumed to be sRGB and
 
 |                                  | Type                                                                            | Description                            | Required             |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|----------------------|
-|**clearcoatTintFactor**               | `number[4]`                                                                        | The clearcoat tint's colour factor.         | No, default: `[1.0, 1.0, 1.0, 1.0]`   |
+|**clearcoatTintFactor**               | `number[3]`                                                                        | The clearcoat tint's colour factor.         | No, default: `[1.0, 1.0, 1.0]`   |
 |**clearcoatTintTexture**              | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The clearcoat layer's tint texture. | No                   |
   
 The clearcoat tint defines the transmittance of light through the coat. That is, it defines what colour of light is allowed to pass through. As with other factor/texture combinations, these two values are multiplied.

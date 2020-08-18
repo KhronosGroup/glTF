@@ -16,12 +16,12 @@
             "default": [ 1.0, 1.0, 1.0 ],
             "minItems": 3,
             "maxItems": 3,
-            "gltf_detailedDescription": "The colour of light allowed to be transmitted through the clearcoat layer of the material. A value of black means no light passes through. A value of white means all light passes through."
+            "gltf_detailedDescription": "The colour of light allowed to be transmitted through the clearcoat layer of the material. A value of black means no light passes through. A value of white means all light passes through. These values are linear."
         },
         "clearcoatTintTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The clearcoat layer tint texture.",
-            "gltf_detailedDescription": "The clearcoat layer tint texture. These values are sampled from the R channel.  The values are linear.  Assume white colour if no texture is supplied."
+            "gltf_detailedDescription": "The clearcoat layer tint texture.  The values are stored in sRGB.  Assume white colour if no texture is supplied."
         },
         "extensions": { },
         "extras": { }
