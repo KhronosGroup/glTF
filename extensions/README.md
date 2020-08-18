@@ -143,7 +143,7 @@ Vendor extensions are not covered by the Khronos IP framework.
 
 ### Multi-Vendor Extensions
 
-When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix.  To promote a vendor extension to a multi-vendor extension, open a pull request labeled `extension` that contains a new copy of the extension (even if there aren't any changes) with the new name using the `EXT` prefix, e.g., `KHR_binary_glTF`.
+When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix.  To promote a vendor extension to a multi-vendor extension, open a pull request labeled `extension` that contains a new copy of the extension (even if there aren't any changes) with the new name using the `EXT` prefix, e.g., `EXT_texture_webp`.
 
 Multi-vendor extensions are not covered by the Khronos IP framework.
 
