@@ -9,8 +9,7 @@ digraph D {
     dielectric_specular_brdf [label=<
       <table border="1" cellborder="0">
         <tr><td port="out"><font point-size="14"><b>specular_brdf</b></font></td></tr>
-        <tr><td><font point-size="10">color = [1, 1, 1]</font></td></tr>
-        <tr><td><font point-size="10">roughness = <i>&lt;roughness&gt;</i><sup>2</sup></font></td></tr>
+        <tr><td><font point-size="10">α = <i>&lt;roughness&gt;</i><sup>2</sup></font></td></tr>
       </table>
     >]
 
@@ -40,8 +39,7 @@ digraph D {
     metal_specular_brdf [label=<
       <table border="1" cellborder="0">
         <tr><td port="out"><font point-size="14"><b>specular_brdf</b></font></td></tr>
-        <tr><td><font point-size="10">color = [1, 1, 1]</font></td></tr>
-        <tr><td><font point-size="10">roughness = <i>&lt;roughness&gt;</i><sup>2</sup></font></td></tr>
+        <tr><td><font point-size="10">α = <i>&lt;roughness&gt;</i><sup>2</sup></font></td></tr>
       </table>
     >]
 
@@ -50,7 +48,6 @@ digraph D {
         <tr><td port="out"><font point-size="14"><b>conductor_fresnel&nbsp;&nbsp;</b></font></td></tr>
         <tr><td port="in_bsdf"><font point-size="10">bsdf</font></td></tr>
         <tr><td><font point-size="10">f0 = <i>&lt;baseColor&gt;</i></font></td></tr>
-        <tr><td><font point-size="10">f90 = [1, 1, 1]</font></td></tr>
       </table>
     >]
 
