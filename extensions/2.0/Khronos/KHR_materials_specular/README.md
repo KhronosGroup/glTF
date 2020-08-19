@@ -167,7 +167,7 @@ As shown in the table, the constant 0.08 corresponds to an index of refraction o
 
 ### Specular-glossiness materials
 
-Materials that use the specular-glossiness workflow (`KHR_materials_pbrSpecularGlossiness`) can be converted with help of the `KHR_materials_ior`. The `ior` parameter has to be set to 0 or inf. In JSON:
+Materials that use the specular-glossiness workflow (`KHR_materials_pbrSpecularGlossiness`) can be converted with help of the `KHR_materials_ior`. The `ior` parameter has to be set to a high value like 1000. In JSON:
 
 ```json
 {
@@ -179,7 +179,7 @@ Materials that use the specular-glossiness workflow (`KHR_materials_pbrSpecularG
                         [KHR_materials_pbrSpecularGlossiness__specularFactor],
                 },
                 "KHR_materials_ior": {
-                    "ior": 0
+                    "ior": 1000
                 }
             }
         }
