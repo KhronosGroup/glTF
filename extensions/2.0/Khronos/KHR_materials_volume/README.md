@@ -88,7 +88,7 @@ The thickness of a volume enclosed by the mesh is typically quite difficult to c
 
 ## Refraction
 
-Light rays falling through the volume boundary are refracted according to the index of refraction given in `KHR_materials_ior`. The index of refraction determines the refraction angle. If `KHR_materials_ior` is not available, the index of refraction is 1.5.
+Light rays falling through the volume boundary are refracted according to the index of refraction (IOR) given in `KHR_materials_ior`. The IOR determines the refraction angle. If `KHR_materials_ior` is not available, the IOR is 1.5.
 
 <figure style="text-align:center">
 <img src="./figures/ior.png"/>
@@ -174,17 +174,35 @@ For best results, we recommend using translucency in case the medium exhibits st
 
 The microfacet BTDF f<sub>transmission</sub> defined in `KHR_materials_transmission` now takes refraction into account. That means that we to use Snell's law to compute the modified half vector:
 
-H = -normalize(*ior<sub>i</sub>* * *V* + *ior<sub>o</sub>* * *L*)
+*H<sub>TR</sub>* = -normalize(*ior<sub>i</sub>* * *V* + *ior<sub>o</sub>* * *L*)
 
-*ior<sub>i</sub>* and *ior<sub>o</sub>* denote the index of refraction of the incident and transmitted side of the surface, respectively. *V* is the vector pointing to the camera, *L* points to the light. In a path tracer that starts rays at the camera, *V* corresponds to the incident side of the surface, which is the side of the medium with *ior<sub>i</sub>*.
+*ior<sub>i</sub>* and *ior<sub>o</sub>* denote the IOR of the incident and transmitted side of the surface, respectively. *V* is the vector pointing to the camera, *L* points to the light. In a path tracer that starts rays at the camera, *V* corresponds to the incident side of the surface, which is the side of the medium with *ior<sub>i</sub>*.
 
-Incident and transmitted index of refraction have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through overlapping objects is described by in [Schmidt and Budge (2002)](#SchmidtBudge2002).
+Incident and transmitted IOR have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through overlapping objects is described by in [Schmidt and Budge (2002)](#SchmidtBudge2002).
 
 The microfacet BTDF also makes use of the modified half vector and the indices of refraction.
 
-f<sub>transmission</sub> = *T* * *baseColor* * (1 - *F<sub>R</sub>*) * (abs(dot(*L*, *H*)) * abs(dot(*V*, *H*))) / (abs(dot(*L*, *N*)) * abs(dot(*V*, *N*))) * (*ior<sub>o</sub>*<sup>2</sup> * *G<sub>R</sub>* * *D<sub>R</sub>*) / (*ior<sub>i</sub>* * dot(*V*, *H*) + *ior<sub>o</sub>* * dot(*L*, *H*))
+*f*<sub>transmission</sub> = *T* * *baseColor* * (1 - *F<sub>TR</sub>*) * (abs(dot(*L*, *H<sub>TR</sub>*)) * abs(dot(*V*, *H<sub>TR</sub>*))) / (abs(dot(*L*, *N*)) * abs(dot(*V*, *N*))) * (*ior<sub>o</sub>*<sup>2</sup> * *G<sub>TR</sub>* * *D<sub>TR</sub>*) / (*ior<sub>i</sub>* * dot(*V*, *H<sub>TR</sub>*) + *ior<sub>o</sub>* * dot(*L*, *H<sub>TR</sub>*))<sup>2</sup>
 
-where *T* is the transmission percentage defined by `KHR_materials_transmission`. The F<sub>R</sub>, D<sub>R</sub>, and G<sub>R</sub> terms are the same as in the specular reflection except using the modified half vector *H* calculated from the refraction direction. See [Walter et al. (2007)](#Walter2007) for details.
+where *T* is the transmission percentage defined by `KHR_materials_transmission`. The *D<sub>T<R/sub>* and *G<sub>TR</sub>* terms are the same as in the specular reflection except using the modified half vector *H<sub>TR</sub>* calculated from the refraction direction. See [Walter et al. (2007)](#Walter2007) for details.
+
+The Fresnel term *F<sub>TR</sub>* now needs to take internal reflection into account. When using the Schlick approximation, care must be taken to use the angle that is on the dense side of the boundary, i.e., the side with the medium that has a higher IOR. In addition, total internal reflection has to be considered. Therefore, we have three cases:
+
+Light enters medium with higher IOR: *ior<sub>o</sub>* ≥ *ior<sub>i</sub>*.
+
+*F<sub>TR</sub>*<sup>+</sup> = F0 + (1 - F0) * (1 - abs(dot(*V*, *H<sub>TR</sub>*)))^5
+
+Light enters medium with lower IOR and there is no total internal reflection: *ior<sub>o</sub>* < *ior<sub>i</sub>* and sin<sup>2</sup>(*θ<sub>o</sub>*) < 1. The angle at the transmitted side of the boundary (medium with lower IOR) *θ<sub>o</sub>* is computed from the angle of incidence via sin<sup>2</sup>(*θ<sub>o</sub>*) = (*ior<sub>i</sub>* / *ior<sub>o</sub>*)<sup>2</sup> (1 - dot(*V*, *H<sub>TR</sub>*)<sup>2</sup>) and thus cos(*θ<sub>o</sub>*) = sqrt(1 - sin<sup>2</sup>(*θ<sub>o</sub>*)).
+
+*F<sub>TR</sub>*<sup>-</sup> = F0 + (1 - F0) * (1 - abs(cos(*θ<sub>o</sub>*)))^5
+
+Light enters medium with lower IOR and there is total internal reflection: *ior<sub>o</sub>* < *ior<sub>i</sub>* and sin<sup>2</sup>(*θ<sub>o</sub>*) ≥ 1.
+
+*F<sub>TR</sub>*<sup>TIR</sup> = 1
+
+## Interaction with other extensions
+
+If `KHR_materials_specular` is used in combination with `KHR_materials_volume`, specular color and specular modify F0 and F90 of the Fresnel as usual, but with one exception: In case of total internal reflection, F90 is not scaled by the specular parameter of `KHR_materials_specular`. This allows users to change the specular component of a refractive object without introducing artifacts, i.e., dark appearance in areas where total internal reflection occurs.
 
 ## Schema
 
