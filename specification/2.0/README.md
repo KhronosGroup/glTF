@@ -3891,12 +3891,14 @@ Application-specific data.
 
 # Appendix B: BRDF Implementation
 
-The metallic-roughness material model is a linear blend of two bidirectional scattering distribution functions (BRDF), a metallic BRDF and a dielectric BRDF, as introduced by [Burley (2012)](#Burley2012). The BRDFs share the parameters for roughness and base color. The blending factor `metallic` describes the metalness of the material.
+The bidirectional reflectance distribution function (BRDF) of the metallic-roughness material is a linear interpolation of a metallic BRDF and a dielectric BRDF. The BRDFs share the parameters for roughness and base color. The blending factor `metallic` describes the metalness of the material.
 
 ```
 material = mix(dielectric_brdf, metal_brdf, metallic)
          = (1 - metallic) * dielectric_brdf + metallic * metal_brdf
 ```
+
+Such a material model based on a linear interpolation of metallic and dielectric components was introduced by [Burley (2012)](#Burley2012) and adapted by many renderers, resulting in a wide-range of applications supporting it.
 
 Usually, a material is either metallic or dielectric. A texture provided for `metallic` with either 1 or 0 separates metallic from dielectric regions on the mesh. There are situations in which there is no clear separation. It may happen that due to anti-alising or mip-mapping there is a portion of metal and a portion of dielectric within a texel. Futhermore, a material composed of several semi-transparent layers may be represented as a blend between several single-layered materials (layering via parameter blending).
 
