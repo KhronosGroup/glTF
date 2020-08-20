@@ -19,7 +19,7 @@ This extension allows for a compact glTF representation of multiple material var
 
 A typical use case is digital commerce, where a user might be presented with e.g. a pair of sneakers and the ability to switch between different colours.
 
-![](examples/shoes/photo.png)
+![pair of sneakers](examples/shoes/photo.png)
 
 ## Design Goals
 
@@ -126,6 +126,6 @@ For reference, we provide several simple examples of variants, both represented 
 
 | Model                     | Screenshot                         | Description                                                                                                   | Net Size (MB) | Combined Size (MB) |
 |---------------------------|------------------------------------|---------------------------------------------------------------------------------------------------------------|---------------|--------------------|
-| [Shoes](examples/shoes)   | ![](examples/shoes/photo.png)      | A simple variant commerce example with a single mesh primitive                                                | 15            | 7.5                |
-| [Chair](examples/chair)   | ![](examples/chair/chairs.jpg)     | A more complex commerce example, involving multi-dimensional variants - flattened into four distinct variants | 7.0           | 1.7                |
-| [Helmet](examples/helmet) | ![](examples/helmet/helmets.jpg)   | Gaming example, with wet and dry variants of a helmet                                                         | 8.8           | 5.0                |
+| [Shoes](examples/shoes)   | ![shoes](examples/shoes/photo.png)      | A simple variant commerce example with a single mesh primitive                                                | 15            | 7.5                |
+| [Chair](examples/chair)   | ![chairs](examples/chair/chairs.jpg)     | A more complex commerce example, involving multi-dimensional variants - flattened into four distinct variants | 7.0           | 1.7                |
+| [Helmet](examples/helmet) | ![helmets](examples/helmet/helmets.jpg)   | Gaming example, with wet and dry variants of a helmet                                                         | 8.8           | 5.0                |
