@@ -2,8 +2,15 @@
 
 ## Contributors
 
+- Mike Bond, Adobe, [@Miibond](https://github.com/MiiBond)
+- Aurelien Vaysset, [Emersya](http://emersya.com)
 - Pär Winzell, Facebook, [@zellski](https://twitter.com/zellski)
 - Renee Rashid, Facebook, [@debuggrl](https://github.com/debuggrl)
+- Jeremy Cytryn, Facebook, [@jercytrn](https://github.com/jercytryn)
+- Edgar Simson, OLV, [@Edzis](https://github.com/edzis)
+- Daniel Beauchamp, Shopify, [@pushmatrix](http://github.com/pushmatrix)
+- Stephan Leroux, Shopify, [@sleroux](http://github.com/sleroux)
+- Eric Chadwick, Wayfair, [@echadwick-wayfair](https://github.com/echadwick-wayfair)
 
 ## Status
 
@@ -25,68 +32,67 @@ A typical use case is digital commerce, where a user might be presented with e.g
 
 _This section is non-normative._
 
-This extension aims specifically to give asset creators and consumers a way to communicate _static configurability_.  In other words, we explicitly optimize for the case of representing asset variants which are:
+This extension aims to give asset creators and consumers a compact way to define multiple materials for a common set of geometry nodes in a glTF document. We explicitly optimize for the case of representing material variants which are:
 
 * **finite** - the list of variants is bounded; multi-dimensional variants (e.g. color + texture) are possible but must ultimately be representable as a flattened list
 * **premade** - the variants are produced at asset authoring time
-* **holistic** - while composable, the variants are dictated wholesale at the granularity of the glTF asset; sub-variants or hierarchical variants are not considered
+* **holistic** - while composable, the variants are defined at the granularity of the glTF asset; sub-variants or hierarchical variants are not considered
 
 In digital commerce, each variant may correspond to a distinct SKU or stocked product code, which naturally meet these requirements.  In games or movies, each variant may represent a fixed set of curated asset skins which can be represented, moved across the wire, and loaded efficiently.
 
-A non-goal of this extension is to serve _configuration authorship_ use cases (i.e. configuration builders or "configurators"), which necessarily entail a separate set of concerns, are more subject to complex application-specific business logic, and may benefit from dynamic and continuous configurability and complex builder rules.
+A non-goal of this extension is to serve _configuration authorship_ use cases (i.e. configuration builders or "configurators"). These have a separate set of concerns, are more subject to complex application-specific business logic, and may benefit from dynamic and continuous configurability with complex builder rules.
 
-While not designed around this use case, we note however that this extension does implicitly communicate at the primitive level which materials are "valid" for that primitive, for any such applications which may be interested in leveraging this information.
+While not designed around this use case, we note however that this extension does implicitly communicate at the primitive level which materials are available for that primitive, for any such applications which may be interested in leveraging this information.
 
-## Variants
+## Material Variants
 
-We introduce a simple variant tagging extension scheme, that allows for high-level runtime swapping between which `material` is used to shade a given `mesh primitive`: the extension root contains a mandatory `mapping` property, which is an array of objects, each one associating some set of variants with a material reference.
+A _material_variant_ is a set of mappings that determine which material can be applied to a given primitive. Consider a model of a shoe where three meshes are defined along with two materials. These meshes contain an assortment of primitives that have an associated material attached.
 
 Imagine a sneaker with shoelace holes that are made from materials that depend on the overall shoe colour in non-obvious ways:
 
-| Variants                           | Material                        |
+| Meshes to Skin                     | Available Materials             |
 | ---------------------------------- | ------------------------------- |
-| `sneaker_yellow`, `sneaker_orange` | `shoelace_hole_material_brown`  |
-| `sneaker_red`                      | `shoelace_hole_material_purple` |
-| `sneaker_black`                    | `shoelace_hole_material_yellow` |
+| `laces`                            | `white_matte`                   |
+| `body`                             | `red_matte`                     |
+| `sole`                             |                                 |
 
-(_the authors of this spec are not product designers, apologies for the dubious colour choices_)
+In one variant of the shoe, the primitives associated with each mesh listed below would have the following materials assigned to them:
 
-Application-specific logic defines, for a given instance of a glTF asset, a single active variant.  The currently active `material` for a `mesh primitive` is found by stepping through this array of mappings in order, and selecting the first one which contains somewhere in its list of variants the currently active variant. The corresponding material is assigned to the mesh.  If none match, fall back on vanilla glTF behaviour.
+| Meshes                             | Material                        |
+| ---------------------------------- | ------------------------------- |
+| `laces`                            | `white_matte`                   |
+| `body`                             | `red_matte`                     |
+| `sole`                             | `white_matte`                   |
 
-In other words, **this is not a literal mapping** in its glTF form – exporters, take note.
+In this case, the laces and sole of the shoe would be white while the body of the shoe would be red.
 
-Implicitly, if the application has no active variant, it should also fall back on vanilla glTF behavior.  For most use cases, we recommend that one of the variants always corresponds to the default vanilla glTF material for each primitive, so that there exists some one-to-one with viewers which do not support the extension, but this is not a strict requirement. The decision of whether to include a separate option to switch to the no active variant case is left as a decision to compliant applications based on their respective use cases.
+This material variant may have an associated SKU or product name in digital commerce. The shoe, however, also comes in an alternative color scheme that is represented by an alternative set of primitive/material mappings:
 
-## The variant mapping as glTF JSON
+| Meshes                             | Material                        |
+| ---------------------------------- | ------------------------------- |
+| `laces`                            | `red_matte`                     |
+| `body`                             | `white_matte`                   |
+| `sole`                             | `white_matte`                   |
 
-A snippet of a mesh implementing shoe holes which uses this extension might look like:
+In the second case, the shoe would have a white body and sole but red laces. In both cases, the meshes and their associated primitives remain the same with the exception of which material is used. Looking at the laces mesh, the KHR_materials_variants extension would define this mapping as follows:
 
 ```javascript
 "meshes": [
     {
-        "name": "shoelace_hole",
+        "name": "laces",
         "primitives": [
             {
-                "attributes": {
-                "POSITION": 0,
-                "NORMAL": 1,
-                },
-                "indices": 2,
-                "material": 0,
+                 ...,
                 "extensions": {
                     "KHR_materials_variants" : {
-                        "mapping": [
+                        "mappings": [
                             {
-                                "variants": [ "sneaker_yellow", "sneaker_orange" ],
-                                "material": 7,
+                                "variants": [0],
+                                "material": 1,
                             },
                             {
-                                "variants": [ "sneaker_red" ],
-                                "material": 8,
-                            },
-                            {
-                                "variants": [ "sneaker_black" ],
-                                "material": 9,
+                                "variants": [1],
+                                "material": 2,
                             },
                         ],
                     }
@@ -98,11 +104,22 @@ A snippet of a mesh implementing shoe holes which uses this extension might look
     // ... more meshes ...
 ]
 ```
-The variant tag-based approach allows for wholesale changes across diverse geometry, by reusing the same variant identifiers in switches across many distinct mesh primitives.  Likewise, for a given primitive, many different variants may share the same materials.
 
-Composition also works well with variants: if a scene were built from several glTFs with different variational models, each with their own set of variants, then it's easy to imagine an API call on the entire scene that takes a set of variants and passes them on to each constituent model, recursively.
+The variants property within each mapping refers to the index of a material variant located at the glTF root node:
 
-> NOTE: Variant strings function only as identifiers.  Communicating a human readable name for the variants is left to specific applications and kept outside the scope of this extension.  Each mapping can optionally define a name as well, though this is strictly optional.
+```javascript
+{
+  "asset": {"version": "2.0", "generator": "Fancy 3D Tool" },
+  "extensions": {
+      "KHR_materials_variants": {
+        "variants": [
+          {"name": "Red Shoe with White Laces" },
+          {"name": "White Shoe with Red Laces" },
+        ]
+      }
+  }
+}
+```
 
 ## Interaction with existing glTF functionality
 
