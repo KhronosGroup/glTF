@@ -29,7 +29,7 @@ This extension allows for a compact glTF representation of multiple material var
 
 A typical use case is digital commerce, where a user might be presented with e.g. a pair of sneakers and the ability to switch between different colours.
 
-![pair of sneakers](examples/shoes/photo.png)
+![pair of sneakers](sneakers.png)
 
 ## Design Goals
 
@@ -47,83 +47,100 @@ A non-goal of this extension is to serve _configuration authorship_ use cases (i
 
 While not designed around this use case, we note however that this extension does implicitly communicate at the primitive level which materials are available for that primitive, for any such applications which may be interested in leveraging this information.
 
-## Material Variants
+## Properties
 
-A _material_variant_ is a set of mappings that determine which material can be applied to a given primitive. Consider a model of a shoe where three meshes are defined along with two materials. These meshes contain an assortment of primitives that each have an associated material attached.
+The `KHR_materials_variants` extension defines two properties — `variants` on the root node and `mappings` on any number of primitive nodes.
 
-Imagine a sneaker with shoelace holes that are made from materials that depend on the overall shoe colour in non-obvious ways:
+## Variants
 
-| Meshes to Skin                     | Available Materials             |
-| ---------------------------------- | ------------------------------- |
-| `laces`                            | `white_matte`                   |
-| `body`                             | `red_matte`                     |
-| `sole`                             |                                 |
+For a glTF asset, a material `variant` represents a combination of materials that can be applied in unison to a set of primitives based on _mappings_.
 
-In one variant of the shoe, the primitives associated with each mesh listed below would have the following materials assigned to them:
+Available _variants_ are defined at the glTF root node as an array of objects each with a name property.
 
-| Meshes                             | Material                        |
-| ---------------------------------- | ------------------------------- |
-| `laces`                            | `white_matte`                   |
-| `body`                             | `red_matte`                     |
-| `sole`                             | `white_matte`                   |
+Viewer-specific logic defines, for a given instance of a glTF asset, up to one single active variant at a time.
 
-In this case, the laces and sole of the shoe would be white while the body of the shoe would be red.
+## Mappings
 
-This material variant may have an associated SKU or product name in digital commerce. The shoe, however, also comes in an alternative color scheme that is represented by an alternative set of primitive/material mappings:
+For a given primitive, each mapping item represents a material that should be applied to the primitive when one of its _variants_ is active. Available _mappings_ are defined on the primitive node as an array of objects. Each object specifies a material by its index in the root level `materials` array and an array of variants each by their respective indices in the root level `variants` array, defined above.
 
-| Meshes                             | Material                        |
-| ---------------------------------- | ------------------------------- |
-| `laces`                            | `red_matte`                     |
-| `body`                             | `white_matte`                   |
-| `sole`                             | `white_matte`                   |
+Across the entire _mappings_ array, each variant index and each material must be used no more than one time.
 
-In the second case, the shoe would have a white body and sole but red laces. In both cases, the meshes and their associated primitives remain the same with the exception of which material is used. Looking at the laces mesh, the KHR_materials_variants extension would define this mapping as follows:
+When the active variant is referenced in a mapping, a compliant viewer will apply its material to the primitive.
 
-```javascript
-"meshes": [
-    {
-        "name": "laces",
-        "primitives": [
-            {
-                ...,
-                "extensions": {
-                    "KHR_materials_variants" : {
-                        "mappings": [
-                            {
-                                "variants": [0],
-                                "material": 1,
-                            },
-                            {
-                                "variants": [1],
-                                "material": 2,
-                            },
-                        ],
-                    }
-                }
-            },
-            // ... more primitives ...
-        ]
-    },
-    // ... more meshes ...
-]
-```
+When no mapping contains the active variant, or there is no active variant, a compliant viewer will fall back on vanilla glTF behaviour for the primitive.
 
-Viewer-specific logic defines, for a given instance of a glTF asset, up to one single active variant. Each `mappings` item gives the material that a compliant viewer should apply for that primitive when any of its `variants` indices is the active one.  If there are no matching variants found within `mappings`, or there is no active variant, fall back on vanilla glTF behaviour. Across the entire `mappings` array, each variant index and each material must be used no more than one time.
+## Example
 
-For each mapping, each index of the `variants` property refers to the index of a material variant located at the glTF root node:
+_This section is non-normative._
+
+By way of illustration, imagine a sneaker with four differently colored variants, each of which may have an associated SKU or product name in digital commerce.
+
+| Variants         |
+| ---------------- |
+| `Yellow Sneaker` |
+| `Red Sneaker`    |
+| `Black Sneaker`  |
+| `Orange Sneaker` |
+
+At the root level, this can be described as follows
 
 ```javascript
 {
   "asset": {"version": "2.0", "generator": "Fancy 3D Tool" },
   "extensions": {
-      "KHR_materials_variants": {
-        "variants": [
-          {"name": "Red Shoe with White Laces" },
-          {"name": "White Shoe with Red Laces" },
-        ]
-      }
+    "KHR_materials_variants": {
+      "variants": [
+        {"name": "Yellow Sneaker" },
+        {"name": "Red Sneaker"    },
+        {"name": "Black Sneaker"  },
+        {"name": "Orange Sneaker" },
+      ]
+    }
   }
 }
+```
+
+Now consider that the sneaker's shoelaces are made from materials which depend on the overall shoe colour in non-obvious ways:
+
+| Variants                           | Shoelace Material           | Material Index |
+| ---------------------------------- | --------------------------- | -------------- |
+| `Yellow Sneaker`, `Orange Sneaker` | `Brown Shoelaces`           | 2              |
+| `Red Sneaker`                      | `Purple Shoelaces`          | 4              |
+| `Black Sneaker`                    | `Yellow Shoelaces`          | 5              |
+
+Looking at the shoelaces mesh, the KHR_materials_variants extension would define this mapping as follows:
+
+```javascript
+"meshes": [
+  {
+    "name": "shoelaces",
+    "primitives": [
+      {
+        ...,
+        "extensions": {
+          "KHR_materials_variants" : {
+            "mappings": [
+              {
+                "material": 2,
+                "variants": [0, 3],
+              },
+              {
+                "material": 4,
+                "variants": [1],
+              },
+              {
+                "material": 5,
+                "variants": [2],
+              },
+            ],
+          }
+        }
+      },
+      // ... more primitives ...
+    ]
+  },
+  // ... more meshes ...
+]
 ```
 
 ## Interaction with existing glTF functionality
