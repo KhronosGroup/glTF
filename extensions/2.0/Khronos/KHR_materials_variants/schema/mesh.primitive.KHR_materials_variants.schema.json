@@ -16,13 +16,13 @@
                         "type": "array",
                         "description": "An array of variant index values.",
                         "items": {
-                            "allOf": [ {"$ref": "../../glTFid.schema.json" } ]
+                            "allOf": [ {"$ref": "glTFid.schema.json" } ]
                         },
                         "minItems": 1,
                         "gltf_detailedDescription": "An array of index values that reference variants defined in the glTF root's extension object."
                     },
                     "material": {
-                        "allOf": [ { "$ref": "../../glTFid.schema.json" } ],
+                        "allOf": [ { "$ref": "glTFid.schema.json" } ],
                         "description": "The material associated with the set of variants.",
                         "gltf_detailedDescription": "A reference to the material associated with the given array of variants."
                     },

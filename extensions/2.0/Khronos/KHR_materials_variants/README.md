@@ -108,7 +108,7 @@ In the second case, the shoe would have a white body and sole but red laces. In 
 ]
 ```
 
-Viewer-specific logic defines, for a given instance of a glTF asset, up to one single active variant. Each `mappings` item gives the material to a compliant viewer should apply for that primitive when any of its `variants` indices is the active one.  If there are no matching variants found within `mappings`, or there is no active variant, fall back on vanilla glTF behaviour. Across the entire `mappings` array, each variant index and each material must be used no more than one time.
+Viewer-specific logic defines, for a given instance of a glTF asset, up to one single active variant. Each `mappings` item gives the material a compliant viewer should apply for that primitive when any of its `variants` indices is the active one.  If there are no matching variants found within `mappings`, or there is no active variant, fall back on vanilla glTF behaviour. Across the entire `mappings` array, each variant index and each material must be used no more than one time.
 
 For each mapping, each index of the `variants` property refers to the index of a material variant located at the glTF root node:
 
