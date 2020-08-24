@@ -3,7 +3,7 @@
 ## Contributors
 
 - Mike Bond, Adobe, [@Miibond](https://github.com/MiiBond)
-- Aurelien Vaysset, [Emersya](http://emersya.com)
+- Aurélien Vaysset, Emersya, [@aurelienvaysset](https://github.com/aurelienvaysset)
 - Pär Winzell, Facebook, [@zellski](https://twitter.com/zellski)
 - Renee Rashid, Facebook, [@debuggrl](https://github.com/debuggrl)
 - Jeremy Cytryn, Facebook, [@jercytrn](https://github.com/jercytryn)
@@ -11,6 +11,9 @@
 - Daniel Beauchamp, Shopify, [@pushmatrix](http://github.com/pushmatrix)
 - Stephan Leroux, Shopify, [@sleroux](http://github.com/sleroux)
 - Eric Chadwick, Wayfair, [@echadwick-wayfair](https://github.com/echadwick-wayfair)
+
+Copyright (C) 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
 
@@ -46,7 +49,7 @@ While not designed around this use case, we note however that this extension doe
 
 ## Material Variants
 
-A _material_variant_ is a set of mappings that determine which material can be applied to a given primitive. Consider a model of a shoe where three meshes are defined along with two materials. These meshes contain an assortment of primitives that have an associated material attached.
+A _material_variant_ is a set of mappings that determine which material can be applied to a given primitive. Consider a model of a shoe where three meshes are defined along with two materials. These meshes contain an assortment of primitives that each have an associated material attached.
 
 Imagine a sneaker with shoelace holes that are made from materials that depend on the overall shoe colour in non-obvious ways:
 
@@ -82,7 +85,7 @@ In the second case, the shoe would have a white body and sole but red laces. In 
         "name": "laces",
         "primitives": [
             {
-                 ...,
+                ...,
                 "extensions": {
                     "KHR_materials_variants" : {
                         "mappings": [
@@ -129,20 +132,18 @@ The primary purpose of this extension is to simply formalise the idea of static 
 
 As a secondary effect, material variants allow multiple assets — with shared geometry but different materials — to be stored more compactly, particularly relevant for the self-contained binary format GLB. When using external URIs as references to textures, applications may (optionally) process geometry only once and lazily request texture assets only when needed for a particular variant.
 
-## Implications for Applications and APIs
+## Appendix: Full Khronos Copyright Statement
 
-_This section is non-normative._
+Copyright 2018-2020 The Khronos Group Inc.
 
-How does an application communicate to a glTF engine what the initial variant state should be? How does it submit a runtime request for a different configuration? It's out of scope for this extension to constrain or mandate an engine's public API, but a useful implementation will require something of the sort.
+Some parts of this Specification are purely informative and do not define requirements necessary for compliance and so are outside the Scope of this Specification. These parts of the Specification are marked as being non-normative, or identified as Implementation Notes.
 
-## Examples
+Where this Specification includes normative references to external documents, only the specifically identified sections and functionality of those external documents are in Scope. Requirements defined by external documents not created by Khronos may contain contributions from non-members of Khronos not covered by the Khronos Intellectual Property Rights Policy.
 
-_This section is non-normative._
+This specification is protected by copyright laws and contains material proprietary to Khronos. Except as described by these terms, it or any components may not be reproduced, republished, distributed, transmitted, displayed, broadcast or otherwise exploited in any manner without the express prior written permission of Khronos.
 
-For reference, we provide several simple examples of variants, both represented as distinct constituent GLB files without the extension and as multi-variant GLB files leveraging this extension.  We also include the respective net size of the individual variant GLB files and the size of the single combined multi-variant GLB, for comparison.
+This specification has been created under the Khronos Intellectual Property Rights Policy, which is Attachment A of the Khronos Group Membership Agreement available at www.khronos.org/files/member_agreement.pdf. Khronos grants a conditional copyright license to use and reproduce the unmodified specification for any purpose, without fee or royalty, EXCEPT no licenses to any patent, trademark or other intellectual property rights are granted under these terms. Parties desiring to implement the specification and make use of Khronos trademarks in relation to that implementation, and receive reciprocal patent license protection under the Khronos IP Policy must become Adopters and confirm the implementation as conformant under the process defined by Khronos for this specification; see https://www.khronos.org/adopters.
 
-| Model                     | Screenshot                         | Description                                                                                                   | Net Size (MB) | Combined Size (MB) |
-|---------------------------|------------------------------------|---------------------------------------------------------------------------------------------------------------|---------------|--------------------|
-| [Shoes](examples/shoes)   | ![shoes](examples/shoes/photo.png)      | A simple variant commerce example with a single mesh primitive                                                | 15            | 7.5                |
-| [Chair](examples/chair)   | ![chairs](examples/chair/chairs.jpg)     | A more complex commerce example, involving multi-dimensional variants - flattened into four distinct variants | 7.0           | 1.7                |
-| [Helmet](examples/helmet) | ![helmets](examples/helmet/helmets.jpg)   | Gaming example, with wet and dry variants of a helmet                                                         | 8.8           | 5.0                |
+Khronos makes no, and expressly disclaims any, representations or warranties, express or implied, regarding this specification, including, without limitation: merchantability, fitness for a particular purpose, non-infringement of any intellectual property, correctness, accuracy, completeness, timeliness, and reliability. Under no circumstances will Khronos, or any of its Promoters, Contributors or Members, or their respective partners, officers, directors, employees, agents or representatives be liable for any damages, whether direct, indirect, special or consequential damages for lost revenues, lost profits, or otherwise, arising from or in connection with these materials.
+
+Khronos® and Vulkan® are registered trademarks, and ANARI™, WebGL™, glTF™, NNEF™, OpenVX™, SPIR™, SPIR-V™, SYCL™, OpenVG™ and 3D Commerce™ are trademarks of The Khronos Group Inc. OpenXR™ is a trademark owned by The Khronos Group Inc. and is registered as a trademark in China, the European Union, Japan and the United Kingdom. OpenCL™ is a trademark of Apple Inc. and OpenGL® is a registered trademark and the OpenGL ES™ and OpenGL SC™ logos are trademarks of Hewlett Packard Enterprise used under license by Khronos. ASTC is a trademark of ARM Holdings PLC. All other product names, trademarks, and/or company names are used solely for identification and belong to their respective owners.
