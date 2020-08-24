@@ -94,7 +94,7 @@ The sheen formula `f_sheen` follows the common microfacet form:
 The sheen distribution follows the "Charlie" sheen definition from ImageWorks [Conty and Kulla (2017)](#ContyKulla2017):
 
 ```glsl
-alphaG = sheenRoughness
+alphaG = sheenRoughness * sheenRoughness
 invR = 1 / alphaG
 cos2h = NdotH * NdotH
 sin2h = 1 - cos2h
