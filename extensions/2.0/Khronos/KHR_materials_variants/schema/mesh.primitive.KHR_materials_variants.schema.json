@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "KHR_materials_variants mesh primitive extension",
     "type": "object",
-    "allOf": [ { "$ref": "../../glTFProperty.schema.json" } ],
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "mappings": {
             "type": "array",
