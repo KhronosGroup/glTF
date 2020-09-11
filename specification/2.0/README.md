@@ -3891,7 +3891,9 @@ Application-specific data.
 
 # Appendix B: BRDF Implementation
 
-The bidirectional reflectance distribution function (BRDF) of the metallic-roughness material is a linear interpolation of a metallic BRDF and a dielectric BRDF. The BRDFs share the parameters for roughness and base color. The blending factor `metallic` describes the metalness of the material.
+In this chapter we present the bidirectional scattering distribution function (BRDF) of the glTF 2.0 metallic-roughness material. The BRDF describes the reflective properties of the surface of a physically-based material. For a pair of directions, the BRDF returns how much light from the incoming direction is scattered from the surface in the outgoing direction. See [Pharr et al. (2018), Chapter 5.6 "Surface Reflection"](#Pharr2018), for an introduction to radiometry and the BRDF.
+
+The BRDF of the metallic-roughness material is a linear interpolation of a metallic BRDF and a dielectric BRDF. The BRDFs share the parameters for roughness and base color. The blending factor `metallic` describes the metalness of the material.
 
 ```
 material = mix(dielectric_brdf, metal_brdf, metallic)
@@ -3908,7 +3910,7 @@ In this chapter, we will first sketch the logical structure of the material. We 
 
 ### Metals
 
-Metallic surfaces reflect back most of the illumination, only a small portion of the light is absorbed by the material ([Pharr et al. (2018)](#Pharr2018)). This effect is described by the Fresnel term `conductor_fresnel` with the wavelength-dependent refractive index and extinction coefficient. To make parameterization simple, the metallic-roughness material combines the two quantities into a single, user-defined color value `baseColor` that defines the reflection color at normal incidence, also referred to as `f0`. The reflection color at grazing incidence is called `f90`. It is set to 1 because the grazing angle reflectance for any material approaches pure white in the limit. The conductor Fresnel term modulates the contribution of a specular BRDF parameterized by the `roughness` parameter.
+Metallic surfaces reflect back most of the illumination, only a small portion of the light is absorbed by the material ([Pharr et al. (2018), Chapter 8.2 "Specular Reflection and Transmission"](#Pharr2018)). This effect is described by the Fresnel term `conductor_fresnel` with the wavelength-dependent refractive index and extinction coefficient. To make parameterization simple, the metallic-roughness material combines the two quantities into a single, user-defined color value `baseColor` that defines the reflection color at normal incidence, also referred to as `f0`. The reflection color at grazing incidence is called `f90`. It is set to 1 because the grazing angle reflectance for any material approaches pure white in the limit. The conductor Fresnel term modulates the contribution of a specular BRDF parameterized by the `roughness` parameter.
 
 ```
 metal_brdf =
@@ -3920,7 +3922,7 @@ metal_brdf =
 
 ### Dielectrics
 
-Unlike metals, dielectric materials transmit most of the incident illumination into the interior of the object and the Fresnel term is parameterized only by the refractive index ([Pharr et al. (2018)](#Pharr2018)). This makes dielectrics like glass, oil, water or air transparent. Other dielectrics, like the majority of plastic materials, are filled with particles that absorb or scatter most or all of the transmitted light, reducing the transparency and giving the surface its colorful appearance.
+Unlike metals, dielectric materials transmit most of the incident illumination into the interior of the object and the Fresnel term is parameterized only by the refractive index ([Pharr et al. (2018), Chapter 8.2 "Specular Reflection and Transmission"](#Pharr2018)). This makes dielectrics like glass, oil, water or air transparent. Other dielectrics, like the majority of plastic materials, are filled with particles that absorb or scatter most or all of the transmitted light, reducing the transparency and giving the surface its colorful appearance.
 
 As a result, dielectric materials are modeled as a Fresnel-weighted combination of a specular BRDF, simulating the reflection at the surface, and a diffuse BRDF, simulating the transmitted portion of the light that is absorbed and scattered inside the object. The reflection roughness is given by the squared `roughness` of the material. The color of the diffuse BRDF comes from the `baseColor`. The amount of reflection compared to transmission is directional-dependent and as such determined by the Fresnel term. Its index of refraction is set to a fixed value of 1.5, a good compromise for the majority of opaque, dielectric materials.
 
@@ -4110,7 +4112,7 @@ More recently, [Jakob et al. (2014)](#Jakob2014) developed a generic framework f
 * [Jakob, W., E. d'Eon, O. Jakob, S. Marschner (2014): A Comprehensive Framework for Rendering Layered Materials](https://research.cs.cornell.edu/layered-sg14/)<a name="Jakob2014"></a>
 * [Kulla, C., and A. Conty (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf)<a name="KullaConty2017"></a>
 * [Lazanyi, I. and L. Szirmay-Kalos (2005): Fresnel term approximations for metals](http://wscg.zcu.cz/WSCG2005/Papers_2005/Short/H29-full.pdf)<a name="LazanyiSzirmayKalos2005"></a>
-* [Pharr, M., W. Jakob, and G. Humphreys (2016): Physically Based Rendering: From Theory To Implementation, 3rd edition, chapter 8.2.](http://www.pbr-book.org/)<a name="Pharr2018"></a>
+* [Pharr, M., W. Jakob, and G. Humphreys (2016): Physically Based Rendering: From Theory To Implementation, 3rd edition. ](http://www.pbr-book.org/)<a name="Pharr2018"></a>
 * [Schlick, C. (1994): An Inexpensive BRDF Model for Physically-based Rendering. Computer Graphics Forum 13, 233-246.](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.50.2297&rep=rep1&type=pdf)<a name="Schlick1994"></a>
 * Smith, B. (1967):  Geometrical shadowing of a random rough surface. IEEE Transactions on Antennas and Propagation 15 (5), 668-671.<a name="Smith1967"></a>
 * [Torrance, K. E., E. M. Sparrow (1967): Theory for Off-Specular Reflection From Roughened Surfaces. Journal of the Optical Society of America 57 (9), 1105-1114.](http://www.graphics.cornell.edu/~westin/pubs/TorranceSparrowJOSA1967.pdf)<a name="TorranceSparrow1967"></a>
