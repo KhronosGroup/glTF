@@ -28,6 +28,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `FB` | Facebook, Inc. | https://www.facebook.com/ | [#1139](https://github.com/KhronosGroup/glTF/pull/1139) |
 | `FOXIT` | Foxit Software, Inc. | https://foxitsoftware.com<br>`liqian_mu at foxitsoftware.com` | [#1712](https://github.com/KhronosGroup/glTF/issues/1712) |
 | `GOOGLE` | Google, LLC | https://www.google.com/ | [#1123](https://github.com/KhronosGroup/glTF/issues/1123) |
+| `GRIFFEL` | Griffel Studio | http://griffelstudio.com/ | [#1861](https://github.com/KhronosGroup/glTF/issues/1861) |
 | `KDAB` | The KDAB Group | https://www.kdab.com/ | [#1728](https://github.com/KhronosGroup/glTF/pull/1728) |
 | `LLQ` | Lifeliqe, Inc. | https://www.lifeliqe.com/ | [#1414](https://github.com/KhronosGroup/glTF/issues/1414) |
 | `MESHOPT` | meshoptimizer | https://meshoptimizer.org/ | [#1634](https://github.com/KhronosGroup/glTF/issues/1634) |
