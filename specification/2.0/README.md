@@ -4046,14 +4046,16 @@ function fresnel_mix(ior, base, layer) {
 
 ### Metal BRDF and Dielectric BRDF
 
-Applying the functions we arrive at the metal BRDF and dielectric BRDF:
+Now that we have an implementation for all the functions used in the glTF metallic-roughness material model, we are able to connect the functions according to the graph shown in section ["Complete Model"](#complete-model). By substituting the mixing functions (`fresnel_mix`, `conductor_fresnel`) for the implementation, we arrive at the following BRDFs for the metal and the dielectric component:
 
 ```
 metal_brdf = specular_brdf(roughness^2) * (baseColor.rgb + (1 - baseColor.rgb)) * (1 - abs(VdotH))^5)
 dielectric_brdf = mix(diffuse_brdf(baseColor.rgb), specular_brdf(roughness^2), 0.04 + (1 - 0.04) * (1 - abs(VdotH))^5)
 ```
 
-These are mixed according to the metalness:
+Note that the dielectric index of refraction `ior = 1.5` is now `f0 = 0.04`.
+
+Metal and dielectric are mixed according to the metalness:
 
 ```
 material = mix(dielectric_brdf, metal_brdf, metallic)
