@@ -17,10 +17,10 @@
             "description": "Color of the sheen layer (in linear space).",
             "default": [0, 0, 0]
         },
-        "sheenTexture": {
+        "sheenColorTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "The sheen color (RGB) and roughness (Alpha) texture.",
-            "gltf_detailedDescription": "The sheen color (RGB) and roughness (Alpha) texture. Stored in channel RGB the sheen color in sRGB transfer function and in A the linear factor."
+            "description": "The sheen color (RGB) texture.",
+            "gltf_detailedDescription": "The sheen color (RGB) texture. Stored in channel RGB, the sheen color is in sRGB transfer function."
         },
         "sheenRoughnessFactor": {
             "type": "number",
@@ -29,6 +29,11 @@
             "minimum": 0.0,
             "maximum": 1.0,
             "gltf_detailedDescription": "The sheen layer roughness of the material."
+        },
+        "sheenRoughnessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The sheen roughness (Alpha) texture.",
+            "gltf_detailedDescription": "The sheen roughness (Alpha) texture. Stored in alpha channel, the roughness value is in linear space."
         },
         "extensions": { },
         "extras": { }

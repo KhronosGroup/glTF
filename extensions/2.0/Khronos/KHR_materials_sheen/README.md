@@ -59,15 +59,16 @@ The following parameters are contributed by the `KHR_materials_sheen` extension:
 |                                  | Type                                                                            | Description                            | Required                       |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|--------------------------------|
 |**sheenColorFactor**                   | `array`                                                                         | The sheen color in linear space        | No, default: `[0.0, 0.0, 0.0]` |
-|**sheenTexture**         | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The sheen color (RGB) and roughness (Alpha) texture.<br> The sheen color is in sRGB transfer function | No               |
+|**sheenColorTexture**         | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The sheen color (RGB).<br> The sheen color is in sRGB transfer function | No               |
 |**sheenRoughnessFactor**               | `number`                                                                        | The sheen roughness.                   | No, default: `0.0`             |
+|**sheenRoughnessTexture**         | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The sheen roughness (Alpha) texture. | No               |
 
 The sheen BRDF is layered on top of the glTF 2.0 Metallic-Roughness material. If clearcoat (`KHR_materials_clearcoat`) is active at the same time, clearcoat is layered on top of sheen. The `sheenColorFactor` determines the view-independent intensity of the sheen BRDF. If `sheenColorFactor` is zero, the whole sheen layer is disabled. Implementations of the BRDF itself can vary based on device performance and resource constraints.
 
 If a texture is defined:
 
-* The sheen color is computed with : `sheenColor = sheenColorFactor * sampleLinear(sheenTexture).rgb`.
-* The sheen roughness is computed with : `sheenRoughness = sheenRoughnessFactor * sample(sheenTexture).a`.
+* The sheen color is computed with : `sheenColor = sheenColorFactor * sampleLinear(sheenColorTexture).rgb`.
+* The sheen roughness is computed with : `sheenRoughness = sheenRoughnessFactor * sample(sheenRoughnessTexture).a`.
 
 Otherwise, `sheenColor = sheenColorFactor` and `sheenRoughness = sheenRoughnessFactor`
 
