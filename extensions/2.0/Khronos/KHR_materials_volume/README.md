@@ -76,7 +76,7 @@ The extension defines the following parameters to describe the volume.
 
 | | Type | Description | Required |
 |-|------|-------------|----------|
-| **thicknessFactor** | `number` | The thickness of the volume beneath the surface in meters in the local coordinate system of the node. If the value is 0 the material is thin-walled. Otherwise the material is a volume boundary. | No, default: `0`. |
+| **thicknessFactor** | `number` | The thickness of the volume beneath the surface in meters in the local coordinate system of the node. If the value is 0 the material is thin-walled. Otherwise the material is a volume boundary. The `doubleSided` property has no effect on volume boundaries. | No, default: `0`. |
 | **thicknessTexture** | `textureInfo` | A texture that defines the thickness, stored in the G channel. This will be multiplied by `thicknessFactor`. | No |
 | **attenuationDistance** | `number` | Density of the medium given as the average distance in meters that light travels in the medium before interacting with a particle. | No, default: +Infinity |
 | **attenuationColor** | `number[3]` | The color that white light turns into due to absorption when reaching the attenuation distance. | No, default: `[1, 1, 1]` |
