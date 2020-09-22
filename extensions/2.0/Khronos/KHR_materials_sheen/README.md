@@ -10,7 +10,7 @@
 * Mike Bond, Adobe, [@MiiBond](https://github.com/MiiBond)
 * Don McCurdy, Google, [@donmccurdy](https://twitter.com/donrmccurdy)
 * Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
-* Eliphas NUIT, Dassault System, [@EliphasNUIT](https://github.com/EliphasNUIT)
+* Jekfer Bichon, Dassault System, [@EliphasNUIT](https://github.com/EliphasNUIT)
 * Aidin Abedi, Epic Games, [@aidinabedi](https://github.com/aidinabedi)
 
 Copyright (C) 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
