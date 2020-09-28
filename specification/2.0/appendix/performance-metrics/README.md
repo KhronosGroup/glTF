@@ -96,10 +96,14 @@ This will include translation, meaning that the bounds will not be centered.
 
 
 [accessors]  
-This value represent the total vertex accessor usage of the model.  
+This value represents the total vertex accessor usage of the asset, it is an indication of the memory requirements for the asset.  
+Note that this value will not take into account if normal/tangent/bitangent values are defined or shall be runtime computed.  
 It is calculated by adding upp the accessors in the model, storing count, componentType and type.  
 This may give an indication of the runtime memory footprint of the buffers needed for the model.  
 componentType and type are taken from glTF specification for Accessor object.  
+`count`
+Number of components, ie 4 VEC3 FLOATs will require 4 * 3 * 4 bytes of memory (on most devices)
+
 `componentType`  
 5120 BYTE  
 5121 UNSIGNED_BYTE  
