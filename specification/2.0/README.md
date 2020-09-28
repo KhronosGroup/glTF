@@ -1164,19 +1164,7 @@ Then, the result would be
 [0.9 * 0.2, 0.5 * 1.0, 0.3 * 0.7, 1.0 * 1.0] = [0.18, 0.5, 0.21, 1.0]
 ```
 
-The following equations show how to calculate bidirectional reflectance distribution function (BRDF) inputs (*c<sub>diff</sub>*, *F<sub>0</sub>*, *&alpha;*) from the metallic-roughness material properties. In addition to the material properties, if a primitive specifies a vertex color using the attribute semantic property `COLOR_0`, then this value acts as an additional linear multiplier to `baseColor`.
-
-`const dielectricSpecular = rgb(0.04, 0.04, 0.04)`
-<br>
-`const black = rgb(0, 0, 0)`
-
-*c<sub>diff</sub>* = `lerp(baseColor.rgb * (1 - dielectricSpecular.r), black, metallic)`
-<br>
-*F<sub>0</sub>* = `lerp(dieletricSpecular, baseColor.rgb, metallic)`
-<br>
-*&alpha;* = `roughness ^ 2`
-
-All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix B](#appendix-b-brdf-implementation) for more details on the BRDF calculations.
+Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix B](#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
 ### Additional Maps
 
@@ -3903,67 +3891,236 @@ Application-specific data.
 
 # Appendix B: BRDF Implementation
 
+In this chapter we present the bidirectional scattering distribution function (BRDF) of the glTF 2.0 metallic-roughness material. The BRDF describes the reflective properties of the surface of a physically-based material. For a pair of directions, the BRDF returns how much light from the incoming direction is scattered from the surface in the outgoing direction. See [Pharr et al. (2018), Chapter 5.6 "Surface Reflection"](#Pharr2018), for an introduction to radiometry and the BRDF.
+
+The BRDF of the metallic-roughness material is a linear interpolation of a metallic BRDF and a dielectric BRDF. The BRDFs share the parameters for roughness and base color. The blending factor `metallic` describes the metalness of the material.
+
+```
+material = mix(dielectric_brdf, metal_brdf, metallic)
+         = (1 - metallic) * dielectric_brdf + metallic * metal_brdf
+```
+
+Such a material model based on a linear interpolation of metallic and dielectric components was introduced by [Burley (2012)](#Burley2012) and adapted by many renderers, resulting in a wide-range of applications supporting it.
+
+Usually, a material is either metallic or dielectric. A texture provided for `metallic` with either 1 or 0 separates metallic from dielectric regions on the mesh. There are situations in which there is no clear separation. It may happen that due to anti-alising or mip-mapping there is a portion of metal and a portion of dielectric within a texel. Futhermore, a material composed of several semi-transparent layers may be represented as a blend between several single-layered materials (layering via parameter blending).
+
+In this chapter, we will first sketch the logical structure of the material. We use an abstract notation that describes the material as a directed acyclic graph (DAG). The vertices correspond to the basic building blocks of the material model: BRDFs, mixing operators, input parameters, and constants. In the second part we will provide a sample implementation as a set of equations and source code for the BRDFs and mixing operators. In contrast to the logical structure the implementation is not normative.
+
+## Material Structure 
+
+### Metals
+
+Metallic surfaces reflect back most of the illumination, only a small portion of the light is absorbed by the material ([Pharr et al. (2018), Chapter 8.2 "Specular Reflection and Transmission"](#Pharr2018)). This effect is described by the Fresnel term `conductor_fresnel` with the wavelength-dependent refractive index and extinction coefficient. To make parameterization simple, the metallic-roughness material combines the two quantities into a single, user-defined color value `baseColor` that defines the reflection color at normal incidence, also referred to as `f0`. The reflection color at grazing incidence is called `f90`. It is set to 1 because the grazing angle reflectance for any material approaches pure white in the limit. The conductor Fresnel term modulates the contribution of a specular BRDF parameterized by the `roughness` parameter.
+
+```
+metal_brdf =
+  conductor_fresnel(
+    f0 = baseColor,
+    bsdf = specular_brdf(
+      α = roughness^2))
+```
+
+### Dielectrics
+
+Unlike metals, dielectric materials transmit most of the incident illumination into the interior of the object and the Fresnel term is parameterized only by the refractive index ([Pharr et al. (2018), Chapter 8.2 "Specular Reflection and Transmission"](#Pharr2018)). This makes dielectrics like glass, oil, water or air transparent. Other dielectrics, like the majority of plastic materials, are filled with particles that absorb or scatter most or all of the transmitted light, reducing the transparency and giving the surface its colorful appearance.
+
+As a result, dielectric materials are modeled as a Fresnel-weighted combination of a specular BRDF, simulating the reflection at the surface, and a diffuse BRDF, simulating the transmitted portion of the light that is absorbed and scattered inside the object. The reflection roughness is given by the squared `roughness` of the material. The color of the diffuse BRDF comes from the `baseColor`. The amount of reflection compared to transmission is directional-dependent and as such determined by the Fresnel term. Its index of refraction is set to a fixed value of 1.5, a good compromise for the majority of opaque, dielectric materials.
+
+```
+dielectric_brdf =
+  fresnel_mix(
+    ior = 1.5,
+    base = diffuse_brdf(
+      color = baseColor),
+    layer = specular_brdf(
+      α = roughness^2))
+```
+
+### Microfacet Surfaces
+
+The metal BRDF and the dielectric BRDF are based on a microfacet model. The theory behind microfacet models was developed in early works by [Torrance and Sparrow (1967)](#TorranceSparrow1967), [Cook and Torrance (1982)](#CookTorrance1982), and others. A microfacet model describes the orientation of tiny facets (microfacets) on the surface as a statistical distribution. The distribution determines the orientation of the facets as a random perturbation around the normal direction of the surface. The perturbation strength depends on the `roughness` parameter and varies between 0 (smooth surface) and 1 (rough surface). A number of distribution functions have been proposed in the last decades. We use the Trowbridge-Reitz distribution first described by [Trowbridge and Reitz (1975)](#TrowbridgeReitz1975). Later [Walter et al. (2007)](#Walter2007) independently developed the same distribution and called it "GGX". They show that it is a better fit for measured data than the Beckmann distribution used by [Cook and Torrance (1982)](#CookTorrance1982) due to its stronger tails.
+
+The Trowbridge-Reitz/GGX microfacet distribution describes the microsurface as being composed of perfectly specular, infinitesimal oblate ellipsoids, whose half-height in the normal direction is α times the radius in the tangent plane. α = 1 gives spheres, which results in uniform reflection in all directions. This reflection behavior corresponds to a rough surface. α = 0 gives a perfectly specular surface. As suggested by [Burley (2012)](#Burley2012) we use the mapping α = `roughness`^2 which results in more perceptually linear changes in the roughness. 
+
+The distribution only describes the proportion of each normal on the microsurface. It does not describe how the normals are organized. For this we need a microsurface profile. The difference between distribution and profile is detailed by [Heitz (2014)](#Heitz2014), where he in addition provides an extensive study of common microfacet profiles. Based on this work, we suggest using the Smith microsurface profile (originally developed by [Smith (1967)](#Smith1967)) and its corresponding masking-shadowing function. Heitz describes the Smith profile as the most accurate model for reflection from random height fields. It assumes that height and normal between neighboring points are not correlated, implying a random set of microfacets instead of a continuous surface.
+
+Microfacet models often do not consider multiple scattering. The shadowing term suppresses light that intersects the microsurface a second time. [Heitz et al. (2016)](#Heitz2016) extended the Smith-based microfacet models to include a multiple scattering component, which significantly improves accuracy of predictions of the model. We suggest to incorporate multiple scattering whenever possible, either by making use of the unbiased stochastic evaluation introduced by Heitz, or one of the approximations presented later, for example by [Kulla and Conty (2017)](#KullaConty2017) or [Turquin (2019)](#Turquin2019).
+
+### Complete Model
+
+The BRDFs and mixing operators used in the metallic-roughness material are summarized in the following image.
+
+![](figures/pbr.png)
+
+The glTF spec is designed to allow applications to choose different lighting implementations based on their requirements. Some implementations may focus on an accurate simulation of light transport while others may choose to deliver real-time performance. Therefore, any implementation that adheres to the rules for mixing BRDFs is conformant to the glTF spec.
+
+In a physically-accurate light simulation, the BRDFs have to follow some basic principles: the BRDF has to be positive, reciprocal and energy conserving. This ensures that the visual output of the simulation is independent of the underlying rendering algorithm, as long as it is unbiased.
+
+The unbiased light simulation with physically realistic BRDFs will be the ground-truth for approximations in real-time renderers that are often biased, but still give visually pleasing results. Usually, these renderers take shortcuts to solve the rendering equation, like the split-sum approximation for image based lighting, or simplify the math to save instructions and reduce register pressure. However, there are many ways to achieve good approximations, depending on the platform (mobile or web applications, desktop applications on low or high-end hardware, VR) different constraints have to be taken into account.
+
+## Implementation
+
 *This section is non-normative.*
 
-The glTF spec is designed to allow applications to choose different lighting implementations based on their requirements.
+An implementation sample is available at https://github.com/KhronosGroup/glTF-Sample-Viewer/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters. In order to achieve high performance in real-time applications, this implementation takes some short-cuts and uses non-physical simplifications that break energy-conservation and reciprocity.
 
-An implementation sample is available at https://github.com/KhronosGroup/glTF-Sample-Viewer/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters.
+We use the following notation:
+* *V* is the normalized vector from the shading location to the eye  
+* *L* is the normalized vector from the shading location to the light  
+* *N* is the surface normal in the same space as the above values  
+* *H* is the half vector, where *H* = normalize(*L*+*V*)  
 
-As previously defined
+### Specular BRDF
 
-`const dielectricSpecular = rgb(0.04, 0.04, 0.04)`
-<br>
-`const black = rgb(0, 0, 0)`
+The specular reflection `specular_brdf(α)` is a microfacet BRDF
 
-*c<sub>diff</sub>* = `lerp(baseColor.rgb * (1 - dielectricSpecular.r), black, metallic)`
-<br>
-*F<sub>0</sub>* = `lerp(dieletricSpecular, baseColor.rgb, metallic)`
-<br>
-*&alpha;* = `roughness ^ 2`
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBRDF} = \frac{G D}{4 \, \left|N \cdot L \right| \, \left| N \cdot V \right|}">
 
-Additionally,  
-*V* is the normalized vector from the shading location to the eye  
-*L* is the normalized vector from the shading location to the light  
-*N* is the surface normal in the same space as the above values  
-*H* is the half vector, where *H* = normalize(*L*+*V*)  
+with the Trowbridge-Reitz/GGX microfacet distribution
 
-The core lighting equation the sample uses is the Schlick BRDF model from [An Inexpensive BRDF Model for Physically-based Rendering](https://www.cs.virginia.edu/~jdl/bib/appearance/analytic%20models/schlick94b.pdf)
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle D = \frac{\alpha^2 \, \chi^%2B(N \cdot H)}{\pi ((N \cdot H)^2 (\alpha^2 - 1) %2B 1)^2}">
 
-![](figures/lightingSum.PNG)
+and the separable form of the Smith joint masking-shadowing function
 
-Below are common implementations for the various terms found in the lighting equation.
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle G = \frac{2 \, \left| N \cdot L \right| \, \chi^%2B(H \cdot L)}{\left| N \cdot L \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{2 \, \left| N \cdot V \right| \, \chi^%2B(H \cdot V)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}">,
 
-### Surface Reflection Ratio (F)
+where χ<sup>+</sup>(*x*) denotes the Heaviside function: 1 if *x* > 0 and 0 if *x* ≤ 0. See [Heitz (2014)](#Heitz2014) for a derivation of the formulas.
 
-**Fresnel Schlick**
+Introducing the visibility function
 
-Simplified implementation of Fresnel from [An Inexpensive BRDF Model for Physically based Rendering](https://www.cs.virginia.edu/~jdl/bib/appearance/analytic%20models/schlick94b.pdf) by Christophe Schlick.
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle V = \frac{G}{4 \, \left| N \cdot L \right| \, \left| N \cdot V \right|}">
 
-![](figures/lightingF.PNG)
+simplifies the original microfacet BRDF to
 
-### Geometric Occlusion (G)
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBRDF} = V D">
 
-**Smith Joint GGX**
+with
 
-[Understanding the Masking-Shadowing Function in Microfacet-Based BRDFs](http://jcgt.org/published/0003/02/03/paper.pdf) by Eric Heitz.
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle V = \frac{\, \chi^%2B(H \cdot L)}{\left| N \cdot L\right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^%2B(H \cdot V)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}">.
 
-![](figures/lightingG.PNG)
+Thus we have the function
 
-### Microfacet Distribution (D)
+```
+function specular_brdf(α) {
+  return V * D
+}
+```
 
-**Trowbridge-Reitz**
+### Diffuse BRDF
 
-Implementation of microfacet distrubtion from [Average Irregularity Representation of a Roughened Surface for Ray Reflection](https://www.osapublishing.org/josa/abstract.cfm?uri=josa-65-5-531) by T. S. Trowbridge, and K. P. Reitz
+The diffuse reflection `diffuse_brdf(color)` is a Lambertian BRDF
 
-![](figures/lightingD.PNG)
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle \text{LambertianBRDF} = \frac{1}{\pi}">
 
-### Diffuse Term (diffuse)
+multiplied with the `color`.
 
-**Lambert**
+```
+function diffuse_brdf(color) {
+  return (1/pi) * color
+}
+```
 
-Implementation of diffuse from [Lambert's Photometria](https://archive.org/details/lambertsphotome00lambgoog) by Johann Heinrich Lambert
+### Fresnel
 
-![](figures/lightingDiff.PNG)
+An inexpensive approximation for the Fresnel term that can be used for conductors and dielectrics was developed by [Schlick (1994)](#Schlick1994):
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle F = f_0 %2B (1 - f_0) (1 - \left| V \cdot H \right| )^5">
+
+The conductor Fresnel `conductor_fresnel(f0, bsdf)` applies a view-dependent tint to a BSDF:
+
+```
+function conductor_fresnel(f0, bsdf) {
+  return bsdf * (f0 + (1 - f0) * (1 - abs(VdotH))^5)
+}
+```
+
+For the dielectric BRDF a diffuse component `base` and a specular component `layer` are combined via `fresnel_mix(ior, base, layer)`. The `f0` color is now derived from the index of refraction `ior`.
+
+```
+function fresnel_mix(ior, base, layer) {
+  f0 = ((1-ior)/(1+ior))^2
+  fr = f0 + (1 - f0)*(1 - abs(VdotH))^5
+  return mix(base, layer, fr)
+}
+```
+
+### Metal BRDF and Dielectric BRDF
+
+Now that we have an implementation for all the functions used in the glTF metallic-roughness material model, we are able to connect the functions according to the graph shown in section ["Complete Model"](#complete-model). By substituting the mixing functions (`fresnel_mix`, `conductor_fresnel`) for the implementation, we arrive at the following BRDFs for the metal and the dielectric component:
+
+```
+metal_brdf = specular_brdf(roughness^2) * (baseColor.rgb + (1 - baseColor.rgb)) * (1 - abs(VdotH))^5)
+dielectric_brdf = mix(diffuse_brdf(baseColor.rgb), specular_brdf(roughness^2), 0.04 + (1 - 0.04) * (1 - abs(VdotH))^5)
+```
+
+Note that the dielectric index of refraction `ior = 1.5` is now `f0 = 0.04`.
+
+Metal and dielectric are mixed according to the metalness:
+
+```
+material = mix(dielectric_brdf, metal_brdf, metallic)
+```
+
+Taking advantage of the fact that `roughness` is shared between metal and dielectric and that the Schlick Fresnel is used, we can simplify the mix and arrive at the final BRDF for the material:
+
+```
+const dielectricSpecular = 0.04
+const black = 0
+
+c_diff = lerp(baseColor.rgb * (1 - dielectricSpecular), black, metallic)
+f0 = lerp(0.04, baseColor.rgb, metallic)
+α = roughness^2
+
+F = (f0 + (1 - f0) * (1 - abs(VdotH))^5
+
+f_diffuse = (1 - F) * (1 / π) * c_diff
+f_specular = F * D(α) * G / (4 * abs(VdotN) * abs(LdotN))
+
+material = f_diffuse + f_specular
+```
+
+### Discussion
+
+#### Masking-Shadowing Term and Multiple Scattering
+
+The model for specular reflection can be improved in several ways. [Heitz (2014)](#Heitz2014) notes that a more accurate form of the masking-shadowing function takes the correlation between masking and shadowing due to the height of the microsurface into account. This correlation is accounted for in the height-correlated masking and shadowing function. Another improvement in accuracy can be achieved by modeling multiple scattering, see Section [Microfacet Surfaces](#microfacet-surfaces).
+
+#### Schlick's Fresnel Approximation
+
+Although Schlick's Fresnel is a good approximation for a wide range of metallic and dielectric materials, there are a couple of reasons to use a more sophisticated solution for the Fresnel term.
+
+Metals often exhibit a "dip" in reflectance near grazing angles which is not present in the Schlick Fresnel. [Lazányi and Szirmay-Kalos (2005)](#LazanyiSzirmayKalos2005) extend the Schlick Fresnel with an error term to account for it. [Hoffman (2019)](#Hoffman2019) improves the parameterization of this term by introducing an artist-friendly "f82" color, the color at an angle of about 82°. An additional color parameter for metals was also introduced by [Gulbrandsen (2014)](#Gulbrandsen2014). Gulbrandson calls it "edge tint" and uses it in the full Fresnel equations instead of Schlick's approximation. Even though the full Fresnel equations should give a more accurate result, Hoffman shows that it is worse than Schlick's approximation in the context of RGB renderers. As we target RGB renderers and do not provide an additional color parameter for metals in glTF, we suggest to use the original Schlick Fresnel for metals.
+
+The index of refraction of most dielectrics is 1.5. For that reason the dielectric Fresnel term uses a fixed `f0 = 0.04`. The Schlick Fresnel approximates the full Fresnel equations well for an index of refraction in the range [1.2, 2.2]. The main reason for a material to fall outside this range is transparency and nested objects. If a transparent object overlaps another transparent object and both have the same (or similar) index of refraction, the resulting ratio at the boundary is 1 (or close to 1). According to the full Fresnel equations, there is no (or almost no) reflection in this case. The reflection intensity computed from the Schlick Fresnel approximation will be too high. Implementations that care about accuracy in case of nested dielectrics are encouraged to use the full Fresnel equations for dielectrics. For metals Schlick's approximation is still a good choice.
+
+#### Coupling Diffuse and Specular Reflection
+
+While the coupling of diffuse and specular components in `fresnel_mix` as proposed in this section is simple and cheap to compute, it is not very accurate and breaks a fundamental property that a physically-based BRDF must fulfill: energy conservation. Energy conservation means that a BRDF must not reflect more light than it receives. Several fixes have been proposed, each with its own trade-offs regarding performance and quality.
+
+[Burley (2012)](#Burley2012) notes that a common solution found in many models calculates the diffuse Fresnel factor by evaluating the Fresnel term twice with view and light direction instead of the half vector: `(1-F(NdotL)) * (1-F(NdotV))`. While this is energy-conserving, he notes that this weighting results in significant darkening at grazing angles, an effect they couldn't observe in their measurements. They propose some changes to the diffuse BRDF to make it better predict the measurements, but even the fixed version is still not energy conserving mathematically.
+
+More recently, [Jakob et al. (2014)](#Jakob2014) developed a generic framework for computing BSDFs of layered materials, including multiple scattering within layers. Amongst much more complicated scenarios it also solves the special case of coupling diffuse and specular components, but it is too heavy for textured materials, even in offline rendering.
+
+[Kulla and Conty (2017)](#KullaConty2017) found a solution tailored to the special case of coupling diffuse and specular components which is easy to compute. It requires the directional albedo of the Fresnel-weighted specular BRDF to be precomputed and tabulated, but they found that the function is smooth and a low-resolution 3D texture (16³ pixels) is sufficient. Their coupled diffuse-specular model is not only energy-*con*serving, but also energy-*pre*serving, meaning that if neither the specular nor the diffuse component absorb any energy, all energy is reflected.
+
+## References
+
+* [Burley, B. (2012): Physically-Based Shading at Disney.](https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf)<a name="Burley2012"></a>
+* [Cook, R. L., and K. E. Torrance (1982): A Reflectance Model for Computer Graphics. ACM Transactions on Graphics 1 (1), 7-24.](https://graphics.pixar.com/library/ReflectanceModel/paper.pdf)<a name="CookTorrance1982"></a>
+* [Gulbrandsen, O. (2014): Artist Friendly Metallic Fresnel](http://jcgt.org/published/0003/04/03/paper-lowres.pdf)<a name="Gulbrandsen2014"></a>
+* [Heitz, E. (2014): Understanding the Masking-Shadowing Function in Microfacet-Based BRDFs](http://jcgt.org/published/0003/02/03/paper.pdf)<a name="Heitz2014"></a>
+* [Heitz, E., J. Hanika, E. d'Eon, and C. Dachsbacher (2016): Multiple-Scattering Microfacet BSDFs with the Smith Model](https://eheitzresearch.wordpress.com/240-2/)<a name="Heitz2016"></a>
+* [Naty Hoffman (2019): Fresnel Equations Considered Harmful](http://renderwonk.com/publications/mam2019/)<a name="Hoffman2019"></a>
+* [Jakob, W., E. d'Eon, O. Jakob, S. Marschner (2014): A Comprehensive Framework for Rendering Layered Materials](https://research.cs.cornell.edu/layered-sg14/)<a name="Jakob2014"></a>
+* [Kulla, C., and A. Conty (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf)<a name="KullaConty2017"></a>
+* [Lazanyi, I. and L. Szirmay-Kalos (2005): Fresnel term approximations for metals](http://wscg.zcu.cz/WSCG2005/Papers_2005/Short/H29-full.pdf)<a name="LazanyiSzirmayKalos2005"></a>
+* [Pharr, M., W. Jakob, and G. Humphreys (2016): Physically Based Rendering: From Theory To Implementation, 3rd edition. ](http://www.pbr-book.org/)<a name="Pharr2018"></a>
+* [Schlick, C. (1994): An Inexpensive BRDF Model for Physically-based Rendering. Computer Graphics Forum 13, 233-246.](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.50.2297&rep=rep1&type=pdf)<a name="Schlick1994"></a>
+* Smith, B. (1967):  Geometrical shadowing of a random rough surface. IEEE Transactions on Antennas and Propagation 15 (5), 668-671.<a name="Smith1967"></a>
+* [Torrance, K. E., E. M. Sparrow (1967): Theory for Off-Specular Reflection From Roughened Surfaces. Journal of the Optical Society of America 57 (9), 1105-1114.](http://www.graphics.cornell.edu/~westin/pubs/TorranceSparrowJOSA1967.pdf)<a name="TorranceSparrow1967"></a>
+* Trowbridge, T., and K. P. Reitz (1975): Average irregularity representation of a rough surface for ray reflection. Journal of the Optical Society of America 65 (5), 531-536.<a name="TrowbridgeReitz1975"></a>
+* [Turquin E. (2019): Practical multiple scattering compensation for microfacet models](https://blog.selfshadow.com/publications/turquin/ms_comp_final.pdf)<a name="Turquin2019"></a>
+* [Walter, B., S. Marschner, H. Li, and K. Torrance (2007): Microfacet models for refraction through rough surfaces.](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.html)<a name="Walter2007"></a>
 
 # Appendix C: Spline Interpolation
 
