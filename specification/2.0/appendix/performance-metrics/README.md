@@ -72,21 +72,22 @@ For each mesh use the POSITION attribute in each primitive, get the Accessor and
 This represents the number of primitives for each scene  
 Each primitive references a material with 0 or more texture sources, has attributes and accessors.  
 
-[textures]  
-This value represents the texture sources that are used by a scene.  
+[channels]  
+This value represents the texture source channels that are used by a scene.  
 This is the max value from the most 'complex' primitive that will be referenced by a Node in the scene.  
-The goal of this metric is to provide a worst case texture usage cost for rendering a pixel.  
+The goal of this metric is to provide a worst case texture usage and processing cost for rendering a pixel.  
 
-`textures`  
+**Note**  
+This value can not be used to know if texture channels are tightly packed according to uniform Sampler usage,  
+just the shader texel lookup and processing needed to calculate a pixel on screen.   
+
+`channels`  
 1 BASECOLOR
 2 METALLICROUGHNESS  
 3 NORMAL  
 4 OCCLUSION  
 5 EMISSIVE  
 6 SPECULARGLOSS  
-7 DIFFUSE  
-8 CLEARCOAT  
-
 
 [materials]  
 This value represents the materials used by a scene.  
@@ -152,7 +153,7 @@ This is how the output would be formatted using JSON
             "vertexCount" : 4300,
             "nodeCount" : 20,
             "primitiveCount" : 50,
-            "textures" : ["BASECOLOR", "METALLICROUGHNESS"],
+            "channels" : ["BASECOLOR", "METALLICROUGHNESS"],
             "materials" : ["PBR", "SPECULARGLOSS"],
             "bounds" : "min": [
                 -0.9999999403953552,
