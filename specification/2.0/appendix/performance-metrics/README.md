@@ -37,7 +37,7 @@ Using these metrics an estimate of target memory can be calculated - however kee
 |                 |             |          |                                                                |             |
 |-----------------|-------------|-------------|----------|----------------------------------------------------------------|
 | Name            | Type        | Category    | Property |Description                                                     |
-|[vertexCount]    | Integer     | Complexity  |Scene     |Total number of vertices used by the Nodes in a scene           |  
+|[drawCount]      | Integer     | Complexity  |Scene     |Total number of vertices drawn in a scene                       |  
 |[nodeCount]      | Integer     | Complexity  |Scene     |Max nodecount in scene (add upp all nodes in a scene)           |  
 |[primitiveCount] | Integer     | Complexity  |Scene     |Total number of referenced primitives (per scene).  This figure is the un-batched number of primitives, engines may optimize if primitives and meshes share textures. |  
 |[channels]       | Integer     | Complexity  |Scene     |Flags specifying presence of materials texture usage, this is the aggregated most complex usage. BASECOLOR, METALLICROUGHNESS, NORMAL, OCCLUSION, EMISSIVE, SPECULARGLOSS, DIFFUSE, CLEARCOAT |  
@@ -62,7 +62,7 @@ Ie one model could have 3 different scenes, where the same accessors (position, 
 This represent the number of traversed nodes in a scene.  
 This is calculated by traversing nodes in each scene (depth or breadth first does not matter) - for each node increase the nodecount.  
 
-[vertexCount]  
+[drawCount]  
 This represents the number of drawn vertices for each scene in the model.  
 This is calculated by traversing the nodes in each scene.  
 For each mesh use the POSITION attribute in each primitive, get the Accessor and add up the count field.  
