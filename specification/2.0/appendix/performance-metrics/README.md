@@ -40,8 +40,7 @@ Using these metrics an estimate of target memory can be calculated - however kee
 |[vertexCount]    | Integer     | Complexity  |Scene     |Total number of vertices used by the Nodes in a scene           |  
 |[nodeCount]      | Integer     | Complexity  |Scene     |Max nodecount in scene (add upp all nodes in a scene)           |  
 |[primitiveCount] | Integer     | Complexity  |Scene     |Total number of referenced primitives (per scene).  This figure is the un-batched number of primitives, engines may optimize if primitives and meshes share textures. |  
-|[textures]       | Integer     | Complexity  |Scene     |Flags specifying presence of materials texture usage, this is the aggregated most complex usage. BASECOLOR, METALLICROUGHNESS, NORMAL, OCCLUSION, EMISSIVE, SPECULARGLOSS, DIFFUSE, CLEARCOAT |  
-|[materials]      | Integer     | Complexity  |Scene     | Flags specifying presence of materials, this is the aggregated most complex usage.  |
+|[channels]       | Integer     | Complexity  |Scene     |Flags specifying presence of materials texture usage, this is the aggregated most complex usage. BASECOLOR, METALLICROUGHNESS, NORMAL, OCCLUSION, EMISSIVE, SPECULARGLOSS, DIFFUSE, CLEARCOAT |  
 |[bounds]         | Bounds      | Complexity  | Scene    | The static 3D bounds for each scene, can be used to estimate world space size of model. |
 |[maxNodeDepth]   | Integer     | Memory      | Scene    | The max node depth of the scene, ie the max number of parent/child relations. This number will represent the max stack depth needed when traversing the nodegraph |
 |[accessors]     | Accessor     | Memory      | Asset    | Total number and format of vertex accessors, this can be used to calculate vertex buffer memory requirements |  
@@ -88,16 +87,6 @@ just the shader texel lookup and processing needed to calculate a pixel on scree
 4 OCCLUSION  
 5 EMISSIVE  
 6 SPECULARGLOSS  
-
-[materials]  
-This value represents the materials used by a scene.  
-This is the max value from the most 'complex' primitive that will be referenced by a Node in the scene.  
-The goal of this metric is to provide a worst case computational cost for rendering a pixel.  
-  
-1 PBR
-2 SPECULARGLOSS (KHR_materials_pbrSpecularGlossiness)
-2 UNLIT (KHR_materials_unlit) 
-
 
 [bounds]  
 This value represents the static (non animated) bounding volume for the scene.  
@@ -154,7 +143,6 @@ This is how the output would be formatted using JSON
             "nodeCount" : 20,
             "primitiveCount" : 50,
             "channels" : ["BASECOLOR", "METALLICROUGHNESS"],
-            "materials" : ["PBR", "SPECULARGLOSS"],
             "bounds" : "min": [
                 -0.9999999403953552,
                 -1.0,
