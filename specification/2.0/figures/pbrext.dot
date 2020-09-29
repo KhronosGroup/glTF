@@ -30,6 +30,22 @@ digraph D {
       </table>
     >]
 
+    dielectric_diffuse_btdf [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>diffuse_btdf</b></font></td></tr>
+        <tr><td><font point-size="10">color = <font color="red"><i>&lt;baseColor&gt;</i></font></font></td></tr>
+      </table>
+    >]
+
+    dielectric_diffuse_mix [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>mix</b></font></td></tr>
+        <tr><td port="in_bsdf0"><font point-size="10">bsdf0</font></td></tr>
+        <tr><td port="in_bsdf1"><font point-size="10">bsdf1</font></td></tr>
+        <tr><td><font point-size="10">weight = <font color="goldenrod"><i>&lt;translucency&gt;</i></font></font></td></tr>
+      </table>
+    >]
+
     dielectric_base_mix [label=<
       <table border="1" cellborder="0">
         <tr><td port="out"><font point-size="14"><b>mix</b></font></td></tr>
@@ -49,7 +65,10 @@ digraph D {
       </table>
     >]
 
-    dielectric_diffuse_brdf:out -> dielectric_base_mix:in_bsdf0
+    dielectric_diffuse_brdf:out -> dielectric_diffuse_mix:in_bsdf0
+    dielectric_diffuse_btdf:out -> dielectric_diffuse_mix:in_bsdf1
+
+    dielectric_diffuse_mix:out -> dielectric_base_mix:in_bsdf0
     dielectric_specular_btdf:out -> dielectric_base_mix:in_bsdf1
 
     dielectric_base_mix:out -> dielectric_fresnel_mix:in_base
@@ -144,6 +163,7 @@ digraph D {
         <tr><td><font point-size="10" color="red"><i>Core</i></font></td></tr>
         <tr><td><font point-size="10" color="blue"><i>KHR_materials_ior</i></font></td></tr>
         <tr><td><font point-size="10" color="darkorchid"><i>KHR_materials_specular</i></font></td></tr>
+        <tr><td><font point-size="10" color="goldenrod"><i>KHR_materials_translucency</i></font></td></tr>
         <tr><td><font point-size="10" color="forestgreen"><i>KHR_materials_transmission</i></font></td></tr>
         <tr><td><font point-size="10" color="deepskyblue"><i>KHR_materials_sheen</i></font></td></tr>
         <tr><td><font point-size="10" color="darkorange"><i>KHR_materials_clearcoat</i></font></td></tr>
