@@ -45,7 +45,7 @@ Using these metrics an estimate of target memory can be calculated - however kee
 |[maxNodeDepth]   | Integer     | Memory      | Scene    | The max node depth of the scene, ie the max number of parent/child relations. This number will represent the max stack depth needed when traversing the nodegraph |
 |[accessors]     | Accessor     | Memory      | Asset    | Total number and format of vertex accessors, this can be used to calculate vertex buffer memory requirements |  
 |[buffers  ]     | Buffer       | Memory      | Asset    | Size and number of buffers in the Asset, memory needed to load model. For a .glb this will include textures |  
-|[textureSize]  |Integer    | Memory      | Asset    | The size and format of textures |  
+|[textureSize]   |Integer       | Memory      | Asset    | The size and number of components of textures |  
 
 Dimension is an Integer[2] containing width and height  
 Accessor is an object containing count, componentType and type, componentType and type is taken from glTF Accessor  
@@ -133,12 +133,18 @@ For a .gltf the textures are usually supplied separately.
 Size in bytes of the buffer.
 
 [textureSize]  
-The size and format of textures, without mipmaps, that are defined in the Asset.  
-This is calculated by iterating the texture array and adding the size and format of indexed images.  
-Formats are as follows [4, 3, 2, 1] :
-4 component, eg (RGBA)    
-3 component, eg (RGB)    
-2 component, eg (MR)    
+The size and number of components of textures, without mipmaps, that are defined in the Asset.  
+This is calculated by iterating the texture array and adding the size and components of indexed images.  
+
+`dimension`  
+Width and height, in pixels of the texture.  
+
+`components`
+The texture component count, currently only supports 8 bit per component.  
+Components are as follows [4, 3, 2, 1] :  
+4 components, eg (RGBA)    
+3 components, eg (RGB) - this is likely to occupy 32 bits on modern hw.  
+2 components, eg (MR)    
 1 component, eg (O)  
 
 It is up to the client to calculate the actual memory requirements on the target device as this may vary depending on hardware and (future) compressed format support.
@@ -181,15 +187,15 @@ This is how the output would be formatted using JSON
         "textureSize" : [
             {
                 "dimension" : [2048,2048],
-                "format" : 4
+                "components" : 4
             },
             {
                 "dimension" : [512,512],
-                "format" : 1
+                "components" : 1
             },
             {
                 "dimension" : [256,200],
-                "format" : 3
+                "components" : 3
             }
         ]
     }
