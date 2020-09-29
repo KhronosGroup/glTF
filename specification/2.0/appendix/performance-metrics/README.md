@@ -44,6 +44,7 @@ Using these metrics an estimate of target memory can be calculated - however kee
 |[bounds]         | Bounds      | Complexity  | Scene    | The static 3D bounds for each scene, can be used to estimate world space size of model. |
 |[maxNodeDepth]   | Integer     | Memory      | Scene    | The max node depth of the scene, ie the max number of parent/child relations. This number will represent the max stack depth needed when traversing the nodegraph |
 |[accessors]     | Accessor     | Memory      | Asset    | Total number and format of vertex accessors, this can be used to calculate vertex buffer memory requirements |  
+|[buffers  ]     | Buffer       | Memory      | Asset    | Size and number of buffers in the Asset, memory needed to load model. For a .glb this will include textures |  
 |[textureSize]  |Integer    | Memory      | Asset    | The size and format of textures |  
 
 Dimension is an Integer[2] containing width and height  
@@ -123,6 +124,13 @@ Number of components, ie 4 VEC3 FLOATs will require 4 * 3 * 4 bytes of memory (o
 "MAT3"  
 "MAT4"  
 
+[buffers]  
+This represents the .glb buffer or the .bin buffers referenced by a .gltf file.  
+To load a model, at least this much memory is required.  
+For a .gltf the textures are usually supplied separately.  
+
+`sizeInBytes`
+Size in bytes of the buffer.
 
 [textureSize]  
 The size and format of textures, without mipmaps, that are defined in the Asset.  
