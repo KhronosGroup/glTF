@@ -55,6 +55,13 @@ begin with vendor extensions (which do not require review), reach out for feedba
 consensus forms we may consider the best way to bring a vendor extension into the broader ecosystem: via multi-vendor
 extensions, Khronos extensions, or inclusion in a future version of the glTF specification.
 
+#### PBR material extensions
+
+There are several extensions to the glTF 2.0 metallic-roughness material. The following image shows the complete material including all extensions. The default values for parameters introduced in extensions are chosen in a way that they do not affect the material if an extension is not used.
+
+![](figures/pbrext.png)
+
+
 ## Extensions for glTF 1.0
 
 #### Khronos extensions
