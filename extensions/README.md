@@ -46,7 +46,7 @@ but may still change before they are complete._
 | [KHR_materials_specular](https://github.com/KhronosGroup/glTF/pull/1719) | Ready for implementation and feedback. |
 | [KHR_materials_variants](2.0/Khronos/KHR_materials_variants/README.md) ([#1681](https://github.com/KhronosGroup/glTF/pull/1681)) | Ready for implementation and feedback. |
 | [KHR_materials_volume](https://github.com/KhronosGroup/glTF/pull/1726) | In development. |
-| [KHR_texture_basisu](https://github.com/KhronosGroup/glTF/pull/1751) | Ready for implementation and feedback. |
+| [KHR_texture_basisu](2.0/Khronos/KHR_texture_basisu) ([#1751](https://github.com/KhronosGroup/glTF/pull/1751)) | Ready for implementation and feedback. |
 
 This section tracks the status of Khronos and multi-vendor extensions that are either already in development,
 or that we feel show enough consensus to be highly likely for future development. We welcome feedback for these
