@@ -2,8 +2,12 @@
 
 ## Contributors
 
-* Members of 3D Formats Working Group
-* Arseny Kapoulkine, [@zeuxcg](https://twitter.com/zeuxcg)
+* Mark Callow [@MarkCallow](https://github.com/MarkCallow)
+* Rich Geldreich, Binomial, [@richgel999](https://github.com/richgel999)
+* Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
+* Arseny Kapoulkine, Roblox, [@zeuxcg](https://twitter.com/zeuxcg)
+* Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)
+* Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)
 
 ## Status
 
@@ -170,7 +174,15 @@ When the high-quality GPU formats (i.e., ASTC or BC7) are not available at runti
 
 ## Known Implementations
 
-None.
+Authoring:
+
+- [gltfpack](https://github.com/zeux/meshoptimizer)
+- [glTF-Transform CLI](https://gltf-transform.donmccurdy.com/cli.html)
+
+Viewing:
+
+- [Babylon](https://www.babylonjs.com/)
+- [three.js](https://threejs.org/)
 
 ## Resources
 
