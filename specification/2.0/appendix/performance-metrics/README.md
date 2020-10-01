@@ -1,10 +1,10 @@
-# Runtime Performance Metrics 
+# Runtime GLTF Metrics 
 
-The goal of these metrics is to assess the runtime performance needs of glTF assets.  
+The goal of these metrics is to assess the runtime needs of glTF assets.  
 By runtime we mean the cpu/gpu, bandwidth and memory resources needed to render the model in realtime.  
 These performance metrics are divided in two major categories - `complexity` and `memory`
 
-## Performance Metric Categories
+## Metric Categories
 
 ### Complexity  
 
@@ -60,7 +60,7 @@ It is possible to reference different meshes (nodes) using different scenes, thi
 Ie one model could have 3 different scenes, where the same accessors (position, uv) are used but different primitives that reference materials with varying number of texture channels.  
 
 [nodeCount]  
-This represent the number of traversed nodes in a scene.  
+This represent the total number of traversed nodes in a scene.  
 This is calculated by traversing nodes in each scene (depth or breadth first does not matter) - for each node increase the nodecount.  
 
 [drawCount]  
@@ -75,7 +75,9 @@ Each primitive references a material with 0 or more texture sources, has attribu
 [channels]  
 This value represents the texture source channels that are used by a scene.  
 This is the max value from the most 'complex' primitive that will be referenced by a Node in the scene.  
-The goal of this metric is to provide a worst case texture usage and processing cost for rendering a pixel.  
+The goal of this metric is to provide a worst case texture usage and processing cost for rendering a pixel. 
+Please note that the processing cost for the different channels will vary, for instance the EMISSIVE or  
+BASECOLOR channels are quite cheap but other channels may add a signification processing overhead.  
 
 **Note**  
 This value can not be used to know if texture channels are tightly packed according to uniform Sampler usage,  
