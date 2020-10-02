@@ -42,6 +42,7 @@
             "description": "The compression filter.",
             "enum": [ "NONE", "OCTAHEDRAL", "QUATERNION", "EXPONENTIAL" ]
         },
+        "extensions": { },
         "extras": { }
     },
     "required": [

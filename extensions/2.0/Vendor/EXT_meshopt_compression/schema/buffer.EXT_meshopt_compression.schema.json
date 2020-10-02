@@ -10,6 +10,7 @@
             "description": "Set to true to indicate that the buffer is only referenced by bufferViews that have EXT_meshopt_compression extension and as such doesn't need to be loaded.",
             "default": false
         },
+        "extensions": { },
         "extras": { }
     },
     "required": [
