@@ -395,7 +395,9 @@ For performance reasons the results of the decoding process are specified to one
 
 Octahedral filter allows to encode unit length 3D vectors (normals/tangents) using octahedral encoding, which results in a more optimal quality vs precision tradeoff compared to storing raw components.
 
-The input to the filter is four 8-bit or 16-bit components, where the first two specify the X and Y components in octahedral encoding encoded as signed normalized K-bit integers, the third component explicitly encodes 1.0 as a K-bit integer, and the last component may contain arbitrary data (which is useful for tangents).
+The input to the filter is four 8-bit or 16-bit components, where the first two specify the X and Y components in octahedral encoding encoded as signed normalized K-bit integers (4 <= K <= 16, integers are stored in two's complement format), the third component explicitly encodes 1.0 as a signed normalized K-bit integer, and the last component may contain arbitrary data (which is useful for tangents).
+
+The encoding of the third compoment allows to compute K for each vector independently from the bit representation, and must encode 1.0 precisely which is equivalent to `1 << (K - 1)` as an integer; values of the third component that aren't equal to `1 << (K - 1)` for a valid `K` are invalid and the result of decoding such vectors is unspecified.
 
 The output of the filter is three decoded unit vector components, stored as 8-bit or 16-bit normalized integers, and the last input component verbatim.
 
@@ -434,7 +436,7 @@ void decode(intN_t input[4], intN_t output[4]) {
 
 Quaternion filter allows to encode unit length quaternions using normalized 16-bit integers for all components, but allows control over the precision used for the components and provides better quality compared to naively encoding each component one by one.
 
-The input to the filter is three quaternion components, excluding the component with the largest magnitude, encoded as signed normalized K-bit integers (4 <= K <= 16), and an index of the largest component that is omitted in the encoding. The largest component is assumed to always be positive (which is possible due to quaternion double-cover). To allow per-element control over K, the last input element explicitly encodes 1.0 as a K-bit integer, except for the least significant 2 bits that store the index of the maximum component.
+The input to the filter is three quaternion components, excluding the component with the largest magnitude, encoded as signed normalized K-bit integers (4 <= K <= 16, integers are stored in two's complement format), and an index of the largest component that is omitted in the encoding. The largest component is assumed to always be positive (which is possible due to quaternion double-cover). To allow per-element control over K, the last input element explicitly encodes 1.0 as a K-bit integer, except for the least significant 2 bits that store the index of the maximum component.
 
 The output of the filter is four decoded quaternion components, stored as 16-bit normalized integers.
 
