@@ -463,7 +463,7 @@ void decode(int16_t input[4], int16_t output[4]) {
 
 ## Filter 3: exponential
 
-Exponential filter allows to encode floating point values with a range close to the full range of a 32-bit floating point value, but allows more control over the exponent/mantissa to trade quality for precision, and has a bit structure that is more optimally aligned to the byte boundary.
+Exponential filter allows to encode floating point values with a range close to the full range of a 32-bit floating point value, but allows more control over the exponent/mantissa to trade quality for precision, and has a bit structure that is more optimally aligned to the byte boundary to facilitate better compression.
 
 The input to the filter is a sequence of 32-bit little endian integers, with the most significant 8 bits specifying a (signed) exponent value, and the remaining 24 bits specifying a (signed) mantissa value. The integers are stored in two-complement format.
 
@@ -477,4 +477,4 @@ float32_t decode(int32_t input) {
 }
 ```
 
-The valid range of `e` is [-100, +100], which facilitates performant implementations.
+The valid range of `e` is [-100, +100], which facilitates performant implementations. Decoding out of range values results in unspecified behavior, and encoders are expected to clamp `e` to the valid range.
