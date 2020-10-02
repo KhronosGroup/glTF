@@ -415,11 +415,11 @@ void decode(intN_t input[4], intN_t output[4]) {
 	y += copysign(t, y);
 
 	// renormalize (x, y, z)
-	float32_t l = sqrt(x * x + y * y + z * z);
+	float32_t len = sqrt(x * x + y * y + z * z);
 
-	x /= l;
-	y /= l;
-	z /= l;
+	x /= len;
+	y /= len;
+	z /= len;
 
 	output[0] = round(x * INTN_MAX);
 	output[1] = round(y * INTN_MAX);
@@ -427,6 +427,8 @@ void decode(intN_t input[4], intN_t output[4]) {
 	output[3] = input[3];
 }
 ```
+
+`copysign` behaves as specified in C99 and returns the value with the magnitude of the first argument and the sign of the second argument.
 
 ## Filter 2: quaternion
 
