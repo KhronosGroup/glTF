@@ -263,7 +263,7 @@ During the decoding process, decoder maintains four variables:
 
 To decode each triangle, the decoder needs to analyze the `code` byte, read additional bytes from `data` as necessary, and update the internal state correctly. The `code` byte encoding is optimized to reach a single byte per triangle in most common cases; the resulting data can often be compressed by a general purpose compressor running on the resulting .bin/.glb file.
 
-When extra data is necessary to decode a triangle and it represents an index value, the decoder uses varint-7 encoding, which encodes an integer as one or more bytes, with the byte with the 0 most significant bit terminating the sequence:
+When extra data is necessary to decode a triangle and it represents an index value, the decoder uses varint-7 encoding (also known as [unsigned LEB128](https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128)), which encodes an integer as one or more bytes, with the byte with the 0 most significant bit terminating the sequence:
 
 ```
 0x7F => 0x7F
