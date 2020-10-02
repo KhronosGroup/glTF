@@ -224,10 +224,10 @@ encode(uint8_t v) = ((v & 0x80) != 0) ? ~(v << 1) : (v << 1)
 decode(uint8_t v) = ((v & 1) != 0) ? ~(v >> 1) : (v >> 1)
 ```
 
-When using the sentinel encoding, each delta is stored as a 2-bit or 4-bit value in a single 4-byte or 8-byte block, with deltas stored from most significant to least significant bit inside the byte (e.g. two 4-bit deltas are stored as `0xAB` where 0xA is the zigzag encoding of the first delta, and 0xB is the zigzag encoding of the second delta). The encoded value of the delta that has all bits set to 1 (corresponds to `3` for 2-bit deltas and `15` for 4-bit deltas, which, when decoded, represents `-2` and `-8` respectively) indicates that the real delta value is outside of the 2-bit or 4-bit range and is stored as a full byte after the bit deltas for this group. For example, for 4-bit deltas, the following byte sequence:
+When using the sentinel encoding, each delta is stored as a 2-bit or 4-bit value in a single 4-byte or 8-byte block, with deltas stored from most significant to least significant bit inside the byte (e.g. two 4-bit deltas are stored as `0xXY` where X is the zigzag encoding of the first delta, and Y is the zigzag encoding of the second delta). The encoded value of the delta that has all bits set to 1 (corresponds to `3` for 2-bit deltas and `15` for 4-bit deltas, which, when decoded, represents `-2` and `-8` respectively) indicates that the real delta value is outside of the 2-bit or 4-bit range and is stored as a full byte after the bit deltas for this group. For example, for 4-bit deltas, the following byte sequence:
 
 ```
-0x17 0x5F 0xF0 0xBC 0x77 0xA9 0x21 0x00 0x34 0xB5
+0x17 0x5f 0xf0 0xbc 0x77 0xa9 0x21 0x00 0x34 0xb5
 ```
 
 Encodes 16 deltas, where the first 8 bytes of the sequence specifies the 4-bit deltas, and the last 2 bytes of the sequence specify the explicit delta values encoded for elements 3 and 4 in the sequence, so the decoded deltas (after zigzag decoding) look like
@@ -236,7 +236,7 @@ Encodes 16 deltas, where the first 8 bytes of the sequence specifies the 4-bit d
 -1 -4 -3 26 -91 0 -6 6 -4 -4 5 -5 1 -1 0 0
 ```
 
-Finally, note that the deltas are computed in 8-bit integer space with wrap-around two-complement arithmetic; for example, if the values of the first byte of two consecutive elements are 0x00 and 0xFF, the byte delta that is stored is `-1` (`1` after zigzag encoding).
+Finally, note that the deltas are computed in 8-bit integer space with wrap-around two-complement arithmetic; for example, if the values of the first byte of two consecutive elements are `0x00` and `0xff`, the byte delta that is stored is `-1` (`1` after zigzag encoding).
 
 ## Mode 1: triangles
 
@@ -266,9 +266,9 @@ To decode each triangle, the decoder needs to analyze the `code` byte, read addi
 When extra data is necessary to decode a triangle and it represents an index value, the decoder uses varint-7 encoding (also known as [unsigned LEB128](https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128)), which encodes an integer as one or more bytes, with the byte with the 0 most significant bit terminating the sequence:
 
 ```
-0x7F => 0x7F
+0x7f => 0x7f
 0x81 0x04 => 0x201
-0xFF 0xA0 0x05 => 0x1FD005
+0xff 0xa0 0x05 => 0x1fd005
 ```
 
 Instead of using the raw index value, a zigzag-encoded 32-bit delta from `last` is used:
@@ -361,12 +361,12 @@ The encoded stream structure is as follows:
 
 Instead of simply encoding deltas vs the previous index, the decoder tracks *two* baseline index values, that start at 0. Each delta is specified in relation to one of these values and updates it so that the next delta that references the same baseline uses the encoded index value as a reference. This encoding is more efficient at handling some types of bimodal sequences where two independent monotonic sequences are spliced together, which can occur for some common cases of triangle strips or line lists.
 
-To specify the index delta, the varint-7 encoding scheme is used, which encodes an integer as one or more bytes, with the byte with the 0 most significant bit terminating the sequence:
+To specify the index delta, the varint-7 encoding scheme (also known as [unsigned LEB128](https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128)) is used, which encodes an integer as one or more bytes, with the byte with the 0 most significant bit terminating the sequence:
 
 ```
-0x7F => 0x7F
+0x7f => 0x7f
 0x81 0x04 => 0x201
-0xFF 0xA0 0x05 => 0x1FD005
+0xff 0xa0 0x05 => 0x1fd005
 ```
 
 When decoding the deltas, the 32-bit value is read using the varint encoding. The least significant bit of the value indicates one of the baseline values; the remaining bits specify a zigzag-encoded signed delta and can be decoded as follows:
