@@ -89,7 +89,7 @@ Compression mode specifies the bitstream layout and the algorithm used to decomp
 - Mode 1: triangles. Suitable for storing indices that represent triangle lists, relies on exploiting topological redundancy of consecutive triangles.
 - Mode 2: indices. Suitable for storing indices that don't represent triangle lists, relies on exploiting similarity between consecutive elements.
 
-In all three modes, the resulting compressed byte sequence is typically noticably smaller than the buffer view length, *and* can be additionally compressed by using a general purpose compression algorithm such as Deflate for the resulting glTF file (.glb/.bin).
+In all three modes, the resulting compressed byte sequence is typically noticeably smaller than the buffer view length, *and* can be additionally compressed by using a general purpose compression algorithm such as Deflate for the resulting glTF file (.glb/.bin).
 
 The format of the bitstream is specified in [Appendix A (Bitstream)](#appendix-a-bitstream).
 
@@ -369,7 +369,7 @@ To specify the index delta, the varint-7 encoding scheme (also known as [unsigne
 0xff 0xa0 0x05 => 0x1fd005
 ```
 
-When decoding the deltas, the 32-bit value is read using the varint encoding. The least significant bit of the value indicates one of the baseline values; the remaining bits specify a zigzag-encoded signed delta and can be decoded as follows:
+When decoding the deltas, the 32-bit value is read using the varint-7 encoding. The least significant bit of the value indicates one of the baseline values; the remaining bits specify a zigzag-encoded signed delta and can be decoded as follows:
 
 ```
 uint32_t decode(uint32_t v) {
@@ -389,7 +389,7 @@ Note that the zigzag-encoded delta must fit in a 31-bit integer; as such, deltas
 
 Filters are functions that transform each encoded attribute. For each filter, this document specifies the transformation used for decoding the data; it's up to the encoder to pick the parameters of the encoding for each element to balance quality and precision.
 
-For performance reasons the results of the decoding process are specified to one unit in last place (ULP) in terms of the decoded data, e.g. if a filter results in a 16-bit signed normalized integer, decoding may produce results within 1/32767 of specifed value.
+For performance reasons the results of the decoding process are specified to one unit in last place (ULP) in terms of the decoded data, e.g. if a filter results in a 16-bit signed normalized integer, decoding may produce results within 1/32767 of specified value.
 
 ## Filter 1: octahedral
 
@@ -397,7 +397,7 @@ Octahedral filter allows to encode unit length 3D vectors (normals/tangents) usi
 
 The input to the filter is four 8-bit or 16-bit components, where the first two specify the X and Y components in octahedral encoding encoded as signed normalized K-bit integers (4 <= K <= 16, integers are stored in two's complement format), the third component explicitly encodes 1.0 as a signed normalized K-bit integer, and the last component may contain arbitrary data (which is useful for tangents).
 
-The encoding of the third compoment allows to compute K for each vector independently from the bit representation, and must encode 1.0 precisely which is equivalent to `1 << (K - 1)` as an integer; values of the third component that aren't equal to `1 << (K - 1)` for a valid `K` are invalid and the result of decoding such vectors is unspecified.
+The encoding of the third component allows to compute K for each vector independently from the bit representation, and must encode 1.0 precisely which is equivalent to `1 << (K - 1)` as an integer; values of the third component that aren't equal to `1 << (K - 1)` for a valid `K` are invalid and the result of decoding such vectors is unspecified.
 
 The output of the filter is three decoded unit vector components, stored as 8-bit or 16-bit normalized integers, and the last input component verbatim.
 
