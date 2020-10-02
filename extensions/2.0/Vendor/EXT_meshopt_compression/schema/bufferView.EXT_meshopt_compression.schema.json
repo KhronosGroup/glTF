@@ -24,13 +24,12 @@
             "type": "integer",
             "description": "The stride, in bytes.",
             "minimum": 4,
-            "maximum": 252,
-            "multipleOf": 4,
+            "maximum": 256
         },
         "count": {
             "type": "integer",
             "description": "The number of elements.",
-            "minimum": 1,
+            "minimum": 1
         },
         "mode": {
             "type": "string",
