@@ -432,6 +432,8 @@ void decode(intN_t input[4], intN_t output[4]) {
 }
 ```
 
+`INTN_MAX` is equal to 127 when using 8-bit components (N is 8) and equal to 32767 when using 16-bit components (N is 16).
+
 `copysign` behaves as specified in C99 and returns the value with the magnitude of the first argument and the sign of the second argument.
 
 ## Filter 2: quaternion
