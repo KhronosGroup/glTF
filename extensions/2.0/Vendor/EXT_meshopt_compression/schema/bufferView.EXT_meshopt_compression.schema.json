@@ -23,7 +23,7 @@
         "byteStride": {
             "type": "integer",
             "description": "The stride, in bytes.",
-            "minimum": 4,
+            "minimum": 2,
             "maximum": 256
         },
         "count": {
