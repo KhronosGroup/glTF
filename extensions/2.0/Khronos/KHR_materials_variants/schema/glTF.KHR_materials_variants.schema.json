@@ -9,6 +9,7 @@
             "type": "array",
             "items": {
                 "type": "object",
+                "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
                 "description": "An object defining a valid material variant",
                 "gltf_detailedDescription": "An object defining a valid material variant",
                 "properties": {
@@ -19,11 +20,15 @@
                     },
                     "extras": {
                         "type": "object"
-                    }
+                    },
+                    "extensions": { }
                 },
                 "required": [ "name" ]
-            }
-        }
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
     },
     "required": [ "variants" ]
 }

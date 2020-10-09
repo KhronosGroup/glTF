@@ -10,6 +10,7 @@
             "gltf_detailedDescription": "An array of object values that associate an indexed material to a set of variants.",
             "items": {
                 "type": "object",
+                "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
                 "properties": {
                     "variants": {
                         "uniqueItems": true,
@@ -37,8 +38,11 @@
                     "extensions": { }
                 },
                 "required": [ "variants", "material" ]
-            }
-        }
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
     },
     "required": [ "mappings" ]
 }
