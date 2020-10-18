@@ -16,17 +16,13 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension is specfically designed to enable GPU instancing, rendering many copies of a single mesh at once using a small number of draw calls.  It's useful for things
-like trees, grass, road signs, etc.  The `TRANSLATION`, `ROTATION`, and `SCALE` attributes allow the mesh to be displayed at many different locations, with different rotations and scales. As with vertex attributes, custom instance attributes may be prefixed with an underscore (e.g. `_ID`, `_COLOR`, etc.) and used for application-specific effects.
+This extension is specfically designed to enable GPU instancing, rendering many copies of a single mesh at once using a small number of draw calls.  It's useful for things like trees, grass, road signs, etc.  The `TRANSLATION`, `ROTATION`, and `SCALE` attributes allow the mesh to be displayed at many different locations, with different rotations and scales. As with vertex attributes, custom instance attributes may be prefixed with an underscore (e.g. `_ID`, `_COLOR`, etc.) and used for application-specific effects.
 
 > **Implementation Note:** While this extension stores mesh data optimized for GPU instancing, it is important to note that (1) GPU instancing and other optimizations are possible — and encouraged — even without this extension, and (2) other common meanings of the term "instancing" exist, distinct from this extension. See [Appendix: Motivation and Purpose](#appendix-motivation-and-purpose).
 
 ## Extending Nodes With Instance Attributes
 
-Instancing is defined by adding the `EXT_mesh_gpu_instancing` extension to any glTF node that has a mesh. Instancing only applies to mesh nodes, there is no defined behavior for a node
-with this extension that doesn't also have a mesh. Applying to nodes rather than meshes allows the same mesh to be used by several nodes, instanced or otherwise. The attributes
-section contains accessor ids for the `TRANSLATION`, `ROTATION`, and `SCALE` attribute buffers, all of which are optional. The attributes specify an object space transform that should be
-multipled by the node's world transform in the shader to produce the final world transform for the instance. For example, the following defines some instancing attributes to a node with mesh.
+Instancing is defined by adding the `EXT_mesh_gpu_instancing` extension to any glTF node that has a mesh. Instancing only applies to mesh nodes, there is no defined behavior for a node with this extension that doesn't also have a mesh. Applying to nodes rather than meshes allows the same mesh to be used by several nodes, instanced or otherwise. The attributes section contains accessor ids for the `TRANSLATION`, `ROTATION`, and `SCALE` attribute buffers, all of which are optional. The attributes specify an object space transform that should be multipled by the node's world transform in the shader to produce the final world transform for the instance. For example, the following defines some instancing attributes to a node with mesh.
 
 ```json
 {
