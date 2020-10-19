@@ -17,7 +17,7 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status <!-- omit in toc -->
 
-Draft
+Complete
 
 ## Dependencies <!-- omit in toc -->
 
