@@ -11,6 +11,7 @@
 * [KHR_materials_unlit](2.0/Khronos/KHR_materials_unlit/README.md)
 * [KHR_mesh_quantization](2.0/Khronos/KHR_mesh_quantization/README.md)
 * [KHR_texture_transform](2.0/Khronos/KHR_texture_transform/README.md)
+* [KHR_xmp](2.0/Khronos/KHR_xmp/README.md)
 
 #### Multi-Vendor Extensions
 
@@ -20,6 +21,7 @@
 
 #### Vendor Extensions
 
+* [ADOBE_materials_clearcoat_specular](2.0/Vendor/ADOBE_materials_clearcoat_specular/README.md)
 * [ADOBE_materials_thin_transparency](2.0/Vendor/ADOBE_materials_thin_transparency/README.md)
 * [AGI_articulations](2.0/Vendor/AGI_articulations/README.md)
 * [AGI_stk_metadata](2.0/Vendor/AGI_stk_metadata/README.md)
@@ -39,12 +41,12 @@ but may still change before they are complete._
 |-----------|--------|
 | [KHR_materials_ior](https://github.com/KhronosGroup/glTF/pull/1718) | In development. |
 | [KHR_materials_thinfilm](https://github.com/KhronosGroup/glTF/pull/1742) | In development. |
-| [KHR_materials_transmission](https://github.com/KhronosGroup/glTF/pull/1698) | In development. |
+| [KHR_materials_transmission](2.0/Khronos/KHR_materials_transmission/README.md) ([#1698](https://github.com/KhronosGroup/glTF/pull/1698)) | Ready for implementation and feedback. |
 | [KHR_materials_sheen](https://github.com/KhronosGroup/glTF/pull/1688) | Ready for implementation and feedback. |
-| KHR_materials_specular | Ready for implementation and feedback. Two proposals in [#1719](https://github.com/KhronosGroup/glTF/pull/1719) and [#1741](https://github.com/KhronosGroup/glTF/pull/1741). |
+| [KHR_materials_specular](https://github.com/KhronosGroup/glTF/pull/1719) | Ready for implementation and feedback. |
+| [KHR_materials_variants](2.0/Khronos/KHR_materials_variants/README.md) ([#1681](https://github.com/KhronosGroup/glTF/pull/1681)) | Ready for implementation and feedback. |
 | [KHR_materials_volume](https://github.com/KhronosGroup/glTF/pull/1726) | In development. |
-| [KHR_texture_basisu](https://github.com/KhronosGroup/glTF/pull/1751) | Ready for implementation and feedback. |
-| [KHR_xmp](https://github.com/KhronosGroup/glTF/pull/1553) | In development. |
+| [KHR_texture_basisu](2.0/Khronos/KHR_texture_basisu) ([#1751](https://github.com/KhronosGroup/glTF/pull/1751)) | Ready for implementation and feedback. |
 
 This section tracks the status of Khronos and multi-vendor extensions that are either already in development,
 or that we feel show enough consensus to be highly likely for future development. We welcome feedback for these
@@ -142,7 +144,7 @@ Vendor extensions are not covered by the Khronos IP framework.
 
 ### Multi-Vendor Extensions
 
-When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix.  To promote a vendor extension to a multi-vendor extension, open a pull request labeled `extension` that contains a new copy of the extension (even if there aren't any changes) with the new name using the `EXT` prefix, e.g., `KHR_binary_glTF`.
+When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix.  To promote a vendor extension to a multi-vendor extension, open a pull request labeled `extension` that contains a new copy of the extension (even if there aren't any changes) with the new name using the `EXT` prefix, e.g., `EXT_texture_webp`.
 
 Multi-vendor extensions are not covered by the Khronos IP framework.
 

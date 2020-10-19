@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_meshopt_compression buffer extension",
+    "type": "object",
+    "description": "Compressed data for bufferView.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "fallback": {
+            "type": "boolean",
+            "description": "Set to true to indicate that the buffer is only referenced by bufferViews that have EXT_meshopt_compression extension and as such doesn't need to be loaded.",
+            "default": false
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

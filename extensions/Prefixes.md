@@ -28,8 +28,10 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `FB` | Facebook, Inc. | https://www.facebook.com/ | [#1139](https://github.com/KhronosGroup/glTF/pull/1139) |
 | `FOXIT` | Foxit Software, Inc. | https://foxitsoftware.com<br>`liqian_mu at foxitsoftware.com` | [#1712](https://github.com/KhronosGroup/glTF/issues/1712) |
 | `GOOGLE` | Google, LLC | https://www.google.com/ | [#1123](https://github.com/KhronosGroup/glTF/issues/1123) |
+| `GRIFFEL` | Griffel Studio | http://griffelstudio.com/ | [#1861](https://github.com/KhronosGroup/glTF/issues/1861) |
 | `KDAB` | The KDAB Group | https://www.kdab.com/ | [#1728](https://github.com/KhronosGroup/glTF/pull/1728) |
 | `LLQ` | Lifeliqe, Inc. | https://www.lifeliqe.com/ | [#1414](https://github.com/KhronosGroup/glTF/issues/1414) |
+| `MAXAR` | Maxar Technologies | https://www.maxar.com/ | [#1869](https://github.com/KhronosGroup/glTF/issues/1869) |
 | `MESHOPT` | meshoptimizer | https://meshoptimizer.org/ | [#1634](https://github.com/KhronosGroup/glTF/issues/1634) |
 | `MOZ` | Mozilla Corporation | https://www.mozilla.org/ | [#1349](https://github.com/KhronosGroup/glTF/issues/1349) |
 | `MPEG` | The Moving Picture Experts Group | https://mpeg.chiariglione.org/standards/mpeg-i | [#1754](https://github.com/KhronosGroup/glTF/issues/1754) |
@@ -38,6 +40,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `OWLII` | Owlii, Inc. | https://www.owlii.com/ | [#1093](https://github.com/KhronosGroup/glTF/issues/1093) |
 | `PANDA3D` | Panda3D | https://www.panda3d.org/ | [#1828](https://github.com/KhronosGroup/glTF/pull/1828) |
 | `POLUTROPON` | Polutropon Games | https://polutropon.games/<br>`ybalrid at polutropon.games` | [#1632](https://github.com/KhronosGroup/glTF/issues/1632) |
+| `PTC` | PTC Inc. | https://www.ptc.com/ | [#1851](https://github.com/KhronosGroup/glTF/issues/1851) |
 | `S8S` | Soft8Soft | https://www.soft8soft.com/ | [#1240](https://github.com/KhronosGroup/glTF/issues/1240) |
 | `SEIN` | Hiloteam | https://seinjs.com/ | [#1840](https://github.com/KhronosGroup/glTF/issues/1840) |
 | `SI` | Smithsonian Institution | https://www.si.edu/ | [#1410](https://github.com/KhronosGroup/glTF/issues/1410) |
@@ -45,4 +48,5 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `SKYLINE` | Skyline Software Systems, Inc. | https://www.skylinesoft.com/ | [#1704](https://github.com/KhronosGroup/glTF/issues/1704) |
 | `SPECTRUM` | Spectrum | https://spectrumcustomizer.com/ | [#1804](https://github.com/KhronosGroup/glTF/issues/1804) |
 | `TRYON` | TRYON Technology Ltd. | https://tryon.technology | [#1785](https://github.com/KhronosGroup/glTF/issues/1785) |
+| `VRMC` | VRM Consortium | https://vrm-consortium.org/ | [#1874](https://github.com/KhronosGroup/glTF/issues/1874) |
 | `WEB3D` | The Web3D Consortium, Inc. | https://www.web3d.org/ |  |

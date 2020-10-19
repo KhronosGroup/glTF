@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "ADOBE_materials_clearcoat_ior glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the colour tint of the clearcoat.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "clearcoatIor": {
+            "type": "number",
+            "description": "The clearcoat layer's index of refraction.",
+            "default": 1.5,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The clearcoat layer's index of refraction."
+        },
+        "clearcoatSpecularFactor": {
+            "type": "number",
+            "description": "The clearcoat layer's specular intensity.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The clearcoat layer's specular intensity."
+        },
+        "clearcoatSpecularTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The clearcoat layer specular intensity texture.",
+            "gltf_detailedDescription": "The clearcoat layer's specular intensity texture. These values are sampled from the B channel."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
