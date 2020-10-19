@@ -8,7 +8,9 @@
 * [KHR_lights_punctual](2.0/Khronos/KHR_lights_punctual/README.md)
 * [KHR_materials_clearcoat](2.0/Khronos/KHR_materials_clearcoat/README.md)
 * [KHR_materials_pbrSpecularGlossiness](2.0/Khronos/KHR_materials_pbrSpecularGlossiness/README.md)
+* [KHR_materials_transmission](2.0/Khronos/KHR_materials_transmission/README.md)
 * [KHR_materials_unlit](2.0/Khronos/KHR_materials_unlit/README.md)
+* [KHR_materials_variants](2.0/Khronos/KHR_materials_variants/README.md)
 * [KHR_mesh_quantization](2.0/Khronos/KHR_mesh_quantization/README.md)
 * [KHR_texture_transform](2.0/Khronos/KHR_texture_transform/README.md)
 * [KHR_xmp](2.0/Khronos/KHR_xmp/README.md)
@@ -17,6 +19,7 @@
 
 * [EXT_lights_image_based](2.0/Vendor/EXT_lights_image_based/README.md)
 * [EXT_mesh_gpu_instancing](2.0/Vendor/EXT_mesh_gpu_instancing/README.md)
+* [EXT_meshopt_compression](2.0/Vendor/EXT_meshopt_compression/README.md)
 * [EXT_texture_webp](2.0/Vendor/EXT_texture_webp/README.md)
 
 #### Vendor Extensions
@@ -41,10 +44,8 @@ but may still change before they are complete._
 |-----------|--------|
 | [KHR_materials_ior](https://github.com/KhronosGroup/glTF/pull/1718) | In development. |
 | [KHR_materials_thinfilm](https://github.com/KhronosGroup/glTF/pull/1742) | In development. |
-| [KHR_materials_transmission](2.0/Khronos/KHR_materials_transmission/README.md) ([#1698](https://github.com/KhronosGroup/glTF/pull/1698)) | Ready for implementation and feedback. |
 | [KHR_materials_sheen](https://github.com/KhronosGroup/glTF/pull/1688) | Ready for implementation and feedback. |
 | [KHR_materials_specular](https://github.com/KhronosGroup/glTF/pull/1719) | Ready for implementation and feedback. |
-| [KHR_materials_variants](2.0/Khronos/KHR_materials_variants/README.md) ([#1681](https://github.com/KhronosGroup/glTF/pull/1681)) | Ready for implementation and feedback. |
 | [KHR_materials_volume](https://github.com/KhronosGroup/glTF/pull/1726) | In development. |
 | [KHR_texture_basisu](2.0/Khronos/KHR_texture_basisu) ([#1751](https://github.com/KhronosGroup/glTF/pull/1751)) | Ready for implementation and feedback. |
 
