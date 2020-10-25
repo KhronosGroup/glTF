@@ -44,8 +44,9 @@ but may still change before they are complete._
 |-----------|--------|
 | [KHR_materials_ior](https://github.com/KhronosGroup/glTF/pull/1718) | In development. |
 | [KHR_materials_thinfilm](https://github.com/KhronosGroup/glTF/pull/1742) | In development. |
-| [KHR_materials_sheen](https://github.com/KhronosGroup/glTF/pull/1688) | Ready for implementation and feedback. |
+| [KHR_materials_sheen](2.0/Khronos/KHR_materials_sheen) ([#1688](https://github.com/KhronosGroup/glTF/pull/1688)) | Ready for implementation and feedback. |
 | [KHR_materials_specular](https://github.com/KhronosGroup/glTF/pull/1719) | Ready for implementation and feedback. |
+| [KHR_materials_translucency](https://github.com/KhronosGroup/glTF/pull/1825) | In development. |
 | [KHR_materials_volume](https://github.com/KhronosGroup/glTF/pull/1726) | In development. |
 | [KHR_texture_basisu](2.0/Khronos/KHR_texture_basisu) ([#1751](https://github.com/KhronosGroup/glTF/pull/1751)) | Ready for implementation and feedback. |
 
