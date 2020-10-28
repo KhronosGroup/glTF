@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "Mesh Primitive",
+    "title": "primitive",
     "type": "object",
     "description": "Geometry to be rendered with the given material.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "Camera",
+    "title": "camera",
     "type": "object",
     "description": "A camera's projection.  A node can reference a camera to apply a transform to place the camera in the scene.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],

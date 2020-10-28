@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "Sampler",
+    "title": "sampler",
     "type": "object",
     "description": "Texture sampler properties for filtering and wrapping modes.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],

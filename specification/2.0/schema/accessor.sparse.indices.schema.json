@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "Accessor Sparse Indices",
+    "title": "indices",
     "type": "object",
     "description": "Indices of those attributes that deviate from their initialization value.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

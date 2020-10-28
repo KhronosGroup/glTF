@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "Accessor Sparse Values",
+    "title": "values",
     "type": "object",
     "description": "Array of size `accessor.sparse.count` times number of components storing the displaced accessor attributes pointed by `accessor.sparse.indices`.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

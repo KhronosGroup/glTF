@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "glTF Property",
+    "title": "glTF property",
     "type": "object",
     "properties": {
         "extensions": {

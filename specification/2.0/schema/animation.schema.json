@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "Animation",
+    "title": "animation",
     "type": "object",
     "description": "A keyframe animation.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],

@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "Animation Channel",
+    "title": "channel",
     "type": "object",
     "description": "Targets an animation's sampler at a node's property.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
