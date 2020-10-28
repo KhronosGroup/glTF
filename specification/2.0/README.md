@@ -1712,6 +1712,8 @@ A typed view into a bufferView.  A bufferView contains raw binary data.  An acce
 
 Additional properties are allowed.
 
+* **JSON schema**: [accessor.schema.json](schema/accessor.schema.json)
+
 #### accessor.bufferView
 
 The index of the bufferView. When not defined, accessor must be initialized with zeros; `sparse` property or extensions could override zeros with actual values.
@@ -1843,6 +1845,8 @@ Sparse storage of attributes that deviate from their initialization value.
 
 Additional properties are allowed.
 
+* **JSON schema**: [accessor.sparse.schema.json](schema/accessor.sparse.schema.json)
+
 #### accessor.sparse.count :white_check_mark: 
 
 The number of attributes encoded in this sparse accessor.
@@ -1900,6 +1904,8 @@ Indices of those attributes that deviate from their initialization value.
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
 
 Additional properties are allowed.
+
+* **JSON schema**: [accessor.sparse.indices.schema.json](schema/accessor.sparse.indices.schema.json)
 
 #### accessor.sparse.indices.bufferView :white_check_mark: 
 
@@ -1963,6 +1969,8 @@ Array of size `accessor.sparse.count` times number of components storing the dis
 
 Additional properties are allowed.
 
+* **JSON schema**: [accessor.sparse.values.schema.json](schema/accessor.sparse.values.schema.json)
+
 #### accessor.sparse.values.bufferView :white_check_mark: 
 
 The index of the bufferView with sparse values. Referenced bufferView can't have ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER target.
@@ -2014,6 +2022,8 @@ A keyframe animation.
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
 
 Additional properties are allowed.
+
+* **JSON schema**: [animation.schema.json](schema/animation.schema.json)
 
 #### animation.channels :white_check_mark: 
 
@@ -2071,6 +2081,8 @@ Targets an animation's sampler at a node's property.
 
 Additional properties are allowed.
 
+* **JSON schema**: [animation.channel.schema.json](schema/animation.channel.schema.json)
+
 #### animation.channel.sampler :white_check_mark: 
 
 The index of a sampler in this animation used to compute the value for the target, e.g., a node's translation, rotation, or scale (TRS).
@@ -2120,6 +2132,8 @@ The index of the node and TRS property that an animation channel targets.
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
 
 Additional properties are allowed.
+
+* **JSON schema**: [animation.channel.target.schema.json](schema/animation.channel.target.schema.json)
 
 #### animation.channel.target.node
 
@@ -2176,6 +2190,8 @@ Combines input and output accessors with an interpolation algorithm to define a 
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
 
 Additional properties are allowed.
+
+* **JSON schema**: [animation.sampler.schema.json](schema/animation.sampler.schema.json)
 
 #### animation.sampler.input :white_check_mark: 
 
@@ -2241,6 +2257,8 @@ Metadata about the glTF asset.
 
 Additional properties are allowed.
 
+* **JSON schema**: [asset.schema.json](schema/asset.schema.json)
+
 #### asset.copyright
 
 A copyright message suitable for display to credit the content creator.
@@ -2305,6 +2323,8 @@ A buffer points to binary geometry, animation, or skins.
 
 Additional properties are allowed.
 
+* **JSON schema**: [buffer.schema.json](schema/buffer.schema.json)
+
 #### buffer.uri
 
 The uri of the buffer.  Relative paths are relative to the .gltf file.  Instead of referencing an external file, the uri can also be a data-uri.
@@ -2366,6 +2386,8 @@ A view into a buffer generally representing a subset of the buffer.
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
 
 Additional properties are allowed.
+
+* **JSON schema**: [bufferView.schema.json](schema/bufferView.schema.json)
 
 #### bufferView.buffer :white_check_mark: 
 
@@ -2456,6 +2478,8 @@ A camera's projection.  A node can reference a camera to apply a transform to pl
 
 Additional properties are allowed.
 
+* **JSON schema**: [camera.schema.json](schema/camera.schema.json)
+
 #### camera.orthographic
 
 An orthographic camera containing properties to create an orthographic projection matrix.
@@ -2524,6 +2548,8 @@ An orthographic camera containing properties to create an orthographic projectio
 
 Additional properties are allowed.
 
+* **JSON schema**: [camera.orthographic.schema.json](schema/camera.orthographic.schema.json)
+
 #### camera.orthographic.xmag :white_check_mark: 
 
 The floating-point horizontal magnification of the view. Must not be zero.
@@ -2591,6 +2617,8 @@ A perspective camera containing properties to create a perspective projection ma
 
 Additional properties are allowed.
 
+* **JSON schema**: [camera.perspective.schema.json](schema/camera.perspective.schema.json)
+
 #### camera.perspective.aspectRatio
 
 The floating-point aspect ratio of the field of view. When this is undefined, the aspect ratio of the canvas is used.
@@ -2649,6 +2677,8 @@ Dictionary object with extension-specific objects.
 
 Additional properties are allowed.
 
+* **JSON schema**: [extension.schema.json](schema/extension.schema.json)
+
 
 
 
@@ -2691,6 +2721,8 @@ The root object for a glTF asset.
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
 
 Additional properties are allowed.
+
+* **JSON schema**: [glTF.schema.json](schema/glTF.schema.json)
 
 #### glTFProperty.extensionsUsed
 
@@ -2846,6 +2878,8 @@ Application-specific data.
 
 Additional properties are allowed.
 
+* **JSON schema**: [glTFChildOfRootProperty.schema.json](schema/glTFChildOfRootProperty.schema.json)
+
 #### glTFChildOfRootProperty.name
 
 The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
@@ -2890,6 +2924,8 @@ Application-specific data.
 
 Additional properties are allowed.
 
+* **JSON schema**: [glTFProperty.schema.json](schema/glTFProperty.schema.json)
+
 #### glTFProperty.extensions
 
 Dictionary object with extension-specific objects.
@@ -2926,6 +2962,8 @@ Image data used to create a texture. Image can be referenced by URI or `bufferVi
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
 
 Additional properties are allowed.
+
+* **JSON schema**: [image.schema.json](schema/image.schema.json)
 
 #### image.uri
 
@@ -3001,6 +3039,8 @@ The material appearance of a primitive.
 |**doubleSided**|`boolean`|Specifies whether the material is double sided.|No, default: `false`|
 
 Additional properties are allowed.
+
+* **JSON schema**: [material.schema.json](schema/material.schema.json)
 
 #### material.name
 
@@ -3107,6 +3147,8 @@ Reference to a texture.
 
 Additional properties are allowed.
 
+* **JSON schema**: [material.normalTextureInfo.schema.json](schema/material.normalTextureInfo.schema.json)
+
 #### material.normalTextureInfo.index :white_check_mark: 
 
 The index of the texture.
@@ -3165,6 +3207,8 @@ Reference to a texture.
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
 
 Additional properties are allowed.
+
+* **JSON schema**: [material.occlusionTextureInfo.schema.json](schema/material.occlusionTextureInfo.schema.json)
 
 #### material.occlusionTextureInfo.index :white_check_mark: 
 
@@ -3228,6 +3272,8 @@ A set of parameter values that are used to define the metallic-roughness materia
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
 
 Additional properties are allowed.
+
+* **JSON schema**: [material.pbrMetallicRoughness.schema.json](schema/material.pbrMetallicRoughness.schema.json)
 
 #### material.pbrMetallicRoughness.baseColorFactor
 
@@ -3305,6 +3351,8 @@ A set of primitives to be rendered.  A node can contain one mesh.  A node's tran
 
 Additional properties are allowed.
 
+* **JSON schema**: [mesh.schema.json](schema/mesh.schema.json)
+
 #### mesh.primitives :white_check_mark: 
 
 An array of primitives, each defining geometry to be rendered with a material.
@@ -3365,6 +3413,8 @@ Geometry to be rendered with the given material.
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
 
 Additional properties are allowed.
+
+* **JSON schema**: [mesh.primitive.schema.json](schema/mesh.primitive.schema.json)
 
 #### mesh.primitive.attributes :white_check_mark: 
 
@@ -3454,6 +3504,8 @@ A node in the node hierarchy.  When the node contains `skin`, all `mesh.primitiv
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
 
 Additional properties are allowed.
+
+* **JSON schema**: [node.schema.json](schema/node.schema.json)
 
 #### node.camera
 
@@ -3572,6 +3624,8 @@ Texture sampler properties for filtering and wrapping modes.
 
 Additional properties are allowed.
 
+* **JSON schema**: [sampler.schema.json](schema/sampler.schema.json)
+
 #### sampler.magFilter
 
 Magnification filter.  Valid values correspond to WebGL enums: `9728` (NEAREST) and `9729` (LINEAR).
@@ -3664,6 +3718,8 @@ The root nodes of a scene.
 
 Additional properties are allowed.
 
+* **JSON schema**: [scene.schema.json](schema/scene.schema.json)
+
 #### scene.nodes
 
 The indices of each root node.
@@ -3716,6 +3772,8 @@ Joints and matrices defining a skin.
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
 
 Additional properties are allowed.
+
+* **JSON schema**: [skin.schema.json](schema/skin.schema.json)
 
 #### skin.inverseBindMatrices
 
@@ -3787,6 +3845,8 @@ A texture and its sampler.
 
 Additional properties are allowed.
 
+* **JSON schema**: [texture.schema.json](schema/texture.schema.json)
+
 #### texture.sampler
 
 The index of the sampler used by this texture. When undefined, a sampler with repeat wrapping and auto filtering should be used.
@@ -3844,6 +3904,8 @@ Reference to a texture.
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
 
 Additional properties are allowed.
+
+* **JSON schema**: [textureInfo.schema.json](schema/textureInfo.schema.json)
 
 #### textureInfo.index :white_check_mark: 
 
