@@ -99,7 +99,7 @@ Light rays falling through the volume boundary are refracted according to the in
 
 Absorption and subsurface scattering are described by the absorption coefficient σ<sub>a</sub> and the scattering coefficient σ<sub>s</sub>. The coefficients σ<sub>a</sub> and σ<sub>s</sub> are wavelength-dependent values in the range [0, Inf]. Such an infinite range makes them hard to be controlled by users.
 
-To provide convenient parameterization for users this extension derives the physical parameters from three user-friendly parameters: attenuation color a, attenuation distance d and subsurface color ρ<sub>ms</sub>.
+To provide convenient parameterization for users this extension provides three parameters: attenuation color a, attenuation distance d and subsurface color ρ<sub>ms</sub> (see [Properties](#Properties)). We will now describe how to derive the physical parameters for absorption and scattering from the user-friendly parameters.
 
 In a first step, we map from attenuation color and distance to the attenuation coefficient σ<sub>t</sub>.
 
