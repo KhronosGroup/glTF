@@ -117,7 +117,9 @@ In the next step, we map from our subsurface color parameter ρ<sub>ms</sub> to 
 
 ρ<sub>ss</sub> = 1 - (4.09712 + 4.20863 ρ<sub>ms</sub> - sqrt(9.59217 + 41.6808 ρ<sub>ms</sub> + 17.7126 ρ<sub>ms</sub><sup>2</sup>))<sup>2</sup>
 
-The single-scattering albedo is the color at each particle in the medium. Light that is scattered by a particle will be tinted with this color. Note that scattering will happen many times in the medium until the light leaves the volume, so the overall color ρ<sub>ms</sub> will differ significantly from the albedo of the particles ρ<sub>ss</sub>. Via the mapping users can control the albedo of surface, i.e., the color that an object appears to have in the final rendering. The mapping was introduced by [Kulla and Conty (2017)](#KullaConty2017).
+The single-scattering albedo is the color of a particle in the medium. Light that is scattered by a particle will be tinted with this color. An albedo of 0 (black) disables scattering, resulting in a medium that only absorbs.
+
+Note that scattering will happen many times in the medium until the light leaves the volume, so the overall color ρ<sub>ms</sub> will differ significantly from the albedo of the particles ρ<sub>ss</sub>. Via the mapping users can control the albedo of surface, i.e., the color that an object appears to have in the final rendering. The mapping was introduced by [Kulla and Conty (2017)](#KullaConty2017).
 
 Now that we have computed σ<sub>t</sub> and ρ<sub>ss</sub>, we can finally derive σ<sub>a</sub> and σ<sub>s</sub> as follows:
 
