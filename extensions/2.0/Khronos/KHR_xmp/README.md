@@ -20,6 +20,10 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 Complete
 
+### Important Notice
+
+_While this extension is marked as complete, it is under review pending a new version to align it closer with the [JSON-LD serialization of XMP data ISO specification](https://www.iso.org/standard/79384.html). We recommend waiting to implement KHR_xmp until development the new version is complete._
+
 ## Dependencies
 
 Written against the glTF 2.0 spec.
