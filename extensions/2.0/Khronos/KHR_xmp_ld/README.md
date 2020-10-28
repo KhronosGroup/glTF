@@ -34,6 +34,8 @@ XMP metadata is embedded in a top-level glTF extension as an array of metadata p
 XMP metadata packets can then be referenced from glTF objects of type: `asset`, `scene`, `node`, `mesh`, `material`, `image`, `animation`.
 XMP metadata referenced by the glTF top level object `asset` applies to the entire glTF asset.
 XMP metadata is organized in namespaces (ISO 16684-1$6.2). This extension enables any XMP metadata namespace to be embedded in a glTF asset.
+XMP metadata packets in glTF use a restricted subset of features from JSON-LD. This allows both JSON parsers and JSON-LD parsers to read the individual packets.
+Serializing XMP metadata using JSON-LD is outlined in [JSON-LD serialization of XMP (ISO/DIS 16684-3)](https://www.iso.org/standard/79384.html).
 
 ## XMP data types
 
@@ -67,22 +69,20 @@ The following table describes how [XMP Core Properties (ISO 16684-1$8.2)](https:
 ## Defining XMP Metadata
 
 An indirection level is introduced to avoid replicating the same XMP metadata in multiple glTF objects.
-XMP metadatas are defined within a dictionary property in the glTF scene description file by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_xmp` object. The `KHR_xmp` object defines two properties:
+XMP metadatas are defined within a dictionary property in the glTF scene description file by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_xmp` object. The `KHR_xmp` object defines one property:
 
-* `@context` : a dictionary mapping XMP namespaces to the URI where they are defined.
-Please note that the context definition conforms with [JSON-LD](https://www.w3.org/2018/jsonld-cg-reports/json-ld/#the-context).
-* `packets`: an array of metadata packets referencing the namespaces defined in the `@context` dictionary.
+* `packets`: an array of metadata packets. Each packet is JSON-LD compliant (with [additional restrictions](#json-ld-restrictions-and-recommendations)) and requires a `@context` dictionary to be defined which includes references for the namespaces.
 
 The following example defines a glTF scene with a sample XMP metadata.
 
 ```json
 "extensions": {
     "KHR_xmp" : {
-        "@context" : {
-            "dc" : "http://purl.org/dc/elements/1.1/"
-        },
         "packets" : [
             {
+                "@context" : {
+                    "dc" : "http://purl.org/dc/elements/1.1/"
+                },
                 "dc:contributor" : [ "Creator1Name", "Creator2Email@email.com", "Creator3Name<Email@email.com>"],
                 "dc:coverage" : "Bay Area, California, United States",
                 "dc:creator" : [ "CreatorName", "CreatorEmail@email.com"],
@@ -143,6 +143,25 @@ The following example shows a glTF Mesh instantiating the XMP metadata at index 
 Metadata applied to JSON objects in the top level arrays ( `scenes`, `nodes`, `meshes`, `materials`, `images`, `animations`) has precedence over the metadata specified in the `asset` property of a glTF.
 A glTF might reference resources already containing XMP metadata. A relevant example would be an image object referencing a PNG/JPG file with embedded XMP metadata. Note that glTF clients and viewers may ignore the metadata embedded in the referenced resources (for instance PNG/JPG images).
 
+#### JSON-LD Restrictions and Recommendations
+
+In order to keep glTF files easily readable without a JSON-LD parser, there are additional restrictions on JSON-LD that are required for `KHR_xmp` metadata packets. Failure to obey these restrictions may create issues for JSON or JSON-LD parsers.
+
+* [Expanded term definitions](https://www.w3.org/TR/json-ld11/#expanded-term-definition) are forbidden unless otherwise specified.
+* Namespace prefixes should only use the latin alphabet `A` to `Z` uppercase or lowercase, roman numerals `0` to `9`, or `_`.
+* Aliases and multiple prefixes for the same namespace are forbidden.
+* [Value objects](https://www.w3.org/TR/json-ld11/#value-objects) are forbidden unless otherwise specified, such as with Language Alternatives.
+* Language Alternatives must use `@language` and `@value` pairs within an array. See the [Using Language Alternatives](#using-language-alternatives) section for details.
+
+Additionally, the following are recommended:
+
+* XMP data types are always preferred. Only use a non XMP data type if you have no other option.
+* Usage of [IRIs](https://www.w3.org/International/wiki/IRIStatus) are heavily discouraged. Where possible, please follow the URI types outlined in the [glTF 2.0 Specification](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#uris).
+
+#### Language Alternatives
+
+TODO
+
 #### Transferring and merging metadata
 
 When a glTF object (for example a Mesh) is copied from a glTF file to another, the associated `KHR_xmp` metadata should be copied as well.
@@ -161,8 +180,8 @@ glTF containing the first mesh:
     ],
     "extensions": {
         "KHR_xmp" : {
-            "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
             "packets" : [{
+                "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
                 "dc:title" : { "en-us" : "My first mesh"},
                 ...
             }]
@@ -183,8 +202,8 @@ glTF containing the second mesh:
     ],
     "extensions": {
         "KHR_xmp" : {
-            "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
             "packets" : [{
+                "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
                 "dc:title" : { "en-us" : "My second mesh"},
                 ...
             }]
@@ -209,13 +228,14 @@ glTF containing copies of both meshes:
     ],
     "extensions": {
         "KHR_xmp" : {
-            "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
             "packets" : [
               {
+                "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
                 "dc:title" : { "en-us" : "My first mesh"},
                 ...
               },
               {
+                "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
                 "dc:title" : { "en-us" : "My second mesh"},
                 ...
               }
@@ -242,9 +262,9 @@ First glTF document:
     },
     "extensions": {
         "KHR_xmp" : {
-            "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
             "packets" : [
               {
+                "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
                 "dc:title" : { "en-us" : "My first glTF"},
                 ...
               }
@@ -268,9 +288,9 @@ Second glTF document:
     },
     "extensions": {
         "KHR_xmp" : {
-            "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
             "packets" : [
               {
+                "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
                 "dc:title" : { "en-us" : "My second glTF"},
                 ...
               }
@@ -294,13 +314,13 @@ Derived glTF document metadata:
     },
     "extensions": {
         "KHR_xmp" : {
-            "@context" :
-              {
-                "dc" : "http://purl.org/dc/elements/1.1/",
-                "xmpMM" : "http://ns.adobe.com/xap/1.0/mm/",
-              },
             "packets" : [
               {
+                "@context":
+                {
+                  "dc" : "http://purl.org/dc/elements/1.1/",
+                  "xmpMM" : "http://ns.adobe.com/xap/1.0/mm/",
+                },
                 "dc:title" : { "en-us" : "My composed glTF."},
                 "xmpMM:Pantry" : [
                   {
