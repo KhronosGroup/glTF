@@ -22,7 +22,7 @@ Complete
 
 ### Important Notice
 
-_While this extension is marked as complete, it is under review pending a potential new version to align it closer with the [JSON-LD serialization of XMP data ISO specification](https://www.iso.org/standard/79384.html). We recommend waiting to implement KHR_xmp until development the new version is complete._
+_While this extension is marked as complete, it is under review [pending a potential new version](https://github.com/KhronosGroup/glTF/pull/1893) to align it closer with the [JSON-LD serialization of XMP data ISO specification](https://www.iso.org/standard/79384.html). We recommend waiting to implement KHR_xmp until development the new version is complete._
 
 ## Dependencies
 
