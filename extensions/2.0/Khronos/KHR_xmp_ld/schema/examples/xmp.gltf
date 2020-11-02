@@ -1,7 +1,7 @@
 {
-  "extensionsUsed": ["KHR_xmp"],
+  "extensionsUsed": ["KHR_xmp_ld"],
   "extensions": {
-    "KHR_xmp": {
+    "KHR_xmp_ld": {
       "packets": [
         {
           "@context": {
@@ -71,7 +71,7 @@
     "minVersion": "2.0",
     "version": "2.0",
     "extensions": {
-      "KHR_xmp": {
+      "KHR_xmp_ld": {
         "packet": 0
       }
     }
@@ -139,7 +139,7 @@
         }
       ],
       "extensions": {
-        "KHR_xmp": {
+        "KHR_xmp_ld": {
           "packet": 1
         }
       }

@@ -1,4 +1,4 @@
-# KHR\_xmp
+# KHR\_xmp\_ld
 
 ## Contributors
 
@@ -35,7 +35,7 @@ XMP metadata packets can then be referenced from glTF objects of type: `asset`, 
 XMP metadata referenced by the glTF top level object `asset` applies to the entire glTF asset.
 XMP metadata is organized in namespaces (ISO 16684-1$6.2). This extension enables any XMP metadata namespace to be embedded in a glTF asset.
 XMP metadata packets in glTF use a restricted subset of features from JSON-LD. This allows both JSON parsers and JSON-LD parsers to read the individual packets.
-Serializing XMP metadata using JSON-LD is outlined in [JSON-LD serialization of XMP (ISO/DIS 16684-3)](https://www.iso.org/standard/79384.html).
+Serializing XMP metadata using JSON-LD is outlined in [JSON-LD serialization of XMP (ISO/DIS 16684-3)](https://www.iso.org/standard/79384.html). There are additional restrictions for glTF outlined in [JSON-LD Restrictions and Recommendations](#json-ld-restrictions-and-recommendations).
 
 ## XMP data types
 
@@ -69,7 +69,7 @@ The following table describes how [XMP Core Properties (ISO 16684-1$8.2)](https:
 ## Defining XMP Metadata
 
 An indirection level is introduced to avoid replicating the same XMP metadata in multiple glTF objects.
-XMP metadatas are defined within a dictionary property in the glTF scene description file by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_xmp` object. The `KHR_xmp` object defines one property:
+XMP metadatas are defined within a dictionary property in the glTF scene description file by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_xmp_ld` object. The `KHR_xmp_ld` object defines one property:
 
 * `packets`: an array of metadata packets. Each packet is JSON-LD compliant (with [additional restrictions](#json-ld-restrictions-and-recommendations)) and requires a `@context` dictionary to be defined which includes references for the namespaces.
 
@@ -77,7 +77,7 @@ The following example defines a glTF scene with a sample XMP metadata.
 
 ```json
 "extensions": {
-  "KHR_xmp": {
+  "KHR_xmp_ld": {
     "packets": [
       {
         "@context": {
@@ -125,7 +125,7 @@ The following example defines a glTF scene with a sample XMP metadata.
 
 ## Instantiating XMP metadata
 
-Metadata can be instantiated in a gltf object by defining the `extensions.KHR_xmp` property and, within that, an index into the `packets` array using the `packet` property.
+Metadata can be instantiated in a gltf object by defining the `extensions.KHR_xmp_ld` property and, within that, an index into the `packets` array using the `packet` property.
 The following example shows a glTF Mesh instantiating the XMP metadata at index `0`.
 
 ```json
@@ -133,7 +133,7 @@ The following example shows a glTF Mesh instantiating the XMP metadata at index 
   "meshes": [
     {
       "extensions": {
-        "KHR_xmp": {
+        "KHR_xmp_ld": {
           "packet": 0
         }
       },
@@ -164,13 +164,18 @@ A glTF might reference resources already containing XMP metadata. A relevant exa
 
 #### JSON-LD Restrictions and Recommendations
 
-In order to keep glTF files easily readable without a JSON-LD parser, there are additional restrictions on JSON-LD that are required for `KHR_xmp` metadata packets. Failure to obey these restrictions may create issues for JSON or JSON-LD parsers.
+In order to keep glTF files easily readable without a JSON-LD parser, there are additional restrictions on JSON-LD that are required for `KHR_xmp_ld` metadata packets. Failure to obey these restrictions may create issues for JSON or JSON-LD parsers.
 
 * [Expanded term definitions](https://www.w3.org/TR/json-ld11/#expanded-term-definition) are forbidden unless otherwise specified.
 * Namespace prefixes should only use the latin alphabet `A` to `Z` uppercase or lowercase, roman numerals `0` to `9`, or `_`.
 * Aliases and multiple prefixes for the same namespace are forbidden.
 * [Value objects](https://www.w3.org/TR/json-ld11/#value-objects) are forbidden unless otherwise specified, such as with Language Alternatives.
+* Lists and sets must use the unordered JSON array form. The `@list` and `@set` keywords are forbidden.
+* Index, Id, and Type maps are forbidden.
+* Local contexts are forbidden.
 * Language Alternatives must use `@language` and `@value` pairs within an array. See the [Using Language Alternatives](#using-language-alternatives) section for details.
+
+These restrictions ensure that `KHR_xmp_ld` metadata remains readable regardless if the parser supports JSON-LD.
 
 Additionally, the following are recommended:
 
@@ -179,13 +184,80 @@ Additionally, the following are recommended:
 
 #### Language Alternatives
 
-TODO
+Language Alternatives provide a powerful way of handling internationalization within XMP metadata. `KHR_xmp_ld` relies on usage of the `@language` and `@value` keywords per requirements outlined in the [JSON-LD serialization of XMP (ISO/DIS 16684-3)](https://www.iso.org/standard/79384.html) specification. Language Alternatives can be contained in either an object or an array of objects with the following properties:
+
+* `@language` with a IETF BCP 47 language code as the value.
+* `@value` with actual value of the XMP property as a string.
+
+An example glTF containing an object with only one language:
+
+```json
+{
+  "meshes": [
+    {
+      "extensions": { "KHR_xmp_ld": { "packet": 0 } },
+      ...
+    }
+  ],
+  "extensions": {
+    "KHR_xmp_ld": {
+      "packets": [
+        {
+          "@context": {
+            "dc": "http://purl.org/dc/elements/1.1/"
+          },
+          "dc:title": {
+            "@language": "en-us",
+            "@value": "My Model"
+          },
+          ...
+        }
+      ]
+    }
+  }
+}
+```
+
+An example glTF containing an array of objects with more than one language:
+
+```json
+{
+  "meshes": [
+    {
+      "extensions": { "KHR_xmp_ld": { "packet": 0 } },
+      ...
+    }
+  ],
+  "extensions": {
+    "KHR_xmp_ld": {
+      "packets": [
+        {
+          "@context": {
+            "dc": "http://purl.org/dc/elements/1.1/"
+          },
+          "dc:title": [
+            {
+              "@language": "en-us",
+              "@value": "My Model"
+            },
+            {
+              "@language": "en-us",
+              "@value": "Mio Modello"
+            }
+          ],
+          ...
+        }
+      ]
+    }
+  }
+}
+```
 
 #### Transferring and merging metadata
 
-When a glTF object (for example a Mesh) is copied from a glTF file to another, the associated `KHR_xmp` metadata should be copied as well.
-Copying metadata requires adding the source object's metadata packets to the destination glTF's `KHR_xmp.packets` array.
-In the following example two glTFs containing a mesh with `KHR_xmp` metadata are copied into a third glTF.
+When a glTF object (for example a Mesh) is copied from a glTF file to another, the associated `KHR_xmp_ld` metadata should be copied as well.
+Copying metadata requires adding the source object's metadata packets to the destination glTF's `KHR_xmp_ld.packets` array.
+In the following example two glTFs containing a mesh with `KHR_xmp_ld` metadata are copied into a third glTF.
 
 glTF containing the first mesh:
 
@@ -193,12 +265,12 @@ glTF containing the first mesh:
 {
   "meshes": [
     {
-      "extensions": { "KHR_xmp": { "packet": 0 } },
+      "extensions": { "KHR_xmp_ld": { "packet": 0 } },
       ...
     }
   ],
   "extensions": {
-    "KHR_xmp": {
+    "KHR_xmp_ld": {
       "packets": [
         {
           "@context": {
@@ -222,12 +294,12 @@ glTF containing the second mesh:
 {
   "meshes": [
     {
-      "extensions": { "KHR_xmp": { "packet": 0 } }
+      "extensions": { "KHR_xmp_ld": { "packet": 0 } }
     },
     ...
   ],
   "extensions": {
-    "KHR_xmp": {
+    "KHR_xmp_ld": {
       "packets": [
         {
           "@context": {
@@ -251,16 +323,16 @@ glTF containing copies of both meshes:
 {
   "meshes": [
     {
-      "extensions": { "KHR_xmp": { "packet": 0 } }
+      "extensions": { "KHR_xmp_ld": { "packet": 0 } }
       ...
     },
     {
-      "extensions": { "KHR_xmp": { "packet": 1 } }
+      "extensions": { "KHR_xmp_ld": { "packet": 1 } }
       ...
     }
   ],
   "extensions": {
-    "KHR_xmp": {
+    "KHR_xmp_ld": {
       "packets": [
         {
           "@context": { "dc": "http://purl.org/dc/elements/1.1/" },
@@ -285,7 +357,7 @@ glTF containing copies of both meshes:
 ```
 
 The [xmpMM (ISO 16684-1$8.6)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/xmpMM.md) namespaces introduces mechanisms such as Pantry-Ingredient to handle the case when a glTF file is generated via derivation or composition of one or more source documents.
-The following example illustrates how `KHR_xmp` metadata can be computed in the case of two glTFs, both containing `asset` metadata, that are processed together to obtain a new composited glTF document.
+The following example illustrates how `KHR_xmp_ld` metadata can be computed in the case of two glTFs, both containing `asset` metadata, that are processed together to obtain a new composited glTF document.
 
 First glTF document:
 
@@ -293,14 +365,14 @@ First glTF document:
 {
   "asset": {
     "extensions": {
-      "KHR_xmp": {
+      "KHR_xmp_ld": {
         "packet": 0
       }
     },
     ...
   },
   "extensions": {
-    "KHR_xmp": {
+    "KHR_xmp_ld": {
       "packets": [
         {
           "@context": {
@@ -324,14 +396,14 @@ Second glTF document:
 {
   "asset": {
     "extensions": {
-      "KHR_xmp": {
+      "KHR_xmp_ld": {
         "packet": 0
       }
     },
     ...
   },
   "extensions": {
-    "KHR_xmp": {
+    "KHR_xmp_ld": {
       "packets": [
         {
           "@context": {
@@ -355,14 +427,14 @@ Derived glTF document metadata:
 {
   "asset": {
     "extensions": {
-      "KHR_xmp": {
+      "KHR_xmp_ld": {
         "packet": 0
       }
     },
     ...
   },
   "extensions": {
-    "KHR_xmp": {
+    "KHR_xmp_ld": {
       "packets": [
         {
           "@context": {
