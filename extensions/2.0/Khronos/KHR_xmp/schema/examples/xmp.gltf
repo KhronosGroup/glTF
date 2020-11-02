@@ -1,40 +1,26 @@
 {
-  "extensionsUsed": ["KHR_xmp"],
+  "extensionsUsed": [
+    "KHR_xmp"
+  ],
   "extensions": {
     "KHR_xmp": {
+      "@context" : {
+        "dc" : "http://purl.org/dc/elements/1.1/"
+      },
       "packets": [
         {
-          "@context": {
-            "dc": "http://purl.org/dc/elements/1.1/"
-          },
-          "dc:contributor": [
-            "Creator1Name",
-            "Creator2Email@email.com",
-            "Creator3Name<Email@email.com>"
-          ],
-          "dc:coverage": "Bay Area, California, United States",
-          "dc:creator": ["CreatorName", "CreatorEmail@email.com"],
-          "dc:date": ["2019-05-16T19:20:30+01:00"],
-          "dc:description": {
-            "@language": "en-us",
-            "@value": "An example of a glTF file with XMP metadata in it"
-          },
-          "dc:format": "model/gltf+json",
-          "dc:language": ["en"],
-          "dc:publisher": ["Khronos"],
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "Sample glTF with XMP metadata"
-          }
+          "dc:contributor" : [ "Creator1Name", "Creator2Email@email.com", "Creator3Name<Email@email.com>"],
+          "dc:coverage" : "Bay Area, California, United States",
+          "dc:creator" : [ "CreatorName", "CreatorEmail@email.com"],
+          "dc:date" : ["2019-05-16T19:20:30+01:00"],
+          "dc:description" : { "en-us": "An example of a glTF file with XMP metadata in it"},
+          "dc:format" : "model/gltf+json",
+          "dc:language" : ["en"],
+          "dc:publisher" : ["Khronos"],
+          "dc:title" : { "en-us" : "Sample glTF with XMP metadata"}
         },
         {
-          "@context": {
-            "dc": "http://purl.org/dc/elements/1.1/"
-          },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My Cube Mesh"
-          }
+          "dc:title" : { "en-us" : "My Cube Mesh"}
         }
       ]
     }
@@ -45,8 +31,16 @@
       "byteOffset": 0,
       "componentType": 5126,
       "count": 3456,
-      "max": [10, 19.949111938476562, 10],
-      "min": [-10, -0.050886999815702438, -10],
+      "max": [
+        10,
+        19.949111938476562,
+        10
+      ],
+      "min": [
+        -10,
+        -0.050886999815702438,
+        -10
+      ],
       "type": "VEC3"
     },
     {
@@ -61,8 +55,12 @@
       "byteOffset": 0,
       "componentType": 5125,
       "count": 5172,
-      "max": [3455],
-      "min": [0],
+      "max": [
+        3455
+      ],
+      "min": [
+        0
+      ],
       "type": "SCALAR"
     }
   ],
@@ -155,7 +153,7 @@
   "scenes": [
     {
       "name": "scene",
-      "nodes": [0]
+      "nodes": [ 0 ]
     }
   ]
 }
