@@ -77,49 +77,30 @@ The following example defines a glTF scene with a sample XMP metadata.
 
 ```json
 "extensions": {
-  "KHR_xmp": {
-    "packets": [
-      {
-        "@context": {
-          "dc": "http://purl.org/dc/elements/1.1/"
+    "KHR_xmp" : {
+        "@context" : {
+            "dc" : "http://purl.org/dc/elements/1.1/"
         },
-        "dc:contributor": [
-          "Creator1Name",
-          "Creator2Email@email.com",
-          "Creator3Name<Email@email.com>"
-        ],
-        "dc:coverage": "Bay Area, California, United States",
-        "dc:creator": ["CreatorName", "CreatorEmail@email.com"],
-        "dc:date": ["1997-07-16T19:20:30+01:00"],
-        "dc:description": {
-          "@language": "en-us",
-          "@value": "text"
-        },
-        "dc:format": "model/gltf-binary",
-        "dc:identifier": "urn:stock-id:292930",
-        "dc:language": ["en"],
-        "dc:publisher": ["Company"],
-        "dc:relation": ["https://www.khronos.org/"],
-        "dc:rights": {
-          "@language": "en-us",
-          "@value": "BSD"
-        },
-        "dc:source": "http://related_resource.org/derived_from_this.gltf",
-        "dc:subject": ["architecture"],
-        "dc:title": [
-          {
-            "@language": "en-us",
-            "@value": "MyModel"
-          },
-          {
-            "@language": "it-it",
-            "@value": "Mio Modello"
-          }
-        ],
-        "dc:type": ["Physical Object"]
-      }
-    ]
-  }
+        "packets" : [
+            {
+                "dc:contributor" : [ "Creator1Name", "Creator2Email@email.com", "Creator3Name<Email@email.com>"],
+                "dc:coverage" : "Bay Area, California, United States",
+                "dc:creator" : [ "CreatorName", "CreatorEmail@email.com"],
+                "dc:date" : ["1997-07-16T19:20:30+01:00"],
+                "dc:description" : { "en-us": "text"},
+                "dc:format" : "model/gltf-binary",
+                "dc:identifier" : "urn:stock-id:292930",
+                "dc:language" : ["en"],
+                "dc:publisher" : ["Company"],
+                "dc:relation" : ["https://www.khronos.org/"],
+                "dc:rights" : {"en-us": "BSD"},
+                "dc:source" : "http://related_resource.org/derived_from_this.gltf",
+                "dc:subject" : ["architecture"],
+                "dc:title" : { "en-us" : "MyModel", "it-it" : "Mio Modello"},
+                "dc:type" : ["Physical Object"],
+            }
+        ]
+    }
 }
 ```
 
@@ -130,28 +111,28 @@ The following example shows a glTF Mesh instantiating the XMP metadata at index 
 
 ```json
 {
-  "meshes": [
-    {
-      "extensions": {
-        "KHR_xmp": {
-          "packet": 0
-        }
-      },
-      "primitives": [
-        {
-          "attributes": {
-            "NORMAL": 23,
-            "POSITION": 22,
-            "TANGENT": 24,
-            "TEXCOORD_0": 25
-          },
-          "indices": 21,
-          "material": 3,
-          "mode": 4
-        }
-      ]
-    }
-  ]
+    "meshes": [
+      {
+        "extensions" : {
+            "KHR_xmp": {
+                "packet" : 0,
+            }
+        },
+        "primitives": [
+          {
+            "attributes": {
+                "NORMAL": 23,
+                "POSITION": 22,
+                "TANGENT": 24,
+                "TEXCOORD_0": 25
+            },
+            "indices": 21,
+            "material": 3,
+            "mode": 4
+          }
+        ]
+      }
+    ]
 }
 ```
 
@@ -172,28 +153,21 @@ glTF containing the first mesh:
 
 ```json
 {
-  "meshes": [
-    {
-      "extensions": { "KHR_xmp": { "packet": 0 } },
-      ...
-    }
-  ],
-  "extensions": {
-    "KHR_xmp": {
-      "packets": [
-        {
-          "@context": {
-            "dc": "http://purl.org/dc/elements/1.1/"
-          },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My first mesh"
-          },
-          ...
+    "meshes": [
+      {
+        "extensions" : { "KHR_xmp": { "packet" : 0 } },
+        ...
+      }
+    ],
+    "extensions": {
+        "KHR_xmp" : {
+            "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
+            "packets" : [{
+                "dc:title" : { "en-us" : "My first mesh"},
+                ...
+            }]
         }
-      ]
     }
-  }
 }
 ```
 
@@ -201,28 +175,21 @@ glTF containing the second mesh:
 
 ```json
 {
-  "meshes": [
-    {
-      "extensions": { "KHR_xmp": { "packet": 0 } }
-    },
-    ...
-  ],
-  "extensions": {
-    "KHR_xmp": {
-      "packets": [
-        {
-          "@context": {
-            "dc": "http://purl.org/dc/elements/1.1/"
-          },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My second mesh"
-          },
-          ...
+    "meshes": [
+      {
+        "extensions" : { "KHR_xmp": { "packet" : 0 } },
+        ...
+      }
+    ],
+    "extensions": {
+        "KHR_xmp" : {
+            "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
+            "packets" : [{
+                "dc:title" : { "en-us" : "My second mesh"},
+                ...
+            }]
         }
-      ]
     }
-  }
 }
 ```
 
@@ -230,38 +197,31 @@ glTF containing copies of both meshes:
 
 ```json
 {
-  "meshes": [
-    {
-      "extensions": { "KHR_xmp": { "packet": 0 } }
-      ...
-    },
-    {
-      "extensions": { "KHR_xmp": { "packet": 1 } }
-      ...
-    }
-  ],
-  "extensions": {
-    "KHR_xmp": {
-      "packets": [
-        {
-          "@context": { "dc": "http://purl.org/dc/elements/1.1/" },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My first mesh"
-          }
-          ...
-        },
-        {
-          "@context": { "dc": "http://purl.org/dc/elements/1.1/" },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My second mesh"
-          }
-          ...
+    "meshes": [
+      {
+        "extensions" : { "KHR_xmp": { "packet" : 0 } },
+        ...
+      },
+      {
+        "extensions" : { "KHR_xmp": { "packet" : 1 } },
+        ...
+      }
+    ],
+    "extensions": {
+        "KHR_xmp" : {
+            "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
+            "packets" : [
+              {
+                "dc:title" : { "en-us" : "My first mesh"},
+                ...
+              },
+              {
+                "dc:title" : { "en-us" : "My second mesh"},
+                ...
+              }
+            ]
         }
-      ]
     }
-  }
 }
 ```
 
@@ -272,30 +232,25 @@ First glTF document:
 
 ```json
 {
-  "asset": {
-    "extensions": {
-      "KHR_xmp": {
-        "packet": 0
-      }
+    "asset": {
+        "extensions" : {
+            "KHR_xmp": {
+                "packet" : 0,
+            }
+        },
+        ...
     },
-    ...
-  },
-  "extensions": {
-    "KHR_xmp": {
-      "packets": [
-        {
-          "@context": {
-            "dc": "http://purl.org/dc/elements/1.1/"
-          },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My first glTF"
-          },
-          ...
+    "extensions": {
+        "KHR_xmp" : {
+            "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
+            "packets" : [
+              {
+                "dc:title" : { "en-us" : "My first glTF"},
+                ...
+              }
+            ]
         }
-      ]
     }
-  }
 }
 ```
 
@@ -303,30 +258,25 @@ Second glTF document:
 
 ```json
 {
-  "asset": {
-    "extensions": {
-      "KHR_xmp": {
-        "packet": 0
-      }
+    "asset": {
+        "extensions" : {
+            "KHR_xmp": {
+                "packet" : 0,
+            }
+        },
+        ...
     },
-    ...
-  },
-  "extensions": {
-    "KHR_xmp": {
-      "packets": [
-        {
-          "@context": {
-            "dc": "http://purl.org/dc/elements/1.1/"
-          },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My second glTF"
-          },
-          ...
+    "extensions": {
+        "KHR_xmp" : {
+            "@context" : { "dc" : "http://purl.org/dc/elements/1.1/" },
+            "packets" : [
+              {
+                "dc:title" : { "en-us" : "My second glTF"},
+                ...
+              }
+            ]
         }
-      ]
     }
-  }
 }
 ```
 
@@ -334,60 +284,52 @@ Derived glTF document metadata:
 
 ```json
 {
-  "asset": {
-    "extensions": {
-      "KHR_xmp": {
-        "packet": 0
-      }
+    "asset": {
+        "extensions" : {
+            "KHR_xmp": {
+                "packet" : 0,
+            }
+        },
+        ...
     },
-    ...
-  },
-  "extensions": {
-    "KHR_xmp": {
-      "packets": [
-        {
-          "@context": {
-            "dc": "http://purl.org/dc/elements/1.1/",
-            "xmpMM": "http://ns.adobe.com/xap/1.0/mm/"
-          },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My composed glTF."
-          },
-          "xmpMM:Pantry": [
-            {
-              "xmpMM:DocumentID": "62bc2623-968e-4b09-8174-02dc53d6b856",
-              "xmpMM:InstanceID": "1a33a91f-7351-471e-9b6c-24bca3213d2a",
-              "dc:title": {
-                "@language": "en-us",
-                "@value": "My first glTF"
+    "extensions": {
+        "KHR_xmp" : {
+            "@context" :
+              {
+                "dc" : "http://purl.org/dc/elements/1.1/",
+                "xmpMM" : "http://ns.adobe.com/xap/1.0/mm/",
               },
-              ...
-            },
-            {
-              "xmpMM:DocumentID": "6d70a25e-129e-42d8-9d63-93bd9eb0298b",
-              "xmpMM:InstanceID": "235b5571-e6a9-48fd-8d6b-b88276f37ee3",
-              "dc:title": {
-                "@language": "en-us",
-                "@value": "My second glTF"
-              },
-              ...
-            }
-          ],
-          "xmpMM:Ingredients": [
-            {
-              "xmpMM:DocumentID": "62bc2623-968e-4b09-8174-02dc53d6b856",
-              "xmpMM:InstanceID": "1a33a91f-7351-471e-9b6c-24bca3213d2a"
-            },
-            {
-              "xmpMM:DocumentID": "6d70a25e-129e-42d8-9d63-93bd9eb0298b",
-              "xmpMM:InstanceID": "235b5571-e6a9-48fd-8d6b-b88276f37ee3"
-            }
-          ]
+            "packets" : [
+              {
+                "dc:title" : { "en-us" : "My composed glTF."},
+                "xmpMM:Pantry" : [
+                  {
+                    "xmpMM:DocumentID" : "62bc2623-968e-4b09-8174-02dc53d6b856",
+                    "xmpMM:InstanceID" : "1a33a91f-7351-471e-9b6c-24bca3213d2a",
+                    "dc:title" : { "en-us" : "My first glTF"},
+                    ...
+                  },
+                  {
+                    "xmpMM:DocumentID" : "6d70a25e-129e-42d8-9d63-93bd9eb0298b",
+                    "xmpMM:InstanceID" : "235b5571-e6a9-48fd-8d6b-b88276f37ee3",
+                    "dc:title" : { "en-us" : "My second glTF"},
+                    ...
+                  }
+                ],
+                "xmpMM:Ingredients" : [
+                  {
+                    "xmpMM:DocumentID" : "62bc2623-968e-4b09-8174-02dc53d6b856",
+                    "xmpMM:InstanceID" : "1a33a91f-7351-471e-9b6c-24bca3213d2a"
+                  },
+                  {
+                    "xmpMM:DocumentID" : "6d70a25e-129e-42d8-9d63-93bd9eb0298b",
+                    "xmpMM:InstanceID" : "235b5571-e6a9-48fd-8d6b-b88276f37ee3"
+                  }
+                ]
+              }
+            ]
         }
-      ]
     }
-  }
 }
 ```
 
