@@ -1657,21 +1657,18 @@ This chunk must be padded with trailing zeros (`0x00`) to satisfy alignment requ
       * [`indices`](#reference-accessor-sparse-indices)
       * [`values`](#reference-accessor-sparse-values)
 * [`animation`](#reference-animation)
+   * [`animation_sampler`](#reference-animation-sampler)
    * [`channel`](#reference-animation-channel)
       * [`target`](#reference-animation-channel-target)
-   * [`sampler`](#reference-animation-sampler)
 * [`asset`](#reference-asset)
 * [`buffer`](#reference-buffer)
 * [`bufferView`](#reference-bufferview)
 * [`camera`](#reference-camera)
    * [`orthographic`](#reference-camera-orthographic)
    * [`perspective`](#reference-camera-perspective)
-* [`Child of a glTF root property`](#reference-gltfchildofrootproperty)
 * [`extension`](#reference-extension)
 * [`extras`](#reference-extras)
-* [`glTF`](#reference-gltfproperty) (root object)
-* [`glTF element index`](#reference-gltfid)
-* [`glTF property`](#reference-gltfproperty)
+* [`glTF`](#reference-gltf) (root object)
 * [`image`](#reference-image)
 * [`material`](#reference-material)
    * [`normalTextureInfo`](#reference-material-normaltextureinfo)
@@ -1697,7 +1694,7 @@ A typed view into a bufferView.  A bufferView contains raw binary data.  An acce
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**bufferView**|[`glTFid`](#reference-gltfid)|The index of the bufferView.|No|
+|**bufferView**|`integer`|The index of the bufferView.|No|
 |**byteOffset**|`integer`|The offset relative to the start of the bufferView in bytes.|No, default: `0`|
 |**componentType**|`integer`|The datatype of components in the attribute.| :white_check_mark: Yes|
 |**normalized**|`boolean`|Specifies whether integer data values should be normalized.|No, default: `false`|
@@ -1718,7 +1715,7 @@ Additional properties are allowed.
 
 The index of the bufferView. When not defined, accessor must be initialized with zeros; [`sparse`](#reference-sparse) property or extensions could override zeros with actual values.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: No
 * **Minimum**: ` >= 0`
 
@@ -1887,6 +1884,71 @@ Application-specific data.
 
 
 ---------------------------------------
+<a name="reference-animation-sampler"></a>
+### animation_sampler
+
+Combines input and output accessors with an interpolation algorithm to define a keyframe graph (but not its target).
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**input**|`integer`|The index of an accessor containing keyframe input values, e.g., time.| :white_check_mark: Yes|
+|**interpolation**|`string`|Interpolation algorithm.|No, default: `"LINEAR"`|
+|**output**|`integer`|The index of an accessor, containing keyframe output values.| :white_check_mark: Yes|
+|**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
+|**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
+
+Additional properties are allowed.
+
+* **JSON schema**: [animation.sampler.schema.json](schema/animation.sampler.schema.json)
+
+#### animation.sampler.input :white_check_mark: 
+
+The index of an accessor containing keyframe input values, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`.
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Minimum**: ` >= 0`
+
+#### animation.sampler.interpolation
+
+Interpolation algorithm.
+
+* **Type**: `string`
+* **Required**: No, default: `"LINEAR"`
+* **Allowed values**:
+   * `"LINEAR"` The animated values are linearly interpolated between keyframes. When targeting a rotation, spherical linear interpolation (slerp) should be used to interpolate quaternions. The number output of elements must equal the number of input elements.
+   * `"STEP"` The animated values remain constant to the output of the first keyframe, until the next keyframe. The number of output elements must equal the number of input elements.
+   * `"CUBICSPLINE"` The animation's interpolation is computed using a cubic spline with specified tangents. The number of output elements must equal three times the number of input elements. For each input element, the output stores three elements, an in-tangent, a spline vertex, and an out-tangent. There must be at least two keyframes when using this interpolation.
+
+#### animation.sampler.output :white_check_mark: 
+
+The index of an accessor containing keyframe output values. When targeting translation or scale paths, the `accessor.componentType` of the output values must be `FLOAT`. When targeting rotation or morph weights, the `accessor.componentType` of the output values must be `FLOAT` or normalized integer. For weights, each output element stores `SCALAR` values with a count equal to the number of morph targets.
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Minimum**: ` >= 0`
+
+#### animation.sampler.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: [`extension`](#reference-extension)
+* **Required**: No
+* **Type of each property**: extension
+
+#### animation.sampler.extras
+
+Application-specific data.
+
+* **Type**: [`extras`](#reference-extras)
+* **Required**: No
+
+
+
+
+---------------------------------------
 <a name="reference-asset"></a>
 ### asset
 
@@ -2024,7 +2086,7 @@ A view into a buffer generally representing a subset of the buffer.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**buffer**|[`glTFid`](#reference-gltfid)|The index of the buffer.| :white_check_mark: Yes|
+|**buffer**|`integer`|The index of the buffer.| :white_check_mark: Yes|
 |**byteOffset**|`integer`|The offset into the buffer in bytes.|No, default: `0`|
 |**byteLength**|`integer`|The total byte length of the buffer view.| :white_check_mark: Yes|
 |**byteStride**|`integer`|The stride, in bytes.|No|
@@ -2041,7 +2103,7 @@ Additional properties are allowed.
 
 The index of the buffer.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: Yes
 * **Minimum**: ` >= 0`
 
@@ -2187,7 +2249,7 @@ Targets an animation's sampler at a node's property.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**sampler**|[`glTFid`](#reference-gltfid)|The index of a sampler in this animation used to compute the value for the target.| :white_check_mark: Yes|
+|**sampler**|`integer`|The index of a sampler in this animation used to compute the value for the target.| :white_check_mark: Yes|
 |**target**|[`animation.channel.target`](#reference-animation-channel-target)|The index of the node and TRS property to target.| :white_check_mark: Yes|
 |**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
@@ -2200,7 +2262,7 @@ Additional properties are allowed.
 
 The index of a sampler in this animation used to compute the value for the target, e.g., a node's translation, rotation, or scale (TRS).
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: Yes
 * **Minimum**: ` >= 0`
 
@@ -2220,47 +2282,6 @@ Dictionary object with extension-specific objects.
 * **Type of each property**: extension
 
 #### animation.channel.extras
-
-Application-specific data.
-
-* **Type**: [`extras`](#reference-extras)
-* **Required**: No
-
-
-
-
----------------------------------------
-<a name="reference-gltfchildofrootproperty"></a>
-### Child of a glTF root property
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
-|**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
-
-Additional properties are allowed.
-
-* **JSON schema**: [glTFChildOfRootProperty.schema.json](schema/glTFChildOfRootProperty.schema.json)
-
-#### glTFChildOfRootProperty.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-#### glTFChildOfRootProperty.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: [`extension`](#reference-extension)
-* **Required**: No
-* **Type of each property**: extension
-
-#### glTFChildOfRootProperty.extras
 
 Application-specific data.
 
@@ -2292,7 +2313,7 @@ Application-specific data.
 
 
 ---------------------------------------
-<a name="reference-gltfproperty"></a>
+<a name="reference-gltf"></a>
 ### glTF
 
 The root object for a glTF asset.
@@ -2314,7 +2335,7 @@ The root object for a glTF asset.
 |**meshes**|[`mesh`](#reference-mesh) `[1-*]`|An array of meshes.|No|
 |**nodes**|[`node`](#reference-node) `[1-*]`|An array of nodes.|No|
 |**samplers**|[`sampler`](#reference-sampler) `[1-*]`|An array of samplers.|No|
-|**scene**|[`glTFid`](#reference-gltfid)|The index of the default scene.|No|
+|**scene**|`integer`|The index of the default scene.|No|
 |**scenes**|[`scene`](#reference-scene) `[1-*]`|An array of scenes.|No|
 |**skins**|[`skin`](#reference-skin) `[1-*]`|An array of skins.|No|
 |**textures**|[`texture`](#reference-texture) `[1-*]`|An array of textures.|No|
@@ -2325,7 +2346,7 @@ Additional properties are allowed.
 
 * **JSON schema**: [glTF.schema.json](schema/glTF.schema.json)
 
-#### glTFProperty.extensionsUsed
+#### gltf.extensionsUsed
 
 Names of glTF extensions used somewhere in this asset.
 
@@ -2333,7 +2354,7 @@ Names of glTF extensions used somewhere in this asset.
    * Each element in the array must be unique.
 * **Required**: No
 
-#### glTFProperty.extensionsRequired
+#### gltf.extensionsRequired
 
 Names of glTF extensions required to properly load this asset.
 
@@ -2341,113 +2362,113 @@ Names of glTF extensions required to properly load this asset.
    * Each element in the array must be unique.
 * **Required**: No
 
-#### glTFProperty.accessors
+#### gltf.accessors
 
 An array of accessors.  An accessor is a typed view into a bufferView.
 
 * **Type**: [`accessor`](#reference-accessor) `[1-*]`
 * **Required**: No
 
-#### glTFProperty.animations
+#### gltf.animations
 
 An array of keyframe animations.
 
 * **Type**: [`animation`](#reference-animation) `[1-*]`
 * **Required**: No
 
-#### glTFProperty.asset
+#### gltf.asset
 
 Metadata about the glTF asset.
 
 * **Type**: [`asset`](#reference-asset)
 * **Required**: No
 
-#### glTFProperty.buffers
+#### gltf.buffers
 
 An array of buffers.  A buffer points to binary geometry, animation, or skins.
 
 * **Type**: [`buffer`](#reference-buffer) `[1-*]`
 * **Required**: No
 
-#### glTFProperty.bufferViews
+#### gltf.bufferViews
 
 An array of bufferViews.  A bufferView is a view into a buffer generally representing a subset of the buffer.
 
 * **Type**: [`bufferView`](#reference-bufferview) `[1-*]`
 * **Required**: No
 
-#### glTFProperty.cameras
+#### gltf.cameras
 
 An array of cameras.  A camera defines a projection matrix.
 
 * **Type**: [`camera`](#reference-camera) `[1-*]`
 * **Required**: No
 
-#### glTFProperty.images
+#### gltf.images
 
 An array of images.  An image defines data used to create a texture.
 
 * **Type**: [`image`](#reference-image) `[1-*]`
 * **Required**: No
 
-#### glTFProperty.materials
+#### gltf.materials
 
 An array of materials.  A material defines the appearance of a primitive.
 
 * **Type**: [`material`](#reference-material) `[1-*]`
 * **Required**: No
 
-#### glTFProperty.meshes
+#### gltf.meshes
 
 An array of meshes.  A mesh is a set of primitives to be rendered.
 
 * **Type**: [`mesh`](#reference-mesh) `[1-*]`
 * **Required**: No
 
-#### glTFProperty.nodes
+#### gltf.nodes
 
 An array of nodes.
 
 * **Type**: [`node`](#reference-node) `[1-*]`
 * **Required**: No
 
-#### glTFProperty.samplers
+#### gltf.samplers
 
 An array of samplers.  A sampler contains properties for texture filtering and wrapping modes.
 
 * **Type**: [`sampler`](#reference-sampler) `[1-*]`
 * **Required**: No
 
-#### glTFProperty.scene
+#### gltf.scene
 
 The index of the default scene.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: No
 * **Minimum**: ` >= 0`
 
-#### glTFProperty.scenes
+#### gltf.scenes
 
 An array of scenes.
 
 * **Type**: [`scene`](#reference-scene) `[1-*]`
 * **Required**: No
 
-#### glTFProperty.skins
+#### gltf.skins
 
 An array of skins.  A skin is defined by joints and matrices.
 
 * **Type**: [`skin`](#reference-skin) `[1-*]`
 * **Required**: No
 
-#### glTFProperty.textures
+#### gltf.textures
 
 An array of textures.
 
 * **Type**: [`texture`](#reference-texture) `[1-*]`
 * **Required**: No
 
-#### glTFProperty.extensions
+#### gltf.extensions
 
 Dictionary object with extension-specific objects.
 
@@ -2455,7 +2476,7 @@ Dictionary object with extension-specific objects.
 * **Required**: No
 * **Type of each property**: extension
 
-#### glTFProperty.extras
+#### gltf.extras
 
 Application-specific data.
 
@@ -2463,43 +2484,6 @@ Application-specific data.
 * **Required**: No
 
 
-
-
----------------------------------------
-<a name="reference-gltfid"></a>
-### glTF element index
-
-
-
----------------------------------------
-<a name="reference-gltfproperty"></a>
-### glTF property
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
-|**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
-
-Additional properties are allowed.
-
-* **JSON schema**: [glTFProperty.schema.json](schema/glTFProperty.schema.json)
-
-#### glTFProperty.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: [`extension`](#reference-extension)
-* **Required**: No
-* **Type of each property**: extension
-
-#### glTFProperty.extras
-
-Application-specific data.
-
-* **Type**: [`extras`](#reference-extras)
-* **Required**: No
 
 
 
@@ -2516,7 +2500,7 @@ Image data used to create a texture. Image can be referenced by URI or [`bufferV
 |---|----|-----------|--------|
 |**uri**|`string`|The uri of the image.|No|
 |**mimeType**|`string`|The image's MIME type. Required if [`bufferView`](#reference-bufferview) is defined.|No|
-|**bufferView**|[`glTFid`](#reference-gltfid)|The index of the bufferView that contains the image. Use this instead of the image's uri property.|No|
+|**bufferView**|`integer`|The index of the bufferView that contains the image. Use this instead of the image's uri property.|No|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
@@ -2547,7 +2531,7 @@ The image's MIME type. Required if [`bufferView`](#reference-bufferview) is defi
 
 The index of the bufferView that contains the image. Use this instead of the image's uri property.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: No
 * **Minimum**: ` >= 0`
 
@@ -2586,7 +2570,7 @@ Indices of those attributes that deviate from their initialization value.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**bufferView**|[`glTFid`](#reference-gltfid)|The index of the bufferView with sparse indices. Referenced bufferView can't have ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER target.| :white_check_mark: Yes|
+|**bufferView**|`integer`|The index of the bufferView with sparse indices. Referenced bufferView can't have ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER target.| :white_check_mark: Yes|
 |**byteOffset**|`integer`|The offset relative to the start of the bufferView in bytes. Must be aligned.|No, default: `0`|
 |**componentType**|`integer`|The indices data type.| :white_check_mark: Yes|
 |**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
@@ -2600,7 +2584,7 @@ Additional properties are allowed.
 
 The index of the bufferView with sparse indices. Referenced bufferView can't have ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER target.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: Yes
 * **Minimum**: ` >= 0`
 
@@ -2823,11 +2807,11 @@ A node in the node hierarchy.  When the node contains [`skin`](#reference-skin),
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**camera**|[`glTFid`](#reference-gltfid)|The index of the camera referenced by this node.|No|
+|**camera**|`integer`|The index of the camera referenced by this node.|No|
 |**children**|`integer` `[1-*]`|The indices of this node's children.|No|
-|**skin**|[`glTFid`](#reference-gltfid)|The index of the skin referenced by this node.|No|
+|**skin**|`integer`|The index of the skin referenced by this node.|No|
 |**matrix**|`number` `[16]`|A floating-point 4x4 transformation matrix stored in column-major order.|No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`|
-|**mesh**|[`glTFid`](#reference-gltfid)|The index of the mesh in this node.|No|
+|**mesh**|`integer`|The index of the mesh in this node.|No|
 |**rotation**|`number` `[4]`|The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar.|No, default: `[0,0,0,1]`|
 |**scale**|`number` `[3]`|The node's non-uniform scale, given as the scaling factors along the x, y, and z axes.|No, default: `[1,1,1]`|
 |**translation**|`number` `[3]`|The node's translation along the x, y, and z axes.|No, default: `[0,0,0]`|
@@ -2844,7 +2828,7 @@ Additional properties are allowed.
 
 The index of the camera referenced by this node.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: No
 * **Minimum**: ` >= 0`
 
@@ -2861,7 +2845,7 @@ The indices of this node's children.
 
 The index of the skin referenced by this node. When a skin is referenced by a node within a scene, all joints used by the skin must belong to the same scene.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: No
 * **Minimum**: ` >= 0`
 
@@ -2877,7 +2861,7 @@ A floating-point 4x4 transformation matrix stored in column-major order.
 
 The index of the mesh in this node.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: No
 * **Minimum**: ` >= 0`
 
@@ -2945,7 +2929,7 @@ Reference to a texture.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**index**|[`glTFid`](#reference-gltfid)|The index of the texture.| :white_check_mark: Yes|
+|**index**|`integer`|The index of the texture.| :white_check_mark: Yes|
 |**texCoord**|`integer`|The set index of texture's TEXCOORD attribute used for texture coordinate mapping.|No, default: `0`|
 |**scale**|`number`|The scalar multiplier applied to each normal vector of the normal texture.|No, default: `1`|
 |**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
@@ -2959,7 +2943,7 @@ Additional properties are allowed.
 
 The index of the texture.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: Yes
 * **Minimum**: ` >= 0`
 
@@ -3006,7 +2990,7 @@ Reference to a texture.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**index**|[`glTFid`](#reference-gltfid)|The index of the texture.| :white_check_mark: Yes|
+|**index**|`integer`|The index of the texture.| :white_check_mark: Yes|
 |**texCoord**|`integer`|The set index of texture's TEXCOORD attribute used for texture coordinate mapping.|No, default: `0`|
 |**strength**|`number`|A scalar multiplier controlling the amount of occlusion applied.|No, default: `1`|
 |**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
@@ -3020,7 +3004,7 @@ Additional properties are allowed.
 
 The index of the texture.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: Yes
 * **Minimum**: ` >= 0`
 
@@ -3292,8 +3276,8 @@ Geometry to be rendered with the given material.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**attributes**|`object`|A dictionary object, where each key corresponds to mesh attribute semantic and each value is the index of the accessor containing attribute's data.| :white_check_mark: Yes|
-|**indices**|[`glTFid`](#reference-gltfid)|The index of the accessor that contains the indices.|No|
-|**material**|[`glTFid`](#reference-gltfid)|The index of the material to apply to this primitive when rendering.|No|
+|**indices**|`integer`|The index of the accessor that contains the indices.|No|
+|**material**|`integer`|The index of the material to apply to this primitive when rendering.|No|
 |**mode**|`integer`|The type of primitives to render.|No, default: `4`|
 |**targets**|`object` `[1-*]`|An array of Morph Targets, each  Morph Target is a dictionary mapping attributes (only `POSITION`, `NORMAL`, and `TANGENT` supported) to their deviations in the Morph Target.|No|
 |**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
@@ -3309,13 +3293,13 @@ A dictionary object, where each key corresponds to mesh attribute semantic and e
 
 * **Type**: `object`
 * **Required**: Yes
-* **Type of each property**: `glTFid`
+* **Type of each property**: `integer`
 
 #### mesh.primitive.indices
 
 The index of the accessor that contains mesh indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`.  When defined, the accessor must contain indices: the [`bufferView`](#reference-bufferview) referenced by the accessor should have a [`target`](#reference-target) equal to 34963 (ELEMENT_ARRAY_BUFFER); `componentType` must be 5121 (UNSIGNED_BYTE), 5123 (UNSIGNED_SHORT) or 5125 (UNSIGNED_INT), the latter may require enabling additional hardware support; `type` must be `"SCALAR"`. For triangle primitives, the front face has a counter-clockwise (CCW) winding order. Values of the index accessor must not include the maximum value for the given component type, which triggers primitive restart in several graphics APIs and would require client implementations to rebuild the index buffer. Primitive restart values are disallowed and all index values must refer to actual vertices. As a result, the index accessor's values must not exceed the following maxima: BYTE `< 255`, UNSIGNED_SHORT `< 65535`, UNSIGNED_INT `< 4294967295`.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: No
 * **Minimum**: ` >= 0`
 
@@ -3323,7 +3307,7 @@ The index of the accessor that contains mesh indices.  When this is not defined,
 
 The index of the material to apply to this primitive when rendering.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: No
 * **Minimum**: ` >= 0`
 
@@ -3358,71 +3342,6 @@ Dictionary object with extension-specific objects.
 * **Type of each property**: extension
 
 #### mesh.primitive.extras
-
-Application-specific data.
-
-* **Type**: [`extras`](#reference-extras)
-* **Required**: No
-
-
-
-
----------------------------------------
-<a name="reference-animation-sampler"></a>
-### sampler
-
-Combines input and output accessors with an interpolation algorithm to define a keyframe graph (but not its target).
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**input**|[`glTFid`](#reference-gltfid)|The index of an accessor containing keyframe input values, e.g., time.| :white_check_mark: Yes|
-|**interpolation**|`string`|Interpolation algorithm.|No, default: `"LINEAR"`|
-|**output**|[`glTFid`](#reference-gltfid)|The index of an accessor, containing keyframe output values.| :white_check_mark: Yes|
-|**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
-|**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
-
-Additional properties are allowed.
-
-* **JSON schema**: [animation.sampler.schema.json](schema/animation.sampler.schema.json)
-
-#### animation.sampler.input :white_check_mark: 
-
-The index of an accessor containing keyframe input values, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`.
-
-* **Type**: [`glTFid`](#reference-gltfid)
-* **Required**: Yes
-* **Minimum**: ` >= 0`
-
-#### animation.sampler.interpolation
-
-Interpolation algorithm.
-
-* **Type**: `string`
-* **Required**: No, default: `"LINEAR"`
-* **Allowed values**:
-   * `"LINEAR"` The animated values are linearly interpolated between keyframes. When targeting a rotation, spherical linear interpolation (slerp) should be used to interpolate quaternions. The number output of elements must equal the number of input elements.
-   * `"STEP"` The animated values remain constant to the output of the first keyframe, until the next keyframe. The number of output elements must equal the number of input elements.
-   * `"CUBICSPLINE"` The animation's interpolation is computed using a cubic spline with specified tangents. The number of output elements must equal three times the number of input elements. For each input element, the output stores three elements, an in-tangent, a spline vertex, and an out-tangent. There must be at least two keyframes when using this interpolation.
-
-#### animation.sampler.output :white_check_mark: 
-
-The index of an accessor containing keyframe output values. When targeting translation or scale paths, the `accessor.componentType` of the output values must be `FLOAT`. When targeting rotation or morph weights, the `accessor.componentType` of the output values must be `FLOAT` or normalized integer. For weights, each output element stores `SCALAR` values with a count equal to the number of morph targets.
-
-* **Type**: [`glTFid`](#reference-gltfid)
-* **Required**: Yes
-* **Minimum**: ` >= 0`
-
-#### animation.sampler.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: [`extension`](#reference-extension)
-* **Required**: No
-* **Type of each property**: extension
-
-#### animation.sampler.extras
 
 Application-specific data.
 
@@ -3594,8 +3513,8 @@ Joints and matrices defining a skin.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**inverseBindMatrices**|[`glTFid`](#reference-gltfid)|The index of the accessor containing the floating-point 4x4 inverse-bind matrices.  The default is that each matrix is a 4x4 identity matrix, which implies that inverse-bind matrices were pre-applied.|No|
-|**skeleton**|[`glTFid`](#reference-gltfid)|The index of the node used as a skeleton root.|No|
+|**inverseBindMatrices**|`integer`|The index of the accessor containing the floating-point 4x4 inverse-bind matrices.  The default is that each matrix is a 4x4 identity matrix, which implies that inverse-bind matrices were pre-applied.|No|
+|**skeleton**|`integer`|The index of the node used as a skeleton root.|No|
 |**joints**|`integer` `[1-*]`|Indices of skeleton nodes, used as joints in this skin.| :white_check_mark: Yes|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
@@ -3609,7 +3528,7 @@ Additional properties are allowed.
 
 The index of the accessor containing the floating-point 4x4 inverse-bind matrices.  The default is that each matrix is a 4x4 identity matrix, which implies that inverse-bind matrices were pre-applied.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: No
 * **Minimum**: ` >= 0`
 
@@ -3617,7 +3536,7 @@ The index of the accessor containing the floating-point 4x4 inverse-bind matrice
 
 The index of the node used as a skeleton root. The node must be the closest common root of the joints hierarchy or a direct or indirect parent node of the closest common root.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: No
 * **Minimum**: ` >= 0`
 
@@ -3725,7 +3644,7 @@ The index of the node and TRS property that an animation channel targets.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**node**|[`glTFid`](#reference-gltfid)|The index of the node to target.|No|
+|**node**|`integer`|The index of the node to target.|No|
 |**path**|`string`|The name of the node's TRS property to modify, or the "weights" of the Morph Targets it instantiates. For the "translation" property, the values that are provided by the sampler are the translation along the x, y, and z axes. For the "rotation" property, the values are a quaternion in the order (x, y, z, w), where w is the scalar. For the "scale" property, the values are the scaling factors along the x, y, and z axes.| :white_check_mark: Yes|
 |**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
@@ -3738,7 +3657,7 @@ Additional properties are allowed.
 
 The index of the node to target.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: No
 * **Minimum**: ` >= 0`
 
@@ -3784,8 +3703,8 @@ A texture and its sampler.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**sampler**|[`glTFid`](#reference-gltfid)|The index of the sampler used by this texture. When undefined, a sampler with repeat wrapping and auto filtering should be used.|No|
-|**source**|[`glTFid`](#reference-gltfid)|The index of the image used by this texture. When undefined, it is expected that an extension or other mechanism will supply an alternate texture source, otherwise behavior is undefined.|No|
+|**sampler**|`integer`|The index of the sampler used by this texture. When undefined, a sampler with repeat wrapping and auto filtering should be used.|No|
+|**source**|`integer`|The index of the image used by this texture. When undefined, it is expected that an extension or other mechanism will supply an alternate texture source, otherwise behavior is undefined.|No|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
@@ -3798,7 +3717,7 @@ Additional properties are allowed.
 
 The index of the sampler used by this texture. When undefined, a sampler with repeat wrapping and auto filtering should be used.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: No
 * **Minimum**: ` >= 0`
 
@@ -3806,7 +3725,7 @@ The index of the sampler used by this texture. When undefined, a sampler with re
 
 The index of the image used by this texture. When undefined, it is expected that an extension or other mechanism will supply an alternate texture source, otherwise behavior is undefined.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: No
 * **Minimum**: ` >= 0`
 
@@ -3845,7 +3764,7 @@ Reference to a texture.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**index**|[`glTFid`](#reference-gltfid)|The index of the texture.| :white_check_mark: Yes|
+|**index**|`integer`|The index of the texture.| :white_check_mark: Yes|
 |**texCoord**|`integer`|The set index of texture's TEXCOORD attribute used for texture coordinate mapping.|No, default: `0`|
 |**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
@@ -3858,7 +3777,7 @@ Additional properties are allowed.
 
 The index of the texture.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: Yes
 * **Minimum**: ` >= 0`
 
@@ -3898,7 +3817,7 @@ Array of size `accessor.sparse.count` times number of components storing the dis
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**bufferView**|[`glTFid`](#reference-gltfid)|The index of the bufferView with sparse values. Referenced bufferView can't have ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER target.| :white_check_mark: Yes|
+|**bufferView**|`integer`|The index of the bufferView with sparse values. Referenced bufferView can't have ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER target.| :white_check_mark: Yes|
 |**byteOffset**|`integer`|The offset relative to the start of the bufferView in bytes. Must be aligned.|No, default: `0`|
 |**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
 |**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
@@ -3911,7 +3830,7 @@ Additional properties are allowed.
 
 The index of the bufferView with sparse values. Referenced bufferView can't have ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER target.
 
-* **Type**: [`glTFid`](#reference-gltfid)
+* **Type**: `integer`
 * **Required**: Yes
 * **Minimum**: ` >= 0`
 
