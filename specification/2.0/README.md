@@ -1659,6 +1659,7 @@ This chunk must be padded with trailing zeros (`0x00`) to satisfy alignment requ
 * [`animation`](#reference-animation)
    * [`channel`](#reference-animation-channel)
       * [`target`](#reference-animation-channel-target)
+   * [`sampler`](#reference-animation-sampler)
 * [`asset`](#reference-asset)
 * [`buffer`](#reference-buffer)
 * [`bufferView`](#reference-bufferview)
@@ -3357,6 +3358,71 @@ Dictionary object with extension-specific objects.
 * **Type of each property**: extension
 
 #### mesh.primitive.extras
+
+Application-specific data.
+
+* **Type**: [`extras`](#reference-extras)
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-animation-sampler"></a>
+### sampler
+
+Combines input and output accessors with an interpolation algorithm to define a keyframe graph (but not its target).
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**input**|[`glTFid`](#reference-gltfid)|The index of an accessor containing keyframe input values, e.g., time.| :white_check_mark: Yes|
+|**interpolation**|`string`|Interpolation algorithm.|No, default: `"LINEAR"`|
+|**output**|[`glTFid`](#reference-gltfid)|The index of an accessor, containing keyframe output values.| :white_check_mark: Yes|
+|**extensions**|[`extension`](#reference-extension)|Dictionary object with extension-specific objects.|No|
+|**extras**|[`extras`](#reference-extras)|Application-specific data.|No|
+
+Additional properties are allowed.
+
+* **JSON schema**: [animation.sampler.schema.json](schema/animation.sampler.schema.json)
+
+#### animation.sampler.input :white_check_mark: 
+
+The index of an accessor containing keyframe input values, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`.
+
+* **Type**: [`glTFid`](#reference-gltfid)
+* **Required**: Yes
+* **Minimum**: ` >= 0`
+
+#### animation.sampler.interpolation
+
+Interpolation algorithm.
+
+* **Type**: `string`
+* **Required**: No, default: `"LINEAR"`
+* **Allowed values**:
+   * `"LINEAR"` The animated values are linearly interpolated between keyframes. When targeting a rotation, spherical linear interpolation (slerp) should be used to interpolate quaternions. The number output of elements must equal the number of input elements.
+   * `"STEP"` The animated values remain constant to the output of the first keyframe, until the next keyframe. The number of output elements must equal the number of input elements.
+   * `"CUBICSPLINE"` The animation's interpolation is computed using a cubic spline with specified tangents. The number of output elements must equal three times the number of input elements. For each input element, the output stores three elements, an in-tangent, a spline vertex, and an out-tangent. There must be at least two keyframes when using this interpolation.
+
+#### animation.sampler.output :white_check_mark: 
+
+The index of an accessor containing keyframe output values. When targeting translation or scale paths, the `accessor.componentType` of the output values must be `FLOAT`. When targeting rotation or morph weights, the `accessor.componentType` of the output values must be `FLOAT` or normalized integer. For weights, each output element stores `SCALAR` values with a count equal to the number of morph targets.
+
+* **Type**: [`glTFid`](#reference-gltfid)
+* **Required**: Yes
+* **Minimum**: ` >= 0`
+
+#### animation.sampler.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: [`extension`](#reference-extension)
+* **Required**: No
+* **Type of each property**: extension
+
+#### animation.sampler.extras
 
 Application-specific data.
 
