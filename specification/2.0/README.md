@@ -2026,7 +2026,7 @@ A buffer points to binary geometry, animation, or skins.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**uri**|`string`|The uri of the buffer.|No|
-|**byteLength**|`integer`|The total byte length of the buffer view.| :white_check_mark: Yes|
+|**byteLength**|`integer`|The length of the buffer in bytes.| :white_check_mark: Yes|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -2045,7 +2045,7 @@ The uri of the buffer.  Relative paths are relative to the .gltf file.  Instead 
 
 #### buffer.byteLength :white_check_mark: 
 
-The total byte length of the buffer view.
+The length of the buffer in bytes.
 
 * **Type**: `integer`
 * **Required**: Yes
@@ -2501,7 +2501,7 @@ Image data used to create a texture. Image can be referenced by URI or [`bufferV
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**uri**|`string`|The uri of the image.|No|
-|**mimeType**|`string`|The image's MIME type.|No|
+|**mimeType**|`string`|The image's MIME type.  Required if `bufferView` is defined.|No|
 |**bufferView**|`integer`|The index of the bufferView that contains the image. Use this instead of the image's uri property.|No|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
@@ -2684,7 +2684,7 @@ A set of parameter values that are used to define the metallic-roughness materia
 
 #### material.normalTexture
 
-A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [1/255 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer. In GLSL, this vector would be unpacked like so: `vec3 normalVector = tex2D(normalMap, texCoord) * 2 - 1`. Client implementations should normalize the normal vectors before using them in lighting equations.
+A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [1/255 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer. In GLSL, this vector would be unpacked like so: `vec3 normalVector = tex2D(<sampled normal map texture value>, texCoord) * 2 - 1`. Client implementations should normalize the normal vectors before using them in lighting equations.
 
 * **Type**: `object`
 * **Required**: No
@@ -2951,7 +2951,7 @@ The index of the texture.
 
 #### normalTextureInfo.texCoord
 
-This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0).
+This integer value is used to construct a string in the format `TEXCOORD_<set index>` which is a reference to a key in mesh.primitives.attributes (e.g. A value of `0` corresponds to `TEXCOORD_0`). Mesh must have corresponding texture coordinate attributes for the material to be applicable to it.
 
 * **Type**: `integer`
 * **Required**: No, default: `0`
@@ -3012,7 +3012,7 @@ The index of the texture.
 
 #### occlusionTextureInfo.texCoord
 
-This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0).
+This integer value is used to construct a string in the format `TEXCOORD_<set index>` which is a reference to a key in mesh.primitives.attributes (e.g. A value of `0` corresponds to `TEXCOORD_0`). Mesh must have corresponding texture coordinate attributes for the material to be applicable to it.
 
 * **Type**: `integer`
 * **Required**: No, default: `0`
@@ -3055,8 +3055,8 @@ An orthographic camera containing properties to create an orthographic projectio
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**xmag**|`number`|The floating-point horizontal magnification of the view.| :white_check_mark: Yes|
-|**ymag**|`number`|The floating-point vertical magnification of the view.| :white_check_mark: Yes|
+|**xmag**|`number`|The floating-point horizontal magnification of the view. Must not be zero.| :white_check_mark: Yes|
+|**ymag**|`number`|The floating-point vertical magnification of the view. Must not be zero.| :white_check_mark: Yes|
 |**zfar**|`number`|The floating-point distance to the far clipping plane. `zfar` must be greater than `znear`.| :white_check_mark: Yes|
 |**znear**|`number`|The floating-point distance to the near clipping plane.| :white_check_mark: Yes|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
@@ -3068,14 +3068,14 @@ Additional properties are allowed.
 
 #### orthographic.xmag :white_check_mark: 
 
-The floating-point horizontal magnification of the view.
+The floating-point horizontal magnification of the view. Must not be zero.
 
 * **Type**: `number`
 * **Required**: Yes
 
 #### orthographic.ymag :white_check_mark: 
 
-The floating-point vertical magnification of the view.
+The floating-point vertical magnification of the view. Must not be zero.
 
 * **Type**: `number`
 * **Required**: Yes
