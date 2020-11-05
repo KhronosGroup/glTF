@@ -17,7 +17,7 @@
         },
         "byteLength": {
             "type": "integer",
-            "description": "The total byte length of the buffer view.",
+            "description": "The length of the bufferView in bytes.",
             "minimum": 1
         },
         "byteStride": {
