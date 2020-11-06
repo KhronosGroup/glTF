@@ -2088,7 +2088,7 @@ A view into a buffer generally representing a subset of the buffer.
 |---|----|-----------|--------|
 |**buffer**|`integer`|The index of the buffer.| :white_check_mark: Yes|
 |**byteOffset**|`integer`|The offset into the buffer in bytes.|No, default: `0`|
-|**byteLength**|`integer`|The total byte length of the buffer view.| :white_check_mark: Yes|
+|**byteLength**|`integer`|The length of the bufferView in bytes.| :white_check_mark: Yes|
 |**byteStride**|`integer`|The stride, in bytes.|No|
 |**target**|`integer`|The target that the GPU buffer should be bound to.|No|
 |**name**|`string`|The user-defined name of this object.|No|
@@ -2117,7 +2117,7 @@ The offset into the buffer in bytes.
 
 #### bufferView.byteLength :white_check_mark: 
 
-The total byte length of the buffer view.
+The length of the bufferView in bytes.
 
 * **Type**: `integer`
 * **Required**: Yes
