@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "Material",
+    "title": "material",
     "type": "object",
     "description": "The material appearance of a primitive.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],

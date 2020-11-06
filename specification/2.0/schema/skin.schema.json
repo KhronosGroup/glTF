@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "Skin",
+    "title": "skin",
     "type": "object",
     "description": "Joints and matrices defining a skin.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],

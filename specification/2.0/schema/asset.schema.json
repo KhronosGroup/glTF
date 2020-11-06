@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "Asset",
+    "title": "asset",
     "type": "object",
     "description": "Metadata about the glTF asset.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

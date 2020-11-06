@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "Extras",
+    "title": "extras",
     "description": "Application-specific data.",
     "gltf_sectionDescription": "**Implementation Note:** Although extras may have any type, it is common for applications to store and access custom data as key/value pairs. As best practice, extras should be an Object rather than a primitive value for best portability."
 }
