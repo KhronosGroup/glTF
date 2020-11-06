@@ -4050,7 +4050,7 @@ function fresnel_mix(ior, base, layer) {
 Now that we have an implementation for all the functions used in the glTF metallic-roughness material model, we are able to connect the functions according to the graph shown in section ["Complete Model"](#complete-model). By substituting the mixing functions (`fresnel_mix`, `conductor_fresnel`) for the implementation, we arrive at the following BRDFs for the metal and the dielectric component:
 
 ```
-metal_brdf = specular_brdf(roughness^2) * (baseColor.rgb + (1 - baseColor.rgb)) * (1 - abs(VdotH))^5)
+metal_brdf = specular_brdf(roughness^2) * (baseColor.rgb + (1 - baseColor.rgb) * (1 - abs(VdotH))^5)
 dielectric_brdf = mix(diffuse_brdf(baseColor.rgb), specular_brdf(roughness^2), 0.04 + (1 - 0.04) * (1 - abs(VdotH))^5)
 ```
 
@@ -4072,10 +4072,10 @@ c_diff = lerp(baseColor.rgb * (1 - dielectricSpecular), black, metallic)
 f0 = lerp(0.04, baseColor.rgb, metallic)
 α = roughness^2
 
-F = (f0 + (1 - f0) * (1 - abs(VdotH))^5
+F = f0 + (1 - f0) * (1 - abs(VdotH))^5
 
 f_diffuse = (1 - F) * (1 / π) * c_diff
-f_specular = F * D(α) * G / (4 * abs(VdotN) * abs(LdotN))
+f_specular = F * D(α) * G(α) / (4 * abs(VdotN) * abs(LdotN))
 
 material = f_diffuse + f_specular
 ```
