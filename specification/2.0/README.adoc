@@ -600,24 +600,28 @@ Values of `NaN`, `+Infinity`, and `-Infinity` are not allowed.
 
 The following tables can be used to compute the size of element accessible by accessor.
 
-| `componentType` | Size in bytes |
-|:---------------:|:-------------:|
-| `5120` (BYTE) | 1 |
-| `5121`(UNSIGNED_BYTE) | 1 |
-| `5122` (SHORT) | 2 |
-| `5123` (UNSIGNED_SHORT) | 2 |
-| `5125` (UNSIGNED_INT) | 4 |
-| `5126` (FLOAT) | 4 |
+[options="header"]
+|====
+| `componentType`         | Size in bytes
+| `5120` (BYTE)           | 1
+| `5121`(UNSIGNED_BYTE)   | 1
+| `5122` (SHORT)          | 2
+| `5123` (UNSIGNED_SHORT) | 2
+| `5125` (UNSIGNED_INT)   | 4
+| `5126` (FLOAT)          | 4
+|====
 
-| `type` | Number of components |
-|:------:|:--------------------:|
-| `"SCALAR"` | 1 |
-| `"VEC2"` | 2 |
-| `"VEC3"` | 3 |
-| `"VEC4"` | 4 |
-| `"MAT2"` | 4 |
-| `"MAT3"` | 9 |
-| `"MAT4"` | 16 |
+[options="header"]
+|====
+| `type`     | Number of components
+| `"SCALAR"` | 1
+| `"VEC2"`   | 2
+| `"VEC3"`   | 3
+| `"VEC4"`   | 4
+| `"MAT2"`   | 4
+| `"MAT3"`   | 9
+| `"MAT4"`   | 16
+|====
 
 Element size, in bytes, is
 `(size in bytes of the 'componentType') * (number of components defined by 'type')`.
@@ -835,16 +839,28 @@ Valid attribute semantic property names include `POSITION`, `NORMAL`, `TANGENT`,
 
 Valid accessor type and component type for each attribute semantic property are defined below.
 
-|Name|Accessor Type(s)|Component Type(s)|Description|
-|----|----------------|-----------------|-----------|
-|`POSITION`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex positions|
-|`NORMAL`|`"VEC3"`|`5126`&nbsp;(FLOAT)|Normalized XYZ vertex normals|
-|`TANGENT`|`"VEC4"`|`5126`&nbsp;(FLOAT)|XYZW vertex tangents where the *w* component is a sign value (-1 or +1) indicating handedness of the tangent basis|
-|`TEXCOORD_0`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the first set|
-|`TEXCOORD_1`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for the second set|
-|`COLOR_0`|`"VEC3"`<br>`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|RGB or RGBA vertex color|
-|`JOINTS_0`|`"VEC4"`|`5121`&nbsp;(UNSIGNED_BYTE)<br>`5123`&nbsp;(UNSIGNED_SHORT)|See [Skinned Mesh Attributes](#skinned-mesh-attributes)|
-|`WEIGHTS_0`|`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|See [Skinned Mesh Attributes](#skinned-mesh-attributes)|
+[options="header",cols="15%,20%,35%,30%"]
+|====
+| Name        | Accessor Type(s)| Component Type(s)| Description
+| `POSITION`  | `"VEC3"`        | `5126` (FLOAT)                     | XYZ vertex positions
+| `NORMAL`    | `"VEC3"`        | `5126` (FLOAT)                     | Normalized XYZ vertex normals
+| `TANGENT`   | `"VEC4"`        | `5126` (FLOAT)                     | XYZW vertex tangents where the *w* component is a sign value (-1 or +1) indicating handedness of the tangent basis
+| `TEXCOORD_0`| `"VEC2"`        | `5126` (FLOAT) +
+                                  `5121` (UNSIGNED_BYTE) normalized +
+                                  `5123` (UNSIGNED_SHORT) normalized | UV texture coordinates for the first set
+| `TEXCOORD_1`| `"VEC2"`        | `5126` (FLOAT) +
+                                  `5121` (UNSIGNED_BYTE) normalized +
+                                  `5123` (UNSIGNED_SHORT) normalized | UV texture coordinates for the second set
+| `COLOR_0`   | `"VEC3"` +
+                `"VEC4"`        | `5126` (FLOAT) +
+                                  `5121` (UNSIGNED_BYTE) normalized +
+                                  `5123` (UNSIGNED_SHORT) normalized | RGB or RGBA vertex color
+| `JOINTS_0`  | `"VEC4"`        | `5121` (UNSIGNED_BYTE)
+                                  `5123` (UNSIGNED_SHORT)            | See [Skinned Mesh Attributes](#skinned-mesh-attributes)
+| `WEIGHTS_0` | `"VEC4"`        | `5126` (FLOAT) +
+                                  `5121` (UNSIGNED_BYTE) normalized +
+                                  `5123` (UNSIGNED_SHORT) normalized | See [Skinned Mesh Attributes](#skinned-mesh-attributes)
+|====
 
 `POSITION` accessor **must** have `min` and `max` properties defined.
 
@@ -905,15 +921,18 @@ primitives[i].attributes.POSITION +
   weights[1] * primitives[i].targets[1].POSITION +
   weights[2] * primitives[i].targets[2].POSITION + ...
 ----
+
 Morph Targets are implemented via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to an accessor containing Morph Target displacement data. Currently only three attributes -- `POSITION`, `NORMAL`, and `TANGENT` -- are commonly supported. If morph targets contain application-specific semantics, their names must be prefixed with an underscore (e.g. `_TEMPERATURE`) like the associated attribute semantic. All primitives are required to list the same number of `targets` in the same order.
 
 Valid accessor type and component type for each attribute semantic property are defined below. Note that the *w* component for handedness is omitted when targeting `TANGENT` data since handedness cannot be displaced.
 
-|Name|Accessor Type(s)|Component Type(s)|Description|
-|----|----------------|-----------------|-----------|
-|`POSITION`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex position displacements|
-|`NORMAL`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex normal displacements|
-|`TANGENT`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ vertex tangent displacements|
+[options="header"]
+|====
+| Name       | Accessor Type(s) | Component Type(s) | Description
+| `POSITION` | `"VEC3"`         | `5126` (FLOAT)    | XYZ vertex position displacements
+| `NORMAL`   | `"VEC3"`         | `5126` (FLOAT)    | XYZ vertex normal displacements
+| `TANGENT`  | `"VEC3"`         | `5126` (FLOAT)    | XYZ vertex tangent displacements
+|====
 
 `POSITION` accessor **must** have `min` and `max` properties defined.
 
@@ -1371,11 +1390,12 @@ The following examples shows a material that is defined using `pbrMetallicRoughn
 ====
 If an implementation is resource-bound and cannot support all the maps defined it should support these additional maps in the following priority order.  Resource-bound implementations should drop maps from the bottom to the top.
 
-| Map       | Rendering impact when map is not supported |
-|-----------|--------------------------------------------|
-| Normal    | Geometry will appear less detailed than authored. |
-| Occlusion | Model will appear brighter in areas that should be darker. |
-| Emissive  | Model with lights will not be lit. For example, the headlights of a car model will be off instead of on. |
+[options="header",cols="20%,80%"]
+|====
+| Map       | Rendering impact when map is not supported
+| Normal    | Geometry will appear less detailed than authored.
+| Occlusion | Model will appear brighter in areas that should be darker.
+| Emissive  | Model with lights will not be lit. For example, the headlights of a car model will be off instead of on.
 ====
 
 === Alpha Coverage
@@ -1665,21 +1685,33 @@ Each of the animation's *samplers* defines the `input`/`output` pair: a set of f
 
 The inputs of each sampler are relative to `t=0`, defined as the beginning of the parent `animations` entry. Before and after the provided input range, output should be "clamped" to the nearest end of the input range. For example, if the earliest sampler input for an animation is `t=10`, a client implementation should begin playback of that animation at `t=0` with output clamped to the first output value. Samplers within a given animation are _not_ required to have the same inputs.
 
-|`channel.path`|Accessor Type|Component Type(s)|Description|
-|----|----------------|-----------------|-----------|
-|`"translation"`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ translation vector|
-|`"rotation"`|`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|XYZW rotation quaternion|
-|`"scale"`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ scale vector|
-|`"weights"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|Weights of morph targets|
+[options="header",cols="15%,15%,35%,35%"]
+|====
+| `channel.path`  | Accessor Type | Component Type(s)                  | Description
+| `"translation"` | `"VEC3"`      | `5126` (FLOAT)                     | XYZ translation vector
+| `"rotation"`    | `"VEC4"`      | `5126` (FLOAT) +
+                                    `5120` (BYTE) normalized +
+                                    `5121` (UNSIGNED_BYTE) normalized +
+                                    `5122` (SHORT) normalized +
+                                    `5123` (UNSIGNED_SHORT) normalized | XYZW rotation quaternion
+| `"scale"`       | `"VEC3"`      | `5126` (FLOAT)|XYZ scale vector
+| `"weights"`     | `"SCALAR"`    | `5126` (FLOAT) +
+                                    `5120` (BYTE) normalized +
+                                    `5121` (UNSIGNED_BYTE) normalized +
+                                    `5122` (SHORT) normalized +
+                                    `5123` (UNSIGNED_SHORT) normalized | Weights of morph targets
+|====
 
 Implementations must use following equations to get corresponding floating-point value `f` from a normalized integer `c` and vise-versa:
 
-|`accessor.componentType`|int-to-float|float-to-int|
-|-----------------------------|--------|----------------|
-| `5120`&nbsp;(BYTE)          |`f = max(c / 127.0, -1.0)`|`c = round(f * 127.0)`|
-| `5121`&nbsp;(UNSIGNED_BYTE) |`f = c / 255.0`|`c = round(f * 255.0)`|
-| `5122`&nbsp;(SHORT)         |`f = max(c / 32767.0, -1.0)`|`c = round(f * 32767.0)`|
-| `5123`&nbsp;(UNSIGNED_SHORT)|`f = c / 65535.0`|`c = round(f * 65535.0)`|
+[options="header"]
+|====
+| `accessor.componentType` | int-to-float                 | float-to-int
+| `5120` (BYTE)            | `f = max(c / 127.0, -1.0)`   | `c = round(f * 127.0)`
+| `5121` (UNSIGNED_BYTE)   | `f = c / 255.0`              | `c = round(f * 255.0)`
+| `5122` (SHORT)           | `f = max(c / 32767.0, -1.0)` | `c = round(f * 32767.0)`
+| `5123` (UNSIGNED_SHORT)  | `f = c / 65535.0`            | `c = round(f * 65535.0)`
+|====
 
 Animation Sampler's `input` accessor **must** have `min` and `max` properties defined.
 
@@ -1815,17 +1847,19 @@ ubyte[] chunkData
 ----
 
 * `chunkLength` is the length of `chunkData`, in bytes.
-* `chunkType` indicates the type of chunk. See Table 1 for details.
+* `chunkType` indicates the type of chunk. See <<table-chunktypes>> for details.
 * `chunkData` is a binary payload of chunk.
 
-The start and the end of each chunk must be aligned to 4-byte boundary. See chunks definitions for padding schemes. Chunks must appear in exactly the order given in the Table 1.
+The start and the end of each chunk must be aligned to 4-byte boundary. See chunks definitions for padding schemes. Chunks must appear in exactly the order given in <<table-chunktypes>>.
 
-**Table 1**: Chunk types
-
-|  | Chunk Type | ASCII | Description | Occurrences |
-|----|------------|-------|-------------------------|-------------|
-| 1. | 0x4E4F534A | JSON | Structured JSON content | 1 |
-| 2. | 0x004E4942 | BIN | Binary buffer | 0 or 1 |
+[[table-chunktypes]]
+.Chunk types
+[options="header"]
+|====
+|    | Chunk Type | ASCII | Description             | Occurrences
+| 1. | 0x4E4F534A | JSON  | Structured JSON content | 1
+| 2. | 0x004E4942 | BIN   | Binary buffer           | 0 or 1
+|====
 
 Client implementations must ignore chunks with unknown types to enable glTF extensions to reference additional chunks with new types following the first two chunks.
 
