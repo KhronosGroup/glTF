@@ -184,12 +184,12 @@ Additionally, the following are recommended:
 
 #### Language Alternatives
 
-Language Alternatives provide a powerful way of handling internationalization within XMP metadata. `KHR_xmp_ld` relies on usage of the `@language` and `@value` keywords per requirements outlined in the [JSON-LD serialization of XMP (ISO/DIS 16684-3)](https://www.iso.org/standard/79384.html) specification. Language Alternatives can be contained in either an object or an array of objects with the following properties:
+Language Alternatives provide a powerful way of handling internationalization within XMP metadata. `KHR_xmp_ld` relies on usage of the `@language` and `@value` keywords per requirements outlined in the [JSON-LD serialization of XMP (ISO/DIS 16684-3)](https://www.iso.org/standard/79384.html) specification. Language Alternatives must be contained in an array of objects with the following properties:
 
 * `@language` with a IETF BCP 47 language code as the value.
 * `@value` with actual value of the XMP property as a string.
 
-An example glTF containing an object with only one language:
+An example glTF with only one language:
 
 ```json
 {
@@ -206,10 +206,12 @@ An example glTF containing an object with only one language:
           "@context": {
             "dc": "http://purl.org/dc/elements/1.1/"
           },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My Model"
-          },
+          "dc:title": [
+            {
+              "@language": "en-us",
+              "@value": "My Model"
+            }
+          ],
           ...
         }
       ]
@@ -218,7 +220,7 @@ An example glTF containing an object with only one language:
 }
 ```
 
-An example glTF containing an array of objects with more than one language:
+An example glTF with more than one language:
 
 ```json
 {
@@ -276,10 +278,12 @@ glTF containing the first mesh:
           "@context": {
             "dc": "http://purl.org/dc/elements/1.1/"
           },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My first mesh"
-          },
+          "dc:title": [
+            {
+              "@language": "en-us",
+              "@value": "My first mesh"
+            }
+          ],
           ...
         }
       ]
@@ -305,10 +309,12 @@ glTF containing the second mesh:
           "@context": {
             "dc": "http://purl.org/dc/elements/1.1/"
           },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My second mesh"
-          },
+          "dc:title": [
+            {
+              "@language": "en-us",
+              "@value": "My second mesh"
+            }
+          ],
           ...
         }
       ]
@@ -336,18 +342,22 @@ glTF containing copies of both meshes:
       "packets": [
         {
           "@context": { "dc": "http://purl.org/dc/elements/1.1/" },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My first mesh"
-          }
+          "dc:title": [
+            {
+              "@language": "en-us",
+              "@value": "My first mesh"
+            }
+          ],
           ...
         },
         {
           "@context": { "dc": "http://purl.org/dc/elements/1.1/" },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My second mesh"
-          }
+          "dc:title": [
+            {
+              "@language": "en-us",
+              "@value": "My second mesh"
+            }
+          ],
           ...
         }
       ]
@@ -378,10 +388,12 @@ First glTF document:
           "@context": {
             "dc": "http://purl.org/dc/elements/1.1/"
           },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My first glTF"
-          },
+          "dc:title": [
+            {
+              "@language": "en-us",
+              "@value": "My first glTF"
+            }
+          ],
           ...
         }
       ]
@@ -409,10 +421,12 @@ Second glTF document:
           "@context": {
             "dc": "http://purl.org/dc/elements/1.1/"
           },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My second glTF"
-          },
+          "dc:title": [
+            {
+              "@language": "en-us",
+              "@value": "My second glTF"
+            }
+          ],
           ...
         }
       ]
@@ -441,27 +455,33 @@ Derived glTF document metadata:
             "dc": "http://purl.org/dc/elements/1.1/",
             "xmpMM": "http://ns.adobe.com/xap/1.0/mm/"
           },
-          "dc:title": {
-            "@language": "en-us",
-            "@value": "My composed glTF."
-          },
+          "dc:title": [
+            {
+              "@language": "en-us",
+              "@value": "My composed glTF."
+            }
+          ],
           "xmpMM:Pantry": [
             {
               "xmpMM:DocumentID": "62bc2623-968e-4b09-8174-02dc53d6b856",
               "xmpMM:InstanceID": "1a33a91f-7351-471e-9b6c-24bca3213d2a",
-              "dc:title": {
-                "@language": "en-us",
-                "@value": "My first glTF"
-              },
+              "dc:title": [
+                {
+                  "@language": "en-us",
+                  "@value": "My first glTF"
+                }
+              ],
               ...
             },
             {
               "xmpMM:DocumentID": "6d70a25e-129e-42d8-9d63-93bd9eb0298b",
               "xmpMM:InstanceID": "235b5571-e6a9-48fd-8d6b-b88276f37ee3",
-              "dc:title": {
-                "@language": "en-us",
-                "@value": "My second glTF"
-              },
+              "dc:title": [
+                {
+                  "@language": "en-us",
+                  "@value": "My second glTF"
+                }
+              ],
               ...
             }
           ],
