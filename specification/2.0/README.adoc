@@ -1149,7 +1149,9 @@ All joint values must be within the range of joints in the skin. Unused joint va
 
 The joint hierarchy used for controlling skinned mesh pose is simply the glTF node hierarchy, with each node designated as a joint. Each skin's joints must have a common root, which may or may not be a joint node itself. When a skin is referenced by a node within a scene, the common root must belong to the same scene.
 
-For more details of vertex skinning implementation, refer to [glTF Overview](figures/gltfOverview-2.0.0b.png).
+//@ Jon: now refers to ToT master branch in github, rather than the local repository
+
+For more details of vertex skinning implementation, refer to https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/figures/gltfOverview-2.0.0b.png[glTF Overview].
 
 [NOTE]
 .Implementation Note
@@ -1879,7 +1881,9 @@ All glTF extensions required to load and/or render an asset must be listed in th
 
 `extensionsRequired` is a subset of `extensionsUsed`. All values in `extensionsRequired` must also exist in `extensionsUsed`.
 
-For more information on glTF extensions, consult the [extensions registry specification](../../extensions/README.md).
+//@ Jon: now refers to ToT master branch in github, rather than the local repository
+
+For more information on glTF extensions, consult the https://github.com/KhronosGroup/glTF/blob/master/extensions/README.md[extensions registry specification].
 
 
 [[glb-file-format-specification]]
