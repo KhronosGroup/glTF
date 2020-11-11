@@ -17,6 +17,7 @@ The Khronos{regtitle} glTF{tmtitle} Working Group
 :numbered:
 :source-highlighter: coderay
 :title-logo-image: image:../figures/gltf.png[Logo,pdfwidth=4in,align=right]
+:stem:
 // Various special / math symbols. This is easier to edit with than Unicode.
 // include::config/attribs.adoc[]
 
@@ -27,12 +28,6 @@ The Khronos{regtitle} glTF{tmtitle} Working Group
 :xrefstyle: short
 :listing-caption: Listing
 
-<<<<
-
-include::chapters/copyright-spec.adoc[]
-
-<<<<
-
 // Table of contents is inserted here
 toc::[]
 
@@ -40,6 +35,15 @@ toc::[]
 
 [[preamble]]
 = Preamble
+
+Some math: stem:[sqrt(4) = 2]
+
+Inline math:
+
+[stem]
+++++
+sqrt(4) = 2^3
+++++
 
 The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern 3D applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
