@@ -710,6 +710,7 @@ This is often the case when encoding morph targets (it is, in general, more effi
 
 glTF 2.0 extends the accessor structure to enable efficient transfer of sparse arrays.
 Similarly to a standard accessor, a sparse accessor initializes an array of typed elements from data stored in a `bufferView` . On top of that, a sparse accessor includes a `sparse` dictionary describing the elements that deviate from their initialization value. The `sparse` dictionary contains the following mandatory properties:
+
 - `count`: number of displaced elements.
 - `indices`: strictly increasing array of integers of size `count` and specific `componentType` that stores the indices of those elements that deviate from the initialization value.
 - `values`: array of displaced elements corresponding to the indices in the `indices` array.
@@ -762,7 +763,7 @@ For performance and compatibility reasons, each element of a vertex attribute mu
 
 Accessors of matrix type have data stored in column-major order; start of each column must be aligned to 4-byte boundaries. To achieve this, three `type`/`componentType` combinations require special layout:
 
-**MAT2, 1-byte components**
+*MAT2, 1-byte components*
 
 //@ Jon - TBD formatting
 
@@ -772,7 +773,7 @@ Accessors of matrix type have data stored in column-major order; start of each c
 |m00|m10|---|---|m01|m11|---|---|
 ----
 
-**MAT3, 1-byte components**
+*MAT3, 1-byte components*
 
 ----
 | 00| 01| 02| 03| 04| 05| 06| 07| 08| 09| 0A| 0B|
@@ -780,7 +781,7 @@ Accessors of matrix type have data stored in column-major order; start of each c
 |m00|m10|m20|---|m01|m11|m21|---|m02|m12|m22|---|
 ----
 
-**MAT3, 2-byte components**
+*MAT3, 2-byte components*
 
 ----
 | 00| 01| 02| 03| 04| 05| 06| 07| 08| 09| 0A| 0B| 0C| 0D| 0E| 0F| 10| 11| 12| 13| 14| 15| 16| 17|
@@ -914,7 +915,7 @@ Valid accessor type and component type for each attribute semantic property are 
                                   `5123` (UNSIGNED_SHORT) normalized | See <<skinned-mesh-attributes,Skinned Mesh Attributes>>
 |====
 
-`POSITION` accessor **must** have `min` and `max` properties defined.
+`POSITION` accessor *must* have `min` and `max` properties defined.
 
 `TEXCOORD`, `COLOR`, `JOINTS`, and `WEIGHTS` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. Client implementations must support at least two UV texture coordinate sets, one vertex color, and one joints/weights set. Extensions can add additional property names, accessor types, and/or accessor component types.
 
@@ -988,9 +989,9 @@ Valid accessor type and component type for each attribute semantic property are 
 | `TANGENT`  | `"VEC3"`         | `5126` (FLOAT)    | XYZ vertex tangent displacements
 |====
 
-`POSITION` accessor **must** have `min` and `max` properties defined.
+`POSITION` accessor *must* have `min` and `max` properties defined.
 
-All Morph Target's accessors **must** have the same `count` as the accessors of the original primitive.
+All Morph Target's accessors *must* have the same `count` as the accessors of the original primitive.
 
 A Morph Target may also define an optional `mesh.weights` property that stores the default targets weights. In the absence of a `node.weights` property, the primitives attributes are resolved using these weights. When this property is missing, the default targets weights are assumed to be zero.
 
@@ -1133,8 +1134,8 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
 
 The number of joints that influence one vertex is limited to 4 per set, so referenced accessors must have `VEC4` type and following component formats:
 
-* **`JOINTS_0`**: `UNSIGNED_BYTE` or `UNSIGNED_SHORT`
-* **`WEIGHTS_0`**: `FLOAT`, or normalized `UNSIGNED_BYTE`, or normalized `UNSIGNED_SHORT`
+* *`JOINTS_0`*: `UNSIGNED_BYTE` or `UNSIGNED_SHORT`
+* *`WEIGHTS_0`*: `FLOAT`, or normalized `UNSIGNED_BYTE`, or normalized `UNSIGNED_SHORT`
 
 The joint weights for each vertex must be non-negative, and normalized to have a linear sum of `1.0`. No joint may have more than one non-zero weight for a given vertex.
 
@@ -1189,8 +1190,10 @@ A mesh is instantiated by `node.mesh` property. The same mesh could be used by m
 ----
 
 A Morph Target is instanced within a node using:
+
 - The Morph Target referenced in the `mesh` property.
 - The Morph Target `weights` overriding the `weights` of the Morph Target referenced in the `mesh` property.
+
 The example below instatiates a Morph Target with non-default weights.
 
 [source,json]
@@ -1286,6 +1289,7 @@ glTF 2.0 supports only 2D textures.
 Images referred to by textures are stored in the `images` array of the asset.
 
 Each image contains one of
+
 - a URI to an external file in one of the supported images formats, or
 - a URI with embedded base64-encoded data, or
 - a reference to a `bufferView`; in that case `mimeType` must be defined.
@@ -1399,6 +1403,7 @@ All parameters related to the metallic-roughness material model are defined unde
 ----
 
 The metallic-roughness material model is defined by the following properties:
+
 * `baseColor` - The base color of the material
 * `metallic` - The metalness of the material
 * `roughness` - The roughness of the material
@@ -1424,9 +1429,10 @@ Implementations of the BRDF itself can vary based on device performance and reso
 The material definition also provides for additional maps that can also be used with the metallic-roughness material model as well as other material models which could be provided via glTF extensions.
 
 Materials define the following additional maps:
-- **normal** : A tangent space normal map.
-- **occlusion** : The occlusion map indicates areas that receive less diffuse lighting from ambient sources. Direct lighting is not affected.
-- **emissive** : The emissive map controls the color and intensity of the light being emitted by the material.
+
+- *normal* : A tangent space normal map.
+- *occlusion* : The occlusion map indicates areas that receive less diffuse lighting from ambient sources. Direct lighting is not affected.
+- *emissive* : The emissive map controls the color and intensity of the light being emitted by the material.
 
 The following examples shows a material that is defined using `pbrMetallicRoughness` parameters as well as additional texture maps:
 
@@ -1480,6 +1486,7 @@ If an implementation is resource-bound and cannot support all the maps defined i
 The `alphaMode` property defines how the alpha value of the main factor and texture should be interpreted. The alpha value is defined in the `baseColor` for metallic-roughness material model.
 
 `alphaMode` can be one of the following values:
+
 * `OPAQUE` - The rendered output is fully opaque and any alpha value is ignored.
 * `MASK` - The rendered output is either fully opaque or fully transparent depending on the alpha value and the specified alpha cutoff value. This mode is used to simulate geometry such as tree leaves or wire fences.
 * `BLEND` - The rendered output is combined with the background using the normal painting operation (i.e. the Porter and Duff over operator). This mode is used to simulate geometry such as guaze cloth or animal fur.
@@ -1808,7 +1815,7 @@ Implementations must use following equations to get corresponding floating-point
 | `5123` (UNSIGNED_SHORT)  | `f = c / 65535.0`            | `c = round(f * 65535.0)`
 |====
 
-Animation Sampler's `input` accessor **must** have `min` and `max` properties defined.
+Animation Sampler's `input` accessor *must* have `min` and `max` properties defined.
 
 [NOTE]
 .Implementation Note
@@ -1888,6 +1895,7 @@ For these resources, glTF requires either separate requests or extra space due t
 To solve this, a container format, _Binary glTF_ is introduced. In Binary glTF, a glTF asset (JSON, .bin, and images) can be stored in a binary blob.
 
 This binary blob (which can be a file, for example) has the following structure:
+
 * A 12-byte preamble, entitled the `header`.
 * One or more `chunks` that contains JSON content and binary data.
 
@@ -1913,7 +1921,7 @@ Use `model/gltf-binary`.
 
 Binary glTF is little endian. Figure 1 shows an example of a Binary glTF asset.
 
-**Figure 1**: Binary glTF layout.
+*Figure 1*: Binary glTF layout.
 
 image:figures/glb2.png[pdfwidth=4in,align=left]
 
@@ -2037,7 +2045,7 @@ include::REFERENCE.adoc[]
 [[appendix-a-tangent-space-recalculation]]
 = Tangent Space Recalculation
 
-**TODO**
+*TODO*
 
 
 [[appendix-b-brdf-implementation]]
@@ -2136,8 +2144,7 @@ We use the following notation:
 * *V* is the normalized vector from the shading location to the eye
 * *L* is the normalized vector from the shading location to the light
 * *N* is the surface normal in the same space as the above values
-* *H* is the half vector, where *H* = normalize(*L*+*V*)
-
+* *H* is the half vector, where *H* = normalize(*L* + *V*)
 
 
 [[specular-brdf]]
@@ -2385,7 +2392,7 @@ Copyright 2013-2020 The Khronos Group Inc.
 Some parts of this Specification are purely informative and do not define requirements
 necessary for compliance and so are outside the Scope of this Specification. These
 parts of the Specification are marked as being non-normative, or identified as
-**Implementation Notes**.
+*Implementation Notes*.
 
 Where this Specification includes normative references to external documents, only the
 specifically identified sections and functionality of those external documents are in
