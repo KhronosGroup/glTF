@@ -18,8 +18,6 @@ The Khronos{regtitle} glTF{tmtitle} Working Group
 :source-highlighter: coderay
 :title-logo-image: image:../figures/gltf.png[Logo,pdfwidth=4in,align=right]
 :stem:
-// Various special / math symbols. This is easier to edit with than Unicode.
-// include::config/attribs.adoc[]
 
 // This causes cross references to chapters, sections, and tables to be
 // rendered as "Section A.B" (for example) rather than rendering the reference
@@ -769,8 +767,6 @@ Accessors of matrix type have data stored in column-major order; start of each c
 
 *MAT2, 1-byte components*
 
-//@ Jon - TBD formatting
-
 ----
 | 00| 01| 02| 03| 04| 05| 06| 07|
 |===|===|===|===|===|===|===|===|
@@ -1153,8 +1149,6 @@ All joint values must be within the range of joints in the skin. Unused joint va
 
 The joint hierarchy used for controlling skinned mesh pose is simply the glTF node hierarchy, with each node designated as a joint. Each skin's joints must have a common root, which may or may not be a joint node itself. When a skin is referenced by a node within a scene, the common root must belong to the same scene.
 
-//@ Jon: now refers to ToT master branch in github, rather than the local repository
-
 For more details of vertex skinning implementation, refer to https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/figures/gltfOverview-2.0.0b.png[glTF Overview].
 
 [NOTE]
@@ -1483,6 +1477,8 @@ If an implementation is resource-bound and cannot support all the maps defined i
 | Normal    | Geometry will appear less detailed than authored.
 | Occlusion | Model will appear brighter in areas that should be darker.
 | Emissive  | Model with lights will not be lit. For example, the headlights of a car model will be off instead of on.
+|====
+
 ====
 
 
@@ -1885,8 +1881,6 @@ All glTF extensions required to load and/or render an asset must be listed in th
 
 `extensionsRequired` is a subset of `extensionsUsed`. All values in `extensionsRequired` must also exist in `extensionsUsed`.
 
-//@ Jon: now refers to ToT master branch in github, rather than the local repository
-
 For more information on glTF extensions, consult the https://github.com/KhronosGroup/glTF/blob/master/extensions/README.md[extensions registry specification].
 
 
@@ -1913,13 +1907,13 @@ For example, an application that wants to download textures on demand may embed 
 
 
 [[file-extension]]
-=== File Extension
+== File Extension
 
 The file extension to be used with Binary glTF is `.glb`.
 
 
 [[mime-type]]
-=== MIME Type
+== MIME Type
 
 Use `model/gltf-binary`.
 
@@ -2019,7 +2013,7 @@ This chunk must be padded with trailing zeros (`0x00`) to satisfy alignment requ
 = Properties Reference
 
 // Generated with wetzel
-include::REFERENCE.adoc[]
+include::PropertiesReference.adoc[]
 
 
 [[acknowledgments]]
@@ -2091,7 +2085,7 @@ metal_brdf =
   conductor_fresnel(
     f0 = baseColor,
     bsdf = specular_brdf(
-      {alpha} = roughness^2))
+      α = roughness^2))
 ----
 
 
@@ -2110,7 +2104,7 @@ dielectric_brdf =
     base = diffuse_brdf(
       color = baseColor),
     layer = specular_brdf(
-      {alpha} = roughness^2))
+      α = roughness^2))
 ----
 
 
@@ -2119,7 +2113,7 @@ dielectric_brdf =
 
 The metal BRDF and the dielectric BRDF are based on a microfacet model. The theory behind microfacet models was developed in early works by <<TorranceSparrow1967,Torrance and Sparrow (1967)>>, <<CookTorrance1982,Cook and Torrance (1982)>> and others. A microfacet model describes the orientation of tiny facets (microfacets) on the surface as a statistical distribution. The distribution determines the orientation of the facets as a random perturbation around the normal direction of the surface. The perturbation strength depends on the `roughness` parameter and varies between 0 (smooth surface) and 1 (rough surface). A number of distribution functions have been proposed in the last decades. We use the Trowbridge-Reitz distribution first described by <<TrowbridgeReitz1975,Trowbridge and Reitz (1975)>>. Later <<Walter2007,Walter et al. (2007)>> independently developed the same distribution and called it "GGX". They show that it is a better fit for measured data than the Beckmann distribution used by <<CookTorrance1982,Cook and Torrance (1982)>> due to its stronger tails.
 
-The Trowbridge-Reitz/GGX microfacet distribution describes the microsurface as being composed of perfectly specular, infinitesimal oblate ellipsoids, whose half-height in the normal direction is {alpha} times the radius in the tangent plane. {alpha} = 1 gives spheres, which results in uniform reflection in all directions. This reflection behavior corresponds to a rough surface. {alpha} = 0 gives a perfectly specular surface. As suggested by <<Burley2012,Burley (2012)>> we use the mapping {alpha} = `roughness`^2^ which results in more perceptually linear changes in the roughness.
+The Trowbridge-Reitz/GGX microfacet distribution describes the microsurface as being composed of perfectly specular, infinitesimal oblate ellipsoids, whose half-height in the normal direction is α times the radius in the tangent plane. α = 1 gives spheres, which results in uniform reflection in all directions. This reflection behavior corresponds to a rough surface. α = 0 gives a perfectly specular surface. As suggested by <<Burley2012,Burley (2012)>> we use the mapping α = `roughness`^2^ which results in more perceptually linear changes in the roughness.
 
 The distribution only describes the proportion of each normal on the microsurface. It does not describe how the normals are organized. For this we need a microsurface profile. The difference between distribution and profile is detailed by <<Heitz2014,Heitz (2014)>>, where he in addition provides an extensive study of common microfacet profiles. Based on this work, we suggest using the Smith microsurface profile (originally developed by <<Smith1967,Smith (1967)>>) and its corresponding masking-shadowing function. Heitz describes the Smith profile as the most accurate model for reflection from random height fields. It assumes that height and normal between neighboring points are not correlated, implying a random set of microfacets instead of a continuous surface.
 
@@ -2158,37 +2152,37 @@ We use the following notation:
 [[specular-brdf]]
 === Specular BRDF
 
-The specular reflection `specular_brdf({alpha})` is a microfacet BRDF
+The specular reflection `specular_brdf(α)` is a microfacet BRDF
 
-image:https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBRDF} = \frac{G D}{4 \, \left|N \cdot L \right| \, \left| N \cdot V \right|}">
+image:https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBRDF} = \frac{G D}{4 \, \left|N \cdot L \right| \, \left| N \cdot V \right|}[]
 
 with the Trowbridge-Reitz/GGX microfacet distribution
 
-image:https://render.githubusercontent.com/render/math?math=\displaystyle D = \frac{\alpha^2 \, \chi^%2B(N \cdot H)}{\pi ((N \cdot H)^2 (\alpha^2 - 1) %2B 1)^2}">
+image:https://render.githubusercontent.com/render/math?math=\displaystyle D = \frac{\alpha^2 \, \chi^%2B(N \cdot H)}{\pi ((N \cdot H)^2 (\alpha^2 - 1) %2B 1)^2}[]
 
 and the separable form of the Smith joint masking-shadowing function
 
-image:https://render.githubusercontent.com/render/math?math=\displaystyle G = \frac{2 \, \left| N \cdot L \right| \, \chi^%2B(H \cdot L)}{\left| N \cdot L \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{2 \, \left| N \cdot V \right| \, \chi^%2B(H \cdot V)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}">,
+image:https://render.githubusercontent.com/render/math?math=\displaystyle G = \frac{2 \, \left| N \cdot L \right| \, \chi^%2B(H \cdot L)}{\left| N \cdot L \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{2 \, \left| N \cdot V \right| \, \chi^%2B(H \cdot V)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}[]
 
-where {chi}^+^(*x*) denotes the Heaviside function: 1 if *x* > 0 and 0 if *x* {leq} 0. See <<Heitz2014,Heitz (2014)>> for a derivation of the formulas.
+where χ^+^(*x*) denotes the Heaviside function: 1 if *x* > 0 and 0 if *x* <= 0. See <<Heitz2014,Heitz (2014)>> for a derivation of the formulas.
 
 Introducing the visibility function
 
-image:https://render.githubusercontent.com/render/math?math=\displaystyle V = \frac{G}{4 \, \left| N \cdot L \right| \, \left| N \cdot V \right|}">
+image:https://render.githubusercontent.com/render/math?math=\displaystyle V = \frac{G}{4 \, \left| N \cdot L \right| \, \left| N \cdot V \right|}[]
 
 simplifies the original microfacet BRDF to
 
-image:https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBRDF} = V D">
+image:https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBRDF} = V D[]
 
 with
 
-image:https://render.githubusercontent.com/render/math?math=\displaystyle V = \frac{\, \chi^%2B(H \cdot L)}{\left| N \cdot L\right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^%2B(H \cdot V)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}">.
+image:https://render.githubusercontent.com/render/math?math=\displaystyle V = \frac{\, \chi^%2B(H \cdot L)}{\left| N \cdot L\right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^%2B(H \cdot V)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}[]
 
 Thus we have the function
 
 [source,c]
 ----
-function specular_brdf({alpha}) {
+function specular_brdf(α) {
   return V * D
 }
 ----
@@ -2199,7 +2193,7 @@ function specular_brdf({alpha}) {
 
 The diffuse reflection `diffuse_brdf(color)` is a Lambertian BRDF
 
-image:https://render.githubusercontent.com/render/math?math=\displaystyle \text{LambertianBRDF} = \frac{1}{\pi}">
+image:https://render.githubusercontent.com/render/math?math=\displaystyle \text{LambertianBRDF} = \frac{1}{\pi}[]
 
 multiplied with the `color`.
 
@@ -2216,7 +2210,7 @@ function diffuse_brdf(color) {
 
 An inexpensive approximation for the Fresnel term that can be used for conductors and dielectrics was developed by <<Schlick1994,Schlick (1994)>>:
 
-image:https://render.githubusercontent.com/render/math?math=\displaystyle F = f_0 %2B (1 - f_0) (1 - \left| V \cdot H \right| )^5">
+image:https://render.githubusercontent.com/render/math?math=\displaystyle F = f_0 %2B (1 - f_0) (1 - \left| V \cdot H \right| )^5[]
 
 The conductor Fresnel `conductor_fresnel(f0, bsdf)` applies a view-dependent tint to a BSDF:
 
@@ -2268,12 +2262,12 @@ const black = 0
 
 c_diff = lerp(baseColor.rgb * (1 - dielectricSpecular), black, metallic)
 f0 = lerp(0.04, baseColor.rgb, metallic)
-{alpha} = roughness^2
+α = roughness^2
 
 F = f0 + (1 - f0) * (1 - abs(VdotH))^5
 
-f_diffuse = (1 - F) * (1 / {pi}) * c_diff
-f_specular = F * D({alpha}) * G({alpha}) / (4 * abs(VdotN) * abs(LdotN))
+f_diffuse = (1 - F) * (1 / π) * c_diff
+f_specular = F * D(α) * G(α) / (4 * abs(VdotN) * abs(LdotN))
 
 material = f_diffuse + f_specular
 ----
@@ -2314,7 +2308,6 @@ More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework f
 [[references]]
 == References
 
-//@ Jon: Burley link is dead/disabled
 * [[Burley2012]] https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf[Burley, B. (2012): Physically-Based Shading at Disney.]
 * [[CookTorrance1982]] https://graphics.pixar.com/library/ReflectanceModel/paper.pdf[Cook, R. L., and K. E. Torrance (1982): A Reflectance Model for Computer Graphics. ACM Transactions on Graphics 1 (1), 7-24.]
 * [[Gulbrandsen2014]] http://jcgt.org/published/0003/04/03/paper-lowres.pdf[Gulbrandsen, O. (2014): Artist Friendly Metallic Fresnel]
@@ -2324,7 +2317,6 @@ More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework f
 * [[Jakob2014]] https://research.cs.cornell.edu/layered-sg14/[Jakob, W., E. d'Eon, O. Jakob, S. Marschner (2014): A Comprehensive Framework for Rendering Layered Materials]
 * [[KullaConty2017]] https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf[Kulla, C., and A. Conty (2017): Revisiting Physically Based Shading at Imageworks]
 * [[LazanyiSzirmayKalos2005]] http://wscg.zcu.cz/WSCG2005/Papers_2005/Short/H29-full.pdf[Lazanyi, I. and L. Szirmay-Kalos (2005): Fresnel term approximations for metals]
-//@ Jon: Third edition is 2018, not 2016?
 * [[Pharr2018]] http://www.pbr-book.org/[Pharr, M., W. Jakob, and G. Humphreys (2016): Physically Based Rendering: From Theory To Implementation, 3rd edition. ]
 * [[Schlick1994]] https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.50.2297&rep=rep1&type=pdf[Schlick, C. (1994): An Inexpensive BRDF Model for Physically-based Rendering. Computer Graphics Forum 13, 233-246.]
 * [[Smith1967]] Smith, B. (1967):  Geometrical shadowing of a random rough surface. IEEE Transactions on Antennas and Propagation 15 (5), 668-671.
