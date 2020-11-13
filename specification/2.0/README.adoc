@@ -34,15 +34,6 @@ toc::[]
 [[preamble]]
 = Preamble
 
-Some math: stem:[sqrt(4) = 2]
-
-Inline math:
-
-[stem]
-++++
-sqrt(4) = 2^3
-++++
-
 The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern 3D applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
 Editors
