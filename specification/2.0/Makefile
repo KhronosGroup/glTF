@@ -11,12 +11,15 @@ allpdf: README.pdf SingleSpec.pdf
 # Generate the Properties Reference section of the spec from JSON schema.
 # This assumes the 'wetzel' repository is cloned in a directory parallel
 # to the glTF repository.
+# Note that by default, the schema used, $($SCHEMA), is the version in
+# the glTF spec repository rather than local versions.
 WETZELROOT = ../../../wetzel
 WETZEL = $(WETZELROOT)/bin/wetzel.js
+SCHEMA = https://github.com/KhronosGroup/glTF/tree/master/specification/2.0/schema
 # Base name of the generated properties reference file
 PROPREF = PropertiesReference
 $(PROPREF).adoc: $(WETZEL) $(wildcard schema/*.json)
-	$(WETZEL) -l2 -a=cqo -m=a -p schema \
+	$(WETZEL) -n -a=cqo -m=a -p "$(SCHEMA)" \
 	    -i '["gltfchildofrootproperty.schema.json", "gltfid.schema.json", "gltfproperty.schema.json"]' \
 	    schema/glTF.schema.json > $@
 
