@@ -14,11 +14,12 @@ allpdf: README.pdf SingleSpec.pdf
 # Note that by default, the schema used, $($SCHEMA), is the version in
 # the glTF spec repository rather than local versions.
 WETZELROOT = ../../../wetzel
-WETZEL = $(WETZELROOT)/bin/wetzel.js
+#WETZEL = $(WETZELROOT)/bin/wetzel.js
+WETZEL = npx wetzel
 SCHEMA = https://github.com/KhronosGroup/glTF/tree/master/specification/2.0/schema
 # Base name of the generated properties reference file
 PROPREF = PropertiesReference
-$(PROPREF).adoc: $(WETZEL) $(wildcard schema/*.json)
+$(PROPREF).adoc: $(wildcard schema/*.json)
 	$(WETZEL) -n -a=cqo -m=a -p "$(SCHEMA)" \
 	    -i '["gltfchildofrootproperty.schema.json", "gltfid.schema.json", "gltfproperty.schema.json"]' \
 	    schema/glTF.schema.json > $@

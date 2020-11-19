@@ -4991,13 +4991,13 @@ Application-specific data.
 
 
 [appendix]
-
 [[appendix-a-tangent-space-recalculation]]
 = Tangent Space Recalculation
 
 *TODO*
 
 
+[appendix]
 [[appendix-b-brdf-implementation]]
 = BRDF Implementation
 
@@ -5274,6 +5274,7 @@ More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework f
 * [[Walter2007]] https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.html[Walter, B., S. Marschner, H. Li, and K. Torrance (2007): Microfacet models for refraction through rough surfaces.]
 
 
+[appendix]
 [[appendix-c-spline-interpolation]]
 = Spline Interpolation
 
@@ -5332,7 +5333,8 @@ The first in-tangent *a*~1~ and last out-tangent *b*~*n*~ should be zeros as the
 ====
 
 
-[[appendix-c-copyright]]
+[appendix]
+[[appendix-d-copyright]]
 = Full Khronos Copyright Statement
 
 Copyright 2013-2020 The Khronos Group Inc.
