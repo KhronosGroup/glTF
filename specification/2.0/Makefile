@@ -2,11 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Output specification targets
-all: allhtml allpdf
-
-allhtml: README.html
-
-allpdf: README.pdf
+TARGETS = README.html README.pdf
+all: $(TARGETS)
 
 # Generate the Properties Reference section of the spec from JSON schema.
 # This uses 'npx' to minimally install the 'wetzel' tool, if needed.
@@ -39,6 +36,6 @@ README.html: $(SPECDEPS)
 README.pdf: $(SPECDEPS)
 	$(ASCIIDOCTOR) -b pdf -a allow-uri-read -r asciidoctor-pdf README.adoc -o $@
 
-GENERATED = $(PROPREF).adoc
+GENERATED = $(PROPREF).adoc $(TARGETS)
 clean:
-	-rm -f $(GENERATED)
+	-rm -f $(GENERATED) $(TARGETS)
