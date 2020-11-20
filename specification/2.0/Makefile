@@ -4,29 +4,29 @@
 # Output specification targets
 all: allhtml allpdf
 
-allhtml: README.html SingleSpec.html
+allhtml: README.html
 
-allpdf: README.pdf SingleSpec.pdf
+allpdf: README.pdf
 
 # Generate the Properties Reference section of the spec from JSON schema.
-# This assumes the 'wetzel' repository is cloned in a directory parallel
-# to the glTF repository.
-# Note that by default, the schema used, $($SCHEMA), is the version in
-# the glTF spec repository rather than local versions.
-WETZELROOT = ../../../wetzel
-#WETZEL = $(WETZELROOT)/bin/wetzel.js
+# This uses 'npx' to minimally install the 'wetzel' tool, if needed.
+# While the schema used by wetzel is the locally installed version, it
+# generates inline links to the schema under $(SCHEMALINK), typically
+# the canonical schema in the github default branch.
+
 WETZEL = npx wetzel
-SCHEMA = https://github.com/KhronosGroup/glTF/tree/master/specification/2.0/schema
+SCHEMALINK = https://github.com/KhronosGroup/glTF/tree/master/specification/2.0/schema
+
 # Base name of the generated properties reference file
 PROPREF = PropertiesReference
 $(PROPREF).adoc: $(wildcard schema/*.json)
-	$(WETZEL) -n -a=cqo -m=a -p "$(SCHEMA)" \
+	$(WETZEL) -n -a=cqo -m=a -p "$(SCHEMALINK)" \
 	    -i '["gltfchildofrootproperty.schema.json", "gltfid.schema.json", "gltfproperty.schema.json"]' \
 	    schema/glTF.schema.json > $@
 
 # Spec targets for offline generation
 # Requires an up-to-date asciidoctor and asciidoctor-pdf be installed
-# Recommended to use the khronosgroup/vulkan-docs-base Docker image
+# We recommend using the khronosgroup/vulkan-docs-base image on dockerhub
 ASCIIDOCTOR = asciidoctor
 SPECDEPS = README.adoc PropertiesReference.adoc
 
@@ -39,29 +39,6 @@ README.html: $(SPECDEPS)
 README.pdf: $(SPECDEPS)
 	$(ASCIIDOCTOR) -b pdf -a allow-uri-read -r asciidoctor-pdf README.adoc -o $@
 
-# Generate a full single-file spec source by merging
-# PropertiesReference.adoc into README.adoc at the point it would
-# otherwise be included by asciidoctor. This is a horrid workaround for
-# the problem that github's asciidoctor implementation does not support
-# the include:: directive.
-
-SINGLESPEC = SingleSpec.adoc
-
-$(SINGLESPEC): $(SPECDEPS)
-	sed -e "/include::$(PROPREF).adoc/r$(PROPREF).adoc" \
-	    -e "/include::$(PROPREF).adoc/d" < README.adoc > $@
-
-# HTML and PDF targets for the single-file spec source. Should be
-# identical to the README outputs - this is intended only for github
-# consumption.
-
-SingleSpec.html: SingleSpec.adoc
-	$(ASCIIDOCTOR) -b html5 $? -o $@
-
-SingleSpec.pdf: SingleSpec.adoc
-	$(ASCIIDOCTOR) -b pdf -a allow-uri-read -r asciidoctor-pdf $? -o $@
-
-
-GENERATED = $(PROPREF).adoc $(SINGLESPEC)
+GENERATED = $(PROPREF).adoc
 clean:
 	-rm -f $(GENERATED)
