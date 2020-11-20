@@ -25,4 +25,5 @@ jobs:
       # See what's there
       - name: Build spec targets
         run: |
+          cd specification/2.0
           make all
