@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_xmp_ld node extension",
+    "title": "KHR_xmp_json_ld node extension",
     "type": "object",
-    "description": "References an XMP packet listed in `KHR_xmp glTF extension`",
+    "description": "References an XMP packet listed in `KHR_xmp_json_ld glTF extension`",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "packet": {

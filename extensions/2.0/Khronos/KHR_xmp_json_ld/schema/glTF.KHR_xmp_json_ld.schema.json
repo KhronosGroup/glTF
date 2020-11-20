@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title" : "KHR_xmp_ld glTF extension",
+    "title" : "KHR_xmp_json_ld glTF extension",
     "type": "object",
     "description": "Metadata about the glTF asset.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
