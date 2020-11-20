@@ -26,11 +26,11 @@ jobs:
       - name: Build spec targets
         run: |
           cd specification/2.0
-          make README.html
+          make README.html README.pdf
       - name: Archive generated files
         uses: actions/upload-artifact@v2
         with:
           name: spec-outputs
           path: |
-            specification/2.0/README.*
-            !specification/2.0/README.adoc
+            specification/2.0/README.html
+            specification/2.0/README.pdf
