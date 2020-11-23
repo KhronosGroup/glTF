@@ -1,4 +1,4 @@
-# KHR\_xmp\_ld
+# KHR\_xmp\_json\_ld
 
 ## Contributors
 
