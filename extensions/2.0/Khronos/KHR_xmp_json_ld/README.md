@@ -91,19 +91,23 @@ The following example defines a glTF scene with a sample XMP metadata.
         "dc:coverage": "Bay Area, California, United States",
         "dc:creator": ["CreatorName", "CreatorEmail@email.com"],
         "dc:date": ["1997-07-16T19:20:30+01:00"],
-        "dc:description": {
-          "@language": "en-us",
-          "@value": "text"
-        },
+        "dc:description": [
+          {
+            "@language": "en-us",
+            "@value": "text"
+          }
+        ],
         "dc:format": "model/gltf-binary",
         "dc:identifier": "urn:stock-id:292930",
         "dc:language": ["en"],
         "dc:publisher": ["Company"],
         "dc:relation": ["https://www.khronos.org/"],
-        "dc:rights": {
-          "@language": "en-us",
-          "@value": "BSD"
-        },
+        "dc:rights": [
+          {
+            "@language": "en-us",
+            "@value": "BSD"
+          }
+        ],
         "dc:source": "http://related_resource.org/derived_from_this.gltf",
         "dc:subject": ["architecture"],
         "dc:title": [
