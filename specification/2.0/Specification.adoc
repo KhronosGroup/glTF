@@ -4,7 +4,7 @@
 
 // :regtitle: is explained in
 // https://discuss.asciidoctor.org/How-to-add-markup-to-author-information-in-document-title-td6488.html
-= glTF{tmtitle} 2.0 Specification
+= glTF{tmtitle} 2.0 Specification - PREVIEW DRAFT
 :tmtitle: pass:q,r[^™^]
 :regtitle: pass:q,r[^®^]
 The Khronos{regtitle} 3D Formats Working Group
