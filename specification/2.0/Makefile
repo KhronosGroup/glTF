@@ -8,19 +8,18 @@ all: $(TARGETS)
 
 # Generate the Properties Reference section of the spec from JSON schema.
 # This uses 'npx' to minimally install the 'wetzel' tool, if needed.
-# While the schema used by wetzel is the locally installed version, it
-# generates inline links to the schema under $(SCHEMALINK), typically
-# the canonical schema in the github default branch.
+# When using embedded schemas, SCHEMALINK should be a relative path.
 
 WETZEL = npx wetzel
-SCHEMALINK = https://github.com/KhronosGroup/glTF/tree/master/specification/2.0/schema
+SCHEMALINK = schema
+EMBEDSCHEMA = JsonSchemaReference.adoc
 
 # Base name of the generated properties reference file
 PROPREF = PropertiesReference
 # Schema files to leave out of $(PROPREF)
 IGNORESCHEMA = '["gltfchildofrootproperty.schema.json", "gltfid.schema.json", "gltfproperty.schema.json"]'
 $(PROPREF).adoc: $(wildcard schema/*.json)
-	$(WETZEL) -n -a=cqo -m=a -p "$(SCHEMALINK)" \
+	$(WETZEL) -n -a=cqo -m=a -p "$(SCHEMALINK)" -e "$(EMBEDSCHEMA)" \
 	    -i $(IGNORESCHEMA) \
 	    schema/glTF.schema.json > $@
 
@@ -33,7 +32,7 @@ SPECDEPS = $(SPEC).adoc PropertiesReference.adoc
 $(SPEC).html: $(SPECDEPS)
 	$(ASCIIDOCTOR) -b html5 $(SPEC).adoc -o $@
 
-# :allow-url-read: is necessary for the imbedded render.githubusers.com
+# :allow-url-read: is necessary for the embedded render.githubusers.com
 # math images to be processed for the PDF target. See
 # https://github.com/asciidoctor/asciidoctor-pdf/issues/369
 $(SPEC).pdf: $(SPECDEPS)
@@ -41,4 +40,4 @@ $(SPEC).pdf: $(SPECDEPS)
 
 GENERATED = $(PROPREF).adoc $(TARGETS)
 clean:
-	-rm -f $(GENERATED) $(TARGETS)
+	-rm -f $(GENERATED) $(TARGETS) $(EMBEDSCHEMA)

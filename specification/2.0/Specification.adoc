@@ -4,10 +4,10 @@
 
 // :regtitle: is explained in
 // https://discuss.asciidoctor.org/How-to-add-markup-to-author-information-in-document-title-td6488.html
-= glTF 2.0 Specification (Last Updated June 9, 2017)
+= glTF{tmtitle} 2.0 Specification
 :tmtitle: pass:q,r[^™^]
 :regtitle: pass:q,r[^®^]
-The Khronos{regtitle} glTF{tmtitle} Working Group
+The Khronos{regtitle} 3D Formats Working Group
 :data-uri:
 :icons: font
 :toc2:
@@ -52,7 +52,7 @@ Khronos 3D Formats Working Group and Alumni
 * Scott Nagy, Microsoft
 * Marco Hutter, Individual Contributor
 * Uli Klumpp, Individual Contributor
-* Ed Mackey, Individual Contributor
+* Ed Mackey, Analytical Graphics, Inc.
 * Don McCurdy, Google
 * Norbert Nopper, UX3D
 * Fabrice Robinet, Individual Contributor (Previous Editor and Incubator)
@@ -2048,11 +2048,11 @@ include::PropertiesReference.adoc[]
 
 
 [appendix]
-[[appendix-a-tangent-space-recalculation]]
-= Tangent Space Recalculation
+[[appendix-a-json-schema-reference]]
+= JSON Schema Reference
 
-*TODO*
-
+// Generated with wetzel
+include::JsonSchemaReference.adoc[]
 
 [appendix]
 [[appendix-b-brdf-implementation]]
