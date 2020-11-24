@@ -10,7 +10,12 @@ all: $(TARGETS)
 # This uses 'npx' to minimally install the 'wetzel' tool, if needed.
 # When using embedded schemas, SCHEMALINK should be a relative path.
 
-WETZEL = npx wetzel
+# Note this Makefile should remain locked to a particular version of
+# wetzel, such that the history of changes to the documentation can
+# accurately reflect changes to wetzel that impact the output here.
+# Please manually upgrade the version as often as needed, without unlocking.
+
+WETZEL = npx wetzel@0.1.0-dev.1.3
 SCHEMALINK = schema
 EMBEDSCHEMA = JsonSchemaReference.adoc
 
