@@ -784,6 +784,14 @@ All indices for indexed attribute semantics must start with 0 and be continuous 
 
 All attribute accessors for a given primitive must have the same `count`. When `indices` property is not defined, it indicates the number of vertices to render; when `indices` property is defined, it indicates the upper (exclusive) bound on the index values in the `indices` accessor.
 
+When `indices` property is not defined, the number of vertex indices to render is defined by `count` of attribute accessors (with the implied values from range `[0..count)`); when `indices` property is defined, the number of vertex indices to render is defined by `count` of accessor referred to by `indices`. In either case, the number of vertex indices **must** be valid for the primitive mode used:
+
+* For `POINTS`, `count` must be non-zero
+* For `LINE_LOOP` and `LINE_STRIP`, `count` must be 2 or greater
+* For `TRIANGLE_STRIP` and `TRIANGLE_FAN`, `count` must be 3 or greater
+* For `LINES`, `count` must be divisible by 2 and non-zero
+* For `TRIANGLES`, `count` must be divisible by 3 and non-zero
+
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
 
 > **Implementation note:** When positions are not specified, client implementations should skip primitive's rendering unless its positions are provided by other means (e.g., by extension). This applies to both indexed and non-indexed geometry.
