@@ -1584,6 +1584,20 @@ Runtimes are expected to use the following projection matrices.
 [[infinite-perspective-projection]]
 ==== Infinite perspective projection
 
+*Latexmath*
+
+[latexmath]
+++++
+\begin{bmatrix}
+1 \over { a \times \tan(0.5 \times y) } & 0 & 0 & 0 \\
+0 & 1 \over { \tan(0.5 \times y) } & 0 & 0 \\
+0 & 0 & -1 & -2n \\
+0 & 0 & -1 & 0
+\end{bmatrix}
+++++
+
+*Old*
+
 image:figures/infinite-perspective.png[pdfwidth=4in,align=left]
 
 where
@@ -1595,6 +1609,20 @@ where
 
 [[finite-perspective-projection]]
 ==== Finite perspective projection
+
+*Latexmath*
+
+[latexmath]
+++++
+\begin{bmatrix}
+1 \over { a \times \tan(0.5 \times y) } & 0 & 0 & 0 \\
+0 & 1 \over { \tan(0.5 \times y) } & 0 & 0 \\
+0 & 0 & { f + n } \over { n - f } & { 2 f n } \over { n - f } \\
+0 & 0 & -1 & 0
+\end{bmatrix}
+++++
+
+*Old*
 
 image:figures/finite-perspective.png[pdfwidth=4in,align=left]
 
@@ -1608,6 +1636,20 @@ where
 
 [[orthographic-projection]]
 ==== Orthographic projection
+
+*Latexmath*
+
+[latexmath]
+++++
+\begin{bmatrix}
+1 \over r & 0 & 0 & 0 \\
+0 & 1 \over t & 0 & 0 \\
+0 & 0 & 2 \over { n - f } & { f + n } \over { n - f } \\
+0 & 0 & 0 & 1
+\end{bmatrix}
+++++
+
+*Old*
 
 image:figures/ortho.png[pdfwidth=4in,align=left]
 
@@ -2159,13 +2201,40 @@ We use the following notation:
 
 The specular reflection `specular_brdf(α)` is a microfacet BRDF
 
+*Latexmath*
+
+[latexmath]
+++++
+\text{MicrofacetBRDF} = \frac{G D}{4 \, \left|N \cdot L \right| \, \left| N \cdot V \right|}
+++++
+
+*Old*
+
 image:https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBRDF} = \frac{G D}{4 \, \left|N \cdot L \right| \, \left| N \cdot V \right|}[format=svg]
 
 with the Trowbridge-Reitz/GGX microfacet distribution
 
+*Latexmath*
+
+[latexmath]
+++++
+D = \frac{\alpha^2 \, \chi^{+}(N \cdot H)}{\pi ((N \cdot H)^2 (\alpha^2 - 1) + 1)^2}
+++++
+
+*Old*
+
 image:https://render.githubusercontent.com/render/math?math=\displaystyle D = \frac{\alpha^2 \, \chi^%2B(N \cdot H)}{\pi ((N \cdot H)^2 (\alpha^2 - 1) %2B 1)^2}[format=svg]
 
 and the separable form of the Smith joint masking-shadowing function
+
+*Latexmath*
+
+[latexmath]
+++++
+G = \frac{2 \, \left| N \cdot L \right| \, \chi^{+}(H \cdot L)}{\left| N \cdot L \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2}} \frac{2 \, \left| N \cdot V \right| \, \chi^{+}(H \cdot V)}{\left| N \cdot V \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
+++++
+
+*Old*
 
 image:https://render.githubusercontent.com/render/math?math=\displaystyle G = \frac{2 \, \left| N \cdot L \right| \, \chi^%2B(H \cdot L)}{\left| N \cdot L \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{2 \, \left| N \cdot V \right| \, \chi^%2B(H \cdot V)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}[format=svg]
 
@@ -2173,13 +2242,40 @@ where χ^+^(*x*) denotes the Heaviside function: 1 if *x* > 0 and 0 if *x* <= 0.
 
 Introducing the visibility function
 
+*Latexmath*
+
+[latexmath]
+++++
+V = \frac{G}{4 \, \left| N \cdot L \right| \, \left| N \cdot V \right|}
+++++
+
+*Old*
+
 image:https://render.githubusercontent.com/render/math?math=\displaystyle V = \frac{G}{4 \, \left| N \cdot L \right| \, \left| N \cdot V \right|}[format=svg]
 
 simplifies the original microfacet BRDF to
 
+*Latexmath*
+
+[latexmath]
+++++
+\text{MicrofacetBRDF} = V D
+++++
+
+*Old*
+
 image:https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBRDF} = V D[format=svg]
 
 with
+
+*Latexmath*
+
+[latexmath]
+++++
+V = \frac{\, \chi^{+}(H \cdot L)}{\left| N \cdot L\right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^{+}(H \cdot V)}{\left| N \cdot V \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
+++++
+
+*Old*
 
 image:https://render.githubusercontent.com/render/math?math=\displaystyle V = \frac{\, \chi^%2B(H \cdot L)}{\left| N \cdot L\right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^%2B(H \cdot V)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}[format=svg]
 
@@ -2198,6 +2294,15 @@ function specular_brdf(α) {
 
 The diffuse reflection `diffuse_brdf(color)` is a Lambertian BRDF
 
+*Latexmath*
+
+[latexmath]
+++++
+\text{LambertianBRDF} = \frac{1}{\pi}
+++++
+
+*Old*
+
 image:https://render.githubusercontent.com/render/math?math=\displaystyle \text{LambertianBRDF} = \frac{1}{\pi}[format=svg]
 
 multiplied with the `color`.
@@ -2214,6 +2319,15 @@ function diffuse_brdf(color) {
 === Fresnel
 
 An inexpensive approximation for the Fresnel term that can be used for conductors and dielectrics was developed by <<Schlick1994,Schlick (1994)>>:
+
+*Latexmath*
+
+[latexmath]
+++++
+F = f_0 + (1 - f_0) (1 - \left| V \cdot H \right| )^5
+++++
+
+*Old*
 
 image:https://render.githubusercontent.com/render/math?math=\displaystyle F = f_0 %2B (1 - f_0) (1 - \left| V \cdot H \right| )^5[format=svg]
 
