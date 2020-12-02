@@ -31,7 +31,8 @@ $(GENERATED): $(wildcard schema/*.json)
 	    schema/glTF.schema.json > $(PROPREF).adoc
 
 # Spec targets for offline generation
-# Requires an up-to-date asciidoctor and asciidoctor-pdf be installed
+# Requires an up-to-date asciidoctor, asciidoctor-pdf, and
+# asciidoctor-mathematical be installed
 # We recommend using the khronosgroup/vulkan-docs-base image on dockerhub
 ASCIIDOCTOR = asciidoctor
 SPECDEPS = $(SPEC).adoc $(GENERATED)
@@ -42,8 +43,13 @@ $(SPEC).html: $(SPECDEPS)
 # :allow-url-read: is necessary for the embedded render.githubusers.com
 # math images to be processed for the PDF target. See
 # https://github.com/asciidoctor/asciidoctor-pdf/issues/369
+# asciidoctor-mathematical leaves intermediate images of equations behing.
+# These are removed after creating the PDF.
+STEMIMAGES = stem-*.png
 $(SPEC).pdf: $(SPECDEPS)
-	$(ASCIIDOCTOR) -b pdf -a allow-uri-read -r asciidoctor-pdf $(SPEC).adoc -o $@
+	$(ASCIIDOCTOR) -b pdf -a allow-uri-read -r asciidoctor-pdf \
+	    -r asciidoctor-mathematical $(SPEC).adoc -o $@
+	rm -f $(STEMIMAGES)
 
 clean:
 	-rm -f $(GENERATED) $(TARGETS)
