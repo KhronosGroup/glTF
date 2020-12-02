@@ -14,7 +14,7 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status
 
-Draft
+Complete
 
 ## Dependencies
 
