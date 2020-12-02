@@ -2058,7 +2058,7 @@ include::JsonSchemaReference.adoc[]
 [[appendix-b-brdf-implementation]]
 = BRDF Implementation
 
-In this chapter we present the bidirectional scattering distribution function (BRDF) of the glTF 2.0 metallic-roughness material. The BRDF describes the reflective properties of the surface of a physically-based material. For a pair of directions, the BRDF returns how much light from the incoming direction is scattered from the surface in the outgoing direction. See <<Pharr2018,Pharr et al. (2018), Chapter 5.6 "Surface Reflection">>, for an introduction to radiometry and the BRDF.
+In this chapter we present the bidirectional scattering distribution function (BRDF) of the glTF 2.0 metallic-roughness material. The BRDF describes the reflective properties of the surface of a physically-based material. For a pair of directions, the BRDF returns how much light from the incoming direction is scattered from the surface in the outgoing direction. See <<Pharr2016,Pharr et al. (2016), Chapter 5.6 "Surface Reflection">>, for an introduction to radiometry and the BRDF.
 
 The BRDF of the metallic-roughness material is a linear interpolation of a metallic BRDF and a dielectric BRDF. The BRDFs share the parameters for roughness and base color. The blending factor `metallic` describes the metalness of the material.
 
@@ -2082,7 +2082,7 @@ In this chapter, we will first sketch the logical structure of the material. We 
 [[metals]]
 === Metals
 
-Metallic surfaces reflect back most of the illumination, only a small portion of the light is absorbed by the material (<<Pharr2018,Pharr et al. (2018), Chapter 8.2 "Specular Reflection and Transmission">>). This effect is described by the Fresnel term `conductor_fresnel` with the wavelength-dependent refractive index and extinction coefficient. To make parameterization simple, the metallic-roughness material combines the two quantities into a single, user-defined color value `baseColor` that defines the reflection color at normal incidence, also referred to as `f0`. The reflection color at grazing incidence is called `f90`. It is set to 1 because the grazing angle reflectance for any material approaches pure white in the limit. The conductor Fresnel term modulates the contribution of a specular BRDF parameterized by the `roughness` parameter.
+Metallic surfaces reflect back most of the illumination, only a small portion of the light is absorbed by the material (<<Pharr2016,Pharr et al. (2016), Chapter 8.2 "Specular Reflection and Transmission">>). This effect is described by the Fresnel term `conductor_fresnel` with the wavelength-dependent refractive index and extinction coefficient. To make parameterization simple, the metallic-roughness material combines the two quantities into a single, user-defined color value `baseColor` that defines the reflection color at normal incidence, also referred to as `f0`. The reflection color at grazing incidence is called `f90`. It is set to 1 because the grazing angle reflectance for any material approaches pure white in the limit. The conductor Fresnel term modulates the contribution of a specular BRDF parameterized by the `roughness` parameter.
 
 [source,c]
 ----
@@ -2097,7 +2097,7 @@ metal_brdf =
 [[dielectrics]]
 === Dielectrics
 
-Unlike metals, dielectric materials transmit most of the incident illumination into the interior of the object and the Fresnel term is parameterized only by the refractive index (<<Pharr2018,Pharr et al. (2018), Chapter 8.2 "Specular Reflection and Transmission">>). This makes dielectrics like glass, oil, water or air transparent. Other dielectrics, like the majority of plastic materials, are filled with particles that absorb or scatter most or all of the transmitted light, reducing the transparency and giving the surface its colorful appearance.
+Unlike metals, dielectric materials transmit most of the incident illumination into the interior of the object and the Fresnel term is parameterized only by the refractive index (<<Pharr2016,Pharr et al. (2016), Chapter 8.2 "Specular Reflection and Transmission">>). This makes dielectrics like glass, oil, water or air transparent. Other dielectrics, like the majority of plastic materials, are filled with particles that absorb or scatter most or all of the transmitted light, reducing the transparency and giving the surface its colorful appearance.
 
 As a result, dielectric materials are modeled as a Fresnel-weighted combination of a specular BRDF, simulating the reflection at the surface, and a diffuse BRDF, simulating the transmitted portion of the light that is absorbed and scattered inside the object. The reflection roughness is given by the squared `roughness` of the material. The color of the diffuse BRDF comes from the `baseColor`. The amount of reflection compared to transmission is directional-dependent and as such determined by the Fresnel term. Its index of refraction is set to a fixed value of 1.5, a good compromise for the majority of opaque, dielectric materials.
 
@@ -2313,7 +2313,7 @@ More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework f
 [[references]]
 == References
 
-* [[Burley2012]] https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf[Burley, B. (2012): Physically-Based Shading at Disney.]
+* [[Burley2012]] https://disneyanimation.com/publications/physically-based-shading-at-disney/[Burley, B. (2012): Physically-Based Shading at Disney.]
 * [[CookTorrance1982]] https://graphics.pixar.com/library/ReflectanceModel/paper.pdf[Cook, R. L., and K. E. Torrance (1982): A Reflectance Model for Computer Graphics. ACM Transactions on Graphics 1 (1), 7-24.]
 * [[Gulbrandsen2014]] http://jcgt.org/published/0003/04/03/paper-lowres.pdf[Gulbrandsen, O. (2014): Artist Friendly Metallic Fresnel]
 * [[Heitz2014]] http://jcgt.org/published/0003/02/03/paper.pdf[Heitz, E. (2014): Understanding the Masking-Shadowing Function in Microfacet-Based BRDFs]
@@ -2322,7 +2322,7 @@ More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework f
 * [[Jakob2014]] https://research.cs.cornell.edu/layered-sg14/[Jakob, W., E. d'Eon, O. Jakob, S. Marschner (2014): A Comprehensive Framework for Rendering Layered Materials]
 * [[KullaConty2017]] https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf[Kulla, C., and A. Conty (2017): Revisiting Physically Based Shading at Imageworks]
 * [[LazanyiSzirmayKalos2005]] http://wscg.zcu.cz/WSCG2005/Papers_2005/Short/H29-full.pdf[Lazanyi, I. and L. Szirmay-Kalos (2005): Fresnel term approximations for metals]
-* [[Pharr2018]] http://www.pbr-book.org/[Pharr, M., W. Jakob, and G. Humphreys (2016): Physically Based Rendering: From Theory To Implementation, 3rd edition. ]
+* [[Pharr2016]] http://www.pbr-book.org/[Pharr, M., W. Jakob, and G. Humphreys (2016): Physically Based Rendering: From Theory To Implementation, 3rd edition. ]
 * [[Schlick1994]] https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.50.2297&rep=rep1&type=pdf[Schlick, C. (1994): An Inexpensive BRDF Model for Physically-based Rendering. Computer Graphics Forum 13, 233-246.]
 * [[Smith1967]] Smith, B. (1967):  Geometrical shadowing of a random rough surface. IEEE Transactions on Antennas and Propagation 15 (5), 668-671.
 * [[TorranceSparrow1967]] https://www.graphics.cornell.edu/~westin/pubs/TorranceSparrowJOSA1967.pdf[Torrance, K. E., E. M. Sparrow (1967): Theory for Off-Specular Reflection From Roughened Surfaces. Journal of the Optical Society of America 57 (9), 1105-1114.]
