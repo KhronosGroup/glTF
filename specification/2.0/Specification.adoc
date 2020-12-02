@@ -486,7 +486,7 @@ The next example defines the transformation for a node with attached camera usin
 === Buffers and Buffer Views
 
 
-[[buffers-overview]]
+[[buffers-and-buffer-views-overview]]
 ==== Overview
 
 A *buffer* is data stored as a binary blob. The buffer can contain a combination of geometry, animation, and skins.
@@ -1954,8 +1954,8 @@ For more information on glTF extensions, consult the https://github.com/KhronosG
 [[glb-file-format-specification]]
 = GLB File Format Specification
 
-[[glb-file-format-specification-introduction]]
-== Introduction
+[[glb-file-format-specification-general]]
+== General
 
 glTF provides two delivery options that can also be used together:
 
@@ -2129,8 +2129,8 @@ include::JsonSchemaReference.adoc[]
 [[appendix-b-brdf-implementation]]
 = BRDF Implementation
 
-[[appendix-b-brdf-implementation-introduction]]
-== Introduction
+[[appendix-b-brdf-implementation-general]]
+== General
 
 In this chapter we present the bidirectional scattering distribution function (BRDF) of the glTF 2.0 metallic-roughness material. The BRDF describes the reflective properties of the surface of a physically-based material. For a pair of directions, the BRDF returns how much light from the incoming direction is scattered from the surface in the outgoing direction. See <<Pharr2016,Pharr et al. (2016), Chapter 5.6 "Surface Reflection">>, for an introduction to radiometry and the BRDF.
 
