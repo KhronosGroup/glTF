@@ -34,7 +34,8 @@ $(GENERATED): $(wildcard schema/*.json)
 # Requires an up-to-date asciidoctor, asciidoctor-pdf, and
 # asciidoctor-mathematical be installed
 # We recommend using the khronosgroup/vulkan-docs-base image on dockerhub
-ASCIIDOCTOR = asciidoctor
+ASCIIDOCTOR = asciidoctor $(ADOCOPTS)
+ADOCOPTS = -d book
 SPECDEPS = $(SPEC).adoc $(GENERATED)
 
 $(SPEC).html: $(SPECDEPS)
