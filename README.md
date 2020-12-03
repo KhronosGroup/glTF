@@ -105,6 +105,7 @@ Tools, applications and libraries for working with glTF can be found in the [glT
 ## Formats Built on glTF
 
 * [3D Tiles](https://github.com/AnalyticalGraphicsInc/3d-tiles) - An open standard for streaming and rendering massive heterogenous 3D content.
+* [VRM](https://vrm.dev/) - A 3D avatar format for VR applications.
 
 ## Stack Overflow
 
