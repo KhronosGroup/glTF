@@ -125,6 +125,8 @@ Tools, applications and libraries for working with glTF can be found in the [glT
 
 ### All Presentations and Articles
 
+* [Streamlining 3D Commerce with Material Variant Support in glTF Assets](https://www.khronos.org/blog/streamlining-3d-commerce-with-material-variant-support-in-gltf-assets) by Daniel Beauchamp and Stephan Leroux at Shopify on behalf the 3D Commerce Working Group. November 2020
+* [Live glTF Asset Editing in Your Browser—Even in AR](https://www.khronos.org/blog/live-gltf-asset-editing-in-your-browsereven-in-ar) by Emmett Lalish. August 2020
 * [View a glTF model in AR on Android without leaving your browser](https://www.khronos.org/blog/view-a-gltf-model-in-ar-on-android-without-leaving-your-browser) by Emmett Lalish.  May 2020
 * [The glTF Model Authoring Pipeline](https://www.youtube.com/playlist?list=PLvdhJ__UbhZ6mst0xgd_S3oSmdRcEiKCp) video series on authoring glTF models in Blender, by Ed Mackey and Alex Wood.  April 2020
 * [glTF Ecosystem Forum during SIGGRAPH](https://www.khronos.org/assets/uploads/developers/library/2019-siggraph/glTF-Ecosystem-Forum-SIGGRAPH_Aug19.pdf).  July 2019
