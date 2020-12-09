@@ -10,6 +10,7 @@
 - Edgar Simson, OLV, [@Edzis](https://github.com/edzis)
 - Daniel Beauchamp, Shopify, [@pushmatrix](http://github.com/pushmatrix)
 - Stephan Leroux, Shopify, [@sleroux](http://github.com/sleroux)
+- Mikko Haapoja, [@mikkoh](http://github.com/mikkoh)
 - Eric Chadwick, Wayfair, [@echadwick-wayfair](https://github.com/echadwick-wayfair)
 
 Copyright (C) 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
