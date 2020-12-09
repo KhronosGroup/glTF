@@ -83,14 +83,20 @@ The following example defines a glTF scene with a sample XMP metadata.
         "@context": {
           "dc": "http://purl.org/dc/elements/1.1/"
         },
-        "dc:contributor": [
-          "Creator1Name",
-          "Creator2Email@email.com",
-          "Creator3Name<Email@email.com>"
-        ],
+        "dc:contributor": {
+          "@set": [
+            "Creator1Name",
+            "Creator2Email@email.com",
+            "Creator3Name<Email@email.com>"
+          ]
+        },
         "dc:coverage": "Bay Area, California, United States",
-        "dc:creator": ["CreatorName", "CreatorEmail@email.com"],
-        "dc:date": ["1997-07-16T19:20:30+01:00"],
+        "dc:creator": {
+          "@list": ["CreatorName", "CreatorEmail@email.com"]
+        },
+        "dc:date": {
+          "@list": ["1997-07-16T19:20:30+01:00"]
+        },
         "dc:description": [
           {
             "@language": "en-us",
@@ -99,9 +105,15 @@ The following example defines a glTF scene with a sample XMP metadata.
         ],
         "dc:format": "model/gltf-binary",
         "dc:identifier": "urn:stock-id:292930",
-        "dc:language": ["en"],
-        "dc:publisher": ["Company"],
-        "dc:relation": ["https://www.khronos.org/"],
+        "dc:language": {
+          "@set": ["en"]
+        },
+        "dc:publisher": {
+          "@set": ["Company"]
+        },
+        "dc:relation": {
+          "@set": ["https://www.khronos.org/"]
+        },
         "dc:rights": [
           {
             "@language": "en-us",
@@ -109,7 +121,9 @@ The following example defines a glTF scene with a sample XMP metadata.
           }
         ],
         "dc:source": "http://related_resource.org/derived_from_this.gltf",
-        "dc:subject": ["architecture"],
+        "dc:subject": {
+          "@set": ["architecture"]
+        },
         "dc:title": [
           {
             "@language": "en-us",
@@ -120,7 +134,9 @@ The following example defines a glTF scene with a sample XMP metadata.
             "@value": "Mio Modello"
           }
         ],
-        "dc:type": ["Physical Object"]
+        "dc:type": {
+          "@set": ["Physical Object"]
+        }
       }
     ]
   }
@@ -166,18 +182,18 @@ The following example shows a glTF Mesh instantiating the XMP metadata at index 
 Metadata applied to JSON objects in the top level arrays ( `scenes`, `nodes`, `meshes`, `materials`, `images`, `animations`) has precedence over the metadata specified in the `asset` property of a glTF.
 A glTF might reference resources already containing XMP metadata. A relevant example would be an image object referencing a PNG/JPG file with embedded XMP metadata. Note that glTF clients and viewers may ignore the metadata embedded in the referenced resources (for instance PNG/JPG images).
 
-#### JSON-LD Restrictions and Recommendations
+#### Restrictions and Recommendations
 
-In order to keep glTF files easily readable without a JSON-LD parser, there are additional restrictions on JSON-LD that are required for `KHR_xmp_json_ld` metadata packets. Failure to obey these restrictions may create issues for JSON or JSON-LD parsers.
+In order to keep glTF files easily readable with either a JSON or JSON-LD parser and keep compliance with [ISO/DIS 16684-3](https://www.iso.org/standard/79384.html), there are additional restrictions that are required for `KHR_xmp_json_ld` metadata packets. Failure to obey these restrictions may create issues for parsers.
 
 * [Expanded term definitions](https://www.w3.org/TR/json-ld11/#expanded-term-definition) are forbidden unless otherwise specified.
 * Namespace prefixes should only use the latin alphabet `A` to `Z` uppercase or lowercase, roman numerals `0` to `9`, or `_`.
 * Aliases and multiple prefixes for the same namespace are forbidden.
 * [Value objects](https://www.w3.org/TR/json-ld11/#value-objects) are forbidden unless otherwise specified, such as with Language Alternatives.
-* Lists and sets must use the unordered JSON array form. The `@list` and `@set` keywords are forbidden.
+* XMP fields containing arrays must use the `@list` and `@set` keywords as a parent to the array, to indicate if the array is ordered or unordered. See the [Lists and Sets](#lists-and-sets) section for details.
 * Index, Id, and Type maps are forbidden.
 * Local contexts are forbidden.
-* Language Alternatives must use `@language` and `@value` pairs within an array. See the [Using Language Alternatives](#using-language-alternatives) section for details.
+* Language Alternatives must use `@language` and `@value` pairs within an array. See the [Language Alternatives](#-language-alternatives) section for details.
 
 These restrictions ensure that `KHR_xmp_json_ld` metadata remains readable regardless if the parser supports JSON-LD.
 
@@ -185,6 +201,63 @@ Additionally, the following are recommended:
 
 * XMP data types are always preferred. Only use a non XMP data type if you have no other option.
 * Usage of [IRIs](https://www.w3.org/International/wiki/IRIStatus) are heavily discouraged. Where possible, please follow the URI types outlined in the [glTF 2.0 Specification](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#uris).
+
+#### Lists and Sets
+
+The XMP specification makes a distinction between ordered lists and unordered sets, but in the case of JSON all arrays are considered the be ordered lists. (See [RFC-7159](https://www.rfc-editor.org/rfc/rfc7159.txt).) In order to handle the differences between ordered lists and unordered sets, all arrays within a `packet` must be children of a `@list` or `@set` property to differentiate between ordered lists and unordered sets respectively. Descriptions for the two fields and examples are provided below.
+
+* `@list` denotes that the child array is an ordered list.
+* `@set` denotes that the child array is an unordered set.
+
+Choosing when to use an ordered list or an unordered set is typically decided by the schema in use. For example, the Dublin Core (`dc` prefix) schema states that `dc:creator` uses an ordered list, and `dc:contributor` uses an unordered set.
+
+An example packet using `@list` for an ordered list of creators:
+
+```json
+{
+  "extensions": {
+    "KHR_xmp_json_ld": {
+      "packets": [
+        {
+          "@context": {
+            "dc": "http://purl.org/dc/elements/1.1/"
+          },
+          "dc:creator": {
+            "@list": ["CreatorName", "CreatorEmail@email.com"]
+          },
+          ...
+        }
+      ]
+    }
+  }
+}
+```
+
+An example packet using `@set` for an unordered list of contributors:
+
+```json
+{
+  "extensions": {
+    "KHR_xmp_json_ld": {
+      "packets": [
+        {
+          "@context": {
+            "dc": "http://purl.org/dc/elements/1.1/"
+          },
+          "dc:contributor": {
+            "@set": [
+              "Creator1Name",
+              "Creator2Email@email.com",
+              "Creator3Name<Email@email.com>"
+            ]
+          }
+          ...
+        }
+      ]
+    }
+  }
+}
+```
 
 #### Language Alternatives
 
