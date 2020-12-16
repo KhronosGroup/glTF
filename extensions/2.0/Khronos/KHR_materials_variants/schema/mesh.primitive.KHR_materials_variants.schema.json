@@ -32,9 +32,7 @@
                         "description": "The user-defined name of this variant material mapping.",
                         "gltf_detailedDescription": "The optional user-defined name of this variant material mapping.  This is not necessarily unique."
                     },
-                    "extras": {
-                        "type": "object"
-                    },
+                    "extras": { },
                     "extensions": { }
                 },
                 "required": [ "variants", "material" ]
