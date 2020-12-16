@@ -281,7 +281,7 @@ An example packet using `@set` for an unordered list of contributors:
 
 #### Language Alternatives
 
-Language Alternatives provide a powerful way of handling internationalization within XMP metadata. In order to remain compliant with the requirements outlined in the [JSON-LD serialization of XMP (ISO/DIS 16684-3)](https://www.iso.org/standard/79384.html) specification `KHR_xmp_json_ld` relies on usage of the `@language` and `@value` keywords contained in an object of the `rdf:Alt` type. A field containing language alternatives must contain a `@type` definition for `rdf:Alt`, and each alternative must be contained in a `rdf:_N` property, where `N` is the index. You must also included the `rdf` namespace, `http://www.w3.org/1999/02/22-rdf-syntax-ns#` in the packet's `@context`. The `rdf:_N` property must have an object containing two properties:
+Language Alternatives provide a powerful way of handling internationalization within XMP metadata. In order to remain compliant with the requirements outlined in the [JSON-LD serialization of XMP (ISO/DIS 16684-3)](https://www.iso.org/standard/79384.html) specification `KHR_xmp_json_ld` relies on usage of the `@language` and `@value` keywords contained in an object of the `rdf:Alt` type. A field containing language alternatives must contain a `@type` definition for `rdf:Alt`, and each alternative must be contained in a `rdf:_N` property, where `N` is the index. You must also include the `rdf` namespace, `http://www.w3.org/1999/02/22-rdf-syntax-ns#` in the packet's `@context`. The `rdf:_N` property must have an object containing two properties:
 
 * `@language` with a IETF BCP 47 language code as the value.
 * `@value` with actual value of the XMP property as a string.
