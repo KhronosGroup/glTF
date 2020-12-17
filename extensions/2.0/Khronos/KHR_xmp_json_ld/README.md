@@ -1,17 +1,17 @@
-# KHR\_xmp\_json\_ld
+# KHR_xmp_json_ld
 
 ## Contributors
 
-* Emiliano Gambaretto, Adobe, [@emilian0](https://github.com/emilian0)
-* Mike Bond, Adobe, [@MiiBond](https://twitter.com/MiiBond)
-* Leonard Rosenthol, Adobe, [@lrosenthol](https://github.com/lrosenthol)
-* Ed Mackey, Analytical Graphics, Inc.
-* Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)
-* Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
-* Robert Long, Mozilla, [@arobertlong](https://twitter.com/arobertlong)
-* Adam Morris, Target, [@weegeekps](https://github.com/weegeekps)
-* Andreas Plesch, Individual Contributor,[@andreasplesch](https://github.com/andreasplesch)
-* Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
+- Emiliano Gambaretto, Adobe, [@emilian0](https://github.com/emilian0)
+- Mike Bond, Adobe, [@MiiBond](https://twitter.com/MiiBond)
+- Leonard Rosenthol, Adobe, [@lrosenthol](https://github.com/lrosenthol)
+- Ed Mackey, Analytical Graphics, Inc.
+- Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)
+- Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
+- Robert Long, Mozilla, [@arobertlong](https://twitter.com/arobertlong)
+- Adam Morris, Target, [@weegeekps](https://github.com/weegeekps)
+- Andreas Plesch, Individual Contributor,[@andreasplesch](https://github.com/andreasplesch)
+- Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
 
 Copyright (C) 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -28,7 +28,7 @@ Written against the glTF 2.0 spec.
 
 This extension adds support for [XMP (Extensible Metadata Platform) (ISO 16684-1)](https://www.iso.org/standard/75163.html) metadata to glTF.
 Metadata is used to transmit information (such as attribution, licensing, creation date) about the glTF asset. Metadata has no normative effect on the glTF asset appearence and rendering.
-XMP is a technology for embedding metadata into documents and has been [an ISO standard since 2012](https://www.iso.org/files/live/sites/isoorg/files/news/magazine/ISO%20Focus+%20(2010-2013)/en/2012/ISO%20Focus+,%20May%202012.pdf).
+XMP is a technology for embedding metadata into documents and has been [an ISO standard since 2012](<https://www.iso.org/files/live/sites/isoorg/files/news/magazine/ISO%20Focus+%20(2010-2013)/en/2012/ISO%20Focus+,%20May%202012.pdf>).
 An instance of the XMP data model is called an XMP packet (ISO 16684-1$6.1).
 XMP metadata is embedded in a top-level glTF extension as an array of metadata packets.
 XMP metadata packets can then be referenced from glTF objects of type: `asset`, `scene`, `node`, `mesh`, `material`, `image`, `animation`.
@@ -47,31 +47,31 @@ XMP simple values are generally encoded via JSON strings with the exception of `
 
 The following table describes how [XMP Core Properties (ISO 16684-1$8.2)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md) are encoded in the glTF manifest.
 
-| XMP Property Type | JSON Type |
-| ----------------- | --------- |
-| [Boolean (ISO 16684-1$8.2.1.1)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#boolean)              | Boolean   |
-| [Date (ISO 16684-1$8.2.1.2)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#date)                    | String formatted as described in the XMP documentation |
-| [Integer (ISO 16684-1$8.2.1.3)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#integer)              | Number    |
-| [Real (ISO 16684-1$8.2.1.4)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#real)                    | Number    |
-| [Text (ISO 16684-1$8.2.1.5](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#text)                    | String |
-| [Agent Name (ISO 16684-1$8.2.2.1)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#agent-name)        | String formatted as described in the XMP documentation |
-| [Choice (ISO 16684-1$8.2.2.2)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#choice)                | A value chosen from a vocabulary of values of a specific type. |
-| [GUID (ISO 16684-1$8.2.2.3)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#guid)                    | String formatted as described in the XMP documentation |
-| [Language Alternative (ISO 16684-1$8.2.2.4)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#language-alternative) | A language alternative is a dictionary that maps a language code, specified via a lower-case [BCP-47](https://tools.ietf.org/html/bcp47) string, to text. See property `dc:title` in the example below|
-| [Locale (ISO 16684-1$8.2.2.5)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#locale)                | String formatted as described in the XMP documentation |
-| [MIMEType (ISO 16684-1$8.2.2.6)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#mimetype)            | String formatted as described in the XMP documentation |
-| [Rational (ISO 16684-1$8.2.2.7)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#rational)            | String formatted as described in the XMP documentation |
-| [RenditionClass (ISO 16684-1$8.2.2.8)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#renditionclass)    | String formatted as described in the XMP documentation |
-| [ResourceRef  (ISO 16684-1$8.2.2.9)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#resourceref)      | Object, we refer to the XMP documentation for a description of its properties |
-| [URI (ISO 16684-1$8.2.2.10)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#uri)                      | String formatted as described in the XMP documentation |
-| [URL (ISO 16684-1$8.2.2.11)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#url)                      | String formatted as described in the XMP documentation |
+| XMP Property Type                                                                                                                                             | JSON Type                                                                                                                                                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [Boolean (ISO 16684-1$8.2.1.1)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#boolean)                           | Boolean                                                                                                                                                                                                |
+| [Date (ISO 16684-1$8.2.1.2)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#date)                                 | String formatted as described in the XMP documentation                                                                                                                                                 |
+| [Integer (ISO 16684-1$8.2.1.3)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#integer)                           | Number                                                                                                                                                                                                 |
+| [Real (ISO 16684-1$8.2.1.4)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#real)                                 | Number                                                                                                                                                                                                 |
+| [Text (ISO 16684-1$8.2.1.5](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#text)                                  | String                                                                                                                                                                                                 |
+| [Agent Name (ISO 16684-1$8.2.2.1)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#agent-name)                     | String formatted as described in the XMP documentation                                                                                                                                                 |
+| [Choice (ISO 16684-1$8.2.2.2)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#choice)                             | A value chosen from a vocabulary of values of a specific type.                                                                                                                                         |
+| [GUID (ISO 16684-1$8.2.2.3)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#guid)                                 | String formatted as described in the XMP documentation                                                                                                                                                 |
+| [Language Alternative (ISO 16684-1$8.2.2.4)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#language-alternative) | A language alternative is a dictionary that maps a language code, specified via a lower-case [BCP-47](https://tools.ietf.org/html/bcp47) string, to text. See property `dc:title` in the example below |
+| [Locale (ISO 16684-1$8.2.2.5)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#locale)                             | String formatted as described in the XMP documentation                                                                                                                                                 |
+| [MIMEType (ISO 16684-1$8.2.2.6)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#mimetype)                         | String formatted as described in the XMP documentation                                                                                                                                                 |
+| [Rational (ISO 16684-1$8.2.2.7)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#rational)                         | String formatted as described in the XMP documentation                                                                                                                                                 |
+| [RenditionClass (ISO 16684-1$8.2.2.8)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#renditionclass)             | String formatted as described in the XMP documentation                                                                                                                                                 |
+| [ResourceRef (ISO 16684-1$8.2.2.9)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#resourceref)                   | Object, we refer to the XMP documentation for a description of its properties                                                                                                                          |
+| [URI (ISO 16684-1$8.2.2.10)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#uri)                                  | String formatted as described in the XMP documentation                                                                                                                                                 |
+| [URL (ISO 16684-1$8.2.2.11)](https://github.com/adobe/xmp-docs/blob/master/XMPNamespaces/XMPDataTypes/CoreProperties.md#url)                                  | String formatted as described in the XMP documentation                                                                                                                                                 |
 
 ## Defining XMP Metadata
 
 An indirection level is introduced to avoid replicating the same XMP metadata in multiple glTF objects.
 XMP metadatas are defined within a dictionary property in the glTF scene description file by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_xmp_json_ld` object. The `KHR_xmp_json_ld` object defines one property:
 
-* `packets`: an array of metadata packets. Each packet is JSON-LD compliant (with [additional restrictions](#json-ld-restrictions-and-recommendations)) and requires a `@context` dictionary to be defined which includes references for the namespaces.
+- `packets`: an array of metadata packets. Each packet is JSON-LD compliant (with [additional restrictions](#json-ld-restrictions-and-recommendations)) and requires a `@context` dictionary to be defined which includes references for the namespaces.
 
 The following example defines a glTF scene with a sample XMP metadata.
 
@@ -190,28 +190,28 @@ A glTF might reference resources already containing XMP metadata. A relevant exa
 
 In order to keep glTF files easily readable with either a JSON or JSON-LD parser and keep compliance with [ISO/DIS 16684-3](https://www.iso.org/standard/79384.html), there are additional restrictions that are required for `KHR_xmp_json_ld` metadata packets. Failure to obey these restrictions may create issues for parsers.
 
-* [Expanded term definitions](https://www.w3.org/TR/json-ld11/#expanded-term-definition) are forbidden unless otherwise specified.
-* Namespace prefixes should only use the latin alphabet `A` to `Z` uppercase or lowercase, roman numerals `0` to `9`, or `_`.
-* Aliases and multiple prefixes for the same namespace are forbidden.
-* [Value objects](https://www.w3.org/TR/json-ld11/#value-objects) are forbidden unless otherwise specified, such as with Language Alternatives.
-* XMP fields containing arrays must use the `@list` and `@set` keywords as a parent to the array, to indicate if the array is ordered or unordered. See the [Lists and Sets](#lists-and-sets) section for details.
-* Index, Id, and Type maps are forbidden.
-* Local contexts are forbidden.
-* Language Alternatives must use `@language` and `@value` pairs within an array. See the [Language Alternatives](#-language-alternatives) section for details.
+- [Expanded term definitions](https://www.w3.org/TR/json-ld11/#expanded-term-definition) are forbidden unless otherwise specified.
+- Namespace prefixes should only use the latin alphabet `A` to `Z` uppercase or lowercase, roman numerals `0` to `9`, or `_`.
+- Aliases and multiple prefixes for the same namespace are forbidden.
+- [Value objects](https://www.w3.org/TR/json-ld11/#value-objects) are forbidden unless otherwise specified, such as with Language Alternatives.
+- XMP fields containing arrays must use the `@list` and `@set` keywords as a parent to the array, to indicate if the array is ordered or unordered. See the [Lists and Sets](#lists-and-sets) section for details.
+- Index, Id, and Type maps are forbidden.
+- Local contexts are forbidden.
+- Language Alternatives must use `@language` and `@value` pairs within an array. See the [Language Alternatives](#-language-alternatives) section for details.
 
 These restrictions ensure that `KHR_xmp_json_ld` metadata remains readable regardless if the parser supports JSON-LD.
 
 Additionally, the following are recommended:
 
-* XMP data types are always preferred. Only use a non XMP data type if you have no other option.
-* Usage of [IRIs](https://www.w3.org/International/wiki/IRIStatus) are heavily discouraged. Where possible, please follow the URI types outlined in the [glTF 2.0 Specification](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#uris).
+- XMP data types are always preferred. Only use a non XMP data type if you have no other option.
+- Usage of [IRIs](https://www.w3.org/International/wiki/IRIStatus) are heavily discouraged. Where possible, please follow the URI types outlined in the [glTF 2.0 Specification](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#uris).
 
 #### Lists and Sets
 
 The XMP specification makes a distinction between ordered lists and unordered sets, but in the case of JSON all arrays are considered the be ordered lists. (See [RFC-7159](https://www.rfc-editor.org/rfc/rfc7159.txt).) In order to handle the differences between ordered lists and unordered sets, all arrays within a `packet` must be children of a `@list` or `@set` property to differentiate between ordered lists and unordered sets respectively. Descriptions for the two fields and examples are provided below.
 
-* `@list` denotes that the child array is an ordered list.
-* `@set` denotes that the child array is an unordered set.
+- `@list` denotes that the child array is an ordered list.
+- `@set` denotes that the child array is an unordered set.
 
 Choosing when to use an ordered list or an unordered set is typically decided by the schema in use. For example, the Dublin Core (`dc` prefix) schema states that `dc:creator` uses an ordered list, and `dc:contributor` uses an unordered set.
 
@@ -283,8 +283,8 @@ An example packet using `@set` for an unordered list of contributors:
 
 Language Alternatives provide a powerful way of handling internationalization within XMP metadata. In order to remain compliant with the requirements outlined in the [JSON-LD serialization of XMP (ISO/DIS 16684-3)](https://www.iso.org/standard/79384.html) specification `KHR_xmp_json_ld` relies on usage of the `@language` and `@value` keywords contained in an object of the `rdf:Alt` type. A field containing language alternatives must contain a `@type` definition for `rdf:Alt`, and each alternative must be contained in a `rdf:_N` property, where `N` is the index. You must also include the `rdf` namespace, `http://www.w3.org/1999/02/22-rdf-syntax-ns#` in the packet's `@context`. The `rdf:_N` property must have an object containing two properties:
 
-* `@language` with a IETF BCP 47 language code as the value.
-* `@value` with actual value of the XMP property as a string.
+- `@language` with a IETF BCP 47 language code as the value.
+- `@value` with actual value of the XMP property as a string.
 
 An example glTF with only one language:
 
@@ -446,7 +446,7 @@ glTF containing copies of both meshes:
     "KHR_xmp_json_ld": {
       "packets": [
         {
-          "@context": { 
+          "@context": {
             "dc": "http://purl.org/dc/elements/1.1/",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
           },
@@ -460,7 +460,7 @@ glTF containing copies of both meshes:
           ...
         },
         {
-          "@context": { 
+          "@context": {
             "dc": "http://purl.org/dc/elements/1.1/",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
           },
@@ -625,19 +625,20 @@ Derived glTF document metadata:
 
 ### Implementation notes
 
-*This section is non-normative.*
+_This section is non-normative._
 
 glTF viewers are free to chose which metadata in the glTF to display.
 Our recommendation for viewers that choose to display XMP metadata is to include the metadata in the glTF `asset` object.
 
 XMP is an extensible metadata format by design. In order to achieve better readability and interoperability across the industry, we recommend glTF creators to use the following preferred list of namespace prefixes and URIs.
 
-| Namespace prefix  | Namespace URI                         |
-|:----------------- |:------------------------------------- |
-| `dc`              | `http://purl.org/dc/elements/1.1/`    |
-| `xmp`             | `http://ns.adobe.com/xap/1.0/`        |
-| `xmpMM`           | `http://ns.adobe.com/xap/1.0/mm/`     |
-| `xmpRights`       | `http://ns.adobe.com/xap/1.0/rights/` |
+| Namespace prefix | Namespace URI                                 |
+| :--------------- | :-------------------------------------------- |
+| `dc`             | `http://purl.org/dc/elements/1.1/`            |
+| `xmp`            | `http://ns.adobe.com/xap/1.0/`                |
+| `xmpMM`          | `http://ns.adobe.com/xap/1.0/mm/`             |
+| `xmpRights`      | `http://ns.adobe.com/xap/1.0/rights/`         |
+| `rdf`            | `http://www.w3.org/1999/02/22-rdf-syntax-ns#` |
 
 ## Appendix: Full Khronos Copyright Statement
 
