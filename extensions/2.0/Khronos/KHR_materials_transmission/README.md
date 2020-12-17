@@ -74,7 +74,9 @@ materials: [
     "extensions": {
        "KHR_materials_transmission": {
          "transmissionFactor": 0.8,
-         "transmissionTexture": 0
+         "transmissionTexture": {
+           "index": 0
+         }
        }
     }
   }
