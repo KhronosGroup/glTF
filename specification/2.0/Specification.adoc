@@ -55,7 +55,7 @@ of Khronos.
 
 This specification has been created under the Khronos Intellectual Property Rights
 Policy, which is Attachment A of the Khronos Group Membership Agreement available at
-www.khronos.org/files/member_agreement.pdf. Khronos grants a conditional
+https://www.khronos.org/files/member_agreement.pdf. Khronos grants a conditional
 copyright license to use and reproduce the unmodified specification for any purpose,
 without fee or royalty, EXCEPT no licenses to any patent, trademark or other
 intellectual property rights are granted under these terms. Parties desiring to
