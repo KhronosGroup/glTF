@@ -20,7 +20,9 @@
             "properties": {
                 "@context" : {
                     "type": "object",
-                    "additionalProperties": true,
+                    "additionalProperties": {
+                        "type": "string"
+                    },
                     "description": "Dictionary mapping XMP namespace names to the URI where they are defined"
                 }
             },

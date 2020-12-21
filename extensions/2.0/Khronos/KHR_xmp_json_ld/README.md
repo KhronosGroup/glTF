@@ -188,15 +188,14 @@ A glTF might reference resources already containing XMP metadata. A relevant exa
 
 #### Restrictions and Recommendations
 
-In order to keep glTF files easily readable with either a JSON or JSON-LD parser and keep compliance with [ISO/DIS 16684-3](https://www.iso.org/standard/79384.html), there are additional restrictions that are required for `KHR_xmp_json_ld` metadata packets. Failure to obey these restrictions may create issues for parsers.
+In order to keep glTF files easily readable with either a JSON or JSON-LD parser and keep compatibility with [ISO/DIS 16684-3](https://www.iso.org/standard/79384.html), there are additional restrictions that are required for `KHR_xmp_json_ld` metadata packets. Failure to obey these restrictions may create issues for parsers.
 
-- [Expanded term definitions](https://www.w3.org/TR/json-ld11/#expanded-term-definition) are forbidden unless otherwise specified.
-- Namespace prefixes should only use the latin alphabet `A` to `Z` uppercase or lowercase, roman numerals `0` to `9`, or `_`.
+- [Expanded term definitions](https://www.w3.org/TR/json-ld11/#expanded-term-definition) are forbidden.
+- Namespace prefixes are recommended to use the latin alphabet `A` to `Z` uppercase or lowercase, roman numerals `0` to `9`, or `_`.
 - Aliases and multiple prefixes for the same namespace are forbidden.
-- [Value objects](https://www.w3.org/TR/json-ld11/#value-objects) are forbidden unless otherwise specified, such as with Language Alternatives.
+- [Value objects](https://www.w3.org/TR/json-ld11/#value-objects) are forbidden unless otherwise specified, such as with Language Alternatives or when providing a content language for Text types.
 - XMP fields containing arrays must use the `@list` and `@set` keywords as a parent to the array, to indicate if the array is ordered or unordered. See the [Lists and Sets](#lists-and-sets) section for details.
-- Index, Id, and Type maps are forbidden.
-- Local contexts are forbidden.
+- Local contexts are forbidden, except when providing a content language for Text types.
 - Language Alternatives must use `@language` and `@value` pairs within an array. See the [Language Alternatives](#-language-alternatives) section for details.
 
 These restrictions ensure that `KHR_xmp_json_ld` metadata remains readable regardless if the parser supports JSON-LD.
