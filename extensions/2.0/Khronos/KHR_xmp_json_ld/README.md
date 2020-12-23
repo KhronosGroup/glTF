@@ -84,6 +84,7 @@ The following example defines a glTF scene with a sample XMP metadata.
           "dc": "http://purl.org/dc/elements/1.1/",
           "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
         },
+        "@id": "",
         "dc:contributor": {
           "@set": [
             "Creator1Name",
@@ -203,6 +204,7 @@ These restrictions ensure that `KHR_xmp_json_ld` metadata remains readable regar
 Additionally, the following are recommended:
 
 - XMP data types are always preferred. Only use a non XMP data type if you have no other option.
+- For proper compatibility with [ISO/DIS 16684-3](https://www.iso.org/standard/79384.html), an AboutURI should be included at the root level of each packet in an `@id`. For most all purposes the value can be left blank.
 - Usage of [IRIs](https://www.w3.org/International/wiki/IRIStatus) are heavily discouraged. Where possible, please follow the URI types outlined in the [glTF 2.0 Specification](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#uris).
 
 #### Lists and Sets
@@ -233,6 +235,7 @@ An example packet using `@list` for an ordered list of creators:
           "@context": {
             "dc": "http://purl.org/dc/elements/1.1/"
           },
+          "@id": "",
           "dc:creator": {
             "@list": ["CreatorName", "CreatorEmail@email.com"]
           },
@@ -263,6 +266,7 @@ An example packet using `@set` for an unordered list of contributors:
           "@context": {
             "dc": "http://purl.org/dc/elements/1.1/"
           },
+          "@id": "",
           "dc:contributor": {
             "@set": [
               "Creator1Name",
@@ -303,6 +307,7 @@ An example glTF with only one language:
             "dc": "http://purl.org/dc/elements/1.1/",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
           },
+          "@id": "",
           "dc:title": {
             "@type": "rdf:Alt",
             "rdf:_1": {
@@ -336,6 +341,7 @@ An example glTF with more than one language:
             "dc": "http://purl.org/dc/elements/1.1/",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
           },
+          "@id": "",
           "dc:title": {
             "@type": "rdf:Alt",
             "rdf:_1": {
@@ -379,6 +385,7 @@ glTF containing the first mesh:
             "dc": "http://purl.org/dc/elements/1.1/",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
           },
+          "@id": "",
           "dc:title": {
             "@type": "rdf:Alt",
             "rdf:_1": {
@@ -412,6 +419,7 @@ glTF containing the second mesh:
             "dc": "http://purl.org/dc/elements/1.1/",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
           },
+          "@id": "",
           "dc:title": {
             "@type": "rdf:Alt",
             "rdf:_1": {
@@ -449,6 +457,7 @@ glTF containing copies of both meshes:
             "dc": "http://purl.org/dc/elements/1.1/",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
           },
+          "@id": "",
           "dc:title": {
             "@type": "rdf:Alt",
             "rdf:_1": {
@@ -463,6 +472,7 @@ glTF containing copies of both meshes:
             "dc": "http://purl.org/dc/elements/1.1/",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
           },
+          "@id": "",
           "dc:title": {
             "@type": "rdf:Alt",
             "rdf:_1": {
@@ -501,6 +511,7 @@ First glTF document:
             "dc": "http://purl.org/dc/elements/1.1/",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
           },
+          "@id": "",
           "dc:title": {
             "@type": "rdf:Alt",
             "rdf:_1": {
@@ -536,6 +547,7 @@ Second glTF document:
             "dc": "http://purl.org/dc/elements/1.1/",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
           },
+          "@id": "",
           "dc:title": {
             "@type": "rdf:Alt",
             "rdf:_1": {
@@ -572,6 +584,7 @@ Derived glTF document metadata:
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "xmpMM": "http://ns.adobe.com/xap/1.0/mm/"
           },
+          "@id": "",
           "dc:title": {
             "@type": "rdf:Alt",
             "rdf:_1": {
