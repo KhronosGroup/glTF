@@ -25,7 +25,6 @@ Written against the glTF 2.0 spec. Needs to be combined with `KHR_materials_tran
 - [Thickness Texture](#thickness-texture)
 - [Refraction](#refraction)
 - [Absorption and Subsurface Scattering](#absorption-and-subsurface-scattering)
-- [Phase Function](#phase-function)
 - [Base Color and Absorption](#base-color-and-absorption)
 - [Transmission and Translucency](#transmission-and-translucency)
 - [Implementation](#implementation)
@@ -34,7 +33,7 @@ Written against the glTF 2.0 spec. Needs to be combined with `KHR_materials_tran
 
 ## Overview
 
-By default, a glTF 2.0 material describes the scattering properties of a surface enclosing an infinitely thin volume. The surface defined by the mesh represents a thin wall. The volume extension makes it possible to turn the surface into an interface between volumes. The mesh to which the material is attached defines the boundaries of an homogeneous medium and therefore must be manifold. Volumes provide effects like refraction, absorption and subsurface scattering. 
+By default, a glTF 2.0 material describes the scattering properties of a surface enclosing an infinitely thin volume. The surface defined by the mesh represents a thin wall. The volume extension makes it possible to turn the surface into an interface between volumes. The mesh to which the material is attached defines the boundaries of an homogeneous medium and therefore must be manifold. Volumes provide effects like refraction, absorption and scattering. Where scattering is not subject of this extensions directly, but is provided by an additional extension KHR_materials_sss to complement the volume definition. 
 
 <figure style="text-align:center">
 <img src="./figures/thin-thick-rendering.png"><br/>
@@ -42,14 +41,15 @@ By default, a glTF 2.0 material describes the scattering properties of a surface
 <figcaption><em>Renderings of various objects (top) and corresponding top-down slice through the scene (bottom). The solid line represents the mesh. The gray area represents the volume. Thin-walled materials can be applied to open (left) and closed meshes (middle). The dashed line indicates the imaginary bounds of the infinitely thin volume. The volumetric material can only be applied to closed meshes (right), resulting in volumetric effects like refraction.</em></figcaption>
 </figure>
 
-The volume extension has to be combined with `KHR_materials_transmission` or `KHR_materials_translucency`. Light that falls onto the volume boundary may enter the volume, depending on the transmission or translucency of the surface's BSDF. Inside the volume, light might be absorbed or scattered by particles in the medium, and eventually hit some surface from inside the volume. It can be a different surface and will most probably be a different point in space compared to the entrance point. At this exit point, if the material properties allow, light may leave the volume.
+The volume extension has to be combined with `KHR_materials_transmission` or `KHR_materials_translucency`. Light that falls onto the volume boundary may enter the volume, depending on the transmission or translucency of the surface's BSDF. Light traveling through the volume is subject to absorption by the medium's particles. When hitting the surface from inside the volume, the light may either decide to leave the volume or bounce back for total internal reflection. 
 
-<figure style="text-align:center">
+TODO: Add refraction/absorption image volume 
+<!-- <figure style="text-align:center">
 <img src="./figures/volume.svg"/>
 <figcaption><em>Interaction of light rays inside the volume and at the boundaries. The volume is homogeneous and has an index of refraction of 1.5.</figcaption>
-</em></figure>
+</em></figure> -->
 
-When light interacts with the surface, it is reflected or refracted at microfacets, taking the roughness of the material into account. The index of refraction is taken from `KHR_materials_ior`.
+When light interacts with the surface, it is reflected at microfacets, taking the roughness of the material into account. For the transmission, the choice of distribution depends on the whether the lights transmits via KHR_materials_transmission or KHR_materials_translucency. In the case of *transmission*, the same microfacet distribution, is being used. For *translucency* microfacets are replaced with a diffuse cosine (lambert) distribution, please see [Transmission and Translucency](#Transmission_and_translucency) for more details. The index of refraction is taken from `KHR_materials_ior`.
 
 ## Extending Materials
 
@@ -62,8 +62,7 @@ materials: [
             "KHR_materials_volume": {
                 "thicknessFactor": 1.0,
                 "attenuationDistance":  0.006,
-                "attenuationColor": [ 0.5, 0.5, 0.5 ],
-                "subsurfaceColor": [ 0.572, 0.227, 0.075 ]
+                "attenuationColor": [ 0.5, 0.5, 0.5 ]
             }
         }
     }
@@ -80,7 +79,6 @@ The extension defines the following parameters to describe the volume.
 | **thicknessTexture** | `textureInfo` | A texture that defines the thickness, stored in the G channel. This will be multiplied by `thicknessFactor`. | No |
 | **attenuationDistance** | `number` | Density of the medium given as the average distance in meters that light travels in the medium before interacting with a particle. | No, default: +Infinity |
 | **attenuationColor** | `number[3]` | The color that white light turns into due to absorption when reaching the attenuation distance. | No, default: `[1, 1, 1]` |
-| **subsurfaceColor** | `number[3]` | The overall color perceived at the surface due to subsurface scattering. | No, default: `[0, 0, 0]` |
 
 ## Thickness Texture
 
@@ -95,46 +93,32 @@ Light rays falling through the volume boundary are refracted according to the in
 <figcaption><em>Transmissive sphere with varying index of refraction. From left to right: 1.1, 1.5, 1.9.</em></figcaption>
 </figure>
 
-## Absorption and Subsurface Scattering
+## Absorption
 
-Absorption and subsurface scattering are described by the absorption coefficient σ<sub>a</sub> and the scattering coefficient σ<sub>s</sub>. The coefficients σ<sub>a</sub> and σ<sub>s</sub> are wavelength-dependent values in the range [0, Inf]. Such an infinite range makes them hard to be controlled by users.
+In literature, the absorption characteristic of a medium is usually given by the absorption coefficient σ<sub>a</sub>, the probability density that light is absorbed per unit distance traveled in the medium. It is a wavelength-dependent value, its unit is m<sup>-1</sup> and it's defined in the range [0, inf]. The infinite range makes it unintuitive to control by users.
 
-To provide convenient parameterization for users this extension provides three parameters: attenuation color a, attenuation distance d and subsurface color ρ<sub>ms</sub> (see [Properties](#Properties)). We will now describe how to derive the physical parameters for absorption and scattering from the user-friendly parameters.
+To provide a convenient parameterization, this extension exposes two derived parameters: attenuation color and attenuation distance d (see [Properties](#Properties)). The relation between the two parameters and the absorption coefficient σ<sub>a</sub> is defined as
 
-In a first step, we map from attenuation color and distance to the attenuation coefficient σ<sub>t</sub>.
+σ<sub>a</sub> = -log(a) / d
 
-σ<sub>t</sub> = -log(a) / d
+> **NOTE**<br>
+> In literature, the term *attenuation* is commonly associated with the effects of *absorption* **and** *scattering*. At this point, we only define it in terms of *absorption*. KHR_materials_sss adds the definitions to seamlessly transform its semantics into the full attenuation coefficient σ<sub>t</sub> = σ<sub>a</sub> + σ<sub>s</sub>. 
 
-In a homogenous medium, σ<sub>t</sub> is constant, and we can compute the fraction of light (radiance) T(x) transmitted after traveling a distance x via Beer's law:
+For rendering, we need integrating the absorption coefficient along a path of a certain length. 
+TODO: add image
 
-T(x) = e<sup>-σ<sub>t</sub>x</sup>
+In a homogenous medium, σ<sub>a</sub> is constant, and we can compute the fraction of light (radiance) T(x) transmitted after traveling a distance x via Beer's law:
 
-The inverse of attenuation coefficient 1 / σ<sub>t</sub> is the mean free path length which gives the average distance light travels in the medium before interacting with a particle. At such an interaction, light may be absorbed or scattered. In our case, we define σ<sub>t</sub> via color and distance separately, so after traveling a distance x = d, we get the attenuation color a:
+T(x) = e<sup>-σ<sub>a</sub>x</sup>
+
+where T is commonly referred to as *transmittance*. 
+
+By replacing σ<sub>a</sub> in the previous equation with our parameters attenuation color and attenuation distance we get
 
 T(d) = e<sup>(-log(a) / d) * d</sup> = a
 
-In the next step, we map from our subsurface color parameter ρ<sub>ms</sub> to single-scattering albedo ρ<sub>ss</sub>.
+So, after traveling through the medium for the attenuation distance d we get attenuation color a.
 
-ρ<sub>ss</sub> = 1 - (4.09712 + 4.20863 ρ<sub>ms</sub> - sqrt(9.59217 + 41.6808 ρ<sub>ms</sub> + 17.7126 ρ<sub>ms</sub><sup>2</sup>))<sup>2</sup>
-
-The single-scattering albedo is the color of a particle in the medium. Light that is scattered by a particle will be tinted with this color. An albedo of 0 (black) disables scattering, resulting in a medium that only absorbs.
-
-Note that scattering will happen many times in the medium until the light leaves the volume, so the overall color ρ<sub>ms</sub> will differ significantly from the albedo of the particles ρ<sub>ss</sub>. Via the mapping users can control the albedo of surface, i.e., the color that an object appears to have in the final rendering. The mapping was introduced by [Kulla and Conty (2017)](#KullaConty2017).
-
-Now that we have computed σ<sub>t</sub> and ρ<sub>ss</sub>, we can finally derive σ<sub>a</sub> and σ<sub>s</sub> as follows:
-
-σ<sub>a</sub> = σ<sub>t</sub> (1 - ρ<sub>ss</sub>)
-
-σ<sub>s</sub> = σ<sub>t</sub> ρ<sub>ss</sub> = σ<sub>t</sub> - σ<sub>a</sub>
-
-<figure style="text-align:center">
-<img src="./figures/diffuse-sss.png"/>
-<figcaption><em>A simple, diffuse-only material (left) and a material that makes use of subsurface scattering (right). The base color of the diffuse material is set to the same color as the subsurface color of the subsurface scattering material. Due to the albedo mapping the final color of the object is very similar.</em></figcaption>
-</figure>
-
-## Phase Function
-
-The phase function p used for scattering inside the medium is isotropic. For any pair of incident and outgoing directions k<sub>1</sub> and k<sub>2</sub>, p(k<sub>1</sub>, k<sub>2</sub>) = 1 / (4π).
 
 ## Base Color and Absorption
 
@@ -147,7 +131,7 @@ Base color and absorption both have an effect on the final color of a volumetric
 
 ## Transmission and Translucency
 
-The volume extension needs one of `KHR_materials_transmission` and `KHR_materials_translucency` to allow light rays to pass through the surface into the volume. Once the volume is entered however, the simulation of absorption and subsurface scattering inside the medium will be independent of the surface properties.
+The volume extension needs one of `KHR_materials_transmission` and `KHR_materials_translucency` to allow light rays to pass through the surface into the volume. Once the volume is entered however, the simulation of absorption and potentially subsurface scattering inside the medium is independent of the surface properties.
 
 If the extension is combined with `KHR_materials_transmission`, the refraction occurs at the microfacets. That means that the thin microfacet BTDF is replaced by a microfacet BTDF that takes refraction into account. The roughness parameter affects both reflection and transmission.
 
@@ -156,24 +140,14 @@ If the extension is combined with `KHR_materials_transmission`, the refraction o
 <figcaption><em>Transmissive sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption>
 </figure>
 
-If the extension is combined with `KHR_materials_translucency`, the translucent BTDF remains unchanged.
+If the extension is combined with `KHR_materials_translucency`, the translucent BTDF will be replaced with the diffuse transmission BTDF as defines in `KHR_materials_translucency`.
 
 <figure style="text-align:center">
 <img src="./figures/translucent-roughness.png"/>
 <figcaption><em>Translucent sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption>
 </figure>
 
-For best results, we recommend using `KHR_materials_translucency` instead of `KHR_materials_transmission` in case the medium exhibits strong subsurface scattering (small scattering distance, high subsurface color). Examples for these dense materials are skin or candle wax. The visual difference between translucency and transmission is small in this case, as the path a light travels is dominated by volume scattering. The scattering interaction at the volume boundary has only a small effect on the final result. 
-
-The benefit of using translucency is that it signals the renderer that a material is dense, without the need to analyze geometry and attenuation distance. Typically, the size of the volume in relation to the scattering coefficient determines the density of the object. A tiny object with low scattering coefficient may appear transparent, but increasing the size of the object will make it appear denser, although the scattering coefficient stays the same. If translucency is used instead of highly glossy transmission, the material appears to be translucent independent of its size.
-
-Consequently, renderers may use translucency as a cue to switch to diffusion approximation instead of random walk subsurface scattering. Diffusion approximation gives results that are very close to ground-truth for dense materials, but can be much faster. This is crucial for real-time implementations (which cannot do random walk), but also beneficial for offline rendering. [Christensen and Burley (2015)](#ChristensenBurley2015) show how to map the physical parameters for attenuation and subsurface scattering to an appropriate reflectance profile for diffusion approximation and compare results between approximation and ground-truth random walk. [Jimenez et al. (2015)](#Jimenez2015) present a method to render reflectance profiles in real-time by approximating the profile with a separable kernel.
-
-<figure style="text-align:center">
-<img src="./figures/transmission-translucency.png"/>
-<figcaption><em>Comparison of combining subsurface scattering with either transmission or translucency. Left: Rough transmission and subsurface scattering. Middle: Translucency and subsurface scattering. Right: Translucency without subsurface scattering using a thin-walled material. Colors are adjusted manually so that they look similar in the three configurations. This adjustment is needed in order to account for differences in distances and to minimize the impact of energy loss from the rough microfacet BTDF.</em></figcaption>
-</figure>
-
+`KHR_materials_translucency` may be a good choice if the appearance should match a material which exhibits strong subsurface scattering (small scattering distance, high subsurface color). Examples for these dense materials are skin or candle wax. 
 ## Implementation
 
 *This section is non-normative.*
@@ -216,8 +190,6 @@ If `KHR_materials_specular` is used in combination with `KHR_materials_volume`, 
 
 ## References
 
-* [Christensen, P. and B. Burley (2015): Approximate Reflectance Profiles for Efficient Subsurface Scattering](https://graphics.pixar.com/library/ApproxBSSRDF/paper.pdf)<a name="ChristensenBurley2015"></a>
-* [Jimenez J., K. Zsolnai, A. Jarabo, C. Freude, T. Auzinger, X.-C. Wu, J. Pahlen, M. Wimmer and D. Gutierrez (2015): Separable Subsurface Scattering](http://www.iryoku.com/separable-sss/)<a name="Jimenez2015"></a>
 * [Kulla C., Conty A. (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf)<a name="KullaConty2017"></a>
 * [Walter B., Marschner S., Li H., Torrance K. (2007): Microfacet Models for Refraction through Rough Surfaces](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf)<a name="Walter2007"></a>
 * [Schmidt C., Budge B. (2002): Simple Nested Dielectrics in Ray Traced Images](https://www.researchgate.net/profile/Brian_Budge/publication/247523037_Simple_Nested_Dielectrics_in_Ray_Traced_Images/links/00b7d52e001e1b88a3000000/Simple-Nested-Dielectrics-in-Ray-Traced-Images.pdf)<a name="SchmidtBudge2002"></a>

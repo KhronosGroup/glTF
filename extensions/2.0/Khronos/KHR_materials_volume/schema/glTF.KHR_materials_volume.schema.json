@@ -32,18 +32,6 @@
             "default": [ 1.0, 1.0, 1.0 ],
             "minItems": 3,
             "maxItems": 3
-        },
-        "subsurfaceColor": {
-            "type": "array",
-            "items": {
-                "type": "number",
-                "minimum": 0.0,
-                "maximum": 1.0
-            },
-            "description": "Color perceived at the surface due to subsurface scattering.",
-            "default": [ 1.0, 1.0, 1.0 ],
-            "minItems": 3,
-            "maxItems": 3
         }
     }
 }

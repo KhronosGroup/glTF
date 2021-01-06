@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_sss glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the parameters for the volume of a material.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "subsurfaceColor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "description": "Color perceived at the surface due to subsurface scattering.",
+            "default": [ 1.0, 1.0, 1.0 ],
+            "minItems": 3,
+            "maxItems": 3
+        }
+    }
+}
