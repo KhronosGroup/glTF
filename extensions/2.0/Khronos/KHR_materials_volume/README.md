@@ -96,7 +96,7 @@ Light rays falling through the volume boundary are refracted according to the in
 
 The way in which a volumetric medium interacts with light, and therefore determines its appearance, is commonly specified by the attenuation coefficient σ<sub>t</sub> (also know as *extinction* coefficient). It is the probability density that a light interacts with a particle per unit distance traveled in the medium. σ<sub>t</sub> is a wavelength-dependent value. It's defined in the range [0, inf] with m<sup>-1</sup> as unit. 
 
-Possible interactions when a light photon hits a particle are absorption and scattering. Absorption removes the light energy from the photon and translates it to other forms of energy, e.g. heat. Scattering preserves the energy, but changes the direction of the light. Both act in wavelength-dependent manner. Based on these two possible events, the attenuation coefficient is defined as the sum of two other coefficients: the absorption coefficient and the scattering coefficient.
+Possible interactions when a light photon hits a particle are absorption and scattering. Absorption removes the light energy from the photon and translates it to other forms of energy, e.g. heat. Scattering preserves the energy, but changes the direction of the light. Both act in wavelength-dependent manner. Based on these two possibilities, the attenuation coefficient is defined as the sum of two other coefficients: the absorption coefficient and the scattering coefficient.
 
 σ<sub>t</sub> = σ<sub>a</sub> + σ<sub>s</sub>
 
@@ -112,7 +112,7 @@ TODO: add image
 
 In a homogenous medium, σ<sub>t</sub> is constant, and we can compute the fraction of light (radiance) transmitted after traveling a distance x via Beer's law:
 
-T(x) = e<sup>-σ<sub>a</sub>x</sup>
+T(x) = e<sup>-σ<sub>t</sub>x</sup>
 
 where T is commonly referred to as *transmittance*. 
 
