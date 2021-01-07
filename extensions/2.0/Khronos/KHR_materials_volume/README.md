@@ -43,11 +43,10 @@ By default, a glTF 2.0 material describes the scattering properties of a surface
 
 The volume extension has to be combined with `KHR_materials_transmission` or `KHR_materials_translucency`. Light that falls onto the volume boundary may enter the volume, depending on the transmission or translucency of the surface's BSDF. Light traveling through the volume is subject to absorption by the medium's particles. When hitting the surface from inside the volume, the light may either decide to leave the volume or bounce back for total internal reflection. 
 
-TODO: Add refraction/absorption image volume 
-<!-- <figure style="text-align:center">
-<img src="./figures/volume.svg"/>
-<figcaption><em>Interaction of light rays inside the volume and at the boundaries. The volume is homogeneous and has an index of refraction of 1.5.</figcaption>
-</em></figure> -->
+<figure style="text-align:center">
+<img src="./figures/refraction-absorption.svg"/>
+<figcaption><em>A light ray being refracted in a volume. The volume is homogeneous and has an index of refraction of 1.5. At the boundaries, the direction of the light ray is bent according to the indices of refraction at incident and outgoing side. Inside the volume, light is attenuated as it travels through the medium into the direction of the eye. The longer it travels, to more it is attenuated.</figcaption>
+</em></figure>
 
 When light interacts with the surface, it is reflected at microfacets, taking the roughness of the material into account. For the transmission, the choice of distribution depends on the whether the lights transmits via KHR_materials_transmission or KHR_materials_translucency. In the case of *transmission*, the same microfacet distribution, is being used. For *translucency* microfacets are replaced with a diffuse cosine (lambert) distribution, please see [Transmission and Translucency](#Transmission_and_translucency) for more details. The index of refraction is taken from `KHR_materials_ior`.
 
