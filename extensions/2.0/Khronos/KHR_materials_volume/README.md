@@ -92,31 +92,35 @@ Light rays falling through the volume boundary are refracted according to the in
 <figcaption><em>Transmissive sphere with varying index of refraction. From left to right: 1.1, 1.5, 1.9.</em></figcaption>
 </figure>
 
-## Absorption
+## Attenuation
 
-In literature, the absorption characteristic of a medium is usually given by the absorption coefficient σ<sub>a</sub>, the probability density that light is absorbed per unit distance traveled in the medium. It is a wavelength-dependent value, its unit is m<sup>-1</sup> and it's defined in the range [0, inf]. The infinite range makes it unintuitive to control by users.
+The way in which a volumetric medium interacts with light, and therefore determines its appearance, is commonly specified by the attenuation coefficient σ<sub>t</sub> (also know as *extinction* coefficient). It is the probability density that a light interacts with a particle per unit distance traveled in the medium. σ<sub>t</sub> is a wavelength-dependent value. It's defined in the range [0, inf] with m<sup>-1</sup> as unit. 
 
-To provide a convenient parameterization, this extension exposes two derived parameters: attenuation color and attenuation distance d (see [Properties](#Properties)). The relation between the two parameters and the absorption coefficient σ<sub>a</sub> is defined as
+Possible interactions when a light photon hits a particle are absorption and scattering. Absorption removes the light energy from the photon and translates it to other forms of energy, e.g. heat. Scattering preserves the energy, but changes the direction of the light. Both act in wavelength-dependent manner. Based on these two possible events, the attenuation coefficient is defined as the sum of two other coefficients: the absorption coefficient and the scattering coefficient.
 
-σ<sub>a</sub> = -log(a) / d
+σ<sub>t</sub> = σ<sub>a</sub> + σ<sub>s</sub>
 
 > **NOTE**<br>
-> In literature, the term *attenuation* is commonly associated with the effects of *absorption* **and** *scattering*. At this point, we only define it in terms of *absorption*. KHR_materials_sss adds the definitions to seamlessly transform its semantics into the full attenuation coefficient σ<sub>t</sub> = σ<sub>a</sub> + σ<sub>s</sub>. 
+> This extension does not define the scattering part of the volumetric light transport. For all further definitions we assume the scattering coefficient σ<sub>s</sub> to be zero for all wavelength, and therefore: σ<sub>t</sub> = σ<sub>a</sub>
 
-For rendering, we need integrating the absorption coefficient along a path of a certain length. 
+The infinite range of the coefficient makes it rather unintuitive to control by users. To provide a convenient parameterization, this extension exposes two derived parameters: *attenuation color c<sub>a</sub>* and *attenuation distance d<sub>a</sub>* (see [Properties](#Properties)). The relation between the two parameters and the attenuation coefficient σ<sub>t</sub> is defined as
+
+σ<sub>t</sub> = -log(c<sub>a</sub>) / d<sub>a</sub>
+
+For rendering, we are interested in the change of light when traversing the medium. So we need to integrate the attenuation coefficient along a path of a certain length.
 TODO: add image
 
-In a homogenous medium, σ<sub>a</sub> is constant, and we can compute the fraction of light (radiance) T(x) transmitted after traveling a distance x via Beer's law:
+In a homogenous medium, σ<sub>t</sub> is constant, and we can compute the fraction of light (radiance) transmitted after traveling a distance x via Beer's law:
 
 T(x) = e<sup>-σ<sub>a</sub>x</sup>
 
 where T is commonly referred to as *transmittance*. 
 
-By replacing σ<sub>a</sub> in the previous equation with our parameters attenuation color and attenuation distance we get
+By replacing σ<sub>t</sub> in the previous equation with our parameters attenuation color and attenuation distance we get
 
-T(d) = e<sup>(-log(a) / d) * d</sup> = a
+T(d<sub>a</sub>) = e<sup>(-log(c<sub>a</sub>) / d<sub>a</sub>) * d<sub>a</sub></sup> = c<sub>a</sub>
 
-So, after traveling through the medium for the attenuation distance d we get attenuation color a.
+So, after traveling distance d<sub>a</sub> through the medium we get attenuation color c<sub>a</sub>.
 
 
 ## Base Color and Absorption
