@@ -33,7 +33,7 @@ Written against the glTF 2.0 spec. Needs to be combined with `KHR_materials_tran
 
 ## Overview
 
-By default, a glTF 2.0 material describes the scattering properties of a surface enclosing an infinitely thin volume. The surface defined by the mesh represents a thin wall. The volume extension makes it possible to turn the surface into an interface between volumes. The mesh to which the material is attached defines the boundaries of an homogeneous medium and therefore must be manifold. Volumes provide effects like refraction, absorption and scattering. Where scattering is not subject of this extensions directly, but is provided by an additional extension KHR_materials_sss to complement the volume definition. 
+By default, a glTF 2.0 material describes the scattering properties of a surface enclosing an infinitely thin volume. The surface defined by the mesh represents a thin wall. The volume extension makes it possible to turn the surface into an interface between volumes. The mesh to which the material is attached defines the boundaries of an homogeneous medium and therefore must be manifold. Volumes provide effects like refraction, absorption and scattering. Scattering is not subject of this extension.
 
 <figure style="text-align:center">
 <img src="./figures/thin-thick-rendering.png"><br/>
@@ -41,14 +41,14 @@ By default, a glTF 2.0 material describes the scattering properties of a surface
 <figcaption><em>Renderings of various objects (top) and corresponding top-down slice through the scene (bottom). The solid line represents the mesh. The gray area represents the volume. Thin-walled materials can be applied to open (left) and closed meshes (middle). The dashed line indicates the imaginary bounds of the infinitely thin volume. The volumetric material can only be applied to closed meshes (right), resulting in volumetric effects like refraction.</em></figcaption>
 </figure>
 
-The volume extension has to be combined with `KHR_materials_transmission` or `KHR_materials_translucency`. Light that falls onto the volume boundary may enter the volume, depending on the transmission or translucency of the surface's BSDF. Light traveling through the volume is subject to absorption by the medium's particles. When hitting the surface from inside the volume, the light may either decide to leave the volume or bounce back for total internal reflection. 
+The volume extension has to be combined with `KHR_materials_transmission` or `KHR_materials_translucency`. Light that falls onto the volume boundary may enter the volume, depending on the transmission or translucency of the surface's BSDF. Light traveling through the volume is subject to absorption by the medium's particles. When hitting the surface from inside the volume, the light may either decide to leave the volume or bounce back, depending on the material configuration and the incident direction.
 
 <figure style="text-align:center">
 <img src="./figures/refraction-absorption.svg"/>
-<figcaption><em>A light ray being refracted in a volume. The volume is homogeneous and has an index of refraction of 1.5. At the boundaries, the direction of the light ray is bent according to the indices of refraction at incident and outgoing side. Inside the volume, light is attenuated as it travels through the medium into the direction of the eye. The longer it travels, to more it is attenuated.</figcaption>
+<figcaption><em>A light ray being refracted in a volume. The volume is homogeneous and has an index of refraction of 1.5. At the boundaries, the direction of the light ray is bent according to the indices of refraction at incident and outgoing side. Inside the volume, light is attenuated as it travels through the medium into the direction of the eye. The longer it travels, the more it is attenuated.</figcaption>
 </em></figure>
 
-When light interacts with the surface, it is reflected at microfacets, taking the roughness of the material into account. For the transmission, the choice of distribution depends on the whether the lights transmits via KHR_materials_transmission or KHR_materials_translucency. In the case of *transmission*, the same microfacet distribution, is being used. For *translucency* microfacets are replaced with a diffuse cosine (lambert) distribution, please see [Transmission and Translucency](#Transmission_and_translucency) for more details. The index of refraction is taken from `KHR_materials_ior`.
+When light interacts with the surface, it is reflected at microfacets taking the roughness of the material into account. For the transmission, the choice of distribution depends on whether the lights transmits via `KHR_materials_transmission` or `KHR_materials_translucency`. In the case of *transmission*, the microfacet distribution of the reflection BRDF is being reused BTDF. For *translucency* microfacets are replaced with a diffuse cosine (Lambert) distribution, please see [Transmission and Translucency](#Transmission_and_translucency) for more details. The index of refraction is taken from `KHR_materials_ior`.
 
 ## Extending Materials
 
@@ -94,34 +94,33 @@ Light rays falling through the volume boundary are refracted according to the in
 
 ## Attenuation
 
-The way in which a volumetric medium interacts with light, and therefore determines its appearance, is commonly specified by the attenuation coefficient σ<sub>t</sub> (also know as *extinction* coefficient). It is the probability density that a light interacts with a particle per unit distance traveled in the medium. σ<sub>t</sub> is a wavelength-dependent value. It's defined in the range [0, inf] with m<sup>-1</sup> as unit. 
+The way in which a volumetric medium interacts with light and, therefore, determines its appearance is commonly specified by the attenuation coefficient σ<sub>t</sub> (also know as *extinction* coefficient). It is the probability density that light interacts with a particle per unit distance traveled in the medium. σ<sub>t</sub> is a wavelength-dependent value. It's defined in the range [0, inf] with m<sup>-1</sup> as unit. 
 
-Possible interactions when a light photon hits a particle are absorption and scattering. Absorption removes the light energy from the photon and translates it to other forms of energy, e.g. heat. Scattering preserves the energy, but changes the direction of the light. Both act in wavelength-dependent manner. Based on these two possibilities, the attenuation coefficient is defined as the sum of two other coefficients: the absorption coefficient and the scattering coefficient.
+There are two types of interaction between light photons and particles: absorption and scattering. Absorption removes the light energy from the photon and translates it to other forms of energy, e.g., heat. Scattering preserves the energy, but changes the direction of the light. Both act in wavelength-dependent manner. Based on these two possibilities, the attenuation coefficient is defined as the sum of two other coefficients: the absorption coefficient and the scattering coefficient.
 
 σ<sub>t</sub> = σ<sub>a</sub> + σ<sub>s</sub>
 
-> **NOTE**<br>
-> This extension does not define the scattering part of the volumetric light transport. For all further definitions we assume the scattering coefficient σ<sub>s</sub> to be zero for all wavelength, and therefore: σ<sub>t</sub> = σ<sub>a</sub>
+> **NOTE**
+>
+> This extension does not define the scattering part of the volumetric light transport. For all further definitions we assume the scattering coefficient σ<sub>s</sub> to be zero for all wavelength, and therefore σ<sub>t</sub> = σ<sub>a</sub>.
 
-The infinite range of the coefficient makes it rather unintuitive to control by users. To provide a convenient parameterization, this extension exposes two derived parameters: *attenuation color c<sub>a</sub>* and *attenuation distance d<sub>a</sub>* (see [Properties](#Properties)). The relation between the two parameters and the attenuation coefficient σ<sub>t</sub> is defined as
+The infinite range of the coefficient makes it rather unintuitive to control by users. To provide a convenient parameterization, this extension exposes two derived parameters: *attenuation color c* and *attenuation distance d* (see [Properties](#Properties)). The relation between the two parameters and the attenuation coefficient σ<sub>t</sub> is defined as
 
-σ<sub>t</sub> = -log(c<sub>a</sub>) / d<sub>a</sub>
+σ<sub>t</sub> = -log(*c*) / *d*
 
 For rendering, we are interested in the change of light when traversing the medium. So we need to integrate the attenuation coefficient along a path of a certain length.
-TODO: add image
 
 In a homogenous medium, σ<sub>t</sub> is constant, and we can compute the fraction of light (radiance) transmitted after traveling a distance x via Beer's law:
 
-T(x) = e<sup>-σ<sub>t</sub>x</sup>
+T(*x*) = e<sup>-σ<sub>t</sub>*x*</sup>
 
 where T is commonly referred to as *transmittance*. 
 
-By replacing σ<sub>t</sub> in the previous equation with our parameters attenuation color and attenuation distance we get
+Substituting σ<sub>t</sub> in the previous equation by its definition via *attenuation color* and *attenuation distance*, as defined above, and setting *x* = *d* we get
 
-T(d<sub>a</sub>) = e<sup>(-log(c<sub>a</sub>) / d<sub>a</sub>) * d<sub>a</sub></sup> = c<sub>a</sub>
+T(d<sub>a</sub>) = e<sup>(-log(*c*) / *d*) * *d*</sup> = *c*
 
-So, after traveling distance d<sub>a</sub> through the medium we get attenuation color c<sub>a</sub>.
-
+So, after traveling distance *d* through the medium we get attenuation color *c*.
 
 ## Base Color and Absorption
 

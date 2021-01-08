@@ -37,8 +37,6 @@ Written against the glTF 2.0 spec. Needs to be combined with `KHR_materials_volu
 <figcaption><em>Interaction of light rays inside the volume and at the boundaries. The volume is homogeneous and has an index of refraction of 1.5.</figcaption>
 </em></figure>
 
-TODO: better graphics of absorption vs scattering
-
 ## Extending Materials
 
 TODO: Clarify location of scattering extensions. volume or material
@@ -71,13 +69,13 @@ The extension defines the following parameters to describe the scattering behavi
 
 In rendering literature, the scattering behavior is most commonly described by the scattering coefficient σ<sub>s</sub>. The scattering coefficient is a probability density with the unit 1/m<sup>2</sup> and values in the range [0, inf]. The sum of absorption and scattering coefficients is referred to as the attenuation (or extinction) coefficient
 
- σ<sub>t</sub> = σ<sub>a</sub> + σ<sub>s</sub>
+σ<sub>t</sub> = σ<sub>a</sub> + σ<sub>s</sub>
 
- Analogous to the parameterization of the absorption coefficient in KHR_materials_volume, this extension parameterizes the scattering coefficient in terms of *scattering color c<sub>s</sub>* and *scattering distance d<sub>s</sub>*. 
+Analogous to the parameterization of the absorption coefficient in `KHR_materials_volume`, this extension parameterizes the scattering coefficient in terms of *scattering color c<sub>s</sub>* and *scattering distance d<sub>s</sub>*. 
 
- σ<sub>s</sub> = -log(c<sub>s</sub>) / d<sub>s</sub>
+σ<sub>s</sub> = -log(c<sub>s</sub>) / d<sub>s</sub>
 
- The definition of the scattering coefficient σ<sub>s</sub> replaces the zero constant in `KHR_materials_volume`. As the volume extension already uses the notation of *attenuation coefficient σ<sub>t</sub>*, the derivation of the transmittance function is unchanged
+The definition of the scattering coefficient σ<sub>s</sub> replaces the zero constant in `KHR_materials_volume`. As the volume extension already uses the notation of *attenuation coefficient σ<sub>t</sub>*, the derivation of the transmittance function is unchanged
 
 T(x) = e<sup>-σ<sub>t</sub>x</sup>
 
@@ -94,9 +92,10 @@ Instead of only taking into account absorption, T now corresponds to a change in
 The phase function p used for scattering inside the medium is isotropic. For any pair of incident and outgoing directions k<sub>1</sub> and k<sub>2</sub>, p(k<sub>1</sub>, k<sub>2</sub>) = 1 / (4π).
 
 ## Scattering, Translucency & Transmission
-For best results, we recommend using `KHR_materials_translucency` instead of `KHR_materials_transmission` in case the medium exhibits strong subsurface scattering (small scattering distance, high subsurface color). Examples for these dense materials are skin or candle wax. The visual difference between translucency and transmission is small in this case, as the path a light travels is dominated by volume scattering. The scattering interaction at the volume boundary has only a small effect on the final result. 
 
-The benefit of using translucency is that it signals the renderer that a material is dense, without the need to analyze geometry and attenuation distance. Typically, the size of the volume in relation to the scattering coefficient determines the density of the object. A tiny object with low scattering coefficient may appear transparent, but increasing the size of the object will make it appear denser, although the scattering coefficient stays the same. If translucency is being used instead of highly glossy transmission, the material appears to be translucent independent of its size.
+For best results, we recommend using `KHR_materials_translucency` instead of `KHR_materials_transmission` in case the medium exhibits strong subsurface scattering (large values for the scattering coefficient σ<sub>s</sub>). Examples for these dense materials are skin or candle wax. The visual difference between translucency and transmission is small in this case, as the path a light travels is dominated by volume scattering. The scattering interaction at the volume boundary has only a small effect on the final result. 
+
+The benefit of using translucency is that it signals the renderer that a material is dense, without the need to analyze geometry and scattering distance. Typically, the size of the volume in relation to the scattering coefficient determines the density of the object. A tiny object with low scattering coefficient may appear transparent, but increasing the size of the object will make it appear denser, although the scattering coefficient stays the same. If translucency is being used instead of highly glossy transmission, the material appears to be translucent independent of its size.
 
 Consequently, renderers may use translucency as a cue to switch to diffusion approximation instead of random walk subsurface scattering. Diffusion approximation gives results that are very close to ground-truth for dense materials, but can be much faster. This is crucial for real-time implementations (which cannot do random walk), but also beneficial for offline rendering. [Christensen and Burley (2015)](#ChristensenBurley2015) show how to map the physical parameters for attenuation and subsurface scattering to an appropriate reflectance profile for diffusion approximation and compare results between approximation and ground-truth random walk. [Jimenez et al. (2015)](#Jimenez2015) present a method to render reflectance profiles in real-time by approximating the profile with a separable kernel.
 
@@ -107,7 +106,7 @@ Consequently, renderers may use translucency as a cue to switch to diffusion app
 
 # Alternative Parameterization
 
-A alternative parameterization for scattering uses the *scatter radius (or mean-free path)* and the *single-scatter albedo* ρ<sub>ss</sub>. 
+An alternative parameterization for scattering uses the *scatter radius (or mean-free path)* and the *single-scatter albedo* ρ<sub>ss</sub>. 
 
 The mean-free path is defined as 
 
@@ -125,11 +124,11 @@ The single-scatter albedo is the color of a single scattering interaction in the
 
 σ<sub>s</sub> = σ<sub>t</sub> ρ<sub>ss</sub> = σ<sub>t</sub> - σ<sub>a</sub>
 
-
 In reality, light scatters multiple times in the medium until it leaves the volume. Depending on the number of bounces, the overall perceived color  of the medium differs drastically from what is given by the single-scatter albedo. [Kulla and Conty (2017)](#KullaConty2017) introduced an alternative, more intuitive term, the multi-scatter albedo ρ<sub>ms</sub>. Assuming commonly used values for scatter distances, it is a good approximation to the perceived color of an object after many bounces. ρ<sub>ss</sub> can be calculated from ρ<sub>ms</sub> as follows
 
 ρ<sub>ss</sub> = 1 - (4.09712 + 4.20863 ρ<sub>ms</sub> - sqrt(9.59217 + 41.6808 ρ<sub>ms</sub> + 17.7126 ρ<sub>ms</sub><sup>2</sup>))<sup>2</sup>
 
+**TODO: (This section needs more motivation. Why is it there? What's the advantage of the alternative parameterization? We should connect this somehow to the typical BSSRDF implementations that use the attenuation cofficient to "blur" the reflectance profile and subsurface color to weight the blurred result.)**
 
 ## Schema
 
