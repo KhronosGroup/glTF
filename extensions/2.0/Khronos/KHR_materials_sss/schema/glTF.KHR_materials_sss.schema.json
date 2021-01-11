@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_sss glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the parameters for the volume of a material.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "scatterDistance": {
+          "type": "number",
+          "minimum": 0.0,
+          "description": "Average distance in meters that light travels in the medium before it collides with a particle and scatters. The value is given in world space. When undefined, the value is assumed to be infinite."
+        },
+        "scatterColor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "description": "Color as a result of scatter events.",
+            "default": [ 1.0, 1.0, 1.0 ],
+            "minItems": 3,
+            "maxItems": 3
+        }
+    }
+}
