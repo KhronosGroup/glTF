@@ -48,7 +48,9 @@ The volume extension has to be combined with `KHR_materials_transmission` or `KH
 <figcaption><em>A light ray being refracted in a volume. The volume is homogeneous and has an index of refraction of 1.5. At the boundaries, the direction of the light ray is bent according to the indices of refraction at incident and outgoing side. Inside the volume, light is attenuated as it travels through the medium into the direction of the eye. The longer it travels, the more it is attenuated.</figcaption>
 </em></figure>
 
-When light interacts with the surface, it is reflected at microfacets taking the roughness of the material into account. For the transmission, the choice of distribution depends on whether the lights transmits via `KHR_materials_transmission` or `KHR_materials_translucency`. In the case of *transmission*, the microfacet distribution of the reflection BRDF is being reused BTDF. For *translucency* microfacets are replaced with a diffuse cosine (Lambert) distribution, please see [Transmission and Translucency](#Transmission_and_translucency) for more details. The index of refraction is taken from `KHR_materials_ior`.
+When light interacts with the surface, it is reflected at microfacets taking the roughness of the material into account. For the transmission, the choice of distribution depends on whether the lights transmits via `KHR_materials_transmission` or `KHR_materials_translucency`. In the case of *transmission*, the microfacet distribution of the reflection BRDF is being reused for the BTDF. For *translucency* microfacets are replaced with a diffuse cosine (Lambert) distribution, please see [Transmission and Translucency](#Transmission_and_translucency) for more details.
+
+The index of refraction is taken from `KHR_materials_ior`.
 
 ## Extending Materials
 
@@ -96,7 +98,7 @@ Light rays falling through the volume boundary are refracted according to the in
 
 The way in which a volumetric medium interacts with light and, therefore, determines its appearance is commonly specified by the attenuation coefficient σ<sub>t</sub> (also know as *extinction* coefficient). It is the probability density that light interacts with a particle per unit distance traveled in the medium. σ<sub>t</sub> is a wavelength-dependent value. It's defined in the range [0, inf] with m<sup>-1</sup> as unit. 
 
-There are two types of interaction between light photons and particles: absorption and scattering. Absorption removes the light energy from the photon and translates it to other forms of energy, e.g., heat. Scattering preserves the energy, but changes the direction of the light. Both act in wavelength-dependent manner. Based on these two possibilities, the attenuation coefficient is defined as the sum of two other coefficients: the absorption coefficient and the scattering coefficient.
+There are two types of interaction between light photons and particles: absorption and scattering. Absorption removes the light energy from the photon and translates it to other forms of energy, e.g., heat. Scattering preserves the energy, but changes the direction of the light. Both act in wavelength-dependent manner. Based on these two possibilities, the attenuation coefficient is defined as the sum of two other coefficients: the absorption coefficient σ<sub>a</sub> and the scattering coefficient σ<sub>s</sub>.
 
 σ<sub>t</sub> = σ<sub>a</sub> + σ<sub>s</sub>
 
@@ -135,38 +137,39 @@ Base color and absorption both have an effect on the final color of a volumetric
 
 The volume extension needs one of `KHR_materials_transmission` and `KHR_materials_translucency` to allow light rays to pass through the surface into the volume. Once the volume is entered however, the simulation of absorption and potentially subsurface scattering inside the medium is independent of the surface properties.
 
-If the extension is combined with `KHR_materials_transmission`, the refraction occurs at the microfacets. That means that the thin microfacet BTDF is replaced by a microfacet BTDF that takes refraction into account. The roughness parameter affects both reflection and transmission.
+If the extension is combined with `KHR_materials_transmission`, a refractive microfacet BTDF describes the transmission of light through the volume boundary. The refraction occurs on microfacets, and thus the roughness parameter affects both reflection and transmission. An exemplatory implementation is shown in [Implementation](#Implementation).
 
 <figure style="text-align:center">
 <img src="./figures/transmissive-roughness.png"/>
 <figcaption><em>Transmissive sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption>
 </figure>
 
-If the extension is combined with `KHR_materials_translucency`, the translucent BTDF will be replaced with the diffuse transmission BTDF as defines in `KHR_materials_translucency`.
+If the extension is combined with `KHR_materials_translucency`, a diffuse transmission BTDF describes the transmission of light through the volume boundary. The object becomes translucent. The roughness parameter only affects the reflection. `KHR_materials_translucency` may be a good choice if the appearance should match a material which exhibits strong subsurface scattering. Examples for these dense materials are skin or candle wax. 
 
 <figure style="text-align:center">
 <img src="./figures/translucent-roughness.png"/>
 <figcaption><em>Translucent sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption>
 </figure>
 
-`KHR_materials_translucency` may be a good choice if the appearance should match a material which exhibits strong subsurface scattering (small scattering distance, high subsurface color). Examples for these dense materials are skin or candle wax. 
 ## Implementation
 
 *This section is non-normative.*
 
-The microfacet BTDF f<sub>transmission</sub> defined in `KHR_materials_transmission` now takes refraction into account. That means that we to use Snell's law to compute the modified half vector:
+The diffuse transmission BTDF defined in `KHR_materials_translucency` remains unchanged.
+
+The microfacet BTDF f<sub>transmission</sub> defined in `KHR_materials_transmission` now takes refraction into account. That means that we use Snell's law to compute the modified half vector:
 
 *H<sub>TR</sub>* = -normalize(*ior<sub>i</sub>* * *V* + *ior<sub>o</sub>* * *L*)
 
-*ior<sub>i</sub>* and *ior<sub>o</sub>* denote the IOR of the incident and transmitted side of the surface, respectively. *V* is the vector pointing to the camera, *L* points to the light. In a path tracer that starts rays at the camera, *V* corresponds to the incident side of the surface, which is the side of the medium with *ior<sub>i</sub>*.
+*ior<sub>i</sub>* and *ior<sub>o</sub>* denote the IOR of the incident and transmitted side of the surface, respectively. *V* is the vector pointing to the camera, *L* points to the light. In a path tracer, *V* corresponds to the incident side of the surface, which is the side of the medium with *ior<sub>i</sub>*.
 
-Incident and transmitted IOR have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through overlapping objects is described by in [Schmidt and Budge (2002)](#SchmidtBudge2002).
+Incident and transmitted IOR have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through overlapping objects was described by [Schmidt and Budge (2002)](#SchmidtBudge2002).
 
 The microfacet BTDF also makes use of the modified half vector and the indices of refraction.
 
 *f*<sub>transmission</sub> = *T* * *baseColor* * (1 - *F<sub>TR</sub>*) * (abs(dot(*L*, *H<sub>TR</sub>*)) * abs(dot(*V*, *H<sub>TR</sub>*))) / (abs(dot(*L*, *N*)) * abs(dot(*V*, *N*))) * (*ior<sub>o</sub>*<sup>2</sup> * *G<sub>TR</sub>* * *D<sub>TR</sub>*) / (*ior<sub>i</sub>* * dot(*V*, *H<sub>TR</sub>*) + *ior<sub>o</sub>* * dot(*L*, *H<sub>TR</sub>*))<sup>2</sup>
 
-where *T* is the transmission percentage defined by `KHR_materials_transmission`. The *D<sub>T<R/sub>* and *G<sub>TR</sub>* terms are the same as in the specular reflection except using the modified half vector *H<sub>TR</sub>* calculated from the refraction direction. See [Walter et al. (2007)](#Walter2007) for details.
+where *T* is the transmission percentage defined by `KHR_materials_transmission`. The *D<sub>T</sub>* and *G<sub>TR</sub>* terms are the same as in the specular reflection except using the modified half vector *H<sub>TR</sub>* calculated from the refraction direction. See [Walter et al. (2007)](#Walter2007) for details.
 
 The Fresnel term *F<sub>TR</sub>* now needs to take internal reflection into account. When using the Schlick approximation, care must be taken to use the angle that is on the dense side of the boundary, i.e., the side with the medium that has a higher IOR. In addition, total internal reflection has to be considered. Therefore, we have three cases:
 
