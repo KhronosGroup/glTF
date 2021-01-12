@@ -189,6 +189,16 @@ Materials that use the specular-glossiness workflow (`KHR_materials_pbrSpecularG
 
 This makes it possible to add advanced effects like clearcoat (`KHR_materials_clearcoat`) and sheen (`KHR_materials_sheen`) to traditional specular-glossiness materials.
 
+> **NOTE**
+>
+> As the `ior` also affects the refraction effect, this conversion is not compatible with volumetric materials (`KHR_materials_volume`). We do not recommended to use this conversion when creating new materials from scratch.
+
+> **How does it work?**
+>
+> There is no clear separation between dielectrics and metals in the specular-glossiness workflow. Thus, it is possible to create materials that do not fall into either of the categories. This doesn't have to be an explicit decision in authoring (although it can be for various artistic styles), it is often just the result of baking several materials into a single texture. Due to anti-aliasing at the borders some texels contain a mix of different material types. This mix may not map to metallic-roughness parameters that are in a realistic range.
+>
+> We achieve an easy, lossless mapping by treating any specular-glossiness material, even pure metals, as dielectric materials in the metallic-roughness workflow. `KHR_materials_ior` gives us the means to do so. As the `ior` determines the upper bound of the specular reflection's strength, we can increase it to its maximum, making it large enough to hold all possible specular-glossiness materials. This is a mathematical trick that results in `((ior - outside_ior) / (ior + outside_ior))^2 ≈ 1`, thus giving full control over the specular reflection to the specular color.
+
 ## Schema
 
 - [glTF.KHR_materials_specular.schema.json](schema/glTF.KHR_materials_specular.schema.json)
