@@ -195,7 +195,7 @@ This makes it possible to add advanced effects like clearcoat (`KHR_materials_cl
 
 ## Appendix: Full Khronos Copyright Statement
 
-Copyright 2018-2020 The Khronos Group Inc.
+Copyright 2018-2021 The Khronos Group Inc.
 
 Some parts of this Specification are purely informative and do not define requirements
 necessary for compliance and so are outside the Scope of this Specification. These
