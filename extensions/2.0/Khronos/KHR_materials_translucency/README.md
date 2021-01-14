@@ -26,7 +26,7 @@ This extension adds a Lambertian diffuse transmission BSDF to the metallic-rough
   <img src="figures/leaves.jpg" width="500" /> 
   <figcaption><em>(Thin) translucent leaves</em></figcaption>
 </figure>
-
+<br/>
 <figure float="left" style="text-align:center">
   <img src="figures/hand1.jpg" width="400" />
   <img src="figures/hand2.jpg" width="400" /> 
