@@ -10,7 +10,7 @@ Draft
 
 ## Dependencies
 
-Written against the glTF 2.0 spec. Needs to be combined with `KHR_materials_transmission` or `KHR_materials_translucency`.
+Written against the glTF 2.0 spec. The volume extension needs to be combined with an extension which allows light to transmit through the surface, e.g. `KHR_materials_transmission`.
 
 ## Exclusions
 
@@ -26,7 +26,6 @@ Written against the glTF 2.0 spec. Needs to be combined with `KHR_materials_tran
 - [Refraction](#refraction)
 - [Absorption and Subsurface Scattering](#absorption-and-subsurface-scattering)
 - [Base Color and Absorption](#base-color-and-absorption)
-- [Transmission and Translucency](#transmission-and-translucency)
 - [Implementation](#implementation)
 - [Reference](#reference)
 - [Appendix: Full Khronos Copyright Statement](#appendix-full-khronos-copyright-statement)
@@ -41,16 +40,22 @@ By default, a glTF 2.0 material describes the scattering properties of a surface
 <figcaption><em>Renderings of various objects (top) and corresponding top-down slice through the scene (bottom). The solid line represents the mesh. The gray area represents the volume. Thin-walled materials can be applied to open (left) and closed meshes (middle). The dashed line indicates the imaginary bounds of the infinitely thin volume. The volumetric material can only be applied to closed meshes (right), resulting in volumetric effects like refraction.</em></figcaption>
 </figure>
 
-The volume extension has to be combined with `KHR_materials_transmission` or `KHR_materials_translucency`. Light that falls onto the volume boundary may enter the volume, depending on the transmission or translucency of the surface's BSDF. Light traveling through the volume is subject to absorption by the medium's particles. When hitting the surface from inside the volume, the light may either decide to leave the volume or bounce back, depending on the material configuration and the incident direction.
+The volume extension needs to be combined with an extension that allows light rays to pass through the surface into the volume, e.g. `KHR_materials_transmission`. Only if light is allowed to penetrate the surface, the volume extensions comes into effect. Once the volume is entered however, the simulation of volumetric effects inside the medium is independent of the surface properties. When hitting the surface from inside the volume, the light may either decide to leave the volume or bounce back, depending on the surface material configuration and the incident direction.
+
 
 <figure style="text-align:center">
 <img src="./figures/refraction-absorption.svg"/>
-<figcaption><em>A light ray being refracted in a volume. The volume is homogeneous and has an index of refraction of 1.5. At the boundaries, the direction of the light ray is bent according to the indices of refraction at incident and outgoing side. Inside the volume, light is attenuated as it travels through the medium into the direction of the eye. The longer it travels, the more it is attenuated.</figcaption>
+<figcaption><em>A light ray being refracted in a volume. The volume is homogeneous and has an index of refraction of 1.5. At the boundaries, the direction of the light ray is bent according to the indices of refraction at incident and outgoing side. Inside the volume, light is attenuated as it travels through the medium into the direction of the eye. The longer it travels, the more it is attenuated. The index of refraction is taken from `KHR_materials_ior`</figcaption>
 </em></figure>
 
-When light interacts with the surface, it is reflected at microfacets taking the roughness of the material into account. For the transmission, the choice of distribution depends on whether the lights transmits via `KHR_materials_transmission` or `KHR_materials_translucency`. In the case of *transmission*, the microfacet distribution of the reflection BRDF is being reused for the BTDF. For *translucency* microfacets are replaced with a diffuse cosine (Lambert) distribution, please see [Transmission and Translucency](#Transmission_and_translucency) for more details.
 
-The index of refraction is taken from `KHR_materials_ior`.
+If the extension is combined with `KHR_materials_transmission`, a refractive microfacet BTDF describes the transmission of light through the volume boundary. The refraction occurs on microfacets, and thus the roughness parameter affects both reflection and transmission. An exemplatory implementation is shown in [Implementation](#Implementation).
+
+<figure style="text-align:center">
+<img src="./figures/transmissive-roughness.png"/>
+<figcaption><em>Transmissive sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption>
+</figure>
+
 
 ## Extending Materials
 
@@ -133,29 +138,9 @@ Base color and absorption both have an effect on the final color of a volumetric
 <figcaption><em>Base color changes the amount of light passing through the volume boundary (left). The overall color of the object is the same everywhere, as if the object is covered with a colored, transparent foil. Absorption changes the amount of light traveling through the volume (right). The overall color depends on the distance the light traveled through it; at small distances (tail of the dragon) less light is absorbed and the color is brighter than at large distances.</em></figcaption>
 </figure>
 
-## Transmission and Translucency
-
-The volume extension needs one of `KHR_materials_transmission` and `KHR_materials_translucency` to allow light rays to pass through the surface into the volume. Once the volume is entered however, the simulation of absorption and potentially subsurface scattering inside the medium is independent of the surface properties.
-
-If the extension is combined with `KHR_materials_transmission`, a refractive microfacet BTDF describes the transmission of light through the volume boundary. The refraction occurs on microfacets, and thus the roughness parameter affects both reflection and transmission. An exemplatory implementation is shown in [Implementation](#Implementation).
-
-<figure style="text-align:center">
-<img src="./figures/transmissive-roughness.png"/>
-<figcaption><em>Transmissive sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption>
-</figure>
-
-If the extension is combined with `KHR_materials_translucency`, a diffuse transmission BTDF describes the transmission of light through the volume boundary. The object becomes translucent. The roughness parameter only affects the reflection. `KHR_materials_translucency` may be a good choice if the appearance should match a material which exhibits strong subsurface scattering. Examples for these dense materials are skin or candle wax. 
-
-<figure style="text-align:center">
-<img src="./figures/translucent-roughness.png"/>
-<figcaption><em>Translucent sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption>
-</figure>
-
 ## Implementation
 
 *This section is non-normative.*
-
-The diffuse transmission BTDF defined in `KHR_materials_translucency` remains unchanged.
 
 The microfacet BTDF f<sub>transmission</sub> defined in `KHR_materials_transmission` now takes refraction into account. That means that we use Snell's law to compute the modified half vector:
 
