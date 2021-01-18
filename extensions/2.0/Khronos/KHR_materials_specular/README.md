@@ -63,11 +63,24 @@ Factor and texture are combined by multiplication to describe a single value.
 | **specularColorFactor** | `number[3]` | The F0 color of the specular reflection (RGB). | No, default: `[1.0, 1.0, 1.0]`|
 | **specularTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A 4-channel texture that defines the F0 color of the specular reflection (RGB channels, encoded in sRGB) and the specular factor (A). Will be multiplied by specularFactor and specularColorFactor. | No |
 
-The specular factor scales the microfacet BRDF in the dielectric BRDF. It also affects the diffuse BRDF; the less energy is reflected by the microfacet BRDF, the more can be shifted to the diffuse BRDF. The following image shows specular factor increasing from 0 to 1.
+The `specular` and `specularColor` parameters affect the `dielectric_brdf` of the glTF 2.0 metallic-roughness material.
+
+```
+dielectric_brdf =
+  fresnel_mix(
+    f0_color = specularColor.rgb,
+    ior = 1.5,
+    base = (1 - specular) * diffuse_brdf(color = baseColor),
+    layer = specular * specular_brdf(α = roughness^2))
+```
+
+The specular factor scales the `layer` and `base`. The less energy is reflected by the `layer` (`specular_brdf`), the more can be shifted to the `base` (`diffuse_brdf`). The following image shows specular factor increasing from 0 to 1.
 
 ![](figures/specular.png)
 
-The specular color changes the F0 color of the Fresnel that is multiplied to the microfacet BRDF. The color at grazing angles (F90) is not changed. As with specular factor, the diffuse BRDF will be weighted with the directional-dependent remaining energy according to the Fresnel. The weight is an RGB color, involving the complementary to specular color. To make it easy to use and ensure energy conservation, the RGB color is converted to scalar via `max(r, g, b)`. The following images show specular color increasing from [0,0,0] to [1,1,1] (top) and from [0,0,0] to [1,0,0] (bottom).
+The specular color is a directional-dependent weight that scales the Fresnel term. At normal incidence (`f0`), `specularColor` scales the F0 reflectance. At grazing incidence (`f90`), the reflectance remains at 1. In between the scale factor is smoothly interpolated.
+
+As with specular factor, the `base` will be weighted with the directional-dependent remaining energy according to the Fresnel term. The weight is an RGB color, involving the complementary to specular color. To make it easy to use and ensure energy conservation, the RGB color is converted to scalar via `max(r, g, b)`. The following images show specular color increasing from [0,0,0] to [1,1,1] (top) and from [0,0,0] to [1,0,0] (bottom).
 
 ![](figures/specular-color.png)
 ![](figures/specular-color-2.png)
@@ -76,7 +89,17 @@ The specular color changes the F0 color of the Fresnel that is multiplied to the
 
 *This section is non-normative.*
 
-The extension changes the computation of the Fresnel term defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) to the following:
+[Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) defines the function `fresnel_mix`. In this extension, we add an additional argument called `f0_color`. It scales `f0` computed inside the function:
+
+```
+function fresnel_mix(ior, f0_color, base, layer) {
+  f0 = ((1-ior)/(1+ior))^2 * f0_color
+  fr = f0 + (1 - f0)*(1 - abs(VdotH))^5
+  return mix(base, layer, fr)
+}
+```
+
+Therefore, the Fresnel term `F` in the final BRDF of the material changes to
 
 ```
 dielectricSpecularF0 = 0.04 * specularFactor * specularTexture.a *
@@ -89,7 +112,7 @@ F90 = lerp(dielectricSpecularF90, 1, metallic)
 F = F0 + (F90 - F0) * (1 - VdotH)^5
 ```
 
-As the Fresnel term `F` is now an RGB value, the diffuse component is also affected:
+In the diffuse component we have to account for the fact that `F` is now an RGB value.
 
 ```
 c_diff = lerp(baseColor.rgb * (1 - max(F0.r, F0.g, F0.b)), black, metallic)
