@@ -62,16 +62,17 @@ Typical values for the index of refraction range from 1 to 2. In rare cases valu
 | Sapphire     | 1.76                |
 | Diamond      | 2.42                |
 
-The reflectance at normal incidence (F0) of dielectric materials is computed from the IOR as follows:
+The ior parameter affects the `dielectric_brdf` of the glTF 2.0 metallic-roughness material. The new `dielectric_brdf` that includes the `ior` parameter is given as follows:
 
 ```
-f0 = ((ior - outside_ior) / (ior + outside_ior))^2
+dielectric_brdf =
+  fresnel_mix(
+    ior = ior,
+    base = diffuse_brdf(
+      color = baseColor),
+    layer = specular_brdf(
+      α = roughness^2))
 ```
-
-The `outside_ior` determines the index of refraction of the medium on the outside. If the renderer does not track the IOR when traversing nested dielectrics, it can assume `outside_ior = 1`.
-
-For `ior = 1.5` and `outside_ior = 1`, the result is `f0 = 0.04`. This is the fixed value used in the glTF 2.0 metallic-roughness material. The extension makes this value configurable.
-
 
 ## Implementation
 
@@ -80,14 +81,16 @@ For `ior = 1.5` and `outside_ior = 1`, the result is `f0 = 0.04`. This is the fi
 The extension changes the computation of the Fresnel term defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) to the following:
 
 ```
-dielectricSpecular = ((ior - 1)/(ior + 1))^2
+const dielectricSpecular = ((ior - 1)/(ior + 1))^2
 ```
+
+Note that for the default index of refraction `ior = 1.5` this term evaluates to `dielectricSpecular = 0.04`.
 
 ## Interaction with other extensions
 
-If `KHR_materials_specular` is used in combination with `KHR_materials_ior`, f0 computed from IOR is multiplied by f0 computed from the specular parameters. See [`KHR_materials_specular`](../KHR_materials_specular/README.md) for more information.
+If `KHR_materials_specular` is used in combination with `KHR_materials_ior`, the Fresnel term is additionally scaled by the values given `specular` and `specularColor`. See [`KHR_materials_specular`](../KHR_materials_specular/README.md) for more information.
 
-If `KHR_materials_transmission` is used in combination with `KHR_materials_ior`, the `ior` affects the strength of the transmission effect according to the Fresnel term. See [`KHR_materials_transmission`](../KHR_materials_transmission/README.md) for more information. If `KHR_materials_specular` is used in addition, the rules for multiplying f0 from `ior` and f0 from the specular parameters apply as defined in `KHR_materials_specular`.
+If `KHR_materials_transmission` is used in combination with `KHR_materials_ior`, the `ior` affects the strength of the transmission effect according to the Fresnel term. See [`KHR_materials_transmission`](../KHR_materials_transmission/README.md) for more information. If `KHR_materials_specular` is used in addition, the Fresnel term is additionally scaled by the values given in `specular` and `specularColor`.
 
 If `KHR_materials_volume` is used in combination with `KHR_materials_ior`, the `ior` affects the refraction effect. See [`KHR_materials_volume`](../KHR_materials_volume/README.md) for more information.
 
