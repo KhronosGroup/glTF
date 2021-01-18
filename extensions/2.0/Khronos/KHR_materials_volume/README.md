@@ -24,7 +24,7 @@ Written against the glTF 2.0 spec. The volume extension needs to be combined wit
 - [Properties](#properties)
 - [Thickness Texture](#thickness-texture)
 - [Refraction](#refraction)
-- [Absorption and Subsurface Scattering](#absorption-and-subsurface-scattering)
+- [Attenuation](#attenuation)
 - [Base Color and Absorption](#base-color-and-absorption)
 - [Implementation](#implementation)
 - [Reference](#reference)
