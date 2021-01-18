@@ -134,33 +134,75 @@ Metals effectively absorb all refracted light (light that isn't reflected), prev
 The metallic parameter of a glTF material effectively scales the `baseColor` of the material toward black while, at the same time scaling the F0 (reflectivity) value towards 1.0. This makes the material opaque for metallic values of 1.0 because transmitted light is attenuated out by absorption. Therefore, for a material with `metallicFactor=1.0`, the value of `transmissionFactor` doesn't matter.
 
 ## Transmission BTDF ##
+
 From the core [glTF BRDF](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#appendix-b-brdf-implementation), we have:
 
-*f* = *f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub>
-
-*f*<sub>*diffuse*</sub> = (1 - *F*) * *diffuse*
-
-*f*<sub>*specular*</sub> = *F* * *G* * *D* / (4 * dot(*N*, *L*) * dot(*N*, *V*)), where *F* is the Surface Reflection Ratio.
+```
+dielectric_brdf =
+  fresnel_mix(
+    ior = 1.5,
+    base = diffuse_brdf(color = baseColor),
+    layer = specular_brdf(α = roughness^2))
+```
 
 We will now add an additional term for the transmitted light:
 
-*f* = *f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub> + *f*<sub>*transmission*</sub>
+```
+dielectric_brdf =
+  fresnel_mix(
+    ior = 1.5,
+    base = mix(
+      diffuse_brdf(baseColor),
+      specular_btdf(α = roughness^2) * baseColor,
+      transmission),
+    layer = specular_brdf(α = roughness^2))
+```
 
-*f*<sub>*transmission*</sub> = (1 - *F*) * *T* * *baseColor* * *D<sub>T</sub>* * *G<sub>T</sub>* / *(4 * abs(dot(N, L))* * *abs(dot(N, V)))*
-
-where *T* is the transmission percentage defined by this extension's `transmission` and `transmissionTexture` properties and *D<sub>T</sub>* is the distribution function for the transmitted light. The distribution function is the same Trowbridge-Reitz model used by specular reflection except sampled along the view vector rather than the reflection. *G<sub>T</sub>* is the geometric occlusion function for transmission. The *baseColor* factor causes the transmitted light to be tinted by the surface.
+where `transmission` is the transmission percentage defined by this extension's `transmissionFactor` and `transmissionTexture` properties and `specular_btdf` is a bidirectional transmission distribution function (BTDF) based on microfacet theory. The microfacet distribution function is the same Trowbridge-Reitz model used by specular reflection except sampled along the view vector rather than the reflection. The *baseColor* factor causes the transmitted light to be tinted by the surface.
 
 Note that unless otherwise specified by another extension, this transmissive surface is really two surfaces back-to-back, representing a thin material. As such there is no average refraction, but in the presence of roughness there is refraction at the microfacet level. This is because the distribution function is appled to both the front and back surface microfacets and they are uncorrelated to each other. These microfacet pairs form tiny prisms that cause the roughness map to blur the transmitted light, and as such this effect will be modulated by the material's index of refraction (IOR). Recall that the default IOR from the base spec is 1.5.
 
-Light that penetrates a surface and is transmitted will not be diffusely reflected so we also need to modify the diffuse calculation to account for this.
-*f*<sub>*diffuse*</sub> = (1 - *F*) * (1 - *T*) * *diffuse*
-
-Optical transparency does not require any changes whatsoever to the specular term. So this can all be rearranged so that the transmitted light amounts to a modification of the diffuse lobe.
-*f* = (1 - *F*) * (*T* * *D<sub>T</sub>* * *G<sub>T</sub>* / *(4 * abs(dot(N, L))* * *abs(dot(N, V)))* + (1 - *T*) * *diffuse*) + *f*<sub>*specular*</sub>
+Optical transparency does not require any changes whatsoever to the specular term. So the transmitted light amount to a modification of the `base` layer only.
 
 ## Implementation Notes
 
 *This section is non-normative.*
+
+The specular transmission `specular_btdf(α)` is a microfacet BTDF
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBTDF} = \frac{G_T D_T}{4 \, \left|N \cdot L \right| \, \left| N \cdot V \right|}">
+
+with the Trowbridge-Reitz/GGX microfacet distribution
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle D_T = \frac{\alpha^2 \, \chi^%2B(N \cdot H_T)}{\pi ((N \cdot H_T)^2 (\alpha^2 - 1) %2B 1)^2}">
+
+and the separable form of the Smith joint masking-shadowing function
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle G_T = \frac{2 \, \left| N \cdot L \right| \, \chi^%2B\left(\frac{H_T \cdot L}{N \cdot L}\right)}{\left| N \cdot L \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{2 \, \left| N \cdot V \right| \, \chi^%2B\left(\frac{H_T \cdot V}{N \cdot V}\right)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}">,
+
+using the transmission half vector *H*<sub>*T*</sub>
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle H_T = \text{normalize}(V %2B \, 2 \, \left| N \cdot L \right| \, N %2B L)">.
+
+Introducing the visibility function
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle V_T = \frac{G_T}{4 \, \left| N \cdot L \right| \, \left| N \cdot V \right|}">
+
+simplifies the original microfacet BTDF to
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBTDF} = V_T D_T">
+
+with
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle V_T = \frac{\, \chi^%2B(H \cdot L)}{\left| N \cdot L\right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^-(H \cdot V)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}">.
+
+Thus we have the function
+
+```
+function specular_btdf(α) {
+  return V_T * D_T
+}
+```
 
 Rendering transparency in a real-time rasterizer in an efficient manner is a difficult problem, especially when an arbitrary number of transparent polygons may be overlapping in view. This is because rendering transparency is order-dependent (i.e. we see background objects through foreground objects) and also because the rendering of absorption and reflections involves two distinct blend operations. Consequently, it may not be possible on the target platform to render every transparent polygon in the correct order, in a reasonable time, and with the correct blending. Therefore, correct ordering is not an absolute requirement when implementing this extension in realtime renderers, nor is rendering all potentially overlapping layers. 
 
