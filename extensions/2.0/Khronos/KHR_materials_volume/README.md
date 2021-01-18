@@ -40,7 +40,7 @@ By default, a glTF 2.0 material describes the scattering properties of a surface
 <figcaption><em>Renderings of various objects (top) and corresponding top-down slice through the scene (bottom). The solid line represents the mesh. The gray area represents the volume. Thin-walled materials can be applied to open (left) and closed meshes (middle). The dashed line indicates the imaginary bounds of the infinitely thin volume. The volumetric material can only be applied to closed meshes (right), resulting in volumetric effects like refraction.</em></figcaption>
 </figure>
 
-The volume extension needs to be combined with an extension that allows light rays to pass through the surface into the volume, e.g. `KHR_materials_transmission`. Only if light is allowed to penetrate the surface, the volume extensions comes into effect. Once the volume is entered however, the simulation of volumetric effects inside the medium is independent of the surface properties. When hitting the surface from inside the volume, the light may either decide to leave the volume or bounce back, depending on the surface material configuration and the incident direction.
+The volume extension needs to be combined with an extension that allows light rays to pass through the surface into the volume, e.g. `KHR_materials_transmission`. Only if light is allowed to penetrate the surface, the volume extensions comes into effect. Once the volume is entered however, the simulation of volumetric effects inside the medium is independent of the surface properties. When hitting the surface from inside the volume, the light will leave the volume, depending on incident direction.
 
 
 <figure style="text-align:center">
@@ -117,7 +117,7 @@ The infinite range of the coefficient makes it rather unintuitive to control by 
 
 For rendering, we are interested in the change of light when traversing the medium. So we need to integrate the attenuation coefficient along a path of a certain length.
 
-In a homogenous medium, σ<sub>t</sub> is constant, and we can compute the fraction of light (radiance) transmitted after traveling a distance x via Beer's law:
+In a homogenous medium, σ<sub>t</sub> is constant, and we can compute the fraction of light (radiance) transmitted after traveling a distance *x* via Beer's law:
 
 T(*x*) = e<sup>-σ<sub>t</sub>*x*</sup>
 
