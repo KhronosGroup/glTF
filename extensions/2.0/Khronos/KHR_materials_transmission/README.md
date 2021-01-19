@@ -160,6 +160,11 @@ dielectric_brdf =
 
 where `transmission` is the transmission percentage defined by this extension's `transmissionFactor` and `transmissionTexture` properties and `specular_btdf` is a bidirectional transmission distribution function (BTDF) based on microfacet theory. The microfacet distribution function is the same Trowbridge-Reitz model used by specular reflection except sampled along the view vector rather than the reflection. The *baseColor* factor causes the transmitted light to be tinted by the surface.
 
+<figure>
+  <img src="./figures/Nodes.png"/>
+<figcaption><em>KHR_material_transmission adds a specular_btdf to the core glTF BRDF.</em></figcaption>
+</figure>
+
 Note that unless otherwise specified by another extension, this transmissive surface is really two surfaces back-to-back, representing a thin material. As such there is no average refraction, but in the presence of roughness there is refraction at the microfacet level. This is because the distribution function is appled to both the front and back surface microfacets and they are uncorrelated to each other. These microfacet pairs form tiny prisms that cause the roughness map to blur the transmitted light, and as such this effect will be modulated by the material's index of refraction (IOR). Recall that the default IOR from the base spec is 1.5.
 
 Optical transparency does not require any changes whatsoever to the specular term. So the transmitted light amount to a modification of the `base` layer only.
