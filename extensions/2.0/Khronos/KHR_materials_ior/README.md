@@ -74,6 +74,8 @@ dielectric_brdf =
       α = roughness^2))
 ```
 
+Valid values for `ior` are numbers greater than or equal to 1. In addition, a value of 0 is allowed. This value gives full weight to `layer`, i.e., the Fresnel term evaluates to 1 independent of the view or light direction. It is useful in combination with `KHR_materials_specular` to seamlessly support the specular-glossiness workflow.
+
 ## Implementation
 
 *This section is non-normative*
