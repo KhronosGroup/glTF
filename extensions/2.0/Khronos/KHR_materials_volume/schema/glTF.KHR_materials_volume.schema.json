@@ -20,6 +20,7 @@
         "attenuationDistance": {
             "type": "number",
             "minimum": 0.0,
+            "exclusiveMinimum": true,
             "description": "Average distance in meters that light travels in the medium before interacting with a particle. The value is given in world space. When undefined, the value is assumed to be infinite."
         },
         "attenuationColor": {
