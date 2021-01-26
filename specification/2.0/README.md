@@ -560,6 +560,7 @@ The following tables can be used to compute the size of element accessible by ac
 | `5121`(UNSIGNED_BYTE) | 1 |
 | `5122` (SHORT) | 2 |
 | `5123` (UNSIGNED_SHORT) | 2 |
+| `5124` (INT) | 4 |
 | `5125` (UNSIGNED_INT) | 4 |
 | `5126` (FLOAT) | 4 |
 
