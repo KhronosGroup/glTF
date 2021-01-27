@@ -182,6 +182,7 @@ Authoring:
 - [gltfpack](https://github.com/zeux/meshoptimizer)
 - [glTF-Transform CLI](https://gltf-transform.donmccurdy.com/cli.html)
 - [Gestaltor](https://gestaltor.io/)
+- [RapidCompact](https://rapidcompact.com/)
 
 Viewing:
 
