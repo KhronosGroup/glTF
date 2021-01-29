@@ -60,8 +60,9 @@ Factor and texture are combined by multiplication to describe a single value.
 | |Type|Description|Required|
 |-|----|-----------|--------|
 | **specularFactor** | `number` | The strength of the specular reflection. | No, default: `1.0`|
-| **specularColorFactor** | `number[3]` | The F0 color of the specular reflection (RGB). | No, default: `[1.0, 1.0, 1.0]`|
-| **specularTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A 4-channel texture that defines the F0 color of the specular reflection (RGB channels, encoded in sRGB) and the specular factor (A). Will be multiplied by specularFactor and specularColorFactor. | No |
+| **specularTexture** | `textureInfo` | A texture that defines the strength of the specular reflection, stored in the alpha (`A`) channel. This will be multiplied by specularFactor. | No |
+| **specularColorFactor** | `number[3]` | The F0 color of the specular reflection (linear RGB). | No, default: `[1.0, 1.0, 1.0]`|
+| **specularColorTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the F0 color of the specular reflection, stored in the `RGB` channels and encoded in sRGB. This texture will be multiplied by specularColorFactor. | No |
 
 The `specular` and `specularColor` parameters affect the `dielectric_brdf` of the glTF 2.0 metallic-roughness material.
 
@@ -102,8 +103,8 @@ function fresnel_mix(ior, f0_color, base, layer) {
 Therefore, the Fresnel term `F` in the final BRDF of the material changes to
 
 ```
-dielectricSpecularF0 = 0.04 * specularFactor * specularTexture.a *
-                              specularColorFactor * specularTexture.rgb
+dielectricSpecularF0 = 0.04 * specularFactor * specularTexture.a * 
+                              specularColorFactor * specularColorTexture.rgb *
 dielectricSpecularF90 = specularFactor * specularTexture.a
 
 F0  = lerp(dielectricSpecularF0, baseColor.rgb, metallic)
@@ -125,7 +126,7 @@ f_diffuse = (1 - max(F.r, F.g, F.b)) * diffuse
 If `KHR_materials_ior` is used in combination with `KHR_materials_specular`, the constant `0.04` is replaced by the value computed from the IOR.
 
 ```
-dielectricSpecularF0 = ((ior - outside_ior) / (ior + outside_ior))^2 * specularFactor * specularTexture.a * specularColorFactor * specularTexture.rgb
+dielectricSpecularF0 = ((ior - outside_ior) / (ior + outside_ior))^2 * specularFactor * specularTexture.a * specularColorFactor * specularColorTexture.rgb
 dielectricSpecularF90 = specularFactor * specularTexture.a
 ```
 
