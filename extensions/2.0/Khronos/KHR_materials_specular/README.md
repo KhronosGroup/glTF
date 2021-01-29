@@ -86,6 +86,8 @@ As with specular factor, the `base` will be weighted with the directional-depend
 ![](figures/specular-color.png)
 ![](figures/specular-color-2.png)
 
+The specular color factor is allowed to be set to color values greater than [1, 1, 1]. Thus, the reflection amount can go beyond what is determined by the index of refraction (IOR). To still ensure energy conservation, the product of specular color and f0 reflectance from IOR is clamped. Please refer to [Implementation](#Implementation) for detailed instructions on where to place the clamping operation.
+
 ## Implementation
 
 *This section is non-normative.*
@@ -95,6 +97,7 @@ As with specular factor, the `base` will be weighted with the directional-depend
 ```
 function fresnel_mix(ior, f0_color, base, layer) {
   f0 = ((1-ior)/(1+ior))^2 * f0_color
+  f0 = min(f0, float3(1.0))
   fr = f0 + (1 - f0)*(1 - abs(VdotH))^5
   return mix(base, layer, fr)
 }
@@ -103,8 +106,8 @@ function fresnel_mix(ior, f0_color, base, layer) {
 Therefore, the Fresnel term `F` in the final BRDF of the material changes to
 
 ```
-dielectricSpecularF0 = 0.04 * specularFactor * specularTexture.a * 
-                              specularColorFactor * specularColorTexture.rgb *
+dielectricSpecularF0  = min(0.04 * specularColorFactor * specularColorTexture.rgb, float3(1.0)) *
+                        specularFactor * specularTexture.a
 dielectricSpecularF90 = specularFactor * specularTexture.a
 
 F0  = lerp(dielectricSpecularF0, baseColor.rgb, metallic)
@@ -112,6 +115,8 @@ F90 = lerp(dielectricSpecularF90, 1, metallic)
 
 F = F0 + (F90 - F0) * (1 - VdotH)^5
 ```
+
+Note that in `dielectricSpecularF0` we clamp the product of specular color and f0 reflectance from IOR (`0.04`), before multiplying by specular.
 
 In the diffuse component we have to account for the fact that `F` is now an RGB value.
 
@@ -126,7 +131,7 @@ f_diffuse = (1 - max(F.r, F.g, F.b)) * diffuse
 If `KHR_materials_ior` is used in combination with `KHR_materials_specular`, the constant `0.04` is replaced by the value computed from the IOR.
 
 ```
-dielectricSpecularF0 = ((ior - outside_ior) / (ior + outside_ior))^2 * specularFactor * specularTexture.a * specularColorFactor * specularColorTexture.rgb
+dielectricSpecularF0 = min(((ior - outside_ior) / (ior + outside_ior))^2 * specularColorFactor * specularColorTexture.rgb, float3(1.0)) * specularFactor * specularTexture.a
 dielectricSpecularF90 = specularFactor * specularTexture.a
 ```
 
@@ -158,19 +163,15 @@ Specular color from [0,0,0] to [1,1,1] (top) and [0,0,0] to [1,0,0]:
 
 ### Materials with reflectance parameter
 
-Material models that define F0 in terms of reflectance at normal incidence can be converted with the help of `KHR_materials_ior`. Typically, the reflectance ranges from 0% to 8%, given as a value between 0 and 1, with 0.5 (=4%) being the default. This default corresponds to an IOR of 1.5. F0 is then computed from the `reflectanceFactor` in range 0..1 in the following way:
+Material models that define F0 in terms of reflectance at normal incidence can be converted by encoding the reflectance in the specular color parameters. Typically, the reflectance ranges from 0% to 8%, given as a value in range [0,1], with 0.5 (=4%) being the default. F0 is computed from `reflectance` in the following way:
 
 ```
-dielectricSpecularF0 = 0.08 * reflectanceFactor
+dielectricSpecularF0 = 0.08 * reflectance
 ```
 
-| reflectance | reflectanceFactor | IOR      |
-|-------------|-------------------|----------|
-| 0%          | 0                 | 1.0      |
-| 4%          | 0.5               | 1.5      |
-| 8%          | 1                 | 1.788789 |
+In contrast, `KHR_materials_specular` defines a constant factor of 0.04 to compute F0, as this corresponds to glTF's default IOR of 1.5. Therefore, by encoding an additional constant factor of 2 in `specularColorFactor`, we can convert from reflectance to specular color without any loss.
 
-As shown in the table, the constant 0.08 corresponds to an index of refraction of 1.788789. By setting `ior` in `KHR_materials_ior` to this value, the behavior of `specularColorFactor` becomes identical to `reflectanceFactor` (the RGB components are equal). In JSON:
+The following JSON snippets shows the conversion from `reflectanceFactor` and `reflectanceTexture` to `specularColorFactor` and `specularColorTexture`:
 
 ```json
 {
@@ -178,10 +179,8 @@ As shown in the table, the constant 0.08 corresponds to an index of refraction o
         {
             "extensions": {
                 "KHR_materials_specular": {
-                    "specularColorFactor": [reflectanceFactor],
-                },
-                "KHR_materials_ior": {
-                    "ior": 1.788789
+                    "specularColorFactor": [2 * reflectanceFactor],
+                    "specularColorTexture": [reflectanceTexture]
                 }
             }
         }

@@ -22,8 +22,7 @@
             "type": "array",
             "items": {
                 "type": "number",
-                "minimum": 0.0,
-                "maximum": 1.0
+                "minimum": 0.0
             },
             "description": "The F0 RGB color of the specular reflection.",
             "default": [ 1.0, 1.0, 1.0 ],
