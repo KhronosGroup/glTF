@@ -71,17 +71,20 @@ dielectric_brdf =
   fresnel_mix(
     f0_color = specularColor.rgb,
     ior = 1.5,
-    base = (1 - specular) * diffuse_brdf(color = baseColor),
-    layer = specular * specular_brdf(α = roughness^2))
+    weight = specular,
+    base = diffuse_brdf(color = baseColor),
+    layer = specular_brdf(α = roughness^2))
 ```
 
-The specular factor scales the `layer` and `base`. The less energy is reflected by the `layer` (`specular_brdf`), the more can be shifted to the `base` (`diffuse_brdf`). The following image shows specular factor increasing from 0 to 1.
+The `fresnel_mix` function mixes two BSDFs according to a Fresnel term. The `layer` is weighted with `weight * fresnel(ior, f0_color)`. The `base` is weighted with `1 - weight * fresnel(ior, f0_color)`.
+
+The specular factor used as `weight` scales `layer` and `base`. The less energy is reflected by the `layer` (`specular_brdf`), the more can be shifted to the `base` (`diffuse_brdf`). The following image shows specular factor increasing from 0 to 1.
 
 ![](figures/specular.png)
 
-The specular color is a directional-dependent weight that scales the Fresnel term. At normal incidence (`f0`), `specularColor` scales the F0 reflectance. At grazing incidence (`f90`), the reflectance remains at 1. In between the scale factor is smoothly interpolated.
+The specular color is a directional-dependent weight included in the Fresnel term. At normal incidence (`f0`), `specularColor` scales the F0 reflectance `f0_color`. At grazing incidence (`f90`), the reflectance remains at 1. In between the scale factor is smoothly interpolated.
 
-As with specular factor, the `base` will be weighted with the directional-dependent remaining energy according to the Fresnel term. The weight is an RGB color, involving the complementary to specular color. To make it easy to use and ensure energy conservation, the RGB color is converted to scalar via `max(r, g, b)`. The following images show specular color increasing from [0,0,0] to [1,1,1] (top) and from [0,0,0] to [1,0,0] (bottom).
+As with specular factor, `base` will be weighted with the directional-dependent remaining energy according to the Fresnel term. `f0_color` is an RGB color, involving the complementary to specular color. To make it easy to use and ensure energy conservation, the RGB color is converted to scalar via `max(r, g, b)`. The following images show specular color increasing from [0,0,0] to [1,1,1] (top) and from [0,0,0] to [1,0,0] (bottom).
 
 ![](figures/specular-color.png)
 ![](figures/specular-color-2.png)
@@ -92,14 +95,14 @@ The specular color factor is allowed to be set to color values greater than [1, 
 
 *This section is non-normative.*
 
-[Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) defines the function `fresnel_mix`. In this extension, we add an additional argument called `f0_color`. It scales `f0` computed inside the function:
+[Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) defines the function `fresnel_mix`. In this extension, we add two additional arguments called `weight` and `f0_color`. It scales `f0` computed inside the function:
 
 ```
-function fresnel_mix(ior, f0_color, base, layer) {
+function fresnel_mix(f0_color, ior, weight, base, layer) {
   f0 = ((1-ior)/(1+ior))^2 * f0_color
   f0 = min(f0, float3(1.0))
   fr = f0 + (1 - f0)*(1 - abs(VdotH))^5
-  return mix(base, layer, fr)
+  return mix(base, layer, weight * fr)
 }
 ```
 
