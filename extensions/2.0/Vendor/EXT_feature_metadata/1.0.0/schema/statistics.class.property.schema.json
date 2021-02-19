@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft-04/schema",
+  "title": "Property Statistics",
+  "type": "object",
+  "description": "Statistics about property values.",
+  "properties": {
+    "max": {
+      "type": "array",
+      "description": "Maximum values for property values in the model. Only applicable for fixed-size numeric types (integers, floats and `ARRAY`s thereof). Both `min` and `max` arrays have the same length. When `type` is `ARRAY` the length is determined by `componentCount`; otherwise the length is 1. `normalized` property has no effect on these values: they always correspond to the integer values.",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 1
+    },
+    "min": {
+      "type": "array",
+      "description": "Minimum values for property values in the model. Only applicable for fixed-size numeric types (integer, floats and `ARRAY`s thereof). Both `min` and `max` arrays have the same length. When `type` is `ARRAY` the length is determined by `componentCount`; otherwise the length is 1. `normalized` property has no effect on these values: they always correspond to the integer values.",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 1
+    },
+    "occurrences": {
+      "type": "object",
+      "description": "A dictionary, where each key corresponds to an enum `name` and each value is an array containing the number of occurrences of that enum. Only applicable when `type` or `componentType` is `ENUM`. When `type` is `ARRAY` the length is determined by `componentCount`; otherwise the length is 1.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "array"
+      }
+    },
+    "additionalProperties": {
+      "description": "Additional application-specific statistics."
+    },
+    "extensions": {},
+    "extras": {}
+  }
+}

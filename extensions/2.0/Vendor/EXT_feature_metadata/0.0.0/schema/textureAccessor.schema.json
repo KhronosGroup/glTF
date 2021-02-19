@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Texture Accessor",
+    "description": "A description of how to access data values from the color channels of a texture",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "channels": {
+            "type": "string",
+            "pattern": "^[rgba]{1,4}$",
+            "description": "Texture channels containing property values according to the property `componentType`. Channels are labeled by `rgba` and are swizzled with a string of 1-4 characters."
+        },
+        "texture": {
+            "allOf": [{"$ref": "textureInfo.schema.json"}],
+            "description": "The glTF texture and texture coordinates to use"
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "Feature ID attribute",
+  "type": "object",
+  "description": "Feature IDs to be used as indices to property arrays in the feature table.",
+  "properties": {
+    "attribute": {
+      "type": "string",
+      "pattern": "^_FEATURE_ID_([1-9]\\d*|0)$",
+      "description": "The name of the attribute containing feature IDs."
+    },
+    "constant": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0,
+      "description": "Sets a constant feature ID when the attribute property is omitted."
+    },
+    "divisor": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0,
+      "description": "The rate at which feature IDs increment. If `divisor` is 0 then `constant` is used. If `divisor` is non-zero the feature ID increments once per `divisor` sets of elements, starting at `constant`. For example, if `constant` is 0 and `divisor` is 1 the feature IDs are [0, 1, 2, ...]; if `constant` is 2 and `divisor` is 3 the feature IDs are [2, 2, 2, 3, 3, 3, 4, 4, 4, ...]"
+    },
+    "extensions": {},
+    "extras": {}
+  },
+  "not": {
+    "anyOf": [
+      {
+        "required": [
+          "attribute",
+          "constant"
+        ]
+      },
+      {
+        "required": [
+          "attribute",
+          "divisor"
+        ]
+      }
+    ]
+  }
+}

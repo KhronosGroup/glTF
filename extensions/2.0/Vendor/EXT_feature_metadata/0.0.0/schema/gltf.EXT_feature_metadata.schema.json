@@ -1,0 +1,35 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_feature_metadata glTF extension",
+    "type": "object",
+    "description": "glTF extension for applying semantic information to a model through per-vertex and per-texel feature assignment and storage of feature properties.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "classes": {
+            "type": "object",
+            "description": "A dictionary, where each key is a class ID and each value is an object defining the class.",
+            "minProperties": 1,
+            "additionalProperties": {
+                "$ref": "class.schema.json"
+            }
+        },
+        "featureTables": {
+            "type": "object",
+            "description": "A dictionary, where each key is a feature table ID and each value is an object defining the feature table",
+            "minProperties": 1,
+            "additionalProperties": {
+                "$ref": "featureTable.schema.json"
+            }
+        },
+        "featureTextures": {
+            "type": "object",
+            "description": "A dictionary, where each key is an ID for a feature texture and each value is an object defining a feature texture",
+            "minProperties": 1,
+            "additionalProperties": {
+                "$ref": "featureTexture.schema.json"
+            }
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
