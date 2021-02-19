@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft-04/schema",
+  "title": "Schema",
+  "type": "object",
+  "description": "An object defining classes and enums.",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The name of the schema."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The description of the schema."
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Application-specific version of the schema."
+    },
+    "classes": {
+      "type": "object",
+      "description": "A dictionary, where each key is a class ID and each value is an object defining the class.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "class.schema.json"
+      }
+    },
+    "enums": {
+      "type": "object",
+      "description": "A dictionary, where each key is an enum ID and each value is an object defining the values for the enum.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "enum.schema.json"
+      }
+    },
+    "extensions": {},
+    "extras": {}
+  }
+}

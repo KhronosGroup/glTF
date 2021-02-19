@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "Enum",
+  "type": "object",
+  "description": "An object defining the values of an enum.",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The name of the enum, e.g. for display purposes."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The description of the enum."
+    },
+    "valueType": {
+      "type": "string",
+      "default": "UINT16",
+      "enum": [
+        "INT8",
+        "UINT8",
+        "INT16",
+        "UINT16",
+        "INT32",
+        "UINT32",
+        "INT64",
+        "UINT64"
+      ],
+      "description": "The type of the integer enum value."
+    },
+    "values": {
+      "type": "array",
+      "description": "An array of enum values. Duplicate names or integer values are not allowed.",
+      "items": {
+        "$ref": "enum.value.schema.json"
+      },
+      "minItems": 1
+    },
+    "extensions": {},
+    "extras": {}
+  },
+  "required": [
+    "values"
+  ]
+}

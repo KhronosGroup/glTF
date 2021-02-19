@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Feature Texture",
+    "type": "object",
+    "description": "Features whose properties are stored directly in the texture designated by a class and property values stored in texture channels. This not to be confused with feature ID textures which store feature IDs for use with a feature table.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "class": {
+            "type": "string",
+            "description": "The ID of the class."
+        },
+        "properties": {
+            "type": "object",
+            "description": "A dictionary, where each key corresponds to a property ID in the class's `properties` dictionary and each value describes the texture channels containing property data.",
+            "minProperties": 1,
+            "additionalProperties" : {
+                "$ref": "textureAccessor.schema.json"
+            }
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "class", "properties" ]
+}
