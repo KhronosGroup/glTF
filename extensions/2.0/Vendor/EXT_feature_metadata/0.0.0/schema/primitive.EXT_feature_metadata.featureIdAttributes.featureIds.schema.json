@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Per-vertex feature IDs",
+    "type": "object",
+    "description": "An object describing per-vertex feature IDs to be used as indices to property arrays in the feature table.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "attribute": {
+            "type": "string",
+            "pattern": "^_FEATURE_ID_([1-9]\\d*|0)$",
+            "description": "The name of the attribute containing feature IDs. Feature IDs must be whole numbers in the range `[0, elementCount - 1]`, where `elementCount` is the total number of elements in each property array."
+        },
+        "constant": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "description": "Sets a default feature ID for each vertex when the attribute property is not supplied."
+        },
+        "vertexStride": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "description": "Specifies a per-vertex stride to apply to feature IDs. Set `vertexStride` to 1 and `constant` to 0 to treat each vertex (point) as a separate feature starting at feature ID 0."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "not": {
+        "anyOf": [
+            {"required": ["attribute", "constant"]}
+        ]
+    }
+}

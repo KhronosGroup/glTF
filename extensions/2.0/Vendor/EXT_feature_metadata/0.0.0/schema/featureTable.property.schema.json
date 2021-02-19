@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "Property array",
+  "type": "object",
+  "description": "Array containing property data",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+  "properties": {
+      "bufferView": {
+          "allOf": [ { "$ref": "glTFid.schema.json" } ],
+          "description": "The index of the `bufferView` containing property array data. The bufferView must be aligned to a multiple of 8 bytes. For a GLB file, this is measured relative to the beginning of the file. For a glTF + BIN file, this is relative to the beginning of the BIN file."
+      },
+      "offsetComponentType": {
+          "type": "string",
+          "default": "UINT32",
+          "enum": ["UINT8", "UINT16", "UINT32", "UINT64"],
+          "description": "The size of each offset in the `offsetBufferViews`. If multiple buffer views are used, they all must use the same offset component type"
+      },
+      "offsetBufferViews": {
+          "type": "array",
+          "items": {
+              "$ref": "glTFid.schema.json"
+          },
+          "minItems": 1,
+          "maxItems": 2,
+          "description": "One or two indices specifying `bufferViews` containing offsets for variable-size quantities. Required for variable-length `ARRAY` types. This is also required for a `BLOB` with an undefined `blobByteLength` or a `STRING` with an undefined `stringByteLength`. The first offset buffer contain `elementCount + 1` unsigned integers. The length of the second offset buffer is the combined lengths of all the arrays plus one. The byte length of these offsets is determined by `offsetComponentType`. The offsets represent the start position of each element in the buffer, with the last offset representing the position after the last element. The byte length of strings and binary blobs and the array length of element arrays is computed using the difference between the current offset and the subsequent offset. Each buffer view must be aligned to a multiple of 8 bytes in the same manner as the main `bufferView`. If a variable-length `ARRAY` of `STRING` or of `BLOB` is used, two offset buffer views must be used. In this case, the first offset buffer view indexes into the second offset buffer view to determine how to group the strings/blobs into variable-size arrays, one array per element. The second offset buffer indexes into the main `bufferView` and determines the start/end bytes of each string/blob."
+      },
+      "extensions": { },
+      "extras": { }
+  },
+  "required": ["bufferView"]
+}
