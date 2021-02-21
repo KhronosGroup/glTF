@@ -11,7 +11,7 @@
     "count": {
       "type": "integer",
       "minimum": 1,
-      "description": "The number of elements in each property array."
+      "description": "The number of features, also the number of elements in each property array."
     },
     "properties": {
       "type": "object",
