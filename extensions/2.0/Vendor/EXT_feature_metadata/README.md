@@ -13,6 +13,7 @@ This extension implements the [Cesium 3D Metadata Specification](https://github.
     * Removed `FLOAT16` type
     * Removed `BLOB` type
     * Added `ENUM` to the list of supported types and component types and added `enumType` to refer to the chosen enum
+    * `min` and `max` are now numbers instead of single-element arrays for non-`ARRAY` properties
   * Changes to feature table
     * Removed `offsetBufferViews`, replaced with `arrayOffsetBufferView` and `stringOffsetBufferView`
     * Removed `blobByteLength`

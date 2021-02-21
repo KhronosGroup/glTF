@@ -67,16 +67,22 @@
       "default": false
     },
     "max": {
-      "type": "array",
-      "description": "Maximum allowed values for property values. Only applicable for fixed-size numeric types (integers, floats and `ARRAY`s thereof). Both `min` and `max` arrays have the same length. When `type` is `ARRAY` the length is determined by `componentCount`; otherwise the length is 1. `normalized` property has no effect on these values: they always correspond to the integer values.",
+      "type": [
+        "number",
+        "array"
+      ],
+      "description": "Maximum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. `normalized` property has no effect on these values: they always correspond to the integer values.",
       "items": {
         "type": "number"
       },
       "minItems": 1
     },
     "min": {
-      "type": "array",
-      "description": "Minimum allowed values for property values. Only applicable for fixed-size numeric element types (integer, floats and `ARRAY`s thereof). Both `min` and `max` arrays have the same length. When `type` is `ARRAY` the length is determined by `componentCount`; otherwise the length is 1. `normalized` property has no effect on these values: they always correspond to the integer values.",
+      "type": [
+        "number",
+        "array"
+      ],
+      "description": "Minimum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. `normalized` property has no effect on these values: they always correspond to the integer values.",
       "items": {
         "type": "number"
       },
