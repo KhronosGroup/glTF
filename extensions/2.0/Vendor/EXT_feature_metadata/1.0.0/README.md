@@ -53,13 +53,13 @@ This extension allows offline batching of heterogeneous 3D features, such as dif
 
 Feature IDs enable individual features to be identified and updated at runtime, e.g., show/hide, highlight color, etc. Feature IDs may be assigned on a per-vertex, per-texel, or per-instance basis.
 
-Feature IDs may be used to access metadata, such as passing a building's ID to get its address. Per-feature metadata is stored in a compact binary tabular format described in the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/blob/3d-tiles-next/specification/Metadata/README.md).
+Feature IDs may be used to access metadata, such as passing a building's ID to get its address. Feature metadata is stored in a compact binary tabular format described in the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/blob/3d-tiles-next/specification/Metadata/README.md).
 
 ![Building Example](figures/feature-table-buildings.png)
 
-> In the diagram above, a glTF consists of two houses batched together into a single primitive. A feature ID attribute on the primitive indicates that all of the vertices making up the first house have a feature ID of 0, while all vertices making up the second house have the feature ID 1. The feature ID is then used to access the building's metadata from the feature table.
+In the image above, a glTF consists of two houses batched together into a single primitive. A feature ID attribute on the primitive indicates that all of the vertices making up the first house have a feature ID of 0, while all vertices making up the second house have the feature ID 1. The feature ID is then used to access the building's metadata from the feature table.
 
-This extension also defines an alternate form of metadata storage that uses textures to store values directly. This format is especially useful when texture mapping high frequency data, like material properties, to less detailed 3D surfaces. Metadata textures enable new styling and analytics capabilities, and complement glTF PBR textures.
+This extension also defines an alternate form of metadata storage that uses textures to store values directly. This format is especially useful when texture mapping high frequency data, such as material properties, to less detailed 3D surfaces. Metadata textures enable new styling and analytics capabilities, and complement glTF PBR textures.
 
 See [Examples](#examples) for a full list of use cases for this extension.
 
@@ -320,15 +320,15 @@ Feature textures use the [Raster Format](https://github.com/CesiumGS/3d-tiles/tr
 
 * A scalar property cannot be encoded into multiple channels. For example, it is not possible to encode a `UINT32` property in an `RGBA8` texture.
 * Components of fixed-length array properties must be separate channels within the same texture.
-* Variable-length arrays are not supported
+* Variable-length arrays are not supported.
 
 Additionally, the data type and bit depth of the image must be compatible with the property type. An 8-bit per pixel RGB image is only compatible with `UINT8` or normalized `UINT8` properties, and array properties thereof with three components or less. Likewise, a floating point property requires a floating point-compatible image format like KTX2 which may require additional extensions.
 
 Feature textures are defined with the following steps:
 
-* A class is defined in the root `EXT_feature_metadata` extension object. This is used to describe the metadata in the texture.
-* A feature texture is defined in the root `EXT_feature_metadata.featureTextures` object. This must reference the class ID defined in step 1.
-* A feature texture is associated with a primitive by listing the feature texture ID in the `primitive.EXT_feature_metadata.featureTextures` array.
+1. A class is defined in the root `EXT_feature_metadata` extension object. This is used to describe the metadata in the texture.
+2. A feature texture is defined in the root `EXT_feature_metadata.featureTextures` object. This must reference the class ID defined in step 1.
+3. A feature texture is associated with a primitive by listing the feature texture ID in the `primitive.EXT_feature_metadata.featureTextures` array.
 <img src="figures/feature-texture.png"  alt="Feature Texture" width="500">
 
 _Class and feature texture_
