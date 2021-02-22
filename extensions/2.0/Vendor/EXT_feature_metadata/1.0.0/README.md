@@ -61,7 +61,7 @@ Feature IDs may be used to access metadata, such as passing a building's ID to g
 
 This extension also defines an alternate form of metadata storage that uses textures to store values directly. This format is especially useful when texture mapping high frequency data, like material properties, to less detailed 3D surfaces. Metadata textures enable new styling and analytics capabilities, and complement glTF PBR textures.
 
-See [Use Cases](#use-cases) for a full list of use cases for this extension.
+See [Examples](#examples) for a full list of use cases for this extension.
 
 ## Feature Identification
 
@@ -489,22 +489,19 @@ Model authors may define their own additional statistics, like `mode` below.
 
 ## Examples
 
-This section gives more examples.
+_This section is non-normative_
 
-_This section is non normative_
-
-This extension supports a wide number of use cases
+The examples below shows the breadth of possible use cases for this extension. 
 
 Example|Description|Image
 --|--|--
-Simple example
-Per-vertex metadata||Accuracy
-Point features||Float64 properties, strings, enums, etc
-Multi-point features|For a concrete example, consider a point cloud of the house, as in the diagram below. The point cloud might be segmented into different regions (roof, window, walls, door), each with properties such as a component name or the year the component was built. The point cloud could also be considered as individual LiDAR samples with an intensity and temperature value. Both types of metadata can be described with this extension.|![Multi-point features](figures/point-cloud-layers.png)
-Triangle and quad features
-Instance features
-Multi-instance features
-Node features
-Material classification||![Material Classification](figures/material-classification.png)
-Multiple texture layers
-Composite
+Simple example||TODO
+Per-vertex metadata<img width=700/>|An implicit feature ID is assigned to each vertex. The feature table stores `FLOAT64` accuracy values. |![Per-vertex metadata](figures/per-vertex-metadata.png)
+Per-triangle metadata|An implicit feature ID is assigned to each set of three vertices. The feature table stores `FLOAT64` accuracy values. |![Per-triangle metadata](figures/per-triangle-metadata.png)
+Per-point metadata|An implicit feature ID is assigned to each point. The feature table stores `FLOAT64` , `STRING`, and `ENUM` properties, which are not possible through glTF vertex attribute accessors alone.|![Point features](figures/point-features.png)
+Per-node metadata|Vertices in node 0 and node 1 are assigned different `constant` feature IDs. Because the door has articulations these two nodes can't be batched together.|![Per-node metadata](figures/per-node-metadata.png)
+Multi-point features|A point cloud with two feature tables, one storing metadata for groups of points and the other storing metadata for individual points.|![Multi-point features](figures/point-cloud-layers.png)
+Multi-instance features|Instanced tree models where trees are assigned to groups with a per-instance feature ID attribute. One feature table stores per-group metadata and the other stores per-tree metadata.|![Multi-instance features](figures/multi-instance-metadata.png)
+Material classification|A textured mesh using a feature texture to store both material enums and the normalized `UINT8` heat loss values.|![Material Classification](figures/material-classification.png)
+Multiple texture layers||TODO
+Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanced models (fencing) with three feature tables.|![Composite Example](figures/composite-example.png)
