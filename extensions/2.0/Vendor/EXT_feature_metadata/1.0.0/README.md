@@ -8,10 +8,10 @@
 
 * Peter Gagliardi, Cesium
 * Sean Lilley, Cesium
-* Bao Tran, Cesium
 * Sam Suhag, Cesium
-* Samuel Vargas, Cesium
 * Patrick Cozzi, Cesium
+* Bao Tran, Cesium
+* Samuel Vargas, Cesium
 
 <!-- omit in toc -->
 ## Status
@@ -23,7 +23,7 @@ Draft
 
 Written against the glTF 2.0 specification.
 
-Optionally extends the [`EXT_mesh_gpu_instancing` extension](../../EXT_mesh_gpu_instancing/README.md).
+Adds new functionality to the [`EXT_mesh_gpu_instancing` extension](../../EXT_mesh_gpu_instancing/README.md).
 
 <!-- omit in toc -->
 ## Optional vs. Required
@@ -49,9 +49,9 @@ This extension is optional, meaning it should be placed in the `extensionsUsed` 
 
 ## Overview
 
-This extension allows offline batching of heterogeneous 3D features, such as different buildings in a city, for efficient streaming to a client for rendering and interaction. Efficiency comes from transferring multiple features in a single request and rendering them in the least number of draw calls necessary.
+This extension allows batching of 3D features, such as different buildings in a city, for efficient streaming to a client for rendering and interaction. Efficiency comes from transferring multiple features in a single request and rendering them in the least number of draw calls necessary.
 
-Feature IDs enable individual features to be identified and updated at runtime, e.g., show/hide, highlight color, etc. Feature IDs may be assigned on a per-vertex, per-texel, or per-instance basis.
+Feature IDs enable individual features to be identified and updated at runtime. For example, a selected feature could be shown/hidden, or highlighted a different color. Feature IDs may be assigned on a per-vertex, per-texel, or per-instance basis.
 
 Feature IDs may be used to access metadata, such as passing a building's ID to get its address. Feature metadata is stored in a compact binary tabular format described in the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/blob/3d-tiles-next/specification/Metadata/README.md).
 
@@ -59,7 +59,7 @@ Feature IDs may be used to access metadata, such as passing a building's ID to g
 
 In the image above, a glTF consists of two houses batched together into a single primitive. A feature ID attribute on the primitive indicates that all of the vertices making up the first house have a feature ID of 0, while all vertices making up the second house have the feature ID 1. The feature ID is then used to access the building's metadata from the feature table.
 
-This extension also defines an alternate form of metadata storage that uses textures to store values directly. This format is especially useful when texture mapping high frequency data, such as material properties, to less detailed 3D surfaces. Metadata textures enable new styling and analytics capabilities, and complement glTF PBR textures.
+Feature metadata may also be stored directly in textures. This is especially useful when texture mapping high frequency data, such as material properties, to less detailed 3D surfaces. Feature textures enable new styling and analytics capabilities, and complement glTF PBR textures.
 
 See [Examples](#examples) for a full list of use cases for this extension.
 
@@ -79,7 +79,7 @@ Features in a glTF primitive are identified in three ways:
 
 The most straightforward method for defining feature IDs is to store them in a glTF vertex attribute. Feature ID attributes must follow the naming convention `_FEATURE_ID_X` where `X` is a non-negative integer. The first feature ID attribute is `_FEATURE_ID_0`, the second `_FEATURE_ID_1`, and so on.
 
-Feature IDs must be whole numbers in the range `[0, count - 1]`, where `count` is the total number of features in the feature table.
+Feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table.
 
 The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be false. There is no restriction on `componentType`.
 
@@ -123,7 +123,12 @@ This is accomplished by using `constant` and `divisor`.
 * `constant` sets a constant feature ID for each vertex. The default is `0`.
 * `divisor` sets the rate at which feature IDs increment. If `divisor` is zero then `constant` is used. If `divisor` is greater than zero the feature ID increments once per `divisor` sets of vertices, starting at `constant`. The default is `0`.
 
-For example, if `constant` is 0 and `divisor` is 1 the feature IDs are `[0, 1, 2, 3, 4, 5, ...]`. If `constant` is 2 and `divisor` is 3 the feature IDs are `[2, 2, 2, 3, 3, 3, 4, 4, 4, ...]`.
+For example 
+
+* If `constant` is 0 and `divisor` is 0, the feature IDs are `[0, 0, 0, ...]`
+* If `constant` is 0 and `divisor` is 1, the feature IDs are `[0, 1, 2, ...]`
+* If `constant` is 0 and `divisor` is 2, the feature IDs are `[0, 0, 1, 1, 2, 2, ...]`
+* If `constant` is 2 and `divisor` is 3, the feature IDs are `[2, 2, 2, 3, 3, 3, 4, 4, 4, ...]`.
 
 `constant` and `divisor` must be omitted when `attribute` is used. These two methods of assigning feature IDs are mutually exclusive.
 
@@ -156,9 +161,9 @@ For example, if `constant` is 0 and `divisor` is 1 the feature IDs are `[0, 1, 2
 ```
 ### Feature ID Textures
 
-Sometimes it is helpful to classify the pixels of an image into different features. Some examples include segmenting an image in a computer vision project or marking regions on a map.
+Feature ID textures classify the pixels of an image into different features. Some examples include image segmentation or marking regions on a map.
 
-Often per-texel feature IDs provide finer granularity than per-vertex feature IDs like in the example below.
+Often per-texel feature IDs provide finer granularity than per-vertex feature IDs as in the example below.
 
 <img src="figures/feature-id-texture.png"  alt="Feature ID Texture" width="800">
 
@@ -193,7 +198,7 @@ Often per-texel feature IDs provide finer granularity than per-vertex feature ID
 }
 ```
 
-`texture` is a glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. `channels` must be a single channel (`"r"`, `"g"`, `"b"`, or `"a"`). Furthermore, feature IDs must be whole numbers in the range `[0, count - 1]`, where `count` is the total number of features in the feature table. Texture filtering should be disabled when accessing feature IDs.
+`texture` is a glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. `channels` must be a single channel (`"r"`, `"g"`, `"b"`, or `"a"`). Furthermore, feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table. Texture filtering should be disabled when accessing feature IDs.
 
 ### Feature ID Instance Attributes
 
@@ -210,7 +215,7 @@ Feature IDs may also be assigned to individual instances when using the [`EXT_me
             "TRANSLATION": 0,
             "ROTATION": 1,
             "SCALE": 2,
-            "_FEATURE_ID_0": 
+            "_FEATURE_ID_0": 3
           },
           "extensions": {
             "EXT_feature_metadata": {
@@ -251,9 +256,13 @@ A schema may be embedded in the extension directly or referenced externally with
 
 Schemas may be given a `name`, `description`, and `version`.
 
+TODO: add table for property types
+
 ### Feature Tables
 
 A feature table stores property values in a parallel array format. Each property array corresponds to a class property. The values contained within a property array must match the data type of the class property. Furthermore, the set of property arrays must match one-to-one with the class properties.
+
+TODO: mention optional properties, default values
 
 The schema and feature tables are defined in the root extension object in the glTF model. See the example below:
 
@@ -266,17 +275,14 @@ The schema and feature tables are defined in the root extension object in the gl
           "tree": {
             "properties": {
               "height": {
-                "name": "Height (m)",
                 "description": "Height of tree measured from ground level",
                 "type": "FLOAT32"
               },
               "birdCount": {
-                "name": "Bird Count",
                 "description": "Number of birds perching on the tree",
                 "type": "UINT8"
               },
               "species": {
-                "name": "Species",
                 "description": "Species of the tree",
                 "type": "STRING"
               }
@@ -308,13 +314,15 @@ The schema and feature tables are defined in the root extension object in the gl
 }
 ```
 
-`class` is the ID of the class in the schema. `count` is the number of features in the feature table, and the length of each property array. Property arrays are stored in glTF buffer views and use the binary encoding defined in the [Table Format](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata/1.0.0#table-format) section of the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/blob/3d-tiles-next/specification/Metadata/README.md).
+`class` is the ID of the class in the schema. `count` is the number of features in the feature table, as well as the length of each property array. Property arrays are stored in glTF buffer views and use the binary encoding defined in the [Table Format](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata/1.0.0#table-format) section of the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/blob/3d-tiles-next/specification/Metadata/README.md).
 
 Each buffer view `byteOffset` must be aligned to a multiple of 8 bytes. For a GLB file, this is measured relative to the beginning of the file. For a glTF + BIN file, this is relative to the beginning of the BIN file.
 
+TODO: reword
+
 ### Feature Textures
 
-Feature textures (not to be confused with [Feature ID Textures](#feature-id-texture)) are an alternate form of metadata storage that uses textures rather than parallel arrays to store values. Feature textures are accessed directly by texture coordinates, rather than feature IDs. Feature textures are especially useful when texture mapping high frequency data to less detailed 3D surfaces.
+Feature textures (not to be confused with [Feature ID Textures](#feature-id-texture)) use textures rather than parallel arrays to store values. Feature textures are accessed directly by texture coordinates, rather than feature IDs. Feature textures are especially useful when texture mapping high frequency data to less detailed 3D surfaces.
 
 Feature textures use the [Raster Format](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata/1.0.0#raster-format) of the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/blob/3d-tiles-next/specification/Metadata/README.md) with a few additional constraints:
 
@@ -339,9 +347,9 @@ _Class and feature texture_
     "EXT_feature_metadata": {
       "schema": {
         "classes": {
-          "heatLossSample": {
+          "heatSample": {
             "properties": {
-              "heatLoss": {
+              "heatSample": {
                 "type": "UINT8",
                 "normalized": true
               }
@@ -351,14 +359,14 @@ _Class and feature texture_
       },
       "featureTextures": {
         "heatLossTexture": {
-          "class": "heatLossSample",
+          "class": "heatSample",
           "properties": {
             "heatLoss": {
               "texture": {
                 "index": 0,
                 "texCoord": 0
               },
-              "channels": "g"
+              "channels": "r"
             }
           }
         }
@@ -368,7 +376,7 @@ _Class and feature texture_
 }
 ```
 
-_Primitive association_
+_Primitive_
 
 ```jsonc
 {
@@ -391,7 +399,7 @@ _Primitive association_
 ```
 
 
-`texture` is a glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. `texCoord` refers to the texture coordinate set in the referring primitive. `channels` is a string matching the pattern `"^[rgba]{1,4}$"` that specifies which texture channels store property values.
+`texture` is a glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. `texCoord` refers to the texture coordinate set of the referring primitive. `channels` is a string matching the pattern `"^[rgba]{1,4}$"` that specifies which texture channels store property values.
 
 ### Statistics
 
@@ -400,17 +408,17 @@ Statistics provide aggregate information about features in the model. Statistics
 * `count` is the number of features that conform to the class
 * `properties` contains statistics about property values
 
-The following built-in statistics can be used:
+Properties have the following built-in statistics:
 
 Name|Description|Type
 --|--|--
-`min`|Minimum value|Numeric types or fixed-length arrays of numeric types
-`max`|Maximum value|...
-`mean`|The arithmetic mean of the values|...
-`median`|The median value|...
-`standardDeviation`|The standard deviation of the values|...
-`variance`|The variance of the values|...
-`sum`|The sum of the values|...
+`min`|Minimum|Numeric types or fixed-length arrays of numeric types
+`max`|Maximum|...
+`mean`|Arithmetic mean|...
+`median`|Median|...
+`standardDeviation`|Standard deviation|...
+`variance`|Variance|...
+`sum`|Sum of all values|...
 `occurrences`|Number of enum occurrences|Enums or fixed-length arrays of enums
 
 Model authors may define their own additional statistics, like `mode` below.
@@ -422,7 +430,7 @@ Model authors may define their own additional statistics, like `mode` below.
       "schema": {
         "enums": {
           "buildingType": {
-            "valueType": "UINT16",
+            "valueType": "UINT8",
             "values": [
               {
                 "name": "Residential",
@@ -497,11 +505,11 @@ Example|Description|Image
 --|--|--
 Simple example||TODO
 Per-vertex metadata<img width=700/>|An implicit feature ID is assigned to each vertex. The feature table stores `FLOAT64` accuracy values. |![Per-vertex metadata](figures/per-vertex-metadata.png)
-Per-triangle metadata|An implicit feature ID is assigned to each set of three vertices. The feature table stores `FLOAT64` accuracy values. |![Per-triangle metadata](figures/per-triangle-metadata.png)
+Per-triangle metadata|An implicit feature ID is assigned to each set of three vertices. The feature table stores `FLOAT64` accuracy values. TODO: use area instead of accuracy |![Per-triangle metadata](figures/per-triangle-metadata.png)
 Per-point metadata|An implicit feature ID is assigned to each point. The feature table stores `FLOAT64` , `STRING`, and `ENUM` properties, which are not possible through glTF vertex attribute accessors alone.|![Point features](figures/point-features.png)
 Per-node metadata|Vertices in node 0 and node 1 are assigned different `constant` feature IDs. Because the door has articulations these two nodes can't be batched together.|![Per-node metadata](figures/per-node-metadata.png)
 Multi-point features|A point cloud with two feature tables, one storing metadata for groups of points and the other storing metadata for individual points.|![Multi-point features](figures/point-cloud-layers.png)
-Multi-instance features|Instanced tree models where trees are assigned to groups with a per-instance feature ID attribute. One feature table stores per-group metadata and the other stores per-tree metadata.|![Multi-instance features](figures/multi-instance-metadata.png)
-Material classification|A textured mesh using a feature texture to store both material enums and the normalized `UINT8` heat loss values.|![Material Classification](figures/material-classification.png)
+Multi-instance features|Instanced tree models where trees are assigned to groups with a per-instance feature ID attribute. One feature table stores per-group metadata and the other stores per-tree metadata. TODO: nature reserve|![Multi-instance features](figures/multi-instance-metadata.png)
+Material classification|A textured mesh using a feature texture to store both material enums and normalized `UINT8` heat loss values.|![Material Classification](figures/material-classification.png)
 Multiple texture layers||TODO
 Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanced models (fencing) with three feature tables.|![Composite Example](figures/composite-example.png)

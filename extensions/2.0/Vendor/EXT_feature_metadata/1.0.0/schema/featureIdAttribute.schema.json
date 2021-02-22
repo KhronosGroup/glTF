@@ -10,7 +10,7 @@
     },
     "featureIds": {
       "allOf": [ { "$ref": "featureIdAttribute.featureIds.schema.json" } ],
-      "description": "An object describing per-vertex feature IDs to be used as indices to property arrays in the feature table. Feature IDs must be whole numbers in the range `[0, count - 1]`, where `count` is the total number of elements in each property array."
+      "description": "An object describing per-vertex feature IDs to be used as indices to property arrays in the feature table. Feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of elements in each property array."
     },
     "extensions": {},
     "extras": {}
