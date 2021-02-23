@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-04/schema",
   "title": "Enum value",
   "type": "object",
-  "description": "The enum value.",
+  "description": "An enum value.",
   "properties": {
     "name": {
       "type": "string",

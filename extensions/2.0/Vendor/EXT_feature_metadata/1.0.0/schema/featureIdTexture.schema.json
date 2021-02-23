@@ -10,7 +10,7 @@
     },
     "featureIds": {
       "allOf": [ { "$ref": "textureAccessor.schema.json" } ],
-      "description": "A description of the texture and channel to use for feature IDs. The `channels` property must have a single channel. Furthermore, feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of elements in each property array. Texel values must not be normalized. Texture filtering should be disabled when fetching feature IDs."
+      "description": "A description of the texture and channel to use for feature IDs. The `channels` property must have a single channel. Furthermore, feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table. Texel values must be read as integers. Texture filtering should be disabled when fetching feature IDs."
     },
     "extensions": {},
     "extras": {}

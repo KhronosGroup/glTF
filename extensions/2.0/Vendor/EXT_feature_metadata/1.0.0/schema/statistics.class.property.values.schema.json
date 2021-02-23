@@ -1,9 +1,0 @@
-{
-  "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "Statistic Values",
-  "type": [
-    "number",
-    "array"
-  ],
-  "description": "The statistic values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. `normalized` property has no effect on these values: they always correspond to the integer values."
-}

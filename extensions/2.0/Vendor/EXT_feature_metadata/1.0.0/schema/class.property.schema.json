@@ -63,7 +63,7 @@
     },
     "normalized": {
       "type": "boolean",
-      "description": "Specifies whether integer values are normalized. This applies both when `type` is an integer type, or when `type` is `ARRAY` with a `componentType` that is an integer type. For unsigned integer types, values are normalized between [0.0, 1.0]. For signed integer types, values are normalized between [-1.0, 1.0]. For all other types, this property is ignored.",
+      "description": "Specifies whether integer values are normalized. This applies both when `type` is an integer type, or when `type` is `ARRAY` with a `componentType` that is an integer type. For unsigned integer types, values are normalized between `[0.0, 1.0]`. For signed integer types, values are normalized between `[-1.0, 1.0]`. For all other types, this property is ignored.",
       "default": false
     },
     "max": {
@@ -87,7 +87,7 @@
         "string",
         "array"
       ],
-      "description": "A default value to use when the property value is not defined. If used, `optional` must be set to true. The type of the default value must match the property definition: For `BOOLEAN` use `true` or `false`. For `STRING` use a JSON string. For an integer or floating point number use a JSON number. For `ENUM` use the enum `name`, not the integer value. For `ARRAY` use a JSON array containing values matching the `componentType`."
+      "description": "A default value to use when the property value is not defined. If used, `optional` must be set to true. The type of the default value must match the property definition: For `BOOLEAN` use `true` or `false`. For `STRING` use a JSON string. For a numeric type use a JSON number. For `ENUM` use the enum `name`, not the integer value. For `ARRAY` use a JSON array containing values matching the `componentType`."
     },
     "optional": {
       "type": "boolean",

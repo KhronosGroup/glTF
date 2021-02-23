@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "Primitive feature mapping",
+  "title": "Feature ID Attribute",
   "type": "object",
-  "description": "An object mapping per-vertex feature IDs to a feature table.",
+  "description": "An object mapping feature IDs to a feature table.",
   "properties": {
     "featureTable": {
       "type": "string",
@@ -10,7 +10,7 @@
     },
     "featureIds": {
       "allOf": [ { "$ref": "featureIdAttribute.featureIds.schema.json" } ],
-      "description": "An object describing per-vertex feature IDs to be used as indices to property arrays in the feature table. Feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of elements in each property array."
+      "description": "An object describing feature IDs to be used as indices to property arrays in the feature table. Feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table."
     },
     "extensions": {},
     "extras": {}
