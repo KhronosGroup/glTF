@@ -5,32 +5,53 @@
   "description": "Statistics about property values.",
   "properties": {
     "min": {
-      "allOf": [ { "$ref": "statistics.class.property.values.schema.json" } ],
-      "description": "The minimum property value."
+      "type": [
+        "number",
+        "array"
+      ],
+      "description": "The minimum property value. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. `normalized` property has no effect on these values."
     },
     "max": {
-      "allOf": [ { "$ref": "statistics.class.property.values.schema.json" } ],
-      "description": "The maximum property value."
+      "type": [
+        "number",
+        "array"
+      ],
+      "description": "The maximum property value. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. `normalized` property has no effect on these values."
     },
     "mean": {
-      "allOf": [ { "$ref": "statistics.class.property.values.schema.json" } ],
-      "description": "The arithmetic mean of the property values."
+      "type": [
+        "number",
+        "array"
+      ],
+      "description": "The arithmetic mean of the property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. `normalized` property has no effect on these values."
     },
     "median": {
-      "allOf": [ { "$ref": "statistics.class.property.values.schema.json" } ],
-      "description": "The median of the property values."
+      "type": [
+        "number",
+        "array"
+      ],
+      "description": "The median of the property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. `normalized` property has no effect on these values."
     },
     "standardDeviation": {
-      "allOf": [ { "$ref": "statistics.class.property.values.schema.json" } ],
-      "description": "The standard deviation of the property values."
+      "type": [
+        "number",
+        "array"
+      ],
+      "description": "The standard deviation of the property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. `normalized` property has no effect on these values."
     },
     "variance": {
-      "allOf": [ { "$ref": "statistics.class.property.values.schema.json" } ],
-      "description": "The variance of the property values."
+      "type": [
+        "number",
+        "array"
+      ],
+      "description": "The variance of the property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. `normalized` property has no effect on these values."
     },
     "sum": {
-      "allOf": [ { "$ref": "statistics.class.property.values.schema.json" } ],
-      "description": "The sum of the property values."
+      "type": [
+        "number",
+        "array"
+      ],
+      "description": "The sum of the property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. `normalized` property has no effect on these values."
     },
     "occurrences": {
       "type": "object",
@@ -42,9 +63,6 @@
           "array"
         ]
       }
-    },
-    "additionalProperties": {
-      "description": "Additional application-specific statistics."
     },
     "extensions": {},
     "extras": {}
