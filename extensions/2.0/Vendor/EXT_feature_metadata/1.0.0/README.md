@@ -46,6 +46,30 @@ This extension is optional, meaning it should be placed in the `extensionsUsed` 
   - [Feature Textures](#feature-textures)
   - [Statistics](#statistics)
 - [Examples](#examples)
+- [JSON Schema Reference](#json-schema-reference)
+- [Objects](#objects)
+  - [Class](#class)
+  - [Class property](#class-property)
+  - [Class Statistics](#class-statistics)
+  - [Enum](#enum)
+  - [Enum value](#enum-value)
+  - [EXT_feature_metadata glTF extension](#ext_feature_metadata-gltf-extension)
+  - [Feature Table](#feature-table)
+  - [Feature Texture](#feature-texture)
+  - [Property Statistics](#property-statistics)
+  - [Property Values](#property-values)
+  - [Schema](#schema)
+  - [Statistic Values](#statistic-values)
+  - [Statistics](#statistics-1)
+  - [Texture Accessor](#texture-accessor)
+- [Objects](#objects-1)
+  - [EXT_feature_metadata glTF Primitive extension](#ext_feature_metadata-gltf-primitive-extension)
+  - [Feature ID Texture](#feature-id-texture)
+  - [Primitive feature mapping](#primitive-feature-mapping)
+  - [Texture Accessor](#texture-accessor-1)
+- [Objects](#objects-2)
+  - [EXT_feature_metadata extension for EXT_mesh_gpu_instancing](#ext_feature_metadata-extension-for-ext_mesh_gpu_instancing)
+  - [WETZEL_WARNING: title not defined](#wetzel_warning-title-not-defined)
 
 ## Overview
 
@@ -508,3 +532,1245 @@ Multi-instance features|Instanced tree models where trees are assigned to groups
 Material classification|A textured mesh using a feature texture to store both material enums and normalized `UINT8` thermal temperatures.|![Material Classification](figures/material-classification.png)
 Multiple texture layers||TODO
 Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanced models (fencing) with three feature tables.|![Composite Example](figures/composite-example.png)
+
+## JSON Schema Reference
+
+<!-- root extension -->
+
+## Objects
+* [`EXT_feature_metadata glTF extension`](#reference-ext_feature_metadata-gltf-extension) (root object)
+* [`Feature Table`](#reference-featuretable)
+   * [`Property Values`](#reference-featuretable-property)
+* [`Feature Texture`](#reference-featuretexture)
+   * [`Texture Accessor`](#reference-textureaccessor)
+* [`Schema`](#reference-schema)
+   * [`Class`](#reference-class)
+      * [`property`](#reference-class-property)
+   * [`Enum`](#reference-enum)
+      * [`value`](#reference-enum-value)
+* [`Statistic Values`](#reference-statistics-class-property-values)
+* [`Statistics`](#reference-statistics)
+   * [`Class Statistics`](#reference-statistics-class)
+      * [`Property Statistics`](#reference-statistics-class-property)
+
+
+---------------------------------------
+<a name="reference-class"></a>
+### Class
+
+A class containing a set of properties.
+
+**`Class` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**name**|`string`|The name of the class, e.g. for display purposes.|No|
+|**description**|`string`|The description of the class.|No|
+|**properties**|`object`|A dictionary, where each key is a property ID and each value is an object defining the property.|No|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### class.name
+
+The name of the class, e.g. for display purposes.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+<!-- omit in toc -->
+#### class.description
+
+The description of the class.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+<!-- omit in toc -->
+#### class.properties
+
+A dictionary, where each key is a property ID and each value is an object defining the property.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `class.property`
+
+<!-- omit in toc -->
+#### class.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### class.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-class-property"></a>
+### Class property
+
+A class property.
+
+**`Class property` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**name**|`string`|The name of the property, e.g. for display purposes.|No|
+|**description**|`string`|The description of the property.|No|
+|**type**|`string`|The property type. If `ENUM` is used, then `enumType` must also be specified. If `ARRAY` is used, then `componentType` must also be specified. `ARRAY` is a fixed-length array when `componentCount` is defined, and variable-length otherwise.| &#10003; Yes|
+|**enumType**|`string`|An enum ID as declared in the `enums` dictionary. This value must be specified when `type` or `componentType` is `ENUM`.|No|
+|**componentType**|`any`|When `type` is `ARRAY` this indicates the type of each component of the array. If `ENUM` is used, then `enumType` must also be specified.|No|
+|**componentCount**|`integer`|The number of components per element for `ARRAY` elements.|No|
+|**normalized**|`boolean`|Specifies whether integer values are normalized. This applies both when `type` is an integer type, or when `type` is `ARRAY` with a `componentType` that is an integer type. For unsigned integer types, values are normalized between [0.0, 1.0]. For signed integer types, values are normalized between [-1.0, 1.0]. For all other types, this property is ignored.|No, default: `false`|
+|**max**|`number,array`|Maximum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. `normalized` property has no effect on these values: they always correspond to the integer values.|No|
+|**min**|`number,array`|Minimum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. `normalized` property has no effect on these values: they always correspond to the integer values.|No|
+|**default**|`boolean,number,string,array`|A default value to use when the property value is not defined. If used, `optional` must be set to true. The type of the default value must match the property definition: For `BOOLEAN` use `true` or `false`. For `STRING` use a JSON string. For an integer or floating point number use a JSON number. For `ENUM` use the enum `name`, not the integer value. For `ARRAY` use a JSON array containing values matching the `componentType`.|No|
+|**optional**|`boolean`|If true, this property is optional.|No, default: `false`|
+|**semantic**|`string`|An identifier that describes how this property should be interpreted. The semantic cannot be used by other properties in the class.|No|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### class.property.name
+
+The name of the property, e.g. for display purposes.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+<!-- omit in toc -->
+#### class.property.description
+
+The description of the property.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+<!-- omit in toc -->
+#### class.property.type
+
+The property type. If `ENUM` is used, then `enumType` must also be specified. If `ARRAY` is used, then `componentType` must also be specified. `ARRAY` is a fixed-length array when `componentCount` is defined, and variable-length otherwise.
+
+* **Type**: `string`
+* **Required**:  &#10003; Yes
+* **Allowed values**:
+   * `"INT8"`
+   * `"UINT8"`
+   * `"INT16"`
+   * `"UINT16"`
+   * `"INT32"`
+   * `"UINT32"`
+   * `"INT64"`
+   * `"UINT64"`
+   * `"FLOAT32"`
+   * `"FLOAT64"`
+   * `"BOOLEAN"`
+   * `"STRING"`
+   * `"ENUM"`
+   * `"ARRAY"`
+
+<!-- omit in toc -->
+#### class.property.enumType
+
+An enum ID as declared in the `enums` dictionary. This value must be specified when `type` or `componentType` is `ENUM`.
+
+* **Type**: `string`
+* **Required**: No
+
+<!-- omit in toc -->
+#### class.property.componentType
+
+When `type` is `ARRAY` this indicates the type of each component of the array. If `ENUM` is used, then `enumType` must also be specified.
+
+* **Type**: `any`
+* **Required**: No
+* **Allowed values**:
+   * `INT8`
+   * `UINT8`
+   * `INT16`
+   * `UINT16`
+   * `INT32`
+   * `UINT32`
+   * `INT64`
+   * `UINT64`
+   * `FLOAT32`
+   * `FLOAT64`
+   * `BOOLEAN`
+   * `STRING`
+   * `ENUM`
+
+<!-- omit in toc -->
+#### class.property.componentCount
+
+The number of components per element for `ARRAY` elements.
+
+* **Type**: `integer`
+* **Required**: No
+* **Minimum**: ` >= 2`
+
+<!-- omit in toc -->
+#### class.property.normalized
+
+Specifies whether integer values are normalized. This applies both when `type` is an integer type, or when `type` is `ARRAY` with a `componentType` that is an integer type. For unsigned integer types, values are normalized between [0.0, 1.0]. For signed integer types, values are normalized between [-1.0, 1.0]. For all other types, this property is ignored.
+
+* **Type**: `boolean`
+* **Required**: No, default: `false`
+
+<!-- omit in toc -->
+#### class.property.max
+
+Maximum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. `normalized` property has no effect on these values: they always correspond to the integer values.
+
+* **Type**: `number,array`
+* **Required**: No
+
+<!-- omit in toc -->
+#### class.property.min
+
+Minimum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. `normalized` property has no effect on these values: they always correspond to the integer values.
+
+* **Type**: `number,array`
+* **Required**: No
+
+<!-- omit in toc -->
+#### class.property.default
+
+A default value to use when the property value is not defined. If used, `optional` must be set to true. The type of the default value must match the property definition: For `BOOLEAN` use `true` or `false`. For `STRING` use a JSON string. For an integer or floating point number use a JSON number. For `ENUM` use the enum `name`, not the integer value. For `ARRAY` use a JSON array containing values matching the `componentType`.
+
+* **Type**: `boolean,number,string,array`
+* **Required**: No
+
+<!-- omit in toc -->
+#### class.property.optional
+
+If true, this property is optional.
+
+* **Type**: `boolean`
+* **Required**: No, default: `false`
+
+<!-- omit in toc -->
+#### class.property.semantic
+
+An identifier that describes how this property should be interpreted. The semantic cannot be used by other properties in the class.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+<!-- omit in toc -->
+#### class.property.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### class.property.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-statistics-class"></a>
+### Class Statistics
+
+Statistics about features that conform to the class.
+
+**`Class Statistics` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**count**|`integer`|The number of features that conform to the class.|No|
+|**properties**|`object`|A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value is an object containing statistics about property values.|No|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### statistics.class.count
+
+The number of features that conform to the class.
+
+* **Type**: `integer`
+* **Required**: No
+* **Minimum**: ` >= 0`
+
+<!-- omit in toc -->
+#### statistics.class.properties
+
+A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value is an object containing statistics about property values.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `statistics.class.property`
+
+<!-- omit in toc -->
+#### statistics.class.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### statistics.class.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-enum"></a>
+### Enum
+
+An object defining the values of an enum.
+
+**`Enum` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**name**|`string`|The name of the enum, e.g. for display purposes.|No|
+|**description**|`string`|The description of the enum.|No|
+|**valueType**|`string`|The type of the integer enum value.|No, default: `"UINT16"`|
+|**values**|`enum.value` `[1-*]`|An array of enum values. Duplicate names or integer values are not allowed.| &#10003; Yes|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### enum.name
+
+The name of the enum, e.g. for display purposes.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+<!-- omit in toc -->
+#### enum.description
+
+The description of the enum.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+<!-- omit in toc -->
+#### enum.valueType
+
+The type of the integer enum value.
+
+* **Type**: `string`
+* **Required**: No, default: `"UINT16"`
+* **Allowed values**:
+   * `"INT8"`
+   * `"UINT8"`
+   * `"INT16"`
+   * `"UINT16"`
+   * `"INT32"`
+   * `"UINT32"`
+   * `"INT64"`
+   * `"UINT64"`
+
+<!-- omit in toc -->
+#### enum.values
+
+An array of enum values. Duplicate names or integer values are not allowed.
+
+* **Type**: `enum.value` `[1-*]`
+* **Required**:  &#10003; Yes
+
+<!-- omit in toc -->
+#### enum.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### enum.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-enum-value"></a>
+### Enum value
+
+The enum value.
+
+**`Enum value` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**name**|`string`|The name of the enum value.| &#10003; Yes|
+|**description**|`string`|The description of the enum value.|No|
+|**value**|`integer`|The integer enum value.| &#10003; Yes|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### enum.value.name
+
+The name of the enum value.
+
+* **Type**: `string`
+* **Required**:  &#10003; Yes
+* **Minimum Length**`: >= 1`
+
+<!-- omit in toc -->
+#### enum.value.description
+
+The description of the enum value.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+<!-- omit in toc -->
+#### enum.value.value
+
+The integer enum value.
+
+* **Type**: `integer`
+* **Required**:  &#10003; Yes
+
+<!-- omit in toc -->
+#### enum.value.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### enum.value.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-ext_feature_metadata-gltf-extension"></a>
+### EXT_feature_metadata glTF extension
+
+glTF extension that assigns metadata to features in a model.
+
+**`EXT_feature_metadata glTF extension` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**schema**|`schema`|An object defining classes and enums.|No|
+|**schemaUri**|`string`|A uri to an external schema file.|No|
+|**statistics**|`statistics`|An object containing statistics about features.|No|
+|**featureTables**|`object`|A dictionary, where each key is a feature table ID and each value is an object defining the feature table.|No|
+|**featureTextures**|`object`|A dictionary, where each key is a feature texture ID and each value is an object defining the feature texture.|No|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### EXT_feature_metadata glTF extension.schema
+
+An object defining classes and enums.
+
+* **Type**: `schema`
+* **Required**: No
+
+<!-- omit in toc -->
+#### EXT_feature_metadata glTF extension.schemaUri
+
+A uri to an external schema file.
+
+* **Type**: `string`
+* **Required**: No
+* **Format**: uriref
+
+<!-- omit in toc -->
+#### EXT_feature_metadata glTF extension.statistics
+
+An object containing statistics about features.
+
+* **Type**: `statistics`
+* **Required**: No
+
+<!-- omit in toc -->
+#### EXT_feature_metadata glTF extension.featureTables
+
+A dictionary, where each key is a feature table ID and each value is an object defining the feature table.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `featureTable`
+
+<!-- omit in toc -->
+#### EXT_feature_metadata glTF extension.featureTextures
+
+A dictionary, where each key is a feature texture ID and each value is an object defining the feature texture.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `featureTexture`
+
+<!-- omit in toc -->
+#### EXT_feature_metadata glTF extension.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### EXT_feature_metadata glTF extension.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-featuretable"></a>
+### Feature Table
+
+A feature table defined by a class and property values stored in arrays.
+
+**`Feature Table` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**class**|`string`|The class that property values conform to. The value must be a class ID declared in the `classes` dictionary.| &#10003; Yes|
+|**count**|`integer`|The number of features, as well as the number of elements in each property array.| &#10003; Yes|
+|**properties**|`object`|A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value is an object describing where property values are stored. Optional properties may be excluded from this dictionary.|No|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### featureTable.class
+
+The class that property values conform to. The value must be a class ID declared in the `classes` dictionary.
+
+* **Type**: `string`
+* **Required**:  &#10003; Yes
+
+<!-- omit in toc -->
+#### featureTable.count
+
+The number of features, as well as the number of elements in each property array.
+
+* **Type**: `integer`
+* **Required**:  &#10003; Yes
+* **Minimum**: ` >= 1`
+
+<!-- omit in toc -->
+#### featureTable.properties
+
+A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value is an object describing where property values are stored. Optional properties may be excluded from this dictionary.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `featureTable.property`
+
+<!-- omit in toc -->
+#### featureTable.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### featureTable.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-featuretexture"></a>
+### Feature Texture
+
+Features whose property values are stored directly in texture channels. This is not to be confused with feature ID textures which store feature IDs for use with a feature table.
+
+**`Feature Texture` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**class**|`string`|The class this feature texture conforms to. The value must be a class ID declared in the `classes` dictionary.| &#10003; Yes|
+|**properties**|`object`|A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value describes the texture channels containing property values.| &#10003; Yes|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### featureTexture.class
+
+The class this feature texture conforms to. The value must be a class ID declared in the `classes` dictionary.
+
+* **Type**: `string`
+* **Required**:  &#10003; Yes
+
+<!-- omit in toc -->
+#### featureTexture.properties
+
+A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value describes the texture channels containing property values.
+
+* **Type**: `object`
+* **Required**:  &#10003; Yes
+* **Type of each property**: `textureAccessor`
+
+<!-- omit in toc -->
+#### featureTexture.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### featureTexture.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-statistics-class-property"></a>
+### Property Statistics
+
+Statistics about property values.
+
+**`Property Statistics` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**min**|`statistics.class.property.values`|The minimum property value.|No|
+|**max**|`statistics.class.property.values`|The maximum property value.|No|
+|**mean**|`statistics.class.property.values`|The arithmetic mean of the property values.|No|
+|**median**|`statistics.class.property.values`|The median of the property values.|No|
+|**standardDeviation**|`statistics.class.property.values`|The standard deviation of the property values.|No|
+|**variance**|`statistics.class.property.values`|The variance of the property values.|No|
+|**sum**|`statistics.class.property.values`|The sum of the property values.|No|
+|**occurrences**|`object`|A dictionary, where each key corresponds to an enum `name` and each value is the number of occurrences of that enum. Only applicable when `type` or `componentType` is `ENUM`. For fixed-length arrays, this is an array with `componentCount` number of elements.|No|
+|**additionalProperties**|`any`|Additional application-specific statistics.|No|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### statistics.class.property.min
+
+The minimum property value.
+
+* **Type**: `statistics.class.property.values`
+* **Required**: No
+
+<!-- omit in toc -->
+#### statistics.class.property.max
+
+The maximum property value.
+
+* **Type**: `statistics.class.property.values`
+* **Required**: No
+
+<!-- omit in toc -->
+#### statistics.class.property.mean
+
+The arithmetic mean of the property values.
+
+* **Type**: `statistics.class.property.values`
+* **Required**: No
+
+<!-- omit in toc -->
+#### statistics.class.property.median
+
+The median of the property values.
+
+* **Type**: `statistics.class.property.values`
+* **Required**: No
+
+<!-- omit in toc -->
+#### statistics.class.property.standardDeviation
+
+The standard deviation of the property values.
+
+* **Type**: `statistics.class.property.values`
+* **Required**: No
+
+<!-- omit in toc -->
+#### statistics.class.property.variance
+
+The variance of the property values.
+
+* **Type**: `statistics.class.property.values`
+* **Required**: No
+
+<!-- omit in toc -->
+#### statistics.class.property.sum
+
+The sum of the property values.
+
+* **Type**: `statistics.class.property.values`
+* **Required**: No
+
+<!-- omit in toc -->
+#### statistics.class.property.occurrences
+
+A dictionary, where each key corresponds to an enum `name` and each value is the number of occurrences of that enum. Only applicable when `type` or `componentType` is `ENUM`. For fixed-length arrays, this is an array with `componentCount` number of elements.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `number,array`
+
+<!-- omit in toc -->
+#### statistics.class.property.additionalProperties
+
+Additional application-specific statistics.
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### statistics.class.property.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### statistics.class.property.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-featuretable-property"></a>
+### Property Values
+
+An array of binary property values.
+
+**`Property Values` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**bufferView**|`any`|The index of the buffer view containing property values. The data type of property values is determined by the property definition: When `type` is `BOOLEAN` values are packed into a bitfield. When `type` is `STRING` values are stored as byte sequences and decoded as UTF-8 strings. When `type` is a numeric type values are stored as the provided `type`. When `type` is `ENUM` values are stored as the enum's `valueType`. When `type` is `ARRAY` elements are packed tightly together and the data type is based on the `componentType` following the same rules as above. Note that `arrayOffsetBufferView` is required for variable-size arrays and `stringOffsetBufferView` is required for strings (for variable-length arrays of strings, both are required). The buffer view must be aligned to a multiple of 8 bytes. For a GLB file, this is measured relative to the beginning of the file. For a glTF + BIN file, this is relative to the beginning of the BIN file.| &#10003; Yes|
+|**offsetType**|`string`|The type of values in `arrayOffsetBufferView` and `stringOffsetBufferView`.|No, default: `"UINT32"`|
+|**arrayOffsetBufferView**|`integer`|The index of the buffer view containing offsets for variable-length arrays. The number of offsets is equal to the feature table `count` plus one. The offsets represent the start positions of each array, with the last offset representing the position after the last array. The array length is computed using the difference between the current offset and the subsequent offset. If `componentType` is `STRING` the offsets index into the string offsets array (stored in `stringOffsetBufferView`), otherwise they index into the property array (stored in `bufferView`). The data type of these offsets is determined by `offsetType`. The buffer view `byteOffset` must be aligned to a multiple of 8 bytes in the same manner as the main `bufferView`|No|
+|**stringOffsetBufferView**|`integer`|The index of the buffer view containing offsets for strings. The number of offsets is equal to the number of string components plus one. The offsets represent the byte offsets of each string in the main `bufferView`, with the last offset representing the byte offset after the last string. The string byte length is computed using the difference between the current offset and the subsequent offset. The data type of these offsets is determined by `offsetType`. The buffer view `byteOffset` must be aligned to a multiple of 8 bytes in the same manner as the main `bufferView`.|No|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### featureTable.property.bufferView
+
+The index of the buffer view containing property values. The data type of property values is determined by the property definition: When `type` is `BOOLEAN` values are packed into a bitfield. When `type` is `STRING` values are stored as byte sequences and decoded as UTF-8 strings. When `type` is a numeric type values are stored as the provided `type`. When `type` is `ENUM` values are stored as the enum's `valueType`. When `type` is `ARRAY` elements are packed tightly together and the data type is based on the `componentType` following the same rules as above. Note that `arrayOffsetBufferView` is required for variable-size arrays and `stringOffsetBufferView` is required for strings (for variable-length arrays of strings, both are required). The buffer view must be aligned to a multiple of 8 bytes. For a GLB file, this is measured relative to the beginning of the file. For a glTF + BIN file, this is relative to the beginning of the BIN file.
+
+* **Type**: `any`
+* **Required**:  &#10003; Yes
+
+<!-- omit in toc -->
+#### featureTable.property.offsetType
+
+The type of values in `arrayOffsetBufferView` and `stringOffsetBufferView`.
+
+* **Type**: `string`
+* **Required**: No, default: `"UINT32"`
+* **Allowed values**:
+   * `"UINT8"`
+   * `"UINT16"`
+   * `"UINT32"`
+   * `"UINT64"`
+
+<!-- omit in toc -->
+#### featureTable.property.arrayOffsetBufferView
+
+The index of the buffer view containing offsets for variable-length arrays. The number of offsets is equal to the feature table `count` plus one. The offsets represent the start positions of each array, with the last offset representing the position after the last array. The array length is computed using the difference between the current offset and the subsequent offset. If `componentType` is `STRING` the offsets index into the string offsets array (stored in `stringOffsetBufferView`), otherwise they index into the property array (stored in `bufferView`). The data type of these offsets is determined by `offsetType`. The buffer view `byteOffset` must be aligned to a multiple of 8 bytes in the same manner as the main `bufferView`
+
+* **Type**: `integer`
+* **Required**: No
+* **Minimum**: ` >= 0`
+
+<!-- omit in toc -->
+#### featureTable.property.stringOffsetBufferView
+
+The index of the buffer view containing offsets for strings. The number of offsets is equal to the number of string components plus one. The offsets represent the byte offsets of each string in the main `bufferView`, with the last offset representing the byte offset after the last string. The string byte length is computed using the difference between the current offset and the subsequent offset. The data type of these offsets is determined by `offsetType`. The buffer view `byteOffset` must be aligned to a multiple of 8 bytes in the same manner as the main `bufferView`.
+
+* **Type**: `integer`
+* **Required**: No
+* **Minimum**: ` >= 0`
+
+<!-- omit in toc -->
+#### featureTable.property.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### featureTable.property.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-schema"></a>
+### Schema
+
+An object defining classes and enums.
+
+**`Schema` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**name**|`string`|The name of the schema.|No|
+|**description**|`string`|The description of the schema.|No|
+|**version**|`string`|Application-specific version of the schema.|No|
+|**classes**|`object`|A dictionary, where each key is a class ID and each value is an object defining the class.|No|
+|**enums**|`object`|A dictionary, where each key is an enum ID and each value is an object defining the values for the enum.|No|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### schema.name
+
+The name of the schema.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+<!-- omit in toc -->
+#### schema.description
+
+The description of the schema.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+<!-- omit in toc -->
+#### schema.version
+
+Application-specific version of the schema.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+<!-- omit in toc -->
+#### schema.classes
+
+A dictionary, where each key is a class ID and each value is an object defining the class.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `class`
+
+<!-- omit in toc -->
+#### schema.enums
+
+A dictionary, where each key is an enum ID and each value is an object defining the values for the enum.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `enum`
+
+<!-- omit in toc -->
+#### schema.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### schema.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-statistics-class-property-values"></a>
+### Statistic Values
+
+The statistic values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. `normalized` property has no effect on these values: they always correspond to the integer values.
+
+
+
+---------------------------------------
+<a name="reference-statistics"></a>
+### Statistics
+
+Statistics about features.
+
+**`Statistics` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**classes**|`object`|A dictionary, where each key is a class ID declared in the `classes` dictionary and each value is an object containing statistics about features that conform to the class.|No|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### statistics.classes
+
+A dictionary, where each key is a class ID declared in the `classes` dictionary and each value is an object containing statistics about features that conform to the class.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `statistics.class`
+
+<!-- omit in toc -->
+#### statistics.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### statistics.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-textureaccessor"></a>
+### Texture Accessor
+
+A description of how to access property values from the color channels of a texture.
+
+**`Texture Accessor` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**channels**|`string`|Texture channels containing property values according. Channels are labeled by `rgba` and are swizzled with a string of 1-4 characters.|No|
+|**texture**|`any`|The glTF texture and texture coordinates to use.|No|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### textureAccessor.channels
+
+Texture channels containing property values according. Channels are labeled by `rgba` and are swizzled with a string of 1-4 characters.
+
+* **Type**: `string`
+* **Required**: No
+* **Pattern**: `^[rgba]{1,4}$`
+
+<!-- omit in toc -->
+#### textureAccessor.texture
+
+The glTF texture and texture coordinates to use.
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### textureAccessor.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### textureAccessor.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+<!-- primitive -->
+## Objects
+* [`EXT_feature_metadata glTF Primitive extension`](#reference-ext_feature_metadata-gltf-primitive-extension) (root object)
+* [`Feature ID Texture`](#reference-featureidtexture)
+   * [`Texture Accessor`](#reference-textureaccessor)
+* [`Primitive feature mapping`](#reference-featureidattribute)
+
+
+---------------------------------------
+<a name="reference-ext_feature_metadata-gltf-primitive-extension"></a>
+### EXT_feature_metadata glTF Primitive extension
+
+EXT_feature_metadata extension for a primitive in a glTF model, to associate it with the root `EXT_feature_metadata` object.
+
+**`EXT_feature_metadata glTF Primitive extension` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**featureIdAttributes**|`featureIdAttribute` `[1-*]`|An array of objects mapping per-vertex feature IDs to a feature table.|No|
+|**featureIdTextures**|`featureIdTexture` `[1-*]`|An array of objects mapping per-texel feature IDs to a feature table.|No|
+|**featureTextures**|`string` `[1-*]`|An array of IDs of feature textures from the root `EXT_feature_metadata` object.|No|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### EXT_feature_metadata glTF Primitive extension.featureIdAttributes
+
+An array of objects mapping per-vertex feature IDs to a feature table.
+
+* **Type**: `featureIdAttribute` `[1-*]`
+* **Required**: No
+
+<!-- omit in toc -->
+#### EXT_feature_metadata glTF Primitive extension.featureIdTextures
+
+An array of objects mapping per-texel feature IDs to a feature table.
+
+* **Type**: `featureIdTexture` `[1-*]`
+* **Required**: No
+
+<!-- omit in toc -->
+#### EXT_feature_metadata glTF Primitive extension.featureTextures
+
+An array of IDs of feature textures from the root `EXT_feature_metadata` object.
+
+* **Type**: `string` `[1-*]`
+* **Required**: No
+
+<!-- omit in toc -->
+#### EXT_feature_metadata glTF Primitive extension.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### EXT_feature_metadata glTF Primitive extension.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-featureidtexture"></a>
+### Feature ID Texture
+
+An object describing a texture used for storing per-texel feature IDs.
+
+**`Feature ID Texture` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**featureTable**|`string`|The ID of the feature table in the model's root `EXT_feature_metadata.featureTables` dictionary.| &#10003; Yes|
+|**featureIds**|`textureAccessor`|A description of the texture and channel to use for feature IDs. The `channels` property must have a single channel. Furthermore, feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of elements in each property array. Texel values must not be normalized. Texture filtering should be disabled when fetching feature IDs.| &#10003; Yes|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### featureIdTexture.featureTable
+
+The ID of the feature table in the model's root `EXT_feature_metadata.featureTables` dictionary.
+
+* **Type**: `string`
+* **Required**:  &#10003; Yes
+
+<!-- omit in toc -->
+#### featureIdTexture.featureIds
+
+A description of the texture and channel to use for feature IDs. The `channels` property must have a single channel. Furthermore, feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of elements in each property array. Texel values must not be normalized. Texture filtering should be disabled when fetching feature IDs.
+
+* **Type**: `textureAccessor`
+* **Required**:  &#10003; Yes
+
+<!-- omit in toc -->
+#### featureIdTexture.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### featureIdTexture.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-featureidattribute"></a>
+### Primitive feature mapping
+
+An object mapping per-vertex feature IDs to a feature table.
+
+**`Primitive feature mapping` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**featureTable**|`string`|The ID of the feature table in the model's root `EXT_feature_metadata.featureTables` dictionary.| &#10003; Yes|
+|**featureIds**|`object`|An object describing per-vertex feature IDs to be used as indices to property arrays in the feature table. Feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of elements in each property array.| &#10003; Yes|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### featureIdAttribute.featureTable
+
+The ID of the feature table in the model's root `EXT_feature_metadata.featureTables` dictionary.
+
+* **Type**: `string`
+* **Required**:  &#10003; Yes
+
+<!-- omit in toc -->
+#### featureIdAttribute.featureIds
+
+An object describing per-vertex feature IDs to be used as indices to property arrays in the feature table. Feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of elements in each property array.
+
+* **Type**: `object`
+* **Required**:  &#10003; Yes
+
+<!-- omit in toc -->
+#### featureIdAttribute.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### featureIdAttribute.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-textureaccessor"></a>
+### Texture Accessor
+
+A description of how to access property values from the color channels of a texture.
+
+**`Texture Accessor` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**channels**|`string`|Texture channels containing property values according. Channels are labeled by `rgba` and are swizzled with a string of 1-4 characters.|No|
+|**texture**|`any`|The glTF texture and texture coordinates to use.|No|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### textureAccessor.channels
+
+Texture channels containing property values according. Channels are labeled by `rgba` and are swizzled with a string of 1-4 characters.
+
+* **Type**: `string`
+* **Required**: No
+* **Pattern**: `^[rgba]{1,4}$`
+
+<!-- omit in toc -->
+#### textureAccessor.texture
+
+The glTF texture and texture coordinates to use.
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### textureAccessor.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### textureAccessor.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+<!-- GPU instancing -->
+## Objects
+* [`EXT_feature_metadata extension for EXT_mesh_gpu_instancing`](#reference-ext_feature_metadata-extension-for-ext_mesh_gpu_instancing) (root object)
+* [`undefined`](#reference-featureidattribute)
+
+
+---------------------------------------
+<a name="reference-ext_feature_metadata-extension-for-ext_mesh_gpu_instancing"></a>
+### EXT_feature_metadata extension for EXT_mesh_gpu_instancing
+
+An object describing per-instance feature IDs to be used as indices to property arrays in the feature table.
+
+**`EXT_feature_metadata extension for EXT_mesh_gpu_instancing` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**featureIdAttributes**|`array[1-*]`|An array of objects mapping per-instance feature IDs to property arrays in a feature table.|No|
+|**extensions**|`any`||No|
+|**extras**|`any`||No|
+
+Additional properties are allowed.
+
+<!-- omit in toc -->
+#### EXT_feature_metadata extension for EXT_mesh_gpu_instancing.featureIdAttributes
+
+An array of objects mapping per-instance feature IDs to property arrays in a feature table.
+
+* **Type**: `array[1-*]`
+* **Required**: No
+
+<!-- omit in toc -->
+#### EXT_feature_metadata extension for EXT_mesh_gpu_instancing.extensions
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- omit in toc -->
+#### EXT_feature_metadata extension for EXT_mesh_gpu_instancing.extras
+
+* **Type**: `any`
+* **Required**: No
+
+
+
+
+---------------------------------------
+<a name="reference-featureidattribute"></a>
+### WETZEL_WARNING: title not defined
+
