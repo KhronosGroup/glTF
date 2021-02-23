@@ -49,7 +49,9 @@ This extension is optional, meaning it should be placed in the `extensionsUsed` 
 
 ## Overview
 
-This extension allows batching of 3D features, such as different buildings in a city, for efficient streaming to a client for rendering and interaction. Efficiency comes from transferring multiple features in a single request and rendering them in the least number of draw calls necessary.
+A feature is an entity that has both geometry and metadata. In Geographic Information Systems (GIS) a feature is an entity such as a point, polyline, or polygon that represents some element on a map. In another domain like CAD/BIM a feature might be a component of a design model. A feature could also be a 3D building in a city, a tree in a forest, a sample point in a weather model, or a patch of imagery.
+
+This extension allows batching of features for efficient streaming to a client for rendering and interaction. Efficiency comes from transferring multiple features in the same glTF and rendering them in the least number of draw calls necessary.
 
 Feature IDs enable individual features to be identified and updated at runtime. For example, a selected feature could be shown/hidden, or highlighted a different color. Feature IDs may be assigned on a per-vertex, per-texel, or per-instance basis.
 
@@ -256,13 +258,9 @@ A schema may be embedded in the extension directly or referenced externally with
 
 Schemas may be given a `name`, `description`, and `version`.
 
-TODO: add table for property types
-
 ### Feature Tables
 
-A feature table stores property values in a parallel array format. Each property array corresponds to a class property. The values contained within a property array must match the data type of the class property. Furthermore, the set of property arrays must match one-to-one with the class properties.
-
-TODO: mention optional properties, default values
+A feature table stores property values in a parallel array format. Each property array corresponds to a class property. The values contained within a property array must match the data type of the class property. Furthermore, the set of property arrays must match one-to-one with the class properties. There is one exception - if a property is optional the feature table may omit that property.
 
 The schema and feature tables are defined in the root extension object in the glTF model. See the example below:
 
@@ -303,8 +301,7 @@ The schema and feature tables are defined in the root extension object in the gl
             },
             "species": {
               "bufferView": 2,
-              "arrayOffsetBufferView": 3,
-              "stringOffsetBufferView": 4
+              "stringOffsetBufferView": 3
             }
           }
         }
@@ -316,9 +313,7 @@ The schema and feature tables are defined in the root extension object in the gl
 
 `class` is the ID of the class in the schema. `count` is the number of features in the feature table, as well as the length of each property array. Property arrays are stored in glTF buffer views and use the binary encoding defined in the [Table Format](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata/1.0.0#table-format) section of the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/blob/3d-tiles-next/specification/Metadata/README.md).
 
-Each buffer view `byteOffset` must be aligned to a multiple of 8 bytes. For a GLB file, this is measured relative to the beginning of the file. For a glTF + BIN file, this is relative to the beginning of the BIN file.
-
-TODO: reword
+Each buffer view `byteOffset` must be aligned to a multiple of 8 bytes. If the buffer view's buffer is the GLB-stored `BIN` chunk the byte offset is measured relative to the beginning of the GLB. Otherwise it is measured relative to the beginning of the buffer.
 
 ### Feature Textures
 
@@ -505,11 +500,11 @@ Example|Description|Image
 --|--|--
 Simple example||TODO
 Per-vertex metadata<img width=700/>|An implicit feature ID is assigned to each vertex. The feature table stores `FLOAT64` accuracy values. |![Per-vertex metadata](figures/per-vertex-metadata.png)
-Per-triangle metadata|An implicit feature ID is assigned to each set of three vertices. The feature table stores `FLOAT64` accuracy values. TODO: use area instead of accuracy |![Per-triangle metadata](figures/per-triangle-metadata.png)
+Per-triangle metadata|An implicit feature ID is assigned to each set of three vertices. The feature table stores `FLOAT64` area values.|![Per-triangle metadata](figures/per-triangle-metadata.png)
 Per-point metadata|An implicit feature ID is assigned to each point. The feature table stores `FLOAT64` , `STRING`, and `ENUM` properties, which are not possible through glTF vertex attribute accessors alone.|![Point features](figures/point-features.png)
 Per-node metadata|Vertices in node 0 and node 1 are assigned different `constant` feature IDs. Because the door has articulations these two nodes can't be batched together.|![Per-node metadata](figures/per-node-metadata.png)
 Multi-point features|A point cloud with two feature tables, one storing metadata for groups of points and the other storing metadata for individual points.|![Multi-point features](figures/point-cloud-layers.png)
-Multi-instance features|Instanced tree models where trees are assigned to groups with a per-instance feature ID attribute. One feature table stores per-group metadata and the other stores per-tree metadata. TODO: nature reserve|![Multi-instance features](figures/multi-instance-metadata.png)
-Material classification|A textured mesh using a feature texture to store both material enums and normalized `UINT8` heat loss values.|![Material Classification](figures/material-classification.png)
+Multi-instance features|Instanced tree models where trees are assigned to groups with a per-instance feature ID attribute. One feature table stores per-group metadata and the other stores per-tree metadata.|![Multi-instance features](figures/multi-instance-metadata.png)
+Material classification|A textured mesh using a feature texture to store both material enums and normalized `UINT8` thermal temperatures.|![Material Classification](figures/material-classification.png)
 Multiple texture layers||TODO
 Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanced models (fencing) with three feature tables.|![Composite Example](figures/composite-example.png)
