@@ -1062,7 +1062,7 @@ A feature table defined by a class and property values stored in arrays.
 
 |   |Type|Description|Required|
 |---|---|---|---|
-|**class**|`string`|The class that property values conform to. The value must be a class ID declared in the `classes` dictionary.| &#10003; Yes|
+|**class**|`string`|The class that property values conform to. The value must be a class ID declared in the `classes` dictionary.|No|
 |**count**|`integer`|The number of features, as well as the number of elements in each property array.| &#10003; Yes|
 |**properties**|`object`|A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value is an object describing where property values are stored. Optional properties may be excluded from this dictionary.|No|
 |**extensions**|`any`||No|
@@ -1076,7 +1076,7 @@ Additional properties are allowed.
 The class that property values conform to. The value must be a class ID declared in the `classes` dictionary.
 
 * **Type**: `string`
-* **Required**:  &#10003; Yes
+* **Required**: No
 
 <!-- omit in toc -->
 #### featureTable.count
