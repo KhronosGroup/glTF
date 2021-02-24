@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Primitive feature mapping",
+    "type": "object",
+    "description": "An object mapping per-vertex feature IDs to property arrays in a feature table.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "featureTable": {
+            "type": "string",
+            "description": "The ID of the feature table in the model's root `EXT_feature_metadata.featureTables` dictionary."
+        },
+        "featureIds": {
+            "allOf": [ { "$ref": "primitive.EXT_feature_metadata.featureIdAttributes.featureIds.schema.json" } ],
+            "description": "An object describing per-vertex feature IDs to be used as indices to property arrays in the feature table."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "featureTable", "featureIds" ]
+}

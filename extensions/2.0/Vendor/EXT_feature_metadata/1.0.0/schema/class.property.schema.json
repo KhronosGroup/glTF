@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "Class property",
+  "type": "object",
+  "description": "A class property.",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The name of the property, e.g. for display purposes."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The description of the property."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "INT8",
+        "UINT8",
+        "INT16",
+        "UINT16",
+        "INT32",
+        "UINT32",
+        "INT64",
+        "UINT64",
+        "FLOAT32",
+        "FLOAT64",
+        "BOOLEAN",
+        "STRING",
+        "ENUM",
+        "ARRAY"
+      ],
+      "description": "The property type. If `ENUM` is used, then `enumType` must also be specified. If `ARRAY` is used, then `componentType` must also be specified. `ARRAY` is a fixed-length array when `componentCount` is defined, and variable-length otherwise."
+    },
+    "enumType": {
+      "type": "string",
+      "description": "An enum ID as declared in the `enums` dictionary. This value must be specified when `type` or `componentType` is `ENUM`."
+    },
+    "componentType": {
+      "enum": [
+        "INT8",
+        "UINT8",
+        "INT16",
+        "UINT16",
+        "INT32",
+        "UINT32",
+        "INT64",
+        "UINT64",
+        "FLOAT32",
+        "FLOAT64",
+        "BOOLEAN",
+        "STRING",
+        "ENUM"
+      ],
+      "description": "When `type` is `ARRAY` this indicates the type of each component of the array. If `ENUM` is used, then `enumType` must also be specified."
+    },
+    "componentCount": {
+      "type": "integer",
+      "minimum": 2,
+      "description": "The number of components per element for `ARRAY` elements."
+    },
+    "normalized": {
+      "type": "boolean",
+      "description": "Specifies whether integer values are normalized. This applies both when `type` is an integer type, or when `type` is `ARRAY` with a `componentType` that is an integer type. For unsigned integer types, values are normalized between `[0.0, 1.0]`. For signed integer types, values are normalized between `[-1.0, 1.0]`. For all other types, this property is ignored.",
+      "default": false
+    },
+    "max": {
+      "type": [
+        "number",
+        "array"
+      ],
+      "description": "Maximum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values: they always correspond to the integer values."
+    },
+    "min": {
+      "type": [
+        "number",
+        "array"
+      ],
+      "description": "Minimum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values: they always correspond to the integer values."
+    },
+    "default": {
+      "type": [
+        "boolean",
+        "number",
+        "string",
+        "array"
+      ],
+      "description": "A default value to use when the property value is not defined. If used, `optional` must be set to true. The type of the default value must match the property definition: For `BOOLEAN` use `true` or `false`. For `STRING` use a JSON string. For a numeric type use a JSON number. For `ENUM` use the enum `name`, not the integer value. For `ARRAY` use a JSON array containing values matching the `componentType`."
+    },
+    "optional": {
+      "type": "boolean",
+      "description": "If true, this property is optional.",
+      "default": false
+    },
+    "semantic": {
+      "type": "string",
+      "minLength": 1,
+      "description": "An identifier that describes how this property should be interpreted. The semantic cannot be used by other properties in the class."
+    },
+    "extensions": {},
+    "extras": {}
+  },
+  "dependencies": {
+    "componentCount": [
+      "componentType"
+    ],
+    "default": [
+      "optional"
+    ]
+  },
+  "required": [
+    "type"
+  ]
+}

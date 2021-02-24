@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Feature ID Texture",
+    "type": "object",
+    "description": "An object describing a texture used for storing per-texel feature IDs",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "featureTable": {
+            "type": "string",
+            "description": "The ID of the feature table to use"
+        },
+        "featureIds": {
+            "allOf": [ { "$ref": "textureAccessor.schema.json" }],
+            "description": "A description of the texture and channel to use for feature IDs. The `channels` property must have a single channel. Furthermore, feature IDs must be whole numbers in the range `[0, elementCount - 1]`, where `elementCount` is the total number of elements in each property array. Texel values must not be normalized. Texture filtering should be disabled when fetching feature IDs."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "featureTable", "featureIds" ]
+}

@@ -1,0 +1,102 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Class Property",
+    "type": "object",
+    "description": "A class property.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+      "name": {
+          "type": "string",
+          "minLength" : 1,
+          "description": "The name of the property, e.g. for display purposes. The string is UTF-8 encoded."
+      },
+      "description": {
+          "type": "string",
+          "minLength" : 1,
+          "description": "The description of the property. The string is UTF-8 encoded."
+      },
+      "type": {
+          "type": "string",
+          "enum": [
+              "BOOLEAN",
+              "INT8",
+              "UINT8",
+              "INT16",
+              "UINT16",
+              "INT32",
+              "UINT32",
+              "INT64",
+              "UINT64",
+              "FLOAT16",
+              "FLOAT32",
+              "FLOAT64",
+              "BLOB",
+              "STRING",
+              "ARRAY"
+          ],
+          "description": "The type of each element of the property array. A `type` is either a basic type used for `componentType` or an `ARRAY`. If `ARRAY` is used, then `componentType` must also be specified. `ARRAY` is a fixed-length array when `componentCount` is defined, and variable-length otherwise. `BLOB` is variable-length unless `blobByteLength` is defined. `STRING` is variable-length unless `stringByteLength` is defined. In these cases, the blobs/strings must be exactly that many bytes. Variable-length arrays, `STRING`, and `BLOB` also require a corresponding `offsetBufferView`. This is used to indicate where each element starts in the buffer. See further notes about offset buffers in the description for `componentType`."
+      },
+      "componentType": {
+          "enum": [
+              "BOOLEAN",
+              "INT8",
+              "UINT8",
+              "INT16",
+              "UINT16",
+              "INT32",
+              "UINT32",
+              "INT64",
+              "UINT64",
+              "FLOAT16",
+              "FLOAT32",
+              "FLOAT64",
+              "STRING",
+              "BLOB"
+          ],
+          "description": "When `type` is `ARRAY` this indicates the type of each component of the array. `componentType` supports simple values (boolean, integer and float types) as well as support for strings and binary blobs. `BOOLEAN` values are packed as 1-bit fields in a bit vector. Bit vectors are represented as a sequence of bytes. The first bit is always stored in the first byte of the sequence. However, with each byte, bits are numbered from right to left. This allows for straightforward access using bitwise operations. `STRING` and `BLOB` always require at least one offset buffer to specify where each element starts in the buffer. When the array is variable-length, an offset buffer must be used to determine the start indices for each element. Note that for variable-size arrays of `STRING` or `BLOB`, two offset buffers must be specified. One buffer determines where each string/blob begins, and the second buffer groups these start indices into variable-length arrays of strings/blobs."
+      },
+      "componentCount": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "The number of components per element for `ARRAY` elements."
+      },
+      "stringByteLength": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "This property can only be used with a `STRING` property or an `ARRAY` of `STRING`. When present, all string values for this property must be exactly this length in bytes when UTF-8 encoded. If the property is an `ARRAY`, then each component must have this byte length when encoded as UTF-8. Furthermore, no `offsetBufferView` is needed for specifying the start byte of each string. When `stringByteLength` is ommitted, strings are variable-length."
+      },
+      "blobByteLength": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "This property can only be used with a `BLOB` property or an `ARRAY` of `BLOB`. When present, all blob values for this property must be exactly this length in bytes. If the property is an `ARRAY`, then each component must have this byte length. Furthermore, no `offsetBufferView` is needed for specifying the start byte of each blob."
+      },
+      "normalized": {
+          "type": "boolean",
+          "description": "Specifies whether integer values are normalized. This applies both when `type` is an integer type, or when `type` is `ARRAY` with a `componentType` that is an integer. For unsigned integer types, values are normalized between [0, 1]. For signed integer types, values are normalized between [-1, 1]. For all other types, this property is ignored.",
+          "default": false
+      },
+      "max": {
+          "type": "array",
+          "description": "Maximum allowed values for property values. Only applicable for fixed-size numeric element types (integer, floats and `ARRAY`s thereof). Both `min` and `max` arrays have the same length. When `type` is `ARRAY` the length is determined by `componentCount`; otherwise the length is 1. `normalized` property has no effect on array values: they always correspond to the integer values.",
+          "items": {
+              "type": "number"
+          },
+          "minItems": 1
+      },
+      "min": {
+          "type": "array",
+          "description": "Minimum allowed values for property values. Only applicable for fixed-size numeric element types (integer, floats and `ARRAY`s thereof). Both `min` and `max` arrays have the same length. When `type` is `ARRAY` the length is determined by `componentCount`; otherwise the length is 1. `normalized` property has no effect on array values: they always correspond to the integer values.",
+          "items": {
+              "type": "number"
+          },
+          "minItems": 1
+      },
+      "extensions": { },
+      "extras": { }
+    },
+    "dependencies": {
+      "componentCount": ["componentType"],
+      "default": ["optional"]
+    },
+    "required": ["type"]
+}
