@@ -1,6 +1,6 @@
 # EXT_feature_metadata
 
-Assigns metadata to features in a model. Metadata may be assigned on a per-vertex or per-texel basis.
+Assigns metadata to features in a model. Metadata may be assigned on a per-vertex, per-texel, or per-instance basis.
 
 This extension implements the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata/1.0.0).
 
@@ -8,7 +8,7 @@ This extension implements the [Cesium 3D Metadata Specification](https://github.
 
 * [**Version 0.0.0**](0.0.0/README.md) December 4, 2020
   * Initial draft
-* [**Version 1.0.0**](1.0.0/README.md) (TODO: Date)
+* [**Version 1.0.0**](1.0.0/README.md) February 24, 2020
   * Changes to class properties
     * Removed `FLOAT16` type
     * Removed `BLOB` type
