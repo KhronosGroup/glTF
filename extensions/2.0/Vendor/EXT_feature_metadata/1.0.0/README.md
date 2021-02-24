@@ -23,7 +23,7 @@ Draft
 
 Written against the glTF 2.0 specification.
 
-Adds new functionality to the [`EXT_mesh_gpu_instancing` extension](../../EXT_mesh_gpu_instancing/README.md).
+Adds new functionality to the [`EXT_mesh_gpu_instancing` extension](../../EXT_mesh_gpu_instancing).
 
 <!-- omit in toc -->
 ## Optional vs. Required
@@ -72,7 +72,7 @@ Features in a glTF primitive are identified in three ways:
 
 * Per-vertex using a vertex attribute
 * Per-texel using a glTF texture
-* Per-instance using an instance attribute with the [`EXT_mesh_gpu_instancing` extension](../../EXT_mesh_gpu_instancing/README.md)
+* Per-instance using an instance attribute with the [`EXT_mesh_gpu_instancing` extension](../../EXT_mesh_gpu_instancing)
 
 <img src="figures/metadata-access.png"  alt="Metadata Access" width="600">
 
@@ -205,7 +205,7 @@ Often per-texel feature IDs provide finer granularity than per-vertex feature ID
 
 ### Feature ID Instance Attributes
 
-Feature IDs may also be assigned to individual instances when using the [`EXT_mesh_gpu_instancing` extension](../../EXT_mesh_gpu_instancing/README.md). This works the same way as assigning feature IDs to vertices. Feature IDs may be stored in accessors or generated implicitly.
+Feature IDs may also be assigned to individual instances when using the [`EXT_mesh_gpu_instancing` extension](../../EXT_mesh_gpu_instancing). This works the same way as assigning feature IDs to vertices. Feature IDs may be stored in accessors or generated implicitly.
 
 ```jsonc
 {
