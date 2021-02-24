@@ -2,7 +2,7 @@
 
 Assigns metadata to features in a model. Metadata may be assigned on a per-vertex or per-texel basis.
 
-This extension implements the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/blob/3d-tiles-next/specification/Metadata/README.md).
+This extension implements the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata/1.0.0).
 
 ## Changelog
 
