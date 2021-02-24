@@ -31,7 +31,7 @@
     },
     "values": {
       "type": "array",
-      "description": "An array of enum values. Duplicate names or integer values are not allowed.",
+      "description": "An array of enum values. Duplicate names or duplicate integer values are not allowed.",
       "items": {
         "$ref": "enum.value.schema.json"
       },
