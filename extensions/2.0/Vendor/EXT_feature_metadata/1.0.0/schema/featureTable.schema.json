@@ -25,7 +25,6 @@
     "extras": {}
   },
   "required": [
-    "class",
     "count"
   ]
 }
