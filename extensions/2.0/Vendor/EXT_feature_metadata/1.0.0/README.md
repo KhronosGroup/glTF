@@ -424,6 +424,23 @@ Model authors may define their own additional statistics, like `mode` below.
   "extensions": {
     "3DTILES_metadata": {
       "schema": {
+        "classes": {
+          "building": {
+            "properties": {
+              "height": {
+                "type": "FLOAT32"
+              },
+              "owners": {
+                "type": "ARRAY",
+                "componentType": "STRING"
+              },
+              "buildingType": {
+                "type": "ENUM",
+                "enumType": "buildingType"
+              }
+            }
+          }
+        },
         "enums": {
           "buildingType": {
             "valueType": "UINT8",
@@ -445,23 +462,6 @@ Model authors may define their own additional statistics, like `mode` below.
                 "value": 3
               }
             ]
-          }
-        },
-        "classes": {
-          "building": {
-            "properties": {
-              "height": {
-                "type": "FLOAT32"
-              },
-              "owners": {
-                "type": "ARRAY",
-                "componentType": "STRING"
-              },
-              "buildingType": {
-                "type": "ENUM",
-                "enumType": "buildingType"
-              }
-            }
           }
         }
       },
