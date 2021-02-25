@@ -1,7 +1,7 @@
 <!-- omit in toc -->
 # EXT_feature_metadata
 
-**Version 1.0.0** February 24, 2020
+**Version 1.0.0**, February 24, 2020
 
 <!-- omit in toc -->
 ## Contributors
@@ -247,7 +247,7 @@ A **feature** is a specific instantiation of class containing **property values*
 
 **Statistics** provide aggregate information about the metadata. For example, statistics may include the min/max values of a numeric property for mapping property values to color ramps or the number of enum occurrences for creating histograms.
 
-By default properties do not have any inherent meaning. A property may be assigned a **semantic**, an identifier that describes how the property should be interpreted. The full list of built-in semantics can be found in the [Cesium Metadata Semantic Reference](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata/Semantics). Model authors may define their own application or domain-specific semantics separately.
+By default properties do not have any inherent meaning. A property may be assigned a **semantic**, an identifier that describes how the property should be interpreted. The full list of built-in semantics can be found in the [Cesium Metadata Semantic Reference](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata/Semantics). Model authors may define their own application- or domain-specific semantics separately.
 
 This extension implements the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata/1.0.0), which describes the metadata format in full detail.
 
