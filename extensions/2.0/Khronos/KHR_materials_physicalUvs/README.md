@@ -1,5 +1,7 @@
 # KHR_materials_physicalUvs
 
+ALTERNATIVE NAMES: KHR_materials_physicalScale, others?
+
 ## Contributors
 
 * Ben Houston, Threekit, <https://twitter.com/BenHouston3D>
