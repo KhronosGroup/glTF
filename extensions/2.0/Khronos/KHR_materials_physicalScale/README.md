@@ -1,6 +1,4 @@
-# KHR_materials_physicalUvs
-
-ALTERNATIVE NAMES: KHR_materials_physicalScale, others?
+# KHR_materials_physicalScale
 
 ## Contributors
 
@@ -24,7 +22,7 @@ Reuse of models has been greatly aided by requiring 3D models to be created in r
 
 ## Extending Materials
 
-Materials that support real-world scale declare this support by adding the `KHR_materials_physicalUvs` extension to any glTF material. 
+Materials that support real-world scale declare this support by adding the `KHR_materials_physicalScale` extension to any glTF material. 
 
 For example, the following defines a material whose UV's space maps onto a 1 meter by 1 meter square.
 
@@ -34,8 +32,8 @@ For example, the following defines a material whose UV's space maps onto a 1 met
         {
             "name": "velvet",
             "extensions": {
-                "KHR_materials_physicalUvs": {
-                    "physicalUvScale": [1.0, 1.0]
+                "KHR_materials_physicalScale": {
+                    "physicalScale": [1.0, 1.0]
                 }
             }
         }
@@ -45,16 +43,17 @@ For example, the following defines a material whose UV's space maps onto a 1 met
 
 ### Physical UVs
 
-The following parameters are contributed by the `KHR_materials_physicalUvs` extension:
+The following parameters are contributed by the `KHR_materials_physicalScale` extension:
 
 |                                  | Type                                                                            | Description                            | Required                       |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|--------------------------------|
-|**physicalUvScale**                   | `array`                                                                         | The ratio of material UVs to 1 meter square        | No, default: `[1.0, 1.0]` |
+|**physicalScale**                   | `array`                                                                         | The ratio of material UVs to 1 meter square        | No, default: `[1.0, 1.0]` |
 
 
 ### Suggested Orientations
 
 In order to ensure easy reuse, many textures have instrinsic and repeated orientations.  Thus extension suggests that these following orientations:
+
 * Fabric: U should be along the grain, while V is cross grain.
 * Wall coverings: U should be horizontal, while V should be vertical.
 * Floor coverings: U should be the long side (e.g. along the lengths planks, or tiles), while V should be the short side.
