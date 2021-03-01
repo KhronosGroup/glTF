@@ -18,7 +18,17 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-Reuse of models has been greatly aided by requiring 3D models to be created in real-world scale.  This requirement has not been pushed onto materials.  As such materials are not as easily reused without applying arbitrary scales.  The solution to this is to allow for materials to specify how they can be mapped to real-world scale.  This extension proposed a simple solution to this - merely materials can specify that they support real world scale by specifying their scale factors relative to 1m in each direction.
+Reuse of models has been greatly aided by requiring 3D models to be created on a real-world scale.  This requirement has not been pushed onto materials.  As such materials are not as easily reused without applying arbitrary scales.  The solution to this is to allow for materials to specify how they can be mapped to real-world scale.  This extension proposed a simple solution to this - merely materials can specify that they support real world scale by specifying their scale factors relative to 1m in each direction.
+
+## Scenarios Enabled
+
+### Floor and Wall AR Experiences
+
+There are AR experiences that can be enabled with glTF-based physical scale materials that do not involve any glTF-transmitted 3D models.  For example, one could preview a new flooring material (carpet, hardwood) or wall covering (tiles, wallpaper, or paint) using ARKit or ARCore to identify the walls or floors planes and then 3D extents in the real world.  Then it could create this geometry and apply the physically scaled material to it.  Thus allowing you to preview these home improvements.
+
+### Reusable Material Libraries
+
+Material-only glTFs are already supported.  This can enable the transfer around of materials by themselves, enabling material libraries.  But for a material which represents a real-world material to look correct on an arbitrary model, it needs to be applied such that its real-world scale is preserved.  Right now there is no concept of a real-world material scale in materials themselves, rather the apparent scale of materials at the moment is a combination of the real world based on combining the physical scale of the models, along with the arbitrary UV scale on the models combined with the arbitrary UV scale of the materials.  This extension enables one to eliminate the two arbitrary scales used currently that determine the physical scale of the materials so that there is an explicit physical scale on materials.
 
 ## Extending Materials
 
@@ -41,7 +51,7 @@ For example, the following defines a material whose UV's space maps onto a 1 met
 }
 ```
 
-### Physical UVs
+### Physical Scale
 
 The following parameters are contributed by the `KHR_materials_physicalScale` extension:
 
@@ -50,13 +60,19 @@ The following parameters are contributed by the `KHR_materials_physicalScale` ex
 |**physicalScale**                   | `array`                                                                         | The ratio of material UVs to 1 meter square        | No, default: `[1.0, 1.0]` |
 
 
-### Suggested Orientations
+## Implementation Notes
 
-In order to ensure easy reuse, many textures have instrinsic and repeated orientations.  Thus extension suggests that these following orientations:
+### Suggested Orientations of Orientable Materials
 
-* Fabric: U should be along the grain, while V is cross grain.
-* Wall coverings: U should be horizontal, while V should be vertical.
-* Floor coverings: U should be the long side (e.g. along the lengths planks, or tiles), while V should be the short side.
+In order to ensure easy reuse, many textures have orientable physical materials.  The following list makes suggestions for orientations of these materials:
+
+* Fabric: U is along the grain, while V is cross grain.
+* Wood Grain: U is along the grain, while V is cross gain.
+* Wall Coverings: U is along the horizontal, while V is along the vertical.
+* Hardwood Tilings: U is the long side (e.g. along the lengths planks, or tiles), while V is the short side.
+* Tiles: U is the long side, while V is the short side.
+
+In all cases, it is assumed that U dimension is from left to right, and V dimension goes from top to bottom.
 
 ## Appendix: Full Khronos Copyright Statement
 
