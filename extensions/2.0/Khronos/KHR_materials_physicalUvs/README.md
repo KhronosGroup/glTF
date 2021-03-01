@@ -50,6 +50,13 @@ The following parameters are contributed by the `KHR_materials_physicalUvs` exte
 |**physicalUvScale**                   | `array`                                                                         | The ratio of material UVs to 1 meter square        | No, default: `[1.0, 1.0]` |
 
 
+### Suggested Orientations
+
+In order to ensure easy reuse, many textures have instrinsic and repeated orientations.  Thus extension suggests that these following orientations:
+* Fabric: U should be along the grain, while V is cross grain.
+* Wall coverings: U should be horizontal, while V should be vertical.
+* Floor coverings: U should be the long side (e.g. along the lengths planks, or tiles), while V should be the short side.
+
 ## Appendix: Full Khronos Copyright Statement
 
 Copyright 2018-2020 The Khronos Group Inc.
