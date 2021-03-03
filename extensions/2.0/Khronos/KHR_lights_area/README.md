@@ -1,4 +1,4 @@
-# KHR\_lights\_rect\_area
+# KHR\_lights\_area
 
 ## Contributors
 
@@ -17,60 +17,77 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension defines a rectangular area light for use with glTF 2.0.
+This extension defines common area lights for use with glTF 2.0.
 
-Many 3D tools and engines support built-in implementations of rect area types. Using this extension, tools can export and engines can import these lights. 
+Many 3D tools and engines support built-in implementations of area types. Using this extension, tools can export and engines can import these lights.
 
-This extension defines a single "rect" area light type: `rect`.
+This extension defines three "area" light types: `sphere`, `disk` and `rect`.
 
 These lights are referenced by nodes and inherit the transform of that node.
 
-A conforming implementation of this extension must be able to load light data defined in the asset and has to render the asset using those lights. 
+A conforming implementation of this extension must be able to load light data defined in the asset and has to render the asset using those lights.
 
 ## Defining Rect Area Lights
 
 Lights are defined within a dictionary property in the glTF scene description file, by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_lights_rect_area` property with a `lights` array inside it.
 
-The area light is assumed to point down the -Z axis.
+If the area lights are flat, then it is assumed that light is only emitted on the surface facing in the -Z direction.
 
-`width` is along the X-axis, and assumed to be centered.
-
-`height` is defined along the y-axis, and assumed to be centered.
-
-The following example defines a white-colored rect area light.
+The following example defines 3 area lights:
 
 ```javascript
 "extensions": {
-    "KHR_lights_rect_area" : {
+    "KHR_lights_area" : {
         "lights": [
             {
-                "width": 1.0,
-                "height": 1.0,
                 "intensity": 1.0,
                 "color": [
                     1.0,
                     1.0,
                     1.0
                 ],
-            }
-        ]
+                "type": "sphere",
+                "radius": 1.0,
+            },
+            {
+                "intensity": 1.0,
+                "color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "type": "disk",
+                "radius": 1.0,
+            },
+            {
+                "intensity": 1.0,
+                "color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "type": "rect",
+                "width": 1.0,
+                "height": 1.0,
+            },
+         ]
     }
 }
 ```
 
 ## Adding Light Instances to Nodes
 
-Lights must be attached to a node by defining the `extensions.KHR_lights_rect_area` property and, within that, an index into the `lights` array using the `light` property.
+Lights must be attached to a node by defining the `extensions.KHR_lights_area` property and, within that, an index into the `lights` array using the `light` property.
 
 ```javascript
 "nodes" : [
     {
         "extensions" : {
-            "KHR_lights_rect_area" : {
+            "KHR_lights_area" : {
                 "light" : 0
             }
         }
-    }            
+    }
 ]
 ```
 
@@ -83,8 +100,10 @@ The light will inherit the transform of the node.
 | `name` | Name of the light. | No, Default: `""` |
 | `color` | RGB value for light's color in linear space. | No, Default: `[1.0, 1.0, 1.0]` |
 | `intensity` | Brightness of light in. The units that this is defined in depend on the type of light in terms of luminous flux per unit area (1 lux = 1 lumen/m^2 = 1 candela * sr / m^2) | No, Default: `1.0` |
-| `width` | The centered width of the light along the X-axis. | :white_check_mark: Yes |
-| `height` | The centered height of the light along the Y-axis. | :white_check_mark: Yes |
+| `type` | Declares the type of the light. | :white_check_mark: Yes |
+| `width` | The centered width of a rect light. Supported only for `rect` lights. | No, Default: `1.0` |
+| `height` | The centered height of a rect light. Supported only for `rect` lights. | No, Default: `1.0` |
+| `radius` | The radius of a disk or sphere light. Supported only for `disk` and `sphere` lights. | No, Default: `1.0` |
 
 QUESTION: If an area light is scaled down by parent transforms, does it emit less light because it has less world space area?  Currently this would be the behavior given the current definition.  This seems intuitively like it makes sense.
 
