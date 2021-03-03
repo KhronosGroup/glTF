@@ -19,9 +19,9 @@ Written against the glTF 2.0 spec.
 
 This extension defines common area lights for use with glTF 2.0.
 
-Many 3D tools and engines support built-in implementations of area types. Using this extension, tools can export and engines can import these lights.
+Many 3D tools and engines support built-in implementations of area shapes. Using this extension, tools can export and engines can import these lights.
 
-This extension defines three "area" light types: `sphere`, `disk` and `rect`.
+This extension defines three area light shapes: `sphere`, `disk` and `rect`.
 
 These lights are referenced by nodes and inherit the transform of that node.
 
@@ -46,7 +46,7 @@ The following example defines 3 area lights:
                     1.0,
                     1.0
                 ],
-                "type": "sphere",
+                "shape": "sphere",
                 "radius": 1.0,
             },
             {
@@ -56,7 +56,7 @@ The following example defines 3 area lights:
                     1.0,
                     1.0
                 ],
-                "type": "disk",
+                "shape": "disk",
                 "radius": 1.0,
             },
             {
@@ -66,7 +66,7 @@ The following example defines 3 area lights:
                     1.0,
                     1.0
                 ],
-                "type": "rect",
+                "shape": "rect",
                 "width": 1.0,
                 "height": 1.0,
             },
@@ -99,8 +99,8 @@ The light will inherit the transform of the node.
 |:-----------------------|:------------------------------------------| :--------------------------|
 | `name` | Name of the light. | No, Default: `""` |
 | `color` | RGB value for light's color in linear space. | No, Default: `[1.0, 1.0, 1.0]` |
-| `intensity` | Brightness of light in. The units that this is defined in depend on the type of light in terms of nits (1 nit = 1 lm/sr/m^2) | No, Default: `1.0` |
-| `type` | Declares the type of the light. | :white_check_mark: Yes |
+| `intensity` | Brightness of light in. The units that this is defined in depend on the shape of light in terms of nits (1 nit = 1 lm/sr/m^2) | No, Default: `1.0` |
+| `shape` | Declares the shape of the light. | :white_check_mark: Yes |
 | `width` | The centered width of a rect light. Supported only for `rect` lights. | No, Default: `1.0` |
 | `height` | The centered height of a rect light. Supported only for `rect` lights. | No, Default: `1.0` |
 | `radius` | The radius of a disk or sphere light. Supported only for `disk` and `sphere` lights. | No, Default: `1.0` |
