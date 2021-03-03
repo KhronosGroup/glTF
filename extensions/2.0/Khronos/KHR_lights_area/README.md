@@ -99,7 +99,7 @@ The light will inherit the transform of the node.
 |:-----------------------|:------------------------------------------| :--------------------------|
 | `name` | Name of the light. | No, Default: `""` |
 | `color` | RGB value for light's color in linear space. | No, Default: `[1.0, 1.0, 1.0]` |
-| `intensity` | Brightness of light in. The units that this is defined in depend on the type of light in terms of luminous flux per unit area (1 lux = 1 lumen/m^2 = 1 candela * sr / m^2) | No, Default: `1.0` |
+| `intensity` | Brightness of light in. The units that this is defined in depend on the type of light in terms of nits (1 nit = 1 lm/sr/m^2) | No, Default: `1.0` |
 | `type` | Declares the type of the light. | :white_check_mark: Yes |
 | `width` | The centered width of a rect light. Supported only for `rect` lights. | No, Default: `1.0` |
 | `height` | The centered height of a rect light. Supported only for `rect` lights. | No, Default: `1.0` |
