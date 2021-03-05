@@ -34,7 +34,7 @@ The aim of these differences is to simplify the adoption of this extension by re
 
 ## Defining Dome Lights
 
-The KHR_lights_dome extension defines a list of dome lights at the root of the glTF.  A dome light contains an intensity, and a cube map that contains the specular image-based light.  The combination of the image along with the intensities is measured in nits.
+The KHR_lights_dome extension defines a list of dome lights at the root of the glTF.  A dome light contains an intensity, and a cube map that contains the image-based light.  The combination of the decoded image pixels values and the intensity parameter results in a value measured in nits (lm/sr/m^2.)
 
 ```javascript
 "extensions": {
@@ -100,6 +100,6 @@ This extension expects 4-channel PNG's to contain RGBE data. However, this shoul
 |:-----------------------|:------------------------------------------| :--------------------------|
 | `name` | Name of the light. | No, default: `` |
 | `intensity` | Brightness multiplier for environment. | No, Default: `1.0` |
-| `cubeImages` | Declares an array of the first N mips of the prefiltered cubemap. Each mip is, in turn, defined with an array of 6 images, one for each cube face. i.e. this is an Nx6 array. | :white_check_mark: Yes |
+| `cubeImages` | Declares an array of the 6 cubemap images, which of which is square and has the resolution of cubeImageSize. | :white_check_mark: Yes |
 | `cubeImageSize` | The dimension (in pixels) of the first specular mip. This is needed to determine, pre-load, the total number of mips needed. | :white_check_mark: Yes |
 
