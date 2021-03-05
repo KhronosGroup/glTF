@@ -20,7 +20,9 @@ Many 3D tools and engines support image-based global illumination but the exact 
 
 The extension supports only a single type of dome light, an image-based dome light, enough though other simplifer dome light specifications exist (spherical harmonic, solid color, etc.).  The lack of choice is motivated by the fact that all other types of dome lights can be viewed as simplification of a sufficiently high resolution image-based dome light.
 
-The extension also specifies that all cube maps images must be encoded in RGBE.  While this is unlikely to be the run-time format, it is the format that has the largest dynamic range and is also the most well established format for HDR images.  It is expected that the run-time engine will re-encode this format to either RGBM, RGBD or just linear floating point values.
+The extension also specifies that all cube maps images must be encoded in RGBE if they are low dynamic range.  If the image format is high dynamic range it is assumed to be in linearly encoded.  While RGBE is unlikely to be the run-time format, it is the format that has the largest dynamic range and is also the most well established format for 8-bit per channel HDR images.  It is expected that the run-time engine will re-encode this input image format to whatever is appropriate for the engine itself.
+
+This format is purposely highly opinionated in order to simplify implementation.
 
 ## Defining Dome Lights
 
@@ -32,7 +34,6 @@ The KHR_lights_dome extension defines a single dome light at the root of the glT
         "extensions": {
             "EXT_lights_dome" : {
                 "intensity": 1.0,
-                "cubeImageEncoding": "RGEB"
                 "cubeImageSize": 256,
                 "cubeImages": [
                     [... 6 cube faces ...],
@@ -42,6 +43,10 @@ The KHR_lights_dome extension defines a single dome light at the root of the glT
     }
 ]
 ```
+
+## Units
+
+The dome light, which is the combination of the decoded pixel values of the high dynamic range multiplied by the intensity, is assumed to be in nits (lm/sr/m^2).
 
 ## CubeMap Images
 
