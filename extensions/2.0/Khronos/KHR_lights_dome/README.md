@@ -102,7 +102,7 @@ TODO: Ensure that this actually works!  -Ben, March 8, 2021.
 
 For platforms that do not support WebGL 2 and WebGPU, it is required that one can decode R11G11B10F manually.  To faciliate this, the following code snippets are provided:
 
-```
+```glsl
 lowp vec4 packR11G11B10(mediump vec3 raw){ \n \
     mediump vec3 idx = floor(log2(max(raw,0.00001))); \n \
     idx = max(min(idx,16.0),-15.0); \n \
