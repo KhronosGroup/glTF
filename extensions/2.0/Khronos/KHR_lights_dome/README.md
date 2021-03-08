@@ -26,7 +26,7 @@ The differences are:
 
 - The cube map is stored in non-prefiltered form (in nits units), rather than prefiltered (in lux units.)
 - Only the top level full resolution cube map is stored, rather than the mip chain.
-- The cube map is assumed to be encoded in RGBE if low dynamic range, rather than RGBD.
+- The cube map data, if specified via a PNG, is assumed to be encoded in R11G11B10F, rather than RGBD.
 - No spherical harmonic is stored, if needed it can be generated at run-time.
 - No rotation quaternion on the image cube map is specified.
 
@@ -91,8 +91,38 @@ Note that for this extension, each saved image must be flipped about its vertica
 
 https://en.wikipedia.org/wiki/Cube_mapping
 
+### Rational for R11G11B10F
+
+The rational for [R11G11B10F](https://www.khronos.org/opengl/wiki/Small_Float_Formats) is that it is a native HDR format for the GPU within in a small form factor, just 32 bits per pixel.  It is required to be natively supported on all WebGL 2 and WebGPU supporting implementation.  This precision has proven to be sufficient for read-only HDR maps based on practical usage.  Some have argued that having independent exponents for each channel can allow for increased color accuracy as well across multiple exposure values.
+
+#### Decoding/Encoding
+
+TODO: Ensure that this actually works!  -Ben, March 8, 2021.
+
+For platforms that do not support WebGL 2 and WebGPU, it is required that one can decode R11G11B10F manually.  To faciliate this, the following code snippets are provided:
+
+```
+lowp vec4 packR11G11B10(mediump vec3 raw){ \n \
+    mediump vec3 idx = floor(log2(max(raw,0.00001))); \n \
+    idx = max(min(idx,16.0),-15.0); \n \
+    mediump vec3 num = max((raw*exp2(-idx) -1.0),0.0) ;\n \
+    return (vec4((idx +geta),floor(num.b * 32.0))*8.0\n \
+        + floor(vec4(num.rg,fract(num.rg * 8.0))*8.0) \n \
+    )/255.0; \n \
+} \n \
+
+mediump vec3 unpackR11G11B10(lowp vec4 raw){ \n \
+    mediump vec4 lo = floor(raw*255.0+0.5)/8.0; \n \
+    mediump vec4 hi= floor(lo); \n \
+    lo -=  hi; \n \
+    return  (vec3(lo.rg + lo.ba/8.0,hi.a/32.0) +1.0) \n \
+        * exp2(hi.rgb-geta); \n \
+} \n \
+```
+
+[Source](https://github.com/qeouo/nanka/blob/2561f0b6d9b86483028c873cee96406f990839b0/hdrpaint/src/lib/rastgl.js#L192)
 ### Future HDR Image Support
-This extension expects 4-channel PNG's to contain RGBE data. However, this should not interfere in any future glTF extensions that provide HDR support. e.g. if there is an extension that defines RGBD or other type of packing packing for PNG's that is in use for the texture/image, that should override the assumed RGBE packing. Support for other HDR file types (e.g. CTTF formats or .hdr/.exr files) should not interfere either as they won't be PNG's.
+This extension expects 4-channel PNG's to contain R11G11B10F data. However, this should not interfere with any future glTF extensions that provide HDR support.  If an image extension supports true HDR data, then it is assumed that this extension will also support loading that data in its native format.
 
 ### Image-Based Light Properties
 
