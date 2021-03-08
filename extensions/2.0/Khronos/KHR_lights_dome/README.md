@@ -85,7 +85,7 @@ Cube faces are defined in the following order and adhere to the standard orienta
 
 Note that for this extension, each saved image must be flipped about its vertical axis to correspond with the way <a href="https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#images">glTF references texture space</a>.
 
-### Rational for R11G11B10F
+### R11G11B10F
 
 The rational for [R11G11B10F](https://www.khronos.org/opengl/wiki/Small_Float_Formats) is that it is a native HDR format for the GPU within in a small form factor, just 32 bits per pixel.  It is required to be natively supported on all WebGL 2 and WebGPU supporting implementation.  This precision has proven to be sufficient for read-only HDR maps based on practical usage.  Some have argued that having independent exponents for each channel can allow for increased color accuracy as well across multiple exposure values.
 
