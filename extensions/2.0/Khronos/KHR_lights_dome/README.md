@@ -83,14 +83,7 @@ Cube faces are defined in the following order and adhere to the standard orienta
 1. Positive Z
 1. Negative Z
 
-<figure>
-<img src="./figures/Cube_map.svg"/>
-<figcaption><em>Cube map orientation reference.<br>Image by <a href="//commons.wikimedia.org/w/index.php?title=User:Microwerx&amp;action=edit&amp;redlink=1" class="new" title="User:Microwerx (page does not exist)">Microwerx</a> - <span class="int-own-work" lang="en">Own work</span>, <a href="https://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0">CC BY-SA 4.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=48935423">Link</a></em></figcaption>
-</figure>
-
 Note that for this extension, each saved image must be flipped about its vertical axis to correspond with the way <a href="https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#images">glTF references texture space</a>.
-
-https://en.wikipedia.org/wiki/Cube_mapping
 
 ### Rational for R11G11B10F
 
