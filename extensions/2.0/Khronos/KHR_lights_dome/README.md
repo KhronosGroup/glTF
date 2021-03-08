@@ -3,6 +3,7 @@
 ## Contributors
 
 * Ben Houston, Threekit, <https://twitter.com/BenHouston3D>
+* Romain Guy, Google, <https://twitter.com/romainguy>
 
 ## Status
 
