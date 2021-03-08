@@ -96,22 +96,22 @@ TODO: Ensure that this actually works!  -Ben, March 8, 2021.
 For platforms that do not support WebGL 2 and WebGPU, it is required that one can decode R11G11B10F manually.  To faciliate this, the following code snippets are provided:
 
 ```glsl
-lowp vec4 packR11G11B10(mediump vec3 raw){ \n \
-    mediump vec3 idx = floor(log2(max(raw,0.00001))); \n \
-    idx = max(min(idx,16.0),-15.0); \n \
-    mediump vec3 num = max((raw*exp2(-idx) -1.0),0.0) ;\n \
-    return (vec4((idx +geta),floor(num.b * 32.0))*8.0\n \
-        + floor(vec4(num.rg,fract(num.rg * 8.0))*8.0) \n \
-    )/255.0; \n \
-} \n \
+lowp vec4 packR11G11B10(mediump vec3 raw){
+    mediump vec3 idx = floor(log2(max(raw,0.00001)));
+    idx = max(min(idx,16.0),-15.0);
+    mediump vec3 num = max((raw*exp2(-idx) -1.0),0.0) ;
+    return (vec4((idx +geta),floor(num.b * 32.0))*8.0
+        + floor(vec4(num.rg,fract(num.rg * 8.0))*8.0)
+        )/255.0;
+}
 
-mediump vec3 unpackR11G11B10(lowp vec4 raw){ \n \
-    mediump vec4 lo = floor(raw*255.0+0.5)/8.0; \n \
-    mediump vec4 hi= floor(lo); \n \
-    lo -=  hi; \n \
-    return  (vec3(lo.rg + lo.ba/8.0,hi.a/32.0) +1.0) \n \
-        * exp2(hi.rgb-geta); \n \
-} \n \
+mediump vec3 unpackR11G11B10(lowp vec4 raw){
+    mediump vec4 lo = floor(raw*255.0+0.5)/8.0;
+    mediump vec4 hi= floor(lo);
+    lo -=  hi;
+    return (vec3(lo.rg + lo.ba/8.0,hi.a/32.0) +1.0)
+        * exp2(hi.rgb-geta);
+}
 ```
 
 [Source](https://github.com/qeouo/nanka/blob/2561f0b6d9b86483028c873cee96406f990839b0/hdrpaint/src/lib/rastgl.js#L192)
