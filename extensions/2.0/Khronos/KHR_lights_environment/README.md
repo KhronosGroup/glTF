@@ -43,7 +43,11 @@ If a compressed texture format is used then pre-filtered mip-levels must be incl
 
 The KHR_lights_environment extension defines an array of image-based lights at the root of the glTF and then each scene can reference one.  
 Each environment light definition consists of a single cubemap that describes the specular radiance of the scene, the l=2 spherical harmonics coefficients for diffuse irradiance and intensity values.  
-The cubemap is defined by texture references to KTX2 files containing a cubemap, these files can contain compressed textures using KHR_texture_basisu
+The cubemap is defined by texture references to KTX2 files containing a cubemap, these files can contain compressed textures using KHR_texture_basisu.  
+KTX2 files may use the following formats for HDR support:  
+VK_FORMAT_B10G11R11_UFLOAT_PACK32  
+VK_FORMAT_E5B9G9R9_UFLOAT_PACK32  
+VK_FORMAT_BC6H_UFLOAT_BLOCK  
 
 If image source contains a cubemap pyramid it must be pre-filtered and contain the needed mip-levels see Specular Radiance Cubemaps.  
 
