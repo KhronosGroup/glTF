@@ -1,21 +1,21 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "EXT_lights_environment glTF extension",
+    "title": "KHR_lights_environment scene extension",
     "type": "object",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "environment": {
+        "light": {
             "allOf": [
                 {
                     "$ref": "glTFid.schema.json"
                 }
             ],
-            "description": "The id of the environment used for lighting referenced by this scene."
+            "description": "The id of the light referenced by this scene."
         },
-        "extensions": {},
-        "extras": {}
+        "extensions": { },
+        "extras": { }
     },
     "required":[
-        "environment"
+        "light"
     ]
 }

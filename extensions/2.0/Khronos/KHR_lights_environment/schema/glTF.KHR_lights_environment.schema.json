@@ -1,21 +1,21 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "EXT_lights_environment glTF extension",
+    "title": "KHR_lights_environment glTF extension",
     "type": "object",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "environments": {
+        "lights": {
             "type": "array",
             "items": {
                 "type": "object",
-                "$ref": "environment.schema.json"
+                "$ref": "light.schema.json"
             },
             "minItems": 1
         },
-        "extensions": {},
-        "extras": {}
+        "extensions": { },
+        "extras": { }
     },
-    "required": [
-        "environments"
+    "required":[
+        "lights"
     ]
 }
