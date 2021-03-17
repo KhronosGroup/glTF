@@ -17,7 +17,6 @@ Draft
 ## Dependencies
 
 Written against the glTF 2.0 spec.  
-This extension requires the KHR_texture_basisu extension to be supported.  
 
 ## Overview
 
@@ -97,7 +96,10 @@ When used in the glTF Binary (GLB) format the `image` that points to the KTX v2 
 
 ### Using Without a Fallback
 
-To use KTX v2 image with Basis Universal supercompression without a fallback, define `KHR_texture_float_bc6h` in both `extensionsUsed` and `extensionsRequired`. The `texture` object will then have its `source` property omitted as shown below.
+To use KTX v2 image with VK_FORMAT_BC6H_UFLOAT_BLOCK without a fallback, define `KHR_texture_float_bc6h` in both `extensionsUsed` and `extensionsRequired`. The `texture` object will then have its `source` property omitted as shown below.
+
+[Unresolved]  
+Shall a LDR fallback be possible?
 
 ```json
 {
@@ -133,17 +135,20 @@ To use KTX v2 image with Basis Universal supercompression without a fallback, de
 
 ## KTX v2 Images with VK_FORMAT_BC6H_UFLOAT_BLOCK
 
-To cover usecases where a texture source shall have increased dynamic range
+To cover usecases where a texture source shall have increased dynamic range.  
 
 - Swizzling metadata (`KTXswizzle`) MUST be `rgba` or omitted.
 - Orientation metadata (`KTXorientation`) MUST be `rd` or omitted.
 - Color space information in the DFD MUST match the expected usage, namely:
   - For textures with **color data** (e.g., base color maps),
     - `colorPrimaries` MUST be `KHR_DF_PRIMARIES_BT709`;
-    - `transferFunction` MUST be `KHR_DF_TRANSFER_SRGB`.
+    - `transferFunction` MUST be `KHR_DF_TRANSFER_LINEAR`.
   - For textures with **non-color data** (e.g., normal maps),
     - `colorPrimaries` MUST be `KHR_DF_PRIMARIES_UNSPECIFIED`;
     - `transferFunction` MUST be `KHR_DF_TRANSFER_LINEAR`.
+
+[Unresolved]  
+Is it enough with BT709 or do we need to define use a standard with wide color gamut?  
 
 ### Using KTX v2 Images with VK_FORMAT_BC6H_UFLOAT_BLOCK for Material Textures
 
