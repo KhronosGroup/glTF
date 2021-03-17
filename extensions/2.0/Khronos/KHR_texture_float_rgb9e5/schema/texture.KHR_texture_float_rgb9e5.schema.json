@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_texture_float_rgb9e5 glTF extension",
+    "type": "object",
+    "description": "glTF extension to specify textures using the KTX v2 images in VK_FORMAT_E5B9G9R9_UFLOAT_PACK32 format.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "source": {
+          "allOf": [ { "$ref": "glTFid.schema.json" } ],
+          "description": "The index of the image which points to a KTX v2 resource in VK_FORMAT_E5B9G9R9_UFLOAT_PACK32 format."
+        },
+        "extensions": {},
+        "extras": {}
+      }
+}
