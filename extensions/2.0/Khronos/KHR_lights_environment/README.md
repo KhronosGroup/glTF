@@ -15,6 +15,7 @@ Draft
 ## Dependencies
 
 Written against the glTF 2.0 spec.
+This extension may use KHR_texture_basisu, KHR_texture_float_bc6h or KHR_texture_float_rgb9e5  
 
 ## Overview
 This extension provides the ability to define image-based lights in a glTF scene.  
@@ -32,9 +33,10 @@ Secondly, it ensures that rendering of the image-based lighting is consistent ac
 
 A conforming implementation of this extension must be able to load the image-based environment data and render the PBR materials using this lighting.  
 
-This extension is based on EXT_lights_image_based, with added support for KTX2 as a carrier for cubemap and HDR texture formats.  
+This extension is based on EXT_lights_image_based, with added support for KTX2 as a carrier for [cubemap and] HDR texture formats.  
 
 The environment light is defined by a cubemap.  
+[TBD - shall a separate KHR_texture_cubemap extension be created?]
 Cubemaps can be supplied pre-filtered, by including the pre-filtered mip-levels, otherwise filtering will be performed at load time.  
 [TBD - point to relevant filtering algorithm]  
 If a compressed texture format is used then pre-filtered mip-levels must be included.  
@@ -43,13 +45,9 @@ If a compressed texture format is used then pre-filtered mip-levels must be incl
 
 The KHR_lights_environment extension defines an array of image-based lights at the root of the glTF and then each scene can reference one.  
 Each environment light definition consists of a single cubemap that describes the specular radiance of the scene, the l=2 spherical harmonics coefficients for diffuse irradiance and intensity values.  
-The cubemap is defined by texture references to KTX2 files containing a cubemap, these files can contain compressed textures using KHR_texture_basisu.  
-KTX2 files may use the following formats for HDR support:  
-VK_FORMAT_B10G11R11_UFLOAT_PACK32  
-VK_FORMAT_E5B9G9R9_UFLOAT_PACK32  
-VK_FORMAT_BC6H_UFLOAT_BLOCK  
+The cubemap is defined by texture references to a KTX2 file containing a cubemap, these files can contain compressed textures using KHR_texture_basisu  
+or use a float texture format as defined by KHR_texture_float_bc6h or KHR_texture_float_rgb95e.   
 
-If image source contains a cubemap pyramid it must be pre-filtered and contain the needed mip-levels see Specular Radiance Cubemaps.  
 
 ```json
 "extensions": {
@@ -67,13 +65,13 @@ If image source contains a cubemap pyramid it must be pre-filtered and contain t
 
 ## Specular Radiance Cubemaps
 
-The cubemap used for specular radiance is defined as separate images for each cube face. 
+The cubemap used for specular radiance is defined as a cubemap containing separate images for each cube face. 
 The mip levels shall evenly map to roughness values from 0 to 1 in the PBR material and should be generated with a principled multi-scatter GGX normal distribution. The data in the maps represents illuminance in candela per square meter (nit).
 
-If mip-levels are not included, then the entire mip chain of images should not be generated.
+If mip-levels are not included, then the entire mip chain of images should not be generated.  
 Instead, the lowest-resolution mip should have sufficient size to represent the maximally-blurred radiance map (say, 16x16) corresponding to roughness=1. The texture references defines the largest dimension of mip 0 and, taken together with the number of defined mips, should give the loading runtime the information it needs to generate the remainder of the mip chain and sample the appropriate mip level in the shader.
 
-Cube faces are defined in the KTX2 format specification and this extension adheres this.  
+Cube faces are defined in the KTX2 format specification, users of this extension must follow the KTX2 cubemap specification.  
 
 
 ## Irradiance Coefficients
