@@ -22,6 +22,9 @@ Written against the glTF 2.0 spec.
 
 This extension adds the ability to specify textures using KTX v2 images with float format as defined by VK_FORMAT_E5B9G9R9_UFLOAT_PACK32.  
 This format is uncompressed and has good precision compared to size requirements.  
+It allows specification of a source texture with increased dynamic range to be used.  
+This source texture shall be used in shader (BRDF) calculations in a way that retains the increased range.  
+However, this extension does not define the way pixel data is written to framebuffer or how swapchain is presented using the increased range.  
 
 When the extension is used, it's allowed to use value `image/ktx2` for the `mimeType` property of images that are referenced by the `source` property of `KHR_texture_float_rgb9e5` texture extension object.
 
