@@ -30,7 +30,10 @@ At runtime, engines are expected to check hardware support for VK_FORMAT_BC6H_UF
 
 The `KHR_texture_float_bc6h` extension is added to the `textures` object and specifies a `source` property that points to the index of the `image` which defines a reference to the KTX v2 image in VK_FORMAT_BC6H_UFLOAT_BLOCK.
 
-The following glTF will load `image.ktx2` in clients that support this extension, and otherwise fall back to `image.png`.
+### Using this extension
+
+The following glTF will load `image.ktx2` in clients that support this extension.  
+Since this extension adds support for higher dynamic range there is no fallback to JPEG or PNG (LDR) images.  
 
 ```json
 {
@@ -45,15 +48,12 @@ The following glTF will load `image.ktx2` in clients that support this extension
             "source": 0,
             "extensions": {
                 "KHR_texture_float_bc6h": {
-                    "source": 1
+                    "source": 0
                 }
             }
         }
     ],
     "images": [
-        {
-            "uri": "image.png"
-        },
         {
             "uri": "image.ktx2"
         }
@@ -76,16 +76,12 @@ When used in the glTF Binary (GLB) format the `image` that points to the KTX v2 
             "source": 0,
             "extensions": {
                 "KHR_texture_float_bc6h": {
-                    "source": 1
+                    "source": 0
                 }
             }
         }
     ],
     "images": [
-        {
-            "mimeType": "image/png",
-            "bufferView": 1
-        },
         {
             "mimeType": "image/ktx2",
             "bufferView": 2
@@ -94,12 +90,6 @@ When used in the glTF Binary (GLB) format the `image` that points to the KTX v2 
 }
 ```
 
-### Using Without a Fallback
-
-To use KTX v2 image with VK_FORMAT_BC6H_UFLOAT_BLOCK without a fallback, define `KHR_texture_float_bc6h` in both `extensionsUsed` and `extensionsRequired`. The `texture` object will then have its `source` property omitted as shown below.
-
-[Unresolved]  
-Shall a LDR fallback be possible?
 
 ```json
 {
