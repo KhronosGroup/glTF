@@ -20,7 +20,8 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds the ability to specify textures using KTX v2 images with float format as defined by VK_FORMAT_E5B9G9R9_UFLOAT_PACK32.
+This extension adds the ability to specify textures using KTX v2 images with float format as defined by VK_FORMAT_E5B9G9R9_UFLOAT_PACK32.  
+This format is uncompressed and has good precision compared to size requirements.  
 
 When the extension is used, it's allowed to use value `image/ktx2` for the `mimeType` property of images that are referenced by the `source` property of `KHR_texture_float_rgb9e5` texture extension object.
 
@@ -31,7 +32,10 @@ At runtime, engines are expected to check hardware support for VK_FORMAT_E5B9G9R
 
 The `KHR_texture_float_rgb9e5` extension is added to the `textures` object and specifies a `source` property that points to the index of the `image` which defines a reference to the KTX v2 image in VK_FORMAT_E5B9G9R9_UFLOAT_PACK32.
 
-The following glTF will load `image.ktx2` in clients that support this extension, and otherwise fall back to `image.png`.
+### Using this extension
+
+The following glTF will load `image.ktx2` in clients that support this extension.  
+Since this extension adds support for higher dynamic range there is no fallback to JPEG or PNG (LDR) images.   
 
 ```json
 {
@@ -46,15 +50,12 @@ The following glTF will load `image.ktx2` in clients that support this extension
             "source": 0,
             "extensions": {
                 "KHR_texture_float_rgb9e5": {
-                    "source": 1
+                    "source": 0
                 }
             }
         }
     ],
     "images": [
-        {
-            "uri": "image.png"
-        },
         {
             "uri": "image.ktx2"
         }
@@ -77,51 +78,14 @@ When used in the glTF Binary (GLB) format the `image` that points to the KTX v2 
             "source": 0,
             "extensions": {
                 "KHR_texture_float_rgb9e5": {
-                    "source": 1
-                }
-            }
-        }
-    ],
-    "images": [
-        {
-            "mimeType": "image/png",
-            "bufferView": 1
-        },
-        {
-            "mimeType": "image/ktx2",
-            "bufferView": 2
-        }
-    ]
-}
-```
-
-### Using Without a Fallback
-
-To use KTX v2 image with Basis Universal supercompression without a fallback, define `KHR_texture_float_rgb9e5` in both `extensionsUsed` and `extensionsRequired`. The `texture` object will then have its `source` property omitted as shown below.
-
-```json
-{
-    "asset": {
-        "version": "2.0"
-    },
-    "extensionsUsed": [
-        "KHR_texture_float_rgb9e5"
-    ],
-    "extensionsRequired": [
-        "KHR_texture_float_rgb9e5"
-    ],
-    "textures": [
-        {
-            "extensions": {
-                "KHR_texture_float_rgb9e5": {
                     "source": 0
                 }
             }
         }
     ],
-    "images": [
         {
-            "uri": "image.ktx2"
+            "mimeType": "image/ktx2",
+            "bufferView": 2
         }
     ]
 }
@@ -140,7 +104,7 @@ To cover usecases where a texture source shall have increased dynamic range
 - Color space information in the DFD MUST match the expected usage, namely:
   - For textures with **color data** (e.g., base color maps),
     - `colorPrimaries` MUST be `KHR_DF_PRIMARIES_BT709`;
-    - `transferFunction` MUST be `KHR_DF_TRANSFER_SRGB`.
+    - `transferFunction` MUST be `KHR_DF_TRANSFER_LINEAR`.
   - For textures with **non-color data** (e.g., normal maps),
     - `colorPrimaries` MUST be `KHR_DF_PRIMARIES_UNSPECIFIED`;
     - `transferFunction` MUST be `KHR_DF_TRANSFER_LINEAR`.
