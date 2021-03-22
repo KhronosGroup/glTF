@@ -21,7 +21,7 @@ Written against the glTF 2.0 spec.
 ## Overview
 
 This extension adds the ability to specify textures using KTX v2 images with float format as defined by VK_FORMAT_R16G16B16_SFLOAT.  
-It allows specification of a source texture with increased dynamic range to be used and is intended to be used when the increased precision of 16 bit float is needed.  
+It allows specification of a source texture with increased dynamic range to be used and is intended to be used when the increased precision and lossless image quality of 16 bit float is needed.  
 For compatibility reasons implementations may expand the texture to R16G16B16A16 (64 bits) format if the platform does not have support for the R16G16B16 format. 
 
 This source texture shall be used in shader (BRDF) calculations in a way that retains the increased range.  
