@@ -1,3 +1,4 @@
+﻿
 ﻿# KHR_texture_float_bc6h
 
 ## Contributors
@@ -27,7 +28,8 @@ However, this extension does not define the way pixel data is written to framebu
 
 When the extension is used, it's allowed to use value `image/ktx2` for the `mimeType` property of images that are referenced by the `source` property of `KHR_texture_float_bc6h` texture extension object.
 
-At runtime, engines are expected to check hardware support for VK_FORMAT_BC6H_UFLOAT_BLOCK, if not present the texture should be transcoded converted to a suitable supported format.
+At runtime, engines are expected to check hardware support for VK_FORMAT_BC6H_UFLOAT_BLOCK, if not present the extension is not supported.  
+This means that it is not allowed to transcode the texture data to some other format.   
 
 ## glTF Schema Updates
 
