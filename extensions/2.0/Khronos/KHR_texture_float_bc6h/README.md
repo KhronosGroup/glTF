@@ -1,5 +1,4 @@
-﻿
-﻿# KHR_texture_float_bc6h
+# KHR_texture_float_bc6h
 
 ## Contributors
 
@@ -28,8 +27,7 @@ However, this extension does not define the way pixel data is written to framebu
 
 When the extension is used, it's allowed to use value `image/ktx2` for the `mimeType` property of images that are referenced by the `source` property of `KHR_texture_float_bc6h` texture extension object.
 
-At runtime, engines are expected to check hardware support for VK_FORMAT_BC6H_UFLOAT_BLOCK, if not present the extension is not supported.  
-This means that it is not allowed to transcode the texture data to some other format.   
+The [conformance](#conformance) section specifies what an implementation must do when encountering this extension, and how the extension interacts with the attributes defined in the base specification.    
 
 ## glTF Schema Updates
 
@@ -37,8 +35,8 @@ The `KHR_texture_float_bc6h` extension is added to the `textures` object and spe
 
 ### Using this extension
 
-The following glTF will load `image.ktx2` in clients that support this extension.  
-Since this extension adds support for higher dynamic range there is no fallback to JPEG or PNG (LDR) images.  
+The following glTF will load `image.ktx2` in clients that support this extension, otherwise fallback to `image.png`  
+
 
 ```json
 {
@@ -53,12 +51,15 @@ Since this extension adds support for higher dynamic range there is no fallback 
             "source": 0,
             "extensions": {
                 "KHR_texture_float_bc6h": {
-                    "source": 0
+                    "source": 1
                 }
             }
         }
     ],
     "images": [
+        {
+            "uri": "image.png"
+        },
         {
             "uri": "image.ktx2"
         }
@@ -81,12 +82,16 @@ When used in the glTF Binary (GLB) format the `image` that points to the KTX v2 
             "source": 0,
             "extensions": {
                 "KHR_texture_float_bc6h": {
-                    "source": 0
+                    "source": 1
                 }
             }
         }
     ],
     "images": [
+        {
+            "mimeType": "image/png",
+            "bufferView": 1
+        },
         {
             "mimeType": "image/ktx2",
             "bufferView": 2
@@ -94,6 +99,11 @@ When used in the glTF Binary (GLB) format the `image` that points to the KTX v2 
     ]
 }
 ```
+
+### Using this extension without a fallback
+
+To use KTX v2 image with half float without a fallback, `KHR_texture_float_bc6h` in both extensionsUsed and extensionsRequired.  
+The texture object will then have its source property omitted as shown below.
 
 
 ```json
@@ -142,8 +152,6 @@ To cover usecases where a texture source shall have increased dynamic range.
     - `colorPrimaries` MUST be `KHR_DF_PRIMARIES_UNSPECIFIED`;
     - `transferFunction` MUST be `KHR_DF_TRANSFER_LINEAR`.
 
-[Unresolved]  
-Is it enough with BT709 or do we need to define use a standard with wide color gamut?  
 
 ### Using KTX v2 Images with VK_FORMAT_BC6H_UFLOAT_BLOCK for Material Textures
 
@@ -151,6 +159,20 @@ When a texture referencing a KTX v2 image with VK_FORMAT_BC6H_UFLOAT_BLOCK is us
 
 `KHR_DF_FLAG_ALPHA_PREMULTIPLIED` flag MUST NOT be set unless the material's specification requires premultiplied alpha.
 
+
+# Conformance
+
+Below is the recommended process when a loader encounters a glTF asset with the compressed half float extension set:
+* If `KHR_texture_float_bc6h` is in extensionsRequired and the loader does not support the extension, then the loader must fail loading the asset.  
+* If the loader does not support the compressed half float extension and `KHR_texture_float_bc6h` is not in extensionsRequired, then load the glTF asset using the image in the source of the texture object.  
+
+
+# Implementation note
+
+_This section is non normative_
+
+Implementations are expected to check hardware support for VK_FORMAT_BC6H_UFLOAT_BLOCK. 
+If not present the texture may be transcoded to a suitable supported format for instance using the [BC6H-Decoder-WASM](https://github.com/KhronosGroup/BC6H-Decoder-WASM) library.  
 
 ## Known Implementations
 
