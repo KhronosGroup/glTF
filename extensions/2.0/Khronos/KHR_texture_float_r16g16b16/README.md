@@ -1,4 +1,4 @@
-﻿﻿# KHR_texture_float_r16g16b16
+# KHR_texture_float_r16g16b16
 
 ## Contributors
 
@@ -20,8 +20,8 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds the ability to specify textures using KTX v2 images with float format as defined by VK_FORMAT_R16G16B16_SFLOAT.  
-It allows specification of a source texture with increased dynamic range to be used and is intended to be used when the increased precision and lossless image quality of 16 bit float is needed.  
+This extension adds the ability to specify textures using KTX v2 images with a half float (F16) format as defined by VK_FORMAT_R16G16B16_SFLOAT.  
+It allows specification of a source texture with increased dynamic range to be used and is intended for usecases when the increased precision and lossless image quality of 16 bit float is needed.  
 For compatibility reasons implementations may expand the texture to R16G16B16A16 (64 bits) format if the platform does not have support for the R16G16B16 format. 
 
 This source texture shall be used in shader (BRDF) calculations in a way that retains the increased range.  
@@ -29,19 +29,14 @@ However, this extension does not define the way pixel data is written to framebu
 
 When the extension is used, it's allowed to use value `image/ktx2` for the `mimeType` property of images that are referenced by the `source` property of `KHR_texture_float_r16g16b16` texture extension object.
 
-At runtime, engines are expected to check hardware support for VK_FORMAT_R16G16B16_SFLOAT. 
-If not present the texture should be converted to a suitable supported format.
-The first fallback shall be to a half float (F16) format with alpha support, then fallback to a format with higher floating point precision.  
-If no such format is present the runtime shall report that the extension is not supported.  
+The [conformance](#conformance) section specifies what an implementation must do when encountering this extension, and how the extension interacts with the attributes defined in the base specification.
+
 
 ## glTF Schema Updates
 
 The `KHR_texture_float_r16g16b16` extension is added to the `textures` object and specifies a `source` property that points to the index of the `image` which defines a reference to the KTX v2 image in VK_FORMAT_R16G16B16_SFLOAT.
 
-### Using this extension
-
-The following glTF will load `image.ktx2` in clients that support this extension.  
-Since this extension adds support for higher dynamic range there is no fallback to JPEG or PNG (LDR) images, or other image types with lower precision.     
+The following glTF will load `image.ktx2` in clients that support this extension, otherwise fallback to `image.png`     
 
 ```json
 {
@@ -56,12 +51,15 @@ Since this extension adds support for higher dynamic range there is no fallback 
             "source": 0,
             "extensions": {
                 "KHR_texture_float_r16g16b16": {
-                    "source": 0
+                    "source": 1
                 }
             }
         }
     ],
     "images": [
+        {
+            "uri": "image.png"
+        },
         {
             "uri": "image.ktx2"
         }
@@ -84,11 +82,15 @@ When used in the glTF Binary (GLB) format the `image` that points to the KTX v2 
             "source": 0,
             "extensions": {
                 "KHR_texture_float_r16g16b16": {
-                    "source": 0
+                    "source": 1
                 }
             }
         }
     ],
+        {
+            "mimeType": "image/png",
+            "bufferView": 1
+        },
         {
             "mimeType": "image/ktx2",
             "bufferView": 2
@@ -96,6 +98,41 @@ When used in the glTF Binary (GLB) format the `image` that points to the KTX v2 
     ]
 }
 ```
+
+### Using this extension without a fallback
+
+To use KTX v2 image with half float without a fallback, `KHR_texture_float_r16g16b16` in both extensionsUsed and extensionsRequired.  
+The texture object will then have its source property omitted as shown below.
+
+```json
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "KHR_texture_float_r16g16b16"
+    ],
+    "extensionsRequired": [
+        "KHR_texture_float_r16g16b16"
+    ],
+    "textures": [
+        {
+            "extensions": {
+                "KHR_texture_float_r16g16b16": {
+                    "source": 0
+                }
+            }
+        }
+    ],
+    "images": [
+        {
+            "uri": "image.ktx2"
+        }
+    ]
+}
+```
+
+
 
 ### JSON Schema
 
@@ -120,6 +157,22 @@ To cover usecases where a texture source shall have increased dynamic range
 When a texture referencing a KTX v2 image with VK_FORMAT_R16G16B16_SFLOAT is used for glTF 2.0 material maps (both color and non-color), the KTX v2 image MUST be of **2D** type as defined in the KTX v2 Specification, Section 4.1.
 
 `KHR_DF_FLAG_ALPHA_PREMULTIPLIED` flag MUST NOT be set unless the material's specification requires premultiplied alpha.
+
+# Conformance
+
+Below is the recommended process when a loader encounters a glTF asset with the half float extension set:
+* If `KHR_texture_float_r16g16b16` is in extensionsRequired and the loader does not support the extension, then the loader must fail loading the asset.  
+* If the loader does not support the half float extension and `KHR_texture_float_r16g16b16` is not in extensionsRequired, then load the glTF asset using the image in the source of the texture object.  
+
+
+# Implementation note
+
+_This section is non normative_
+
+Implementations are expected to check hardware support for VK_FORMAT_R16G16B16_SFLOAT. 
+If not present the texture may be converted to a suitable supported format.  
+The first fallback is suggested to a half float (F16) format with alpha support,  
+then fallback to a format with either higher or lower precision depending on platform capabilities.  
 
 
 ## Known Implementations
