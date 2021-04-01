@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "GRIFFEL_bim_data glTF Node extension",
+    "type": "object",
+    "description": "",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "buffer": {
+            "type": "number",
+            "description": "Index of the buffer which contains data for this node. Specifi this parameter only when BIM data is exported in a separate binary file."
+        },
+        "properties": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0
+            },
+            "description": "Array of indices which point to corresponding instance properties of the node. (Instance properties are unique to the node.)"
+        },
+        "type": {
+            "type": "number",
+            "description": "Index of corresponding type of the node. (Type is a set of properties which are shared between many nodes.)"
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
