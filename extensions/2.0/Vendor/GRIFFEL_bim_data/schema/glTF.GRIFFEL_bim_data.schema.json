@@ -5,6 +5,32 @@
     "description": "Set of properties for glTF Nodes.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
+        "elementProperties": {
+            "$ref": "elementProperties.schema.json",
+            "description": "Node name - properties map. Used only when BIM data is saved in a separate file."
+        },
+        "propertyValues": {
+            "type": "string",
+            "description": "Collection of unique property values."
+        },
+        "propertyNames": {
+            "type": "string",
+            "description": "Collection of unique property names."
+        },
+        "properties": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "description": "Collection of unique property values."
+        },
+        "types": {
+            "type": "array",
+            "items": {
+                "type": ""
+            },
+            "description": "Collection of particular sets of properties."
+        },
         "extensions": { },
         "extras": { }
     }
