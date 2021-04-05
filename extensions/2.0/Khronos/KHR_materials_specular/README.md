@@ -4,15 +4,19 @@
 
 * Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
 * Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
-* Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
-* Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
-* Ben Houston, ThreeKit [@bhouston](https://github.com/bhouston)
+* Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
 * Emmett Lalish, Google [@elalish](https://github.com/elalish)
 * Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+* Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
+* Eric Chadwick, Wayfair [echadwick-wayfair](https://github.com/echadwick-wayfair)
+* Ben Houston, ThreeKit [@bhouston](https://github.com/bhouston)
+* Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
 * Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
+* Alex Wood, AGI [@abwood](https://twitter.com/abwood)
+* Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
 
-Copyright (C) 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright (C) 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
