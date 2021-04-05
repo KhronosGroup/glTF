@@ -13,6 +13,14 @@
 * Ben Houston, ThreeKit [@bhouston](https://github.com/bhouston)
 * Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
 * Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
+* Nicholas Barlow, Microsoft
+* Nicolas Savva, Autodesk [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
+* Henrik Edstrom, Autodesk
+* Bruce Cherniak, Intel
+* Adam Morris, Target [@weegeekps](https://github.com/weegeekps)
+* Sandra Voelker, Target
+* Alex Jamerson, Amazon
+* Thomas Dideriksen, Amazon
 * Alex Wood, AGI [@abwood](https://twitter.com/abwood)
 * Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
 
