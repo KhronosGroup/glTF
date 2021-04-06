@@ -9,8 +9,8 @@
             "type": "number",
             "minimum": 0.0,
             "default": 0.0,
-            "description": "Thickness of the volume in meters.",
-            "gltf_detailedDescription": "The thickness of the volume beneath the surface. The value is relative to the local coordinate system of the mesh's node. A value greater than 0 turns the mesh into a volume with a homogeneous medium, enabling refraction, absorption and subsurface scattering. The actual value may be ignored by renderers that are able to derive the thickness from the mesh (ray tracer)."
+            "description": "Thickness of the volume.",
+            "gltf_detailedDescription": "The thickness of the volume beneath the surface. The value is given in the coordinate space of the mesh. A value greater than 0 turns the mesh into a volume with a homogeneous medium, enabling refraction, absorption and subsurface scattering. The actual value may be ignored by renderers that are able to derive the thickness from the mesh (ray tracer)."
         },
         "thicknessTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
@@ -21,7 +21,8 @@
             "type": "number",
             "minimum": 0.0,
             "exclusiveMinimum": true,
-            "description": "Average distance that light travels in the medium before interacting with a particle. The value is given in world space. When undefined, the value is assumed to be infinite."
+            "description": "Average distance that light travels in the medium before interacting with a particle.",
+            "gltf_detailedDescription": "Density of the medium given as the average distance that light travels in the medium before interacting with a particle. The value is given in world space. When undefined, the value is assumed to be infinite."
         },
         "attenuationColor": {
             "type": "array",

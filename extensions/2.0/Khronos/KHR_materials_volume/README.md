@@ -104,14 +104,20 @@ The extension defines the following parameters to describe the volume.
 
 | | Type | Description | Required |
 |-|------|-------------|----------|
-| **thicknessFactor** | `number` | The thickness of the volume beneath the surface. The value is relative to the local coordinate system of the mesh's node. If the value is 0 the material is thin-walled. Otherwise the material is a volume boundary. The `doubleSided` property has no effect on volume boundaries. | No, default: `0`. |
+| **thicknessFactor** | `number` | The thickness of the volume beneath the surface. The value is given the coordinate space of the mesh. If the value is 0 the material is thin-walled. Otherwise the material is a volume boundary. The `doubleSided` property has no effect on volume boundaries. | No, default: `0`. |
 | **thicknessTexture** | `textureInfo` | A texture that defines the thickness, stored in the G channel. This will be multiplied by `thicknessFactor`. | No |
 | **attenuationDistance** | `number` | Density of the medium given as the average distance that light travels in the medium before interacting with a particle. The value is given in world space. | No, default: +Infinity |
 | **attenuationColor** | `number[3]` | The color that white light turns into due to absorption when reaching the attenuation distance. | No, default: `[1, 1, 1]` |
 
 ## Thickness Texture
 
-The thickness of a volume enclosed by the mesh is typically quite difficult to compute at run-time in a rasterizer. Since glTF is primarily used with real-time rasterizers, this extension allows for the thickness of the volume to be explicitly defined, either via a 1-channel texture value or as a constant. However, deriving the thickness along a ray from the actual geometry is the preferred approach. Path-traced renderers as well as more sophisticated raster techniques should ignore the thickness texture. Note that it is still necessary to check the `thicknessFactor` to determine whether the object is thin-walled or volumetric.
+The thickness of a volume enclosed by the mesh is typically quite difficult to compute at run-time in a rasterizer. Since glTF is primarily used with real-time rasterizers, this extension allows for the thickness of the volume to be baked into a thickness map. Thickness is given in the coordinate space of the mesh. Any transformations applied to the mesh's node will also be applied to the thickness. Thickness is an absolute value, and, therefore, the thickness factor is in the range (0, inf). The value from the thickness texture, which is limited to the range (0,1], is multiplied by the thickness factor. In practice that means that, for example, the thickness factor is set to the longest edge of the bounding box of a mesh, and the texture scales this value so that it corresponds to the actual thickness underneath each surface point.
+
+Baking thickness into a map is similar to ambient occlusion baking, but rays are cast into the opposite direction of the surface normal. Dark values represent thin parts, bright values represent thick parts of the model.
+
+Computing volumetric effects with a thickness map is a lossy process. We use the thickness map to estimate the distance that a light ray will travel until it exists the volume. The estimation takes place at the entrance point, where we fetch the thickness from the thickness map. The actual distance, however, varies with the angle of incidence at the entrance point, as this angle determines the direction into which the light ray will travel through the mesh.
+
+Ray-tracers should ignore the thickness texture and use the actual, ray-traced distance instead. For this reason it is important that thickness factor and texture represent the actual thickness as accurate as possible. An accurate representation ensures that visual results look consistent across different rendering techniques. Note that it is still necessary to check the `thicknessFactor` to determine whether the object is thin-walled or volumetric.
 
 ## Refraction
 
