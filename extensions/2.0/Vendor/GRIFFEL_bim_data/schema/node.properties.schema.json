@@ -1,0 +1,29 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Node Properties and Type",
+    "type": "object",
+    "description": "Maps properties to nodes by name. Used only when data is saved in a separate file.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "node": {
+            "type": "string",
+            "description": "Name of the node which has the type and properties below."
+        },
+        "properties": {
+            "type": "array",
+            "item": {
+                "type": "number",
+                "description": "Index of a property from the root level collection."
+            },
+            "description": "Collection of indices which point to corresponding instance properties of the node. (Instance properties are unique to the node.)",
+            "minItems": 1
+        },
+        "type": {
+            "type": "number",
+            "description": "Index of a type in the root level collection. (Type is a set of properties which are common for many nodes.)"
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "node", "properties" ]
+}

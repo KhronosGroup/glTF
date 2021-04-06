@@ -1,17 +1,18 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "Element Type",
+    "title": "Node Type",
     "type": "object",
-    "description": "Set of properties which are common for many Nodes.",
+    "description": "Set of properties which are common for many nodes.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "properties": {
             "type": "array",
-            "items": {
+            "item": {
                 "type": "number",
-                "description": "Property index."
+                "description": "Index of a property in the root level collection."
             },
-            "description": "Collection of type properties.",
+            "description": "Collection of indices which point to corresponding properties of the type.",
+            "minItems": 1
         },
         "extensions": { },
         "extras": { }

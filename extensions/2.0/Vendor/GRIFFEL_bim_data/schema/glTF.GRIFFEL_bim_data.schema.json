@@ -1,37 +1,58 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "GRIFFEL_bim_data glTF extension",
+    "title": "GRIFFEL_bim_data glTF Extension",
     "type": "object",
-    "description": "Set of properties for glTF Nodes.",
+    "description": "Domain specific properties for glTF nodes.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "elementProperties": {
-            "$ref": "elementProperties.schema.json",
-            "description": "Node name - properties map. Used only when BIM data is saved in a separate file."
+        "nodeProperties": {
+            "type": "array",
+            "items": {
+                "$ref": "node.properties.schema.json",
+                "description": "Node properties and type."
+            },
+            "description": "Node type and instance properties map. Used only when data is saved in a separate file."
         },
         "propertyValues": {
-            "type": "string",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "description": "Property value.",
+                "minLength": 1
+            },
+            "minItems": 1,
             "description": "Collection of unique property values."
         },
         "propertyNames": {
-            "type": "string",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "description": "Property name.",
+                "minLength": 1
+            },
+            "minItems": 1,
             "description": "Collection of unique property names."
         },
         "properties": {
             "type": "array",
             "items": {
-                "type": "number"
+                "$ref": "property.schema.json",
+                "description": "Node property."
             },
-            "description": "Collection of unique property values."
+            "minItems": 1,
+            "description": "Collection of unique properties."
         },
         "types": {
             "type": "array",
             "items": {
-                "type": ""
+                "$ref": "type.schema.json",
+                "description": "Node type - set of properties common for many nodes."
             },
-            "description": "Collection of particular sets of properties."
+            "minItems": 1,
+            "description": "Collection of types - common sets of properties for many nodes."
         },
         "extensions": { },
         "extras": { }
-    }
+    },
+    "required": [ "propertyValues", "propertyNames", "properties" ]
 }
