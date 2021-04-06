@@ -23,6 +23,7 @@
 * Thomas Dideriksen, Amazon
 * Alex Wood, AGI [@abwood](https://twitter.com/abwood)
 * Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
+* Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)
 
 Copyright (C) 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -101,7 +102,7 @@ As with specular factor, `base` will be weighted with the directional-dependent 
 ![](figures/specular-color.png)
 ![](figures/specular-color-2.png)
 
-The specular color factor is allowed to be set to color values greater than [1, 1, 1]. Thus, the reflection amount can go beyond what is determined by the index of refraction (IOR). To still ensure energy conservation, the product of specular color and f0 reflectance from IOR is clamped. Please refer to [Implementation](#Implementation) for detailed instructions on where to place the clamping operation.
+The specular color factor is allowed to be set to values greater than [1, 1, 1]. Thus, the reflection amount can go beyond what is determined by the index of refraction (IOR). To still ensure energy conservation, the product of specular color factor, specular color texture, and f0 reflectance from IOR is clamped to 1. Please refer to [Implementation](#Implementation) for an example on where to place the clamping operation.
 
 ## Implementation
 
