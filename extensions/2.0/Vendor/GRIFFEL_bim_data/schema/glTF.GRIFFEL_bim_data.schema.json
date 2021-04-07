@@ -40,7 +40,7 @@
                 "description": "Node property."
             },
             "minItems": 1,
-            "description": "Collection of unique properties."
+            "description": "Collection of unique property name - property value pairs."
         },
         "types": {
             "type": "array",
