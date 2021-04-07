@@ -7,6 +7,7 @@
 * Rickard Sahlin, <mailto:rickard.sahlin@ikea.com>
 * Gary Hsu, Microsoft, <mailto:garyhsu@microsoft.com>
 * Mike Bond, Adobe, <mailto:mbond@adobe.com>
+* Ben Houston, ThreeKit, <mailto:bhouston@threekit.com>
 
 ## Status
 
@@ -15,7 +16,7 @@ Draft
 ## Dependencies
 
 Written against the glTF 2.0 spec.
-This extension may use KHR_texture_basisu, KHR_texture_float_bc6h or KHR_texture_float_rgb9e5  
+This extension may use KHR_texture_basisu, KHR_texture_float_bc6h or KHR_texture_float_f16  
 
 ## Overview
 This extension provides the ability to define image-based lights in a glTF scene.  
@@ -26,37 +27,62 @@ It can also be used together with model data, for usecases where a model shall b
 Many 3D tools and engines support image-based global illumination but the exact technique and data formats employed vary.  
 Using this extension, tools can export and engines can import image-based lights and the result should be highly consistent.   
 
-This extension specifies exactly one way to format and reference the environment map to be used.  
-The goals of this are two-fold.  
+This extension specifies exactly one way to format and reference the environment map to be used, the goals of this are two-fold.  
 First, it makes implementing support for this extension easier.  
 Secondly, it ensures that rendering of the image-based lighting is consistent across runtimes.
 
 A conforming implementation of this extension must be able to load the image-based environment data and render the PBR materials using this lighting.  
 
-This extension is based on EXT_lights_image_based, with added support for KTX2 as a carrier for [cubemap and] HDR texture formats.  
-
-The environment light is defined by a cubemap.  
-[TBD - shall a separate KHR_texture_cubemap extension be created?]
-Cubemaps can be supplied pre-filtered, by including the pre-filtered mip-levels, otherwise filtering will be performed at load time.  
-[TBD - point to relevant filtering algorithm]  
+The environment light is defined by a cubemap, this is to simplify realtime implementations as these are likely to use cubemap texture format.  
+Cubemaps can be supplied pre-filtered, by including the pre-filtered mip-levels, where each mip-level corresponds to increasing roughness values.
+If cubemap does not include mip-levels then filtering will be performed at load time.
 If a compressed texture format is used then pre-filtered mip-levels must be included.  
 
 ## Declaring an environment light
 
 The KHR_lights_environment extension defines an array of image-based lights at the root of the glTF and then each scene can reference one.  
 Each environment light definition consists of a single cubemap that describes the specular radiance of the scene, the l=2 spherical harmonics coefficients for diffuse irradiance and intensity values.  
-The cubemap is defined by texture references to a KTX2 file containing a cubemap, these files can contain compressed textures using KHR_texture_basisu  
-or use a float texture format as defined by KHR_texture_float_bc6h or KHR_texture_float_rgb95e.   
+The cubemap is defined by texture references to a KTX2 file containing a cubemap.  
+These files can contain compressed textures using KHR_texture_basisu or use a float texture format as defined by KHR_texture_float_bc6h or KHR_texture_float_f16   
+
+When the extension is used, it's mandated to use value image/ktx2 for the mimeType property of (cubemap) images that are referenced by the `specularCubemap` property of KHR_lights_environment extension object.  
+
+The following will load the environment light using KHR_texture_basisu on clients that supports that extension,  otherwise fall back to using KTX2 using VK_FORMAT_R8G8B8_SRGB.  
+
+TODO: Clarify what KTX2 formats, if any, are supported by default.  
+Should a separate extension be created to enable ktx2 as image source?  
 
 
 ```json
+"textures": [
+    {
+        "source": 0,
+        "extensions": {
+            "KHR_texture_basisu": {
+                "source": 1
+            }
+        }
+    }
+],
+"images": [
+        {
+            "name": "environment cubemap 0",
+            "uri": "cubemap0.ktx2",
+            "mimeType": "image/ktx2"
+        },
+        {
+            "name": "environment cubemap basisu",
+            "uri": "cubemap_basisu.ktx2",
+            "mimeType": "image/ktx2"
+        }
+],
 "extensions": {
     "KHR_lights_environment" : {
         "lights": [
             {
                 "intensity": 1.0,
                 "irradianceCoefficients": [...3 x 9 array of floats...],
-                "specularCubemaps": [... Reference to KTX2 cubemaps...],
+                "specularCubemaps": [0],
             }
         ]
     }
@@ -69,21 +95,41 @@ The cubemap used for specular radiance is defined as a cubemap containing separa
 The mip levels shall evenly map to roughness values from 0 to 1 in the PBR material and should be generated with a principled multi-scatter GGX normal distribution. The data in the maps represents illuminance in candela per square meter (nit).
 
 If mip-levels are not included, then the entire mip chain of images should not be generated.  
-Instead, the lowest-resolution mip should have sufficient size to represent the maximally-blurred radiance map (say, 16x16) corresponding to roughness=1. The texture references defines the largest dimension of mip 0 and, taken together with the number of defined mips, should give the loading runtime the information it needs to generate the remainder of the mip chain and sample the appropriate mip level in the shader.
+Instead, the lowest-resolution mip should have sufficient size to represent the maximally-blurred radiance map corresponding to roughness=1.  
+The texture references defines the largest dimension of mip 0 and should give the loading runtime the information it needs to generate the remainder of the mip chain and sample the appropriate mip level in the shader.  
 
 Cube faces are defined in the KTX2 format specification, users of this extension must follow the KTX2 cubemap specification.  
+
+## Implementation Note 
+This section is non-normative  
+
+The cubemap textures are used both as direct light contribution and as source for reflection.  
+A performant way of achieving this is to store the reflection at different roughness values in mip-levels,   
+where mip-level 0 is for a mirror like reflection (roughness = 0) and the last mip-level is for maximum roughness (roughness = 0).  
+It is recommended to map roughness = 1 to a mip-level size that is larger than 1 * 1 pixels to avoid blockiness, it is generally enough to stop at 16 * 16 pixels.  
+To avoid oversampling of flat surfaces (low roughness values) it is recommended to use a 3D cubemap when possible.  
+
+[Runtime filtering of mip-levels](https://developer.nvidia.com/gpugems/gpugems3/part-iii-rendering/chapter-20-gpu-based-importance-sampling)
 
 
 ## Irradiance Coefficients
 
-This extension uses spherical harmonic coefficients to define irradiance used for diffuse lighting.  
+This extension may use spherical harmonic coefficients to define irradiance used for diffuse lighting.  
 Coefficients are calculated for the first 3 SH bands (l=2) and take the form of a 9x3 array.  
-[Realtime Image Based Lighting using Spherical Harmonics](https://metashapes.com/blog/realtime-image-based-lighting-using-spherical-harmonics/)
-[An Efficient Representation for Irradiance Environment Maps](http://graphics.stanford.edu/papers/envmap/)
+
+## Implementation Note
+This section is non-normative  
+
+Implementations may calculate the irradiance cubemap from the specular radiance cubemap and use instead.  
+One possible benefit with spherical harmonics is that it is generally enough evaluate the harmonics on a per vertex basis, instead of sampling a cubemap on a per fragment basis.  
+
+[Realtime Image Based Lighting using Spherical Harmonics](https://metashapes.com/blog/realtime-image-based-lighting-using-spherical-harmonics/)  
+[An Efficient Representation for Irradiance Environment Maps](http://graphics.stanford.edu/papers/envmap/)  
 
 ### Using the environment light
 
 The environment light is utilized by a scene.  
+Each scene can have a single environment light attached to it by defining the `extensions.KHR_lights_environment` property and, within that, an index into the `lights` array using the `light` property.
 
 ```json
 "scenes": [
@@ -93,30 +139,15 @@ The environment light is utilized by a scene.
         ],
         "extensions": {
             "KHR_lights_environment": {
-                "environment": 0
+                "light": 0
             }
         }
     }
   ]
 ```
 
-## Adding Light Instances to Scenes
 
-Each scene can have a single IBL light attached to it by defining the `extensions.KHR_lights_image_based` property and, within that, an index into the `lights` array using the `light` property.
-
-```javascript
-"scenes" : [
-    {
-        "extensions" : {
-            "KHR_lights_image_based" : {
-                "light" : 0
-            }
-        }
-    }            
-]
-```
-
-### Image-Based Light Properties
+### Environment Light Properties
 
 | Property | Description | Required |
 |:-----------------------|:------------------------------------------| :--------------------------|
@@ -140,4 +171,4 @@ Each scene can have a single IBL light attached to it by defining the `extension
 
 ## Reference
 
-* `TODO: Add references`
+[Irradiance Environment Maps](https://graphics.stanford.edu/papers/ravir_thesis/chapter4.pdf)
