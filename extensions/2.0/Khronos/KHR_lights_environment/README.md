@@ -15,11 +15,11 @@ Draft
 
 ## Dependencies
 
-Written against the glTF 2.0 spec.
+Written against the glTF 2.0 spec.  
 This extension may use KHR_texture_basisu, KHR_texture_float_bc6h or KHR_texture_float_f16  
 
 ## Overview
-This extension provides the ability to define image-based lights in a glTF scene.  
+This extension provides the ability to define image-based lights in a glTF scene using KTX v2 images.  
 Image-based lights consist of an environment map that represents specular radiance for the scene as well as irradiance information.  
 This can be used on it's own - ie a glTF asset with only environment map data - for a usecase where the IBL needs to be distributed.  
 It can also be used together with model data, for usecases where a model shall be displayed in a defined environment.  
@@ -45,12 +45,15 @@ Each environment light definition consists of a single cubemap that describes th
 The cubemap is defined by texture references to a KTX2 file containing a cubemap.  
 These files can contain compressed textures using KHR_texture_basisu or use a float texture format as defined by KHR_texture_float_bc6h or KHR_texture_float_f16   
 
-When the extension is used, it's mandated to use value image/ktx2 for the mimeType property of (cubemap) images that are referenced by the `specularCubemap` property of KHR_lights_environment extension object.  
+When the extension is used, images shall use `image/ktx2` as mimeType for cubemaps that are referenced by the `specularCubemap` property of KHR_lights_environment extension object.  
+The texture type of the KTX v2 file shall be 'Cubemap'  
+
+Supported formats are:  
+VK_FORMAT_R8G8B8_SRGB  
+VK_FORMAT_R16G16B16_SFLOAT  
+VK_FORMAT_R32G32B32_SFLOAT  
 
 The following will load the environment light using KHR_texture_basisu on clients that supports that extension,  otherwise fall back to using KTX2 using VK_FORMAT_R8G8B8_SRGB.  
-
-TODO: Clarify what KTX2 formats, if any, are supported by default.  
-Should a separate extension be created to enable ktx2 as image source?  
 
 
 ```json
