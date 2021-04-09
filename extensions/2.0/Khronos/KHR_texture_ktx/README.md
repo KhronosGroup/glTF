@@ -1,4 +1,4 @@
-﻿# KHR_texture_ktx
+# KHR_texture_ktx
 
 ## Contributors
 
@@ -131,8 +131,6 @@ To use KTX v2 image without a fallback, define `KHR_texture_ktx` in both `extens
 
 ## KTX v2 Images
 
-
-
 For the purposes of this extension, the following texture types and formats are defined:
 
 - **RGBA:** A texture that uses all four channels.  
@@ -144,6 +142,8 @@ VK_FORMAT_R32G32B32A32_SFLOAT
 
 - **RGB:** A texture that uses red, green, and blue channels. Alpha channel is unused and not sampled at runtime.  
 
+VK_FORMAT_E5B9G9R9_UFLOAT_PACK32  
+VK_FORMAT_B10G11R11_UFLOAT_PACK32  
 VK_FORMAT_R16G16B16_SFLOAT  
 VK_FORMAT_R16G16B16_UNORM  
 VK_FORMAT_R32G32B32_SFLOAT  
@@ -154,9 +154,21 @@ VK_FORMAT_R16_SFLOAT
 VK_FORMAT_R16_UNORM  
 VK_FORMAT_R32_SFLOAT  
 
+**Implementation Notes**  
+This section is non-normative
+
+This extension defines a number of formats that are supported for images used as texture sources.  
+It does not define how these formats are stored internally, it is up to implementations to use a suitable texture format.  
+The source texture shall be used in shader (BRDF) calculations in a way that retains the increased range.  
+However, this extension does not define the way pixel data is written to framebuffer or how swapchain is presented using the increased range.  
+
 ## KTX header fields
 
+`supercompressionScheme` MUST be 1 (BasisLZ).  
+
 - vkFormat must be one of:  
+VK_FORMAT_E5B9G9R9_UFLOAT_PACK32  
+VK_FORMAT_B10G11R11_UFLOAT_PACK32  
 VK_FORMAT_R16G16B16A16_SFLOAT  
 VK_FORMAT_R16G16B16A16_UNORM  
 VK_FORMAT_R32G32B32A32_SFLOAT  
