@@ -13,14 +13,23 @@
 
 Draft
 
+Open issues:
+Should Spherical Harmonics be supported or should clients be forced to evaluate the specular cubemap for diffuse contribution.  
+The question comes down to if resolution supplied by 9 coefficients SH is enough for most usecases?
+Since the SH are optional, and I believe the quality using 9 coefficients is reasonable,  I am leaning towards keeping them.   
+
+If compressed texture format is used how should pre-filtering for roughness reflection be done?
+May lead to unpredicted results of clients shall decode then create mip-levels since the result will likely take much more GPU memory since compression is likely not supported on target.  
+
 ## Dependencies
 
 Written against the glTF 2.0 spec.  
-This extension may use KHR_texture_basisu, KHR_texture_float_bc6h or KHR_texture_float_f16  
+This extension depends on KHR_texture_ktx
+This extension may use KHR_texture_basisu or KHR_texture_float_bc6h to support compressed texture formats.
 
 ## Overview
-This extension provides the ability to define image-based lights in a glTF scene using KTX v2 images.  
-Image-based lights consist of an environment map that represents specular radiance for the scene as well as irradiance information.  
+This extension provides the ability to define image-based lights in a glTF scene using KTX v2 images as defined by KHR_texture_ktx.  
+Image-based lights (environment map, light map) consist of a cubemap map that represents specular radiance for the scene, irradiance information and is the source for environment reflection.   
 This can be used on it's own - ie a glTF asset with only environment map data - for a usecase where the IBL needs to be distributed.  
 It can also be used together with model data, for usecases where a model shall be displayed in a defined environment.  
 
@@ -34,24 +43,21 @@ Secondly, it ensures that rendering of the image-based lighting is consistent ac
 A conforming implementation of this extension must be able to load the image-based environment data and render the PBR materials using this lighting.  
 
 The environment light is defined by a cubemap, this is to simplify realtime implementations as these are likely to use cubemap texture format.  
-Cubemaps can be supplied pre-filtered, by including the pre-filtered mip-levels, where each mip-level corresponds to increasing roughness values.
-If cubemap does not include mip-levels then filtering will be performed at load time.
-If a compressed texture format is used then pre-filtered mip-levels must be included.  
+Cubemaps shall be supplied without pre-filtered mip-maps for roughness values > 0, pre-filtering shall be done by the client.  
+[See Specular radiance cubemaps](#specular-radiance-cubemaps)  
+
+If a compressed texture format is used then pre-filtered mip-levels for roughness values > 0 shall be specified.  
 
 ## Declaring an environment light
 
 The KHR_lights_environment extension defines an array of image-based lights at the root of the glTF and then each scene can reference one.  
 Each environment light definition consists of a single cubemap that describes the specular radiance of the scene, the l=2 spherical harmonics coefficients for diffuse irradiance and intensity values.  
 The cubemap is defined by texture references to a KTX2 file containing a cubemap.  
-These files can contain compressed textures using KHR_texture_basisu or use a float texture format as defined by KHR_texture_float_bc6h or KHR_texture_float_f16   
+These files can contain compressed textures using KHR_texture_basisu or compressed float texture format as defined by KHR_texture_float_bc6h.   
 
 When the extension is used, images shall use `image/ktx2` as mimeType for cubemaps that are referenced by the `specularCubemap` property of KHR_lights_environment extension object.  
 The texture type of the KTX v2 file shall be 'Cubemap'  
 
-Supported formats are:  
-VK_FORMAT_R8G8B8_SRGB  
-VK_FORMAT_R16G16B16_SFLOAT  
-VK_FORMAT_R32G32B32_SFLOAT  
 
 The following will load the environment light using KHR_texture_basisu on clients that supports that extension,  otherwise fall back to using KTX2 using VK_FORMAT_R8G8B8_SRGB.  
 
@@ -123,7 +129,7 @@ Coefficients are calculated for the first 3 SH bands (l=2) and take the form of 
 ## Implementation Note
 This section is non-normative  
 
-Implementations may calculate the irradiance cubemap from the specular radiance cubemap and use instead.  
+Implementations may calculate the irradiance from the specular radiance cubemap and use instead.  
 One possible benefit with spherical harmonics is that it is generally enough evaluate the harmonics on a per vertex basis, instead of sampling a cubemap on a per fragment basis.  
 
 [Realtime Image Based Lighting using Spherical Harmonics](https://metashapes.com/blog/realtime-image-based-lighting-using-spherical-harmonics/)  
