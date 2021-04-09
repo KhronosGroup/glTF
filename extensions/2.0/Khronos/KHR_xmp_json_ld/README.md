@@ -35,7 +35,7 @@ XMP metadata packets can then be referenced from glTF objects of type: `asset`, 
 XMP metadata referenced by the glTF top level object `asset` applies to the entire glTF asset.
 XMP metadata is organized in namespaces (ISO 16684-1$6.2). This extension enables any XMP metadata namespace to be embedded in a glTF asset.
 XMP metadata packets in glTF use a restricted subset of features from JSON-LD. This allows both JSON parsers and JSON-LD parsers to read the individual packets.
-Serializing XMP metadata using JSON-LD is outlined in [JSON-LD serialization of XMP (ISO/DIS 16684-3)](https://www.iso.org/standard/79384.html). There are additional restrictions for glTF outlined in [JSON-LD Restrictions and Recommendations](#json-ld-restrictions-and-recommendations).
+Serializing XMP metadata using JSON-LD is outlined in [JSON-LD serialization of XMP (ISO/DIS 16684-3)](https://www.iso.org/standard/79384.html). The [JSON-LD specification](https://www.w3.org/TR/json-ld11/) outlines the detailed use of JSON-LD 1.1. There are additional restrictions for glTF outlined in [JSON-LD Restrictions and Recommendations](#json-ld-restrictions-and-recommendations).
 
 ## XMP data types
 
@@ -189,15 +189,17 @@ A glTF might reference resources already containing XMP metadata. A relevant exa
 
 #### Restrictions and Recommendations
 
-In order to keep glTF files easily readable with either a JSON or JSON-LD parser and keep compatibility with [ISO/DIS 16684-3](https://www.iso.org/standard/79384.html), there are additional restrictions that are required for `KHR_xmp_json_ld` metadata packets. Failure to obey these restrictions may create issues for parsers.
+In order to keep glTF files easily readable with either a JSON or [JSON-LD](https://www.w3.org/TR/json-ld11/) parser and keep compatibility with [ISO/DIS 16684-3](https://www.iso.org/standard/79384.html), there are additional restrictions that are required for `KHR_xmp_json_ld` metadata packets. Failure to obey these restrictions may create issues for parsers.
 
 - [Expanded term definitions](https://www.w3.org/TR/json-ld11/#expanded-term-definition) are forbidden.
+- Compact IRIs (_prefix:suffix_) are required by [ISO/DIS 16684-3](https://www.iso.org/standard/79384.html). Due to this, `@base` and `@vocab` keywords are always ignored.
 - Namespace prefixes are recommended to use the latin alphabet `A` to `Z` uppercase or lowercase, roman numerals `0` to `9`, or `_`.
 - Aliases and multiple prefixes for the same namespace are forbidden.
 - [Value objects](https://www.w3.org/TR/json-ld11/#value-objects) are forbidden unless otherwise specified, such as with Language Alternatives or when providing a content language for Text types.
 - XMP fields containing arrays must use the `@list` and `@set` keywords as a parent to the array, to indicate if the array is ordered or unordered. See the [Lists and Sets](#lists-and-sets) section for details.
 - Local contexts are forbidden, except when providing a content language for Text types.
-- Language Alternatives must use `@language` and `@value` pairs within an array. See the [Language Alternatives](#-language-alternatives) section for details.
+- Language alternatives must use an `rdf:Alt` type. See the [Language Alternatives](#-language-alternatives) section for details.
+- Non-string data types such as `Boolean`, `Integer`, and `Real` must use JSON types.
 
 These restrictions ensure that `KHR_xmp_json_ld` metadata remains readable regardless if the parser supports JSON-LD.
 
@@ -644,13 +646,17 @@ Our recommendation for viewers that choose to display XMP metadata is to include
 
 XMP is an extensible metadata format by design. In order to achieve better readability and interoperability across the industry, we recommend glTF creators to use the following preferred list of namespace prefixes and URIs.
 
-| Namespace prefix | Namespace URI                                 |
-| :--------------- | :-------------------------------------------- |
-| `dc`             | `http://purl.org/dc/elements/1.1/`            |
-| `xmp`            | `http://ns.adobe.com/xap/1.0/`                |
-| `xmpMM`          | `http://ns.adobe.com/xap/1.0/mm/`             |
-| `xmpRights`      | `http://ns.adobe.com/xap/1.0/rights/`         |
-| `rdf`            | `http://www.w3.org/1999/02/22-rdf-syntax-ns#` |
+| Preferred prefix | Namespace URI                                      | Usage                                                                                   |
+| :--------------- | :------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `dc`             | `http://purl.org/dc/elements/1.1/`                 | Dublin Core                                                                             |
+| `xmp`            | `http://ns.adobe.com/xap/1.0/`                     | Basic Descriptive Information                                                           |
+| `xmpGImg`        | `http://ns.adobe.com/xap/1.0/g/img/`               | `xmp:Thumbnails`                                                                        |
+| `xmpMM`          | `http://ns.adobe.com/xap/1.0/mm/`                  | Media Management, used by Digital Asset Management systems                              |
+| `stRef`          | `http://ns.adobe.com/xap/1.0/sType/ResourceRef#`   | `xmpMM:DerivedFrom`, `xmpMM:Ingredients`, `xmpMM:ManagedForm`                           |
+| `stEvt`          | `http://ns.adobe.com/xap/1.0/sType/ResourceEvent#` | `xmpMM:History`                                                                         |
+| `stVer`          | `http://ns.adobe.com/xap/1.0/sType/Version#`       | `xmpMM:Versions`                                                                        |
+| `xmpRights`      | `http://ns.adobe.com/xap/1.0/rights/`              | Legal restrictions associated with a resource                                           |
+| `rdf`            | `http://www.w3.org/1999/02/22-rdf-syntax-ns#`      | Resource Description Framework; Primarily used for Language Alternatives in XMP JSON-LD |
 
 ## Appendix: Full Khronos Copyright Statement
 
