@@ -2,8 +2,9 @@
 
 ## Contributors
 
-* Rickard Sahlin, Ikea 
-* Ben Houston, ThreeKit
+* Rickard Sahlin, Ikea  
+* Ben Houston, ThreeKit  
+* Alexey Knyazev  
 
 
 Copyright (C) 2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
@@ -131,9 +132,9 @@ To use KTX v2 image without a fallback, define `KHR_texture_ktx` in both `extens
 
 ## Color Texture Sources
 
-When this extension is used it is allowed to provide color textures that does not use sRGB transfer function for texture sources refered to by material source objects.
-In the core spec this affects baseColorTextureand emissiveTexture, in extensions it will affect any color texture source.  
-This means that when this extension is used a texture that stores color values shall not be sRGB encoded, if it contains higher range than 8 bits per color component.  
+Texture data provided by this extension is always encoded using linear transfer function. When this extension is used with material texture slots that expect sRGB-encoded values, only the fallback 8-bit texture (when present) uses sRGB encoding.  
+
+>Implementation Note: For the core glTF 2.0 specification, these texture slots include emissiveTexture and baseColorTexture; for material extensions, it's usually texture slots named *ColorTexture.  
 
 ## KTX v2 Images
 
