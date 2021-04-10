@@ -22,8 +22,8 @@ Written against the glTF 2.0 spec.
 This extension adds the ability to specify textures using KTX v2 images.  
 An implementation of this extension can use such images as an alternative to the PNG or JPEG images available in glTF 2.0 when higher precision or range is needed.  
 
-When the extension is used, it's allowed to use value `image/ktx2` for the `mimeType` property of images that are referenced by the `source` property of `KHR_texture_ktx` texture extension object.
-
+When the extension is used, it's allowed to use value `image/ktx2` for the `mimeType` property of images that are referenced by the `source` property of `KHR_texture_ktx` texture extension object.  
+This extension does not define how to output the higher dynamic range result buffer to display or to a lower precision target buffer.  
 
 ## glTF Schema Updates
 
@@ -128,6 +128,12 @@ To use KTX v2 image without a fallback, define `KHR_texture_ktx` in both `extens
 ### JSON Schema
 
 [texture.KHR_texture_ktx.schema.json](schema/texture.KHR_texture_ktx.schema.json)
+
+## Color Texture Sources
+
+When this extension is used it is allowed to provide color textures that does not use sRGB transfer function for texture sources refered to by material source objects.
+In the core spec this affects baseColorTextureand emissiveTexture, in extensions it will affect any color texture source.  
+This means that when this extension is used a texture that stores color values shall not be sRGB encoded, if it contains higher range than 8 bits per color component.  
 
 ## KTX v2 Images
 
