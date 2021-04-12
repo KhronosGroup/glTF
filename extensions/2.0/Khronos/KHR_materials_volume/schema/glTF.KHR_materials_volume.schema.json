@@ -35,6 +35,8 @@
             "default": [ 1.0, 1.0, 1.0 ],
             "minItems": 3,
             "maxItems": 3
-        }
+        },
+        "extensions": { },
+        "extras": { }
     }
 }
