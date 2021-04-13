@@ -176,9 +176,11 @@ It does not define how these formats are stored internally, it is up to implemen
 The source texture shall be used in shader (BRDF) calculations in a way that retains the increased range.  
 However, this extension does not define the way pixel data is written to framebuffer or how swapchain is presented using the increased range.  
 
+If ktx image 
+
 ## KTX header fields
 
-`supercompressionScheme` MUST be 1 (BasisLZ).  
+`supercompressionScheme` MUST be 3 (ZLIB).  
 
 - vkFormat must be one of:  
 VK_FORMAT_E5B9G9R9_UFLOAT_PACK32  
@@ -205,6 +207,24 @@ Regardless of the format used, these additional restrictions apply for compatibi
 - Swizzling metadata (`KTXswizzle`) MUST be `rgba` or omitted.
 - Orientation metadata (`KTXorientation`) MUST be `rd` or omitted.
 
+- Color space information in the DFD MUST match the expected usage, namely:
+  - For textures with **color data** (e.g., base color maps),
+    - `colorPrimaries` MUST be `KHR_DF_PRIMARIES_BT709`;
+    - `transferFunction` MUST be `KHR_DF_TRANSFER_LINEAR`.
+  - For textures with **non-color data** (e.g., normal maps),
+    - `colorPrimaries` MUST be `KHR_DF_PRIMARIES_UNSPECIFIED`;
+    - `transferFunction` MUST be `KHR_DF_TRANSFER_LINEAR`.
+
+  > **Implementation Note**: Engines may need to generate missing mipmaps at runtime when a full mip pyramid is not available.
+
+
+### Using KTX v2 Images with Basis Universal Supercompression for Material Textures
+
+When a texture referencing a KTX v2 image with Basis Universal supercompression is used for glTF 2.0 material maps (both color and non-color), the KTX v2 image MUST be of **2D** type as defined in the KTX v2 Specification, Section 4.1.
+
+`KHR_DF_FLAG_ALPHA_PREMULTIPLIED` flag MUST NOT be set unless the material's specification requires premultiplied alpha.
+
+Exporters SHOULD choose the most appropriate texture format based on the texture's usage and content.
 
 ## Known Implementations
 
