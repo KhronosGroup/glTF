@@ -180,9 +180,11 @@ If ktx image
 
 ## KTX header fields
 
-`supercompressionScheme` MUST be 3 (ZLIB).  
+- `supercompressionScheme` MUST be one of:  
+2 (Zstandard)  
+3 (ZLIB)  
 
-- vkFormat must be one of:  
+- `vkFormat` MUST be one of:  
 VK_FORMAT_E5B9G9R9_UFLOAT_PACK32  
 VK_FORMAT_B10G11R11_UFLOAT_PACK32  
 VK_FORMAT_R16G16B16A16_SFLOAT  
@@ -218,9 +220,9 @@ Regardless of the format used, these additional restrictions apply for compatibi
   > **Implementation Note**: Engines may need to generate missing mipmaps at runtime when a full mip pyramid is not available.
 
 
-### Using KTX v2 Images with Basis Universal Supercompression for Material Textures
+### Using KTX v2 Images for Material Textures
 
-When a texture referencing a KTX v2 image with Basis Universal supercompression is used for glTF 2.0 material maps (both color and non-color), the KTX v2 image MUST be of **2D** type as defined in the KTX v2 Specification, Section 4.1.
+When a texture referencing a KTX v2 image is used for glTF 2.0 material maps (both color and non-color), the KTX v2 image MUST be of **2D** type as defined in the KTX v2 Specification, Section 4.1.
 
 `KHR_DF_FLAG_ALPHA_PREMULTIPLIED` flag MUST NOT be set unless the material's specification requires premultiplied alpha.
 
