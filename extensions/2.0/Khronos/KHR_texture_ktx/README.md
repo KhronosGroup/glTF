@@ -180,10 +180,6 @@ If ktx image
 
 ## KTX header fields
 
-- `supercompressionScheme` MUST be one of:  
-2 (Zstandard)  
-3 (ZLIB)  
-
 - `vkFormat` MUST be one of:  
 VK_FORMAT_E5B9G9R9_UFLOAT_PACK32  
 VK_FORMAT_B10G11R11_UFLOAT_PACK32  
@@ -199,6 +195,13 @@ VK_FORMAT_R32G32_SFLOAT
 VK_FORMAT_R16_SFLOAT  
 VK_FORMAT_R16_UNORM  
 VK_FORMAT_R32_SFLOAT  
+
+- `levelCount`MUST be 0  
+
+- `supercompressionScheme` MUST be one of:  
+2 (Zstandard)  
+3 (ZLIB)  
+
 
 
 
