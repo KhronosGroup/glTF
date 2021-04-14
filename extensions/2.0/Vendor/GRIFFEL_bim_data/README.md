@@ -53,28 +53,10 @@ Node can also have a `type`. Type is a set of properties which is common for man
 In this example properties are: "Width - 900 mm", "Height - 2,1 m", "Height - 2,4 m", "Material - Wood". 
 A single `type` here is represented by the collection consisting of the first and the last properties, as width and material are common properties for both doors.</em>
 
-To save some space for storing properties they are written only once in the properties collection and referenced by each node where needed. To save even more space each unique property name and each unique property value are stored in separate collections. This approach is beneficial over keeping metadata in `extras` for large amounts of data. <em>TODO Add a link to Alex's graphics</em>.
+To save some space for storing properties they are written only once in the properties collection and referenced by each node where needed. To save even more space each unique property name and each unique property value are stored in separate collections. This approach is beneficial over keeping metadata in `extras` for large amounts of data.
 
 Types and nodes reference properies by index.
 Each node can reference any number of properties and only one type.
-
-#### Example:
-<em></em>
-
-
-### Some water for blog posts:
-
-AEC industry operates huge 3D models with enormous data bound to them. This data is used to represent real world objects, construction parts and elements in digital environment. This data is nesessary to share designs between companies, different software, between architects and engineers, designers and workers on site.
-IFC has it all.
-But it's complex industry standard file format, all-inclusive, with wide specification.
-Very often we simply need to display BIM models with some data for elements. We need to click elements throughout the 3D model and quickly read a few parameters of these elements: like whether it's a wood or steel frame, what width the window has or what top elevation of the floor is. We don't need to know all the classifications and miscellaneous properties of a particular door knob - just to see the geometry and most important stuff.
-That's why glTF BIM data extension was created - to keep the most nesessary data within 3D models in the most compact and simple way just to display it on the other side. That's often needed in AR applications, web viewers for BIM models, HoloLens and Unity projects, while prototyping or sharing architectural designs.
-
-The goal was to keep all the data in a simple and compact way.
-That's achived by storing only unique property names and values in separate arrays of strings. No matter what type property value is: text, number or boolean - it's up to the reader to convert the value from string or display it as it is written in the extension.
-Property names and values are mapped in a separate array of unique key value pairs.
-
-
 
 ## Implementation notice
 
