@@ -369,6 +369,8 @@ When a glTF object (for example a Mesh) is copied from a glTF file to another, t
 Copying metadata requires adding the source object's metadata packets to the destination glTF's `KHR_xmp_json_ld.packets` array.
 In the following example two glTFs containing a mesh with `KHR_xmp_json_ld` metadata are copied into a third glTF.
 
+> **NOTE:** When merging metadata between two glTF objects, namespaces should be normalized based on the namespace URI. Example: Object A uses `dc` for the Dublin Core, but Object B uses `dc11` for the Dublin Core, so the implementer must normalize these based on the namespace URI and pick either `dc` or `dc11` as the prefix for the unified packet.
+
 glTF containing the first mesh:
 
 ```json
