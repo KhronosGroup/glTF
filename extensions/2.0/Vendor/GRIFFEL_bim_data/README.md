@@ -80,7 +80,7 @@ Given the same two doors from the example above, there are two options to implem
     "extensions": {
       "GRIFFEL_bim_data": {
         "properties": [
-          1
+          3
         ],
         "type": 0
       }
