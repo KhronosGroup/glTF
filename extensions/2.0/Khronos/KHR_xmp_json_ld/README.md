@@ -9,9 +9,12 @@
 - Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)
 - Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
 - Robert Long, Mozilla, [@arobertlong](https://twitter.com/arobertlong)
+- Yujin Jung, Samsung
+- Jon Wade, Shopify, [@JonathanWade](https://github.com/JonathanWade)
 - Adam Morris, Target, [@weegeekps](https://github.com/weegeekps)
 - Andreas Plesch, Individual Contributor,[@andreasplesch](https://github.com/andreasplesch)
 - Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
+- Leonard Daly, Individual Contributor, [@DrX3D](https://github.com/DrX3D)
 
 Copyright (C) 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
