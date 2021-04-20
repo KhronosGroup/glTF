@@ -43,7 +43,7 @@ Where:
 Model - is a building,
 Storey - includes all elements which lay or rise up starting from a particular level,
 Category - groups elements by some parameter (columns, furniture, ducts, etc.),
-Element - leave `node` with `mesh` which represents a real construction product.
+Element - leaf `node` with `mesh` which represents a real construction product.
 
 ### Approach
 A single piece of metadata for the node is represented by `property`. Property is a key-value pair, like 'name of the object's parameter' - 'it's value'. To keep it simple name and value of the property are `strings`.
