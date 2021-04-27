@@ -8,7 +8,7 @@ This extension implements the [Cesium 3D Metadata Specification](https://github.
 
 * [**Version 0.0.0**](0.0.0) December 4, 2020
   * Initial draft
-* [**Version 1.0.0**](1.0.0) February 24, 2020
+* [**Version 1.0.0**](1.0.0) February 24, 2021
   * Changes to class properties
     * Removed `FLOAT16` type
     * Removed `BLOB` type
