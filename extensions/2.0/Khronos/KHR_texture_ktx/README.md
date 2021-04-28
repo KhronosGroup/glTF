@@ -21,10 +21,16 @@ Written against the glTF 2.0 spec.
 ## Overview
 
 This extension adds the ability to specify textures using KTX v2 images.  
-An implementation of this extension can use such images as an alternative to the PNG or JPEG images available in glTF 2.0 when higher precision or range is needed.  
+An implementation of this extension can use such images as an alternative to the PNG or JPEG images available in glTF 2.0.  
+This could for instance be when multiple images of the same dimension and format needs to be stored or when higher precision or range is needed.  
+Multiple images can be stored in the KTX file using arrays and referenced using the `layer` property.  
 
 When the extension is used, it's allowed to use value `image/ktx2` for the `mimeType` property of images that are referenced by the `source` property of `KHR_texture_ktx` texture extension object.  
 This extension does not define how to output the higher dynamic range result buffer to display or to a lower precision target buffer.  
+
+One intended usecase is to make it easier for implementations to optimize texture uniform sampler usage by grouping samplers by dimension and format.  
+For instance, if model uses an atlasmap and the resulting baseColor, normal and orm textures are the same size and format they can be stored as different layers in the same KTX file.  
+This will then give a hint to the runtime implementation that these textures can be grouped together, potentially using less uniform samplers.  
 
 ## glTF Schema Updates
 
@@ -45,7 +51,8 @@ The following glTF will load `image.ktx2`
             "source": 0,
             "extensions": {
                 "KHR_texture_ktx": {
-                    "source": 1
+                    "source": 1, 
+                    "layer": 0
                 }
             }
         }
@@ -132,7 +139,11 @@ To use KTX v2 image without a fallback, define `KHR_texture_ktx` in both `extens
 
 ## Color Texture Sources
 
-Texture data provided by this extension is always encoded using linear transfer function. When this extension is used with material texture slots that expect sRGB-encoded values, only the fallback 8-bit texture (when present) uses sRGB encoding.  
+Texture data provided by this extension is encoded depending on the target format and material teture slot usage.    
+When this extension is used with material texture slots that expect sRGB-encoded values (RGB or RGBA format) and the texture format is 8 bits per pixel (VK_FORMAT_R8G8B8 or VK_FORMAT_R8G8B8A8) the texture uses sRGB encoding.  
+When this extension is used with material texture slosts that expect sRGB-encoded values (RGB or RGBA format) and the texture format is > bits per pixel the texture is encoded using linear transfer function.  
+The range limitation on the target texture remains unchanged.  
+
 
 >Implementation Note: For the core glTF 2.0 specification, these texture slots include emissiveTexture and baseColorTexture; for material extensions, it's usually texture slots named *ColorTexture.  
 
@@ -142,6 +153,7 @@ For the purposes of this extension, the following texture types and formats are 
 
 - **RGBA:** A texture that uses all four channels.  
 
+VK_FORMAT_R8G8B8A8_UNORM
 VK_FORMAT_R16G16B16A16_SFLOAT  
 VK_FORMAT_R16G16B16A16_UNORM  
 VK_FORMAT_R32G32B32A32_SFLOAT  
@@ -149,6 +161,7 @@ VK_FORMAT_R32G32B32A32_SFLOAT
 
 - **RGB:** A texture that uses red, green, and blue channels. Alpha channel is unused and not sampled at runtime.  
 
+VK_FORMAT_R8G8B8_UNORM
 VK_FORMAT_E5B9G9R9_UFLOAT_PACK32  
 VK_FORMAT_B10G11R11_UFLOAT_PACK32  
 VK_FORMAT_R16G16B16_SFLOAT  
@@ -157,6 +170,7 @@ VK_FORMAT_R32G32B32_SFLOAT
 
 - **RG_** A texture that uses, red and green channels. All other channels are unused and their values are not sampled at runtime.  
 
+VK_FORMAT_R8G8_UNORM
 VK_FORMAT_R16G16_SFLOAT  
 VK_FORMAT_R16G16_UNORM  
 VK_FORMAT_R32G32_SFLOAT  
@@ -164,11 +178,12 @@ VK_FORMAT_R32G32_SFLOAT
 
 - **Red:** A texture that uses only red channel. All other channels are unused and their values are not sampled at runtime.  
 
+VK_FORMAT_R8_UNORM
 VK_FORMAT_R16_SFLOAT  
 VK_FORMAT_R16_UNORM  
 VK_FORMAT_R32_SFLOAT  
 
-**Implementation Notes**  
+**Implementation Note**  
 This section is non-normative
 
 This extension defines a number of formats that are supported for images used as texture sources.  
@@ -181,6 +196,10 @@ If ktx image
 ## KTX header fields
 
 - `vkFormat` MUST be one of:  
+VK_FORMAT_R8G8B8A8_UNORM  
+VK_FORMAT_R8G8B8_UNORM  
+VK_FORMAT_R8G8_UNORM  
+VK_FORMAT_R8_UNORM  
 VK_FORMAT_E5B9G9R9_UFLOAT_PACK32  
 VK_FORMAT_B10G11R11_UFLOAT_PACK32  
 VK_FORMAT_R16G16B16A16_SFLOAT  
@@ -195,8 +214,6 @@ VK_FORMAT_R32G32_SFLOAT
 VK_FORMAT_R16_SFLOAT  
 VK_FORMAT_R16_UNORM  
 VK_FORMAT_R32_SFLOAT  
-
-- `levelCount`MUST be 0  
 
 - `supercompressionScheme` MUST be one of:  
 2 (Zstandard)  
