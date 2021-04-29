@@ -140,7 +140,7 @@ To use KTX v2 image without a fallback, define `KHR_texture_ktx` in both `extens
 ## Color Texture Sources
 
 Texture data provided by this extension is encoded depending on the target format and material texture slot usage.    
-When this extension is used with material texture slots that expect sRGB-encoded values (RGB or RGBA format) and the texture format is 8 bits per pixel, the texture format must be one of VK_FORMAT_B8G8R8_SRGB or VK_FORMAT_B8G8R8A8_SRGB and contain an sRGB encoded image.  
+When this extension is used with material texture slots that expect sRGB-encoded values (RGB or RGBA format) and the texture format is 8 bits per pixel, the texture format must be one of VK_FORMAT_R8G8B8_SRGB or VK_FORMAT_R8G8B8A8_SRGB and contain an sRGB encoded image.  
 When this extension is used with material texture slosts that expect sRGB-encoded values (RGB or RGBA format) and the texture format is > 8 bits per pixel the texture is encoded using linear transfer function.  
 The texture format must then be one of the following:  
 VK_FORMAT_R16G16B16A16_UNORM  
@@ -165,7 +165,7 @@ For the purposes of this extension, the following texture types and formats are 
 
 - **RGBA:** A texture that uses all four channels.  
 
-VK_FORMAT_B8G8R8A8_SRGB  
+VK_FORMAT_R8G8B8A8_SRGB  
 VK_FORMAT_R8G8B8A8_UNORM  
 VK_FORMAT_R16G16B16A16_SFLOAT  
 VK_FORMAT_R16G16B16A16_UNORM  
@@ -174,7 +174,7 @@ VK_FORMAT_R32G32B32A32_SFLOAT
 
 - **RGB:** A texture that uses red, green, and blue channels. Alpha channel is unused and not sampled at runtime.  
 
-VK_FORMAT_B8G8R8_SRGB  
+VK_FORMAT_R8G8B8_SRGB  
 VK_FORMAT_R8G8B8_UNORM
 VK_FORMAT_E5B9G9R9_UFLOAT_PACK32  
 VK_FORMAT_B10G11R11_UFLOAT_PACK32  
