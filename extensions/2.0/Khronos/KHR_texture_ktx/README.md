@@ -149,7 +149,15 @@ VK_FORMAT_R16G16B16_UNORM
 The range limitation on the target texture remains unchanged.  
 
 
->Implementation Note: For the core glTF 2.0 specification, these texture slots include emissiveTexture and baseColorTexture; for material extensions, it's usually texture slots named *ColorTexture.  
+>Implementation Note: For the core glTF 2.0 specification, these texture slots include emissiveTexture and baseColorTexture.  
+For material extensions, it's usually texture slots named *ColorTexture.  
+
+## Non Color Texture Sources
+
+When this extension is used with material texture slots that expect linear non-color texture values, such as normal or metallic/roughness values, the texture format must be one of the VK_FORMAT_XXX_UNORM formats.  
+
+>Implementation Note: For the core glTF 2.0 specification, these texture slots include normalTexture, occlusionTexture and metallicRoughnessTexture.  
+For material extensions, it's usually texture slots named *Texture, *RoughnessTexture or similar.    
 
 ## KTX v2 Images
 
