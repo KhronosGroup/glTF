@@ -25,7 +25,7 @@ May lead to unpredicted results of clients shall decode then create mip-levels s
 ## Dependencies
 
 Written against the glTF 2.0 spec.  
-This extension depends on KHR_texture_ktx
+This extension depends on KHR_texture_ktx.    
 This extension may use KHR_texture_basisu or KHR_texture_float_bc6h to support compressed texture formats.
 
 ## Overview
@@ -49,27 +49,37 @@ Cubemaps shall be supplied without pre-filtered mip-maps for roughness values > 
 
 If a compressed texture format is used then pre-filtered mip-levels for roughness values > 0 shall be specified.  
 
+  > **Implementation Note**: Implementations are free to ignore the pre-filtered mip-levels and generate the mip-levels for roughness values at runtime.  
+
 ## Declaring an environment light
 
 The KHR_lights_environment extension defines an array of image-based lights at the root of the glTF and then each scene can reference one.  
 Each environment light definition consists of a single cubemap that describes the specular radiance of the scene, the l=2 spherical harmonics coefficients for diffuse irradiance and intensity values.  
 The cubemap is defined by texture references to a KTX2 file containing a cubemap.  
-These files can contain compressed textures using KHR_texture_basisu or compressed float texture format as defined by KHR_texture_float_bc6h.   
+These files may contain compressed textures using KHR_texture_basisu or compressed float texture format as defined by KHR_texture_float_bc6h.   
 
 When the extension is used, images shall use `image/ktx2` as mimeType for cubemaps that are referenced by the `specularCubemap` property of KHR_lights_environment extension object.  
 The texture type of the KTX v2 file shall be 'Cubemap'  
 
 
-The following will load the environment light using KHR_texture_basisu on clients that supports that extension,  otherwise fall back to using KTX2 using VK_FORMAT_R8G8B8_SRGB.  
+The following will load the environment light using KHR_texture_ktx.  
 
 
-```json
+```json  
+
+"asset": {
+"version": "2.0"
+},
+"extensionsUsed": [
+    "KHR_texture_ktx",
+    "KHR_lights_environment"
+],
 "textures": [
     {
-        "source": 0,
         "extensions": {
-            "KHR_texture_basisu": {
-                "source": 1
+            "KHR_texture_ktx": {
+                "source": 0,
+                "layer": 0
             }
         }
     }
@@ -78,11 +88,6 @@ The following will load the environment light using KHR_texture_basisu on client
         {
             "name": "environment cubemap 0",
             "uri": "cubemap0.ktx2",
-            "mimeType": "image/ktx2"
-        },
-        {
-            "name": "environment cubemap basisu",
-            "uri": "cubemap_basisu.ktx2",
             "mimeType": "image/ktx2"
         }
 ],
@@ -167,6 +172,10 @@ Each scene can have a single environment light attached to it by defining the `e
 | `specularCubemaps` | Cubemap texture | :white_check_mark: Yes |
 
 
+## KTX v2 Images  
+
+The texture type of the KTX v2 file shall be 'Cubemap'  
+
 
 
 ## glTF Schema Updates
@@ -174,6 +183,9 @@ Each scene can have a single environment light attached to it by defining the `e
 - [glTF.KHR_lights_environment.schema.json](schema/glTF.KHR_lights_environment.schema.json)
 - [environment.schema.json](schema/environment.schema.json)
 - [scene.KHR_lights_environment.schema.json](schema/scene.KHR_lights_environment.schema.json)
+
+
+
 
 ## Known Implementations
 
