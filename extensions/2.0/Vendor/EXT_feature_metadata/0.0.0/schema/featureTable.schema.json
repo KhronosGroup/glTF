@@ -1,0 +1,45 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Feature table",
+    "type": "object",
+    "description": "A feature table designated by a class and property values stored in arrays.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "minLength" : 1,
+            "description": "The name of the feature table, e.g. for display purposes. The string is UTF-8 encoded."
+        },
+        "description": {
+            "type": "string",
+            "minLength" : 1,
+            "description": "The description of the feature table. The string is UTF-8 encoded."
+        },
+        "class": {
+            "type": "string",
+            "minLength" : 1,
+            "description": "The ID of the class."
+        },
+        "count": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The number of features in the table. This is the number of unique feature IDs in the model that reference this feature table, not to be confused with `elementCount`."
+        },
+        "elementCount": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The number of elements in each property array. `elementCount` may be greater than `featureCount` if the array contains extra elements not used by this model, e.g. if different models refer to different sections of a global array or if the arrays represents a larger data dictionary. if `elementCount` is not specified, it is assumed to be equal to `featureCount`"
+        },
+        "properties": {
+            "type": "object",
+            "description": "A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value describes where property array data is stored.",
+            "minProperties": 1,
+            "additionalProperties" : {
+                "$ref": "featureTable.property.schema.json"
+            }
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "class", "count" ]
+}

@@ -1,0 +1,40 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_feature_metadata glTF Primitive extension",
+    "type": "object",
+    "description": "glTF extension for an individual primitive in a glTF model, to associate it with the model's root `EXT_feature_metadata` object.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "featureIdAttributes": {
+            "type": "array",
+            "description": "An array of objects mapping per-vertex feature IDs to property arrays in a feature table.",
+            "items": {
+                "$ref": "primitive.EXT_feature_metadata.featureIdAttributes.schema.json"
+            },
+            "minItems": 1
+        },
+        "featureIdTextures": {
+            "type": "array",
+            "description": "An array of objects mapping per-texel feature IDs to a feature table",
+            "items": {
+                "$ref": "primitive.EXT_feature_metadata.featureIdTexture.schema.json"
+            },
+            "minItems": 1
+        },
+        "featureTextures": {
+            "type": "array",
+            "description": "An array of IDs of feature textures from the root `EXT_feature_metadata`",
+            "items": {
+                "type": "string"
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "anyOf": [
+      {"required": ["featureIdAttributes"]},
+      {"required": ["featureIdTextures"]},
+      {"required": ["featureTextures"]}
+    ]
+}

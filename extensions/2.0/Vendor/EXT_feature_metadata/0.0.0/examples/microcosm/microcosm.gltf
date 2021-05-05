@@ -1,0 +1,273 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "extensionsUsed": [
+    "EXT_feature_metadata"
+  ],
+  "extensions": {
+    "EXT_feature_metadata": {
+      "extras": {
+        "draftVersion": "0.0.0"
+      },
+      "classes": {
+        "NDVI": {
+          "name": "Normalized difference vegetation index",
+          "properties": {
+            "NDVI": {
+              "name": "Normalized Difference Vegetation Index",
+              "type": "UINT8",
+              "normalized": true
+            }
+          }
+        },
+        "LULC": {
+          "name": "Landcover/Landuse",
+          "properties": {
+            "Name": {
+              "name": "Name",
+              "type": "STRING"
+            },
+            "Color": {
+              "name": "Color",
+              "type": "ARRAY",
+              "componentType": "UINT8",
+              "componentCount": 3
+            }
+          }
+        }
+      },
+      "featureTables": {
+        "LandCover": {
+          "class": "LULC",
+          "count": 6,
+          "elementCount": 256,
+          "properties": {
+            "Name": {
+              "bufferView": 5,
+              "offsetBufferViews": [6]
+            },
+            "Color": {
+              "bufferView": 7
+            }
+          }
+        }
+      },
+      "featureTextures": {
+        "NDVITexture": {
+          "class": "NDVI",
+          "properties": {
+            "NDVI": {
+              "texture": {
+                "index": 1,
+                "texCoord": 1
+              },
+              "channels": "r"
+            }
+          }
+        }
+      }
+    }
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Scene",
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "mesh": 0,
+      "name": "Terrain"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "Photogrammetry",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0,
+          "texCoord": 0
+        },
+        "metallicFactor": 0,
+        "roughnessFactor": 0.5
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Terrain Mesh",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "TEXCOORD_0": 2,
+            "TEXCOORD_1": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "extensions": {
+            "EXT_feature_metadata": {
+              "featureIdTextures": [
+                {
+                  "featureTable": "LandCover",
+                  "featureIds": {
+                    "texture": {
+                      "texCoord": 1,
+                      "index": 2
+                    },
+                    "channels": "r"
+                  }
+                }
+              ],
+              "featureTextures": ["NDVITexture"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "name": "Photogrammetry Texture",
+      "source": 0
+    },
+    {
+      "name": "NDVI Texture",
+      "source": 1
+    },
+    {
+      "name": "Land Cover Texture",
+      "source": 2
+    }
+  ],
+  "images": [
+    {
+      "mimeType": "image/png",
+      "name": "Photogrammetry",
+      "uri": "photogrammetry.png"
+    },
+    {
+      "mimeType": "image/png",
+      "name": "NDVI",
+      "uri": "ndvi.png"
+    },
+    {
+      "mimeType": "image/png",
+      "name": "Land Cover",
+      "uri": "land-cover.png"
+    }
+  ],
+  "accessors": [
+    {
+      "name": "Positions",
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 62802,
+      "max": [
+        50,
+        20.001466751098633,
+        50.00535202026367
+      ],
+      "min": [
+        -50,
+        -16.49410629272461,
+        -50.00535202026367
+      ],
+      "type": "VEC3"
+    },
+    {
+      "name": "Normals",
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 62802,
+      "type": "VEC3"
+    },
+    {
+      "name": "Photogrammetry UVs",
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 62802,
+      "type": "VEC2"
+    },
+    {
+      "name": "Ortho UVs",
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 62802,
+      "type": "VEC2"
+    },
+    {
+      "name": "Indices",
+      "bufferView": 4,
+      "componentType": 5123,
+      "count": 95484,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "name": "Positions",
+      "buffer": 0,
+      "byteLength": 753624,
+      "byteOffset": 0
+    },
+    {
+      "name": "Normals",
+      "buffer": 0,
+      "byteLength": 753624,
+      "byteOffset": 753624
+    },
+    {
+      "name": "Ortho UVs",
+      "buffer": 0,
+      "byteLength": 502416,
+      "byteOffset": 1507248
+    },
+    {
+      "name": "Photogrammetry UVs",
+      "buffer": 0,
+      "byteLength" : 502416,
+      "byteOffset" : 2009664
+    },
+    {
+      "name": "Indices",
+      "buffer": 0,
+      "byteLength" : 190968,
+      "byteOffset" : 2512080
+    },
+    {
+      "name": "LULC Name",
+      "buffer": 1,
+      "byteLength": 1546,
+      "byteOffset": 0
+    },
+    {
+      "name": "LULC Name Offsets",
+      "buffer": 1,
+      "byteLength": 1028,
+      "byteOffset": 1552
+    },
+    {
+      "name": "LULC Color",
+      "buffer": 1,
+      "byteLength": 768,
+      "byteOffset": 2584
+    }
+  ],
+  "buffers": [
+    {
+      "name": "Geometry Buffer",
+      "byteLength": 2703048,
+      "uri": "microcosm.bin"
+    },
+    {
+      "name": "Metadata Buffer",
+      "byteLength": 3352,
+      "uri": "microcosm-metadata.bin"
+    }
+  ]
+}

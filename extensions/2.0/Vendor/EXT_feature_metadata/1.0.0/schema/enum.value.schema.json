@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "Enum value",
+  "type": "object",
+  "description": "An enum value.",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The name of the enum value."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The description of the enum value."
+    },
+    "value": {
+      "type": "integer",
+      "description": "The integer enum value."
+    },
+    "extensions": {},
+    "extras": {}
+  },
+  "required": [
+    "name",
+    "value"
+  ]
+}
