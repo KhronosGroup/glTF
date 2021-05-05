@@ -65,4 +65,4 @@ This extension uses WGS84([EPSG:4979](https://epsg.io/4979)) as the coordinate r
 
 ## Schema Updates
 
-Updates to the schema can be found in the [extension schema](schema/gltf.CESIUM_geopose.schema.json).
+Updates to the schema can be found in the [extension schema](schema/gltf.EXT_geopose.schema.json).
