@@ -1,6 +1,6 @@
 # CESIUM_geopose
 
-Implementation of the [OGC GeoPose Standard 1.0](https://github.com/opengeospatial/GeoPose/tree/main/standard).
+Implementation of [Standardization Target 2: Basic-Euler](https://github.com/opengeospatial/GeoPose/blob/main/standard/standard/standard/clause_7_normative_text.adoc#standardization-target-2-basic-euler) in the OGC GeoPose 1.0 Standard.
 
 ## Changelog
 
