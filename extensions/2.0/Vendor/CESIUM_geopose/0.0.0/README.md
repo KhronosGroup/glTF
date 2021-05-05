@@ -10,17 +10,27 @@
 * Sean Lilley, Cesium
 * Peter Gagliardi, Cesium
 
+<!-- omit in toc -->
 ## Status
 
 Draft
 
+<!-- omit in toc -->
 ## Dependencies
 
 Written against the [OGC GeoPose Standard 1.0](https://github.com/opengeospatial/GeoPose/tree/main/standard).
 
+<!-- omit in toc -->
 ## Optional vs. Required
 
 This extension is optional, meaning it should be placed in the `extensionsUsed` list, but not in the `extensionsRequired` list.
+
+<!-- omit in toc -->
+## Contents
+- [Overview](#overview)
+  - [GeoPose 1.0 Standard](#geopose-10-standard)
+- [Coordinate Systems](#coordinate-systems)
+- [Schema Updates](#schema-updates)
 
 ## Overview
 
