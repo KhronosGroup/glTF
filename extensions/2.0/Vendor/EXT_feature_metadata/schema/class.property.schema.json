@@ -71,6 +71,9 @@
         "number",
         "array"
       ],
+      "items": {
+        "type": "number"
+      },
       "description": "Maximum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values: they always correspond to the integer values."
     },
     "min": {
@@ -78,6 +81,9 @@
         "number",
         "array"
       ],
+      "items": {
+        "type": "number"
+      },
       "description": "Minimum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values: they always correspond to the integer values."
     },
     "default": {
