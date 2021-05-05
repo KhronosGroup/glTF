@@ -18,7 +18,7 @@ Draft
 <!-- omit in toc -->
 ## Dependencies
 
-Written against the [OGC GeoPose Standard 1.0](https://github.com/opengeospatial/GeoPose/tree/main/standard).
+Written against the draft of [OGC GeoPose Standard 1.0](https://github.com/opengeospatial/GeoPose/tree/main/standard).
 
 <!-- omit in toc -->
 ## Optional vs. Required
