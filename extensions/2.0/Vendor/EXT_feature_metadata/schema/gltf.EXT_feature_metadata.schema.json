@@ -35,11 +35,5 @@
     },
     "extensions": {},
     "extras": {}
-  },
-  "not": {
-    "required": [
-      "schema",
-      "schemaUri"
-    ]
   }
 }
