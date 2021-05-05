@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "CESIUM_geopose glTF extension",
+  "type": "object",
+  "description": "glTF extension for specifying the position and orientation of models on the Earth.",
+  "allOf": [
+    {
+      "$ref": "glTFProperty.schema.json"
+    }
+  ],
+  "properties": {
+    "longitude": {
+      "type": "number",
+      "description": "Longitude in the WGS84 datum. The angle must be specified in degrees.",
+      "minimum": -180.0,
+      "maximum": 180.0
+    },
+    "latitude": {
+      "type": "number",
+      "description": "Latitude in the WGS84 datum. The angle must be specified in degrees.",
+      "minimum": -90.0,
+      "maximum": 90.0
+    },
+    "height": {
+      "type": "number",
+      "description": "Heights are in meters above (or below) the WGS84 ellipsoid."
+    },
+    "ypr": {
+      "type": "object",
+      "description": "Rotation-only transformation from a WGS-84-referenced local tangent plane east-north-up coordinate system.",
+      "properties": {
+        "yaw": {
+          "type": "number",
+          "description": "Rotation about the LTP-ENU frame Z (up) axis. The angle must be specified in degrees."
+        },
+        "pitch": {
+          "type": "number",
+          "description": "Pitch is rotation about the y axis of the yaw-rotated local frame. The angle must be specified in degrees."
+        },
+        "roll": {
+          "type": "number",
+          "description": "Roll is rotation about the yaw and pitch rotated x axis of the local frame. The angle must be specified in degrees."
+        }
+      },
+      "required": [
+        "yaw",
+        "pitch",
+        "roll"
+      ]
+    },
+    "extensions": {},
+    "extras": {}
+  }
+}
