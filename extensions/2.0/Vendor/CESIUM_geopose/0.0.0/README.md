@@ -1,7 +1,7 @@
 <!-- omit in toc -->
 # CESIUM_geopose
 
-**Version 0.0.0, May 17, 2021
+**Version 0.0.0**, May 17, 2021
 
 <!-- omit in toc -->
 ## Contributors
