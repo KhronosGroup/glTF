@@ -44,12 +44,12 @@ This extension implements [Standardization Target 2: Basic-Euler](https://github
 
 ## Coordinate Systems
 
-This extension uses WGS84([EPSG:4979](https://epsg.io/4979)) as the coordinate reference system for specifying the position with longitude and latitude specified in degrees. Height above (or below) the ellipsoid must be specified in meters.
+This extension uses WGS84([EPSG:4979](https://epsg.io/4979)) as the coordinate reference system for specifying the position with longitude and latitude specified in degrees. Height above (or below) the ellipsoid must be specified in meters. The yaw-pitch-roll is provided as a rotation-only transform from a WGS84 referenced local tangent plane East-North-Up coordinate system..
 
 ```json
 {
   "extensions": {
-    "CESIUM_geopose": {
+    "EXT_geopose": {
       "longitude": 46.7,
       "latitude": 25.067,
       "height": 691.0,

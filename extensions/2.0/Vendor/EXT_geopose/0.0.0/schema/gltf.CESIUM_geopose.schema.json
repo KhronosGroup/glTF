@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "CESIUM_geopose glTF extension",
+  "title": "EXT_geopose glTF extension",
   "type": "object",
   "description": "glTF extension for specifying the position and orientation of models on the Earth.",
   "allOf": [
