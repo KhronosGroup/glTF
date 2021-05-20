@@ -13,15 +13,6 @@
 
 Draft
 
-Open issues:
-Should Spherical Harmonics be supported or should clients be forced to evaluate the specular cubemap for diffuse contribution?  
-The question comes down to if resolution supplied by 9 coefficients SH is enough for most usecases?  
-It could also be the case that a scene only wants diffuse contribution.  
-A link to an implementation that uses the cubemap for specular, diffuse and reflection would be beneficial.  
-
-If compressed texture format is used how should pre-filtering for roughness reflection be done?
-May lead to unpredicted results of clients shall decode then create mip-levels since the result will likely take much more GPU memory since compression is likely not supported on target.  
-
 ## Dependencies
 
 Written against the glTF 2.0 spec.  
