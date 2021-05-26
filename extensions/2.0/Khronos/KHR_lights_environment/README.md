@@ -76,17 +76,19 @@ The following will load the environment light using KHR_texture_ktx.
         }
     }
 ],
-"images": [
-        {
-            "name": "environment cubemap 0",
-            "uri": "cubemap0.ktx2",
-            "mimeType": "image/ktx2"
-        }
-],
+
 "extensions": {
     "KHR_lights_environment" : {
+        "images": [
+            {
+                "name": "environment cubemap 0",
+                "uri": "cubemap0.ktx2",
+                "mimeType": "image/ktx2"
+            }
+        ],    
         "lights": [
             {
+                "name": "environment light 0",
                 "intensity": 1.0,
                 "irradianceCoefficients": [...3 x 9 array of floats...],
                 "specularCubemaps": [0],
