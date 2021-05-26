@@ -161,7 +161,7 @@ Each scene can have a single environment light attached to it by defining the `e
 | `name` | Name of the light. | No |
 | `intensity` | Brightness multiplier for environment. | No, Default: `1.0` |
 | `irradianceCoefficients` | Declares spherical harmonic coefficients for irradiance up to l=2. This is a 9x3 array. | No |
-| `specularCubemaps` | Cubemap texture - this must be a KTX v2 image containing a cubemap | :white_check_mark: Yes |
+| `specularCubemaps` | Cubemap texture - this must be a KTX v2 image containing a cubemap. The texture source may use some other extension include additional texture format support. Although this is an array only one value is allowed. | :white_check_mark: Yes |
 
 
 ## KTX v2 Images  
