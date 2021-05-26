@@ -39,6 +39,7 @@ Cubemaps shall be supplied without pre-filtered mip-maps for roughness values > 
 [See Specular radiance cubemaps](#specular-radiance-cubemaps)  
 
 If a compressed texture format is used then pre-filtered mip-levels for roughness values > 0 shall be specified.  
+This is to ensure deterministic texture memory usage.  
 
   > **Implementation Note**: Implementations are free to ignore the pre-filtered mip-levels and generate the mip-levels for roughness values at runtime.  
 
@@ -159,8 +160,8 @@ Each scene can have a single environment light attached to it by defining the `e
 |:-----------------------|:------------------------------------------| :--------------------------|
 | `name` | Name of the light. | No |
 | `intensity` | Brightness multiplier for environment. | No, Default: `1.0` |
-| `irradianceCoefficients` | Declares spherical harmonic coefficients for irradiance up to l=2. This is a 9x3 array. | :white_check_mark: Yes |
-| `specularCubemaps` | Cubemap texture | :white_check_mark: Yes |
+| `irradianceCoefficients` | Declares spherical harmonic coefficients for irradiance up to l=2. This is a 9x3 array. | No |
+| `specularCubemaps` | Cubemap texture - this must be a KTX v2 image containing a cubemap | :white_check_mark: Yes |
 
 
 ## KTX v2 Images  
