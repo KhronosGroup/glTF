@@ -12,6 +12,7 @@
 * Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
 * Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
 * Emmett Lalish, Google [@elalish](https://github.com/elalish)
+* Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
 * Bruce Cherniak, Intel
 * Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
 * Nicholas Barlow, Microsoft
