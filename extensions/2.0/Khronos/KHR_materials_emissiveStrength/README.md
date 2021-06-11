@@ -2,10 +2,23 @@
 
 ## Contributors
 
-* Ben Houston, Threekit, [@bhouston](https://twitter.com/BenHouston3D)
-* Ed Mackey, Analytical Graphics, [@emackey](https://twitter.com/emackey)
-* Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
+* Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
+* Alex Jamerson, Amazon
+* Thomas Dideriksen, Amazon
 * Alex Wood, Analytical Graphics, [@abwood](https://twitter.com/abwood)
+* Ed Mackey, Analytical Graphics, [@emackey](https://twitter.com/emackey)
+* Nicolas Savva, Autodesk [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
+* Henrik Edstrom, Autodesk
+* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
+* Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
+* Emmett Lalish, Google [@elalish](https://github.com/elalish)
+* Bruce Cherniak, Intel
+* Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
+* Nicholas Barlow, Microsoft
+* Adam Morris, Target [@weegeekps](https://github.com/weegeekps)
+* Sandra Voelker, Target
+* Ben Houston, Threekit, [@bhouston](https://twitter.com/BenHouston3D)
+* Eric Chadwick, Wayfair [echadwick-wayfair](https://github.com/echadwick-wayfair)
 
 Copyright (C) 2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -34,14 +47,17 @@ strength per material. This strength can be colored and tempered using the core 
 and `emissiveTexture` controls, permitting the strength to vary across the surface of the material.
 Supplying values above 1.0 for `emissiveStrength` can have an influence on reflections, tonemapping, blooming, and more.
 
-For systems where a physical light unit is needed, the units for `emissiveStrength` are kilonits (thousands of
-nits, where a nit is candela per square meter: **1000 cd/m<sup>2</sup>**).  This is intended to be roughly
-equivalent to a very bright display screen.
+### Physical Units
 
-Specifying the default value of `1.0` for `emissiveStrength` should not produce any change from glTF's core emissive
-material parameters.  [Unless the implementation can do something with the physical units defined?]
+For implementations where a physical light unit is needed, the units for `emissiveStrength` are candela per square
+meter: **cd / m<sup>2</sup>**, sometimes called *nits*.  The default value is 100 nits.
 
-[Alternative: we could default emissiveStrength to 1000 and have it specified in terms of nits.]
+### Non-Physical Units
+
+For implementations where a physical unit is not needed, the value is treated as a *percentage*.  The default value
+of 100 corresponds to 100%, indicating no change in brightness from the core glTF material emissive settings.
+Values greater than 100% are encouraged, permitting a material's emission to become brighter than what is possible
+without this extension.
 
 ## Extending Materials
 
@@ -62,7 +78,7 @@ or amplified by the inclusion of this extension.  For example:
             },
             "extensions": {
                 "KHR_materials_emissive_strength": {
-                    "emissiveStrength": 5.0
+                    "emissiveStrength": 500.0
                 }
             }
         }
@@ -71,22 +87,27 @@ or amplified by the inclusion of this extension.  For example:
 ```
 
 In the above example, the `emissiveFactor` has been set to its maximum value, to enable the `emissiveTexture`.
-The `emissiveStrength` has been set to 5.0, making the texture five times brighter than it otherwise
-would have been.  
+The `emissiveStrength` has been set to 500.0, making the texture five times brighter than it otherwise
+would have been.
 
 ### Parameters
 
 The following parameters are contributed by the `KHR_materials_emissive_strength` extension:
 
-| Name                   | Type       | Description                                    | Required           |
-|------------------------|------------|------------------------------------------------|--------------------|
-| **emissiveStrength**   | `number`   | The maximum strength of the emissive texture.  | No, default: `1.0` |
+| Name                   | Type       | Description                                    | Required             |
+|------------------------|------------|------------------------------------------------|----------------------|
+| **emissiveStrength**   | `number`   | The maximum strength of the emissive texture.  | No, default: `100.0` |
 
 
 ## Implementation Notes
 
 *This section is non-normative.*
 
+A typical (pseudocode) implementation without physical units might look like the following:
+
+```
+color += emissiveFactor.rgb * sRGB_to_Linear(emissiveTexture.rgb) * vec3(emissiveStrength * 0.01);
+```
 
 ## Appendix: Full Khronos Copyright Statement
 
