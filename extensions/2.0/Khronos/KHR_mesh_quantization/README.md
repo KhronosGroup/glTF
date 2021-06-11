@@ -47,6 +47,8 @@ For `POSITION` and `TEXCOORD` attributes, the application is free to choose norm
 
 > **Implementation Note:** As quantization may introduce a non-negligible error, quantized normal and tangent vectors are typically not exactly unit length. Applications are expected to normalize the vectors before using them in lighting equations; this typically can be done after transforming them using the normal matrix. Even if quantization is not used, normal matrix can contain scale/skew so normalization is typically required anyway.
 
+> **Implementation Note:** For quantized data, `accessor.min` and `accessor.max` properties also contain quantized values. Applications that use these properties, e.g. for bounding box computations, will need to dequantize them first.
+
 ## Extending Morph Target Attributes
 
 When `KHR_mesh_quantization` extension is supported, the set of types used for storing morph target attributes is expanded according to the table below.

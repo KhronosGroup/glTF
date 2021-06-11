@@ -136,17 +136,43 @@ To use KTX v2 image with Basis Universal supercompression without a fallback, de
 
 To cover a broad range of use cases, this extension allows two Basis Universal formats: ETC1S with BasisLZ and UASTC with optional Zstandard compression.
 
-- KTX header fields for ETC1S with BasisLZ payloads
+For the purposes of this extension, the following texture types are defined:
+
+- **RGB:** A texture that uses red, green, and blue channels. Alpha channel is either assumed to be always equal to `1.0` (`255`) or unused and not sampled at runtime. Such textures MAY be encoded with the sRGB transfer function.
+  > **Note:** RGB textures from the core glTF 2.0 specification include:
+  > - `baseColorTexture` (opaque case)
+  > - `normalTexture`
+  > - `emissiveTexture`
+  > - `metallicRoughnessTexture` (when be combined with `occlusionTexture`, otherwise red channel is ignored)
+
+- **RGBA:** A texture that uses all four channels. Such textures MAY be encoded with the sRGB transfer function (not applied to Alpha).
+  > **Note:** RGBA textures from the core glTF 2.0 specification include:
+  > - `baseColorTexture` (non-opaque case)
+
+- **Red:** A texture that uses only red channel. All other channels are unused and their values are not sampled at runtime. Such textures MUST NOT be encoded with the sRGB transfer function.
+  > **Note:** Red textures from the core glTF 2.0 specification include:
+  > - `occlusionTexture` (standalone)
+
+- **Red-Green:** A texture that uses only red and green channels. Blue and Alpha channels are unused and their values are not sampled at runtime. Such textures MUST NOT be encoded with sRGB transfer function.
+  > **Note:** The core glTF 2.0 specification has no examples of red-green textures.
+
+### KTX header fields for ETC1S with BasisLZ payloads
   - `supercompressionScheme` MUST be `1` (BasisLZ).
   - DFD `colorModel` MUST be `KHR_DF_MODEL_ETC1S`.
-  - RGB textures MUST use a single DFD channel with value `KHR_DF_CHANNEL_ETC1S_RGB`.
-  - RGBA textures MUST use two DFD channels with values `KHR_DF_CHANNEL_ETC1S_RGB` and `KHR_DF_CHANNEL_ETC1S_AAA`.
+  - RGB textures MUST use a single `KHR_DF_CHANNEL_ETC1S_RGB` DFD channel.
+  - RGBA textures MUST use two DFD channels: `KHR_DF_CHANNEL_ETC1S_RGB` and `KHR_DF_CHANNEL_ETC1S_AAA`.
+  - Red textures MUST use a single `KHR_DF_CHANNEL_ETC1S_RRR` DFD channel.
+  - Red-Green textures MUST use two DFD channels: `KHR_DF_CHANNEL_ETC1S_RRR` and `KHR_DF_CHANNEL_ETC1S_GGG`.
 
-- KTX header fields for UASTC payloads
+### KTX header fields for UASTC payloads
   - `supercompressionScheme` MUST be `0` (None) or `2` (Zstandard).
   - DFD `colorModel` MUST be `KHR_DF_MODEL_UASTC`.
-  - RGB textures MUST use a single DFD channel with value `KHR_DF_CHANNEL_UASTC_RGB`.
-  - RGBA textures MUST use a single DFD channel with value `KHR_DF_CHANNEL_UASTC_RGBA`.
+  - RGB textures MUST use a single `KHR_DF_CHANNEL_UASTC_RGB` DFD channel.
+  - RGBA textures MUST use a single `KHR_DF_CHANNEL_UASTC_RGBA` DFD channel.
+  - Red textures MUST use a single `KHR_DF_CHANNEL_UASTC_RRR` DFD channel.
+  - Red-Green textures MUST use a single `KHR_DF_CHANNEL_UASTC_RG` DFD channel.
+
+### Additional requirements
 
 Regardless of the format used, these additional restrictions apply for compatibility reasons:
 

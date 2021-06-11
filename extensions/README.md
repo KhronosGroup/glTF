@@ -44,11 +44,11 @@ but may still change before they are complete._
 
 | Extension | Status |
 |-----------|--------|
-| [KHR_materials_ior](https://github.com/KhronosGroup/glTF/pull/1718) | In development. |
+| [KHR_materials_ior](https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_materials_ior/README.md) | Pending ratification. |
+| [KHR_materials_specular](https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_materials_specular/README.md) | Pending ratification. |
+| [KHR_materials_volume](https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_materials_volume/README.md) | Pending ratification. |
 | [KHR_materials_thinfilm](https://github.com/KhronosGroup/glTF/pull/1742) | In development. |
-| [KHR_materials_specular](https://github.com/KhronosGroup/glTF/pull/1719) | Ready for implementation and feedback. |
 | [KHR_materials_translucency](https://github.com/KhronosGroup/glTF/pull/1825) | In development. |
-| [KHR_materials_volume](https://github.com/KhronosGroup/glTF/pull/1726) | In development. |
 
 This section tracks the status of Khronos and multi-vendor extensions that are either already in development,
 or that we feel show enough consensus to be highly likely for future development. We welcome feedback for these
