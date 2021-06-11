@@ -45,7 +45,8 @@ with high-dynamic range reflections and lighting, stronger emission effects may 
 In this extension, a new `emissiveStrength` scalar factor is supplied, that governs the upper limit of emissive
 strength per material. This strength can be colored and tempered using the core `emissiveFactor`
 and `emissiveTexture` controls, permitting the strength to vary across the surface of the material.
-Supplying values above 1.0 for `emissiveStrength` can have an influence on reflections, tonemapping, blooming, and more.
+Supplying values above 100.0 for `emissiveStrength` can have an influence on reflections, tonemapping,
+blooming, and more.
 
 ### Physical Units
 
