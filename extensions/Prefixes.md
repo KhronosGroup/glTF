@@ -25,6 +25,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `BLENDER` | Blender Foundation | https://www.blender.org/ | [#865](https://github.com/KhronosGroup/glTF/issues/865) |
 | `CAPTURE` | Capture Visualisation AB | https://www.capture.se/ | [#1732](https://github.com/KhronosGroup/glTF/issues/1732) |
 | `CESIUM` | Cesium GS, Inc. | https://cesium.com |  |
+| `CITRUS` | Citrus Toolbox | https://github.com/KenzieMac130/CitrusToolbox | [#1962](https://github.com/KhronosGroup/glTF/issues/1962) |
 | `CLO` | CLO Virtual Fashion | https://www.clo3d.com | [#1944](https://github.com/KhronosGroup/glTF/issues/1944) |
 | `CVTOOLS` | Canvas Tools | https://github.com/MackeyK24/CanvasTools | [#1389](https://github.com/KhronosGroup/glTF/issues/1389) |
 | `EPIC` | Epic Games, Inc. | https://www.epicgames.com/ | [#1905](https://github.com/KhronosGroup/glTF/issues/1905) |
