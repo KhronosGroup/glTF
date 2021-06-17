@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Skeleton",
+    "type": "object",
+    "description": "A skeleton definition for joints and skins.",
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "root": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The root joint of the skeleton."
+        },
+        "joints": {
+            "type": "array",
+            "description": "Indices of skeleton nodes, which are joints.",
+            "items": {
+                "$ref": "glTFid.schema.json"
+            },
+            "uniqueItems": true,
+            "minItems": 1,
+            "gltf_detailedDescription": "Indices of skeleton nodes. The nodes form a complete subtree in the scene graph."
+        },
+        "inverseBindMatrices": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the accessor containing the floating-point 4x4 inverse-bind matrices.  The default is that each matrix is a 4x4 identity matrix, which implies that inverse-bind matrices were pre-applied.",
+            "gltf_detailedDescription": "The inverse bind matrices representing the skeletons default bind pose"
+        },
+        "name": { }
+    },
+    "required": [ "root", "joints" ]
+}
