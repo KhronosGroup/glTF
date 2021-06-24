@@ -26,7 +26,7 @@
             "minimum": 4,
             "maximum": 252,
             "multipleOf": 4,
-            "gltf_detailedDescription": "The stride, in bytes, between vertex attributes.  When this is not defined, data is tightly packed. When two or more accessors use the same bufferView, this field must be defined.",
+            "gltf_detailedDescription": "The stride, in bytes, between vertex attributes.  When this is not defined, data is tightly packed. When two or more vertex data accessors use the same bufferView, this field must be defined.",
             "gltf_webgl": "`vertexAttribPointer()` stride parameter"
         },
         "target": {
