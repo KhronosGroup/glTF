@@ -4,3 +4,7 @@
 *.nupkg
 specification/.project
 .DS_Store
+specification/2.0/PropertiesReference.adoc
+specification/2.0/JsonSchemaReference.adoc
+specification/2.0/Specification.html
+specification/2.0/Specification.pdf
