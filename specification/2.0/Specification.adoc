@@ -91,7 +91,7 @@ for identification and belong to their respective owners.
 [[introduction-general]]
 == General
 
-This document, referred to as the “glTF Specification” or just the “Specification” hereafter, describes the glTF file format.
+This document, referred to as the "`glTF Specification`" or just the "`Specification`" hereafter, describes the glTF file format.
 
 glTF is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern graphics applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
@@ -99,7 +99,7 @@ glTF is an API-neutral runtime asset delivery format.  glTF bridges the gap betw
 [[introduction-conventions]]
 == Document Conventions
 
-The glTF Specification is intended for use by both implementors of the asset exporters or converters (e.g. DCC tools) and application developers seeking to import or load glTF assets, forming a contract between these parties.
+The glTF Specification is intended for use by both implementors of the asset exporters or converters (e.g. digital content creation tools) and application developers seeking to import or load glTF assets, forming a contract between these parties.
 
 Specification text may address either party; typically the intended audience can be inferred from context, though some sections are defined to address only one of these parties.
 
@@ -129,7 +129,7 @@ Unless otherwise noted in the section heading, all sections and appendices in th
 [[introduction-technical-terminology]]
 === Technical Terminology
 
-The glTF Specification makes use of common engineering and graphics terms such as *Vertex*, *Normal*, *Texture*, etc to identify and describe certain GPU constructs and their attributes, states, and behaviors.
+The glTF Specification makes use of common engineering and graphics terms such as *Vertex*, *Normal*, *Texture*, etc. to identify and describe certain GPU constructs and their attributes, states, and behaviors.
 
 [[introduction-normative-references]]
 === Normative References
@@ -140,84 +140,119 @@ The following documents are referenced by normative sections of the specificatio
 
 ==== External Specifications
 
-[[bcp14]]
+* [[bcp14]]
 Bradner, S., _Key words for use in RFCs to Indicate Requirement Levels_, BCP 14, RFC 2119, March 1997. Leiba, B., _Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words_, BCP 14, RFC 8174, May 2017.
 <https://www.rfc-editor.org/info/bcp14>
 
-[[utf8]
+* [[utf8]]
 The Unicode Consortium, _The Unicode Standard_
 <https://www.unicode.org/versions/latest/>
 
-[[json]]
+* [[json]]
 Bray, T., Ed., _The JavaScript Object Notation (JSON) Data Interchange Format_, STD 90, RFC 8259, DOI 10.17487/RFC8259, December 2017, <https://www.rfc-editor.org/info/rfc8259>
 
-[[ieee-754]]
+* [[ieee-754]]
 ISO/IEC 60559:2020
 _Floating-point arithmetic_
 <https://www.iso.org/standard/80985.html>
 
-[[png]]
+* [[png]]
 ISO/IEC 15948:2004
 _Portable Network Graphics (PNG): Functional specification_
 <https://www.iso.org/standard/29581.html>
++
+[NOTE]
+.Note
+====
+A free version of this standard is available from W3C: https://www.w3.org/TR/PNG/
+====
 
-[[jpeg]]
+
+
+* [[jpeg]]
 ISO/IEC 10918-1:1994
 _Digital compression and coding of continuous-tone still images: Requirements and guidelines_
 <https://www.iso.org/standard/18902.html>
++
+[NOTE]
+.Note
+====
+An earlier edition of this standard called ITU Recommendation T.81 is available from W3C: https://www.w3.org/Graphics/JPEG/itu-t81.pdf
+====
 
-[[jfif]]
+* [[jfif]]
 ISO/IEC 10918-5:2013
 _Digital compression and coding of continuous-tone still images: JPEG File Interchange Format (JFIF)_
 <https://www.iso.org/standard/54989.html>
++
+[NOTE]
+.Note
+====
+An earlier edition of this standard is available from W3C: https://www.w3.org/Graphics/JPEG/jfif3.pdf
+====
 
-[[data-uri]]
+* [[exif]]
+CIPA DC-008-Translation-2019
+_Exchangeable image file format for digital still cameras_
+<https://www.cipa.jp/std/documents/download_e.html?DC-008-Translation-2019-E>
+
+* [[data-uri]]
 Masinter, L., _The "data" URL scheme_, RFC 2397, DOI 10.17487/RFC2397, August 1998, <https://www.rfc-editor.org/info/rfc2397>
 
-[[uri]]
+* [[uri]]
 Berners-Lee, T., Fielding, R., and L. Masinter, _Uniform Resource Identifier (URI): Generic Syntax_, STD 66, RFC 3986, DOI 10.17487/RFC3986, January 2005, <https://www.rfc-editor.org/info/rfc3986>
 
-[[iri]]
+* [[iri]]
 Duerst, M. and M. Suignard, _Internationalized Resource Identifiers (IRIs)_, RFC 3987, DOI 10.17487/RFC3987, January 2005, <https://www.rfc-editor.org/info/rfc3987>
 
-[[http]]
+* [[http]]
 Fielding, R., Ed., and J. Reschke, Ed., _Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing_, RFC 7230, DOI 10.17487/RFC7230, June 2014, <https://www.rfc-editor.org/info/rfc7230>
 
-[[srgb]]
-IEC 61966-2-1:1999.
+* [[srgb]]
+IEC 61966-2-1:1999
 _Default RGB colour space - sRGB_
 https://webstore.iec.ch/publication/6169
++
+[NOTE]
+.Note
+====
+The encoding characteristics of sRGB are freely available from ICC: https://www.color.org/chardata/rgb/srgb.xalter
+====
 
-[[mikktspace]]
+* [[bt709]]
+Recommendation ITU-R BT.709-6 _Parameter values for the HDTV standards for production and international programme exchange_
+https://www.itu.int/rec/R-REC-BT.709-6-201506-I
+
+* [[mikktspace]]
 _MikkTSpace_
 https://github.com/mmikk/MikkTSpace
 
 ==== Media Type Registrations
 
-[[gltf-json]]
+* [[gltf-json]]
 IANA.
 _model/gltf+json Media Type_.
 https://www.iana.org/assignments/media-types/model/gltf+json
 
-[[gltf-binary]]
+* [[gltf-binary]]
 IANA.
 _model/gltf-binary Media Type_.
 https://www.iana.org/assignments/media-types/model/gltf-binary
 
-[[gltf-buffer]]
+* [[gltf-buffer]]
 IANA.
 _application/gltf-buffer Media Type_.
 https://www.iana.org/assignments/media-types/application/gltf-buffer
 
-[[octet-stream]]
+* [[octet-stream]]
 IANA.
 _application/octet-stream Media Type_.
 https://www.iana.org/assignments/media-types/application/octet-stream
 
-[[image-jpeg]]
+* [[image-jpeg]]
 Freed, N. and N. Borenstein, _Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types_, RFC 2046, DOI 10.17487/RFC2046, November 1996, <https://www.rfc-editor.org/info/rfc2046>
 
-[[image-png]]
+* [[image-png]]
 IANA.
 _image/png Media Type_.
 https://www.iana.org/assignments/media-types/image/png
@@ -244,9 +279,9 @@ A glTF asset is represented by:
 * Binary files (`.bin`) containing geometry, animation, and other buffer-based data.
 * Image files (`.jpg`, `.png`) containing texture images.
 
-Binary and image resources **MAY** also be embedded directly in JSON using <<data-uri,Data URI>> or stored side-by-side with JSON in GLB container.
+Binary and image resources **MAY** also be embedded directly in JSON using <<data-uri,Data URI>> or stored side-by-side with JSON in <<glb-file-format-specification,GLB>> container.
 
-Valid glTF asset **MUST** specify its version.
+A valid glTF asset **MUST** specify its version.
 
 image:figures/files.png[pdfwidth=4in,align=left]
 
@@ -270,6 +305,7 @@ The following are outside the scope of the initial design of glTF:
 * *glTF is not intended to be human-readable,* though by virtue of being represented in JSON, it is developer-friendly.
 
 While version 2.0 of glTF does not define compression for geometry and other rich data, there are extensions providing such options.
+
 * https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_draco_mesh_compression/README.md[KHR_draco_mesh_compression] for geometry.
 * https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_texture_basisu/README.md[KHR_texture_basisu] for GPU-compatible block-compressed textures.
 
@@ -291,8 +327,8 @@ Major version updates **MAY** be incompatible with previous versions.
 [[file-extensions-and-media-types]]
 == File Extensions and Media Types
 
-* JSON glTF files **SHOULD** use `.gltf` extension and <<gltf-json,`model/gltf+json`>> Media Type.
-* glTF files stored in GLB container **SHOULD** use `.glb` extension and <<gltf-binary,`model/gltf-binary`>> Media Type.
+* <<json,JSON>> glTF files **SHOULD** use `.gltf` extension and <<gltf-json,`model/gltf+json`>> Media Type.
+* glTF files stored in <<glb-file-format-specification,GLB>> container **SHOULD** use `.glb` extension and <<gltf-binary,`model/gltf-binary`>> Media Type.
 * Files representing binary buffers **SHOULD** use either:
 ** `.bin` file extension with <<octet-stream,`application/octet-stream`>> Media Type;
 ** `.bin`, `.glbin`, or `.glbuf` file extensions with <<gltf-buffer,`application/gltf-buffer`>> Media Type.
@@ -309,7 +345,7 @@ Major version updates **MAY** be incompatible with previous versions.
 
 Although glTF Specification does not define any subset of the <<json,JSON>> format, implementations **SHOULD** be aware of its peculiar properties that could affect asset interoperability.
 
-1. glTF JSON data **SHOULD** be written with UTF-8 encoding without BOM. This requirement is not applied when a glTF implementation does not control string encoding. glTF implementations **SHOULD** adhere to the <<json,RFC 8259>>, Section 8.1. with regards to treating BOM presence.
+1. glTF JSON data **SHOULD** be written with UTF-8 encoding without BOM. This requirement is not applied when a glTF implementation does not control string encoding. glTF implementations **SHOULD** adhere to <<json,RFC 8259>>, Section 8.1. with regards to treating BOM presence.
 
 2. ASCII characters stored in glTF JSON **SHOULD** be written unescaped.
 +
@@ -426,7 +462,7 @@ The image above shows relations between top-level arrays in a glTF asset.  See t
 [[asset]]
 == Asset
 
-Each glTF asset **MUST** have an `asset` property. The `asset` object **MUST** contain `version` property which specifies the target glTF version of the asset. Additionally, an optional `minVersion` property **MAY** be used to specify the minimum glTF version support required to load the asset. The `minVersion` property allows asset creators to specify a minimum version that a client implementation **MUST** support in order to load the asset. This is very similar to the `extensionsRequired` concept described in <<specifying-extensions>>, where an asset **SHOULD NOT** be loaded if the client does not support the specified extension. Additional metadata **MAY** be stored in optional properties such as `generator` or `copyright`.  For example,
+Each glTF asset **MUST** have an `asset` property. The `asset` object **MUST** contain a `version` property which specifies the target glTF version of the asset. Additionally, an optional `minVersion` property **MAY** be used to specify the minimum glTF version support required to load the asset. The `minVersion` property allows asset creators to specify a minimum version that a client implementation **MUST** support in order to load the asset. This is very similar to the `extensionsRequired` concept described in <<specifying-extensions>>, where an asset **SHOULD NOT** be loaded if the client does not support the specified extension. Additional metadata **MAY** be stored in optional properties such as `generator` or `copyright`.  For example,
 
 [source,json]
 ----
@@ -498,7 +534,7 @@ RGB color values **MUST** use <<srgb,sRGB>> color primaries.
 [NOTE]
 .Implementation Note
 ====
-Color primaries define the interpretation of each color channel of the color model, particularly with respect to the RGB color model. In the context of a typical display, color primaries describe the color of the red, green and blue phosphors or filters. The same primaries are also defined in Recommendation ITU-R BT.709. Since the overwhelming majority of currently used consumer displays are using the same primaries as default, client implementations usually do not need to convert color values. Future specification versions or extensions may allow other color primaries (such as P3).
+Color primaries define the interpretation of each color channel of the color model, particularly with respect to the RGB color model. In the context of a typical display, color primaries describe the color of the red, green and blue phosphors or filters. The same primaries are also defined in <<bt709,Recommendation ITU-R BT.709>>. Since the overwhelming majority of currently used consumer displays are using the same primaries as default, client implementations usually do not need to convert color values. Future specification versions or extensions may allow other color primaries (such as P3).
 ====
 
 
@@ -543,7 +579,7 @@ The following example defines a glTF asset with a single scene, that contains a 
 
 glTF assets **MAY** define _nodes_, that is, the objects comprising the scene to render.
 
-Nodes **MAY** have transform properties, as described in the next section.
+Nodes **MAY** have transform properties, as described later.
 
 Nodes are organized in a parent-child hierarchy known informally as the _node hierarchy_. A node is called a _root node_ when it doesn't have a parent.
 
@@ -1103,7 +1139,7 @@ Each attribute is defined as a property of the `attributes` object. The name of 
 
 Valid attribute semantic property names include `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`, `JOINTS_0`, and `WEIGHTS_0`.
 
-Application-specific attribute semantics **MUST** start with an underscore, e.g., `_TEMPERATURE`. Application-specific attribute semantics **MUST NOT** use _unsigned int__ component type.
+Application-specific attribute semantics **MUST** start with an underscore, e.g., `_TEMPERATURE`. Application-specific attribute semantics **MUST NOT** use __unsigned int__ component type.
 
 Valid accessor type and component type for each attribute semantic property are defined below.
 
@@ -1125,20 +1161,26 @@ Valid accessor type and component type for each attribute semantic property are 
                                   _unsigned short_ normalized | RGB or RGBA vertex color linear multiplier
 | `JOINTS_0`  | `"VEC4"`        | _unsigned byte_
                                   _unsigned short_            | See <<skinned-mesh-attributes,Skinned Mesh Attributes>>
-| `WEIGHTS_0` | `"VEC4"`        | _float_) +
+| `WEIGHTS_0` | `"VEC4"`        | _float_ +
                                   _unsigned byte_ normalized +
                                   _unsigned short_ normalized | See <<skinned-mesh-attributes,Skinned Mesh Attributes>>
 |====
 
 `POSITION` accessor **MUST** have its `min` and `max` properties defined.
 
-`TEXCOORD`, `COLOR`, `JOINTS`, and `WEIGHTS` attribute semantic property names **MUST** be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. All indices for indexed attribute semantics **MUST** start with 0 and be continuous positive integers: `TEXCOORD_0`, `TEXCOORD_1`, etc. Indices **MUST NOT** use leading zeroes to pad the number of digits (e.g. `TEXCOORD_01`).
+`TEXCOORD`, `COLOR`, `JOINTS`, and `WEIGHTS` attribute semantic property names **MUST** be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. All indices for indexed attribute semantics **MUST** start with 0 and be consecutive positive integers: `TEXCOORD_0`, `TEXCOORD_1`, etc. Indices **MUST NOT** use leading zeroes to pad the number of digits (e.g. `TEXCOORD_01`).
 
 Client implementations **SHOULD** support at least two UV texture coordinate sets, one vertex color, and one joints/weights set.
 
-All attribute accessors for a given primitive **MUST** have the same `count`. When `indices` property is not defined, accessors' `count` indicates the number of vertices to render; when `indices` property is defined, it indicates the upper (exclusive) bound on the index values in the `indices` accessor.
+All attribute accessors for a given primitive **MUST** have the same `count`. When `indices` property is not defined, attribute accessors' `count` indicates the number of vertices to render; when `indices` property is defined, it indicates the upper (exclusive) bound on the index values in the `indices` accessor, i.e. all index values **MUST** be less than attribute accessors' `count`.
 
 `indices` accessor **MUST NOT** contain the maximum possible value for the component type used (i.e. 255 for unsigned bytes, 65535 for unsigned shorts, 4294967295 for unsigned ints).
+
+[NOTE]
+.Implementation Note
+====
+The maximum values trigger primitive restart in some graphics APIs and would require client implementations to rebuild the index buffer.
+====
 
 When `indices` property is not defined, the number of vertex indices to render is defined by `count` of attribute accessors (with the implied values from range `[0..count)`); when `indices` property is defined, the number of vertex indices to render is defined by `count` of accessor referred to by `indices`. In either case, the number of vertex indices **MUST** be valid for the topology type used:
 
@@ -1205,11 +1247,11 @@ Extensions **MAY** add additional property names, accessor types and/or componen
 [[morph-targets]]
 ==== Morph Targets
 
-Morph Targets are defined by extending the Mesh concept.
+Morph targets are defined by extending the Mesh concept.
 
-A Morph Target is a morphable Mesh where primitives' attributes are obtained by adding the original attributes to a weighted sum of targets attributes.
+A morph target is a morphable Mesh where primitives' attributes are obtained by adding the original attributes to a weighted sum of targets attributes.
 
-For instance, the Morph Target vertices `POSITION` for the primitive at index *i* are computed in this way:
+For instance, the morph target vertices `POSITION` for the primitive at index *i* are computed in this way:
 
 [source,c]
 ----
@@ -1219,7 +1261,7 @@ primitives[i].attributes.POSITION +
   weights[2] * primitives[i].targets[2].POSITION + ...
 ----
 
-Morph Targets are specified via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to an accessor containing Morph Target displacement data.
+Morph targets are specified via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a plain JSON object mapping a primitive attribute to an accessor containing morph target displacement data.
 
 Client implementations **SHOULD** support at least three attributes -- `POSITION`, `NORMAL`, and `TANGENT` -- for morphing. If morph targets contain application-specific semantics, their names **MUST** be prefixed with an underscore (e.g. `_TEMPERATURE`) like the associated attribute semantic.
 
@@ -1237,11 +1279,11 @@ Accessor type and component type for each morphed attribute semantic property **
 
 `POSITION` accessor **MUST** have `min` and `max` properties defined.
 
-All Morph Target's accessors **MUST** have the same `count` as the accessors of the original primitive.
+All morph target's accessors **MUST** have the same `count` as the accessors of the original primitive.
 
-A mesh with Morph Targets **MAY** also define an optional `mesh.weights` property that stores the default targets weights. In the absence of a `node.weights` property, the primitives attributes are resolved using these weights. When this property is missing, the default targets weights are zeros.
+A mesh with morph targets **MAY** also define an optional `mesh.weights` property that stores the default targets weights. These weights **MUST** be used when `node.weights` is undefined. When `mesh.weights` is undefined, the default targets weights are zeros.
 
-The following example extends the Mesh defined in the previous example to a morphable one by adding two Morph Targets:
+The following example extends the Mesh defined in the previous example to a morphable one by adding two morph targets:
 
 [source,json]
 ----
@@ -1274,7 +1316,7 @@ The following example extends the Mesh defined in the previous example to a morp
 }
 ----
 
-The number of morph targets is not limited. Client implementations **SHOULD** support at least eight morphed attributes. This means that they **SHOULD** support at least eight morph targets that contain a `POSITION` attribute, or four morph targets that contain a `POSITION` and a `NORMAL` attribute, or two morph targets that contain `POSITION`, `NORMAL` and `TANGENT` attributes.
+The number of morph targets is not limited. Client implementations **SHOULD** support at least eight morphed attributes. This means that they **SHOULD** support eight morph targets when each morph target has one attribute, four morph targets where each morph target has two attributes, or two morph targets where each morph target has three or four attributes.
 
 For assets that contain a higher number of morphed attributes, client implementations **MAY** choose to only use the eight attributes of the morph targets with the highest weights.
 
@@ -1387,7 +1429,7 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
 The number of joints that influence one vertex is limited to 4 per set, so referenced accessors **MUST** have `VEC4` type and following component types:
 
 * *`JOINTS_0`*: _unsigned byte_ or _unsigned short_
-* *`WEIGHTS_0`*: _float_, or _normalized unsigned byte_, or _normalized unsigned short_`
+* *`WEIGHTS_0`*: _float_, or _normalized unsigned byte_, or _normalized unsigned short_
 
 The joint weights for each vertex **MUST** be non-negative.
 
@@ -1395,7 +1437,7 @@ Joints **MUST NOT** contain more than one non-zero weight for a given vertex.
 
 When the weights are stored using _float_ component type, their linear sum **SHOULD** be as close as reasonably possible to `1.0` for a given vertex.
 
-When the weights are stored using _normalized unsigned byte_, or _normalized unsigned short_` component types, their linear sum before normalization **MUST** be `255` or `65535` respectively. Without these requirements, vertices would be deformed significantly because the weight error would get multiplied by the joint position. For example, an error of `1/255` in the weight sum would result in an unacceptably large difference in the joint position.
+When the weights are stored using _normalized unsigned byte_, or _normalized unsigned short_ component types, their linear sum before normalization **MUST** be `255` or `65535` respectively. Without these requirements, vertices would be deformed significantly because the weight error would get multiplied by the joint position. For example, an error of `1/255` in the weight sum would result in an unacceptably large difference in the joint position.
 
 [NOTE]
 .Implementation Note
@@ -1483,7 +1525,7 @@ The example below instantiates a Morph Target with non-default weights.
 }
 ----
 
-A skin is instanced within a node using a combination of the node's `mesh` and `skin` properties. The mesh for a skin instance is defined in the `mesh` property. The `skin` property contains the index of the skin to instance.
+A skin is instantiated within a node using a combination of the node's `mesh` and `skin` properties. The mesh for a skin instance is defined in the `mesh` property. The `skin` property contains the index of the skin to instance.
 
 [source,json]
 ----
@@ -1608,7 +1650,7 @@ The origin of the UV coordinates (0, 0) corresponds to the upper left corner of 
 
 image:figures/texcoords.jpg[pdfwidth=4in,align=left]
 
-Any colorspace information (such as ICC profiles, intents, gamma values, etc) from PNG or JPEG images **MUST** be ignored. Effective transfer function (encoding) is defined by a glTF object that refers to the image (in most cases it's a texture that is used by a material).
+Any colorspace information (such as ICC profiles, intents, gamma values, etc.) from PNG or JPEG images **MUST** be ignored. Effective transfer function (encoding) is defined by a glTF object that refers to the image (in most cases it's a texture that is used by a material).
 
 [NOTE]
 .Web Implementation Note
@@ -1653,7 +1695,16 @@ Minification modes include:
 
 * _Linear-mipmap-linear_. For each requested texel coordinates, the sampler first selects two pre-minified versions of the original image, computes a weighted sum of several adjacent texels from each of them, and performs final linear interpolation between these two intermediate results. This process is sometimes called "trilinear interpolation".
 
-To support mipmap modes, client implementations **MUST** be able to generate mipmaps at runtime.
+To properly support mipmap modes, client implementations **SHOULD** generate mipmaps at runtime. When runtime mipmap generation is not possible, client implementations **SHOULD** override the minification filtering mode as follows:
+
+[options="header"]
+|====
+| Mipmap minification mode   | Fallback mode
+| _Nearest-mipmap-nearest_ +
+  _Nearest-mipmap-linear_    | _Nearest_
+| _Linear-mipmap-nearest_ +
+  _Linear-mipmap-linear_     | _Linear_
+|====
 
 
 ==== Wrapping
@@ -1699,7 +1750,7 @@ The following example defines a sampler with _linear_ magnification filtering, _
 
 ==== Non-power-of-two Textures
 
-Client implementations **SHOULD** resize non power-of-two textures when running on certain platforms that have limited support for such texture dimensions.
+Client implementations **SHOULD** resize non power-of-two textures (so that their horizontal and vertical sizes are powers of two) when running on certain platforms that have limited support for such texture dimensions.
 
 [NOTE]
 .Implementation Note
@@ -1747,7 +1798,7 @@ All parameters related to the metallic-roughness material model are defined unde
 The metallic-roughness material model is defined by the following properties:
 
 * _base color_ - The base color of the material.
-* _metalness_ - The metalness of the material; values range from `0.0` (non-metal) to `1.0` (metal).
+* _metalness_ - The metalness of the material; values range from `0.0` (non-metal) to `1.0` (metal); see <<appendix-b-brdf-implementation, Appendix B>> for the interpretation of intermediate values.
 * _roughness_ - The roughness of the material; values range from `0.0` (smooth) to `1.0` (rough).
 
 The _base color_ has two different interpretations depending on the value of _metalness_. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used.
@@ -1812,7 +1863,9 @@ The following additional textures are supported:
 This mapping is usually implemented as `sampledValue * 2.0 - 1.0`.
 ====
 +
-The texture binding for normal textures **MAY** additionally contain a scalar `scale` value that linearly scales X and Y components of the normal vector. After scaling, the normal vector **MUST** be re-normalized.
+The texture binding for normal textures **MAY** additionally contain a scalar `scale` value that linearly scales X and Y components of the normal vector.
++
+Normal vectors **MUST** be normalized before being used in lighting equations. When scaling is used, vector normalization happens after scaling.
 
 - *occlusion* : The occlusion texture; it indicates areas that receive less diffuse lighting from ambient sources. Direct lighting is not affected. The _red_ channel of the texture encodes the occlusion value, where `0.0` means fully-occluded area (no indirect lighting) and `1.0` means not occluded area (full indirect lighting). Other texture channels (if present) do not affect occlusion.
 +
@@ -2049,7 +2102,7 @@ glTF 2.0 only supports animating node transforms and morph target weights. Exten
 [NOTE]
 .Note
 ====
-glTF 2.0 defines only storage of animation keyframes, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc... When loading a glTF 2.0 asset, client implementations may select an animation entry and pause it on the first frame, play it automatically, or ignore all animations until further user requests. When a playing animation is stopped, client implementations may reset the scene to the initial state or to freeze it at the current frame.
+glTF 2.0 defines only storage of animation keyframes, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc... When loading a glTF 2.0 asset, client implementations may select an animation entry and pause it on the first frame, play it automatically, or ignore all animations until further user requests. When a playing animation is stopped, client implementations may reset the scene to the initial state or freeze it at the current frame.
 ====
 
 [NOTE]
@@ -2346,7 +2399,7 @@ For example, an application that wants to download textures on demand may embed 
 
 This binary blob (which can be a file, for example) has the following structure:
 
-* A 12-byte preamble, entitled the _header_.
+* A 12-byte preamble, called the _header_.
 * One or more _chunks_ that contain JSON content and binary data.
 
 The _chunk_ containing JSON **MAY** refer to external resources as usual, and **MAY** also reference resources stored within other _chunks_.
@@ -2520,31 +2573,41 @@ include::PropertiesReference.adoc[]
 
 [appendix]
 [[appendix-a-json-schema-reference]]
-= JSON Schema Reference
+= JSON Schema Reference (Informative)
 
 // Generated with wetzel
 include::JsonSchemaReference.adoc[]
 
 [appendix]
 [[appendix-b-brdf-implementation]]
-= BRDF Implementation (Informative)
+= BRDF Implementation
 
 [[appendix-b-brdf-implementation-general]]
 == General
 
-In this chapter we present the bidirectional scattering distribution function (BRDF) of the glTF 2.0 metallic-roughness material. The BRDF describes the reflective properties of the surface of a physically-based material. For a pair of directions, the BRDF returns how much light from the incoming direction is scattered from the surface in the outgoing direction. See <<Pharr2016,Pharr et al. (2016), Chapter 5.6 "Surface Reflection">>, for an introduction to radiometry and the BRDF.
+In this chapter we present the bidirectional scattering distribution function (BRDF) of the glTF 2.0 metallic-roughness material. The BRDF describes the reflective properties of the surface of a physically-based material. For a pair of directions, the BRDF returns how much light from the incoming direction is scattered from the surface in the outgoing direction.
+
+[NOTE]
+.Note
+====
+See <<Pharr2016,Pharr et al. (2016), Chapter 5.6 "Surface Reflection">>, for an introduction to radiometry and the BRDF.
+====
 
 The BRDF of the metallic-roughness material is a linear interpolation of a metallic BRDF and a dielectric BRDF. The BRDFs share the parameters for roughness and base color. The blending factor `metallic` describes the metalness of the material.
 
 [source,c]
 ----
 material = mix(dielectric_brdf, metal_brdf, metallic)
-         = (1 - metallic) * dielectric_brdf + metallic * metal_brdf
+         = (1.0 - metallic) * dielectric_brdf + metallic * metal_brdf
 ----
 
+[NOTE]
+.Note
+====
 Such a material model based on a linear interpolation of metallic and dielectric components was introduced by <<Burley2012,Burley (2012)>> and adapted by many renderers, resulting in a wide-range of applications supporting it.
 
-Usually, a material is either metallic or dielectric. A texture provided for `metallic` with either 1 or 0 separates metallic from dielectric regions on the mesh. There are situations in which there is no clear separation. It may happen that due to anti-alising or mip-mapping there is a portion of metal and a portion of dielectric within a texel. Futhermore, a material composed of several semi-transparent layers may be represented as a blend between several single-layered materials (layering via parameter blending).
+Usually, a material is either metallic or dielectric. A texture provided for `metallic` with either `1.0` or `0.0` separates metallic from dielectric regions on the mesh. There are situations in which there is no clear separation. It may happen that due to anti-alising or mip-mapping there is a portion of metal and a portion of dielectric within a texel. Futhermore, a material composed of several semi-transparent layers may be represented as a blend between several single-layered materials (layering via parameter blending).
+====
 
 In this chapter, we will first sketch the logical structure of the material. We use an abstract notation that describes the material as a directed acyclic graph (DAG). The vertices correspond to the basic building blocks of the material model: BRDFs, mixing operators, input parameters, and constants. In the second part we will provide a sample implementation as a set of equations and source code for the BRDFs and mixing operators. In contrast to the logical structure the implementation is not normative.
 
@@ -2556,7 +2619,15 @@ In this chapter, we will first sketch the logical structure of the material. We 
 [[metals]]
 === Metals
 
-Metallic surfaces reflect back most of the illumination, only a small portion of the light is absorbed by the material (<<Pharr2016,Pharr et al. (2016), Chapter 8.2 "Specular Reflection and Transmission">>). This effect is described by the Fresnel term `conductor_fresnel` with the wavelength-dependent refractive index and extinction coefficient. To make parameterization simple, the metallic-roughness material combines the two quantities into a single, user-defined color value `baseColor` that defines the reflection color at normal incidence, also referred to as `f0`. The reflection color at grazing incidence is called `f90`. It is set to 1 because the grazing angle reflectance for any material approaches pure white in the limit. The conductor Fresnel term modulates the contribution of a specular BRDF parameterized by the `roughness` parameter.
+Metallic surfaces reflect back most of the illumination, only a small portion of the light is absorbed by the material.
+
+[NOTE]
+.Note
+====
+See <<Pharr2016,Pharr et al. (2016), Chapter 8.2 "Specular Reflection and Transmission">>.
+====
+
+This effect is described by the Fresnel term `conductor_fresnel` with the wavelength-dependent refractive index and extinction coefficient. To make parameterization simple, the metallic-roughness material combines the two quantities into a single, user-defined color value `baseColor` that defines the reflection color at normal incidence, also referred to as `f0`. The reflection color at grazing incidence is called `f90`. It is set to `1.0` because the grazing angle reflectance for any material approaches pure white in the limit. The conductor Fresnel term modulates the contribution of a specular BRDF parameterized by the `roughness` parameter.
 
 [source,c]
 ----
@@ -2564,16 +2635,24 @@ metal_brdf =
   conductor_fresnel(
     f0 = baseColor,
     bsdf = specular_brdf(
-      α = roughness^2))
+      α = roughness ^ 2))
 ----
 
 
 [[dielectrics]]
 === Dielectrics
 
-Unlike metals, dielectric materials transmit most of the incident illumination into the interior of the object and the Fresnel term is parameterized only by the refractive index (<<Pharr2016,Pharr et al. (2016), Chapter 8.2 "Specular Reflection and Transmission">>). This makes dielectrics like glass, oil, water or air transparent. Other dielectrics, like the majority of plastic materials, are filled with particles that absorb or scatter most or all of the transmitted light, reducing the transparency and giving the surface its colorful appearance.
+Unlike metals, dielectric materials transmit most of the incident illumination into the interior of the object and the Fresnel term is parameterized only by the refractive index.
 
-As a result, dielectric materials are modeled as a Fresnel-weighted combination of a specular BRDF, simulating the reflection at the surface, and a diffuse BRDF, simulating the transmitted portion of the light that is absorbed and scattered inside the object. The reflection roughness is given by the squared `roughness` of the material. The color of the diffuse BRDF comes from the `baseColor`. The amount of reflection compared to transmission is directional-dependent and as such determined by the Fresnel term. Its index of refraction is set to a fixed value of 1.5, a good compromise for the majority of opaque, dielectric materials.
+[NOTE]
+.Note
+====
+See <<Pharr2016,Pharr et al. (2016), Chapter 8.2 "Specular Reflection and Transmission">>.
+====
+
+This makes dielectrics like glass, oil, water or air transparent. Other dielectrics, like the majority of plastic materials, are filled with particles that absorb or scatter most or all of the transmitted light, reducing the transparency and giving the surface its colorful appearance.
+
+As a result, dielectric materials are modeled as a Fresnel-weighted combination of a specular BRDF, simulating the reflection at the surface, and a diffuse BRDF, simulating the transmitted portion of the light that is absorbed and scattered inside the object. The reflection roughness is given by the squared `roughness` of the material. The color of the diffuse BRDF comes from the `baseColor`. The amount of reflection compared to transmission is directional-dependent and as such determined by the Fresnel term. Its index of refraction is set to a fixed value of `1.5`, a good compromise for the majority of opaque, dielectric materials.
 
 [source,c]
 ----
@@ -2583,20 +2662,48 @@ dielectric_brdf =
     base = diffuse_brdf(
       color = baseColor),
     layer = specular_brdf(
-      α = roughness^2))
+      α = roughness ^ 2))
 ----
 
 
 [[microfacet-surfaces]]
 === Microfacet Surfaces
 
-The metal BRDF and the dielectric BRDF are based on a microfacet model. The theory behind microfacet models was developed in early works by <<TorranceSparrow1967,Torrance and Sparrow (1967)>>, <<CookTorrance1982,Cook and Torrance (1982)>> and others. A microfacet model describes the orientation of tiny facets (microfacets) on the surface as a statistical distribution. The distribution determines the orientation of the facets as a random perturbation around the normal direction of the surface. The perturbation strength depends on the `roughness` parameter and varies between 0 (smooth surface) and 1 (rough surface). A number of distribution functions have been proposed in the last decades. We use the Trowbridge-Reitz distribution first described by <<TrowbridgeReitz1975,Trowbridge and Reitz (1975)>>. Later <<Walter2007,Walter et al. (2007)>> independently developed the same distribution and called it "GGX". They show that it is a better fit for measured data than the Beckmann distribution used by <<CookTorrance1982,Cook and Torrance (1982)>> due to its stronger tails.
+The metal BRDF and the dielectric BRDF are based on a microfacet model.
 
-The Trowbridge-Reitz/GGX microfacet distribution describes the microsurface as being composed of perfectly specular, infinitesimal oblate ellipsoids, whose half-height in the normal direction is α times the radius in the tangent plane. α = 1 gives spheres, which results in uniform reflection in all directions. This reflection behavior corresponds to a rough surface. α = 0 gives a perfectly specular surface. As suggested by <<Burley2012,Burley (2012)>> we use the mapping α = `roughness`^2^ which results in more perceptually linear changes in the roughness.
+[NOTE]
+.Note
+====
+The theory behind microfacet models was developed in early works by <<TorranceSparrow1967,Torrance and Sparrow (1967)>>, <<CookTorrance1982,Cook and Torrance (1982)>> and others.
+====
 
-The distribution only describes the proportion of each normal on the microsurface. It does not describe how the normals are organized. For this we need a microsurface profile. The difference between distribution and profile is detailed by <<Heitz2014,Heitz (2014)>>, where he in addition provides an extensive study of common microfacet profiles. Based on this work, we suggest using the Smith microsurface profile (originally developed by <<Smith1967,Smith (1967)>>) and its corresponding masking-shadowing function. Heitz describes the Smith profile as the most accurate model for reflection from random height fields. It assumes that height and normal between neighboring points are not correlated, implying a random set of microfacets instead of a continuous surface.
+A microfacet model describes the orientation of tiny facets (microfacets) on the surface as a statistical distribution. The distribution determines the orientation of the facets as a random perturbation around the normal direction of the surface. The perturbation strength depends on the `roughness` parameter and varies between `0.0` (smooth surface) and `1.0` (rough surface). A number of distribution functions have been proposed in the last decades.
+
+We use the Trowbridge-Reitz / GGX microfacet distribution that describes the microsurface as being composed of perfectly specular, infinitesimal oblate ellipsoids, whose half-height in the normal direction is α times the radius in the tangent plane. α = 1 gives spheres, which results in uniform reflection in all directions. This reflection behavior corresponds to a rough surface. α = 0 gives a perfectly specular surface.
+
+[NOTE]
+.Note
+====
+The Trowbridge-Reitz distribution was first described by <<TrowbridgeReitz1975,Trowbridge and Reitz (1975)>>. Later <<Walter2007,Walter et al. (2007)>> independently developed the same distribution and called it "GGX". They show that it is a better fit for measured data than the Beckmann distribution used by <<CookTorrance1982,Cook and Torrance (1982)>> due to its stronger tails.
+====
+
+We use the mapping α = `roughness`^2^ which results in more perceptually linear changes in the roughness.
+
+[NOTE]
+.Note
+====
+This mapping was suggested by <<Burley2012,Burley (2012)>>. 
+====
+
+The distribution only describes the proportion of each normal on the microsurface. It does not describe how the normals are organized. For this we need a microsurface profile.
+
+[NOTE]
+.Note
+====
+The difference between distribution and profile is detailed by <<Heitz2014,Heitz (2014)>>, where he in addition provides an extensive study of common microfacet profiles. Based on this work, we suggest using the Smith microsurface profile (originally developed by <<Smith1967,Smith (1967)>>) and its corresponding masking-shadowing function. Heitz describes the Smith profile as the most accurate model for reflection from random height fields. It assumes that height and normal between neighboring points are not correlated, implying a random set of microfacets instead of a continuous surface.
 
 Microfacet models often do not consider multiple scattering. The shadowing term suppresses light that intersects the microsurface a second time. <<Heitz2016,Heitz et al. (2016)>> extended the Smith-based microfacet models to include a multiple scattering component, which significantly improves accuracy of predictions of the model. We suggest to incorporate multiple scattering whenever possible, either by making use of the unbiased stochastic evaluation introduced by Heitz, or one of the approximations presented later, for example by <<KullaConty2017,Kulla and Conty (2017)>> or <<Turquin2019,Turquin (2019)>>.
+====
 
 
 [[complete-model]]
@@ -2606,20 +2713,18 @@ The BRDFs and mixing operators used in the metallic-roughness material are summa
 
 image:figures/pbr.png[pdfwidth=4in,align=left]
 
-The glTF spec is designed to allow applications to choose different lighting implementations based on their requirements. Some implementations may focus on an accurate simulation of light transport while others may choose to deliver real-time performance. Therefore, any implementation that adheres to the rules for mixing BRDFs is conformant to the glTF spec.
+The glTF Specification is designed to allow applications to choose different lighting implementations based on their requirements. Some implementations **MAY** focus on an accurate simulation of light transport while others **MAY** choose to deliver real-time performance. Therefore, any implementation that adheres to the rules for mixing BRDFs is conformant to the glTF Specification.
 
-In a physically-accurate light simulation, the BRDFs have to follow some basic principles: the BRDF has to be positive, reciprocal and energy conserving. This ensures that the visual output of the simulation is independent of the underlying rendering algorithm, as long as it is unbiased.
+In a physically-accurate light simulation, the BRDFs **MUST** follow some basic principles: the BRDF has to be positive, reciprocal and energy conserving. This ensures that the visual output of the simulation is independent of the underlying rendering algorithm, as long as it is unbiased.
 
 The unbiased light simulation with physically realistic BRDFs will be the ground-truth for approximations in real-time renderers that are often biased, but still give visually pleasing results. Usually, these renderers take shortcuts to solve the rendering equation, like the split-sum approximation for image based lighting, or simplify the math to save instructions and reduce register pressure. However, there are many ways to achieve good approximations, depending on the platform (mobile or web applications, desktop applications on low or high-end hardware, VR) different constraints have to be taken into account.
 
 
 [[implementation]]
-== Implementation
+== Implementation (Informative)
 
 [[implementation-overview]]
 === Overview
-
-*This section is non-normative.*
 
 An implementation sample is available at https://github.com/KhronosGroup/glTF-Sample-Viewer/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters. In order to achieve high performance in real-time applications, this implementation takes some short-cuts and uses non-physical simplifications that break energy-conservation and reciprocity.
 
