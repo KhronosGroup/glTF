@@ -167,8 +167,6 @@ _Portable Network Graphics (PNG): Functional specification_
 A free version of this standard is available from W3C: https://www.w3.org/TR/PNG/
 ====
 
-
-
 * [[jpeg]]
 ISO/IEC 10918-1:1994
 _Digital compression and coding of continuous-tone still images: Requirements and guidelines_
@@ -347,7 +345,7 @@ Although glTF Specification does not define any subset of the <<json,JSON>> form
 
 1. glTF JSON data **SHOULD** be written with UTF-8 encoding without BOM. This requirement is not applied when a glTF implementation does not control string encoding. glTF implementations **SHOULD** adhere to <<json,RFC 8259>>, Section 8.1. with regards to treating BOM presence.
 
-2. ASCII characters stored in glTF JSON **SHOULD** be written unescaped.
+2. ASCII characters stored in glTF JSON **SHOULD** be written without JSON escaping.
 +
 [NOTE]
 .Example
@@ -429,7 +427,7 @@ glTF assets use <<uri,URIs>> or <<iri,IRIs>> to reference buffers and image reso
 Base64 encoding used in Data URI increases the payload's byte length by 33%.
 ====
 
-- **Relative paths** -- `path-noscheme` or `ipath-noscheme` as defined by <<uri,RFC 3986>>, Section 4.2 or <<iri,RFC 3987>>, Section 2.2 -- without scheme, authority, or parameters. Reserved characters **MUST** be percent-encoded, per <<uri,RFC 3986>>, Section 2.2.
+- **Relative paths** -- `path-noscheme` or `ipath-noscheme` as defined by <<uri,RFC 3986>>, Section 4.2 or <<iri,RFC 3987>>, Section 2.2 -- without scheme, authority, or parameters. Reserved characters (as defined by <<uri,RFC 3986>>, Section 2.2. and <<iri,RFC 3987>>, Section 2.2.) **MUST** be percent-encoded.
 
 Client implementations **MAY** optionally support additional URI components. For example `http://` or `file://` schemes, authorities, hostnames, absolute paths, and query or fragment parameters. Assets containing these additional URI components would be less portable.
 
@@ -529,12 +527,12 @@ All angles are in radians.
 
 Positive rotation is counterclockwise.
 
-RGB color values **MUST** use <<srgb,sRGB>> color primaries.
+Red, Green, and Blue primary colors use <<bt709,Recommendation ITU-R BT.709>> chromaticity coordinates.
 
 [NOTE]
 .Implementation Note
 ====
-Color primaries define the interpretation of each color channel of the color model, particularly with respect to the RGB color model. In the context of a typical display, color primaries describe the color of the red, green and blue phosphors or filters. The same primaries are also defined in <<bt709,Recommendation ITU-R BT.709>>. Since the overwhelming majority of currently used consumer displays are using the same primaries as default, client implementations usually do not need to convert color values. Future specification versions or extensions may allow other color primaries (such as P3).
+Chromaticity coordinates define the interpretation of each primary color channel of the color model. In the context of a typical display, color primaries describe the color of the red, green and blue phosphors or filters. Unless a wide color gamut output is explicitly used, client implementations usually do not need to convert colors. Future specification versions or extensions may allow other color primaries (such as P3).
 ====
 
 
@@ -734,13 +732,13 @@ The following example defines a buffer. The `byteLength` property specifies the 
 
 The byte length of the referenced resource **MUST** be greater than or equal to the `buffer.byteLength` property.
 
-Buffer data **MAY** alternatively be embedded in the glTF file via `data:` URI with base64 encoding. When `data:` URI is used for buffer storage, its `mediatype` field **MUST** be set to `application/octet-stream` or `application/gltf-buffer`. The byte length of the base64-encoded data **MUST** be equal to the `buffer.byteLength` property.
+Buffer data **MAY** alternatively be embedded in the glTF file via `data:` URI with base64 encoding. When `data:` URI is used for buffer storage, its `mediatype` field **MUST** be set to `application/octet-stream` or `application/gltf-buffer`.
 
 A _buffer view_ represents a contiguous segment of data in a buffer, defined by a byte offset into the buffer specified in the `byteOffset` property and a total byte length specified by the `byteLength` property of the buffer view.
 
 Buffer views used for images, vertex indices, vertex attributes, or inverse bind matrices **MUST** contain only one kind of data, i.e. the same buffer view **MUST NOT** be used both for vertex indices and vertex attributes.
 
-When a buffer view is used by vertex indices or attribute accessors it **SHOULD** specify `bufferView.target` with a value of `34963` or `34962` respectively.
+When a buffer view is used by vertex indices or attribute accessors it **SHOULD** specify `bufferView.target` with a value of _element array buffer_ or _array buffer_ respectively.
 
 [NOTE]
 .Implementation Note
@@ -986,7 +984,9 @@ accessor.byteOffset + EFFECTIVE_BYTE_STRIDE * (accessor.count - 1) + SIZE_OF_COM
 
 For performance and compatibility reasons, each element of a vertex attribute **MUST** be aligned to 4-byte boundaries inside a `bufferView` (i.e., `accessor.byteOffset` and `bufferView.byteStride` **MUST** be multiples of 4).
 
-Accessors of matrix type have data stored in column-major order; start of each column **MUST** be aligned to 4-byte boundaries. To achieve this, three `type`/`componentType` combinations require special layout:
+Accessors of matrix type have data stored in column-major order; start of each column **MUST** be aligned to 4-byte boundaries. Specifically, when `ROWS * SIZE_OF_COMPONENT` (where `ROWS` is the number of rows of the matrix) is not a multiple of 4, then `(ROWS * SIZE_OF_COMPONENT) % 4` padding bytes **MUST** be inserted at the end of each column.
+
+Only the following three accessor configurations require padding.
 
 *MAT2, 1-byte components*
 
@@ -1012,7 +1012,7 @@ Accessors of matrix type have data stored in column-major order; start of each c
 |m00|m00|m10|m10|m20|m20|---|---|m01|m01|m11|m11|m21|m21|---|---|m02|m02|m12|m12|m22|m22|---|---|
 ----
 
-Alignment requirements apply only to start of each column, so trailing bytes **MAY** be omitted if there's no further data.
+Alignment requirements apply only to the start of each column, so trailing bytes **MAY** be omitted if there's no further data.
 
 [NOTE]
 .Implementation Note
@@ -1137,7 +1137,7 @@ The following example defines a mesh containing one indexed triangle set primiti
 
 Each attribute is defined as a property of the `attributes` object. The name of the property corresponds to an enumerated value identifying the vertex attribute, such as `POSITION`. The value of the property is the index of an accessor that contains the data.
 
-Valid attribute semantic property names include `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`, `JOINTS_0`, and `WEIGHTS_0`.
+The specification defines the following attribute semantics: `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`, `JOINTS_0`, and `WEIGHTS_0`.
 
 Application-specific attribute semantics **MUST** start with an underscore, e.g., `_TEMPERATURE`. Application-specific attribute semantics **MUST NOT** use __unsigned int__ component type.
 
