@@ -251,7 +251,7 @@ For property names, glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCas
 
 ## Coordinate System and Units
 
-glTF uses a right-handed coordinate system, that is, the cross product of +X and +Y yields +Z. glTF defines +Y as up. The front of a glTF asset faces +Z.
+glTF uses a right-handed coordinate system. glTF defines +Y as up, +Z as forward, and -X as right. The front of a glTF asset faces +Z.
 
 ![](figures/coordinate-system.png)
 
