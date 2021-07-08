@@ -4,10 +4,11 @@
 
 // :regtitle: is explained in
 // https://discuss.asciidoctor.org/How-to-add-markup-to-author-information-in-document-title-td6488.html
-= glTF{tmtitle} 2.0 Specification - PREVIEW DRAFT
+= glTF{tmtitle} 2.0 Specification
 :tmtitle: pass:q,r[^™^]
 :regtitle: pass:q,r[^®^]
 The Khronos{regtitle} 3D Formats Working Group
+Version 2.0.0
 :data-uri:
 :icons: font
 :toc2:
@@ -341,11 +342,18 @@ Major version updates may be incompatible with previous versions.
 ** `.bin`, `.glbin`, or `.glbuf` file extensions with <<gltf-buffer,`application/gltf-buffer`>> Media Type.
 
 * <<png,PNG>> images **SHOULD** use `.png` file extension with <<image-png,`image/png`>> Media Type;
-** PNG images **SHOULD NOT** contain animations, non-square pixel ratios, or embedded ICC profiles. Such features if present **MUST** be ignored by client implementations.
+** PNG images **SHOULD NOT** contain animations, non-square pixel ratios, or embedded ICC profiles. Such features, if present, **MUST** be ignored by client implementations.
 
 * <<jpeg,JPEG>> images **SHOULD** use `.jpeg` or `.jpg` file extensions with <<image-jpeg,`image/jpeg`>> Media Type
-** JPEG images **SHOULD** use <<jfif,JPEG File Interchange Format>>.
-** Client implementations **MAY** support JPEG images that use <<exif,Exchangeable image file format (Exif)>>.
+** JPEG images **MUST** be compatible with <<jfif,JPEG File Interchange Format>>.
+** JPEG images **SHOULD NOT** contain embedded ICC profiles. If present, embedded ICC profiles **MUST** be ignored by client implementations.
+** <<exif,Exchangeable image file format (Exif)>> chunks **MAY** be ignored by client implementations.
++
+[NOTE]
+.Implementation Note
+====
+Certain Exif chunks, e.g. "`Orientation`", may severely impact asset's portability.
+====
 
 [[json-encoding]]
 == JSON Encoding
