@@ -23,7 +23,7 @@
             "description": "The floating-point distance to the far clipping plane.",
             "minimum": 0.0,
             "exclusiveMinimum": true,
-            "gltf_detailedDescription": "The floating-point distance to the far clipping plane. When defined, `zfar` must be greater than `znear`. If `zfar` is undefined, client implementations **SHOULD** use infinite projection matrix."
+            "gltf_detailedDescription": "The floating-point distance to the far clipping plane. When defined, `zfar` **MUST** be greater than `znear`. If `zfar` is undefined, client implementations **SHOULD** use infinite projection matrix."
         },
         "znear": {
             "type": "number",

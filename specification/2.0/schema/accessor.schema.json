@@ -60,9 +60,9 @@
         },
         "normalized": {
             "type": "boolean",
-            "description": "Specifies whether integer data values should be normalized before usage.",
+            "description": "Specifies whether integer data values are normalized before usage.",
             "default": false,
-            "gltf_detailedDescription": "Specifies whether integer data values should be normalized (`true`) to [0, 1] (for unsigned types) or to [-1, 1] (for signed types) when they are accessed. This property **MAY** be defined only for accessors that contain vertex attributes or animation output data. This property **MUST NOT** be defined for accessors with floating-point components.",
+            "gltf_detailedDescription": "Specifies whether integer data values are normalized (`true`) to [0, 1] (for unsigned types) or to [-1, 1] (for signed types) when they are accessed. This property **MAY** be defined only for accessors that contain vertex attributes or animation output data. This property **MUST NOT** be defined for accessors with floating-point components.",
             "gltf_webgl": "`normalized` parameter of `vertexAttribPointer()` "
         },
         "count": {
@@ -108,7 +108,7 @@
             },
             "minItems": 1,
             "maxItems": 16,
-            "gltf_detailedDescription": "Maximum value of each component in this accessor.  Array elements **MUST** be treated as having the same data type as accessor's `componentType`. Both `min` and `max` arrays have the same length.  The length is determined by the value of the `type` property; it can be 1, 2, 3, 4, 9, or 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer. When the accessor is sparse, this property must contain maximum values of accessor data with sparse substitution applied."
+            "gltf_detailedDescription": "Maximum value of each component in this accessor.  Array elements **MUST** be treated as having the same data type as accessor's `componentType`. Both `min` and `max` arrays have the same length.  The length is determined by the value of the `type` property; it can be 1, 2, 3, 4, 9, or 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer. When the accessor is sparse, this property **MUST** contain maximum values of accessor data with sparse substitution applied."
         },
         "min": {
             "type": "array",
@@ -118,7 +118,7 @@
             },
             "minItems": 1,
             "maxItems": 16,
-            "gltf_detailedDescription": "Minimum value of each component in this accessor.  Array elements **MUST** be treated as having the same data type as accessor's `componentType`. Both `min` and `max` arrays have the same length.  The length is determined by the value of the `type` property; it can be 1, 2, 3, 4, 9, or 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer. When the accessor is sparse, this property must contain minimum values of accessor data with sparse substitution applied."
+            "gltf_detailedDescription": "Minimum value of each component in this accessor.  Array elements **MUST** be treated as having the same data type as accessor's `componentType`. Both `min` and `max` arrays have the same length.  The length is determined by the value of the `type` property; it can be 1, 2, 3, 4, 9, or 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer. When the accessor is sparse, this property **MUST** contain minimum values of accessor data with sparse substitution applied."
         },
         "sparse": {
             "allOf": [ { "$ref": "accessor.sparse.schema.json" } ],

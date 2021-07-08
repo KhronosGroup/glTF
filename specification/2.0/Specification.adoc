@@ -111,7 +111,7 @@ Any requirements, prohibitions, recommendations or options defined by <<introduc
 
 Some language in the specification is purely informative, intended to give background or suggestions to implementors or developers.
 
-If an entire chapter or section contains only informative language, its title will be suffixed with "`(Informative)`".
+If an entire chapter or section contains only informative language, its title is suffixed with "`(Informative)`".
 
 All NOTEs are implicitly informative.
 
@@ -119,7 +119,7 @@ All NOTEs are implicitly informative.
 [[introduction-normative-terminology]]
 === Normative Terminology
 
-The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**,  **MAY**, and **OPTIONAL** in this document are to be interpreted as described in https://tools.ietf.org/rfc/bcp/bcp14.html[BCP 14 - Key words for use in RFCs to Indicate Requirement Levels].
+The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**,  **MAY**, and **OPTIONAL** in this document are to be interpreted as described in <<bcp14,BCP 14>>.
 
 These key words are highlighted in the specification for clarity.
 
@@ -225,6 +225,15 @@ https://www.itu.int/rec/R-REC-BT.709-6-201506-I
 _MikkTSpace_
 https://github.com/mmikk/MikkTSpace
 
+* [[compositing]]
+Thomas Porter and Tom Duff. 1984. _Compositing digital images._ SIGGRAPH Comput. Graph. 18, 3 (July 1984), 253–259. DOI: https://doi.org/10.1145/964965.808606
++
+[NOTE]
+.Note
+====
+A free version of this paper is available from Pixar: https://graphics.pixar.com/library/Compositing/
+====
+
 ==== Media Type Registrations
 
 * [[gltf-json]]
@@ -269,7 +278,7 @@ glTF solves these problems by providing a vendor- and runtime-neutral format tha
 
 
 [[gltf-basics]]
-== glTF Basics (Informative)
+== glTF Basics
 
 A glTF asset is represented by:
 
@@ -307,19 +316,19 @@ While version 2.0 of glTF does not define compression for geometry and other ric
 * https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_draco_mesh_compression/README.md[KHR_draco_mesh_compression] for geometry.
 * https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_texture_basisu/README.md[KHR_texture_basisu] for GPU-compatible block-compressed textures.
 
-Future extensions **MAY** include more compression methods including those for animation data.
+Future extensions may include more compression methods including those for animation data.
 
 
 [[versioning]]
 == Versioning (Informative)
 
-This section is marked as informal as there is no binding responsibility on implementations of the glTF — these guarantees are however a contract between the 3D Formats Working Group and developers using this Specification.
+This section is marked as informative as there is no binding responsibility on implementations of the glTF — these guarantees are however a contract between the 3D Formats Working Group and developers using this Specification.
 
-Any updates made to glTF in a minor version **MUST** be backwards and forwards compatible. Backwards compatibility means that any client implementation that supports loading a glTF 2.x asset will also be able to load a glTF 2.0 asset. Forwards compatibility means that a client implementation that only supports glTF 2.0 is able to load glTF 2.x assets while gracefully ignoring any new features it does not understand.
+Any updates made to glTF in a minor version must be backwards and forwards compatible. Backwards compatibility means that any client implementation that supports loading a glTF 2.x asset will also be able to load a glTF 2.0 asset. Forwards compatibility means that a client implementation that only supports glTF 2.0 is able to load glTF 2.x assets while gracefully ignoring any new features it does not understand.
 
-A minor version update **MAY** introduce new features but **MUST NOT** change any previously existing behavior. Existing functionality **MAY** be deprecated in a minor version update, but it **MUST NOT** be removed.
+A minor version update may introduce new features but must not change any previously existing behavior. Existing functionality may be deprecated in a minor version update, but it must not be removed.
 
-Major version updates **MAY** be incompatible with previous versions.
+Major version updates may be incompatible with previous versions.
 
 
 [[file-extensions-and-media-types]]
@@ -1924,8 +1933,20 @@ The `alphaMode` property defines how the alpha value is interpreted. The alpha v
 `alphaMode` can be one of the following values:
 
 * `OPAQUE` - The rendered output is fully opaque and any alpha value is ignored.
-* `MASK` - The rendered output is either fully opaque or fully transparent depending on the alpha value and the specified _alpha cutoff_ value. This mode is used to simulate geometry such as tree leaves or wire fences.
-* `BLEND` - The rendered output is combined with the background using the normal painting operation (i.e. the Porter and Duff over operator). This mode is used to simulate geometry such as guaze cloth or animal fur.
+* `MASK` - The rendered output is either fully opaque or fully transparent depending on the alpha value and the specified _alpha cutoff_ value.
++
+[NOTE]
+.Note
+====
+This mode is used to simulate geometry such as tree leaves or wire fences.
+====
+* `BLEND` - The rendered output is combined with the background using the "`over`" operator as described in <<compositing,Compositing digital images>>.
++
+[NOTE]
+.Note
+====
+This mode is used to simulate geometry such as guaze cloth or animal fur.
+====
 
 When `alphaMode` is set to `MASK` the `alphaCutoff` property specifies the cutoff threshold. If the alpha value is greater than or equal to the `alphaCutoff` value then it is rendered as fully opaque, otherwise, it is rendered as fully transparent. `alphaCutoff` value is ignored for other modes.
 
@@ -1978,13 +1999,28 @@ This specification does not define size and style of non-triangular primitives (
 [[cameras-overview]]
 === Overview
 
-A camera defines the projection matrix that transforms from view to clip coordinates. The projection can be perspective or orthographic. Cameras are contained in nodes and thus can be transformed. Their world-space transformation matrix is used for calculating view-space transformation. The camera is defined such that the local +X axis is to the right, the lens looks towards the local -Z axis, and the top of the camera is aligned with the local +Y axis. If no transformation is specified, the location of the camera is at the origin.
+Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details. A camera is instantiated within a node using `node.camera` property.
 
-Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
+A camera object defines the projection matrix that transforms from view to clip coordinates.
 
-There are two subtypes of perspective projections: finite and infinite. When `zfar` property is undefined, infinite projection is used. Otherwise the camera defines a finite projection.
+A node containing the camera instance defines the view matrix that transforms from world to view coordinates.
 
-For orthographic and finite perspective cameras, `zfar` **MUST** be greater than `znear`.
+[[view-matrix]]
+=== View Matrix
+
+The camera is defined such that the local +X axis is to the right, the "`lens`" looks towards the local -Z axis, and the top of the camera is aligned with the local +Y axis.
+
+The view matrix is derived from the world transform of the node containing the camera with the scaling ignored. If no transformation is specified, the location of the camera is at the origin.
+
+[[projection-matrices]]
+=== Projection Matrices
+
+[[projection-matrices-overview]]
+==== Overview
+
+The projection can be perspective or orthographic.
+
+There are two subtypes of perspective projections: finite and infinite. When `zfar` property is undefined, the camera defines an infinite projection. Otherwise the camera defines a finite projection.
 
 The following example defines two perspective cameras with supplied values for Y field of view, aspect ratio, and clipping information.
 
@@ -2014,13 +2050,6 @@ The following example defines two perspective cameras with supplied values for Y
     ]
 }
 ----
-
-
-[[projection-matrices]]
-=== Projection Matrices
-
-[[projection-matrices-overview]]
-==== Overview
 
 Client implementations **SHOULD** use the following projection matrices.
 
@@ -2524,7 +2553,7 @@ include::PropertiesReference.adoc[]
 * Tony Parisi, Unity
 
 [[working-group-and-alumni]]
-== Khronos 3D Formats Working Group and Alumni
+== Khronos 3D Formats Working Group and Alumni (Informative)
 
 * Remi Arnaud, Starbreeze Studios
 * Mike Bond, Adobe
