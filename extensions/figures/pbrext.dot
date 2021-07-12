@@ -1,0 +1,175 @@
+digraph D {
+  graph [rankdir="LR", fontname="Helvetica"]
+  node [shape=plaintext, fontname="Helvetica"]
+  edge [fontname="Helvetica"]
+
+  subgraph cluster_dielectric {
+    label="Dielectric"
+
+    dielectric_specular_brdf [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>specular_brdf</b></font></td></tr>
+        <tr><td><font point-size="10">color = [1, 1, 1]</font></td></tr>
+        <tr><td><font point-size="10">roughness = <font color="red"><i>&lt;roughness&gt;</i></font><sup>2</sup></font></td></tr>
+      </table>
+    >]
+
+    dielectric_specular_btdf [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>specular_btdf</b></font></td></tr>
+        <tr><td><font point-size="10">color = <font color="red"><i>&lt;baseColor&gt;</i></font></font></td></tr>
+        <tr><td><font point-size="10">roughness = <font color="red"><i>&lt;roughness&gt;</i></font><sup>2</sup></font></td></tr>
+        <tr><td><font point-size="10">ior = <font color="blue"><i>&lt;ior&gt;</i></font></font></td></tr>
+      </table>
+    >]
+
+    dielectric_diffuse_brdf [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>diffuse_brdf</b></font></td></tr>
+        <tr><td><font point-size="10">color = <font color="red"><i>&lt;baseColor&gt;</i></font></font></td></tr>
+      </table>
+    >]
+
+    dielectric_diffuse_btdf [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>diffuse_btdf</b></font></td></tr>
+        <tr><td><font point-size="10">color = <font color="red"><i>&lt;baseColor&gt;</i></font></font></td></tr>
+      </table>
+    >]
+
+    dielectric_diffuse_mix [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>mix</b></font></td></tr>
+        <tr><td port="in_bsdf0"><font point-size="10">bsdf0</font></td></tr>
+        <tr><td port="in_bsdf1"><font point-size="10">bsdf1</font></td></tr>
+        <tr><td><font point-size="10">weight = <font color="goldenrod"><i>&lt;translucency&gt;</i></font></font></td></tr>
+      </table>
+    >]
+
+    dielectric_base_mix [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>mix</b></font></td></tr>
+        <tr><td port="in_bsdf0"><font point-size="10">bsdf0</font></td></tr>
+        <tr><td port="in_bsdf1"><font point-size="10">bsdf1</font></td></tr>
+        <tr><td><font point-size="10">weight = <font color="forestgreen"><i>&lt;transmission&gt;</i></font></font></td></tr>
+      </table>
+    >]
+
+    dielectric_fresnel_mix [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>fresnel_mix</b></font></td></tr>
+        <tr><td port="in_layer"><font point-size="10">layer</font></td></tr>
+        <tr><td port="in_base"><font point-size="10">base</font></td></tr>
+        <tr><td><font point-size="10">f0 = toF0(<font color="blue"><i>&lt;ior&gt;</i></font>) * <font color="darkorchid"><i>&lt;specularColor&gt;</i></font> * <font color="darkorchid"><i>&lt;specular&gt;</i></font></font></td></tr>
+        <tr><td><font point-size="10">f90 = <font color="darkorchid"><i>&lt;specular&gt;</i></font></font></td></tr>
+      </table>
+    >]
+
+    dielectric_diffuse_brdf:out -> dielectric_diffuse_mix:in_bsdf0
+    dielectric_diffuse_btdf:out -> dielectric_diffuse_mix:in_bsdf1
+
+    dielectric_diffuse_mix:out -> dielectric_base_mix:in_bsdf0
+    dielectric_specular_btdf:out -> dielectric_base_mix:in_bsdf1
+
+    dielectric_base_mix:out -> dielectric_fresnel_mix:in_base
+    dielectric_specular_brdf:out -> dielectric_fresnel_mix:in_layer
+  }
+
+  subgraph cluster_metal {
+    label="Metal"
+
+    metal_specular_brdf [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>specular_brdf</b></font></td></tr>
+        <tr><td><font point-size="10">color = [1, 1, 1]</font></td></tr>
+        <tr><td><font point-size="10">roughness = <font color="red"><i>&lt;roughness&gt;</i></font><sup>2</sup></font></td></tr>
+      </table>
+    >]
+
+    metal_conductor_fresnel [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>conductor_fresnel&nbsp;</b></font></td></tr>
+        <tr><td port="in_bsdf"><font point-size="10">bsdf</font></td></tr>
+        <tr><td><font point-size="10">f0 = <font color="red"><i>&lt;baseColor&gt;</i></font></font></td></tr>
+        <tr><td><font point-size="10">f90 = [1, 1, 1]</font></td></tr>
+      </table>
+    >]
+
+    metal_specular_brdf:out -> metal_conductor_fresnel:in_bsdf
+  }
+
+  subgraph core {
+    core_mix [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>mix</b></font></td></tr>
+        <tr><td port="in_bsdf0"><font point-size="10">bsdf0</font></td></tr>
+        <tr><td port="in_bsdf1"><font point-size="10">bsdf1</font></td></tr>
+        <tr><td><font point-size="10">weight = <font color="red"><i>&lt;metallic&gt;</i></font></font></td></tr>
+      </table>
+    >]
+
+    dielectric_fresnel_mix:out -> core_mix:in_bsdf0
+    metal_conductor_fresnel:out -> core_mix:in_bsdf1
+  }
+
+  subgraph sheen {
+    sheen_brdf [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>sheen_brdf</b></font></td></tr>
+        <tr><td><font point-size="10">color = <font color="deepskyblue"><i>&lt;sheenColor&gt;</i></font></font></td></tr>
+        <tr><td><font point-size="10">roughness = <font color="deepskyblue"><i>&lt;sheenRoughness&gt;</i></font></font></td></tr>
+      </table>
+    >]
+
+    sheen_coat [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>coat</b></font></td></tr>
+        <tr><td port="in_layer"><font point-size="10">layer</font></td></tr>
+        <tr><td port="in_base"><font point-size="10">base</font></td></tr>
+      </table>
+    >]
+
+    sheen_brdf:out -> sheen_coat:in_layer
+  }
+
+  core_mix:out -> sheen_coat:in_base
+
+  subgraph clearcoat {
+    clearcoat_brdf [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>specular_brdf</b></font></td></tr>
+        <tr><td><font point-size="10">color = <font color="darkorange"><i>&lt;clearcoat&gt;</i></font></font></td></tr>
+        <tr><td><font point-size="10">roughness = <font color="darkorange"><i>&lt;clearcoatRoughness&gt;</i></font><sup>2</sup></font></td></tr>
+      </table>
+    >]
+
+    clearcoat_coat [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>coat</b></font></td></tr>
+        <tr><td port="in_layer"><font point-size="10">layer</font></td></tr>
+        <tr><td port="in_base"><font point-size="10">base</font></td></tr>
+      </table>
+    >]
+
+    clearcoat_brdf:out -> clearcoat_coat:in_layer
+  }
+
+  sheen_coat:out -> clearcoat_coat:in_base
+
+  subgraph legend {
+    rank="same"
+    legend_node [label=<
+      <table border="0">
+        <tr><td><font point-size="10" color="red"><i>Core</i></font></td></tr>
+        <tr><td><font point-size="10" color="blue"><i>KHR_materials_ior</i></font></td></tr>
+        <tr><td><font point-size="10" color="darkorchid"><i>KHR_materials_specular</i></font></td></tr>
+        <tr><td><font point-size="10" color="goldenrod"><i>KHR_materials_translucency</i></font></td></tr>
+        <tr><td><font point-size="10" color="forestgreen"><i>KHR_materials_transmission</i></font></td></tr>
+        <tr><td><font point-size="10" color="deepskyblue"><i>KHR_materials_sheen</i></font></td></tr>
+        <tr><td><font point-size="10" color="darkorange"><i>KHR_materials_clearcoat</i></font></td></tr>
+      </table>
+    >]
+
+    core_mix -> legend_node [style=invis]
+  }
+}
