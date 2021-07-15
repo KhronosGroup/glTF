@@ -8,6 +8,15 @@
 * Kai Ninomiya, Google, <mailto:kainino@google.com>
 * Patrick Cozzi, Cesium, [@pjcozzi](https://twitter.com/pjcozzi)
 
+#### Bitstream
+
+* Mathias Kanzler, UX3D, <mailto:kanzler@ux3d.io>
+* Phillip Hohenester, UX3D, <mailto:hohenester@ux3d.io>
+* Jim Eckerlein, UX3D, <mailto:eckerlein@ux3d.io>
+* Moritz Becher, UX3D, <mailto:becher@ux3d.io>
+* Norbert Nopper, UX3D, <mailto:nopper@ux3d.io>
+
+
 Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 ## Status
@@ -20,7 +29,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension defines a schema to use [Draco geometry compression (non-normative)](https://github.com/google/draco) libraries in glTF format. This allows glTF to support streaming compressed geometry data instead of the raw data. This extension specification is based on [Draco bitstream version 2.2 (the entirety of this specification is normative and included in Scope)](https://google.github.io/draco/spec/).
+This extension defines a schema to use [Draco geometry compression (non-normative)](https://github.com/google/draco) libraries in glTF format. This allows glTF to support streaming compressed geometry data instead of the raw data. This extension specification is based on [Draco bitstream version 2.2 (the entirety of this specification is normative and included in Scope)](DracoBitstream.md).
 
 The [conformance](#conformance) section specifies what an implementation must do when encountering this extension, and how the extension interacts with the attributes defined in the base specification.
 
