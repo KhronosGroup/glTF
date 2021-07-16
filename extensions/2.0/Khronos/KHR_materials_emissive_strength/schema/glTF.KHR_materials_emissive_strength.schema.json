@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_emissive_strength glTF extension",
+    "type": "object",
+    "description": "glTF extension that adjusts the strength of emissive material properties.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "emissiveStrength": {
+            "type": "number",
+            "description": "The strength adjustment of the material emissive properties.",
+            "default": 100.0,
+            "minimum": 0.0,
+            "gltf_detailedDescription": "The strength adjustment of the material emissive properties. If a physical value is needed, these are candela per square meter (cd/m^2). Otherwise, this is a percentage, and should be divided by 100."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
