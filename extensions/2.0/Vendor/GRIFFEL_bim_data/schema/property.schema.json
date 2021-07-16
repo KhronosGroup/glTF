@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Node Property",
+    "type": "object",
+    "description": "Basically, key value pair - unique property (instance or type) attached to nodes. Name and value are referenced by index of corresponding root level collection.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "name": {
+            "type": "number",
+            "description": "Index of a property name in the root level collection."
+        },
+        "value": {
+            "type": "number",
+            "description": "Index of a property value in the root level collection."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "name", "value" ]
+}
