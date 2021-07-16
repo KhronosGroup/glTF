@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_specular glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the translucency of the material.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "translucencyFactor": {
+            "type": "number",
+            "description": "The percentage of light that is transmitted through the surface.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The percentage of non-specularly reflected light that is transmitted through the surface via a Lambertian diffuse transmission."
+        },
+        "translucencyTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "A greyscale texture that defines the percentage of light transmitted through the surface.",
+            "gltf_detailedDescription": "A greyscale texture that defines the percentage of non-specularly reflected light transmitted through the surface via a Lambertian diffuse transmission. Will be multiplied by translucencyFactor."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
