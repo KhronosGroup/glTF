@@ -106,6 +106,8 @@ The `bufferView` property points to the buffer containing compressed data. The d
 ### accessors
 The `accessors` properties corresponding to the `attributes` and `indices` of the `primitives` must match the decompressed data.
 
+If only compressed data is stored, the accessors referenced in `attributes` and `indices` of the `primitives` must not define the `bufferView` and `sparse` properties. The `byteOffset` property should be omitted.
+
 #### Restrictions on geometry type
 When using this extension, the `mode` of `primitive` must be either `TRIANGLES` or `TRIANGLE_STRIP` and the mesh data will be decoded accordingly.
 
