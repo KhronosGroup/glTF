@@ -1,0 +1,50 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "light",
+    "type": "object",
+    "description": "An image based environment light.",
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "intensity": {
+            "type": "number",
+            "description": "Brightness multiplier for environment.",
+            "default": 1.0,
+            "minimum": 0.0
+        },
+        "irradianceCoefficients": {
+            "description": "Declares spherical harmonic coefficients for irradiance up to l=2. This is a 9x3 array.",
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+            },
+            "minItems": 9,
+            "maxItems": 9
+        },
+        "specularCubemaps": {
+            "description": "Declares an array of the cubemap textures, by using KTX2. Each entry must point to a KTX2 file with a cubemap containing 6 sides.",
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "minItems": 1,
+                "maxItems": 1
+            },
+            "minItems": 1
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "irradianceCoefficients",
+        "specularCubemaps",
+    ]
+}
