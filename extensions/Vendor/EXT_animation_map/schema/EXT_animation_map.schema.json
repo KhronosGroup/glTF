@@ -1,0 +1,43 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "EXT_animation_map extension",
+    "type" : "object",
+    "definitions": {
+        "semanticBinding": {
+            "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+            "type": "object",
+            "properties": {
+                "semantic": {
+                    "type": "string"
+                },
+                "animations": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "uniqueItems": true,
+                    "minItems": 1
+                },
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "uniqueItems": true,
+                    "minItems": 1
+                }
+            },
+            "required": ["semantic", "animations"]
+        }
+    },
+    "properties" : {
+        "bindings" : {
+            "type" : "array",
+            "description" : "A list of bindings between event or state semantics and animation indexes",
+            "items": { "$ref": "#/definitions/semanticBinding" }
+        }
+    },
+    "required" : ["bindings"]
+}
