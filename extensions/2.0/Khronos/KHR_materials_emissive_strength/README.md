@@ -46,22 +46,25 @@ with high-dynamic range reflections and lighting, stronger emission effects may 
 In this extension, a new `emissiveStrength` scalar factor is supplied, that governs the upper limit of emissive
 strength per material. This strength can be colored and tempered using the core `emissiveFactor`
 and `emissiveTexture` controls, permitting the strength to vary across the surface of the material.
-Supplying values above 100.0 for `emissiveStrength` can have an influence on reflections, tonemapping,
+Supplying values above 1.0 for `emissiveStrength` can have an influence on reflections, tonemapping,
 blooming, and more.
 
 ### Physical Units
 
-For implementations where a physical light unit is needed, the units for `emissiveStrength` are candela per square
-meter: **cd / m<sup>2</sup>**, sometimes called *nits*.  The default value is 100 nits.
+*This section is non-normative.*
 
-### Non-Physical Units
+For implementations where a physical light unit is needed, the units for the multiplicative product of
+`emissiveStrength`, `emissiveFactor`, and `emissiveTexture` are candela per square
+meter: **cd / m<sup>2</sup>**, sometimes called *nits*.
 
-For implementations where a physical unit is not needed, the value is treated as a *percentage*.  The default value
-of 100 corresponds to 100%, indicating no change in brightness from the core glTF material emissive settings.
-Values greater than 100% are encouraged, permitting a material's emission to become brighter than what is possible
-without this extension.
+Because the value is specified per square meter, it indicates the brightness of any given point along
+the surface.  However, the exact conversion from physical light units to the brightness of rendered
+pixels requires knowledge of the camera's exposure settings, which are left as an implementation
+detail, unless otherwise defined in a future version of the glTF specification or other extension.
 
 ## Extending Materials
+
+*This section is non-normative.*
 
 Any material with an `emissiveFactor` (and optionally an `emissiveTexture`) can have its strength modulated
 or amplified by the inclusion of this extension.  For example:
@@ -80,7 +83,7 @@ or amplified by the inclusion of this extension.  For example:
             },
             "extensions": {
                 "KHR_materials_emissive_strength": {
-                    "emissiveStrength": 500.0
+                    "emissiveStrength": 5.0
                 }
             }
         }
@@ -89,26 +92,26 @@ or amplified by the inclusion of this extension.  For example:
 ```
 
 In the above example, the `emissiveFactor` has been set to its maximum value, to enable the `emissiveTexture`.
-The `emissiveStrength` has been set to 500.0, making the texture five times brighter than it otherwise
+The `emissiveStrength` has been set to 5.0, making the texture five times brighter than it otherwise
 would have been.
 
 ### Parameters
 
 The following parameters are contributed by the `KHR_materials_emissive_strength` extension:
 
-| Name                   | Type       | Description                                    | Required             |
-|------------------------|------------|------------------------------------------------|----------------------|
-| **emissiveStrength**   | `number`   | The maximum strength of the emissive texture.  | No, default: `100.0` |
+| Name                   | Type       | Description                                    | Required           |
+|------------------------|------------|------------------------------------------------|--------------------|
+| **emissiveStrength**   | `number`   | The maximum strength of the emissive texture.  | No, default: `1.0` |
 
 
 ## Implementation Notes
 
 *This section is non-normative.*
 
-A typical (pseudocode) implementation without physical units might look like the following:
+A typical (pseudocode) implementation might look like the following:
 
 ```
-color += emissiveFactor.rgb * sRGB_to_Linear(emissiveTexture.rgb) * vec3(emissiveStrength * 0.01);
+color += emissiveFactor.rgb * sRGB_to_Linear(emissiveTexture.rgb) * emissiveStrength;
 ```
 
 ## Schema
