@@ -1889,6 +1889,16 @@ Normal vectors **MUST** be normalized before being used in lighting equations. W
 The texture binding for occlusion maps **MAY** optionally contain a scalar `strength` value that is used to reduce the occlusion effect. When present, it affects the occlusion value as `1.0 + strength * (occlusionTexture - 1.0)`.
 
 - *emissive* : The emissive texture and factor control the color and intensity of the light being emitted by the material. The texture **MUST** contain 8-bit values encoded with the <<srgb, sRGB opto-electronic transfer function>> so RGB values **MUST** be decoded to real linear values before they are used for any computations. To achieve correct filtering, the transfer function **SHOULD** be decoded before performing linear interpolation.
++
+For implementations where a physical light unit is needed, the units for the multiplicative product of the emissive texture and factor are candela per square meter (**cd / m^2^**), sometimes called *nits*.
++
+[NOTE]
+.Implementation Note
+====
+Because the value is specified per square meter, it indicates the brightness of any given point along the surface.  However, the exact conversion from physical light units to the brightness of rendered pixels requires knowledge of the camera's exposure settings, which are left as an implementation detail unless otherwise defined by a glTF extension.
+
+Many rendering engines simplify this calculation by assuming that an emissive factor of `1.0` results in a fully exposed pixel.
+====
 
 The following example shows a material that is defined using `pbrMetallicRoughness` parameters as well as additional textures:
 
