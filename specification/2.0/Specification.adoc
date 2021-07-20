@@ -100,9 +100,9 @@ glTF is an API-neutral runtime asset delivery format.  glTF bridges the gap betw
 [[introduction-conventions]]
 == Document Conventions
 
-The glTF Specification is intended for use by both implementors of the asset exporters or converters (e.g. digital content creation tools) and application developers seeking to import or load glTF assets, forming a contract between these parties.
+The glTF Specification is intended for use by both implementors of the asset exporters or converters (e.g. digital content creation tools) and application developers seeking to import or load glTF assets, forming a basis for interoperability between these parties.
 
-Specification text may address either party; typically the intended audience can be inferred from context, though some sections are defined to address only one of these parties.
+Specification text can address either party; typically the intended audience can be inferred from context, though some sections are defined to address only one of these parties.
 
 Any requirements, prohibitions, recommendations or options defined by <<introduction-normative-terminology, normative terminology>> are imposed only on the audience of that text.
 
@@ -321,15 +321,13 @@ Future extensions may include more compression methods including those for anima
 
 
 [[versioning]]
-== Versioning (Informative)
+== Versioning
 
-This section is marked as informative as there is no binding responsibility on implementations of the glTF — these guarantees are however a contract between the 3D Formats Working Group and developers using this Specification.
+Any updates made to the glTF Specification in a minor version **MUST** be backwards and forwards compatible. Backwards compatibility means that any client implementation that supports loading a glTF 2.x asset will also be able to load a glTF 2.0 asset. Forwards compatibility means that a client implementation that only supports glTF 2.0 is able to load glTF 2.x assets while gracefully ignoring any new features it does not understand.
 
-Any updates made to glTF in a minor version must be backwards and forwards compatible. Backwards compatibility means that any client implementation that supports loading a glTF 2.x asset will also be able to load a glTF 2.0 asset. Forwards compatibility means that a client implementation that only supports glTF 2.0 is able to load glTF 2.x assets while gracefully ignoring any new features it does not understand.
+A minor version update **MAY** introduce new features but **MUST NOT** change any previously existing behavior. Existing functionality **MAY** be deprecated in a minor version update, but it **MUST NOT** be removed.
 
-A minor version update may introduce new features but must not change any previously existing behavior. Existing functionality may be deprecated in a minor version update, but it must not be removed.
-
-Major version updates may be incompatible with previous versions.
+Major version updates **MAY** be incompatible with previous versions.
 
 
 [[file-extensions-and-media-types]]
