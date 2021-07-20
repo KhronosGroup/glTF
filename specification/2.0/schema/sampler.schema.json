@@ -7,8 +7,7 @@
     "properties": {
         "magFilter": {
             "description": "Magnification filter.",
-            "gltf_detailedDescription": "Magnification filter.  Valid values correspond to WebGL enums: `9728` (NEAREST) and `9729` (LINEAR).",
-            "gltf_webgl": "`texParameterf()` with pname equal to TEXTURE_MAG_FILTER",
+            "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_MAG_FILTER",
             "anyOf": [
                 {
                     "enum": [ 9728 ],
@@ -27,8 +26,7 @@
         },
         "minFilter": {
             "description": "Minification filter.",
-            "gltf_detailedDescription": "Minification filter.  All valid values correspond to WebGL enums.",
-            "gltf_webgl": "`texParameterf()` with pname equal to TEXTURE_MIN_FILTER",
+            "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_MIN_FILTER",
             "anyOf": [
                 {
                     "enum": [ 9728 ],
@@ -66,10 +64,10 @@
             ]
         },
         "wrapS": {
-            "description": "s wrapping mode.",
+            "description": "S (U) wrapping mode.",
             "default": 10497,
             "gltf_detailedDescription": "S (U) wrapping mode.  All valid values correspond to WebGL enums.",
-            "gltf_webgl": "`texParameterf()` with pname equal to TEXTURE_WRAP_S",
+            "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_WRAP_S",
             "anyOf": [
                 {
                     "enum": [ 33071 ],
@@ -92,10 +90,9 @@
             ]
         },
         "wrapT": {
-            "description": "t wrapping mode.",
+            "description": "T (V) wrapping mode.",
             "default": 10497,
-            "gltf_detailedDescription": "T (V) wrapping mode.  All valid values correspond to WebGL enums.",
-            "gltf_webgl": "`texParameterf()` with pname equal to TEXTURE_WRAP_T",
+            "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_WRAP_T",
             "anyOf": [
                 {
                     "enum": [ 33071 ],
@@ -120,6 +117,5 @@
         "name": { },
         "extensions": { },
         "extras": { }
-    },
-    "gltf_webgl": "`texParameterf()`"
+    }
 }
