@@ -34,7 +34,6 @@ Written against the glTF 2.0 spec.
 
 ## Exclusions
 
-* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
 * This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Overview
@@ -44,23 +43,26 @@ intensity of the light being emitted by the material, clamped to the range [0.0,
 with high-dynamic range reflections and lighting, stronger emission effects may be desirable.
 
 In this extension, a new `emissiveStrength` scalar factor is supplied, that governs the upper limit of emissive
-strength per material. This strength can be colored and tempered using the core `emissiveFactor`
+strength per material.
+
+**Implementation Note**: This strength can be colored and tempered using the core material's `emissiveFactor`
 and `emissiveTexture` controls, permitting the strength to vary across the surface of the material.
-Supplying values above 1.0 for `emissiveStrength` can have an influence on reflections, tonemapping,
-blooming, and more.
+Supplying values above 1.0 for `emissiveStrength` can have an influence on
+reflections, tonemapping, blooming, and more.
 
 ### Physical Units
 
-*This section is non-normative.*
-
 For implementations where a physical light unit is needed, the units for the multiplicative product of
 `emissiveStrength`, `emissiveFactor`, and `emissiveTexture` are candela per square
-meter: **cd / m<sup>2</sup>**, sometimes called *nits*.
+meter (**cd / m<sup>2</sup>**), sometimes called *nits*.
 
+**Implementation Note**:
 Because the value is specified per square meter, it indicates the brightness of any given point along
 the surface.  However, the exact conversion from physical light units to the brightness of rendered
 pixels requires knowledge of the camera's exposure settings, which are left as an implementation
 detail, unless otherwise defined in a future version of the glTF specification or other extension.
+Many rendering engines simplify this calculation by assuming that an emissive factor of `1.0`
+results in a fully exposed pixel.
 
 ## Extending Materials
 
