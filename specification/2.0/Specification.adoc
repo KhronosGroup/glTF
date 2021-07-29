@@ -475,7 +475,7 @@ The image above shows relations between top-level arrays in a glTF asset.  See t
 [[asset]]
 == Asset
 
-Each glTF asset **MUST** have an `asset` property. The `asset` object **MUST** contain a `version` property which specifies the target glTF version of the asset. Additionally, an optional `minVersion` property **MAY** be used to specify the minimum glTF version support required to load the asset. The `minVersion` property allows asset creators to specify a minimum version that a client implementation **MUST** support in order to load the asset. This is very similar to the `extensionsRequired` concept described in <<specifying-extensions>>, where an asset **SHOULD NOT** be loaded if the client does not support the specified extension. Additional metadata **MAY** be stored in optional properties such as `generator` or `copyright`.  For example,
+Each glTF asset **MUST** have an `asset` property. The `asset` object **MUST** contain a `version` property that specifies the target glTF version of the asset. Additionally, an optional `minVersion` property **MAY** be used to specify the minimum glTF version support required to load the asset. The `minVersion` property allows asset creators to specify a minimum version that a client implementation **MUST** support in order to load the asset. This is very similar to the `extensionsRequired` concept described in <<specifying-extensions>>, where an asset **SHOULD NOT** be loaded if the client does not support the specified extension. Additional metadata **MAY** be stored in optional properties such as `generator` or `copyright`.  For example,
 
 [source,json]
 ----
@@ -564,7 +564,7 @@ An additional root-level property, `scene` (note singular), identifies which of 
 
 A glTF asset that does not contain any scenes **SHOULD** be treated as a library of individual entities such as materials or meshes.
 
-The following example defines a glTF asset with a single scene, that contains a single node.
+The following example defines a glTF asset with a single scene that contains a single node.
 
 [source,json]
 ----
@@ -1292,7 +1292,7 @@ Accessor type and component type for each morphed attribute semantic property **
 | `TANGENT`  | `"VEC3"`      | _float_        | XYZ vertex tangent displacements
 |====
 
-`POSITION` accessor **MUST** have `min` and `max` properties defined.
+`POSITION` accessor **MUST** have its `min` and `max` properties defined.
 
 All morph target's accessors **MUST** have the same `count` as the accessors of the original primitive.
 
@@ -1349,7 +1349,7 @@ A significant number of authoring and client implementations associate names wit
 [[skins-overview]]
 ==== Overview
 
-Skins are stored in the `skins` array of the asset. Each skin is defined by an **OPTIONAL** `inverseBindMatrices` property (which points to an accessor with inverse bind matrices data), used to bring coordinates being skinned into the same space as each joint; and a **REQUIRED** `joints` array property that lists the node indices used as joints to animate the skin.
+Skins are stored in the `skins` array of the asset. Each skin is defined by a **REQUIRED** `joints` property that lists the indices of nodes used as joints to pose the skin and an **OPTIONAL** `inverseBindMatrices` property that points to an accessor with inverse bind matrices data used to bring coordinates being skinned into the same space as each joint.
 
 The order of joints is defined in the `skin.joints` array and it **MUST** match the order of `inverseBindMatrices` accessor elements (when the latter is present). The `skeleton` property (if present) points to the node that is the common root of a joints hierarchy or to a direct or indirect parent node of the common root.
 
@@ -1866,7 +1866,7 @@ Implementations of the BRDF itself **MAY** vary based on device performance and 
 [[additional-textures]]
 === Additional Textures
 
-The material definition also provides for additional textures that **MAY** also be used with the metallic-roughness material model as well as other material models which could be provided via glTF extensions.
+The material definition also provides for additional textures that **MAY** also be used with the metallic-roughness material model as well as other material models, which could be provided via glTF extensions.
 
 The following additional textures are supported:
 
@@ -1973,7 +1973,7 @@ Real-time rasterizers typically use depth buffers and mesh sorting to support al
 
 * `OPAQUE` - A depth value is written for every pixel and mesh sorting is not required for correct output.
 * `MASK` - A depth value is not written for a pixel that is discarded after the alpha test. A depth value is written for all other pixels. Mesh sorting is not required for correct output.
-* `BLEND` - Support for this mode varies. There is no perfect and fast solution that works for all cases. Client implementations should try to achieve the correct blending output for as many situations as possible. Whether depth value is written or whether to sort is up to the implementation. For example, implementations may discard pixels which have zero or close to zero alpha value to avoid sorting issues.
+* `BLEND` - Support for this mode varies. There is no perfect and fast solution that works for all cases. Client implementations should try to achieve the correct blending output for as many situations as possible. Whether depth value is written or whether to sort is up to the implementation. For example, implementations may discard pixels that have zero or close to zero alpha value to avoid sorting issues.
 ====
 
 
@@ -2732,7 +2732,7 @@ We use the Trowbridge-Reitz / GGX microfacet distribution that describes the mic
 The Trowbridge-Reitz distribution was first described by <<TrowbridgeReitz1975,Trowbridge and Reitz (1975)>>. Later <<Walter2007,Walter et al. (2007)>> independently developed the same distribution and called it "GGX". They show that it is a better fit for measured data than the Beckmann distribution used by <<CookTorrance1982,Cook and Torrance (1982)>> due to its stronger tails.
 ====
 
-We use the mapping α = `roughness`^2^ which results in more perceptually linear changes in the roughness.
+We use the mapping α = `roughness`^2^, which results in more perceptually linear changes in the roughness.
 
 [NOTE]
 .Note
@@ -2944,7 +2944,7 @@ The model for specular reflection can be improved in several ways. <<Heitz2014,H
 
 Although Schlick's Fresnel is a good approximation for a wide range of metallic and dielectric materials, there are a couple of reasons to use a more sophisticated solution for the Fresnel term.
 
-Metals often exhibit a "dip" in reflectance near grazing angles which is not present in the Schlick Fresnel. <<LazanyiSzirmayKalos2005,Lazányi and Szirmay-Kalos (2005)>> extend the Schlick Fresnel with an error term to account for it. <<Hoffman2019,Hoffman (2019)>> improves the parameterization of this term by introducing an artist-friendly "f82" color, the color at an angle of about 82°. An additional color parameter for metals was also introduced by <<Gulbrandsen2014,Gulbrandsen (2014)>>. Gulbrandson calls it "edge tint" and uses it in the full Fresnel equations instead of Schlick's approximation. Even though the full Fresnel equations should give a more accurate result, Hoffman shows that it is worse than Schlick's approximation in the context of RGB renderers. As we target RGB renderers and do not provide an additional color parameter for metals in glTF, we suggest to use the original Schlick Fresnel for metals.
+Metals often exhibit a "dip" in reflectance near grazing angles, which is not present in the Schlick Fresnel. <<LazanyiSzirmayKalos2005,Lazányi and Szirmay-Kalos (2005)>> extend the Schlick Fresnel with an error term to account for it. <<Hoffman2019,Hoffman (2019)>> improves the parameterization of this term by introducing an artist-friendly "f82" color, the color at an angle of about 82°. An additional color parameter for metals was also introduced by <<Gulbrandsen2014,Gulbrandsen (2014)>>. Gulbrandson calls it "edge tint" and uses it in the full Fresnel equations instead of Schlick's approximation. Even though the full Fresnel equations should give a more accurate result, Hoffman shows that it is worse than Schlick's approximation in the context of RGB renderers. As we target RGB renderers and do not provide an additional color parameter for metals in glTF, we suggest to use the original Schlick Fresnel for metals.
 
 The index of refraction of most dielectrics is 1.5. For that reason the dielectric Fresnel term uses a fixed `f0 = 0.04`. The Schlick Fresnel approximates the full Fresnel equations well for an index of refraction in the range [1.2, 2.2]. The main reason for a material to fall outside this range is transparency and nested objects. If a transparent object overlaps another transparent object and both have the same (or similar) index of refraction, the resulting ratio at the boundary is 1 (or close to 1). According to the full Fresnel equations, there is no (or almost no) reflection in this case. The reflection intensity computed from the Schlick Fresnel approximation will be too high. Implementations that care about accuracy in case of nested dielectrics are encouraged to use the full Fresnel equations for dielectrics. For metals Schlick's approximation is still a good choice.
 
@@ -2958,7 +2958,7 @@ While the coupling of diffuse and specular components in `fresnel_mix` as propos
 
 More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework for computing BSDFs of layered materials, including multiple scattering within layers. Amongst much more complicated scenarios it also solves the special case of coupling diffuse and specular components, but it is too heavy for textured materials, even in offline rendering.
 
-<<KullaConty2017,Kulla and Conty (2017)>> found a solution tailored to the special case of coupling diffuse and specular components which is easy to compute. It requires the directional albedo of the Fresnel-weighted specular BRDF to be precomputed and tabulated, but they found that the function is smooth and a low-resolution 3D texture (16³ pixels) is sufficient. Their coupled diffuse-specular model is not only energy-*con*serving, but also energy-*pre*serving, meaning that if neither the specular nor the diffuse component absorb any energy, all energy is reflected.
+<<KullaConty2017,Kulla and Conty (2017)>> found a solution tailored to the special case of coupling diffuse and specular components, which is easy to compute. It requires the directional albedo of the Fresnel-weighted specular BRDF to be precomputed and tabulated, but they found that the function is smooth and a low-resolution 3D texture (16³ pixels) is sufficient. Their coupled diffuse-specular model is not only energy-*con*serving, but also energy-*pre*serving, meaning that if neither the specular nor the diffuse component absorb any energy, all energy is reflected.
 
 
 [[references]]
@@ -3028,7 +3028,7 @@ The scalar-point multiplications are per point component.
 
 When the sampler targets a node's rotation property, the resulting *p*(_t_) quaternion **MUST** be normalized before applying the result to the node's rotation.
 
-When writing out rotation output values, exporters **SHOULD** take care to not write out values which can result in an invalid quaternion with all zero values.
+When writing out rotation output values, exporters **SHOULD** take care to not write out values that can result in an invalid quaternion with all zero values.
 
 [NOTE]
 .Implementation Note
