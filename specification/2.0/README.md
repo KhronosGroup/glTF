@@ -1479,7 +1479,7 @@ The following examples show expected animations usage.
 
 When `node` isn't defined, channel should be ignored. Valid path names are `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
 
-Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating point scalar values representing linear time in seconds; and a set of vectors or scalars representing animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, and `CUBICSPLINE`. See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
+Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating point scalar values representing linear time in seconds; and a set of vectors or scalars representing animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, `CUBICSPLINE`, and `CUBICSLERP`. See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
 
 The inputs of each sampler are relative to `t=0`, defined as the beginning of the parent `animations` entry. Before and after the provided input range, output should be "clamped" to the nearest end of the input range. For example, if the earliest sampler input for an animation is `t=10`, a client implementation should begin playback of that animation at `t=0` with output clamped to the first output value. Samplers within a given animation are _not_ required to have the same inputs.
 
@@ -1927,6 +1927,9 @@ Interpolation algorithm.
    * `"LINEAR"` The animated values are linearly interpolated between keyframes. When targeting a rotation, spherical linear interpolation (slerp) should be used to interpolate quaternions. The number output of elements must equal the number of input elements.
    * `"STEP"` The animated values remain constant to the output of the first keyframe, until the next keyframe. The number of output elements must equal the number of input elements.
    * `"CUBICSPLINE"` The animation's interpolation is computed using a cubic spline with specified tangents. The number of output elements must equal three times the number of input elements. For each input element, the output stores three elements, an in-tangent, a spline vertex, and an out-tangent. There must be at least two keyframes when using this interpolation.
+   * `"CUBICSLERP"` The animation's interpolation is computed using spherical cubic interpolation (sqlerp) with specified tangents. This interpolation mode is only valid when targeting a rotation. The number of output elements must equal three times the number of input elements. For each input element, the output stores three elements, an in-tangent quaternion, a spline quaternion, and an out-tangent quaternion. There must be at least two keyframes when using this interpolation.
+
+See [Appendix C](#appendix-c-spline-interpolation) for additional information about spline interpolation.
 
 #### animation sampler.output :white_check_mark: 
 
@@ -4131,6 +4134,8 @@ More recently, [Jakob et al. (2014)](#Jakob2014) developed a generic framework f
 
 # Appendix C: Spline Interpolation
 
+## `CUBICSPLINE` Interpolation
+
 Animations in glTF support spline interpolation with a cubic spline.
 
 The keyframes of a cubic spline in glTF have input and output values where each input value corresponds to three output values of the same type: in-tangent, data point, and out-tangent.
@@ -4162,11 +4167,43 @@ and where at input offset *t*<sub>*current*</sub> with keyframe index *k*
 
 The scalar-point multiplications are per point component.
 
-When the sampler targets a node's rotation property, the resulting ***p***(*t*) quaternion must be normalized before applying the result to the node's rotation.
+When a `CUBICSPLINE` sampler targets a node's rotation property, the resulting ***p***(*t*) quaternion must be normalized before applying the result to the node's rotation.
 
 > **Implementation Note:** When writing out rotation output values, exporters should take care to not write out values which can result in an invalid quaternion with all zero values. This can be achieved by ensuring the output values never have both -***q*** and ***q*** in the same spline.
 
 > **Implementation Note:** The first in-tangent ***a***<sub>1</sub> and last out-tangent ***b***<sub>*n*</sub> should be zeros as they are not used in the spline calculations.
+
+## `CUBICSLERP` Interpolation
+
+This form of rotation animation matches the de facto industry standard of animating rotations via spherical cubic interpolation ("sqlerp()", originally from [Shoemake (1985)](#Shoemake1985)).
+
+The keyframes of a spherical cubic spline in glTF have input and output values where each input value corresponds to three output values (all unit quaternions): in-tangent, key-value, and out-tangent.
+
+Given a set of keyframes
+
+&nbsp;&nbsp;&nbsp;&nbsp;Input *t*<sub>*k*</sub> with Output in-tangent ***a***<sub>k</sub>, point ***v***<sub>*k*</sub>, and out-tangent ***b***<sub>k</sub> for *k* = 1,...,*n*
+
+a spherical spline segment between two keyframes (k and k+1) is represented in a spherical cubic spline form:
+
+&nbsp;&nbsp;&nbsp;&nbsp;***q***<sub>k</sub>(*t*) = ***sqlerp***(***v***<sub>k</sub>, ***b***<sub>k</sub>, ***a***<sub>k+1</sub>, ***v***<sub>k+1</sub>, *t*)
+
+
+where
+
+&nbsp;&nbsp;&nbsp;&nbsp;*t* is a value between 0 and 1  
+&nbsp;&nbsp;&nbsp;&nbsp;***sqlerp***(***A***,***B***,***C***,***D***,*t*) = ***slerp***( ***slerp***(***A***,***D***,*t*), ***slerp***(***B***,***C***,*t*), 2*t - 2*t<sup>2</sup> )  
+&nbsp;&nbsp;&nbsp;&nbsp;***slerp***() is spherical linear interpolation between two unit quaternions  
+&nbsp;&nbsp;&nbsp;&nbsp;***q***(*t*) is the resulting unit quaternion value  
+
+and where at input offset *t*<sub>*current*</sub> with keyframe index *k*
+
+&nbsp;&nbsp;&nbsp;&nbsp;*t* = (*t*<sub>*current*</sub> - *t*<sub>*k*</sub>) / (*t*<sub>*k*+1</sub> - *t*<sub>*k*</sub>)  
+
+> **Implementation Note:** The first in-tangent ***a***<sub>1</sub> and last out-tangent ***b***<sub>*n*</sub> should be zeros as they are not used in the spherical spline calculations.
+
+## References
+
+* Shoemake, Ken (1985):  Animating rotation with quaternion curves.  ACM SIGGRAPH Computer Graphics 19 (3), 245-254.<a name=Shoemake1985></a>
 
 # Appendix D: Full Khronos Copyright Statement
 

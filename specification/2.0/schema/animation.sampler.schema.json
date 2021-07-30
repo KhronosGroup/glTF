@@ -28,6 +28,10 @@
                     "description": "The animation's interpolation is computed using a cubic spline with specified tangents. The number of output elements must equal three times the number of input elements. For each input element, the output stores three elements, an in-tangent, a spline vertex, and an out-tangent. There must be at least two keyframes when using this interpolation."
                 },
                 {
+                    "enum": [ "CUBICSLERP" ],
+                    "description": "The animation's interpolation is computed using spherical cubic interpolation (sqlerp) with specified tangents. This interpolation mode is only valid when targeting a rotation. The number of output elements must equal three times the number of input elements. For each input element, the output stores three elements, an in-tangent quaternion, a spline quaternion, and an out-tangent quaternion. There must be at least two keyframes when using this interpolation."
+                },
+                {
                     "type": "string"
                 }
             ]
