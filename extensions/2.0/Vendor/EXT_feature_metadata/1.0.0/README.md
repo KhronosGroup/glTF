@@ -1,7 +1,7 @@
 <!-- omit in toc -->
 # EXT_feature_metadata
 
-**Version 1.0.0**, February 24, 2020
+**Version 1.0.0**, February 24, 2021
 
 <!-- omit in toc -->
 ## Contributors
