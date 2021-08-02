@@ -134,12 +134,12 @@ Given the same two doors from the example above, there are two options to implem
 ```
 
 * ### Write properties to separate binary file which optionally can be compressed
-In this case each node points to the buffer where metadata for this node can be found. File is a serialized 'GRIFFEL_bim_data' extension object with additional `nodeProperties` field. This field maps node properties and types to nodes by name.
+In this case each node points to the buffer where metadata for this node can be found. File is a serialized 'GRIFFEL_bim_data' extension object with additional `nodeProperties` field. This field maps node properties and types to nodes by nodeId.
 ```javascript
 // gltf content:
 "nodes": [
   {
-    "name": "Door 1",
+    "nodeId": "Door 1",
     "extensions": {
       "GRIFFEL_bim_data": {
         "buffer": 1
@@ -147,7 +147,7 @@ In this case each node points to the buffer where metadata for this node can be 
     }
   },
   {
-    "name": "Door 2",
+    "nodeId": "Door 2",
     "extensions": {
       "GRIFFEL_bim_data": {
         "buffer": 1

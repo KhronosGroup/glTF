@@ -5,9 +5,9 @@
     "description": "Maps properties to nodes by name. Used only when data is saved in a separate file.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "node": {
+        "nodeId": {
             "type": "string",
-            "description": "Name of the node which has the type and properties below."
+            "description": "Id of the node which has the type and properties below."
         },
         "properties": {
             "type": "array",

@@ -6,19 +6,19 @@
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "buffer": {
-            "type": "number",
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "Index of the buffer which contains data for this node. Used only when data is saved in a separate file."
         },
         "properties": {
             "type": "array",
             "items": {
-                "type": "number",
+                "allOf": [ { "$ref": "glTFid.schema.json" } ],
                 "description": "Index of a property in the root level collection."
             },
             "description": "Collection of indices which point to corresponding instance properties of the node. (Instance properties are unique to the node.)"
         },
         "type": {
-            "type": "number",
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "Index of a type in the root level collection. (Type is a set of properties which are common for many nodes.)"
         },
         "extensions": { },
