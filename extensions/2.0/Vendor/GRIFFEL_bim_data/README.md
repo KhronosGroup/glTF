@@ -49,12 +49,9 @@ Element - leaf `node` with `mesh` which represents a real construction product.
 A single piece of metadata for the node is represented by `property`. Property is a key-value pair, like 'name of the object's parameter' - 'its value'. To keep it simple name and value of the property are `strings`.
 Node can also have a `type`. Type is a set of properties which is common for many nodes.
 #### Example:
-<em>There are two timber doors in the building. Each is 900 mm (3') wide. First is 2,1 m (7') high, second is 2,4 m (8') high.
+There are two timber doors in the building. Each is 900 mm (3') wide. First is 2,1 m (7') high, second is 2,4 m (8') high.
 In this example properties are: "Width - 900 mm", "Height - 2,1 m", "Height - 2,4 m", "Material - Timber". 
-A single `type` here is represented by the collection consisting of the firs
- 
- 
- t and the last properties as width and material are common properties for both doors.</em>
+A single `type` here is represented by the collection consisting of the first and the last properties as width and material are common properties for both doors.
 
 To save some space for storing properties they are written only once in the properties collection and referenced by each node where needed. To save even more space each unique property name and each unique property value are stored in separate collections. This approach is beneficial over keeping metadata in `extras` for large amounts of data.
 
