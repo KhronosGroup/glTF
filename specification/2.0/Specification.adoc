@@ -32,25 +32,14 @@ toc::[]
 
 :leveloffset: 1
 
-[[copyright-statement]]
-= Copyright Statement
+[[foreword]]
+= Foreword
 
 Copyright 2013-2021 The Khronos Group Inc.
 
-Some parts of this Specification are purely informative and do not define requirements
-necessary for compliance and so are outside the Scope of this Specification. These
-parts of the Specification are marked as being non-normative, or identified as
-*Implementation Notes*.
-
-Where this Specification includes normative references to external documents, only the
-specifically identified sections and functionality of those external documents are in
-Scope. Requirements defined by external documents not created by Khronos may contain
-contributions from non-members of Khronos not covered by the Khronos Intellectual
-Property Rights Policy.
-
 This specification is protected by copyright laws and contains material proprietary
 to Khronos. Except as described by these terms, it or any components
-may not be reproduced, republished, distributed, transmitted, displayed, broadcast
+may not be reproduced, republished, distributed, transmitted, displayed, broadcast,
 or otherwise exploited in any manner without the express prior written permission
 of Khronos.
 
@@ -62,9 +51,18 @@ without fee or royalty, EXCEPT no licenses to any patent, trademark or other
 intellectual property rights are granted under these terms. Parties desiring to
 implement the specification and make use of Khronos trademarks in relation to that
 implementation, and receive reciprocal patent license protection under the Khronos
-IP Policy must become Adopters and confirm the implementation as conformant under
-the process defined by Khronos for this specification;
-see https://www.khronos.org/adopters.
+IP Policy must become Adopters under the process defined by Khronos for this specification;
+see https://www.khronos.org/conformance/adopters/file-format-adopter-program.
+
+Some parts of this Specification are non-normative through being explicitly identified as
+purely informative, and do not define requirements necessary for compliance and so are
+outside the Scope of this Specification.
+
+Where this Specification includes normative references to external documents, only the
+specifically identified sections and functionality of those external documents are in
+Scope. Requirements defined by external documents not created by Khronos may contain
+contributions from non-members of Khronos not covered by the Khronos Intellectual
+Property Rights Policy.
 
 Khronos makes no, and expressly disclaims any, representations or warranties,
 express or implied, regarding this specification, including, without limitation:
@@ -100,11 +98,21 @@ glTF is an API-neutral runtime asset delivery format.  glTF bridges the gap betw
 [[introduction-conventions]]
 == Document Conventions
 
-The glTF Specification is intended for use by both implementors of the asset exporters or converters (e.g. digital content creation tools) and application developers seeking to import or load glTF assets, forming a basis for interoperability between these parties.
+The glTF Specification is intended for use by both implementors of the asset exporters or converters (e.g., digital content creation tools) and application developers seeking to import or load glTF assets, forming a basis for interoperability between these parties.
 
-Specification text can address either party; typically the intended audience can be inferred from context, though some sections are defined to address only one of these parties.
+Specification text can address either party; typically, the intended audience can be inferred from context, though some sections are defined to address only one of these parties.
 
 Any requirements, prohibitions, recommendations or options defined by <<introduction-normative-terminology, normative terminology>> are imposed only on the audience of that text.
+
+
+[[introduction-normative-terminology]]
+=== Normative Terminology and References
+
+The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**,  **MAY**, and **OPTIONAL** in this document are to be interpreted as described in <<bcp14,BCP 14>>.
+
+These key words are highlighted in the specification for clarity.
+
+References to external documents are considered normative if the Specification uses any of the normative terms defined in this section to refer to them or their requirements, either as a whole or in part.
 
 
 [[introduction-informative-language]]
@@ -112,19 +120,12 @@ Any requirements, prohibitions, recommendations or options defined by <<introduc
 
 Some language in the specification is purely informative, intended to give background or suggestions to implementors or developers.
 
-If an entire chapter or section contains only informative language, its title is suffixed with "`(Informative)`".
-
-All NOTEs are implicitly informative.
+If an entire chapter or section contains only informative language, its title is suffixed with "`(Informative)`". If not designated as informative, all chapters, sections, and appendices in this document are normative.
 
 
-[[introduction-normative-terminology]]
-=== Normative Terminology
 
-The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**,  **MAY**, and **OPTIONAL** in this document are to be interpreted as described in <<bcp14,BCP 14>>.
 
-These key words are highlighted in the specification for clarity.
-
-Unless otherwise noted in the section heading, all sections and appendices in this document are normative.
+All Notes, Implementation notes, and Examples are purely informative.
 
 
 [[introduction-technical-terminology]]
@@ -134,8 +135,6 @@ The glTF Specification makes use of common engineering and graphics terms such a
 
 [[introduction-normative-references]]
 === Normative References
-
-References to external documents are considered normative references if the Specification uses any of the normative terms defined in <<introduction-normative-terminology>> to refer to them or their requirements, either as a whole or in part.
 
 The following documents are referenced by normative sections of the specification:
 
@@ -267,35 +266,15 @@ https://www.iana.org/assignments/media-types/image/png
 
 
 [[motivation]]
-== Motivation (Informative)
+== Motivation and Design Goals (Informative)
 
-Traditional 3D modeling formats have been designed to store data for offline use, primarily to support authoring workflows on desktop systems. Industry-standard 3D interchange formats allow for sharing assets between different modeling tools, and within the content pipeline in general. However, neither of these types of formats is optimized for download speed or fast loading at runtime. Files tend to grow very large, and applications need to do a significant amount of processing to load such assets into GPU-accelerated applications.
+Traditional 3D modeling formats have been designed to store data for offline use, primarily to support authoring workflows on desktop systems. Industry-standard 3D authoring interchange formats enable sharing assets between different modeling tools, and within the content pipeline in general. However, neither of these types of formats is optimized for download speed or fast loading at runtime. Files tend to grow very large, and applications need to do a significant amount of processing to load such assets into GPU-accelerated applications.
 
 Applications seeking high performance rarely load modeling formats directly; instead, they process models offline as part of a custom content pipeline, converting the assets into a proprietary format optimized for their runtime application.  This has led to a fragmented market of incompatible proprietary runtime formats and duplicated efforts in the content creation pipeline. 3D assets exported for one application cannot be reused in another application without going back to the original modeling, tool-specific source and performing another proprietary export step.
 
 With the advent of mobile- and web-based 3D computing, new classes of applications have emerged that require fast, dynamic loading of standardized 3D assets. Digital marketing solutions, e-commerce product visualizations, and online model-sharing sites are just a few of the connected 3D applications being built today using GPU APIs. Beyond the need for efficient delivery, many of these online applications can benefit from a standard, interoperable format to enable sharing and reuse of assets between users, between applications, and within heterogeneous, distributed content pipelines.
 
-glTF solves these problems by providing a vendor- and runtime-neutral format that can be loaded and rendered with minimal processing. The format combines an easily parsable JSON scene description with one or more binary resources representing geometry, animations, and other rich data. Binary data is stored in such a way that it can be in most cases loaded directly into GPU buffers without additional parsing or other manipulation. Using this approach, glTF is able to faithfully preserve full hierarchical scenes with nodes, meshes, cameras, materials, and animations, while enabling efficient delivery and fast loading.
-
-
-[[gltf-basics]]
-== glTF Basics
-
-A glTF asset is represented by:
-
-* A JSON-formatted file (`.gltf`) containing a full scene description: node hierarchy, materials, cameras, as well as descriptor information for meshes, animations, and other constructs.
-* Binary files (`.bin`) containing geometry, animation, and other buffer-based data.
-* Image files (`.jpg`, `.png`) containing texture images.
-
-Binary and image resources **MAY** also be embedded directly in JSON using <<data-uri,Data URI>> or stored side-by-side with JSON in <<glb-file-format-specification,GLB>> container.
-
-A valid glTF asset **MUST** specify its version.
-
-image:figures/files.png[pdfwidth=4in,align=left]
-
-
-[[design-goals]]
-== Design Goals (Informative)
+glTF solves these problems by providing a vendor- and runtime-neutral format that can be loaded and rendered with minimal processing. The format combines an easily parsable JSON scene description with one or more binary resources representing geometry, animations, and other rich data. Binary data is stored in such a way that it can be in most cases loaded directly into GPU buffers without additional parsing or other manipulation. Using this approach, glTF can faithfully preserve full hierarchical scenes with nodes, meshes, cameras, materials, and animations, while enabling efficient delivery and fast loading.
 
 glTF has been designed to meet the following goals:
 
@@ -317,13 +296,27 @@ While version 2.0 of glTF does not define compression for geometry and other ric
 * https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_draco_mesh_compression/README.md[KHR_draco_mesh_compression] for geometry.
 * https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_texture_basisu/README.md[KHR_texture_basisu] for GPU-compatible block-compressed textures.
 
-Future extensions may include more compression methods including those for animation data.
+
+[[gltf-basics]]
+== glTF Basics
+
+A glTF asset is represented by:
+
+* A JSON-formatted file (`.gltf`) containing a full scene description: node hierarchy, materials, cameras, as well as descriptor information for meshes, animations, and other constructs.
+* Binary files (`.bin`) containing geometry, animation, and other buffer-based data.
+* Image files (`.jpg`, `.png`) containing texture images.
+
+Binary and image resources **MAY** also be embedded directly in JSON using <<data-uri,Data URI>> or stored side-by-side with JSON in <<glb-file-format-specification,GLB>> container.
+
+A valid glTF asset **MUST** specify its version.
+
+image:figures/files.png[pdfwidth=4in,align=left]
 
 
 [[versioning]]
 == Versioning
 
-Any updates made to the glTF Specification in a minor version **MUST** be backwards and forwards compatible. Backwards compatibility means that any client implementation that supports loading a glTF 2.x asset will also be able to load a glTF 2.0 asset. Forwards compatibility means that a client implementation that only supports glTF 2.0 is able to load glTF 2.x assets while gracefully ignoring any new features it does not understand.
+Any updates made to the glTF Specification in a minor version **MUST** be backward and forward compatible. Backward compatibility means that any client implementation that supports loading a glTF 2.x asset will also be able to load a glTF 2.0 asset. Forward compatibility means that a client implementation that only supports glTF 2.0 can load glTF 2.x assets while gracefully ignoring any new features it does not understand.
 
 A minor version update **MAY** introduce new features but **MUST NOT** change any previously existing behavior. Existing functionality **MAY** be deprecated in a minor version update, but it **MUST NOT** be removed.
 
@@ -730,7 +723,7 @@ glTF assets **MAY** have any number of buffer resources. Buffers are defined in 
 
 While there's no hard upper limit on buffer's size, glTF assets **SHOULD NOT** use buffers bigger than 2^53^ bytes because some JSON parsers may be unable to parse their `byteLength` correctly. Buffers stored as <<glb-file-format-specification,GLB>> binary chunk have an implicit limit of 2^32^-1 bytes.
 
-All buffer data defined in this specification (i.e. geometry attributes, geometry indices, sparse accessor data, animation inputs and outputs, inverse bind matrices) **MUST** use little endian byte order.
+All buffer data defined in this specification (i.e., geometry attributes, geometry indices, sparse accessor data, animation inputs and outputs, inverse bind matrices) **MUST** use little endian byte order.
 
 The following example defines a buffer. The `byteLength` property specifies the size of the buffer file. The `uri` property is the URI to the buffer data.
 [source,json]
@@ -806,7 +799,7 @@ Byte length of `BIN` chunk **MAY** be up to 3 bytes bigger than JSON-defined `bu
 Not requiring strict equality of chunk's and buffer's lengths slightly simplifies glTF to GLB conversion: `buffer.byteLength` does not need to be updated after applying GLB padding.
 ====
 
-In the following example, the first buffer objects refers to GLB-stored data, while the second points to external resource:
+In the following example, the first buffer object refers to GLB-stored data, while the second points to external resource:
 
 [source,json]
 ----
@@ -834,7 +827,7 @@ See <<glb-file-format-specification,GLB File Format Specification>> for details 
 
 All binary data for meshes, skins, and animations is stored in buffers and retrieved via accessors.
 
-An _accessor_ defines a method for retrieving data as typed arrays from within a `bufferView`. The accessor specifies a component type (e.g. _float_) and a data type (e.g. `VEC3` for 3D vectors), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the `bufferView` using the properties `byteOffset` and `count`. The latter specifies the number of elements within the `bufferView`, _not_ the number of bytes. Elements could be, e.g., vertex indices, vertex attributes, animation keyframes, etc.
+An _accessor_ defines a method for retrieving data as typed arrays from within a `bufferView`. The accessor specifies a component type (e.g., _float_) and a data type (e.g., `VEC3` for 3D vectors), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the `bufferView` using the properties `byteOffset` and `count`. The latter specifies the number of elements within the `bufferView`, _not_ the number of bytes. Elements could be, e.g., vertex indices, vertex attributes, animation keyframes, etc.
 
 All accessors are stored in the asset's `accessors` array.
 
@@ -930,7 +923,7 @@ For example:
 }
 ----
 
-In this accessor, the `componentType` is `5126` (_float_), so each component is four bytes.  The `type` is `"VEC3"`, so there are three components.  The size of each element is 12 bytes (`4 * 3`). Thus the accessor takes 7020 bytes (`[7032 ... 14051]` inclusive range of the buffer view).
+In this accessor, the `componentType` is `5126` (_float_), so each component is four bytes.  The `type` is `"VEC3"`, so there are three components.  The size of each element is 12 bytes (`4 * 3`). Thus, the accessor takes 7020 bytes (`[7032 ... 14051]` inclusive range of the buffer view).
 
 
 [[sparse-accessors]]
@@ -939,7 +932,7 @@ In this accessor, the `componentType` is `5126` (_float_), so each component is 
 Sparse encoding of arrays is often more memory-efficient than dense encoding when describing incremental changes with respect to a reference array.
 This is often the case when encoding morph targets (it is, in general, more efficient to describe a few displaced vertices in a morph target than transmitting all morph target vertices).
 
-Similarly to a standard accessor, a sparse accessor initializes an array of typed elements from data stored in a `bufferView`. When `accessor.bufferView` is undefined, the sparse accessor is initialized as an array of zeros of size `(size of the accessor element) * (accessor.count)` bytes.
+Similar to a standard accessor, a sparse accessor initializes an array of typed elements from data stored in a `bufferView`. When `accessor.bufferView` is undefined, the sparse accessor is initialized as an array of zeros of size `(size of the accessor element) * (accessor.count)` bytes.
 
 On top of that, a sparse accessor includes a `sparse` JSON object describing the elements that deviate from their initialization values. The `sparse` object contains the following **REQUIRED** properties:
 
@@ -1205,7 +1198,7 @@ When `indices` property is not defined, the number of vertex indices to render i
 * For _lines_, it **MUST** be divisible by 2 and non-zero.
 * For _triangles_, it **MUST** be divisible by 3 and non-zero
 
-The topology types are defined as follows.
+Topology types are defined as follows.
 
 * **Points**
 +
@@ -1278,7 +1271,7 @@ primitives[i].attributes.POSITION +
 
 Morph targets are specified via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a plain JSON object mapping a primitive attribute to an accessor containing morph target displacement data.
 
-Client implementations **SHOULD** support at least three attributes -- `POSITION`, `NORMAL`, and `TANGENT` -- for morphing. If morph targets contain application-specific semantics, their names **MUST** be prefixed with an underscore (e.g. `_TEMPERATURE`) like the associated attribute semantic.
+Client implementations **SHOULD** support at least three attributes -- `POSITION`, `NORMAL`, and `TANGENT` -- for morphing. If morph targets contain application-specific semantics, their names **MUST** be prefixed with an underscore (e.g., `_TEMPERATURE`) like the associated attribute semantic.
 
 All primitives **MUST** have the same number of morph targets in the same order.
 
@@ -1466,7 +1459,7 @@ The threshold in the official validation tool is set to `2e-7` times the number 
 Since the allowed threshold is much lower than minimum possible step for quantized component types, weight sum should be renormalized after quantization.
 ====
 
-When any of the vertices are influenced by more than four joints, the additional joint and weight information are stored in subsequent sets. For example `JOINTS_1` and `WEIGHTS_1` if present will reference the accessor for up to 4 additional joints that influence the vertices. Client implementations **MAY** support only a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the asset's animation.
+When any of the vertices are influenced by more than four joints, the additional joint and weight information are stored in subsequent sets. For example, `JOINTS_1` and `WEIGHTS_1` if present will reference the accessor for up to 4 additional joints that influence the vertices. Client implementations **MAY** support only a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the asset's animation.
 
 All joint values **MUST** be within the range of joints in the skin. Unused joint values (i.e. joints with a weight of zero) **SHOULD** be set to zero.
 
@@ -1488,7 +1481,7 @@ For more details of vertex skinning implementation, refer to https://github.com/
 A node definition does not specify whether the node is a joint. Client implementations may need to traverse the `skins` array first, marking each joint node.
 ====
 
-A joint **MAY** have regular nodes attached to it, even a complete node sub graph with meshes. It's often used to have an entire geometry attached to a joint without having it being skinned by the joint. (i.e. a sword attached to a hand joint). Note that the node transform is the local transform of the node relative to the joint, like any other node in the glTF node hierarchy as described in the <<transformations,Transformation>> section.
+A joint **MAY** have regular nodes attached to it, even a complete node sub graph with meshes. It's often used to have an entire geometry attached to a joint without having it being skinned by the joint. (i.e., a sword attached to a hand joint). Note that the node transform is the local transform of the node relative to the joint, like any other node in the glTF node hierarchy as described in the <<transformations,Transformation>> section.
 
 
 [[instantiation]]
@@ -1516,7 +1509,7 @@ A mesh is instantiated by `node.mesh` property. The same mesh could be used by m
 
 ----
 
-When a mesh primitive uses any triangle-based topology (i.e. _triangles_, _triangle strip_, or _triangle fan_), the determinant of the node's global transform defines the winding order of that primitive. If the determinant is a positive value, the winding order triangle faces is counter-clockwise; in the opposite case, the winding order is clockwise.
+When a mesh primitive uses any triangle-based topology (i.e., _triangles_, _triangle strip_, or _triangle fan_), the determinant of the node's global transform defines the winding order of that primitive. If the determinant is a positive value, the winding order triangle faces is counterclockwise; in the opposite case, the winding order is clockwise.
 
 [NOTE]
 .Implementation Note
@@ -1524,7 +1517,7 @@ When a mesh primitive uses any triangle-based topology (i.e. _triangles_, _trian
 Switching the winding order to clockwise enables mirroring geometry via negative scale transformations.
 ====
 
-When an instantiated mesh has morph targets, it **MUST** use morph weights specified with the `node.weights` property. When the latter is undefined, `mesh.weights` property **MUST** used instead. When both of these fields are undefined, the mesh is instantiated in a non-morphed state (i.e. with all morph weights set to zeros).
+When an instantiated mesh has morph targets, it **MUST** use morph weights specified with the `node.weights` property. When the latter is undefined, `mesh.weights` property **MUST** used instead. When both of these fields are undefined, the mesh is instantiated in a non-morphed state (i.e., with all morph weights set to zeros).
 
 The example below instantiates a Morph Target with non-default weights.
 
@@ -1731,7 +1724,7 @@ Wrapping defines how to handle out of range texture coordinates, independently f
 [NOTE]
 .Example
 ====
-`2.2` maps to `0.2`; `-0.4` maps to `0.6`. 
+`2.2` maps to `0.2`; `-0.4` maps to `0.6`.
 ====
 
 * _Mirrored Repeat_. This mode works as _repeat_ but flips the direction when the integer part (truncated towards −∞) is odd.
@@ -1739,12 +1732,12 @@ Wrapping defines how to handle out of range texture coordinates, independently f
 [NOTE]
 .Example
 ====
-`2.2` maps to `0.2`; `-0.4` is treated as `0.4`. 
+`2.2` maps to `0.2`; `-0.4` is treated as `0.4`.
 ====
 
 * _Clamp to edge_. Texture coordinates with values outside the image are clamped to the closest existing image texel at the edge.
 
-==== Example 
+==== Example
 
 The following example defines a sampler with _linear_ magnification filtering, _linear-mipmap-linear_ minification filtering, and _repeat_ wrapping in both directions.
 
@@ -1784,7 +1777,7 @@ Specifically if the `sampler` the texture references
 [[materials-overview]]
 === Overview
 
-glTF defines materials using a common set of parameters that are based on widely used material representations from Physically-Based Rendering (PBR). Specifically, glTF uses the metallic-roughness material model. Using this declarative representation of materials enables a glTF file to be rendered consistently across platforms.
+glTF defines materials using a common set of parameters that are based on widely used material representations from Physically Based Rendering (PBR). Specifically, glTF uses the metallic-roughness material model. Using this declarative representation of materials enables a glTF file to be rendered consistently across platforms.
 
 image:figures/materials.png[pdfwidth=4in,align=left]
 
@@ -1818,7 +1811,7 @@ The metallic-roughness material model is defined by the following properties:
 
 The _base color_ has two different interpretations depending on the value of _metalness_. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used.
 
-The value for each property **MAY** be defined using factors and / or textures (e.g. `baseColorTexture` and `baseColorFactor`). If a texture is not given, all respective texture components within this material model **MUST** be assumed to have a value of `1.0`. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values. A texture binding is defined by an `index` of a _texture_ object and an optional index of texture coordinates.
+The value for each property **MAY** be defined using factors and / or textures (e.g., `baseColorTexture` and `baseColorFactor`). If a texture is not given, all respective texture components within this material model **MUST** be assumed to have a value of `1.0`. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values. A texture binding is defined by an `index` of a _texture_ object and an optional index of texture coordinates.
 
 [source,json]
 ----
@@ -2036,7 +2029,7 @@ The view matrix is derived from the world transform of the node containing the c
 
 The projection can be perspective or orthographic.
 
-There are two subtypes of perspective projections: finite and infinite. When `zfar` property is undefined, the camera defines an infinite projection. Otherwise the camera defines a finite projection.
+There are two subtypes of perspective projections: finite and infinite. When `zfar` property is undefined, the camera defines an infinite projection. Otherwise, the camera defines a finite projection.
 
 The following example defines two perspective cameras with supplied values for Y field of view, aspect ratio, and clipping information.
 
@@ -2147,13 +2140,13 @@ glTF 2.0 only supports animating node transforms and morph target weights. Exten
 [NOTE]
 .Note
 ====
-glTF 2.0 defines only storage of animation keyframes, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc... When loading a glTF 2.0 asset, client implementations may select an animation entry and pause it on the first frame, play it automatically, or ignore all animations until further user requests. When a playing animation is stopped, client implementations may reset the scene to the initial state or freeze it at the current frame.
+glTF 2.0 defines only storage of animation keyframes, so this specification doesn't define any runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc... When loading a glTF 2.0 asset, client implementations may select an animation entry and pause it on the first frame, play it automatically, or ignore all animations until further user requests. When a playing animation is stopped, client implementations may reset the scene to the initial state or freeze it at the current frame.
 ====
 
 [NOTE]
 .Implementation Note
 ====
-glTF 2.0 does not specifically define how an animation will be used when imported but, as a best practice, it is recommended that each animation is self contained as an action. For example, "Walk" and "Run" animations might each contain multiple channels targeting a model's various bones. The client implementation may choose when to play any of the available animations.
+glTF 2.0 does not specifically define how an animation will be used when imported but, as a best practice, it is recommended that each animation is self-contained as an action. For example, "Walk" and "Run" animations might each contain multiple channels targeting a model's various bones. The client implementation may choose when to play any of the available animations.
 ====
 
 All animations are stored in the `animations` array of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
@@ -2303,7 +2296,7 @@ _Channels_ connect the output values of the key frame animation to a specific no
 
 When `node` isn't defined, channel **SHOULD** be ignored. Valid path names are `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
 
-Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating point scalar values representing linear time in seconds; and a set of vectors or scalars representing the animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, and `CUBICSPLINE`. See <<appendix-c-spline-interpolation,Appendix C>> for additional information about spline interpolation.
+Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating-point scalar values representing linear time in seconds; and a set of vectors or scalars representing the animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, and `CUBICSPLINE`. See <<appendix-c-spline-interpolation,Appendix C>> for additional information about spline interpolation.
 
 The inputs of each sampler are relative to `t = 0`, defined as the beginning of the parent `animations` entry. Before and after the provided input range, output **MUST** be clamped to the nearest end of the input range.
 
@@ -2313,7 +2306,7 @@ The inputs of each sampler are relative to `t = 0`, defined as the beginning of 
 For example, if the earliest sampler input for an animation is `t = 10`, a client implementation must begin playback of that animation channel at `t = 0` with output clamped to the first available output value.
 ====
 
-Samplers within a given animation are **MAY** have different inputs.
+Samplers within a given animation **MAY** have different inputs.
 
 [options="header",cols="15%,15%,35%,35%"]
 |====
@@ -2428,21 +2421,21 @@ For more information on developing glTF extensions, consult the https://github.c
 [[glb-file-format-specification-general]]
 == General (Informative)
 
-glTF provides two delivery options that can also be used together:
+glTF provides two delivery options that can be used together:
 
 * glTF JSON points to external binary data (geometry, key frames, skins), and images.
 * glTF JSON embeds base64-encoded binary data, and images inline using data URIs.
 
-For these resources, loading glTF usually requires either separate requests or extra space due to base64-encoding. Base64-encoding requires extra processing to decode and increases the file size (by ~33% for encoded resources). While transport-layer gzip mitigates the file size increase, decompression and decoding still add significant loading time.
+Hence, loading glTF files usually requires either separate requests to fetch all binary data, or extra space due to base64-encoding. Base64-encoding requires extra processing to decode and increases the file size (by ~33% for encoded resources). While transport-layer gzip mitigates the file size increase, decompression and decoding still add significant loading time.
 
-To solve this, a container format, _Binary glTF_ is introduced. In Binary glTF, a glTF asset (JSON, .bin, and images) can be stored in a binary blob.
+To avoid this file size and processing overhead, a container format, _Binary glTF_ is introduced that enables a glTF asset, including JSON, buffers, and images, to be stored in a single binary blob.
 
-For example, an application that wants to download textures on demand may embed everything except images in the Binary glTF. Embedded base64-encoded resources are also still supported, but it would be inefficient to use them.
+A Binary glTF asset can still refer to external resources. For example, an application that wants to keep images as separate files may embed everything needed for a scene, except images, in a Binary glTF.
 
 [[glb-file-format-specification-structure]]
 == Structure
 
-This binary blob (which can be a file, for example) has the following structure:
+A Binary glTF (which can be a file, for example) has the following structure:
 
 * A 12-byte preamble, called the _header_.
 * One or more _chunks_ that contain JSON content and binary data.
@@ -2483,7 +2476,7 @@ uint32 version
 uint32 length
 ----
 
-* `magic` **MUST** be equal to equal `0x46546C67`. It is ASCII string `glTF`, and can be used to identify data as Binary glTF.
+* `magic` **MUST** be equal to equal `0x46546C67`. It is ASCII string `glTF` and can be used to identify data as Binary glTF.
 * `version` indicates the version of the Binary glTF container format. This specification defines version 2.
 +
 Client implementations that load GLB format **MUST** also check for the <<asset,asset version properties>> in the JSON chunk, as the version specified in the GLB header only refers to the GLB container version.
@@ -2571,7 +2564,7 @@ include::PropertiesReference.adoc[]
 [[working-group-and-alumni]]
 == Khronos 3D Formats Working Group and Alumni (Informative)
 
-* Remi Arnaud, Starbreeze Studios
+* Remi Arnaud, Vario
 * Mike Bond, Adobe
 * Leonard Daly, Individual Contributor
 * Emiliano Gambaretto, Adobe
@@ -2597,12 +2590,14 @@ include::PropertiesReference.adoc[]
 * Tom Fili, Cesium
 * Darryl Gough
 * Eric Haines, Autodesk
-* Yu Chen Hou
+* Yu Chen Hou, Individual Contributor
 * Scott Hunter, Analytical Graphics, Inc.
 * Brandon Jones, Google
+* Arseny Kapoulkine, Individual Contributor
+* Jon Leech, Individual Contributor
 * Sean Lilley, Cesium
 * Juan Linietsky, Godot Engine
-* Matthew McMullan
+* Matthew McMullan, Individual Contributor
 * Mohamad Moneimne, University of Pennsylvania
 * Kai Ninomiya, formerly Cesium
 * Cedric Pinson, Sketchfab
@@ -2614,7 +2609,6 @@ include::PropertiesReference.adoc[]
 * Steven Vergenz, AltspaceVR
 * Corentin Wallez, Google
 * Alex Wood, Analytical Graphics, Inc
-* Jon Leech
 
 [appendix]
 [[appendix-a-json-schema-reference]]
@@ -2630,7 +2624,7 @@ include::JsonSchemaReference.adoc[]
 [[appendix-b-brdf-implementation-general]]
 == General
 
-In this chapter we present the bidirectional scattering distribution function (BRDF) of the glTF 2.0 metallic-roughness material. The BRDF describes the reflective properties of the surface of a physically-based material. For a pair of directions, the BRDF returns how much light from the incoming direction is scattered from the surface in the outgoing direction.
+This chapter presents the bidirectional scattering distribution function (BRDF) of the glTF 2.0 metallic-roughness material. The BRDF describes the reflective properties of the surface of a physically based material. For a pair of directions, the BRDF returns how much light from the incoming direction is scattered from the surface in the outgoing direction.
 
 [NOTE]
 .Note
@@ -2649,12 +2643,12 @@ material = mix(dielectric_brdf, metal_brdf, metallic)
 [NOTE]
 .Note
 ====
-Such a material model based on a linear interpolation of metallic and dielectric components was introduced by <<Burley2012,Burley (2012)>> and adapted by many renderers, resulting in a wide-range of applications supporting it.
+Such a material model based on a linear interpolation of metallic and dielectric components was introduced by <<Burley2012,Burley (2012)>> and adapted by many renderers, resulting in a wide range of applications supporting it.
 
-Usually, a material is either metallic or dielectric. A texture provided for `metallic` with either `1.0` or `0.0` separates metallic from dielectric regions on the mesh. There are situations in which there is no clear separation. It may happen that due to anti-alising or mip-mapping there is a portion of metal and a portion of dielectric within a texel. Futhermore, a material composed of several semi-transparent layers may be represented as a blend between several single-layered materials (layering via parameter blending).
+Usually, a material is either metallic or dielectric. A texture provided for `metallic` with either `1.0` or `0.0` separates metallic from dielectric regions on the mesh. There are situations in which there is no clear separation. It may happen that due to anti-aliasing or mip-mapping there is a portion of metal and a portion of dielectric within a texel. Furthermore, a material composed of several semi-transparent layers may be represented as a blend between several single-layered materials (layering via parameter blending).
 ====
 
-In this chapter, we will first sketch the logical structure of the material. We use an abstract notation that describes the material as a directed acyclic graph (DAG). The vertices correspond to the basic building blocks of the material model: BRDFs, mixing operators, input parameters, and constants. In the second part we will provide a sample implementation as a set of equations and source code for the BRDFs and mixing operators. In contrast to the logical structure the implementation is not normative.
+The logical structure of the material is presented below, using an abstract notation that describes the material as a directed acyclic graph (DAG). The vertices correspond to the basic building blocks of the material model: BRDFs, mixing operators, input parameters, and constants. This is followed by an informative sample implementation as a set of equations and source code for the BRDFs and mixing operators.
 
 
 [[material-structure]]
@@ -2664,7 +2658,7 @@ In this chapter, we will first sketch the logical structure of the material. We 
 [[metals]]
 === Metals
 
-Metallic surfaces reflect back most of the illumination, only a small portion of the light is absorbed by the material.
+Metallic surfaces reflect most illumination, only a small portion of the light is absorbed by the material.
 
 [NOTE]
 .Note
@@ -2695,9 +2689,9 @@ Unlike metals, dielectric materials transmit most of the incident illumination i
 See <<Pharr2016,Pharr et al. (2016), Chapter 8.2 "Specular Reflection and Transmission">>.
 ====
 
-This makes dielectrics like glass, oil, water or air transparent. Other dielectrics, like the majority of plastic materials, are filled with particles that absorb or scatter most or all of the transmitted light, reducing the transparency and giving the surface its colorful appearance.
+This makes dielectrics like glass, oil, water or air transparent. Other dielectrics, like most plastic materials, are filled with particles that absorb or scatter most or all of the transmitted light, reducing the transparency and giving the surface its colorful appearance.
 
-As a result, dielectric materials are modeled as a Fresnel-weighted combination of a specular BRDF, simulating the reflection at the surface, and a diffuse BRDF, simulating the transmitted portion of the light that is absorbed and scattered inside the object. The reflection roughness is given by the squared `roughness` of the material. The color of the diffuse BRDF comes from the `baseColor`. The amount of reflection compared to transmission is directional-dependent and as such determined by the Fresnel term. Its index of refraction is set to a fixed value of `1.5`, a good compromise for the majority of opaque, dielectric materials.
+As a result, dielectric materials are modeled as a Fresnel-weighted combination of a specular BRDF, simulating the reflection at the surface, and a diffuse BRDF, simulating the transmitted portion of the light that is absorbed and scattered inside the object. The reflection roughness is given by the squared `roughness` of the material. The color of the diffuse BRDF comes from the `baseColor`. The amount of reflection compared to transmission is directional-dependent and as such determined by the Fresnel term. Its index of refraction is set to a fixed value of `1.5`, a good compromise for most opaque, dielectric materials.
 
 [source,c]
 ----
@@ -2724,7 +2718,7 @@ The theory behind microfacet models was developed in early works by <<TorranceSp
 
 A microfacet model describes the orientation of tiny facets (microfacets) on the surface as a statistical distribution. The distribution determines the orientation of the facets as a random perturbation around the normal direction of the surface. The perturbation strength depends on the `roughness` parameter and varies between `0.0` (smooth surface) and `1.0` (rough surface). A number of distribution functions have been proposed in the last decades.
 
-We use the Trowbridge-Reitz / GGX microfacet distribution that describes the microsurface as being composed of perfectly specular, infinitesimal oblate ellipsoids, whose half-height in the normal direction is α times the radius in the tangent plane. α = 1 gives spheres, which results in uniform reflection in all directions. This reflection behavior corresponds to a rough surface. α = 0 gives a perfectly specular surface.
+The Trowbridge-Reitz / GGX microfacet distribution describes the microsurface as being composed of perfectly specular, infinitesimal oblate ellipsoids, whose half-height in the normal direction is α times the radius in the tangent plane. α = 1 gives spheres, which results in uniform reflection in all directions. This reflection behavior corresponds to a rough surface. α = 0 gives a perfectly specular surface.
 
 [NOTE]
 .Note
@@ -2732,12 +2726,12 @@ We use the Trowbridge-Reitz / GGX microfacet distribution that describes the mic
 The Trowbridge-Reitz distribution was first described by <<TrowbridgeReitz1975,Trowbridge and Reitz (1975)>>. Later <<Walter2007,Walter et al. (2007)>> independently developed the same distribution and called it "GGX". They show that it is a better fit for measured data than the Beckmann distribution used by <<CookTorrance1982,Cook and Torrance (1982)>> due to its stronger tails.
 ====
 
-We use the mapping α = `roughness`^2^, which results in more perceptually linear changes in the roughness.
+The mapping α = `roughness`^2^ results in more perceptually linear changes in the roughness.
 
 [NOTE]
 .Note
 ====
-This mapping was suggested by <<Burley2012,Burley (2012)>>. 
+This mapping was suggested by <<Burley2012,Burley (2012)>>.
 ====
 
 The distribution only describes the proportion of each normal on the microsurface. It does not describe how the normals are organized. For this we need a microsurface profile.
@@ -2760,18 +2754,20 @@ image:figures/pbr.png[pdfwidth=4in,align=left]
 
 The glTF Specification is designed to allow applications to choose different lighting implementations based on their requirements. Some implementations **MAY** focus on an accurate simulation of light transport while others **MAY** choose to deliver real-time performance. Therefore, any implementation that adheres to the rules for mixing BRDFs is conformant to the glTF Specification.
 
-In a physically-accurate light simulation, the BRDFs **MUST** follow some basic principles: the BRDF has to be positive, reciprocal and energy conserving. This ensures that the visual output of the simulation is independent of the underlying rendering algorithm, as long as it is unbiased.
+In a physically accurate light simulation, the BRDFs **MUST** follow some basic principles: the BRDF **MUST** be positive, reciprocal and energy conserving. This ensures that the visual output of the simulation is independent of the underlying rendering algorithm, if it is unbiased.
 
-The unbiased light simulation with physically realistic BRDFs will be the ground-truth for approximations in real-time renderers that are often biased, but still give visually pleasing results. Usually, these renderers take shortcuts to solve the rendering equation, like the split-sum approximation for image based lighting, or simplify the math to save instructions and reduce register pressure. However, there are many ways to achieve good approximations, depending on the platform (mobile or web applications, desktop applications on low or high-end hardware, VR) different constraints have to be taken into account.
+The unbiased light simulation with physically realistic BRDFs will be the ground-truth for approximations in real-time renderers that are often biased, but still give visually pleasing results.
 
 
 [[implementation]]
-== Implementation (Informative)
+== Sample Implementation (Informative)
 
 [[implementation-overview]]
 === Overview
 
-An implementation sample is available at https://github.com/KhronosGroup/glTF-Sample-Viewer/ and provides an example of a WebGL implementation of a standard BRDF based on the glTF material parameters. In order to achieve high performance in real-time applications, this implementation takes some short-cuts and uses non-physical simplifications that break energy-conservation and reciprocity.
+Often, renderers use approximations to solve the rendering equation, like the split-sum approximation for image based lighting, or simplify the math to save instructions and reduce register pressure. However, there are many ways to achieve good approximations, depending on the platform.
+
+A sample implementation is available at https://github.com/KhronosGroup/glTF-Sample-Viewer/ and provides an example of a WebGL 2.0 implementation of a standard BRDF based on the glTF material parameters. To achieve high performance in real-time applications, this implementation uses several approximations and uses non-physical simplifications that break energy-conservation and reciprocity.
 
 We use the following notation:
 
@@ -2828,7 +2824,7 @@ with
 V = \frac{\, \chi^{+}(H \cdot L)}{\left| N \cdot L\right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^{+}(H \cdot V)}{\left| N \cdot V \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
 ++++
 
-Thus we have the function
+Thus, we have the function
 
 [source,c]
 ----
@@ -2946,19 +2942,19 @@ Although Schlick's Fresnel is a good approximation for a wide range of metallic 
 
 Metals often exhibit a "dip" in reflectance near grazing angles, which is not present in the Schlick Fresnel. <<LazanyiSzirmayKalos2005,Lazányi and Szirmay-Kalos (2005)>> extend the Schlick Fresnel with an error term to account for it. <<Hoffman2019,Hoffman (2019)>> improves the parameterization of this term by introducing an artist-friendly "f82" color, the color at an angle of about 82°. An additional color parameter for metals was also introduced by <<Gulbrandsen2014,Gulbrandsen (2014)>>. Gulbrandson calls it "edge tint" and uses it in the full Fresnel equations instead of Schlick's approximation. Even though the full Fresnel equations should give a more accurate result, Hoffman shows that it is worse than Schlick's approximation in the context of RGB renderers. As we target RGB renderers and do not provide an additional color parameter for metals in glTF, we suggest to use the original Schlick Fresnel for metals.
 
-The index of refraction of most dielectrics is 1.5. For that reason the dielectric Fresnel term uses a fixed `f0 = 0.04`. The Schlick Fresnel approximates the full Fresnel equations well for an index of refraction in the range [1.2, 2.2]. The main reason for a material to fall outside this range is transparency and nested objects. If a transparent object overlaps another transparent object and both have the same (or similar) index of refraction, the resulting ratio at the boundary is 1 (or close to 1). According to the full Fresnel equations, there is no (or almost no) reflection in this case. The reflection intensity computed from the Schlick Fresnel approximation will be too high. Implementations that care about accuracy in case of nested dielectrics are encouraged to use the full Fresnel equations for dielectrics. For metals Schlick's approximation is still a good choice.
+The index of refraction of most dielectrics is 1.5. For that reason, the dielectric Fresnel term uses a fixed `f0 = 0.04`. The Schlick Fresnel approximates the full Fresnel equations well for an index of refraction in the range [1.2, 2.2]. The main reason for a material to fall outside this range is transparency and nested objects. If a transparent object overlaps another transparent object and both have the same (or similar) index of refraction, the resulting ratio at the boundary is 1 (or close to 1). According to the full Fresnel equations, there is no (or almost no) reflection in this case. The reflection intensity computed from the Schlick Fresnel approximation will be too high. Implementations that care about accuracy in case of nested dielectrics are encouraged to use the full Fresnel equations for dielectrics. For metals Schlick's approximation is still a good choice.
 
 
 [[coupling-diffuse-and-specular-reflection]]
 ==== Coupling Diffuse and Specular Reflection
 
-While the coupling of diffuse and specular components in `fresnel_mix` as proposed in this section is simple and cheap to compute, it is not very accurate and breaks a fundamental property that a physically-based BRDF must fulfill: energy conservation. Energy conservation means that a BRDF must not reflect more light than it receives. Several fixes have been proposed, each with its own trade-offs regarding performance and quality.
+While the coupling of diffuse and specular components in `fresnel_mix` as proposed in this section is simple and cheap to compute, it is not very accurate and breaks a fundamental property that a physically based BRDF must fulfill — energy conservation. Energy conservation means that a BRDF must not reflect more light than it receives. Several fixes have been proposed, each with its own trade-offs regarding performance and quality.
 
 <<Burley2012,Burley (2012)>> notes that a common solution found in many models calculates the diffuse Fresnel factor by evaluating the Fresnel term twice with view and light direction instead of the half vector: `(1-F(NdotL)) * (1-F(NdotV))`. While this is energy-conserving, he notes that this weighting results in significant darkening at grazing angles, an effect they couldn't observe in their measurements. They propose some changes to the diffuse BRDF to make it better predict the measurements, but even the fixed version is still not energy conserving mathematically.
 
 More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework for computing BSDFs of layered materials, including multiple scattering within layers. Amongst much more complicated scenarios it also solves the special case of coupling diffuse and specular components, but it is too heavy for textured materials, even in offline rendering.
 
-<<KullaConty2017,Kulla and Conty (2017)>> found a solution tailored to the special case of coupling diffuse and specular components, which is easy to compute. It requires the directional albedo of the Fresnel-weighted specular BRDF to be precomputed and tabulated, but they found that the function is smooth and a low-resolution 3D texture (16³ pixels) is sufficient. Their coupled diffuse-specular model is not only energy-*con*serving, but also energy-*pre*serving, meaning that if neither the specular nor the diffuse component absorb any energy, all energy is reflected.
+<<KullaConty2017,Kulla and Conty (2017)>> found a solution tailored to the special case of coupling diffuse and specular components, which is easy to compute. It requires the directional albedo of the Fresnel-weighted specular BRDF to be precomputed and tabulated, but they found that the function is smooth, and a low-resolution 3D texture (16³ pixels) is sufficient. Their coupled diffuse-specular model is not only energy-__con__serving, but also energy-__pre__serving, meaning that if neither the specular nor the diffuse component absorb any energy, all energy is reflected.
 
 
 [[references]]
