@@ -15,7 +15,7 @@ all: $(TARGETS)
 # accurately reflect changes to wetzel that impact the output here.
 # Please manually upgrade the version as often as needed, without unlocking.
 
-WETZEL = npx wetzel@0.1.0-dev.1.5
+WETZEL = npx wetzel@0.2.1
 SCHEMALINK = schema
 EMBEDSCHEMA = JsonSchemaReference.adoc
 
@@ -27,7 +27,7 @@ GENERATED = $(PROPREF).adoc $(EMBEDSCHEMA)
 IGNORESCHEMA = '["gltfchildofrootproperty.schema.json", "gltfid.schema.json", "gltfproperty.schema.json"]'
 $(GENERATED): $(wildcard schema/*.json)
 	$(WETZEL) -n -a=cqo -m=a -p "$(SCHEMALINK)" -e "$(EMBEDSCHEMA)" \
-	    -i $(IGNORESCHEMA) -c "icon:check[]" \
+	    -i $(IGNORESCHEMA) -c "icon:check[]" -k "**MUST**"\
 	    schema/glTF.schema.json > $(PROPREF).adoc
 
 # Spec targets for offline generation
