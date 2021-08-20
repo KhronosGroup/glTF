@@ -268,33 +268,31 @@ https://www.iana.org/assignments/media-types/image/png
 [[motivation]]
 == Motivation and Design Goals (Informative)
 
-Traditional 3D modeling formats have been designed to store data for offline use, primarily to support authoring workflows on desktop systems. Industry-standard 3D authoring interchange formats enable sharing assets between different modeling tools, and within the content pipeline in general. However, neither of these types of formats is optimized for download speed or fast loading at runtime. Files tend to grow very large, and applications need to do a significant amount of processing to load such assets into GPU-accelerated applications.
+glTF is an open interoperable 3D asset ‘transmission’ format that is compact, and efficient to process and render at runtime. glTF 2.0 is designed to be vendor- and runtime-neutral, usable by a wide variety of native and web-based engines and applications regardless of underlying platforms and 3D graphics APIs.
 
-Applications seeking high performance rarely load modeling formats directly; instead, they process models offline as part of a custom content pipeline, converting the assets into a proprietary format optimized for their runtime application.  This has led to a fragmented market of incompatible proprietary runtime formats and duplicated efforts in the content creation pipeline. 3D assets exported for one application cannot be reused in another application without going back to the original modeling, tool-specific source and performing another proprietary export step.
+glTF’s focus on run-time efficiency is a different design goal than typical 3D ‘authoring’ formats. Authoring formats are typically more verbose, with higher processing overheads, to carry authoring data that is no longer needed after iterative design is complete. glTF is complementary to authoring formats, providing a common, interoperable distillation target for publishing 3D assets to a wide audience of end users.
 
-With the advent of mobile- and web-based 3D computing, new classes of applications have emerged that require fast, dynamic loading of standardized 3D assets. Digital marketing solutions, e-commerce product visualizations, and online model-sharing sites are just a few of the connected 3D applications being built today using GPU APIs. Beyond the need for efficient delivery, many of these online applications can benefit from a standard, interoperable format to enable sharing and reuse of assets between users, between applications, and within heterogeneous, distributed content pipelines.
+A primary goal of glTF is to be deployable on a wide range of devices and platforms, including the web and mobile devices with limited processing and memory resources. glTF can be evolved, to keep pace with growing compute capabilities over time. This helps to foster broad industry consensus on 3D functionality that can be used ubiquitously, including Physically Based Rendering.
 
-glTF solves these problems by providing a vendor- and runtime-neutral format that can be loaded and rendered with minimal processing. The format combines an easily parsable JSON scene description with one or more binary resources representing geometry, animations, and other rich data. Binary data is stored in such a way that it can be in most cases loaded directly into GPU buffers without additional parsing or other manipulation. Using this approach, glTF can faithfully preserve full hierarchical scenes with nodes, meshes, cameras, materials, and animations, while enabling efficient delivery and fast loading.
+glTF combines an easily parsable JSON scene description with one or more binary resources representing geometry, animations, and other rich data. These binary resources can often be loaded directly into GPU buffers with no additional parsing or processing, combining the faithful preservation of full hierarchical scenes, nodes, meshes, cameras, materials, and animations with efficient delivery and fast loading.
 
 glTF has been designed to meet the following goals:
 
-* *Compact file sizes.* While web developers like to work with clear text as much as possible, clear text encoding is simply not practical for transmitting 3D data due to sheer size. The glTF JSON file itself is clear text, but it is compact and rapid to parse. All large data such as geometry and animations are stored in binary files that are much smaller than equivalent text representations.
-* *Fast loading.* glTF data structures have been designed to mirror the GPU API data as closely as possible, both in the JSON and binary files, to reduce load times. For example, binary data for meshes could be viewed as JavaScript Typed Arrays and be loaded directly into GPU buffers with a simple data copy; no parsing or further processing is required.
-* *Runtime-independence.* glTF makes no assumptions about the target application or 3D engine. glTF specifies no runtime behaviors other than rendering and animation.
-* *Complete 3D scene representation.* Exporting single objects from a modeling package is not sufficient for many applications. Often, authors want to load entire scenes, including nodes, transformations, transform hierarchy, meshes, materials, cameras, and animations into their applications. glTF strives to preserve all of this information for use in the downstream application.
-* *Extensibility.* While the initial base specification supports a rich feature set, there will be many opportunities for growth and improvement. glTF defines a mechanism that allows the addition of both general-purpose and vendor-specific extensions.
+* **Compact file sizes.** The plain text glTF JSON file description is compact and rapid to parse. All large data such as geometry, textures and animations are stored in binary files that are significantly smaller than equivalent text representations.
 
-The design of glTF takes a pragmatic approach. The format is meant to mirror the GPU APIs as closely as possible, but if it did only that, there would be no cameras, animations, or other features typically found in both modeling tools and runtime systems, and much semantic information would be lost in the translation. By supporting these common constructs, glTF content can not only load and render, but it can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
+* **Runtime-independence.** glTF is purely an asset format and does not mandate any runtime behavior. This enables its use by any application for any purpose, including display using any rendering technology, up to and including path tracing renderers.
 
-The following are outside the scope of the initial design of glTF:
+* **Complete 3D scene representation.** Not restricted to single objects, glTF can represent entire scenes, including nodes, transformations, transform hierarchy, meshes, materials, cameras, and animations.
 
-* *glTF is not a streaming format.* The binary data in glTF is inherently streamable, and the buffer design allows for fetching data incrementally. But there are no other streaming constructs in the format, and no conformance requirements for an implementation to stream data versus downloading it in its entirety before rendering.
-* *glTF is not intended to be human-readable,* though by virtue of being represented in JSON, it is developer-friendly.
+* **Extensibility.** glTF is fully extensible, enabling the addition of both general-purpose and vendor-specific extensions, including geometry and texture compression. Widely adopted extensions may be considered for integration into future versions of the glTF specification.
 
-While version 2.0 of glTF does not define compression for geometry and other rich data, there are extensions providing such options.
+The following are outside the scope of glTF 2.0:
 
-* https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_draco_mesh_compression/README.md[KHR_draco_mesh_compression] for geometry.
-* https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_texture_basisu/README.md[KHR_texture_basisu] for GPU-compatible block-compressed textures.
+* **glTF is not a streaming format.** The binary data in glTF is inherently streamable, and the buffer design allows for fetching data incrementally, but there are no other streaming constructs in glTF 2.0.
+
+* **glTF is not an authoring format.** glTF deliberately does not retain 3D authoring information, in order to preserve runtime efficiency, however glTF files may be ingested by 3D authoring tools for remixing.
+
+* **glTF is not intended to be human-readable,** though by virtue of being represented in JSON, it is developer-friendly.
 
 
 [[gltf-basics]]
