@@ -193,7 +193,7 @@ The encoded stream structure is as follows:
 - One or more attribute blocks, detailed below
 - Tail block, which consists of a baseline element stored verbatim, padded to 32 bytes
 
-Note that there is no easy way to directly calculate the length of a stream; instead, it is expected that the user passes a correctly sized stream so that the tail block element can be found.
+Note that there is no way to calculate the length of a stream; instead, it is expected that the input stream is correctly sized (using `byteLength`) so that the tail block element can be found.
 
 Each attribute block stores a sequence of deltas, with the first element in the first block using the deltas from the baseline element stored in the tail block, and each subsequent element using the deltas from the previous element. The attribute block always stores up to an integer number of elements, with that number computed as follows:
 
@@ -272,7 +272,7 @@ The encoded stream structure is as follows:
 - Extra data which is necessary to decode triangles that don't fit into a single byte, referred to as `data` below
 - Tail block, which consists of a 16-byte lookup table, referred to as `codeaux` below
 
-Note that there is no easy way to directly calculate the length of a stream; instead, it is expected that the user passes a correctly sized stream so that the tail block element can be found.
+Note that there is no way to calculate the length of a stream; instead, it is expected that the input stream is correctly sized (using `byteLength`) so that the tail block element can be found.
 
 There are two limitations on the structure of the 16-byte lookup table:
 
