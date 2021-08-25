@@ -208,7 +208,7 @@ groupCount = ceil(blockElements / 16)
 ```
 
 The structure of each "data block" breaks down as follows:
-- Header bits, with 2 bits for each group
+- Header bits, with 2 bits for each group, aligned to the byte boundary if groupCount is not divisible by 4
 - Delta blocks, with variable number of bytes stored for each group
 
 Header bits are stored from least significant to most significant bit - header bits for 4 consecutive groups are packed in a byte together as follows:
