@@ -195,17 +195,22 @@ The encoded stream structure is as follows:
 
 Note that there is no way to calculate the length of a stream; instead, it is expected that the input stream is correctly sized (using `byteLength`) so that the tail block element can be found.
 
-Each attribute block stores a sequence of deltas, with the first element in the first block using the deltas from the baseline element stored in the tail block, and each subsequent element using the deltas from the previous element. The attribute block always stores up to an integer number of elements, with that number computed as follows:
+Each attribute block stores a sequence of deltas, with the first element in the first block using the deltas from the baseline element stored in the tail block, and each subsequent element using the deltas from the previous element. The attribute block always stores an integer number of elements, with that number computed as follows:
 
 ```
 maxBlockElements = min((8192 / byteStride) & ~15, 256)
+blockElements = min(remainingElements, maxBlockElements)
 ```
+
+Where `remainingElements` is the number of elements that have yet to be decoded.
 
 Each attribute block consists of `byteStride` "data blocks" (one for each byte of the element), and each "data block" contains deltas stored for groups of elements. Each group always contains 16 elements; when the number of elements that needs to be encoded isn't divisible by 16, it gets rounded up and the remaining elements are ignored after decoding. In other terms:
 
 ```
 groupCount = ceil(blockElements / 16)
 ```
+
+For example, a stream with a `byteStride` of 64 containing 200 elements would be broken up into two attribute blocks: one containing 128 elements, and the other containing 72 elements. And these blocks would have 8 and 5 groups, respectively.
 
 The structure of each "data block" breaks down as follows:
 - Header bits, with 2 bits for each group, aligned to the byte boundary if groupCount is not divisible by 4
