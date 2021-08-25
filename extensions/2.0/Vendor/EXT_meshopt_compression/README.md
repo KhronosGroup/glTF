@@ -3,7 +3,7 @@
 ## Contributors
 
 * Arseny Kapoulkine, [@zeuxcg](https://twitter.com/zeuxcg)
-* Jasper St. Pierre, [@JasperRLZ] (https://twitter.com/JasperRLZ)
+* Jasper St. Pierre, [@JasperRLZ](https://twitter.com/JasperRLZ)
 
 ## Status
 
@@ -198,13 +198,13 @@ Note that there is no easy way to directly calculate the length of a stream; ins
 Each attribute block stores a sequence of deltas, with the first element in the first block using the deltas from the baseline element stored in the tail block, and each subsequent element using the deltas from the previous element. The attribute block always stores up to an integer number of elements, with that number computed as follows:
 
 ```
-attrBlockMaxElementCount = min((8192 / byteStride) & ~15, 256)
+maxBlockElements = min((8192 / byteStride) & ~15, 256)
 ```
 
 Each attribute block consists of `byteStride` "data blocks" (one for each byte of the element), and each "data block" contains deltas stored for groups of elements. Each group always contains 16 elements; when the number of elements that needs to be encoded isn't divisible by 16, it gets rounded up and the remaining elements are ignored after decoding. In other terms:
 
 ```
-groupCount = ceil(attrBlockElementCount / 16)
+groupCount = ceil(blockElements / 16)
 ```
 
 The structure of each "data block" breaks down as follows:
@@ -238,7 +238,7 @@ And the 4-bit encoding is packed as:
 
 Note that this is not the same order as the packing of the header bits found above.
 
-A that has all bits set to 1 (corresponds to `3` for 2-bit encoding and `15` for 4-bit encoding) indicates that the real delta value is outside of the 2-bit or 4-bit range, and is stored as a full byte after the bit deltas for this group.
+A delta that has all bits set to 1 (corresponds to `3` for 2-bit encoding and `15` for 4-bit encoding) indicates that the real delta value is outside of the 2-bit or 4-bit range, and is stored as a full byte after the bit deltas for this group.
 
 Byte deltas are stored as zigzag-encoded differences between the byte values of the element and the byte values of the previous element in the same position; the zigzag encoding scheme works as follows:
 
@@ -271,6 +271,8 @@ The encoded stream structure is as follows:
 - Triangle codes, referred to as `code` below, with a single byte for each triangle
 - Extra data which is necessary to decode triangles that don't fit into a single byte, referred to as `data` below
 - Tail block, which consists of a 16-byte lookup table, referred to as `codeaux` below
+
+Note that there is no easy way to directly calculate the length of a stream; instead, it is expected that the user passes a correctly sized stream so that the tail block element can be found.
 
 There are two limitations on the structure of the 16-byte lookup table:
 
