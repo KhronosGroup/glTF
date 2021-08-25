@@ -59,7 +59,7 @@
       "minProperties": 1,
       "additionalProperties": {
         "type": [
-          "number",
+          "integer",
           "array"
         ]
       }
