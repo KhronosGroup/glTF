@@ -222,7 +222,7 @@ The header bits establish the delta encoding mode (0-3) for each group of 16 ele
 - bits 0: All 16 byte deltas are 0; the size of the encoded block is 0 bytes
 - bits 1: Deltas are stored in 2-bit sentinel encoding; the size of the encoded block is [4..20] bytes
 - bits 2: Deltas are stored in 4-bit sentinel encoding; the size of the encoded block is [8..24] bytes
-- bits 3: All 16 byte delta are stored as bytes; the size of the encoded block is 16 bytes
+- bits 3: All 16 byte deltas are stored as bytes; the size of the encoded block is 16 bytes
 
 When using the sentinel encoding, each delta is stored as a 2-bit or 4-bit value in a single 4-byte or 8-byte block, with deltas stored from most significant to least significant bit inside the byte. That is, the 2-bit encoding is packed as follows with 4 deltas per byte:
 
@@ -333,7 +333,8 @@ The third index, `c`, is equal to `last-1` for `0xXd` and `last+1` for `0xXe`.
 
 `last` is set to `c` (effectively decrementing or incrementing it accordingly).
 
-Edges (c, b) and (a, c) are pushed to edge FIFO (in this order).
+Edge (c, b) is pushed to the edge FIFO.
+Edge (a, c) is pushed to the edge FIFO.
 Vertex c is pushed to the vertex FIFO.
 
 - `0xXf`, where `X < 0xf`: Encodes a recently encountered edge and a free-standing vertex encoded explicitly.
@@ -341,7 +342,8 @@ Vertex c is pushed to the vertex FIFO.
 The edge (a, b) is read from the edge FIFO at index X (where 0 is the most recently added edge).
 The third index, `c`, is decoded using `decodeIndex` by reading extra bytes from `data` (and also updates `last`).
 
-Edges (c, b) and (a, c) are pushed to edge FIFO (in this order).
+Edge (c, b) is pushed to edge FIFO.
+Edge (a, c) is pushed to edge FIFO.
 Vertex c is pushed to the vertex FIFO.
 
 - `0xfY`, where `Y < 0xe`: Encodes three indices using `codeaux` table lookup and vertex FIFO.
