@@ -253,13 +253,13 @@ For a complete example, assuming 4-bit sentinel coding, the following byte seque
 0x17 0x5f 0xf0 0xbc 0x77 0xa9 0x21 0x00 0x34 0xb5
 ```
 
-Encodes 16 deltas, where the first 8 bytes of the sequence specifies the 4-bit delta, and the last 2 bytes of the sequence specify the explicit delta code values encoded for elements 3 and 4 in the sequence. After de-zigzagging, the decoded deltas look like:
+Encodes 16 deltas, where the first 8 bytes of the sequence specifies 16 4-bit deltas, and the last 2 bytes of the sequence specify the explicit delta code values encoded for elements 3 and 4 in the sequence. After de-zigzagging, the decoded deltas look like:
 
 ```
 -1 -4 -3 26 -91 0 -6 6 -4 -4 5 -5 1 -1 0 0
 ```
 
-Finally, note that the deltas are computed in 8-bit integer space with wrap-around two-complement arithmetic; for example, if the values of the first byte of two consecutive elements are `0x00` and `0xFF`, the byte delta that is stored is `-1` (`1` after zigzag encoding).
+Finally, note that the deltas are computed in 8-bit integer space with wrap-around two-complement arithmetic; for example, if the values of the first byte of two consecutive elements are `0x00` and `0xff`, the byte delta that is stored is `-1` (`1` after zigzag encoding).
 
 ## Mode 1: triangles
 
