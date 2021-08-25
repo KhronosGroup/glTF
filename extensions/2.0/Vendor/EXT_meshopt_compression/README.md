@@ -224,13 +224,13 @@ The header bits establish the delta encoding mode (0-3) for each group of 16 ele
 - bits 2: Deltas are stored in 4-bit sentinel encoding; the size of the encoded block is [8..24] bytes
 - bits 3: All 16 byte delta are stored as bytes; the size of the encoded block is 16 bytes
 
-When using the sentinel encoding, each delta is stored as a 2-bit or 4-bit value in a single 4-byte or 8-byte block, with deltas stored from most significant to least significant bit inside the byte. That is, the 2-bit encoding is packed as:
+When using the sentinel encoding, each delta is stored as a 2-bit or 4-bit value in a single 4-byte or 8-byte block, with deltas stored from most significant to least significant bit inside the byte. That is, the 2-bit encoding is packed as follows with 4 deltas per byte:
 
 ```
 (delta3 << 0) | (delta2 << 2) | (delta1 << 4) | (delta0 << 6)
 ```
 
-And the 4-bit encoding is packed as:
+And the 4-bit encoding is packed as follows with 2 deltas per byte:
 
 ```
 (delta1 << 0) | (delta1 << 4)
@@ -238,7 +238,7 @@ And the 4-bit encoding is packed as:
 
 Note that this is not the same order as the packing of the header bits found above.
 
-A delta that has all bits set to 1 (corresponds to `3` for 2-bit encoding and `15` for 4-bit encoding) indicates that the real delta value is outside of the 2-bit or 4-bit range, and is stored as a full byte after the bit deltas for this group.
+A delta that has all bits set to 1 (corresponds to `3` for 2-bit encoding and `15` for 4-bit encoding, otherwise known as "sentinel") indicates that the real delta value is outside of the 2-bit or 4-bit range, and is stored as a full byte after the bit deltas for this group.
 
 Byte deltas are stored as zigzag-encoded differences between the byte values of the element and the byte values of the previous element in the same position; the zigzag encoding scheme works as follows:
 
@@ -259,7 +259,7 @@ Encodes 16 deltas, where the first 8 bytes of the sequence specifies the 4-bit d
 -1 -4 -3 26 -91 0 -6 6 -4 -4 5 -5 1 -1 0 0
 ```
 
-Finally, note that the deltas are computed in 8-bit integer space with wrap-around arithmetic; for example, if the values of the first byte of two consecutive elements are `0x00` and `0xFF`, the byte delta that is stored is `-1` (`1` after zigzag encoding).
+Finally, note that the deltas are computed in 8-bit integer space with wrap-around two-complement arithmetic; for example, if the values of the first byte of two consecutive elements are `0x00` and `0xFF`, the byte delta that is stored is `-1` (`1` after zigzag encoding).
 
 ## Mode 1: triangles
 
@@ -316,7 +316,7 @@ The third index, `c`, is equal to `next` (which is then incremented).
 
 Edge (c, b) is pushed to the edge FIFO.
 Edge (a, c) is pushed to the edge FIFO.
-Vertex c is pushed to vertex FIFO.
+Vertex c is pushed to the vertex FIFO.
 
 - `0xXY`, where `X < 0xf` and `0 < Y < 0xd`: Encodes a recently encountered edge and a recently encountered vertex.
 
@@ -334,7 +334,7 @@ The third index, `c`, is equal to `last-1` for `0xXd` and `last+1` for `0xXe`.
 `last` is set to `c` (effectively decrementing or incrementing it accordingly).
 
 Edges (c, b) and (a, c) are pushed to edge FIFO (in this order).
-Vertex c is pushed to vertex FIFO.
+Vertex c is pushed to the vertex FIFO.
 
 - `0xXf`, where `X < 0xf`: Encodes a recently encountered edge and a free-standing vertex encoded explicitly.
 
@@ -342,7 +342,7 @@ The edge (a, b) is read from the edge FIFO at index X (where 0 is the most recen
 The third index, `c`, is decoded using `decodeIndex` by reading extra bytes from `data` (and also updates `last`).
 
 Edges (c, b) and (a, c) are pushed to edge FIFO (in this order).
-Vertex c is pushed to vertex FIFO.
+Vertex c is pushed to the vertex FIFO.
 
 - `0xfY`, where `Y < 0xe`: Encodes three indices using `codeaux` table lookup and vertex FIFO.
 
@@ -357,9 +357,9 @@ Note that in the process `next` is incremented from 1 to 3 times depending on va
 Edge (b, a) is pushed to the edge FIFO.
 Edge (c, b) is pushed to the edge FIFO.
 Edge (a, c) is pushed to the edge FIFO.
-Vertex a is pushed to vertex FIFO.
-Vertex b is pushed to vertex FIFO if `Z == 0`.
-Vertex c is pushed to vertex FIFO if `W == 0`.
+Vertex a is pushed to the vertex FIFO.
+Vertex b is pushed to the vertex FIFO if `Z == 0`.
+Vertex c is pushed to the vertex FIFO if `W == 0`.
 
 - `0xfe` or `0xff`: Encodes three indices explicitly.
 
@@ -374,9 +374,9 @@ The third index, `c`, is equal to `next` if `W == 0` (`next` is then incremented
 Edge (b, a) is pushed to the edge FIFO.
 Edge (c, b) is pushed to the edge FIFO.
 Edge (a, c) is pushed to the edge FIFO.
-Vertex a is pushed to vertex FIFO.
-Vertex b is pushed to vertex FIFO if `Z == 0` or `Z == 0xf`.
-Vertex c is pushed to vertex FIFO if `W == 0` or `W == 0xf`.
+Vertex a is pushed to the vertex FIFO.
+Vertex b is pushed to the vertex FIFO if `Z == 0` or `Z == 0xf`.
+Vertex c is pushed to the vertex FIFO if `W == 0` or `W == 0xf`.
 
 At the end of the decoding, `data` is expected to be fully read by all the triangle codes and not contain any extra bytes.
 
@@ -426,7 +426,7 @@ For performance reasons the results of the decoding process are specified to one
 
 Octahedral filter allows to encode unit length 3D vectors (normals/tangents) using octahedral encoding, which results in a more optimal quality vs precision tradeoff compared to storing raw components.
 
-This filter is only valid `byteStride` is 4 or 8. When `byteStride` is 4, then the input and output of this filter are four 8-bit components, and when `byteStride` is 8, the input and output of this filter are four 16-bit signed components.
+This filter is only valid if `byteStride` is 4 or 8. When `byteStride` is 4, then the input and output of this filter are four 8-bit components, and when `byteStride` is 8, the input and output of this filter are four 16-bit signed components.
 
 The input to the filter is four 8-bit or 16-bit components, where the first two specify the X and Y components in octahedral encoding encoded as signed normalized K-bit integers (4 <= K <= 16, integers are stored in two's complement format), the third component explicitly encodes 1.0 as a signed normalized K-bit integer. The last component may contain arbitrary data which is passed through unfiltered (this can be useful for tangents).
 
@@ -473,7 +473,7 @@ void decode(intN_t input[4], intN_t output[4]) {
 
 Quaternion filter allows to encode unit length quaternions using normalized 16-bit integers for all components, but allows control over the precision used for the components and provides better quality compared to naively encoding each component one by one.
 
-This filter is only valid `byteStride` is 8.
+This filter is only valid if `byteStride` is 8.
 
 The input to the filter is three quaternion components, excluding the component with the largest magnitude, encoded as signed normalized K-bit integers (4 <= K <= 16, integers are stored in two's complement format), and an index of the largest component that is omitted in the encoding. The largest component is assumed to always be positive (which is possible due to quaternion double-cover). To allow per-element control over K, the last input element must explicitly encode 1.0 as a signed normalized K-bit integer, except for the least significant 2 bits that store the index of the maximum component.
 
@@ -510,7 +510,7 @@ void decode(int16_t input[4], int16_t output[4]) {
 
 Exponential filter allows to encode floating point values with a range close to the full range of a 32-bit floating point value, but allows more control over the exponent/mantissa to trade quality for precision, and has a bit structure that is more optimally aligned to the byte boundary to facilitate better compression.
 
-This filter is only valid `byteStride` is a multiple of 4.
+This filter is only valid if `byteStride` is a multiple of 4.
 
 The input to the filter is a sequence of 32-bit little endian integers, with the most significant 8 bits specifying a (signed) exponent value, and the remaining 24 bits specifying a (signed) mantissa value. The integers are stored in two-complement format.
 
