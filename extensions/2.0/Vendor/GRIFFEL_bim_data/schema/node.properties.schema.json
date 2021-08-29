@@ -2,12 +2,16 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "Node Properties and Type",
     "type": "object",
-    "description": "Maps properties to nodes by name. Used only when data is saved in a separate file.",
+    "description": "Maps properties to nodes by nodeId. Used only when data is saved in a separate file.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "nodeId": {
-            "type": "string",
+            "type": "number",
             "description": "Id of the node which has the type and properties below."
+        },
+        "name": {
+            "type": "string",
+            "description": "Name of the node."
         },
         "properties": {
             "type": "array",

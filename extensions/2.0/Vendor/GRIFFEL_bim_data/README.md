@@ -66,6 +66,7 @@ Given the same two doors from the example above, there are two options to implem
 "nodes": [
   {
     "name": "Door 1",
+    "nodeId" : 0,
     "extensions": {
       "GRIFFEL_bim_data": {
         "properties": [
@@ -77,6 +78,7 @@ Given the same two doors from the example above, there are two options to implem
   },
   {
     "name": "Door 2",
+    "nodeId" : 1,
     "extensions": {
       "GRIFFEL_bim_data": {
         "properties": [
@@ -130,13 +132,15 @@ Given the same two doors from the example above, there are two options to implem
 ]
 ```
 
-* ### Write properties to separate binary file which optionally can be compressed
+* ### Write properties to separate binary file
+
 In this case each node points to the buffer where metadata for this node can be found. File is a serialized 'GRIFFEL_bim_data' extension object with additional `nodeProperties` field. This field maps node properties and types to nodes by nodeId.
 ```javascript
 // gltf content:
 "nodes": [
   {
-    "nodeId": "Door 1",
+    "nodeId" : 0,
+    "name": "Door 1",
     "extensions": {
       "GRIFFEL_bim_data": {
         "buffer": 1
@@ -144,9 +148,11 @@ In this case each node points to the buffer where metadata for this node can be 
     }
   },
   {
-    "nodeId": "Door 2",
+    "nodeId" : 1,
+    "name": "Door 2",
     "extensions": {
       "GRIFFEL_bim_data": {
+      "GRIFFEL_bim_data": {nodeId
         "buffer": 1
       }
     }
@@ -165,14 +171,14 @@ In this case each node points to the buffer where metadata for this node can be 
 {
   "nodeProperties": [
     {
-      "node": "Door 1",
+      "nodeId" : 0,
       "properties": [
           0
       ],
       "type": 0
     },
     {
-      "node": "Door 2",
+      "nodeId" : 1,
       "properties": [
           3
       ],
@@ -183,7 +189,7 @@ In this case each node points to the buffer where metadata for this node can be 
 }
 ```
 
-[MessagePaсk](https://msgpack.org/) can be used for serializing and compressing extension object in a separate binary file to achive the highest compression rate and the fastest deserialization speed.
+[MessagePaсk](https://msgpack.org/) can be used for serializing extension object in a separate binary file to achive the fastest deserialization speed.
 
 ## glTF Schema Updates
 
