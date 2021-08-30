@@ -1,8 +1,6 @@
 <!-- omit in toc -->
 # EXT_feature_metadata
 
-**Version 1.0.0**, February 24, 2021
-
 <!-- omit in toc -->
 ## Contributors
 
@@ -1667,9 +1665,9 @@ An array of objects mapping per-instance feature IDs to property arrays in a fea
 
 ## Revision History
 
-* [**Version 0.0.0**](0.0.0) December 4, 2020
+* **Version 0.0.0** December 4, 2020
   * Initial draft
-* [**Version 1.0.0**](1.0.0) February 24, 2021
+* **Version 1.0.0** February 24, 2021
   * Changes to class properties
     * Removed `FLOAT16` type
     * Removed `BLOB` type
