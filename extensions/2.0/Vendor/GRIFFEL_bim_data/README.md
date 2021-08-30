@@ -66,7 +66,6 @@ Given the same two doors from the example above, there are two options to implem
 "nodes": [
   {
     "name": "Door 1",
-    "nodeId" : 0,
     "extensions": {
       "GRIFFEL_bim_data": {
         "properties": [
@@ -78,7 +77,6 @@ Given the same two doors from the example above, there are two options to implem
   },
   {
     "name": "Door 2",
-    "nodeId" : 1,
     "extensions": {
       "GRIFFEL_bim_data": {
         "properties": [
@@ -139,7 +137,6 @@ In this case each node points to the buffer where metadata for this node can be 
 // gltf content:
 "nodes": [
   {
-    "nodeId" : 0,
     "name": "Door 1",
     "extensions": {
       "GRIFFEL_bim_data": {
@@ -148,11 +145,9 @@ In this case each node points to the buffer where metadata for this node can be 
     }
   },
   {
-    "nodeId" : 1,
     "name": "Door 2",
     "extensions": {
       "GRIFFEL_bim_data": {
-      "GRIFFEL_bim_data": {nodeId
         "buffer": 1
       }
     }
@@ -171,14 +166,14 @@ In this case each node points to the buffer where metadata for this node can be 
 {
   "nodeProperties": [
     {
-      "nodeId" : 0,
+      "node": 0,
       "properties": [
           0
       ],
       "type": 0
     },
     {
-      "nodeId" : 1,
+      "node": 1,
       "properties": [
           3
       ],
@@ -189,7 +184,7 @@ In this case each node points to the buffer where metadata for this node can be 
 }
 ```
 
-[MessagePaсk](https://msgpack.org/) can be used for serializing extension object in a separate binary file to achive the fastest deserialization speed.
+[MessagePaсk](https://msgpack.org/) can be used for serializing extension object in a separate binary file to achive the most compact file size and the fastest deserialization speed.
 
 ## glTF Schema Updates
 
