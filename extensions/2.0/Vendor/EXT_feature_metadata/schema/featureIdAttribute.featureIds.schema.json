@@ -6,7 +6,7 @@
   "properties": {
     "attribute": {
       "type": "string",
-      "pattern": "^_FEATURE_ID_([1-9]\\d*|0)$",
+      "pattern": "^FEATURE_ID_([1-9]\\d*|0)$",
       "description": "The name of the attribute containing feature IDs."
     },
     "constant": {

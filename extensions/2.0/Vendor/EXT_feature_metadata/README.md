@@ -319,7 +319,9 @@ The schema and feature tables are defined in the root extension object in the gl
 
 `class` is the ID of the class in the schema. `count` is the number of features in the feature table, as well as the length of each property array. Property arrays are stored in glTF buffer views and use the binary encoding defined in the [Table Format](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata#table-format) section of the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata).
 
-Each buffer view `byteOffset` must be aligned to a multiple of 8 bytes. If the buffer view's buffer is the GLB-stored `BIN` chunk the byte offset is measured relative to the beginning of the GLB. Otherwise it is measured relative to the beginning of the buffer.
+Each buffer view `byteOffset` must be aligned to a multiple of 8 bytes.
+
+> **TODO:** Depending on whether feature table properties are stored in buffer views or in accessors, it will be necessary to define 8-byte alignment for one of the two. Alignment may be selective (as in the core specification) based on component size of the internal data type.
 
 ### Feature Textures
 
