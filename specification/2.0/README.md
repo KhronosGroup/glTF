@@ -4074,7 +4074,7 @@ Taking advantage of the fact that `roughness` is shared between metal and dielec
 const dielectricSpecular = 0.04
 const black = 0
 
-c_diff = lerp(baseColor.rgb * (1 - dielectricSpecular), black, metallic)
+c_diff = lerp(baseColor.rgb, black, metallic)
 f0 = lerp(0.04, baseColor.rgb, metallic)
 α = roughness^2
 
