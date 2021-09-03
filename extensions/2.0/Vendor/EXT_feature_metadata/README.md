@@ -43,6 +43,7 @@ This extension is optional, meaning it should be placed in the `extensionsUsed` 
   - [Feature Tables](#feature-tables)
   - [Feature Textures](#feature-textures)
   - [Statistics](#statistics)
+- [Binary Data Storage](#binary-data-storage)
 - [Examples](#examples)
 - [JSON Schema Reference](#json-schema-reference)
 - [Revision History](#revision-history)
@@ -79,7 +80,7 @@ Features in a glTF primitive are identified in three ways:
 
 #### Feature ID Accessors
 
-The most straightforward method for defining feature IDs is to store them in a glTF vertex attribute. Feature ID attributes must follow the naming convention `_FEATURE_ID_X` where `X` is a non-negative integer. The first feature ID attribute is `_FEATURE_ID_0`, the second `_FEATURE_ID_1`, and so on.
+The most straightforward method for defining feature IDs is to store them in a glTF vertex attribute. Feature ID attributes must follow the naming convention `FEATURE_ID_X` where `X` is a non-negative integer. The first feature ID attribute is `FEATURE_ID_0`, the second `FEATURE_ID_1`, and so on.
 
 Feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table.
 
@@ -95,7 +96,7 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
     {
       "attributes": {
         "POSITION": 0,
-        "_FEATURE_ID_0": 1
+        "FEATURE_ID_0": 1
       },
       "indices": 2,
       "mode": 4,
@@ -105,7 +106,7 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
             {
               "featureTable": "buildings",
               "featureIds": {
-                "attribute": "_FEATURE_ID_0"
+                "attribute": "FEATURE_ID_0"
               }
             }
           ]
@@ -217,7 +218,7 @@ Feature IDs may also be assigned to individual instances when using the [`EXT_me
             "TRANSLATION": 0,
             "ROTATION": 1,
             "SCALE": 2,
-            "_FEATURE_ID_0": 3
+            "FEATURE_ID_0": 3
           },
           "extensions": {
             "EXT_feature_metadata": {
@@ -225,7 +226,7 @@ Feature IDs may also be assigned to individual instances when using the [`EXT_me
                 {
                   "featureTable": "trees",
                   "featureIds": {
-                    "attribute": "_FEATURE_ID_0"
+                    "attribute": "FEATURE_ID_0"
                   }
                 }
               ]
@@ -246,7 +247,12 @@ A **feature** is a specific instantiation of class containing **property values*
 
 **Statistics** provide aggregate information about the metadata. For example, statistics may include the min/max values of a numeric property for mapping property values to color ramps or the number of enum occurrences for creating histograms.
 
-By default properties do not have any inherent meaning. A property may be assigned a **semantic**, an identifier that describes how the property should be interpreted. The full list of built-in semantics can be found in the [Cesium Metadata Semantic Reference](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata/Semantics). Model authors may define their own application- or domain-specific semantics separately.
+By default properties do not have any inherent meaning. A property may be assigned a **semantic**, an identifier that describes how the property should be interpreted. Built-in semantics include `ID` and `NAME`, as defined below. Model authors may define their own application- or domain-specific semantics separately.
+
+- `ID`: Unique identifier for the feature.
+- `NAME`: Name of the feature; not required to be unique.
+
+> **TODO:** Is there any naming convention for application- or domain-specific semantics, such as an `_*` prefix?
 
 This extension implements the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata), which describes the metadata format in full detail.
 
@@ -490,6 +496,17 @@ Model authors may define their own additional statistics, like `mode` below.
 }
 ```
 
+## Binary Data Storage
+
+`EXT_feature_metadata` imposes additional binary data alignment requirements on an asset, extending the 4-byte alignment in the core glTF specification:
+
+- GLB-stored `JSON` chunk must be padded with trailing `Space` characters (`0x20`) to 8-byte boundary.
+- GLB-stored `BIN` chunk must be padded with trailing zeroes (`0x00`) to 8-byte boundary.
+
+As a result, byte length of the `BIN` chunk may be up to 7 bytes larger than JSON-defined `buffer.byteLength` to satisfy alignment requirements.
+
+> **TODO:** Depending on whether feature table properties are stored in buffer views or in accessors, it will be necessary to define 8-byte alignment for one of the two. Alignment may be selective (as in the core specification) based on component size of the internal data type.
+
 ## Examples
 
 _This section is non-normative_
@@ -502,7 +519,7 @@ Triangle mesh|Feature IDs are assigned to each vertex to distinguish components 
 Per-vertex metadata<img width=700/>|An implicit feature ID is assigned to each vertex. The feature table stores `FLOAT64` accuracy values. |![Per-vertex metadata](figures/per-vertex-metadata.png)
 Per-triangle metadata|An implicit feature ID is assigned to each set of three vertices. The feature table stores `FLOAT64` area values.|![Per-triangle metadata](figures/per-triangle-metadata.png)
 Per-point metadata|An implicit feature ID is assigned to each point. The feature table stores `FLOAT64` , `STRING`, and `ENUM` properties, which are not possible through glTF vertex attribute accessors alone.|![Point features](figures/point-features.png)
-Per-node metadata|Vertices in node 0 and node 1 are assigned different `constant` feature IDs. Because the door has articulations these two nodes can't be batched together.|![Per-node metadata](figures/per-node-metadata.png)
+Per-node metadata|Vertices in node 0 and node 1, not batched together, are assigned different `constant` feature IDs.|![Per-node metadata](figures/per-node-metadata.png)
 Multi-point features|A point cloud with two feature tables, one storing metadata for groups of points and the other storing metadata for individual points.|![Multi-point features](figures/point-cloud-layers.png)
 Multi-instance features|Instanced tree models where trees are assigned to groups with a per-instance feature ID attribute. One feature table stores per-group metadata and the other stores per-tree metadata.|![Multi-instance features](figures/multi-instance-metadata.png)
 Material classification|A textured mesh using a feature texture to store both material enums and normalized `UINT8` thermal temperatures.|![Material Classification](figures/material-classification.png)
