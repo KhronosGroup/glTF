@@ -247,7 +247,7 @@ A **feature** is a specific instantiation of class containing **property values*
 
 **Statistics** provide aggregate information about the metadata. For example, statistics may include the min/max values of a numeric property for mapping property values to color ramps or the number of enum occurrences for creating histograms.
 
-By default properties do not have any inherent meaning. A property may be assigned a **semantic**, an identifier that describes how the property should be interpreted. Built-in semantics include `ID` and `NAME`, as defined below. Model authors may define their own application- or domain-specific semantics separately.
+By default, properties do not have any inherent meaning. A property may be assigned a **semantic**, an identifier that describes how the property should be interpreted. Built-in semantics include `ID` and `NAME`, as defined below. Model authors may define their own application- or domain-specific semantics separately.
 
 - `ID`: Unique identifier for the feature.
 - `NAME`: Name of the feature; not required to be unique.
