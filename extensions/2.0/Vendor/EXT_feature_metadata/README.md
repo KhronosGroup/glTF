@@ -126,7 +126,7 @@ This is accomplished by using `constant` and `divisor`.
 * `constant` sets a constant feature ID for each vertex. The default is `0`.
 * `divisor` sets the rate at which feature IDs increment. If `divisor` is zero then `constant` is used. If `divisor` is greater than zero the feature ID increments once per `divisor` sets of vertices, starting at `constant`. The default is `0`.
 
-For example 
+For example
 
 * If `constant` is 0 and `divisor` is 0, the feature IDs are `[0, 0, 0, ...]`
 * If `constant` is 0 and `divisor` is 1, the feature IDs are `[0, 1, 2, ...]`
@@ -247,12 +247,12 @@ A **feature** is a specific instantiation of class containing **property values*
 
 **Statistics** provide aggregate information about the metadata. For example, statistics may include the min/max values of a numeric property for mapping property values to color ramps or the number of enum occurrences for creating histograms.
 
-By default, properties do not have any inherent meaning. A property may be assigned a **semantic**, an identifier that describes how the property should be interpreted. Built-in semantics include `ID` and `NAME`, as defined below. Model authors may define their own application- or domain-specific semantics separately.
+By default, properties do not have any inherent meaning. A property may be assigned a **semantic**, an identifier that describes how the property should be interpreted. Built-in semantics include `ID` and `NAME`, as defined below.
 
 - `ID`: Unique identifier for the feature.
 - `NAME`: Name of the feature; not required to be unique.
 
-> **TODO:** Is there any naming convention for application- or domain-specific semantics, such as an `_*` prefix?
+Model authors may define their own application- or domain-specific semantics separately. For application-specific semantics, authoring implementations are encouraged to use a `_*` prefix. For semantics common to a particular domain or vendor, creation of new uppercase, alphanumeric prefixes is encouraged.
 
 This extension implements the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata), which describes the metadata format in full detail.
 
@@ -320,8 +320,6 @@ The schema and feature tables are defined in the root extension object in the gl
 `class` is the ID of the class in the schema. `count` is the number of features in the feature table, as well as the length of each property array. Property arrays are stored in glTF buffer views and use the binary encoding defined in the [Table Format](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata#table-format) section of the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata).
 
 Each buffer view `byteOffset` must be aligned to a multiple of 8 bytes.
-
-> **TODO:** Depending on whether feature table properties are stored in buffer views or in accessors, it will be necessary to define 8-byte alignment for one of the two. Alignment may be selective (as in the core specification) based on component size of the internal data type.
 
 ### Feature Textures
 
@@ -507,13 +505,11 @@ Model authors may define their own additional statistics, like `mode` below.
 
 As a result, byte length of the `BIN` chunk may be up to 7 bytes larger than JSON-defined `buffer.byteLength` to satisfy alignment requirements.
 
-> **TODO:** Depending on whether feature table properties are stored in buffer views or in accessors, it will be necessary to define 8-byte alignment for one of the two. Alignment may be selective (as in the core specification) based on component size of the internal data type.
-
 ## Examples
 
 _This section is non-normative_
 
-The examples below shows the breadth of possible use cases for this extension. 
+The examples below shows the breadth of possible use cases for this extension.
 
 Example|Description|Image
 --|--|--
