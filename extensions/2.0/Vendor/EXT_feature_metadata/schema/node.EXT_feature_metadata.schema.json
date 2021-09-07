@@ -8,7 +8,7 @@
         "type": "array",
         "description": "An array of objects mapping per-instance feature IDs to property arrays in a feature table.",
         "items": {
-          "$ref": "../featureIdAttribute.schema.json"
+          "$ref": "featureIdAttribute.schema.json"
         },
         "minItems": 1
       },
@@ -16,4 +16,3 @@
       "extras": {}
     }
   }
- 
