@@ -205,7 +205,7 @@ Often per-texel feature IDs provide finer granularity than per-vertex feature ID
 
 ### Feature ID Instance Attributes
 
-Feature IDs may also be assigned to individual instances when using the [`EXT_mesh_gpu_instancing` extension](../../EXT_mesh_gpu_instancing). This works the same way as assigning feature IDs to vertices. Feature IDs may be stored in accessors or generated implicitly. Nodes with using `EXT_feature_metadata` must also define an `EXT_mesh_gpu_instancing` extension providing feature ID instance attributes, and are invalid without this dependency.
+Feature IDs may also be assigned to individual instances when using the [`EXT_mesh_gpu_instancing` extension](../../EXT_mesh_gpu_instancing). This works the same way as assigning feature IDs to vertices. Feature IDs may be stored in accessors or generated implicitly. Nodes with `EXT_feature_metadata` must also define an `EXT_mesh_gpu_instancing` extension providing feature ID instance attributes, and are invalid without this dependency.
 
 ```jsonc
 {
