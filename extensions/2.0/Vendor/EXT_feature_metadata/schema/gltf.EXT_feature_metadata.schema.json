@@ -13,10 +13,6 @@
       "description": "A uri to an external schema file.",
       "format": "uriref"
     },
-    "statistics": {
-      "allOf": [ { "$ref": "statistics.schema.json" } ],
-      "description": "An object containing statistics about features."
-    },
     "featureTables": {
       "type": "object",
       "description": "A dictionary, where each key is a feature table ID and each value is an object defining the feature table.",

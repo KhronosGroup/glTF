@@ -42,7 +42,6 @@ This extension is optional, meaning it should be placed in the `extensionsUsed` 
   - [Schemas](#schemas)
   - [Feature Tables](#feature-tables)
   - [Feature Textures](#feature-textures)
-  - [Statistics](#statistics)
 - [Binary Data Storage](#binary-data-storage)
 - [Examples](#examples)
 - [JSON Schema Reference](#json-schema-reference)
@@ -121,19 +120,19 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
 
 In some cases it is possible to define feature IDs implicitly, such as when all vertices in a primitive have the same feature ID or when each vertex in a primitive has a different feature ID.
 
-This is accomplished by using `constant` and `divisor`.
+This is accomplished by using `offset` and `repeat`.
 
-* `constant` sets a constant feature ID for each vertex. The default is `0`.
-* `divisor` sets the rate at which feature IDs increment. If `divisor` is zero then `constant` is used. If `divisor` is greater than zero the feature ID increments once per `divisor` sets of vertices, starting at `constant`. The default is `0`.
+* `offset` specifies the initial value for the vertex feature ID range. The default is `0`.
+* `repeat`, if defined, specifies the number of vertices for which to repeat each feature ID before incrementing the ID by 1. If `repeat` is undefined, the feature ID for all vertices is `offset`.
 
 For example
 
-* If `constant` is 0 and `divisor` is 0, the feature IDs are `[0, 0, 0, ...]`
-* If `constant` is 0 and `divisor` is 1, the feature IDs are `[0, 1, 2, ...]`
-* If `constant` is 0 and `divisor` is 2, the feature IDs are `[0, 0, 1, 1, 2, 2, ...]`
-* If `constant` is 2 and `divisor` is 3, the feature IDs are `[2, 2, 2, 3, 3, 3, 4, 4, 4, ...]`.
+* If `offset` is 0 or undefined and `repeat` is undefined, the feature IDs are `[0, 0, 0, ...]`
+* If `offset` is 0 and `repeat` is 1, the feature IDs are `[0, 1, 2, ...]`
+* If `offset` is 0 and `repeat` is 2, the feature IDs are `[0, 0, 1, 1, 2, 2, ...]`
+* If `offset` is 2 and `repeat` is 3, the feature IDs are `[2, 2, 2, 3, 3, 3, 4, 4, 4, ...]`.
 
-`constant` and `divisor` must be omitted when `attribute` is used. These two methods of assigning feature IDs are mutually exclusive.
+`offset` and `repeat` must be omitted when `attribute` is used. These two methods of assigning feature IDs are mutually exclusive.
 
 <img src="figures/placemarks.png"  alt="Placemarks" width="600">
 
@@ -151,8 +150,8 @@ For example
             {
               "featureTable": "placemarks",
               "featureIds": {
-                "constant": 0,
-                "divisor": 1
+                "offset": 0,
+                "repeat": 1
               }
             }
           ]
@@ -244,8 +243,6 @@ Feature IDs may also be assigned to individual instances when using the [`EXT_me
 Feature metadata is structured according to a **schema**. A schema has a set of **classes** and **enums**. A class contains a set of **properties**, which may be numeric, boolean, string, enum, or array types.
 
 A **feature** is a specific instantiation of class containing **property values**. Property values are stored in either a **feature table** or a **feature texture** depending on the use case. Both formats are designed for storing property values for a large number of features.
-
-**Statistics** provide aggregate information about the metadata. For example, statistics may include the min/max values of a numeric property for mapping property values to color ramps or the number of enum occurrences for creating histograms.
 
 By default, properties do not have any inherent meaning. A property may be assigned a **semantic**, an identifier that describes how the property should be interpreted. Built-in semantics include `ID` and `NAME`, as defined below.
 
@@ -402,100 +399,6 @@ _Primitive_
 
 `texture` is a glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. `texCoord` refers to the texture coordinate set of the referring primitive. `channels` is a string matching the pattern `"^[rgba]{1,4}$"` that specifies which texture channels store property values.
 
-### Statistics
-
-Statistics provide aggregate information about features in the model. Statistics are provided on a per-class basis.
-
-* `count` is the number of features that conform to the class
-* `properties` contains statistics about property values
-
-Properties have the following built-in statistics:
-
-Name|Description|Type
---|--|--
-`min`|The minimum property value|Numeric types or fixed-length arrays of numeric types
-`max`|The maximum property value|...
-`mean`|The arithmetic mean of the property values|...
-`median`|The median of the property values|...
-`standardDeviation`|The standard deviation of the property values|...
-`variance`|The variance of the property values|...
-`sum`|The sum of the property values|...
-`occurrences`|Number of enum occurrences|Enums or fixed-length arrays of enums
-
-Model authors may define their own additional statistics, like `mode` below.
-
-```jsonc
-{
-  "extensions": {
-    "3DTILES_metadata": {
-      "schema": {
-        "classes": {
-          "building": {
-            "properties": {
-              "height": {
-                "type": "FLOAT32"
-              },
-              "owners": {
-                "type": "ARRAY",
-                "componentType": "STRING"
-              },
-              "buildingType": {
-                "type": "ENUM",
-                "enumType": "buildingType"
-              }
-            }
-          }
-        },
-        "enums": {
-          "buildingType": {
-            "valueType": "UINT8",
-            "values": [
-              {
-                "name": "Residential",
-                "value": 0
-              },
-              {
-                "name": "Commercial",
-                "value": 1
-              },
-              {
-                "name": "Hospital",
-                "value": 2
-              },
-              {
-                "name": "Other",
-                "value": 3
-              }
-            ]
-          }
-        }
-      },
-      "statistics": {
-        "classes": {
-          "building": {
-            "count": 100,
-            "properties": {
-              "height": {
-                "min": 3.9,
-                "max": 341.7,
-                "mode": 5.0
-              },
-              "buildingType": {
-                "occurrences": {
-                  "Residential": 70,
-                  "Commercial": 28,
-                  "Hospital": 2
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-```
-
 ## Binary Data Storage
 
 `EXT_feature_metadata` imposes additional binary data alignment requirements on an asset, extending the 4-byte alignment in the core glTF specification:
@@ -517,7 +420,7 @@ Triangle mesh|Feature IDs are assigned to each vertex to distinguish components 
 Per-vertex metadata<img width=700/>|An implicit feature ID is assigned to each vertex. The feature table stores `FLOAT64` accuracy values. |![Per-vertex metadata](figures/per-vertex-metadata.png)
 Per-triangle metadata|An implicit feature ID is assigned to each set of three vertices. The feature table stores `FLOAT64` area values.|![Per-triangle metadata](figures/per-triangle-metadata.png)
 Per-point metadata|An implicit feature ID is assigned to each point. The feature table stores `FLOAT64` , `STRING`, and `ENUM` properties, which are not possible through glTF vertex attribute accessors alone.|![Point features](figures/point-features.png)
-Per-node metadata|Vertices in node 0 and node 1, not batched together, are assigned different `constant` feature IDs.|![Per-node metadata](figures/per-node-metadata.png)
+Per-node metadata|Vertices in node 0 and node 1, not batched together, are assigned different `offset` feature IDs.|![Per-node metadata](figures/per-node-metadata.png)
 Multi-point features|A point cloud with two feature tables, one storing metadata for groups of points and the other storing metadata for individual points.|![Multi-point features](figures/point-cloud-layers.png)
 Multi-instance features|Instanced tree models where trees are assigned to groups with a per-instance feature ID attribute. One feature table stores per-group metadata and the other stores per-tree metadata.|![Multi-instance features](figures/multi-instance-metadata.png)
 Material classification|A textured mesh using a feature texture to store both material enums and normalized `UINT8` thermal temperatures.|![Material Classification](figures/material-classification.png)
@@ -1704,3 +1607,6 @@ An array of objects mapping per-instance feature IDs to property arrays in a fea
     * Added optional `statistics` object which provides aggregate information about select properties within the model
   * Other changes
     * Added `EXT_feature_metadata` extension to the [`EXT_mesh_gpu_instancing`](https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Vendor/EXT_mesh_gpu_instancing) extension for assigning metadata to instances
+* **Version 2.0.0** September 2021
+  * Renamed `constant` to `offset`, and `divisor` to `repeat`
+  * Removed `statistics` specification, to be provided at the tile level for now, and perhaps a future extension

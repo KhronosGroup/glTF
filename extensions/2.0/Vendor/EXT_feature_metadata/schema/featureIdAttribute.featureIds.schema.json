@@ -9,17 +9,16 @@
       "pattern": "^FEATURE_ID_([1-9]\\d*|0)$",
       "description": "The name of the attribute containing feature IDs."
     },
-    "constant": {
+    "offset": {
       "type": "integer",
       "minimum": 0,
       "default": 0,
-      "description": "Sets a constant feature ID when the attribute property is omitted."
+      "description": "Initial value for an implicit feature ID range."
     },
-    "divisor": {
+    "repeat": {
       "type": "integer",
-      "minimum": 0,
-      "default": 0,
-      "description": "The rate at which feature IDs increment. If `divisor` is 0 then `constant` is used. If `divisor` is non-zero the feature ID increments once per `divisor` sets of elements, starting at `constant`. For example, if `constant` is 0 and `divisor` is 1 the feature IDs are [0, 1, 2, ...]; if `constant` is 2 and `divisor` is 3 the feature IDs are [2, 2, 2, 3, 3, 3, 4, 4, 4, ...]"
+      "minimum": 1,
+      "description": "Number of vertices for which to repeat each feature ID before incrementing the ID by 1. If `repeat` is undefined, the feature ID for all vertices is `offset`."
     },
     "extensions": {},
     "extras": {}
@@ -29,13 +28,13 @@
       {
         "required": [
           "attribute",
-          "constant"
+          "offset"
         ]
       },
       {
         "required": [
           "attribute",
-          "divisor"
+          "repeat"
         ]
       }
     ]
