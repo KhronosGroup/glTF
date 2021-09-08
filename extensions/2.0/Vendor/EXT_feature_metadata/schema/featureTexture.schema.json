@@ -2,8 +2,11 @@
   "$schema": "http://json-schema.org/draft-04/schema",
   "title": "Feature Texture",
   "type": "object",
+  "allOf": [ { "$ref": "textureInfo.schema.json" } ],
   "description": "Features whose property values are stored directly in texture channels. This is not to be confused with feature ID textures which store feature IDs for use with a feature table.",
   "properties": {
+    "index": { },
+    "texCoord": { },
     "class": {
       "type": "string",
       "description": "The class this feature texture conforms to. The value must be a class ID declared in the `classes` dictionary."
@@ -13,7 +16,9 @@
       "description": "A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value describes the texture channels containing property values.",
       "minProperties": 1,
       "additionalProperties": {
-        "$ref": "textureAccessor.schema.json"
+        "type": "string",
+        "pattern": "^[rgba]{1,4}$",
+        "description": "Texture channels containing property values. Channels are labeled by `rgba` and are swizzled with a string of 1-4 characters."
       }
     },
     "extensions": {},

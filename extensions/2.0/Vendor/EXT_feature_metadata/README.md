@@ -184,14 +184,10 @@ Often per-texel feature IDs provide finer granularity than per-vertex feature ID
         "EXT_feature_metadata": {
           "featureIdTextures": [
             {
-              "featureTable": "buildingFeatures",
-              "featureIds": {
-                "texture": {
-                  "texCoord": 0,
-                  "index": 0
-                },
-                "channels": "r"
-              }
+              "index": 0,
+              "texCoord": 0,
+              "channels": "r",
+              "featureTable": "buildingFeatures"
             }
           ]
         }
@@ -201,7 +197,9 @@ Often per-texel feature IDs provide finer granularity than per-vertex feature ID
 }
 ```
 
-`texture` is a glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. `channels` must be a single channel (`"r"`, `"g"`, `"b"`, or `"a"`). Furthermore, feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table. Texture filtering should be disabled when accessing feature IDs.
+A `featureIdTextures` object extends the glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. `channels` must be a single channel (`"r"`, `"g"`, `"b"`, or `"a"`) in linear space. Furthermore, feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table.
+
+Texture filtering must be `9728` (NEAREST), or undefined, for any texture object referenced as a feature ID texture.
 
 ### Feature ID Instance Attributes
 
@@ -354,20 +352,15 @@ _Class and feature texture_
           }
         }
       },
-      "featureTextures": {
-        "heatLossTexture": {
-          "class": "heatSample",
-          "properties": {
-            "heatLoss": {
-              "texture": {
-                "index": 0,
-                "texCoord": 0
-              },
-              "channels": "r"
-            }
-          }
+      "featureTextures": [{
+        "class": "heatSample",
+        "index": 0,
+        "texCoord": 0,
+        "properties": {
+          "heatLoss": "r",
+          "insulation": "g"
         }
-      }
+      }]
     }
   }
 }
@@ -387,7 +380,7 @@ _Primitive_
       "material": 0,
       "extensions": {
         "EXT_feature_metadata": {
-          "featureTextures": ["heatLossTexture"]
+          "featureTextures": [0]
         }
       }
     }
@@ -396,7 +389,9 @@ _Primitive_
 ```
 
 
-`texture` is a glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. `texCoord` refers to the texture coordinate set of the referring primitive. `channels` is a string matching the pattern `"^[rgba]{1,4}$"` that specifies which texture channels store property values.
+A `featureTexture` object extends the glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. `texCoord` refers to the texture coordinate set of the referring primitive. `channels` is a string matching the pattern `"^[rgba]{1,4}$"` that specifies which texture channels store property values. All property values are stored as RGBA components in linear space. Multiple channels may be used only for fixed-length arrays of 2, 3, or 4 components.
+
+Texture filtering must be `9728` (NEAREST), `9729` (LINEAR), or undefined, for any texture object referenced as a feature texture.
 
 ## Binary Data Storage
 

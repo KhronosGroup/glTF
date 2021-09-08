@@ -24,7 +24,7 @@
       "type": "array",
       "description": "An array of IDs of feature textures from the root `EXT_feature_metadata` object.",
       "items": {
-        "type": "string"
+        "allOf": [ {"$ref": "glTFid.schema.json" } ]
       },
       "minItems": 1
     },
