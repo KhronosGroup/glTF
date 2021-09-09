@@ -1610,4 +1610,4 @@ An array of objects mapping per-instance feature IDs to property arrays in a fea
     * Added `EXT_feature_metadata` extension to the [`EXT_mesh_gpu_instancing`](https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Vendor/EXT_mesh_gpu_instancing) extension for assigning metadata to instances
 * **Version 2.0.0** September 2021
   * Renamed `constant` to `offset`, and `divisor` to `repeat`
-  * Removed `statistics` specification, to be considered as future extension
+  * Removed `statistics` specification, to be considered as a future extension
