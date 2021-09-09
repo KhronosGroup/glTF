@@ -130,7 +130,8 @@ For example
 * If `offset` is 0 or undefined and `repeat` is undefined, the feature IDs are `[0, 0, 0, ...]`
 * If `offset` is 0 and `repeat` is 1, the feature IDs are `[0, 1, 2, ...]`
 * If `offset` is 0 and `repeat` is 2, the feature IDs are `[0, 0, 1, 1, 2, 2, ...]`
-* If `offset` is 2 and `repeat` is 3, the feature IDs are `[2, 2, 2, 3, 3, 3, 4, 4, 4, ...]`.
+* If `offset` is 2 and `repeat` is 3, the feature IDs are `[2, 2, 2, 3, 3, 3, 4, 4, 4, ...]`
+* If `offset` is 2 and `repeat` is undefined, the feature IDs are `[2, 2, 2, ...]`
 
 `offset` and `repeat` must be omitted when `attribute` is used. These two methods of assigning feature IDs are mutually exclusive.
 
@@ -1609,4 +1610,4 @@ An array of objects mapping per-instance feature IDs to property arrays in a fea
     * Added `EXT_feature_metadata` extension to the [`EXT_mesh_gpu_instancing`](https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Vendor/EXT_mesh_gpu_instancing) extension for assigning metadata to instances
 * **Version 2.0.0** September 2021
   * Renamed `constant` to `offset`, and `divisor` to `repeat`
-  * Removed `statistics` specification, to be provided at the tile level for now, and perhaps a future extension
+  * Removed `statistics` specification, to be considered as future extension
