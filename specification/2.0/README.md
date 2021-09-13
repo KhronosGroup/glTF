@@ -4071,10 +4071,9 @@ material = mix(dielectric_brdf, metal_brdf, metallic)
 Taking advantage of the fact that `roughness` is shared between metal and dielectric and that the Schlick Fresnel is used, we can simplify the mix and arrive at the final BRDF for the material:
 
 ```
-const dielectricSpecular = 0.04
 const black = 0
 
-c_diff = lerp(baseColor.rgb * (1 - dielectricSpecular), black, metallic)
+c_diff = lerp(baseColor.rgb, black, metallic)
 f0 = lerp(0.04, baseColor.rgb, metallic)
 α = roughness^2
 
