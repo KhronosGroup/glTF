@@ -101,14 +101,8 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
       "mode": 4,
       "extensions": {
         "EXT_feature_metadata": {
-          "featureIdAttributes": [
-            {
-              "featureTable": "buildings",
-              "featureIds": {
-                "attribute": "FEATURE_ID_0"
-              }
-            }
-          ]
+          "featureTables": [0],
+          "featureIds": [{"attribute": 0}]
         }
       }
     }
@@ -147,15 +141,8 @@ For example
       "mode": 0,
       "extensions": {
         "EXT_feature_metadata": {
-          "featureIdAttributes": [
-            {
-              "featureTable": "placemarks",
-              "featureIds": {
-                "offset": 0,
-                "repeat": 1
-              }
-            }
-          ]
+          "featureTables": [0],
+          "featurIds": [{"offset": 0, "repeat": 1}]
         }
       }
     }
@@ -182,13 +169,9 @@ Often per-texel feature IDs provide finer granularity than per-vertex feature ID
       "material": 0,
       "extensions": {
         "EXT_feature_metadata": {
-          "featureIdTextures": [
-            {
-              "index": 0,
-              "texCoord": 0,
-              "channels": "r",
-              "featureTable": "buildingFeatures"
-            }
+          "featureTables": [0],
+          "featureIds": [
+            {"index": 0, "texCoord": 0, "channels": [0]}
           ]
         }
       }
@@ -197,7 +180,7 @@ Often per-texel feature IDs provide finer granularity than per-vertex feature ID
 }
 ```
 
-A `featureIdTextures` object extends the glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. `channels` must be a single channel (`"r"`, `"g"`, `"b"`, or `"a"`) in linear space. Furthermore, feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table.
+The `featureId` entry for a feature ID texture extends the glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. `channels` must be a single positive integer channel in linear space. Furthermore, feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table.
 
 Texture filtering must be `9728` (NEAREST), or undefined, for any texture object referenced as a feature ID texture.
 
@@ -220,14 +203,7 @@ Feature IDs may also be assigned to individual instances when using the [`EXT_me
           },
         },
         "EXT_feature_metadata": {
-          "featureIdAttributes": [
-            {
-              "featureTable": "trees",
-              "featureIds": {
-                "attribute": "FEATURE_ID_0"
-              }
-            }
-          ]
+          "featureIds": [{"attribute": 0}]
         }
       }
     }
@@ -288,24 +264,23 @@ The schema and feature tables are defined in the root extension object in the gl
           }
         }
       },
-      "featureTables": {
-        "trees": {
-          "class": "tree",
-          "count": 10,
-          "properties": {
-            "height": {
-              "bufferView": 0
-            },
-            "birdCount": {
-              "bufferView": 1
-            },
-            "species": {
-              "bufferView": 2,
-              "stringOffsetBufferView": 3
-            }
+      "featureTables": [{
+        "name": "tree",
+        "class": "tree",
+        "count": 10,
+        "properties": {
+          "height": {
+            "bufferView": 0
+          },
+          "birdCount": {
+            "bufferView": 1
+          },
+          "species": {
+            "bufferView": 2,
+            "stringOffsetBufferView": 3
           }
         }
-      }
+      }]
     }
   }
 }
