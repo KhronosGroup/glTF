@@ -7,11 +7,14 @@
 * [KHR_draco_mesh_compression](2.0/Khronos/KHR_draco_mesh_compression/README.md)
 * [KHR_lights_punctual](2.0/Khronos/KHR_lights_punctual/README.md)
 * [KHR_materials_clearcoat](2.0/Khronos/KHR_materials_clearcoat/README.md)
+* [KHR_materials_ior](2.0/Khronos/KHR_materials_ior/README.md)
 * [KHR_materials_pbrSpecularGlossiness](2.0/Khronos/KHR_materials_pbrSpecularGlossiness/README.md)
 * [KHR_materials_sheen](2.0/Khronos/KHR_materials_sheen/README.md)
+* [KHR_materials_specular](2.0/Khronos/KHR_materials_specular/README.md)
 * [KHR_materials_transmission](2.0/Khronos/KHR_materials_transmission/README.md)
 * [KHR_materials_unlit](2.0/Khronos/KHR_materials_unlit/README.md)
 * [KHR_materials_variants](2.0/Khronos/KHR_materials_variants/README.md)
+* [KHR_materials_volume](2.0/Khronos/KHR_materials_volume/README.md)
 * [KHR_mesh_quantization](2.0/Khronos/KHR_mesh_quantization/README.md)
 * [KHR_texture_basisu](2.0/Khronos/KHR_texture_basisu/README.md)
 * [KHR_texture_transform](2.0/Khronos/KHR_texture_transform/README.md)
@@ -44,11 +47,8 @@ but may still change before they are complete._
 
 | Extension | Status |
 |-----------|--------|
-| [KHR_materials_ior](https://github.com/KhronosGroup/glTF/pull/1718) | In development. |
 | [KHR_materials_thinfilm](https://github.com/KhronosGroup/glTF/pull/1742) | In development. |
-| [KHR_materials_specular](https://github.com/KhronosGroup/glTF/pull/1719) | Ready for implementation and feedback. |
 | [KHR_materials_translucency](https://github.com/KhronosGroup/glTF/pull/1825) | In development. |
-| [KHR_materials_volume](https://github.com/KhronosGroup/glTF/pull/1726) | In development. |
 
 This section tracks the status of Khronos and multi-vendor extensions that are either already in development,
 or that we feel show enough consensus to be highly likely for future development. We welcome feedback for these

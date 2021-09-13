@@ -18,9 +18,7 @@
                         "description": "The name of the material variant",
                         "gltf_detailedDescription": "The name of the material variant."
                     },
-                    "extras": {
-                        "type": "object"
-                    },
+                    "extras": { },
                     "extensions": { }
                 },
                 "required": [ "name" ]

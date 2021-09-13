@@ -4071,10 +4071,9 @@ material = mix(dielectric_brdf, metal_brdf, metallic)
 Taking advantage of the fact that `roughness` is shared between metal and dielectric and that the Schlick Fresnel is used, we can simplify the mix and arrive at the final BRDF for the material:
 
 ```
-const dielectricSpecular = 0.04
 const black = 0
 
-c_diff = lerp(baseColor.rgb * (1 - dielectricSpecular), black, metallic)
+c_diff = lerp(baseColor.rgb, black, metallic)
 f0 = lerp(0.04, baseColor.rgb, metallic)
 α = roughness^2
 
@@ -4112,7 +4111,7 @@ More recently, [Jakob et al. (2014)](#Jakob2014) developed a generic framework f
 
 ## References
 
-* [Burley, B. (2012): Physically-Based Shading at Disney.](https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf)<a name="Burley2012"></a>
+* [Burley, B. (2012): Physically-Based Shading at Disney.](https://blog.selfshadow.com/publications/s2012-shading-course/burley/s2012_pbs_disney_brdf_notes_v3.pdf)<a name="Burley2012"></a>
 * [Cook, R. L., and K. E. Torrance (1982): A Reflectance Model for Computer Graphics. ACM Transactions on Graphics 1 (1), 7-24.](https://graphics.pixar.com/library/ReflectanceModel/paper.pdf)<a name="CookTorrance1982"></a>
 * [Gulbrandsen, O. (2014): Artist Friendly Metallic Fresnel](http://jcgt.org/published/0003/04/03/paper-lowres.pdf)<a name="Gulbrandsen2014"></a>
 * [Heitz, E. (2014): Understanding the Masking-Shadowing Function in Microfacet-Based BRDFs](http://jcgt.org/published/0003/02/03/paper.pdf)<a name="Heitz2014"></a>

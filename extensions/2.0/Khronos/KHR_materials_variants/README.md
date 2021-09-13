@@ -10,6 +10,7 @@
 - Edgar Simson, OLV, [@Edzis](https://github.com/edzis)
 - Daniel Beauchamp, Shopify, [@pushmatrix](http://github.com/pushmatrix)
 - Stephan Leroux, Shopify, [@sleroux](http://github.com/sleroux)
+- Mikko Haapoja, [@mikkoh](http://github.com/mikkoh)
 - Eric Chadwick, Wayfair, [@echadwick-wayfair](https://github.com/echadwick-wayfair)
 
 Copyright (C) 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
@@ -63,7 +64,7 @@ Viewer-specific logic defines, for a given instance of a glTF asset, up to one s
 
 For a given primitive, each mapping item represents a material that should be applied to the primitive when one of its _variants_ is active. Available _mappings_ are defined on the primitive node as an array of objects. Each object specifies a material by its index in the root level `materials` array and an array of variants each by their respective indices in the root level `variants` array, defined above.
 
-Across the entire _mappings_ array, each variant index and each material must be used no more than one time.
+Across the entire _mappings_ array, each variant index must be used no more than one time.
 
 When the active variant is referenced in a mapping, a compliant viewer will apply its material to the primitive.
 

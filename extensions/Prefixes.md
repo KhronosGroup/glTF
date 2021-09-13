@@ -20,10 +20,13 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `ALI` | Alibaba Group | https://www.alibaba.com/ | [#1160](https://github.com/KhronosGroup/glTF/pull/1160) |
 | `AMZN` | Amazon | https://www.amazon.com/<br>`jasoncan at amazon.com` | [#1233](https://github.com/KhronosGroup/glTF/issues/1233) |
 | `ANIMECH` | Animech AB | http://animech.com/ | [#1780](https://github.com/KhronosGroup/glTF/issues/1780) |
+| `ASOBO` | Asobo Studio | https://www.asobostudio.com/ | [#1989](https://github.com/KhronosGroup/glTF/issues/1989) |
 | `AVR` | AltspaceVR, Inc. | https://altvr.com/ | [#1009](https://github.com/KhronosGroup/glTF/issues/1009) |
 | `BLENDER` | Blender Foundation | https://www.blender.org/ | [#865](https://github.com/KhronosGroup/glTF/issues/865) |
 | `CAPTURE` | Capture Visualisation AB | https://www.capture.se/ | [#1732](https://github.com/KhronosGroup/glTF/issues/1732) |
 | `CESIUM` | Cesium GS, Inc. | https://cesium.com |  |
+| `CITRUS` | Citrus Toolbox | https://github.com/KenzieMac130/CitrusToolbox | [#1962](https://github.com/KhronosGroup/glTF/issues/1962) |
+| `CLO` | CLO Virtual Fashion | https://www.clo3d.com | [#1944](https://github.com/KhronosGroup/glTF/issues/1944) |
 | `CVTOOLS` | Canvas Tools | https://github.com/MackeyK24/CanvasTools | [#1389](https://github.com/KhronosGroup/glTF/issues/1389) |
 | `EPIC` | Epic Games, Inc. | https://www.epicgames.com/ | [#1905](https://github.com/KhronosGroup/glTF/issues/1905) |
 | `FB` | Facebook, Inc. | https://www.facebook.com/ | [#1139](https://github.com/KhronosGroup/glTF/pull/1139) |
@@ -38,6 +41,8 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `MPEG` | The Moving Picture Experts Group | https://mpeg.chiariglione.org/standards/mpeg-i | [#1754](https://github.com/KhronosGroup/glTF/issues/1754) |
 | `MSFT` | Microsoft Corporation | https://www.microsoft.com/ | [#1164](https://github.com/KhronosGroup/glTF/pull/1164) |
 | `NV` | NVIDIA Corporation | https://www.nvidia.com | [#1211](https://github.com/KhronosGroup/glTF/issues/1211) |
+| `OFT` | OppenFuture Technologies | https://www.hololux.cn/en/ | [#1957](https://github.com/KhronosGroup/glTF/issues/1957) |
+| `OMI` | Open Metaverse Interoperability Group | https://github.com/omigroup/OMI | [#2003](https://github.com/KhronosGroup/glTF/issues/2003) |
 | `OWLII` | Owlii, Inc. | https://www.owlii.com/ | [#1093](https://github.com/KhronosGroup/glTF/issues/1093) |
 | `PANDA3D` | Panda3D | https://www.panda3d.org/ | [#1828](https://github.com/KhronosGroup/glTF/pull/1828) |
 | `POLUTROPON` | Polutropon Games | https://polutropon.games/<br>`ybalrid at polutropon.games` | [#1632](https://github.com/KhronosGroup/glTF/issues/1632) |
