@@ -16,7 +16,7 @@
 - Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
 - Leonard Daly, Individual Contributor, [@DrX3D](https://github.com/DrX3D)
 
-Copyright (C) 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright (C) 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
@@ -38,7 +38,7 @@ XMP metadata packets can then be referenced from glTF objects of type: `asset`, 
 XMP metadata referenced by the glTF top level object `asset` applies to the entire glTF asset.
 XMP metadata is organized in namespaces (ISO 16684-1$6.2). This extension enables any XMP metadata namespace to be embedded in a glTF asset.
 XMP metadata packets in glTF use a restricted subset of features from JSON-LD. This allows both JSON parsers and JSON-LD parsers to read the individual packets.
-Serializing XMP metadata using JSON-LD is outlined in [JSON-LD serialization of XMP (ISO/DIS 16684-3)](https://www.iso.org/standard/79384.html). The [JSON-LD specification](https://www.w3.org/TR/json-ld11/) outlines the detailed use of JSON-LD 1.1. There are additional restrictions for glTF outlined in [JSON-LD Restrictions and Recommendations](#json-ld-restrictions-and-recommendations).
+Serializing XMP metadata using JSON-LD is outlined in [JSON-LD serialization of XMP (ISO 16684-3)](https://www.iso.org/standard/79384.html). The [JSON-LD specification](https://www.w3.org/TR/json-ld11/) outlines the detailed use of JSON-LD 1.1. There are additional restrictions for glTF outlined in [JSON-LD Restrictions and Recommendations](#json-ld-restrictions-and-recommendations).
 
 ## XMP data types
 
@@ -192,10 +192,10 @@ A glTF might reference resources already containing XMP metadata. A relevant exa
 
 #### Restrictions and Recommendations
 
-In order to keep glTF files easily readable with either a JSON or [JSON-LD](https://www.w3.org/TR/json-ld11/) parser and keep compatibility with [ISO/DIS 16684-3](https://www.iso.org/standard/79384.html), there are additional restrictions that are required for `KHR_xmp_json_ld` metadata packets. Failure to obey these restrictions may create issues for parsers.
+In order to keep glTF files easily readable with either a JSON or [JSON-LD](https://www.w3.org/TR/json-ld11/) parser and keep compatibility with [ISO 16684-3](https://www.iso.org/standard/79384.html), there are additional restrictions that are required for `KHR_xmp_json_ld` metadata packets. Failure to obey these restrictions may create issues for parsers.
 
 - [Expanded term definitions](https://www.w3.org/TR/json-ld11/#expanded-term-definition) are forbidden.
-- Compact IRIs (_prefix:suffix_) are required by [ISO/DIS 16684-3](https://www.iso.org/standard/79384.html). Due to this, `@base` and `@vocab` keywords are always ignored.
+- Compact IRIs (_prefix:suffix_) are required by [ISO 16684-3](https://www.iso.org/standard/79384.html). Due to this, `@base` and `@vocab` keywords are always ignored.
 - Namespace prefixes are recommended to use the latin alphabet `A` to `Z` uppercase or lowercase, roman numerals `0` to `9`, or `_`.
 - Aliases and multiple prefixes for the same namespace are forbidden.
 - [Value objects](https://www.w3.org/TR/json-ld11/#value-objects) are forbidden unless otherwise specified, such as with Language Alternatives or when providing a content language for Text types.
@@ -209,7 +209,7 @@ These restrictions ensure that `KHR_xmp_json_ld` metadata remains readable regar
 Additionally, the following are recommended:
 
 - XMP data types are always preferred. Only use a non XMP data type if you have no other option.
-- For proper compatibility with [ISO/DIS 16684-3](https://www.iso.org/standard/79384.html), an AboutURI should be included at the root level of each packet in an `@id`. For most all purposes the value can be left blank.
+- For proper compatibility with [ISO 16684-3](https://www.iso.org/standard/79384.html), an AboutURI should be included at the root level of each packet in an `@id`. For most all purposes the value can be left blank.
 - Usage of [IRIs](https://www.w3.org/International/wiki/IRIStatus) are heavily discouraged. Where possible, please follow the URI types outlined in the [glTF 2.0 Specification](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#uris).
 
 #### Lists and Sets
@@ -289,7 +289,7 @@ An example packet using `@set` for an unordered list of contributors:
 
 #### Language Alternatives
 
-Language Alternatives provide a powerful way of handling internationalization within XMP metadata. In order to remain compliant with the requirements outlined in the [JSON-LD serialization of XMP (ISO/DIS 16684-3)](https://www.iso.org/standard/79384.html) specification `KHR_xmp_json_ld` relies on usage of the `@language` and `@value` keywords contained in an object of the `rdf:Alt` type. A field containing language alternatives must contain a `@type` definition for `rdf:Alt`, and each alternative must be contained in a `rdf:_N` property, where `N` is the index. You must also include the `rdf` namespace, `http://www.w3.org/1999/02/22-rdf-syntax-ns#` in the packet's `@context`. The `rdf:_N` property must have an object containing two properties:
+Language Alternatives provide a powerful way of handling internationalization within XMP metadata. In order to remain compliant with the requirements outlined in the [JSON-LD serialization of XMP (ISO 16684-3)](https://www.iso.org/standard/79384.html) specification `KHR_xmp_json_ld` relies on usage of the `@language` and `@value` keywords contained in an object of the `rdf:Alt` type. A field containing language alternatives must contain a `@type` definition for `rdf:Alt`, and each alternative must be contained in a `rdf:_N` property, where `N` is the index. You must also include the `rdf` namespace, `http://www.w3.org/1999/02/22-rdf-syntax-ns#` in the packet's `@context`. The `rdf:_N` property must have an object containing two properties:
 
 - `@language` with a IETF BCP 47 language code as the value.
 - `@value` with actual value of the XMP property as a string.
@@ -665,7 +665,7 @@ XMP is an extensible metadata format by design. In order to achieve better reada
 
 ## Appendix: Full Khronos Copyright Statement
 
-Copyright 2018-2020 The Khronos Group Inc.
+Copyright 2018-2021 The Khronos Group Inc.
 
 Some parts of this Specification are purely informative and do not define requirements
 necessary for compliance and so are outside the Scope of this Specification. These
