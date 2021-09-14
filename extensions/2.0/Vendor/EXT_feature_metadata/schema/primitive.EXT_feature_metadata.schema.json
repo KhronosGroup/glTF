@@ -4,19 +4,22 @@
   "type": "object",
   "description": "`EXT_feature_metadata extension` for a primitive in a glTF model, to associate it with the root `EXT_feature_metadata` object.",
   "properties": {
-    "featureIdAttributes": {
+    "featureIds": {
       "type": "array",
-      "description": "An array of objects mapping per-vertex feature IDs to a feature table.",
+      "description": "",
       "items": {
-        "$ref": "featureIdAttribute.schema.json"
+        "oneOf": [
+          {"$ref": "featureIdAttribute.schema.json"},
+          {"$ref": "featureIdTexture.schema.json"}
+        ]
       },
       "minItems": 1
     },
-    "featureIdTextures": {
+    "featureTables": {
       "type": "array",
-      "description": "An array of objects mapping per-texel feature IDs to a feature table.",
+      "description": "An array of IDs of feature tables from the root `EXT_feature_metadata` object.",
       "items": {
-        "$ref": "featureIdTexture.schema.json"
+        "allOf": [ {"$ref": "glTFid.schema.json" } ]
       },
       "minItems": 1
     },
@@ -34,12 +37,8 @@
   "anyOf": [
     {
       "required": [
-        "featureIdAttributes"
-      ]
-    },
-    {
-      "required": [
-        "featureIdTextures"
+        "featureIds",
+        "featureTables"
       ]
     },
     {

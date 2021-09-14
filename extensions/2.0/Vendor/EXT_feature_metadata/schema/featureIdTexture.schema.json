@@ -11,16 +11,15 @@
       "type": "string",
       "description": "The ID of the feature table in the model's root `EXT_feature_metadata.featureTables` dictionary."
     },
-    "channels": {
-      "type": "string",
-      "pattern": "^[rgba]$",
-      "description": "Single channel (`\"r\"`, `\"g\"`, `\"b\"`, or `\"a\"`) storing per-texel feature IDs."
+    "channel": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Single channel index storing per-texel feature IDs."
     },
     "extensions": {},
     "extras": {}
   },
   "required": [
-    "featureTable",
-    "featureIds"
+    "featureTable"
   ]
 }

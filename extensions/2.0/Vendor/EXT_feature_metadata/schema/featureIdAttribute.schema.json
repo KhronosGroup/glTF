@@ -1,22 +1,42 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "Feature ID Attribute",
+  "title": "Feature IDs",
   "type": "object",
-  "description": "An object mapping feature IDs to a feature table.",
+  "description": "Feature IDs to be used as indices to property arrays in the feature table.",
   "properties": {
-    "featureTable": {
+    "attribute": {
       "type": "string",
-      "description": "The ID of the feature table in the model's root `EXT_feature_metadata.featureTables` dictionary."
+      "pattern": "^FEATURE_ID_([1-9]\\d*|0)$",
+      "description": "The name of the attribute containing feature IDs."
     },
-    "featureIds": {
-      "allOf": [ { "$ref": "featureIdAttribute.featureIds.schema.json" } ],
-      "description": "An object describing feature IDs to be used as indices to property arrays in the feature table. Feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table."
+    "offset": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0,
+      "description": "Initial value for an implicit feature ID range."
+    },
+    "repeat": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Number of vertices for which to repeat each feature ID before incrementing the ID by 1. If `repeat` is undefined, the feature ID for all vertices is `offset`."
     },
     "extensions": {},
     "extras": {}
   },
-  "required": [
-    "featureTable",
-    "featureIds"
-  ]
+  "not": {
+    "anyOf": [
+      {
+        "required": [
+          "attribute",
+          "offset"
+        ]
+      },
+      {
+        "required": [
+          "attribute",
+          "repeat"
+        ]
+      }
+    ]
+  }
 }

@@ -16,9 +16,12 @@
       "description": "A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value describes the texture channels containing property values.",
       "minProperties": 1,
       "additionalProperties": {
-        "type": "string",
-        "pattern": "^[rgba]{1,4}$",
-        "description": "Texture channels containing property values. Channels are labeled by `rgba` and are swizzled with a string of 1-4 characters."
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "description": "Texture channels containing property values, identified by index."
       }
     },
     "extensions": {},
