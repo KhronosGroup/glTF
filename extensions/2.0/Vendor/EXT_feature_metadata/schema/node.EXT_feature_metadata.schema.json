@@ -10,6 +10,14 @@
       "items": {"$ref": "featureIdAttribute.schema.json"},
       "minItems": 1
     },
+    "featureTables": {
+      "type": "array",
+      "description": "An array of IDs of feature tables from the root `EXT_feature_metadata` object.",
+      "items": {
+        "allOf": [ {"$ref": "glTFid.schema.json" } ]
+      },
+      "minItems": 1
+    },
     "extensions": {},
     "extras": {}
   },

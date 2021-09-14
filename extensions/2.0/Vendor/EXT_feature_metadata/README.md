@@ -203,6 +203,7 @@ Feature IDs may also be assigned to individual instances when using the [`EXT_me
           },
         },
         "EXT_feature_metadata": {
+          "featureTables": [0],
           "featureIds": [{"attribute": 0}]
         }
       }
@@ -430,3 +431,5 @@ Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanc
 * **Version 2.0.0** September 2021
   * Renamed `constant` to `offset`, and `divisor` to `repeat`
   * Removed `statistics` specification, to be considered as a future extension
+  * Removed `featureIdAttributes` and `featureIdTextures`, replaced with `featureIds` and `featureTables`.
+  * Removed string ID references to feature tables and textures, replaced with integer IDs.
