@@ -142,7 +142,7 @@ For example
       "extensions": {
         "EXT_feature_metadata": {
           "featureTables": [0],
-          "featurIds": [{"offset": 0, "repeat": 1}]
+          "featureIds": [{"offset": 0, "repeat": 1}]
         }
       }
     }
