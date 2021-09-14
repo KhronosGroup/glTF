@@ -20,6 +20,7 @@
     "extras": {}
   },
   "required": [
-    "featureTable"
+    "featureTable",
+    "channel"
   ]
 }

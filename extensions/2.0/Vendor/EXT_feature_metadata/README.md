@@ -180,7 +180,7 @@ Often per-texel feature IDs provide finer granularity than per-vertex feature ID
 }
 ```
 
-The `featureId` entry for a feature ID texture extends the glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. Each `channel` must be a positive integer corresponding to a channel of the source texture. Feature IDs must be whole numbers — stored in linear space — in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table.
+The `featureId` entry for a feature ID texture extends the glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. Each `channel` must be a positive integer corresponding to a channel of the source texture. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. Feature IDs must be whole numbers — stored in linear space — in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table.
 
 Texture filtering must be `9728` (NEAREST), or undefined, for any texture object referenced as a feature ID texture.
 
@@ -369,7 +369,7 @@ _Primitive_
 ```
 
 
-A `featureTexture` object extends the glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. `texCoord` refers to the texture coordinate set of the referring primitive. The `properties` map specifies the texture channels providing data for all required class properties, and perhaps optional class properties. An array of integer index values identify channels, where multiple channels may be used only for fixed-length arrays of 2, 3, or 4 components. All values are stored in linear space.
+A `featureTexture` object extends the glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. `texCoord` refers to the texture coordinate set of the referring primitive. The `properties` map specifies the texture channels providing data for all required class properties, and perhaps optional class properties. An array of integer index values identify channels, where multiple channels may be used only for fixed-length arrays of 2, 3, or 4 components. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. All values are stored in linear space.
 
 Texture filtering must be `9728` (NEAREST), `9729` (LINEAR), or undefined, for any texture object referenced as a feature texture.
 
