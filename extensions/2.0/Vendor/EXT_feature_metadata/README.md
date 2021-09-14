@@ -320,10 +320,14 @@ _Class and feature texture_
         "classes": {
           "heatSample": {
             "properties": {
-              "heatSample": {
+              "heatLoss": {
                 "type": "UINT8",
                 "normalized": true
-              }
+              },
+              "insulation": {
+                "type": "UINT8",
+                "normalized": true
+              },
             }
           }
         }
