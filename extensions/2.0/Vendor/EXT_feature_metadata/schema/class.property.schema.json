@@ -17,26 +17,20 @@
     "type": {
       "type": "string",
       "enum": [
-        "INT8",
-        "UINT8",
-        "INT16",
-        "UINT16",
-        "INT32",
-        "UINT32",
-        "INT64",
-        "UINT64",
-        "FLOAT32",
-        "FLOAT64",
-        "BOOLEAN",
-        "STRING",
-        "ENUM",
+        "SINGLE",
+        "VEC2",
+        "VEC3",
+        "VEC4",
+        "MAT2",
+        "MAT3",
+        "MAT4",
         "ARRAY"
       ],
-      "description": "The property type. If `ENUM` is used, then `enumType` must also be specified. If `ARRAY` is used, then `componentType` must also be specified. `ARRAY` is a fixed-length array when `componentCount` is defined, and variable-length otherwise."
+      "description": "Element type represented by each property value. `ARRAY` is a fixed-length array when `componentCount` is defined and variable-length otherwise. Types `VECN` and `MATN` have implicit component counts of `N` and `N ⨉ N` respectively."
     },
     "enumType": {
       "type": "string",
-      "description": "An enum ID as declared in the `enums` dictionary. This value must be specified when `type` or `componentType` is `ENUM`."
+      "description": "Enum ID as declared in the `enums` dictionary. Required when `componentType` is `ENUM`."
     },
     "componentType": {
       "enum": [
@@ -54,12 +48,12 @@
         "STRING",
         "ENUM"
       ],
-      "description": "When `type` is `ARRAY` this indicates the type of each component of the array. If `ENUM` is used, then `enumType` must also be specified."
+      "description": "Data type of an element's components. When `type` is `SINGLE`, then `componentType` is also the data type of the element. When `componentType` is `ENUM`, `enumType` is required."
     },
     "componentCount": {
       "type": "integer",
       "minimum": 2,
-      "description": "The number of components per element for `ARRAY` elements."
+      "description": "Number of components per element for fixed-length `ARRAY` elements. Always undefined for variable-length `ARRAY` and other element types."
     },
     "normalized": {
       "type": "boolean",
@@ -110,13 +104,13 @@
   },
   "dependencies": {
     "componentCount": [
-      "componentType"
+      "type"
     ],
     "default": [
       "optional"
     ]
   },
   "required": [
-    "type"
+    "componentType"
   ]
 }
