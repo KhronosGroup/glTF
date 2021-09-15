@@ -289,6 +289,8 @@ The schema and feature tables are defined in the root extension object in the gl
 
 `class` is the ID of the class in the schema. `count` is the number of features in the feature table, as well as the length of each property array. Property arrays are stored in glTF buffer views and use the binary encoding defined in the [Table Format](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata#table-format) section of the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata).
 
+As in the core glTF specification, values of NaN, +Infinity, and -Infinity are never allowed.
+
 Each buffer view `byteOffset` must be aligned to a multiple of 8 bytes.
 
 ### Feature Textures
