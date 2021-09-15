@@ -26,7 +26,8 @@
         "MAT4",
         "ARRAY"
       ],
-      "description": "Element type represented by each property value. `ARRAY` is a fixed-length array when `componentCount` is defined and variable-length otherwise. Types `VECN` and `MATN` have implicit component counts of `N` and `N ⨉ N` respectively."
+      "default": "SINGLE",
+      "description": "Element type represented by each property value. `VECN` is a vector with `N` components. `MATN` is an `N ⨉ N` matrix. `ARRAY` is fixed-length when `componentCount` is defined, and is variable-length otherwise."
     },
     "enumType": {
       "type": "string",
@@ -53,7 +54,7 @@
     "componentCount": {
       "type": "integer",
       "minimum": 2,
-      "description": "Number of components per element for fixed-length `ARRAY` elements. Always undefined for variable-length `ARRAY` and other element types."
+      "description": "Number of components per element for fixed-length `ARRAY` elements. Always undefined for variable-length `ARRAY` and all other element types."
     },
     "normalized": {
       "type": "boolean",
