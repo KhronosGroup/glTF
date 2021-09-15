@@ -62,38 +62,27 @@
       "default": false
     },
     "max": {
-      "type": [
-        "number",
-        "array"
+      "oneOf": [
+        {"type": "number"},
+        {"type": "array", "items": {"type": "number"}, "minItems": 1}
       ],
-      "items": {
-        "type": "number"
-      },
       "description": "Maximum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values: they always correspond to the integer values."
     },
     "min": {
-      "type": [
-        "number",
-        "array"
+      "oneOf": [
+        {"type": "number"},
+        {"type": "array", "items": {"type": "number"}, "minItems": 1}
       ],
-      "items": {
-        "type": "number"
-      },
       "description": "Minimum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values: they always correspond to the integer values."
     },
-    "default": {
-      "type": [
-        "boolean",
-        "number",
-        "string",
-        "array"
+    "noData": {
+      "oneOf": [
+        {"type": "number"},
+        {"type": "string"},
+        {"type": "array", "items": {"type": "number"}, "minItems": 1},
+        {"type": "array", "items": {"type": "string"}, "minItems": 1}
       ],
-      "description": "A default value to use when the property value is not defined. If used, `optional` must be set to true. The type of the default value must match the property definition: For `BOOLEAN` use `true` or `false`. For `STRING` use a JSON string. For a numeric type use a JSON number. For `ENUM` use the enum `name`, not the integer value. For `ARRAY` use a JSON array containing values matching the `componentType`."
-    },
-    "optional": {
-      "type": "boolean",
-      "description": "If true, this property is optional.",
-      "default": false
+      "description": "NoData value represents missing data — also known as a sentinel value — wherever it appears. If omitted (excluding variable-length `ARRAY` properties), property values exist for all features, and the property is required in feature tables or textures instantiating the class. For variable-length `ARRAY` elements, NoData is implicitly `[]` and the property is never required; an additional NoData array, such as `[\"UNSPECIFIED\"]`, may be provided if necessary. `BOOLEAN` properties may not specify NoData values."
     },
     "semantic": {
       "type": "string",
@@ -106,9 +95,6 @@
   "dependencies": {
     "componentCount": [
       "type"
-    ],
-    "default": [
-      "optional"
     ]
   },
   "required": [

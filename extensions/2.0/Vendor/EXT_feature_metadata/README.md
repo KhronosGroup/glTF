@@ -237,7 +237,7 @@ Schemas may be given a `name`, `description`, and `version`.
 
 ### Feature Tables
 
-A feature table stores property values in a parallel array format. Each property array corresponds to a class property. The values contained within a property array must match the data type of the class property. Furthermore, the set of property arrays must match one-to-one with the class properties. There is one exception - if a property is optional the feature table may omit that property.
+A feature table stores property values in a parallel array format. Each property array corresponds to a class property. The values contained within a property array must match the data type of the class property. Furthermore, the set of property arrays must match one-to-one with the class properties. There is one exception - if a property specifies a `noData` value, the feature table may omit that property.
 
 The schema and feature tables are defined in the root extension object in the glTF model. See the example below:
 
@@ -293,7 +293,7 @@ Each buffer view `byteOffset` must be aligned to a multiple of 8 bytes.
 
 ### Feature Textures
 
-Feature textures (not to be confused with [Feature ID Textures](#feature-id-texture)) use textures rather than parallel arrays to store values. Feature textures are accessed directly by texture coordinates, rather than feature IDs. Feature textures are especially useful when texture mapping high frequency data to less detailed 3D surfaces.
+Feature textures (not to be confused with [Feature ID Textures](#feature-id-texture)) use textures rather than parallel arrays to store values. Feature textures are accessed directly by texture coordinates, rather than feature IDs. Feature textures are especially useful when texture mapping high frequency data to less detailed 3D surfaces. For each property that does not specify a `noData` value, a mapping to the corresponding texture channel or channels is required. Properties with a `noData` value are optional in feature textures instantiating a given class.
 
 Feature textures use the [Raster Format](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata#raster-format) of the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata) with a few additional constraints:
 
