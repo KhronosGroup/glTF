@@ -81,7 +81,7 @@ Features in a glTF primitive are identified in three ways:
 
 The most straightforward method for defining feature IDs is to store them in a glTF vertex attribute. Feature ID attributes must follow the naming convention `FEATURE_ID_X` where `X` is a non-negative integer. The first feature ID attribute is `FEATURE_ID_0`, the second `FEATURE_ID_1`, and so on.
 
-Feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table.
+Feature IDs are whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table. Values outside this range may exist, indicating that no feature is associated.
 
 The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be false. There is no restriction on `componentType`.
 
@@ -180,7 +180,7 @@ Often per-texel feature IDs provide finer granularity than per-vertex feature ID
 }
 ```
 
-The `featureId` entry for a feature ID texture extends the glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. Each `channel` must be a positive integer corresponding to a channel of the source texture. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. Feature IDs must be whole numbers — stored in linear space — in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table.
+The `featureId` entry for a feature ID texture extends the glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. Each `channel` must be a non-negative integer corresponding to a channel of the source texture. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. Feature IDs are whole numbers in the range `[0, count - 1]` (inclusive), stored in linear space, where `count` is the total number of features in the feature table. Values outside this range may exist, indicating that no feature is associated.
 
 Texture filtering must be `9728` (NEAREST), or undefined, for any texture object referenced as a feature ID texture.
 
