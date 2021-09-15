@@ -188,7 +188,7 @@ The following example shows a glTF Mesh instantiating the XMP metadata at index 
 #### Precedence
 
 Metadata applied to JSON objects in the top level arrays ( `scenes`, `nodes`, `meshes`, `materials`, `images`, `animations`) has precedence over the metadata specified in the `asset` property of a glTF.
-A glTF might reference resources already containing XMP metadata. A relevant example would be an image object referencing a PNG/JPG file with embedded XMP metadata. Note that glTF clients and viewers may ignore the metadata embedded in the referenced resources (for instance PNG/JPG images).
+A glTF might reference resources already containing XMP metadata. A relevant example would be an image object referencing a PNG or JPEG file with embedded XMP metadata. Note that glTF clients and viewers may ignore the metadata embedded in the referenced resources (for instance PNG or JPEG images).
 
 #### Restrictions and Recommendations
 
@@ -208,9 +208,8 @@ These restrictions ensure that `KHR_xmp_json_ld` metadata remains readable regar
 
 Additionally, the following are recommended:
 
-- XMP data types are always preferred. Only use a non XMP data type if you have no other option.
+- XMP data types are always preferred. Only use a non XMP data type if there is no other option.
 - For proper compatibility with [ISO 16684-3](https://www.iso.org/standard/79384.html), an AboutURI should be included at the root level of each packet in an `@id`. For most all purposes the value can be left blank.
-- Usage of [IRIs](https://www.w3.org/International/wiki/IRIStatus) are heavily discouraged. Where possible, please follow the URI types outlined in the [glTF 2.0 Specification](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#uris).
 
 #### Lists and Sets
 
@@ -289,7 +288,7 @@ An example packet using `@set` for an unordered list of contributors:
 
 #### Language Alternatives
 
-Language Alternatives provide a powerful way of handling internationalization within XMP metadata. In order to remain compliant with the requirements outlined in the [JSON-LD serialization of XMP (ISO 16684-3)](https://www.iso.org/standard/79384.html) specification `KHR_xmp_json_ld` relies on usage of the `@language` and `@value` keywords contained in an object of the `rdf:Alt` type. A field containing language alternatives must contain a `@type` definition for `rdf:Alt`, and each alternative must be contained in a `rdf:_N` property, where `N` is the index. You must also include the `rdf` namespace, `http://www.w3.org/1999/02/22-rdf-syntax-ns#` in the packet's `@context`. The `rdf:_N` property must have an object containing two properties:
+Language Alternatives provide a powerful way of handling internationalization within XMP metadata. In order to remain compliant with the requirements outlined in the [JSON-LD serialization of XMP (ISO 16684-3)](https://www.iso.org/standard/79384.html) specification `KHR_xmp_json_ld` relies on usage of the `@language` and `@value` keywords contained in an object of the `rdf:Alt` type. A field containing language alternatives must contain a `@type` definition for `rdf:Alt`, and each alternative must be contained in a `rdf:_N` property, where `N` is the index. The `rdf` namespace (`http://www.w3.org/1999/02/22-rdf-syntax-ns#`) must also be included in the packet's `@context`. The `rdf:_N` property must have an object containing two properties:
 
 - `@language` with a IETF BCP 47 language code as the value.
 - `@value` with actual value of the XMP property as a string.
