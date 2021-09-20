@@ -7,35 +7,48 @@
     "properties": {
         "iridescenceFactor": {
             "type": "number",
-            "description": "The iridescence intensity.",
+            "description": "The iridescence intensity factor.",
             "default": 0.0,
             "minimum": 0.0,
             "maximum": 1.0,
             "gltf_detailedDescription": ""
-        },        
+        },
         "iridescenceTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The iridescence intensity texture.",
             "gltf_detailedDescription": "The iridescence intensity texture. Stored in channel R with default linear value 1.0 of the iridescence texture."
         },
-        "iridescenceThicknessMinimum": {
+        "thinFilmIOR": {
             "type": "number",
-            "description": "The iridescence minimum thickness.",
+            "description": "The index of refraction of the dielectric thin-film layer.",
+            "default": 1.8,
+            "minimum": 1.0,
+            "gltf_detailedDescription": ""
+        },
+        "baseExtinctionCoefficient": {
+            "type": "number",
+            "description": "The extinction coefficient of the base material.",
+            "default": 2.0,
+            "gltf_detailedDescription": "The extinction coefficient of the base (conductor) material. Together with the base IOR, this builds the complex IOR of the conductor."
+        },
+        "thinFilmThicknessMinimum": {
+            "type": "number",
+            "description": "The minimum thickness of the thin-film layer.",
             "default": 400.0,
             "minimum": 0.0,
             "gltf_detailedDescription": ""
-        },        
-        "iridescenceThicknessMaximum": {
+        },
+        "thinFilmThicknessMaximum": {
             "type": "number",
-            "description": "The iridescence maximum thickness.",
+            "description": "The maximum thickness of the thin-film layer.",
             "default": 1200.0,
-            "maximum": 1200.0,
-            "gltf_detailedDescription": ""
-        },        
-        "iridescenceThicknessTexture": {
+            "minimum": 0.0,
+            "gltf_detailedDescription": "The maximum thickness of the thin-film layer. This value will be used as the overall thickness if no thinFilmThicknessTexture is provided."
+        },
+        "thinFilmThicknessTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "The iridescence thickness texture.",
-            "gltf_detailedDescription": "The iridescence thickness texture. Stored in channel G with default linear value 1.0 of the iridescence texture."
+            "description": "The thickness texture of the thin-film layer to blend between the minimum and maximum thickness.",
+            "gltf_detailedDescription": "The thickness texture of the thin-film layer to blend between the minimum and maximum thickness. Stored in channel G with default linear value 1.0 of the iridescence texture."
         },
         "extensions": { },
         "extras": { }
