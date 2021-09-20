@@ -3,6 +3,7 @@
 ## Khronos 3D Formats Working Group
 
 * Pascal Schoen, adidas  
+* Ben Houston, threekit  
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)  
 
 ## Acknowledgments
