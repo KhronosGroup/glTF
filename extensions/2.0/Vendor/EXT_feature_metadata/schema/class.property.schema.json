@@ -66,18 +66,18 @@
         {"type": "number"},
         {"type": "array", "items": {"type": "number"}, "minItems": 1}
       ],
-      "description": "Maximum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values: they always correspond to the integer values."
+      "description": "Maximum allowed value for the property. Only applicable for single-value numeric types, fixed-length arrays of numeric types, and `VECN` types. For single-value numeric types this is a single number. For fixed-length arrays and `VECN`, the maximum is an array with the same number of elements. The `normalized` property has no effect on the maximum, which always contains integer values."
     },
     "min": {
       "oneOf": [
         {"type": "number"},
         {"type": "array", "items": {"type": "number"}, "minItems": 1}
       ],
-      "description": "Minimum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values: they always correspond to the integer values."
+      "description": "Minimum allowed value for the property. Only applicable for single-value numeric types, fixed-length arrays of numeric types, and `VECN` types. For single-value numeric types this is a single number. For fixed-length arrays and `VECN`, the minimum is an array with the same number of elements. The `normalized` property has no effect on the minimum, which always contains integer values."
     },
     "required": {
       "type": "boolean",
-      "description": "If required, the property must be present for every feature of its class. If not required, individual features may include `noData` values, or the entire property may be omitted from a feature table or texture. As a result, `noData` has no effect on a required property. Client implementations may take advantage of required properties to make certain performance optimizations.",
+      "description": "If required, the property must be present for every feature of its class. If not required, individual features may include `noData` values, or the entire property may be omitted from a feature table or texture. As a result, `noData` has no effect on a required property. Client implementations may use required properties to make performance optimizations.",
       "default": false
     },
     "noData": {
