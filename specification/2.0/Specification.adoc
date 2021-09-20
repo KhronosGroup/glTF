@@ -1392,12 +1392,12 @@ The joint hierarchy used for controlling skinned mesh pose is simply the node hi
 A node object does not specify whether it is a joint. Client implementations may need to traverse the `skins` array first, marking each joint node.
 ====
 
-A joint node **MAY** have regular nodes attached to it, even a complete node sub graph with meshes.
+A joint node **MAY** have other nodes attached to it, even a complete node sub graph with meshes.
 
 [NOTE]
 .Implementation Note
 ====
-It's often used to have an entire geometry attached to a joint node without having it being skinned (e.g., a sword attached to a hand). Note that the node transform is the local transform of the node relative to the joint, like any other node in the glTF node hierarchy as described in the <<transformations,Transformations>> section.
+It's common to have an entire geometry attached to a joint node without having it being skinned (e.g., a sword attached to a hand). Note that the node transform is the local transform of the node relative to the joint, like any other node in the glTF node hierarchy as described in the <<transformations,Transformations>> section.
 ====
 
 To apply skinning, a regular transformation matrix is computed for each joint and then used to transform individual vertices as described in the next section.
