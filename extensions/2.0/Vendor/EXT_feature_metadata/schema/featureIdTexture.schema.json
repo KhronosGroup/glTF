@@ -7,9 +7,9 @@
   "properties": {
     "index": { },
     "texCoord": { },
-    "featureTable": {
+    "propertyTable": {
       "type": "string",
-      "description": "The ID of the feature table in the model's root `EXT_feature_metadata.featureTables` dictionary."
+      "description": "The ID of the property table in the model's root `EXT_feature_metadata.propertyTables` dictionary."
     },
     "channel": {
       "type": "integer",
@@ -20,7 +20,7 @@
     "extras": {}
   },
   "required": [
-    "featureTable",
+    "propertyTable",
     "channel"
   ]
 }

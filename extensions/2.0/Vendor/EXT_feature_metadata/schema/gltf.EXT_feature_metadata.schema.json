@@ -13,20 +13,20 @@
       "description": "A uri to an external schema file.",
       "format": "uriref"
     },
-    "featureTables": {
+    "propertyTables": {
       "type": "object",
-      "description": "A dictionary, where each key is a feature table ID and each value is an object defining the feature table.",
+      "description": "A dictionary, where each key is a property table ID and each value is an object defining the property table.",
       "minProperties": 1,
       "additionalProperties": {
-        "$ref": "featureTable.schema.json"
+        "$ref": "propertyTable.schema.json"
       }
     },
-    "featureTextures": {
+    "propertyTextures": {
       "type": "object",
-      "description": "A dictionary, where each key is a feature texture ID and each value is an object defining the feature texture.",
+      "description": "A dictionary, where each key is a property texture ID and each value is an object defining the property texture.",
       "minProperties": 1,
       "additionalProperties": {
-        "$ref": "featureTexture.schema.json"
+        "$ref": "propertyTexture.schema.json"
       }
     },
     "extensions": {},

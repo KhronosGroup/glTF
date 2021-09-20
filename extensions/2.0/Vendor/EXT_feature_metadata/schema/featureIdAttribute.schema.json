@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-04/schema",
   "title": "Feature IDs",
   "type": "object",
-  "description": "Feature IDs to be used as indices to property arrays in the feature table.",
+  "description": "Feature IDs to be used as indices to property arrays in the property table.",
   "properties": {
     "attribute": {
       "type": "string",

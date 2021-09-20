@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "Feature Table",
+  "title": "Property Table",
   "type": "object",
-  "description": "A feature table defined by a class and property values stored in arrays.",
+  "description": "A property table defined by a class and property values stored in arrays.",
   "properties": {
     "class": {
       "type": "string",
@@ -18,7 +18,7 @@
       "description": "A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value is an object describing where property values are stored. Optional properties may be excluded from this dictionary.",
       "minProperties": 1,
       "additionalProperties": {
-        "$ref": "featureTable.property.schema.json"
+        "$ref": "propertyTable.property.schema.json"
       }
     },
     "extensions": {},

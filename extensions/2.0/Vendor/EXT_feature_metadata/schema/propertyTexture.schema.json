@@ -1,15 +1,15 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "Feature Texture",
+  "title": "Property Texture",
   "type": "object",
   "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-  "description": "Features whose property values are stored directly in texture channels. This is not to be confused with feature ID textures which store feature IDs for use with a feature table.",
+  "description": "Features whose property values are stored directly in texture channels. This is not to be confused with feature ID textures which store feature IDs for use with a property table.",
   "properties": {
     "index": { },
     "texCoord": { },
     "class": {
       "type": "string",
-      "description": "The class this feature texture conforms to. The value must be a class ID declared in the `classes` dictionary."
+      "description": "The class this property texture conforms to. The value must be a class ID declared in the `classes` dictionary."
     },
     "properties": {
       "type": "object",

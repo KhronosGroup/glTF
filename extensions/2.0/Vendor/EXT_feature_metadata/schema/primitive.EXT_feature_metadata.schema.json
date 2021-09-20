@@ -15,17 +15,17 @@
       },
       "minItems": 1
     },
-    "featureTables": {
+    "propertyTables": {
       "type": "array",
-      "description": "An array of IDs of feature tables from the root `EXT_feature_metadata` object.",
+      "description": "An array of IDs of property tables from the root `EXT_feature_metadata` object.",
       "items": {
         "allOf": [ {"$ref": "glTFid.schema.json" } ]
       },
       "minItems": 1
     },
-    "featureTextures": {
+    "propertyTextures": {
       "type": "array",
-      "description": "An array of IDs of feature textures from the root `EXT_feature_metadata` object.",
+      "description": "An array of IDs of property textures from the root `EXT_feature_metadata` object.",
       "items": {
         "allOf": [ {"$ref": "glTFid.schema.json" } ]
       },
@@ -38,12 +38,12 @@
     {
       "required": [
         "featureIds",
-        "featureTables"
+        "propertyTables"
       ]
     },
     {
       "required": [
-        "featureTextures"
+        "propertyTextures"
       ]
     }
   ]

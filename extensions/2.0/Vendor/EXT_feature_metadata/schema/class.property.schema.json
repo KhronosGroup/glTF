@@ -77,7 +77,7 @@
     },
     "required": {
       "type": "boolean",
-      "description": "If required, the property must be present for every feature of its class. If not required, individual features may include `noData` values, or the entire property may be omitted from a feature table or texture. As a result, `noData` has no effect on a required property. Client implementations may use required properties to make performance optimizations.",
+      "description": "If required, the property must be present for every feature of its class. If not required, individual features may include `noData` values, or the entire property may be omitted from a property table or texture. As a result, `noData` has no effect on a required property. Client implementations may use required properties to make performance optimizations.",
       "default": false
     },
     "noData": {
@@ -87,7 +87,7 @@
         {"type": "array", "items": {"type": "number"}, "minItems": 1},
         {"type": "array", "items": {"type": "string"}, "minItems": 1}
       ],
-      "description": "A `noData` value represents missing data — also known as a sentinel value — wherever it appears. If omitted (excluding variable-length `ARRAY` properties), property values exist for all features, and the property is required in feature tables or textures instantiating the class. For variable-length `ARRAY` elements, `noData` is implicitly `[]` and the property is never required; an additional `noData` array, such as `[\"UNSPECIFIED\"]`, may be provided if necessary. For fixed-length `ARRAY` properties, `noData` must be an array of length `componentCount`. For `VECN` properties, `noData` must be an array of length `N`. For `MATN` propperties, `noData` must be an array of length `N²`. `BOOLEAN` properties may not specify `noData` values. `ENUM` `noData` values must be a valid item name, not an integer value."
+      "description": "A `noData` value represents missing data — also known as a sentinel value — wherever it appears. If omitted (excluding variable-length `ARRAY` properties), property values exist for all features, and the property is required in property tables or textures instantiating the class. For variable-length `ARRAY` elements, `noData` is implicitly `[]` and the property is never required; an additional `noData` array, such as `[\"UNSPECIFIED\"]`, may be provided if necessary. For fixed-length `ARRAY` properties, `noData` must be an array of length `componentCount`. For `VECN` properties, `noData` must be an array of length `N`. For `MATN` propperties, `noData` must be an array of length `N²`. `BOOLEAN` properties may not specify `noData` values. `ENUM` `noData` values must be a valid item name, not an integer value."
     },
     "semantic": {
       "type": "string",
