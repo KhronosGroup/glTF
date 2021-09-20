@@ -77,5 +77,5 @@ TODO
 
 ### Theory, Documentation and Implementations
 
-[Real-time Image-based Lighting of Microfacet BRDFs with Varying Iridescence](https://cg.cs.uni-bonn.de/en/publications/paper-details/kneiphof-2019-iridescence/)
-[A Practical Extension to Microfacet Theory for the Modeling of Varying Iridescence](https://hal.archives-ouvertes.fr/hal-01518344/document)
+[Real-time Image-based Lighting of Microfacet BRDFs with Varying Iridescence](https://cg.cs.uni-bonn.de/en/publications/paper-details/kneiphof-2019-iridescence/)  
+[A Practical Extension to Microfacet Theory for the Modeling of Varying Iridescence](https://hal.archives-ouvertes.fr/hal-01518344/document)  
