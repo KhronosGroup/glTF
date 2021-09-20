@@ -75,6 +75,11 @@
       ],
       "description": "Minimum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values: they always correspond to the integer values."
     },
+    "required": {
+      "type": "boolean",
+      "description": "If required, the property must be present for every feature of its class. If not required, individual features may include `noData` values, or the entire property may be omitted from a feature table or texture. As a result, `noData` has no effect on a required property. Client implementations may take advantage of required properties to make certain performance optimizations.",
+      "default": false
+    },
     "noData": {
       "oneOf": [
         {"type": "number"},
