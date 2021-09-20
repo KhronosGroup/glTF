@@ -939,12 +939,18 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
 }
 ```
 
-The number of joints that influence one vertex is limited to 4 per set, so referenced accessors must have `VEC4` type and following component formats:
+The number of joints that influence one vertex is limited to 4 per set, so referenced accessors must have `VEC4` type and following component types:
 
 * **`JOINTS_0`**: `UNSIGNED_BYTE` or `UNSIGNED_SHORT`
 * **`WEIGHTS_0`**: `FLOAT`, or normalized `UNSIGNED_BYTE`, or normalized `UNSIGNED_SHORT`
 
-The joint weights for each vertex must be non-negative, and normalized to have a linear sum of `1.0`. No joint may have more than one non-zero weight for a given vertex.
+The joint weights for each vertex must be non-negative. No joint may have more than one non-zero weight for a given vertex.
+
+When the weights are stored using `FLOAT` component type, glTF exporters should produce weights with linear sum as close as reasonably possible to `1.0` for a given vertex. When the weights are stored using `UNSIGNED_BYTE` or `UNSIGNED_SHORT` component types, their linear sum before normalization must be `255` or `65535` respectively. Without these requirements, vertices would be deformed significantly because the weight error would get multiplied by the joint position. For example, an error of `1/255` in the weight sum would result in an unacceptably large difference in the joint position.
+
+> **Implementation Note:** The threshold in the official validation tool is set to `2e-7` times the number of non-zero weights per vertex.
+
+> **Implementation Note:** Since the allowed threshold is much lower than minimum possible step for quantized component types, exporters should just renormalize weight sum after quantization.
 
 In the event that of any of the vertices are influenced by more than four joints, the additional joint and weight information will be found in subsequent sets. For example `JOINTS_1` and `WEIGHTS_1` if present will reference the accessor for up to 4 additional joints that influence the vertices. Note that client implementations are only required to support a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the model's animation.
 
@@ -2026,7 +2032,7 @@ A buffer points to binary geometry, animation, or skins.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**uri**|`string`|The uri of the buffer.|No|
-|**byteLength**|`integer`|The total byte length of the buffer view.| :white_check_mark: Yes|
+|**byteLength**|`integer`|The length of the buffer in bytes.| :white_check_mark: Yes|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -2045,7 +2051,7 @@ The uri of the buffer.  Relative paths are relative to the .gltf file.  Instead 
 
 #### buffer.byteLength :white_check_mark: 
 
-The total byte length of the buffer view.
+The length of the buffer in bytes.
 
 * **Type**: `integer`
 * **Required**: Yes
@@ -2501,7 +2507,7 @@ Image data used to create a texture. Image can be referenced by URI or [`bufferV
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**uri**|`string`|The uri of the image.|No|
-|**mimeType**|`string`|The image's MIME type.|No|
+|**mimeType**|`string`|The image's MIME type.  Required if `bufferView` is defined.|No|
 |**bufferView**|`integer`|The index of the bufferView that contains the image. Use this instead of the image's uri property.|No|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
@@ -2684,7 +2690,7 @@ A set of parameter values that are used to define the metallic-roughness materia
 
 #### material.normalTexture
 
-A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [1/255 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer. In GLSL, this vector would be unpacked like so: `vec3 normalVector = tex2D(normalMap, texCoord) * 2 - 1`. Client implementations should normalize the normal vectors before using them in lighting equations.
+A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [1/255 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer. In GLSL, this vector would be unpacked like so: `vec3 normalVector = tex2D(<sampled normal map texture value>, texCoord) * 2 - 1`. Client implementations should normalize the normal vectors before using them in lighting equations.
 
 * **Type**: `object`
 * **Required**: No
@@ -2951,7 +2957,7 @@ The index of the texture.
 
 #### normalTextureInfo.texCoord
 
-This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0).
+This integer value is used to construct a string in the format `TEXCOORD_<set index>` which is a reference to a key in mesh.primitives.attributes (e.g. A value of `0` corresponds to `TEXCOORD_0`). Mesh must have corresponding texture coordinate attributes for the material to be applicable to it.
 
 * **Type**: `integer`
 * **Required**: No, default: `0`
@@ -3012,7 +3018,7 @@ The index of the texture.
 
 #### occlusionTextureInfo.texCoord
 
-This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0).
+This integer value is used to construct a string in the format `TEXCOORD_<set index>` which is a reference to a key in mesh.primitives.attributes (e.g. A value of `0` corresponds to `TEXCOORD_0`). Mesh must have corresponding texture coordinate attributes for the material to be applicable to it.
 
 * **Type**: `integer`
 * **Required**: No, default: `0`
@@ -3055,8 +3061,8 @@ An orthographic camera containing properties to create an orthographic projectio
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**xmag**|`number`|The floating-point horizontal magnification of the view.| :white_check_mark: Yes|
-|**ymag**|`number`|The floating-point vertical magnification of the view.| :white_check_mark: Yes|
+|**xmag**|`number`|The floating-point horizontal magnification of the view. Must not be zero.| :white_check_mark: Yes|
+|**ymag**|`number`|The floating-point vertical magnification of the view. Must not be zero.| :white_check_mark: Yes|
 |**zfar**|`number`|The floating-point distance to the far clipping plane. `zfar` must be greater than `znear`.| :white_check_mark: Yes|
 |**znear**|`number`|The floating-point distance to the near clipping plane.| :white_check_mark: Yes|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
@@ -3068,14 +3074,14 @@ Additional properties are allowed.
 
 #### orthographic.xmag :white_check_mark: 
 
-The floating-point horizontal magnification of the view.
+The floating-point horizontal magnification of the view. Must not be zero.
 
 * **Type**: `number`
 * **Required**: Yes
 
 #### orthographic.ymag :white_check_mark: 
 
-The floating-point vertical magnification of the view.
+The floating-point vertical magnification of the view. Must not be zero.
 
 * **Type**: `number`
 * **Required**: Yes
@@ -4050,7 +4056,7 @@ function fresnel_mix(ior, base, layer) {
 Now that we have an implementation for all the functions used in the glTF metallic-roughness material model, we are able to connect the functions according to the graph shown in section ["Complete Model"](#complete-model). By substituting the mixing functions (`fresnel_mix`, `conductor_fresnel`) for the implementation, we arrive at the following BRDFs for the metal and the dielectric component:
 
 ```
-metal_brdf = specular_brdf(roughness^2) * (baseColor.rgb + (1 - baseColor.rgb)) * (1 - abs(VdotH))^5)
+metal_brdf = specular_brdf(roughness^2) * (baseColor.rgb + (1 - baseColor.rgb) * (1 - abs(VdotH))^5)
 dielectric_brdf = mix(diffuse_brdf(baseColor.rgb), specular_brdf(roughness^2), 0.04 + (1 - 0.04) * (1 - abs(VdotH))^5)
 ```
 
@@ -4065,17 +4071,16 @@ material = mix(dielectric_brdf, metal_brdf, metallic)
 Taking advantage of the fact that `roughness` is shared between metal and dielectric and that the Schlick Fresnel is used, we can simplify the mix and arrive at the final BRDF for the material:
 
 ```
-const dielectricSpecular = 0.04
 const black = 0
 
-c_diff = lerp(baseColor.rgb * (1 - dielectricSpecular), black, metallic)
+c_diff = lerp(baseColor.rgb, black, metallic)
 f0 = lerp(0.04, baseColor.rgb, metallic)
 α = roughness^2
 
-F = (f0 + (1 - f0) * (1 - abs(VdotH))^5
+F = f0 + (1 - f0) * (1 - abs(VdotH))^5
 
 f_diffuse = (1 - F) * (1 / π) * c_diff
-f_specular = F * D(α) * G / (4 * abs(VdotN) * abs(LdotN))
+f_specular = F * D(α) * G(α) / (4 * abs(VdotN) * abs(LdotN))
 
 material = f_diffuse + f_specular
 ```
@@ -4106,7 +4111,7 @@ More recently, [Jakob et al. (2014)](#Jakob2014) developed a generic framework f
 
 ## References
 
-* [Burley, B. (2012): Physically-Based Shading at Disney.](https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf)<a name="Burley2012"></a>
+* [Burley, B. (2012): Physically-Based Shading at Disney.](https://blog.selfshadow.com/publications/s2012-shading-course/burley/s2012_pbs_disney_brdf_notes_v3.pdf)<a name="Burley2012"></a>
 * [Cook, R. L., and K. E. Torrance (1982): A Reflectance Model for Computer Graphics. ACM Transactions on Graphics 1 (1), 7-24.](https://graphics.pixar.com/library/ReflectanceModel/paper.pdf)<a name="CookTorrance1982"></a>
 * [Gulbrandsen, O. (2014): Artist Friendly Metallic Fresnel](http://jcgt.org/published/0003/04/03/paper-lowres.pdf)<a name="Gulbrandsen2014"></a>
 * [Heitz, E. (2014): Understanding the Masking-Shadowing Function in Microfacet-Based BRDFs](http://jcgt.org/published/0003/02/03/paper.pdf)<a name="Heitz2014"></a>

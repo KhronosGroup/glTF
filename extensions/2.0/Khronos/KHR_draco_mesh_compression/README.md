@@ -113,7 +113,7 @@ When using this extension, the `mode` of `primitive` must be either `TRIANGLES` 
 
 For full details on the `KHR_draco_mesh_compression` extension properties, see the schema:
 
-* [extension property (the entirety of this specification is normative and included in Scope)](schema/node.KHR_draco_mesh_compression.schema.json)
+* [extension property (the entirety of this specification is normative and included in Scope)](schema/mesh.primitive.KHR_draco_mesh_compression.schema.json)
 
 ## Conformance
 

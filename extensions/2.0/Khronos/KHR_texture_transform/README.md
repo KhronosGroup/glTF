@@ -105,8 +105,10 @@ This example inverts the T axis, effectively defining a bottom-left origin.
 
 * [UnityGLTF](https://github.com/KhronosGroup/UnityGLTF)
 * [Babylon.js](https://www.babylonjs.com/)
+* [PlayCanvas](https://playcanvas.com/)
 * [Three.js](https://threejs.org/)
 * [Blender](https://docs.blender.org/manual/en/2.81/addons/import_export/io_scene_gltf2.html#uv-mapping)
+* [Gestaltor](https://gestaltor.io/)
 
 ## Appendix: Full Khronos Copyright Statement
 
