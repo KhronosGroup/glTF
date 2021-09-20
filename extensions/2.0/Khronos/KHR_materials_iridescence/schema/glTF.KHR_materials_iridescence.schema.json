@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_iridescence glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines an iridescence effect.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "iridescenceFactor": {
+            "type": "number",
+            "description": "The iridescence intensity.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": ""
+        },        
+        "iridescenceTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The iridescence intensity texture.",
+            "gltf_detailedDescription": "The iridescence intensity texture. Stored in channel R with default linear value 1.0 of the iridescence texture."
+        },
+        "iridescenceThicknessMinimum": {
+            "type": "number",
+            "description": "The iridescence minimum thickness.",
+            "default": 400.0,
+            "minimum": 0.0,
+            "gltf_detailedDescription": ""
+        },        
+        "iridescenceThicknessMaximum": {
+            "type": "number",
+            "description": "The iridescence maximum thickness.",
+            "default": 1200.0,
+            "maximum": 1200.0,
+            "gltf_detailedDescription": ""
+        },        
+        "iridescenceThicknessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The iridescence thickness texture.",
+            "gltf_detailedDescription": "The iridescence thickness texture. Stored in channel G with default linear value 1.0 of the iridescence texture."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
