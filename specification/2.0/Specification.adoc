@@ -1450,7 +1450,7 @@ In the example below, the translation of `node_0` and the scale of `node_1` are 
 
 The skinned mesh **MUST** have vertex attributes that are used in skinning calculations. The `JOINTS_0` attribute data contains the indices of the joints from the corresponding `skin.joints` array that affect the vertex. The `WEIGHTS_0` attribute data defines the weights indicating how strongly the joint influences the vertex.
 
-The per-vertex transformation matrix is computed as a weighted linear sum of the joint transformation matrices. Note that per-joint inverse bind matrices (when present) **MUST** be applied before the regular node transforms.
+The per-vertex transformation matrix is computed as a weighted linear sum of the joint transformation matrices. Note that per-joint inverse bind matrices (when present) **MUST** be applied before the base node transforms.
 
 In the following example, a mesh primitive defines `JOINTS_0` and `WEIGHTS_0` vertex attributes:
 
