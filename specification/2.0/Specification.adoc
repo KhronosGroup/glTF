@@ -2037,7 +2037,7 @@ This material does not emit light and will be black unless some lighting is pres
 [[point-and-line-materials]]
 === Point and Line Materials
 
-This specification does not define size and style of non-triangular primitives (such as _points_ or _lines_), and applications **MAY** use various techniques to render these primitives as appropriate. However, the following conventions are **RECOMMENDED** for consistency:
+This specification does not define size or style of non-triangular primitives (such as _points_ or _lines_), and applications **MAY** use various techniques to render these primitives as appropriate. However, the following conventions are **RECOMMENDED** for consistency:
 
 * Points and Lines **SHOULD** have widths of 1px in viewport space.
 * Points or Lines with `NORMAL` and `TANGENT` attributes **SHOULD** be rendered with standard lighting including normal textures.
