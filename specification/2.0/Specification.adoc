@@ -568,7 +568,7 @@ Chromaticity coordinates define the interpretation of each primary color channel
 [[scenes-overview]]
 === Overview
 
-glTF 2.0 assets **MAY** contain zero or more _scenes_, the set of visual objects to render. Scenes are defined in a `scenes` array. All nodes listed in `scene.nodes` array **MUST** be root nodes (see the next section for details).
+glTF 2.0 assets **MAY** contain zero or more _scenes_, the set of visual objects to render. Scenes are defined in a `scenes` array. All nodes listed in `scene.nodes` array **MUST** be root nodes, i.e., they **MUST NOT** be listed in a `node.children` array of any node.
 
 An additional root-level property, `scene` (note singular), identifies which of the scenes in the array **SHOULD** be displayed at load time. When `scene` is undefined, client implementations **MAY** delay rendering until a particular scene is requested.
 
@@ -806,7 +806,7 @@ Buffers and buffer views do not contain type information. They simply define the
 
 glTF asset **MAY** use GLB file container to pack glTF JSON and one glTF buffer into one file. Data for such buffer is provided via GLB-stored `BIN` chunk.
 
-A buffer with data provided by the GLB-stored `BIN` chunk, **MUST** be the first element of `buffers` array and it **MUST** have its `buffer.uri` property undefined.
+A buffer with data provided by the GLB-stored `BIN` chunk, **MUST** be the first element of `buffers` array and it **MUST** have its `buffer.uri` property undefined. When such a buffer exists, a `BIN` chunk **MUST** be present.
 
 Any glTF buffer with undefined `buffer.uri` property that is not the first element of `buffers` array does not refer to the GLB-stored BIN chunk, and the behavior of such buffers is left undefined to accommodate future extensions and specification versions.
 
@@ -955,9 +955,9 @@ Similar to a standard accessor, a sparse accessor initializes an array of typed 
 
 On top of that, a sparse accessor includes a `sparse` JSON object describing the elements that deviate from their initialization values. The `sparse` object contains the following **REQUIRED** properties:
 
-- `count`: number of displaced elements.
+- `count`: number of displaced elements. This number **MUST NOT** be greater than the number of the base accessor elements.
 
-- `indices`: object describing the location and the component type of indices of deviating values. The indices **MUST** form a strictly increasing sequence.
+- `indices`: object describing the location and the component type of indices of deviating values. The indices **MUST** form a strictly increasing sequence. The indices **MUST NOT** be greater than or equal to the number of the base accessor elements. 
 
 - `values`: object describing the location of displaced elements corresponding to the indices referred from the `indices`.
 
@@ -1195,6 +1195,10 @@ Valid accessor type and component type for each attribute semantic property are 
 
 `POSITION` accessor **MUST** have its `min` and `max` properties defined.
 
+The W component of each `TANGENT` accessor element **MUST** be set to `1.0` or `-1.0`.
+
+All components of each `COLOR_0` accessor element **MUST** be clamped to `[0.0, 1.0]` range.
+
 `TEXCOORD`, `COLOR`, `JOINTS`, and `WEIGHTS` attribute semantic property names **MUST** be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. All indices for indexed attribute semantics **MUST** start with 0 and be consecutive positive integers: `TEXCOORD_0`, `TEXCOORD_1`, etc. Indices **MUST NOT** use leading zeroes to pad the number of digits (e.g., `TEXCOORD_01` is not allowed).
 
 Client implementations **SHOULD** support at least two UV texture coordinate sets, one vertex color, and one joints/weights set.
@@ -1259,11 +1263,13 @@ Triangle primitives are defined around a shared common vertex, according to the 
 
   {empty}:: [eq]#p~i~ = {v~i+1~, v~i+2~, v~0~}#
 
+Mesh geometry **SHOULD NOT** contain degenerate lines or triangles, i.e., lines or triangles that use the same vertex more than once per topology primitive.
+
 When positions are not specified, client implementations **SHOULD** skip primitive's rendering unless its positions are provided by other means (e.g., by an extension). This applies to both indexed and non-indexed geometry.
 
 When tangents are not specified, client implementations **SHOULD** calculate tangents using default <<mikktspace,MikkTSpace>> algorithms.
 
-When normals are not specified, client implementations **SHOULD** assume flat normals and the provided tangents (if present) **SHOULD** be ignored.
+When normals are not specified, client implementations **MUST** calculate flat normals and the provided tangents (if present) **MUST** be ignored.
 
 Vertices of the same triangle **SHOULD** have the same `tangent.w` value. When vertices of the same triangle have different `tangent.w` values, its tangent space is considered undefined.
 
@@ -1289,6 +1295,8 @@ primitives[i].attributes.POSITION +
 ----
 
 Morph targets are specified via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a plain JSON object mapping a primitive attribute to an accessor containing morph target displacement data.
+
+For each morph target attribute, an original attribute **MUST** be present in the mesh primitive.
 
 Client implementations **SHOULD** support at least three attributes -- `POSITION`, `NORMAL`, and `TANGENT` -- for morphing. If morph targets contain application-specific semantics, their names **MUST** be prefixed with an underscore (e.g., `_TEMPERATURE`) like the associated attribute semantic.
 
@@ -1373,7 +1381,7 @@ The order of joints is defined by the `skin.joints` array and it **MUST** match 
 Although the `skeleton` property is not needed for computing skinning transforms, it may be used to provide a specific "`pivot point`" for the skinned geometry.
 ====
 
-An accessor referenced by `inverseBindMatrices` **MUST** have floating-point components of `"MAT4"` type. The number of elements of the accessor referenced by `inverseBindMatrices` **MUST** greater than or equal to the number of `joints` elements.
+An accessor referenced by `inverseBindMatrices` **MUST** have floating-point components of `"MAT4"` type. The number of elements of the accessor referenced by `inverseBindMatrices` **MUST** greater than or equal to the number of `joints` elements. The fourth row of each matrix **MUST** be set to `[0.0, 0.0, 0.0, 1.0]`.
 
 [NOTE]
 .Implementation Note
@@ -1399,8 +1407,6 @@ A joint node **MAY** have other nodes attached to it, even a complete node sub g
 ====
 It's common to have an entire geometry attached to a joint node without having it being skinned (e.g., a sword attached to a hand). Note that the node transform is the local transform of the node relative to the joint, like any other node in the glTF node hierarchy as described in the <<transformations,Transformations>> section.
 ====
-
-To apply skinning, a regular transformation matrix is computed for each joint and then used to transform individual vertices as described in the next section.
 
 Only the joint transforms are applied to the skinned mesh; the transform of the skinned mesh node **MUST** be ignored.
 
@@ -1450,7 +1456,7 @@ In the example below, the translation of `node_0` and the scale of `node_1` are 
 
 The skinned mesh **MUST** have vertex attributes that are used in skinning calculations. The `JOINTS_0` attribute data contains the indices of the joints from the corresponding `skin.joints` array that affect the vertex. The `WEIGHTS_0` attribute data defines the weights indicating how strongly the joint influences the vertex.
 
-The per-vertex transformation matrix is computed as a weighted linear sum of the joint transformation matrices. Note that per-joint inverse bind matrices (when present) **MUST** be applied before the base node transforms.
+To apply skinning, a transformation matrix is computed for each joint. Then, the per-vertex transformation matrices are computed as weighted linear sums of the joint transformation matrices. Note that per-joint inverse bind matrices (when present) **MUST** be applied before the base node transforms.
 
 In the following example, a mesh primitive defines `JOINTS_0` and `WEIGHTS_0` vertex attributes:
 
@@ -1481,8 +1487,8 @@ In the following example, a mesh primitive defines `JOINTS_0` and `WEIGHTS_0` ve
 
 The number of joints that influence one vertex is limited to 4 per set, so the referenced accessors **MUST** have `VEC4` type and following component types:
 
-* *`JOINTS_0`*: _unsigned byte_ or _unsigned short_
-* *`WEIGHTS_0`*: _float_, or _normalized unsigned byte_, or _normalized unsigned short_
+* *`JOINTS_n`*: _unsigned byte_ or _unsigned short_
+* *`WEIGHTS_n`*: _float_, or _normalized unsigned byte_, or _normalized unsigned short_
 
 The joint weights for each vertex **MUST NOT** be negative.
 
@@ -1504,7 +1510,9 @@ The threshold in the official validation tool is set to `2e-7` times the number 
 Since the allowed threshold is much lower than minimum possible step for quantized component types, weight sum should be renormalized after quantization.
 ====
 
-When any of the vertices are influenced by more than four joints, the additional joint and weight information are stored in subsequent sets. For example, `JOINTS_1` and `WEIGHTS_1` if present will reference the accessor for up to 4 additional joints that influence the vertices. Client implementations **MAY** support only a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the asset's animation.
+When any of the vertices are influenced by more than four joints, the additional joint and weight information are stored in subsequent sets. For example, `JOINTS_1` and `WEIGHTS_1` if present will reference the accessor for up to 4 additional joints that influence the vertices. For a given primitive, the number of `JOINTS` attribute sets **MUST** be equal to the number of `WEIGHTS` attribute sets.
+
+Client implementations **MAY** support only a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the asset's animation.
 
 All joint values **MUST** be within the range of joints in the skin. Unused joint values (i.e., joints with a weight of zero) **SHOULD** be set to zero.
 
@@ -1542,7 +1550,7 @@ When a mesh primitive uses any triangle-based topology (i.e., _triangles_, _tria
 Switching the winding order to clockwise enables mirroring geometry via negative scale transformations.
 ====
 
-When an instantiated mesh has morph targets, it **MUST** use morph weights specified with the `node.weights` property. When the latter is undefined, `mesh.weights` property **MUST** used instead. When both of these fields are undefined, the mesh is instantiated in a non-morphed state (i.e., with all morph weights set to zeros).
+When an instantiated mesh has morph targets, it **MUST** use morph weights specified with the `node.weights` property. When the latter is undefined, `mesh.weights` property **MUST** be used instead. When both of these fields are undefined, the mesh is instantiated in a non-morphed state (i.e., with all morph weights set to zeros).
 
 The example below instantiates a Morph Target with non-default weights.
 
@@ -2331,6 +2339,8 @@ _Channels_ connect the output values of the key frame animation to a specific no
 
 When `node` isn't defined, channel **SHOULD** be ignored. Valid path names are `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
 
+Nodes that do not contain a mesh with morph targets **MUST NOT** be targeted with `"weights"` path.
+
 Within one animation, each target (a combination of a node and a path) **MUST NOT** be used more than once.
 
 [NOTE]
@@ -3021,6 +3031,8 @@ More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework f
 glTF animations support cubic spline interpolation.
 
 The keyframes of a cubic spline in glTF have input and output values where each input value corresponds to three output values of the same type: in-tangent, data point, and out-tangent.
+
+An animation that uses cubic spline interpolation **MUST** have at least 2 keyframes.
 
 Given a set of keyframes
 

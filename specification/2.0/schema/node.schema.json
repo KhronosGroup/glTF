@@ -72,7 +72,7 @@
         },
         "weights": {
             "type": "array",
-            "description": "The weights of the instantiated morph target. Number of elements **MUST** match the number of Morph Targets of used mesh. When defined, `mesh` **MUST** also be defined.",
+            "description": "The weights of the instantiated morph target. The number of array elements **MUST** match the number of morph targets of the referenced mesh. When defined, `mesh` **MUST** also be defined.",
             "minItems": 1,
             "items": {
                 "type": "number"

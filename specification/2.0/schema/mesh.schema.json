@@ -15,7 +15,7 @@
         },
         "weights": {
             "type": "array",
-            "description": "Array of weights to be applied to the Morph Targets.",
+            "description": "Array of weights to be applied to the morph targets. The number of array elements **MUST** match the number of morph targets.",
             "items": {
                 "type": "number"
             },
