@@ -70,6 +70,8 @@ TODO
 
 ### Theory, Documentation and Implementations
 
-[Real-time Image-based Lighting of Microfacet BRDFs with Varying Iridescence](https://cg.cs.uni-bonn.de/en/publications/paper-details/kneiphof-2019-iridescence/)  
-[A Practical Extension to Microfacet Theory for the Modeling of Varying Iridescence](https://hal.archives-ouvertes.fr/hal-01518344/document)  
+[A Practical Extension to Microfacet Theory for the Modeling of Varying Iridescence](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html)  
 [Practical Multilayered Materials in Call of Duty: Infinite Warfare](https://blog.selfshadow.com/publications/s2017-shading-course/drobot/s2017_pbs_multilayered.pdf)  
+[Real-time Image-based Lighting of Microfacet BRDFs with Varying Iridescence](https://cg.cs.uni-bonn.de/en/publications/paper-details/kneiphof-2019-iridescence/)  
+[Real-Time Rendering, Fourth Edition; page 361ff](https://www.realtimerendering.com/)  
+[Rendering Iridescent Objects in Real-time](http://dspace.library.uu.nl/handle/1874/287110)  
