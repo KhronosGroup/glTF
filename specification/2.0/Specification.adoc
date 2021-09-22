@@ -1164,7 +1164,7 @@ The following example defines a mesh containing one indexed triangle set primiti
 
 Each attribute is defined as a property of the `attributes` object. The name of the property corresponds to an enumerated value identifying the vertex attribute, such as `POSITION`. The value of the property is the index of an accessor that contains the data.
 
-The specification defines the following attribute semantics: `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`, `JOINTS_0`, and `WEIGHTS_0`.
+The specification defines the following attribute semantics: `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_n`, `COLOR_n`, `JOINTS_n`, and `WEIGHTS_n`.
 
 Application-specific attribute semantics **MUST** start with an underscore, e.g., `_TEMPERATURE`. Application-specific attribute semantics **MUST NOT** use __unsigned int__ component type.
 
@@ -1172,23 +1172,20 @@ Valid accessor type and component type for each attribute semantic property are 
 
 [options="header",cols="15%,20%,35%,30%"]
 |====
-| Name        | Accessor Type(s)| Component Type(s)| Description
-| `POSITION`  | `"VEC3"`        | _float_                     | XYZ vertex positions
-| `NORMAL`    | `"VEC3"`        | _float_                     | Normalized XYZ vertex normals
-| `TANGENT`   | `"VEC4"`        | _float_                     | XYZW vertex tangents where the W component is a sign value (-1 or +1) indicating handedness of the tangent basis
-| `TEXCOORD_0`| `"VEC2"`        | _float_ +
+| Name        | Accessor Type(s)| Component Type(s)           | Description
+| `POSITION`  | VEC3            | _float_                     | XYZ vertex positions
+| `NORMAL`    | VEC3            | _float_                     | Normalized XYZ vertex normals
+| `TANGENT`   | VEC4            | _float_                     | XYZW vertex tangents where the W component is a sign value (-1 or +1) indicating handedness of the tangent basis
+| `TEXCOORD_n`| VEC2            | _float_ +
                                   _unsigned byte_ normalized +
-                                  _unsigned short_ normalized | UV texture coordinates for the first set
-| `TEXCOORD_1`| `"VEC2"`        | _float_ +
-                                  _unsigned byte_ normalized +
-                                  _unsigned short_ normalized | UV texture coordinates for the second set
-| `COLOR_0`   | `"VEC3"` +
-                `"VEC4"`        | _float_ +
+                                  _unsigned short_ normalized | UV texture coordinates
+| `COLOR_n`   | VEC3 +
+                VEC4            | _float_ +
                                   _unsigned byte_ normalized +
                                   _unsigned short_ normalized | RGB or RGBA vertex color linear multiplier
-| `JOINTS_0`  | `"VEC4"`        | _unsigned byte_
+| `JOINTS_n`  | VEC4            | _unsigned byte_
                                   _unsigned short_            | See <<skinned-mesh-attributes,Skinned Mesh Attributes>>
-| `WEIGHTS_0` | `"VEC4"`        | _float_ +
+| `WEIGHTS_n` | VEC4            | _float_ +
                                   _unsigned byte_ normalized +
                                   _unsigned short_ normalized | See <<skinned-mesh-attributes,Skinned Mesh Attributes>>
 |====
@@ -1197,9 +1194,11 @@ Valid accessor type and component type for each attribute semantic property are 
 
 The W component of each `TANGENT` accessor element **MUST** be set to `1.0` or `-1.0`.
 
+When a `COLOR_n` attribute uses an accessor of `"VEC3"` type, its alpha component **MUST** be assumed to have a value of `1.0`.
+
 All components of each `COLOR_0` accessor element **MUST** be clamped to `[0.0, 1.0]` range.
 
-`TEXCOORD`, `COLOR`, `JOINTS`, and `WEIGHTS` attribute semantic property names **MUST** be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. All indices for indexed attribute semantics **MUST** start with 0 and be consecutive positive integers: `TEXCOORD_0`, `TEXCOORD_1`, etc. Indices **MUST NOT** use leading zeroes to pad the number of digits (e.g., `TEXCOORD_01` is not allowed).
+`TEXCOORD_n`, `COLOR_n`, `JOINTS_n`, and `WEIGHTS_n` attribute semantic property names **MUST** be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. All indices for indexed attribute semantics **MUST** start with 0 and be consecutive positive integers: `TEXCOORD_0`, `TEXCOORD_1`, etc. Indices **MUST NOT** use leading zeroes to pad the number of digits (e.g., `TEXCOORD_01` is not allowed).
 
 Client implementations **SHOULD** support at least two UV texture coordinate sets, one vertex color, and one joints/weights set.
 
@@ -1294,11 +1293,13 @@ primitives[i].attributes.POSITION +
   weights[2] * primitives[i].targets[2].POSITION + ...
 ----
 
-Morph targets are specified via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a plain JSON object mapping a primitive attribute to an accessor containing morph target displacement data.
+Morph targets are specified via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a plain JSON object mapping a primitive attribute to an accessor containing morph target displacement data (deltas).
 
 For each morph target attribute, an original attribute **MUST** be present in the mesh primitive.
 
-Client implementations **SHOULD** support at least three attributes -- `POSITION`, `NORMAL`, and `TANGENT` -- for morphing. If morph targets contain application-specific semantics, their names **MUST** be prefixed with an underscore (e.g., `_TEMPERATURE`) like the associated attribute semantic.
+Client implementations **SHOULD** support at least three attributes -- `POSITION`, `NORMAL`, and `TANGENT` -- for morphing. Client implementations **MAY** optionally support morphed `TEXCOORD_n` and / or `COLOR_n` attributes.
+
+If morph targets contain application-specific semantics, their names **MUST** be prefixed with an underscore (e.g., `_TEMPERATURE`) like the associated attribute semantics.
 
 All primitives **MUST** have the same number of morph targets in the same order.
 
@@ -1306,13 +1307,28 @@ Accessor type and component type for each morphed attribute semantic property **
 
 [options="header"]
 |====
-| Name       | Accessor Type | Component Type | Description
-| `POSITION` | `"VEC3"`      | _float_        | XYZ vertex position displacements
-| `NORMAL`   | `"VEC3"`      | _float_        | XYZ vertex normal displacements
-| `TANGENT`  | `"VEC3"`      | _float_        | XYZ vertex tangent displacements
+| Name         | Accessor Type(s) | Component Type(s)            | Description
+| `POSITION`   | VEC3             | _float_                      | XYZ vertex position displacements
+| `NORMAL`     | VEC3             | _float_                      | XYZ vertex normal displacements
+| `TANGENT`    | VEC3             | _float_                      | XYZ vertex tangent displacements
+| `TEXCOORD_n` | VEC2             | _float_ +
+                                    _signed byte_ normalized +
+                                    _signed short_ normalized +
+                                    _unsigned byte_ normalized +
+                                    _unsigned short_ normalized  | UV texture coordinate displacements
+| `COLOR_n`    | VEC3 +
+                 VEC4             | _float_ +
+                                    _signed byte_ normalized +
+                                    _signed short_ normalized +
+                                    _unsigned byte_ normalized +
+                                    _unsigned short_ normalized  | RGB or RGBA color deltas
 |====
 
 `POSITION` accessor **MUST** have its `min` and `max` properties defined.
+
+When `COLOR_n` deltas use an accessor of `"VEC3"` type, their alpha components **MUST** be assumed to have a value of `0.0`.
+
+After applying color deltas, all components of each `COLOR_0` morphed accessor element **MUST** be clamped to `[0.0, 1.0]` range.
 
 All morph target's accessors **MUST** have the same `count` as the accessors of the original primitive.
 
@@ -1454,7 +1470,7 @@ In the example below, the translation of `node_0` and the scale of `node_1` are 
 [[skinned-mesh-attributes]]
 ==== Skinned Mesh Attributes
 
-The skinned mesh **MUST** have vertex attributes that are used in skinning calculations. The `JOINTS_0` attribute data contains the indices of the joints from the corresponding `skin.joints` array that affect the vertex. The `WEIGHTS_0` attribute data defines the weights indicating how strongly the joint influences the vertex.
+The skinned mesh **MUST** have vertex attributes that are used in skinning calculations. The `JOINTS_n` attribute data contains the indices of the joints from the corresponding `skin.joints` array that affect the vertex. The `WEIGHTS_n` attribute data defines the weights indicating how strongly the joint influences the vertex.
 
 To apply skinning, a transformation matrix is computed for each joint. Then, the per-vertex transformation matrices are computed as weighted linear sums of the joint transformation matrices. Note that per-joint inverse bind matrices (when present) **MUST** be applied before the base node transforms.
 
@@ -1510,7 +1526,7 @@ The threshold in the official validation tool is set to `2e-7` times the number 
 Since the allowed threshold is much lower than minimum possible step for quantized component types, weight sum should be renormalized after quantization.
 ====
 
-When any of the vertices are influenced by more than four joints, the additional joint and weight information are stored in subsequent sets. For example, `JOINTS_1` and `WEIGHTS_1` if present will reference the accessor for up to 4 additional joints that influence the vertices. For a given primitive, the number of `JOINTS` attribute sets **MUST** be equal to the number of `WEIGHTS` attribute sets.
+When any of the vertices are influenced by more than four joints, the additional joint and weight information are stored in subsequent sets. For example, `JOINTS_1` and `WEIGHTS_1` if present will reference the accessor for up to 4 additional joints that influence the vertices. For a given primitive, the number of `JOINTS_n` attribute sets **MUST** be equal to the number of `WEIGHTS_n` attribute sets.
 
 Client implementations **MAY** support only a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the asset's animation.
 
