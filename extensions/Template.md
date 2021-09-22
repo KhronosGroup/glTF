@@ -1,4 +1,9 @@
-# TODO_EXTENSION_NAME 
+<!--
+Copyright 2015-2021 The Khronos Group Inc.
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
+# TODO_EXTENSION_NAME
 
 ## Contributors
 

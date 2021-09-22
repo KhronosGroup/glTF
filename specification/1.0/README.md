@@ -1,3 +1,8 @@
+<!--
+Copyright 2013-2021 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+-->
+
 <p align="center">
 <img src="../figures/gltf.png" />
 </p>
@@ -251,7 +256,7 @@ Any node can define a local space transformation either by supplying a `matrix` 
 
 TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation.
 
-When a node is targeted for animation (referenced by an [`animation.channel.target`](#reference-animation.channel.target)), only TRS properties may be present; `matrix` will not be present. 
+When a node is targeted for animation (referenced by an [`animation.channel.target`](#reference-animation.channel.target)), only TRS properties may be present; `matrix` will not be present.
 
 In the example below, `node-box` defines non-default rotation and translation.
 
@@ -697,7 +702,7 @@ The following example shows a technique and the properties it defines. This sect
 ```javascript
 "techniques": {
     "technique1": {
-    	 // parameter definitions
+         // parameter definitions
         "parameters": {
             "ambient": {
                 "type": 35666
@@ -720,32 +725,32 @@ The following example shows a technique and the properties it defines. This sect
             }
             // more parameters
         },
-    	// program, attributes and uniforms definitions
-	    "attributes": {
-	        "a_normal": "normal",
-	        "a_position": "position",
-	        "a_texcoord0": "texcoord0"
-	    },
-	    "program": "program_0",
-	    "uniforms": {
-	        "u_ambient": "ambient",
-	        "u_diffuse": "diffuse",
-	        "u_emission": "emission",
-	        "u_light0Color": "light0Color",
-	        "u_light0Transform": "light0Transform",
-	        "u_modelViewMatrix": "modelViewMatrix",
-	        "u_normalMatrix": "normalMatrix",
-	        "u_projectionMatrix": "projectionMatrix",
-	        "u_shininess": "shininess",
-	        "u_specular": "specular"
-	    },
-		// render states
-		"states": {
-		    "enable": [
-		        2884,
-		        2929
-		    ]
-		}
+        // program, attributes and uniforms definitions
+            "attributes": {
+                "a_normal": "normal",
+                "a_position": "position",
+                "a_texcoord0": "texcoord0"
+            },
+            "program": "program_0",
+            "uniforms": {
+                "u_ambient": "ambient",
+                "u_diffuse": "diffuse",
+                "u_emission": "emission",
+                "u_light0Color": "light0Color",
+                "u_light0Transform": "light0Transform",
+                "u_modelViewMatrix": "modelViewMatrix",
+                "u_normalMatrix": "normalMatrix",
+                "u_projectionMatrix": "projectionMatrix",
+                "u_shininess": "shininess",
+                "u_specular": "specular"
+            },
+                // render states
+                "states": {
+                    "enable": [
+                        2884,
+                        2929
+                    ]
+                }
 
 ```
 
@@ -873,12 +878,12 @@ The following example `states` object indicates to enable all Boolean states (se
 
 The following example shows a typical `"states"` object for closed opaque geometry.  Culling and the depth test are enabled, and all other GL states are set to the default value (disabled).
 ```javascript
-	"states": {
-	    "enable": [
-	        2884,
-	        2929
-	    ]
-	}
+        "states": {
+            "enable": [
+                2884,
+                2929
+            ]
+        }
 ```
 
 > **Implementation Note**: It is recommended that a runtime use the minimal number of GL state function calls.  This generally means ordering draw calls by technique, and then making GL state function calls only for the states that vary between techniques.
@@ -919,7 +924,7 @@ Shader source files are stored in the asset's `shaders` dictionary property, whi
         "uri": "duck0VS.glsl"
     }
 },
-```    
+```
 
 #### Textures
 
@@ -1107,7 +1112,7 @@ Only the `version` property is required. For example,
         "version" : "1.0.3",
         "extras" : {
             "Application specific" : "The extra object can contain any properties."
-        }  
+        }
     },
     "version": "1.0"
 }
@@ -3380,7 +3385,7 @@ Application-specific data.
 * Brandon Jones, Google
 * Ed Mackey, Analytical Graphics, Inc.
 * Matthew McMullan,
-* Darryl Gough, 
+* Darryl Gough,
 * Alex Wood,
 * Rob Taglang, Cesium
 * Marco Hutter,

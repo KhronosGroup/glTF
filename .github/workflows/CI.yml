@@ -1,10 +1,13 @@
+# Copyright 2020-2021 The Khronos Group Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 # CI to build asciidoctor spec targets
 
 name: CI
 
 # Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
+  # Triggers the workflow on push or pull request events but only for the default branch
   push:
 
   # Allows you to run this workflow manually from the Actions tab
@@ -16,17 +19,23 @@ jobs:
     runs-on: ubuntu-latest
 
     # Use Khronos container with asciidoctor toolchain preinstalled
-    container: khronosgroup/docker-images:vulkan-docs-base
+    container: khronosgroup/docker-images:asciidoctor-spec
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # See what's there
-      - name: Build spec targets
+      # REUSE license checker
+      - name: license-check
+        run: |
+          reuse lint
+
+      # Build spec targets
+      - name: spec-generate
         run: |
           cd specification/2.0
           make Specification.html Specification.pdf
+
       - name: Archive generated files
         uses: actions/upload-artifact@v2
         with:

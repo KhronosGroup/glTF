@@ -1,3 +1,8 @@
+<!--
+Copyright 2018-2021 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+-->
+
 # KHR\_materials\_ior
 
 ## Contributors
@@ -24,7 +29,7 @@
 * Alex Wood, AGI [@abwood](https://twitter.com/abwood)
 * Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
 
-Copyright (C) 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
