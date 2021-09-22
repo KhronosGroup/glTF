@@ -1,7 +1,7 @@
 // Copyright 2020-2021 The Khronos Group Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= COPYING file for the KhronosGroup/Vulkan-Docs project
+= COPYING file for the KhronosGroup/glTF project
 
 == Licenses
 
