@@ -341,7 +341,7 @@ Major version updates **MAY** be incompatible with previous versions.
 [NOTE]
 .Implementation Note
 ====
-Certain Exif chunks, e.g. "`Orientation`", may severely impact asset's portability.
+Certain Exif chunks, e.g., "`Orientation`", may severely impact asset's portability.
 ====
 
 [[json-encoding]]
@@ -412,7 +412,7 @@ These two examples represent the same glTF JSON data.
 `100`, `100.0`, and `1e2` represent the same value. See <<json,RFC 8259>>, Section 6 for more details.
 ====
 
-6. Non-integer numbers **SHOULD** be written in a way that preserves original values when these numbers are read back, i.e. they **SHOULD NOT** be altered by JSON serialization / deserialization roundtrip.
+6. Non-integer numbers **SHOULD** be written in a way that preserves original values when these numbers are read back, i.e., they **SHOULD NOT** be altered by JSON serialization / deserialization roundtrip.
 +
 [NOTE]
 .Implementation Note
@@ -434,6 +434,25 @@ Base64 encoding used in Data URI increases the payload's byte length by 33%.
 ====
 
 - **Relative paths** -- `path-noscheme` or `ipath-noscheme` as defined by <<uri,RFC 3986>>, Section 4.2 or <<iri,RFC 3987>>, Section 2.2 -- without scheme, authority, or parameters. Reserved characters (as defined by <<uri,RFC 3986>>, Section 2.2. and <<iri,RFC 3987>>, Section 2.2.) **MUST** be percent-encoded.
+
+Paths with non-ASCII characters **MAY** be written as-is, with JSON string escaping, or with percent-encoding; all these options are valid. For example, the following three paths point to the same resource:
+
+[source,json]
+----
+{
+    "images": [
+        {
+            "uri": "grande_sphère.png"
+        },
+        {
+            "uri": "grande_sph\u00E8re.png"
+        },
+        {
+            "uri": "grande_sph%C3%A8re.png"
+        }
+    ]
+}
+----
 
 Client implementations **MAY** optionally support additional URI components. For example `http://` or `file://` schemes, authorities, hostnames, absolute paths, and query or fragment parameters. Assets containing these additional URI components would be less portable.
 
@@ -549,7 +568,7 @@ Chromaticity coordinates define the interpretation of each primary color channel
 [[scenes-overview]]
 === Overview
 
-glTF 2.0 assets **MAY** contain zero or more _scenes_, the set of visual objects to render. Scenes are defined in a `scenes` array. All nodes listed in `scene.nodes` array **MUST** be root nodes (see the next section for details).
+glTF 2.0 assets **MAY** contain zero or more _scenes_, the set of visual objects to render. Scenes are defined in a `scenes` array. All nodes listed in `scene.nodes` array **MUST** be root nodes, i.e., they **MUST NOT** be listed in a `node.children` array of any node.
 
 An additional root-level property, `scene` (note singular), identifies which of the scenes in the array **SHOULD** be displayed at load time. When `scene` is undefined, client implementations **MAY** delay rendering until a particular scene is requested.
 
@@ -742,7 +761,7 @@ Buffer data **MAY** alternatively be embedded in the glTF file via `data:` URI w
 
 A _buffer view_ represents a contiguous segment of data in a buffer, defined by a byte offset into the buffer specified in the `byteOffset` property and a total byte length specified by the `byteLength` property of the buffer view.
 
-Buffer views used for images, vertex indices, vertex attributes, or inverse bind matrices **MUST** contain only one kind of data, i.e. the same buffer view **MUST NOT** be used both for vertex indices and vertex attributes.
+Buffer views used for images, vertex indices, vertex attributes, or inverse bind matrices **MUST** contain only one kind of data, i.e., the same buffer view **MUST NOT** be used both for vertex indices and vertex attributes.
 
 When a buffer view is used by vertex indices or attribute accessors it **SHOULD** specify `bufferView.target` with a value of _element array buffer_ or _array buffer_ respectively.
 
@@ -751,6 +770,8 @@ When a buffer view is used by vertex indices or attribute accessors it **SHOULD*
 ====
 This allows client implementations to early designate each buffer view to a proper processing step, e.g, buffer views with vertex indices and attributes would be copied to the appropriate GPU buffers, while buffer views with image data would be passed to format-specific image decoders.
 ====
+
+The `bufferView.target` value uses integer enums defined in the <<_bufferview_target,Properties Reference>>.
 
 The following example defines two buffer views: the first holds the indices for an indexed triangle set, and the second holds the vertex data for the triangle set.
 
@@ -775,7 +796,7 @@ The following example defines two buffer views: the first holds the indices for 
 }
 ----
 
-When a buffer view is used for vertex attribute data, it **MAY** have a `byteStride` property. This property defines the stride in bytes between each vertex. Buffer views with other types of data **MUST NOT** not define `byteStride`.
+When a buffer view is used for vertex attribute data, it **MAY** have a `byteStride` property. This property defines the stride in bytes between each vertex. Buffer views with other types of data **MUST NOT** not define `byteStride` (unless such layout is explicitly enabled by an extension).
 
 Buffers and buffer views do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF asset (meshes, skins, animations) access buffers or buffer views via *accessors*.
 
@@ -785,7 +806,7 @@ Buffers and buffer views do not contain type information. They simply define the
 
 glTF asset **MAY** use GLB file container to pack glTF JSON and one glTF buffer into one file. Data for such buffer is provided via GLB-stored `BIN` chunk.
 
-A buffer with data provided by the GLB-stored `BIN` chunk, **MUST** be the first element of `buffers` array and it **MUST** have its `buffer.uri` property undefined.
+A buffer with data provided by the GLB-stored `BIN` chunk, **MUST** be the first element of `buffers` array and it **MUST** have its `buffer.uri` property undefined. When such a buffer exists, a `BIN` chunk **MUST** be present.
 
 Any glTF buffer with undefined `buffer.uri` property that is not the first element of `buffers` array does not refer to the GLB-stored BIN chunk, and the behavior of such buffers is left undefined to accommodate future extensions and specification versions.
 
@@ -829,7 +850,7 @@ An _accessor_ defines a method for retrieving data as typed arrays from within a
 
 All accessors are stored in the asset's `accessors` array.
 
-The following fragment shows two accessors, the first is a scalar accessor for retrieving a primitive's indices, and the second is a 3-float-component vector accessor for retrieving the primitive's position data.
+The following example shows two accessors, the first is a scalar accessor for retrieving a primitive's indices, and the second is a 3-float-component vector accessor for retrieving the primitive's position data.
 
 [source,json]
 ----
@@ -934,13 +955,13 @@ Similar to a standard accessor, a sparse accessor initializes an array of typed 
 
 On top of that, a sparse accessor includes a `sparse` JSON object describing the elements that deviate from their initialization values. The `sparse` object contains the following **REQUIRED** properties:
 
-- `count`: number of displaced elements.
+- `count`: number of displaced elements. This number **MUST NOT** be greater than the number of the base accessor elements.
 
-- `indices`: object describing the location and the component type of indices of deviating values. The indices **MUST** form a strictly increasing sequence.
+- `indices`: object describing the location and the component type of indices of deviating values. The indices **MUST** form a strictly increasing sequence. The indices **MUST NOT** be greater than or equal to the number of the base accessor elements. 
 
 - `values`: object describing the location of displaced elements corresponding to the indices referred from the `indices`.
 
-The following fragment shows an example of `sparse` accessor with 10 elements deviating from the initialization array.
+The following example shows an example of a sparse accessor with 10 elements deviating from the initialization array.
 
 [source,json]
 ----
@@ -1066,7 +1087,7 @@ end = 2 * 2 * accessor.count + start
 
 The unsigned short view for the resulting buffer range could be created without copying: 84 scalar values starting from byte offset 5228.
 
-When accessor values are not tightly-packed (i.e. `bufferView.byteStride` is greater than element's byte length), iteration over the created data view would need to take interleaved values into account (e.g. skip them).
+When accessor values are not tightly-packed (i.e., `bufferView.byteStride` is greater than element's byte length), iteration over the created data view would need to take interleaved values into account (i.e., skip them).
 
 
 [[accessors-bounds]]
@@ -1174,13 +1195,17 @@ Valid accessor type and component type for each attribute semantic property are 
 
 `POSITION` accessor **MUST** have its `min` and `max` properties defined.
 
-`TEXCOORD`, `COLOR`, `JOINTS`, and `WEIGHTS` attribute semantic property names **MUST** be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. All indices for indexed attribute semantics **MUST** start with 0 and be consecutive positive integers: `TEXCOORD_0`, `TEXCOORD_1`, etc. Indices **MUST NOT** use leading zeroes to pad the number of digits (e.g. `TEXCOORD_01`).
+The W component of each `TANGENT` accessor element **MUST** be set to `1.0` or `-1.0`.
+
+All components of each `COLOR_0` accessor element **MUST** be clamped to `[0.0, 1.0]` range.
+
+`TEXCOORD`, `COLOR`, `JOINTS`, and `WEIGHTS` attribute semantic property names **MUST** be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. All indices for indexed attribute semantics **MUST** start with 0 and be consecutive positive integers: `TEXCOORD_0`, `TEXCOORD_1`, etc. Indices **MUST NOT** use leading zeroes to pad the number of digits (e.g., `TEXCOORD_01` is not allowed).
 
 Client implementations **SHOULD** support at least two UV texture coordinate sets, one vertex color, and one joints/weights set.
 
-All attribute accessors for a given primitive **MUST** have the same `count`. When `indices` property is not defined, attribute accessors' `count` indicates the number of vertices to render; when `indices` property is defined, it indicates the upper (exclusive) bound on the index values in the `indices` accessor, i.e. all index values **MUST** be less than attribute accessors' `count`.
+All attribute accessors for a given primitive **MUST** have the same `count`. When `indices` property is not defined, attribute accessors' `count` indicates the number of vertices to render; when `indices` property is defined, it indicates the upper (exclusive) bound on the index values in the `indices` accessor, i.e., all index values **MUST** be less than attribute accessors' `count`.
 
-`indices` accessor **MUST NOT** contain the maximum possible value for the component type used (i.e. 255 for unsigned bytes, 65535 for unsigned shorts, 4294967295 for unsigned ints).
+`indices` accessor **MUST NOT** contain the maximum possible value for the component type used (i.e., 255 for unsigned bytes, 65535 for unsigned shorts, 4294967295 for unsigned ints).
 
 [NOTE]
 .Implementation Note
@@ -1238,17 +1263,19 @@ Triangle primitives are defined around a shared common vertex, according to the 
 
   {empty}:: [eq]#p~i~ = {v~i+1~, v~i+2~, v~0~}#
 
+Mesh geometry **SHOULD NOT** contain degenerate lines or triangles, i.e., lines or triangles that use the same vertex more than once per topology primitive.
+
 When positions are not specified, client implementations **SHOULD** skip primitive's rendering unless its positions are provided by other means (e.g., by an extension). This applies to both indexed and non-indexed geometry.
 
 When tangents are not specified, client implementations **SHOULD** calculate tangents using default <<mikktspace,MikkTSpace>> algorithms.
 
-When normals are not specified, client implementations **SHOULD** assume flat normals and the provided tangents (if present) **SHOULD** be ignored.
+When normals are not specified, client implementations **MUST** calculate flat normals and the provided tangents (if present) **MUST** be ignored.
 
 Vertices of the same triangle **SHOULD** have the same `tangent.w` value. When vertices of the same triangle have different `tangent.w` values, its tangent space is considered undefined.
 
 The bitangent vectors **MUST** be computed by taking the cross product of the normal and tangent XYZ vectors and multiplying it against the W component of the tangent: `bitangent = cross(normal.xyz, tangent.xyz) * tangent.w`
 
-Extensions **MAY** add additional property names, accessor types and/or component types.
+Extensions **MAY** add additional attribute names, accessor types, and / or component types.
 
 [[morph-targets]]
 ==== Morph Targets
@@ -1268,6 +1295,8 @@ primitives[i].attributes.POSITION +
 ----
 
 Morph targets are specified via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a plain JSON object mapping a primitive attribute to an accessor containing morph target displacement data.
+
+For each morph target attribute, an original attribute **MUST** be present in the mesh primitive.
 
 Client implementations **SHOULD** support at least three attributes -- `POSITION`, `NORMAL`, and `TANGENT` -- for morphing. If morph targets contain application-specific semantics, their names **MUST** be prefixed with an underscore (e.g., `_TEMPERATURE`) like the associated attribute semantic.
 
@@ -1340,25 +1369,46 @@ A significant number of authoring and client implementations associate names wit
 [[skins-overview]]
 ==== Overview
 
+glTF 2.0 meshes support Linear Blend Skinning via skin objects, joint hierarchies, and designated vertex attributes.
+
 Skins are stored in the `skins` array of the asset. Each skin is defined by a **REQUIRED** `joints` property that lists the indices of nodes used as joints to pose the skin and an **OPTIONAL** `inverseBindMatrices` property that points to an accessor with inverse bind matrices data used to bring coordinates being skinned into the same space as each joint.
 
-The order of joints is defined in the `skin.joints` array and it **MUST** match the order of `inverseBindMatrices` accessor elements (when the latter is present). The `skeleton` property (if present) points to the node that is the common root of a joints hierarchy or to a direct or indirect parent node of the common root.
+The order of joints is defined by the `skin.joints` array and it **MUST** match the order of `inverseBindMatrices` accessor elements (when the latter is present). The `skeleton` property (if present) points to the node that is the common root of a joints hierarchy or to a direct or indirect parent node of the common root.
 
 [NOTE]
 .Implementation Note
 ====
-Although the `skeleton` property is not needed for computing skinning transforms, it may be used to provide a specific "pivot point" for the skinned geometry.
+Although the `skeleton` property is not needed for computing skinning transforms, it may be used to provide a specific "`pivot point`" for the skinned geometry.
 ====
 
-An accessor referenced by `inverseBindMatrices` **MUST** have floating-point components of `"MAT4"` type. The number of elements of the accessor referenced by `inverseBindMatrices` **MUST** greater than or equal to the number of `joints` elements.
+An accessor referenced by `inverseBindMatrices` **MUST** have floating-point components of `"MAT4"` type. The number of elements of the accessor referenced by `inverseBindMatrices` **MUST** greater than or equal to the number of `joints` elements. The fourth row of each matrix **MUST** be set to `[0.0, 0.0, 0.0, 1.0]`.
 
 [NOTE]
 .Implementation Note
 ====
-The matrix defining how to pose the skin's geometry for use with the joints (also known as "Bind Shape Matrix") should be premultiplied to mesh data or to Inverse Bind Matrices.
+The matrix defining how to pose the skin's geometry for use with the joints (also known as "`Bind Shape Matrix`") should be premultiplied to mesh data or to Inverse Bind Matrices.
 ====
 
-Only the transform of the skeleton root node is applied to the skinned mesh while the transform of the skinned mesh node **MUST** be ignored.
+[[joint-hierarchy]]
+==== Joint Hierarchy
+
+The joint hierarchy used for controlling skinned mesh pose is simply the node hierarchy, with each node designated as a _joint_ by a reference from the `skin.joints` array. Each skin's joints **MUST** have a common parent node (direct or indirect) called _common root_, which may or may not be a joint node itself. When a skin is referenced by a node within a scene, the common root **MUST** belong to the same scene.
+
+[NOTE]
+.Implementation Note
+====
+A node object does not specify whether it is a joint. Client implementations may need to traverse the `skins` array first, marking each joint node.
+====
+
+A joint node **MAY** have other nodes attached to it, even a complete node sub graph with meshes.
+
+[NOTE]
+.Implementation Note
+====
+It's common to have an entire geometry attached to a joint node without having it being skinned (e.g., a sword attached to a hand). Note that the node transform is the local transform of the node relative to the joint, like any other node in the glTF node hierarchy as described in the <<transformations,Transformations>> section.
+====
+
+Only the joint transforms are applied to the skinned mesh; the transform of the skinned mesh node **MUST** be ignored.
 
 In the example below, the translation of `node_0` and the scale of `node_1` are applied while the translation of `node_3` and rotation of `node_4` are ignored.
 
@@ -1393,7 +1443,6 @@ In the example below, the translation of `node_0` and the scale of `node_1` are 
     ],
     "skins": [
         {
-            "name": "skin_0",
             "inverseBindMatrices": 0,
             "joints": [ 1, 2 ],
             "skeleton": 1
@@ -1405,7 +1454,11 @@ In the example below, the translation of `node_0` and the scale of `node_1` are 
 [[skinned-mesh-attributes]]
 ==== Skinned Mesh Attributes
 
-The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The `JOINTS_0` attribute data contains the indices of the joints from the corresponding `skin.joints` array that affect the vertex. The `WEIGHTS_0` attribute data defines the weights indicating how strongly the joint influences the vertex. The following mesh skin defines `JOINTS_0` and `WEIGHTS_0` vertex attributes for a triangle mesh primitive:
+The skinned mesh **MUST** have vertex attributes that are used in skinning calculations. The `JOINTS_0` attribute data contains the indices of the joints from the corresponding `skin.joints` array that affect the vertex. The `WEIGHTS_0` attribute data defines the weights indicating how strongly the joint influences the vertex.
+
+To apply skinning, a transformation matrix is computed for each joint. Then, the per-vertex transformation matrices are computed as weighted linear sums of the joint transformation matrices. Note that per-joint inverse bind matrices (when present) **MUST** be applied before the base node transforms.
+
+In the following example, a mesh primitive defines `JOINTS_0` and `WEIGHTS_0` vertex attributes:
 
 [source,json]
 ----
@@ -1432,12 +1485,12 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
 }
 ----
 
-The number of joints that influence one vertex is limited to 4 per set, so referenced accessors **MUST** have `VEC4` type and following component types:
+The number of joints that influence one vertex is limited to 4 per set, so the referenced accessors **MUST** have `VEC4` type and following component types:
 
-* *`JOINTS_0`*: _unsigned byte_ or _unsigned short_
-* *`WEIGHTS_0`*: _float_, or _normalized unsigned byte_, or _normalized unsigned short_
+* *`JOINTS_n`*: _unsigned byte_ or _unsigned short_
+* *`WEIGHTS_n`*: _float_, or _normalized unsigned byte_, or _normalized unsigned short_
 
-The joint weights for each vertex **MUST** be non-negative.
+The joint weights for each vertex **MUST NOT** be negative.
 
 Joints **MUST NOT** contain more than one non-zero weight for a given vertex.
 
@@ -1457,29 +1510,11 @@ The threshold in the official validation tool is set to `2e-7` times the number 
 Since the allowed threshold is much lower than minimum possible step for quantized component types, weight sum should be renormalized after quantization.
 ====
 
-When any of the vertices are influenced by more than four joints, the additional joint and weight information are stored in subsequent sets. For example, `JOINTS_1` and `WEIGHTS_1` if present will reference the accessor for up to 4 additional joints that influence the vertices. Client implementations **MAY** support only a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the asset's animation.
+When any of the vertices are influenced by more than four joints, the additional joint and weight information are stored in subsequent sets. For example, `JOINTS_1` and `WEIGHTS_1` if present will reference the accessor for up to 4 additional joints that influence the vertices. For a given primitive, the number of `JOINTS` attribute sets **MUST** be equal to the number of `WEIGHTS` attribute sets.
 
-All joint values **MUST** be within the range of joints in the skin. Unused joint values (i.e. joints with a weight of zero) **SHOULD** be set to zero.
+Client implementations **MAY** support only a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the asset's animation.
 
-
-[[joint-hierarchy]]
-==== Joint Hierarchy
-
-The joint hierarchy used for controlling skinned mesh pose is simply the node hierarchy, with each node designated as a joint. Each skin's joints **MUST** have a common root, which may or may not be a joint node itself. When a skin is referenced by a node within a scene, the common root **MUST** belong to the same scene.
-
-[NOTE]
-.Implementation Note
-====
-For more details of vertex skinning implementation, refer to https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/figures/gltfOverview-2.0.0b.png[glTF Overview].
-====
-
-[NOTE]
-.Implementation Note
-====
-A node definition does not specify whether the node is a joint. Client implementations may need to traverse the `skins` array first, marking each joint node.
-====
-
-A joint **MAY** have regular nodes attached to it, even a complete node sub graph with meshes. It's often used to have an entire geometry attached to a joint without having it being skinned by the joint. (i.e., a sword attached to a hand joint). Note that the node transform is the local transform of the node relative to the joint, like any other node in the glTF node hierarchy as described in the <<transformations,Transformation>> section.
+All joint values **MUST** be within the range of joints in the skin. Unused joint values (i.e., joints with a weight of zero) **SHOULD** be set to zero.
 
 
 [[instantiation]]
@@ -1515,7 +1550,7 @@ When a mesh primitive uses any triangle-based topology (i.e., _triangles_, _tria
 Switching the winding order to clockwise enables mirroring geometry via negative scale transformations.
 ====
 
-When an instantiated mesh has morph targets, it **MUST** use morph weights specified with the `node.weights` property. When the latter is undefined, `mesh.weights` property **MUST** used instead. When both of these fields are undefined, the mesh is instantiated in a non-morphed state (i.e., with all morph weights set to zeros).
+When an instantiated mesh has morph targets, it **MUST** use morph weights specified with the `node.weights` property. When the latter is undefined, `mesh.weights` property **MUST** be used instead. When both of these fields are undefined, the mesh is instantiated in a non-morphed state (i.e., with all morph weights set to zeros).
 
 The example below instantiates a Morph Target with non-default weights.
 
@@ -1532,6 +1567,8 @@ The example below instantiates a Morph Target with non-default weights.
 ----
 
 A skin is instantiated within a node using a combination of the node's `mesh` and `skin` properties. The mesh for a skin instance is defined in the `mesh` property. The `skin` property contains the index of the skin to instance.
+
+The following example shows a skinned mesh instance: a skin object, a node with a skinned mesh, and two joint nodes.
 
 [source,json]
 ----
@@ -1588,7 +1625,7 @@ glTF 2.0 separates texture access into three distinct types of objects: Textures
 [[textures]]
 === Textures
 
-Textures are stored in the asset's `textures` array. A texture is defined by an image index, denoted by the `source` property and a sampler index (`sampler`). glTF 2.0 supports only static 2D textures.
+Textures are stored in the asset's `textures` array. A texture is defined by an image index, denoted by the `source` property and a sampler index (`sampler`). For example:
 
 [source,json]
 ----
@@ -1601,6 +1638,8 @@ Textures are stored in the asset's `textures` array. A texture is defined by an 
     ]
 }
 ----
+
+glTF 2.0 supports only static 2D textures.
 
 When `texture.source` is undefined, the image **SHOULD** be provided by an extension or application-specific means, otherwise the texture object is undefined.
 
@@ -1673,6 +1712,8 @@ To ignore embedded colorspace information when using ImageBitmap API, set `color
 ==== Overview
 Samplers are stored in the `samplers` array of the asset. Each sampler specifies filtering and wrapping modes.
 
+The sampler properties use integer enums defined in the <<reference-sampler,Properties Reference>>.
+
 Client implementations **SHOULD** follow specified filtering modes. When the latter are undefined, client implementations **MAY** set their own default texture filtering settings.
 
 Client implementations **MUST** follow specified wrapping modes.
@@ -1683,15 +1724,15 @@ Filtering modes control texture's magnification and minification.
 
 Magnification modes include:
 
-* _Nearest_. For each requested texel coordinates, the sampler selects a texel with the nearest coordinates. This process is sometimes called "nearest neighbor".
+* _Nearest_. For each requested texel coordinates, the sampler selects a texel with the nearest coordinates. This process is sometimes called "`nearest neighbor`".
 
-* _Linear_. For each requested texel coordinates, the sampler computes a weighted sum of several adjacent texels. This process is sometimes called "bilinear interpolation".
+* _Linear_. For each requested texel coordinates, the sampler computes a weighted sum of several adjacent texels. This process is sometimes called "`bilinear interpolation`".
 
 Minification modes include:
 
-* _Nearest_. For each requested texel coordinates, the sampler selects a texel with the nearest (in Manhattan distance) coordinates from the original image. This process is sometimes called "nearest neighbor".
+* _Nearest_. For each requested texel coordinates, the sampler selects a texel with the nearest (in Manhattan distance) coordinates from the original image. This process is sometimes called "`nearest neighbor`".
 
-* _Linear_. For each requested texel coordinates, the sampler computes a weighted sum of several adjacent texels from the original image. This process is sometimes called "bilinear interpolation".
+* _Linear_. For each requested texel coordinates, the sampler computes a weighted sum of several adjacent texels from the original image. This process is sometimes called "`bilinear interpolation`".
 
 * _Nearest-mipmap-nearest_. For each requested texel coordinates, the sampler first selects one of pre-minified versions of the original image, and then selects a texel with the nearest (in Manhattan distance) coordinates from it.
 
@@ -1699,7 +1740,7 @@ Minification modes include:
 
 * _Nearest-mipmap-linear_. For each requested texel coordinates, the sampler first selects two pre-minified versions of the original image, selects a texel with the nearest (in Manhattan distance) coordinates from each of them, and performs final linear interpolation between these two intermediate results.
 
-* _Linear-mipmap-linear_. For each requested texel coordinates, the sampler first selects two pre-minified versions of the original image, computes a weighted sum of several adjacent texels from each of them, and performs final linear interpolation between these two intermediate results. This process is sometimes called "trilinear interpolation".
+* _Linear-mipmap-linear_. For each requested texel coordinates, the sampler first selects two pre-minified versions of the original image, computes a weighted sum of several adjacent texels from each of them, and performs final linear interpolation between these two intermediate results. This process is sometimes called "`trilinear interpolation`".
 
 To properly support mipmap modes, client implementations **SHOULD** generate mipmaps at runtime. When runtime mipmap generation is not possible, client implementations **SHOULD** override the minification filtering mode as follows:
 
@@ -1715,7 +1756,9 @@ To properly support mipmap modes, client implementations **SHOULD** generate mip
 
 ==== Wrapping
 
-Wrapping defines how to handle out of range texture coordinates, independently for both directions. Supported modes include:
+Per-vertex texture coordinates, which are provided via `TEXCOORD_n` attribute values, are normalized for the image size (not to confuse with the `normalized` accessor property, the latter refers only to data encoding). That is, the texture coordinate value of `(0.0, 0.0)` points to the beginning of the first (upper-left) image pixel, while the texture coordinate value of `(1.0, 1.0)` points to the end of the last (lower-right) image pixel.
+
+Sampler's wrapping modes define how to handle texture coordinates that are negative or greater than or equal to `1.0`, independently for both directions. Supported modes include:
 
 * _Repeat_. Only the fractional part of texture coordinates is used.
 +
@@ -1756,16 +1799,16 @@ The following example defines a sampler with _linear_ magnification filtering, _
 
 ==== Non-power-of-two Textures
 
-Client implementations **SHOULD** resize non power-of-two textures (so that their horizontal and vertical sizes are powers of two) when running on certain platforms that have limited support for such texture dimensions.
+Client implementations **SHOULD** resize non power-of-two textures (so that their horizontal and vertical sizes are powers of two) when running on platforms that have limited support for such texture dimensions.
 
 [NOTE]
 .Implementation Note
 ====
-Specifically if the `sampler` the texture references
+Specifically, if the `sampler` the texture references:
 
-* Has a wrapping mode (either `wrapS` or `wrapT`) equal to _repeat_ or _mirrored repeat_, or
+* has a wrapping mode (either `wrapS` or `wrapT`) equal to _repeat_ or _mirrored repeat_, or
 
-* Has a minification filter (`minFilter`) that uses mipmapping.
+* has a minification filter (`minFilter`) that uses mipmapping.
 ====
 
 
@@ -1810,6 +1853,8 @@ The metallic-roughness material model is defined by the following properties:
 The _base color_ has two different interpretations depending on the value of _metalness_. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used.
 
 The value for each property **MAY** be defined using factors and / or textures (e.g., `baseColorTexture` and `baseColorFactor`). If a texture is not given, all respective texture components within this material model **MUST** be assumed to have a value of `1.0`. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values. A texture binding is defined by an `index` of a _texture_ object and an optional index of texture coordinates.
+
+The following example shows a material that uses a texture for its _base color_ property.
 
 [source,json]
 ----
@@ -1973,7 +2018,7 @@ Real-time rasterizers typically use depth buffers and mesh sorting to support al
 
 The `doubleSided` property specifies whether the material is double sided.
 
-When this value is false, back-face culling is enabled, i.e. only front-facing triangles are rendered.
+When this value is false, back-face culling is enabled, i.e., only front-facing triangles are rendered.
 
 When this value is true, back-face culling is disabled and double sided lighting is enabled. The back-face **MUST** have its normals reversed before the lighting equation is evaluated.
 
@@ -1992,12 +2037,12 @@ This material does not emit light and will be black unless some lighting is pres
 [[point-and-line-materials]]
 === Point and Line Materials
 
-This specification does not define size and style of non-triangular primitives (such as _points_ or _lines_), and applications **MAY** use various techniques to render these primitives as appropriate. However, the following conventions are **RECOMMENDED** for consistency:
+This specification does not define size or style of non-triangular primitives (such as _points_ or _lines_), and applications **MAY** use various techniques to render these primitives as appropriate. However, the following conventions are **RECOMMENDED** for consistency:
 
 * Points and Lines **SHOULD** have widths of 1px in viewport space.
-* Lines with `NORMAL` and `TANGENT` attributes **SHOULD** be rendered with standard lighting including normal maps.
-* Points or Lines with no `TANGENT` attribute **SHOULD** be rendered with standard lighting but ignoring any normal maps on the material.
-* Points or Lines with no `NORMAL` property **SHOULD** be rendered without lighting and instead use the `COLOR` value for each pixel drawn.
+* Points or Lines with `NORMAL` and `TANGENT` attributes **SHOULD** be rendered with standard lighting including normal textures.
+* Points or Lines with `NORMAL` but without `TANGENT` attributes **SHOULD** be rendered with standard lighting but ignoring any normal textures on the material.
+* Points or Lines with no `NORMAL` attribute **SHOULD** be rendered without lighting and instead use the sum of the _base color_ value (as defined above, multiplied by `COLOR_0` when present) and the _emissive_ value.
 
 
 [[cameras]]
@@ -2138,13 +2183,13 @@ glTF 2.0 only supports animating node transforms and morph target weights. Exten
 [NOTE]
 .Note
 ====
-glTF 2.0 defines only storage of animation keyframes, so this specification doesn't define any runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc... When loading a glTF 2.0 asset, client implementations may select an animation entry and pause it on the first frame, play it automatically, or ignore all animations until further user requests. When a playing animation is stopped, client implementations may reset the scene to the initial state or freeze it at the current frame.
+glTF 2.0 defines only storage of animation keyframes, so this specification doesn't define any runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc. When loading a glTF 2.0 asset, client implementations may select an animation entry and pause it on the first frame, play it automatically, or ignore all animations until further user requests. When a playing animation is stopped, client implementations may reset the scene to the initial state or freeze it at the current frame.
 ====
 
 [NOTE]
 .Implementation Note
 ====
-glTF 2.0 does not specifically define how an animation will be used when imported but, as a best practice, it is recommended that each animation is self-contained as an action. For example, "Walk" and "Run" animations might each contain multiple channels targeting a model's various bones. The client implementation may choose when to play any of the available animations.
+glTF 2.0 does not specifically define how an animation will be used when imported but, as a best practice, it is recommended that each animation is self-contained as an action. For example, "`Walk`" and "`Run`" animations might each contain multiple channels targeting a model's various bones. The client implementation may choose when to play any of the available animations.
 ====
 
 All animations are stored in the `animations` array of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
@@ -2294,6 +2339,16 @@ _Channels_ connect the output values of the key frame animation to a specific no
 
 When `node` isn't defined, channel **SHOULD** be ignored. Valid path names are `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
 
+Nodes that do not contain a mesh with morph targets **MUST NOT** be targeted with `"weights"` path.
+
+Within one animation, each target (a combination of a node and a path) **MUST NOT** be used more than once.
+
+[NOTE]
+.Implementation Note
+====
+This prevents potential ambiguities when one target is affected by two or more overlapping samplers.
+====
+
 Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating-point scalar values representing linear time in seconds; and a set of vectors or scalars representing the animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, and `CUBICSPLINE`. See <<appendix-c-spline-interpolation,Appendix C>> for additional information about spline interpolation.
 
 The inputs of each sampler are relative to `t = 0`, defined as the beginning of the parent `animations` entry. Before and after the provided input range, output **MUST** be clamped to the nearest end of the input range.
@@ -2405,12 +2460,6 @@ All glTF extensions required to load and/or render an asset **MUST** be listed i
 ----
 
 `extensionsRequired` is a subset of `extensionsUsed`. All values in `extensionsRequired` **MUST** also exist in `extensionsUsed`.
-
-[NOTE]
-.Note
-====
-For more information on developing glTF extensions, consult the https://github.com/KhronosGroup/glTF/blob/master/extensions/README.md[extensions registry specification].
-====
 
 
 [[glb-file-format-specification]]
@@ -2627,7 +2676,7 @@ This chapter presents the bidirectional scattering distribution function (BRDF) 
 [NOTE]
 .Note
 ====
-See <<Pharr2016,Pharr et al. (2016), Chapter 5.6 "Surface Reflection">>, for an introduction to radiometry and the BRDF.
+See <<Pharr2016,Pharr et al. (2016), Chapter 5.6 "`Surface Reflection`">>, for an introduction to radiometry and the BRDF.
 ====
 
 The BRDF of the metallic-roughness material is a linear interpolation of a metallic BRDF and a dielectric BRDF. The BRDFs share the parameters for roughness and base color. The blending factor `metallic` describes the metalness of the material.
@@ -2661,7 +2710,7 @@ Metallic surfaces reflect most illumination, only a small portion of the light i
 [NOTE]
 .Note
 ====
-See <<Pharr2016,Pharr et al. (2016), Chapter 8.2 "Specular Reflection and Transmission">>.
+See <<Pharr2016,Pharr et al. (2016), Chapter 8.2 "`Specular Reflection and Transmission`">>.
 ====
 
 This effect is described by the Fresnel term `conductor_fresnel` with the wavelength-dependent refractive index and extinction coefficient. To make parameterization simple, the metallic-roughness material combines the two quantities into a single, user-defined color value `baseColor` that defines the reflection color at normal incidence, also referred to as `f0`. The reflection color at grazing incidence is called `f90`. It is set to `1.0` because the grazing angle reflectance for any material approaches pure white in the limit. The conductor Fresnel term modulates the contribution of a specular BRDF parameterized by the `roughness` parameter.
@@ -2684,7 +2733,7 @@ Unlike metals, dielectric materials transmit most of the incident illumination i
 [NOTE]
 .Note
 ====
-See <<Pharr2016,Pharr et al. (2016), Chapter 8.2 "Specular Reflection and Transmission">>.
+See <<Pharr2016,Pharr et al. (2016), Chapter 8.2 "`Specular Reflection and Transmission`">>.
 ====
 
 This makes dielectrics like glass, oil, water or air transparent. Other dielectrics, like most plastic materials, are filled with particles that absorb or scatter most or all of the transmitted light, reducing the transparency and giving the surface its colorful appearance.
@@ -2721,7 +2770,7 @@ The Trowbridge-Reitz / GGX microfacet distribution describes the microsurface as
 [NOTE]
 .Note
 ====
-The Trowbridge-Reitz distribution was first described by <<TrowbridgeReitz1975,Trowbridge and Reitz (1975)>>. Later <<Walter2007,Walter et al. (2007)>> independently developed the same distribution and called it "GGX". They show that it is a better fit for measured data than the Beckmann distribution used by <<CookTorrance1982,Cook and Torrance (1982)>> due to its stronger tails.
+The Trowbridge-Reitz distribution was first described by <<TrowbridgeReitz1975,Trowbridge and Reitz (1975)>>. Later <<Walter2007,Walter et al. (2007)>> independently developed the same distribution and called it "`GGX`". They show that it is a better fit for measured data than the Beckmann distribution used by <<CookTorrance1982,Cook and Torrance (1982)>> due to its stronger tails.
 ====
 
 The mapping α = `roughness`^2^ results in more perceptually linear changes in the roughness.
@@ -2937,7 +2986,7 @@ The model for specular reflection can be improved in several ways. <<Heitz2014,H
 
 Although Schlick's Fresnel is a good approximation for a wide range of metallic and dielectric materials, there are a couple of reasons to use a more sophisticated solution for the Fresnel term.
 
-Metals often exhibit a "dip" in reflectance near grazing angles, which is not present in the Schlick Fresnel. <<LazanyiSzirmayKalos2005,Lazányi and Szirmay-Kalos (2005)>> extend the Schlick Fresnel with an error term to account for it. <<Hoffman2019,Hoffman (2019)>> improves the parameterization of this term by introducing an artist-friendly "f82" color, the color at an angle of about 82°. An additional color parameter for metals was also introduced by <<Gulbrandsen2014,Gulbrandsen (2014)>>. Gulbrandson calls it "edge tint" and uses it in the full Fresnel equations instead of Schlick's approximation. Even though the full Fresnel equations should give a more accurate result, Hoffman shows that it is worse than Schlick's approximation in the context of RGB renderers. As we target RGB renderers and do not provide an additional color parameter for metals in glTF, we suggest to use the original Schlick Fresnel for metals.
+Metals often exhibit a "`dip`" in reflectance near grazing angles, which is not present in the Schlick Fresnel. <<LazanyiSzirmayKalos2005,Lazányi and Szirmay-Kalos (2005)>> extend the Schlick Fresnel with an error term to account for it. <<Hoffman2019,Hoffman (2019)>> improves the parameterization of this term by introducing an artist-friendly `f82` color, the color at an angle of about 82°. An additional color parameter for metals was also introduced by <<Gulbrandsen2014,Gulbrandsen (2014)>>. Gulbrandson calls it "`edge tint`" and uses it in the full Fresnel equations instead of Schlick's approximation. Even though the full Fresnel equations should give a more accurate result, Hoffman shows that it is worse than Schlick's approximation in the context of RGB renderers. As we target RGB renderers and do not provide an additional color parameter for metals in glTF, we suggest to use the original Schlick Fresnel for metals.
 
 The index of refraction of most dielectrics is 1.5. For that reason, the dielectric Fresnel term uses a fixed `f0 = 0.04`. The Schlick Fresnel approximates the full Fresnel equations well for an index of refraction in the range [1.2, 2.2]. The main reason for a material to fall outside this range is transparency and nested objects. If a transparent object overlaps another transparent object and both have the same (or similar) index of refraction, the resulting ratio at the boundary is 1 (or close to 1). According to the full Fresnel equations, there is no (or almost no) reflection in this case. The reflection intensity computed from the Schlick Fresnel approximation will be too high. Implementations that care about accuracy in case of nested dielectrics are encouraged to use the full Fresnel equations for dielectrics. For metals Schlick's approximation is still a good choice.
 
@@ -2966,7 +3015,7 @@ More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework f
 * [[Jakob2014]] https://research.cs.cornell.edu/layered-sg14/[Jakob, W., E. d'Eon, O. Jakob, S. Marschner (2014): A Comprehensive Framework for Rendering Layered Materials]
 * [[KullaConty2017]] https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf[Kulla, C., and A. Conty (2017): Revisiting Physically Based Shading at Imageworks]
 * [[LazanyiSzirmayKalos2005]] http://wscg.zcu.cz/WSCG2005/Papers_2005/Short/H29-full.pdf[Lazanyi, I. and L. Szirmay-Kalos (2005): Fresnel term approximations for metals]
-* [[Pharr2016]] http://www.pbr-book.org/[Pharr, M., W. Jakob, and G. Humphreys (2016): Physically Based Rendering: From Theory To Implementation, 3rd edition. ]
+* [[Pharr2016]] https://www.pbr-book.org/[Pharr, M., W. Jakob, and G. Humphreys (2016): Physically Based Rendering: From Theory To Implementation, 3rd edition. ]
 * [[Schlick1994]] https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.50.2297&rep=rep1&type=pdf[Schlick, C. (1994): An Inexpensive BRDF Model for Physically-based Rendering. Computer Graphics Forum 13, 233-246.]
 * [[Smith1967]] Smith, B. (1967):  Geometrical shadowing of a random rough surface. IEEE Transactions on Antennas and Propagation 15 (5), 668-671.
 * [[TorranceSparrow1967]] https://www.graphics.cornell.edu/~westin/pubs/TorranceSparrowJOSA1967.pdf[Torrance, K. E., E. M. Sparrow (1967): Theory for Off-Specular Reflection From Roughened Surfaces. Journal of the Optical Society of America 57 (9), 1105-1114.]
@@ -2982,6 +3031,8 @@ More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework f
 glTF animations support cubic spline interpolation.
 
 The keyframes of a cubic spline in glTF have input and output values where each input value corresponds to three output values of the same type: in-tangent, data point, and out-tangent.
+
+An animation that uses cubic spline interpolation **MUST** have at least 2 keyframes.
 
 Given a set of keyframes
 

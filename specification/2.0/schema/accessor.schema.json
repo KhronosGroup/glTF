@@ -62,7 +62,7 @@
             "type": "boolean",
             "description": "Specifies whether integer data values are normalized before usage.",
             "default": false,
-            "gltf_detailedDescription": "Specifies whether integer data values are normalized (`true`) to [0, 1] (for unsigned types) or to [-1, 1] (for signed types) when they are accessed. This property **MAY** be defined only for accessors that contain vertex attributes or animation output data. This property **MUST NOT** be defined for accessors with floating-point components.",
+            "gltf_detailedDescription": "Specifies whether integer data values are normalized (`true`) to [0, 1] (for unsigned types) or to [-1, 1] (for signed types) when they are accessed. This property **MUST NOT** be set to `true` for accessors with `FLOAT` or `UNSIGNED_INT` component type.",
             "gltf_webgl": "`normalized` parameter of `vertexAttribPointer()` "
         },
         "count": {
