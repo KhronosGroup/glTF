@@ -7,6 +7,11 @@
   "properties": {
     "index": { },
     "texCoord": { },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The name of the property, e.g. for display purposes."
+    },
     "class": {
       "type": "string",
       "description": "The class this property texture conforms to. The value must be a class ID declared in the `classes` dictionary."

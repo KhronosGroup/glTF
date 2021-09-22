@@ -16,7 +16,7 @@
     },
     "properties": {
       "type": "object",
-      "description": "A dictionary, where each key is a property ID and each value is an object defining the property.",
+      "description": "A dictionary, where each key is a property ID and each value is an object defining the property. Property IDs may contain only alphanumeric and underscore characters.",
       "minProperties": 1,
       "additionalProperties": {
         "$ref": "class.property.schema.json"
