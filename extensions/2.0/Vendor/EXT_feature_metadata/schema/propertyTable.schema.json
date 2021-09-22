@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-04/schema",
   "title": "Property Table",
   "type": "object",
-  "description": "A property table defined by a class and property values stored in arrays.",
+  "description": "Features conforming to a class, organized as property values stored in columnar arrays.",
   "properties": {
     "class": {
       "type": "string",

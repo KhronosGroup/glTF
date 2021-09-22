@@ -3,7 +3,7 @@
   "title": "Property Texture",
   "type": "object",
   "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-  "description": "Features whose property values are stored directly in texture channels. This is not to be confused with feature ID textures which store feature IDs for use with a property table.",
+  "description": "Features conforming to a class, organized as property values stored in texture channels.",
   "properties": {
     "index": { },
     "texCoord": { },

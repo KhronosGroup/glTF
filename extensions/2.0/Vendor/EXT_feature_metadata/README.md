@@ -49,7 +49,7 @@ This extension is optional, meaning it should be placed in the `extensionsUsed` 
 
 ## Overview
 
-A **feature** is an entity that has both geometry and non-geometric properties. In Geographic Information Systems (GIS) a feature is an entity such as a point, polyline, or polygon that represents some element on a map. In another domain like CAD/BIM a feature might be a component of a design model. A feature could also be a 3D building in a city, a tree in a forest, a sample point in a weather model, or a patch of texels on a 3D model.
+A **feature** is an entity that has both geometry and associated properties. In Geographic Information Systems (GIS) a feature is an entity such as a point, polyline, or polygon that represents some element on a map. In another domain like CAD/BIM a feature might be a component of a design model. A feature could also be a 3D building in a city, a tree in a forest, a sample point in a weather model, or a patch of texels on a 3D model.
 
 This extension allows batching features for efficient streaming to a client for rendering and interaction. Efficiency comes from transferring multiple features in the same glTF and rendering them in the least number of draw calls necessary.
 
@@ -295,7 +295,7 @@ Each buffer view `byteOffset` must be aligned to a multiple of 8 bytes.
 
 ### Property Textures
 
-Property textures (not to be confused with [Feature ID Textures](#feature-id-texture)) use textures rather than parallel arrays to store values. Property textures are accessed directly by texture coordinates, rather than feature IDs. Property textures are especially useful when texture mapping high frequency data to less detailed 3D surfaces. For each property that does not specify a `noData` value, a mapping to the corresponding texture channel or channels is required. Properties with a `noData` value are optional in property textures instantiating a given class.
+Property textures use textures rather than parallel arrays to store values. Property textures are accessed directly by texture coordinates, and do not require feature IDs. Property textures are especially useful when texture mapping high frequency data to less detailed 3D surfaces. For each property that does not specify a `noData` value, a mapping to the corresponding texture channel or channels is required. Properties with a `noData` value are optional in property textures instantiating a given class.
 
 Property textures use the [Raster Format](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata#raster-format) of the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata) with a few additional constraints:
 
