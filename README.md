@@ -1,3 +1,8 @@
+<!--
+Copyright 2014-2021 The Khronos Group Inc.
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 <p align="center">
 <img src="specification/figures/gltf.png" />
 </p>
@@ -9,8 +14,10 @@ glTF™ (GL Transmission Format) is a royalty-free specification for the efficie
 
 ## Specification
 
-* [glTF Specification, 2.0](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md) (or [all specification versions](https://github.com/KhronosGroup/glTF/blob/master/specification/README.md))
-* [glTF Extension Registry](https://github.com/KhronosGroup/glTF/blob/master/extensions/README.md)
+**NOTE** as of September 23, 2021, the glTF 2.0 Specification has been moved to AsciiDoc markup format.
+
+* [glTF Specification, 2.0](https://www.khronos.org/registry/glTF/) (or [all specification versions](https://github.com/KhronosGroup/glTF/blob/main/specification/README.md))
+* [glTF Extension Registry](https://github.com/KhronosGroup/glTF/blob/main/extensions/README.md)
 
 Please provide spec feedback by submitting [issues](https://github.com/KhronosGroup/glTF/issues). For technical or art workflow questions, or to showcase your work, [join the glTF forum](https://community.khronos.org/c/gltf-general). For quick questions, use the `#gltf` channel in the Khronos Group [Slack](https://www.khr.io/slack).
 
@@ -96,7 +103,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 
 ## glTF Tools
 
-Tools, applications and libraries for working with glTF can be found in the [glTF Project Explorer](http://github.khronos.org/glTF-Project-Explorer/). 
+Tools, applications and libraries for working with glTF can be found in the [glTF Project Explorer](http://github.khronos.org/glTF-Project-Explorer/).
 
 ### Resources
 

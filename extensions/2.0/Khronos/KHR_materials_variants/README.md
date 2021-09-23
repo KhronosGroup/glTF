@@ -1,3 +1,8 @@
+<!--
+Copyright 2018-2020 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+-->
+
 # KHR_materials_variants
 
 ## Contributors
@@ -13,7 +18,7 @@
 - Mikko Haapoja, [@mikkoh](http://github.com/mikkoh)
 - Eric Chadwick, Wayfair, [@echadwick-wayfair](https://github.com/echadwick-wayfair)
 
-Copyright (C) 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status

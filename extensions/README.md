@@ -1,3 +1,8 @@
+<!--
+Copyright 2015-2021 The Khronos Group Inc.
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # glTF Extension Registry
 
 ## Extensions for glTF 2.0

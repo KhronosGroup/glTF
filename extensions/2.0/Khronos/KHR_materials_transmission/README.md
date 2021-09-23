@@ -1,3 +1,8 @@
+<!--
+Copyright 2020 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+-->
+
 # KHR\_materials\_transmission <!-- omit in toc -->
 
 ## Contributors <!-- omit in toc -->
@@ -12,7 +17,7 @@
 * Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
 
-Copyright (C) 2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status <!-- omit in toc -->
