@@ -14,7 +14,7 @@ glTF™ (GL Transmission Format) is a royalty-free specification for the efficie
 
 ## Specification
 
-**NOTE** as of September 23, 2021, the glTF 2.0 Specification has been moved to asciidoctor format.
+**NOTE** as of September 23, 2021, the glTF 2.0 Specification has been moved to AsciiDoc markup format.
 
 * [glTF Specification, 2.0](https://www.khronos.org/registry/glTF/) (or [all specification versions](https://github.com/KhronosGroup/glTF/blob/main/specification/README.md))
 * [glTF Extension Registry](https://github.com/KhronosGroup/glTF/blob/main/extensions/README.md)

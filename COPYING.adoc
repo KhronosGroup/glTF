@@ -26,7 +26,7 @@ The glTF project uses several licenses.
   license identifier "`Apache-2.0`").
 * Some generated, transient files produced during the course of building the
   specification, headers, or other targets may not have copyrights. These
-  are typically very short asciidoc fragments describing parts of the glTF
+  are typically very short AsciiDoc fragments describing parts of the glTF
   2.0 schema, and are incorporated by reference into specification or
   reference page builds.
 
