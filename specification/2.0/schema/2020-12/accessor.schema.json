@@ -1,0 +1,136 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "accessor.schema.json",
+    "title": "Accessor",
+    "type": "object",
+    "description": "A typed view into a buffer view that contains raw binary data.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "bufferView": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the bufferView.",
+            "gltf_detailedDescription": "The index of the buffer view. When undefined, the accessor **MUST** be initialized with zeros; `sparse` property or extensions **MAY** override zeros with actual values."
+        },
+        "byteOffset": {
+            "type": "integer",
+            "description": "The offset relative to the start of the buffer view in bytes.",
+            "minimum": 0,
+            "default": 0,
+            "gltf_detailedDescription": "The offset relative to the start of the buffer view in bytes.  This **MUST** be a multiple of the size of the component datatype. This property **MUST NOT** be defined when `bufferView` is undefined.",
+            "gltf_webgl": "`vertexAttribPointer()` offset parameter"
+        },
+        "componentType": {
+            "description": "The datatype of the accessor's components.",
+            "gltf_detailedDescription": "The datatype of the accessor's components.  UNSIGNED_INT type **MUST NOT** be used for any accessor that is not referenced by `mesh.primitive.indices`.",
+            "gltf_webgl": "`type` parameter of `vertexAttribPointer()`.  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, `Uint32Array`, and `Float32Array`.",
+            "anyOf": [
+                {
+                    "const": 5120,
+                    "description": "BYTE",
+                    "type": "integer"
+                },
+                {
+                    "const": 5121,
+                    "description": "UNSIGNED_BYTE",
+                    "type": "integer"
+                },
+                {
+                    "const": 5122,
+                    "description": "SHORT",
+                    "type": "integer"
+                },
+                {
+                    "const": 5123,
+                    "description": "UNSIGNED_SHORT",
+                    "type": "integer"
+                },
+                {
+                    "const": 5125,
+                    "description": "UNSIGNED_INT",
+                    "type": "integer"
+                },
+                {
+                    "const": 5126,
+                    "description": "FLOAT",
+                    "type": "integer"
+                },
+                {
+                    "type": "integer"
+                }
+            ]
+        },
+        "normalized": {
+            "type": "boolean",
+            "description": "Specifies whether integer data values are normalized before usage.",
+            "default": false,
+            "gltf_detailedDescription": "Specifies whether integer data values are normalized (`true`) to [0, 1] (for unsigned types) or to [-1, 1] (for signed types) when they are accessed. This property **MUST NOT** be set to `true` for accessors with `FLOAT` or `UNSIGNED_INT` component type.",
+            "gltf_webgl": "`normalized` parameter of `vertexAttribPointer()` "
+        },
+        "count": {
+            "type": "integer",
+            "description": "The number of elements referenced by this accessor.",
+            "minimum": 1,
+            "gltf_detailedDescription": "The number of elements referenced by this accessor, not to be confused with the number of bytes or number of components."
+        },
+        "type": {
+            "description": "Specifies if the accessor's elements are scalars, vectors, or matrices.",
+            "anyOf": [
+                {
+                    "const": "SCALAR"
+                },
+                {
+                    "const": "VEC2"
+                },
+                {
+                    "const": "VEC3"
+                },
+                {
+                    "const": "VEC4"
+                },
+                {
+                    "const": "MAT2"
+                },
+                {
+                    "const": "MAT3"
+                },
+                {
+                    "const": "MAT4"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "max": {
+            "type": "array",
+            "description": "Maximum value of each component in this accessor.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 1,
+            "maxItems": 16,
+            "gltf_detailedDescription": "Maximum value of each component in this accessor.  Array elements **MUST** be treated as having the same data type as accessor's `componentType`. Both `min` and `max` arrays have the same length.  The length is determined by the value of the `type` property; it can be 1, 2, 3, 4, 9, or 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer. When the accessor is sparse, this property **MUST** contain maximum values of accessor data with sparse substitution applied."
+        },
+        "min": {
+            "type": "array",
+            "description": "Minimum value of each component in this accessor.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 1,
+            "maxItems": 16,
+            "gltf_detailedDescription": "Minimum value of each component in this accessor.  Array elements **MUST** be treated as having the same data type as accessor's `componentType`. Both `min` and `max` arrays have the same length.  The length is determined by the value of the `type` property; it can be 1, 2, 3, 4, 9, or 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer. When the accessor is sparse, this property **MUST** contain minimum values of accessor data with sparse substitution applied."
+        },
+        "sparse": {
+            "allOf": [ { "$ref": "accessor.sparse.schema.json" } ],
+            "description": "Sparse storage of elements that deviate from their initialization value."
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "dependencies": {
+        "byteOffset": [ "bufferView" ]
+    },
+    "required": [ "componentType", "count", "type" ]
+}

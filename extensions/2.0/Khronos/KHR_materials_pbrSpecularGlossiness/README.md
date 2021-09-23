@@ -1,3 +1,8 @@
+<!--
+Copyright 2018-2021 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+-->
+
 # KHR\_materials\_pbrSpecularGlossiness
 
 ## Khronos 3D Formats Working Group
