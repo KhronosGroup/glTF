@@ -18,6 +18,17 @@ The Khronos{regtitle} 3D Formats Working Group
 :source-highlighter: coderay
 :title-logo-image: image:../figures/gltf.png[Logo,pdfwidth=4in,align=right]
 :stem:
+ifdef::env-github[]
+:toc-placement!:
+
+[NOTE]
+.Note
+====
+Khronos posts the AsciiDoc source of the glTF specification to enable community
+feedback and remixing under CC-BY 4.0. Published versions of the Specification
+are located in the https://www.khronos.org/registry/glTF[glTF Registry].
+====
+endif::[]
 
 // This causes cross references to chapters, sections, and tables to be
 // rendered as "Section A.B" (for example) rather than rendering the reference
