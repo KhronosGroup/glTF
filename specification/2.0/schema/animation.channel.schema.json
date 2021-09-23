@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "animation.channel.schema.json",
     "title": "Animation Channel",
     "type": "object",
     "description": "Targets an animation's sampler at a node's property.",

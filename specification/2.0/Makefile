@@ -15,7 +15,7 @@ all: $(TARGETS)
 # accurately reflect changes to wetzel that impact the output here.
 # Please manually upgrade the version as often as needed, without unlocking.
 
-WETZEL = npx wetzel@0.2.1
+WETZEL = npx wetzel@0.2.2
 SCHEMALINK = schema
 EMBEDSCHEMA = JsonSchemaReference.adoc
 
@@ -26,7 +26,7 @@ GENERATED = $(PROPREF) $(EMBEDSCHEMA)
 # Schema files to leave out of $(PROPREF)
 IGNORESCHEMA = '["gltfchildofrootproperty.schema.json", "gltfid.schema.json", "gltfproperty.schema.json"]'
 $(GENERATED): $(wildcard schema/*.json)
-	$(WETZEL) -n -a=cqo -m=a -p "$(SCHEMALINK)/2020-12" -e "$(EMBEDSCHEMA)" \
+	$(WETZEL) -n -a=cqo -m=a -p "$(SCHEMALINK)" -e "$(EMBEDSCHEMA)" \
 	    -i $(IGNORESCHEMA) -c "icon:check[]" -k "**MUST**"\
 	    schema/glTF.schema.json > $(PROPREF)
 

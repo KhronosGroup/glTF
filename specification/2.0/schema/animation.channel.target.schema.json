@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "animation.channel.target.schema.json",
     "title": "Animation Channel Target",
     "type": "object",
     "description": "The index of the node and TRS property that an animation channel targets.",
@@ -13,16 +14,16 @@
             "description": "The name of the node's TRS property to modify, or the `\"weights\"` of the Morph Targets it instantiates. For the `\"translation\"` property, the values that are provided by the sampler are the translation along the X, Y, and Z axes. For the `\"rotation\"` property, the values are a quaternion in the order (x, y, z, w), where w is the scalar. For the `\"scale\"` property, the values are the scaling factors along the X, Y, and Z axes.",
             "anyOf": [
                 {
-                    "enum": [ "translation" ]
+                    "const": "translation"
                 },
                 {
-                    "enum": [ "rotation" ]
+                    "const": "rotation"
                 },
                 {
-                    "enum": [ "scale" ]
+                    "const": "scale"
                 },
                 {
-                    "enum": [ "weights" ]
+                    "const": "weights"
                 },
                 {
                     "type": "string"
