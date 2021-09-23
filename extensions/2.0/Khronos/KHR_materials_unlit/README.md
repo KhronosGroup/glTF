@@ -1,3 +1,8 @@
+<!--
+Copyright 2017-2018 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+-->
+
 # KHR\_materials\_unlit
 
 ## Contributors
@@ -10,7 +15,7 @@
 * Michael Feldstein, Facebook, [@msfeldstein](https://twitter.com/msfeldstein)
 * Robert Long, Mozilla, [@arobertlong](https://twitter.com/arobertlong)
 
-Copyright (C) 2017-2018 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2017-2018 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status

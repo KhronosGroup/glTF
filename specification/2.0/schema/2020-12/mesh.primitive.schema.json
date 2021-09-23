@@ -1,0 +1,89 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "mesh.primitive.schema.json",
+    "title": "Mesh Primitive",
+    "type": "object",
+    "description": "Geometry to be rendered with the given material.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "attributes": {
+            "type": "object",
+            "description": "A plain JSON object, where each key corresponds to a mesh attribute semantic and each value is the index of the accessor containing attribute's data.",
+            "minProperties": 1,
+            "additionalProperties": {
+                "$ref": "glTFid.schema.json"
+            }
+        },
+        "indices": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the accessor that contains the vertex indices.",
+            "gltf_detailedDescription": "The index of the accessor that contains the vertex indices.  When this is undefined, the primitive defines non-indexed geometry.  When defined, the accessor **MUST** have `SCALAR` type and an unsigned integer component type.",
+            "gltf_webgl": "`drawElements()` when defined and `drawArrays()` otherwise."
+        },
+        "material": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the material to apply to this primitive when rendering."
+        },
+        "mode": {
+            "description": "The topology type of primitives to render.",
+            "default": 4,
+            "anyOf": [
+                {
+                    "const": 0,
+                    "description": "POINTS",
+                    "type": "integer"
+                },
+                {
+                    "const": 1,
+                    "description": "LINES",
+                    "type": "integer"
+                },
+                {
+                    "const": 2,
+                    "description": "LINE_LOOP",
+                    "type": "integer"
+                },
+                {
+                    "const": 3,
+                    "description": "LINE_STRIP",
+                    "type": "integer"
+                },
+                {
+                    "const": 4,
+                    "description": "TRIANGLES",
+                    "type": "integer"
+                },
+                {
+                    "const": 5,
+                    "description": "TRIANGLE_STRIP",
+                    "type": "integer"
+                },
+                {
+                    "const": 6,
+                    "description": "TRIANGLE_FAN",
+                    "type": "integer"
+                },
+                {
+                    "type": "integer"
+                }
+            ]
+        },
+        "targets": {
+            "type": "array",
+            "description": "An array of morph targets.",
+            "items": {
+                "type": "object",
+                "minProperties": 1,
+                "additionalProperties": {
+                    "$ref": "glTFid.schema.json"
+                },
+                "description": "A plain JSON object specifying attributes displacements in a morph target, where each key corresponds to one of the three supported attribute semantic (`POSITION`, `NORMAL`, or `TANGENT`) and each value is the index of the accessor containing the attribute displacements' data."
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "gltf_webgl": "`drawElements()` and `drawArrays()`",
+    "required": [ "attributes" ]
+}

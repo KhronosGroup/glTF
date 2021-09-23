@@ -1,3 +1,8 @@
+<!--
+Copyright 2018-2020 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+-->
+
 # KHR_xmp_json_ld
 
 ## Contributors
@@ -16,7 +21,7 @@
 - Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
 - Leonard Daly, Individual Contributor, [@DrX3D](https://github.com/DrX3D)
 
-Copyright (C) 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status

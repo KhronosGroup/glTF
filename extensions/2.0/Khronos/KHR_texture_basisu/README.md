@@ -1,3 +1,8 @@
+<!--
+Copyright 2020 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+-->
+
 # KHR_texture_basisu
 
 ## Contributors
@@ -9,7 +14,7 @@
 * Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)
 * Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)
 
-Copyright (C) 2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status

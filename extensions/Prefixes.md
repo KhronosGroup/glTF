@@ -1,3 +1,8 @@
+<!--
+Copyright 2015-2021 The Khronos Group Inc.
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # glTF Extension Prefixes
 
 The following extension prefixes are reserved by the spec maintainers:
