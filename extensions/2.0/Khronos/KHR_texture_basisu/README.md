@@ -218,6 +218,7 @@ Authoring:
 Viewing:
 
 - [Babylon](https://www.babylonjs.com/)
+- [PlayCanvas](https://playcanvas.com/)
 - [three.js](https://threejs.org/)
 
 ## Resources
