@@ -8,7 +8,6 @@
 :tmtitle: pass:q,r[^™^]
 :regtitle: pass:q,r[^®^]
 The Khronos{regtitle} 3D Formats Working Group
-Version 2.0.0
 :data-uri:
 :icons: font
 :toc2:

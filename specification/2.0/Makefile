@@ -38,8 +38,28 @@ ASCIIDOCTOR = asciidoctor $(ADOCOPTS)
 ADOCOPTS = -d book
 SPECDEPS = $(SPEC).adoc $(GENERATED)
 
+PATCHVERSION = 0
+SPECREVISION = 2.0.$(PATCHVERSION)
+
+# Spell out ISO 8601 format as not all date commands support --rfc-3339
+SPECDATE = $(shell echo `date -u "+%Y-%m-%d %TZ"`)
+
+# Generate AsciiDoc attributes for spec remark
+# Could use `git log -1 --format="%cd"` to get branch commit date
+# This used to be a dependency in the spec html/pdf targets,
+# but that's likely to lead to merge conflicts. Just regenerate
+# when pushing a new spec for review to the sandbox.
+# The dependency on HEAD is per the suggestion in
+# http://neugierig.org/software/blog/2014/11/binary-revisions.html
+SPECREMARK = from git branch: $(shell echo `git symbolic-ref --short HEAD 2> /dev/null || echo Git branch not available`) \
+             commit: $(shell echo `git log -1 --format="%H" 2> /dev/null || echo Git commit not available`)
+
+ATTRIBOPTS = -a revnumber="$(SPECREVISION)" \
+             -a revdate="$(SPECDATE)" \
+             -a revremark="$(SPECREMARK)"
+
 $(SPEC).html: $(SPECDEPS)
-	$(ASCIIDOCTOR) -b html5 $(SPEC).adoc -o $@
+	$(ASCIIDOCTOR) -b html5 $(ATTRIBOPTS) $(SPEC).adoc -o $@
 
 # :allow-url-read: is necessary for the embedded render.githubusers.com
 # math images to be processed for the PDF target. See
@@ -48,7 +68,7 @@ $(SPEC).html: $(SPECDEPS)
 # These are removed after creating the PDF.
 STEMIMAGES = stem-*.png
 $(SPEC).pdf: $(SPECDEPS)
-	$(ASCIIDOCTOR) -b pdf -a allow-uri-read -r asciidoctor-pdf \
+	$(ASCIIDOCTOR) -b pdf $(ATTRIBOPTS) -a allow-uri-read -r asciidoctor-pdf \
 	    -r asciidoctor-mathematical $(SPEC).adoc -o $@
 	rm -f $(STEMIMAGES)
 
