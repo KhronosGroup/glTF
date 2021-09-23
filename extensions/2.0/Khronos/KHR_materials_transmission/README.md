@@ -189,6 +189,8 @@ using the transmission half vector *H*<sub>*T*</sub>
 
 <img src="https://render.githubusercontent.com/render/math?math=\displaystyle H_T = \text{normalize}(V %2B \, 2 \, \left| N \cdot L \right| \, N %2B L)">.
 
+With the step function χ<sup>+</sup> we ensure that the microsurface is only visible for directions that are on the same side of the macro and microsurfaces. Macro and microsurfaces are oriented according to *N* and *H*<sub>*T*</sub>, respectively.
+
 Introducing the visibility function
 
 <img src="https://render.githubusercontent.com/render/math?math=\displaystyle V_T = \frac{G_T}{4 \, \left| N \cdot L \right| \, \left| N \cdot V \right|}">
@@ -199,7 +201,7 @@ simplifies the original microfacet BTDF to
 
 with
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle V_T = \frac{\, \chi^%2B(H \cdot L)}{\left| N \cdot L\right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^-(H \cdot V)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}">.
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle V_T = \frac{\, \chi^%2B\left(\frac{H_T \cdot L}{N \cdot L}\right)}{\left| N \cdot L\right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^%2B\left(\frac{H_T \cdot V}{N \cdot V}\right)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}">.
 
 Thus we have the function
 
