@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Animation Channel Target",
+    "type": "object",
+    "description": "The property as a JSON pointer that an animation channel targets.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "pointer": {
+            "type": "string",
+            "description": "The JSON pointer of the property to target."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "pointer" ]
+}
