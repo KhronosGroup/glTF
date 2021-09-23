@@ -1,0 +1,21 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "material.occlusionTextureInfo.schema.json",
+    "title": "Material Occlusion Texture Info",
+    "type": "object",
+    "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+    "properties": {
+        "index": { },
+        "texCoord": { },
+        "strength": {
+            "type": "number",
+            "description": "A scalar multiplier controlling the amount of occlusion applied.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "A scalar parameter controlling the amount of occlusion applied. A value of `0.0` means no occlusion. A value of `1.0` means full occlusion. This value affects the final occlusion value as: `1.0 + strength * (<sampled occlusion texture value> - 1.0)`."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
