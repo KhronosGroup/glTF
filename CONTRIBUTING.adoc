@@ -19,11 +19,12 @@ If you are adding a new file, it must be under one of the following
 licenses:
 
   * Creative Commons Attribution 4.0 International, for specification text
-    (for example, link:vkspec.txt[`vkspec.txt`])
+    and informative files (for example, this CONTRIBUTING.adoc file or
+    link:specification/2.0/Specification.adoc[`specification/2.0/Specification.adoc`])
   * Apache 2.0, for all other changes (for example,
-    link:scripts/reg.py[`reg.py`])
+    link:specification/2.0/Makefile[`specification/2.0/Makefile`])
   * Apache 2.0 OR MIT, for source-like files that may need to used in GPL
-    projects (for example, link:xml/vk.xml[`vk.xml`])
+    projects
 
 We use a short license in each file consisting of just the copyright
 statement and the SPDX license identifier of the license applying to that
