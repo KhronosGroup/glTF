@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "Animation Channel",
     "type": "object",
-    "description": "Targets an animation's sampler at a JSON pointer's property.",
+    "description": "Targets an animation's sampler at a object's property.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "sampler": {
@@ -10,10 +10,16 @@
             "description": "The index of a sampler in this animation used to compute the value for the target.",
             "gltf_detailedDescription": "The index of a sampler in this animation used to compute the value for the target, e.g., a node's translation, rotation, or scale (TRS)."
         },
-        "target": {
-            "allOf": [ { "$ref": "animation.channel.target.schema.json" } ],
-            "description": "The property as a JSON pointer to target."
-        },
+        "targets": {
+            "type": "array",
+            "description": "An array of targets.",
+            "items": {
+                "type": "string",
+                "description": "The JSON pointer of the object to target.",
+                "gltf_detailedDescription": "The number elements in this array **MUST** have the same number of output elements of the sampler."
+            },
+            "minItems": 1
+        },        
         "extensions": { },
         "extras": { }
     },
