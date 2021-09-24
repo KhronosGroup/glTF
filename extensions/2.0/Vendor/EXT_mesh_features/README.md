@@ -1,5 +1,5 @@
 <!-- omit in toc -->
-# EXT_feature_metadata
+# EXT_mesh_features
 
 <!-- omit in toc -->
 ## Contributors
@@ -100,7 +100,7 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
       "indices": 2,
       "mode": 4,
       "extensions": {
-        "EXT_feature_metadata": {
+        "EXT_mesh_features": {
           "propertyTables": [0],
           "featureIds": [{"attribute": 0}]
         }
@@ -140,7 +140,7 @@ For example
       },
       "mode": 0,
       "extensions": {
-        "EXT_feature_metadata": {
+        "EXT_mesh_features": {
           "propertyTables": [0],
           "featureIds": [{"offset": 0, "repeat": 1}]
         }
@@ -168,7 +168,7 @@ Often per-texel feature IDs provide finer granularity than per-vertex feature ID
       "indices": 2,
       "material": 0,
       "extensions": {
-        "EXT_feature_metadata": {
+        "EXT_mesh_features": {
           "propertyTables": [0],
           "featureIds": [
             {"index": 0, "texCoord": 0, "channel": 0}
@@ -186,7 +186,7 @@ Texture filtering must be `9728` (NEAREST), or undefined, for any texture object
 
 ### Feature ID Instance Attributes
 
-Feature IDs may also be assigned to individual instances when using the [`EXT_mesh_gpu_instancing` extension](../../EXT_mesh_gpu_instancing). This works the same way as assigning feature IDs to vertices. Feature IDs may be stored in accessors or generated implicitly. Nodes with `EXT_feature_metadata` must also define an `EXT_mesh_gpu_instancing` extension providing feature ID instance attributes, and are invalid without this dependency.
+Feature IDs may also be assigned to individual instances when using the [`EXT_mesh_gpu_instancing` extension](../../EXT_mesh_gpu_instancing). This works the same way as assigning feature IDs to vertices. Feature IDs may be stored in accessors or generated implicitly. Nodes with `EXT_mesh_features` must also define an `EXT_mesh_gpu_instancing` extension providing feature ID instance attributes, and are invalid without this dependency.
 
 ```jsonc
 {
@@ -202,7 +202,7 @@ Feature IDs may also be assigned to individual instances when using the [`EXT_me
             "FEATURE_ID_0": 3
           },
         },
-        "EXT_feature_metadata": {
+        "EXT_mesh_features": {
           "propertyTables": [0],
           "featureIds": [{"attribute": 0}]
         }
@@ -244,7 +244,7 @@ The schema and property tables are defined in the root extension object in the g
 ```jsonc
 {
   "extensions": {
-    "EXT_feature_metadata": {
+    "EXT_mesh_features": {
       "schema": {
         "classes": {
           "tree": {
@@ -307,9 +307,9 @@ Additionally, the data type and bit depth of the image must be compatible with t
 
 Property textures are defined with the following steps:
 
-1. A class is defined in the root `EXT_feature_metadata` extension object. This is used to describe the properties in the texture.
-2. A property texture is defined in the root `EXT_feature_metadata.propertyTextures` object. This must reference the class ID defined in step 1.
-3. A property texture is associated with a primitive by listing the property texture ID in the `primitive.EXT_feature_metadata.propertyTextures` array.
+1. A class is defined in the root `EXT_mesh_features` extension object. This is used to describe the properties in the texture.
+2. A property texture is defined in the root `EXT_mesh_features.propertyTextures` object. This must reference the class ID defined in step 1.
+3. A property texture is associated with a primitive by listing the property texture ID in the `primitive.EXT_mesh_features.propertyTextures` array.
 <img src="figures/feature-texture.png"  alt="Property Texture" width="500">
 
 _Class and property texture_
@@ -317,7 +317,7 @@ _Class and property texture_
 ```jsonc
 {
   "extensions": {
-    "EXT_feature_metadata": {
+    "EXT_mesh_features": {
       "schema": {
         "classes": {
           "heatSample": {
@@ -361,7 +361,7 @@ _Primitive_
       "indices": 2,
       "material": 0,
       "extensions": {
-        "EXT_feature_metadata": {
+        "EXT_mesh_features": {
           "propertyTextures": [0]
         }
       }
@@ -377,7 +377,7 @@ Texture filtering must be `9728` (NEAREST), `9729` (LINEAR), or undefined, for a
 
 ## Binary Data Storage
 
-`EXT_feature_metadata` imposes additional binary data alignment requirements on an asset, extending the 4-byte alignment in the core glTF specification:
+`EXT_mesh_features` imposes additional binary data alignment requirements on an asset, extending the 4-byte alignment in the core glTF specification:
 
 - GLB-stored `JSON` chunk must be padded with trailing `Space` characters (`0x20`) to 8-byte boundary.
 - GLB-stored `BIN` chunk must be padded with trailing zeroes (`0x00`) to 8-byte boundary.
@@ -404,9 +404,9 @@ Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanc
 
 ## Schema
 
-* [gltf.EXT_feature_metadata.schema.json](./schema/gltf.EXT_feature_metadata.schema.json)
-* [primitive.EXT_feature_metadata.schema.json](./schema/primitive.EXT_feature_metadata.schema.json)
-* [node.EXT_feature_metadata.schema.json](./schema/node.EXT_feature_metadata.schema.json)
+* [gltf.EXT_mesh_features.schema.json](./schema/gltf.EXT_mesh_features.schema.json)
+* [primitive.EXT_mesh_features.schema.json](./schema/primitive.EXT_mesh_features.schema.json)
+* [node.EXT_mesh_features.schema.json](./schema/node.EXT_mesh_features.schema.json)
 
 ## Revision History
 
@@ -435,6 +435,7 @@ Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanc
   * Other changes
     * Added `EXT_feature_metadata` extension to the [`EXT_mesh_gpu_instancing`](https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Vendor/EXT_mesh_gpu_instancing) extension for assigning metadata to instances
 * **Version 2.0.0** September 2021
+  * Renamed extension from `EXT_feature_metadata` to `EXT_mesh_features`
   * Renamed `constant` to `offset`, and `divisor` to `repeat`
   * Removed `statistics` specification, to be considered as a future extension
   * Renamed `featureTable` → `propertyTable` and `featureTexture` → `propertyTexture`
