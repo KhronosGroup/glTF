@@ -22,7 +22,7 @@ This extension is based on the animation features of glTF 2.0. The structure of 
 The change is, that the output values are mapped using a [JSON Pointer](https://datatracker.ietf.org/doc/html/rfc6901).
   
 At this point of time, one can only target the transformation or weight data of a node.  
-With this approach, one can technically target any value (`scalar`, `vec2`, `vec3`, `vec4` and `array`) in glTF e.g.
+With this approach, one can technically target any value (`scalar`, `vec2`, `vec3`, `vec4` and an `array`) in glTF e.g.
 
 * Color factors in materials
 * Camera field of view
@@ -45,12 +45,7 @@ The following snippet shows the changes for [`animations`](https://github.com/Kh
             {
                 "name" : "Targeting x, y, y, w for a rotation of node at index 0."
                 "sampler" : 0,
-                "targets" : [
-                    "nodes/0/rotation/0",
-                    "nodes/0/rotation/1",
-                    "nodes/0/rotation/2",
-                    "nodes/0/rotation/3"
-                ]
+                "targetpointer" : "nodes/0/rotation"
             }
         ],
         "samplers" : [

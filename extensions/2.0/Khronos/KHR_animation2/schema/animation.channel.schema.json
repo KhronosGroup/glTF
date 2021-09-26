@@ -10,16 +10,11 @@
             "description": "The index of a sampler in this animation used to compute the value for the target.",
             "gltf_detailedDescription": "The index of a sampler in this animation used to compute the value for the target, e.g., a node's translation, rotation, or scale (TRS)."
         },
-        "targets": {
-            "type": "array",
-            "description": "An array of targets.",
-            "items": {
-                "type": "string",
-                "description": "The JSON pointer of the object to target.",
-                "gltf_detailedDescription": "The number elements in this array **MUST** have the same number of output elements of the sampler."
-            },
-            "minItems": 1
-        },        
+        "targetpointer": {
+            "type": "string",
+            "description": "The JSON pointer of the object to target.",
+            "gltf_detailedDescription": "The number elements of the target **MUST** have the same number of output elements of the sampler."
+        },
         "extensions": { },
         "extras": { }
     },
