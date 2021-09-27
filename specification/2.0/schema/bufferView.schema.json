@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "bufferView.schema.json",
     "title": "Buffer View",
     "type": "object",
     "description": "A view into a buffer generally representing a subset of the buffer.",
@@ -34,12 +35,12 @@
             "gltf_webgl": "`bindBuffer()`",
             "anyOf": [
                 {
-                    "enum": [ 34962 ],
+                    "const": 34962,
                     "description": "ARRAY_BUFFER",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 34963 ],
+                    "const": 34963,
                     "description": "ELEMENT_ARRAY_BUFFER",
                     "type": "integer"
                 },
