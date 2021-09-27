@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "EXT_feature_metadata extension for EXT_mesh_gpu_instancing",
+  "title": "EXT_mesh_features extension for EXT_mesh_gpu_instancing",
   "type": "object",
   "description": "An object describing per-instance feature IDs to be used as indices to property arrays in the property table.",
   "properties": {
@@ -12,7 +12,7 @@
     },
     "propertyTables": {
       "type": "array",
-      "description": "An array of IDs of property tables from the root `EXT_feature_metadata` object.",
+      "description": "An array of IDs of property tables from the root `EXT_mesh_features` object.",
       "items": {
         "allOf": [ {"$ref": "glTFid.schema.json" } ]
       },

@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "EXT_feature_metadata glTF Primitive extension",
+  "title": "EXT_mesh_features glTF Primitive extension",
   "type": "object",
-  "description": "`EXT_feature_metadata extension` for a primitive in a glTF model, to associate it with the root `EXT_feature_metadata` object.",
+  "description": "`EXT_mesh_features extension` for a primitive in a glTF model, to associate it with the root `EXT_mesh_features` object.",
   "properties": {
     "featureIds": {
       "type": "array",
@@ -17,7 +17,7 @@
     },
     "propertyTables": {
       "type": "array",
-      "description": "An array of IDs of property tables from the root `EXT_feature_metadata` object.",
+      "description": "An array of IDs of property tables from the root `EXT_mesh_features` object.",
       "items": {
         "allOf": [ {"$ref": "glTFid.schema.json" } ]
       },
@@ -25,7 +25,7 @@
     },
     "propertyTextures": {
       "type": "array",
-      "description": "An array of IDs of property textures from the root `EXT_feature_metadata` object.",
+      "description": "An array of IDs of property textures from the root `EXT_mesh_features` object.",
       "items": {
         "allOf": [ {"$ref": "glTFid.schema.json" } ]
       },

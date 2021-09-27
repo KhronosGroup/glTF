@@ -9,7 +9,7 @@
     "texCoord": { },
     "propertyTable": {
       "type": "string",
-      "description": "The ID of the property table in the model's root `EXT_feature_metadata.propertyTables` dictionary."
+      "description": "The ID of the property table in the model's root `EXT_mesh_features.propertyTables` dictionary."
     },
     "channel": {
       "type": "integer",
