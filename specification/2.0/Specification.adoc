@@ -1944,7 +1944,7 @@ The texture binding for normal textures **MAY** additionally contain a scalar `s
 +
 Normal vectors **MUST** be normalized before being used in lighting equations. When scaling is used, vector normalization happens after scaling.
 
-- *occlusion* : The occlusion texture; it indicates areas that receive less diffuse lighting from ambient sources. Direct lighting is not affected. The _red_ channel of the texture encodes the occlusion value, where `0.0` means fully-occluded area (no indirect lighting) and `1.0` means not occluded area (full indirect lighting). Other texture channels (if present) do not affect occlusion.
+- *occlusion* : The occlusion texture; it indicates areas that receive less indirect lighting from ambient sources. Direct lighting is not affected. The _red_ channel of the texture encodes the occlusion value, where `0.0` means fully-occluded area (no indirect lighting) and `1.0` means not occluded area (full indirect lighting). Other texture channels (if present) do not affect occlusion.
 +
 The texture binding for occlusion maps **MAY** optionally contain a scalar `strength` value that is used to reduce the occlusion effect. When present, it affects the occlusion value as `1.0 + strength * (occlusionTexture - 1.0)`.
 
