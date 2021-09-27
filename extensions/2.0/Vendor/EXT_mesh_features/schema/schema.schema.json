@@ -21,7 +21,7 @@
     },
     "classes": {
       "type": "object",
-      "description": "A dictionary, where each key is a class ID and each value is an object defining the class.",
+      "description": "A dictionary, where each key is a class ID and each value is an object defining the class. Class IDs may contain only alphanumeric and underscore characters.",
       "minProperties": 1,
       "additionalProperties": {
         "$ref": "class.schema.json"
@@ -29,7 +29,7 @@
     },
     "enums": {
       "type": "object",
-      "description": "A dictionary, where each key is an enum ID and each value is an object defining the values for the enum.",
+      "description": "A dictionary, where each key is an enum ID and each value is an object defining the values for the enum. Enum IDs may contain only alphanumeric and underscore characters.",
       "minProperties": 1,
       "additionalProperties": {
         "$ref": "enum.schema.json"
