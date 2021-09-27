@@ -17,7 +17,7 @@
             "anyOf": [
                 {
                     "enum": [ "LINEAR" ],
-                    "description": "The animated values are linearly interpolated between keyframes. When targeting a rotation, spherical linear interpolation (slerp) **SHOULD** be used to interpolate quaternions. The number of output elements **MUST** equal the number of input elements."
+                    "description": "The animated values are linearly interpolated between keyframes. The number of output elements **MUST** equal the number of input elements."
                 },
                 {
                     "enum": [ "STEP" ],
@@ -26,6 +26,10 @@
                 {
                     "enum": [ "CUBICSPLINE" ],
                     "description": "The animation's interpolation is computed using a cubic spline with specified tangents. The number of output elements **MUST** equal three times the number of input elements. For each input element, the output stores three elements, an in-tangent, a spline vertex, and an out-tangent. There **MUST** be at least two keyframes when using this interpolation."
+                },
+                {
+                    "enum": [ "SLERP" ],
+                    "description": "When using quaternions for e.g. the rotation target, spherical linear interpolation (slerp) **MUST** be used to interpolate."
                 },
                 {
                     "type": "string"
