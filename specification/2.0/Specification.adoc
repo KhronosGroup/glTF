@@ -17,6 +17,7 @@ The Khronos{regtitle} 3D Formats Working Group
 :numbered:
 :source-highlighter: coderay
 :title-logo-image: image:../figures/gltf.png[Logo,pdfwidth=4in,align=right]
+:docinfo: shared-head
 :stem:
 ifdef::env-github[]
 :toc-placement!:
@@ -2537,7 +2538,7 @@ image:figures/glb2.png[pdfwidth=4in,align=left]
 The following sections describe the structure more in detail.
 
 
-[[header]]
+[[binary-header]]
 === Header
 
 The 12-byte header consists of three 4-byte entries:
