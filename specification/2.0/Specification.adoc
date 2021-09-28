@@ -1340,6 +1340,8 @@ Accessor type and component type for each morphed attribute semantic property **
 
 `POSITION` accessor **MUST** have its `min` and `max` properties defined.
 
+Displacements for `POSITION`, `NORMAL`, and `TANGENT` attributes **MUST** be applied before any transformation matrices affecting the mesh vertices such as skinning or node transforms.
+
 When `COLOR_n` deltas use an accessor of `"VEC3"` type, their alpha components **MUST** be assumed to have a value of `0.0`.
 
 After applying color deltas, all components of each `COLOR_0` morphed accessor element **MUST** be clamped to `[0.0, 1.0]` range.
