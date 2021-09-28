@@ -578,7 +578,7 @@ Chromaticity coordinates define the interpretation of each primary color channel
 [[scenes-overview]]
 === Overview
 
-glTF 2.0 assets **MAY** contain zero or more _scenes_, the set of visual objects to render. Scenes are defined in a `scenes` array. All nodes listed in `scene.nodes` array **MUST** be root nodes, i.e., they **MUST NOT** be listed in a `node.children` array of any node.
+glTF 2.0 assets **MAY** contain zero or more _scenes_, the set of visual objects to render. Scenes are defined in a `scenes` array. All nodes listed in `scene.nodes` array **MUST** be root nodes, i.e., they **MUST NOT** be listed in a `node.children` array of any node. The same root node **MAY** appear in multiple scenes.
 
 An additional root-level property, `scene` (note singular), identifies which of the scenes in the array **SHOULD** be displayed at load time. When `scene` is undefined, client implementations **MAY** delay rendering until a particular scene is requested.
 
