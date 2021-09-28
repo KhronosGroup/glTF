@@ -965,15 +965,15 @@ This is often the case when encoding morph targets (it is, in general, more effi
 
 Similar to a standard accessor, a sparse accessor initializes an array of typed elements from data stored in a `bufferView`. When `accessor.bufferView` is undefined, the sparse accessor is initialized as an array of zeros of size `(size of the accessor element) * (accessor.count)` bytes.
 
-On top of that, a sparse accessor includes a `sparse` JSON object describing the elements that deviate from their initialization values. The `sparse` object contains the following **REQUIRED** properties:
+On top of that, a sparse accessor includes a `sparse` JSON object describing the elements that are different from their initialization values. The `sparse` object contains the following **REQUIRED** properties:
 
 - `count`: number of displaced elements. This number **MUST NOT** be greater than the number of the base accessor elements.
 
-- `indices`: object describing the location and the component type of indices of deviating values. The indices **MUST** form a strictly increasing sequence. The indices **MUST NOT** be greater than or equal to the number of the base accessor elements. 
+- `indices`: object describing the location and the component type of indices of values to be replaced. The indices **MUST** form a strictly increasing sequence. The indices **MUST NOT** be greater than or equal to the number of the base accessor elements. 
 
 - `values`: object describing the location of displaced elements corresponding to the indices referred from the `indices`.
 
-The following example shows an example of a sparse accessor with 10 elements deviating from the initialization array.
+The following example shows an example of a sparse accessor with 10 elements that are different from the initialization array.
 
 [source,json]
 ----
