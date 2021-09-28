@@ -669,6 +669,8 @@ To compose the local transformation matrix, TRS properties **MUST** be converted
 Non-invertible transformations (e.g., scaling one axis to zero) could lead to lighting and/or visibility artifacts.
 ====
 
+The global transformation matrix of a node is the product of its local transformation matrix and the local transformation matrices of all its parent nodes.
+
 In the example below, node named `Box` defines non-default rotation and translation.
 
 [source,json]
