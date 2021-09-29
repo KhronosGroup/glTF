@@ -19,7 +19,15 @@ The Khronos{regtitle} 3D Formats Working Group
 :title-logo-image: image:../figures/gltf.png[Logo,pdfwidth=4in,align=right]
 :docinfo: shared-head
 :stem:
-ifdef::env-github[]
+
+// This causes cross references to chapters, sections, and tables to be
+// rendered as "Section A.B" (for example) rather than rendering the reference
+// as the text of the section title.  It also enables cross references to
+// [source] blocks as "Listing N", but only if the [source] block has a title.
+:xrefstyle: short
+:listing-caption: Listing
+
+ifndef::revdate[]
 :toc-placement!:
 
 [NOTE]
@@ -30,13 +38,6 @@ feedback and remixing under CC-BY 4.0. Published versions of the Specification
 are located in the https://www.khronos.org/registry/glTF[glTF Registry].
 ====
 endif::[]
-
-// This causes cross references to chapters, sections, and tables to be
-// rendered as "Section A.B" (for example) rather than rendering the reference
-// as the text of the section title.  It also enables cross references to
-// [source] blocks as "Listing N", but only if the [source] block has a title.
-:xrefstyle: short
-:listing-caption: Listing
 
 // Table of contents is inserted here
 toc::[]
@@ -579,7 +580,7 @@ Chromaticity coordinates define the interpretation of each primary color channel
 [[scenes-overview]]
 === Overview
 
-glTF 2.0 assets **MAY** contain zero or more _scenes_, the set of visual objects to render. Scenes are defined in a `scenes` array. All nodes listed in `scene.nodes` array **MUST** be root nodes, i.e., they **MUST NOT** be listed in a `node.children` array of any node.
+glTF 2.0 assets **MAY** contain zero or more _scenes_, the set of visual objects to render. Scenes are defined in a `scenes` array. All nodes listed in `scene.nodes` array **MUST** be root nodes, i.e., they **MUST NOT** be listed in a `node.children` array of any node. The same root node **MAY** appear in multiple scenes.
 
 An additional root-level property, `scene` (note singular), identifies which of the scenes in the array **SHOULD** be displayed at load time. When `scene` is undefined, client implementations **MAY** delay rendering until a particular scene is requested.
 
@@ -669,6 +670,8 @@ To compose the local transformation matrix, TRS properties **MUST** be converted
 ====
 Non-invertible transformations (e.g., scaling one axis to zero) could lead to lighting and/or visibility artifacts.
 ====
+
+The global transformation matrix of a node is the product of the global transformation matrix of its parent node and its own local transformation matrix. When the node has no parent node, its global transformation matrix is identical to its local transformation matrix.
 
 In the example below, node named `Box` defines non-default rotation and translation.
 
@@ -857,7 +860,9 @@ See <<glb-file-format-specification,GLB File Format Specification>> for details 
 
 All binary data for meshes, skins, and animations is stored in buffers and retrieved via accessors.
 
-An _accessor_ defines a method for retrieving data as typed arrays from within a `bufferView`. The accessor specifies a component type (e.g., _float_) and a data type (e.g., `VEC3` for 3D vectors), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the `bufferView` using the properties `byteOffset` and `count`. The latter specifies the number of elements within the `bufferView`, _not_ the number of bytes. Elements could be, e.g., vertex indices, vertex attributes, animation keyframes, etc.
+An _accessor_ defines a method for retrieving data as typed arrays from within a buffer view. The accessor specifies a component type (e.g., _float_) and a data type (e.g., `VEC3` for 3D vectors), which when combined define the complete data type for each data element. The number of elements is specified using the `count` property. Elements could be, e.g., vertex indices, vertex attributes, animation keyframes, etc.
+
+The `byteOffset` property specifies the location of the first data element within the referenced buffer view. If the accessor is used for vertex attributes (i.e., it is referenced by a mesh primitive or its morph targets), the locations of the subsequent data elements are controlled by the `bufferView.byteStride` property. If the accessor is used for any other kind of data (vertex indices, animation keyframes, etc.), its data elements are tightly packed.
 
 All accessors are stored in the asset's `accessors` array.
 
@@ -964,15 +969,15 @@ This is often the case when encoding morph targets (it is, in general, more effi
 
 Similar to a standard accessor, a sparse accessor initializes an array of typed elements from data stored in a `bufferView`. When `accessor.bufferView` is undefined, the sparse accessor is initialized as an array of zeros of size `(size of the accessor element) * (accessor.count)` bytes.
 
-On top of that, a sparse accessor includes a `sparse` JSON object describing the elements that deviate from their initialization values. The `sparse` object contains the following **REQUIRED** properties:
+On top of that, a sparse accessor includes a `sparse` JSON object describing the elements that are different from their initialization values. The `sparse` object contains the following **REQUIRED** properties:
 
 - `count`: number of displaced elements. This number **MUST NOT** be greater than the number of the base accessor elements.
 
-- `indices`: object describing the location and the component type of indices of deviating values. The indices **MUST** form a strictly increasing sequence. The indices **MUST NOT** be greater than or equal to the number of the base accessor elements. 
+- `indices`: object describing the location and the component type of indices of values to be replaced. The indices **MUST** form a strictly increasing sequence. The indices **MUST NOT** be greater than or equal to the number of the base accessor elements. 
 
 - `values`: object describing the location of displaced elements corresponding to the indices referred from the `indices`.
 
-The following example shows an example of a sparse accessor with 10 elements deviating from the initialization array.
+The following example shows an example of a sparse accessor with 10 elements that are different from the initialization array.
 
 [source,json]
 ----
@@ -1186,7 +1191,7 @@ Valid accessor type and component type for each attribute semantic property are 
 | Name        | Accessor Type(s)| Component Type(s)           | Description
 | `POSITION`  | VEC3            | _float_                     | XYZ vertex positions
 | `NORMAL`    | VEC3            | _float_                     | Normalized XYZ vertex normals
-| `TANGENT`   | VEC4            | _float_                     | XYZW vertex tangents where the W component is a sign value (-1 or +1) indicating handedness of the tangent basis
+| `TANGENT`   | VEC4            | _float_                     | XYZW vertex tangents where the XYZ portion is normalized, and the W component is a sign value (-1 or +1) indicating handedness of the tangent basis
 | `TEXCOORD_n`| VEC2            | _float_ +
                                   _unsigned byte_ normalized +
                                   _unsigned short_ normalized | UV texture coordinates
@@ -1277,7 +1282,7 @@ Mesh geometry **SHOULD NOT** contain degenerate lines or triangles, i.e., lines 
 
 When positions are not specified, client implementations **SHOULD** skip primitive's rendering unless its positions are provided by other means (e.g., by an extension). This applies to both indexed and non-indexed geometry.
 
-When tangents are not specified, client implementations **SHOULD** calculate tangents using default <<mikktspace,MikkTSpace>> algorithms.
+When tangents are not specified, client implementations **SHOULD** calculate tangents using default <<mikktspace,MikkTSpace>> algorithms with the specified vertex positions, normals, and texture coordinates associated with the normal texture.
 
 When normals are not specified, client implementations **MUST** calculate flat normals and the provided tangents (if present) **MUST** be ignored.
 
@@ -1336,6 +1341,12 @@ Accessor type and component type for each morphed attribute semantic property **
 |====
 
 `POSITION` accessor **MUST** have its `min` and `max` properties defined.
+
+Displacements for `POSITION`, `NORMAL`, and `TANGENT` attributes **MUST** be applied before any transformation matrices affecting the mesh vertices such as skinning or node transforms.
+
+When the base mesh primitive does not specify tangents, client implementations **SHOULD** calculate tangents for each morph target using default <<mikktspace,MikkTSpace>> algorithms with the updated vertex positions, normals, and texture coordinates associated with the normal texture.
+
+When the base mesh primitive does not specify normals, client implementations **MUST** calculate flat normals for each morph target; the provided tangents and their displacements (if present) **MUST** be ignored.
 
 When `COLOR_n` deltas use an accessor of `"VEC3"` type, their alpha components **MUST** be assumed to have a value of `0.0`.
 
@@ -2135,6 +2146,15 @@ Client implementations **SHOULD** use the following projection matrices.
 [[infinite-perspective-projection]]
 ==== Infinite perspective projection
 
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#infinite-perspective-projection[infinite perspective projection].
+====
+endif::[]
+
 [latexmath]
 ++++
 \begin{bmatrix}
@@ -2154,6 +2174,15 @@ where
 
 [[finite-perspective-projection]]
 ==== Finite perspective projection
+
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#finite-perspective-projection[finite perspective projection].
+====
+endif::[]
 
 [latexmath]
 ++++
@@ -2175,6 +2204,15 @@ where
 
 [[orthographic-projection]]
 ==== Orthographic projection
+
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#orthographic-projection[orthographic projection].
+====
+endif::[]
 
 [latexmath]
 ++++
@@ -2619,6 +2657,15 @@ When the binary buffer is empty or when it is stored by other means, this chunk 
 
 [[properties-reference]]
 = Properties Reference
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section is auto-generated, and will be a broken link when previewing.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#properties-reference[Properties Reference Section].
+To suggest changes, open a Pull Request to edit the https://github.com/KhronosGroup/glTF/tree/main/specification/2.0/schema[JSON Schema Files].
+====
+endif::[]
 
 // Generated with wetzel
 include::PropertiesReference.adoc[]
@@ -2687,6 +2734,15 @@ include::PropertiesReference.adoc[]
 [appendix]
 [[appendix-a-json-schema-reference]]
 = JSON Schema Reference (Informative)
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section is auto-generated, and will be a broken link when previewing.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-a-json-schema-reference[JSON Schema Reference].
+To suggest changes, open a Pull Request to edit the https://github.com/KhronosGroup/glTF/tree/main/specification/2.0/schema[JSON Schema Files].
+====
+endif::[]
 
 // Generated with wetzel
 include::JsonSchemaReference.adoc[]
@@ -2854,6 +2910,15 @@ We use the following notation:
 [[specular-brdf]]
 === Specular BRDF
 
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#specular-brdf[Specular BRDF Section].
+====
+endif::[]
+
 The specular reflection `specular_brdf(α)` is a microfacet BRDF
 
 [latexmath]
@@ -2911,6 +2976,15 @@ function specular_brdf(α) {
 [[diffuse-brdf]]
 === Diffuse BRDF
 
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#diffuse-brdf[Diffuse BRDF Section].
+====
+endif::[]
+
 The diffuse reflection `diffuse_brdf(color)` is a Lambertian BRDF
 
 [latexmath]
@@ -2930,6 +3004,15 @@ function diffuse_brdf(color) {
 
 [[fresnel]]
 === Fresnel
+
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#fresnel[Fresnel Section].
+====
+endif::[]
 
 An inexpensive approximation for the Fresnel term that can be used for conductors and dielectrics was developed by <<Schlick1994,Schlick (1994)>>:
 
