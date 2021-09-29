@@ -1280,7 +1280,7 @@ Mesh geometry **SHOULD NOT** contain degenerate lines or triangles, i.e., lines 
 
 When positions are not specified, client implementations **SHOULD** skip primitive's rendering unless its positions are provided by other means (e.g., by an extension). This applies to both indexed and non-indexed geometry.
 
-When tangents are not specified, client implementations **SHOULD** calculate tangents using default <<mikktspace,MikkTSpace>> algorithms.
+When tangents are not specified, client implementations **SHOULD** calculate tangents using default <<mikktspace,MikkTSpace>> algorithms with the specified vertex positions, normals, and texture coordinates associated with the normal texture.
 
 When normals are not specified, client implementations **MUST** calculate flat normals and the provided tangents (if present) **MUST** be ignored.
 
