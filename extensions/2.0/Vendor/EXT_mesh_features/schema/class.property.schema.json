@@ -58,7 +58,7 @@
     },
     "normalized": {
       "type": "boolean",
-      "description": "Specifies whether integer values are normalized. This applies both when `type` is an integer type, or when `type` is `ARRAY` with a `componentType` that is an integer type. For unsigned integer types, values are normalized between `[0.0, 1.0]`. For signed integer types, values are normalized between `[-1.0, 1.0]`. For all other types, this property is ignored.",
+      "description": "Specifies whether integer values are normalized. This applies both when `componentType` is an integer type. For unsigned integer component types, values are normalized between `[0.0, 1.0]`. For signed integer component types, values are normalized between `[-1.0, 1.0]`. For all other component types, this property must be false.",
       "default": false
     },
     "max": {
