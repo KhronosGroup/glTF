@@ -1189,7 +1189,7 @@ Valid accessor type and component type for each attribute semantic property are 
 | Name        | Accessor Type(s)| Component Type(s)           | Description
 | `POSITION`  | VEC3            | _float_                     | XYZ vertex positions
 | `NORMAL`    | VEC3            | _float_                     | Normalized XYZ vertex normals
-| `TANGENT`   | VEC4            | _float_                     | XYZW vertex tangents where the W component is a sign value (-1 or +1) indicating handedness of the tangent basis
+| `TANGENT`   | VEC4            | _float_                     | XYZW vertex tangents where the XYZ portion is normalized, and the W component is a sign value (-1 or +1) indicating handedness of the tangent basis
 | `TEXCOORD_n`| VEC2            | _float_ +
                                   _unsigned byte_ normalized +
                                   _unsigned short_ normalized | UV texture coordinates
