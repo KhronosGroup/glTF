@@ -4,9 +4,6 @@
  * Copyright 2021 The Khronos Group Inc.
  * SPDX-License-Identifier: CC-BY-4.0
  */
-body.toc2 {
-    font-family: 'Open Sans', sans-serif;
-}
 #header {
     margin-top: 25px;
 }
@@ -28,17 +25,17 @@ body.toc2 {
     position: relative;
     top: -1px;
     left: -16px;
-    color: rgba(33, 86, 165, 0.0);
+    color: rgba(0, 104, 176, 0.0);
     transition: color 0.25s ease-in-out;
     margin: 0;
     padding: 4px 13px 4px 5px;
     cursor: pointer;
 }
 #toc:hover .toc-expander::before {
-    color: rgba(33, 86, 165, 0.4);
+    color: rgba(0, 104, 176, 0.4);
 }
 #toc .toc-expander:hover::before {
-    color: rgba(33, 86, 165, 0.8);
+    color: #333;
 }
 .toc-expanded > .toc-expander::before {
     content: '\f0d7';
@@ -49,7 +46,7 @@ body.toc2 {
 .toc-expanded > ul {
     display: block;
 }
-@media screen and (min-width: 1010px) {
+@media only screen and (min-width: 1010px) {
     #content {
         max-width: 768px !important;
         border-left: 1px solid #eee;
@@ -65,7 +62,7 @@ body.toc2 {
         margin-right: auto;
     }
 }
-@media screen and (min-width:1400px) {
+@media only screen and (min-width:1400px) {
     #content {
         max-width: 1080px !important;
         padding-left: 100px;

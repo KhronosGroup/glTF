@@ -36,6 +36,7 @@ $(GENERATED): $(wildcard schema/*.json)
 # We recommend using the khronosgroup/vulkan-docs-base image on dockerhub
 ASCIIDOCTOR = asciidoctor $(ADOCOPTS)
 ADOCOPTS = -d book
+ADOCHTMLOPTS = -a stylesheet=khronos.css
 SPECDEPS = $(SPEC).adoc $(GENERATED)
 
 PATCHVERSION = 0
@@ -59,7 +60,7 @@ ATTRIBOPTS = -a revnumber="$(SPECREVISION)" \
              -a revremark="$(SPECREMARK)"
 
 $(SPEC).html: $(SPECDEPS)
-	$(ASCIIDOCTOR) -b html5 $(ATTRIBOPTS) $(SPEC).adoc -o $@
+	$(ASCIIDOCTOR) -b html5 $(ADOCHTMLOPTS) $(ATTRIBOPTS) $(SPEC).adoc -o $@
 
 # :allow-url-read: is necessary for the embedded render.githubusers.com
 # math images to be processed for the PDF target. See
