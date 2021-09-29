@@ -1342,6 +1342,10 @@ Accessor type and component type for each morphed attribute semantic property **
 
 Displacements for `POSITION`, `NORMAL`, and `TANGENT` attributes **MUST** be applied before any transformation matrices affecting the mesh vertices such as skinning or node transforms.
 
+When the base mesh primitive does not specify tangents, client implementations **SHOULD** calculate tangents for each morph target using default <<mikktspace,MikkTSpace>> algorithms with the updated vertex positions, normals, and texture coordinates associated with the normal texture.
+
+When the base mesh primitive does not specify normals, client implementations **MUST** calculate flat normals for each morph target; the provided tangents and their displacements (if present) **MUST** be ignored.
+
 When `COLOR_n` deltas use an accessor of `"VEC3"` type, their alpha components **MUST** be assumed to have a value of `0.0`.
 
 After applying color deltas, all components of each `COLOR_0` morphed accessor element **MUST** be clamped to `[0.0, 1.0]` range.
