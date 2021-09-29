@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 Khronos Group.
+// Copyright 2013-2021 The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
