@@ -2135,6 +2135,15 @@ Client implementations **SHOULD** use the following projection matrices.
 [[infinite-perspective-projection]]
 ==== Infinite perspective projection
 
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#infinite-perspective-projection[infinite perspective projection].
+====
+endif::[]
+
 [latexmath]
 ++++
 \begin{bmatrix}
@@ -2154,6 +2163,15 @@ where
 
 [[finite-perspective-projection]]
 ==== Finite perspective projection
+
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#finite-perspective-projection[finite perspective projection].
+====
+endif::[]
 
 [latexmath]
 ++++
@@ -2175,6 +2193,15 @@ where
 
 [[orthographic-projection]]
 ==== Orthographic projection
+
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#orthographic-projection[orthographic projection].
+====
+endif::[]
 
 [latexmath]
 ++++
@@ -2872,6 +2899,15 @@ We use the following notation:
 [[specular-brdf]]
 === Specular BRDF
 
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#specular-brdf[Specular BRDF Section].
+====
+endif::[]
+
 The specular reflection `specular_brdf(α)` is a microfacet BRDF
 
 [latexmath]
@@ -2929,6 +2965,15 @@ function specular_brdf(α) {
 [[diffuse-brdf]]
 === Diffuse BRDF
 
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#diffuse-brdf[Diffuse BRDF Section].
+====
+endif::[]
+
 The diffuse reflection `diffuse_brdf(color)` is a Lambertian BRDF
 
 [latexmath]
@@ -2948,6 +2993,15 @@ function diffuse_brdf(color) {
 
 [[fresnel]]
 === Fresnel
+
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#fresnel[Fresnel Section].
+====
+endif::[]
 
 An inexpensive approximation for the Fresnel term that can be used for conductors and dielectrics was developed by <<Schlick1994,Schlick (1994)>>:
 
