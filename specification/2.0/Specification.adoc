@@ -1033,15 +1033,15 @@ Only the following three accessor configurations require padding.
 
 *MAT2, 1-byte components*
 
-image:figures/padding-mat2-1byte.png[pdfwidth=4in,align=left]
+image:figures/padding-mat2-1byte.svg[pdfwidth=2in,align=left]
 
 *MAT3, 1-byte components*
 
-image:figures/padding-mat3-1byte.png[pdfwidth=4in,align=left]
+image:figures/padding-mat3-1byte.svg[pdfwidth=2in,align=left]
 
 *MAT3, 2-byte components*
 
-image:figures/padding-mat3-2byte.png[pdfwidth=4in,align=left]
+image:figures/padding-mat3-2byte.svg[pdfwidth=4in,align=left]
 
 Alignment requirements apply only to the start of each column, so trailing bytes **MAY** be omitted if there's no further data.
 
