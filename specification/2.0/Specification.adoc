@@ -2145,6 +2145,14 @@ Client implementations **SHOULD** use the following projection matrices.
 [[infinite-perspective-projection]]
 ==== Infinite perspective projection
 
+Let
+
+- `a` be the aspect ratio (width over height) of the field of view;
+- `y` be the vertical field of view in radians;
+- `n` be the distance to the near clipping plane.
+
+Then, the projection matrix is defined as follows.
+
 ifndef::revdate[]
 [NOTE]
 .Note
@@ -2166,13 +2174,22 @@ endif::[]
 
 where
 
-- `a` equals `camera.perspective.aspectRatio`;
+- `a` equals `camera.perspective.aspectRatio` or the aspect ratio of the current viewport;
 - `y` equals `camera.perspective.yfov`;
 - `n` equals `camera.perspective.znear`.
 
 
 [[finite-perspective-projection]]
 ==== Finite perspective projection
+
+Let
+
+- `a` be the aspect ratio (width over height) of the field of view;
+- `y` be the vertical field of view in radians;
+- `f` be the distance to the far clipping plane;
+- `n` be the distance to the near clipping plane.
+
+Then, the projection matrix is defined as follows.
 
 ifndef::revdate[]
 [NOTE]
@@ -2195,7 +2212,7 @@ endif::[]
 
 where
 
-- `a` equals `camera.perspective.aspectRatio`;
+- `a` equals `camera.perspective.aspectRatio` or the aspect ratio of the current viewport;
 - `y` equals `camera.perspective.yfov`;
 - `f` equals `camera.perspective.zfar`;
 - `n` equals `camera.perspective.znear`.
@@ -2203,6 +2220,15 @@ where
 
 [[orthographic-projection]]
 ==== Orthographic projection
+
+Let
+
+- `r` be half the orthographic width;
+- `t` be half the orthographic height;
+- `f` be the distance to the far clipping plane;
+- `n` be the distance to the near clipping plane.
+
+Then, the projection matrix is defined as follows.
 
 ifndef::revdate[]
 [NOTE]
@@ -2230,6 +2256,7 @@ where
 - `f` equals `camera.orthographic.zfar`;
 - `n` equals `camera.orthographic.znear`.
 
+When `r / t` does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** perform non-uniform scaling ("`stretching`") to fill the viewport.
 
 [[animations]]
 == Animations
