@@ -1152,7 +1152,7 @@ Splitting one mesh into several *primitives* could be useful to limit number of 
 
 If `material` is undefined, then a <<default-material,default material>> **MUST** be used.
 
-The following example defines a mesh containing one indexed triangle set primitive:
+The following example defines a mesh containing one indexed triangle primitive:
 
 [source,json]
 ----
@@ -1188,7 +1188,7 @@ Valid accessor type and component type for each attribute semantic property are 
 [options="header",cols="15%,20%,35%,30%"]
 |====
 | Name        | Accessor Type(s)| Component Type(s)           | Description
-| `POSITION`  | VEC3            | _float_                     | XYZ vertex positions
+| `POSITION`  | VEC3            | _float_                     | Unitless XYZ vertex positions
 | `NORMAL`    | VEC3            | _float_                     | Normalized XYZ vertex normals
 | `TANGENT`   | VEC4            | _float_                     | XYZW vertex tangents where the XYZ portion is normalized, and the W component is a sign value (-1 or +1) indicating handedness of the tangent basis
 | `TEXCOORD_n`| VEC2            | _float_ +
@@ -1586,6 +1586,8 @@ A mesh is instantiated by `node.mesh` property. The same mesh could be used by m
 }
 
 ----
+
+After applying the node's global transformation, mesh vertex position values are meters.
 
 When a mesh primitive uses any triangle-based topology (i.e., _triangles_, _triangle strip_, or _triangle fan_), the determinant of the node's global transform defines the winding order of that primitive. If the determinant is a positive value, the winding order triangle faces is counterclockwise; in the opposite case, the winding order is clockwise.
 
