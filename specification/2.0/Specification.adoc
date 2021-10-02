@@ -2178,6 +2178,7 @@ where
 - `y` equals `camera.perspective.yfov`;
 - `n` equals `camera.perspective.znear`.
 
+When the provided camera's aspect ratio does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** crop or perform non-uniform scaling ("`stretching`") to fill the viewport.
 
 [[finite-perspective-projection]]
 ==== Finite perspective projection
@@ -2217,6 +2218,7 @@ where
 - `f` equals `camera.perspective.zfar`;
 - `n` equals `camera.perspective.znear`.
 
+When the provided camera's aspect ratio does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** crop or perform non-uniform scaling ("`stretching`") to fill the viewport.
 
 [[orthographic-projection]]
 ==== Orthographic projection
@@ -2256,7 +2258,7 @@ where
 - `f` equals `camera.orthographic.zfar`;
 - `n` equals `camera.orthographic.znear`.
 
-When `r / t` does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** perform non-uniform scaling ("`stretching`") to fill the viewport.
+When `r / t` does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** crop or perform non-uniform scaling ("`stretching`") to fill the viewport.
 
 [[animations]]
 == Animations
