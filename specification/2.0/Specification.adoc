@@ -1312,6 +1312,14 @@ Morph targets are specified via the `targets` property defined in the Mesh `prim
 
 For each morph target attribute, an original attribute **MUST** be present in the mesh primitive.
 
+Attributes present in the base mesh primitive but not included in a given morph target **MUST** retain their original values for the morph target.
+
+[NOTE]
+.Implementation Note
+====
+This allows skipping zero-filled accessors and implies that different morph targets may contain different sets of attributes.
+====
+
 Client implementations **SHOULD** support at least three attributes -- `POSITION`, `NORMAL`, and `TANGENT` -- for morphing. Client implementations **MAY** optionally support morphed `TEXCOORD_n` and / or `COLOR_n` attributes.
 
 If morph targets contain application-specific semantics, their names **MUST** be prefixed with an underscore (e.g., `_TEMPERATURE`) like the associated attribute semantics.
