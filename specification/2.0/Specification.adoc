@@ -2147,9 +2147,9 @@ Client implementations **SHOULD** use the following projection matrices.
 
 Let
 
-- `a` be the aspect ratio (width over height) of the field of view;
-- `y` be the vertical field of view in radians;
-- `n` be the distance to the near clipping plane.
+- `a` be the aspect ratio (width over height) of the field of view, set by `camera.perspective.aspectRatio`, or the aspect ratio of the viewport;
+- `y` be the vertical field of view in radians, set by `camera.perspective.yfov`;
+- `n` be the distance to the near clipping plane, set by `camera.perspective.znear`.
 
 Then, the projection matrix is defined as follows.
 
@@ -2172,12 +2172,6 @@ endif::[]
 \end{bmatrix}
 ++++
 
-where
-
-- `a` equals `camera.perspective.aspectRatio` or the aspect ratio of the current viewport;
-- `y` equals `camera.perspective.yfov`;
-- `n` equals `camera.perspective.znear`.
-
 When the provided camera's aspect ratio does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** crop or perform non-uniform scaling ("`stretching`") to fill the viewport.
 
 [[finite-perspective-projection]]
@@ -2185,10 +2179,10 @@ When the provided camera's aspect ratio does not match the aspect ratio of the v
 
 Let
 
-- `a` be the aspect ratio (width over height) of the field of view;
-- `y` be the vertical field of view in radians;
-- `f` be the distance to the far clipping plane;
-- `n` be the distance to the near clipping plane.
+- `a` be the aspect ratio (width over height) of the field of view, set by `camera.perspective.aspectRatio`, or the aspect ratio of the viewport;
+- `y` be the vertical field of view in radians, set by `camera.perspective.yfov`;
+- `f` be the distance to the far clipping plane, set by `camera.perspective.zfar`;
+- `n` be the distance to the near clipping plane, set by `camera.perspective.znear`.
 
 Then, the projection matrix is defined as follows.
 
@@ -2211,13 +2205,6 @@ endif::[]
 \end{bmatrix}
 ++++
 
-where
-
-- `a` equals `camera.perspective.aspectRatio` or the aspect ratio of the current viewport;
-- `y` equals `camera.perspective.yfov`;
-- `f` equals `camera.perspective.zfar`;
-- `n` equals `camera.perspective.znear`.
-
 When the provided camera's aspect ratio does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** crop or perform non-uniform scaling ("`stretching`") to fill the viewport.
 
 [[orthographic-projection]]
@@ -2225,10 +2212,10 @@ When the provided camera's aspect ratio does not match the aspect ratio of the v
 
 Let
 
-- `r` be half the orthographic width;
-- `t` be half the orthographic height;
-- `f` be the distance to the far clipping plane;
-- `n` be the distance to the near clipping plane.
+- `r` be half the orthographic width, set by `camera.orthographic.xmag`;
+- `t` be half the orthographic height, set by `camera.orthographic.ymag`;
+- `f` be the distance to the far clipping plane, set by `camera.orthographic.zfar`;
+- `n` be the distance to the near clipping plane, set by `camera.orthographic.znear`.
 
 Then, the projection matrix is defined as follows.
 
@@ -2250,13 +2237,6 @@ endif::[]
 0 & 0 & 0 & 1
 \end{bmatrix}
 ++++
-
-where
-
-- `r` equals `camera.orthographic.xmag`;
-- `t` equals `camera.orthographic.ymag`;
-- `f` equals `camera.orthographic.zfar`;
-- `n` equals `camera.orthographic.znear`.
 
 When `r / t` does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** crop or perform non-uniform scaling ("`stretching`") to fill the viewport.
 
