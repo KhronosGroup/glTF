@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "sampler.schema.json",
     "title": "Sampler",
     "type": "object",
     "description": "Texture sampler properties for filtering and wrapping modes.",
@@ -10,12 +11,12 @@
             "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_MAG_FILTER",
             "anyOf": [
                 {
-                    "enum": [ 9728 ],
+                    "const": 9728,
                     "description": "NEAREST",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 9729 ],
+                    "const": 9729,
                     "description": "LINEAR",
                     "type": "integer"
                 },
@@ -29,32 +30,32 @@
             "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_MIN_FILTER",
             "anyOf": [
                 {
-                    "enum": [ 9728 ],
+                    "const": 9728,
                     "description": "NEAREST",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 9729 ],
+                    "const": 9729,
                     "description": "LINEAR",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 9984 ],
+                    "const": 9984,
                     "description": "NEAREST_MIPMAP_NEAREST",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 9985 ],
+                    "const": 9985,
                     "description": "LINEAR_MIPMAP_NEAREST",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 9986 ],
+                    "const": 9986,
                     "description": "NEAREST_MIPMAP_LINEAR",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 9987 ],
+                    "const": 9987,
                     "description": "LINEAR_MIPMAP_LINEAR",
                     "type": "integer"
                 },
@@ -70,17 +71,17 @@
             "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_WRAP_S",
             "anyOf": [
                 {
-                    "enum": [ 33071 ],
+                    "const": 33071,
                     "description": "CLAMP_TO_EDGE",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 33648 ],
+                    "const": 33648,
                     "description": "MIRRORED_REPEAT",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 10497 ],
+                    "const": 10497,
                     "description": "REPEAT",
                     "type": "integer"
                 },
@@ -95,17 +96,17 @@
             "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_WRAP_T",
             "anyOf": [
                 {
-                    "enum": [ 33071 ],
+                    "const": 33071,
                     "description": "CLAMP_TO_EDGE",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 33648 ],
+                    "const": 33648,
                     "description": "MIRRORED_REPEAT",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 10497 ],
+                    "const": 10497,
                     "description": "REPEAT",
                     "type": "integer"
                 },

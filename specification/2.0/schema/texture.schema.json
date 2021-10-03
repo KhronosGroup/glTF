@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "texture.schema.json",
     "title": "Texture",
     "type": "object",
     "description": "A texture and its sampler.",

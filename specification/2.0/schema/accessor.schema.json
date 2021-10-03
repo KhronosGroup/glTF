@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "accessor.schema.json",
     "title": "Accessor",
     "type": "object",
     "description": "A typed view into a buffer view that contains raw binary data.",
@@ -24,32 +25,32 @@
             "gltf_webgl": "`type` parameter of `vertexAttribPointer()`.  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, `Uint32Array`, and `Float32Array`.",
             "anyOf": [
                 {
-                    "enum": [ 5120 ],
+                    "const": 5120,
                     "description": "BYTE",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 5121 ],
+                    "const": 5121,
                     "description": "UNSIGNED_BYTE",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 5122 ],
+                    "const": 5122,
                     "description": "SHORT",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 5123 ],
+                    "const": 5123,
                     "description": "UNSIGNED_SHORT",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 5125 ],
+                    "const": 5125,
                     "description": "UNSIGNED_INT",
                     "type": "integer"
                 },
                 {
-                    "enum": [ 5126 ],
+                    "const": 5126,
                     "description": "FLOAT",
                     "type": "integer"
                 },
@@ -75,25 +76,25 @@
             "description": "Specifies if the accessor's elements are scalars, vectors, or matrices.",
             "anyOf": [
                 {
-                    "enum": [ "SCALAR" ]
+                    "const": "SCALAR"
                 },
                 {
-                    "enum": [ "VEC2" ]
+                    "const": "VEC2"
                 },
                 {
-                    "enum": [ "VEC3" ]
+                    "const": "VEC3"
                 },
                 {
-                    "enum": [ "VEC4" ]
+                    "const": "VEC4"
                 },
                 {
-                    "enum": [ "MAT2" ]
+                    "const": "MAT2"
                 },
                 {
-                    "enum": [ "MAT3" ]
+                    "const": "MAT3"
                 },
                 {
-                    "enum": [ "MAT4" ]
+                    "const": "MAT4"
                 },
                 {
                     "type": "string"

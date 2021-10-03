@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "skin.schema.json",
     "title": "Skin",
     "type": "object",
     "description": "Joints and matrices defining a skin.",
