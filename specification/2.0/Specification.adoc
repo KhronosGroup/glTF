@@ -652,7 +652,7 @@ The node named `Car` has four children. Each of those nodes could in turn have i
 [[transformations]]
 === Transformations
 
-Any node **MAY** define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as _TRS properties_). `translation` and `scale` are 3D vectors in the local coordinate system. `rotation` is a unit quaternion value, XYZW, in the local coordinate system, where W is the scalar.
+Any node **MAY** define a local space transform either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as _TRS properties_). `translation` and `scale` are 3D vectors in the local coordinate system. `rotation` is a unit quaternion value, XYZW, in the local coordinate system, where W is the scalar.
 
 When `matrix` is defined, it **MUST** be decomposable to TRS properties.
 [NOTE]
@@ -668,7 +668,7 @@ To compose the local transformation matrix, TRS properties **MUST** be converted
 [NOTE]
 .Implementation Note
 ====
-Non-invertible transformations (e.g., scaling one axis to zero) could lead to lighting and/or visibility artifacts.
+Non-invertible transforms (e.g., scaling one axis to zero) could lead to lighting and/or visibility artifacts.
 ====
 
 The global transformation matrix of a node is the product of the global transformation matrix of its parent node and its own local transformation matrix. When the node has no parent node, its global transformation matrix is identical to its local transformation matrix.
@@ -702,7 +702,7 @@ In the example below, node named `Box` defines non-default rotation and translat
 }
 ----
 
-The next example defines the transformation for a node with attached camera using the `matrix` property rather than using the individual TRS values:
+The next example defines the transform for a node with attached camera using the `matrix` property rather than using the individual TRS values:
 
 [source,json]
 ----
@@ -1554,7 +1554,7 @@ All joint values **MUST** be within the range of joints in the skin. Unused join
 [[instantiation]]
 === Instantiation
 
-A mesh is instantiated by `node.mesh` property. The same mesh could be used by many nodes, which could have different transformations. For example:
+A mesh is instantiated by `node.mesh` property. The same mesh could be used by many nodes, which could have different transforms. For example:
 
 [source,json]
 ----
@@ -1576,14 +1576,14 @@ A mesh is instantiated by `node.mesh` property. The same mesh could be used by m
 
 ----
 
-After applying the node's global transformation, mesh vertex position values are meters.
+After applying the node's global transform, mesh vertex position values are meters.
 
 When a mesh primitive uses any triangle-based topology (i.e., _triangles_, _triangle strip_, or _triangle fan_), the determinant of the node's global transform defines the winding order of that primitive. If the determinant is a positive value, the winding order triangle faces is counterclockwise; in the opposite case, the winding order is clockwise.
 
 [NOTE]
 .Implementation Note
 ====
-Switching the winding order to clockwise enables mirroring geometry via negative scale transformations.
+Switching the winding order to clockwise enables mirroring geometry via negative scale transforms.
 ====
 
 When an instantiated mesh has morph targets, it **MUST** use morph weights specified with the `node.weights` property. When the latter is undefined, `mesh.weights` property **MUST** be used instead. When both of these fields are undefined, the mesh is instantiated in a non-morphed state (i.e., with all morph weights set to zeros).
@@ -2089,16 +2089,16 @@ This specification does not define size or style of non-triangular primitives (s
 
 Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details. A camera is instantiated within a node using `node.camera` property.
 
-A camera object defines the projection matrix that transforms from view to clip coordinates.
+A camera object defines the projection matrix that transforms scene coordinates from the view space to the clip space.
 
-A node containing the camera instance defines the view matrix that transforms from world to view coordinates.
+A node containing the camera instance defines the view matrix that transforms scene coordinates from the global space to the view space.
 
 [[view-matrix]]
 === View Matrix
 
 The camera is defined such that the local +X axis is to the right, the "`lens`" looks towards the local -Z axis, and the top of the camera is aligned with the local +Y axis.
 
-The view matrix is derived from the world transform of the node containing the camera with the scaling ignored. If no transformation is specified, the location of the camera is at the origin.
+The view matrix is derived from the global transform of the node containing the camera with the scaling ignored. If the node's global transform is identity, the location of the camera is at the origin.
 
 [[projection-matrices]]
 === Projection Matrices
@@ -2240,7 +2240,7 @@ glTF 2.0 also supports animation of instantiated morph targets in a similar fash
 [NOTE]
 .Note
 ====
-glTF 2.0 only supports animating node transforms and morph target weights. Extensions or a future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
+glTF 2.0 only supports animating node transforms and morph target weights. Extensions or a future version of the specification may support animating arbitrary properties, such as material colors and texture transformation matrices.
 ====
 
 [NOTE]
