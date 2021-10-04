@@ -674,7 +674,7 @@ Non-invertible transforms (e.g., scaling one axis to zero) could lead to lightin
 [NOTE]
 .Implementation Note
 ====
-When the scale is zero on all three axes (by node transform or by animated scale), implementations are free to optimize away rendering of the node's un-skinned mesh, and all of the node's children's un-skinned meshes.
+When the scale is zero on all three axes (by node transform or by animated scale), implementations are free to optimize away rendering of the node's mesh, and all of the node's children's meshes. This provides a mechanism to animate visibility. For skinned meshes, this optimization would only be applicable if all joints in the skin were scaled to zero simultaneously.
 ====
 
 The global transformation matrix of a node is the product of the global transformation matrix of its parent node and its own local transformation matrix. When the node has no parent node, its global transformation matrix is identical to its local transformation matrix.
