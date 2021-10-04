@@ -138,6 +138,14 @@ Extensions start as a vendor extension, then can become a multi-vendor extension
 3. Names SHOULD be structured as `<PREFIX>_<scope>_<feature>`, where *scope* is an existing glTF concept (e.g. mesh, texture, image) and *feature* describes the functionality being added within that scope. This structure is recommended, but not required.
 4. Scope SHOULD be singular (e.g. mesh, texture), except where this would be inconsistent with an existing Khronos extension (e.g. materials, lights).
 
+### Structure
+
+When an extension is attached to a parent property from the core glTF 2.0 specification, properties of the extension should generally be named and defined as though they were attached directly to the parent object. For example, use `KHR_materials_clearcoat.clearcoatTexture` and NOT `KHR_materials_clearcoat.texture`. The extension object does not, in these cases, have implicit meaning of its own. Furthermore, mere presence of such an extension should not typically change the behavior of the parent property: the extension should be "disabled by default" and require at least one property before it has an effect. 
+
+When an extension is attached to the glTF root object (e.g. `KHR_lights_punctual.lights`) its purpose is generally to define a new type of resource for later reuse, and would not be affected by these recommendations.
+
+These patterns help to increase internal consistency among extensions in the glTF ecosystem, as well as increasing the likelihood that the same property names and semantics could be preserved if the extension were later promoted into the core specification.
+
 ## Promoting Extensions
 
 ### Vendor Extensions
