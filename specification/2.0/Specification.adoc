@@ -671,6 +671,12 @@ To compose the local transformation matrix, TRS properties **MUST** be converted
 Non-invertible transforms (e.g., scaling one axis to zero) could lead to lighting and/or visibility artifacts.
 ====
 
+[NOTE]
+.Implementation Note
+====
+When the scale is zero on all three axes (by node transform or by animated scale), implementations are free to optimize away rendering of the node's mesh, and all of the node's children's meshes. This provides a mechanism to animate visibility. Skinned meshes must not use this optimization unless all of the joints in the skin are scaled to zero simultaneously.
+====
+
 The global transformation matrix of a node is the product of the global transformation matrix of its parent node and its own local transformation matrix. When the node has no parent node, its global transformation matrix is identical to its local transformation matrix.
 
 In the example below, node named `Box` defines non-default rotation and translation.
