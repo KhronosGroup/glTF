@@ -818,7 +818,7 @@ Buffers and buffer views do not contain type information. They simply define the
 [[glb-stored-buffer]]
 ==== GLB-stored Buffer
 
-The glTF asset **MAY** use a GLB file container to pack glTF JSON and one glTF buffer into one file. Data for such a buffer is provided via the GLB-stored `BIN` chunk.
+The glTF asset **MAY** use the GLB file container to pack glTF JSON and one glTF buffer into one file. Data for such a buffer is provided via the GLB-stored `BIN` chunk.
 
 A buffer with data provided by the GLB-stored `BIN` chunk, **MUST** be the first element of `buffers` array and it **MUST** have its `buffer.uri` property undefined. When such a buffer exists, a `BIN` chunk **MUST** be present.
 
