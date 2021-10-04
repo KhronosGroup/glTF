@@ -36,9 +36,9 @@ On that Action's Summary Page, if it was successful, there should be an "artifac
 
 ## Building Locally
 
-Building the documentation locally can be useful when proposing changes to the actual tooling used during the build.
+Building the specification locally can be useful when proposing changes to the actual tooling used during the build.
 
-The most straightforward way is to install [Docker](https://www.docker.com/) such that the documentation can be built inside a preconfigured container.  After installing Docker, pull the following image from Docker Hub:
+The most straightforward way is to install [Docker](https://www.docker.com/) such that the specification can be built inside a preconfigured container.  After installing Docker, pull the following image from Docker Hub:
 
 ```
 docker pull khronosgroup/docker-images:asciidoctor-spec
@@ -51,7 +51,7 @@ Then, open a terminal inside the new container, and do the following:
 3. `cd specification/2.0`
 4. `make Specification.html Specification.pdf`
 
-This should build the HTML and PDF versions of the documentation, including any changes from the current git branch.
+This should build the HTML and PDF versions of the specification, including any changes from the current git branch.
 
 ## Publishing
 
