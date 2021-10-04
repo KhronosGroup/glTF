@@ -49,9 +49,9 @@ Then, open a terminal inside the new container, and do the following:
 1. `git clone ...` this repository, or your fork.
 2. `git checkout ...` the branch with your changes.
 3. `cd specification/2.0`
-4. `make Specification.html Specification.pdf`
+4. `make`
 
-This should build the HTML and PDF versions of the specification, including any changes from the current git branch.
+This should build `Specification.html` and `Specification.pdf`, containing the HTML and PDF versions of the specification, including any changes from the current git branch.
 
 ## Publishing
 
