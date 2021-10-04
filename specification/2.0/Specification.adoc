@@ -110,7 +110,7 @@ glTF is an API-neutral runtime asset delivery format.  glTF bridges the gap betw
 [[introduction-conventions]]
 == Document Conventions
 
-The glTF Specification is intended for use by both implementors of the asset exporters or converters (e.g., digital content creation tools) and application developers seeking to import or load glTF assets, forming a basis for interoperability between these parties.
+The glTF Specification is intended for use by both implementers of the asset exporters or converters (e.g., digital content creation tools) and application developers seeking to import or load glTF assets, forming a basis for interoperability between these parties.
 
 Specification text can address either party; typically, the intended audience can be inferred from context, though some sections are defined to address only one of these parties.
 
@@ -130,7 +130,7 @@ References to external documents are considered normative if the Specification u
 [[introduction-informative-language]]
 === Informative Language
 
-Some language in the specification is purely informative, intended to give background or suggestions to implementors or developers.
+Some language in the specification is purely informative, intended to give background or suggestions to implementers or developers.
 
 If an entire chapter or section contains only informative language, its title is suffixed with "`(Informative)`". If not designated as informative, all chapters, sections, and appendices in this document are normative.
 
@@ -353,7 +353,7 @@ Major version updates **MAY** be incompatible with previous versions.
 [NOTE]
 .Implementation Note
 ====
-Certain Exif chunks, e.g., "`Orientation`", may severely impact asset's portability.
+Certain Exif chunks, e.g., "`Orientation`", may severely impact an asset's portability.
 ====
 
 [[json-encoding]]
@@ -471,7 +471,7 @@ Client implementations **MAY** optionally support additional URI components. For
 [NOTE]
 .Implementation Note
 ====
-This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, or textures, separate files may be preferred to reduce the total amount of data requested. With separate files, applications may progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading. Alternatively, an asset could use GLB container to store JSON and binary data in one file without base64 encoding. See <<glb-file-format-specification,GLB File Format Specification>> for details.
+This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, or textures, separate files may be preferred to reduce the total amount of data requested. With separate files, applications may progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading. Alternatively, an asset could use the GLB container to store JSON and binary data in one file without base64 encoding. See <<glb-file-format-specification,GLB File Format Specification>> for details.
 ====
 
 URIs **SHOULD** undergo syntax-based normalization as defined by <<uri,RFC 3986>>, Section 6.2.2, <<iri,RFC 3987>>, Section 5.3.2, and applicable schema rules (e.g., <<http,RFC 7230>>, Section 2.7.3 for HTTP) on export and/or import.
@@ -673,7 +673,7 @@ Non-invertible transforms (e.g., scaling one axis to zero) could lead to lightin
 
 The global transformation matrix of a node is the product of the global transformation matrix of its parent node and its own local transformation matrix. When the node has no parent node, its global transformation matrix is identical to its local transformation matrix.
 
-In the example below, node named `Box` defines non-default rotation and translation.
+In the example below, a node named `Box` defines non-default rotation and translation.
 
 [source,json]
 ----
@@ -818,13 +818,13 @@ Buffers and buffer views do not contain type information. They simply define the
 [[glb-stored-buffer]]
 ==== GLB-stored Buffer
 
-glTF asset **MAY** use GLB file container to pack glTF JSON and one glTF buffer into one file. Data for such buffer is provided via GLB-stored `BIN` chunk.
+The glTF asset **MAY** use a GLB file container to pack glTF JSON and one glTF buffer into one file. Data for such a buffer is provided via the GLB-stored `BIN` chunk.
 
 A buffer with data provided by the GLB-stored `BIN` chunk, **MUST** be the first element of `buffers` array and it **MUST** have its `buffer.uri` property undefined. When such a buffer exists, a `BIN` chunk **MUST** be present.
 
 Any glTF buffer with undefined `buffer.uri` property that is not the first element of `buffers` array does not refer to the GLB-stored BIN chunk, and the behavior of such buffers is left undefined to accommodate future extensions and specification versions.
 
-Byte length of `BIN` chunk **MAY** be up to 3 bytes bigger than JSON-defined `buffer.byteLength` value to satisfy GLB padding requirements.
+The byte length of the `BIN` chunk **MAY** be up to 3 bytes bigger than JSON-defined `buffer.byteLength` value to satisfy GLB padding requirements.
 
 [NOTE]
 .Implementation Note
@@ -1122,7 +1122,7 @@ Animation input and vertex position attribute accessors **MUST** have `accessor.
 [[geometry-overview]]
 === Overview
 
-Any node **MAY** contain one mesh, defined in its `mesh` property. Mesh **MAY** be skinned using an information provided in a referenced `skin` object. Mesh **MAY** have morph targets.
+Any node **MAY** contain one mesh, defined in its `mesh` property. The mesh **MAY** be skinned using information provided in a referenced `skin` object. The mesh **MAY** have morph targets.
 
 
 [[meshes]]
@@ -1136,7 +1136,7 @@ Meshes are defined as arrays of _primitives_. Primitives correspond to the data 
 [NOTE]
 .Implementation Note
 ====
-Splitting one mesh into several *primitives* could be useful to limit number of indices per draw call or to assign different materials to different parts of the mesh.
+Splitting one mesh into several *primitives* can be useful to limit the number of indices per draw call or to assign different materials to different parts of the mesh.
 ====
 
 If `material` is undefined, then a <<default-material,default material>> **MUST** be used.
@@ -1285,7 +1285,7 @@ Extensions **MAY** add additional attribute names, accessor types, and / or comp
 
 Morph targets are defined by extending the Mesh concept.
 
-A morph target is a morphable Mesh where primitives' attributes are obtained by adding the original attributes to a weighted sum of targets attributes.
+A morph target is a morphable Mesh where the primitives' attributes are obtained by adding the original attributes to a weighted sum of the target's attributes.
 
 For instance, the morph target vertices `POSITION` for the primitive at index *i* are computed in this way:
 
@@ -1348,9 +1348,9 @@ When `COLOR_n` deltas use an accessor of `"VEC3"` type, their alpha components *
 
 After applying color deltas, all components of each `COLOR_0` morphed accessor element **MUST** be clamped to `[0.0, 1.0]` range.
 
-All morph target's accessors **MUST** have the same `count` as the accessors of the original primitive.
+All morph target accessors **MUST** have the same `count` as the accessors of the original primitive.
 
-A mesh with morph targets **MAY** also define an optional `mesh.weights` property that stores the default targets weights. These weights **MUST** be used when `node.weights` is undefined. When `mesh.weights` is undefined, the default targets weights are zeros.
+A mesh with morph targets **MAY** also define an optional `mesh.weights` property that stores the default targets' weights. These weights **MUST** be used when `node.weights` is undefined. When `mesh.weights` is undefined, the default targets' weights are zeros.
 
 The following example extends the Mesh defined in the previous example to a morphable one by adding two morph targets:
 
@@ -1760,23 +1760,23 @@ Filtering modes control texture's magnification and minification.
 
 Magnification modes include:
 
-* _Nearest_. For each requested texel coordinates, the sampler selects a texel with the nearest coordinates. This process is sometimes called "`nearest neighbor`".
+* _Nearest_. For each requested texel coordinate, the sampler selects a texel with the nearest coordinates. This process is sometimes called "`nearest neighbor`".
 
-* _Linear_. For each requested texel coordinates, the sampler computes a weighted sum of several adjacent texels. This process is sometimes called "`bilinear interpolation`".
+* _Linear_. For each requested texel coordinate, the sampler computes a weighted sum of several adjacent texels. This process is sometimes called "`bilinear interpolation`".
 
 Minification modes include:
 
-* _Nearest_. For each requested texel coordinates, the sampler selects a texel with the nearest (in Manhattan distance) coordinates from the original image. This process is sometimes called "`nearest neighbor`".
+* _Nearest_. For each requested texel coordinate, the sampler selects a texel with the nearest (in Manhattan distance) coordinates from the original image. This process is sometimes called "`nearest neighbor`".
 
-* _Linear_. For each requested texel coordinates, the sampler computes a weighted sum of several adjacent texels from the original image. This process is sometimes called "`bilinear interpolation`".
+* _Linear_. For each requested texel coordinate, the sampler computes a weighted sum of several adjacent texels from the original image. This process is sometimes called "`bilinear interpolation`".
 
-* _Nearest-mipmap-nearest_. For each requested texel coordinates, the sampler first selects one of pre-minified versions of the original image, and then selects a texel with the nearest (in Manhattan distance) coordinates from it.
+* _Nearest-mipmap-nearest_. For each requested texel coordinate, the sampler first selects one of pre-minified versions of the original image, and then selects a texel with the nearest (in Manhattan distance) coordinates from it.
 
-* _Linear-mipmap-nearest_. For each requested texel coordinates, the sampler first selects one of pre-minified versions of the original image, and then computes a weighted sum of several adjacent texels from it.
+* _Linear-mipmap-nearest_. For each requested texel coordinate, the sampler first selects one of pre-minified versions of the original image, and then computes a weighted sum of several adjacent texels from it.
 
-* _Nearest-mipmap-linear_. For each requested texel coordinates, the sampler first selects two pre-minified versions of the original image, selects a texel with the nearest (in Manhattan distance) coordinates from each of them, and performs final linear interpolation between these two intermediate results.
+* _Nearest-mipmap-linear_. For each requested texel coordinate, the sampler first selects two pre-minified versions of the original image, selects a texel with the nearest (in Manhattan distance) coordinates from each of them, and performs final linear interpolation between these two intermediate results.
 
-* _Linear-mipmap-linear_. For each requested texel coordinates, the sampler first selects two pre-minified versions of the original image, computes a weighted sum of several adjacent texels from each of them, and performs final linear interpolation between these two intermediate results. This process is sometimes called "`trilinear interpolation`".
+* _Linear-mipmap-linear_. For each requested texel coordinate, the sampler first selects two pre-minified versions of the original image, computes a weighted sum of several adjacent texels from each of them, and performs final linear interpolation between these two intermediate results. This process is sometimes called "`trilinear interpolation`".
 
 To properly support mipmap modes, client implementations **SHOULD** generate mipmaps at runtime. When runtime mipmap generation is not possible, client implementations **SHOULD** override the minification filtering mode as follows:
 
@@ -1835,7 +1835,7 @@ The following example defines a sampler with _linear_ magnification filtering, _
 
 ==== Non-power-of-two Textures
 
-Client implementations **SHOULD** resize non power-of-two textures (so that their horizontal and vertical sizes are powers of two) when running on platforms that have limited support for such texture dimensions.
+Client implementations **SHOULD** resize non-power-of-two textures (so that their horizontal and vertical sizes are powers of two) when running on platforms that have limited support for such texture dimensions.
 
 [NOTE]
 .Implementation Note
@@ -2033,7 +2033,7 @@ This mode is used to simulate geometry such as tree leaves or wire fences.
 [NOTE]
 .Note
 ====
-This mode is used to simulate geometry such as guaze cloth or animal fur.
+This mode is used to simulate geometry such as gauze cloth or animal fur.
 ====
 
 When `alphaMode` is set to `MASK` the `alphaCutoff` property specifies the cutoff threshold. If the alpha value is greater than or equal to the `alphaCutoff` value then it is rendered as fully opaque, otherwise, it is rendered as fully transparent. `alphaCutoff` value is ignored for other modes.
@@ -2087,7 +2087,7 @@ This specification does not define size or style of non-triangular primitives (s
 [[cameras-overview]]
 === Overview
 
-Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details. A camera is instantiated within a node using `node.camera` property.
+Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details. A camera is instantiated within a node using the `node.camera` property.
 
 A camera object defines the projection matrix that transforms scene coordinates from the view space to the clip space.
 
@@ -2108,7 +2108,7 @@ The view matrix is derived from the global transform of the node containing the 
 
 The projection can be perspective or orthographic.
 
-There are two subtypes of perspective projections: finite and infinite. When `zfar` property is undefined, the camera defines an infinite projection. Otherwise, the camera defines a finite projection.
+There are two subtypes of perspective projections: finite and infinite. When the `zfar` property is undefined, the camera defines an infinite projection. Otherwise, the camera defines a finite projection.
 
 The following example defines two perspective cameras with supplied values for Y field of view, aspect ratio, and clipping information.
 
@@ -2266,7 +2266,7 @@ glTF 2.0 does not specifically define how an animation will be used when importe
 
 All animations are stored in the `animations` array of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
 
-The following examples show expected animations usage.
+The following examples show the expected usage of animations.
 
 [source,json]
 ----
@@ -2619,9 +2619,9 @@ ubyte[] chunkData
 
 * `chunkLength` is the length of `chunkData`, in bytes.
 * `chunkType` indicates the type of chunk. See <<table-chunktypes>> for details.
-* `chunkData` is a binary payload of chunk.
+* `chunkData` is the binary payload of the chunk.
 
-The start and the end of each chunk **MUST** be aligned to 4-byte boundary. See chunks definitions for padding schemes. Chunks **MUST** appear in exactly the order given in <<table-chunktypes>>.
+The start and the end of each chunk **MUST** be aligned to a 4-byte boundary. See chunks definitions for padding schemes. Chunks **MUST** appear in exactly the order given in <<table-chunktypes>>.
 
 [[table-chunktypes]]
 .Chunk types
@@ -2646,7 +2646,7 @@ This chunk holds the glTF JSON, as it would be provided within a .gltf file.
 In a JavaScript implementation, the `TextDecoder` API can be used to extract the glTF content from the ArrayBuffer, and then the JSON can be parsed with `JSON.parse` as usual.
 ====
 
-This chunk **MUST** be the very first chunk of Binary glTF asset. By reading this chunk first, an implementation is able to progressively retrieve resources from subsequent chunks. This way, it is also possible to read only a selected subset of resources from a Binary glTF asset.
+This chunk **MUST** be the very first chunk of a Binary glTF asset. By reading this chunk first, an implementation is able to progressively retrieve resources from subsequent chunks. This way, it is also possible to read only a selected subset of resources from a Binary glTF asset.
 
 This chunk **MUST** be padded with trailing `Space` chars (`0x20`) to satisfy alignment requirements.
 
@@ -3103,7 +3103,7 @@ The model for specular reflection can be improved in several ways. <<Heitz2014,H
 
 Although Schlick's Fresnel is a good approximation for a wide range of metallic and dielectric materials, there are a couple of reasons to use a more sophisticated solution for the Fresnel term.
 
-Metals often exhibit a "`dip`" in reflectance near grazing angles, which is not present in the Schlick Fresnel. <<LazanyiSzirmayKalos2005,Lazányi and Szirmay-Kalos (2005)>> extend the Schlick Fresnel with an error term to account for it. <<Hoffman2019,Hoffman (2019)>> improves the parameterization of this term by introducing an artist-friendly `f82` color, the color at an angle of about 82°. An additional color parameter for metals was also introduced by <<Gulbrandsen2014,Gulbrandsen (2014)>>. Gulbrandson calls it "`edge tint`" and uses it in the full Fresnel equations instead of Schlick's approximation. Even though the full Fresnel equations should give a more accurate result, Hoffman shows that it is worse than Schlick's approximation in the context of RGB renderers. As we target RGB renderers and do not provide an additional color parameter for metals in glTF, we suggest to use the original Schlick Fresnel for metals.
+Metals often exhibit a "`dip`" in reflectance near grazing angles, which is not present in the Schlick Fresnel. <<LazanyiSzirmayKalos2005,Lazányi and Szirmay-Kalos (2005)>> extend the Schlick Fresnel with an error term to account for it. <<Hoffman2019,Hoffman (2019)>> improves the parameterization of this term by introducing an artist-friendly `f82` color, the color at an angle of about 82°. An additional color parameter for metals was also introduced by <<Gulbrandsen2014,Gulbrandsen (2014)>>. Gulbrandson calls it "`edge tint`" and uses it in the full Fresnel equations instead of Schlick's approximation. Even though the full Fresnel equations should give a more accurate result, Hoffman shows that it is worse than Schlick's approximation in the context of RGB renderers. As we target RGB renderers and do not provide an additional color parameter for metals in glTF, we suggest using the original Schlick Fresnel for metals.
 
 The index of refraction of most dielectrics is 1.5. For that reason, the dielectric Fresnel term uses a fixed `f0 = 0.04`. The Schlick Fresnel approximates the full Fresnel equations well for an index of refraction in the range [1.2, 2.2]. The main reason for a material to fall outside this range is transparency and nested objects. If a transparent object overlaps another transparent object and both have the same (or similar) index of refraction, the resulting ratio at the boundary is 1 (or close to 1). According to the full Fresnel equations, there is no (or almost no) reflection in this case. The reflection intensity computed from the Schlick Fresnel approximation will be too high. Implementations that care about accuracy in case of nested dielectrics are encouraged to use the full Fresnel equations for dielectrics. For metals Schlick's approximation is still a good choice.
 
