@@ -30,7 +30,7 @@ After discussing the issue, if corrections are needed to the core glTF 2.0 speci
 
 ## Building with GitHub Actions
 
-Opening a PR here will trigger a GitHub Action. Click on the "Actions" tab of the repository containing the edited branch, making careful note that this is likely to be your own fork of the glTF repository, not the main one. The most recent Action should display the name of your commit or PR.
+Opening a PR here will trigger a GitHub Action. Click on the "Actions" tab of the repository containing the edited branch, making careful note that this is likely to be your own fork of the glTF repository, not the Khronos one. The most recent Action should display the name of your commit or PR.
 
 On that Action's Summary Page, if it was successful, there should be an "artifact" at the bottom called `spec-outputs`. This will be a ZIP file containing the newly built HTML and PDF versions, incorporating the proposed changes.
 
