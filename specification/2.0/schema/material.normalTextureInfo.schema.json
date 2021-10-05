@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "material.normalTextureInfo.schema.json",
     "title": "Material Normal Texture Info",
     "type": "object",
     "allOf": [ { "$ref": "textureInfo.schema.json" } ],

@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "camera.orthographic.schema.json",
     "title": "Camera Orthographic",
     "type": "object",
     "description": "An orthographic camera containing properties to create an orthographic projection matrix.",
@@ -16,8 +17,7 @@
         "zfar": {
             "type": "number",
             "description": "The floating-point distance to the far clipping plane. This value **MUST NOT** be equal to zero. `zfar` **MUST** be greater than `znear`.",
-            "minimum": 0.0,
-            "exclusiveMinimum": true
+            "exclusiveMinimum": 0.0
         },
         "znear": {
             "type": "number",

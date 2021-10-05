@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "mesh.schema.json",
     "title": "Mesh",
     "type": "object",
     "description": "A set of primitives to be rendered.  Its global transform is defined by a node that references it.",

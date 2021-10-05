@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 Khronos Group.
+// Copyright 2013-2021 The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -17,8 +17,17 @@ The Khronos{regtitle} 3D Formats Working Group
 :numbered:
 :source-highlighter: coderay
 :title-logo-image: image:../figures/gltf.png[Logo,pdfwidth=4in,align=right]
+:docinfo: shared-head
 :stem:
-ifdef::env-github[]
+
+// This causes cross references to chapters, sections, and tables to be
+// rendered as "Section A.B" (for example) rather than rendering the reference
+// as the text of the section title.  It also enables cross references to
+// [source] blocks as "Listing N", but only if the [source] block has a title.
+:xrefstyle: short
+:listing-caption: Listing
+
+ifndef::revdate[]
 :toc-placement!:
 
 [NOTE]
@@ -29,13 +38,6 @@ feedback and remixing under CC-BY 4.0. Published versions of the Specification
 are located in the https://www.khronos.org/registry/glTF[glTF Registry].
 ====
 endif::[]
-
-// This causes cross references to chapters, sections, and tables to be
-// rendered as "Section A.B" (for example) rather than rendering the reference
-// as the text of the section title.  It also enables cross references to
-// [source] blocks as "Listing N", but only if the [source] block has a title.
-:xrefstyle: short
-:listing-caption: Listing
 
 // Table of contents is inserted here
 toc::[]
@@ -578,7 +580,7 @@ Chromaticity coordinates define the interpretation of each primary color channel
 [[scenes-overview]]
 === Overview
 
-glTF 2.0 assets **MAY** contain zero or more _scenes_, the set of visual objects to render. Scenes are defined in a `scenes` array. All nodes listed in `scene.nodes` array **MUST** be root nodes, i.e., they **MUST NOT** be listed in a `node.children` array of any node.
+glTF 2.0 assets **MAY** contain zero or more _scenes_, the set of visual objects to render. Scenes are defined in a `scenes` array. All nodes listed in `scene.nodes` array **MUST** be root nodes, i.e., they **MUST NOT** be listed in a `node.children` array of any node. The same root node **MAY** appear in multiple scenes.
 
 An additional root-level property, `scene` (note singular), identifies which of the scenes in the array **SHOULD** be displayed at load time. When `scene` is undefined, client implementations **MAY** delay rendering until a particular scene is requested.
 
@@ -650,7 +652,7 @@ The node named `Car` has four children. Each of those nodes could in turn have i
 [[transformations]]
 === Transformations
 
-Any node **MAY** define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as _TRS properties_). `translation` and `scale` are 3D vectors in the local coordinate system. `rotation` is a unit quaternion value, XYZW, in the local coordinate system, where W is the scalar.
+Any node **MAY** define a local space transform either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as _TRS properties_). `translation` and `scale` are 3D vectors in the local coordinate system. `rotation` is a unit quaternion value, XYZW, in the local coordinate system, where W is the scalar.
 
 When `matrix` is defined, it **MUST** be decomposable to TRS properties.
 [NOTE]
@@ -666,8 +668,16 @@ To compose the local transformation matrix, TRS properties **MUST** be converted
 [NOTE]
 .Implementation Note
 ====
-Non-invertible transformations (e.g., scaling one axis to zero) could lead to lighting and/or visibility artifacts.
+Non-invertible transforms (e.g., scaling one axis to zero) could lead to lighting and/or visibility artifacts.
 ====
+
+[NOTE]
+.Implementation Note
+====
+When the scale is zero on all three axes (by node transform or by animated scale), implementations are free to optimize away rendering of the node's mesh, and all of the node's children's meshes. This provides a mechanism to animate visibility. Skinned meshes must not use this optimization unless all of the joints in the skin are scaled to zero simultaneously.
+====
+
+The global transformation matrix of a node is the product of the global transformation matrix of its parent node and its own local transformation matrix. When the node has no parent node, its global transformation matrix is identical to its local transformation matrix.
 
 In the example below, node named `Box` defines non-default rotation and translation.
 
@@ -698,7 +708,7 @@ In the example below, node named `Box` defines non-default rotation and translat
 }
 ----
 
-The next example defines the transformation for a node with attached camera using the `matrix` property rather than using the individual TRS values:
+The next example defines the transform for a node with attached camera using the `matrix` property rather than using the individual TRS values:
 
 [source,json]
 ----
@@ -856,7 +866,9 @@ See <<glb-file-format-specification,GLB File Format Specification>> for details 
 
 All binary data for meshes, skins, and animations is stored in buffers and retrieved via accessors.
 
-An _accessor_ defines a method for retrieving data as typed arrays from within a `bufferView`. The accessor specifies a component type (e.g., _float_) and a data type (e.g., `VEC3` for 3D vectors), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the `bufferView` using the properties `byteOffset` and `count`. The latter specifies the number of elements within the `bufferView`, _not_ the number of bytes. Elements could be, e.g., vertex indices, vertex attributes, animation keyframes, etc.
+An _accessor_ defines a method for retrieving data as typed arrays from within a buffer view. The accessor specifies a component type (e.g., _float_) and a data type (e.g., `VEC3` for 3D vectors), which when combined define the complete data type for each data element. The number of elements is specified using the `count` property. Elements could be, e.g., vertex indices, vertex attributes, animation keyframes, etc.
+
+The `byteOffset` property specifies the location of the first data element within the referenced buffer view. If the accessor is used for vertex attributes (i.e., it is referenced by a mesh primitive or its morph targets), the locations of the subsequent data elements are controlled by the `bufferView.byteStride` property. If the accessor is used for any other kind of data (vertex indices, animation keyframes, etc.), its data elements are tightly packed.
 
 All accessors are stored in the asset's `accessors` array.
 
@@ -963,15 +975,15 @@ This is often the case when encoding morph targets (it is, in general, more effi
 
 Similar to a standard accessor, a sparse accessor initializes an array of typed elements from data stored in a `bufferView`. When `accessor.bufferView` is undefined, the sparse accessor is initialized as an array of zeros of size `(size of the accessor element) * (accessor.count)` bytes.
 
-On top of that, a sparse accessor includes a `sparse` JSON object describing the elements that deviate from their initialization values. The `sparse` object contains the following **REQUIRED** properties:
+On top of that, a sparse accessor includes a `sparse` JSON object describing the elements that are different from their initialization values. The `sparse` object contains the following **REQUIRED** properties:
 
 - `count`: number of displaced elements. This number **MUST NOT** be greater than the number of the base accessor elements.
 
-- `indices`: object describing the location and the component type of indices of deviating values. The indices **MUST** form a strictly increasing sequence. The indices **MUST NOT** be greater than or equal to the number of the base accessor elements. 
+- `indices`: object describing the location and the component type of indices of values to be replaced. The indices **MUST** form a strictly increasing sequence. The indices **MUST NOT** be greater than or equal to the number of the base accessor elements. 
 
 - `values`: object describing the location of displaced elements corresponding to the indices referred from the `indices`.
 
-The following example shows an example of a sparse accessor with 10 elements deviating from the initialization array.
+The following example shows an example of a sparse accessor with 10 elements that are different from the initialization array.
 
 [source,json]
 ----
@@ -1027,27 +1039,15 @@ Only the following three accessor configurations require padding.
 
 *MAT2, 1-byte components*
 
-----
-| 00| 01| 02| 03| 04| 05| 06| 07|
-|===|===|===|===|===|===|===|===|
-|m00|m10|---|---|m01|m11|---|---|
-----
+image:figures/padding-mat2-1byte.svg[pdfwidth=2in,align=left]
 
 *MAT3, 1-byte components*
 
-----
-| 00| 01| 02| 03| 04| 05| 06| 07| 08| 09| 0A| 0B|
-|===|===|===|===|===|===|===|===|===|===|===|===|
-|m00|m10|m20|---|m01|m11|m21|---|m02|m12|m22|---|
-----
+image:figures/padding-mat3-1byte.svg[pdfwidth=2in,align=left]
 
 *MAT3, 2-byte components*
 
-----
-| 00| 01| 02| 03| 04| 05| 06| 07| 08| 09| 0A| 0B| 0C| 0D| 0E| 0F| 10| 11| 12| 13| 14| 15| 16| 17|
-|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|
-|m00|m00|m10|m10|m20|m20|---|---|m01|m01|m11|m11|m21|m21|---|---|m02|m02|m12|m12|m22|m22|---|---|
-----
+image:figures/padding-mat3-2byte.svg[pdfwidth=4in,align=left]
 
 Alignment requirements apply only to the start of each column, so trailing bytes **MAY** be omitted if there's no further data.
 
@@ -1147,7 +1147,7 @@ Splitting one mesh into several *primitives* could be useful to limit number of 
 
 If `material` is undefined, then a <<default-material,default material>> **MUST** be used.
 
-The following example defines a mesh containing one indexed triangle set primitive:
+The following example defines a mesh containing one indexed triangle primitive:
 
 [source,json]
 ----
@@ -1183,9 +1183,9 @@ Valid accessor type and component type for each attribute semantic property are 
 [options="header",cols="15%,20%,35%,30%"]
 |====
 | Name        | Accessor Type(s)| Component Type(s)           | Description
-| `POSITION`  | VEC3            | _float_                     | XYZ vertex positions
+| `POSITION`  | VEC3            | _float_                     | Unitless XYZ vertex positions
 | `NORMAL`    | VEC3            | _float_                     | Normalized XYZ vertex normals
-| `TANGENT`   | VEC4            | _float_                     | XYZW vertex tangents where the W component is a sign value (-1 or +1) indicating handedness of the tangent basis
+| `TANGENT`   | VEC4            | _float_                     | XYZW vertex tangents where the XYZ portion is normalized, and the W component is a sign value (-1 or +1) indicating handedness of the tangent basis
 | `TEXCOORD_n`| VEC2            | _float_ +
                                   _unsigned byte_ normalized +
                                   _unsigned short_ normalized | UV texture coordinates
@@ -1276,7 +1276,7 @@ Mesh geometry **SHOULD NOT** contain degenerate lines or triangles, i.e., lines 
 
 When positions are not specified, client implementations **SHOULD** skip primitive's rendering unless its positions are provided by other means (e.g., by an extension). This applies to both indexed and non-indexed geometry.
 
-When tangents are not specified, client implementations **SHOULD** calculate tangents using default <<mikktspace,MikkTSpace>> algorithms.
+When tangents are not specified, client implementations **SHOULD** calculate tangents using default <<mikktspace,MikkTSpace>> algorithms with the specified vertex positions, normals, and texture coordinates associated with the normal texture.
 
 When normals are not specified, client implementations **MUST** calculate flat normals and the provided tangents (if present) **MUST** be ignored.
 
@@ -1307,6 +1307,14 @@ Morph targets are specified via the `targets` property defined in the Mesh `prim
 
 For each morph target attribute, an original attribute **MUST** be present in the mesh primitive.
 
+Attributes present in the base mesh primitive but not included in a given morph target **MUST** retain their original values for the morph target.
+
+[NOTE]
+.Implementation Note
+====
+This allows skipping zero-filled accessors and implies that different morph targets may contain different sets of attributes.
+====
+
 Client implementations **SHOULD** support at least three attributes -- `POSITION`, `NORMAL`, and `TANGENT` -- for morphing. Client implementations **MAY** optionally support morphed `TEXCOORD_n` and / or `COLOR_n` attributes.
 
 If morph targets contain application-specific semantics, their names **MUST** be prefixed with an underscore (e.g., `_TEMPERATURE`) like the associated attribute semantics.
@@ -1335,6 +1343,12 @@ Accessor type and component type for each morphed attribute semantic property **
 |====
 
 `POSITION` accessor **MUST** have its `min` and `max` properties defined.
+
+Displacements for `POSITION`, `NORMAL`, and `TANGENT` attributes **MUST** be applied before any transformation matrices affecting the mesh vertices such as skinning or node transforms.
+
+When the base mesh primitive does not specify tangents, client implementations **SHOULD** calculate tangents for each morph target using default <<mikktspace,MikkTSpace>> algorithms with the updated vertex positions, normals, and texture coordinates associated with the normal texture.
+
+When the base mesh primitive does not specify normals, client implementations **MUST** calculate flat normals for each morph target; the provided tangents and their displacements (if present) **MUST** be ignored.
 
 When `COLOR_n` deltas use an accessor of `"VEC3"` type, their alpha components **MUST** be assumed to have a value of `0.0`.
 
@@ -1546,7 +1560,7 @@ All joint values **MUST** be within the range of joints in the skin. Unused join
 [[instantiation]]
 === Instantiation
 
-A mesh is instantiated by `node.mesh` property. The same mesh could be used by many nodes, which could have different transformations. For example:
+A mesh is instantiated by `node.mesh` property. The same mesh could be used by many nodes, which could have different transforms. For example:
 
 [source,json]
 ----
@@ -1568,12 +1582,14 @@ A mesh is instantiated by `node.mesh` property. The same mesh could be used by m
 
 ----
 
+After applying the node's global transform, mesh vertex position values are meters.
+
 When a mesh primitive uses any triangle-based topology (i.e., _triangles_, _triangle strip_, or _triangle fan_), the determinant of the node's global transform defines the winding order of that primitive. If the determinant is a positive value, the winding order triangle faces is counterclockwise; in the opposite case, the winding order is clockwise.
 
 [NOTE]
 .Implementation Note
 ====
-Switching the winding order to clockwise enables mirroring geometry via negative scale transformations.
+Switching the winding order to clockwise enables mirroring geometry via negative scale transforms.
 ====
 
 When an instantiated mesh has morph targets, it **MUST** use morph weights specified with the `node.weights` property. When the latter is undefined, `mesh.weights` property **MUST** be used instead. When both of these fields are undefined, the mesh is instantiated in a non-morphed state (i.e., with all morph weights set to zeros).
@@ -1922,7 +1938,7 @@ For example, assume an 8-bit RGBA value of `[64, 124, 231, 255]` is sampled from
 
 In addition to the material properties, if a primitive specifies a vertex color using the attribute semantic property `COLOR_0`, then this value acts as an additional linear multiplier to _base color_.
 
-Implementations of the BRDF itself **MAY** vary based on device performance and resource constraints. See <<appendix-b-brdf-implementation,Appendix B>> for more details on the BRDF calculations.
+Implementations of the bidirectional reflectance distribution function (BRDF) itself **MAY** vary based on device performance and resource constraints. See <<appendix-b-brdf-implementation,Appendix B>> for more details on the BRDF calculations.
 
 
 [[additional-textures]]
@@ -1944,7 +1960,7 @@ The texture binding for normal textures **MAY** additionally contain a scalar `s
 +
 Normal vectors **MUST** be normalized before being used in lighting equations. When scaling is used, vector normalization happens after scaling.
 
-- *occlusion* : The occlusion texture; it indicates areas that receive less diffuse lighting from ambient sources. Direct lighting is not affected. The _red_ channel of the texture encodes the occlusion value, where `0.0` means fully-occluded area (no indirect lighting) and `1.0` means not occluded area (full indirect lighting). Other texture channels (if present) do not affect occlusion.
+- *occlusion* : The occlusion texture; it indicates areas that receive less indirect lighting from ambient sources. Direct lighting is not affected. The _red_ channel of the texture encodes the occlusion value, where `0.0` means fully-occluded area (no indirect lighting) and `1.0` means not occluded area (full indirect lighting). Other texture channels (if present) do not affect occlusion.
 +
 The texture binding for occlusion maps **MAY** optionally contain a scalar `strength` value that is used to reduce the occlusion effect. When present, it affects the occlusion value as `1.0 + strength * (occlusionTexture - 1.0)`.
 
@@ -2079,16 +2095,16 @@ This specification does not define size or style of non-triangular primitives (s
 
 Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details. A camera is instantiated within a node using `node.camera` property.
 
-A camera object defines the projection matrix that transforms from view to clip coordinates.
+A camera object defines the projection matrix that transforms scene coordinates from the view space to the clip space.
 
-A node containing the camera instance defines the view matrix that transforms from world to view coordinates.
+A node containing the camera instance defines the view matrix that transforms scene coordinates from the global space to the view space.
 
 [[view-matrix]]
 === View Matrix
 
 The camera is defined such that the local +X axis is to the right, the "`lens`" looks towards the local -Z axis, and the top of the camera is aligned with the local +Y axis.
 
-The view matrix is derived from the world transform of the node containing the camera with the scaling ignored. If no transformation is specified, the location of the camera is at the origin.
+The view matrix is derived from the global transform of the node containing the camera with the scaling ignored. If the node's global transform is identity, the location of the camera is at the origin.
 
 [[projection-matrices]]
 === Projection Matrices
@@ -2134,6 +2150,23 @@ Client implementations **SHOULD** use the following projection matrices.
 [[infinite-perspective-projection]]
 ==== Infinite perspective projection
 
+Let
+
+- `a` be the aspect ratio (width over height) of the field of view, set by `camera.perspective.aspectRatio`, or the aspect ratio of the viewport;
+- `y` be the vertical field of view in radians, set by `camera.perspective.yfov`;
+- `n` be the distance to the near clipping plane, set by `camera.perspective.znear`.
+
+Then, the projection matrix is defined as follows.
+
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#infinite-perspective-projection[infinite perspective projection].
+====
+endif::[]
+
 [latexmath]
 ++++
 \begin{bmatrix}
@@ -2144,15 +2177,28 @@ Client implementations **SHOULD** use the following projection matrices.
 \end{bmatrix}
 ++++
 
-where
-
-- `a` equals `camera.perspective.aspectRatio`;
-- `y` equals `camera.perspective.yfov`;
-- `n` equals `camera.perspective.znear`.
-
+When the provided camera's aspect ratio does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** crop or perform non-uniform scaling ("`stretching`") to fill the viewport.
 
 [[finite-perspective-projection]]
 ==== Finite perspective projection
+
+Let
+
+- `a` be the aspect ratio (width over height) of the field of view, set by `camera.perspective.aspectRatio`, or the aspect ratio of the viewport;
+- `y` be the vertical field of view in radians, set by `camera.perspective.yfov`;
+- `f` be the distance to the far clipping plane, set by `camera.perspective.zfar`;
+- `n` be the distance to the near clipping plane, set by `camera.perspective.znear`.
+
+Then, the projection matrix is defined as follows.
+
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#finite-perspective-projection[finite perspective projection].
+====
+endif::[]
 
 [latexmath]
 ++++
@@ -2164,16 +2210,28 @@ where
 \end{bmatrix}
 ++++
 
-where
-
-- `a` equals `camera.perspective.aspectRatio`;
-- `y` equals `camera.perspective.yfov`;
-- `f` equals `camera.perspective.zfar`;
-- `n` equals `camera.perspective.znear`.
-
+When the provided camera's aspect ratio does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** crop or perform non-uniform scaling ("`stretching`") to fill the viewport.
 
 [[orthographic-projection]]
 ==== Orthographic projection
+
+Let
+
+- `r` be half the orthographic width, set by `camera.orthographic.xmag`;
+- `t` be half the orthographic height, set by `camera.orthographic.ymag`;
+- `f` be the distance to the far clipping plane, set by `camera.orthographic.zfar`;
+- `n` be the distance to the near clipping plane, set by `camera.orthographic.znear`.
+
+Then, the projection matrix is defined as follows.
+
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#orthographic-projection[orthographic projection].
+====
+endif::[]
 
 [latexmath]
 ++++
@@ -2185,13 +2243,7 @@ where
 \end{bmatrix}
 ++++
 
-where
-
-- `r` equals `camera.orthographic.xmag`;
-- `t` equals `camera.orthographic.ymag`;
-- `f` equals `camera.orthographic.zfar`;
-- `n` equals `camera.orthographic.znear`.
-
+When `r / t` does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** crop or perform non-uniform scaling ("`stretching`") to fill the viewport.
 
 [[animations]]
 == Animations
@@ -2203,7 +2255,7 @@ glTF 2.0 also supports animation of instantiated morph targets in a similar fash
 [NOTE]
 .Note
 ====
-glTF 2.0 only supports animating node transforms and morph target weights. Extensions or a future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
+glTF 2.0 only supports animating node transforms and morph target weights. Extensions or a future version of the specification may support animating arbitrary properties, such as material colors and texture transformation matrices.
 ====
 
 [NOTE]
@@ -2537,7 +2589,7 @@ image:figures/glb2.png[pdfwidth=4in,align=left]
 The following sections describe the structure more in detail.
 
 
-[[header]]
+[[binary-header]]
 === Header
 
 The 12-byte header consists of three 4-byte entries:
@@ -2618,6 +2670,15 @@ When the binary buffer is empty or when it is stored by other means, this chunk 
 
 [[properties-reference]]
 = Properties Reference
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section is auto-generated, and will be a broken link when previewing.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#properties-reference[Properties Reference Section].
+To suggest changes, open a Pull Request to edit the https://github.com/KhronosGroup/glTF/tree/main/specification/2.0/schema[JSON Schema Files].
+====
+endif::[]
 
 // Generated with wetzel
 include::PropertiesReference.adoc[]
@@ -2686,6 +2747,15 @@ include::PropertiesReference.adoc[]
 [appendix]
 [[appendix-a-json-schema-reference]]
 = JSON Schema Reference (Informative)
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section is auto-generated, and will be a broken link when previewing.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-a-json-schema-reference[JSON Schema Reference].
+To suggest changes, open a Pull Request to edit the https://github.com/KhronosGroup/glTF/tree/main/specification/2.0/schema[JSON Schema Files].
+====
+endif::[]
 
 // Generated with wetzel
 include::JsonSchemaReference.adoc[]
@@ -2697,7 +2767,7 @@ include::JsonSchemaReference.adoc[]
 [[appendix-b-brdf-implementation-general]]
 == General
 
-This chapter presents the bidirectional scattering distribution function (BRDF) of the glTF 2.0 metallic-roughness material. The BRDF describes the reflective properties of the surface of a physically based material. For a pair of directions, the BRDF returns how much light from the incoming direction is scattered from the surface in the outgoing direction.
+This chapter presents the bidirectional reflectance distribution function (BRDF) of the glTF 2.0 metallic-roughness material. The BRDF describes the reflective properties of the surface of a physically based material. For a pair of directions, the BRDF returns how much light from the incoming direction is reflected from the surface in the outgoing direction.
 
 [NOTE]
 .Note
@@ -2853,6 +2923,15 @@ We use the following notation:
 [[specular-brdf]]
 === Specular BRDF
 
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#specular-brdf[Specular BRDF Section].
+====
+endif::[]
+
 The specular reflection `specular_brdf(α)` is a microfacet BRDF
 
 [latexmath]
@@ -2910,6 +2989,15 @@ function specular_brdf(α) {
 [[diffuse-brdf]]
 === Diffuse BRDF
 
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#diffuse-brdf[Diffuse BRDF Section].
+====
+endif::[]
+
 The diffuse reflection `diffuse_brdf(color)` is a Lambertian BRDF
 
 [latexmath]
@@ -2929,6 +3017,15 @@ function diffuse_brdf(color) {
 
 [[fresnel]]
 === Fresnel
+
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This section contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#fresnel[Fresnel Section].
+====
+endif::[]
 
 An inexpensive approximation for the Fresnel term that can be used for conductors and dielectrics was developed by <<Schlick1994,Schlick (1994)>>:
 

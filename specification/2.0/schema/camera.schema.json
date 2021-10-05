@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "camera.schema.json",
     "title": "Camera",
     "type": "object",
     "description": "A camera's projection.  A node **MAY** reference a camera to apply a transform to place the camera in the scene.",
@@ -18,10 +19,10 @@
             "gltf_detailedDescription": "Specifies if the camera uses a perspective or orthographic projection.  Based on this, either the camera's `perspective` or `orthographic` property **MUST** be defined.",
             "anyOf": [
                 {
-                    "enum": [ "perspective" ]
+                    "const": "perspective"
                 },
                 {
-                    "enum": [ "orthographic" ]
+                    "const": "orthographic"
                 },
                 {
                     "type": "string"

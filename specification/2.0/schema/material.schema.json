@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "material.schema.json",
     "title": "Material",
     "type": "object",
     "description": "The material appearance of a primitive.",
@@ -46,15 +47,15 @@
             "gltf_detailedDescription": "The material's alpha rendering mode enumeration specifying the interpretation of the alpha value of the base color.",
             "anyOf": [
                 {
-                    "enum": [ "OPAQUE" ],
+                    "const": "OPAQUE",
                     "description": "The alpha value is ignored, and the rendered output is fully opaque."
                 },
                 {
-                    "enum": [ "MASK" ],
+                    "const": "MASK",
                     "description": "The rendered output is either fully opaque or fully transparent depending on the alpha value and the specified `alphaCutoff` value."
                 },
                 {
-                    "enum": [ "BLEND" ],
+                    "const": "BLEND",
                     "description": "The alpha value is used to composite the source and destination areas. The rendered output is combined with the background using the normal painting operation (i.e. the Porter and Duff over operator)."
                 },
                 {

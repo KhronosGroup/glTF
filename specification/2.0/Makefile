@@ -15,7 +15,7 @@ all: $(TARGETS)
 # accurately reflect changes to wetzel that impact the output here.
 # Please manually upgrade the version as often as needed, without unlocking.
 
-WETZEL = npx wetzel@0.2.1
+WETZEL = npx wetzel@0.2.2
 SCHEMALINK = schema
 EMBEDSCHEMA = JsonSchemaReference.adoc
 
@@ -26,16 +26,18 @@ GENERATED = $(PROPREF) $(EMBEDSCHEMA)
 # Schema files to leave out of $(PROPREF)
 IGNORESCHEMA = '["gltfchildofrootproperty.schema.json", "gltfid.schema.json", "gltfproperty.schema.json"]'
 $(GENERATED): $(wildcard schema/*.json)
-	$(WETZEL) -n -a=cqo -m=a -p "$(SCHEMALINK)/2020-12" -e "$(EMBEDSCHEMA)" \
+	$(WETZEL) -n -a=cqo -m=a -p "$(SCHEMALINK)" -e "$(EMBEDSCHEMA)" \
 	    -i $(IGNORESCHEMA) -c "icon:check[]" -k "**MUST**"\
 	    schema/glTF.schema.json > $(PROPREF)
 
 # Spec targets for offline generation
 # Requires an up-to-date asciidoctor, asciidoctor-pdf, and
 # asciidoctor-mathematical be installed
-# We recommend using the khronosgroup/vulkan-docs-base image on dockerhub
+# We recommend using the following image on dockerhub:
+# docker pull khronosgroup/docker-images:asciidoctor-spec
 ASCIIDOCTOR = asciidoctor $(ADOCOPTS)
 ADOCOPTS = -d book
+ADOCHTMLOPTS = -a stylesheet=khronos.css -a sectanchors
 SPECDEPS = $(SPEC).adoc $(GENERATED)
 
 PATCHVERSION = 0
@@ -59,7 +61,7 @@ ATTRIBOPTS = -a revnumber="$(SPECREVISION)" \
              -a revremark="$(SPECREMARK)"
 
 $(SPEC).html: $(SPECDEPS)
-	$(ASCIIDOCTOR) -b html5 $(ATTRIBOPTS) $(SPEC).adoc -o $@
+	$(ASCIIDOCTOR) -b html5 $(ADOCHTMLOPTS) $(ATTRIBOPTS) $(SPEC).adoc -o $@
 
 # :allow-url-read: is necessary for the embedded render.githubusers.com
 # math images to be processed for the PDF target. See
