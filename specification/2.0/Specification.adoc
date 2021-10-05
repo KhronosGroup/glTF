@@ -2427,7 +2427,7 @@ Within one animation, each target (a combination of a node and a path) **MUST NO
 This prevents potential ambiguities when one target is affected by two or more overlapping samplers.
 ====
 
-Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating-point scalar values representing linear time in seconds; and a set of vectors or scalars representing the animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, and `CUBICSPLINE`. See <<appendix-c-spline-interpolation,Appendix C>> for additional information about spline interpolation.
+Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating-point scalar values representing linear time in seconds; and a set of vectors or scalars representing the animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, and `CUBICSPLINE`. See <<appendix-c-interpolation,Appendix C>> for additional information about interpolation modes.
 
 The inputs of each sampler are relative to `t = 0`, defined as the beginning of the parent `animations` entry. Before and after the provided input range, output **MUST** be clamped to the nearest end of the input range.
 
@@ -2481,7 +2481,7 @@ Morph target animation is by nature sparse, consider using <<sparse-accessors,Sp
 
 a~1~,a~2~,...a~n~,v~1~,v~2~,...v~n~,b~1~,b~2~,...b~n~
 
-See <<appendix-c-spline-interpolation,Appendix C>> for additional information about spline interpolation.
+See <<appendix-c-interpolation,Appendix C>> for additional information about interpolation modes.
 
 Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
 
@@ -3148,59 +3148,111 @@ More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework f
 
 
 [appendix]
-[[appendix-c-spline-interpolation]]
-= Spline Interpolation
+[[appendix-c-interpolation]]
+= Animation Sampler Interpolation Modes
 
-glTF animations support cubic spline interpolation.
+== Overview
 
-The keyframes of a cubic spline in glTF have input and output values where each input value corresponds to three output values of the same type: in-tangent, data point, and out-tangent.
+Animation sampler interpolation modes define how to compute values of animated properties for the timestamps located between the keyframes. When the current (requested) timestamp exists in the animation data, its assosiated property value **MUST** be used as-is, without interpolation.
 
-An animation that uses cubic spline interpolation **MUST** have at least 2 keyframes.
+For the following sections, let
 
-Given a set of keyframes
+[none]
+* stem:[n] be the total number of keyframes, stem:[n > 0];
+* stem:[t_k] be the timestamp of the stem:[k]-th keyframe, stem:[k \in [1,n\]];
+* stem:[v_k] be the animated property value of the stem:[k]-th keyframe;
+* stem:[t_c] be the current (requested) timestamp, stem:[t_k < t_c < t_{k+1}];
+* stem:[t_d = t_{k + 1} - t_k] be the duration of the interpolation segment;
+* stem:[t = (t_c - t_k) / t_d] be the segment-normalized interpolation factor.
 
-{nbsp}{nbsp}{nbsp}{nbsp} Input _t_~_k_~ with Output in-tangent *a*~_k_~, point *v*~_k_~, and out-tangent *b*~_k_~ for _k_ = 1,...,_n_
+The scalar-vector multiplications are per vector component.
 
-a spline segment between two keyframes is represented in a cubic Hermite spline form:
 
-{nbsp}{nbsp}{nbsp}{nbsp} *p*(_t_) = (2 _t_^3^ - 3 _t_^2^ + 1) *p*~0~ + (_t_^3^ - 2 _t_^2^ + _t_) *m*~0~ + (-2 _t_^3^ + 3 _t_^2^) *p*~1~ + (_t_^3^ - _t_^2^) *m*~1~
+== Step Interpolation
 
-where
+This mode is used when the animation sampler interpolation mode is set to `STEP`.
 
-{nbsp}{nbsp}{nbsp}{nbsp} _t_ is a value between 0 and 1
+The interpolated sampler value stem:[v_t] at the current (requested) timestamp stem:[t_c] is computed as follows.
 
-{nbsp}{nbsp}{nbsp}{nbsp} *p*~0~ is the starting point at _t_ = 0
+[latexmath]
+++++
+v_t = v_k
+++++
 
-{nbsp}{nbsp}{nbsp}{nbsp} *m*~0~ is the scaled starting tangent at _t_ = 0
 
-{nbsp}{nbsp}{nbsp}{nbsp} *p*~1~ is the ending point at _t_ = 1
+[[interpolation-lerp]]
+== Linear Interpolation
 
-{nbsp}{nbsp}{nbsp}{nbsp} *m*~1~ is the scaled ending tangent at _t_ = 1
+This mode is used when the animation sampler interpolation mode is set to `LINEAR` and the animated property is not `rotation`.
 
-{nbsp}{nbsp}{nbsp}{nbsp} *p*(_t_) is the resulting point value
+The interpolated sampler value stem:[v_t] at the current (requested) timestamp stem:[t_c] is computed as follows.
 
-and where at input offset _t_~_current_~ with keyframe index _k_
+[latexmath]
+++++
+v_t = (1 - t) * {v}_k + t * v_{k+1}
+++++
 
-{nbsp}{nbsp}{nbsp}{nbsp} _t_ = (_t_~_current_~ - _t_~_k_~) / (_t_~_k_+1~ - _t_~_k_~)
 
-{nbsp}{nbsp}{nbsp}{nbsp} *p*~0~ = *v*~_k_~
+[[interpolation-slerp]]
+== Spherical Linear Interpolation
 
-{nbsp}{nbsp}{nbsp}{nbsp} *m*~0~ = (_t_~_k_+1~ - _t_~_k_~) *b*~_k_~
+This mode is used when the animation sampler interpolation mode is set to `LINEAR` and the animated property is `rotation`, i.e., values of the animated property are unit quaternions.
 
-{nbsp}{nbsp}{nbsp}{nbsp} *p*~1~ = *v*~_k_+1~
+Let
+[none]
+* stem:[a = arccos(|v_k \cdot v_{k+1}|)] be the arccosine of the absolute value of the dot product of two consecutive quaternions;
+* latexmath:[s = \frac{v_k \cdot v_{k+1}}{|v_k \cdot v_{k+1}|}] be the sign of the dot product of two consecutive quaternions.
 
-{nbsp}{nbsp}{nbsp}{nbsp} *m*~1~ = (_t_~_k_+1~ - _t_~_k_~) *a*~_k_+1~
+The interpolated sampler value stem:[v_t] at the timestamp stem:[t_c] is computed as follows.
 
-The scalar-point multiplications are per point component.
-
-When the sampler targets a node's rotation property, the resulting *p*(_t_) quaternion **MUST** be normalized before applying the result to the node's rotation.
-
-When writing out rotation output values, exporters **SHOULD** take care to not write out values that can result in an invalid quaternion with all zero values.
+[latexmath]
+++++
+v_t = \frac{sin(a(1 - t))}{sin(a)} * {v}_k + s * \frac{sin(at)}{sin(a)} * v_{k+1}
+++++
 
 [NOTE]
 .Implementation Note
 ====
-This can be achieved by ensuring the output values never have both -*q* and *q* in the same spline.
+Multiplication by the dot product's sign ensures that the spherical interpolation follows the short path.
 ====
 
-The first in-tangent *a*~1~ and last out-tangent *b*~*n*~ **SHOULD** be zeros as they are not used in the spline calculations.
+Implementations **MAY** approximate these equations to reach application-specific accuracy and / or performance targets.
+
+[NOTE]
+.Implementation Note
+====
+When stem:[a] is close to zero, spherical linear interpolation turns into regular linear interpolation.
+====
+
+
+[[interpolation-cubic]]
+== Cubic Spline Interpolation
+
+This mode is used when the animation sampler interpolation mode is set to `CUBICSPLINE`.
+
+An animation sampler that uses cubic spline interpolation **MUST** have at least 2 keyframes.
+
+For each timestamp stored in the animaition sampler, there are three assosiated keyframe values: in-tangent, property value, and out-tangent.
+
+Let
+[none]
+* stem:[a_k], stem:[v_k], and stem:[b_k] be the in-tangent, the property value, and the out-tangent of the stem:[k]-th frame respectively.
+
+The interpolated sampler value stem:[v_t] at the timestamp stem:[t_c] is computed as follows.
+
+[latexmath]
+++++
+v_t = (2t^3 - 3t^2 + 1) * v_k + t_d(t^3 - 2t^2 + t) * b_k + (-2t^3 + 3t^2) * v_{k+1} + t_d(t^3 - t^2) * a_{k+1}
+++++
+
+When the animation sampler targets a node's rotation property, the interpolated quaternion **MUST** be normalized before applying the result to the node's rotation.
+
+When writing out rotation values, exporters **SHOULD** take care to not write out values that can result in an invalid quaternion with all zero values being produced by the interpolation.
+
+[NOTE]
+.Implementation Note
+====
+This can be achieved by ensuring that stem:[v_k != -v_{k+1}] for all keyframes.
+====
+
+The first in-tangent stem:[a_1] and last out-tangent stem:[b_n] **SHOULD** be zeros as they are not used in the spline calculations.
