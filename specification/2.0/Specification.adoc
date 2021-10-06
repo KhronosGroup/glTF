@@ -2685,7 +2685,7 @@ include::PropertiesReference.adoc[]
 
 
 [[acknowledgments]]
-= Acknowledgments
+= Acknowledgments (Informative)
 
 [[editors]]
 == Editors
@@ -2696,7 +2696,7 @@ include::PropertiesReference.adoc[]
 * Tony Parisi, Unity
 
 [[working-group-and-alumni]]
-== Khronos 3D Formats Working Group and Alumni (Informative)
+== Khronos 3D Formats Working Group and Alumni
 
 * Remi Arnaud, Vario
 * Mike Bond, Adobe
