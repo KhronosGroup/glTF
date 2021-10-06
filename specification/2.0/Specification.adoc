@@ -3153,7 +3153,7 @@ More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework f
 
 == Overview
 
-Animation sampler interpolation modes define how to compute values of animated properties for the timestamps located between the keyframes. When the current (requested) timestamp exists in the animation data, its assosiated property value **MUST** be used as-is, without interpolation.
+Animation sampler interpolation modes define how to compute values of animated properties for the timestamps located between the keyframes. When the current (requested) timestamp exists in the animation data, its associated property value **MUST** be used as-is, without interpolation.
 
 For the following sections, let
 
@@ -3232,7 +3232,7 @@ This mode is used when the animation sampler interpolation mode is set to `CUBIC
 
 An animation sampler that uses cubic spline interpolation **MUST** have at least 2 keyframes.
 
-For each timestamp stored in the animaition sampler, there are three assosiated keyframe values: in-tangent, property value, and out-tangent.
+For each timestamp stored in the animation sampler, there are three associated keyframe values: in-tangent, property value, and out-tangent.
 
 Let
 [none]
