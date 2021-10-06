@@ -2027,7 +2027,7 @@ The `alphaMode` property defines how the alpha value is interpreted. The alpha v
 `alphaMode` can be one of the following values:
 
 * `OPAQUE` - The rendered output is fully opaque and any alpha value is ignored.
-* `MASK` - The rendered output is either fully opaque or fully transparent depending on the alpha value and the specified _alpha cutoff_ value.
+* `MASK` - The rendered output is either fully opaque or fully transparent depending on the alpha value and the specified _alpha cutoff_ value; the exact appearance of the edges **MAY** be subject to implementation-specific techniques such as "`Alpha-to-Coverage`".
 +
 [NOTE]
 .Note
