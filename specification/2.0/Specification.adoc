@@ -142,7 +142,7 @@ All Notes, Implementation notes, and Examples are purely informative.
 
 The glTF Specification makes use of linear algebra terms such as *axis*, *matrix*, *vector*, etc. to identify certain math constructs and their behaviors as defined in the <<iev,International Electrotechnical Vocabulary>>.
 
-The glTF Specification makes use of common engineering and graphics terms such as *image*, *buffer*, *texture*, etc. to identify and describe certain _glTF_ constructs and their attributes, states, and behaviors. This section defines the basic meanings of these terms in the context of the Specification. The Specification text provides fuller definitions of the terms and elaborates, extend, or clarify the definitions. When a term defined in this section is used in normative language within the Specification, the definitions within the Specification govern and supersede any meanings the terms may have in other technical contexts (i.e. outside the Specification).
+The glTF Specification makes use of common engineering and graphics terms such as *image*, *buffer*, *texture*, etc. to identify and describe certain _glTF_ constructs and their attributes, states, and behaviors. This section defines the basic meanings of these terms in the context of the Specification. The Specification text provides fuller definitions of the terms and elaborates, extends, or clarifies the definitions. When a term defined in this section is used in normative language within the Specification, the definitions within the Specification govern and supersede any meanings the terms may have in other technical contexts (i.e. outside the Specification).
 
 accessor::
 An object describing the number and the format of data elements stored in a binary buffer.
