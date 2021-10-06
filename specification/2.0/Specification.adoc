@@ -3189,7 +3189,7 @@ The interpolated sampler value stem:[v_t] at the current (requested) timestamp s
 
 [latexmath]
 ++++
-v_t = (1 - t) * {v}_k + t * v_{k+1}
+v_t = (1 - t) * v_k + t * v_{k+1}
 ++++
 
 
@@ -3207,7 +3207,7 @@ The interpolated sampler value stem:[v_t] at the timestamp stem:[t_c] is compute
 
 [latexmath]
 ++++
-v_t = \frac{sin(a(1 - t))}{sin(a)} * {v}_k + s * \frac{sin(at)}{sin(a)} * v_{k+1}
+v_t = \frac{sin(a(1 - t))}{sin(a)} * v_k + s * \frac{sin(at)}{sin(a)} * v_{k+1}
 ++++
 
 [NOTE]
