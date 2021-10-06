@@ -3257,6 +3257,15 @@ More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework f
 
 == Overview
 
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This appendix contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-c-interpolation[Appendix C: Animation Sampler Interpolation Modes].
+====
+endif::[]
+
 Animation sampler interpolation modes define how to compute values of animated properties for the timestamps located between the keyframes. When the current (requested) timestamp exists in the animation data, its associated property value **MUST** be used as-is, without interpolation.
 
 For the following sections, let
