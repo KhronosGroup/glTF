@@ -3213,7 +3213,7 @@ v_t = \frac{sin(a(1 - t))}{sin(a)} * v_k + s * \frac{sin(at)}{sin(a)} * v_{k+1}
 [NOTE]
 .Implementation Note
 ====
-Multiplication by the dot product's sign ensures that the spherical interpolation follows the short path.
+Using the dot product's absolute value for computing stem:[a] and multiplying stem:[v_{k+1}] by the dot product's sign ensure that the spherical interpolation follows the short path along the great circle defined by the two quaternions.
 ====
 
 Implementations **MAY** approximate these equations to reach application-specific accuracy and / or performance targets.
