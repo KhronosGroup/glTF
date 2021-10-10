@@ -12,6 +12,8 @@ The full specification is available in two forms:
 - [Specification as HTML](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html) - for viewing in a browser
 - [Specification as PDF](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.pdf) - for viewing as a document
 
+A _preview_ of the rendered output can be viewn directly on GitHub, by opening the [Specification AsciiDoc file](https://github.com/KhronosGroup/glTF/blob/main/specification/2.0/Specification.adoc), but note that mathematical formulas will not be displayed correctly in this preview, and it will not include the JSON Schema- and properties reference.
+
 ## Extensions
 
 Features not covered by the core glTF specification may be contributed by way of extensions. See the [glTF Extension Registry](https://github.com/KhronosGroup/glTF/tree/main/extensions) for details.
