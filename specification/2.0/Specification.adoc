@@ -16,7 +16,7 @@ The Khronos{regtitle} 3D Formats Working Group
 :max-width: 100%
 :numbered:
 :source-highlighter: coderay
-:title-logo-image: image:../figures/gltf.png[Logo,pdfwidth=4in,align=right]
+:title-logo-image: image:../figures/glTF_RGB_June16.svg[Logo,pdfwidth=4in,align=right]
 :docinfo: shared-head
 :stem:
 
@@ -87,7 +87,7 @@ indirect, special or consequential damages for lost revenues, lost profits, or
 otherwise, arising from or in connection with these materials.
 
 Khronos® and Vulkan® are registered trademarks, and ANARI™, WebGL™, glTF™, NNEF™, OpenVX™,
-SPIR™, SPIR-V™, SYCL™, OpenVG™ and 3D Commerce™ are trademarks of The Khronos Group Inc.
+SPIR™, SPIR&#8209;V™, SYCL™, OpenVG™ and 3D Commerce™ are trademarks of The Khronos Group Inc.
 OpenXR™ is a trademark owned by The Khronos Group Inc. and is registered as a trademark in
 China, the European Union, Japan and the United Kingdom. OpenCL™ is a trademark of Apple Inc.
 and OpenGL® is a registered trademark and the OpenGL ES™ and OpenGL SC™ logos are trademarks
@@ -114,7 +114,7 @@ The glTF Specification is intended for use by both implementers of the asset exp
 
 Specification text can address either party; typically, the intended audience can be inferred from context, though some sections are defined to address only one of these parties.
 
-Any requirements, prohibitions, recommendations or options defined by <<introduction-normative-terminology, normative terminology>> are imposed only on the audience of that text.
+Any requirements, prohibitions, recommendations, or options defined by <<introduction-normative-terminology, normative terminology>> are imposed only on the audience of that text.
 
 
 [[introduction-normative-terminology]]
@@ -424,8 +424,6 @@ Binary and image resources **MAY** also be embedded directly in JSON using <<dat
 
 A valid glTF asset **MUST** specify its version.
 
-image:figures/files.png[pdfwidth=4in,align=left]
-
 
 [[versioning]]
 == Versioning
@@ -593,9 +591,10 @@ While the specification does not explicitly disallow non-normalized URIs, their 
 [[concepts-general]]
 == General
 
-image:figures/dictionary-objects.png[pdfwidth=4in,align=left]
+The figure below shows relations between top-level arrays in a glTF asset.  See the <<properties-reference, Properties Reference>>.
 
-The image above shows relations between top-level arrays in a glTF asset.  See the <<properties-reference, Properties Reference>>.
+.glTF Object Hierarchy
+image::figures/objects.svg[pdfwidth=6in,align=left]
 
 
 [[asset]]
@@ -660,7 +659,8 @@ For property names, glTF usually uses camel case, `likeThis`.
 
 glTF uses a right-handed coordinate system. glTF defines +Y as up, +Z as forward, and -X as right; the front of a glTF asset faces +Z.
 
-image:figures/coordinate-system.png[pdfwidth=4in,align=left]
+.glTF Coordinate System Orientation
+image::figures/coordinate-system.png[pdfwidth=2in,align=left]
 
 The units for all linear distances are meters.
 
@@ -673,7 +673,7 @@ Red, Green, and Blue primary colors use <<bt709,Recommendation ITU-R BT.709>> ch
 [NOTE]
 .Implementation Note
 ====
-Chromaticity coordinates define the interpretation of each primary color channel of the color model. In the context of a typical display, color primaries describe the color of the red, green and blue phosphors or filters. Unless a wide color gamut output is explicitly used, client implementations usually do not need to convert colors. Future specification versions or extensions may allow other color primaries (such as P3).
+Chromaticity coordinates define the interpretation of each primary color channel of the color model. In the context of a typical display, color primaries describe the color of the red, green, and blue phosphors or filters. Unless a wide color gamut output is explicitly used, client implementations usually do not need to convert colors. Future specification versions or extensions may allow other color primaries (such as P3).
 ====
 
 
@@ -1141,17 +1141,14 @@ Accessors of matrix type have data stored in column-major order; start of each c
 
 Only the following three accessor configurations require padding.
 
-*MAT2, 1-byte components*
+.Matrix 2x2, 1-byte Components
+image::figures/padding-mat2-1byte.svg[pdfwidth=2in,align=left]
 
-image:figures/padding-mat2-1byte.svg[pdfwidth=2in,align=left]
+.Matrix 3x3, 1-byte Components
+image::figures/padding-mat3-1byte.svg[pdfwidth=2in,align=left]
 
-*MAT3, 1-byte components*
-
-image:figures/padding-mat3-1byte.svg[pdfwidth=2in,align=left]
-
-*MAT3, 2-byte components*
-
-image:figures/padding-mat3-2byte.svg[pdfwidth=4in,align=left]
+.Matrix 3x3, 2-byte Components
+image::figures/padding-mat3-2byte.svg[pdfwidth=4in,align=left]
 
 Alignment requirements apply only to the start of each column, so trailing bytes **MAY** be omitted if there's no further data.
 
@@ -1388,7 +1385,7 @@ Vertices of the same triangle **SHOULD** have the same `tangent.w` value. When v
 
 The bitangent vectors **MUST** be computed by taking the cross product of the normal and tangent XYZ vectors and multiplying it against the W component of the tangent: `bitangent = cross(normal.xyz, tangent.xyz) * tangent.w`.
 
-Extensions **MAY** add additional attribute names, accessor types, and / or component types.
+Extensions **MAY** add additional attribute names, accessor types, and/or component types.
 
 [[morph-targets]]
 ==== Morph Targets
@@ -1419,7 +1416,7 @@ Attributes present in the base mesh primitive but not included in a given morph 
 This allows skipping zero-filled accessors and implies that different morph targets may contain different sets of attributes.
 ====
 
-Client implementations **SHOULD** support at least three attributes -- `POSITION`, `NORMAL`, and `TANGENT` -- for morphing. Client implementations **MAY** optionally support morphed `TEXCOORD_n` and / or `COLOR_n` attributes.
+Client implementations **SHOULD** support at least three attributes -- `POSITION`, `NORMAL`, and `TANGENT` -- for morphing. Client implementations **MAY** optionally support morphed `TEXCOORD_n` and/or `COLOR_n` attributes.
 
 If morph targets contain application-specific semantics, their names **MUST** be prefixed with an underscore (e.g., `_TEMPERATURE`) like the associated attribute semantics.
 
@@ -1839,7 +1836,8 @@ The image data **MUST** match the `image.mimeType` property when the latter is d
 
 The origin of the texture coordinates (0, 0) corresponds to the upper left corner of a texture image. This is illustrated in the following figure, where the respective coordinates are shown for all four corners of a normalized texture space:
 
-image:figures/texcoords.jpg[pdfwidth=4in,align=left]
+.Normalized Texture Coordinates
+image::figures/texcoords.svg[pdfwidth=3in,align=left]
 
 Any colorspace information (such as ICC profiles, intents, gamma values, etc.) from PNG or JPEG images **MUST** be ignored. Effective transfer function (encoding) is defined by a glTF object that refers to the image (in most cases it's a texture that is used by a material).
 
@@ -1966,7 +1964,8 @@ Specifically, if the `sampler` the texture references:
 
 glTF defines materials using a common set of parameters that are based on widely used material representations from Physically Based Rendering (PBR). Specifically, glTF uses the metallic-roughness material model. Using this declarative representation of materials enables a glTF file to be rendered consistently across platforms.
 
-image:figures/materials.png[pdfwidth=4in,align=left]
+.Physically Based Rendering Example
+image::figures/materials.svg[pdfwidth=6in,align=left]
 
 
 [[metallic-roughness-material]]
@@ -1998,7 +1997,7 @@ The metallic-roughness material model is defined by the following properties:
 
 The _base color_ has two different interpretations depending on the value of _metalness_. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used.
 
-The value for each property **MAY** be defined using factors and / or textures (e.g., `baseColorTexture` and `baseColorFactor`). If a texture is not given, all respective texture components within this material model **MUST** be assumed to have a value of `1.0`. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values. A texture binding is defined by an `index` of a _texture_ object and an optional index of texture coordinates.
+The value for each property **MAY** be defined using factors and/or textures (e.g., `baseColorTexture` and `baseColorFactor`). If a texture is not given, all respective texture components within this material model **MUST** be assumed to have a value of `1.0`. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values. A texture binding is defined by an `index` of a _texture_ object and an optional index of texture coordinates.
 
 The following example shows a material that uses a texture for its _base color_ property.
 
@@ -2684,11 +2683,10 @@ The registered media type is `model/gltf-binary`.
 [[binary-gltf-layout-overview]]
 === Overview
 
-Binary glTF is little endian. Figure 1 shows an example of a Binary glTF asset.
+Binary glTF is little endian. The figure below shows an example of a Binary glTF asset.
 
-*Figure 1*: Binary glTF layout.
-
-image:figures/glb2.png[pdfwidth=4in,align=left]
+.Binary glTF Layout
+image::figures/glb2.svg[pdfwidth=6in,align=left]
 
 The following sections describe the structure more in detail.
 
@@ -2995,13 +2993,14 @@ Microfacet models often do not consider multiple scattering. The shadowing term 
 [[complete-model]]
 === Complete Model
 
-The BRDFs and mixing operators used in the metallic-roughness material are summarized in the following image.
+The BRDFs and mixing operators used in the metallic-roughness material are summarized in the following figure.
 
-image:figures/pbr.png[pdfwidth=4in,align=left]
+.BRDFs and Mixing Operators
+image::figures/pbr.svg[pdfwidth=4in,align=left]
 
 The glTF Specification is designed to allow applications to choose different lighting implementations based on their requirements. Some implementations **MAY** focus on an accurate simulation of light transport while others **MAY** choose to deliver real-time performance. Therefore, any implementation that adheres to the rules for mixing BRDFs is conformant to the glTF Specification.
 
-In a physically accurate light simulation, the BRDFs **MUST** follow some basic principles: the BRDF **MUST** be positive, reciprocal and energy conserving. This ensures that the visual output of the simulation is independent of the underlying rendering algorithm, if it is unbiased.
+In a physically accurate light simulation, the BRDFs **MUST** follow some basic principles: the BRDF **MUST** be positive, reciprocal, and energy conserving. This ensures that the visual output of the simulation is independent of the underlying rendering algorithm, if it is unbiased.
 
 The unbiased light simulation with physically realistic BRDFs will be the ground-truth for approximations in real-time renderers that are often biased, but still give visually pleasing results.
 
@@ -3329,7 +3328,7 @@ v_t = \frac{sin(a(1 - t))}{sin(a)} * v_k + s * \frac{sin(at)}{sin(a)} * v_{k+1}
 Using the dot product's absolute value for computing stem:[a] and multiplying stem:[v_{k+1}] by the dot product's sign ensure that the spherical interpolation follows the short path along the great circle defined by the two quaternions.
 ====
 
-Implementations **MAY** approximate these equations to reach application-specific accuracy and / or performance targets.
+Implementations **MAY** approximate these equations to reach application-specific accuracy and/or performance targets.
 
 [NOTE]
 .Implementation Note
