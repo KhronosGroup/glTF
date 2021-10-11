@@ -444,5 +444,7 @@ Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanc
   * Removed `optional` and `default` and rephrased with properties `noData` and `required`:
     * Properties are now assumed to be optional unless `required` is true
     * `noData` is used to specify a sentinel value that indicates missing data
-  * Feature ID values `>= count` now indicate "no associated feature"
+  * Feature ID values outside the range `[0, count - 1]` now indicate "no associated feature"
   * `NaN` and `Infinity` are now explicitly disallowed as property values.
+  * Byte offsets for buffer views in a GLB-stored BIN chunk are no longer different from the core glTF specification.
+  * Renamed `_FEATURE_ID_#` to `FEATURE_ID_#`.
