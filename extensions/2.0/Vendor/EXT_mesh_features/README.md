@@ -441,3 +441,12 @@ Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanc
   * Renamed `featureTable` → `propertyTable` and `featureTexture` → `propertyTexture`
   * Removed `featureIdAttributes` and `featureIdTextures`, replaced with `featureIds`
   * Removed string ID references to property tables and textures, replaced with integer IDs
+  * Removed `optional` and `default` and rephrased with properties `noData` and `required`:
+    * Properties are now assumed to be optional unless `required` is true
+    * `noData` is used to specify a sentinel value that indicates missing data
+  * Feature ID values outside the range `[0, count - 1]` now indicate "no associated feature"
+  * `NaN` and `Infinity` are now explicitly disallowed as property values
+  * Byte offsets for buffer views in a GLB-stored BIN chunk are no longer different from the core glTF specification
+  * Renamed `_FEATURE_ID_#` to `FEATURE_ID_#`
+  * Added vector and matrix types
+  * Refactored `type` and `componentType` to avoid overlap. Properties that store a single value now have a `type` of `SINGLE` and a `componentType` of the desired type (e.g. `type: "SINGLE", componentType: "UINT8"`)
