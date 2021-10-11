@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "Feature Table Property",
+  "type": "object",
+  "description": "An array of binary property values.",
+  "properties": {
+    "bufferView": {
+      "allOf": [ { "$ref": "glTFid.schema.json" } ],
+      "description": "The index of the buffer view containing property values. The data type of property values is determined by the property definition: When `type` is `BOOLEAN` values are packed into a bitfield. When `type` is `STRING` values are stored as byte sequences and decoded as UTF-8 strings. When `type` is a numeric type values are stored as the provided `type`. When `type` is `ENUM` values are stored as the enum's `valueType`. Each enum value in the buffer must match one of the allowed values in the enum definition. When `type` is `ARRAY` elements are packed tightly together and the data type is based on the `componentType` following the same rules as above. `arrayOffsetBufferView` is required for variable-size arrays and `stringOffsetBufferView` is required for strings (for variable-length arrays of strings, both are required). The buffer view `byteOffset` must be aligned to a multiple of 8 bytes. If the buffer view's `buffer` is the GLB-stored `BIN` chunk, the byte offset is measured relative to the beginning of the GLB. Otherwise, it is measured relative to the beginning of the buffer."
+    },
+    "offsetType": {
+      "type": "string",
+      "default": "UINT32",
+      "enum": [
+        "UINT8",
+        "UINT16",
+        "UINT32",
+        "UINT64"
+      ],
+      "description": "The type of values in `arrayOffsetBufferView` and `stringOffsetBufferView`."
+    },
+    "arrayOffsetBufferView": {
+      "allOf": [ { "$ref": "glTFid.schema.json" } ],
+      "description": "The index of the buffer view containing offsets for variable-length arrays. The number of offsets is equal to the feature table `count` plus one. The offsets represent the start positions of each array, with the last offset representing the position after the last array. The array length is computed using the difference between the current offset and the subsequent offset. If `componentType` is `STRING` the offsets index into the string offsets array (stored in `stringOffsetBufferView`), otherwise they index into the property array (stored in `bufferView`). The data type of these offsets is determined by `offsetType`. The buffer view `byteOffset` must be aligned to a multiple of 8 bytes in the same manner as the main `bufferView`"
+    },
+    "stringOffsetBufferView": {
+      "allOf": [ { "$ref": "glTFid.schema.json" } ],
+      "description": "The index of the buffer view containing offsets for strings. The number of offsets is equal to the number of string components plus one. The offsets represent the byte offsets of each string in the main `bufferView`, with the last offset representing the byte offset after the last string. The string byte length is computed using the difference between the current offset and the subsequent offset. The data type of these offsets is determined by `offsetType`. The buffer view `byteOffset` must be aligned to a multiple of 8 bytes in the same manner as the main `bufferView`."
+    },
+    "extensions": {},
+    "extras": {}
+  },
+  "required": [
+    "bufferView"
+  ]
+}

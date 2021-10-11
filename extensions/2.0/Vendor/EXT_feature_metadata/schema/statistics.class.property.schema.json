@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft-04/schema",
+  "title": "Property Statistics",
+  "type": "object",
+  "description": "Statistics about property values.",
+  "properties": {
+    "min": {
+      "type": [
+        "number",
+        "array"
+      ],
+      "items": {
+        "type": "number"
+      },
+      "description": "The minimum property value. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values."
+    },
+    "max": {
+      "type": [
+        "number",
+        "array"
+      ],
+      "items": {
+        "type": "number"
+      },
+      "description": "The maximum property value. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values."
+    },
+    "mean": {
+      "type": [
+        "number",
+        "array"
+      ],
+      "items": {
+        "type": "number"
+      },
+      "description": "The arithmetic mean of the property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values."
+    },
+    "median": {
+      "type": [
+        "number",
+        "array"
+      ],
+      "items": {
+        "type": "number"
+      },
+      "description": "The median of the property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values."
+    },
+    "standardDeviation": {
+      "type": [
+        "number",
+        "array"
+      ],
+      "items": {
+        "type": "number"
+      },
+      "description": "The standard deviation of the property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values."
+    },
+    "variance": {
+      "type": [
+        "number",
+        "array"
+      ],
+      "items": {
+        "type": "number"
+      },
+      "description": "The variance of the property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values."
+    },
+    "sum": {
+      "type": [
+        "number",
+        "array"
+      ],
+      "items": {
+        "type": "number"
+      },
+      "description": "The sum of the property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values."
+    },
+    "occurrences": {
+      "type": "object",
+      "description": "A dictionary, where each key corresponds to an enum `name` and each value is the number of occurrences of that enum. Only applicable when `type` or `componentType` is `ENUM`. For fixed-length arrays, this is an array with `componentCount` number of elements.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": [
+          "integer",
+          "array"
+        ],
+        "items": {
+          "type": "number"
+        }
+      }
+    },
+    "extensions": {},
+    "extras": {}
+  }
+}

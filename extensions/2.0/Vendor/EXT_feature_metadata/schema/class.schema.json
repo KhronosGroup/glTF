@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "Class",
+  "type": "object",
+  "description": "A class containing a set of properties.",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The name of the class, e.g. for display purposes."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The description of the class."
+    },
+    "properties": {
+      "type": "object",
+      "description": "A dictionary, where each key is a property ID and each value is an object defining the property.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "class.property.schema.json"
+      }
+    },
+    "extensions": {},
+    "extras": {}
+  }
+}
