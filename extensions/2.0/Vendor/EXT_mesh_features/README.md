@@ -65,7 +65,7 @@ Concepts and terminology used throughout this document refer to the [Cesium 3D M
 
 See [Examples](#examples) for a more detailed list of use cases for this extension.
 
-> **Disambiguation:** glTF has other methods of storing details that could similarly be described as metadata or properties, including [`KHR_xmp_json_ld`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_xmp_json_ld), Extras, and Extensions. While those methods associate data with discrete objects in a glTF asset — nodes, materials, etc. — `EXT_mesh_features` is uniquely suited for properties of more granular conceptual features as small as individual vertices or texels.
+> **Disambiguation:** glTF has other methods of storing details that could similarly be described as metadata or properties, including [`KHR_xmp_json_ld`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_xmp_json_ld), Extras, and Extensions. While those methods associate data with discrete objects in a glTF asset — nodes, materials, etc. — `EXT_mesh_features` is uniquely suited for properties of more granular conceptual features in subregions composed of vertices or texels.
 
 ## Feature IDs
 
@@ -93,7 +93,7 @@ Values of feature IDs are non-negative integers in the range `[0, count - 1]` (i
 
 The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be false. The accessor's `componentType` is not restricted.
 
-> **Implementation Note:** since glTF accessors do not support `UNSIGNED_INT` types for 32-bit integers, `FLOAT` may be used instead allowing integer feature IDs up to 2<sup>24</sup>. For smaller ranges of feature IDs, `UNSIGNED_BYTE` or `UNSIGNED_SHORT` should be used. As with other vertex attributes, each element of a feature ID accessor must align to 4-byte boundaries.
+> **Implementation Note:** since glTF accessors do not support `UNSIGNED_INT` types for 32-bit integers, `FLOAT` may be used instead allowing integer feature IDs up to 2<sup>24</sup>. For smaller ranges of feature IDs, `UNSIGNED_BYTE` or `UNSIGNED_SHORT` may be used. As with other vertex attributes, each element of a feature ID accessor must align to 4-byte boundaries.
 
 > **Example:** A primitive defines two quads, where each quad is a distinct feature. The quads are composed of four vertices, distinguished by different `FEATURE_ID_0` vertex attribute values. Each feature is associated with "Name", "Year", and "Coordinates" values in a [property table](#property-tables).
 >
@@ -350,19 +350,12 @@ Properties are defined abstractly in a class by their semantic meaning and data 
   - **Type:** `string`
   - **Required:** ✓ Yes
   - **Allowed values:**
-    - `"INT8"`
-    - `"UINT8"`
-    - `"INT16"`
-    - `"UINT16"`
-    - `"INT32"`
-    - `"UINT32"`
-    - `"INT64"`
-    - `"UINT64"`
-    - `"FLOAT32"`
-    - `"FLOAT64"`
     - `"BOOLEAN"`
     - `"STRING"`
     - `"ENUM"`
+    - `"INT8"`, `"INT16"`, `"INT32"`, `"INT64"`
+    - `"UINT8"`, `"UINT16"`, `"UINT32"`, `"UINT64"`
+    - `"FLOAT32"`, `"FLOAT64"`
 
 A property may compose multiple components into higher-level types (vector, matrix, and array), defined by `property.type`:
 
@@ -371,13 +364,9 @@ A property may compose multiple components into higher-level types (vector, matr
   - **Required:** No, default: `"SINGLE"`
   - **Allowed values:**
     - `"SINGLE"`
-    - `"VEC2"`
-    - `"VEC3"`
-    - `"VEC4"`
-    - `"MAT2"`
-    - `"MAT3"`
-    - `"MAT4"`
     - `"ARRAY"`
+    - `"VEC2"`, `"VEC3"`, `"VEC4"`
+    - `"MAT2"`, `"MAT3"`, `"MAT4"`
 
 Class properties are defined as entries in the `class.properties` dictionary, indexed by an alphanumeric property ID.
 
@@ -548,11 +537,11 @@ Enum values may be encoded in images, as integer values according to their enum 
 >           "wall": {
 >             "name": "Wall Temperature vs. Insulation",
 >             "properties": {
->               "insideTemp": {
+>               "insideTemperature": {
 >                 "name": "Inside Temperature",
 >                 "type": "UINT8"
 >               },
->               "outsideTemp": {
+>               "outsideTemperature": {
 >                 "name": "Outside Temperature",
 >                 "type": "UINT8"
 >               },
@@ -570,8 +559,8 @@ Enum values may be encoded in images, as integer values according to their enum 
 >         "index": 0,
 >         "texCoord": 0,
 >         "properties": {
->           "insideTemp": [0],
->           "outsideTemp": [1],
+>           "insideTemperature": [0],
+>           "outsideTemperature": [1],
 >           "insulation": [2]
 >         }
 >       }]
@@ -607,7 +596,7 @@ A `propertyTexture` object extends the glTF [`textureInfo`](../../../../../speci
 
 The `properties` map specifies the texture channels providing data for available properties. An array of integer index values identifies channels, where multiple channels may be used only for fixed-length arrays of 2, 3, or 4 components. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. All values are stored in linear space.
 
-> **Example:** A property texture for wind velocity samples. The "speedKPH" property values are stored in the red channel, and "direction" property values are stored as a unit-length vector, with X/Y components in the green and blue channels. Both properties are indexed by UV coordinates in a `TEXCOORD_0` attribute.
+> **Example:** A property texture for wind velocity samples. The "speed" property values are stored in the red channel, and "direction" property values are stored as a unit-length vector, with X/Y components in the green and blue channels. Both properties are indexed by UV coordinates in a `TEXCOORD_0` attribute.
 >
 > ```jsonc
 > // Root EXT_mesh_features extension:
@@ -617,7 +606,7 @@ The `properties` map specifies the texture channels providing data for available
 >     "index": 0,
 >     "texCoord": 0,
 >     "properties": {
->       "speedKPH": [0],
+>       "speed": [0],
 >       "direction": [1, 2]
 >     }
 >   }]
