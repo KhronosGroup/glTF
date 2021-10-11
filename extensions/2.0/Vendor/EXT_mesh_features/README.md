@@ -448,3 +448,5 @@ Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanc
   * `NaN` and `Infinity` are now explicitly disallowed as property values.
   * Byte offsets for buffer views in a GLB-stored BIN chunk are no longer different from the core glTF specification.
   * Renamed `_FEATURE_ID_#` to `FEATURE_ID_#`.
+  * Added vector and matrix types
+  * Refactored `type` and `componentType` to avoid overlap. Properties that store a single value now have a `type` of `SINGLE` and a `componentType` of the desired type (e.g. `type: "SINGLE", componentType: "UINT8"`)
