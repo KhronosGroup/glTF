@@ -126,7 +126,7 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
 
 *Defined in [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
 
-Per-vertex feature IDs may also be defined implicitly, as a function of vertex index within the primitive. Implicit feature IDs reduce storage costs in several common cases, such as when all vertices in a primitive share the same feature ID, or each sequential group of `N` vertices (e.g. each triangle face) share the same feature ID.
+Per-vertex feature IDs may also be defined implicitly, as a function of vertex index within the primitive. Implicit feature IDs reduce storage costs in several common cases, such as when all vertices in a primitive share the same feature ID, or each sequential group of *N* vertices (e.g. each triangle face) share the same feature ID.
 
 Implicit feature IDs are a monotonically increasing function of the vertex index, configured by `offset` and `repeat` parameters.
 
@@ -245,7 +245,7 @@ Each feature ID definition may include only a single source, so the following ar
 - `featureId.offset` and `featureId.repeat`
 - `featureId.index`
 
-The `featureIds` and `propertyTables` arrays must have the same length, with the feature ID definition at index `i` corresponding to the property table at the same index. Each `featureIds:propertyTable` pair must be unique, but individual feature IDs and property tables may be repeated within a primitive or node.
+Every `propertyTables` pointer must have an associated `featureIds` definition, but feature IDs may be defined without a property table. The `featureIds` entry at index *i* corresponds to the `propertyTables` entry at the same index, if any. As a result, the length of the `featureIds` array must be greater than or equal to the length of the `propertyTables` array. Each `featureIds:propertyTable` pair must be unique, but individual feature IDs and property tables may be repeated within a primitive or node.
 
 Empty feature IDs (e.g. `{}`) are disallowed — a feature ID must explicitly set at least one property.
 
