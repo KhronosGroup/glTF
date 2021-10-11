@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="24" width="384" height="272" viewBox="0 0 384 272">
+  <path fill="none" stroke="#000" d="M64 0h256v256H64z"/>
+  <path stroke="#000" d="M80 16h210v-5l14 5-14 5v-5M80 16v210h-5l5 14 5-14h-5"/>
+  <text y="22">(0, 0)</text>
+  <text y="250.5">(0, 1)</text>
+  <text x="327" y="250.5">(1, 1)</text>
+  <text x="327" y="22">(1, 0)</text>
+  <text x="185.3203" y="45">S</text>
+  <text x="90" y="135.75">T</text>
+</svg>

@@ -40,7 +40,7 @@ ADOCOPTS = -d book
 ADOCHTMLOPTS = -a stylesheet=khronos.css -a sectanchors
 SPECDEPS = $(SPEC).adoc $(GENERATED)
 
-PATCHVERSION = 0
+PATCHVERSION = 1
 SPECREVISION = 2.0.$(PATCHVERSION)
 
 # Spell out ISO 8601 format as not all date commands support --rfc-3339

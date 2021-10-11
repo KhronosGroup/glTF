@@ -3,7 +3,9 @@ Copyright 2014-2021 The Khronos Group Inc.
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-![glTF 2.0](../figures/gltf.png)
+<p align="center">
+<img src="../figures/glTF_RGB_June16.svg" width="340" height="170" />
+</p>
 
 # The glTF 2.0 Specification
 
