@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "Property Texture",
+  "type": "object",
+  "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+  "description": "Features conforming to a class, organized as property values stored in texture channels.",
+  "properties": {
+    "index": { },
+    "texCoord": { },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The name of the property, e.g. for display purposes."
+    },
+    "class": {
+      "type": "string",
+      "description": "The class this property texture conforms to. The value must be a class ID declared in the `classes` dictionary."
+    },
+    "properties": {
+      "type": "object",
+      "description": "A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value describes the texture channels containing property values.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "description": "Texture channels containing property values, identified by index."
+      }
+    },
+    "extensions": {},
+    "extras": {}
+  },
+  "required": [
+    "class",
+    "properties"
+  ]
+}

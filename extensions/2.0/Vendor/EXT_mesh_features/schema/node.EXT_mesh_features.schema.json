@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "EXT_mesh_features extension for EXT_mesh_gpu_instancing",
+  "type": "object",
+  "description": "An object describing per-instance feature IDs to be used as indices to property arrays in the property table.",
+  "properties": {
+    "featureIds": {
+      "type": "array",
+      "description": "",
+      "items": {"$ref": "featureIdAttribute.schema.json"},
+      "minItems": 1
+    },
+    "propertyTables": {
+      "type": "array",
+      "description": "An array of IDs of property tables from the root `EXT_mesh_features` object.",
+      "items": {
+        "allOf": [ {"$ref": "glTFid.schema.json" } ]
+      },
+      "minItems": 1
+    },
+    "extensions": {},
+    "extras": {}
+  },
+  "required": ["featureIds"]
+}

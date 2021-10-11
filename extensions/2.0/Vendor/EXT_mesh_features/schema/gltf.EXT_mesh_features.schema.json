@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "EXT_mesh_features glTF extension",
+  "type": "object",
+  "description": "glTF extension that assigns metadata to features in a model.",
+  "properties": {
+    "schema": {
+      "allOf": [ { "$ref": "schema.schema.json" } ],
+      "description": "An object defining classes and enums."
+    },
+    "schemaUri": {
+      "type": "string",
+      "description": "A uri to an external schema file.",
+      "format": "uriref"
+    },
+    "propertyTables": {
+      "type": "object",
+      "description": "A dictionary, where each key is a property table ID and each value is an object defining the property table.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "propertyTable.schema.json"
+      }
+    },
+    "propertyTextures": {
+      "type": "object",
+      "description": "A dictionary, where each key is a property texture ID and each value is an object defining the property texture.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "propertyTexture.schema.json"
+      }
+    },
+    "extensions": {},
+    "extras": {}
+  }
+}
