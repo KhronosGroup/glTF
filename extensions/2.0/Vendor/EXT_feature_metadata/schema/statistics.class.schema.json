@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft-04/schema",
+  "title": "Class Statistics",
+  "type": "object",
+  "description": "Statistics about features that conform to the class.",
+  "properties": {
+    "count": {
+      "type": "integer",
+      "description": "The number of features that conform to the class.",
+      "minimum": 0
+    },
+    "properties": {
+      "type": "object",
+      "description": "A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value is an object containing statistics about property values.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "statistics.class.property.schema.json"
+      }
+    },
+    "extensions": {},
+    "extras": {}
+  }
+}
