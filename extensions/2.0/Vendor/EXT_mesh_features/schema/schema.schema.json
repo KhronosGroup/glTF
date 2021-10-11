@@ -7,7 +7,7 @@
     "name": {
       "type": "string",
       "minLength": 1,
-      "description": "The name of the schema."
+      "description": "The name of the schema, e.g. for display purposes."
     },
     "description": {
       "type": "string",
