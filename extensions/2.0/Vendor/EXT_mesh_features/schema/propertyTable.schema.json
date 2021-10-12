@@ -30,6 +30,8 @@
     "extras": {}
   },
   "required": [
-    "count"
+    "class",
+    "count",
+    "properties"
   ]
 }
