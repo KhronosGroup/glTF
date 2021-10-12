@@ -89,7 +89,7 @@ Per-vertex feature IDs may be defined explicitly in a vertex attribute accessor.
 
 Names of feature ID attribute semantics follow the naming convention `FEATURE_ID_n` where `n` must start with 0 and continue with consecutive positive integers: `FEATURE_ID_0`, `FEATURE_ID_1`, etc. Indices must not use leading zeroes to pad the number of digits (e.g., `FEATURE_ID_01` is not allowed).
 
-Values of feature IDs are non-negative integers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the [property table](#property-tables). Values outside this range indicate that no feature is associated.
+When associated with a [property table](#property-tables), values of feature IDs are non-negative integers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the property table. Values outside this range indicate that no feature is associated. Feature IDs may be provided without an associated property table, in which case the property value lookup method and range of valid IDs are undefined.
 
 The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be false. The accessor's `componentType` is not restricted.
 
@@ -199,7 +199,7 @@ Feature ID textures classify the pixels of an image into different features. Som
 
 A `featureId` pointing to a feature ID texture extends the glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. Its `channel` must be a non-negative integer corresponding to a channel of the source texture. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels.
 
-Feature ID values stored in a texture are non-negative integers in the range `[0, count - 1]` (inclusive), stored in linear space, where `count` is the total number of features in the property table. Values outside this range indicate that no feature is associated.
+When associated with a [property table](#property-tables), feature ID values stored in a texture are non-negative integers in the range `[0, count - 1]` (inclusive), stored in linear space, where `count` is the total number of features in the property table. Values outside this range indicate that no feature is associated. Feature IDs may be provided without an associated property table, in which case the property value lookup method and range of valid IDs are undefined.
 
 Texture filtering must be `9728` (NEAREST), or undefined, for any texture object referenced as a feature ID texture.
 
@@ -683,6 +683,7 @@ Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanc
   * Removed `statistics` specification, to be considered as a future extension
   * Renamed `featureTable` → `propertyTable` and `featureTexture` → `propertyTexture`
   * Removed `featureIdAttributes` and `featureIdTextures`, replaced with `featureIds`
+    * Primitives and Nodes may now have feature IDs without associated property tables
   * Removed string ID references to property tables and textures, replaced with integer IDs
   * Removed `optional` and `default` and rephrased with properties `noData` and `required`:
     * Properties are now assumed to be optional unless `required` is true
