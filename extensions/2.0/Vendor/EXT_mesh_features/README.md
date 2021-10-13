@@ -629,7 +629,7 @@ This extension is optional, meaning it should be placed in the `extensionsUsed` 
 
 ## Schema
 
-* [gltf.EXT_mesh_features.schema.json](./schema/gltf.EXT_mesh_features.schema.json)
+* [glTF.EXT_mesh_features.schema.json](./schema/glTF.EXT_mesh_features.schema.json)
 * [primitive.EXT_mesh_features.schema.json](./schema/primitive.EXT_mesh_features.schema.json)
 * [node.EXT_mesh_features.schema.json](./schema/node.EXT_mesh_features.schema.json)
 
