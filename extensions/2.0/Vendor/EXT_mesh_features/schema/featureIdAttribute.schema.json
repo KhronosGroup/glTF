@@ -30,9 +30,17 @@
         "attribute"
       ],
       "not": {
-        "required": [
-          "offset",
-          "repeat"
+        "oneOf": [
+          {
+            "required": [
+              "offset"
+            ]
+          },
+          {
+            "required": [
+              "repeat"
+            ]
+          }
         ]
       }
     },
