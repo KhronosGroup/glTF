@@ -1,8 +1,14 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "primitive.EXT_feature_metadata.schema.json",
   "title": "EXT_feature_metadata glTF Primitive extension",
   "type": "object",
   "description": "`EXT_feature_metadata extension` for a primitive in a glTF model, to associate it with the root `EXT_feature_metadata` object.",
+  "allOf": [
+    {
+      "$ref": "glTFProperty.schema.json"
+    }
+  ],
   "properties": {
     "featureIdAttributes": {
       "type": "array",

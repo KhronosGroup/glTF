@@ -1,8 +1,14 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "class.property.schema.json",
   "title": "Class property",
   "type": "object",
   "description": "A class property.",
+  "allOf": [
+    {
+      "$ref": "glTFProperty.schema.json"
+    }
+  ],
   "properties": {
     "name": {
       "type": "string",
@@ -15,46 +21,105 @@
       "description": "The description of the property."
     },
     "type": {
-      "type": "string",
-      "enum": [
-        "INT8",
-        "UINT8",
-        "INT16",
-        "UINT16",
-        "INT32",
-        "UINT32",
-        "INT64",
-        "UINT64",
-        "FLOAT32",
-        "FLOAT64",
-        "BOOLEAN",
-        "STRING",
-        "ENUM",
-        "ARRAY"
-      ],
-      "description": "The property type. If `ENUM` is used, then `enumType` must also be specified. If `ARRAY` is used, then `componentType` must also be specified. `ARRAY` is a fixed-length array when `componentCount` is defined, and variable-length otherwise."
+      "description": "The property type. If `ENUM` is used, then `enumType` must also be specified. If `ARRAY` is used, then `componentType` must also be specified. `ARRAY` is a fixed-length array when `componentCount` is defined, and variable-length otherwise.",
+      "anyOf": [
+        {
+          "const": "INT8"
+        },
+        {
+          "const": "UINT8"
+        },
+        {
+          "const": "INT16"
+        },
+        {
+          "const": "UINT16"
+        },
+        {
+          "const": "INT32"
+        },
+        {
+          "const": "UINT32"
+        },
+        {
+          "const": "INT64"
+        },
+        {
+          "const": "UINT64"
+        },
+        {
+          "const": "FLOAT32"
+        },
+        {
+          "const": "FLOAT64"
+        },
+        {
+          "const": "BOOLEAN"
+        },
+        {
+          "const": "STRING"
+        },
+        {
+          "const": "ENUM"
+        },
+        {
+          "const": "ARRAY"
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "enumType": {
       "type": "string",
       "description": "An enum ID as declared in the `enums` dictionary. This value must be specified when `type` or `componentType` is `ENUM`."
     },
     "componentType": {
-      "enum": [
-        "INT8",
-        "UINT8",
-        "INT16",
-        "UINT16",
-        "INT32",
-        "UINT32",
-        "INT64",
-        "UINT64",
-        "FLOAT32",
-        "FLOAT64",
-        "BOOLEAN",
-        "STRING",
-        "ENUM"
-      ],
-      "description": "When `type` is `ARRAY` this indicates the type of each component of the array. If `ENUM` is used, then `enumType` must also be specified."
+      "description": "When `type` is `ARRAY` this indicates the type of each component of the array. If `ENUM` is used, then `enumType` must also be specified.",
+      "anyOf": [
+        {
+          "const": "INT8"
+        },
+        {
+          "const": "UINT8"
+        },
+        {
+          "const": "INT16"
+        },
+        {
+          "const": "UINT16"
+        },
+        {
+          "const": "INT32"
+        },
+        {
+          "const": "UINT32"
+        },
+        {
+          "const": "INT64"
+        },
+        {
+          "const": "UINT64"
+        },
+        {
+          "const": "FLOAT32"
+        },
+        {
+          "const": "FLOAT64"
+        },
+        {
+          "const": "BOOLEAN"
+        },
+        {
+          "const": "STRING"
+        },
+        {
+          "const": "ENUM"
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "componentCount": {
       "type": "integer",

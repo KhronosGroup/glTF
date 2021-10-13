@@ -1,20 +1,34 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "glTF.EXT_feature_metadata.schema.json",
   "title": "EXT_feature_metadata glTF extension",
   "type": "object",
   "description": "glTF extension that assigns metadata to features in a model.",
+  "allOf": [
+    {
+      "$ref": "glTFProperty.schema.json"
+    }
+  ],
   "properties": {
     "schema": {
-      "allOf": [ { "$ref": "schema.schema.json" } ],
+      "allOf": [
+        {
+          "$ref": "schema.schema.json"
+        }
+      ],
       "description": "An object defining classes and enums."
     },
     "schemaUri": {
       "type": "string",
-      "description": "A uri to an external schema file.",
-      "format": "uriref"
+      "description": "The URI (or IRI) of the external schema file.",
+      "format": "iri-reference"
     },
     "statistics": {
-      "allOf": [ { "$ref": "statistics.schema.json" } ],
+      "allOf": [
+        {
+          "$ref": "statistics.schema.json"
+        }
+      ],
       "description": "An object containing statistics about features."
     },
     "featureTables": {
