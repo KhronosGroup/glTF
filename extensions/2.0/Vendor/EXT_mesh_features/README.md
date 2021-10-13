@@ -22,7 +22,7 @@ Draft
 
 Written against the glTF 2.0 specification.
 
-Optionally, this extension may be used in conjunction with [`EXT_mesh_gpu_instancing`](../../EXT_mesh_gpu_instancing). When used together, certain GPU instance attributes defined by `EXT_mesh_gpu_instancing` are used as [instance feature IDs](#feature-id-by-gpu-instance).
+Optionally, this extension may be used in conjunction with [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing). When used together, certain GPU instance attributes defined by `EXT_mesh_gpu_instancing` are used as [instance feature IDs](#feature-id-by-gpu-instance).
 
 <!-- omit in toc -->
 ## Table of Contents
@@ -77,7 +77,7 @@ Features are identified within a 3D asset by **Feature IDs** (unique identifiers
 
 * **Feature ID by Vertex:** Per-vertex ID, in a vertex attribute or derived from the vertex index
 * **Feature ID by Texture Coordinates:** Per-texel ID, in a texture channel
-* **Feature ID by GPU Instance:** Per-instance ID, in an instance attribute (requires [`EXT_mesh_gpu_instancing`](../../EXT_mesh_gpu_instancing))
+* **Feature ID by GPU Instance:** Per-instance ID, in an instance attribute (requires [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing))
 
 ### Feature ID by Vertex
 
@@ -197,7 +197,7 @@ Feature ID textures classify the pixels of an image into different features. Som
 > }
 > ```
 
-A `featureId` pointing to a feature ID texture extends the glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. Its `channel` must be a non-negative integer corresponding to a channel of the source texture. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels.
+A `featureId` pointing to a feature ID texture extends the glTF [`textureInfo`](../../../../specification/2.0/schema/textureInfo.schema.json) object. Its `channel` must be a non-negative integer corresponding to a channel of the source texture. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels.
 
 When associated with a [property table](#property-tables), feature ID values stored in a texture are non-negative integers in the range `[0, count - 1]` (inclusive), stored in linear space, where `count` is the total number of features in the property table. Values outside this range indicate that no feature is associated. Feature IDs may be provided without an associated property table, in which case the property value lookup method and range of valid IDs are undefined.
 
@@ -207,7 +207,7 @@ Texture filtering must be `9728` (NEAREST), or undefined, for any texture object
 
 *Defined in [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
 
-Feature IDs may also be assigned to individual GPU instances when using the [`EXT_mesh_gpu_instancing` extension](../../EXT_mesh_gpu_instancing). Similar to per-vertex IDs, per-instance IDs are stored in instance attributes or generated implicitly by instance index. Nodes with `EXT_mesh_features` must also define an `EXT_mesh_gpu_instancing` extension, and are invalid without this dependency.
+Feature IDs may also be assigned to individual GPU instances when using the [`EXT_mesh_gpu_instancing` extension](../EXT_mesh_gpu_instancing). Similar to per-vertex IDs, per-instance IDs are stored in instance attributes or generated implicitly by instance index. Nodes with `EXT_mesh_features` must also define an `EXT_mesh_gpu_instancing` extension, and are invalid without this dependency.
 
 > **Example:** A node defining instances of mesh `0`, with each instance having a feature ID in the `FEATURE_ID_0` instance attribute.
 >
@@ -592,7 +592,7 @@ Enum values may be encoded in images, as integer values according to their enum 
 > ```
 
 
-A `propertyTexture` object extends the glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. `texCoord` specifies a texture coordinate set in the referring primitive.
+A `propertyTexture` object extends the glTF [`textureInfo`](../../../../specification/2.0/schema/textureInfo.schema.json) object. `texCoord` specifies a texture coordinate set in the referring primitive.
 
 The `properties` map specifies the texture channels providing data for available properties. An array of integer index values identifies channels, where multiple channels may be used only for fixed-length arrays of 2, 3, or 4 components. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. All values are stored in linear space.
 
