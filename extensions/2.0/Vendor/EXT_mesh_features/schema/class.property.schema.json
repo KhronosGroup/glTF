@@ -127,7 +127,7 @@
           "minItems": 1
         }
       ],
-      "description": "Maximum allowed value for the property. Only applicable for single-value numeric types, fixed-length arrays of numeric types, `VECN`, and `MATN` types. For single-value numeric types this is a single number. For fixed-length arrays, `VECN`, and `MATN` types, the maximum is an array with the same number of elements. The `normalized` property has no effect on the maximum, which always contains integer values."
+      "description": "Maximum allowed value for the property. Only applicable for single-value numeric types, fixed-length arrays of numeric types, `VECN`, and `MATN` types. For single-value numeric types this is a single number. For fixed-length arrays, `VECN`, and `MATN` types, this is an array of component-wise maximum values. The `normalized` property has no effect on the maximum, which always contains integer values."
     },
     "min": {
       "oneOf": [
@@ -142,7 +142,7 @@
           "minItems": 1
         }
       ],
-      "description": "Minimum allowed value for the property. Only applicable for single-value numeric types, fixed-length arrays of numeric types, `VECN`, and `MATN` types. For single-value numeric types this is a single number. For fixed-length arrays, `VECN`, and `MATN` types, the minimum is an array with the same number of elements. The `normalized` property has no effect on the minimum, which always contains integer values."
+      "description": "Minimum allowed value for the property. Only applicable for single-value numeric types, fixed-length arrays of numeric types, `VECN`, and `MATN` types. For single-value numeric types this is a single number. For fixed-length arrays, `VECN`, and `MATN` types, this is an array of component-wise minimum values. The `normalized` property has no effect on the minimum, which always contains integer values."
     },
     "required": {
       "type": "boolean",
