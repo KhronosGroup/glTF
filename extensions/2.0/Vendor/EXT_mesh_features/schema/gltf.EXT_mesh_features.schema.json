@@ -5,7 +5,11 @@
   "description": "glTF extension that assigns metadata to features in a model.",
   "properties": {
     "schema": {
-      "allOf": [ { "$ref": "schema.schema.json" } ],
+      "allOf": [
+        {
+          "$ref": "schema.schema.json"
+        }
+      ],
       "description": "An object defining classes and enums."
     },
     "schemaUri": {
@@ -14,22 +18,40 @@
       "format": "uriref"
     },
     "propertyTables": {
-      "type": "object",
-      "description": "A dictionary, where each key is a property table ID and each value is an object defining the property table.",
-      "minProperties": 1,
-      "additionalProperties": {
+      "type": "array",
+      "description": "An array of property table definitions, which may be referenced by index.",
+      "minItems": 1,
+      "items": {
         "$ref": "propertyTable.schema.json"
       }
     },
     "propertyTextures": {
-      "type": "object",
-      "description": "A dictionary, where each key is a property texture ID and each value is an object defining the property texture.",
-      "minProperties": 1,
-      "additionalProperties": {
+      "type": "array",
+      "description": "An array of property texture definitions, which may be referenced by index.",
+      "minItems": 1,
+      "items": {
         "$ref": "propertyTexture.schema.json"
       }
     },
     "extensions": {},
     "extras": {}
-  }
+  },
+  "oneOf": [
+    {
+      "description": "External schema, if any.",
+      "not": {
+        "required": [
+          "schema"
+        ]
+      }
+    },
+    {
+      "description": "Internal schema, if any.",
+      "not": {
+        "required": [
+          "schemaUri"
+        ]
+      }
+    }
+  ]
 }

@@ -5,8 +5,8 @@
   "description": "Feature IDs to be used as indices to property arrays in the property table.",
   "properties": {
     "attribute": {
-      "type": "string",
-      "pattern": "^FEATURE_ID_([1-9]\\d*|0)$",
+      "type": "integer",
+      "minimum": 0,
       "description": "The name of the attribute containing feature IDs."
     },
     "offset": {
@@ -23,20 +23,34 @@
     "extensions": {},
     "extras": {}
   },
-  "not": {
-    "anyOf": [
-      {
-        "required": [
-          "attribute",
-          "offset"
-        ]
-      },
-      {
-        "required": [
-          "attribute",
-          "repeat"
+  "oneOf": [
+    {
+      "description": "Explicit feature ID. 'attribute' is required; 'offset' and 'repeat' are disallowed.",
+      "required": [
+        "attribute"
+      ],
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "offset"
+            ]
+          },
+          {
+            "required": [
+              "repeat"
+            ]
+          }
         ]
       }
-    ]
-  }
+    },
+    {
+      "description": "Implicit feature ID. Both 'offset' and 'repeat' are optional; 'attribute' is disallowed.",
+      "not": {
+        "required": [
+          "attribute"
+        ]
+      }
+    }
+  ]
 }
