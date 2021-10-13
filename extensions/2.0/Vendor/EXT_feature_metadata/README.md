@@ -1,3 +1,5 @@
+### ⚠️ `EXT_feature_metadata` has been replaced by [`EXT_mesh_features`](https://github.com/CesiumGS/glTF/tree/3d-tiles-next/extensions/2.0/Vendor/EXT_mesh_features) ⚠️
+
 <!-- omit in toc -->
 # EXT_feature_metadata
 
