@@ -1,8 +1,14 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "class.schema.json",
   "title": "Class",
   "type": "object",
   "description": "A class containing a set of properties.",
+  "allOf": [
+    {
+      "$ref": "glTFProperty.schema.json"
+    }
+  ],
   "properties": {
     "name": {
       "type": "string",

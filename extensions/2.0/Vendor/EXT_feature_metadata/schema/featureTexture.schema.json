@@ -1,8 +1,14 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "featureTexture.schema.json",
   "title": "Feature Texture",
   "type": "object",
   "description": "Features whose property values are stored directly in texture channels. This is not to be confused with feature ID textures which store feature IDs for use with a feature table.",
+  "allOf": [
+    {
+      "$ref": "glTFProperty.schema.json"
+    }
+  ],
   "properties": {
     "class": {
       "type": "string",

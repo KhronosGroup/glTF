@@ -1,8 +1,14 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "featureIdAttribute.featureIds.schema.json",
   "title": "Feature IDs",
   "type": "object",
   "description": "Feature IDs to be used as indices to property arrays in the feature table.",
+  "allOf": [
+    {
+      "$ref": "glTFProperty.schema.json"
+    }
+  ],
   "properties": {
     "attribute": {
       "type": "string",

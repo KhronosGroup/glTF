@@ -1,8 +1,14 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "featureTable.schema.json",
   "title": "Feature Table",
   "type": "object",
   "description": "A feature table defined by a class and property values stored in arrays.",
+  "allOf": [
+    {
+      "$ref": "glTFProperty.schema.json"
+    }
+  ],
   "properties": {
     "class": {
       "type": "string",

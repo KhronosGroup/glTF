@@ -1,8 +1,14 @@
 {
-  "$schema": "https://json-schema.org/draft-04/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "statistics.class.schema.json",
   "title": "Class Statistics",
   "type": "object",
   "description": "Statistics about features that conform to the class.",
+  "allOf": [
+    {
+      "$ref": "glTFProperty.schema.json"
+    }
+  ],
   "properties": {
     "count": {
       "type": "integer",
