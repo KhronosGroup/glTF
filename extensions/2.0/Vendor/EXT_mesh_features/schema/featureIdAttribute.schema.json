@@ -30,7 +30,7 @@
         "attribute"
       ],
       "not": {
-        "oneOf": [
+        "anyOf": [
           {
             "required": [
               "offset"
