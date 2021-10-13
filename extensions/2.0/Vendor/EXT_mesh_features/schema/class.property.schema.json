@@ -21,7 +21,7 @@
       "description": "The description of the property."
     },
     "type": {
-      "description": "Element type represented by each property value. `VECN` is a vector with `N` components. `MATN` is an `N ⨉ N` matrix. `ARRAY` is fixed-length when `componentCount` is defined, and is variable-length otherwise.",
+      "description": "Element type represented by each property value. `VECN` is a vector of `N` numeric components. `MATN` is an `N ⨉ N` matrix of numeric components. `ARRAY` is fixed-length when `componentCount` is defined, and is variable-length otherwise.",
       "default": "SINGLE",
       "anyOf": [
         {
