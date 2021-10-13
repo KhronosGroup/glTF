@@ -1,13 +1,19 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "propertyTable.schema.json",
   "title": "Property Table",
   "type": "object",
   "description": "Features conforming to a class, organized as property values stored in columnar arrays.",
+  "allOf": [
+    {
+      "$ref": "glTFProperty.schema.json"
+    }
+  ],
   "properties": {
     "name": {
       "type": "string",
       "minLength": 1,
-      "description": "The name of the property, e.g. for display purposes."
+      "description": "The name of the property table, e.g. for display purposes."
     },
     "class": {
       "type": "string",
@@ -20,7 +26,7 @@
     },
     "properties": {
       "type": "object",
-      "description": "A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value is an object describing where property values are stored. Optional properties may be excluded from this dictionary.",
+      "description": "A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value is an object describing where property values are stored. Required properties may not be excluded from this dictionary.",
       "minProperties": 1,
       "additionalProperties": {
         "$ref": "propertyTable.property.schema.json"

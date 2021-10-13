@@ -1,16 +1,26 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "primitive.EXT_mesh_features.schema.json",
   "title": "EXT_mesh_features glTF Primitive extension",
   "type": "object",
-  "description": "`EXT_mesh_features extension` for a primitive in a glTF model, to associate it with the root `EXT_mesh_features` object.",
+  "description": "`EXT_mesh_features` extension for a primitive in a glTF model, to associate it with the root `EXT_mesh_features` object.",
+  "allOf": [
+    {
+      "$ref": "glTFProperty.schema.json"
+    }
+  ],
   "properties": {
     "featureIds": {
       "type": "array",
-      "description": "",
+      "description": "An array of feature IDs. (TODO: one to one mapping with `propertyTables`)",
       "items": {
         "oneOf": [
-          {"$ref": "featureIdAttribute.schema.json"},
-          {"$ref": "featureIdTexture.schema.json"}
+          {
+            "$ref": "featureIdAttribute.schema.json"
+          },
+          {
+            "$ref": "featureIdTexture.schema.json"
+          }
         ]
       },
       "minItems": 1
@@ -19,7 +29,11 @@
       "type": "array",
       "description": "An array of IDs of property tables from the root `EXT_mesh_features` object.",
       "items": {
-        "allOf": [ {"$ref": "glTFid.schema.json" } ]
+        "allOf": [
+          {
+            "$ref": "glTFid.schema.json"
+          }
+        ]
       },
       "minItems": 1
     },
@@ -27,7 +41,11 @@
       "type": "array",
       "description": "An array of IDs of property textures from the root `EXT_mesh_features` object.",
       "items": {
-        "allOf": [ {"$ref": "glTFid.schema.json" } ]
+        "allOf": [
+          {
+            "$ref": "glTFid.schema.json"
+          }
+        ]
       },
       "minItems": 1
     },
