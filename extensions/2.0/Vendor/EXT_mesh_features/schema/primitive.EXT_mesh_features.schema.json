@@ -27,7 +27,7 @@
     },
     "propertyTables": {
       "type": "array",
-      "description": "An array of IDs of property tables from the root `EXT_mesh_features` object.",
+      "description": "An array of IDs of property tables from the root `EXT_mesh_features` object. A property table at index `i` corresponds to the `featureIds` entry at the same index.",
       "items": {
         "allOf": [
           {
