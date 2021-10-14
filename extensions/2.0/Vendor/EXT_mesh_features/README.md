@@ -7,10 +7,11 @@
 * Peter Gagliardi, Cesium
 * Sean Lilley, Cesium
 * Sam Suhag, Cesium
-* Patrick Cozzi, Cesium
 * Don McCurdy, Independent
+* Marco Hutter, Cesium
 * Bao Tran, Cesium
 * Samuel Vargas, Cesium
+* Patrick Cozzi, Cesium
 
 <!-- omit in toc -->
 ## Status
