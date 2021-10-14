@@ -26,7 +26,7 @@
     },
     "properties": {
       "type": "object",
-      "description": "A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value is an object describing where property values are stored. Required properties may not be excluded from this dictionary.",
+      "description": "A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value is an object describing where property values are stored. Required properties must be included in this dictionary.",
       "minProperties": 1,
       "additionalProperties": {
         "$ref": "propertyTable.property.schema.json"
