@@ -1,16 +1,17 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "featureIdTexture.schema.json",
   "title": "Feature ID Texture",
   "type": "object",
-  "allOf": [ { "$ref": "textureInfo.schema.json" } ],
   "description": "An object describing a texture used for storing per-texel feature IDs.",
+  "allOf": [
+    {
+      "$ref": "textureInfo.schema.json"
+    }
+  ],
   "properties": {
-    "index": { },
-    "texCoord": { },
-    "propertyTable": {
-      "type": "string",
-      "description": "The ID of the property table in the model's root `EXT_mesh_features.propertyTables` dictionary."
-    },
+    "index": {},
+    "texCoord": {},
     "channel": {
       "type": "integer",
       "minimum": 0,
@@ -20,7 +21,6 @@
     "extras": {}
   },
   "required": [
-    "propertyTable",
     "channel"
   ]
 }

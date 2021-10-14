@@ -22,7 +22,7 @@ Draft
 
 Written against the glTF 2.0 specification.
 
-Optionally, this extension may be used in conjunction with [`EXT_mesh_gpu_instancing`](../../EXT_mesh_gpu_instancing). When used together, certain GPU instance attributes defined by `EXT_mesh_gpu_instancing` are used as [instance feature IDs](#feature-id-by-gpu-instance).
+Optionally, this extension may be used in conjunction with [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing). When used together, certain GPU instance attributes defined by `EXT_mesh_gpu_instancing` are used as [instance feature IDs](#feature-id-by-gpu-instance).
 
 <!-- omit in toc -->
 ## Table of Contents
@@ -65,7 +65,7 @@ Concepts and terminology used throughout this document refer to the [Cesium 3D M
 
 See [Examples](#examples) for a more detailed list of use cases for this extension.
 
-> **Disambiguation:** glTF has other methods of storing details that could similarly be described as metadata or properties, including [`KHR_xmp_json_ld`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_xmp_json_ld), Extras, and Extensions. While those methods associate data with discrete objects in a glTF asset — nodes, materials, etc. — `EXT_mesh_features` is uniquely suited for properties of more granular conceptual features in subregions composed of vertices or texels.
+> **Disambiguation:** glTF has other methods of storing details that could similarly be described as metadata or properties, including [`KHR_xmp_json_ld`](../../Khronos/KHR_xmp_json_ld), Extras, and Extensions. While those methods associate data with discrete objects in a glTF asset — nodes, materials, etc. — `EXT_mesh_features` is uniquely suited for properties of more granular conceptual features in subregions composed of vertices or texels.
 
 ## Feature IDs
 
@@ -77,7 +77,7 @@ Features are identified within a 3D asset by **Feature IDs** (unique identifiers
 
 * **Feature ID by Vertex:** Per-vertex ID, in a vertex attribute or derived from the vertex index
 * **Feature ID by Texture Coordinates:** Per-texel ID, in a texture channel
-* **Feature ID by GPU Instance:** Per-instance ID, in an instance attribute (requires [`EXT_mesh_gpu_instancing`](../../EXT_mesh_gpu_instancing))
+* **Feature ID by GPU Instance:** Per-instance ID, in an instance attribute (requires [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing))
 
 ### Feature ID by Vertex
 
@@ -197,7 +197,7 @@ Feature ID textures classify the pixels of an image into different features. Som
 > }
 > ```
 
-A `featureId` pointing to a feature ID texture extends the glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. Its `channel` must be a non-negative integer corresponding to a channel of the source texture. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels.
+A `featureId` pointing to a feature ID texture extends the glTF [`textureInfo`](../../../../specification/2.0/schema/textureInfo.schema.json) object. Its `channel` must be a non-negative integer corresponding to a channel of the source texture. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels.
 
 When associated with a [property table](#property-tables), feature ID values stored in a texture are non-negative integers in the range `[0, count - 1]` (inclusive), stored in linear space, where `count` is the total number of features in the property table. Values outside this range indicate that no feature is associated. Feature IDs may be provided without an associated property table, in which case the property value lookup method and range of valid IDs are undefined.
 
@@ -207,7 +207,7 @@ Texture filtering must be `9728` (NEAREST), or undefined, for any texture object
 
 *Defined in [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
 
-Feature IDs may also be assigned to individual GPU instances when using the [`EXT_mesh_gpu_instancing` extension](../../EXT_mesh_gpu_instancing). Similar to per-vertex IDs, per-instance IDs are stored in instance attributes or generated implicitly by instance index. Nodes with `EXT_mesh_features` must also define an `EXT_mesh_gpu_instancing` extension, and are invalid without this dependency.
+Feature IDs may also be assigned to individual GPU instances when using the [`EXT_mesh_gpu_instancing` extension](../EXT_mesh_gpu_instancing). Similar to per-vertex IDs, per-instance IDs are stored in instance attributes or generated implicitly by instance index. Nodes with `EXT_mesh_features` must also define an `EXT_mesh_gpu_instancing` extension, and are invalid without this dependency.
 
 > **Example:** A node defining instances of mesh `0`, with each instance having a feature ID in the `FEATURE_ID_0` instance attribute.
 >
@@ -241,9 +241,9 @@ A primitive or node may specify multiple feature IDs using one or more of the me
 
 Each feature ID definition may include only a single source, so the following are mutually exclusive:
 
-- `featureId.attribute`
-- `featureId.offset` and `featureId.repeat`
-- `featureId.index`
+- `featureId.attribute` (for a Feature ID Attribute)
+- `featureId.offset` and `featureId.repeat` (for a Feature ID Attribute)
+- `featureId.index` (for a Feature ID Texture)
 
 Every `propertyTables` index must have an associated `featureIds` definition, but feature IDs may be defined without a property table. The `propertyTables` entry at index `i` corresponds to the `featureIds` entry at the same index. As a result, the length of the `featureIds` array must be greater than or equal to the length of the `propertyTables` array. Each (`featureId`, `propertyTable`) pair must be unique, but individual feature IDs and property tables may be repeated within a primitive or node.
 
@@ -592,7 +592,7 @@ Enum values may be encoded in images, as integer values according to their enum 
 > ```
 
 
-A `propertyTexture` object extends the glTF [`textureInfo`](../../../../../specification/2.0/schema/textureInfo.schema.json) object. `texCoord` specifies a texture coordinate set in the referring primitive.
+A `propertyTexture` object extends the glTF [`textureInfo`](../../../../specification/2.0/schema/textureInfo.schema.json) object. `texCoord` specifies a texture coordinate set in the referring primitive.
 
 The `properties` map specifies the texture channels providing data for available properties. An array of integer index values identifies channels, where multiple channels may be used only for fixed-length arrays of 2, 3, or 4 components. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. All values are stored in linear space.
 
@@ -629,7 +629,7 @@ This extension is optional, meaning it should be placed in the `extensionsUsed` 
 
 ## Schema
 
-* [gltf.EXT_mesh_features.schema.json](./schema/gltf.EXT_mesh_features.schema.json)
+* [glTF.EXT_mesh_features.schema.json](./schema/glTF.EXT_mesh_features.schema.json)
 * [primitive.EXT_mesh_features.schema.json](./schema/primitive.EXT_mesh_features.schema.json)
 * [node.EXT_mesh_features.schema.json](./schema/node.EXT_mesh_features.schema.json)
 
@@ -676,24 +676,25 @@ Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanc
     * Added `schema` and `schemaUri`. The schema object contains class and enum definitions. `schemaUri` refers to an external schema JSON file. `schema` and `schemaUri` are mutually exclusive.
     * Added optional `statistics` object which provides aggregate information about select properties within the model
   * Other changes
-    * Added `EXT_feature_metadata` extension to the [`EXT_mesh_gpu_instancing`](https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Vendor/EXT_mesh_gpu_instancing) extension for assigning metadata to instances
+    * Added `EXT_feature_metadata` extension to the [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing) extension for assigning metadata to instances
 * **Version 2.0.0** September 2021
   * Renamed extension from `EXT_feature_metadata` to `EXT_mesh_features`
   * Renamed `constant` to `offset`, and `divisor` to `repeat`
   * Removed `statistics` specification, to be considered as a future extension
-  * Renamed `featureTable` → `propertyTable` and `featureTexture` → `propertyTexture`
+  * Renamed `featureTable` to `propertyTable` and `featureTexture` to `propertyTexture`
   * Removed `featureIdAttributes` and `featureIdTextures`, replaced with `featureIds`
     * Primitives and Nodes may now have feature IDs without associated property tables
   * Removed string ID references to property tables and textures, replaced with integer IDs
-  * Removed `optional` and `default` and rephrased with properties `noData` and `required`:
-    * Properties are now assumed to be optional unless `required` is true
-    * `noData` is used to specify a sentinel value that indicates missing data
+  * Removed `optional` and added `required`. Properties are now assumed to be optional unless `required` is true.
+  * Added `noData` for specifying a sentinel value that indicates missing data
+  * Removed `default`
   * Feature ID values outside the range `[0, count - 1]` now indicate "no associated feature"
   * `NaN` and `Infinity` are now explicitly disallowed as property values
   * Binary alignment, offset, and padding changes:
     * Byte offsets for buffer views in a GLB-stored BIN chunk are no longer different from the core glTF specification
     * Relaxed buffer view alignment to component size, rather than strict 8-byte boundaries
   * Renamed `_FEATURE_ID_#` to `FEATURE_ID_#`
-  * Added vector and matrix types
+  * Added vector and matrix types: `VEC2`, `VEC3`, `VEC4`, `MAT2`, `MAT3`, `MAT4`
   * Refactored `type` and `componentType` to avoid overlap. Properties that store a single value now have a `type` of `SINGLE` and a `componentType` of the desired type (e.g. `type: "SINGLE", componentType: "UINT8"`)
+  * Class IDs, enum IDs, and property IDs must now contain only alphanumeric and underscore characters
   * Clarified that nodes with GPU instancing cannot reference property textures
