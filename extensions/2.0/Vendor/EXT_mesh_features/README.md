@@ -206,7 +206,7 @@ Texture filtering must be `9728` (NEAREST), or undefined, for any texture object
 
 ### Feature ID by GPU Instance
 
-*Defined in [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
+*Defined in [node.EXT_mesh_features.schema.json](./schema/node.EXT_mesh_features.schema.json).*
 
 Feature IDs may also be assigned to individual GPU instances when using the [`EXT_mesh_gpu_instancing` extension](../EXT_mesh_gpu_instancing). Similar to per-vertex IDs, per-instance IDs are stored in instance attributes or generated implicitly by instance index. Nodes with `EXT_mesh_features` must also define an `EXT_mesh_gpu_instancing` extension, and are invalid without this dependency.
 
@@ -492,7 +492,7 @@ The property table may provide value arrays for only a subset of the properties 
 > }
 > ```
 
-Property arrays are stored in glTF buffer views and use the binary encoding defined in the [Table Format](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata#table-format) section of the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata).
+Property arrays are stored in glTF buffer views and use the binary encoding defined in the [Binary Table Format](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata#binary-table-format) section of the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata).
 
 As in the core glTF specification, values of NaN, +Infinity, and -Infinity are never allowed.
 
@@ -699,3 +699,4 @@ Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanc
   * Refactored `type` and `componentType` to avoid overlap. Properties that store a single value now have a `type` of `SINGLE` and a `componentType` of the desired type (e.g. `type: "SINGLE", componentType: "UINT8"`)
   * Class IDs, enum IDs, and property IDs must now contain only alphanumeric and underscore characters
   * Clarified that nodes with GPU instancing cannot reference property textures
+  * For GPU instance metadata, the `EXT_mesh_features` extension is now scoped to the `node` extensions instead of nesting inside the `EXT_mesh_gpu_instancing` extension.
