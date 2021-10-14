@@ -241,9 +241,9 @@ A primitive or node may specify multiple feature IDs using one or more of the me
 
 Each feature ID definition may include only a single source, so the following are mutually exclusive:
 
-- `featureId.attribute`
-- `featureId.offset` and `featureId.repeat`
-- `featureId.index`
+- `featureId.attribute` (for a Feature ID Attribute)
+- `featureId.offset` and `featureId.repeat` (for a Feature ID Attribute)
+- `featureId.index` (for a Feature ID Texture)
 
 Every `propertyTables` index must have an associated `featureIds` definition, but feature IDs may be defined without a property table. The `propertyTables` entry at index `i` corresponds to the `featureIds` entry at the same index. As a result, the length of the `featureIds` array must be greater than or equal to the length of the `propertyTables` array. Each (`featureId`, `propertyTable`) pair must be unique, but individual feature IDs and property tables may be repeated within a primitive or node.
 
