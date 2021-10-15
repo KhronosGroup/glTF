@@ -102,7 +102,7 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
 >
 > Note that `"attribute": 0` refers to `FEATURE_ID_0`.
 >
-> ![Property Table](figures/feature-table.svg)
+> ![Property Table](figures/feature-table.png)
 >
 > ```jsonc
 > {
