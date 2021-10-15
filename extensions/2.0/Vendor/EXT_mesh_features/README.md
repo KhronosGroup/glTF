@@ -346,29 +346,25 @@ Classes are defined as entries in the `schema.classes` dictionary, indexed by an
 
 *Defined in [class.property.schema.json](./schema/class.property.schema.json).*
 
-Properties are defined abstractly in a class by their semantic meaning and data type, and are instantiated in a feature with specific values conforming to that definition. Properties support a richer variety of data types than glTF accessors or GPU shading languages allow, defined by `property.componentType`:
+Properties are defined abstractly in a class by their semantic meaning and data type, and are instantiated in a feature with specific values conforming to that definition. Properties support a richer variety of data types than glTF accessors or GPU shading languages allow, defined by `property.componentType`.
 
-- `componentType`
-  - **Type:** `string`
-  - **Required:** ✓ Yes
-  - **Allowed values:**
-    - `"BOOLEAN"`
-    - `"STRING"`
-    - `"ENUM"`
-    - `"INT8"`, `"INT16"`, `"INT32"`, `"INT64"`
-    - `"UINT8"`, `"UINT16"`, `"UINT32"`, `"UINT64"`
-    - `"FLOAT32"`, `"FLOAT64"`
+Allowed values for `componentType`:
 
-A property may compose multiple components into higher-level types (vector, matrix, and array), defined by `property.type`:
+- `"BOOLEAN"`
+- `"STRING"`
+- `"ENUM"`
+- `"INT8"`, `"INT16"`, `"INT32"`, `"INT64"`
+- `"UINT8"`, `"UINT16"`, `"UINT32"`, `"UINT64"`
+- `"FLOAT32"`, `"FLOAT64"`
 
-- `type`
-  - **Type:** `string`
-  - **Required:** No, default: `"SINGLE"`
-  - **Allowed values:**
-    - `"SINGLE"`
-    - `"ARRAY"`
-    - `"VEC2"`, `"VEC3"`, `"VEC4"`
-    - `"MAT2"`, `"MAT3"`, `"MAT4"`
+A property may compose multiple components into higher-level types (vector, matrix, and array), defined by `property.type`.
+
+Allowed values for `type`:
+
+- `"SINGLE"` (default)
+- `"ARRAY"`
+- `"VEC2"`, `"VEC3"`, `"VEC4"`
+- `"MAT2"`, `"MAT3"`, `"MAT4"`
 
 Class properties are defined as entries in the `class.properties` dictionary, indexed by an alphanumeric property ID.
 
