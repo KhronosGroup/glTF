@@ -52,7 +52,7 @@ but may still change before they are complete._
 
 | Extension | Status |
 |-----------|--------|
-| [KHR_materials_thinfilm](https://github.com/KhronosGroup/glTF/pull/1742) | In development. |
+| [KHR_materials_iridescence](https://github.com/KhronosGroup/glTF/pull/2027) | In development. |
 | [KHR_materials_translucency](https://github.com/KhronosGroup/glTF/pull/1825) | In development. |
 
 This section tracks the status of Khronos and multi-vendor extensions that are either already in development,
