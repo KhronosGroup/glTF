@@ -288,7 +288,7 @@ Data types and semantic meanings of properties are provided by a schema, as defi
 
 *Defined in [schema.schema.json](./schema/schema.schema.json).*
 
-Top-level definitions for type and semantic information. The schema provides a set of *classes* and *enums* the asset can reference.
+Top-level definitions for type and semantic information. The schema provides a set of [classes](#class) and [enums](#enum) the asset can reference.
 
 A schema may be embedded in the extension directly or referenced externally with the `schemaUri` property. Multiple glTF assets may refer to the same external schema to avoid duplication. A schema is defined by an `EXT_mesh_features` extension attached to the glTF root object.
 
