@@ -416,11 +416,11 @@ Class properties are defined as entries in the `class.properties` dictionary, in
 
 *Defined in [enum.schema.json](./schema/enum.schema.json).*
 
-Set of categorical types, defined as `name: integer` pairs. Enum properties use an enum as their data type.
+Set of categorical types, defined as `(name, value)` pairs. Enum properties use an enum as their data type.
 
 Enums are defined as entries in the `schema.enums` dictionary, indexed by an alphanumeric enum ID.
 
-> **Example:** A "Color" enum, defining pixel colors on a simple RGB display. Use of a leading "Unspecified" enum value is optional, but suggested where missing data may be present.
+> **Example:** A "Species" enum defining types of trees. An "Unspecified" enum value is optional, but when provided as the `noData` value for a property (see: [Cesium 3D Metadata → No Data Values](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata#required-properties-and-no-data-values)) may be helpful to identify missing data.
 >
 > ```jsonc
 > {
@@ -449,7 +449,7 @@ Enums are defined as entries in the `schema.enums` dictionary, indexed by an alp
 
 *Defined in [enum.value.schema.json](./schema/enum.value.schema.json).*
 
-Pairs of `name: integer` entries representing possible values of an enum property.
+Pairs of `(name, value)` entries representing possible values of an enum property.
 
 Enum values are defined as entries in the `enum.values` array. Duplicate names or duplicate integer values are not allowed.
 
