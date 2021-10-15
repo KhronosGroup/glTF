@@ -72,7 +72,7 @@ See [Examples](#examples) for a more detailed list of use cases for this extensi
 
 ### Overview
 
-A **feature** is a conceptual object associated with both geometry and properties. Similar concepts exist in various industries and domains. In Geographic Information Systems (GIS) a feature is an entity such as a point, polyline, or polygon that represents some element on a map. In another domain like CAD/BIM a feature might be a component of a design model, such as a pipe. A feature could also be a 3D building in a city, a tree in a forest, a sample point in a weather model, or a patch of texels on a 3D asset.
+A **feature** is a conceptual object associated with both geometry and properties. Similar concepts exist in various industries and domains. In Geographic Information Systems (GIS) a feature is an entity such as a point, polyline, or polygon that represents some element on a map. In another domain like CAD/BIM, a feature might be a component of a design model, such as a pipe. A feature could also be a 3D building in a city, a tree in a forest, a sample point in a weather model, or a patch of texels on a 3D asset.
 
 Features are identified within a 3D asset by **Feature IDs** (unique identifiers) associated with parts of the asset in one of three ways:
 
@@ -94,7 +94,9 @@ When associated with a [property table](#property-tables), values of feature IDs
 
 The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be false. The accessor's `componentType` is not restricted.
 
-> **Implementation Note:** since glTF accessors do not support `UNSIGNED_INT` types for 32-bit integers, `FLOAT` may be used instead allowing integer feature IDs up to 2<sup>24</sup>. For smaller ranges of feature IDs, `UNSIGNED_BYTE` or `UNSIGNED_SHORT` may be used. As with other vertex attributes, each element of a feature ID accessor must align to 4-byte boundaries.
+> **Implementation note:** since glTF accessors do not support `UNSIGNED_INT` types for 32-bit integers, `FLOAT` may be used instead allowing integer feature IDs up to 2<sup>24</sup>. For smaller ranges of feature IDs, `UNSIGNED_BYTE` or `UNSIGNED_SHORT` may be used. As with other vertex attributes, each element of a feature ID accessor must align to 4-byte boundaries.
+
+> **Implementation note:** for a primitive with feature ID attributes, points in the interior of a triangle or line segment should be considered to belong to the feature associated with the nearest vertex.
 
 > **Example:** A primitive defines two quads, where each quad is a distinct feature. The quads are composed of four vertices, distinguished by different `FEATURE_ID_0` vertex attribute values. Each feature is associated with "Name", "Year", and "Coordinates" values in a [property table](#property-tables).
 >
@@ -129,7 +131,7 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
 
 Per-vertex feature IDs may also be defined implicitly, as a function of vertex index within the primitive. Implicit feature IDs reduce storage costs in several common cases, such as when all vertices in a primitive share the same feature ID, or each sequential group of `N` vertices (e.g. each triangle face) share the same feature ID.
 
-Implicit feature IDs are a monotonically increasing function of the vertex index, configured by `offset` and `repeat` parameters.
+Implicit feature IDs are a monotonically increasing function of the vertex index, configured by `offset` and `repeat` parameters:
 
 * `offset` specifies the initial value for the vertex feature ID range. The default is `0`.
 * `repeat`, if defined, specifies the number of vertices for which to repeat each feature ID before incrementing the ID by 1. If `repeat` is undefined, the feature ID for all vertices is `offset`.
@@ -141,7 +143,6 @@ For example
 * If `offset` is 0 and `repeat` is 2, the feature IDs are `[0, 0, 1, 1, 2, 2, ...]`
 * If `offset` is 2 and `repeat` is 3, the feature IDs are `[2, 2, 2, 3, 3, 3, 4, 4, 4, ...]`
 * If `offset` is 2 and `repeat` is undefined, the feature IDs are `[2, 2, 2, ...]`
-
 > **Example:** Each point in the point cloud below represents a distinct feature. Points are identified by feature IDs 0–5. Each point is associated "Name" and "Elevation" values a [property table](#property-tables).
 >
 > <img src="figures/placemarks.jpg"  alt="Placemarks" width="600">
