@@ -34,7 +34,7 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status
 
-Complete
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 

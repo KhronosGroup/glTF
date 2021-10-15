@@ -18,7 +18,7 @@ Copyright 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tradem
 
 ## Status
 
-Draft (not ratified yet)
+Archived Draft, Never Ratified
 
 ## Dependencies
 

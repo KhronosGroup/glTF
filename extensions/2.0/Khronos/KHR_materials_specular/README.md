@@ -35,7 +35,9 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status
 
-Complete
+Complete, Ratified by the Khronos Group
+
+Supersedes [KHR_materials_pbrSpecularGlossiness](../../Archived/KHR_materials_pbrSpecularGlossiness/README.md)
 
 ## Dependencies
 

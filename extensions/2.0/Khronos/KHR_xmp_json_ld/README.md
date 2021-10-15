@@ -26,7 +26,9 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status
 
-Complete
+Complete, Pending Ratification
+
+Supersedes [KHR_xmp](../../Archived/KHR_xmp/README.md)
 
 ## Dependencies
 
