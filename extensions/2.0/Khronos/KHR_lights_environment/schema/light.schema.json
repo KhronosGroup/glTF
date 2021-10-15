@@ -5,9 +5,9 @@
     "description": "An image based environment light.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
-        "intensity": {
+        "luminance": {
             "type": "number",
-            "description": "Brightness multiplier for environment.",
+            "description": " Luminance factor for the environment, in candela per square meter. .",
             "default": 1.0,
             "minimum": 0.0
         },
@@ -25,26 +25,33 @@
             "minItems": 9,
             "maxItems": 9
         },
-        "specularCubemaps": {
-            "description": "Declares an array of the cubemap textures, by using KTX2. Each entry must point to a KTX2 file with a cubemap containing 6 sides.",
+        "cubemap": {
+            "type": "integer",
+            "description": "Texture reference to one of the declared cubemap textures.",
+        },
+        "boundingBoxMin": {
+            "description": "Local boundingbox min. The minimum 3D point of the cubemap boundingbox. In world coordinates (meters)",
             "type": "array",
-            "items": {
-                "type": "array",
                 "items": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "number"
                 },
-                "minItems": 1,
-                "maxItems": 1
-            },
-            "minItems": 1
+                "minItems": 3,
+                "maxItems": 3
+        },
+        "boundingBoxMax": {
+            "description": "Local boundingbox max. The maximum 3D point of the cubemap boundingbox. In world coordinates (meters)",
+            "type": "array",
+                "items": {
+                    "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
         },
         "name": { },
         "extensions": { },
         "extras": { }
     },
     "required": [
-        "irradianceCoefficients",
-        "specularCubemaps",
+        "cubemap",
     ]
 }
