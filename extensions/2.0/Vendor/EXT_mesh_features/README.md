@@ -143,7 +143,7 @@ For example
 * If `offset` is 0 and `repeat` is 2, the feature IDs are `[0, 0, 1, 1, 2, 2, ...]`
 * If `offset` is 2 and `repeat` is 3, the feature IDs are `[2, 2, 2, 3, 3, 3, 4, 4, 4, ...]`
 * If `offset` is 2 and `repeat` is undefined, the feature IDs are `[2, 2, 2, ...]`
-> **Example:** Each point in the point cloud below represents a distinct feature. Points are identified by feature IDs 0–5. Each point is associated "Name" and "Elevation" values a [property table](#property-tables).
+> **Example:** Each point in the point cloud below represents a distinct feature. Points are identified by feature IDs 0–5. Each point is associated with "Name" and "Elevation" values a [property table](#property-tables).
 >
 > <img src="figures/placemarks.jpg"  alt="Placemarks" width="600">
 >
@@ -318,7 +318,7 @@ Template for features. Classes provide a list of properties with type and semant
 
 Classes are defined as entries in the `schema.classes` dictionary, indexed by an alphanumeric class ID.
 
-> **Example:** A "Tree" class, which might describe a table of tree measurements taken in a park. Property definitions abbreviated here, and introduced in the next section.
+> **Example:** A "Tree" class, which might describe a table of tree measurements taken in a park. Property definitions are abbreviated here, and introduced in the next section.
 >
 > ```jsonc
 > {
