@@ -366,6 +366,8 @@ Allowed values for `type`:
 - `"VEC2"`, `"VEC3"`, `"VEC4"`
 - `"MAT2"`, `"MAT3"`, `"MAT4"`
 
+`"SINGLE"` and `"ARRAY"` types may contain any component type; `"VECN"` and `"MATN"` must contain only numeric component types.
+
 Class properties are defined as entries in the `class.properties` dictionary, indexed by an alphanumeric property ID.
 
 > **Example:** A "Tree" class, which might describe a table of tree measurements taken in a park. Properties include species, height, and diameter of each tree, as well as the number of birds observed in its branches.
