@@ -94,15 +94,15 @@ When associated with a [property table](#property-tables), values of feature IDs
 
 The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be false. The accessor's `componentType` is not restricted.
 
-> **Implementation note:** since glTF accessors do not support `UNSIGNED_INT` types for 32-bit integers, `FLOAT` may be used instead allowing integer feature IDs up to 2<sup>24</sup>. For smaller ranges of feature IDs, `UNSIGNED_BYTE` or `UNSIGNED_SHORT` may be used. As with other vertex attributes, each element of a feature ID accessor must align to 4-byte boundaries.
+> **Implementation note:** Because glTF accessors do not support `UNSIGNED_INT` types for 32-bit integers, `FLOAT` may be used instead allowing integer feature IDs up to 2<sup>24</sup>. For smaller ranges of feature IDs, `UNSIGNED_BYTE` or `UNSIGNED_SHORT` may be used. As with other vertex attributes, each element of a feature ID accessor must align to 4-byte boundaries.
 
-> **Implementation note:** for a primitive with feature ID attributes, points in the interior of a triangle or line segment should be considered to belong to the feature associated with the nearest vertex.
+> **Implementation note:** For a primitive with feature ID attributes, points in the interior of a triangle or line segment should be considered to belong to the feature associated with the nearest vertex.
 
 > **Example:** A primitive defines two quads, where each quad is a distinct feature. The quads are composed of four vertices, distinguished by different `FEATURE_ID_0` vertex attribute values. Each feature is associated with "Name", "Year", and "Coordinates" values in a [property table](#property-tables).
 >
 > Note that `"attribute": 0` refers to `FEATURE_ID_0`.
 >
-> ![Property Table](figures/feature-table.svg)
+> ![Property Table](figures/feature-table.png)
 >
 > ```jsonc
 > {
@@ -288,7 +288,7 @@ Data types and semantic meanings of properties are provided by a schema, as defi
 
 *Defined in [schema.schema.json](./schema/schema.schema.json).*
 
-Top-level definitions for type and semantic information. The schema provides a set of *classes* and *enums* the asset can reference.
+Top-level definitions for type and semantic information. The schema provides a set of [classes](#class) and [enums](#enum) the asset can reference.
 
 A schema may be embedded in the extension directly or referenced externally with the `schemaUri` property. Multiple glTF assets may refer to the same external schema to avoid duplication. A schema is defined by an `EXT_mesh_features` extension attached to the glTF root object.
 
@@ -416,11 +416,11 @@ Class properties are defined as entries in the `class.properties` dictionary, in
 
 *Defined in [enum.schema.json](./schema/enum.schema.json).*
 
-Set of categorical types, defined as `name: integer` pairs. Enum properties use an enum as their data type.
+Set of categorical types, defined as `(name, value)` pairs. Enum properties use an enum as their data type.
 
 Enums are defined as entries in the `schema.enums` dictionary, indexed by an alphanumeric enum ID.
 
-> **Example:** A "Color" enum, defining pixel colors on a simple RGB display. Use of a leading "Unspecified" enum value is optional, but suggested where missing data may be present.
+> **Example:** A "Species" enum defining types of trees. An "Unspecified" enum value is optional, but when provided as the `noData` value for a property (see: [Cesium 3D Metadata → No Data Values](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata#required-properties-and-no-data-values)) may be helpful to identify missing data.
 >
 > ```jsonc
 > {
@@ -449,7 +449,7 @@ Enums are defined as entries in the `schema.enums` dictionary, indexed by an alp
 
 *Defined in [enum.value.schema.json](./schema/enum.value.schema.json).*
 
-Pairs of `name: integer` entries representing possible values of an enum property.
+Pairs of `(name, value)` entries representing possible values of an enum property.
 
 Enum values are defined as entries in the `enum.values` array. Duplicate names or duplicate integer values are not allowed.
 
