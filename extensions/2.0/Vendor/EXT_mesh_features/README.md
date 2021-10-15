@@ -96,7 +96,7 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
 
 > **Implementation note:** since glTF accessors do not support `UNSIGNED_INT` types for 32-bit integers, `FLOAT` may be used instead allowing integer feature IDs up to 2<sup>24</sup>. For smaller ranges of feature IDs, `UNSIGNED_BYTE` or `UNSIGNED_SHORT` may be used. As with other vertex attributes, each element of a feature ID accessor must align to 4-byte boundaries.
 
-> **Implementation note:** When rasterizing a primitive with feature ID attributes, points in the interior of a triangle should be considered to belong to the feature associated with the nearest vertex.
+> **Implementation note:** for a primitive with feature ID attributes, points in the interior of a triangle or line segment should be considered to belong to the feature associated with the nearest vertex.
 
 > **Example:** A primitive defines two quads, where each quad is a distinct feature. The quads are composed of four vertices, distinguished by different `FEATURE_ID_0` vertex attribute values. Each feature is associated with "Name", "Year", and "Coordinates" values in a [property table](#property-tables).
 >
@@ -143,8 +143,6 @@ For example
 * If `offset` is 0 and `repeat` is 2, the feature IDs are `[0, 0, 1, 1, 2, 2, ...]`
 * If `offset` is 2 and `repeat` is 3, the feature IDs are `[2, 2, 2, 3, 3, 3, 4, 4, 4, ...]`
 * If `offset` is 2 and `repeat` is undefined, the feature IDs are `[2, 2, 2, ...]`
-> **Implementation note:** When rasterizing a primitive with feature ID attributes, points in the interior of a triangle should be considered to belong to the feature associated with the nearest vertex.
-
 > **Example:** Each point in the point cloud below represents a distinct feature. Points are identified by feature IDs 0–5. Each point is associated "Name" and "Elevation" values a [property table](#property-tables).
 >
 > <img src="figures/placemarks.jpg"  alt="Placemarks" width="600">
