@@ -14,11 +14,11 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-ToDo: Write motivation and explanation.
+ToDo: Write motivation, explanation and outlook.
 
 ### Examples
 
-#### Minimum valid controller entry referencing animation 0.
+#### Minimum valid animation controller entry referencing animation 0.
 
 ```json
 {
@@ -26,17 +26,17 @@ ToDo: Write motivation and explanation.
 }
 ```
 
-#### Valid controller with all values set.
+#### Animation controller with all values set.
 
 ```json
 {
 	"animation": 0,
-	"name": "All values set",
+	"name": "Forth and back animation.",
 	"start": 0.0,
 	"end": 10.0,
 	"timestamp": 0.0,
 	"direction": 1.0,
-	"counter": 1,
+	"counter": 2,
 	"bounce": true
 }
 ```
