@@ -183,6 +183,8 @@ void updateTimestamp(float deltaTime, AnimationController& ac)
 		if (ac.bounce)
 		{
 			ac.timestamp = ac.end - overtime;
+
+			ac.direction *= -1.0f;
 		}
 		else
 		{
@@ -202,6 +204,8 @@ void updateTimestamp(float deltaTime, AnimationController& ac)
 		if (ac.bounce)
 		{
 			ac.timestamp = ac.start + overtime;
+
+			ac.direction *= -1.0f;
 		}
 		else
 		{
