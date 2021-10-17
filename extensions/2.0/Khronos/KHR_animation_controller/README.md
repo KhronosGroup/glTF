@@ -16,7 +16,7 @@ Written against the glTF 2.0 spec.
 
 ToDo: Write motivation, explanation and outlook.
 
-### Examples
+### Animation controller JSON examples
 
 #### Minimum valid animation controller entry referencing animation 0.
 
@@ -36,6 +36,124 @@ ToDo: Write motivation, explanation and outlook.
 	"end": 10.0,
 	"timestamp": 0.0,
 	"direction": 1.0,
+	"counter": 2,
+	"bounce": true
+}
+```
+
+### Examples
+
+`Total time` is the accumulated time in seconds since the start of rendering.  
+`timestamp` is the internal time in seconds of the animation controller.  
+
+#### Example 1
+
+|Total time|00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|
+|----------|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|
+|timestamp |00|01|02|03|04|00|01|02|03|04|00|01|02|03|04|00|01|02|03|04|00|
+
+```json
+{
+	"animation": 0,
+	"name": "Example 1",
+	"start": 0.0,
+	"end": 4.0,
+	"timestamp": 0.0,
+	"direction": 1.0,
+	"counter": -1,
+	"bounce": false
+}
+```
+
+#### Example 2
+
+|Total time|00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|
+|----------|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|
+|timestamp |02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|
+
+```json
+{
+	"animation": 0,
+	"name": "Example 2",
+	"start": 2.0,
+	"timestamp": 2.0,
+	"direction": 1.0,
+	"counter": -1,
+	"bounce": false
+}
+```
+
+#### Example 3
+
+|Total time|00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|
+|----------|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|
+|timestamp |03|04|05|06|07|08|03|04|05|06|07|08|03|04|05|06|07|08|03|04|05|
+
+```json
+{
+	"animation": 0,
+	"name": "Example 3",
+	"start": 3.0,
+	"end": 8.0,
+	"timestamp": 3.0,
+	"direction": 1.0,
+	"counter": -1,
+	"bounce": false
+}
+```
+
+#### Example 4
+
+|Total time|00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|
+|----------|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|
+|timestamp |00|01|02|03|04|04|04|04|04|04|04|04|04|04|04|04|04|04|04|04|04|
+
+```json
+{
+	"animation": 0,
+	"name": "Example 4",
+	"start": 0.0,
+	"end": 4.0,
+	"timestamp": 0.0,
+	"direction": 1.0,
+	"counter": 1,
+	"bounce": false
+}
+```
+
+#### Example 5
+
+|Total time|00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|
+|----------|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|
+|timestamp |00|01|02|03|04|05|04|03|02|01|00|01|02|03|04|05|05|05|05|05|05|
+
+```json
+{
+	"animation": 0,
+	"name": "Example 5",
+	"start": 0.0,
+	"end": 5.0,
+	"timestamp": 0.0,
+	"direction": 1.0,
+	"counter": 3,
+	"bounce": true
+}
+```
+
+#### Example 6
+
+|Total time|00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|
+|----------|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|
+|timestamp |04|04|03|03|02|02|01|01|00|00|01|01|02|02|03|03|04|04|04|04|04|
+
+```json
+{
+	"animation": 0,
+	"name": "Example 6",
+	"start": 4.0,
+	"end": 0.0,
+	"timestamp": 4.0,
+	"direction": -0.5,
 	"counter": 2,
 	"bounce": true
 }
