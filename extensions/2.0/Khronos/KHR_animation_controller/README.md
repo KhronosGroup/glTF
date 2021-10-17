@@ -1,4 +1,4 @@
-# KHR\_aniamtion\_controller
+# KHR\_animation\_controller
 
 ## Contributors
 
