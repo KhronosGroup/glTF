@@ -167,7 +167,7 @@ void updateTimestamp(float deltaTime, AnimationController& ac)
 {
 	// Animation controller is off.
 	// Early quit for performance and not having to change the direction value.
-	if (ac.counter == 0)
+	if (ac.counter == 0 || ac.direction == 0.0f)
 	{
 		return;
 	}
