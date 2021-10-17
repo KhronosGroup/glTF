@@ -13,6 +13,9 @@ Requests containing fixes for, or additions to:
 
 Please keep contributions focused on solving a single issue or bug.
 
+For contributions to the glTF 2.0 core specification, see:
+link:specification/2.0/README.md#contributing[glTF 2.0 Contributions].
+
 == Copyright Notice and License Template
 
 If you are adding a new file, it must be under one of the following
