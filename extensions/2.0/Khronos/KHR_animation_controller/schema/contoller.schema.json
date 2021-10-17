@@ -1,0 +1,58 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "controller",
+    "type": "object",
+    "description": "An animation controller.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "animation": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of an animation.",
+            "gltf_detailedDescription": "The index of an animation."
+        },
+        "start": {
+            "type": "number",
+            "minimum": 0.0,
+            "default": 0.0,
+            "description": "The lower bound of animation controller.",
+            "gltf_detailedDescription": "This value **MUST** be smaller or equal than all keyframe timestamps."
+        },                
+        "end": {
+            "type": "number",
+            "description": "The upper bound of animation controller.",
+            "gltf_detailedDescription": "This value **MUST** be greater or equal than all keyframe timestamps. When defined, `end` **MUST** be greater or equal than `start`. If `end` is undefined, client implementations **SHOULD** use an infinite flnumber value."
+        },                
+        "timestamp": {
+            "type": "number",
+            "minimum": 0.0,
+            "default": 0.0,
+            "description": "The current timestamp.",
+            "gltf_detailedDescription": "This value **MUST** be greater or equal than `start` and smaller or equal than `end`."
+        },                
+        "direction": {
+            "type": "number",
+            "default": 1.0,
+            "description": "The direction and speed used for updating the `timestamp`.",
+            "gltf_detailedDescription": "This value allows to run an animation forward (`direction` > 0.0) or backward (`direction` < 0.0). It allows to increase (abs(`direction`) > 1.0) or decrease (abs(`direction`) < 1.0) the speed. `direction` = 0.0 stops the animation controller."
+        },                
+        "counter": {
+            "type": "integer",
+            "minimum": -1,
+            "default": -1,
+            "description": "The amount of times the animation is looped.",
+            "gltf_detailedDescription": "-1 means infinite loops. 0 means no more loops and the animation contorller is stopped. If the counter is larger > 0 and `timestamp` becomes smaller than `start` or `timwstamp` becomes larger than `end`, the counter is decremented by one."
+        },
+        "bounce": {
+            "type": "boolean",
+            "default": false,
+            "description": "Specifies whether the animation should bounce or loop.",
+            "gltf_detailedDescription": "If an animation is repeated, the animation begins from the `start` (`end` for a backward animation.) again. If an animation is bounced, `direction` becomes -1.0 * `direction` if the `timestamp` gets larger or smaller than `end` or `start`."
+        },                        
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "animation"
+    ]
+}
