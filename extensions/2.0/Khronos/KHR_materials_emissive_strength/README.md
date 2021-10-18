@@ -52,17 +52,9 @@ reflections, tonemapping, blooming, and more.
 
 ### Physical Units
 
-For implementations where a physical light unit is needed, the units for the multiplicative product of
-`emissiveStrength`, `emissiveFactor`, and `emissiveTexture` are candela per square
-meter (**cd / m<sup>2</sup>**), sometimes called *nits*.
-
-**Implementation Note**:
-Because the value is specified per square meter, it indicates the brightness of any given point along
-the surface.  However, the exact conversion from physical light units to the brightness of rendered
-pixels requires knowledge of the camera's exposure settings, which are left as an implementation
-detail, unless otherwise defined in a future version of the glTF specification or other extension.
-Many rendering engines simplify this calculation by assuming that an emissive factor of `1.0`
-results in a fully exposed pixel.
+This extension supplies a unitless multiplier to the glTF 2.0 specification's emissive factor and
+texture.  Including this multiplier does not alter the physical units defined in glTF 2.0's
+[section 3.9.3, additional textures](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#additional-textures)
 
 ## Extending Materials
 
