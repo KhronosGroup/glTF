@@ -2,12 +2,13 @@
 
 ## Contributors
 
-* Johannes Behr, Fraunhofer IGD, [@jbehr](https://github.com/jbehr)
-* Timo Sturm, Fraunhofer IGD, [@tsturm](https://github.com/tsturm)
+* Johannes Behr, Threedy GmbH, [@jbehr](https://github.com/jbehr)
+* Timo Sturm, Threedy GmbH, [@tsturm](https://github.com/tsturm)
+* Manuel Olbrich, Fraunhofer IGD [@dschie](https://github.com/dschie)
 
 ## Status
 
-Fraunhofer Vendor Extension - Currently supported only in the current development branch of [X3DOM](https://github.com/x3dom/x3dom).
+Fraunhofer Vendor Extension - Currently supported by [X3DOM](https://github.com/x3dom/x3dom) 1.8.0+ and [instant3Dhub](https://www.threedy.io/) 3.0.0+.
 
 ## Dependencies
 
@@ -23,7 +24,7 @@ Unfortunately referencing external models is not provided by the current glTF Sp
 
 Client implementations of the FRAUNHOFER_external_model extension must support at least one glTF format but can support and negotiate any number of glTF and non-glTF encodings as long as those follow
 * the abstract model definition RFC2077 [1],
-* provide a registered content type (e.g model/gltf+json) [2]
+* provide a registered content type (e.g. model/gltf+json) [2]
 * and can be determinate with some form of content negotiation [3].
 
 Figure 1 shows a screenshot of our public available FRAUNHOFER_external_model [example](https://examples.x3dom.org/FRAUNHOFER_external_model/).
@@ -101,7 +102,8 @@ A model is instantiated by node.model property. The same model could be used by 
 
 ## Known Implementations
 
-* [X3DOM](https://github.com/x3dom/x3dom)
+* [X3DOM](https://github.com/x3dom/x3dom) 1.8.0+
+* [instant3Dhub](https://www.threedy.io/) 3.0.0+
 
 ## Resources
 
