@@ -9,7 +9,17 @@
           "allOf": [ { "$ref": "glTFid.schema.json" } ],
           "description": "The index of the image which points to a KTX v2 resource."
         },
+        "layer": {
+           "type": "integer",
+            "description": "The KTX v 2 layer that the image source is fetched from.",
+            "default": 0,
+            "minimum": 0
+            
+        }
         "extensions": {},
         "extras": {}
-      }
+    },
+    "required": [
+        "source"
+    ]    
 }
