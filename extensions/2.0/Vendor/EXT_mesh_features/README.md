@@ -699,3 +699,4 @@ Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanc
   * Class IDs, enum IDs, and property IDs must now contain only alphanumeric and underscore characters
   * Clarified that nodes with GPU instancing cannot reference property textures
   * For GPU instance metadata, the `EXT_mesh_features` extension is now scoped to the `node` extensions instead of nesting inside the `EXT_mesh_gpu_instancing` extension.
+  * Split `offsetType` into `arrayOffsetType` and `stringOffsetType`
