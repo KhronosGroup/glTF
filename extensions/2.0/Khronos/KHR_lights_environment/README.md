@@ -71,19 +71,15 @@ The following will load the environment light using KHR_texture_ktx.
     "KHR_texture_ktx",
     "KHR_lights_environment"
 ],
-"textures": [
-    {
-        "extensions": {
-            "KHR_texture_ktx": {
-                "source": 0,
-                "layer": 0
-            }
-        }
-    }
-],
 
 "extensions": {
     "KHR_lights_environment" : {
+        "textures": [
+            {
+              "source": 0,
+              "layer": 0
+            }
+        ],
         "images": [
             {
                 "name": "environment cubemap 0",
@@ -91,16 +87,6 @@ The following will load the environment light using KHR_texture_ktx.
                 "mimeType": "image/ktx2"
             }
         ],  
-        "textures": [
-            {
-                "extensions": {
-                    "KHR_texture_ktx": {
-                        "source": 0,
-                        "layer": 0
-                    }
-                }
-            }
-        ],
         "lights": [
             {
                 "name": "environment light 0",
@@ -157,7 +143,7 @@ Meaning that models displayed within the cubemap environment does not have to re
 Instead it is possible to place objects and the camera within this environment.  
 The cubemap boundingbox is declared as a pair of 3D coordinates for min / max.  
 
-### Implementaiton Note
+### Implementation Note
 
 Here is an example of a realtime implementation of reflections using local cubemap:  
 [Implement reflections with a local cubemap](https://developer.arm.com/solutions/graphics-and-gaming/gaming-engine/unity/arm-guides-for-unity-developers/local-cubemap-rendering/implement-reflections-with-a-local-cubemap)
@@ -203,11 +189,14 @@ Each scene can have a single environment light attached to it by defining the `e
 
 ### Environment Light Properties
 
+The environment light declaration present in the root of the glTF object must contain one or more textures and images specification.  
+Textures are declared as an array of KHR_texture_ktx objects. Images are declared as an array of image objects.  
+
 `textures`  
 
 | Property | Type   |  Description | Required |
 |:-----------------------|:-----------|:------------------------------------------| :--------------------------|
-| `textures` | texture [1-* ]  | Array of textures. |  :white_check_mark: Yes |  
+| `textures` | texture [1-* ]  | Array of KHR_texture_ktx objects, referencing cubemap source images. |  :white_check_mark: Yes |  
 
 
 `images`  
@@ -223,9 +212,9 @@ Each scene can have a single environment light attached to it by defining the `e
 | `name` | String | Name of the light. | No |
 | `luminanceFactor` | number  | Luminance factor for the environment, in candela per square meter.  | No, Default: `1.0` |
 | `irradianceCoefficients` | number[9][3] | Declares spherical harmonic coefficients for irradiance up to l=2. This is a 9x3 array. | No |
-| `boundingBoxMin` | number[3]  | Local boundingbox min. The minimum 3D point of the cubemap boundingbox. In world coordinates (meters) |  :white_check_mark: Yes |
-| `boundingBoxMax` | number[3]  | Local boundingbox max. The maximum 3D point of the cubemap boundingbox. In world coordinates (meters) |  :white_check_mark: Yes |
-| `cubemap` | integer  | Reference to texture to be used as cubemap. The texture source may use some other extension to include additional texture format support. | :white_check_mark: Yes |
+| `boundingBoxMin` | number[3]  | Local boundingbox min. The minimum 3D point of the cubemap boundingbox. In world coordinates (meters) |  No |
+| `boundingBoxMax` | number[3]  | Local boundingbox max. The maximum 3D point of the cubemap boundingbox. In world coordinates (meters) |  No |
+| `cubemap` | integer  | Reference to texture source to be used as cubemap, source must contain valid cubemap.  | :white_check_mark: Yes |
 
 
 ## KTX v2 Images  
