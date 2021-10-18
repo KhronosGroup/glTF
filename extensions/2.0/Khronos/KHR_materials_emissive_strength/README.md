@@ -54,7 +54,8 @@ reflections, tonemapping, blooming, and more.
 
 This extension supplies a unitless multiplier to the glTF 2.0 specification's emissive factor and
 texture.  Including this multiplier does not alter the physical units defined in glTF 2.0's
-[section 3.9.3, additional textures](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#additional-textures)
+[additional textures section](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#additional-textures),
+under the **emissive** texture.
 
 ## Extending Materials
 
