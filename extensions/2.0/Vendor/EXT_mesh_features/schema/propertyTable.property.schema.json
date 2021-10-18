@@ -18,8 +18,8 @@
       ],
       "description": "The index of the buffer view containing property values. The data type of property values is determined by the property definition: When `componentType` is `BOOLEAN` values are packed into a bitstream. When `componentType` is `STRING` values are stored as byte sequences and decoded as UTF-8 strings. When `componentType` is a numeric type values are stored as the provided `componentType`. When `componentType` is `ENUM` values are stored as the enum's `valueType`. Each enum value in the buffer must match one of the allowed values in the enum definition. When `type` is `ARRAY` elements are packed tightly together and the data type is based on the `componentType` following the same rules as above. `arrayOffsetBufferView` is required for variable-size arrays and `stringOffsetBufferView` is required for strings (for variable-length arrays of strings, both are required). The buffer view `byteOffset` must be aligned to a multiple of the `componentType` size."
     },
-    "offsetType": {
-      "description": "The type of values in `arrayOffsetBufferView` and `stringOffsetBufferView`.",
+    "arrayOffsetType": {
+      "description": "The type of values in `arrayOffsetBufferView`.",
       "default": "UINT32",
       "anyOf": [
         {
@@ -45,7 +45,28 @@
           "$ref": "glTFid.schema.json"
         }
       ],
-      "description": "The index of the buffer view containing offsets for variable-length arrays. The number of offsets is equal to the property table `count` plus one. The offsets represent the start positions of each array, with the last offset representing the position after the last array. The array length is computed using the difference between the current offset and the subsequent offset. If `componentType` is `STRING` the offsets index into the string offsets array (stored in `stringOffsetBufferView`), otherwise they index into the property array (stored in `bufferView`). The data type of these offsets is determined by `offsetType`. The buffer view `byteOffset` must be aligned to a multiple of the `offsetType` size."
+      "description": "The index of the buffer view containing offsets for variable-length arrays. The number of offsets is equal to the property table `count` plus one. The offsets represent the start positions of each array, with the last offset representing the position after the last array. The array length is computed using the difference between the current offset and the subsequent offset. If `componentType` is `STRING` the offsets index into the string offsets array (stored in `stringOffsetBufferView`), otherwise they index into the property array (stored in `bufferView`). The data type of these offsets is determined by `arrayOffsetType`. The buffer view `byteOffset` must be aligned to a multiple of the `arrayOffsetType` size."
+    },
+    "stringOffsetType": {
+      "description": "The type of values in `stringOffsetBufferView`.",
+      "default": "UINT32",
+      "anyOf": [
+        {
+          "const": "UINT8"
+        },
+        {
+          "const": "UINT16"
+        },
+        {
+          "const": "UINT32"
+        },
+        {
+          "const": "UINT64"
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "stringOffsetBufferView": {
       "allOf": [
@@ -53,7 +74,7 @@
           "$ref": "glTFid.schema.json"
         }
       ],
-      "description": "The index of the buffer view containing offsets for strings. The number of offsets is equal to the number of string components plus one. The offsets represent the byte offsets of each string in the main `bufferView`, with the last offset representing the byte offset after the last string. The string byte length is computed using the difference between the current offset and the subsequent offset. The data type of these offsets is determined by `offsetType`. The buffer view `byteOffset` must be aligned to a multiple of the `offsetType` size."
+      "description": "The index of the buffer view containing offsets for strings. The number of offsets is equal to the number of string components plus one. The offsets represent the byte offsets of each string in the main `bufferView`, with the last offset representing the byte offset after the last string. The string byte length is computed using the difference between the current offset and the subsequent offset. The data type of these offsets is determined by `stringOffsetType`. The buffer view `byteOffset` must be aligned to a multiple of the `stringOffsetType` size."
     },
     "extensions": {},
     "extras": {}
