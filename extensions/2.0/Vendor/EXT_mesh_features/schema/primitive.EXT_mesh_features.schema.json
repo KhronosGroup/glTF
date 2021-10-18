@@ -1,67 +1,67 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "primitive.EXT_mesh_features.schema.json",
-  "title": "EXT_mesh_features glTF Primitive extension",
-  "type": "object",
-  "description": "`EXT_mesh_features` extension for a primitive in a glTF model, to associate it with the root `EXT_mesh_features` object.",
-  "allOf": [
-    {
-      "$ref": "glTFProperty.schema.json"
-    }
-  ],
-  "properties": {
-    "featureIds": {
-      "type": "array",
-      "description": "An array of feature IDs. A property table at index `i` corresponds to the `featureIds` entry at the same index. Additional feature ID entries may be present, so the length of the `featureIds` array must be greater than or equal to the length of the `propertyTables` array.",
-      "items": {
-        "oneOf": [
-          {
-            "$ref": "featureIdAttribute.schema.json"
-          },
-          {
-            "$ref": "featureIdTexture.schema.json"
-          }
-        ]
-      },
-      "minItems": 1
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "primitive.EXT_mesh_features.schema.json",
+    "title": "EXT_mesh_features glTF Primitive extension",
+    "type": "object",
+    "description": "`EXT_mesh_features` extension for a primitive in a glTF model, to associate it with the root `EXT_mesh_features` object.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "featureIds": {
+            "type": "array",
+            "description": "An array of feature IDs. A property table at index `i` corresponds to the `featureIds` entry at the same index. Additional feature ID entries may be present, so the length of the `featureIds` array must be greater than or equal to the length of the `propertyTables` array.",
+            "items": {
+                "oneOf": [
+                    {
+                        "$ref": "featureIdAttribute.schema.json"
+                    },
+                    {
+                        "$ref": "featureIdTexture.schema.json"
+                    }
+                ]
+            },
+            "minItems": 1
+        },
+        "propertyTables": {
+            "type": "array",
+            "description": "An array of IDs of property tables from the root `EXT_mesh_features` object. A property table at index `i` corresponds to the `featureIds` entry at the same index.",
+            "items": {
+                "allOf": [
+                    {
+                        "$ref": "glTFid.schema.json"
+                    }
+                ]
+            },
+            "minItems": 1
+        },
+        "propertyTextures": {
+            "type": "array",
+            "description": "An array of IDs of property textures from the root `EXT_mesh_features` object.",
+            "items": {
+                "allOf": [
+                    {
+                        "$ref": "glTFid.schema.json"
+                    }
+                ]
+            },
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
     },
-    "propertyTables": {
-      "type": "array",
-      "description": "An array of IDs of property tables from the root `EXT_mesh_features` object. A property table at index `i` corresponds to the `featureIds` entry at the same index.",
-      "items": {
-        "allOf": [
-          {
-            "$ref": "glTFid.schema.json"
-          }
-        ]
-      },
-      "minItems": 1
-    },
-    "propertyTextures": {
-      "type": "array",
-      "description": "An array of IDs of property textures from the root `EXT_mesh_features` object.",
-      "items": {
-        "allOf": [
-          {
-            "$ref": "glTFid.schema.json"
-          }
-        ]
-      },
-      "minItems": 1
-    },
-    "extensions": {},
-    "extras": {}
-  },
-  "anyOf": [
-    {
-      "required": [
-        "featureIds"
-      ]
-    },
-    {
-      "required": [
-        "propertyTextures"
-      ]
-    }
-  ]
+    "anyOf": [
+        {
+            "required": [
+                "featureIds"
+            ]
+        },
+        {
+            "required": [
+                "propertyTextures"
+            ]
+        }
+    ]
 }

@@ -1,39 +1,39 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "node.EXT_mesh_features.schema.json",
-  "title": "EXT_mesh_features extension for EXT_mesh_gpu_instancing",
-  "type": "object",
-  "description": "An object describing per-instance feature IDs to be used as indices to property arrays in the property table.",
-  "allOf": [
-    {
-      "$ref": "glTFProperty.schema.json"
-    }
-  ],
-  "properties": {
-    "featureIds": {
-      "type": "array",
-      "description": "",
-      "items": {
-        "$ref": "featureIdAttribute.schema.json"
-      },
-      "minItems": 1
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "node.EXT_mesh_features.schema.json",
+    "title": "EXT_mesh_features extension for EXT_mesh_gpu_instancing",
+    "type": "object",
+    "description": "An object describing per-instance feature IDs to be used as indices to property arrays in the property table.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "featureIds": {
+            "type": "array",
+            "description": "",
+            "items": {
+                "$ref": "featureIdAttribute.schema.json"
+            },
+            "minItems": 1
+        },
+        "propertyTables": {
+            "type": "array",
+            "description": "An array of IDs of property tables from the root `EXT_mesh_features` object.",
+            "items": {
+                "allOf": [
+                    {
+                        "$ref": "glTFid.schema.json"
+                    }
+                ]
+            },
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
     },
-    "propertyTables": {
-      "type": "array",
-      "description": "An array of IDs of property tables from the root `EXT_mesh_features` object.",
-      "items": {
-        "allOf": [
-          {
-            "$ref": "glTFid.schema.json"
-          }
-        ]
-      },
-      "minItems": 1
-    },
-    "extensions": {},
-    "extras": {}
-  },
-  "required": [
-    "featureIds"
-  ]
+    "required": [
+        "featureIds"
+    ]
 }
