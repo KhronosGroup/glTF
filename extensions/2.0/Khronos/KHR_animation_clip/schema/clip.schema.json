@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "controller",
+    "title": "clip",
     "type": "object",
-    "description": "An animation controller.",
+    "description": "An animation clip.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
         "animation": {
@@ -14,12 +14,12 @@
             "type": "number",
             "minimum": 0.0,
             "default": 0.0,
-            "description": "The lower bound of animation controller.",
+            "description": "The lower bound of animation clip.",
             "gltf_detailedDescription": "This value **MUST** be smaller or equal than all keyframe timestamps."
         },                
         "end": {
             "type": "number",
-            "description": "The upper bound of animation controller.",
+            "description": "The upper bound of animation clip.",
             "gltf_detailedDescription": "This value **MUST** be greater or equal than all keyframe timestamps. When defined, `end` **MUST** be greater or equal than `start`. If `end` is undefined, client implementations **SHOULD** use an infinite flnumber value."
         },                
         "timestamp": {
@@ -33,7 +33,7 @@
             "type": "number",
             "default": 1.0,
             "description": "The direction and speed used for updating the `timestamp`.",
-            "gltf_detailedDescription": "This value allows to run an animation forward (`direction` > 0.0) or backward (`direction` < 0.0). It allows to increase (abs(`direction`) > 1.0) or decrease (abs(`direction`) < 1.0) the speed. `direction` = 0.0 stops the animation controller."
+            "gltf_detailedDescription": "This value allows to run an animation forward (`direction` > 0.0) or backward (`direction` < 0.0). It allows to increase (abs(`direction`) > 1.0) or decrease (abs(`direction`) < 1.0) the speed. `direction` = 0.0 stops the animation clip."
         },                
         "counter": {
             "type": "integer",

@@ -1,7 +1,8 @@
-# KHR\_animation\_controller
+# KHR\_animation\_clip
 
 ## Contributors
 
+* Ben Houston, Threekit
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
 
 ## Status
@@ -16,9 +17,9 @@ Written against the glTF 2.0 spec.
 
 ToDo: Write motivation, explanation and outlook.
 
-### Animation controller JSON examples
+### Animation clip JSON examples
 
-#### Minimum valid animation controller entry referencing animation 0.
+#### Minimum valid animation clip entry referencing animation 0.
 
 ```json
 {
@@ -26,7 +27,7 @@ ToDo: Write motivation, explanation and outlook.
 }
 ```
 
-#### Animation controller with all values set.
+#### Animation clip with all values set.
 
 ```json
 {
@@ -44,7 +45,7 @@ ToDo: Write motivation, explanation and outlook.
 ### Examples
 
 `Total time` is the accumulated time in seconds since the start of rendering.  
-`timestamp` is the internal time in seconds of the animation controller.  
+`timestamp` is the internal time in seconds of the animation clip.  
 
 #### Example 1
 
@@ -163,9 +164,9 @@ ToDo: Write motivation, explanation and outlook.
 
 ```cpp
 // Delta time is in seconds. Delta time is the time executed between the current and last frame.
-void updateTimestamp(float deltaTime, AnimationController& ac)
+void updateTimestamp(float deltaTime, AnimationClip& ac)
 {
-	// Animation controller is off.
+	// Animation clip is off.
 	// Early quit for performance and not having to change the direction value.
 	if (ac.counter == 0 || ac.direction == 0.0f)
 	{

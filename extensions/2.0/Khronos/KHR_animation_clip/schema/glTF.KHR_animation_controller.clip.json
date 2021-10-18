@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title" : "KHR_animation_clip glTF extension",
+    "type": "object",
+    "description": "Animation clip for glTF animations.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "clips": {
+            "type": "array",
+            "description": "An array of animation clips.",
+            "items": {
+                "$ref": "clip.schema.json"
+            },
+            "minItems": 1,
+            "gltf_detailedDescription": "An array of animation clips. A contoller provides the current timestamp used for the input field of an animation sampler."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
