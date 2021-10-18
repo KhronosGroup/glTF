@@ -1,26 +1,26 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "featureIdTexture.schema.json",
-  "title": "Feature ID Texture",
-  "type": "object",
-  "description": "An object describing a texture used for storing per-texel feature IDs.",
-  "allOf": [
-    {
-      "$ref": "textureInfo.schema.json"
-    }
-  ],
-  "properties": {
-    "index": {},
-    "texCoord": {},
-    "channel": {
-      "type": "integer",
-      "minimum": 0,
-      "description": "Single channel index storing per-texel feature IDs."
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "featureIdTexture.schema.json",
+    "title": "Feature ID Texture",
+    "type": "object",
+    "description": "An object describing a texture used for storing per-texel feature IDs.",
+    "allOf": [
+        {
+            "$ref": "textureInfo.schema.json"
+        }
+    ],
+    "properties": {
+        "index": {},
+        "texCoord": {},
+        "channel": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Single channel index storing per-texel feature IDs."
+        },
+        "extensions": {},
+        "extras": {}
     },
-    "extensions": {},
-    "extras": {}
-  },
-  "required": [
-    "channel"
-  ]
+    "required": [
+        "channel"
+    ]
 }
