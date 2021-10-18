@@ -1,3 +1,8 @@
+<!--
+Copyright 2015-2021 The Khronos Group Inc.
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # glTF Extension Prefixes
 
 The following extension prefixes are reserved by the spec maintainers:
@@ -29,6 +34,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `CLO` | CLO Virtual Fashion | https://www.clo3d.com | [#1944](https://github.com/KhronosGroup/glTF/issues/1944) |
 | `CVTOOLS` | Canvas Tools | https://github.com/MackeyK24/CanvasTools | [#1389](https://github.com/KhronosGroup/glTF/issues/1389) |
 | `EPIC` | Epic Games, Inc. | https://www.epicgames.com/ | [#1905](https://github.com/KhronosGroup/glTF/issues/1905) |
+| `F8` | Forum8 Co., Ltd. | https://www.forum8.com/ | [#1999](https://github.com/KhronosGroup/glTF/issues/1999) |
 | `FB` | Facebook, Inc. | https://www.facebook.com/ | [#1139](https://github.com/KhronosGroup/glTF/pull/1139) |
 | `FOXIT` | Foxit Software, Inc. | https://foxitsoftware.com<br>`liqian_mu at foxitsoftware.com` | [#1712](https://github.com/KhronosGroup/glTF/issues/1712) |
 | `GOOGLE` | Google, LLC | https://www.google.com/ | [#1123](https://github.com/KhronosGroup/glTF/issues/1123) |

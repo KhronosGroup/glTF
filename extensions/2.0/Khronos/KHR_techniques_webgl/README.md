@@ -1,3 +1,8 @@
+<!--
+Copyright 2013-2017 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+-->
+
 # KHR_techniques_webgl
 
 ## Contributors
@@ -9,7 +14,7 @@
 * Tony Parisi, Unity, [@auradeluxe](https://twitter.com/auradeluxe)
 * Fabrice Robinet, Individual Contributor, [@fabricerobinet](https://twitter.com/fabricerobinet)
 
-Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc. See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
+Copyright 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc. See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
 
