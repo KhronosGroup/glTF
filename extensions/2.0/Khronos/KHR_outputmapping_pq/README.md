@@ -19,6 +19,9 @@ Written against the glTF 2.0 spec.
 ## Overview
 
 The goal of this extension is to provide the means to map internal, usually floating point, light contribution values that may be in an unknown range to that of an attached display.  
+
+The intended usecases for this extension is any usecase where the light contribution values will go above 1.0, for instance by using KHR_lights_punctual, KHR_emissive_strength or KHR_environment_lights.  
+
 Output pixel values from a rendered 3D model are generally in a range that is larger than that of a display device.  
 This may not be a problem if the output is a high definition image format or some other target that has the same range and precision as the internal calculations.  
 However, a typical usecase for realtime rasterizer implementations is that the output is a light emitting display.  
@@ -38,13 +41,17 @@ When the KHR_outputmapping_pq extension is used all lighting and pixel calculati
 This does not have an impact on color texture sources since they define values as contribution factor.  
 The value 10000 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in the SMPTE ST 2084 transfer function.  
 
-When using this extension any light contribution values shall be aligned to account for 10000 cd / m2 as max luminance. This means that content creators shall be aware of 10000 cd/m2 as the maximum brightness value.  
+When using this extension light contribution values shall be aligned to account for 10000 cd / m2 as max luminance. This means that content creators shall be aware of 10000 cd/m2 as the maximum brightness value.  
 Values above 10000 shall be clamped.  
 
 
 ## Outputmapping
 
+To convert from internal values (wanted luminance on the display) to the non-linear output value in the range 0.0 - 1.0 the PQ EOTF shall be used.  
+
 If the framebuffer format and colorspace is known to the implementation then a format and colorspace shall be chosen to preserve the range and precision of the SMPTE ST 2084 transfer function.  
+If available, a colorspace that is compatible with the color primaries of Rec. 2020 or Rec. 2100 shall be used.  
+
 If the framebuffer format or colorspace is not known, or none is available that preserves range, precision and color gamut then lower range framebuffer with sRGB colorspace may be used.  
 This is to allow for compatibility with displays that does not support higher range and/or compatible colorspaces.  
 It also allows for implementations where the details of the framebuffer is not known or available.  
