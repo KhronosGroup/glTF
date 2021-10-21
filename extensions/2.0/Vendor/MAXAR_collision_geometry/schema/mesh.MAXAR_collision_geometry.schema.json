@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "MAXAR_collision_geometry mesh extension",
+  "type": "object",
+  "description": "Collision volumes for a mesh.",
+  "allOf": [
+    {
+      "$ref": "glTFProperty.schema.json"
+    }
+  ],
+  "properties": {
+    "mesh": {
+      "allOf": [
+        {
+          "$ref": "glTFid.schema.json"
+        }
+      ],
+      "description": "The index of the mesh to use as a collision volume."
+    },
+    "extensions": {},
+    "extras": {}
+  },
+  "required": [
+    "mesh"
+  ]
+}
