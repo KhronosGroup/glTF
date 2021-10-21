@@ -8,6 +8,7 @@
 * Gary Hsu, Microsoft, <mailto:garyhsu@microsoft.com>
 * Mike Bond, Adobe, <mailto:mbond@adobe.com>
 * Ben Houston, ThreeKit, <mailto:bhouston@threekit.com>
+* Dominick D'Aniello, Mozilla <mailto:netpro2k@gmail.com>
 
 ## Status
 
