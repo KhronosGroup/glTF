@@ -5,12 +5,6 @@
     "description": "An image based environment light.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
-        "luminance": {
-            "type": "number",
-            "description": " Luminance factor for the environment, in candela per square meter. .",
-            "default": 1.0,
-            "minimum": 0.0
-        },
         "irradianceCoefficients": {
             "description": "Declares spherical harmonic coefficients for irradiance up to l=2. This is a 9x3 array.",
             "type": "array",
