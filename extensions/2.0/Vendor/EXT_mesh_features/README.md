@@ -701,4 +701,5 @@ Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanc
   * For GPU instance metadata, the `EXT_mesh_features` extension is now scoped to the `node` extensions instead of nesting inside the `EXT_mesh_gpu_instancing` extension.
   * Split `offsetType` into `arrayOffsetType` and `stringOffsetType`
   * Refactored the property texture schema so it is now a glTF `textureInfo` object.
-  * A property texture's properties are now required to be stored in the same texture. 
+  * Each property texture now contains only a single texture
+  * Property textures are now assumed to be in linear space, and must use nearest or linear filtering
