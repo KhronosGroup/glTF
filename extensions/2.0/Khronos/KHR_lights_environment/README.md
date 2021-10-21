@@ -99,7 +99,6 @@ The following will load the environment light using KHR_texture_ktx.
         "lights": [
             {
                 "name": "environment light 0",
-                "luminance": 1.0,
                 "irradianceCoefficients": [...3 x 9 array of floats...],
                 "boundingBoxMin": [-100, -100, -100],
                 "boundingBoxMax": [100, 100, 100],
@@ -225,11 +224,10 @@ Images are declared as an array of image objects.
 | Property | Type   |  Description | Required |
 |:-----------------------|:-----------|:------------------------------------------| :--------------------------|
 | `name` | String | Name of the light. | No |
-| `luminanceFactor` | number  | Luminance factor for the environment, in candela per square meter. The luminanceFactor shall be applied both to specular cubemap and irradianceCOefficients, if thos are supplied.  | No, Default: `1.0` |
 | `irradianceCoefficients` | number[9][3] | Declares spherical harmonic coefficients for irradiance up to l=2. This is a 9x3 array. | No |
 | `boundingBoxMin` | number[3]  | Local boundingbox min. The minimum 3D point of the cubemap boundingbox. In world coordinates (meters) |  No |
 | `boundingBoxMax` | number[3]  | Local boundingbox max. The maximum 3D point of the cubemap boundingbox. In world coordinates (meters) |  No |
-| `cubemap` | integer  | Reference to texture source to be used as cubemap, source must contain valid cubemap.  | :white_check_mark: Yes |
+| `cubemap` | integer  | Reference to texture source to be used as specular radiance cubemap, source must contain valid cubemap.  | :white_check_mark: Yes |
 
 
 ## KTX v2 Images  
