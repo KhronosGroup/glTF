@@ -1,5 +1,9 @@
 # MAXAR_collision_geometry
 
+## Status
+
+Draft
+
 ## Dependencies
 
 Written against the glTF 2.0 spec.
