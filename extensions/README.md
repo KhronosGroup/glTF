@@ -42,7 +42,7 @@ The list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any ve
 
 * The name of the prefix.
 * The name of the vendor requesting the prefix.
-* The vendor's URL and / or contact information (optionally).
+* The vendor's URL and/or contact information.
 
 Vendor extensions are not covered by the Khronos IP framework.
 
