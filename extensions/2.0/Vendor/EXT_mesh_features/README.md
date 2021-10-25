@@ -100,7 +100,7 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
 
 > **Example:** A primitive defines two quads, where each quad is a distinct feature. The quads are composed of four vertices, distinguished by different `FEATURE_ID_0` vertex attribute values. Each feature is associated with "Name", "Year", and "Coordinates" values in a [property table](#property-tables).
 >
-> Note that `"attribute": 0` refers to `FEATURE_ID_0`.
+> Note that the `attribute` value is an index that is used to construct the string that identifies the ID attribute, in the format `FEATURE_ID_<index>`. This means that `"attribute": 0` refers to `FEATURE_ID_0`.
 >
 > ![Property Table](figures/feature-table.png)
 >
