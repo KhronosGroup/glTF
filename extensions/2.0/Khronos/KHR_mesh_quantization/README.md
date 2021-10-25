@@ -63,7 +63,7 @@ When `KHR_mesh_quantization` extension is supported, the following **extra** typ
 |`POSITION`|VEC3|_byte_<br>_byte_&nbsp;normalized<br>_short_<br>_short_&nbsp;normalized|
 |`NORMAL`|VEC3|_byte_&nbsp;normalized<br>_short_&nbsp;normalized|
 |`TANGENT`|VEC3|_byte_&nbsp;normalized<br>_short_&nbsp;normalized|
-|`TEXCOORD_n`|VEC2|_byte_<br>_unsigned byte_<br>_short_<br>_unsigned short_|
+|`TEXCOORD_n`|VEC2|_byte_<br>_short_|
 
 Note that to comply with alignment rules for accessors, `"VEC3"` accessors need to be aligned to 4-byte boundaries; for example, a `BYTE` normal is expected to have a stride of 4, not 3.
 
