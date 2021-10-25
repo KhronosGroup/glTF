@@ -22,7 +22,7 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status <!-- omit in toc -->
 
-Complete
+Complete, Ratified by the Khronos Group
 
 ## Dependencies <!-- omit in toc -->
 

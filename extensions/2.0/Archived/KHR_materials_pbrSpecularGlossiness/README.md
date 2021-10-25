@@ -21,7 +21,9 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Status
 
-Complete 
+Archived, Ratified by the Khronos Group
+
+Superseded by [KHR_materials_specular](../../Khronos/KHR_materials_specular/README.md)
 
 ## Dependencies
 
