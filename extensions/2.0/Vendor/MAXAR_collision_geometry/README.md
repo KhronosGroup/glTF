@@ -1,5 +1,10 @@
 # MAXAR_collision_geometry
 
+## Contributors
+
+* Erik Dahlström, Maxar, [@erikdahlstrom](https://github.com/erikdahlstrom)
+* Sam Suhag, Cesium, [@sanjeetsuhag](https://github.com/sanjeetsuhag)
+
 ## Status
 
 Draft
