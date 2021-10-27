@@ -247,7 +247,22 @@ Each feature ID definition may include only a single source, so the following ar
 - `featureId.offset` and `featureId.repeat` (for a Feature ID Attribute)
 - `featureId.index` (for a Feature ID Texture)
 
-Every `propertyTables` index must have an associated `featureIds` definition, but feature IDs may be defined without a property table. The `propertyTables` entry at index `i` corresponds to the `featureIds` entry at the same index. As a result, the length of the `featureIds` array must be greater than or equal to the length of the `propertyTables` array. Each (`featureId`, `propertyTable`) pair must be unique, but individual feature IDs and property tables may be repeated within a primitive or node.
+Feature IDs may be assigned to primitives or nodes, but do not have to be associated with a property table. This is useful when the feature IDs are supposed to be resolved externally by an application. 
+
+> **Example:** A minimal example for assigning feature IDs to a mesh primitive, using an implicit vertex attribute: The default value for the `offset` is 0, and the value for `repeat` is 3. This means that the vertices will receive the feature IDs `[0, 0, 0, 1, 1, 1, 2, 2, 2, ...]`, causing the vertices of each triangle to receive the same feature ID. 
+>
+> ```jsonc
+> // Primitive:
+> "extensions": {
+>   "EXT_mesh_features": {
+>     "featureIds": [
+>       { "repeat": 3 }
+>     ]
+>   }
+> }
+> ```
+
+When feature IDs are associated with property tables, then every `propertyTables` index must have an associated `featureIds` definition. The `propertyTables` entry at index `i` corresponds to the `featureIds` entry at the same index. As a result, the length of the `featureIds` array must be greater than or equal to the length of the `propertyTables` array. Each (`featureId`, `propertyTable`) pair must be unique, but individual feature IDs and property tables may be repeated within a primitive or node.
 
 Empty feature IDs (e.g. `{}`) are disallowed — a feature ID must explicitly set at least one property.
 
