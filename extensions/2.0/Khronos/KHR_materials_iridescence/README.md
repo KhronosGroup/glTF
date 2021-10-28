@@ -74,6 +74,10 @@ TODO
 [Real-Time Rendering, Fourth Edition; page 361ff](https://www.realtimerendering.com/)  
 [Rendering Iridescent Objects in Real-time](http://dspace.library.uu.nl/handle/1874/287110)  
 
+## Schema
+
+[glTF.KHR_materials_iridescence.schema.json](schema/glTF.KHR_materials_iridescence.schema.json)
+
 
 ## Appendix: Full Khronos Copyright Statement
 
