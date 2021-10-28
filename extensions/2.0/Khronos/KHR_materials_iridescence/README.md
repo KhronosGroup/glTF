@@ -25,8 +25,8 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-Iridescence describes an effect where hue varies depending on the viewing angle and illumination angle: A thin film of a semi-transparent layer results in inter-reflections and due to thin film interference, certain wavelengths get absorbed or amplified. Iridescence can be seen on soap bubbles, oil films, or on the wings of many insects.
-With this extension, thickness and IOR of the thin film can be specified, enabling iridescent materials. 
+Iridescence describes an effect where hue varies depending on the viewing angle and illumination angle: A thin-film of a semi-transparent layer results in inter-reflections and due to thin-film interference, certain wavelengths get absorbed or amplified. Iridescence can be seen on soap bubbles, oil films, or on the wings of many insects.
+With this extension, thickness and index of refraction (IOR) of the thin-film can be specified, enabling iridescent materials. 
 
 ## Extending Materials
 
