@@ -76,6 +76,7 @@ thickness = mix(iridescenceThicknessMinimum, iridescenceThicknessMaximum, irides
 ```
 The thin-film layer can have a different IOR than the underlying material. With `iridescenceIOR` one can set an IOR value for the thin-film layer independently.
 
+The iridescence effect is modeled via a microfacet BRDF with a modified Fresnel reflectance term that accounts for inter-reflections as shown in [Laurent Belcour and Pascal Barla (2017)](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html).
 
 ## Reference
 
