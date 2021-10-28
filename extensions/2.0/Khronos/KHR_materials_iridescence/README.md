@@ -61,7 +61,20 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 |**iridescenceThicknessMaximum**  | `number`                                                            | The maximum thickness of the thin-film layer.                                                    | No, default: `1200.0` |
 |**iridescenceThicknessTexture**  | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The thickness texture of the thin-film layer to blend between the minimum and maximum thickness. | No                    |
 
-TODO
+The values for iridescence intensity can be defined using a factor, a texture, or both.
+`iridescenceFactor` is multiplied with the red channel of `iridescenceTexture` to control the overall strength of the iridescence effect. If the texture is not set, a value of 1.0 is assumed. 
+```
+iridescence = iridescenceFactor * iridescenceTexture.r
+```
+
+If `iridescenceFactor` is zero (default), the iridescence extension has no effect on the material. 
+All textures in this extension use a single channel in linear space. 
+The thickness of the thin-film is set to `iridescenceThicknessMaximum` if `iridescenceThicknessTexture` is not given.
+If `iridescenceThicknessTexture` is set, the thickness of the thin-film varies between  `iridescenceThicknessMinimum` and `iridescenceThicknessMaximum` as follows: 
+```
+thickness = mix(iridescenceThicknessMinimum, iridescenceThicknessMaximum, iridescenceThicknessTexture.g)
+```
+The thin-film layer can have a different IOR than the underlying material. With `iridescenceIOR` one can set an IOR value for the thin-film layer independently.
 
 
 ## Reference
