@@ -5,10 +5,10 @@
 * Pascal Schoen, adidas  
 * Ben Houston, threekit  
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)  
+* Mathias Kanzler, UX3D
 
-## Acknowledgments
-
-* TODO
+Copyright (C) 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
 
