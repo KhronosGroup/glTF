@@ -37,7 +37,7 @@
             "description": "The maximum thickness of the thin-film layer.",
             "default": 1200.0,
             "minimum": 0.0,
-            "gltf_detailedDescription": "The maximum thickness of the thin-film layer. This value will be used as the overall thickness if no thinFilmThicknessTexture is provided."
+            "gltf_detailedDescription": "The maximum thickness of the thin-film layer. This value will be used as the overall thickness if no iridescenceThicknessTexture is provided."
         },
         "iridescenceThicknessTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
