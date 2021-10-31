@@ -90,7 +90,7 @@ If the extension is combined with `KHR_materials_transmission`, a refractive mic
 The volumetric properties are defined by adding the `KHR_materials_volume` extension to any glTF material. A non-zero thickness switches from thin-walled to volumetric behavior. This requires a manifold/closed mesh. The properties of the medium are not texturable, it is assumed to be homogeneous.
 
 ```json
-materials: [
+"materials": [
     {
         "extensions": {
             "KHR_materials_volume": {
@@ -109,14 +109,14 @@ The extension defines the following parameters to describe the volume.
 
 | | Type | Description | Required |
 |-|------|-------------|----------|
-| **thicknessFactor** | `number` | The thickness of the volume beneath the surface. The value is given in the coordinate space of the mesh. If the value is 0 the material is thin-walled. Otherwise the material is a volume boundary. The `doubleSided` property has no effect on volume boundaries. | No, default: `0`. |
-| **thicknessTexture** | `textureInfo` | A texture that defines the thickness, stored in the G channel. This will be multiplied by `thicknessFactor`. | No |
-| **attenuationDistance** | `number` | Density of the medium given as the average distance that light travels in the medium before interacting with a particle. The value is given in world space. | No, default: +Infinity |
+| **thicknessFactor** | `number` | The thickness of the volume beneath the surface. The value is given in the coordinate space of the mesh. If the value is 0 the material is thin-walled. Otherwise the material is a volume boundary. The `doubleSided` property has no effect on volume boundaries. Range is \[0, inf). | No, default: `0`. |
+| **thicknessTexture** | `textureInfo` | A texture that defines the thickness, stored in the G channel. This will be multiplied by `thicknessFactor`. Range is \[0,1]. | No |
+| **attenuationDistance** | `number` | Density of the medium given as the average distance that light travels in the medium before interacting with a particle. The value is given in world space. Range is (0, inf]. | No, default: +Infinity |
 | **attenuationColor** | `number[3]` | The color that white light turns into due to absorption when reaching the attenuation distance. | No, default: `[1, 1, 1]` |
 
 ## Thickness Texture
 
-The thickness of a volume enclosed by the mesh is typically quite difficult to compute at run-time in a rasterizer. Since glTF is primarily used with real-time rasterizers, this extension allows for the thickness of the volume to be baked into a thickness map. Thickness is given in the coordinate space of the mesh. Any transformations applied to the mesh's node will also be applied to the thickness. Thickness is an absolute value and defined as the product of thickness factor and thickness texture value. The thickness factor is defined in the range (0, inf), whereas the thickness texture value range is limited to (0,1]. An exemplary configuration could set the thickness factor to the longest edge of the bounding box of a mesh, and the texture scales this value so that it corresponds to the actual thickness underneath each surface point.
+The thickness of a volume enclosed by the mesh is typically quite difficult to compute at run-time in a rasterizer. Since glTF is primarily used with real-time rasterizers, this extension allows for the thickness of the volume to be baked into a thickness map. Thickness is given in the coordinate space of the mesh. Any transformations applied to the mesh's node will also be applied to the thickness. Thickness is an absolute value and defined as the product of thickness factor and thickness texture value. The thickness factor is defined in the range \[0, inf), whereas the thickness texture value range is limited to \[0,1]. An exemplary configuration could set the thickness factor to the longest edge of the bounding box of a mesh, and the texture scales this value so that it corresponds to the actual thickness underneath each surface point.
 
 Baking thickness into a map is similar to ambient occlusion baking, but rays are cast into the opposite direction of the surface normal. Dark values represent thin parts, bright values represent thick parts of the model.
 
