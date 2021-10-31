@@ -18,7 +18,7 @@ Experimental
 
 ## Dependencies
 
-Written against the glTF 2.0 spec and the `KHR_texture_transform` and `KHR_lights_punctual` extension.
+Written against the glTF 2.0 spec.
 
 ## Overview
 
@@ -34,52 +34,44 @@ With this extension, one can technically target any value (`scalar`, `vec2`, `ve
 * Color factors in materials
 * Camera field of view
 
-It even works on extensions and because of this, it is future proof:
+Even using a JSON pointer, the targets and their expected behavior are explictly defined.
 
-* Light color factors
-* Texture transformation values
+Current and future extensions have to write against this specification to allow to animate specific values.
 
-In a first step, even using a JSON pointer, the targets and their expected behavior should be clearly defined.
+#### Current and future restrictions
 
-Future extensions have to write against this specification to allow to animate values.
+The calculated values can be out of range of the minimum and maximum value, however the values have to be clamped before setting the value.
 
-The animated and calculated values have to be in the range of the minimum and maximum value.
+##### Not animatable properties
 
-#### `glTFid`
+`glTFid`
 
-It is not allowed to animate a glTFid property.
+It is not allowed to animate a glTFid property, as it does change the structure of the glTF in general.
 
 ### Valid target templates
 
-|`path`|Accessor Type|Component Type(s)|Description|
-|----|----------------|-----------------|-----------|
-|`"/nodes/{}/matrix"`|`"ARRAY"`|`5126`&nbsp;(FLOAT)|Matrix elements|
-|`"/nodes/{}/translation"`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ translation vector|
-|`"/nodes/{}/rotation"`|`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|XYZW rotation quaternion|
-|`"/nodes/{}/scale"`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ scale vector|
-|`"/nodes/{}/weights"`|`"ARRAY"`|`5126`&nbsp;(FLOAT)|Morph target weights|
-|`"/cameras/{}/orthographic/xmag"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Horizontal magnification of the view|
-|`"/cameras/{}/orthographic/ymag"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Vertical magnification of the view|
-|`"/cameras/{}/orthographic/zfar"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Distance to the far clipping plane|
-|`"/cameras/{}/orthographic/znear"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Distance to the near clipping plane|
-|`"/cameras/{}/perspective/aspectRatio"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Aspect ratio of the field of view|
-|`"/cameras/{}/perspective/yfov"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Vertical field of view in radians|
-|`"/cameras/{}/perspective/zfar"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Distance to the far clipping plane|
-|`"/cameras/{}/perspective/znear"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Distance to the near clipping plane|
-|`"/materials/{}/pbrMetallicRoughness/baseColorFactor"`|`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|The material's base color factor|
-|`"/materials/{}/pbrMetallicRoughness/metallicFactor"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|The metalness of the material|
-|`"/materials/{}/pbrMetallicRoughness/roughnessFactor"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|The roughness of the material|
-|`"/materials/{}/alphaCutoff"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|The alpha cutoff value of the material|
-|`"/materials/{}/emissiveFactor"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|The emissive color of the material|
-|`"/materials/{}/normalTexture/scale"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Multiplier applied to each normal vector of the normal texture|
-|`"/materials/{}/occlusionTexture/strength"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Multiplier controlling the amount of occlusion applied|
-|`"/extensions/KHR_lights_punctual/lights/{}/color"`|`"VEC3"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|RGB value for light's color in linear space|
-|`"/extensions/KHR_lights_punctual/lights/{}/intensity"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Brightness of light|
-|`"/extensions/KHR_lights_punctual/lights/{}/innerConeAngle"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Angle, in radians, from centre of spotlight where falloff begins|
-|`"/extensions/KHR_lights_punctual/lights/{}/outerConeAngle"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Brightness of light|
-|`"/materials/{}{}/extensions/KHR_texture_transform/offset"`|`"VEC2"`|`5126`&nbsp;(FLOAT)|The offset of the UV coordinate origin as a factor of the texture dimensions|
-|`"/materials/{}{}/extensions/KHR_texture_transform/rotation"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Rotate the UVs by this many radians counter-clockwise around the origin|
-|`"/materials/{}{}/extensions/KHR_texture_transform/scale"`|`"VEC2"`|`5126`&nbsp;(FLOAT)|The scale factor applied to the components of the UV coordinates|
+|`path`                                                |Accessor Type|Component Type(s)  |Description                                                   |
+|------------------------------------------------------|-------------|-------------------|--------------------------------------------------------------|
+|`"/nodes/{}/matrix"`                                  |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Matrix elements                                               |
+|`"/nodes/{}/rotation"`                                |`"VEC4"`     |`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|XYZW rotation quaternion|
+|`"/nodes/{}/scale"`                                   |`"VEC3"`     |`5126`&nbsp;(FLOAT)|XYZ scale vector                                              |
+|`"/nodes/{}/translation"`                             |`"VEC3"`     |`5126`&nbsp;(FLOAT)|XYZ translation vector                                        |
+|`"/nodes/{}/weights"`                                 |`"SCALAR"`   |`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|Morph target weights                                          |
+|`"/cameras/{}/orthographic/xmag"`                     |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Horizontal magnification of the view                          |
+|`"/cameras/{}/orthographic/ymag"`                     |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Vertical magnification of the view                            |
+|`"/cameras/{}/orthographic/zfar"`                     |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Distance to the far clipping plane                            |
+|`"/cameras/{}/orthographic/znear"`                    |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Distance to the near clipping plane                           |
+|`"/cameras/{}/perspective/aspectRatio"`               |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Aspect ratio of the field of view                             |
+|`"/cameras/{}/perspective/yfov"`                      |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Vertical field of view in radians                             |
+|`"/cameras/{}/perspective/zfar"`                      |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Distance to the far clipping plane                            |
+|`"/cameras/{}/perspective/znear"`                     |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Distance to the near clipping plane                           |
+|`"/materials/{}/pbrMetallicRoughness/baseColorFactor"`|`"VEC4"`     |`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|The material's base color factor|
+|`"/materials/{}/pbrMetallicRoughness/metallicFactor"` |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|The metalness of the material                                 |
+|`"/materials/{}/pbrMetallicRoughness/roughnessFactor"`|`"SCALAR"`   |`5126`&nbsp;(FLOAT)|The roughness of the material                                 |
+|`"/materials/{}/alphaCutoff"`                         |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|The alpha cutoff value of the material                        |
+|`"/materials/{}/emissiveFactor"`                      |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|The emissive color of the material                            |
+|`"/materials/{}/normalTexture/scale"`                 |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Multiplier applied to each normal vector of the normal texture|
+|`"/materials/{}/occlusionTexture/strength"`           |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Multiplier controlling the amount of occlusion applied        |
 
 ##### `extras`
 
@@ -146,7 +138,7 @@ The following snippet shows the changes for [`animations`](https://github.com/Kh
 ]
 ```
 
-## Spherical Cubic Spline Interpolation
+### Spherical Cubic Spline Interpolation
 
 This form of rotation animation matches the de facto industry standard of animating rotations via spherical cubic interpolation ("sqlerp()", originally from [Shoemake (1985)](#Shoemake1985)).
 
