@@ -18,7 +18,7 @@ Experimental
 
 ## Dependencies
 
-Written against the glTF 2.0 spec.
+Written against the glTF 2.0 spec and the `KHR_texture_transform` and `KHR_lights_punctual` extension.
 
 ## Overview
 
@@ -39,15 +39,25 @@ It even works on extensions and because of this, it is future proof:
 * Light color factors
 * Texture transformation values
 
-In a first step, even using a JSON pointer, the targets and their expected behavior should be clearly defined:
+In a first step, even using a JSON pointer, the targets and their expected behavior should be clearly defined.
 
-#### Valid target templates
+Future extensions have to write against this specification to allow to animate values.
+
+The animated and calculated values have to be in the range of the minimum and maximum value.
+
+#### `glTFid`
+
+It is not allowed to animate a glTFid property.
+
+### Valid target templates
 
 |`path`|Accessor Type|Component Type(s)|Description|
 |----|----------------|-----------------|-----------|
+|`"/nodes/{}/matrix"`|`"ARRAY"`|`5126`&nbsp;(FLOAT)|Matrix elements|
 |`"/nodes/{}/translation"`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ translation vector|
 |`"/nodes/{}/rotation"`|`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|XYZW rotation quaternion|
 |`"/nodes/{}/scale"`|`"VEC3"`|`5126`&nbsp;(FLOAT)|XYZ scale vector|
+|`"/nodes/{}/weights"`|`"ARRAY"`|`5126`&nbsp;(FLOAT)|Morph target weights|
 |`"/cameras/{}/orthographic/xmag"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Horizontal magnification of the view|
 |`"/cameras/{}/orthographic/ymag"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Vertical magnification of the view|
 |`"/cameras/{}/orthographic/zfar"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Distance to the far clipping plane|
@@ -63,17 +73,13 @@ In a first step, even using a JSON pointer, the targets and their expected behav
 |`"/materials/{}/emissiveFactor"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|The emissive color of the material|
 |`"/materials/{}/normalTexture/scale"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Multiplier applied to each normal vector of the normal texture|
 |`"/materials/{}/occlusionTexture/strength"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Multiplier controlling the amount of occlusion applied|
-|`"/materials/{}/extensions/KHR_materials_pbrSpecularGlossiness/diffuseFactor"`|`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|The reflected diffuse factor of the material|
-|`"/materials/{}/extensions/KHR_materials_pbrSpecularGlossiness/specularFactor"`|`"VEC3"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|The specular RGB color of the material|
-|`"/materials/{}/extensions/KHR_materials_pbrSpecularGlossiness/glossinessFactor"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Angle, in radians, from centre of spotlight where falloff ends|
-|`"/extensions/KHR_lights/lights/{}/color"`|`"VEC3"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|RGB value for light's color in linear space|
-|`"/extensions/KHR_lights/lights/{}/intensity"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Brightness of light|
-|`"/extensions/KHR_lights/lights/{}/innerConeAngle"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Angle, in radians, from centre of spotlight where falloff begins|
-|`"/extensions/KHR_lights/lights/{}/outerConeAngle"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Brightness of light|
+|`"/extensions/KHR_lights_punctual/lights/{}/color"`|`"VEC3"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|RGB value for light's color in linear space|
+|`"/extensions/KHR_lights_punctual/lights/{}/intensity"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Brightness of light|
+|`"/extensions/KHR_lights_punctual/lights/{}/innerConeAngle"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Angle, in radians, from centre of spotlight where falloff begins|
+|`"/extensions/KHR_lights_punctual/lights/{}/outerConeAngle"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Brightness of light|
 |`"/materials/{}{}/extensions/KHR_texture_transform/offset"`|`"VEC2"`|`5126`&nbsp;(FLOAT)|The offset of the UV coordinate origin as a factor of the texture dimensions|
 |`"/materials/{}{}/extensions/KHR_texture_transform/rotation"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|Rotate the UVs by this many radians counter-clockwise around the origin|
 |`"/materials/{}{}/extensions/KHR_texture_transform/scale"`|`"VEC2"`|`5126`&nbsp;(FLOAT)|The scale factor applied to the components of the UV coordinates|
-|`"/nodes/{}/extensions/AVR_lights_static/strength"`|`"SCALAR"`|`5126`&nbsp;(FLOAT)|The influence of the lightmap on the final output|
 
 ##### `extras`
 
@@ -83,7 +89,7 @@ interpretation of the animated values is entirely application specific.
 ## Extension compatibility and fallback behavior
 
 When possible, authoring tools should define reasonable initial values
-for properties intended to be animated and mark the `EXT_property_animation`
+for properties intended to be animated and mark the `KHR_animation2`
 extension as optional. Models including the extension optionally will still
 render in all clients that support the core glTF 2.0 specification. Clients
 that do not support the extension will fallback to an un-animated initial
@@ -100,7 +106,7 @@ sampler must conform to those limitations.
 
 ### `quat` and rotations
 
-[Spherical Cubic Spline Interpolation](##Spherical-Cubic-Spline-Interpolation) is used when the animation sampler interpolation mode is set to CUBIC and the animated property is rotation, i.e., values of the animated property are unit quaternions.
+[Spherical Cubic Spline Interpolation](##Spherical-Cubic-Spline-Interpolation) can optionally be used when the animation sampler interpolation mode is set to CUBIC and the animated property is rotation, i.e., values of the animated property are unit quaternions.
 
 ### JSON Pointer
 
