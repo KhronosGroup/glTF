@@ -45,7 +45,7 @@ Optionally, this extension may be used in conjunction with [`EXT_mesh_gpu_instan
     - [Class](#class)
     - [Class Property](#class-property)
     - [Enum](#enum)
-    - [Enum Values](#enum-values)
+    - [Enum Value](#enum-value)
   - [Property Tables](#property-tables)
   - [Property Textures](#property-textures)
 - [Binary Data Storage](#binary-data-storage)
@@ -271,7 +271,7 @@ Empty feature IDs (e.g. `{}`) are disallowed — a feature ID must explicitly se
 
 ### Overview
 
-Feature properties describe attributes or characteristics of a feature. Schemas are templates describing the data types and semantic meanings of properties, where each feature is a single instance of that template with specific values. Property values may be associated with features in one of two ways:
+Feature properties describe attributes or characteristics of a feature. Classes, defined by a schema, are templates describing the data types and meanings of properties, where each feature is a single instance of that template with specific values. Property values may be associated with features in one of two ways:
 
 - **Property Tables** store property values as numeric arrays in a parallel, column-based binary layout. Property tables are indexed by Feature IDs, used as the index of a given feature into each property array.
 - **Property Textures** store property values in channels of a texture, suitable for very high-frequency data mapped to less-detailed 3D surfaces. Property textures are indexed by texture coordinates, and do not have associated Feature IDs.
@@ -282,13 +282,13 @@ Both storage formats are appropriate for efficiently transmitting large quantiti
 
 #### Overview
 
-Data types and semantic meanings of properties are provided by a schema, as defined in the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata/) and summarized below.
+Data types and meanings of properties are provided by a schema, as defined in the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata/) and summarized below.
 
 #### Schema
 
 *Defined in [schema.schema.json](./schema/schema.schema.json).*
 
-Top-level definitions for type and semantic information. The schema provides a set of [classes](#class) and [enums](#enum) the asset can reference.
+Top-level definitions for data type and structure. The schema provides a set of [classes](#class) and [enums](#enum) the asset can reference.
 
 A schema may be embedded in the extension directly or referenced externally with the `schemaUri` property. Multiple glTF assets may refer to the same external schema to avoid duplication. A schema is defined by an `EXT_mesh_features` extension attached to the glTF root object.
 
@@ -314,7 +314,7 @@ A schema may be embedded in the extension directly or referenced externally with
 
 *Defined in [class.schema.json](./schema/class.schema.json).*
 
-Template for features. Classes provide a list of properties with type and semantic information. Every feature must be associated with a class, and the feature's properties must conform to the class's property definitions. Features whose properties conform to a class are considered instances of that class.
+Template for features. Classes provide a list of properties definitions. Every feature must be associated with a class, and the feature's properties must conform to the class's property definitions. Features whose properties conform to a class are considered instances of that class.
 
 Classes are defined as entries in the `schema.classes` dictionary, indexed by an alphanumeric class ID.
 
@@ -346,7 +346,7 @@ Classes are defined as entries in the `schema.classes` dictionary, indexed by an
 
 *Defined in [class.property.schema.json](./schema/class.property.schema.json).*
 
-Properties are defined abstractly in a class by their semantic meaning and data type, and are instantiated in a feature with specific values conforming to that definition. Properties support a richer variety of data types than glTF accessors or GPU shading languages allow, defined by `property.componentType`.
+Properties are defined abstractly in a class, and are instantiated in a feature with specific values conforming to that definition. Properties support a richer variety of data types than glTF accessors or GPU shading languages allow, defined by `property.componentType`.
 
 Allowed values for `componentType`:
 
@@ -414,7 +414,7 @@ Class properties are defined as entries in the `class.properties` dictionary, in
 
 *Defined in [enum.schema.json](./schema/enum.schema.json).*
 
-Set of categorical types, defined as `(name, value)` pairs. Enum properties use an enum as their data type.
+Set of categorical types, defined as `(name, value)` pairs. Enum properties use an enum as their component type.
 
 Enums are defined as entries in the `schema.enums` dictionary, indexed by an alphanumeric enum ID.
 
@@ -443,7 +443,7 @@ Enums are defined as entries in the `schema.enums` dictionary, indexed by an alp
 > }
 > ```
 
-#### Enum Values
+#### Enum Value
 
 *Defined in [enum.value.schema.json](./schema/enum.value.schema.json).*
 
