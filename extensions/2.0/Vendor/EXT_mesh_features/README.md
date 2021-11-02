@@ -703,3 +703,4 @@ Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanc
   * Refactored the property texture schema so it is now a glTF `textureInfo` object.
   * Each property texture now contains only a single texture
   * Property textures are now assumed to be in linear space, and must use nearest or linear filtering
+  * Added `id` to schema
