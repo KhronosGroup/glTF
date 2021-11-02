@@ -17,7 +17,7 @@ Copyright 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tradem
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 ## Status
 
-Complete
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 

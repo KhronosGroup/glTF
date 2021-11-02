@@ -10,7 +10,7 @@ Files: extensions/1.0/Vendor/* extensions/2.0/Vendor/*
 Copyright: 2012-2021 Various Authors
 License: LicenseRef-TBD
 
-Files: extensions/1.0/Khronos/* extensions/2.0/Khronos/*
+Files: extensions/1.0/Khronos/* extensions/2.0/Khronos/* extensions/2.0/Archived/*
 Copyright: 2012-2021 The Khronos Group Inc.
 License: LicenseRef-KhronosSpecCopyright
 
