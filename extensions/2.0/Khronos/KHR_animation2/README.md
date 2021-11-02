@@ -25,9 +25,9 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension is based on the animation features of glTF 2.0. The structure of the schemas are the same.  
+This extension is based on the animation features of glTF 2.0. The structure of the schemas stay the same.  
   
-The major change is, that the output values are mapped using a [JSON Pointer](https://datatracker.ietf.org/doc/html/rfc6901). Technically, the `path` of the Animation Channel Target has to be a JSON Pointer.  
+The only major addition is, that the output values are mapped using a [JSON Pointer](https://datatracker.ietf.org/doc/html/rfc6901).
   
 ### Motivation
 
@@ -83,19 +83,13 @@ interpretation of the animated values is entirely application specific.
 
 ## Extension compatibility and fallback behavior
 
-When possible, authoring tools should define reasonable initial values
-for properties intended to be animated and mark the `KHR_animation2`
-extension as optional. Models including the extension optionally will still
-render in all clients that support the core glTF 2.0 specification. Clients
-that do not support the extension will fallback to an un-animated initial
-state.
-
-Where ever a property defines limitations to acceptable values an animation's
-sampler must conform to those limitations.
+If this extension is used, the `animation.channel.target.node` **must not** be set.
+Because the node isn’t defined, the channel is ignored and not animated due to the current specification.  
+If this extension is used, the `animation.channel.target.path` **must** contain any of constant values. Even this value is ignored, the unused glTF part is still valid.
 
 ## glTF Schema Updates
 
-* **JSON schema**: [animation2.channel.target.schema.json](schema/animation2.channel.target.schema.json)
+* **JSON schema**: [glTF.KHR_animation2.schema.json](schema/glTF.KHR_animation2.schema.json)
 
 ## Notes and clarifications
 
@@ -119,9 +113,11 @@ The following snippet shows the changes for [`animations`](https://github.com/Kh
                 "name" : "Targeting x, y, z, w for a rotation of node at index 0."
                 "sampler" : 0,
                 "target" : {
-                    "path" : "/nodes/0/rotation"
+                    "path" : "rotation"
                     "extensions": {
-                        "KHR_animation2" : {}
+                        "KHR_animation2" : {
+                            "path" : "/nodes/0/rotation"
+                        }
                     }
                }
             }

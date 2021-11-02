@@ -1,0 +1,16 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "KHR_animation2 glTF extension",
+    "type": "object",
+    "description": "The descriptor of the animated property.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "path": {
+            "type": "string",
+            "description": "JSON pointer of the object to target. The value of the orignal path are ignored."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "path" ]
+}
