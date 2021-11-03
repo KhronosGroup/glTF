@@ -209,7 +209,7 @@ Texture filtering must be `9728` (NEAREST), or undefined, for any texture object
 
 *Defined in [node.EXT_mesh_features.schema.json](./schema/node.EXT_mesh_features.schema.json) and [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
 
-Feature IDs may also be assigned to individual GPU instances when using the [`EXT_mesh_gpu_instancing` extension](../EXT_mesh_gpu_instancing). Similar to per-vertex IDs, per-instance IDs are stored in instance attributes or generated implicitly by instance index. Nodes with `EXT_mesh_features` must also define an `EXT_mesh_gpu_instancing` extension, and are invalid without this dependency.
+Feature IDs may also be assigned to individual GPU instances when using the [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing) extension. Similar to per-vertex IDs, per-instance IDs are stored in instance attributes or generated implicitly by instance index. Nodes with `EXT_mesh_features` must also define an `EXT_mesh_gpu_instancing` extension, and are invalid without this dependency.
 
 > **Example:** A node defining instances of mesh `0`, with each instance having a feature ID in the `FEATURE_ID_0` instance attribute.
 >
