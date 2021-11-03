@@ -62,7 +62,7 @@ In most realtime 3D contexts, performance requirements demand minimizing the num
 
 By defining a representation of conceptual objects ("features") distinct from rendered geometry, and a means of associating structured metadata ("properties") with those features, this extension allows applications to preserve important details of 3D assets for inspection and interaction without compromising runtime performance and draw calls.
 
-Concepts and terminology used throughout this document refer to the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/blob/3d-tiles-next/specification/Metadata/README.md), which should be considered a normative reference for definitions and requirements. This document provides inline definitions of terms where appropriate.
+Concepts and terminology used throughout this document refer to the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata), which should be considered a normative reference for definitions and requirements. This document provides inline definitions of terms where appropriate.
 
 See [Examples](#examples) for a more detailed list of use cases for this extension.
 
@@ -209,7 +209,7 @@ Texture filtering must be `9728` (NEAREST), or undefined, for any texture object
 
 *Defined in [node.EXT_mesh_features.schema.json](./schema/node.EXT_mesh_features.schema.json) and [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
 
-Feature IDs may also be assigned to individual GPU instances when using the [`EXT_mesh_gpu_instancing` extension](../EXT_mesh_gpu_instancing). Similar to per-vertex IDs, per-instance IDs are stored in instance attributes or generated implicitly by instance index. Nodes with `EXT_mesh_features` must also define an `EXT_mesh_gpu_instancing` extension, and are invalid without this dependency.
+Feature IDs may also be assigned to individual GPU instances when using the [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing) extension. Similar to per-vertex IDs, per-instance IDs are stored in instance attributes or generated implicitly by instance index. Nodes with `EXT_mesh_features` must also define an `EXT_mesh_gpu_instancing` extension, and are invalid without this dependency.
 
 > **Example:** A node defining instances of mesh `0`, with each instance having a feature ID in the `FEATURE_ID_0` instance attribute.
 >
@@ -282,7 +282,7 @@ Both storage formats are appropriate for efficiently transmitting large quantiti
 
 #### Overview
 
-Data types and semantic meanings of properties are provided by a schema, as defined in the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/blob/3d-tiles-next/specification/Metadata/) and summarized below.
+Data types and semantic meanings of properties are provided by a schema, as defined in the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata/) and summarized below.
 
 #### Schema
 
@@ -418,7 +418,7 @@ Set of categorical types, defined as `(name, value)` pairs. Enum properties use 
 
 Enums are defined as entries in the `schema.enums` dictionary, indexed by an alphanumeric enum ID.
 
-> **Example:** A "Species" enum defining types of trees. An "Unspecified" enum value is optional, but when provided as the `noData` value for a property (see: [Cesium 3D Metadata → No Data Values](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata#required-properties-and-no-data-values)) may be helpful to identify missing data.
+> **Example:** A "Species" enum defining types of trees. An "Unspecified" enum value is optional, but when provided as the `noData` value for a property (see: [3D Metadata → No Data Values](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#required-properties-and-no-data-values)) may be helpful to identify missing data.
 >
 > ```jsonc
 > {
@@ -491,7 +491,7 @@ The property table may provide value arrays for only a subset of the properties 
 > }
 > ```
 
-Property arrays are stored in glTF buffer views and use the binary encoding defined in the [Binary Table Format](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata#binary-table-format) section of the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata).
+Property arrays are stored in glTF buffer views and use the binary encoding defined in the [Binary Table Format](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#binary-table-format) section of the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata).
 
 As in the core glTF specification, values of NaN, +Infinity, and -Infinity are never allowed.
 
@@ -503,7 +503,7 @@ Each buffer view `byteOffset` must be aligned to a multiple of its component siz
 
 *Defined in [propertyTexture.schema.json](./schema/propertyTexture.schema.json).*
 
-Property textures use texture channels to store property values conforming to a particular class (identified by ID `class`), with those values accessed directly by texture coordinates. Property textures do not require feature IDs, and are especially useful when texture mapping high frequency data to less detailed 3D surfaces. Unlike textures used in glTF materials, property textures are not necessarily visible in a rendered scene. Like property tables, property textures are implementations of the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata).
+Property textures use texture channels to store property values conforming to a particular class (identified by ID `class`), with those values accessed directly by texture coordinates. Property textures do not require feature IDs, and are especially useful when texture mapping high frequency data to less detailed 3D surfaces. Unlike textures used in glTF materials, property textures are not necessarily visible in a rendered scene. Like property tables, property textures are implementations of the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata).
 
 Property textures are defined as entries in the `propertyTextures` array of the root-level `EXT_mesh_features` extension, and may be referenced by extensions on primitive objects. Property textures do not provide per-instance values with `EXT_mesh_gpu_instancing`, and must not be used by extensions on node objects.
 
@@ -616,7 +616,7 @@ Texture filtering must be `9728` (NEAREST), `9729` (LINEAR), or undefined, for a
 
 ## Binary Data Storage
 
-Feature properties are stored in a compact binary tabular format described in the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata), with each property table array occupying a glTF buffer view. `EXT_mesh_features` imposes 8-byte binary data alignment requirements on an asset, allowing support for 64-bit data types while remaining compatible with the 4-byte alignments in the core glTF specification:
+Feature properties are stored in a compact binary tabular format described in the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata), with each property table array occupying a glTF buffer view. `EXT_mesh_features` imposes 8-byte binary data alignment requirements on an asset, allowing support for 64-bit data types while remaining compatible with the 4-byte alignments in the core glTF specification:
 
 - GLB-stored `JSON` chunk must be padded with trailing `Space` characters (`0x20`) to 8-byte boundary.
 - GLB-stored `BIN` chunk must be padded with trailing zeroes (`0x00`) to 8-byte boundary.
