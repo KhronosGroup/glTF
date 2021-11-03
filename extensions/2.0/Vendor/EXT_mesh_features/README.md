@@ -62,7 +62,7 @@ In most realtime 3D contexts, performance requirements demand minimizing the num
 
 By defining a representation of conceptual objects ("features") distinct from rendered geometry, and a means of associating structured metadata ("properties") with those features, this extension allows applications to preserve important details of 3D assets for inspection and interaction without compromising runtime performance and draw calls.
 
-Concepts and terminology used throughout this document refer to the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/blob/3d-tiles-next/specification/Metadata/README.md), which should be considered a normative reference for definitions and requirements. This document provides inline definitions of terms where appropriate.
+Concepts and terminology used throughout this document refer to the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata), which should be considered a normative reference for definitions and requirements. This document provides inline definitions of terms where appropriate.
 
 See [Examples](#examples) for a more detailed list of use cases for this extension.
 
@@ -282,7 +282,7 @@ Both storage formats are appropriate for efficiently transmitting large quantiti
 
 #### Overview
 
-Data types and semantic meanings of properties are provided by a schema, as defined in the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/blob/3d-tiles-next/specification/Metadata/) and summarized below.
+Data types and semantic meanings of properties are provided by a schema, as defined in the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata/) and summarized below.
 
 #### Schema
 
