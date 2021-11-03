@@ -288,7 +288,7 @@ Data types and meanings of properties are provided by a schema, as defined in th
 
 *Defined in [schema.schema.json](./schema/schema.schema.json).*
 
-Top-level definitions for data type and structure. The schema provides a set of [classes](#class) and [enums](#enum) the asset can reference.
+Top-level definitions for the structure and data types of properties. The schema provides a set of [classes](#class) and [enums](#enum) the asset can reference.
 
 A schema may be embedded in the extension directly or referenced externally with the `schemaUri` property. Multiple glTF assets may refer to the same external schema to avoid duplication. A schema is defined by an `EXT_mesh_features` extension attached to the glTF root object.
 
@@ -314,7 +314,7 @@ A schema may be embedded in the extension directly or referenced externally with
 
 *Defined in [class.schema.json](./schema/class.schema.json).*
 
-Template for features. Classes provide a list of properties definitions. Every feature must be associated with a class, and the feature's properties must conform to the class's property definitions. Features whose properties conform to a class are considered instances of that class.
+Template for features. Classes provide a list of property definitions. Every feature must be associated with a class, and the feature's properties must conform to the class's property definitions. Features whose properties conform to a class are considered instances of that class.
 
 Classes are defined as entries in the `schema.classes` dictionary, indexed by an alphanumeric class ID.
 
