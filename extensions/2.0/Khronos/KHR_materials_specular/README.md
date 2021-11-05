@@ -144,7 +144,7 @@ Note that in `dielectricSpecularF0` we clamp the product of specular color and f
 In the diffuse component we have to account for the fact that `F` is now an RGB value.
 
 ```
-c_diff = lerp(baseColor.rgb * (1 - max(F0.r, F0.g, F0.b)), black, metallic)
+c_diff = lerp(baseColor.rgb, black, metallic)
 diffuse = c_diff / PI
 f_diffuse = (1 - max(F.r, F.g, F.b)) * diffuse
 ```
