@@ -246,7 +246,7 @@ Attributes and uniforms passed to the program instance's shader code are defined
 
 #### Attributes
 
-The `attributes` dictionary property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's key is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is an [attribute](#reference-attribute) object, where the semantic of the attribute is defined. The semantic corresponds with the mesh attribute semantic specified in the [primitive](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-primitive), the value of which is the index of the accessor containing attribute's data. It's invalid to specify a semantic that does not exist in the mesh data.
+The `attributes` dictionary property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's key is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is an [attribute](#reference-attribute) object, where the semantic of the attribute is defined. The semantic corresponds with the mesh attribute semantic specified in the [mesh primitive](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-mesh-primitive), the value of which is the index of the accessor containing attribute's data. It's invalid to specify a semantic that does not exist in the mesh data.
 
 #### Uniforms
 
