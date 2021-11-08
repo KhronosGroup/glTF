@@ -62,7 +62,7 @@ This extension enforces the following rules on the relationships between meshes:
 2. A mesh may not designate itself as its collision mesh.
 3. A mesh with a collision mesh must not have morph targets.
 4. A collision mesh must not have morph targets.
-7. At runtime, the node transformation of a mesh must be applied to its collision mesh.
+5. At runtime, the node transformation of a mesh must be applied to its collision mesh.
 
 ### Primitive Requirements
 
@@ -71,7 +71,6 @@ This extension enforces the following rules on the primitives inside a collision
 1. Primitives in a collision mesh must have the POSITION attribute.
 2. Primitives in a collision mesh must use the TRIANGLES primitive mode.
 3. Each primitive inside a collision mesh must represent a convex polyhedron.
-4. Primitives inside a collision mesh must not intersect.
 
 ## Optional vs. Required
 
