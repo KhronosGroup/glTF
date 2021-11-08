@@ -83,6 +83,7 @@ The iridescence effect is modeled via a microfacet BRDF with a modified Fresnel 
 ### Theory, Documentation and Implementations
 
 [A Practical Extension to Microfacet Theory for the Modeling of Varying Iridescence](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html)  
+[Arnold for Maya user guide - Thin Film](https://docs.arnoldrenderer.com/display/A5AFMUG/Thin+Film)  
 [Artist Friendly Metallic Fresnel](http://jcgt.org/published/0003/04/03/)  
 [Practical Multilayered Materials in Call of Duty: Infinite Warfare](https://blog.selfshadow.com/publications/s2017-shading-course/drobot/s2017_pbs_multilayered.pdf)  
 [Real-time Image-based Lighting of Microfacet BRDFs with Varying Iridescence](https://cg.cs.uni-bonn.de/en/publications/paper-details/kneiphof-2019-iridescence/)  
