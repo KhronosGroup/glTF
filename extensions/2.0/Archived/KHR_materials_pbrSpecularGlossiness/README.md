@@ -89,10 +89,10 @@ The following table lists the allowed types and ranges for the specular-glossine
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**diffuseFactor** | `number[4]` | The reflected diffuse factor of the material.|No, default:`[1.0,1.0,1.0,1.0]`|
-|**diffuseTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureInfo)  | The diffuse texture.|No|
+|**diffuseTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo)  | The diffuse texture.|No|
 |**specularFactor** | `number[3]` | The specular RGB color of the material. |No, default:`[1.0,1.0,1.0]`|
 |**glossinessFactor** | `number` | The glossiness or smoothness of the material. |No, default:`1.0`|
-|**specularGlossinessTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureInfo) | The specular-glossiness texture.|No|
+|**specularGlossinessTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | The specular-glossiness texture.|No|
 
 Additional properties are allowed.
 
@@ -110,7 +110,7 @@ The RGBA components of the reflected diffuse color of the material. Metals have 
 
 The diffuse texture. This texture contains RGB components of the reflected diffuse color of the material encoded with the sRGB transfer function. If the fourth component (A) is present, it represents the linear alpha coverage of the material. Otherwise, an alpha of 1.0 is assumed. The `alphaMode` property specifies how alpha is interpreted. The stored texels must not be premultiplied.
 
-* **Type**: [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureInfo)  
+* **Type**: [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo)  
 * **Required**: No
 
 ### specularFactor
@@ -134,7 +134,7 @@ The glossiness or smoothness of the material. A value of 1.0 means the material 
 
 The specular-glossiness texture is an RGBA texture, containing the specular color (RGB) encoded with the sRGB transfer function and the linear glossiness value (A).
 
-* **Type**: [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureInfo) 
+* **Type**: [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) 
 * **Required**: No
 
 

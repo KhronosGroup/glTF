@@ -64,9 +64,9 @@ The following parameters are contributed by the `KHR_materials_sheen` extension:
 |                                  | Type                                                                            | Description                            | Required                       |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|--------------------------------|
 |**sheenColorFactor**                   | `array`                                                                         | The sheen color in linear space        | No, default: `[0.0, 0.0, 0.0]` |
-|**sheenColorTexture**         | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureInfo)             | The sheen color (RGB).<br> The sheen color is in sRGB transfer function | No               |
+|**sheenColorTexture**         | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo)             | The sheen color (RGB).<br> The sheen color is in sRGB transfer function | No               |
 |**sheenRoughnessFactor**               | `number`                                                                        | The sheen roughness.                   | No, default: `0.0`             |
-|**sheenRoughnessTexture**         | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureInfo)             | The sheen roughness (Alpha) texture. | No               |
+|**sheenRoughnessTexture**         | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo)             | The sheen roughness (Alpha) texture. | No               |
 
 The sheen BRDF is layered on top of the glTF 2.0 Metallic-Roughness material. If clearcoat (`KHR_materials_clearcoat`) is active at the same time, clearcoat is layered on top of sheen. The `sheenColorFactor` determines the view-independent intensity of the sheen BRDF. If `sheenColorFactor` is zero, the whole sheen layer is disabled. Implementations of the BRDF itself can vary based on device performance and resource constraints.
 

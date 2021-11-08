@@ -61,9 +61,9 @@ The following parameters are contributed by the `KHR_materials_clearcoat` extens
 |                                  | Type                                                                            | Description                            | Required             |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|----------------------|
 |**clearcoatFactor**               | `number`                                                                        | The clearcoat layer intensity.         | No, default: `0.0`   |
-|**clearcoatTexture**              | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureInfo)             | The clearcoat layer intensity texture. | No                   |
+|**clearcoatTexture**              | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo)             | The clearcoat layer intensity texture. | No                   |
 |**clearcoatRoughnessFactor**      | `number`                                                                        | The clearcoat layer roughness.         | No, default: `0.0`   |
-|**clearcoatRoughnessTexture**     | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureInfo)             | The clearcoat layer roughness texture. | No                   |
+|**clearcoatRoughnessTexture**     | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo)             | The clearcoat layer roughness texture. | No                   |
 |**clearcoatNormalTexture**        | [`normalTextureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-normaltextureinfo) | The clearcoat normal map texture.      | No                   |
 
 If `clearcoatFactor` (in the extension) is zero, the whole clearcoat layer is disabled.

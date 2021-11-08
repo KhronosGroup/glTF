@@ -54,7 +54,7 @@ As with the core glTF 2.0 spec, all colored textures are assumed to be sRGB and 
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|----------------------|
 |**clearcoatIor**               | `number`                                                                        | The clearcoat IOR.         | No, default: `1.5`   |
 |**clearcoatSpecularFactor**               | `number`                                                                        | The clearcoat specular factor.         | No, default: `1.0`   |
-|**clearcoatSpecularTexture**              | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureInfo)             | The clearcoat layer's specular amount, stored in the `B` channel of a texture. | No                   |
+|**clearcoatSpecularTexture**              | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo)             | The clearcoat layer's specular amount, stored in the `B` channel of a texture. | No                   |
 
 The clearcoat Fresnel contribution is usually calculated just as described for the base layer in [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation).
 This extension modifies the Fresnel contribution of clearcoat as follows:
