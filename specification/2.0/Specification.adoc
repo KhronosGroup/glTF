@@ -13,7 +13,6 @@ The Khronos{regtitle} 3D Formats Working Group
 :toc2:
 :toclevels: 10
 :sectnumlevels: 10
-:max-width: 100%
 :numbered:
 :source-highlighter: coderay
 :title-logo-image: image:../figures/glTF_RGB_June16.svg[Logo,pdfwidth=4in,align=right]
