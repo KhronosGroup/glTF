@@ -100,7 +100,7 @@ Valid values for `ior` are numbers greater than or equal to 1. In addition, a va
 
 *This section is non-normative*
 
-The extension changes the computation of the Fresnel term defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) to the following:
+The extension changes the computation of the Fresnel term defined in [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) to the following:
 
 ```
 const dielectricSpecular = ((ior - 1)/(ior + 1))^2

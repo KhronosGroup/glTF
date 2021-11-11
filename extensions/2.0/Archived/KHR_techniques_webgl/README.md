@@ -156,7 +156,7 @@ One or more shader source files are listed in the asset's `KHR_techniques_webgl.
 
 ##### Shader Requirements
 
-Supplied shaders must respect values of material [`doubleSided`](../../../../specification/2.0/README.md#double-sided), [`alphaMode`](../../../../specification/2.0/README.md#alpha-coverage), and [`alphaCutoff`](../../../../specification/2.0/README.md#alpha-coverage) properties.
+Supplied shaders must respect values of material [`doubleSided`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#double-sided), [`alphaMode`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#alpha-coverage), and [`alphaCutoff`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#alpha-coverage) properties.
 
 > **Implementation Note**: TODO: Reference shader implementation notes on `doubleSided` once included in the main spec, including how to account for normal and tangent-space calculations.
 
@@ -246,7 +246,7 @@ Attributes and uniforms passed to the program instance's shader code are defined
 
 #### Attributes
 
-The `attributes` dictionary property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's key is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is an [attribute](#reference-attribute) object, where the semantic of the attribute is defined. The semantic corresponds with the mesh attribute semantic specified in the [primitive](../../../../specification/2.0#reference-primitive), the value of which is the index of the accessor containing attribute's data. It's invalid to specify a semantic that does not exist in the mesh data.
+The `attributes` dictionary property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's key is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is an [attribute](#reference-attribute) object, where the semantic of the attribute is defined. The semantic corresponds with the mesh attribute semantic specified in the [mesh primitive](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-mesh-primitive), the value of which is the index of the accessor containing attribute's data. It's invalid to specify a semantic that does not exist in the mesh data.
 
 #### Uniforms
 
@@ -254,7 +254,7 @@ The `uniforms` dictionary property specifies the uniform variables that will be 
 
 When a material instances a technique, the name of each supplied value in its `KHR_techniques_webgl.values` property must correspond to one of the uniforms defined in the technique.
 
-Uniforms which specify the `SAMPLER_2D` type use a [`textureInfo`](../../../../specification/2.0#reference-textureinfo) object as a value to reference a texture, (see [conformance](#conformance) for objects with extended with `KHR_texture_transform`).
+Uniforms which specify the `SAMPLER_2D` type use a [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) object as a value to reference a texture, (see [conformance](#conformance) for objects with extended with `KHR_texture_transform`).
 
 The above example illustrates several uniforms. The property `u_ambient` is defined as a `FLOAT_VEC4` type; and `u_light0Color` is defined as a `FLOAT_VEC3` with a default color value of white.
 
@@ -302,15 +302,15 @@ Table 1. Uniform Semantics
 | `MODELVIEWINVERSETRANSPOSE`  | `FLOAT_MAT3` | The inverse-transpose of `MODELVIEW` without the translation.  This transforms normals in model coordinates to eye coordinates. |
 | `VIEWPORT`                   | `FLOAT_VEC4` | The viewport's x, y, width, and height properties stored in the `x`, `y`, `z`, and `w` components, respectively.  For example, this is used to scale window coordinates to [0, 1]: `vec2 v = gl_FragCoord.xy / viewport.zw;` |
 | `JOINTMATRIX`                | `FLOAT_MAT4[]` | Array parameter; its length (`uniform.count`) must be greater than or equal to the length of `jointNames` array of a skin being used. Each element transforms mesh coordinates for a particular joint for skinning and animation. |
-| `ALPHACUTOFF`                | `FLOAT` | The value of the material's [`alphaCutoff`](../../../../specification/2.0/README.md#alpha-coverage) property. |
+| `ALPHACUTOFF`                | `FLOAT` | The value of the material's [`alphaCutoff`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#alpha-coverage) property. |
 
 For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_SIMULATION_TIME`.
 
 ## Conformance
 
-Implementations should continue to respect material [`doubleSided`](../../../../specification/2.0/README.md#double-sided), [`alphaMode`](../../../../specification/2.0/README.md#alpha-coverage), and [`alphaCutoff`](../../../../specification/2.0/README.md#alpha-coverage) properties by modifying the render state. The default state of the WebGL context should not be assumed.
+Implementations should continue to respect material [`doubleSided`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#double-sided), [`alphaMode`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#alpha-coverage), and [`alphaCutoff`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#alpha-coverage) properties by modifying the render state. The default state of the WebGL context should not be assumed.
 
-[`textureInfo`](../../../../specification/2.0/README.md#reference-textureinfo) objects referenced by the `KHR_techniques_webgl` extension may not use the `KHR_texture_transform` extension. The `offset`, `rotation`, and `scale` transforms applied to the texture by using `KHR_texture_transform` can be applied with this extension by providing uniforms for these values and performing the necessary transformations in the supplied GLSL shader code.
+[`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) objects referenced by the `KHR_techniques_webgl` extension may not use the `KHR_texture_transform` extension. The `offset`, `rotation`, and `scale` transforms applied to the texture by using `KHR_texture_transform` can be applied with this extension by providing uniforms for these values and performing the necessary transformations in the supplied GLSL shader code.
 
 ## Properties Reference
 
