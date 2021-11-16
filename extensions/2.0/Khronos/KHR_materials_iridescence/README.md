@@ -74,9 +74,64 @@ If `iridescenceThicknessTexture` is set, the thickness of the thin-film varies b
 ```
 thickness = mix(iridescenceThicknessMinimum, iridescenceThicknessMaximum, iridescenceThicknessTexture.g)
 ```
-The thin-film layer can have a different IOR than the underlying material. With `iridescenceIOR` one can set an IOR value for the thin-film layer independently.
+
+Aside from light direction and IOR, the thickness of the thin-film defines the variation in hue. 
+This effect is the result of constructive and destructive interferences of certain wavelengths. 
+If the the optical path difference between the ray reflected at the thin-film and the ray reflected at the base material is half the wavelength (λ), the resulting 180 degree phase shift is cancelling out the reflected light:
+
+<figure>
+<img width=70% src="./figures/interference.png"/>
+<figcaption><em> </em></figcaption>
+</figure>
+
+With a thin-film thickness near half the wavelength of visible light (380 nm - 750 nm), the effect is most visible. 
+By increasing the thin-film thickness, multiples of wavelengths are still causing wave interferences, however, as the optical path distance increases, different rays are mixed in. 
+This leads to more pastel colored patterns for increased thickness:
+
+<figure>
+<img src="./figures/thickness-comparison.jpg"/>
+<figcaption><em>Comparison of different iridescence thickness ranges for a constant iridescence IOR value of 1.8. </em></figcaption>
+</figure>
+
+The thin-film layer can have a different IOR than the underlying material. With `iridescenceIOR` one can set an IOR value for the thin-film layer independently. 
+This also has an effect on the optical path difference:
+
+<figure>
+<img src="./figures/ior-comparison.jpg"/>
+<figcaption><em>Comparison of different iridescence IOR values for a thin-film thickness range between 200 nm (bottom) and 800 nm (top).</em></figcaption>
+</figure>
+
 
 The iridescence effect is modeled via a microfacet BRDF with a modified Fresnel reflectance term that accounts for inter-reflections as shown in [Laurent Belcour and Pascal Barla (2017)](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html).
+
+
+## Implementation Notes
+
+*This section is non-normative.*
+
+For the calculation of `f_specular`, the original Fresnel term `F_schlick` is exchanged with a newly introduced `F_iridescence` term. 
+To artistically control the strength of the iridescence effect, the two Fresnel terms are mixed by using the `iridescenceFactor`:
+```
+F = mix(F_schlick, F_iridescence, iridescenceFactor)
+```
+
+To calculate `F_iridescence` we need to calculate the spectral differences. 
+At first, optical path differences (`diff`) between rays reflected at the thin-film and at the base material have to be calculated:
+```
+diff = 2.0 * IOR_iridescence * thin_film_thickness * cos(viewAngle)
+```
+With the path difference, the phase shift can be calculated in Fourier space.
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle%20\Delta%20\phi%20=%202%20\pi%20\lambda^{-1}\text{diff}">
+
+### Clearcoat
+Considering KHR_materials_clearcoat extension, the clearcoat layer is evaluated before the thin-film layer. 
+Light that is passing through the clearcoat is then processed as described taking into account differences in IOR. 
+<figure>
+<img width=40% src="./figures/layering.png"/>
+<figcaption><em> </em></figcaption>
+</figure>
+
 
 ## Reference
 
