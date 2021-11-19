@@ -124,6 +124,9 @@ With the path difference, the phase shift can be calculated in Fourier space.
 
 <img src="https://render.githubusercontent.com/render/math?math=\displaystyle%20\Delta%20\phi%20=%202%20\pi%20\lambda^{-1}\text{diff}">
 
+A complete implementation for evaluating `F_iridescence` can be found in the shader file of the Khronos Sample Viewer:
+[iridescence.glsl](https://github.com/PascalSchoen/glTF-Sample-Viewer/blob/feature/KHR_materials_iridescence/source/Renderer/shaders/iridescence.glsl)
+
 ### Clearcoat
 Considering KHR_materials_clearcoat extension, the clearcoat layer is evaluated before the thin-film layer. 
 Light that is passing through the clearcoat is then processed as described taking into account differences in IOR. 
