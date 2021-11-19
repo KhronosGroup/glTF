@@ -62,7 +62,7 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 |**iridescenceThicknessTexture**  | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | The green channel of this texture defines the thickness of the thin-film layer by blending between the minimum and maximum thickness. | No                    |
 
 The values for iridescence intensity can be defined using a factor, a texture, or both.
-`iridescenceFactor` is multiplied with the red channel of `iridescenceTexture` to control the overall strength of the iridescence effect. If the texture is not set, a value of 1.0 is assumed. 
+`iridescenceFactor` is multiplied with the red channel of `iridescenceTexture` to control the overall strength of the iridescence effect. If the texture is not set, a value of 1.0 is assumed for the texture. 
 ```
 iridescence = iridescenceFactor * iridescenceTexture.r
 ```
