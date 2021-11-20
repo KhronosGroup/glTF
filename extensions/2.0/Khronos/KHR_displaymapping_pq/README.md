@@ -1,4 +1,4 @@
-# KHR_outputmapping_pq
+# KHR_displaytmapping_pq
 
 ## Contributors
 
@@ -19,6 +19,7 @@ Written against the glTF 2.0 spec.
 ## Overview
 
 The goal of this extension is to provide the means to map internal, usually floating point, light contribution values that may be in an unknown range to that of an attached display.  
+It also provides the specification for using HDR compatible display outputs.  
 
 The intended usecases for this extension is any usecase where the light contribution values will go above 1.0, for instance by using KHR_lights_punctual, KHR_emissive_strength or KHR_environment_lights.  
 
@@ -26,37 +27,60 @@ Output pixel values from a rendered 3D model are generally in a range that is la
 This may not be a problem if the output is a high definition image format or some other target that has the same range and precision as the internal calculations.  
 However, a typical usecase for realtime rasterizer implementations is that the output is a light emitting display.  
 Such a display rarely has the range and precision of internal calculations making it necessary to map internal pixel values to match the characteristics of the output.  
-This mapping is generally referred to as tone-mapping, a term that we will use here.  
+This mapping is generally referred to as tone-mapping, however the exact meaning of tone-mapping varies and can also mean the process of applying artistic intent to the output.  
+For that reason this document will use the term displaymapping.    
 
 Here the term rasterizer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
 This buffer will be referred to as the framebuffer.  
 The framebuffer can be of varying range, precision and colorspace. This has an impact on the color gamut that can be displayed.  
   
 After completion of one framebuffer it is output to the display, this is usually done by means of a swap-chain. The details of how the swap works is outside the scope of this extension.  
-KHR_outputmapping_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
+KHR_displaytmapping_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
 
 ## Internal range
 
-When the KHR_outputmapping_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum ouput brightness.  
+When the KHR_displaytmapping_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum ouput brightness.  
 This does not have an impact on color texture sources since they define values as contribution factor.  
 The value 10000 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in the SMPTE ST 2084 transfer function.  
 
-When using this extension light contribution values shall be aligned to account for 10000 cd / m2 as max luminance. This means that content creators shall be aware of 10000 cd/m2 as the maximum brightness value.  
+When using this extension light contribution values shall be aligned to account for 10000 cd / m2 as max luminance.  
+This means that content creators shall be aware of 10000 cd/m2 as the maximum brightness value.  
 Values above 10000 shall be clamped.  
+
+The internal precision shall at a minimum match the equivalent of 12 bits unsigned integer, which maps to the PQ.  
 
 
 ## Outputmapping
 
-To convert from internal values (wanted luminance on the display) to the non-linear output value in the range 0.0 - 1.0 the PQ EOTF shall be used.  
+To convert from internal values (linear scene light) to the non-linear output value in the range 0.0 - 1.0 the PQ EOTF shall be used.  
+This is specified in Rec. 2100:
+https://www.itu.int/rec/R-REC-BT.2100/en  
 
 If the framebuffer format and colorspace is known to the implementation then a format and colorspace shall be chosen to preserve the range and precision of the SMPTE ST 2084 transfer function.  
-If available, a colorspace that is compatible with the color primaries of Rec. 2020 or Rec. 2100 shall be used.  
+If available, a framebuffer colorspace that is compatible with the color primaries of Rec. 2020 shall be used.  
+If this colorspace is used the source images must be converted from Rec. 709 linear values to Rec. 2020 linear values, after conversion has been done from sRGB to linear values.
+Color conversion from Rec. 709 to Rec. 2020 is specified in Rec. 2087  
+https://www.itu.int/rec/R-REC-BT.2087/en
+
+The M2 linear color conversion matrix is defined as:
+0.6274 0.3293 0.0433
+0.0691 0.9195 0.0114
+0.0164 0.0880 0.8956
 
 If the framebuffer format or colorspace is not known, or none is available that preserves range, precision and color gamut then lower range framebuffer with sRGB colorspace may be used.  
 This is to allow for compatibility with displays that does not support higher range and/or compatible colorspaces.  
 It also allows for implementations where the details of the framebuffer is not known or available.  
 
+Resulting linear scene light values shall be display mapped according to Rec. 2100:  
+The opto-optical reference transform shall be applied, the reference transform compatible with both SDR and HDR displays is described in Rec. 2390 with the use of range extension and gamma values.  
 
+E′ = G709[E] = pow(1.099 (rangeExtension E), 0.45) – 0.099 for 1 > E > 0.0003024
+               267.84 E for 0.0003024 ≥ E ≥ 0
+FD = G1886[E'] = pow(100 E′, gamma
+
+Where the (rangeExtension and gamma values can be set by this extension for HDR and SDR display cases.  
+
+After the OOTF is applied the OETF shall be applied, this will yield a non linear output-signal in the range [0.0 - 1.0] that is stored in the display buffer.  
 
 ## Schema
 
