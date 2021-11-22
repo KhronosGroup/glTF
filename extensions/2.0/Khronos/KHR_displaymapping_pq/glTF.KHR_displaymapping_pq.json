@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_displaymapping_pq glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the parameters for displaymapping using perceptual quantizer.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "OOTF-HDR": {
+            "type": "object",
+            "description": "Opto-optical transfer function values for HDR display output.",
+            "items": {
+                "$ref": "OOTF.schema.json"
+            },
+            "minItems": 0,
+            "gltf_detailedDescription": "The opto-optical transfer function values for HDR display output."
+        },
+        "OOTF-SDR": {
+            "type": "object",
+            "description": "Opto-optical transfer function values for SDR display output.",
+            "items": {
+                "$ref": "OOTF.schema.json"
+            },
+            "minItems": 0,
+            "gltf_detailedDescription": "The opto-optical transfer function values for HDR display output."
+        }
+
+    }
+}
