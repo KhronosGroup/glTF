@@ -1,4 +1,4 @@
-# KHR_displaytmapping_pq
+# KHR_displaymapping_pq
 
 ## Contributors
 
@@ -37,7 +37,7 @@ This buffer will be referred to as the framebuffer.
 The framebuffer can be of varying range, precision and colorspace. This has an impact on the color gamut that can be displayed.  
   
 After completion of one framebuffer it is output to the display, this is usually done by means of a swap-chain. The details of how the swap works is outside the scope of this extension.  
-KHR_displaytmapping_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
+KHR_displaymapping_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
 
 This extension does not take the viewing environment, or light adaptation, into consideration.  
 It is assumed that the content is viewed in an environment that is dimly lit (~5 cd / m2) without direct light on the display.  
