@@ -19,8 +19,10 @@ Written against the glTF 2.0 spec.
 ## Overview
 
 The goal of this extension is to provide the means to map internal, usually floating point, light contribution values that may be in an unknown range to that of an attached display.  
-It also provides the specification for using HDR compatible display outputs.  
+This is so that the hue of the source materials is retained under the light conditions declared within the glTF scene.  
+Correct representation of hue is important in order to keep artistic intent, or to achieve a physically correct visualization of products for instance in e-commerce.  
 
+It also provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
 The intended usecases for this extension is any usecase where the light contribution values will go above 1.0, for instance by using KHR_lights_punctual, KHR_emissive_strength or KHR_environment_lights.  
 
 Output pixel values from a rendered 3D model are generally in a range that is larger than that of a display device.  
@@ -39,13 +41,15 @@ KHR_displaytmapping_pq specifies one method of mapping internal pixel values to 
 
 ## Internal range
 
-When the KHR_displaytmapping_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum ouput brightness.  
+When the KHR_displaymapping_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum ouput brightness.  
 This does not have an impact on color texture sources since they define values as contribution factor.  
-The value 10000 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in the SMPTE ST 2084 transfer function.  
+The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in the SMPTE ST 2084 transfer function.  
 
 When using this extension light contribution values shall be aligned to account for 10000 cd / m2 as max luminance.  
 This means that content creators shall be aware of 10000 cd/m2 as the maximum brightness value.  
-Values above 10000 shall be clamped.  
+A content cration tool supporting this extension shall sum upp light contribution for a scene before exporting to glTF, this can be a naive addition of all lights included in the scene that adds max values together.  
+If scene max light contribution is above 10000 cd / m2 then the values shall be downscaled or clamped before exporting.  
+Light contribution values above 10000 c3 / m2 is strongly discouraged and will be clamped by implementations.  
 
 The internal precision shall at a minimum match the equivalent of 12 bits unsigned integer, which maps to the PQ.  
 
@@ -62,10 +66,10 @@ If this colorspace is used the source images must be converted from Rec. 709 lin
 Color conversion from Rec. 709 to Rec. 2020 is specified in Rec. 2087  
 https://www.itu.int/rec/R-REC-BT.2087/en
 
-The M2 linear color conversion matrix is defined as:
-0.6274 0.3293 0.0433
-0.0691 0.9195 0.0114
-0.0164 0.0880 0.8956
+The M2 linear color conversion matrix is defined as:  
+0.6274 0.3293 0.0433  
+0.0691 0.9195 0.0114  
+0.0164 0.0880 0.8956  
 
 If the framebuffer format or colorspace is not known, or none is available that preserves range, precision and color gamut then lower range framebuffer with sRGB colorspace may be used.  
 This is to allow for compatibility with displays that does not support higher range and/or compatible colorspaces.  
@@ -78,12 +82,27 @@ E′ = G709[E] = pow(1.099 (rangeExtension E), 0.45) – 0.099 for 1 > E > 0.000
                267.84 E for 0.0003024 ≥ E ≥ 0
 FD = G1886[E'] = pow(100 E′, gamma
 
-Where the (rangeExtension and gamma values can be set by this extension for HDR and SDR display cases.  
+Where the rangeExtension and gamma values can be set by this extension for HDR and SDR display outputs.  
+* For HDR output,  a range extension value of 59.5208 and gamma of 2.4 is suggested, these values can be changed according to artistic intent.  
+
+* For SDR output,  a range extension value of 46.42 and gamma of 2.4 is suggested, these values can be changed according to artistic intent.  
+
 
 After the OOTF is applied the OETF shall be applied, this will yield a non linear output-signal in the range [0.0 - 1.0] that is stored in the display buffer.  
 
+### Parameters
+
+The following parameters are added by the `KHR_displaymapping_pq` extension:
+
+| Name                   | Type       | Description                                    | Required           |
+|------------------------|------------|------------------------------------------------|--------------------|
+| **OOTF-HDR**   | `object`   | Opto-optical transfer function values for HDR display output  | No |
+| **OOTF-SDR**   | `object`   | Opto-optical transfer function values for SDR display output  | No |
+
+
 ## Schema
 
+[glTF.KHR_displaymapping_pq.json](schema/glTF.KHR_displaymapping_pq.json)
 
 ## Appendix: Full Khronos Copyright Statement
 
