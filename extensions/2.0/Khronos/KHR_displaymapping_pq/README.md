@@ -39,6 +39,10 @@ The framebuffer can be of varying range, precision and colorspace. This has an i
 After completion of one framebuffer it is output to the display, this is usually done by means of a swap-chain. The details of how the swap works is outside the scope of this extension.  
 KHR_displaytmapping_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
 
+This extension does not take the viewing environment, or light adaptation, into consideration.  
+It is assumed that the content is viewed in an environment that is dimly lit (~5 cd / m2) without direct light on the display.  
+
+
 ## Internal range
 
 When the KHR_displaymapping_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum ouput brightness.  
