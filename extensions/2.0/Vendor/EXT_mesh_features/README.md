@@ -273,7 +273,7 @@ Empty feature IDs (e.g. `{}`) are disallowed — a feature ID must explicitly se
 
 #### Referencing External Resources with Feature IDs
 
-Feature IDs do not have to be associated with a property table. It is also possible to specify feature IDs to only identify the features in an asset, and then use their IDs in an application-specific manner. 
+Feature IDs do not have to be associated with a property table. Without a property table, IDs may identify features for use in other extensions or in custom applications. Use cases for these IDs extend beyond the scope of this extension, but could include identifying features for styling or picking, or looking up metadata externally in a REST API or database.
 
 > **Example:** A minimal example for assigning feature IDs to a mesh primitive, using an implicit vertex attribute: The default value for the `offset` is 0, and the value for `repeat` is 3. This means that the vertices will receive the feature IDs `[0, 0, 0, 1, 1, 1, 2, 2, 2, ...]`, causing the vertices of each triangle to receive the same feature ID. 
 >
