@@ -271,7 +271,7 @@ Empty feature IDs (e.g. `{}`) are disallowed — a feature ID must explicitly se
 > }
 > ```
 
-#### Resolving Feature IDs Externally
+#### Referencing External Resources with Feature IDs
 
 Feature IDs do not have to be associated with a property table. It is also possible to specify feature IDs to only identify the features in an asset, and then use their IDs in an application-specific manner. 
 
