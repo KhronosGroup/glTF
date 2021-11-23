@@ -273,7 +273,7 @@ Empty feature IDs (e.g. `{}`) are disallowed — a feature ID must explicitly se
 
 #### Referencing External Resources with Feature IDs
 
-Feature IDs do not have to be associated with a property table. Without a property table, IDs may identify features for use in other extensions or in custom applications. Use cases for these IDs extend beyond the scope of this extension, but could include identifying features for styling or picking, or looking up metadata externally in a REST API or database. These feature IDs can be used by the application in different ways. For example they could be used for styling features in a mesh, or to look up information for these features externally, via a REST API, or in a database.
+Feature IDs do not have to be associated with a property table. Without a property table, IDs may identify features for use in other extensions or in custom applications. Use cases for these IDs extend beyond the scope of this extension, but could include identifying features for styling or picking, or looking up metadata externally in a REST API or database.
 
 > <img src="figures/feature-id-lookup.png"  alt="Feature ID lookup" width="800">
 
