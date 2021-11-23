@@ -277,11 +277,6 @@ Feature IDs do not have to be associated with a property table. Without a proper
 
 > <img src="figures/feature-id-lookup.png"  alt="Feature ID lookup" width="800">
 
-
-
-
-
-
 ## Feature Properties
 
 ### Overview
