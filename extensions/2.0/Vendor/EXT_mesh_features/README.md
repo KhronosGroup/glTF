@@ -247,7 +247,7 @@ Each feature ID definition may include only a single source, so the following ar
 - `featureId.offset` and `featureId.repeat` (for a Feature ID Attribute)
 - `featureId.index` (for a Feature ID Texture)
 
-Feature IDs may be assigned to primitives or nodes 
+Primitives may contain `featureIds` entries for vertex attribute and texture-based feature IDs, and Nodes may contain `featureIds` entries for GPU instance attributes.
 
 #### Resolving Feature IDs with Property Tables
 
