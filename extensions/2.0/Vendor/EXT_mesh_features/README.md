@@ -247,7 +247,11 @@ Each feature ID definition may include only a single source, so the following ar
 - `featureId.offset` and `featureId.repeat` (for a Feature ID Attribute)
 - `featureId.index` (for a Feature ID Texture)
 
-Every `propertyTables` index must have an associated `featureIds` definition, but feature IDs may be defined without a property table. The `propertyTables` entry at index `i` corresponds to the `featureIds` entry at the same index. As a result, the length of the `featureIds` array must be greater than or equal to the length of the `propertyTables` array. Each (`featureId`, `propertyTable`) pair must be unique, but individual feature IDs and property tables may be repeated within a primitive or node.
+Primitives may contain `featureIds` entries for vertex attribute and texture-based feature IDs, and Nodes may contain `featureIds` entries for GPU instance attributes.
+
+#### Referencing Property Tables with Feature IDs
+
+When feature IDs are associated with property tables, then every `propertyTables` index must have an associated `featureIds` definition. The `propertyTables` entry at index `i` corresponds to the `featureIds` entry at the same index. As a result, the length of the `featureIds` array must be greater than or equal to the length of the `propertyTables` array. Each (`featureId`, `propertyTable`) pair must be unique, but individual feature IDs and property tables may be repeated within a primitive or node.
 
 Empty feature IDs (e.g. `{}`) are disallowed — a feature ID must explicitly set at least one property.
 
@@ -266,6 +270,12 @@ Empty feature IDs (e.g. `{}`) are disallowed — a feature ID must explicitly se
 >   }
 > }
 > ```
+
+#### Referencing External Resources with Feature IDs
+
+Feature IDs do not have to be associated with a property table. Without a property table, IDs may identify features for use in other extensions or in custom applications. Use cases for these IDs extend beyond the scope of this extension, but could include identifying features for styling or picking, or looking up metadata externally in a REST API or database.
+
+> <img src="figures/feature-id-lookup.png"  alt="Feature ID lookup" width="800">
 
 ## Feature Properties
 
