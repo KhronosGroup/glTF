@@ -45,7 +45,7 @@ Optionally, this extension may be used in conjunction with [`EXT_mesh_gpu_instan
     - [Class](#class)
     - [Class Property](#class-property)
     - [Enum](#enum)
-    - [Enum Values](#enum-values)
+    - [Enum Value](#enum-value)
   - [Property Tables](#property-tables)
   - [Property Textures](#property-textures)
 - [Binary Data Storage](#binary-data-storage)
@@ -62,7 +62,7 @@ In most realtime 3D contexts, performance requirements demand minimizing the num
 
 By defining a representation of conceptual objects ("features") distinct from rendered geometry, and a means of associating structured metadata ("properties") with those features, this extension allows applications to preserve important details of 3D assets for inspection and interaction without compromising runtime performance and draw calls.
 
-Concepts and terminology used throughout this document refer to the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/blob/3d-tiles-next/specification/Metadata/README.md), which should be considered a normative reference for definitions and requirements. This document provides inline definitions of terms where appropriate.
+Concepts and terminology used throughout this document refer to the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata), which should be considered a normative reference for definitions and requirements. This document provides inline definitions of terms where appropriate.
 
 See [Examples](#examples) for a more detailed list of use cases for this extension.
 
@@ -209,7 +209,7 @@ Texture filtering must be `9728` (NEAREST), or undefined, for any texture object
 
 *Defined in [node.EXT_mesh_features.schema.json](./schema/node.EXT_mesh_features.schema.json) and [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
 
-Feature IDs may also be assigned to individual GPU instances when using the [`EXT_mesh_gpu_instancing` extension](../EXT_mesh_gpu_instancing). Similar to per-vertex IDs, per-instance IDs are stored in instance attributes or generated implicitly by instance index. Nodes with `EXT_mesh_features` must also define an `EXT_mesh_gpu_instancing` extension, and are invalid without this dependency.
+Feature IDs may also be assigned to individual GPU instances when using the [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing) extension. Similar to per-vertex IDs, per-instance IDs are stored in instance attributes or generated implicitly by instance index. Nodes with `EXT_mesh_features` must also define an `EXT_mesh_gpu_instancing` extension, and are invalid without this dependency.
 
 > **Example:** A node defining instances of mesh `0`, with each instance having a feature ID in the `FEATURE_ID_0` instance attribute.
 >
@@ -247,7 +247,11 @@ Each feature ID definition may include only a single source, so the following ar
 - `featureId.offset` and `featureId.repeat` (for a Feature ID Attribute)
 - `featureId.index` (for a Feature ID Texture)
 
-Every `propertyTables` index must have an associated `featureIds` definition, but feature IDs may be defined without a property table. The `propertyTables` entry at index `i` corresponds to the `featureIds` entry at the same index. As a result, the length of the `featureIds` array must be greater than or equal to the length of the `propertyTables` array. Each (`featureId`, `propertyTable`) pair must be unique, but individual feature IDs and property tables may be repeated within a primitive or node.
+Primitives may contain `featureIds` entries for vertex attribute and texture-based feature IDs, and Nodes may contain `featureIds` entries for GPU instance attributes.
+
+#### Referencing Property Tables with Feature IDs
+
+When feature IDs are associated with property tables, then every `propertyTables` index must have an associated `featureIds` definition. The `propertyTables` entry at index `i` corresponds to the `featureIds` entry at the same index. As a result, the length of the `featureIds` array must be greater than or equal to the length of the `propertyTables` array. Each (`featureId`, `propertyTable`) pair must be unique, but individual feature IDs and property tables may be repeated within a primitive or node.
 
 Empty feature IDs (e.g. `{}`) are disallowed — a feature ID must explicitly set at least one property.
 
@@ -267,11 +271,17 @@ Empty feature IDs (e.g. `{}`) are disallowed — a feature ID must explicitly se
 > }
 > ```
 
+#### Referencing External Resources with Feature IDs
+
+Feature IDs do not have to be associated with a property table. Without a property table, IDs may identify features for use in other extensions or in custom applications. Use cases for these IDs extend beyond the scope of this extension, but could include identifying features for styling or picking, or looking up metadata externally in a REST API or database.
+
+> <img src="figures/feature-id-lookup.png"  alt="Feature ID lookup" width="800">
+
 ## Feature Properties
 
 ### Overview
 
-Feature properties describe attributes or characteristics of a feature. Schemas are templates describing the data types and semantic meanings of properties, where each feature is a single instance of that template with specific values. Property values may be associated with features in one of two ways:
+Feature properties describe attributes or characteristics of a feature. Classes, defined by a schema, are templates describing the data types and meanings of properties, where each feature is a single instance of that template with specific values. Property values may be associated with features in one of two ways:
 
 - **Property Tables** store property values as numeric arrays in a parallel, column-based binary layout. Property tables are indexed by Feature IDs, used as the index of a given feature into each property array.
 - **Property Textures** store property values in channels of a texture, suitable for very high-frequency data mapped to less-detailed 3D surfaces. Property textures are indexed by texture coordinates, and do not have associated Feature IDs.
@@ -282,13 +292,13 @@ Both storage formats are appropriate for efficiently transmitting large quantiti
 
 #### Overview
 
-Data types and semantic meanings of properties are provided by a schema, as defined in the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/blob/3d-tiles-next/specification/Metadata/) and summarized below.
+Data types and meanings of properties are provided by a schema, as defined in the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata/) and summarized below.
 
 #### Schema
 
 *Defined in [schema.schema.json](./schema/schema.schema.json).*
 
-Top-level definitions for type and semantic information. The schema provides a set of [classes](#class) and [enums](#enum) the asset can reference.
+Top-level definitions for the structure and data types of properties. The schema provides a set of [classes](#class) and [enums](#enum) the asset can reference.
 
 A schema may be embedded in the extension directly or referenced externally with the `schemaUri` property. Multiple glTF assets may refer to the same external schema to avoid duplication. A schema is defined by an `EXT_mesh_features` extension attached to the glTF root object.
 
@@ -314,7 +324,7 @@ A schema may be embedded in the extension directly or referenced externally with
 
 *Defined in [class.schema.json](./schema/class.schema.json).*
 
-Template for features. Classes provide a list of properties with type and semantic information. Every feature must be associated with a class, and the feature's properties must conform to the class's property definitions. Features whose properties conform to a class are considered instances of that class.
+Template for features. Classes provide a list of property definitions. Every feature must be associated with a class, and the feature's properties must conform to the class's property definitions. Features whose properties conform to a class are considered instances of that class.
 
 Classes are defined as entries in the `schema.classes` dictionary, indexed by an alphanumeric class ID.
 
@@ -346,7 +356,7 @@ Classes are defined as entries in the `schema.classes` dictionary, indexed by an
 
 *Defined in [class.property.schema.json](./schema/class.property.schema.json).*
 
-Properties are defined abstractly in a class by their semantic meaning and data type, and are instantiated in a feature with specific values conforming to that definition. Properties support a richer variety of data types than glTF accessors or GPU shading languages allow, defined by `property.componentType`.
+Properties are defined abstractly in a class, and are instantiated in a feature with specific values conforming to that definition. Properties support a richer variety of data types than glTF accessors or GPU shading languages allow, defined by `property.componentType`.
 
 Allowed values for `componentType`:
 
@@ -414,11 +424,11 @@ Class properties are defined as entries in the `class.properties` dictionary, in
 
 *Defined in [enum.schema.json](./schema/enum.schema.json).*
 
-Set of categorical types, defined as `(name, value)` pairs. Enum properties use an enum as their data type.
+Set of categorical types, defined as `(name, value)` pairs. Enum properties use an enum as their component type.
 
 Enums are defined as entries in the `schema.enums` dictionary, indexed by an alphanumeric enum ID.
 
-> **Example:** A "Species" enum defining types of trees. An "Unspecified" enum value is optional, but when provided as the `noData` value for a property (see: [Cesium 3D Metadata → No Data Values](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata#required-properties-and-no-data-values)) may be helpful to identify missing data.
+> **Example:** A "Species" enum defining types of trees. An "Unspecified" enum value is optional, but when provided as the `noData` value for a property (see: [3D Metadata → No Data Values](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#required-properties-and-no-data-values)) may be helpful to identify missing data.
 >
 > ```jsonc
 > {
@@ -443,7 +453,7 @@ Enums are defined as entries in the `schema.enums` dictionary, indexed by an alp
 > }
 > ```
 
-#### Enum Values
+#### Enum Value
 
 *Defined in [enum.value.schema.json](./schema/enum.value.schema.json).*
 
@@ -491,7 +501,7 @@ The property table may provide value arrays for only a subset of the properties 
 > }
 > ```
 
-Property arrays are stored in glTF buffer views and use the binary encoding defined in the [Binary Table Format](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata#binary-table-format) section of the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata).
+Property arrays are stored in glTF buffer views and use the binary encoding defined in the [Binary Table Format](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#binary-table-format) section of the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata).
 
 As in the core glTF specification, values of NaN, +Infinity, and -Infinity are never allowed.
 
@@ -503,7 +513,7 @@ Each buffer view `byteOffset` must be aligned to a multiple of its component siz
 
 *Defined in [propertyTexture.schema.json](./schema/propertyTexture.schema.json).*
 
-Property textures use texture channels to store property values conforming to a particular class (identified by ID `class`), with those values accessed directly by texture coordinates. Property textures do not require feature IDs, and are especially useful when texture mapping high frequency data to less detailed 3D surfaces. Unlike textures used in glTF materials, property textures are not necessarily visible in a rendered scene. Like property tables, property textures are implementations of the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata).
+Property textures use texture channels to store property values conforming to a particular class (identified by ID `class`), with those values accessed directly by texture coordinates. Property textures do not require feature IDs, and are especially useful when texture mapping high frequency data to less detailed 3D surfaces. Unlike textures used in glTF materials, property textures are not necessarily visible in a rendered scene. Like property tables, property textures are implementations of the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata).
 
 Property textures are defined as entries in the `propertyTextures` array of the root-level `EXT_mesh_features` extension, and may be referenced by extensions on primitive objects. Property textures do not provide per-instance values with `EXT_mesh_gpu_instancing`, and must not be used by extensions on node objects.
 
@@ -616,7 +626,7 @@ Texture filtering must be `9728` (NEAREST), `9729` (LINEAR), or undefined, for a
 
 ## Binary Data Storage
 
-Feature properties are stored in a compact binary tabular format described in the [Cesium 3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/3d-tiles-next/specification/Metadata), with each property table array occupying a glTF buffer view. `EXT_mesh_features` imposes 8-byte binary data alignment requirements on an asset, allowing support for 64-bit data types while remaining compatible with the 4-byte alignments in the core glTF specification:
+Feature properties are stored in a compact binary tabular format described in the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata), with each property table array occupying a glTF buffer view. `EXT_mesh_features` imposes 8-byte binary data alignment requirements on an asset, allowing support for 64-bit data types while remaining compatible with the 4-byte alignments in the core glTF specification:
 
 - GLB-stored `JSON` chunk must be padded with trailing `Space` characters (`0x20`) to 8-byte boundary.
 - GLB-stored `BIN` chunk must be padded with trailing zeroes (`0x00`) to 8-byte boundary.
@@ -703,3 +713,4 @@ Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanc
   * Refactored the property texture schema so it is now a glTF `textureInfo` object.
   * Each property texture now contains only a single texture
   * Property textures are now assumed to be in linear space, and must use nearest or linear filtering
+  * Added a `schema.id` property
