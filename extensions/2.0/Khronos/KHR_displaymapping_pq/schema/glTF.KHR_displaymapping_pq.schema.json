@@ -5,24 +5,32 @@
     "description": "glTF extension that defines the parameters for displaymapping using perceptual quantizer.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "OOTF-HDR": {
+        "ootfHDR": {
             "type": "object",
             "description": "Opto-optical transfer function values for HDR display output.",
             "items": {
-                "$ref": "OOTF.schema.json"
+                "$ref": "ootf.schema.json"
             },
             "minItems": 0,
             "gltf_detailedDescription": "The opto-optical transfer function values for HDR display output."
         },
-        "OOTF-SDR": {
+        "ootfSDR": {
             "type": "object",
-            "description": "Opto-optical transfer function values for SDR display output.",
+            "description": "Opto-optical transfer function values to be used for SDR display output.",
             "items": {
-                "$ref": "OOTF.schema.json"
+                "$ref": "ootf.schema.json"
             },
             "minItems": 0,
             "gltf_detailedDescription": "The opto-optical transfer function values for HDR display output."
-        }
+        },
+	"sceneAperture": {
+	    "type": "object",
+	    "description": "Controls scene light contribution values before displaymapping is applied."
+	    "items": {
+                "$ref": "aperture.schema.json"
+            },
+            "minItems": 0,
+            "gltf_detailedDescription": "Defines how overall scene light values shall be used."
 
     }
 }

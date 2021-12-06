@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Opto-optical transfer function",
+    "type": "object",
+    "description": "The opto-optical transfer function to be applied.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "rangeExtension": {
+            "type": "number",
+            "description": "Opto-optical transfer function values for display output.",
+            "minItems": 1,
+            "gltf_detailedDescription": "Defines the range extension value to be applied before the perceptual quantizer"
+        },
+        "gamma": {
+            "type": "number",
+            "description": "Opto-optical transfer function values for display output.",
+            "minItems": 1,
+            "gltf_detailedDescription": "Defines the gamma value value to be applied before the perceptual quantizer"
+        }
+}

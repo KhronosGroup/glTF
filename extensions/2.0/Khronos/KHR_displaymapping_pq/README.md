@@ -39,7 +39,7 @@ The framebuffer can be of varying range, precision and colorspace. This has an i
 After completion of one framebuffer it is output to the display, this is usually done by means of a swap-chain. The details of how the swap works is outside the scope of this extension.  
 KHR_displaymapping_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
 
-This extension does not take the viewing environment, or light adaptation, into consideration.  
+This extension does not take the viewing environment of the display, or eye light adaptation, into consideration.  
 It is assumed that the content is viewed in an environment that is dimly lit (~5 cd / m2) without direct light on the display.  
 
 
@@ -50,15 +50,20 @@ This does not have an impact on color texture sources since they define values a
 The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in the SMPTE ST 2084 transfer function.  
 
 When using this extension light contribution values shall be aligned to account for 10000 cd / m2 as max luminance.  
-This means that content creators shall be aware of 10000 cd/m2 as the maximum brightness value.  
-A content cration tool supporting this extension shall sum upp light contribution for a scene before exporting to glTF, this can be a naive addition of all lights included in the scene that adds max values together.  
-If scene max light contribution is above 10000 cd / m2 then the values shall be downscaled or clamped before exporting.  
-Light contribution values above 10000 c3 / m2 is strongly discouraged and will be clamped by implementations.  
+This means that content creators shall be aware of 10000 cd/m2 as the maximum brightness value range, it does not mean that the display will be capable of outputing at this light luminance.  
+
+## Scene light value
+
+A content creation tool supporting this extension shall sum upp light contribution for a scene before exporting to glTF, this can be a naive addition of all lights included in the scene that adds max values together.  
+If scene max light contribution is above 10000 cd / m2 there is a choice to either downscale light values before export or to set `sceneAperture` to `AUTO`  
+This means that implementations will calculate max light intensity for the scene and use as a scale factor to keep all light contribution within 0 - 10000 cd / m2.  
+
+Light contribution values above 10000 cd / m2 is strongly discouraged and will be clamped by implementations if not adjusted by scene aperture.    
 
 The internal precision shall at a minimum match the equivalent of 12 bits unsigned integer, which maps to the PQ.  
 
 
-## Outputmapping
+## Displaymapping
 
 To convert from internal values (linear scene light) to the non-linear output value in the range 0.0 - 1.0 the PQ EOTF shall be used.  
 This is specified in Rec. 2100:
@@ -100,9 +105,9 @@ The following parameters are added by the `KHR_displaymapping_pq` extension:
 
 | Name                   | Type       | Description                                    | Required           |
 |------------------------|------------|------------------------------------------------|--------------------|
-| **OOTF-HDR**   | `object`   | Opto-optical transfer function values for HDR display output  | No |
-| **OOTF-SDR**   | `object`   | Opto-optical transfer function values for SDR display output  | No |
-
+| **ootfHDR**         | `object`   | Opto-optical transfer function values for HDR display output, if no value is specified then the default parameters rangeExtension=59.5208 and gamma=2.4 is used  | No |
+| **ootfSDR**         | `object`   | Opto-optical transfer function values for SDR display output, if no value is specified then the default parameters rangeExtension=46.42 and gamma=2.4 is used  | No |
+| **sceneAperture**   | `object`   | Scene light adjustment setting, if no value supplied the default value of OFF will be used and scene light values will be kept unmodified.  OFF = No scene aperture control. Scene light values will be kept before applying display mapping. Any value above 10000 will be clamped.  AUTO = Auto scene aperture, light values are scaled according to `lightScale`, this is calculated using  `lightScale` = 10000 / `maxSceneLight`. Where `maxSceneLight` is updated for each frame.  | No |
 
 ## Schema
 
