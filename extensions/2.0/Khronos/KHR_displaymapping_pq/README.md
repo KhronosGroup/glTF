@@ -32,6 +32,15 @@ Such a display rarely has the range and precision of internal calculations makin
 This mapping is generally referred to as tone-mapping, however the exact meaning of tone-mapping varies and can also mean the process of applying artistic intent to the output.  
 For that reason this document will use the term displaymapping.    
 
+The displaymapping for this extension is chosen from Rec.2100 which is the standard for HDR TV and broadcast content creation.   
+This standard uses the perceptual quantizer as transfer function, ie to go from scene linear values to non linear output values.  
+The function is selected based on minimizing visual artefacts from color banding according to the Barten Ramp. Resulting on very slight visible banding on panels with 10 bits per colorchannel.  
+On panels with 12 bits there is no visible banding artefacts when using the perceptual qantizer.  
+
+Apart from being widely supported and used in the TV / movie industry it is also embraced by the gaming community, with support in the engines from some of the major game companies.  
+For instance, game engines Frostbite and Lumberyard and also in specific games such as Destiny 2 and Call Of Duty.  
+
+
 Here the term rasterizer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
 This buffer will be referred to as the framebuffer.  
 The framebuffer can be of varying range, precision and colorspace. This has an impact on the color gamut that can be displayed.  
@@ -49,7 +58,7 @@ When the KHR_displaymapping_pq extension is used all lighting and pixel calculat
 This does not have an impact on color texture sources since they define values as contribution factor.  
 The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in the SMPTE ST 2084 transfer function.  
 
-When using this extension light contribution values shall be aligned to account for 10000 cd / m2 as max luminance.  
+When using this extension light contribution values shall be aligned to account for 10000 cd/m2 as max luminance.  
 This means that content creators shall be aware of 10000 cd/m2 as the maximum brightness value range, it does not mean that the display will be capable of outputing at this light luminance.  
 
 ## Scene light value
@@ -64,6 +73,8 @@ The internal precision shall at a minimum match the equivalent of 12 bits unsign
 
 
 ## Displaymapping
+
+### To HDR capable display
 
 To convert from internal values (linear scene light) to the non-linear output value in the range 0.0 - 1.0 the PQ EOTF shall be used.  
 This is specified in Rec. 2100:
@@ -80,9 +91,20 @@ The M2 linear color conversion matrix is defined as:
 0.0691 0.9195 0.0114  
 0.0164 0.0880 0.8956  
 
+
+
+A HDR capable display is defined as having at least 10 bits per pixel for each colorchannel. 
+
+### To SDR capable display
+
 If the framebuffer format or colorspace is not known, or none is available that preserves range, precision and color gamut then lower range framebuffer with sRGB colorspace may be used.  
 This is to allow for compatibility with displays that does not support higher range and/or compatible colorspaces.  
 It also allows for implementations where the details of the framebuffer is not known or available.  
+
+A SDR capable display is defined as having less than 10 bits per pixel for each colorchannel.  
+
+
+### OOTF
 
 Resulting linear scene light values shall be display mapped according to Rec. 2100:  
 The opto-optical reference transform shall be applied, the reference transform compatible with both SDR and HDR displays is described in Rec. 2390 with the use of range extension and gamma values.  
@@ -96,8 +118,10 @@ Where the rangeExtension and gamma values can be set by this extension for HDR a
 
 * For SDR output,  a range extension value of 46.42 and gamma of 2.4 is suggested, these values can be changed according to artistic intent.  
 
+### EOTF
 
 After the OOTF is applied the OETF shall be applied, this will yield a non linear output-signal in the range [0.0 - 1.0] that is stored in the display buffer.  
+
 
 ### Parameters
 
