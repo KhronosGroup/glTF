@@ -17,16 +17,14 @@ Draft
 ## Dependencies
 
 Written against the glTF 2.0 spec.  
-This extension depends on KHR_texture_ktx.    
-This extension may use KHR_texture_basisu or KHR_texture_float_bc6h to support compressed texture formats.
 
 ## Overview
-This extension provides the ability to define environment light contribution to a glTF using KTX v2 images, as defined by KHR_texture_ktx, and irradiance coefficients.    
+This extension provides the ability to define environment light contribution to a glTF using KTX v2 images and irradiance coefficients.    
 The extension provide two ways of supplying environmental light contribution.  
 Image-based by means of a cubemap and irradiance by means of spherical harmonics.  
 
 The environment light cubemap can be seen as capturing the directed specular conntribution as well as the reflections.  
-The irradiance coefficients contain the non-directed light contribution from the scene.  
+The irradiance coefficients contain the non-directed light contribution from the scene, these may be supplied or can be calculated by the implementations.    
 
 This extension can be used on it's own - ie a glTF asset with only environment map data - for a usecase where the environmental light needs to be distributed.  
 It may also be used together with model data, for usecases where a model shall be displayed in a controlled environment.  
@@ -40,8 +38,8 @@ Secondly, it ensures that rendering of the image-based lighting is consistent ac
 
 A conforming implementation of this extension must be able to load the environment data and render the PBR materials using this lighting.  
 
-Cubemap environment light images are declared as an array of images in the extension that is placed in the glTF root.  
-These images are specified using KHR_texture_ktx extension to reference the source images for the textures used in the environment light extension.   
+Cubemap environment light images are declared as an array of images in the extension, this extension is then placed in the glTF root.  
+These images shall be supplied using a KTX V2 file containing at least one cubemap.  
 
 ### Pre Filtering Of Cubemaps
 
@@ -49,11 +47,6 @@ The environment light is defined by a cubemap, this is to simplify realtime impl
 Cubemaps shall be supplied without pre-filtered mip-maps for roughness values > 0, pre-filtering shall be done by the client.  
 [See Specular radiance cubemaps](#specular-radiance-cubemaps)  
 
-If a compressed texture format is used then pre-filtered mip-levels for roughness values > 0 shall be specified.  
-The number of specified mip-levels shall be log2 of the min value from texture width and height, ie a full mipmap pyramid. 
-This is to ensure deterministic texture memory usage.  
-
-  > **Implementation Note**: Implementations are free to ignore the pre-filtered mip-levels and generate the mip-levels for roughness values at runtime.  
 
 ## Declaring An Environment Light
 
@@ -75,19 +68,15 @@ The following will load the environment light using KHR_texture_ktx.
 "version": "2.0"
 },
 "extensionsUsed": [
-    "KHR_texture_ktx",
     "KHR_lights_environment"
 ],
 
 "extensions": {
     "KHR_lights_environment" : {
-        "textures": [
+        "cubemaps": [
             {
-                "extensions": {
-                    "KHR_texture_ktx": {
-                    "source": 0
-                    "layer": 0
-                }
+                "source": 0
+                "layer": 0
             }
         ],
         "images": [
@@ -125,7 +114,7 @@ Making it possible to calculate the localized reflection vector allowing for lig
 [See Localized cubemaps](#localized-cubemaps)  
 
 
-### Implementation Note 
+**Implementation Notes** 
 This section is non-normative  
 
 One common way of sampling the reflected component of light contribution from the environment is using pre-filtered maps.  
@@ -205,21 +194,22 @@ Each scene can have a single environment light attached to it by defining the `e
 
 ### Environment Light Properties
 
-The environment light declaration present in the root of the glTF object must contain one or more textures and images specification.  
-Textures must be declared using KHR_texture_ktx extension, or a texture extension that uses this.  
-Images are declared as an array of image objects.  
+The environment light declaration present in the root of the glTF object must contain one or more cubemaps and images specification.  
+Cubemaps are declared as an array of image and layer indexes.   
+Images are declared as an array of image objects referencing KTX v2 image files.  
 
-`textures`  
+`cubemaps`  
 
 | Property | Type   |  Description | Required |
 |:-----------------------|:-----------|:------------------------------------------| :--------------------------|
-| `textures` | texture [1-* ]  | Array of textures, using KHR_texture_ktx or related extension, that reference the source image(s). Image source must contain valid cubemap. |  :white_check_mark: Yes |  
+| `source` | integer  | Index of KTX V2 file containing cubemap in the specified layer |  :white_check_mark: Yes |  
+| `layer` | integer  | Layer of the KTX V2 file containing the cubemap, if no value is supplied the default value of 0 is used |  No |  
 
 
 `images`  
 | Property | Type   |  Description | Required |
 |:-----------------------|:-----------|:------------------------------------------| :--------------------------|
-| `images` | image [1-* ]  | Array of images that reference KTX V 2 file containing at least one cubemap. Mimetype must be 'image/ktx2'. |  :white_check_mark: Yes |  
+| `images` | Image [1-* ]  | Array of images that reference KTX V 2 file containing at least one cubemap. Mimetype must be 'image/ktx2'. |  :white_check_mark: Yes |  
 
 
 `light` 
@@ -236,7 +226,14 @@ Images are declared as an array of image objects.
 ## KTX v2 Images  
 
 The texture type of the KTX v2 file shall be 'Cubemap'  
+The texture format must be one of the following:  
 
+VK_FORMAT_R8G8B8_SRGB  
+VK_FORMAT_R8G8B8_UNORM  
+VK_FORMAT_E5B9G9R9_UFLOAT_PACK32  
+VK_FORMAT_B10G11R11_UFLOAT_PACK32  
+VK_FORMAT_R16G16B16_SFLOAT  
+VK_FORMAT_R16G16B16_UNORM  
 
 
 ## glTF Schema Updates
