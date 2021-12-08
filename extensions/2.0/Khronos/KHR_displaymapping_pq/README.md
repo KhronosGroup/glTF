@@ -18,12 +18,30 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-The goal of this extension is to provide the means to map internal, usually floating point, light contribution values that may be in an unknown range to that of an attached display.  
-This is so that the hue of the source materials is retained under the light conditions declared within the glTF scene.  
+The goal of this extension is to provide the means to map internal, usually floating point, light contribution values that may be in an unknown range to that of a known range and attached display.  
+One of the reasons for this is to retain the hue of the source materials under varying light conditions.  
 Correct representation of hue is important in order to keep artistic intent, or to achieve a physically correct visualization of products for instance in e-commerce.  
 
 It also provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
 The intended usecases for this extension is any usecase where the light contribution values will go above 1.0, for instance by using KHR_lights_punctual, KHR_emissive_strength or KHR_environment_lights.  
+
+This extension has three integration points:  
+1: If the framebuffer colorspace is compatible with ITU BT.2020 color primaries, then before images are sampled they shall be converted to ITU BT.2020 colorspace  
+This can be done from linear colorspace by the conversion matrix outlined later in this document - [see 'To HDR capable display'](#to-hdr-capable-display)  
+
+2: The scene max light intensity, ie the highest light value, needs to be approximated when automatic aperture is enabled.  
+The goal of this is to provide a means to increase or decrease the overall brightness of the scene.  
+This does not have to be done in an exact manner every frame, approximations or slight delays in adjustment are allowed.  
+[See `sceneAperture` parameter](#parameters)  
+
+3: Before outputing the calculated pixel value, ie the light reaching the viewer from a point in the scene, the opto-optical transfer function shall be applied followed by the opto-electrical transfer function.  
+This is the process that will adjust for gamma and adapt the 0 - 10000 range value into a nonlinear display value.  
+
+[See OOTF](#ootf)  
+[See OETF](#oetf)  
+
+
+### Motivation
 
 Output pixel values from a rendered 3D model are generally in a range that is larger than that of a display device.  
 This may not be a problem if the output is a high definition image format or some other target that has the same range and precision as the internal calculations.  
@@ -32,7 +50,7 @@ Such a display rarely has the range and precision of internal calculations makin
 This mapping is generally referred to as tone-mapping, however the exact meaning of tone-mapping varies and can also mean the process of applying artistic intent to the output.  
 For that reason this document will use the term displaymapping.    
 
-The displaymapping for this extension is chosen from Rec.2100 which is the standard for HDR TV and broadcast content creation.   
+The displaymapping for this extension is chosen from ITU BT.2100 which is the standard for HDR TV and broadcast content creation.   
 This standard uses the perceptual quantizer as transfer function, ie to go from scene linear values to non linear output values.  
 The function is selected based on minimizing visual artefacts from color banding according to the Barten Ramp. Resulting on very slight visible banding on panels with 10 bits per colorchannel.  
 On panels with 12 bits there is no visible banding artefacts when using the perceptual qantizer.  
@@ -71,27 +89,31 @@ Light contribution values above 10000 cd / m2 is strongly discouraged and will b
 
 The internal precision shall at a minimum match the equivalent of 12 bits unsigned integer, which maps to the PQ.  
 
-
 ## Displaymapping
 
 ### To HDR capable display
 
 To convert from internal values (linear scene light) to the non-linear output value in the range 0.0 - 1.0 the PQ EOTF shall be used.  
-This is specified in Rec. 2100:
+This is specified in ITU BT.2100:
 https://www.itu.int/rec/R-REC-BT.2100/en  
 
 If the framebuffer format and colorspace is known to the implementation then a format and colorspace shall be chosen to preserve the range and precision of the SMPTE ST 2084 transfer function.  
-If available, a framebuffer colorspace that is compatible with the color primaries of Rec. 2020 shall be used.  
-If this colorspace is used the source images must be converted from Rec. 709 linear values to Rec. 2020 linear values, after conversion has been done from sRGB to linear values.
-Color conversion from Rec. 709 to Rec. 2020 is specified in Rec. 2087  
+If available, a framebuffer colorspace that is compatible with the color primaries of ITU BT.2020 shall be used.  
+If this colorspace is used the source color images must be converted from linear ITU BT.709 values to ITU BT.2020 linear values, where applicable depending on texture target and source format.  
+
+**Implementation notes**
+
+Conversion of color pramaries to BT.2020 could be done after loading of a PNG/JPEG and after the image has been gamma expanded from sRGB to linear.  
+
+#### Color conversion matrix
+
+Color conversion from BT.709 to BT.2020 is specified in ITU BT.2087  
 https://www.itu.int/rec/R-REC-BT.2087/en
 
 The M2 linear color conversion matrix is defined as:  
 0.6274 0.3293 0.0433  
 0.0691 0.9195 0.0114  
 0.0164 0.0880 0.8956  
-
-
 
 A HDR capable display is defined as having at least 10 bits per pixel for each colorchannel. 
 
@@ -106,21 +128,52 @@ A SDR capable display is defined as having less than 10 bits per pixel for each 
 
 ### OOTF
 
-Resulting linear scene light values shall be display mapped according to Rec. 2100:  
-The opto-optical reference transform shall be applied, the reference transform compatible with both SDR and HDR displays is described in Rec. 2390 with the use of range extension and gamma values.  
+Resulting linear scene light values shall be display mapped according to the parameter `Reference PQ OOTF` of ITU BT.2100   
+The opto-optical reference transform shall be applied, the reference transform compatible with both SDR and HDR displays is described in ITU BT.2390 with the use of range extension and gamma values.  
 
-E′ = G709[E] = pow(1.099 (rangeExtension E), 0.45) – 0.099 for 1 > E > 0.0003024
-               267.84 E for 0.0003024 ≥ E ≥ 0
-FD = G1886[E'] = pow(100 E′, gamma
+E′ = G709[E] = pow(1.099 (rangeExtension * E), 0.45) – 0.099 for 1 > E > 0.0003024
+               267.84 * E for 0.0003024 ≥ E ≥ 0
+FD = G1886[E'] = pow(100 E′, gamma)
+
+E is the linear scene light value. 
 
 Where the rangeExtension and gamma values can be set by this extension for HDR and SDR display outputs.  
 * For HDR output,  a range extension value of 59.5208 and gamma of 2.4 is suggested, these values can be changed according to artistic intent.  
+Some game engines are known to use a value of 2.8 for HDR gamma.  
 
 * For SDR output,  a range extension value of 46.42 and gamma of 2.4 is suggested, these values can be changed according to artistic intent.  
 
-### EOTF
+**Implementation Notes**
+
+Pseudocode for BT.2100 reference OOTF  
+
+BT_2100_OOTF(color, rangeExponent, gamma) {  
+    if (color <= 0.0003024) {  
+        nonlinear = 267.84 * color;  
+    else {  
+        nonlinear = 1.099 * pow(rangeExponent * color, 0.45) - 0.099;  
+    }  
+    return 100 * pow(nonlinear, gamma);
+}  
+
+Where this is calculated per RGB component, note that the color value in this equation must be in range 0.0 - 1.0
+It may be estimated that the display will not have the ability to output dark levels in the region of 0.0003024 in which case implementations may ignore that condition and use the same operator for the whole range 0.0 - 1.0  
+
+
+### OETF
 
 After the OOTF is applied the OETF shall be applied, this will yield a non linear output-signal in the range [0.0 - 1.0] that is stored in the display buffer.  
+This shall be done according to the parameter `Reference PQ OETF`of ITU BT.2100    
+
+Where the resulting non-linear signal (R,G,B) in the range [0:1] = ((C1 + C2 * pow(FD / 10000, m1)) / (1 + C3 * pow(FD / 10000, m1))  ^ m2 
+
+FD from the OOTF and  
+m1 = 2610/16384 = 0.1593017578125 
+m2 = 2523/4096 * 128 = 78.84375 
+c1 = 3424/4096 =0.8359375 = c3 − c2 + 1
+c2 = 2413/4096 * 32 = 18.8515625
+c3 = 2392/4096 * 32 = 18.6875
+
 
 
 ### Parameters
@@ -132,6 +185,12 @@ The following parameters are added by the `KHR_displaymapping_pq` extension:
 | **ootfHDR**         | `object`   | Opto-optical transfer function values for HDR display output, if no value is specified then the default parameters rangeExtension=59.5208 and gamma=2.4 is used  | No |
 | **ootfSDR**         | `object`   | Opto-optical transfer function values for SDR display output, if no value is specified then the default parameters rangeExtension=46.42 and gamma=2.4 is used  | No |
 | **sceneAperture**   | `object`   | Scene light adjustment setting, if no value supplied the default value of OFF will be used and scene light values will be kept unmodified.  OFF = No scene aperture control. Scene light values will be kept before applying display mapping. Any value above 10000 will be clamped.  AUTO = Auto scene aperture, light values are scaled according to `lightScale`, this is calculated using  `lightScale` = 10000 / `maxSceneLight`. Where `maxSceneLight` is updated for each frame.  | No |
+
+**Implementation Notes**
+
+Since knowledge of overall scene brightness values may be time-consuming to calculate exactly, implementations are free to approximate.  
+This could be done by calculating the max scene brightness once, adding up punctual and environment lights and then using this value, not taking occlusion of lightrays into account.    
+
 
 ## Schema
 
