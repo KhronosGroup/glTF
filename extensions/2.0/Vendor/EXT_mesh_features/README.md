@@ -400,7 +400,7 @@ Class properties are defined as entries in the `class.properties` dictionary, in
 >               },
 >               "birdCount": {
 >                 "description": "Number of birds perching on the tree",
->                 "type": "UINT8",
+>                 "componentType": "UINT8",
 >                 "required": true
 >               },
 >               "height": {
@@ -549,15 +549,15 @@ Enum values may be encoded in images, as integer values according to their enum 
 >             "properties": {
 >               "insideTemperature": {
 >                 "name": "Inside Temperature",
->                 "type": "UINT8"
+>                 "componentType": "UINT8"
 >               },
 >               "outsideTemperature": {
 >                 "name": "Outside Temperature",
->                 "type": "UINT8"
+>                 "componentType": "UINT8"
 >               },
 >               "insulation": {
 >                 "name": "Insulation Thickness",
->                 "type": "UINT8",
+>                 "componentType": "UINT8",
 >                 "normalized": true
 >               },
 >             }
