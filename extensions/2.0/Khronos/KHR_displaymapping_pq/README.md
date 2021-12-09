@@ -2,6 +2,10 @@
 
 ## Contributors
 
+
+Rickard Sahlin, <mailto:rickard.sahlin@ikea.com>  
+Sebastien Vandenberghe, <mailto:sevan@microsoft.com>  
+
 Copyright (C) 2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
@@ -184,7 +188,29 @@ The following parameters are added by the `KHR_displaymapping_pq` extension:
 |------------------------|------------|------------------------------------------------|--------------------|
 | **ootfHDR**         | `object`   | Opto-optical transfer function values for HDR display output, if no value is specified then the default parameters rangeExtension=59.5208 and gamma=2.4 is used  | No |
 | **ootfSDR**         | `object`   | Opto-optical transfer function values for SDR display output, if no value is specified then the default parameters rangeExtension=46.42 and gamma=2.4 is used  | No |
-| **sceneAperture**   | `object`   | Scene light adjustment setting, if no value supplied the default value of OFF will be used and scene light values will be kept unmodified.  OFF = No scene aperture control. Scene light values will be kept before applying display mapping. Any value above 10000 will be clamped.  AUTO = Auto scene aperture, light values are scaled according to `lightScale`, this is calculated using  `lightScale` = 10000 / `maxSceneLight`. Where `maxSceneLight` is updated for each frame.  | No |
+| **sceneAperture**   | `object`   | Scene light adjustment setting, if no value supplied the default value of OFF will be used and scene light values will be kept unmodified.    | No |
+
+
+`sceneAperture`
+
+| **apertureValue**   | `number`   | Aperture factor used to calculate aperture factor  | No |
+| **apertureControl**   | `number`   | Aperture control value used to calculate aperture factor  | No |
+| **minLuminance**   | `number`   | Min luminance to use when calculating aperture factor, if no value is specified it defaults to 0  | No |
+| **maxLuminance**   | `number`   | Max luminance to use when calculating aperture factor, if no value is specified it defaults to 10000  | No |
+
+
+This can be seen as a simplified automatic exposure control, without shutterspeed and ISO values, it can be seen as a way to get similar result to how the human eye would adapt to different light conditions by letting in more or less light.  
+The intended usecase is simpler scenes that do not change drastically, for instance when displaying product models or a room.  
+It is not intended for gaming like usecases where the viewpoint and environment changes dramitically, for instance from dimly lit outdoor night environments to a highly illuminated hallway.  
+
+This setting is a way to avoid having too high scene brightess, that would result in clamping of output values.  
+Or to avoid a scene from being too dark.  
+
+luminance = clamp(luminance, minLuminance, maxLuminance) 
+Aperture = apertureValue / (luminance - luminance * apertureControl)
+
+Before values are displaymapped, ie before the OOTF and OETF is applied, pixel values shall be factored by the Aperture value.  
+
 
 **Implementation Notes**
 
