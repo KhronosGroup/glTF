@@ -25,12 +25,12 @@
         },
 	"sceneAperture": {
 	    "type": "object",
-	    "description": "Controls scene light contribution values before displaymapping is applied."
+	    "description": "Controls scene light contribution values before displaymapping is applied by means of aperture."
 	    "items": {
                 "$ref": "aperture.schema.json"
             },
             "minItems": 0,
-            "gltf_detailedDescription": "Defines how overall scene light values shall be used."
+            "gltf_detailedDescription": "Defines parameters for scene light contribution using automatic aperture control."
 
     }
 }

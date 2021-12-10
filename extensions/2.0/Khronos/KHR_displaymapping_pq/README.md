@@ -222,6 +222,35 @@ This could be done by calculating the max scene brightness once, adding up punct
 
 [glTF.KHR_displaymapping_pq.json](schema/glTF.KHR_displaymapping_pq.json)
 
+The `KHR_displaymapping` extension is added to the root of the glTF   
+
+```json
+{
+  "extensions": {
+    "KHR_displaymapping_pq" : {
+      "ootfHDR": {
+        "rangeExtension": "58",
+        "gamma": "2.8"
+      },
+      "ootfSDR": {
+        "rangeExtension": "46",
+        "gamma": "2.2"
+      },
+      "sceneAperture": {
+        "apertureValue": "5000",
+        "apertureControl": "0",
+        "minLuminance": "300",
+        "maxLuminance": "5000"
+      }
+    }
+  },
+  "extensionsUsed": [
+    "KHR_displaymapping_pq"
+  ]
+  }
+```
+
+
 ## Appendix: Full Khronos Copyright Statement
 
 Copyright 2021 The Khronos Group Inc.
