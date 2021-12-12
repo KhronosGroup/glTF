@@ -72,7 +72,7 @@ It is not allowed to animate a glTFid property, as it does change the structure 
 |`"/materials/{}/pbrMetallicRoughness/metallicFactor"` |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|The metalness of the material                                 |
 |`"/materials/{}/pbrMetallicRoughness/roughnessFactor"`|`"SCALAR"`   |`5126`&nbsp;(FLOAT)|The roughness of the material                                 |
 |`"/materials/{}/alphaCutoff"`                         |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|The alpha cutoff value of the material                        |
-|`"/materials/{}/emissiveFactor"`                      |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|The emissive color of the material                            |
+|`"/materials/{}/emissiveFactor"`                      |`"VEC3"`     |`5126`&nbsp;(FLOAT)|The emissive color of the material                            |
 |`"/materials/{}/normalTexture/scale"`                 |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Multiplier applied to each normal vector of the normal texture|
 |`"/materials/{}/occlusionTexture/strength"`           |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Multiplier controlling the amount of occlusion applied        |
 
