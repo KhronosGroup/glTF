@@ -9,6 +9,7 @@
 * Mike Bond, Adobe, <mailto:mbond@adobe.com>
 * Ben Houston, ThreeKit, <mailto:bhouston@threekit.com>
 * Dominick D'Aniello, Mozilla <mailto:netpro2k@gmail.com>
+* Sebastian Vanderbeghe, <mailto:sevan@microsoft.com>  
 
 ## Status
 
@@ -59,7 +60,7 @@ This texture source shall contain a cubemap at the layer defined by the texture.
 When this extension is used, images shall use `image/ktx2` as mimeType.  
 The texture type of the KTX v2 file shall be 'Cubemap'  
 
-The following will load the environment light using KHR_texture_ktx.  
+The following will declare one cubemap to be referenced by a scene.  
 
 
 ```json  
@@ -220,7 +221,7 @@ Images are declared as an array of image objects referencing KTX v2 image files.
 | `irradianceCoefficients` | number[9][3] | Declares spherical harmonic coefficients for irradiance up to l=2. This is a 9x3 array. | No |
 | `boundingBoxMin` | number[3]  | Local boundingbox min. The minimum 3D point of the cubemap boundingbox. In world coordinates (meters) |  No |
 | `boundingBoxMax` | number[3]  | Local boundingbox max. The maximum 3D point of the cubemap boundingbox. In world coordinates (meters) |  No |
-| `cubemap` | integer  | Reference to texture source to be used as specular radiance cubemap, source must contain valid cubemap.  | :white_check_mark: Yes |
+| `cubemap` | integer  | Reference to texture source to be used as specular radiance cubemap, this references one of the images declared by this extensions images array.  | :white_check_mark: Yes |
 
 
 ## KTX v2 Images  

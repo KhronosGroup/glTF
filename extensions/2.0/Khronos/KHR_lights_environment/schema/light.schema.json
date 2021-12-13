@@ -21,7 +21,7 @@
         },
         "cubemap": {
             "type": "integer",
-            "description": "Texture reference to one of the declared cubemap textures.",
+            "description": "Texture reference to one of the declared cubemaps in this extension.",
         },
         "boundingBoxMin": {
             "description": "Local boundingbox min. The minimum 3D point of the cubemap boundingbox. In world coordinates (meters)",
