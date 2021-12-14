@@ -107,7 +107,7 @@ If this colorspace is used the source color images must be converted from linear
 
 **Implementation notes**
 
-Conversion of color pramaries to BT.2020 could be done after loading of a PNG/JPEG and after the image has been gamma expanded from sRGB to linear.  
+Conversion of color primaries to ITU BT.2020 could be done after loading of a PNG/JPEG and after the image has been gamma expanded from sRGB to linear.  
 
 #### Color conversion matrix
 
