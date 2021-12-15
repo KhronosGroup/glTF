@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "primitive.EXT_mesh_features.schema.json",
-    "title": "EXT_mesh_features glTF Primitive extension",
+    "$id": "mesh.primitive.EXT_mesh_features.schema.json",
+    "title": "EXT_mesh_features glTF Mesh Primitive extension",
     "type": "object",
     "description": "`EXT_mesh_features` extension for a primitive in a glTF model, to associate it with the root `EXT_mesh_features` object.",
     "allOf": [
