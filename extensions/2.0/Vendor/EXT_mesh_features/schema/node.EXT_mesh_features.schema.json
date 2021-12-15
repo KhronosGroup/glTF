@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "node.EXT_mesh_features.schema.json",
-    "title": "EXT_mesh_features extension for EXT_mesh_gpu_instancing",
+    "title": "EXT_mesh_features glTF Node extension",
     "type": "object",
     "description": "An object describing per-instance feature IDs to be used as indices to property arrays in the property table.",
     "allOf": [
