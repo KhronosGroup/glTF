@@ -84,7 +84,7 @@ Features are identified within a 3D asset by **Feature IDs** (unique identifiers
 
 #### Vertex Attribute
 
-*Defined in [primitive.EXT_mesh_features.schema.json](./schema/primitive.EXT_mesh_features.schema.json) and [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
+*Defined in [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json) and [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
 
 Per-vertex feature IDs may be defined explicitly in a vertex attribute accessor.
 
@@ -127,7 +127,7 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
 
 #### Implicit Vertex Attribute
 
-*Defined in [primitive.EXT_mesh_features.schema.json](./schema/primitive.EXT_mesh_features.schema.json) and [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
+*Defined in [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json) and [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
 
 Per-vertex feature IDs may also be defined implicitly, as a function of vertex index within the primitive. Implicit feature IDs reduce storage costs in several common cases, such as when all vertices in a primitive share the same feature ID, or each sequential group of `N` vertices (e.g. each triangle face) share the same feature ID.
 
@@ -168,7 +168,7 @@ For example
 
 ### Feature ID by Texture Coordinates
 
-*Defined in [primitive.EXT_mesh_features.schema.json](./schema/primitive.EXT_mesh_features.schema.json) and [featureIdTexture.schema.json](./schema/featureIdTexture.schema.json).*
+*Defined in [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json) and [featureIdTexture.schema.json](./schema/featureIdTexture.schema.json).*
 
 Feature ID textures classify the pixels of an image into different features. Some use cases include image segmentation or marking regions on a map. Often per-texel feature IDs provide finer granularity than per-vertex feature IDs, as in the example below.
 
@@ -640,7 +640,7 @@ This extension is optional, meaning it should be placed in the `extensionsUsed` 
 ## Schema
 
 * [glTF.EXT_mesh_features.schema.json](./schema/glTF.EXT_mesh_features.schema.json)
-* [primitive.EXT_mesh_features.schema.json](./schema/primitive.EXT_mesh_features.schema.json)
+* [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json)
 * [node.EXT_mesh_features.schema.json](./schema/node.EXT_mesh_features.schema.json)
 
 ## Examples

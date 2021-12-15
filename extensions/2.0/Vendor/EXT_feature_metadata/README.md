@@ -333,7 +333,7 @@ Feature textures are defined with the following steps:
 
 1. A class is defined in the root `EXT_feature_metadata` extension object. This is used to describe the metadata in the texture.
 2. A feature texture is defined in the root `EXT_feature_metadata.featureTextures` object. This must reference the class ID defined in step 1.
-3. A feature texture is associated with a primitive by listing the feature texture ID in the `primitive.EXT_feature_metadata.featureTextures` array.
+3. A feature texture is associated with a primitive by listing the feature texture ID in the `mesh.primitive.EXT_feature_metadata.featureTextures` array.
 <img src="figures/feature-texture.png"  alt="Feature Texture" width="500">
 
 _Class and feature texture_
