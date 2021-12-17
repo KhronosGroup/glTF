@@ -1,35 +1,55 @@
-# MSFT_packing_occlusionRoughnessMetallic
+= MSFT_packing_occlusionRoughnessMetallic
+:tmtitle: pass:q,r[^™^]
+:regtitle: pass:q,r[^®^]
+// (AUTHOR)
+:data-uri:
+:icons: font
+:toc2:
+:toclevels: 10
+:sectnumlevels: 10
+:max-width: 100%
+:numbered:
+:source-highlighter: coderay
+:docinfo: shared-head
+:docinfodir: ../..
+:stem:
 
-## Contributors
+// :xrefstyle: short
+// :listing-caption: Listing
+:leveloffset: 1
 
-* Saurabh Bhatia, Microsoft
-* Gary Hsu, Microsoft
-* Marc Appelsmeier, Microsoft
-* Dag Frommhold, Microsoft 
-* John Copic, Microsoft 
+= Contributors
 
-## Status
+  * Saurabh Bhatia, Microsoft
+  * Gary Hsu, Microsoft
+  * Marc Appelsmeier, Microsoft
+  * Dag Frommhold, Microsoft
+  * John Copic, Microsoft
+
+= Status
 
 Complete
 
-## Dependencies
+= Dependencies
 
 Written against the glTF 2.0 spec.
 
-## Overview
+= Overview
 
 This extension adds support for alternate texture packing and is meant to be used for Windows Mixed Reality Home and 3D Launchers for Windows Mixed Reality.
 
 This extension defines three additional properties:
-- `occlusionRoughnessMetallicTexture`: Specifies the index of a texture with the packing Occlusion (R), Roughness (G), Metallic (B)
-- `roughnessMetallicOcclusionTexture`: Specifies the index of a texture with the packing Roughness (R), Metallic (G), Occlusion (B)
-- `normalTexture`: Specifies the index of a texture which contains two channel (RG) normal map. 
 
-The extension should only be used when creating glTF assets for engines that support this packing and is not meant to be a general purpose packing extension. Any client that does not support this extension can safely ignore these additional packed textures and rely on the default packing in glTF 2.0. This extension can also be used along with other extensions like [MSFT_texture_dds](../MSFT_texture_dds/README.md) to store the packed textures in DDS files. 
+  * `occlusionRoughnessMetallicTexture`: Specifies the index of a texture with the packing Occlusion (R), Roughness (G), Metallic (B)
+  * `roughnessMetallicOcclusionTexture`: Specifies the index of a texture with the packing Roughness (R), Metallic (G), Occlusion (B)
+  * `normalTexture`: Specifies the index of a texture which contains two channel (RG) normal map.
+
+The extension should only be used when creating glTF assets for engines that support this packing and is not meant to be a general purpose packing extension. Any client that does not support this extension can safely ignore these additional packed textures and rely on the default packing in glTF 2.0. This extension can also be used along with other extensions like link:../MSFT_texture_dds/README.html[MSFT_texture_dds] to store the packed textures in DDS files.
 
 The example below shows how this extension can be used along with the MSFT_texture_dds extension in a glTF Binary (.glb) file:
 
-```json
+[source,json]
+----
 {
     "materials": [
         {
@@ -129,14 +149,13 @@ The example below shows how this extension can be used along with the MSFT_textu
         }
     ]
 }
-```
+----
 
-## glTF Schema Updates
+= glTF Schema Updates
 
-* **JSON schema**: [glTF.MSFT_packing_occlusionRoughnessMetallic.schema.json](schema/glTF.MSFT_packing_occlusionRoughnessMetallic.schema.json)
+  * *JSON schema*: link:schema/glTF.MSFT_packing_occlusionRoughnessMetallic.schema.json[glTF.MSFT_packing_occlusionRoughnessMetallic.schema.json]
 
+= Known Implementations
 
-## Known Implementations
-
-This extension is used by Windows Mixed Reality Home and 3D Launchers for Windows Mixed Reality to improve performance by using the specially packed textures. [glTF-Toolkit](https://github.com/Microsoft/glTF-Toolkit) can be used to generate files that use this extension.
+This extension is used by Windows Mixed Reality Home and 3D Launchers for Windows Mixed Reality to improve performance by using the specially packed textures. https://github.com/Microsoft/glTF-Toolkit[glTF-Toolkit] can be used to generate files that use this extension.
 

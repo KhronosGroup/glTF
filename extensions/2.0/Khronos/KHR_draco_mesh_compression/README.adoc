@@ -1,0 +1,182 @@
+// Copyright 2013-2022 The Khronos Group Inc.
+// SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+
+= KHR_draco_mesh_compression
+:tmtitle: pass:q,r[^™^]
+:regtitle: pass:q,r[^®^]
+The Khronos{regtitle} 3D Formats Working Group
+:data-uri:
+:icons: font
+:toc2:
+:toclevels: 10
+:sectnumlevels: 10
+:max-width: 100%
+:numbered:
+:source-highlighter: coderay
+:docinfo: shared-head
+:docinfodir: ../..
+:stem:
+
+// :xrefstyle: short
+// :listing-caption: Listing
+:leveloffset: 1
+
+= Contributors
+
+  * Fan Zhang, Google, link:mailto:zhafang@google.com[zhafang@google.com]
+  * Ondrej Stava, Google, link:mailto:ostava@google.com[ostava@google.com]
+  * Frank Galligan, Google, link:mailto:fgalligan@google.com[fgalligan@google.com]
+  * Kai Ninomiya, Google, link:mailto:kainino@google.com[kainino@google.com]
+  * Patrick Cozzi, Cesium, https://twitter.com/pjcozzi[@pjcozzi]
+
+Copyright 2013-2022 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+See <<full-copyright, the appendix>> for the full Khronos Copyright Statement.
+
+= Status
+
+Complete, Ratified by the Khronos Group
+
+= Dependencies
+
+Written against the glTF 2.0 spec.
+
+= Overview
+
+This extension defines a schema to use https://github.com/google/draco[Draco geometry compression (non-normative)] libraries in glTF format. This allows glTF to support streaming compressed geometry data instead of the raw data. This extension specification is based on https://google.github.io/draco/spec/[Draco bitstream version 2.2 (the entirety of this specification is normative and included in Scope)].
+
+The <<conformance, Conformance>> section specifies what an implementation must do when encountering this extension, and how the extension interacts with the attributes defined in the base specification.
+
+= glTF Schema Updates
+
+If a `primitive` contains an `extension` property and the `extension` property defines its `KHR_draco_mesh_compression` property, then the Draco geometry compression must be used.
+
+The following picture shows the structure of the schema update.
+
+.Structure of geometry compression extension.
+image::figures/structure.png[align="left"]
+
+The Draco extension points to the `bufferView` that contains the compressed data.
+If the uncompressed version of the asset is not provided, then `KHR_draco_mesh_compression` must be added to `extensionsRequired`.
+
+[source,javascript]
+----
+"extensionsRequired" : [
+    "KHR_draco_mesh_compression"
+]
+----
+
+If the `KHR_draco_mesh_compression` property is set in `extensionsRequired` then the primitive must only contain the Draco compressed data.
+If a Draco compressed version of the asset is provided then `KHR_draco_mesh_compression` must be added to `extensionsUsed`.
+
+Usage of the extension must be listed in the `extensionsUsed`.
+
+[source,javascript]
+----
+"extensionsUsed" : [
+    "KHR_draco_mesh_compression"
+]
+----
+
+Below is an example of what part of a glTF file will look like if the Draco extension is set. Note that all other nodes stay the same except `primitives`:
+
+[source,javascript]
+----
+"mesh" : {
+    "primitives" : [
+        {
+            "attributes" : {
+                "POSITION" : 11,
+                "NORMAL" : 12,
+                "TEXCOORD_0" : 13,
+                "WEIGHTS_0" : 14,
+                "JOINTS_0" : 15
+            },
+            "indices" : 10,
+            "mode" : 4,
+            "extensions" : {
+                "KHR_draco_mesh_compression" : {
+                    "bufferView" : 5,
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2,
+                        "WEIGHTS_0" : 3,
+                        "JOINTS_0" : 4
+                    }
+                }
+            }
+        }
+    ]
+}
+
+"bufferViews" : [
+    // ...
+    // bufferView of Id 5
+    {
+        "buffer" : 10,
+        "byteOffset" : 1024,
+        "byteLength" : 10000
+    }
+    // ...
+}
+----
+
+== bufferView
+
+The `bufferView` property points to the buffer containing compressed data. The data must be passed to a mesh decoder and decompressed to a mesh.
+
+== attributes
+
+`attributes` defines the attributes stored in the decompressed geometry. e.g., in the example above, `POSITION`, `NORMAL`, `TEXCOORD_0`, `WEIGHTS_0` and `JOINTS_0`. Each attribute is associated with an attribute id which is its unique id in the compressed data. The `attributes` defined in the extension must be a subset of the attributes of the primitive. To request an attribute, loaders must be able to use the correspondent attribute id specified in the `attributes` to get the attribute from the compressed data.
+
+== accessors
+
+The `accessors` properties corresponding to the `attributes` and `indices` of the `primitives` must match the decompressed data.
+
+=== Restrictions on geometry type
+
+When using this extension, the `mode` of `primitive` must be either `TRIANGLES` or `TRIANGLE_STRIP` and the mesh data will be decoded accordingly.
+
+== glTF Schema Updates
+
+For full details on the `KHR_draco_mesh_compression` extension properties, see the schema:
+
+  * *JSON schema*: link:schema/mesh.primitive.KHR_draco_mesh_compression.schema.json[extension property (the entirety of this specification is normative and included in Scope)]
+
+[[conformance]]
+= Conformance
+
+Below is the recommended process when a loader encounters a glTF asset with the Draco extension set:
+
+  * If `KHR_draco_mesh_compression` is in `extensionsRequired` and the loader does not support the Draco extension, then the loader must fail loading the asset.
+  * If the loader does not support the Draco extension and `KHR_draco_mesh_compression` is not in `extensionsRequired`, then load the glTF asset ignoring `KHR_draco_mesh_compression` in `primitive`.
+  * If the loader does support the Draco extension, but will not process `KHR_draco_mesh_compression`, then the loader must load the glTF asset ignoring `KHR_draco_mesh_compression` in `primitive`.
+  * If the loader does support the Draco extension, and will process `KHR_draco_mesh_compression` then:
+  ** The loader must process `KHR_draco_mesh_compression` first. The loader must get the data from `KHR_draco_mesh_compression`'s `bufferView` property and decompress the data using a Draco decoder to a Draco geometry.
+  ** Then the loader must process `attributes` and `indices` properties of the `primitive`. When loading each `accessor`, you must ignore the `bufferView` and `byteOffset` of the `accessor` and go to the previously decoded Draco geometry in the `primitive` to get the data of indices and attributes. A loader must use the decompressed data to fill the `accessors` or render the decompressed Draco geometry directly (e.g. https://github.com/mrdoob/three.js/blob/dev/examples/js/loaders/DRACOLoader.js[ThreeJS (non-normative)]).
+  ** If additional attributes are defined in `primitive`'s `attributes`, but not defined in `KHR_draco_mesh_compression`'s `attributes`, then the loader must process the additional attributes as usual.
+
+= Implementation Note
+
+_This section is non-normative._
+
+To prevent transmission of redundant data, exporters should generally write compressed Draco data into a separate buffer from the uncompressed fallback, and shared data into a third buffer. Loaders may then optimize to request only the necessary buffers.
+
+Draco compression may change the order and number of vertices in a mesh. To satisfy the requirement that `accessors` properties be correct for both compressed and uncompressed data, generators should create uncompressed `attributes` and `indices` using data that has been decompressed from the Draco buffer, rather than the original source data.
+
+= Resources
+
+_This section is non-normative._
+
+  * https://github.com/google/draco[Draco Open Source Library]
+  * https://github.com/mrdoob/three.js/blob/dev/examples/js/loaders/DRACOLoader.js[ThreeJS Loader] and
+    https://github.com/mrdoob/three.js/blob/dev/examples/webgl_loader_draco.html[example]
+
+:numbered!:
+
+[appendix]
+[[full-copyright]]
+= Full Khronos Copyright Statement
+
+:copyyears: 2013-2022
+include::../../speccopyright.txt[]

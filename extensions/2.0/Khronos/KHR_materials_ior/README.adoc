@@ -1,0 +1,153 @@
+// Copyright 2018-2022 The Khronos Group Inc.
+// SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+
+= KHR_materials_ior
+:tmtitle: pass:q,r[^™^]
+:regtitle: pass:q,r[^®^]
+The Khronos{regtitle} 3D Formats Working Group
+:data-uri:
+:icons: font
+:toc2:
+:toclevels: 10
+:sectnumlevels: 10
+:max-width: 100%
+:numbered:
+:source-highlighter: coderay
+:docinfo: shared-head
+:docinfodir: ../..
+:stem:
+
+// :xrefstyle: short
+// :listing-caption: Listing
+:leveloffset: 1
+
+= Contributors
+
+  * Tobias Haeussler, Dassault Systemes https://github.com/proog128[@proog128]
+  * Bastian Sdorra, Dassault Systemes https://github.com/bsdorra[@bsdorra]
+  * Mike Bond, Adobe, https://github.com/MiiBond[@miibond]
+  * Emmett Lalish, Google https://github.com/elalish[@elalish]
+  * Don McCurdy, Google https://twitter.com/donrmccurdy[@donrmccurdy]
+  * Norbert Nopper, UX3D https://twitter.com/UX3DGpuSoftware[@UX3DGpuSoftware]
+  * Richard Sahlin, IKEA https://github.com/rsahlin[@rsahlin]
+  * Eric Chadwick, Wayfair https://github.com/echadwick-wayfair[echadwick-wayfair]
+  * Ben Houston, ThreeKit https://github.com/bhouston[@bhouston]
+  * Gary Hsu, Microsoft https://twitter.com/bghgary[@bghgary]
+  * Sebastien Vandenberghe, Microsoft https://twitter.com/sebavanjs[@sebavanjs]
+  * Nicholas Barlow, Microsoft
+  * Nicolas Savva, Autodesk https://github.com/nicolassavva-autodesk[@nicolassavva-autodesk]
+  * Henrik Edstrom, Autodesk
+  * Bruce Cherniak, Intel
+  * Adam Morris, Target https://github.com/weegeekps[@weegeekps]
+  * Sandra Voelker, Target
+  * Alex Jamerson, Amazon
+  * Thomas Dideriksen, Amazon
+  * Alex Wood, AGI https://twitter.com/abwood[@abwood]
+  * Ed Mackey, AGI https://twitter.com/emackey[@emackey]
+
+Copyright 2018-2022 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+See <<full-copyright, the appendix>> for the full Khronos Copyright Statement.
+
+= Status
+
+Complete, Ratified by the Khronos Group
+
+= Dependencies
+
+Written against the glTF 2.0 spec.
+
+= Exclusions
+
+  * This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+  * This extension must not be used on a material that also uses `KHR_materials_unlit`.
+
+= Overview
+
+The dielectric BRDF of the metallic-roughness material in glTF uses a fixed value of 1.5 for the index of refraction. This is a good fit for many plastics and glass, but not for other materials like water or asphalt, sapphire or diamond. This extensions allows users to set the index of refraction to a certain value.
+
+= Extending Materials
+
+The index of refraction of a material is configured by adding the `KHR_materials_ior` extension to any glTF material.
+
+[source,json]
+----
+{
+    "materials": [
+        {
+            "extensions": {
+                "KHR_materials_ior": {
+                    "ior": 1.4,
+                }
+            }
+        }
+    ]
+}
+----
+
+[options="header"]
+|====
+|       | Type     | Description              | Required
+| *ior* | `number` | The index of refraction. | No, default: `1.5`
+|====
+
+Typical values for the index of refraction range from 1 to 2. In rare cases values greater than 2 are possible. The following table shows some materials and their index of refraction:
+
+[options="header"]
+|====
+| Material     | Index of Refraction
+| Air          | 1.0
+| Water        | 1.33
+| Eyes         | 1.38
+| Window Glass | 1.52
+| Sapphire     | 1.76
+| Diamond      | 2.42
+|====
+
+The ior parameter affects the `dielectric_brdf` of the glTF 2.0 metallic-roughness material. The new `dielectric_brdf` that includes the `ior` parameter is given as follows:
+
+[source]
+----
+dielectric_brdf =
+  fresnel_mix(
+    ior = ior,
+    base = diffuse_brdf(
+      color = baseColor),
+    layer = specular_brdf(
+      {alpha} = roughness^2))
+----
+
+Valid values for `ior` are numbers greater than or equal to 1. In addition, a value of 0 is allowed. This value gives full weight to `layer`, i.e., the Fresnel term evaluates to 1 independent of the view or light direction. It is useful in combination with `KHR_materials_specular` to seamlessly support the specular-glossiness workflow.
+
+= Implementation
+
+_This section is non-normative._
+
+The extension changes the computation of the Fresnel term defined in https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation[Appendix B] to the following:
+
+[source]
+----
+const dielectricSpecular = ((ior - 1)/(ior + 1))^2
+----
+
+Note that for the default index of refraction `ior = 1.5` this term evaluates to `dielectricSpecular = 0.04`.
+
+= Interaction with other extensions
+
+If `KHR_materials_specular` is used in combination with `KHR_materials_ior`, the Fresnel term is additionally scaled by the values given `specular` and `specularColor`. See link:../KHR_materials_specular/README.html[`KHR_materials_specular`] for more information.
+
+If `KHR_materials_transmission` is used in combination with `KHR_materials_ior`, the `ior` affects the strength of the transmission effect according to the Fresnel term. See link:../KHR_materials_transmission/README.html[`KHR_materials_transmission`] for more information. If `KHR_materials_specular` is used in addition, the Fresnel term is additionally scaled by the values given in `specular` and `specularColor`.
+
+If `KHR_materials_volume` is used in combination with `KHR_materials_ior`, the `ior` affects the refraction effect. See link:../KHR_materials_volume/README.html[`KHR_materials_volume`] for more information.
+
+= glTF Schema Updates
+
+  * *JSON schema*: link:schema/glTF.KHR_materials_ior.schema.json[glTF.KHR_materials_ior.schema.json]
+
+:numbered!:
+
+[appendix]
+[[full-copyright]]
+= Full Khronos Copyright Statement
+
+:copyyears: 2018-2022
+include::../../speccopyright.txt[]
