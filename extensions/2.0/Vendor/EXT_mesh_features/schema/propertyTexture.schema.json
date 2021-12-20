@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "propertyTexture.schema.json",
-    "title": "Property Texture",
+    "title": "Property Texture in EXT_mesh_features",
     "type": "object",
     "description": "Features conforming to a class, organized as property values stored in texture channels.",
     "allOf": [

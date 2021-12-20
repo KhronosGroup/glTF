@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "textureAccessor.schema.json",
-    "title": "Texture Accessor",
+    "title": "Texture Accessor in EXT_feature_metadata",
     "type": "object",
     "description": "A description of how to access property values from the color channels of a texture.",
     "allOf": [

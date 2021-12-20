@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "featureIdAttribute.schema.json",
-    "title": "Feature ID Attribute",
+    "title": "Feature ID Attribute in EXT_mesh_features",
     "type": "object",
     "description": "Feature IDs to be used as indices to property arrays in the property table.",
     "allOf": [

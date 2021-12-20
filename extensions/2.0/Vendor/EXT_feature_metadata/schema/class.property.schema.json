@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "class.property.schema.json",
-    "title": "Class property",
+    "title": "Property in EXT_feature_metadata",
     "type": "object",
     "description": "A class property.",
     "allOf": [

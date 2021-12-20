@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "enum.value.schema.json",
-    "title": "Enum value",
+    "title": "Enum value in EXT_feature_metadata",
     "type": "object",
     "description": "An enum value.",
     "allOf": [

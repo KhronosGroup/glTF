@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "statistics.class.property.schema.json",
-    "title": "Property Statistics",
+    "title": "Property Statistics in EXT_feature_metadata",
     "type": "object",
     "description": "Statistics about property values.",
     "allOf": [

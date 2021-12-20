@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "featureTable.schema.json",
-    "title": "Feature Table",
+    "title": "Feature Table in EXT_feature_metadata",
     "type": "object",
     "description": "A feature table defined by a class and property values stored in arrays.",
     "allOf": [

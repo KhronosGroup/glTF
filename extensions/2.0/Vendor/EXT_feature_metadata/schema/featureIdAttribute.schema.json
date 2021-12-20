@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "featureIdAttribute.schema.json",
-    "title": "Feature ID Attribute",
+    "title": "Feature ID Attribute in EXT_feature_metadata",
     "type": "object",
     "description": "An object mapping feature IDs to a feature table.",
     "allOf": [

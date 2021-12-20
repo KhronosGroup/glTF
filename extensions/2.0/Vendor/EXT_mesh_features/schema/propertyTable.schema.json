@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "propertyTable.schema.json",
-    "title": "Property Table",
+    "title": "Property Table in EXT_mesh_features",
     "type": "object",
     "description": "Features conforming to a class, organized as property values stored in columnar arrays.",
     "allOf": [

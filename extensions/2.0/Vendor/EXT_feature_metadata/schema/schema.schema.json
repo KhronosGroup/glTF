@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "schema.schema.json",
-    "title": "Schema",
+    "title": "Schema in EXT_feature_metadata",
     "type": "object",
     "description": "An object defining classes and enums.",
     "allOf": [

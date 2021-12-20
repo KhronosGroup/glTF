@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "statistics.class.schema.json",
-    "title": "Class Statistics",
+    "title": "Class Statistics in EXT_feature_metadata",
     "type": "object",
     "description": "Statistics about features that conform to the class.",
     "allOf": [

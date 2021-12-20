@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "featureIdTexture.schema.json",
-    "title": "Feature ID Texture",
+    "title": "Feature ID Texture in EXT_feature_metadata",
     "type": "object",
     "description": "An object describing a texture used for storing per-texel feature IDs.",
     "allOf": [
