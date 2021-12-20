@@ -18,7 +18,6 @@
         "offset": {
             "type": "integer",
             "minimum": 0,
-            "default": 0,
             "description": "Initial value for an implicit feature ID range."
         },
         "repeat": {
@@ -51,7 +50,10 @@
             }
         },
         {
-            "description": "Implicit feature ID. Both 'offset' and 'repeat' are optional; 'attribute' is disallowed.",
+            "description": "Implicit feature ID. `offset` is required; 'repeat' is optional; 'attribute' is disallowed.",
+            "required": [
+                "offset"
+            ],
             "not": {
                 "required": [
                     "attribute"
