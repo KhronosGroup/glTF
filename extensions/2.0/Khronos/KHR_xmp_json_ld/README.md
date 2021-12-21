@@ -1,5 +1,5 @@
 <!--
-Copyright 2018-2020 The Khronos Group Inc.
+Copyright 2018-2021 The Khronos Group Inc.
 SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 -->
 
@@ -26,7 +26,7 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status
 
-Complete, Pending Ratification
+Complete, Ratified by the Khronos Group
 
 Supersedes [KHR_xmp](../../Archived/KHR_xmp/README.md)
 
