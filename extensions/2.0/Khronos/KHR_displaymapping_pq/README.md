@@ -3,7 +3,7 @@
 ## Contributors
 
 
-Rickard Sahlin, <mailto:rickard.sahlin@ikea.com>  
+Rickard Sahlin, <mailto:rickard.sahlin@inter.ikea.com>  
 Sebastien Vandenberghe, <mailto:sevan@microsoft.com>  
 
 Copyright (C) 2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
@@ -25,6 +25,11 @@ Written against the glTF 2.0 spec.
 The goal of this extension is to provide the means to map internal, usually floating point, light contribution values that may be in an unknown range to that of a known range and attached display.  
 One of the reasons for this is to retain the hue of the source materials under varying light conditions.  
 Correct representation of hue is important in order to keep artistic intent, or to achieve a physically correct visualization of products for instance in e-commerce.  
+
+Another reason is to provide means for deterministic brightness (light intensity) values.  
+According to research (Bernstein et al. 2018) the mind's perception of brightness is mostly the same, regardless of object brightness.  
+The difference in the perception of the object's brightness is based on background color.  
+This means that in order to have deterministic control of perceived brightness it is important to be able to control both object and background color, for instance by means of a set dynamic range.  
 
 It also provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
 The intended usecases for this extension is any usecase where the light contribution values will go above 1.0, for instance by using KHR_lights_punctual, KHR_emissive_strength or KHR_environment_lights.  
@@ -52,7 +57,7 @@ This may not be a problem if the output is a high definition image format or som
 However, a typical usecase for realtime rasterizer implementations is that the output is a light emitting display.  
 Such a display rarely has the range and precision of internal calculations making it necessary to map internal pixel values to match the characteristics of the output.  
 This mapping is generally referred to as tone-mapping, however the exact meaning of tone-mapping varies and can also mean the process of applying artistic intent to the output.  
-For that reason this document will use the term displaymapping.    
+For that reason this document will use the term displaymapping.  
 
 The displaymapping for this extension is chosen from ITU BT.2100 which is the standard for HDR TV and broadcast content creation.   
 This standard uses the perceptual quantizer as transfer function, ie to go from scene linear values to non linear output values.  
@@ -80,7 +85,7 @@ When the KHR_displaymapping_pq extension is used all lighting and pixel calculat
 This does not have an impact on color texture sources since they define values as contribution factor.  
 The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in the SMPTE ST 2084 transfer function.  
 
-When using this extension light contribution values shall be aligned to account for 10000 cd/m2 as max luminance.  
+When using this extension light contribution values shall be aligned to account for 10000 cd/m2 as max luminance, meaning that the dynamic range is 0 to 10000.    
 This means that content creators shall be aware of 10000 cd/m2 as the maximum brightness value range, it does not mean that the display will be capable of outputing at this light luminance.  
 
 ## Scene light value
