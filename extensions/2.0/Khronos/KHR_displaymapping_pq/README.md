@@ -64,7 +64,13 @@ This standard uses the perceptual quantizer as transfer function, ie to go from 
 The function is selected based on minimizing visual artefacts from color banding according to the Barten Ramp. Resulting on very slight visible banding on panels with 10 bits per colorchannel.  
 On panels with 12 bits there is no visible banding artefacts when using the perceptual qantizer.  
 
-Apart from being widely supported and used in the TV / movie industry it is also embraced by the gaming community, with support in the engines from some of the major game companies.  
+The need for a known dynamic range comes from the way that the mind perceieves brightness.  
+Humans have no way to determine exact brightness of objects, instead the brightness is measured compared to background (Bernstein et al.2018).  
+As an effect of this it is important to know the mapped display brightness for a high dynamic range.  
+Imagine a background with a scene linear brightness around RGB (10.0, 10.0, 10.0) with an object of scene linear brightness around RGB (100.0, 100.0, 100.0).  
+As the mind will perceive object brightess compared to the background, ie 100 vs 10, it is vital to have a known higher dynamic range in order to achieve deterministic display output.     
+
+Apart from being widely supported and used in the TV / movie industry the perceptual quantizer is also embraced by the gaming community, with support in the engines from some of the major game companies.  
 For instance, game engines Frostbite and Lumberyard and also in specific games such as Destiny 2 and Call Of Duty.  
 
 
