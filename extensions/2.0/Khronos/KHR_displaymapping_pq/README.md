@@ -22,7 +22,8 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-The goal of this extension is to provide the means to map internal, usually floating point, light contribution values that may be in an unknown range to that of a known range and attached display.  
+
+The goal of this extension is to provide a way to convert the resulting (rendered) output values to a known range so that they can be sent to a display.  
 One of the reasons for this is to retain the hue of the source materials under varying light conditions.  
 Correct representation of hue is important in order to keep artistic intent, or to achieve a physically correct visualization of products for instance in e-commerce.  
 
@@ -33,6 +34,9 @@ This means that in order to have deterministic control of perceived brightness i
 
 It also provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
 The intended usecases for this extension is any usecase where the light contribution values will go above 1.0, for instance by using KHR_lights_punctual, KHR_emissive_strength or KHR_environment_lights.  
+
+The extension affects all of the assets, images and textures, included in a file that is using this extension.   
+
 
 This extension has three integration points:  
 1: If the framebuffer colorspace is compatible with ITU BT.2020 color primaries, then before images are sampled they shall be converted to ITU BT.2020 colorspace  
@@ -85,16 +89,21 @@ This extension does not take the viewing environment of the display, or eye ligh
 It is assumed that the content is viewed in an environment that is dimly lit (~5 cd / m2) without direct light on the display.  
 
 
-## Internal range
+## Internal range of light contribution values
+
+This section describes how light contribution values shall be handled.  
 
 When the KHR_displaymapping_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum ouput brightness.  
 This does not have an impact on color texture sources since they define values as contribution factor.  
 The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in the SMPTE ST 2084 transfer function.  
 
 When using this extension light contribution values shall be aligned to account for 10000 cd/m2 as max luminance, meaning that the dynamic range is 0 to 10000.    
-This means that content creators shall be aware of 10000 cd/m2 as the maximum brightness value range, it does not mean that the display will be capable of outputing at this light luminance.  
+This means that content creators shall be aware of 10000 cd/m2 as the maximum brightness value range.  
+It does not mean that the display will be capable of outputing at this light luminance.  
 
-## Scene light value
+
+
+## Exporter considerations for light contribution values
 
 A content creation tool supporting this extension shall sum upp light contribution for a scene before exporting to glTF, this can be a naive addition of all lights included in the scene that adds max values together.  
 If scene max light contribution is above 10000 cd / m2 there is a choice to either downscale light values before export or to set `sceneAperture` to `AUTO`  
@@ -102,7 +111,6 @@ This means that implementations will calculate max light intensity for the scene
 
 Light contribution values above 10000 cd / m2 is strongly discouraged and will be clamped by implementations if not adjusted by scene aperture.    
 
-The internal precision shall at a minimum match the equivalent of 12 bits unsigned integer, which maps to the PQ.  
 
 ## Displaymapping
 
@@ -143,7 +151,11 @@ A SDR capable display is defined as having less than 10 bits per pixel for each 
 
 ### OOTF
 
-Resulting linear scene light values shall be display mapped according to the parameter `Reference PQ OOTF` of ITU BT.2100   
+Opto-optical-transfer-function  
+Input signal to the OOTF is the scene linear light. The OOTF maps relative scene linear light to display linear light.  
+For more information see the ITU BT.2100 specification.  
+
+Resulting linear scene light values (the pixel output) shall be display mapped according to the parameter `Reference PQ OOTF` of ITU BT.2100   
 The opto-optical reference transform shall be applied, the reference transform compatible with both SDR and HDR displays is described in ITU BT.2390 with the use of range extension and gamma values.  
 
 E′ = G709[E] = pow(1.099 (rangeExtension * E), 0.45) – 0.099 for 1 > E > 0.0003024
@@ -162,6 +174,7 @@ Some game engines are known to use a value of 2.8 for HDR gamma.
 
 Pseudocode for BT.2100 reference OOTF  
 
+```
 BT_2100_OOTF(color, rangeExponent, gamma) {  
     if (color <= 0.0003024) {  
         nonlinear = 267.84 * color;  
@@ -170,16 +183,24 @@ BT_2100_OOTF(color, rangeExponent, gamma) {
     }  
     return 100 * pow(nonlinear, gamma);
 }  
+```
 
 Where this is calculated per RGB component, note that the color value in this equation must be in range 0.0 - 1.0
 It may be estimated that the display will not have the ability to output dark levels in the region of 0.0003024 in which case implementations may ignore that condition and use the same operator for the whole range 0.0 - 1.0  
 
+The incoming color value shall first be adjusted by aperture as detailed in [See Scene aperture](#scene-aperture) 
+
 
 ### OETF
+
+Opto-electrical-transfer-function  
+Input signal to the PQ OETF is the scene linear light. The PQ OETF maps scene linear light to non-linear PQ signal value.  
+For more information see the ITU BT.2100 specification.  
 
 After the OOTF is applied the OETF shall be applied, this will yield a non linear output-signal in the range [0.0 - 1.0] that is stored in the display buffer.  
 This shall be done according to the parameter `Reference PQ OETF`of ITU BT.2100    
 
+```
 Where the resulting non-linear signal (R,G,B) in the range [0:1] = ((C1 + C2 * pow(FD / 10000, m1)) / (1 + C3 * pow(FD / 10000, m1))  ^ m2 
 
 FD from the OOTF and  
@@ -188,7 +209,7 @@ m2 = 2523/4096 * 128 = 78.84375
 c1 = 3424/4096 =0.8359375 = c3 − c2 + 1
 c2 = 2413/4096 * 32 = 18.8515625
 c3 = 2392/4096 * 32 = 18.6875
-
+```
 
 
 ### Parameters
@@ -202,15 +223,43 @@ The following parameters are added by the `KHR_displaymapping_pq` extension:
 | **sceneAperture**   | `object`   | Scene light adjustment setting, if no value supplied the default value of OFF will be used and scene light values will be kept unmodified.    | No |
 
 
+
+`ootfHDR`
+
+These values shall be used if the output framebuffer is compatible with BT 2020 color primaries or is otherwise considered to be HDR capable.  
+[See OOTF](#ootf)
+
+| Name                   | Type       | Description                                    | Required           |
+|------------------------|------------|------------------------------------------------|--------------------|
+| **rangeExtension**   | `number`   | Range extension value used in the HDR ootf  | :white_check_mark: Yes |
+| **gamma**   | `number`   | Gamma value used in the HDR ootf  | :white_check_mark: Yes |
+
+
+`ootfHDR`
+
+These valuse shall be used if the output framebuffer is not compatible with BT 2020 color primaries or is otherwise NOT considered to be HDR capable.  
+[See OOTF](#ootf)
+
+| Name                   | Type       | Description                                    | Required           |
+|------------------------|------------|------------------------------------------------|--------------------|
+| **rangeExtension**   | `number`   | Range extension value used in the SDR ootf  | :white_check_mark: Yes |
+| **gamma**   | `number`   | Gamma value used in the SDR ootf  | :white_check_mark: Yes |
+
+
+### Scene aperture
+
 `sceneAperture`
 
-| **apertureValue**   | `number`   | Aperture factor used to calculate aperture factor  | No |
-| **apertureControl**   | `number`   | Aperture control value used to calculate aperture factor  | No |
+| Name                   | Type       | Description                                    | Required           |
+|------------------------|------------|------------------------------------------------|--------------------|
+| **apertureValue**   | `number`   | Base value used to calculate aperture factor  | No |
+| **apertureControl**   | `number`   | Control value used to calculate aperture factor  | No |
 | **minLuminance**   | `number`   | Min luminance to use when calculating aperture factor, if no value is specified it defaults to 0  | No |
 | **maxLuminance**   | `number`   | Max luminance to use when calculating aperture factor, if no value is specified it defaults to 10000  | No |
 
 
-This can be seen as a simplified automatic exposure control, without shutterspeed and ISO values, it can be seen as a way to get similar result to how the human eye would adapt to different light conditions by letting in more or less light.  
+Scene aperture can be seen as a simplified automatic exposure control, without shutterspeed and ISO values.  
+It's a way to get similar result to how the human eye would adapt to different light conditions by letting in more or less light.  
 The intended usecase is simpler scenes that do not change drastically, for instance when displaying product models or a room.  
 It is not intended for gaming like usecases where the viewpoint and environment changes dramitically, for instance from dimly lit outdoor night environments to a highly illuminated hallway.  
 
