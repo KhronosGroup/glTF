@@ -35,7 +35,6 @@ This means that in order to have deterministic control of perceived brightness i
 It also provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
 The intended usecases for this extension is any usecase where the light contribution values will go above 1.0, for instance by using KHR_lights_punctual, KHR_emissive_strength or KHR_environment_lights.  
 
-The extension affects all of the assets, images and textures, included in a file that is using this extension.   
 
 
 This extension has three integration points:  
@@ -48,10 +47,18 @@ This does not have to be done in an exact manner every frame, approximations or 
 [See `sceneAperture` parameter](#parameters)  
 
 3: Before outputing the calculated pixel value, ie the light reaching the viewer from a point in the scene, the opto-optical transfer function shall be applied followed by the opto-electrical transfer function.  
-This is the process that will adjust for gamma and adapt the 0 - 10000 range value into a nonlinear display value.  
+This is the process that will adjust for gamma and adapt the 0 - 10000 range value into a nonlinear display value (in the range 0.0 - 1.0)  
 
 [See OOTF](#ootf)  
 [See OETF](#oetf)  
+
+### glTF asset considerations
+
+The extension affects the entire glTF asset, ie all scenes, geometry, images and textures, included in a file that is using this extension.   
+This means that the current rendered scene shall be processed using this extension.  
+If the glTF asset contains multiple scenes, each one when rendered, shall be processed using this extension.  
+
+If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for displaymapping.  
 
 
 ### Motivation
