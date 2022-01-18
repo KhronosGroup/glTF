@@ -5,6 +5,9 @@
 
 Rickard Sahlin, <mailto:rickard.sahlin@inter.ikea.com>  
 Sebastien Vandenberghe, <mailto:sevan@microsoft.com>  
+Gary Hsu, Microsoft, <mailto:garyhsu@microsoft.com>  
+Ben Houston, ThreeKit, <mailto:bhouston@threekit.com>  
+
 
 Copyright (C) 2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
