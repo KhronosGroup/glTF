@@ -55,8 +55,8 @@ This is the process that will adjust for gamma and adapt the 0 - 10000 range val
 ### glTF asset considerations
 
 The extension affects the entire glTF asset, ie all scenes, geometry, images and textures, included in a file that is using this extension.   
-This means that the current rendered scene shall be processed using this extension.  
-If the glTF asset contains multiple scenes, each one when rendered, shall be processed using this extension.  
+This means that the current rendered scene shall be output using the displaymapping declared by this extension whenever the usecase is relevant, ie a realtime rasterizer with output to a display.  
+If the glTF asset contains multiple scenes, each one when rendered, shall be output using this extension.  
 
 If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for displaymapping.  
 
@@ -112,6 +112,8 @@ It does not mean that the display will be capable of outputing at this light lum
 
 ## Exporter considerations for light contribution values
 
+This section describes how an exporter shal handle lightsources, such as point, directional or environment lights, that are saved with the model.  
+
 A content creation tool supporting this extension shall sum upp light contribution for a scene before exporting to glTF, this can be a naive addition of all lights included in the scene that adds max values together.  
 If scene max light contribution is above 10000 cd / m2 there is a choice to either downscale light values before export or to set `sceneAperture` to `AUTO`  
 This means that implementations will calculate max light intensity for the scene and use as a scale factor to keep all light contribution within 0 - 10000 cd / m2.  
@@ -120,6 +122,9 @@ Light contribution values above 10000 cd / m2 is strongly discouraged and will b
 
 
 ## Displaymapping
+
+Displaymapping will be done different depending on wether the output is an HDR or SDR capable display.  
+If the output type is unknown then it shall be considered to be SDR, and the SDR ootf shall be used.  
 
 ### To HDR capable display
 
@@ -130,6 +135,8 @@ https://www.itu.int/rec/R-REC-BT.2100/en
 If the framebuffer format and colorspace is known to the implementation then a format and colorspace shall be chosen to preserve the range and precision of the SMPTE ST 2084 transfer function.  
 If available, a framebuffer colorspace that is compatible with the color primaries of ITU BT.2020 shall be used.  
 If this colorspace is used the source color images must be converted from linear ITU BT.709 values to ITU BT.2020 linear values, where applicable depending on texture target and source format.  
+
+For HDR output,  a range extension value of 59.5208 and gamma of 2.4 shall be used.  
 
 **Implementation notes**
 
@@ -155,6 +162,8 @@ It also allows for implementations where the details of the framebuffer is not k
 
 A SDR capable display is defined as having less than 10 bits per pixel for each colorchannel.  
 
+For SDR output,  a range extension value of 46.42 and gamma of 2.4 shall be used.  
+
 
 ### OOTF
 
@@ -171,11 +180,20 @@ FD = G1886[E'] = pow(100 E′, gamma)
 
 E is the linear scene light value. 
 
-Where the rangeExtension and gamma values can be set by this extension for HDR and SDR display outputs.  
-* For HDR output,  a range extension value of 59.5208 and gamma of 2.4 is suggested, these values can be changed according to artistic intent.  
-Some game engines are known to use a value of 2.8 for HDR gamma.  
+Where the rangeExtension and gamma values shall be set according to HDR or SDR display.  
 
-* For SDR output,  a range extension value of 46.42 and gamma of 2.4 is suggested, these values can be changed according to artistic intent.  
+```
+HDR
+range extension = 59.5208  
+gamma = 2.4  
+```
+
+```
+SDR
+range extension = 46.42  
+gamma = 2.4  
+```
+
 
 **Implementation Notes**
 
@@ -221,36 +239,11 @@ c3 = 2392/4096 * 32 = 18.6875
 
 ### Parameters
 
-The following parameters are added by the `KHR_displaymapping_pq` extension:
+The following parameters are added by the `KHR_displaymapping_pq` extension, it is added with the extension on a scene object:  
 
 | Name                   | Type       | Description                                    | Required           |
 |------------------------|------------|------------------------------------------------|--------------------|
-| **ootfHDR**         | `object`   | Opto-optical transfer function values for HDR display output, if no value is specified then the default parameters rangeExtension=59.5208 and gamma=2.4 is used  | No |
-| **ootfSDR**         | `object`   | Opto-optical transfer function values for SDR display output, if no value is specified then the default parameters rangeExtension=46.42 and gamma=2.4 is used  | No |
 | **sceneAperture**   | `object`   | Scene light adjustment setting, if no value supplied the default value of OFF will be used and scene light values will be kept unmodified.    | No |
-
-
-
-`ootfHDR`
-
-These values shall be used if the output framebuffer is compatible with BT 2020 color primaries or is otherwise considered to be HDR capable.  
-[See OOTF](#ootf)
-
-| Name                   | Type       | Description                                    | Required           |
-|------------------------|------------|------------------------------------------------|--------------------|
-| **rangeExtension**   | `number`   | Range extension value used in the HDR ootf  | :white_check_mark: Yes |
-| **gamma**   | `number`   | Gamma value used in the HDR ootf  | :white_check_mark: Yes |
-
-
-`ootfHDR`
-
-These valuse shall be used if the output framebuffer is not compatible with BT 2020 color primaries or is otherwise NOT considered to be HDR capable.  
-[See OOTF](#ootf)
-
-| Name                   | Type       | Description                                    | Required           |
-|------------------------|------------|------------------------------------------------|--------------------|
-| **rangeExtension**   | `number`   | Range extension value used in the SDR ootf  | :white_check_mark: Yes |
-| **gamma**   | `number`   | Gamma value used in the SDR ootf  | :white_check_mark: Yes |
 
 
 ### Scene aperture
@@ -267,16 +260,20 @@ These valuse shall be used if the output framebuffer is not compatible with BT 2
 
 Scene aperture can be seen as a simplified automatic exposure control, without shutterspeed and ISO values.  
 It's a way to get similar result to how the human eye would adapt to different light conditions by letting in more or less light.  
-The intended usecase is simpler scenes that do not change drastically, for instance when displaying product models or a room.  
+The intended usecase is scenes that do not change drastically, for instance when displaying product models or a room.  
 It is not intended for gaming like usecases where the viewpoint and environment changes dramitically, for instance from dimly lit outdoor night environments to a highly illuminated hallway.  
 
 This setting is a way to avoid having too high scene brightess, that would result in clamping of output values.  
 Or to avoid a scene from being too dark.  
 
-luminance = clamp(luminance, minLuminance, maxLuminance) 
-Aperture = apertureValue / (luminance - luminance * apertureControl)
+pseudocode for scene aperture calculation, this shall be performed before the reference OOTF. Meaning that the resulting `color` parameter shall be passed to BT_2100_OOTF.  
 
-Before values are displaymapped, ie before the OOTF and OETF is applied, pixel values shall be factored by the Aperture value.  
+```
+luminance = clamp(luminance, minLuminance, maxLuminance) 
+aperture = apertureValue / (luminance - luminance * apertureControl)
+color = color * aperture
+```
+
 
 
 **Implementation Notes**
@@ -289,32 +286,38 @@ This could be done by calculating the max scene brightness once, adding up punct
 
 [glTF.KHR_displaymapping_pq.json](schema/glTF.KHR_displaymapping_pq.json)
 
-The `KHR_displaymapping` extension is added to the root of the glTF   
+The `KHR_displaymapping_pq` extension is added to the root of the glTF and scene aperture may be declared on one or more scenes.    
 
 ```json
 {
   "extensions": {
     "KHR_displaymapping_pq" : {
-      "ootfHDR": {
-        "rangeExtension": "58",
-        "gamma": "2.8"
-      },
-      "ootfSDR": {
-        "rangeExtension": "46",
-        "gamma": "2.2"
-      },
-      "sceneAperture": {
-        "apertureValue": "5000",
-        "apertureControl": "0",
-        "minLuminance": "300",
-        "maxLuminance": "5000"
-      }
     }
   },
   "extensionsUsed": [
     "KHR_displaymapping_pq"
-  ]
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        0,
+        1,
+        2
+    ],
+    "name": "scene",
+    "extensions": {
+      "KHR_displaymapping_pq": {
+        "sceneAperture": {
+          "apertureValue": "10000",
+          "apertureControl": "0",
+          "minLuminance": "300",
+          "maxLuminance": "5000"
+        }
+      }
+    }
   }
+}
+
 ```
 
 
