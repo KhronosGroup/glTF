@@ -25,6 +25,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
+This extension is intended for implementations that targets a display with the goal of outputting realtime, or interactive, framerates.  
 
 The goal of this extension is to provide a way to convert the resulting (rendered) output values to a known range so that they can be sent to a display.  
 One of the reasons for this is to retain the hue of the source materials under varying light conditions.  
@@ -38,7 +39,27 @@ This means that in order to have deterministic control of perceived brightness i
 It also provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
 The intended usecases for this extension is any usecase where the light contribution values will go above 1.0, for instance by using KHR_lights_punctual, KHR_emissive_strength or KHR_environment_lights.  
 
+Here the term rasterizer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
+This buffer will be referred to as the framebuffer.  
+The framebuffer can be of varying range, precision and colorspace. This has an impact on the color gamut that can be displayed.  
+  
+After completion of one framebuffer it is output to the display, this is usually done by means of a swap-chain. The details of how the swap works is outside the scope of this extension.  
+KHR_displaymapping_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
 
+This extension does not take the viewing environment of the display, or eye light adaptation, into consideration.  
+It is assumed that the content is viewed in an environment that is dimly lit (~5 cd / m2) without direct light on the display.  
+Viewer calibration is not part of this extension as this is heavily dependant on the usecase and application.  
+
+### glTF asset considerations
+
+The extension affects the entire glTF asset, ie all scenes, geometry, images and textures, included in a file that is using this extension.   
+This means that the current rendered scene shall be output using the displaymapping declared by this extension whenever the usecase is relevant, ie a realtime rasterizer with output to a display.  
+If the glTF asset contains multiple scenes, each one when rendered, shall be output using this extension.  
+
+If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for displaymapping.  
+
+
+### Integration points
 
 This extension has three integration points:  
 1: If the framebuffer colorspace is compatible with ITU BT.2020 color primaries, then before images are sampled they shall be converted to ITU BT.2020 colorspace  
@@ -54,14 +75,6 @@ This is the process that will adjust for gamma and adapt the 0 - 10000 range val
 
 [See OOTF](#ootf)  
 [See OETF](#oetf)  
-
-### glTF asset considerations
-
-The extension affects the entire glTF asset, ie all scenes, geometry, images and textures, included in a file that is using this extension.   
-This means that the current rendered scene shall be output using the displaymapping declared by this extension whenever the usecase is relevant, ie a realtime rasterizer with output to a display.  
-If the glTF asset contains multiple scenes, each one when rendered, shall be output using this extension.  
-
-If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for displaymapping.  
 
 
 ### Motivation
@@ -87,16 +100,6 @@ As the mind will perceive object brightess compared to the background, ie 100 vs
 Apart from being widely supported and used in the TV / movie industry the perceptual quantizer is also embraced by the gaming community, with support in the engines from some of the major game companies.  
 For instance, game engines Frostbite and Lumberyard and also in specific games such as Destiny 2 and Call Of Duty.  
 
-
-Here the term rasterizer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
-This buffer will be referred to as the framebuffer.  
-The framebuffer can be of varying range, precision and colorspace. This has an impact on the color gamut that can be displayed.  
-  
-After completion of one framebuffer it is output to the display, this is usually done by means of a swap-chain. The details of how the swap works is outside the scope of this extension.  
-KHR_displaymapping_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
-
-This extension does not take the viewing environment of the display, or eye light adaptation, into consideration.  
-It is assumed that the content is viewed in an environment that is dimly lit (~5 cd / m2) without direct light on the display.  
 
 
 ## Internal range of light contribution values
@@ -125,6 +128,8 @@ Light contribution values above 10000 cd / m2 is strongly discouraged and will b
 
 
 ## Displaymapping
+
+This section describes how the mapping of internal, scene linear light, values to display output values in the range [0 - 1.0] shall be done.  
 
 Displaymapping will be done different depending on wether the output is an HDR or SDR capable display.  
 If the output type is unknown then it shall be considered to be SDR, and the SDR ootf shall be used.  
@@ -322,6 +327,24 @@ The `KHR_displaymapping_pq` extension is added to the root of the glTF and scene
 }
 
 ```
+
+## References
+
+[Perceptual signal coding (PQ) explained by Dolby](https://pdfs.semanticscholar.org/presentation/e946/68cd54571e419a4440b85bc6e3f23ab99cb3.pdf)  
+
+[ITU Rec BT 2100 Image parameter values for high dynamic range television for use in production and international programme exchange](https://www.itu.int/rec/R-REC-BT.2100)
+
+[ITU Rec BT 2390 High dynamic range television for production and international programme exchange](https://www.itu.int/pub/R-REP-BT.2390)  
+
+[PQ in the Frostbite engine by EA](https://www.youtube.com/watch?v=7z_EIjNG0pQ&list=PL3Bn4v5NMqSsbgK4Crj9YBzBSmeiTAGNT&index=1)  
+
+[PQ in the Call Of Duty engine](https://www.youtube.com/watch?v=EN1Uk6vJqRw)  
+
+[PQ in the Lumberyard engine](https://www.youtube.com/watch?v=LQlJGUcDYy4&t=1488s)  
+
+[PQ in the Destiny 2 engine](https://www.youtube.com/watch?v=9jvhM8B63ng)  
+
+
 
 
 ## Appendix: Full Khronos Copyright Statement
