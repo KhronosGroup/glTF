@@ -56,6 +56,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `PTC` | PTC Inc. | https://www.ptc.com/ | [#1851](https://github.com/KhronosGroup/glTF/issues/1851) |
 | `S8S` | Soft8Soft | https://www.soft8soft.com/ | [#1240](https://github.com/KhronosGroup/glTF/issues/1240) |
 | `SEIN` | Hiloteam | https://seinjs.com/ | [#1840](https://github.com/KhronosGroup/glTF/issues/1840) |
+| `SHAPEDIVER` | ShapeDiver GmbH | https://www.shapediver.com/ | [#2103](https://github.com/KhronosGroup/glTF/issues/2103) |
 | `SI` | Smithsonian Institution | https://www.si.edu/ | [#1410](https://github.com/KhronosGroup/glTF/issues/1410) |
 | `SKFB` | Sketchfab, Inc. | https://sketchfab.com/ | [#1239](https://github.com/KhronosGroup/glTF/issues/1239) |
 | `SKYLINE` | Skyline Software Systems, Inc. | https://www.skylinesoft.com/ | [#1704](https://github.com/KhronosGroup/glTF/issues/1704) |
