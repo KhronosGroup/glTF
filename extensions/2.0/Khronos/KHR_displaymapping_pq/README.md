@@ -132,7 +132,7 @@ If the output type is unknown then it shall be considered to be SDR, and the SDR
 
 ### To HDR capable display
 
-To convert from internal values (linear scene light) to the non-linear output value in the range 0.0 - 1.0 the PQ EOTF shall be used.  
+To convert from internal values (linear scene light) to the non-linear output value in the range 0.0 - 1.0 the reference PQ OETF shall be used. [See OETF](#oetf)  
 This is specified in ITU BT.2100:
 https://www.itu.int/rec/R-REC-BT.2100/en  
 
@@ -181,7 +181,7 @@ E′ = G709[E] = pow(1.099 (rangeExtension * E), 0.45) – 0.099 for 1 > E > 0.0
                267.84 * E for 0.0003024 ≥ E ≥ 0
 FD = G1886[E'] = pow(100 E′, gamma)
 
-E is the linear scene light value. 
+E {R, G, B} is the linear scene light value. Goin into the OOTF these values shall be in the range [0.0 - 1.0]  
 
 Where the rangeExtension and gamma values shall be set according to HDR or SDR display.  
 
@@ -197,9 +197,16 @@ range extension = 46.42
 gamma = 2.4  
 ```
 
-**Implementation Notes**
+**Implementation Notes** 
+
+At the stage prior to OOTF, values shall have been adjusted for dynamic range and `sceneAperture` if that is declared.   
+Meaning values shall be in the range 0 - 10000 as defined as the dynamic range by this extension.  
+Depending on implementation of OOTF and OETF, RGB values may simply be scaled by 10000 before used in the OOTF.  
+
 
 Pseudocode for BT.2100 reference OOTF  
+
+`color`is in range [0.0 - 1.0]  
 
 ```
 BT_2100_OOTF(color, rangeExponent, gamma) {  
