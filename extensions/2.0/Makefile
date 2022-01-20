@@ -11,7 +11,6 @@ SPECPATH = $(REPOPATH)/specification/2.0
 ASCIIDOCTOR = asciidoctor $(ADOCOPTS)
 ADOCOPTS = -d book
 ADOCHTMLOPTS = -a stylesheet=khronos.css -a stylesdir=$(SPECPATH) -a sectanchors
-SPECDEPS = $(SPEC).adoc $(GENERATED)
 
 # Spell out ISO 8601 format as not all date commands support --rfc-3339
 SPECDATE = $(shell echo `date -u "+%Y-%m-%d %TZ"`)
@@ -25,24 +24,36 @@ ATTRIBOPTS = -a revnumber="$(SPECREVISION)" \
 	     -a revdate="$(SPECDATE)" \
 	     -a revremark="$(SPECREMARK)"
 
-# Output specification targets
-SPEC = Specification
-SOURCES = $(wildcard Khronos/*/README.adoc Vendor/*/README.adoc)
-TARGETS = $(SOURCES:.adoc=.html)
+# Extensions to generate. The wildcard could lead to false positives
+SRCDIRS = $(wildcard Vendor/[A-Z]*_[A-Za-z]* Khronos/[A-Z]*_[A-Za-z]*)
+#vpath %.adoc $(SRCDIRS)
+.SUFFIXES:
+.SUFFIXES: .adoc .html
+VPATH = $(SRCDIRS)
+
+# Names of the individual extensions
+SOURCES = $(notdir $(SRCDIRS))
+
+TARGETS = $(addsuffix .html, $(addprefix $(OUTDIR)/, $(SOURCES)))
+
 # Where to generate HTML outputs
 OUTDIR = out
 
 all: $(TARGETS)
+	echo "Built all"
 
-# This rule will always rebuild the targets, since it's actually
-# generating the output HTML in a different directory under a different
-# pathname.
-# The GNU make functions generate an HTML file in $(OUTDIR) after the
-# directory in which the source README.adoc resides.
-$(TARGETS): %.html: %.adoc
+define generateRules =
+$(OUTDIR)/$(1).html: $(1).adoc
 	@mkdir -p $(OUTDIR)
-	$(ASCIIDOCTOR) -b html5 $(ADOCHTMLOPTS) $(ATTRIBOPTS) $< \
-	    -o $(OUTDIR)/$(addsuffix .html, $(notdir $(realpath $(dir $<))))
+	$(ASCIIDOCTOR) -b html5 $(ADOCHTMLOPTS) $(ATTRIBOPTS) $$< -o $$@
+endef
+
+# Generate dependencies for each target.
+# This is done dynamically since we don't know all the extensions
+# without examining the extension directories.
+$(foreach target,$(SOURCES),$(eval $(call generateRules,$(target))))
+
+
 
 # Generate the Properties Reference section of the spec from JSON schema.
 # This uses 'npx' to minimally install the 'wetzel' tool, if needed.
@@ -71,5 +82,4 @@ $(GENERATED): $(wildcard schema/*.json)
 	    -k "**MUST**" schema/glTF.schema.json > $(PROPREF)
 
 clean:
-	-rm -f $(GENERATED) $(addprefix $(OUTDIR)/, $(TARGETS))
-
+	-rm -f $(GENERATED) $(TARGETS)
