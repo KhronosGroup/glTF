@@ -2,12 +2,10 @@
 
 ## Contributors
 
-
 Rickard Sahlin, <mailto:rickard.sahlin@inter.ikea.com>  
 Sebastien Vandenberghe, <mailto:sevan@microsoft.com>  
 Gary Hsu, Microsoft, <mailto:garyhsu@microsoft.com>  
 Ben Houston, ThreeKit, <mailto:bhouston@threekit.com>  
-
 
 Copyright (C) 2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -21,7 +19,6 @@ Draft
 Written against the glTF 2.0 spec.
 
 ## Exclusions
-
 
 ## Overview
 
@@ -42,13 +39,19 @@ The intended usecases for this extension is any usecase where the light contribu
 Here the term rasterizer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
 This buffer will be referred to as the framebuffer.  
 The framebuffer can be of varying range, precision and colorspace. This has an impact on the color gamut that can be displayed.  
-  
+
 After completion of one framebuffer it is output to the display, this is usually done by means of a swap-chain. The details of how the swap works is outside the scope of this extension.  
 KHR_displaymapping_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
 
 This extension does not take the viewing environment of the display, or eye light adaptation, into consideration.  
 It is assumed that the content is viewed in an environment that is dimly lit (~5 cd / m2) without direct light on the display.  
 Viewer calibration is not part of this extension as this is heavily dependant on the usecase and application.  
+
+[Output using extension, without scene aperture, and one directional light with an intensity of 10 000 lumen / m2](images/DisplayMappingPQ-10000.png?display=inline-block)
+
+
+
+
 
 ### glTF asset considerations
 
@@ -57,7 +60,6 @@ This means that the current rendered scene shall be output using the displaymapp
 If the glTF asset contains multiple scenes, each one when rendered, shall be output using this extension.  
 
 If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for displaymapping.  
-
 
 ### Integration points
 
@@ -75,7 +77,6 @@ This is the process that will adjust for gamma and adapt the 0 - 10000 range val
 
 [See OOTF](#ootf)  
 [See OETF](#oetf)  
-
 
 ### Motivation
 
@@ -100,8 +101,6 @@ As the mind will perceive object brightess compared to the background, ie 100 vs
 Apart from being widely supported and used in the TV / movie industry the perceptual quantizer is also embraced by the gaming community, with support in the engines from some of the major game companies.  
 For instance, game engines Frostbite and Lumberyard and also in specific games such as Destiny 2 and Call Of Duty.  
 
-
-
 ## Internal range of light contribution values
 
 This section describes how light contribution values shall be handled.  
@@ -114,8 +113,6 @@ When using this extension light contribution values shall be aligned to account 
 This means that content creators shall be aware of 10000 cd/m2 as the maximum brightness value range.  
 It does not mean that the display will be capable of outputing at this light luminance.  
 
-
-
 ## Exporter considerations for light contribution values
 
 This section describes how an exporter shal handle lightsources, such as point, directional or environment lights, that are saved with the model.  
@@ -125,7 +122,6 @@ If scene max light contribution is above 10000 cd / m2 there is a choice to eith
 This means that implementations will calculate max light intensity for the scene and use as a scale factor to keep all light contribution within 0 - 10000 cd / m2.  
 
 Light contribution values above 10000 cd / m2 is strongly discouraged and will be clamped by implementations if not adjusted by scene aperture.    
-
 
 ## Displaymapping
 
@@ -172,7 +168,6 @@ A SDR capable display is defined as having less than 10 bits per pixel for each 
 
 For SDR output,  a range extension value of 46.42 and gamma of 2.4 shall be used.  
 
-
 ### OOTF
 
 Opto-optical-transfer-function  
@@ -202,7 +197,6 @@ range extension = 46.42
 gamma = 2.4  
 ```
 
-
 **Implementation Notes**
 
 Pseudocode for BT.2100 reference OOTF  
@@ -222,7 +216,6 @@ Where this is calculated per RGB component, note that the color value in this eq
 It may be estimated that the display will not have the ability to output dark levels in the region of 0.0003024 in which case implementations may ignore that condition and use the same operator for the whole range 0.0 - 1.0  
 
 The incoming color value shall first be adjusted by aperture as detailed in [See Scene aperture](#scene-aperture) 
-
 
 ### OETF
 
@@ -244,27 +237,24 @@ c2 = 2413/4096 * 32 = 18.8515625
 c3 = 2392/4096 * 32 = 18.6875
 ```
 
-
 ### Parameters
 
 The following parameters are added by the `KHR_displaymapping_pq` extension, it is added with the extension on a scene object:  
 
-| Name                   | Type       | Description                                    | Required           |
-|------------------------|------------|------------------------------------------------|--------------------|
-| **sceneAperture**   | `object`   | Scene light adjustment setting, if no value supplied the default value of OFF will be used and scene light values will be kept unmodified.    | No |
-
+| Name              | Type     | Description                                                                                                                                | Required |
+| ----------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
+| **sceneAperture** | `object` | Scene light adjustment setting, if no value supplied the default value of OFF will be used and scene light values will be kept unmodified. | No       |
 
 ### Scene aperture
 
 `sceneAperture`
 
-| Name                   | Type       | Description                                    | Required           |
-|------------------------|------------|------------------------------------------------|--------------------|
-| **apertureValue**   | `number`   | Base value used to calculate aperture factor  | No |
-| **apertureControl**   | `number`   | Control value used to calculate aperture factor  | No |
-| **minLuminance**   | `number`   | Min luminance to use when calculating aperture factor, if no value is specified it defaults to 0  | No |
-| **maxLuminance**   | `number`   | Max luminance to use when calculating aperture factor, if no value is specified it defaults to 10000  | No |
-
+| Name                | Type     | Description                                                                                          | Required |
+| ------------------- | -------- | ---------------------------------------------------------------------------------------------------- | -------- |
+| **apertureValue**   | `number` | Base value used to calculate aperture factor                                                         | No       |
+| **apertureControl** | `number` | Control value used to calculate aperture factor                                                      | No       |
+| **minLuminance**    | `number` | Min luminance to use when calculating aperture factor, if no value is specified it defaults to 0     | No       |
+| **maxLuminance**    | `number` | Max luminance to use when calculating aperture factor, if no value is specified it defaults to 10000 | No       |
 
 Scene aperture can be seen as a simplified automatic exposure control, without shutterspeed and ISO values.  
 It's a way to get similar result to how the human eye would adapt to different light conditions by letting in more or less light.  
@@ -282,13 +272,10 @@ aperture = apertureValue / (luminance - luminance * apertureControl)
 color = color * aperture
 ```
 
-
-
 **Implementation Notes**
 
 Since knowledge of overall scene brightness values may be time-consuming to calculate exactly, implementations are free to approximate.  
 This could be done by calculating the max scene brightness once, adding up punctual and environment lights and then using this value, not taking occlusion of lightrays into account.    
-
 
 ## Schema
 
@@ -325,7 +312,6 @@ The `KHR_displaymapping_pq` extension is added to the root of the glTF and scene
     }
   }
 }
-
 ```
 
 ## References
@@ -343,9 +329,6 @@ The `KHR_displaymapping_pq` extension is added to the root of the glTF and scene
 [PQ in the Lumberyard engine](https://www.youtube.com/watch?v=LQlJGUcDYy4&t=1488s)  
 
 [PQ in the Destiny 2 engine](https://www.youtube.com/watch?v=9jvhM8B63ng)  
-
-
-
 
 ## Appendix: Full Khronos Copyright Statement
 
