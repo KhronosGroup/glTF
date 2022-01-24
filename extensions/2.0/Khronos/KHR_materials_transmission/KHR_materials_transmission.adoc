@@ -1,5 +1,5 @@
 // Copyright 2020-2022 The Khronos Group Inc.
-// SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+// SPDX-License-Identifier: CC-BY-4.0
 
 = KHR_materials_transmission
 :tmtitle: pass:q,r[^™^]
