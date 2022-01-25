@@ -22,11 +22,13 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension is intended for implementations that targets a display with the goal of outputting realtime, or interactive, framerates.  
+This extension is intended for implementations that targets a display with the goal of outputting realtime, or interactive, framerates in either HDR or SDR in a physically correct manner.    
 
-The goal of this extension is to provide a way to convert the resulting (rendered) output values to a known range so that they can be sent to a display.  
+The goal of this extension is to provide a way to convert the resulting (rendered) scene linear light output values to a known range so that they can be sent to a display.  
 One of the reasons for this is to retain the hue of the source materials under varying light conditions.  
-Correct representation of hue is important in order to keep artistic intent, or to achieve a physically correct visualization of products for instance in e-commerce.  
+Correct representation of hue is important in order to achieve a physically correct visualization and to retain original artistic intent.  
+
+This extension does not declare user defined tone-mapping, s-curve, color lookup table (LUT) or similar as the process of applying these may be non pysically based and alter the energy conserving nature of the glTF BRDF.  
 
 Another reason is to provide means for deterministic brightness (light intensity) values.  
 According to research (Bernstein et al. 2018) the mind's perception of brightness is mostly the same, regardless of object brightness.  
@@ -34,7 +36,10 @@ The difference in the perception of the object's brightness is based on backgrou
 This means that in order to have deterministic control of perceived brightness it is important to be able to control both object and background color, for instance by means of a set dynamic range.  
 
 It also provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
+
 The intended usecases for this extension is any usecase where the light contribution values will go above 1.0, for instance by using KHR_lights_punctual, KHR_emissive_strength or KHR_environment_lights.  
+When using this extension it is recommended that the dynamic range is kept between 0 and 10 000 lumen/m2 in order to utilize the range of the Perceptual Quantizer.  
+This can for instance be done by exporters by scaling light contributions values.  
 
 Here the term rasterizer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
 This buffer will be referred to as the framebuffer.  
@@ -57,6 +62,9 @@ Viewer calibration is not part of this extension as this is heavily dependant on
 
 The extension affects the entire glTF asset, ie all scenes, geometry, images and textures, included in a file that is using this extension.   
 This means that the current rendered scene shall be output using the displaymapping declared by this extension whenever the usecase is relevant, ie a realtime rasterizer with output to a display.  
+
+Visualization of multiple glTF assets using this extension is supported and will produce a normative result.  
+
 If the glTF asset contains multiple scenes, each one when rendered, shall be output using this extension.  
 
 If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for displaymapping.  
