@@ -87,7 +87,7 @@ If unknown then choose SDR.
 [See Display type](#display-type)  
 
 2: Color source images  
-If the display type is considered to be HDR (compatible with ITU BT.2020 color primaries) then convert color source images to ITU BT.2020 colorspace  
+If the display type is considered to be HDR (compatible with ITU BT.2020 color primaries) then color source images may need to be converted to ITU BT.2020 colorspace  
 [See Color source images](#color-source-images)  
 
 The following steps shall be performed before outputing the calculated pixel value (scene linear light).    
@@ -175,13 +175,14 @@ This section describes how to decide if display type is HDR or SDR.
 
 If the framebuffer format and colorspace is known to the implementation then a format and colorspace shall be chosen to preserve the range and precision of the SMPTE ST 2084 transfer function.  
 If available, a framebuffer colorspace that is compatible with the color primaries of ITU BT.2020 shall be used.  
-If this colorspace is used the source color images must be converted from linear ITU BT.709 values to ITU BT.2020 linear values, where applicable depending on texture target and source format.  
+If this colorspace is used then the display output value that is written to the framebuffer shall be in a compatible colorspace.  
 
 For HDR output,  a range extension value of 59.5208 and gamma of 2.4 shall be used.  
 
 **Implementation notes**
 
 Conversion of color primaries to ITU BT.2020 could be done after loading of a PNG/JPEG and after the image has been gamma expanded from sRGB to linear.  
+Another solution would be to perform render calculation in BT.709 colorspace and convert to target colorspace before writing out values to the framebuffer.  
 
 
 ### SDR capable display
@@ -197,6 +198,7 @@ For SDR output,  a range extension value of 46.42 and gamma of 2.4 shall be used
 ## Color source images
 
 If display type is considered to be HDR then color source images shall be converted to BT.2020 as needed.  
+Exactly where this conversion takes place is up to implementations. 
 
 
 ### Color conversion matrix
