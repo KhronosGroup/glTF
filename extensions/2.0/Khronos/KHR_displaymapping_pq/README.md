@@ -96,7 +96,7 @@ The following steps shall be performed before outputing the calculated pixel val
 This would normally be done in the fragment shader.  
 
 3: Scene aperture  
-If `sceneAperture` is defined, then the scene linear light (normally fragment shader output value) pixel value shall be adjusted as defined:    
+If `aperture` is defined, then the scene linear light (normally fragment shader output value) pixel value shall be adjusted as defined:    
 The output from scene aperture calculations shall be used in the next step.  
 [See Scene aperture](#scene-aperture)  
 
@@ -115,7 +115,7 @@ Input values are linear values in the range [0 - 10000] and output is non-linear
 
 | Input         |   Function    | Output range  | Description   |
 | ------------- | ------------- | ----------- |------------- |
-| [0.0 - X]     | sceneAperture | 0 - 10 000  | Adjusted scene light |
+| [0.0 - X]     | aperture | 0 - 10 000  | Adjusted scene light |
 | [0.0 - 1.0]   |     OOTF      | 0 - 10 000  | Reference PQ OOTF  |
 | [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Framebuffer output  |
 
@@ -164,7 +164,7 @@ It does not mean that the display will be capable of outputing at this light lum
 This section describes how an exporter shal handle lightsources, such as point, directional or environment lights, that are saved with the model.  
 
 A content creation tool supporting this extension shall sum upp light contribution for a scene before exporting to glTF, this can be a naive addition of all lights included in the scene that adds max values together.  
-If scene max light contribution is above 10000 cd / m2 there is a choice to either downscale light values before export or to set `sceneAperture` to values that will scale light contribution for a scene  
+If scene max light contribution is above 10000 cd / m2 there is a choice to either downscale light values before export or to set `aperture` to values that will scale light contribution for a scene  
 
 Light contribution values above 10000 cd / m2 is discouraged and will be clamped by implementations if not adjusted by scene aperture.  
 
@@ -222,16 +222,16 @@ The following parameters are added by the `KHR_displaymapping_pq` extension, it 
 
 | Name              | Type     | Description                                                                                                                                | Required |
 | ----------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
-| **sceneAperture** | `object` | Scene light adjustment setting, if no value supplied the default value of OFF will be used and scene light values will be kept unmodified. | No       |
+| **aperture** | `object` | Scene light adjustment setting, if no value supplied the default value of OFF will be used and scene light values will be kept unmodified. | No       |
 
 ### Scene aperture
 
-`sceneAperture`
+`aperture`
 
 | Name                | Type     | Description                                                                                          | Required |
 | ------------------- | -------- | ---------------------------------------------------------------------------------------------------- | -------- |
-| **apertureValue**   | `number` | Base value used to calculate aperture factor                                                         | No       |
-| **apertureControl** | `number` | Control value used to calculate aperture factor                                                      | No       |
+| **value**   | `number` | Base value used to calculate aperture factor                                                         | No       |
+| **control** | `number` | Control value used to calculate aperture factor                                                      | No       |
 | **minLuminance**    | `number` | Min luminance to use when calculating aperture factor, if no value is specified it defaults to 0     | No       |
 | **maxLuminance**    | `number` | Max luminance to use when calculating aperture factor, if no value is specified it defaults to 10000 | No       |
 
@@ -249,8 +249,8 @@ Where `luminance` is the total scene or frame light contribution, ie the scene m
 
 ```
 luminance = clamp(luminance, minLuminance, maxLuminance) 
-aperture = apertureValue / (luminance - luminance * apertureControl)
-color = color * aperture
+factor = value / (luminance - luminance * control)
+color = color * factor
 ```
 
 **Implementation Notes**
@@ -297,7 +297,7 @@ gamma = 2.4
 
 **Implementation Notes** 
 
-At the stage prior to OOTF, values shall have been adjusted for dynamic range and `sceneAperture` if that is declared.   
+At the stage prior to OOTF, values shall have been adjusted for dynamic range and `aperture` if that is declared.   
 
 Depending on implementation of OOTF and OETF, RGB values may simply be scaled by 10000 before used in the OOTF.  
 
@@ -384,9 +384,9 @@ The `KHR_displaymapping_pq` extension is added to the root of the glTF and scene
     "name": "scene",
     "extensions": {
       "KHR_displaymapping_pq": {
-        "sceneAperture": {
-          "apertureValue": "10000",
-          "apertureControl": "0",
+        "aperture": {
+          "value": "10000",
+          "control": "0",
           "minLuminance": "300",
           "maxLuminance": "5000"
         }
