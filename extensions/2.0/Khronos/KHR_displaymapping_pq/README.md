@@ -6,6 +6,7 @@ Rickard Sahlin, <mailto:rickard.sahlin@inter.ikea.com>
 Sebastien Vandenberghe, <mailto:sevan@microsoft.com>  
 Gary Hsu, Microsoft, <mailto:garyhsu@microsoft.com>  
 Ben Houston, ThreeKit, <mailto:bhouston@threekit.com>  
+Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)  
 
 Copyright (C) 2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -51,7 +52,7 @@ The intended use-case for this extension is when light contribution values are e
 When using this extension it is recommended that the dynamic range is kept between 0 and 10 000 lumen/m2 in order to utilize the range of the Perceptual Quantizer.  
 This can for instance be done by exporters by scaling light contributions values.  
 
-Here the term rasterizer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
+Here the term renderer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
 This buffer will be referred to as the framebuffer.  
 The framebuffer can be of varying range, precision and colorspace. This has an impact on the color gamut that can be displayed.  
 
@@ -69,7 +70,7 @@ Viewer calibration is not part of this extension as this is heavily dependant on
 ### glTF asset considerations
 
 The extension affects the entire glTF asset, ie all scenes, geometry, images and textures, included in a file that is using this extension.   
-This means that the current rendered scene shall be output using the displaymapping declared by this extension whenever the usecase is relevant, ie a realtime rasterizer with output to a display.  
+This means that the current rendered scene shall be output using the displaymapping declared by this extension whenever the usecase is relevant, ie a realtime renderer with output to a display.  
 
 Visualization of multiple glTF assets using this extension is supported and will produce a normative result.  
 
@@ -127,7 +128,7 @@ Input values are linear values in the range [0 - 10000] and output is non-linear
 
 Output pixel values from a rendered 3D model are generally in a range that is larger than that of a display device.  
 This may not be a problem if the output is a high definition image format or some other target that has the same range and precision as the internal calculations.  
-However, a typical usecase for realtime rasterizer implementations is that the output is a light emitting display.  
+However, a typical usecase for realtime renderer implementations is that the output is a light emitting display.  
 Such a display rarely has the range and precision of internal calculations making it necessary to map internal pixel values to match the characteristics of the output.  
 This mapping is generally referred to as tone-mapping, however the exact meaning of tone-mapping varies and can also mean the process of applying artistic intent to the output.  
 For that reason this document will use the term displaymapping.  
