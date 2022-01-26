@@ -46,7 +46,8 @@ This means that in order to have deterministic control of perceived brightness i
 
 It also provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
 
-The intended usecases for this extension is any usecase where the light contribution values will go above 1.0, for instance by using KHR_lights_punctual, KHR_emissive_strength or KHR_environment_lights.  
+The intended use-case for this extension is when light contribution values are expected to go above 1.0 and the output values shall be mapped to an output range that retains hue.
+
 When using this extension it is recommended that the dynamic range is kept between 0 and 10 000 lumen/m2 in order to utilize the range of the Perceptual Quantizer.  
 This can for instance be done by exporters by scaling light contributions values.  
 
