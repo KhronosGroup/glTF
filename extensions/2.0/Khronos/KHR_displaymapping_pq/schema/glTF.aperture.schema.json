@@ -5,24 +5,24 @@
     "description": "Defines settings for aperture.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "apertureValue": {
+        "value": {
             "type": "number",
             "description": "Specifies the aperture value."
             "minItems": 1,
         },
-        "apertureValue": {
+        "control": {
             "type": "number",
             "description": "Specifies the aperture control."
             "minItems": 1,
         },
         "minLuminance": {
             "type": "number",
-            "description": "Specifies the min luminance used in aperture calculations."
+            "description": "Specifies the minimim incoming luminance used in aperture calculations."
             "minItems": 1,
         },
         "maxLuminance": {
             "type": "number",
-            "description": "Specifies the max luminance used in aperture calculations."
+            "description": "Specifies the maximum incoming luminance used in aperture calculations."
             "minItems": 1,
         }
     },
