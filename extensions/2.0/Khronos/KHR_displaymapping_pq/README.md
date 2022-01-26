@@ -28,6 +28,15 @@ The goal of this extension is to provide a way to convert the resulting (rendere
 One of the reasons for this is to retain the hue of the source materials under varying light conditions.  
 Correct representation of hue is important in order to achieve a physically correct visualization and to retain original artistic intent.  
 
+Currently the glTF specification does not define how to output pixels.  
+This results in hue shift and white-out, due to clipping of pixel values as they are written to framebuffer.      
+The result is not desirable when the goal is to display physically correct scenes.  
+
+[Sample viewer reference implementation with one directional light at intensity 100 lumen / m2](images/SampleViewer-100.png?display=inline-block)
+
+This extension sets out standardize the output from such a scene in a way that the result is predictable.  
+
+
 This extension does not declare user defined tone-mapping, s-curve, color lookup table (LUT) or similar as the process of applying these may be non pysically based and alter the energy conserving nature of the glTF BRDF.  
 
 Another reason is to provide means for deterministic brightness (light intensity) values.  
@@ -52,9 +61,7 @@ This extension does not take the viewing environment of the display, or eye ligh
 It is assumed that the content is viewed in an environment that is dimly lit (~5 cd / m2) without direct light on the display.  
 Viewer calibration is not part of this extension as this is heavily dependant on the usecase and application.  
 
-[Output using extension, without scene aperture, and one directional light with an intensity of 10 000 lumen / m2](images/DisplayMappingPQ-10000.png?display=inline-block)
-
-
+[Output using extension, without scene aperture, and one directional light at intensity 10 000 lumen / m2](images/DisplayMappingPQ-10000.png?display=inline-block)
 
 
 
@@ -70,6 +77,7 @@ If the glTF asset contains multiple scenes, each one when rendered, shall be out
 If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for displaymapping.  
 
 ### Integration points
+
 
 This extension has the following integration points:  
 
@@ -98,6 +106,20 @@ Input values are in linear scene light in range [0.0 - 1.0] and output values in
 5:   Perceptural Quantizer - reference OETF  
 Apply the opto-electrical transfer function (OETF).  
 Input values are linear values in the range [0 - 10000] and output is non-linear display values in range [0.0 - 1.0]  
+
+
+
+
+
+| Input         |   Function    | Output range  | Description   |
+| ------------- | ------------- | ----------- |------------- |
+| [0.0 - X]     | sceneAperture | 0 - 10 000  | Adjusted scene light |
+| [0.0 - 1.0]   |     OOTF      | 0 - 10 000  | Reference PQ OOTF  |
+| [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Framebuffer output  |
+
+
+
+
 
 
 ### Motivation
