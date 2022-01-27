@@ -23,9 +23,9 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension is intended for implementations that targets a display with the goal of outputting realtime, or interactive, framerates in either HDR or SDR in a physically correct manner.    
+This extension is intended for implementations that targets a display with the goal of outputting realtime, or interactive, framerates in either HDR or SDR in a physically correct manner.   
 
-The goal of this extension is to provide a way to convert the resulting (rendered) scene linear light output values to a known range so that they can be sent to a display.  
+The goal of this extension is to provide a way to convert the resulting (rendered) scene linear light output values to a known range {R,G,B} so that they can be sent to a display.  
 One of the reasons for this is to retain the hue of the source materials under varying light conditions.  
 Correct representation of hue is important in order to achieve a physically correct visualization and to retain original artistic intent.  
 
@@ -43,14 +43,13 @@ This extension does not declare user defined tone-mapping, s-curve, color lookup
 Another reason is to provide means for deterministic brightness (light intensity) values.  
 According to research (Bernstein et al. 2018) the mind's perception of brightness is mostly the same, regardless of object brightness.  
 The difference in the perception of the object's brightness is based on background color.  
-This means that in order to have deterministic control of perceived brightness it is important to be able to control both object and background color, for instance by means of a set dynamic range.  
+This means that in order to have deterministic control of perceived brightness it is important to be able to control both object and background color, for instance by a set light contribution range.  
 
 It also provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
 
-The intended use-case for this extension is when light contribution values are expected to go above 1.0 and the output values shall be mapped to an output range that retains hue.
+The intended use-case for this extension is when light contribution values are expected to go above 1.0 and the output values shall be mapped to an output range {R,G,B} that retains hue.
 
-When using this extension it is recommended that the dynamic range is kept between 0 and 10 000 lumen/m2 in order to utilize the range of the Perceptual Quantizer.  
-This can for instance be done by exporters by scaling light contributions values.  
+When using this extension it is recommended that the light intensity is kept between 0 and 10 000 lumen/m2 in order to utilize the range of the Perceptual Quantizer.  
 
 Here the term renderer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
 This buffer will be referred to as the framebuffer.  
@@ -103,11 +102,11 @@ The output from scene aperture calculations shall be used in the next step.
 
 4: Perceptual Quantizer - reference OOTF  
 Apply opto-optical transfer function (OOTF), this will apply the reference 'rendering intent'  
-Input values are in linear scene light in range [0.0 - 1.0] and output values in the range [0 - 10000]  
+Input values are in linear scene light in range {R,G,B} [0.0 - 1.0] and output values in the range {R,G,B} [0 - 10000]  
 
 5:   Perceptural Quantizer - reference OETF  
 Apply the opto-electrical transfer function (OETF).  
-Input values are linear values in the range [0 - 10000] and output is non-linear display values in range [0.0 - 1.0]  
+Input values are linear values in the range {R,G,B} [0 - 10000] and output is non-linear display values in range {R,G,B} [0.0 - 1.0]  
 
 
 
@@ -115,7 +114,7 @@ Input values are linear values in the range [0 - 10000] and output is non-linear
 
 | Input         |   Function    | Output range  | Description   |
 | ------------- | ------------- | ----------- |------------- |
-| [0.0 - X]     | aperture | 0 - 10 000  | Adjusted scene light |
+| [0.0 - X]     | aperture      | 0 - 10 000  | Light adjusted for scene max. |
 | [0.0 - 1.0]   |     OOTF      | 0 - 10 000  | Reference PQ OOTF  |
 | [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Framebuffer output  |
 
@@ -155,18 +154,17 @@ When the KHR_displaymapping_pq extension is used all lighting and pixel calculat
 This does not have an impact on color texture sources since they define values as contribution factor.  
 The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in the SMPTE ST 2084 transfer function.  
 
-When using this extension light contribution values shall be aligned to account for 10000 cd/m2 as max luminance, meaning that the dynamic range is 0 to 10000.    
-This means that content creators shall be aware of 10000 cd/m2 as the maximum brightness value range.  
-It does not mean that the display will be capable of outputing at this light luminance.  
+When using this extension light contribution values shall be aligned to account for 10000 cd/m2 as max output value, meaning that the range {R,G,B} is 0 to 10000.  
+This means that content creators shall be aware of 10000 cd/m2 as the maximum value range.  
+It does not mean that the display will be capable of outputing this light luminance.  
 
 ## Exporter considerations for light contribution values
 
-This section describes how an exporter shal handle lightsources, such as point, directional or environment lights, that are saved with the model.  
+This section describes how an exporter shall handle lightsources, such as point, directional or environment lights, that are saved with the model.  
 
 A content creation tool supporting this extension shall sum upp light contribution for a scene before exporting to glTF, this can be a naive addition of all lights included in the scene that adds max values together.  
-If scene max light contribution is above 10000 cd / m2 there is a choice to either downscale light values before export or to set `aperture` to values that will scale light contribution for a scene  
+If scene max light contribution is above 10000 cd / m2 there is a choice to downscale light values before export.  
 
-Light contribution values above 10000 cd / m2 is discouraged and will be clamped by implementations if not adjusted by scene aperture.  
 
 ## Display type
 
@@ -179,7 +177,7 @@ If the framebuffer format and colorspace is known to the implementation then a f
 If available, a framebuffer colorspace that is compatible with the color primaries of ITU BT.2020 shall be used.  
 If this colorspace is used then the display output value that is written to the framebuffer shall be in a compatible colorspace.  
 
-For HDR output,  a range extension value of 59.5208 and gamma of 2.4 shall be used.  
+For HDR output, a range extension value of 59.5208 and gamma of 2.4 shall be used.  
 
 **Implementation notes**
 
@@ -216,28 +214,9 @@ The M2 linear color conversion matrix is defined as:
 
 ## Scene aperture
 
-### Parameters
 
-The following parameters are added by the `KHR_displaymapping_pq` extension, it is added with the extension on a scene object:  
-
-| Name              | Type     | Description                                                                                                                                | Required |
-| ----------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
-| **aperture** | `object` | Scene light adjustment setting, if no value supplied the default value of OFF will be used and scene light values will be kept unmodified. | No       |
-
-### Scene aperture
-
-`aperture`
-
-| Name                | Type     | Description                                                                                          | Required |
-| ------------------- | -------- | ---------------------------------------------------------------------------------------------------- | -------- |
-| **value**   | `number` | Base value used to calculate aperture factor                                                         | No       |
-| **control** | `number` | Control value used to calculate aperture factor                                                      | No       |
-| **minLuminance**    | `number` | Min luminance to use when calculating aperture factor, if no value is specified it defaults to 0     | No       |
-| **maxLuminance**    | `number` | Max luminance to use when calculating aperture factor, if no value is specified it defaults to 10000 | No       |
-
-Scene aperture can be seen as a simplified automatic exposure control, without shutterspeed and ISO values.  
-It's a way to get similar result to how the human eye would adapt to different light conditions by letting in more or less light.  
-The intended usecase is scenes that do not change drastically, for instance when displaying product models or a room.  
+Scene aperture can be seen as a simplified automatic exposure control, without shutterspeed and ISO values...
+If scene contains light contribution that goes above 10 000 then all lightsources will be scaled.  
 It is not intended for gaming like usecases where the viewpoint and environment changes dramitically, for instance from dimly lit outdoor night environments to a highly illuminated hallway.  
 
 This setting is a way to avoid having too high scene brightess, that would result in clamping of output values, or to avoid a scene from being too dark.  
@@ -245,19 +224,25 @@ This setting is a way to avoid having too high scene brightess, that would resul
 pseudocode for scene aperture calculation, this shall be performed before the reference OOTF.  
 Meaning that the resulting `color` parameter shall be passed to BT_2100_OOTF.  
 
-Where `luminance` is the total scene or frame light contribution, ie the scene max brightness.  
+Where `lightIn` is the max scene or frame light contribution, ie the scene max value.  
+
+`lightIn = max(max(light.r, light.g), light.b)`  
+
+`float maxComponent = 10000`  
 
 ```
-luminance = clamp(luminance, minLuminance, maxLuminance) 
-factor = value / (luminance - luminance * control)
-color = color * factor
+vec3 aperture(float lightIn, vec3 colorIn) {
+	float value = min(lightIn, maxComponent) 
+	float factor = lightIn / value
+	return colorIn * factor
+}	
 ```
 
 **Implementation Notes**
 
 Since knowledge of overall scene brightness values may be time-consuming to calculate exactly, implementations are free to approximate.  
-This could be done by calculating the max scene brightness once, adding up punctual and environment lights and then using this value, not taking occlusion of lightrays into account.  
-
+This could be done by calculating the max scene value once, adding up punctual and environment lights and then using this value, not taking occlusion of lightrays into account.  
+This value can be used until light contribution changes.  
 
 
 
@@ -348,10 +333,10 @@ c3 = 2392/4096 * 32 = 18.6875
 
 Pseudocode for BT.2100 reference OETF  
 
-`color` is in range [0 - 10000]  
+`color` is in range {R,G,B} [0 - 10000]  
 
 ```
-BT_2100_OETF(color) {
+BT_2100_OETF(vec3 color) {
     Ypow = pow(rgb / 10000, m1);
     return pow((c1 + c2 * Ypow) / (1 + c3 * Ypow), m2); 
 }
@@ -359,41 +344,18 @@ BT_2100_OETF(color) {
 
 
 
-## Schema
+## Defining an asset to use KHR_displaymapping_pq
 
-[glTF.KHR_displaymapping_pq.json](schema/glTF.KHR_displaymapping_pq.json)
-
-The `KHR_displaymapping_pq` extension is added to the root of the glTF and scene aperture may be declared on one or more scenes.    
+The `KHR_displaymapping_pq` extension is added to the root of the glTF.  
 
 ```json
 {
   "extensions": {
     "KHR_displaymapping_pq" : {
     }
-  },
-  "extensionsUsed": [
-    "KHR_displaymapping_pq"
-  ],
-  "scenes": [
-    {
-      "nodes": [
-        0,
-        1,
-        2
-    ],
-    "name": "scene",
-    "extensions": {
-      "KHR_displaymapping_pq": {
-        "aperture": {
-          "value": "10000",
-          "control": "0",
-          "minLuminance": "300",
-          "maxLuminance": "5000"
-        }
-      }
-    }
   }
 }
+
 ```
 
 ## References
