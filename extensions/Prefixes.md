@@ -50,6 +50,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `NV` | NVIDIA Corporation | https://www.nvidia.com | [#1211](https://github.com/KhronosGroup/glTF/issues/1211) |
 | `OFT` | OppenFuture Technologies | https://www.hololux.cn/en/ | [#1957](https://github.com/KhronosGroup/glTF/issues/1957) |
 | `OMI` | Open Metaverse Interoperability Group | https://github.com/omigroup/OMI | [#2003](https://github.com/KhronosGroup/glTF/issues/2003) |
+| `OTOY` | OTOY, Inc. | https://otoy.com | [#2112](https://github.com/KhronosGroup/glTF/issues/2112) |
 | `OWLII` | Owlii, Inc. | https://www.owlii.com/ | [#1093](https://github.com/KhronosGroup/glTF/issues/1093) |
 | `PANDA3D` | Panda3D | https://www.panda3d.org/ | [#1828](https://github.com/KhronosGroup/glTF/pull/1828) |
 | `POLUTROPON` | Polutropon Games | https://polutropon.games/<br>`ybalrid at polutropon.games` | [#1632](https://github.com/KhronosGroup/glTF/issues/1632) |
