@@ -35,21 +35,19 @@ The result is not desirable when the goal is to display physically correct scene
 
 [Sample viewer reference implementation with one directional light at intensity 100 lumen / m2](images/SampleViewer-100.png?display=inline-block)
 
-This extension sets out standardize the output from such a scene in a way that the result is predictable.  
+This extension sets out standardize the output from such a scene in a way that the result is predictable and retains hue.    
+The intended use-case for this extension is when light contribution values are expected to go above 1.0 and the output values shall be mapped to an output range {R,G,B} that retains hue.  
 
+When using this extension it is recommended that the light intensity is kept between 0 and 10 000 lumen/m2 in order to utilize the range of the Perceptual Quantizer.  
 
 This extension does not declare user defined tone-mapping, s-curve, color lookup table (LUT) or similar as the process of applying these may be non pysically based and alter the energy conserving nature of the glTF BRDF.  
 
-Another reason is to provide means for deterministic brightness (light intensity) values.  
+Another reason to provide means for deterministic brightness (light intensity) values is how the brain perceives brightness.
 According to research (Bernstein et al. 2018) the mind's perception of brightness is mostly the same, regardless of object brightness.  
 The difference in the perception of the object's brightness is based on background color.  
 This means that in order to have deterministic control of perceived brightness it is important to be able to control both object and background color, for instance by a set light contribution range.  
 
-It also provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
-
-The intended use-case for this extension is when light contribution values are expected to go above 1.0 and the output values shall be mapped to an output range {R,G,B} that retains hue.
-
-When using this extension it is recommended that the light intensity is kept between 0 and 10 000 lumen/m2 in order to utilize the range of the Perceptual Quantizer.  
+This extension also provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
 
 Here the term renderer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
 This buffer will be referred to as the framebuffer.  
@@ -95,14 +93,14 @@ The following steps shall be performed before outputing the calculated pixel val
 This would normally be done in the fragment shader.  
 
 3: Scene aperture  
-If `aperture` is defined, then the scene linear light (normally fragment shader output value) pixel value shall be adjusted as defined:    
+Scene linear light (normally fragment shader output value) pixel value shall be adjusted to get scaled scene linear light, [see scene aperture](#scene-aperture)      
 The output from scene aperture calculations shall be used in the next step.  
 [See Scene aperture](#scene-aperture)  
 
 
 4: Perceptual Quantizer - reference OOTF  
 Apply opto-optical transfer function (OOTF), this will apply the reference 'rendering intent'  
-Input values are in linear scene light in range {R,G,B} [0.0 - 1.0] and output values in the range {R,G,B} [0 - 10000]  
+Input values are in scaled scene linear light in range {R,G,B} [0.0 - 1.0] and output values in the range {R,G,B} [0 - 10000]  
 
 5:   Perceptural Quantizer - reference OETF  
 Apply the opto-electrical transfer function (OETF).  
@@ -110,15 +108,11 @@ Input values are linear values in the range {R,G,B} [0 - 10000] and output is no
 
 
 
-
-
 | Input         |   Function    | Output range  | Description   |
 | ------------- | ------------- | ----------- |------------- |
-| [0.0 - X]     | aperture      | 0 - 10 000  | Light adjusted for scene max. |
+| [0.0 - X]     | aperture      | 0 - 10 000  | Light adjusted for scene max intensity. |
 | [0.0 - 1.0]   |     OOTF      | 0 - 10 000  | Reference PQ OOTF  |
 | [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Framebuffer output  |
-
-
 
 
 
@@ -156,14 +150,14 @@ The value 10000 cd / m2 for an output pixel with full brightness is chosen to be
 
 When using this extension light contribution values shall be aligned to account for 10000 cd/m2 as max output value, meaning that the range {R,G,B} is 0 to 10000.  
 This means that content creators shall be aware of 10000 cd/m2 as the maximum value range.  
-It does not mean that the display will be capable of outputing this light luminance.  
+It does not mean that the display will be capable of outputing this light intensity.  
 
 ## Exporter considerations for light contribution values
 
-This section describes how an exporter shall handle lightsources, such as point, directional or environment lights, that are saved with the model.  
+This section describes how an exporter shall handle lightsources, such as point, directional, emissive or environment lights, that are saved with the model.  
 
 A content creation tool supporting this extension shall sum upp light contribution for a scene before exporting to glTF, this can be a naive addition of all lights included in the scene that adds max values together.  
-If scene max light contribution is above 10000 cd / m2 there is a choice to downscale light values before export.  
+If scene max light contribution intensity is above 10000 there is a choice to downscale light values before export.  
 
 
 ## Display type
@@ -219,12 +213,12 @@ Scene aperture can be seen as a simplified automatic exposure control, without s
 If scene contains light contribution that goes above 10 000 then all lightsources will be scaled.  
 It is not intended for gaming like usecases where the viewpoint and environment changes dramitically, for instance from dimly lit outdoor night environments to a highly illuminated hallway.  
 
-This setting is a way to avoid having too high scene brightess, that would result in clamping of output values, or to avoid a scene from being too dark.  
+This function is a way to avoid having too high scene brightess, that would result in clamping of output values, or to avoid a scene from being too dark.  
 
 pseudocode for scene aperture calculation, this shall be performed before the reference OOTF.  
 Meaning that the resulting `color` parameter shall be passed to BT_2100_OOTF.  
 
-Where `lightIn` is the max scene or frame light contribution, ie the scene max value.  
+Where `lightIn` is the max scene or frame light contribution, ie the scene max intensity value.  
 
 `lightIn = max(max(light.r, light.g), light.b)`  
 
