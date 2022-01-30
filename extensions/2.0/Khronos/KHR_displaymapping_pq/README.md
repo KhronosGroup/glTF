@@ -66,7 +66,7 @@ Viewer calibration is not part of this extension as this is heavily dependant on
 
 ### glTF asset considerations
 
-The extension affects the entire glTF asset, ie all scenes, geometry, images and textures, included in a file that is using this extension.   
+The extension affects the output of the entire glTF asset, all scenes and nodes, included in a file that is using this extension.
 This means that the current rendered scene shall be output using the displaymapping declared by this extension whenever the usecase is relevant, ie a realtime renderer with output to a display.  
 
 Visualization of multiple glTF assets using this extension is supported and will produce a normative result.  
