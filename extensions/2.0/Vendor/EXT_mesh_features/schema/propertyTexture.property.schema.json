@@ -1,0 +1,27 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "propertyTexture.schema.json",
+    "title": "Property Texture Property in EXT_mesh_features",
+    "type": "object",
+    "description": "Texture channels containing property values.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "channels": {
+            "type": "array",
+            "items": {
+                "type": "integer",
+                "minimum": 0
+            },
+            "description": "Texture channels containing property values, identified by index."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "channels"
+    ]
+}

@@ -3,7 +3,7 @@
     "$id": "propertyTexture.schema.json",
     "title": "Property Texture in EXT_mesh_features",
     "type": "object",
-    "description": "Features conforming to a class, organized as property values stored in texture channels.",
+    "description": "Properties conforming to a class, organized as property values stored in texture channels.",
     "allOf": [
         {
             "$ref": "textureInfo.schema.json"
@@ -23,15 +23,10 @@
         },
         "properties": {
             "type": "object",
-            "description": "A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value describes the texture channels containing property values.",
+            "description": "A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value is an object describing where property values are stored. Required properties must be included in this dictionary.",
             "minProperties": 1,
             "additionalProperties": {
-                "type": "array",
-                "items": {
-                    "type": "integer",
-                    "minimum": 0
-                },
-                "description": "Texture channels containing property values, identified by index."
+                "$ref": "propertyTexture.property.schema.json"
             }
         },
         "extensions": {},
