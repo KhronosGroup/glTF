@@ -37,6 +37,8 @@ Optionally, this extension may be used in conjunction with [`EXT_mesh_gpu_instan
   - [Feature ID by Texture Coordinates](#feature-id-by-texture-coordinates)
   - [Feature ID by GPU Instance](#feature-id-by-gpu-instance)
   - [Specifying Feature IDs](#specifying-feature-ids)
+    - [Referencing Property Tables with Feature IDs](#referencing-property-tables-with-feature-ids)
+    - [Referencing External Resources with Feature IDs](#referencing-external-resources-with-feature-ids)
 - [Feature Properties](#feature-properties)
   - [Overview](#overview-2)
   - [Schema Definitions](#schema-definitions)
@@ -559,21 +561,29 @@ Enum values may be encoded in images, as integer values according to their enum 
 >                 "name": "Insulation Thickness",
 >                 "componentType": "UINT8",
 >                 "normalized": true
->               },
+>               }
 >             }
 >           }
 >         }
 >       },
->       "propertyTextures": [{
->         "class": "wall",
->         "index": 0,
->         "texCoord": 0,
->         "properties": {
->           "insideTemperature": [0],
->           "outsideTemperature": [1],
->           "insulation": [2]
+>       "propertyTextures": [
+>         {
+>           "class": "wall",
+>           "index": 0,
+>           "texCoord": 0,
+>           "properties": {
+>             "insideTemperature": {
+>               "channels": [0]
+>             },
+>             "outsideTemperature": {
+>               "channels": [1]
+>             },
+>             "insulation": {
+>               "channels": [2]
+>             }
+>           }
 >         }
->       }]
+>       ]
 >     }
 >   }
 > }
@@ -611,15 +621,21 @@ The `properties` map specifies the texture channels providing data for available
 > ```jsonc
 > // Root EXT_mesh_features extension:
 > {
->   "propertyTextures": [{
->     "class": "wind",
->     "index": 0,
->     "texCoord": 0,
->     "properties": {
->       "speed": [0],
->       "direction": [1, 2]
+>   "propertyTextures": [
+>     {
+>       "class": "wind",
+>       "index": 0,
+>       "texCoord": 0,
+>       "properties": {
+>         "speed": {
+>           "channels": [0]
+>         },
+>         "direction": {
+>           "channels": [1, 2]
+>         }
+>       }
 >     }
->   }]
+>   ]
 > }
 
 Texture filtering must be `9728` (NEAREST), `9729` (LINEAR), or undefined, for any texture object referenced as a property texture.
@@ -714,3 +730,5 @@ Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanc
   * Each property texture now contains only a single texture
   * Property textures are now assumed to be in linear space, and must use nearest or linear filtering
   * Added a `schema.id` property
+* **Version 3.0.0** February 2022
+  * Elements in the property texture `properties` dictionary are now objects containing a `channels` property rather than an array of channels directly.
