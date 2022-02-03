@@ -1,0 +1,386 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "class.property.schema.json",
+    "title": "Class Property in EXT_3d_metadata",
+    "type": "object",
+    "description": "A class property.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The name of the property, e.g. for display purposes."
+        },
+        "description": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The description of the property."
+        },
+        "type": {
+            "description": "The element type.",
+            "anyOf": [
+                {
+                    "const": "SCALAR"
+                },
+                {
+                    "const": "VEC2"
+                },
+                {
+                    "const": "VEC3"
+                },
+                {
+                    "const": "VEC4"
+                },
+                {
+                    "const": "MAT2"
+                },
+                {
+                    "const": "MAT3"
+                },
+                {
+                    "const": "MAT4"
+                },
+                {
+                    "const": "STRING"
+                },
+                {
+                    "const": "BOOLEAN"
+                },
+                {
+                    "const": "ENUM"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "componentType": {
+            "description": "The datatype of the element's components. Only applicable for `SCALAR`, `VECN`, and `MATN` types.",
+            "anyOf": [
+                {
+                    "const": "INT8"
+                },
+                {
+                    "const": "UINT8"
+                },
+                {
+                    "const": "INT16"
+                },
+                {
+                    "const": "UINT16"
+                },
+                {
+                    "const": "INT32"
+                },
+                {
+                    "const": "UINT32"
+                },
+                {
+                    "const": "INT64"
+                },
+                {
+                    "const": "UINT64"
+                },
+                {
+                    "const": "FLOAT32"
+                },
+                {
+                    "const": "FLOAT64"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "enumType": {
+            "type": "string",
+            "description": "Enum ID as declared in the `enums` dictionary. Required when `type` is `ENUM`."
+        },
+        "count": {
+            "type": "integer",
+            "minimum": 2,
+            "description": "Indicates that the property is a fixed-length array containing `count` elements. When `count` is defined `variableCount` must not be defined. When neither is defined the property is a single element."
+        },
+        "variableCount": {
+            "type": "boolean",
+            "description": "When true, indicates that the property is a variable-length array. When `variableCount` is defined `count` must not be defined. When neither is defined the property is a single element."
+        },
+        "normalized": {
+            "type": "boolean",
+            "description": "Specifies whether integer values are normalized. This applies when `componentType` is an integer type. For unsigned integer component types, values are normalized between `[0.0, 1.0]`. For signed integer component types, values are normalized between `[-1.0, 1.0]`. For all other component types, this property must be false.",
+            "default": false
+        },
+        "offset": {
+            "$ref": "#/definitions/numericValue",
+            "description": "An offset to apply to property values. Only applicable for `SCALAR`, `VECN`, and `MATN` types."
+        },
+        "max": {
+            "oneOf": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 1
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 1
+                    },
+                    "minItems": 1
+                }
+            ],
+            "description": "Maximum allowed value for the property after `normalize`, `offset`, and `scale` have been applied. Only applicable for `SCALAR`, `VECN`, and `MATN` types. For `SCALAR` this is a single number. For `VECN` and `MATN` this is an array of component-wise maximum values. For fixed-length array of `SCALAR` this is an array of numbers. For fixed-length array of `VECN` and `MATN` this is an array of arrays of numbers."
+        },
+        "min": {
+            "oneOf": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 1
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 1
+                    },
+                    "minItems": 1
+                }
+            ],
+            "description": "Minimum allowed value for the property after `normalize`, `offset`, and `scale` have been applied. Only applicable for `SCALAR`, `VECN`, and `MATN` types. For `SCALAR` this is a single number. For `VECN` and `MATN` this is an array of component-wise minimum values. For fixed-length arrays of `SCALAR` this is an array of numbers. For fixed-length arrays of `VECN` and `MATN` this is an array of arrays of numbers."
+        },
+        "required": {
+            "type": "boolean",
+            "description": "If required, the property must be present in every entity conforming to the class. If not required, individual entities may include `noData` values, or the entire property may be omitted. As a result, `noData` has no effect on a required property. Client implementations may use required properties to make performance optimizations.",
+            "default": false
+        },
+        "noData": {
+            "oneOf": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 1
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 1
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 1
+                    },
+                    "minItems": 1
+                }
+            ],
+            "description": "A `noData` value represents missing data — also known as a sentinel value — wherever it appears. For variable-length array properties, `noData` is implicitly `[]` and the property is never required. For fixed-length array properties, `noData` must be an array of length `count`. For `VECN` properties, `noData` must be an array of length `N`. For `MATN` properties, `noData` must be an array of length `N²`. For fixed-length arrays of `VECN` and `MATN` `noData` must be an array of arrays. `BOOLEAN` properties may not specify `noData` values. `ENUM` `noData` values must use a valid enum `name`, not an integer value."
+        },
+        "defaultValue": {
+            "oneOf": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 1
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 1
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "boolean"
+                    },
+                    "minItems": 1
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 1
+                    },
+                    "minItems": 1
+                }
+            ],
+            "description": "A default value to use when encountering a `noData` value or an omitted property."
+        },
+        "semantic": {
+            "type": "string",
+            "minLength": 1,
+            "description": "An identifier that describes how this property should be interpreted. The semantic cannot be used by other properties in the class."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "dependencies": {
+        "componentCount": [
+            "type"
+        ]
+    },
+    "required": [
+        "type"
+    ],
+    "definitions": {
+        "numericValue": {
+            "oneOf": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 1
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 1
+                    },
+                    "minItems": 1
+                }
+            ],
+            "description": "For `SCALAR` this is a number. For `VECN` this is an array of `N` numbers. For `MATN` this is an array of `N²` numbers. For fixed-length array this is an array of `count` elements of the previously defined types."
+        },
+        "noDataValue": {
+            "oneOf": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 1
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 1
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 1
+                    },
+                    "minItems": 1
+                }
+            ],
+            "description": "For `SCALAR` this is a number. For `STRING` this is a string. For `ENUM` this is a string that must be a valid enum `name`, not an integer value. For `VECN` this is an array of `N` numbers. For `MATN` this is an array of `N²` numbers. For fixed-length array this is an array of `count` elements of the previously defined types."
+        },
+        "anyValue": {
+            "oneOf": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 1
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 1
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "boolean"
+                    },
+                    "minItems": 1
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 1
+                    },
+                    "minItems": 1
+                }
+            ],
+            "description": "For `SCALAR` this is a number. For `STRING` this is a string. For `ENUM` this is a string that must be a valid enum `name`, not an integer value. For `BOOLEAN` this is a boolean. For `VECN` this is an array of `N` numbers. For `MATN` this is an array of `N²` numbers. For fixed-length array this is an array of `count` elements of the previously defined types. For variable-length array this is an array of any length of the previously defined types."
+        }
+    }
+}

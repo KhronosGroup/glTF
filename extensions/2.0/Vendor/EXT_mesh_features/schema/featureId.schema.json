@@ -1,0 +1,45 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "featureId.schema.json",
+    "title": "Feature ID",
+    "type": "object",
+    "description": "Feature IDs stored in an attribute or texture.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "The name of the feature ID set, e.g. for display purposes."
+        },
+        "attribute": {
+            "description": "An attribute containing feature IDs.",
+            "$ref": "featureIdAttribute.schema.json"
+        },
+        "texture": {
+            "description": "A texture containing feature IDs.",
+            "$ref": "featureIdTexture.schema.json"
+        },
+        "propertyTable": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The index of the property table containing feature metadata. Only applicable when using the `EXT_3d_metadata` extension."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "oneOf": [
+        {
+            "required": [
+                "attribute"
+            ]
+        },
+        {
+            "required": [
+                "texture"
+            ]
+        }
+    ]
+}

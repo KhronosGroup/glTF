@@ -1,4 +1,4 @@
-# EXT_mesh_features
+# EXT_3d_metadata
 
 ## Contributors
 
