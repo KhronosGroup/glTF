@@ -14,6 +14,16 @@
             "type": "string",
             "description": "The name of the feature ID set, e.g. for display purposes."
         },
+        "featureCount": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The number of unique features in the attribute or texture."
+        },
+        "nullFeatureId": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "A value that indicates that no feature is associated with this vertex or texel."
+        },
         "attribute": {
             "description": "An attribute containing feature IDs.",
             "$ref": "featureIdAttribute.schema.json"
@@ -25,7 +35,7 @@
         "propertyTable": {
             "type": "integer",
             "minimum": 0,
-            "description": "The index of the property table containing feature metadata. Only applicable when using the `EXT_3d_metadata` extension."
+            "description": "The index of the property table containing per-feature property values. Only applicable when using the `EXT_structural_metadata` extension."
         },
         "extensions": {},
         "extras": {}

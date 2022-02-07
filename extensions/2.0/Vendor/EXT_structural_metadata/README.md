@@ -1,4 +1,4 @@
-# EXT_3d_metadata
+# EXT_structural_metadata
 
 ## Contributors
 

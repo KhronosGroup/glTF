@@ -3,7 +3,7 @@
     "$id": "mesh.primitive.EXT_mesh_features.schema.json",
     "title": "EXT_mesh_features glTF Mesh Primitive extension",
     "type": "object",
-    "description": "An array of feature ID attributes or feature ID textures assigned to the primitive.",
+    "description": "Feature identification on a mesh primitive.",
     "allOf": [
         {
             "$ref": "glTFProperty.schema.json"

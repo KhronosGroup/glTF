@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "glTF.EXT_3d_metadata.schema.json",
-    "title": "EXT_3d_metadata glTF extension",
+    "$id": "glTF.EXT_structural_metadata.schema.json",
+    "title": "EXT_structural_metadata glTF extension",
     "type": "object",
     "description": "glTF extension that assigns properties to features in a model.",
     "allOf": [
