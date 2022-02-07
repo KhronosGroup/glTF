@@ -16,7 +16,7 @@
                 "type": "integer",
                 "minimum": 0
             },
-            "description": "Texture channels containing feature IDs, identified by index. Feature IDs may be packed into multiple channels if a single channel does not have sufficient bit depth to represent all feature ID values.",
+            "description": "Texture channels containing feature IDs, identified by index. Feature IDs may be packed into multiple channels if a single channel does not have sufficient bit depth to represent all feature ID values. The values are packed in little-endian order.",
             "default": [
                 0
             ]
