@@ -140,13 +140,12 @@ Light that is passing through the clearcoat is then processed as described takin
 
 ### Theory, Documentation and Implementations
 
-[A Practical Extension to Microfacet Theory for the Modeling of Varying Iridescence](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html)  
-[Arnold for Maya user guide - Thin Film](https://docs.arnoldrenderer.com/display/A5AFMUG/Thin+Film)  
-[Artist Friendly Metallic Fresnel](http://jcgt.org/published/0003/04/03/)  
-[Practical Multilayered Materials in Call of Duty: Infinite Warfare](https://blog.selfshadow.com/publications/s2017-shading-course/drobot/s2017_pbs_multilayered.pdf)  
-[Real-time Image-based Lighting of Microfacet BRDFs with Varying Iridescence](https://cg.cs.uni-bonn.de/en/publications/paper-details/kneiphof-2019-iridescence/)  
-[Real-Time Rendering, Fourth Edition; page 361ff](https://www.realtimerendering.com/)  
-[Rendering Iridescent Objects in Real-time](http://dspace.library.uu.nl/handle/1874/287110)  
+[Belcour, L. and Barla, P. (2017): A Practical Extension to Microfacet Theory for the Modeling of Varying Iridescence](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html)  
+[Autodesk: Arnold for Maya user guide - Thin Film](https://docs.arnoldrenderer.com/display/A5AFMUG/Thin+Film)  
+[Drobot, M. and Micciulla, A. (2017): Practical Multilayered Materials in Call of Duty: Infinite Warfare](https://blog.selfshadow.com/publications/s2017-shading-course/drobot/s2017_pbs_multilayered.pdf)  
+[Kneiphof, T., Golla, T. and Klein, R. (2019): Real-time Image-based Lighting of Microfacet BRDFs with Varying Iridescence](https://cg.cs.uni-bonn.de/publication/kneiphof-2019-real-time)  
+[Akenine-Möller, T., Haines, E., Hoffman, N., Pesce, A., Iwanicki, M., and Hillaire, S. (2018): Real-Time Rendering, Fourth Edition; page 361ff](https://www.realtimerendering.com/)  
+[Sussenbach, M. (2013): Rendering Iridescent Objects in Real-time](http://dspace.library.uu.nl/handle/1874/287110)  
 
 ## Schema
 
