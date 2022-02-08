@@ -39,6 +39,14 @@
                 "$ref": "propertyTexture.schema.json"
             }
         },
+        "propertyMappings": {
+            "type": "array",
+            "description": "An array of mappings from class properties to vertex attribute semantics, which may be referenced by index.",
+            "minItems": 1,
+            "items": {
+                "$ref": "propertyMappings.schema.json"
+            }
+        },
         "extensions": {},
         "extras": {}
     },

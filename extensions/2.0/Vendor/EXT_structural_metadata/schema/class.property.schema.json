@@ -102,73 +102,35 @@
         },
         "count": {
             "type": "integer",
-            "minimum": 2,
-            "description": "Indicates that the property is a fixed-length array containing `count` elements. When `count` is defined `variableCount` must not be defined. When neither is defined the property is a single element."
+            "minimum": 1,
+            "default": 1,
+            "description": "The number of elements in the property. When `count` is greater than 1 the property has a fixed-length array of `count` elements. When `count` is 1 the property has a single element. Only applicable when `hasFixedCount` is true."
         },
-        "variableCount": {
+        "hasFixedCount": {
             "type": "boolean",
-            "description": "When true, indicates that the property is a variable-length array. When `variableCount` is defined `count` must not be defined. When neither is defined the property is a single element."
+            "default": true,
+            "description": "When true, indicates the property has a fixed number of elements (see `count`). When false, indicates that the property is a variable-length array."
         },
         "normalized": {
             "type": "boolean",
-            "description": "Specifies whether integer values are normalized. This applies when `componentType` is an integer type. For unsigned integer component types, values are normalized between `[0.0, 1.0]`. For signed integer component types, values are normalized between `[-1.0, 1.0]`. For all other component types, this property must be false.",
+            "description": "Specifies whether integer values are normalized. Only applicable for `SCALAR`, `VECN`, and `MATN` types with integer component types. For unsigned integer component types, values are normalized between `[0.0, 1.0]`. For signed integer component types, values are normalized between `[-1.0, 1.0]`. For all other component types, this property must be false.",
             "default": false
         },
         "offset": {
             "$ref": "#/definitions/numericValue",
             "description": "An offset to apply to property values. Only applicable for `SCALAR`, `VECN`, and `MATN` types."
         },
+        "scale": {
+            "$ref": "#/definitions/numericValue",
+            "description": "A scale to apply to property values. Only applicable for `SCALAR`, `VECN`, and `MATN` types."
+        },
         "max": {
-            "oneOf": [
-                {
-                    "type": "number"
-                },
-                {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    },
-                    "minItems": 1
-                },
-                {
-                    "type": "array",
-                    "items": {
-                        "type": "array",
-                        "items": {
-                            "type": "number"
-                        },
-                        "minItems": 1
-                    },
-                    "minItems": 1
-                }
-            ],
-            "description": "Maximum allowed value for the property after `normalize`, `offset`, and `scale` have been applied. Only applicable for `SCALAR`, `VECN`, and `MATN` types. For `SCALAR` this is a single number. For `VECN` and `MATN` this is an array of component-wise maximum values. For fixed-length array of `SCALAR` this is an array of numbers. For fixed-length array of `VECN` and `MATN` this is an array of arrays of numbers."
+            "$ref": "#/definitions/numericValue",
+            "description": "Maximum allowed value for the property. Only applicable for `SCALAR`, `VECN`, and `MATN` types. The `normalized`, `offset`, and `scale` properties have no effect on the maximum, which always contains integer values."
         },
         "min": {
-            "oneOf": [
-                {
-                    "type": "number"
-                },
-                {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    },
-                    "minItems": 1
-                },
-                {
-                    "type": "array",
-                    "items": {
-                        "type": "array",
-                        "items": {
-                            "type": "number"
-                        },
-                        "minItems": 1
-                    },
-                    "minItems": 1
-                }
-            ],
-            "description": "Minimum allowed value for the property after `normalize`, `offset`, and `scale` have been applied. Only applicable for `SCALAR`, `VECN`, and `MATN` types. For `SCALAR` this is a single number. For `VECN` and `MATN` this is an array of component-wise minimum values. For fixed-length arrays of `SCALAR` this is an array of numbers. For fixed-length arrays of `VECN` and `MATN` this is an array of arrays of numbers."
+            "$ref": "#/definitions/numericValue",
+            "description": "Minimum allowed value for the property. Only applicable for `SCALAR`, `VECN`, and `MATN` types. The `normalized`, `offset`, and `scale` properties have no effect on the minimum, which always contains integer values."
         },
         "required": {
             "type": "boolean",
@@ -176,85 +138,11 @@
             "default": false
         },
         "noData": {
-            "oneOf": [
-                {
-                    "type": "number"
-                },
-                {
-                    "type": "string"
-                },
-                {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    },
-                    "minItems": 1
-                },
-                {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "minItems": 1
-                },
-                {
-                    "type": "array",
-                    "items": {
-                        "type": "array",
-                        "items": {
-                            "type": "number"
-                        },
-                        "minItems": 1
-                    },
-                    "minItems": 1
-                }
-            ],
-            "description": "A `noData` value represents missing data — also known as a sentinel value — wherever it appears. For variable-length array properties, `noData` is implicitly `[]` and the property is never required. For fixed-length array properties, `noData` must be an array of length `count`. For `VECN` properties, `noData` must be an array of length `N`. For `MATN` properties, `noData` must be an array of length `N²`. For fixed-length arrays of `VECN` and `MATN` `noData` must be an array of arrays. `BOOLEAN` properties may not specify `noData` values. `ENUM` `noData` values must use a valid enum `name`, not an integer value."
+            "$ref": "#/definitions/noDataValue",
+            "description": "A `noData` value represents missing data — also known as a sentinel value — wherever it appears. For variable-length array properties, `noData` is implicitly `[]` and the property is never required. `BOOLEAN` properties may not specify `noData` values."
         },
         "defaultValue": {
-            "oneOf": [
-                {
-                    "type": "number"
-                },
-                {
-                    "type": "string"
-                },
-                {
-                    "type": "boolean"
-                },
-                {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    },
-                    "minItems": 1
-                },
-                {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "minItems": 1
-                },
-                {
-                    "type": "array",
-                    "items": {
-                        "type": "boolean"
-                    },
-                    "minItems": 1
-                },
-                {
-                    "type": "array",
-                    "items": {
-                        "type": "array",
-                        "items": {
-                            "type": "number"
-                        },
-                        "minItems": 1
-                    },
-                    "minItems": 1
-                }
-            ],
+            "$ref": "#/definitions/anyValue",
             "description": "A default value to use when encountering a `noData` value or an omitted property."
         },
         "semantic": {
@@ -264,11 +152,6 @@
         },
         "extensions": {},
         "extras": {}
-    },
-    "dependencies": {
-        "componentCount": [
-            "type"
-        ]
     },
     "required": [
         "type"

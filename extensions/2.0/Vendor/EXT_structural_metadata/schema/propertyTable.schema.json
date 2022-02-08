@@ -3,18 +3,13 @@
     "$id": "propertyTable.schema.json",
     "title": "Property Table in EXT_structural_metadata",
     "type": "object",
-    "description": "Features conforming to a class, organized as property values stored in columnar arrays.",
+    "description": "Binary property values stored in columnar arrays.",
     "allOf": [
         {
             "$ref": "glTFProperty.schema.json"
         }
     ],
     "properties": {
-        "name": {
-            "type": "string",
-            "minLength": 1,
-            "description": "The name of the property table, e.g. for display purposes."
-        },
         "class": {
             "type": "string",
             "description": "The class that property values conform to. The value must be a class ID declared in the `classes` dictionary."
@@ -22,7 +17,7 @@
         "count": {
             "type": "integer",
             "minimum": 1,
-            "description": "The number of features, as well as the number of elements in each property array."
+            "description": "The number of elements in each property array."
         },
         "properties": {
             "type": "object",
