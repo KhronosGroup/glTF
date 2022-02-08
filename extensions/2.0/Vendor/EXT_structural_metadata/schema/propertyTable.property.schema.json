@@ -16,7 +16,7 @@
                     "$ref": "glTFid.schema.json"
                 }
             ],
-            "description": "The index of the accessor containing property values. The data type of property values is determined by the property definition: When `type` is `BOOLEAN` values are packed into a bitstream. When `type` is `STRING` values are stored as byte sequences and decoded as UTF-8 strings. When `type` is `SCALAR`, `VECN`, or `MATN` the values are stored as the provided `componentType`. When `type` is `ENUM` values are stored as the enum's `valueType`. Each enum value in the array must match one of the allowed values in the enum definition. When the property is an fixed or variable-length array elements are packed tightly together. `arrayOffsets` is required for variable-length arrays and `stringOffsets` is required for strings (for variable-length arrays of strings, both are required)."
+            "description": "The index of the accessor containing property values. The data type of property values is determined by the property definition: When `type` is `BOOLEAN` values are packed into a bitstream. When `type` is `STRING` values are stored as byte sequences and decoded as UTF-8 strings. When `type` is `SCALAR`, `VECN`, or `MATN` the values are stored as the provided `componentType`. When `type` is `ENUM` values are stored as the enum's `valueType`. Each enum value in the array must match one of the allowed values in the enum definition. `arrayOffsets` is required for variable-length arrays and `stringOffsets` is required for strings (for variable-length arrays of strings, both are required)."
         },
         "arrayOffsets": {
             "allOf": [
@@ -33,6 +33,14 @@
                 }
             ],
             "description": "The index of the accessor containing offsets for strings. The number of offsets is equal to the number of string elements plus one. The offsets represent the byte offsets of each string in the property array (stored in `values`), with the last offset representing the byte offset after the last string. The string byte length is computed using the difference between the current offset and the subsequent offset. The accessor `type` must be \"SCALAR\" and the accessor `componentType` must be `5121` (\"UNSIGNED_BYTE\"), `5123` (\"UNSIGNED_SHORT\"), or `5125` (\"UNSIGNED_INT\")."
+        },
+        "offset": {
+            "$ref": "definitions.schema.json/#/definitions/numericValue",
+            "description": "An offset to apply to property values. Only applicable for `SCALAR`, `VECN`, and `MATN` types. Overrides the class property's `offset` if both are defined."
+        },
+        "scale": {
+            "$ref": "definitions.schema.json/#/definitions/numericValue",
+            "description": "A scale to apply to property values. Only applicable for `SCALAR`, `VECN`, and `MATN` types. Overrides the class property's `scale` if both are defined."
         },
         "extensions": {},
         "extras": {}

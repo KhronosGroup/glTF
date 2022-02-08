@@ -3,7 +3,7 @@
     "$id": "glTF.EXT_structural_metadata.schema.json",
     "title": "EXT_structural_metadata glTF extension",
     "type": "object",
-    "description": "glTF extension that assigns properties to features in a model.",
+    "description": "glTF extension that provides structural metadata about geometry and textures in a glTF model.",
     "allOf": [
         {
             "$ref": "glTFProperty.schema.json"
@@ -41,10 +41,10 @@
         },
         "propertyMappings": {
             "type": "array",
-            "description": "An array of mappings from class properties to vertex attribute semantics, which may be referenced by index.",
+            "description": "An array of property mapping definitions, which may be referenced by index.",
             "minItems": 1,
             "items": {
-                "$ref": "propertyMappings.schema.json"
+                "$ref": "propertyMapping.schema.json"
             }
         },
         "extensions": {},

@@ -1,9 +1,9 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "propertyTable.schema.json",
-    "title": "Property Table in EXT_structural_metadata",
+    "$id": "propertyTexture.schema.json",
+    "title": "Property Texture in EXT_structural_metadata",
     "type": "object",
-    "description": "Properties conforming to a class, organized as property values stored in binary columnar arrays.",
+    "description": "Properties conforming to a class, organized as property values stored in textures.",
     "allOf": [
         {
             "$ref": "glTFProperty.schema.json"
@@ -14,24 +14,18 @@
             "type": "string",
             "description": "The class that property values conform to. The value must be a class ID declared in the `classes` dictionary."
         },
-        "count": {
-            "type": "integer",
-            "minimum": 1,
-            "description": "The number of elements in each property array."
-        },
         "properties": {
             "type": "object",
             "description": "A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value is an object describing where property values are stored. Required properties must be included in this dictionary.",
             "minProperties": 1,
             "additionalProperties": {
-                "$ref": "propertyTable.property.schema.json"
+                "$ref": "propertyTexture.property.schema.json"
             }
         },
         "extensions": {},
         "extras": {}
     },
     "required": [
-        "class",
-        "count"
+        "class"
     ]
 }
