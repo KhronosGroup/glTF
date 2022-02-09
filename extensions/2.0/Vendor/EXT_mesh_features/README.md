@@ -87,7 +87,7 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
 >     {
 >       "attributes": {
 >         "POSITION": 0,
->         "FEATURE_ID_0": 1
+>         "_FEATURE_ID_0": 1
 >       },
 >       "indices": 2,
 >       "mode": 4,
@@ -270,6 +270,8 @@ Material classification|A textured mesh using a feature ID texture.|![Material C
   * Added a `schema.id` property
 * **Version 3.0.0** February 2022
   * Elements in the property texture `properties` dictionary are now objects containing a `channels` property rather than an array of channels directly.
-  * Split the `EXT_mesh_features` extension into one that only defines the concept of feature IDs, and a separate `EXT_structural_metadata` extension that allows associating the features with metadata
+  * Split the `EXT_mesh_features` extension into one that only defines the concept of feature IDs, and a separate `EXT_structural_metadata` extension that allows associating the features with metadata, including the following changes:
+    * Renamed `FEATURE_ID_#` back to `_FEATURE_ID_#`
+    * Removed the "Implicit Feature IDs" concept
 
 
