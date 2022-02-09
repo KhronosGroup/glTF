@@ -273,5 +273,6 @@ Material classification|A textured mesh using a feature ID texture.|![Material C
   * Split the `EXT_mesh_features` extension into one that only defines the concept of feature IDs, and a separate `EXT_structural_metadata` extension that allows associating the features with metadata, including the following changes:
     * Renamed `FEATURE_ID_#` back to `_FEATURE_ID_#`
     * Removed the "Implicit Feature IDs" concept
+    * JSON restructuring (inlined `propertyTable`, store `texture` and `attribute` as mutually exclusive properties (instead of different types), added `featureCount` and `nullFeatureId`, allow multiple texture channels to be combined into one feature ID)
 
 
