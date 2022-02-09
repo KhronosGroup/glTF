@@ -115,6 +115,12 @@ Input values are linear values in the range {R,G,B} [0 - 10000] and output is no
 | [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Framebuffer output  |
 
 
+**Implementation Notes**
+
+Overview of where implementations may decide to perform the functions defined by this extension.
+
+[Render process]((images/RenderOricess.png?display=inline-block))
+
 
 
 ### Motivation
