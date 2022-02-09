@@ -35,11 +35,19 @@
             "description": "The index of the accessor containing offsets for strings. The number of offsets is equal to the number of string elements plus one. The offsets represent the byte offsets of each string in the property array (stored in `values`), with the last offset representing the byte offset after the last string. The string byte length is computed using the difference between the current offset and the subsequent offset. The accessor `type` must be \"SCALAR\" and the accessor `componentType` must be `5121` (\"UNSIGNED_BYTE\"), `5123` (\"UNSIGNED_SHORT\"), or `5125` (\"UNSIGNED_INT\")."
         },
         "offset": {
-            "$ref": "definitions.schema.json/#/definitions/numericValue",
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json/#/definitions/numericValue"
+                }
+            ],
             "description": "An offset to apply to property values. Only applicable for `SCALAR`, `VECN`, and `MATN` types. Overrides the class property's `offset` if both are defined."
         },
         "scale": {
-            "$ref": "definitions.schema.json/#/definitions/numericValue",
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json/#/definitions/numericValue"
+                }
+            ],
             "description": "A scale to apply to property values. Only applicable for `SCALAR`, `VECN`, and `MATN` types. Overrides the class property's `scale` if both are defined."
         },
         "extensions": {},

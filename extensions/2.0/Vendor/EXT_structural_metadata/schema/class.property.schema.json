@@ -117,19 +117,35 @@
             "default": false
         },
         "offset": {
-            "$ref": "definitions.schema.json/#/definitions/numericValue",
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json/#/definitions/numericValue"
+                }
+            ],
             "description": "An offset to apply to property values. Only applicable for `SCALAR`, `VECN`, and `MATN` types."
         },
         "scale": {
-            "$ref": "definitions.schema.json/#/definitions/numericValue",
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json/#/definitions/numericValue"
+                }
+            ],
             "description": "A scale to apply to property values. Only applicable for `SCALAR`, `VECN`, and `MATN` types."
         },
         "max": {
-            "$ref": "definitions.schema.json/#/definitions/numericValue",
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json/#/definitions/numericValue"
+                }
+            ],
             "description": "Maximum allowed value for the property. Only applicable for `SCALAR`, `VECN`, and `MATN` types. The `normalized`, `offset`, and `scale` properties have no effect on the maximum, which always contains integer values."
         },
         "min": {
-            "$ref": "definitions.schema.json/#/definitions/numericValue",
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json/#/definitions/numericValue"
+                }
+            ],
             "description": "Minimum allowed value for the property. Only applicable for `SCALAR`, `VECN`, and `MATN` types. The `normalized`, `offset`, and `scale` properties have no effect on the minimum, which always contains integer values."
         },
         "required": {
@@ -138,11 +154,19 @@
             "default": false
         },
         "noData": {
-            "$ref": "definitions.schema.json/#/definitions/noDataValue",
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json/#/definitions/noDataValue"
+                }
+            ],
             "description": "A `noData` value represents missing data — also known as a sentinel value — wherever it appears. For variable-length array properties, `noData` is implicitly `[]` and the property is never required. `BOOLEAN` properties may not specify `noData` values."
         },
         "defaultValue": {
-            "$ref": "definitions.schema.json/#/definitions/anyValue",
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json/#/definitions/anyValue"
+                }
+            ],
             "description": "A default value to use when encountering a `noData` value or an omitted property."
         },
         "semantic": {

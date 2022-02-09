@@ -15,11 +15,19 @@
             "description": "The name of the attribute containing property values."
         },
         "offset": {
-            "$ref": "definitions.schema.json/#/definitions/numericValue",
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json/#/definitions/numericValue"
+                }
+            ],
             "description": "An offset to apply to property values. Only applicable for `SCALAR`, `VECN`, and `MATN` types. Overrides the class property's `offset` if both are defined."
         },
         "scale": {
-            "$ref": "definitions.schema.json/#/definitions/numericValue",
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json/#/definitions/numericValue"
+                }
+            ],
             "description": "A scale to apply to property values. Only applicable for `SCALAR`, `VECN`, and `MATN` types. Overrides the class property's `scale` if both are defined."
         },
         "extensions": {},
