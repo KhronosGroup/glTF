@@ -33,7 +33,13 @@ Currently the glTF specification does not define how to output pixels.
 This results in hue shift and white-out, due to clipping of pixel values as they are written to framebuffer.      
 The result is not desirable when the goal is to display physically correct scenes.  
 
-[Sample viewer reference implementation with one directional light at intensity 100 lumen / m2](images/SampleViewer-100.png?display=inline-block)
+
+<figure>
+<img src="./images/SampleViewer-100.png"/>
+<figcaption><em>Sample viewer reference implementation with one directional light at 100 lumen/m2.  
+Notice how colors have been clipped and changed hue</em></figcaption>
+</figure>
+
 
 This extension sets out standardize the output from such a scene in a way that the result is predictable and retains hue.    
 The intended use-case for this extension is when light contribution values are expected to go above 1.0 and the output values shall be mapped to an output range {R,G,B} that retains hue.  
@@ -60,7 +66,12 @@ This extension does not take the viewing environment of the display, or eye ligh
 It is assumed that the content is viewed in an environment that is dimly lit (~5 cd / m2) without direct light on the display.  
 Viewer calibration is not part of this extension as this is heavily dependant on the usecase and application.  
 
-[Output using extension, without scene aperture, and one directional light at intensity 10 000 lumen / m2](images/DisplayMappingPQ-10000.png?display=inline-block)
+<figure>
+<img src="./images/DisplayMappingPQ-10000.png"/>
+<figcaption><em>Output using extension, one directional light at intensity 10 000 lumen/m2.
+No clipping of color values, no change in hue.</em></figcaption>
+</figure>
+
 
 
 
@@ -119,7 +130,11 @@ Input values are linear values in the range {R,G,B} [0 - 10000] and output is no
 
 Overview of where implementations may decide to perform the functions defined by this extension.
 
-[Render process]((images/RenderOricess.png?display=inline-block))
+
+<figure>
+<img src="./images/RenderProcess.png"/>
+<figcaption><em>Design flow of image space implementation. This shows where implementations may choose to apply the image space functions of this extension.</em></figcaption>
+</figure>
 
 
 
