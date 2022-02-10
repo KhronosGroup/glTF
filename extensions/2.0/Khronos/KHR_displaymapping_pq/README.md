@@ -161,6 +161,22 @@ As the mind will perceive object brightess compared to the background, ie 100 vs
 Apart from being widely supported and used in the TV / movie industry the perceptual quantizer is also embraced by the gaming community, with support in the engines from some of the major game companies.  
 For instance, game engines Frostbite and Lumberyard and also in specific games such as Destiny 2 and Call Of Duty.  
 
+**Implementation Notes**
+
+The extension is compatible with usecases where a different output is wanted.  
+This could for instance be a viewer or engine that implements a physical camera or a post-processing step.  
+
+
+<figure>
+<img src="./images/DesignOverview.png"/>
+<figcaption><em>This extension affects the image processing step of realtime rendering.  
+Viewers or engines may choose to implement physical camera, post-processing or other type of features in the world/scene or image space.  
+The extension is fully compatible with such usecases</em></figcaption>
+</figure>
+
+
+
+
 ## Internal range of light contribution values
 
 This section describes how light contribution values shall be handled.  
