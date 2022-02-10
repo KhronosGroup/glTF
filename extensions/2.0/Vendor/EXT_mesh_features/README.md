@@ -54,18 +54,18 @@ See [Examples](#examples) for a more detailed list of use cases for this extensi
 
 ### Overview
 
-A **feature** is a conceptual object associated with both geometry and properties. Similar concepts exist in various industries and domains. In Geographic Information Systems (GIS) a feature is an entity such as a point, polyline, or polygon that represents some element on a map. In another domain like CAD/BIM, a feature might be a component of a design model, such as a pipe. A feature could also be a 3D building in a city, a tree in a forest, a sample point in a weather model, or a patch of texels on a 3D asset.
+A **feature** is a conceptual object in a virtual environment. Similar concepts exist in various industries and domains. In Geographic Information Systems (GIS) a feature is an entity such as a point, polyline, or polygon that represents some element on a map. In another domain like CAD/BIM, a feature might be a component of a design model, such as a pipe. A feature could also be a 3D building in a city, a tree in a forest, a sample point in a weather model, or a patch of texels on a 3D asset.
 
 Features are identified within a 3D asset by **Feature IDs** (unique identifiers) associated with parts of the asset in one of two ways:
 
-* **Feature ID by Vertex:** Per-vertex ID, in a vertex attribute or derived from the vertex index
-* **Feature ID by Texture Coordinates:** Per-texel ID, in a texture channel
+* **Feature ID by Vertex:** Feature IDs that are stored as vertex attribute, using a standard glTF accessor
+* **Feature ID by Texture Coordinates:** Feature IDs that are stored in the channels of a standard glTF texture
 
 ### Feature ID by Vertex
 
-*Defined in [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json) and [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
+*Defined in [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json), [featureId.schema.json](./schema/featureId.schema.json), and [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
 
-Per-vertex feature IDs may be defined explicitly in a vertex attribute accessor.
+Per-vertex feature IDs are defined in a vertex attribute accessor.
 
 Names of feature ID attribute semantics follow the naming convention `_FEATURE_ID_n` where `n` must start with 0 and continue with consecutive positive integers: `_FEATURE_ID_0`, `_FEATURE_ID_1`, etc. Indices must not use leading zeroes to pad the number of digits (e.g., `_FEATURE_ID_01` is not allowed).
 
@@ -79,7 +79,7 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
 >
 > Note that the `attribute` value is a set index `n` that refers to the `_FEATURE_ID_n` vertex attribute semantic. For example, `"attribute": 0` corresponds to `_FEATURE_ID_0`.
 >
-> ![Property Table](figures/feature-table.png)
+> ![Feature ID by attribute](figures/feature-id-by-attribute.png)
 >
 > ```jsonc
 > {
@@ -106,13 +106,13 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
 
 ### Feature ID by Texture Coordinates
 
-*Defined in [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json) and [featureIdTexture.schema.json](./schema/featureIdTexture.schema.json).*
+*Defined in [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json), [featureId.schema.json](./schema/featureId.schema.json),  and [featureIdTexture.schema.json](./schema/featureIdTexture.schema.json).*
 
 Feature ID textures classify the pixels of an image into different features. Some use cases include image segmentation or marking regions on a map. Often per-texel feature IDs provide finer granularity than per-vertex feature IDs, as in the example below.
 
 > **Example:** A building facade, represented by a single quad. The primitive's `baseColorTexture` displays the visible appearance of the building, and its feature ID texture identifies regions of the quad (walls, door, roof, window) as distinct features. Both textures use the same texture coordinates, `TEXCOORD_0`, in this example.
 >
-> <img src="figures/feature-id-texture.png"  alt="Feature ID Texture" width="800">
+> <img src="figures/feature-id-by-texture.png"  alt="Feature ID Texture" width="800">
 >
 > ```jsonc
 > {
@@ -131,7 +131,7 @@ Feature ID textures classify the pixels of an image into different features. Som
 >             "texture" : {
 >               "index": 0, 
 >               "texCoord": 0, 
->               "channels": [0, 1]
+>               "channels": [0]
 >             }
 >           } ]
 >         }
@@ -141,7 +141,9 @@ Feature ID textures classify the pixels of an image into different features. Som
 > }
 > ```
 
-A `featureId` pointing to a feature ID texture extends the glTF [`textureInfo`](../../../../specification/2.0/schema/textureInfo.schema.json) object. The `channels` array contains non-negative integer values corresponding to channels of the source texture that the feature ID consists of. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. The values from the selected channels are treated as unsigned 8 bit integers, and represent the bytes of the actual feature ID, in little-endian order. 
+A `featureId` pointing to a feature ID texture extends the glTF [`textureInfo`](../../../../specification/2.0/schema/textureInfo.schema.json) object. The `channels` array contains non-negative integer values corresponding to channels of the source texture that the feature ID consists of. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. 
+
+The values from the selected channels are treated as unsigned 8 bit integers, and represent the bytes of the actual feature ID, in little-endian order. 
 
 > **Example:** 
 > If a feature ID defines `"channels": [0, 1]`, then the actual feature ID can be computed as `id = channel[0] | (channel[1] << 8);`. 
