@@ -270,9 +270,14 @@ Material classification|A textured mesh using a feature ID texture.|![Material C
   * Added a `schema.id` property
 * **Version 3.0.0** February 2022
   * Elements in the property texture `properties` dictionary are now objects containing a `channels` property rather than an array of channels directly.
-  * Split the `EXT_mesh_features` extension into one that only defines the concept of feature IDs, and a separate `EXT_structural_metadata` extension that allows associating the features with metadata, including the following changes:
-    * Renamed `FEATURE_ID_#` back to `_FEATURE_ID_#`
-    * Removed the "Implicit Feature IDs" concept
-    * JSON restructuring (inlined `propertyTable`, store `texture` and `attribute` as mutually exclusive properties (instead of different types), added `featureCount` and `nullFeatureId`, allow multiple texture channels to be combined into one feature ID)
+  * Split the `EXT_mesh_features` extension into one that only defines the concept of feature IDs, a separate `EXT_structural_metadata` extension that allows associating the features with metadata, and a `EXT_instance_features` extension that supports GPU instance feature IDs. This included the following changes to the part where feature IDs are defined:
+    * Removed the "Implicit Feature IDs" concept. There have not been enough practical use-cases that could justify including them.
+    * Renamed `FEATURE_ID_#` back to `_FEATURE_ID_#`: The underscore is required for custom attributes, according to the glTF specification, and without it, the assets do not pass validation.
+    * JSON restructuring: 
+      * The `featureIds` and the `propertyTables` had been stored as parallel arrays, and the connection between them had been established _implicitly_, by them appearing at the same index in their respective array. Now, the `featureIds` are a dictionary, where each value can _explicitly_ contain `propertyTable`, which is the index of the property table that it refers to.
+      * Instead of having dedicated classes for "Attribute Feature IDs" and "Texture Feature IDs", there is one common "Feature ID" class that either stores the `attribute` or the `texture`, respectively.
+      * Added `featureId.nullFeatureId`, which can be used as a value indicating that a certain element is not associated with a feature ID.
+      * Added `featureId.featureCount`, which is the number of distinct, non-`null` feature ID values.
+      * Changed the `channel` for feature ID textures to be a `channels` array, so that multiple channels can be combined into one feature ID, allowing for more than 256 feature ID values in feature ID textures.
 
 
