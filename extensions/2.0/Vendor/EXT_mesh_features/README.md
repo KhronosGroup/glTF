@@ -24,17 +24,20 @@ Draft
 Written against the glTF 2.0 specification.
 
 <!-- omit in toc -->
+## Optional vs. Required
+
+This extension is optional, meaning it should be placed in the `extensionsUsed` list, but not in the `extensionsRequired` list.
+
+<!-- omit in toc -->
 ## Table of Contents
 
 - [Overview](#overview)
 - [Feature IDs](#feature-ids)
-  - [Overview](#overview-1)
-  - [Feature ID by Vertex](#feature-id-by-vertex)
-  - [Feature ID by Texture Coordinates](#feature-id-by-texture-coordinates)
-  - [Specifying Feature IDs](#specifying-feature-ids)
-    - [Referencing Property Tables with Feature IDs](#referencing-property-tables-with-feature-ids)
-    - [Referencing External Resources with Feature IDs](#referencing-external-resources-with-feature-ids)
-- [Optional vs. Required](#optional-vs-required)
+ - [Feature ID by Vertex](#feature-id-by-vertex)
+- [Feature ID by Texture Coordinates](#feature-id-by-texture-coordinates)
+- [Specifying Feature IDs](#specifying-feature-ids)
+  - [Referencing Property Tables with Feature IDs](#referencing-property-tables-with-feature-ids)
+  - [Referencing External Resources with Feature IDs](#referencing-external-resources-with-feature-ids)
 - [Schema](#schema-1)
 - [Examples](#examples)
 - [Revision History](#revision-history)
@@ -50,9 +53,7 @@ By defining a representation of conceptual objects ("features") distinct from re
 See [Examples](#examples) for a more detailed list of use cases for this extension.
 
 
-## Feature IDs
-
-### Overview
+### Feature IDs
 
 A **feature** is a conceptual object in a virtual environment. Similar concepts exist in various industries and domains. In Geographic Information Systems (GIS) a feature is an entity such as a point, polyline, or polygon that represents some element on a map. In another domain like CAD/BIM, a feature might be a component of a design model, such as a pipe. A feature could also be a 3D building in a city, a tree in a forest, a sample point in a weather model, or a patch of texels on a 3D asset.
 
@@ -141,22 +142,22 @@ Feature ID textures classify the pixels of an image into different features. Som
 > }
 > ```
 
-A `featureId` pointing to a feature ID texture extends the glTF [`textureInfo`](../../../../specification/2.0/schema/textureInfo.schema.json) object. The `channels` array contains non-negative integer values corresponding to channels of the source texture that the feature ID consists of. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. 
+The `texture` object of a `featureId` extends the glTF [`textureInfo`](../../../../specification/2.0/schema/textureInfo.schema.json) object. The `channels` array contains non-negative integer values corresponding to channels of the source texture that the feature ID consists of. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. 
 
 The values from the selected channels are treated as unsigned 8 bit integers, and represent the bytes of the actual feature ID, in little-endian order. 
 
 > **Example:** 
-> If a feature ID defines `"channels": [0, 1]`, then the actual feature ID can be computed as `id = channel[0] | (channel[1] << 8);`. 
-> If a feature ID defines `"channels": [1, 0, 2]`, then the actual feature ID can be computed as `id = channel[1] | (channel[0] << 8) | (channel[2] << 16);`.
+> If a `featureID.texture` defines `"channels": [0, 1]`, then the actual feature ID can be computed as `id = channel[0] | (channel[1] << 8);`. 
+> If a `featureID.texture` defines `"channels": [1, 0, 2]`, then the actual feature ID can be computed as `id = channel[1] | (channel[0] << 8) | (channel[2] << 16);`.
 
 Texture filtering must be `9728` (NEAREST), or undefined, for any texture object referenced as a feature ID texture.
 
 
 ### Specifying Feature IDs
 
-A primitive or node may specify multiple feature IDs using one or more of the methods above. With multiple feature IDs, an asset might (for example) identify features at different levels of abstraction: per-vertex feature IDs for individual buildings, and per-texel feature IDs for parts of each building.
+A primitive or node may specify multiple feature ID sets using one or more of the methods above. With multiple feature ID sets, an asset might (for example) identify features at different levels of abstraction: per-vertex feature IDs for individual buildings, and per-texel feature IDs for parts of each building.
 
-Each feature ID definition may include only a single source, so the following are mutually exclusive:
+Each feature ID set definition may include only a single source, so the following are mutually exclusive:
 
 - `featureId.attribute` for a Feature ID Attribute
 - `featureId.texture` for a Feature ID Texture
@@ -165,9 +166,9 @@ Primitives may contain `featureIds` entries for vertex attribute and texture-bas
 
 #### Referencing Property Tables with Feature IDs
 
-When combined with the `EXT_structural_metadata` extension, feature IDs can be associated with property tables. A property table maps each feature ID to a set of values that are associated with the respective feature. The feature ID in this case serves as an _index_ for the row of the table. The the index of the property table that a certain set of feature IDs is associated with is stored in the `propertyTable` of the feature ID definition.
+When combined with the `EXT_structural_metadata` extension, feature ID sets can be associated with property tables. A property table maps each feature ID to a set of values that are associated with the respective feature. The feature ID in this case serves as an _index_ for the row of the table. The index of the property table that a certain set of feature IDs is associated with is stored in the `propertyTable` of the feature ID set definition.
 
-> **Example:** This example assumes that an array of property tables is defined in the asset, using the `EXT_structural_metadata` extension. The example shows a primitive with multiple feature ID set. The first one uses a feature ID texture that contains 4 different features. The second one is defined via an attribute, and defines 2 different features. The first ID is associated with the property table with index 1. The second one is associated with the property table with index 0. 
+> **Example:** This example assumes that an array of property tables is defined in the asset, using the `EXT_structural_metadata` extension. The example shows a primitive with multiple feature ID sets. The first one uses a feature ID texture that contains 4 different features. The second one is defined via a vertex attribute, and defines 2 different features. The first ID set is associated with the property table with index 1. The second one is associated with the property table with index 0. 
 >
 > ```jsonc
 > // Primitive:
@@ -196,10 +197,6 @@ Feature IDs may identify features for use in other extensions or in custom appli
 
 > <img src="figures/feature-id-lookup.png"  alt="Feature ID lookup" width="800">
 
-## Optional vs. Required
-
-This extension is optional, meaning it should be placed in the `extensionsUsed` list, but not in the `extensionsRequired` list.
-
 ## Schema
 
 * [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json)
@@ -208,14 +205,13 @@ This extension is optional, meaning it should be placed in the `extensionsUsed` 
 
 _This section is non-normative_
 
-The examples below shows the breadth of possible use cases for this extension.
+The examples below show possible use cases for this extension.
 
 Example|Description|Image
 --|--|--
-Triangle mesh|Feature IDs are assigned to each vertex to distinguish components of a building.|![Building Components](figures/building-components-ids.png)
-Per-point feature IDs|A feature ID is assigned to each point of a point cloud.|![Point features](figures/point-features-ids.png)
-Multi-point features|A point cloud where groups of points are associated with different feature IDs.|![Multi-point features](figures/point-cloud-layers-ids.png)
-Material classification|A textured mesh using a feature ID texture.|![Material Classification](figures/feature-id-texture-ids.png)
+Triangle mesh|Feature IDs are assigned to each vertex to distinguish components of a building.|![Building Components](figures/feature-id-building-components.png)
+Multi-point features|A point cloud where groups of points that represent distinct components of the building receive the same feature ID|![Multi-point features](figures/feature-id-building-points.png)
+Material classification|A textured mesh using a feature ID texture to identify regions on the surface of the mesh as distinct features|![Material Classification](figures/feature-id-texture-ids.png)
 
 ## Revision History
 
