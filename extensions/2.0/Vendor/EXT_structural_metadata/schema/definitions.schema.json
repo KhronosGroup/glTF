@@ -5,6 +5,7 @@
     "description": "Common definitions used in schema files.",
     "definitions": {
         "numericValue": {
+            "title": "Numeric Value",
             "oneOf": [
                 {
                     "type": "number"
@@ -31,6 +32,7 @@
             "description": "For `SCALAR` this is a number. For `VECN` this is an array of `N` numbers. For `MATN` this is an array of `N²` numbers. For fixed-length array this is an array of `count` elements of the previously defined types."
         },
         "noDataValue": {
+            "title": "No Data Value",
             "oneOf": [
                 {
                     "type": "number"
@@ -67,6 +69,7 @@
             "description": "For `SCALAR` this is a number. For `STRING` this is a string. For `ENUM` this is a string that must be a valid enum `name`, not an integer value. For `VECN` this is an array of `N` numbers. For `MATN` this is an array of `N²` numbers. For fixed-length array this is an array of `count` elements of the previously defined types."
         },
         "anyValue": {
+            "title": "Any Value",
             "oneOf": [
                 {
                     "type": "number"
