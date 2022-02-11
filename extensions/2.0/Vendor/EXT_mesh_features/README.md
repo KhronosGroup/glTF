@@ -32,10 +32,11 @@ This extension is optional, meaning it should be placed in the `extensionsUsed` 
 ## Table of Contents
 
 - [Overview](#overview)
+- [Features](#features)
 - [Feature IDs](#feature-ids)
- - [Feature ID by Vertex](#feature-id-by-vertex)
-- [Feature ID by Texture Coordinates](#feature-id-by-texture-coordinates)
-- [Specifying Feature IDs](#specifying-feature-ids)
+  - [Feature ID by Vertex](#feature-id-by-vertex)
+  - [Feature ID by Texture Coordinates](#feature-id-by-texture-coordinates)
+- [Using Feature IDs](#using-feature-ids)
   - [Referencing Property Tables with Feature IDs](#referencing-property-tables-with-feature-ids)
   - [Referencing External Resources with Feature IDs](#referencing-external-resources-with-feature-ids)
 - [Schema](#schema-1)
@@ -53,18 +54,28 @@ By defining a representation of conceptual objects ("features") distinct from re
 See [Examples](#examples) for a more detailed list of use cases for this extension.
 
 
-### Feature IDs
+### Features
 
 A **feature** is a conceptual object in a virtual environment. Similar concepts exist in various industries and domains. In Geographic Information Systems (GIS) a feature is an entity such as a point, polyline, or polygon that represents some element on a map. In another domain like CAD/BIM, a feature might be a component of a design model, such as a pipe. A feature could also be a 3D building in a city, a tree in a forest, a sample point in a weather model, or a patch of texels on a 3D asset.
 
-Features are identified within a 3D asset by **Feature IDs** (unique identifiers) associated with parts of the asset in one of two ways:
+### Feature IDs
 
-* **Feature ID by Vertex:** Feature IDs that are stored as vertex attribute, using a standard glTF accessor
-* **Feature ID by Texture Coordinates:** Feature IDs that are stored in the channels of a standard glTF texture
+*Defined in [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json) and [featureId.schema.json](./schema/featureId.schema.json)*
 
-### Feature ID by Vertex
+Features are identified within a 3D asset by **Feature IDs**. A mesh primitive may specify multiple sets of feature IDs. These feature ID sets might (for example) identify features at different levels of abstraction: there may be feature IDs that identify individual buildings, and feature IDs that identify different parts of each building.
 
-*Defined in [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json), [featureId.schema.json](./schema/featureId.schema.json), and [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
+Each feature ID set is defined as a set of values that are associated with the conceptual parts of the model. The definition of the feature ID set may include a `nullFeatureId`, which is a value that indicates that a certain part is not considered to be an identifiable object. The definition also includes a `featureCount` value, which is the number of unique features that are identified. 
+
+Feature IDs can be associated with parts of a model in one of two ways:
+
+* **Feature ID by Vertex:** Feature IDs that are stored as vertex attribute, using a standard glTF accessor. The `featureId.attribute` refers to this accessor, and allows defining feature IDs for each individual vertex.
+* **Feature ID by Texture Coordinates:** Feature IDs that are stored in the channels of a standard glTF texture. The `featureId.texture` refers to this texture, and allows defining feature IDs for regions on the surface of a mesh.
+
+These concepts are explained in more detail in the following sections.
+
+#### Feature ID by Vertex
+
+*Defined [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
 
 Per-vertex feature IDs are defined in a vertex attribute accessor.
 
@@ -75,6 +86,8 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
 > **Implementation note:** Because glTF accessors do not support `UNSIGNED_INT` types for 32-bit integers in vertex attributes, `FLOAT` may be used instead allowing integer feature IDs up to 2<sup>24</sup>. For smaller ranges of feature IDs, `UNSIGNED_BYTE` or `UNSIGNED_SHORT` may be used. As with other vertex attributes, each element of a feature ID accessor must align to 4-byte boundaries.
 
 > **Implementation note:** For a primitive with feature ID attributes, points in the interior of a triangle or line segment should be considered to belong to the feature associated with the nearest vertex.
+
+Per-vertex feature IDs can be used to identify individual objects that have been combined into a single mesh primitive, as shown in the example below.
 
 > **Example:** A primitive defines two quads, where each quad is a distinct feature. The quads are composed of four vertices, distinguished by different `_FEATURE_ID_0` vertex attribute values.
 >
@@ -105,9 +118,9 @@ The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be fals
 > }
 > ```
 
-### Feature ID by Texture Coordinates
+#### Feature ID by Texture Coordinates
 
-*Defined in [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json), [featureId.schema.json](./schema/featureId.schema.json),  and [featureIdTexture.schema.json](./schema/featureIdTexture.schema.json).*
+*Defined in [featureIdTexture.schema.json](./schema/featureIdTexture.schema.json).*
 
 Feature ID textures classify the pixels of an image into different features. Some use cases include image segmentation or marking regions on a map. Often per-texel feature IDs provide finer granularity than per-vertex feature IDs, as in the example below.
 
@@ -152,17 +165,9 @@ The values from the selected channels are treated as unsigned 8 bit integers, an
 
 Texture filtering must be `9728` (NEAREST), or undefined, for any texture object referenced as a feature ID texture.
 
+### Using Feature IDs
 
-### Specifying Feature IDs
-
-A primitive or node may specify multiple feature ID sets using one or more of the methods above. With multiple feature ID sets, an asset might (for example) identify features at different levels of abstraction: per-vertex feature IDs for individual buildings, and per-texel feature IDs for parts of each building.
-
-Each feature ID set definition may include only a single source, so the following are mutually exclusive:
-
-- `featureId.attribute` for a Feature ID Attribute
-- `featureId.texture` for a Feature ID Texture
-
-Primitives may contain `featureIds` entries for vertex attribute and texture-based feature IDs.
+The feature ID sets that are associated with mesh primitives can be accessed by client applications, and be used to look up addition information that is associated with thse features. Two possible ways of associating features with additional information are presented here. 
 
 #### Referencing Property Tables with Feature IDs
 
@@ -200,6 +205,9 @@ Feature IDs may identify features for use in other extensions or in custom appli
 ## Schema
 
 * [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json)
+* [featureId.schema.json](./schema/featureId.schema.json)
+* [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json)
+* [featureIdTexture.schema.json](./schema/featureIdTexture.schema.json)
 
 ## Examples
 
@@ -215,67 +223,6 @@ Material classification|A textured mesh using a feature ID texture to identify r
 
 ## Revision History
 
-* **Version 0.0.0** December 4, 2020
-  * Initial draft
-* **Version 1.0.0** February 24, 2021
-  * Changes to class properties
-    * Removed `FLOAT16` type
-    * Removed `BLOB` type
-    * Added `ENUM` to the list of supported types and component types and added `enumType` to refer to the chosen enum
-    * `min` and `max` are now numbers instead of single-element arrays for non-`ARRAY` properties
-  * Changes to property table
-    * Removed `offsetBufferViews`, replaced with `arrayOffsetBufferView` and `stringOffsetBufferView`
-    * Removed `blobByteLength`
-    * Removed `stringByteLength`
-    * Removed `name` and `description`
-    * Removed `elementCount` and redefined `count` to mean the element count
-    * Added optional `semantic` property
-  * Changes to feature ID attribute
-    * Removed `vertexStride` and `instanceStride`
-    * Added `divisor` for incrementing feature IDs at fixed intervals, e.g. per-triangle or per-quad
-  * Changes to `EXT_feature_metadata` object
-    * Removed `classes` dictionary. Classes and enums are now contained in the `schema` object.
-    * Added `schema` and `schemaUri`. The schema object contains class and enum definitions. `schemaUri` refers to an external schema JSON file. `schema` and `schemaUri` are mutually exclusive.
-    * Added optional `statistics` object which provides aggregate information about select properties within the model
-  * Other changes
-    * Added `EXT_feature_metadata` extension to the [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing) extension for assigning metadata to instances
-* **Version 2.0.0** September 2021
-  * Renamed extension from `EXT_feature_metadata` to `EXT_mesh_features`
-  * Renamed `constant` to `offset`, and `divisor` to `repeat`
-  * Removed `statistics` specification, to be considered as a future extension
-  * Renamed `featureTable` to `propertyTable` and `featureTexture` to `propertyTexture`
-  * Removed `featureIdAttributes` and `featureIdTextures`, replaced with `featureIds`
-    * Primitives and Nodes may now have feature IDs without associated property tables
-  * Removed string ID references to property tables and textures, replaced with integer IDs
-  * Removed `optional` and added `required`. Properties are now assumed to be optional unless `required` is true.
-  * Added `noData` for specifying a sentinel value that indicates missing data
-  * Removed `default`
-  * Feature ID values outside the range `[0, count - 1]` now indicate "no associated feature"
-  * `NaN` and `Infinity` are now explicitly disallowed as property values
-  * Binary alignment, offset, and padding changes:
-    * Byte offsets for buffer views in a GLB-stored BIN chunk are no longer different from the core glTF specification
-    * Relaxed buffer view alignment to component size, rather than strict 8-byte boundaries
-  * Renamed `_FEATURE_ID_#` to `FEATURE_ID_#`
-  * Added vector and matrix types: `VEC2`, `VEC3`, `VEC4`, `MAT2`, `MAT3`, `MAT4`
-  * Refactored `type` and `componentType` to avoid overlap. Properties that store a single value now have a `type` of `SINGLE` and a `componentType` of the desired type (e.g. `type: "SINGLE", componentType: "UINT8"`)
-  * Class IDs, enum IDs, and property IDs must now contain only alphanumeric and underscore characters
-  * Clarified that nodes with GPU instancing cannot reference property textures
-  * For GPU instance metadata, the `EXT_mesh_features` extension is now scoped to the `node` extensions instead of nesting inside the `EXT_mesh_gpu_instancing` extension.
-  * Split `offsetType` into `arrayOffsetType` and `stringOffsetType`
-  * Refactored the property texture schema so it is now a glTF `textureInfo` object.
-  * Each property texture now contains only a single texture
-  * Property textures are now assumed to be in linear space, and must use nearest or linear filtering
-  * Added a `schema.id` property
-* **Version 3.0.0** February 2022
-  * Elements in the property texture `properties` dictionary are now objects containing a `channels` property rather than an array of channels directly.
-  * Split the `EXT_mesh_features` extension into one that only defines the concept of feature IDs, a separate `EXT_structural_metadata` extension that allows associating the features with metadata, and a `EXT_instance_features` extension that supports GPU instance feature IDs. This included the following changes to the part where feature IDs are defined:
-    * Removed the "Implicit Feature IDs" concept. There have not been enough practical use-cases that could justify including them.
-    * Renamed `FEATURE_ID_#` back to `_FEATURE_ID_#`: The underscore is required for custom attributes, according to the glTF specification, and without it, the assets do not pass validation.
-    * JSON restructuring: 
-      * The `featureIds` and the `propertyTables` had been stored as parallel arrays, and the connection between them had been established _implicitly_, by them appearing at the same index in their respective array. Now, the `featureIds` are a dictionary, where each value can _explicitly_ contain `propertyTable`, which is the index of the property table that it refers to.
-      * Instead of having dedicated classes for "Attribute Feature IDs" and "Texture Feature IDs", there is one common "Feature ID" class that either stores the `attribute` or the `texture`, respectively.
-      * Added `featureId.nullFeatureId`, which can be used as a value indicating that a certain element is not associated with a feature ID.
-      * Added `featureId.featureCount`, which is the number of distinct, non-`null` feature ID values.
-      * Changed the `channel` for feature ID textures to be a `channels` array, so that multiple channels can be combined into one feature ID, allowing for more than 256 feature ID values in feature ID textures.
+The revision history of this extension can be found in the [common revision history of the 3D Tiles Next extensions](../next/REVISION_HISTORY.md).
 
 
