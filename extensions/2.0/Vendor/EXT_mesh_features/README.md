@@ -107,10 +107,12 @@ Per-vertex feature IDs can be used to identify individual objects that have been
 >       "mode": 4,
 >       "extensions": {
 >         "EXT_mesh_features": {
->           "featureIds": [ {
->             "featureCount": 2,
->             "attribute": 0
->           } ]
+>           "featureIds": { 
+>             "exampleRectangles" : {
+>               "featureCount": 2,
+>               "attribute": 0
+>             } 
+>           }
 >         }
 >       }
 >     }
@@ -140,14 +142,16 @@ Feature ID textures classify the pixels of an image into different features. Som
 >       "material": 0,
 >       "extensions": {
 >         "EXT_mesh_features": {
->           "featureIds": [ {
->             "featureCount": 4,     
->             "texture" : {
->               "index": 0, 
->               "texCoord": 0, 
->               "channels": [0]
->             }
->           } ]
+>           "featureIds": {
+>             "buildingComponents" : {
+>               "featureCount": 4,     
+>               "texture" : {
+>                 "index": 0, 
+>                 "texCoord": 0, 
+>                 "channels": [0]
+>               }
+>             } 
+>           }
 >         }
 >       }
 >     }
@@ -179,19 +183,23 @@ When combined with the `EXT_structural_metadata` extension, feature ID sets can 
 > // Primitive:
 > "extensions": {
 >   "EXT_mesh_features": {
->     "featureIds": [ {
->       "featureCount": 4,     
->       "texture" : {
->         "index": 0, 
->         "texCoord": 0, 
->         "channels": [0]
->       }, 
->       "propertyTable": 1
->     }, {
->       "featureCount": 2,
->       "attribute": 0,
->       "propertyTable": 0
->     } ]
+>     "featureIds": { 
+>       "firstFeatureId" : {
+>         "featureCount": 4,     
+>         "texture" : {
+>           "index": 0, 
+>           "texCoord": 0, 
+>           "channels": [0]
+>         }, 
+>         "propertyTable": 1
+>       },
+>       "secondFeatureId":   
+>       {
+>         "featureCount": 2,
+>         "attribute": 0,
+>         "propertyTable": 0
+>       } 
+>     }
 >   }
 > }
 > ```
