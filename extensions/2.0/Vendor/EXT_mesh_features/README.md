@@ -1,7 +1,5 @@
-<!-- omit in toc -->
 # EXT_mesh_features
 
-<!-- omit in toc -->
 ## Contributors
 
 * Peter Gagliardi, Cesium
@@ -13,35 +11,17 @@
 * Samuel Vargas, Cesium
 * Patrick Cozzi, Cesium
 
-<!-- omit in toc -->
 ## Status
 
 Draft
 
-<!-- omit in toc -->
 ## Dependencies
 
 Written against the glTF 2.0 specification.
 
-<!-- omit in toc -->
 ## Optional vs. Required
 
 This extension is optional, meaning it should be placed in the `extensionsUsed` list, but not in the `extensionsRequired` list.
-
-<!-- omit in toc -->
-## Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Feature IDs](#feature-ids)
-  - [Feature ID by Vertex](#feature-id-by-vertex)
-  - [Feature ID by Texture Coordinates](#feature-id-by-texture-coordinates)
-- [Using Feature IDs](#using-feature-ids)
-  - [Referencing Property Tables with Feature IDs](#referencing-property-tables-with-feature-ids)
-  - [Referencing External Resources with Feature IDs](#referencing-external-resources-with-feature-ids)
-- [Schema](#schema-1)
-- [Examples](#examples)
-- [Revision History](#revision-history)
 
 ## Overview
 
@@ -171,7 +151,7 @@ Texture filtering must be `9728` (NEAREST), or undefined, for any texture object
 
 ### Using Feature IDs
 
-The feature ID sets that are associated with mesh primitives can be accessed by client applications, and be used to look up addition information that is associated with thse features. Two possible ways of associating features with additional information are presented here. 
+The feature ID sets that are associated with mesh primitives can be accessed by client applications, and be used to look up addition information that is associated with these features. Two possible ways of associating features with additional information are presented here.
 
 #### Referencing Property Tables with Feature IDs
 
@@ -193,8 +173,7 @@ When combined with the `EXT_structural_metadata` extension, feature ID sets can 
 >         }, 
 >         "propertyTable": 1
 >       },
->       "secondFeatureId":   
->       {
+>       "secondFeatureId": {
 >         "featureCount": 2,
 >         "attribute": 0,
 >         "propertyTable": 0
@@ -231,6 +210,4 @@ Material classification|A textured mesh using a feature ID texture to identify r
 
 ## Revision History
 
-The revision history of this extension can be found in the [common revision history of the 3D Tiles Next extensions](../next/REVISION_HISTORY.md).
-
-
+The revision history of this extension can be found in the [common revision history of the 3D Tiles Next extensions](https://github.com/CesiumGS/3d-tiles/blob/extension-revisions/next/REVISION_HISTORY.md).
