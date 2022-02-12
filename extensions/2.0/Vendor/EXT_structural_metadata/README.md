@@ -374,12 +374,9 @@ A property texture may provide channels for only a subset of the properties of i
 
 Several constraints are imposed to ensure compatibility of texture storage with various property types:
 
-* A scalar property cannot be encoded into multiple channels. For example, it is not possible to encode a `UINT32` property in an `RGBA8` texture.
 * Components of array and vector properties must be separate channels within a texture.
 * Variable-length arrays are not supported.
 * Data type and bit depth of the image must be compatible with the property type.
-
-For example, an 8-bit per pixel RGB image may only contain `SINGLE`, fixed-length `ARRAY` (length ≤3), `VEC2`, or `VEC3` values composed of 8-bit component types.
 
 Enum values may be encoded in images, as integer values according to their enum value type (see [Enum](#enum)).
 
@@ -465,7 +462,16 @@ Enum values may be encoded in images, as integer values according to their enum 
 
 A `propertyTexture` object extends the glTF [`textureInfo`](../../../../specification/2.0/schema/textureInfo.schema.json) object. `texCoord` specifies a texture coordinate set in the referring primitive.
 
-The `properties` map specifies the texture channels providing data for available properties. An array of integer index values identifies channels, where multiple channels may be used only for fixed-length arrays of 2, 3, or 4 components. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. All values are stored in linear space.
+The `properties` map specifies the texture channels providing data for available properties. An array of integer index values identifies channels. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. All values are stored in linear space.
+
+The values from the selected channels are treated as unsigned 8 bit integers, and represent the bytes of the actual property value, in little-endian order. 
+
+> **Example:** 
+> If a property texture defines `"channels": [0, 1]`, then the actual property value can be computed as `channel[0] | (channel[1] << 8);`. 
+> If a property texture defines `"channels": [1, 0, 2]`, then the actual property value can be computed as `channel[1] | (channel[0] << 8) | (channel[2] << 16);`.
+
+
+
 
 > **Example:** A property texture for wind velocity samples. The "speed" property values are stored in the red channel, and "direction" property values are stored as a unit-length vector, with X/Y components in the green and blue channels. Both properties are indexed by UV coordinates in a `TEXCOORD_0` attribute.
 >
