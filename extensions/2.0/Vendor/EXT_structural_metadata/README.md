@@ -1,5 +1,5 @@
 <!-- omit in toc -->
-# EXT_mesh_features
+# EXT_structural_metadata
 
 <!-- omit in toc -->
 ## Contributors
@@ -57,7 +57,7 @@ Concepts and terminology used throughout this document refer to the [3D Metadata
 
 See [Examples](#examples) for a more detailed list of use cases for this extension.
 
-> **Disambiguation:** glTF has other methods of storing details that could similarly be described as metadata or properties, including [`KHR_xmp_json_ld`](../../Khronos/KHR_xmp_json_ld), Extras, and Extensions. While those methods associate data with discrete objects in a glTF asset — nodes, materials, etc. — `EXT_mesh_features` is uniquely suited for properties of more granular conceptual features in subregions composed of vertices or texels.
+> **Disambiguation:** glTF has other methods of storing details that could similarly be described as metadata or properties, including [`KHR_xmp_json_ld`](../../Khronos/KHR_xmp_json_ld), Extras, and Extensions. While those methods associate data with discrete objects in a glTF asset — nodes, materials, etc. — `EXT_structural_metadata` is uniquely suited for properties of more granular conceptual features in subregions composed of vertices or texels.
 
 ## Feature Properties
 
@@ -82,14 +82,14 @@ Data types and meanings of properties are provided by a schema, as defined in th
 
 Top-level definitions for the structure and data types of properties. The schema provides a set of [classes](#class) and [enums](#enum) the asset can reference.
 
-A schema may be embedded in the extension directly or referenced externally with the `schemaUri` property. Multiple glTF assets may refer to the same external schema to avoid duplication. A schema is defined by an `EXT_mesh_features` extension attached to the glTF root object.
+A schema may be embedded in the extension directly or referenced externally with the `schemaUri` property. Multiple glTF assets may refer to the same external schema to avoid duplication. A schema is defined by an `EXT_structural_metadata` extension attached to the glTF root object.
 
 > **Example:** A simple schema defining enums and classes.
 >
 > ```jsonc
 > {
 >   "extensions": {
->     "EXT_mesh_features": {
+>     "EXT_structural_metadata": {
 >       "schema": {
 >         "id": "schema-001",
 >         "name": "Schema 001",
@@ -116,7 +116,7 @@ Classes are defined as entries in the `schema.classes` dictionary, indexed by an
 > ```jsonc
 > {
 >   "extensions": {
->     "EXT_mesh_features": {
+>     "EXT_structural_metadata": {
 >       "schema": {
 >         "classes": {
 >           "tree": {
@@ -223,6 +223,13 @@ The transformation consists of an `offset` and `scale` value. For `SCALAR` (non-
 > ```
 
 
+---
+
+TODO Mention `min`, `max`, `noData`, `default`, `semantic` and `required`....
+
+---
+---
+
 Class properties are defined as entries in the `class.properties` dictionary, indexed by an alphanumeric property ID. 
 
 > **Example:** A "Tree" class, which might describe a table of tree measurements taken in a park. Properties include species, height, and diameter of each tree, as well as the number of birds observed in its branches.
@@ -230,7 +237,7 @@ Class properties are defined as entries in the `class.properties` dictionary, in
 > ```jsonc
 > {
 >   "extensions": {
->     "EXT_mesh_features": {
+>     "EXT_structural_metadata": {
 >       "schema": {
 >         "classes": {
 >           "tree": {
@@ -278,7 +285,7 @@ Enums are defined as entries in the `schema.enums` dictionary, indexed by an alp
 > ```jsonc
 > {
 >   "extensions": {
->     "EXT_mesh_features": {
+>     "EXT_structural_metadata": {
 >       "schema": {
 >         "enums": {
 >           "speciesEnum": {
@@ -313,7 +320,7 @@ Enum values are defined as entries in the `enum.values` array. Duplicate names o
 
 Each property table defines a specified number (`count`) of features conforming to a particular class (`class`), with property values stored as parallel arrays in a column-based binary layout. Property tables support a richer variety of data types than glTF accessors or GPU shading languages allow, and are suitable for datasets that can be expressed in a tabular layout.
 
-Property tables are defined as entries in the `propertyTables` array of the root-level `EXT_mesh_features` extension, and may be referenced by extensions on primitive or node objects.
+Property tables are defined as entries in the `propertyTables` array of the root-level `EXT_structural_metadata` extension, and may be referenced by extensions on primitive or node objects.
 
 The property table may provide value arrays for only a subset of the properties of its class, but class properties marked `required: true` must not be omitted. Each property value array given by the property table must be defined by a class property with the same alphanumeric property ID, with values matching the data type of the class property.
 
@@ -322,7 +329,7 @@ The property table may provide value arrays for only a subset of the properties 
 > ```jsonc
 > {
 >   "extensions": {
->     "EXT_mesh_features": {
+>     "EXT_structural_metadata": {
 >       "schema": { ... },
 >       "propertyTables": [{
 >         "name": "tree_survey_2021-09-29",
@@ -361,7 +368,7 @@ Each buffer view `byteOffset` must be aligned to a multiple of its component siz
 
 Property textures use texture channels to store property values conforming to a particular class (identified by ID `class`), with those values accessed directly by texture coordinates. Property textures do not require feature IDs, and are especially useful when texture mapping high frequency data to less detailed 3D surfaces. Unlike textures used in glTF materials, property textures are not necessarily visible in a rendered scene. Like property tables, property textures are implementations of the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata).
 
-Property textures are defined as entries in the `propertyTextures` array of the root-level `EXT_mesh_features` extension, and may be referenced by extensions on primitive objects. Property textures do not provide per-instance values with `EXT_mesh_gpu_instancing`, and must not be used by extensions on node objects.
+Property textures are defined as entries in the `propertyTextures` array of the root-level `EXT_structural_metadata` extension, and may be referenced by extensions on primitive objects. Property textures do not provide per-instance values with `EXT_mesh_gpu_instancing`, and must not be used by extensions on node objects.
 
 A property texture may provide channels for only a subset of the properties of its class, but class properties marked `required: true` must not be omitted.
 
@@ -387,7 +394,7 @@ Enum values may be encoded in images, as integer values according to their enum 
 > ```jsonc
 > {
 >   "extensions": {
->     "EXT_mesh_features": {
+>     "EXT_structural_metadata": {
 >       "schema": {
 >         "classes": {
 >           "wall": {
@@ -446,7 +453,7 @@ Enum values may be encoded in images, as integer values according to their enum 
 >       "indices": 2,
 >       "material": 0,
 >       "extensions": {
->         "EXT_mesh_features": {
+>         "EXT_structural_metadata": {
 >           "propertyTextures": [0]
 >         }
 >       }
@@ -463,7 +470,7 @@ The `properties` map specifies the texture channels providing data for available
 > **Example:** A property texture for wind velocity samples. The "speed" property values are stored in the red channel, and "direction" property values are stored as a unit-length vector, with X/Y components in the green and blue channels. Both properties are indexed by UV coordinates in a `TEXCOORD_0` attribute.
 >
 > ```jsonc
-> // Root EXT_mesh_features extension:
+> // Root EXT_structural_metadata extension:
 > {
 >   "propertyTextures": [
 >     {
@@ -486,7 +493,7 @@ Texture filtering must be `9728` (NEAREST), `9729` (LINEAR), or undefined, for a
 
 ## Binary Data Storage
 
-Feature properties are stored in a compact binary tabular format described in the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata), with each property table array occupying a glTF buffer view. `EXT_mesh_features` imposes 8-byte binary data alignment requirements on an asset, allowing support for 64-bit data types while remaining compatible with the 4-byte alignments in the core glTF specification:
+Feature properties are stored in a compact binary tabular format described in the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata), with each property table array occupying a glTF buffer view. `EXT_structural_metadata` imposes 8-byte binary data alignment requirements on an asset, allowing support for 64-bit data types while remaining compatible with the 4-byte alignments in the core glTF specification:
 
 - GLB-stored `JSON` chunk must be padded with trailing `Space` characters (`0x20`) to 8-byte boundary.
 - GLB-stored `BIN` chunk must be padded with trailing zeroes (`0x00`) to 8-byte boundary.
@@ -499,9 +506,8 @@ This extension is optional, meaning it should be placed in the `extensionsUsed` 
 
 ## Schema
 
-* [glTF.EXT_mesh_features.schema.json](./schema/glTF.EXT_mesh_features.schema.json)
-* [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json)
-* [node.EXT_mesh_features.schema.json](./schema/node.EXT_mesh_features.schema.json)
+* [glTF.EXT_structural_metadata.schema.json](./schema/glTF.EXT_structural_metadata.schema.json)
+* [mesh.primitive.EXT_structural_metadata.schema.json](./schema/mesh.primitive.EXT_structural_metadata.schema.json)
 
 
 
@@ -537,7 +543,7 @@ Empty feature IDs (e.g. `{}`) are disallowed — a feature ID must explicitly se
 > ```jsonc
 > // Primitive:
 > "extensions": {
->   "EXT_mesh_features": {
+>   "EXT_structural_metadata": {
 >     "propertyTables": [0, 1, 2],
 >     "featureIds": [
 >       {"attribute": 0},
