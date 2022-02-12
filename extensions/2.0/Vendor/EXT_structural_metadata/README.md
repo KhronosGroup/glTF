@@ -29,16 +29,6 @@ Optionally, this extension may be used in conjunction with [`EXT_mesh_gpu_instan
 ## Table of Contents
 
 - [Overview](#overview)
-- [Feature IDs](#feature-ids)
-  - [Overview](#overview-1)
-  - [Feature ID by Vertex](#feature-id-by-vertex)
-    - [Vertex Attribute](#vertex-attribute)
-    - [Implicit Vertex Attribute](#implicit-vertex-attribute)
-  - [Feature ID by Texture Coordinates](#feature-id-by-texture-coordinates)
-  - [Feature ID by GPU Instance](#feature-id-by-gpu-instance)
-  - [Specifying Feature IDs](#specifying-feature-ids)
-    - [Referencing Property Tables with Feature IDs](#referencing-property-tables-with-feature-ids)
-    - [Referencing External Resources with Feature IDs](#referencing-external-resources-with-feature-ids)
 - [Feature Properties](#feature-properties)
   - [Overview](#overview-2)
   - [Schema Definitions](#schema-definitions)
@@ -53,16 +43,15 @@ Optionally, this extension may be used in conjunction with [`EXT_mesh_gpu_instan
 - [Binary Data Storage](#binary-data-storage)
 - [Optional vs. Required](#optional-vs-required)
 - [Schema](#schema-1)
+- [Specifying Feature IDs](#specifying-feature-ids)
+  - [Referencing Property Tables with Feature IDs](#referencing-property-tables-with-feature-ids)
+  - [Referencing External Resources with Feature IDs](#referencing-external-resources-with-feature-ids)
 - [Examples](#examples)
 - [Revision History](#revision-history)
 
 ## Overview
 
-This extension defines a means of storing structured metadata associated with geometry and subcomponents of geometry within a glTF 2.0 asset.
-
-In most realtime 3D contexts, performance requirements demand minimizing the number of nodes and meshes in an asset. These requirements compete with interactivity, as applications may wish to merge static objects while still supporting interaction or inspection on those objects. Common performance optimizations for GPU rendering — like merging geometry or GPU instancing to reduce CPU overhead — may destroy references to distinct objects, their attributes, and their behaviors.
-
-By defining a representation of conceptual objects ("features") distinct from rendered geometry, and a means of associating structured metadata ("properties") with those features, this extension allows applications to preserve important details of 3D assets for inspection and interaction without compromising runtime performance and draw calls.
+This extension defines a means of storing structured metadata associated with features within a glTF 2.0 asset. A feature a conceptual object or element of a glTF asset that and be uniquely identified. The identification of features can happen on different levels of granularity. A feature might be one instance of a rendered mesh, when using the [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing) extension, or a subset of geometry or an area on the surface of a mesh that is identified using the concepts that are introduced in the [`EXT_mesh_fatures`](../EXT_mesh_gpu_instancing) extension.
 
 Concepts and terminology used throughout this document refer to the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata), which should be considered a normative reference for definitions and requirements. This document provides inline definitions of terms where appropriate.
 
@@ -70,214 +59,11 @@ See [Examples](#examples) for a more detailed list of use cases for this extensi
 
 > **Disambiguation:** glTF has other methods of storing details that could similarly be described as metadata or properties, including [`KHR_xmp_json_ld`](../../Khronos/KHR_xmp_json_ld), Extras, and Extensions. While those methods associate data with discrete objects in a glTF asset — nodes, materials, etc. — `EXT_mesh_features` is uniquely suited for properties of more granular conceptual features in subregions composed of vertices or texels.
 
-## Feature IDs
 
-### Overview
 
-A **feature** is a conceptual object associated with both geometry and properties. Similar concepts exist in various industries and domains. In Geographic Information Systems (GIS) a feature is an entity such as a point, polyline, or polygon that represents some element on a map. In another domain like CAD/BIM, a feature might be a component of a design model, such as a pipe. A feature could also be a 3D building in a city, a tree in a forest, a sample point in a weather model, or a patch of texels on a 3D asset.
 
-Features are identified within a 3D asset by **Feature IDs** (unique identifiers) associated with parts of the asset in one of three ways:
 
-* **Feature ID by Vertex:** Per-vertex ID, in a vertex attribute or derived from the vertex index
-* **Feature ID by Texture Coordinates:** Per-texel ID, in a texture channel
-* **Feature ID by GPU Instance:** Per-instance ID, in an instance attribute (requires [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing))
 
-### Feature ID by Vertex
-
-#### Vertex Attribute
-
-*Defined in [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json) and [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
-
-Per-vertex feature IDs may be defined explicitly in a vertex attribute accessor.
-
-Names of feature ID attribute semantics follow the naming convention `FEATURE_ID_n` where `n` must start with 0 and continue with consecutive positive integers: `FEATURE_ID_0`, `FEATURE_ID_1`, etc. Indices must not use leading zeroes to pad the number of digits (e.g., `FEATURE_ID_01` is not allowed).
-
-When associated with a [property table](#property-tables), values of feature IDs are non-negative integers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the property table. Values outside this range indicate that no feature is associated. Feature IDs may be provided without an associated property table, in which case the property value lookup method and range of valid IDs are undefined.
-
-The attribute's accessor `type` must be `"SCALAR"` and `normalized` must be false. The accessor's `componentType` is not restricted.
-
-> **Implementation note:** Because glTF accessors do not support `UNSIGNED_INT` types for 32-bit integers in vertex attributes, `FLOAT` may be used instead allowing integer feature IDs up to 2<sup>24</sup>. For smaller ranges of feature IDs, `UNSIGNED_BYTE` or `UNSIGNED_SHORT` may be used. As with other vertex attributes, each element of a feature ID accessor must align to 4-byte boundaries.
-
-> **Implementation note:** For a primitive with feature ID attributes, points in the interior of a triangle or line segment should be considered to belong to the feature associated with the nearest vertex.
-
-> **Example:** A primitive defines two quads, where each quad is a distinct feature. The quads are composed of four vertices, distinguished by different `FEATURE_ID_0` vertex attribute values. Each feature is associated with "Name", "Year", and "Coordinates" values in a [property table](#property-tables).
->
-> Note that the `attribute` value is a set index `n` that refers to the `FEATURE_ID_n` vertex attribute semantic. For example, `"attribute": 0` corresponds to `FEATURE_ID_0`.
->
-> ![Property Table](figures/feature-table.png)
->
-> ```jsonc
-> {
->   "primitives": [
->     {
->       "attributes": {
->         "POSITION": 0,
->         "FEATURE_ID_0": 1
->       },
->       "indices": 2,
->       "mode": 4,
->       "extensions": {
->         "EXT_mesh_features": {
->           "propertyTables": [0],
->           "featureIds": [{"attribute": 0}]
->         }
->       }
->     }
->   ]
-> }
-> ```
-
-#### Implicit Vertex Attribute
-
-*Defined in [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json) and [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
-
-Per-vertex feature IDs may also be defined implicitly, as a function of vertex index within the primitive. Implicit feature IDs reduce storage costs in several common cases, such as when all vertices in a primitive share the same feature ID, or each sequential group of `N` vertices (e.g. each triangle face) share the same feature ID.
-
-Implicit feature IDs are a monotonically increasing function of the vertex index, configured by `offset` and `repeat` parameters:
-
-* `offset` specifies the initial value for the vertex feature ID range. The default is `0`.
-* `repeat`, if defined, specifies the number of vertices for which to repeat each feature ID before incrementing the ID by 1. If `repeat` is undefined, the feature ID for all vertices is `offset`.
-
-For example
-
-* If `offset` is 0 or undefined and `repeat` is undefined, the feature IDs are `[0, 0, 0, ...]`
-* If `offset` is 0 and `repeat` is 1, the feature IDs are `[0, 1, 2, ...]`
-* If `offset` is 0 and `repeat` is 2, the feature IDs are `[0, 0, 1, 1, 2, 2, ...]`
-* If `offset` is 2 and `repeat` is 3, the feature IDs are `[2, 2, 2, 3, 3, 3, 4, 4, 4, ...]`
-* If `offset` is 2 and `repeat` is undefined, the feature IDs are `[2, 2, 2, ...]`
-> **Example:** Each point in the point cloud below represents a distinct feature. Points are identified by feature IDs 0–5. Each point is associated with "Name" and "Elevation" values in a [property table](#property-tables).
->
-> <img src="figures/placemarks.jpg"  alt="Placemarks" width="600">
->
-> ```jsonc
-> {
->   "primitives": [
->     {
->       "attributes": {
->         "POSITION": 0
->       },
->       "mode": 0,
->       "extensions": {
->         "EXT_mesh_features": {
->           "propertyTables": [0],
->           "featureIds": [{"offset": 0, "repeat": 1}]
->         }
->       }
->     }
->   ]
-> }
-> ```
-
-### Feature ID by Texture Coordinates
-
-*Defined in [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json) and [featureIdTexture.schema.json](./schema/featureIdTexture.schema.json).*
-
-Feature ID textures classify the pixels of an image into different features. Some use cases include image segmentation or marking regions on a map. Often per-texel feature IDs provide finer granularity than per-vertex feature IDs, as in the example below.
-
-> **Example:** A building facade, represented by a single quad. The primitive's `baseColorTexture` displays the visible appearance of the building, and its feature ID texture identifies regions of the quad (walls, door, roof, window) as distinct features. Both textures use the same texture coordinates, `TEXCOORD_0`, in this example. Each feature is associated with "Component" and "Year Built" values in a [property table](#property-tables).
->
-> <img src="figures/feature-id-texture.png"  alt="Feature ID Texture" width="800">
->
-> ```jsonc
-> {
->   "primitives": [
->     {
->       "attributes": {
->         "POSITION": 0,
->         "TEXCOORD_0": 1
->       },
->       "indices": 2,
->       "material": 0,
->       "extensions": {
->         "EXT_mesh_features": {
->           "propertyTables": [0],
->           "featureIds": [
->             {"index": 0, "texCoord": 0, "channel": 0}
->           ]
->         }
->       }
->     }
->   ]
-> }
-> ```
-
-A `featureId` pointing to a feature ID texture extends the glTF [`textureInfo`](../../../../specification/2.0/schema/textureInfo.schema.json) object. Its `channel` must be a non-negative integer corresponding to a channel of the source texture. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels.
-
-When associated with a [property table](#property-tables), feature ID values stored in a texture are non-negative integers in the range `[0, count - 1]` (inclusive), stored in linear space, where `count` is the total number of features in the property table. Values outside this range indicate that no feature is associated. Feature IDs may be provided without an associated property table, in which case the property value lookup method and range of valid IDs are undefined.
-
-Texture filtering must be `9728` (NEAREST), or undefined, for any texture object referenced as a feature ID texture.
-
-### Feature ID by GPU Instance
-
-*Defined in [node.EXT_mesh_features.schema.json](./schema/node.EXT_mesh_features.schema.json) and [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json).*
-
-Feature IDs may also be assigned to individual GPU instances when using the [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing) extension. Similar to per-vertex IDs, per-instance IDs are stored in instance attributes or generated implicitly by instance index. Nodes with `EXT_mesh_features` must also define an `EXT_mesh_gpu_instancing` extension, and are invalid without this dependency.
-
-> **Example:** A node defining instances of mesh `0`, with each instance having a feature ID in the `FEATURE_ID_0` instance attribute.
->
-> ```jsonc
-> {
->   "nodes": [
->     {
->       "mesh": 0,
->       "extensions": {
->         "EXT_mesh_gpu_instancing": {
->           "attributes": {
->             "TRANSLATION": 0,
->             "ROTATION": 1,
->             "SCALE": 2,
->             "FEATURE_ID_0": 3
->           },
->         },
->         "EXT_mesh_features": {
->           "propertyTables": [0],
->           "featureIds": [{"attribute": 0}]
->         }
->       }
->     }
->   ]
-> }
-> ```
-
-### Specifying Feature IDs
-
-A primitive or node may specify multiple feature IDs using one or more of the methods above. With multiple feature IDs, an asset might (for example) identify features at different levels of abstraction: per-vertex feature IDs for individual buildings, and per-texel feature IDs for parts of each building, with each level of abstraction having its own properties.
-
-Each feature ID definition may include only a single source, so the following are mutually exclusive:
-
-- `featureId.attribute` (for a Feature ID Attribute)
-- `featureId.offset` and `featureId.repeat` (for a Feature ID Attribute)
-- `featureId.index` (for a Feature ID Texture)
-
-Primitives may contain `featureIds` entries for vertex attribute and texture-based feature IDs, and Nodes may contain `featureIds` entries for GPU instance attributes.
-
-#### Referencing Property Tables with Feature IDs
-
-When feature IDs are associated with property tables, then every `propertyTables` index must have an associated `featureIds` definition. The `propertyTables` entry at index `i` corresponds to the `featureIds` entry at the same index. As a result, the length of the `featureIds` array must be greater than or equal to the length of the `propertyTables` array. Each (`featureId`, `propertyTable`) pair must be unique, but individual feature IDs and property tables may be repeated within a primitive or node.
-
-Empty feature IDs (e.g. `{}`) are disallowed — a feature ID must explicitly set at least one property.
-
-> **Example:** Multiple property tables and feature IDs may be defined on a single primitive.
->
-> ```jsonc
-> // Primitive:
-> "extensions": {
->   "EXT_mesh_features": {
->     "propertyTables": [0, 1, 2],
->     "featureIds": [
->       {"attribute": 0},
->       {"offset": 1},
->       {"index": 0, "texCoord": 0, "channel": 0},
->     ]
->   }
-> }
-> ```
-
-#### Referencing External Resources with Feature IDs
-
-Feature IDs do not have to be associated with a property table. Without a property table, IDs may identify features for use in other extensions or in custom applications. Use cases for these IDs extend beyond the scope of this extension, but could include identifying features for styling or picking, or looking up metadata externally in a REST API or database.
-
-> <img src="figures/feature-id-lookup.png"  alt="Feature ID lookup" width="800">
 
 ## Feature Properties
 
@@ -658,6 +444,94 @@ This extension is optional, meaning it should be placed in the `extensionsUsed` 
 * [glTF.EXT_mesh_features.schema.json](./schema/glTF.EXT_mesh_features.schema.json)
 * [mesh.primitive.EXT_mesh_features.schema.json](./schema/mesh.primitive.EXT_mesh_features.schema.json)
 * [node.EXT_mesh_features.schema.json](./schema/node.EXT_mesh_features.schema.json)
+
+
+
+
+
+
+
+
+
+
+
+
+### Specifying Feature IDs
+
+A primitive or node may specify multiple feature IDs using one or more of the methods above. With multiple feature IDs, an asset might (for example) identify features at different levels of abstraction: per-vertex feature IDs for individual buildings, and per-texel feature IDs for parts of each building, with each level of abstraction having its own properties.
+
+Each feature ID definition may include only a single source, so the following are mutually exclusive:
+
+- `featureId.attribute` (for a Feature ID Attribute)
+- `featureId.offset` and `featureId.repeat` (for a Feature ID Attribute)
+- `featureId.index` (for a Feature ID Texture)
+
+Primitives may contain `featureIds` entries for vertex attribute and texture-based feature IDs, and Nodes may contain `featureIds` entries for GPU instance attributes.
+
+#### Referencing Property Tables with Feature IDs
+
+When feature IDs are associated with property tables, then every `propertyTables` index must have an associated `featureIds` definition. The `propertyTables` entry at index `i` corresponds to the `featureIds` entry at the same index. As a result, the length of the `featureIds` array must be greater than or equal to the length of the `propertyTables` array. Each (`featureId`, `propertyTable`) pair must be unique, but individual feature IDs and property tables may be repeated within a primitive or node.
+
+Empty feature IDs (e.g. `{}`) are disallowed — a feature ID must explicitly set at least one property.
+
+> **Example:** Multiple property tables and feature IDs may be defined on a single primitive.
+>
+> ```jsonc
+> // Primitive:
+> "extensions": {
+>   "EXT_mesh_features": {
+>     "propertyTables": [0, 1, 2],
+>     "featureIds": [
+>       {"attribute": 0},
+>       {"offset": 1},
+>       {"index": 0, "texCoord": 0, "channel": 0},
+>     ]
+>   }
+> }
+> ```
+
+#### Referencing External Resources with Feature IDs
+
+Feature IDs do not have to be associated with a property table. Without a property table, IDs may identify features for use in other extensions or in custom applications. Use cases for these IDs extend beyond the scope of this extension, but could include identifying features for styling or picking, or looking up metadata externally in a REST API or database.
+
+> <img src="figures/feature-id-lookup.png"  alt="Feature ID lookup" width="800">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Examples
 
