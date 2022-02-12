@@ -51,7 +51,7 @@ Optionally, this extension may be used in conjunction with [`EXT_mesh_gpu_instan
 
 ## Overview
 
-This extension defines a means of storing structured metadata associated with features within a glTF 2.0 asset. A feature a conceptual object or element of a glTF asset that and be uniquely identified. The identification of features can happen on different levels of granularity. A feature might be one instance of a rendered mesh, when using the [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing) extension, or a subset of geometry or an area on the surface of a mesh that is identified using the concepts that are introduced in the [`EXT_mesh_fatures`](../EXT_mesh_gpu_instancing) extension.
+This extension defines a means of storing structured metadata associated with features within a glTF 2.0 asset. A feature a conceptual object or element of a glTF asset that can be uniquely identified. The identification of features can happen on different levels of granularity. A feature might be one instance of a rendered mesh, when using the [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing) extension, or a subset of geometry or an area on the surface of a mesh that is identified using the concepts that are introduced in the [`EXT_mesh_fatures`](../EXT_mesh_gpu_instancing) extension.
 
 Concepts and terminology used throughout this document refer to the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata), which should be considered a normative reference for definitions and requirements. This document provides inline definitions of terms where appropriate.
 
@@ -59,20 +59,14 @@ See [Examples](#examples) for a more detailed list of use cases for this extensi
 
 > **Disambiguation:** glTF has other methods of storing details that could similarly be described as metadata or properties, including [`KHR_xmp_json_ld`](../../Khronos/KHR_xmp_json_ld), Extras, and Extensions. While those methods associate data with discrete objects in a glTF asset — nodes, materials, etc. — `EXT_mesh_features` is uniquely suited for properties of more granular conceptual features in subregions composed of vertices or texels.
 
-
-
-
-
-
-
 ## Feature Properties
 
 ### Overview
 
 Feature properties describe attributes or characteristics of a feature. Classes, defined by a schema, are templates describing the data types and meanings of properties, where each feature is a single instance of that template with specific values. Property values may be associated with features in one of two ways:
 
-- **Property Tables** store property values as numeric arrays in a parallel, column-based binary layout. Property tables are indexed by Feature IDs, used as the index of a given feature into each property array.
-- **Property Textures** store property values in channels of a texture, suitable for very high-frequency data mapped to less-detailed 3D surfaces. Property textures are indexed by texture coordinates, and do not have associated Feature IDs.
+- **Property Tables** store property values as numeric arrays in a parallel, column-based binary layout. The identifiers of features inside a glTF asset serve as a row index that is used for accessing this table. 
+- **Property Textures** store property values in channels of a texture, suitable for very high-frequency data mapped to less-detailed 3D surfaces. Property textures are indexed by texture coordinates, and do not have associated feature IDs.
 
 Both storage formats are appropriate for efficiently transmitting large quantities of property values.
 
@@ -97,6 +91,7 @@ A schema may be embedded in the extension directly or referenced externally with
 >   "extensions": {
 >     "EXT_mesh_features": {
 >       "schema": {
+>         "id": "schema-001",
 >         "name": "Schema 001",
 >         "description": "An example schema.",
 >         "version": "3.5.1",
@@ -144,29 +139,91 @@ Classes are defined as entries in the `schema.classes` dictionary, indexed by an
 
 *Defined in [class.property.schema.json](./schema/class.property.schema.json).*
 
-Properties are defined abstractly in a class, and are instantiated in a feature with specific values conforming to that definition. Properties support a richer variety of data types than glTF accessors or GPU shading languages allow, defined by `property.componentType`.
+Class properties are defined abstractly in a class, and are instantiated in a feature with specific values conforming to that definition. They support a richer variety of data types than glTF accessors or GPU shading languages allow. 
 
-Allowed values for `componentType`:
+##### Component Type
+
+The type information includes the `property.componentType`, which is the fundamental data type that the actual type consists of. Allowed values for `componentType` are:
 
 - `"BOOLEAN"`
 - `"STRING"`
 - `"ENUM"`
-- `"INT8"`, `"INT16"`, `"INT32"`, `"INT64"`
-- `"UINT8"`, `"UINT16"`, `"UINT32"`, `"UINT64"`
-- `"FLOAT32"`, `"FLOAT64"`
+- `"INT8"`, `"INT16"`, `"INT32"`, `"INT64"` (numeric signed integer types)
+- `"UINT8"`, `"UINT16"`, `"UINT32"`, `"UINT64"` (numeric unsigned integer types)
+- `"FLOAT32"`, `"FLOAT64"` (numeric floating-point types)
 
-A property may compose multiple components into higher-level types (vector, matrix, and array), defined by `property.type`.
+##### Type
 
-Allowed values for `type`:
+A property may compose multiple components into higher-level vector- or matrix types, defined by `property.type`. Allowed values for `type` are:
 
 - `"SINGLE"` (default)
-- `"ARRAY"`
 - `"VEC2"`, `"VEC3"`, `"VEC4"`
 - `"MAT2"`, `"MAT3"`, `"MAT4"`
 
-`"SINGLE"` and `"ARRAY"` types may contain any component type; `"VECN"` and `"MATN"` must contain only numeric component types.
+`"SINGLE"` may contain any component type; `"VECN"` and `"MATN"` must contain only numeric component types.
 
-Class properties are defined as entries in the `class.properties` dictionary, indexed by an alphanumeric property ID.
+##### Array Types
+
+The type of a property can be declared to be a fixed- and variable length array, consisting of elements with the given `type` and `componentType`.
+
+Fixed-length array types are indicated by `property.hasFixedCount` being `true`, and the `property.count` being an integer value greater than 1. When `property.hasFixedCount` is `false`, then the type is a variable-length array. 
+
+##### Normalization 
+
+The `SCALAR`, `VECN`, and `MATN` types with integer component types can also be declared to be `normalized`. For unsigned integer component types, values are normalized between `[0.0, 1.0]`. For signed integer component types, values are normalized between `[-1.0, 1.0]`.
+
+##### Linear Value Transformations
+
+A linear value transformation can be defined for the `SCALAR`, `VECN`, and `MATN` types with numeric component types, and for fixed-length arrays of these types. 
+
+The transformation consists of an `offset` and `scale` value. For `SCALAR` (non-array) types, the values are single numeric values. For other types, these values are given as arrays: 
+
+- For `SCALAR` array types with fixed length `count`, the values are arrays with length `count`.
+- For `VECN` types, the values are arrays, with length `N`.
+- For `MATN` types, the values are arrays, with length `N * N*`.
+- For `VECN` array types with fixed length `count`, the values are arrays with length `count`, where each array element is itself an array of length `N`
+- For `MATN` array types with fixed length `count`, the values are arrays with length `count`, where each array element is itself an array of length `N * N`.
+
+> **Example:** A property that consists of arrays with fixed length 2, containing 3D vectors of normalized 16 bit unsigned integer values:
+>
+> ```jsonc
+> "exampleClassProperty": {
+>   "componentType": "UINT16",
+>   "type": "VEC3",
+>   "hasFixedCount": true,
+>   "count": 2,
+>   "normalized": true,
+>   "offset": [
+>     [ 0.0, 0.1, 0.2 ],
+>     [ 1.0, 1.1, 1.2 ] 
+>   ],
+>   "scale": [
+>     [ 1.0, 2.0, 3.0 ],
+>     [ 1.1, 2.2, 2.3 ] 
+>   ]
+> }
+> ``` 
+> <sub>(Note: The values shown in the example below are rounded to three decimal digits)</sub>
+> 
+> When the actual value that are stored for one element are given as
+> ```
+> [ [ 0, 32768, 65535 ], [ 16384, 32768, 49152 ] ]
+> ```
+> then this value will first be normalized, component-wise, to the range [0.0, 1.0], due to the `normalized` flag being `true`:
+>
+> ```
+> normalizedValue = [ [ 0.0, 0.5, 1.0 ], [ 0.25, 0.5, 0.75 ] ]
+> ```
+> The linear transformation that is defined with the `offset` and `scale` values will then be applied to the normalized value, as in `offset + scale * normalizedValue = result`:
+> ```
+>   offset              [ [ 0.0, 0.1, 0.2 ], [ 1.0,   1.1, 1.2   ] ]
+> + scale               [ [ 1.0, 2.0, 3.0 ], [ 1.1,   2.2, 2.3   ] ]
+> * normalizedValue     [ [ 0.0, 0.5, 1.0 ], [ 0.25,  0.5, 0.75  ] ]
+> = result              [ [ 0.0, 1.1, 3.2 ], [ 1.275, 2.2, 2.925 ] ]
+> ```
+
+
+Class properties are defined as entries in the `class.properties` dictionary, indexed by an alphanumeric property ID. 
 
 > **Example:** A "Tree" class, which might describe a table of tree measurements taken in a park. Properties include species, height, and diameter of each tree, as well as the number of birds observed in its branches.
 >
@@ -248,6 +305,7 @@ Enums are defined as entries in the `schema.enums` dictionary, indexed by an alp
 Pairs of `(name, value)` entries representing possible values of an enum property.
 
 Enum values are defined as entries in the `enum.values` array. Duplicate names or duplicate integer values are not allowed.
+
 
 ### Property Tables
 
