@@ -159,7 +159,7 @@
                     "$ref": "definitions.schema.json#/definitions/noDataValue"
                 }
             ],
-            "description": "A `noData` value represents missing data — also known as a sentinel value — wherever it appears. For variable-length array properties, `noData` is implicitly `[]` and the property is never required. `BOOLEAN` properties may not specify `noData` values."
+            "description": "A `noData` value represents missing data — also known as a sentinel value — wherever it appears. `BOOLEAN` properties may not specify `noData` values."
         },
         "default": {
             "allOf": [
