@@ -59,7 +59,7 @@
             ]
         },
         "componentType": {
-            "description": "The datatype of the element's components. Only applicable for `SCALAR`, `VECN`, and `MATN` types.",
+            "description": "The datatype of the element's components. Only applicable to `SCALAR`, `VECN`, and `MATN` types.",
             "anyOf": [
                 {
                     "const": "INT8"
@@ -113,7 +113,7 @@
         },
         "normalized": {
             "type": "boolean",
-            "description": "Specifies whether integer values are normalized. Only applicable for `SCALAR`, `VECN`, and `MATN` types with integer component types. For unsigned integer component types, values are normalized between `[0.0, 1.0]`. For signed integer component types, values are normalized between `[-1.0, 1.0]`. For all other component types, this property must be false.",
+            "description": "Specifies whether integer values are normalized. Only applicable to `SCALAR`, `VECN`, and `MATN` types with integer component types. For unsigned integer component types, values are normalized between `[0.0, 1.0]`. For signed integer component types, values are normalized between `[-1.0, 1.0]`. For all other component types, this property must be false.",
             "default": false
         },
         "offset": {
@@ -122,7 +122,7 @@
                     "$ref": "definitions.schema.json#/definitions/numericValue"
                 }
             ],
-            "description": "An offset to apply to property values. Only applicable for `SCALAR`, `VECN`, and `MATN` types."
+            "description": "An offset to apply to property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types."
         },
         "scale": {
             "allOf": [
@@ -130,7 +130,7 @@
                     "$ref": "definitions.schema.json#/definitions/numericValue"
                 }
             ],
-            "description": "A scale to apply to property values. Only applicable for `SCALAR`, `VECN`, and `MATN` types."
+            "description": "A scale to apply to property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types."
         },
         "max": {
             "allOf": [
@@ -138,7 +138,7 @@
                     "$ref": "definitions.schema.json#/definitions/numericValue"
                 }
             ],
-            "description": "Maximum allowed value for the property. Only applicable for `SCALAR`, `VECN`, and `MATN` types. The `normalized`, `offset`, and `scale` properties have no effect on the maximum, it always corresponds to the actual value."
+            "description": "Maximum allowed value for the property. Only applicable to `SCALAR`, `VECN`, and `MATN` types. The `normalized`, `offset`, and `scale` properties have no effect on the maximum, it always corresponds to the actual value."
         },
         "min": {
             "allOf": [
@@ -146,7 +146,7 @@
                     "$ref": "definitions.schema.json#/definitions/numericValue"
                 }
             ],
-            "description": "Minimum allowed value for the property. Only applicable for `SCALAR`, `VECN`, and `MATN` types. The `normalized`, `offset`, and `scale` properties have no effect on the minimum, it always corresponds to the actual value."
+            "description": "Minimum allowed value for the property. Only applicable to `SCALAR`, `VECN`, and `MATN` types. The `normalized`, `offset`, and `scale` properties have no effect on the minimum, it always corresponds to the actual value."
         },
         "required": {
             "type": "boolean",

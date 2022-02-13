@@ -169,7 +169,8 @@ Specular color from [0,0,0] to [1,1,1] (top) and [0,0,0] to [1,0,0]:
 ![](figures/specular-color-thin.png)
 ![](figures/specular-color-thin-2.png)
 
-If `KHR_materials_transmission` and `KHR_materials_volume` are used in combination with `KHR_materials_specular`, specular factor and specular color have no effect on the refraction angle. The direction of the refracted light ray is only based on the index of refraction defined in `KHR_materials_ior`. The ratio of transmission and reflection computed from the Fresnel term still depends on `dielectricSpecularF0` and `dielectricSpecularF90`. The following images show a refractive material.
+If `KHR_materials_transmission` and `KHR_materials_volume` are used in combination with `KHR_materials_specular`, specular factor and specular color have When not provided `offset` 
+ refraction angle. The direction of the refracted light ray is only based on the index of refraction defined in `KHR_materials_ior`. The ratio of transmission and reflection computed from the Fresnel term still depends on `dielectricSpecularF0` and `dielectricSpecularF90`. The following images show a refractive material.
 
 Specular from 0 to 1:
 
