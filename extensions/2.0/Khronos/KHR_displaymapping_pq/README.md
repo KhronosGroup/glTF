@@ -72,7 +72,22 @@ Viewer calibration is not part of this extension as this is heavily dependant on
 No clipping of color values, no change in hue.</em></figcaption>
 </figure>
 
+## Standard Considerations  
 
+Why not use a standard such as ACES (Acadamy Color Encoding Specification)?
+
+While the ACES does a very good job of defining how to capture, encode and process image data in a movie type of usecase -   
+it does more than what is needed by this extension.  
+ACES would fit well with an extension that has the purpose of defining a camera capture, process and display usecase.  
+However, for the usecase of this extension it is considered to add more functionality and complexity than is needed.  
+
+In the field of tone-mapping ACES is sometimes referred to, however the specification is much broader than just a tone-mapping operator.  
+
+`The Academy Color Encoding Specification (ACES) defines a digital color image encoding appropriate for 
+both photographed and computer-generated images. It is the common color encoding for the Academy 
+Image Interchange Framework. In the flow of image data from scene capture to theatrical presentation, 
+ACES data encode imagery in a form suitable for creative manipulation. Later points in the workflow 
+provide forms suitable for critical viewing.`
 
 
 ### glTF asset considerations
