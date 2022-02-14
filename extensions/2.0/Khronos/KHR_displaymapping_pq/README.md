@@ -204,9 +204,22 @@ When using this extension light contribution values shall be aligned to account 
 This means that content creators shall be aware of 10000 cd/m2 as the maximum value range.  
 It does not mean that the display will be capable of outputing this light intensity.  
 
-## Exporter considerations for light contribution values
 
-This section describes how an exporter shall handle lightsources, such as point, directional, emissive or environment lights, that are saved with the model.  
+
+## Content creation and exporter considerations
+ 
+This section describes how a content creator and exporter shall handle lightsources, such as point, directional, emissive or environment lights, that are saved with the model.  
+
+As a content creator using this extension the light intensity value of 10 000 lumen / m2 shall be considered scene max intensity.  
+This will give the benefit of a known increased light range as well as providing enough fidelity for most usecases.  
+The below images show how light intensities roughly align with real world illumination.  
+
+
+| Sunrise (400 lux) | Overcast (1500 lux) | Bright (5000 lux) | Sunny (10 000 lux) |
+|-----|-----|-------|------|
+| <img src="./images/PQ-sunrise-400.png" width=200 height=200/> | <img src="./images/PQ-overcast-1500.png" width=200 height=200/> | <img src="./images/PQ-bright-5000.png" width=200 height=200/> | <img src="./images/PQ-sunny-10000.png" width=200 height=200/> |
+
+
 
 A content creation tool supporting this extension shall sum upp light contribution for a scene before exporting to glTF, this can be a naive addition of all lights included in the scene that adds max values together.  
 If scene max light contribution intensity is above 10000 there is a choice to downscale light values before export.  
