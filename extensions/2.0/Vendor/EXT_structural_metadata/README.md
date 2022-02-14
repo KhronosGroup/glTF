@@ -395,7 +395,64 @@ Each buffer view `byteOffset` must be aligned to a multiple of its component siz
 
 *Defined in [propertyMapping.schema.json](./schema/propertyMapping.schema.json).*
 
-TODO
+Property mappings provide a mechanism to store property values for each vertex of a mesh primitive directly as vertex attributes. They refer to a certain class from the schema definition, via their `class` property, and contain a `properties` dictionary that defines a set of properties that conform to this class. Each property refers to an attribute that may be stored in a mesh primitive. 
+
+> **Example:** 
+>
+> An example of a property mapping that represents information about the movement of points in a point cloud. 
+> 
+> The top-level `propertyMapping` refers to a class that defines a `direction` and a `magnitude` property. These might, for example, be normalized 3D float vectors for the movement direction, and float values for the velocity. These propeties are associated with attributes called `_DIRECTION` and `_MAGNITUDE`. 
+>
+> The mesh primitive defines (non-indexed) vertices with primitive mode 0, and thus, represents a simple point cloud, with the positions of the points being stored in the `POSITION` attribute. Additionally, it defines vertex attributes `_DIRECTION` and `_MAGNITUDE`, which contain the data for the properties from the property mapping. 
+> 
+> 
+> _Top-level extension object:_
+> ```jsonc
+> {
+>   "extensions": {
+>     "EXT_structural_metadata": {
+>       "schema": { ... },
+>       "propertyMapping": [{
+>         "class": "movement",
+>         "properties": {
+>           "direction": {
+>             "attribute": "_DIRECTION",
+>           },
+>           "magnitude": {
+>             "attribute": "_MAGNITUDE",
+>           }
+>         }
+>       }]
+>     }
+>   }
+> }
+> ```
+> _Primitive_
+>
+> ```jsonc
+> {
+>   "primitives": [
+>     {
+>       "mode:": 0, 
+>       "attributes": {
+>         "POSITION": 0,
+>         "_DIRECTION": 1,
+>         "_MAGNITUDE": 2,
+>       },
+>       "extensions": {
+>         "EXT_structural_metadata": {
+>           "propertyMappings": [0]
+>         }
+>       }
+>     }
+>   ]
+> }
+> ```
+
+
+
+
+
 
 ### Property Textures
 
