@@ -36,6 +36,7 @@ Optionally, this extension may be used in conjunction with [`EXT_mesh_gpu_instan
     - [Schema](#schema)
     - [Class](#class)
     - [Class Property](#class-property)
+    - [Class Property Type](#class-property-type)
     - [Enum](#enum)
     - [Enum Value](#enum-value)
   - [Property Tables](#property-tables)
@@ -139,7 +140,54 @@ Classes are defined as entries in the `schema.classes` dictionary, indexed by an
 
 *Defined in [class.property.schema.json](./schema/class.property.schema.json).*
 
-Class properties are defined abstractly in a class, and are instantiated in a feature with specific values conforming to that definition. They support a richer variety of data types than glTF accessors or GPU shading languages allow. 
+Class properties are defined abstractly in a class. They support a richer variety of data types than glTF accessors or GPU shading languages allow. The class is instantiated with specific values conforming to these properties. 
+
+Class properties are defined as entries in the `class.properties` dictionary, indexed by an alphanumeric property ID. 
+
+> **Example:** A "Tree" class, which might describe a table of tree measurements taken in a park. Properties include species, height, and diameter of each tree, as well as the number of birds observed in its branches.
+>
+> ```jsonc
+> {
+>   "extensions": {
+>     "EXT_structural_metadata": {
+>       "schema": {
+>         "classes": {
+>           "tree": {
+>             "name": "Tree",
+>             "description": "Woody, perennial plant.",
+>             "properties": {
+>               "species": {
+>                 "description": "Type of tree.",
+>                 "componentType": "ENUM",
+>                 "enumType": "speciesEnum",
+>                 "required": true
+>               },
+>               "birdCount": {
+>                 "description": "Number of birds perching on the tree",
+>                 "componentType": "UINT8",
+>                 "required": true
+>               },
+>               "height": {
+>                 "description": "Height of tree measured from ground level, in meters.",
+>                 "componentType": "FLOAT32"
+>               },
+>               "diameter": {
+>                 "description": "Diameter at trunk base, in meters.",
+>                 "componentType": "FLOAT32"
+>               }
+>             }
+>           }
+>         }
+>       }
+>     }
+>   }
+> }
+> ```
+
+
+#### Class Property Type
+
+Class properties support a larger variety of types than glTF accessors. The exact structure of the property type is defined with the following properties: 
 
 ##### Component Type
 
@@ -222,55 +270,36 @@ The transformation consists of an `offset` and `scale` value. For `SCALAR` (non-
 > = result              [ [ 0.0, 1.1, 3.2 ], [ 1.275, 2.2, 2.925 ] ]
 > ```
 
+When the `offset` for a property is not given, then is is assumed to be `0` for each component of the respective type. When the `scale` value of a property is not given, then it is assumed to be `1` for each component of the respective type. 
 
----
-
-TODO Mention `min`, `max`, `noData`, `default`, `semantic` and `required`....
-
----
----
-
-Class properties are defined as entries in the `class.properties` dictionary, indexed by an alphanumeric property ID. 
-
-> **Example:** A "Tree" class, which might describe a table of tree measurements taken in a park. Properties include species, height, and diameter of each tree, as well as the number of birds observed in its branches.
+> **Example:**
 >
-> ```jsonc
-> {
->   "extensions": {
->     "EXT_structural_metadata": {
->       "schema": {
->         "classes": {
->           "tree": {
->             "name": "Tree",
->             "description": "Woody, perennial plant.",
->             "properties": {
->               "species": {
->                 "description": "Type of tree.",
->                 "componentType": "ENUM",
->                 "enumType": "speciesEnum",
->                 "required": true
->               },
->               "birdCount": {
->                 "description": "Number of birds perching on the tree",
->                 "componentType": "UINT8",
->                 "required": true
->               },
->               "height": {
->                 "description": "Height of tree measured from ground level, in meters.",
->                 "componentType": "FLOAT32"
->               },
->               "diameter": {
->                 "description": "Diameter at trunk base, in meters.",
->                 "componentType": "FLOAT32"
->               }
->             }
->           }
->         }
->       }
->     }
->   }
-> }
-> ```
+> For a property with type `VEC2` and component type `FLOAT32`:
+> - A missing `offset` is assumed to be `[0.0, 0.0]`.
+> - A missing `scale` is assumed to be `[1.0, 1.0]`.
+> 
+> For an array with a fixed length of 2, type `VEC3`, and component type `INT16`:
+> - A missing `offset` is assumed to be `[ [0, 0, 0], [0, 0, 0] ]`.
+> - A missing `scale` is assumed to be `[ [1, 1, 1], [1, 1, 1] ]`.
+
+
+#### Value Ranges
+
+For `SCALAR`, `VECN`, and `MATN` types with numeric component types, the allowed minimum and maximum value can be provided in `property.min` and `property.max`, respectively. The structure of these values corresponds to the type that is defined for the property itself. Their values correspond to the actual minimum and maximum values, *after* `normalize`, `offset`, and `scale` have been applied. 
+
+##### Sentinel- and Default Value
+
+Class properties can be _optional_ or _required_, as indicated by the `property.required` flag. For optional properties, it is possible to indicate missing data values, or to omit the property value entirely when creating an instance of the class. 
+
+The `property.noData` value is a sentinel value that indicates that no information is available for a specific instance. Its structure corresponds to the type of the property itself. 
+
+For properties that are not `required`, it is possible to define a default value that should be used when the `noData` is encountered or when the respective property is omitted entirely. This value is stored as `property.default`, and has the same structure as the property itself.
+
+##### Property Semantics
+
+By default, properties do not have an inherent meaning in the context of an application. The `property.semantic` is a string that allows defining domain-specific semantics to individual properties. Examples of semantic definitions can be found in the [3D Tiles Metadata Semantics](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata/Semantics). 
+
+
 
 #### Enum
 
