@@ -30,17 +30,17 @@ Optionally, this extension may be used in conjunction with [`EXT_mesh_gpu_instan
 
 - [Overview](#overview)
 - [Feature Properties](#feature-properties)
-  - [Overview](#overview-2)
-  - [Schema Definitions](#schema-definitions)
-    - [Overview](#overview-3)
-    - [Schema](#schema)
-    - [Class](#class)
-    - [Class Property](#class-property)
-    - [Class Property Type](#class-property-type)
-    - [Enum](#enum)
-    - [Enum Value](#enum-value)
-  - [Property Tables](#property-tables)
-  - [Property Textures](#property-textures)
+- [Schema Definitions](#schema-definitions)
+  - [Overview](#overview-3)
+  - [Schema](#schema)
+  - [Class](#class)
+  - [Class Property](#class-property)
+  - [Class Property Type](#class-property-type)
+  - [Enum](#enum)
+  - [Enum Value](#enum-value)
+- [Property Tables](#property-tables)
+- [Property Mappings](#property-mappings)
+- [Property Textures](#property-textures)
 - [Binary Data Storage](#binary-data-storage)
 - [Optional vs. Required](#optional-vs-required)
 - [Schema](#schema-1)
@@ -390,6 +390,12 @@ As in the core glTF specification, values of NaN, +Infinity, and -Infinity are n
 Each buffer view `byteOffset` must be aligned to a multiple of its component size.
 
 > **Implementation note:** Authoring tools may choose to align all buffer views to 8-byte boundaries for consistency, but client implementations should only depend on 8-byte alignment for buffer views containing 64-bit component types.
+
+### Property Mappings
+
+*Defined in [propertyMapping.schema.json](./schema/propertyMapping.schema.json).*
+
+TODO
 
 ### Property Textures
 
