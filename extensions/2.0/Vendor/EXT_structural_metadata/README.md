@@ -411,9 +411,9 @@ Enum values may be encoded in images, as integer values according to their enum 
 
 > **Implementation note:** Use of floating-point properties in a property texture would require a floating point-compatible image format like KTX2, provided by an additional extension.
 
-> **Example:** Property texture implementing a "wall" class, with property values stored in a glTF texture at index 0 and indexed by `TEXCOORD_0`.
+> **Example:** Property texture implementing a "wall" class, with property values stored in a glTF texture at index 0 and indexed by `TEXCOORD_0`. Each property of the `"wall"` class is stored in one channel of the texture.
 >
-> <img src="figures/feature-texture.png"  alt="Property Texture" width="500">
+> <img src="figures/property-texture.png"  alt="Property Texture" width="500">
 >
 > _Class and property texture_
 >
@@ -493,14 +493,6 @@ A `propertyTexture` object extends the glTF [`textureInfo`](../../../../specific
 
 The `properties` map specifies the texture channels providing data for available properties. An array of integer index values identifies channels. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. All values are stored in linear space.
 
-The values from the selected channels are treated as unsigned 8 bit integers, and represent the bytes of the actual property value, in little-endian order. 
-
-> **Example:** 
-> If a property texture defines `"channels": [0, 1]`, then the actual property value can be computed as `channel[0] | (channel[1] << 8);`. 
-> If a property texture defines `"channels": [1, 0, 2]`, then the actual property value can be computed as `channel[1] | (channel[0] << 8) | (channel[2] << 16);`.
-
-
-
 
 > **Example:** A property texture for wind velocity samples. The "speed" property values are stored in the red channel, and "direction" property values are stored as a unit-length vector, with X/Y components in the green and blue channels. Both properties are indexed by UV coordinates in a `TEXCOORD_0` attribute.
 >
@@ -523,6 +515,31 @@ The values from the selected channels are treated as unsigned 8 bit integers, an
 >     }
 >   ]
 > }
+
+Multiple channels can be used to represent individual bytes of larger data types: The values from the selected channels are treated as unsigned 8 bit integers, and represent the bytes of the actual property value, in little-endian order.
+
+> **Example:** 
+> 
+> If a property is defined to store (single) `FLOAT32` components, then these values can be stored in the 4 channels of a property texture. The raw bits of the property value can be computed as 
+> ```
+> vec4<uint8> rgba = texture(sampler, coordinates);
+> uint8 byte0 = rgba[channels[0]];
+> uint8 byte1 = rgba[channels[1]];
+> uint8 byte2 = rgba[channels[2]];
+> uint8 byte3 = rgba[channels[3]];
+> int32 rawBits = byte0 | (byte1 << 8) | (byte2 << 16) | (byte3 << 24);
+> ```
+> 
+> If a property has the type `VEC2` with `UIN16` components, or an array with a fixed length of 2 and `UINT16` components, then the respective property can be represented with 4 channels as well:
+> ```
+> vec4<uint8> rgba = texture(sampler, coordinates);
+> uint8 byte0 = rgba[channels[0]];
+> uint8 byte1 = rgba[channels[1]];
+> uint8 byte2 = rgba[channels[2]];
+> uint8 byte3 = rgba[channels[3]];
+> value[0] = byte0 | (byte1 << 8);
+> value[1] = byte2 | (byte3 << 8);
+> ```
 
 Texture filtering must be `9728` (NEAREST), `9729` (LINEAR), or undefined, for any texture object referenced as a property texture.
 
