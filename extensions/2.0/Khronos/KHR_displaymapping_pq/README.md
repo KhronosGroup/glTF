@@ -78,10 +78,15 @@ Why not use a standard such as ACES (Acadamy Color Encoding Specification)?
 
 While the ACES does a very good job of defining how to capture, encode and process image data in a movie type of usecase -   
 it does more than what is needed by this extension.  
-ACES would fit well with an extension that has the purpose of defining a camera capture, process and display usecase.  
-However, for the usecase of this extension it is considered to add more functionality and complexity than is needed.  
+ACES could potentially fit in an extension that has the purpose of defining a camera capture, image process and movie display usecase.  
+However, for the usecase of this extension it is considered to add more functionality and complexity than is needed.    
+This extension is similar to what is defined in the ACES `Output Device Transform` (ODT) which is a sub-step of the ACES 'Output Transform'    
+Please not that the ACES Output Transform is explicitly not neutral in its appearance.  
 
 In the field of tone-mapping ACES is sometimes referred to, however the specification is much broader than just a tone-mapping operator.  
+
+[Good explanation of ACES](https://chrisbrejon.com/cg-cinematography/chapter-1-5-academy-color-encoding-system-aces/)
+
 
 `The Academy Color Encoding Specification (ACES) defines a digital color image encoding appropriate for 
 both photographed and computer-generated images. It is the common color encoding for the Academy 
