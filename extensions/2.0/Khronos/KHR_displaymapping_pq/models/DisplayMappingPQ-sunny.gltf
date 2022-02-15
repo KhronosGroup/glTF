@@ -1,7 +1,10 @@
 {
   "asset": {
     "generator": "Khronos glTF Blender I/O v1.6.16",
-    "version": "2.0"
+    "version": "2.0",
+    "extras": {
+        "gltf.clearcolor": "0.9,0.9,0.9,0"
+    }
   },
   "extensionsUsed": [
     "KHR_lights_punctual",
@@ -98,7 +101,8 @@
         "baseColorTexture": {
           "index": 0
         },
-        "metallicFactor": 0
+        "metallicFactor": 0,
+        "roughnessFactor": 1
       }
     }
   ],
