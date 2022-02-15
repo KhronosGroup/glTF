@@ -41,7 +41,6 @@ Written against the glTF 2.0 specification.
 - [Binary Data Storage](#binary-data-storage)
 - [Optional vs. Required](#optional-vs-required)
 - [Schema](#schema-1)
-- [Examples](#examples)
 - [Revision History](#revision-history)
 
 ## Overview
@@ -51,8 +50,6 @@ This extension defines a means of storing structured metadata within a glTF 2.0 
 The metadata schema definition includes a JSON representation of the schema structure, suitable for being stored inside a glTF asset. The storage formats that are defined in this extension allow storing metadata in standard glTF vertex attributes, or in the channels of a texture. Both representations are compact binary storage formats that are appropriate for efficiently transmitting large quantities of metadata. 
 
 The schema definition and the storage formats in this extension are implementations of the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata). This specification should be considered a normative reference for definitions and requirements. This document provides inline definitions of terms where appropriate.
-
-See [Examples](#examples) for a more detailed list of use cases for this extension.
 
 > **Disambiguation:** glTF has other methods of storing details that could similarly be described as metadata or properties, including [`KHR_xmp_json_ld`](../../Khronos/KHR_xmp_json_ld), Extras, and Extensions. While those methods associate data with discrete objects in a glTF asset — nodes, materials, etc. — `EXT_structural_metadata` is uniquely suited for properties of more granular conceptual features in subregions composed of vertices or texels.
 
@@ -287,6 +284,7 @@ The property types that are supported via property mappings are therefore restri
 >
 > The mesh primitive defines (non-indexed) vertices with primitive mode 0, and thus, represents a simple point cloud, with the positions of the points being stored in the `POSITION` attribute. Additionally, it defines vertex attributes `_DIRECTION` and `_MAGNITUDE`, which contain the data for the properties from the property mapping. 
 > 
+> ![Property Mapping](figures/property-mapping.png)
 > 
 > _Top-level extension object:_
 > ```jsonc
@@ -353,7 +351,7 @@ Enum values may be encoded in images, as integer values according to their enum 
 
 > **Example:** Property texture implementing a "wall" class, with property values stored in a glTF texture at index 0 and indexed by `TEXCOORD_0`. Each property of the `"wall"` class is stored in one channel of the texture.
 >
-> <img src="figures/property-texture.png"  alt="Property Texture" width="500">
+> ![Property Texture](figures/property-texture.png)
 >
 > _Class and property texture_
 >
@@ -498,24 +496,6 @@ This extension is optional, meaning it should be placed in the `extensionsUsed` 
 
 * [glTF.EXT_structural_metadata.schema.json](./schema/glTF.EXT_structural_metadata.schema.json)
 * [mesh.primitive.EXT_structural_metadata.schema.json](./schema/mesh.primitive.EXT_structural_metadata.schema.json)
-
-## Examples
-
-_This section is non-normative_
-
-The examples below shows the breadth of possible use cases for this extension.
-
-Example|Description|Image
---|--|--
-Triangle mesh|Feature IDs are assigned to each vertex to distinguish components of a building.|![Building Components](figures/building-components.png)
-Per-vertex properties<img width=700/>|An implicit feature ID is assigned to each vertex. The property table stores `FLOAT64` accuracy values. |![Per-vertex properties](figures/per-vertex-metadata.png)
-Per-triangle properties|An implicit feature ID is assigned to each set of three vertices. The property table stores `FLOAT64` area values.|![Per-triangle properties](figures/per-triangle-metadata.png)
-Per-point properties|An implicit feature ID is assigned to each point. The property table stores `FLOAT64` , `STRING`, and `ENUM` properties, which are not possible through glTF vertex attribute accessors alone.|![Point features](figures/point-features.png)
-Per-node properties|Vertices in node 0 and node 1, not batched together, are assigned different `offset` feature IDs.|![Per-node properties](figures/per-node-metadata.png)
-Multi-point features|A point cloud with two property tables, one storing properties for groups of points and the other storing properties for individual points.|![Multi-point features](figures/point-cloud-layers.png)
-Multi-instance features|Instanced tree meshes, where trees are assigned to groups with a per-GPU-instance feature ID attribute. One property table stores per-group properties and the other stores per-tree properties.|![Multi-instance features](figures/multi-instance-metadata.png)
-Material classification|A textured mesh using a property texture to store both material enums and normalized `UINT8` insulation values.|![Material Classification](figures/material-classification.png)
-Composite|A glTF containing a 3D mesh (house), a point cloud (tree), and instanced meshes (fencing) with three property tables.|![Composite Example](figures/composite-example.png)
 
 ## Revision History
 
