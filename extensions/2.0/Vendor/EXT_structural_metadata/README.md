@@ -23,55 +23,40 @@ Draft
 
 Written against the glTF 2.0 specification.
 
-Optionally, this extension may be used in conjunction with [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing). When used together, certain GPU instance attributes defined by `EXT_mesh_gpu_instancing` are used as [instance feature IDs](#feature-id-by-gpu-instance).
-
 <!-- omit in toc -->
 ## Table of Contents
 
 - [Overview](#overview)
-- [Feature Properties](#feature-properties)
 - [Schema Definitions](#schema-definitions)
   - [Overview](#overview-3)
   - [Schema](#schema)
   - [Class](#class)
   - [Class Property](#class-property)
-  - [Class Property Type](#class-property-type)
   - [Enum](#enum)
   - [Enum Value](#enum-value)
-- [Property Tables](#property-tables)
-- [Property Mappings](#property-mappings)
-- [Property Textures](#property-textures)
+- [Metadata Storage](#metadata-storage)
+  - [Property Tables](#property-tables)
+  - [Property Mappings](#property-mappings)
+  - [Property Textures](#property-textures)
 - [Binary Data Storage](#binary-data-storage)
 - [Optional vs. Required](#optional-vs-required)
 - [Schema](#schema-1)
-- [Specifying Feature IDs](#specifying-feature-ids)
-  - [Referencing Property Tables with Feature IDs](#referencing-property-tables-with-feature-ids)
-  - [Referencing External Resources with Feature IDs](#referencing-external-resources-with-feature-ids)
 - [Examples](#examples)
 - [Revision History](#revision-history)
 
 ## Overview
 
-This extension defines a means of storing structured metadata associated with features within a glTF 2.0 asset. A feature a conceptual object or element of a glTF asset that can be uniquely identified. The identification of features can happen on different levels of granularity. A feature might be one instance of a rendered mesh, when using the [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing) extension, or a subset of geometry or an area on the surface of a mesh that is identified using the concepts that are introduced in the [`EXT_mesh_fatures`](../EXT_mesh_gpu_instancing) extension.
+This extension defines a means of storing structured metadata within a glTF 2.0 asset. The key concepts of this extension are the definition of a schema that describes the structure of the metadata, and methods for storing and associating metadata with different entities within the asset.
 
-Concepts and terminology used throughout this document refer to the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata), which should be considered a normative reference for definitions and requirements. This document provides inline definitions of terms where appropriate.
+The metadata schema definition includes a JSON representation of the schema structure, suitable for being stored inside a glTF asset. The storage formats that are defined in this extension allow storing metadata in standard glTF vertex attributes, or in the channels of a texture. Both representations are compact binary storage formats that are appropriate for efficiently transmitting large quantities of metadata. 
+
+The schema definition and the storage formats in this extension are implementations of the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata). This specification should be considered a normative reference for definitions and requirements. This document provides inline definitions of terms where appropriate.
 
 See [Examples](#examples) for a more detailed list of use cases for this extension.
 
 > **Disambiguation:** glTF has other methods of storing details that could similarly be described as metadata or properties, including [`KHR_xmp_json_ld`](../../Khronos/KHR_xmp_json_ld), Extras, and Extensions. While those methods associate data with discrete objects in a glTF asset — nodes, materials, etc. — `EXT_structural_metadata` is uniquely suited for properties of more granular conceptual features in subregions composed of vertices or texels.
 
-## Feature Properties
-
-### Overview
-
-Feature properties describe attributes or characteristics of a feature. Classes, defined by a schema, are templates describing the data types and meanings of properties, where each feature is a single instance of that template with specific values. Property values may be associated with features in one of two ways:
-
-- **Property Tables** store property values as numeric arrays in a parallel, column-based binary layout. The identifiers of features inside a glTF asset serve as a row index that is used for accessing this table. 
-- **Property Textures** store property values in channels of a texture, suitable for very high-frequency data mapped to less-detailed 3D surfaces. Property textures are indexed by texture coordinates, and do not have associated feature IDs.
-
-Both storage formats are appropriate for efficiently transmitting large quantities of property values.
-
-### Schema Definitions
+## Schema Definitions
 
 #### Overview
 
@@ -108,7 +93,7 @@ A schema may be embedded in the extension directly or referenced externally with
 
 *Defined in [class.schema.json](./schema/class.schema.json).*
 
-Template for features. Classes provide a list of property definitions. Every feature must be associated with a class, and the feature's properties must conform to the class's property definitions. Features whose properties conform to a class are considered instances of that class.
+Template for metadata entities. Classes provide a list of property definitions. Instances of a class can be created from property values that conform to the class's property definitions. 
 
 Classes are defined as entries in the `schema.classes` dictionary, indexed by an alphanumeric class ID.
 
@@ -226,11 +211,23 @@ Pairs of `(name, value)` entries representing possible values of an enum propert
 Enum values are defined as entries in the `enum.values` array. Duplicate names or duplicate integer values are not allowed.
 
 
+
+
+## Metadata Storage
+
+The classes that defined in the schema are templates describing the data types and meanings of properties. An instance of such a metadata class is referred to as a _metadata entity_, and can be created from a set of values that conform to the structure of the class. This extension defines different ways of storing large amounts of property values inside a glTF asset, in compact binary forms: 
+
+- **Property Tables** store property values as numeric arrays in a parallel, column-based binary layout, using standard glTF buffer views. These tables can be accessed with a row index, and allow associating complex, structured metadata with arbitrary types with entities of a glTF asset on different levels of granularity.
+- **Property Mappings** are a way of storing metadata as vertex attributes, using standard glTF accessors. They can be used to associate certain forms of metadata with vertices of a mesh primitive. 
+- **Property Textures** store property values in channels of a texture, suitable for very high-frequency data mapped to less-detailed 3D surfaces. 
+
+The following sections describe these storage formats in more detail.
+
 ### Property Tables
 
 *Defined in [propertyTable.schema.json](./schema/propertyTable.schema.json).*
 
-Each property table defines a specified number (`count`) of features conforming to a particular class (`class`), with property values stored as parallel arrays in a column-based binary layout. Property tables support a richer variety of data types than glTF accessors or GPU shading languages allow, and are suitable for datasets that can be expressed in a tabular layout.
+Each property table defines a specified number (`count`) of metadata entities conforming to a particular class (`class`), with property values stored as parallel arrays in a column-based binary layout. Property tables support a richer variety of data types than glTF accessors or GPU shading languages allow, and are suitable for datasets that can be expressed in a tabular layout.
 
 Property tables are defined as entries in the `propertyTables` array of the root-level `EXT_structural_metadata` extension, and may be referenced by other extensions. 
 
@@ -280,11 +277,13 @@ Each buffer view `byteOffset` must be aligned to a multiple of its component siz
 
 Property mappings provide a mechanism to store property values for each vertex of a mesh primitive directly as vertex attributes. They refer to a certain class from the schema definition, via their `class` property, and contain a `properties` dictionary that defines a set of properties that conform to this class. Each property refers to an attribute that may be stored in a mesh primitive. 
 
+The property types that are supported via property mappings are therefore restricted to the types that are supported by standard glTF accessors. These types are a strict subset of the types that are supported with the schema definitions in this extension.
+
 > **Example:** 
 >
 > An example of a property mapping that represents information about the movement of points in a point cloud. 
 > 
-> The top-level `propertyMapping` refers to a class that defines a `direction` and a `magnitude` property. These might, for example, be normalized 3D float vectors for the movement direction, and float values for the velocity. These propeties are associated with attributes called `_DIRECTION` and `_MAGNITUDE`. 
+> The top-level `propertyMapping` refers to a class called `movement` that defines a `direction` and a `magnitude` property. These might, for example, be normalized 3D float vectors for the movement direction, and float values for the velocity. These properties are associated with attributes called `_DIRECTION` and `_MAGNITUDE`. 
 >
 > The mesh primitive defines (non-indexed) vertices with primitive mode 0, and thus, represents a simple point cloud, with the positions of the points being stored in the `POSITION` attribute. Additionally, it defines vertex attributes `_DIRECTION` and `_MAGNITUDE`, which contain the data for the properties from the property mapping. 
 > 
@@ -333,10 +332,6 @@ Property mappings provide a mechanism to store property values for each vertex o
 > ```
 
 
-
-
-
-
 ### Property Textures
 
 *Defined in [propertyTexture.schema.json](./schema/propertyTexture.schema.json).*
@@ -349,7 +344,6 @@ A property texture may provide channels for only a subset of the properties of i
 
 Several constraints are imposed to ensure compatibility of texture storage with various property types:
 
-* Components of array and vector properties must be separate channels within a texture.
 * Variable-length arrays are not supported.
 * Data type and bit depth of the image must be compatible with the property type.
 
@@ -434,13 +428,11 @@ Enum values may be encoded in images, as integer values according to their enum 
 > }
 > ```
 
-
 A `propertyTexture` object extends the glTF [`textureInfo`](../../../../specification/2.0/schema/textureInfo.schema.json) object. `texCoord` specifies a texture coordinate set in the referring primitive.
 
 The `properties` map specifies the texture channels providing data for available properties. An array of integer index values identifies channels. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. All values are stored in linear space.
 
-
-> **Example:** A property texture for wind velocity samples. The "speed" property values are stored in the red channel, and "direction" property values are stored as a unit-length vector, with X/Y components in the green and blue channels. Both properties are indexed by UV coordinates in a `TEXCOORD_0` attribute.
+> **Example:** A property texture for 2D wind velocity samples. The "speed" property values are stored in the red channel. The "direction" property values are stored as a unit-length vector, with X/Y components in the green and blue channels. Both properties are indexed by UV coordinates in a `TEXCOORD_0` attribute.
 >
 > ```jsonc
 > // Root EXT_structural_metadata extension:
@@ -491,7 +483,7 @@ Texture filtering must be `9728` (NEAREST), `9729` (LINEAR), or undefined, for a
 
 ## Binary Data Storage
 
-Feature properties are stored in a compact binary tabular format described in the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata), with each property table array occupying a glTF buffer view. `EXT_structural_metadata` imposes 8-byte binary data alignment requirements on an asset, allowing support for 64-bit data types while remaining compatible with the 4-byte alignments in the core glTF specification:
+Property values are stored in a compact binary tabular format described in the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata), with each property table array occupying a glTF buffer view. `EXT_structural_metadata` imposes 8-byte binary data alignment requirements on an asset, allowing support for 64-bit data types while remaining compatible with the 4-byte alignments in the core glTF specification:
 
 - GLB-stored `JSON` chunk must be padded with trailing `Space` characters (`0x20`) to 8-byte boundary.
 - GLB-stored `BIN` chunk must be padded with trailing zeroes (`0x00`) to 8-byte boundary.
