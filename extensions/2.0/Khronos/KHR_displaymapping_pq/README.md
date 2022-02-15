@@ -297,7 +297,7 @@ Where `lightIn` is the max scene or frame light contribution, ie the scene max i
 ```
 vec3 aperture(float lightIn, vec3 colorIn) {
 	float value = min(lightIn, maxComponent) 
-	float factor = lightIn / value
+	float factor = value / lightIn
 	return colorIn * factor
 }	
 ```
