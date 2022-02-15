@@ -29,7 +29,7 @@
                     "minItems": 1
                 }
             ],
-            "description": "For `SCALAR` this is a number. For `VECN` this is an array of `N` numbers. For `MATN` this is an array of `N²` numbers. For fixed-length array this is an array of `count` elements of the previously defined types."
+            "description": "For `SCALAR` this is a number. For `VECN` this is an array of `N` numbers. For `MATN` this is an array of `N²` numbers. For fixed-length arrays this is an array of `count` elements of the given `type`."
         },
         "noDataValue": {
             "title": "No Data Value",
@@ -66,7 +66,7 @@
                     "minItems": 1
                 }
             ],
-            "description": "For `SCALAR` this is a number. For `STRING` this is a string. For `ENUM` this is a string that must be a valid enum `name`, not an integer value. For `VECN` this is an array of `N` numbers. For `MATN` this is an array of `N²` numbers. For fixed-length array this is an array of `count` elements of the previously defined types."
+            "description": "For `SCALAR` this is a number. For `STRING` this is a string. For `ENUM` this is a string that must be a valid enum `name`, not an integer value. For `VECN` this is an array of `N` numbers. For `MATN` this is an array of `N²` numbers. For fixed-length arrays this is an array of `count` elements of the given `type`."
         },
         "anyValue": {
             "title": "Any Value",
@@ -113,7 +113,7 @@
                     "minItems": 1
                 }
             ],
-            "description": "For `SCALAR` this is a number. For `STRING` this is a string. For `ENUM` this is a string that must be a valid enum `name`, not an integer value. For `BOOLEAN` this is a boolean. For `VECN` this is an array of `N` numbers. For `MATN` this is an array of `N²` numbers. For fixed-length array this is an array of `count` elements of the previously defined types. For variable-length array this is an array of any length of the previously defined types."
+            "description": "For `SCALAR` this is a number. For `STRING` this is a string. For `ENUM` this is a string that must be a valid enum `name`, not an integer value. For `BOOLEAN` this is a boolean. For `VECN` this is an array of `N` numbers. For `MATN` this is an array of `N²` numbers. For fixed-length array this is an array of `count` elements of the given `type`. For variable-length arrays this is an array of any length of the given `type`."
         }
     }
 }

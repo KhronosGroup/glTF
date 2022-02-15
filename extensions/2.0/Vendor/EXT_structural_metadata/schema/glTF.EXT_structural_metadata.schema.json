@@ -3,7 +3,7 @@
     "$id": "glTF.EXT_structural_metadata.schema.json",
     "title": "EXT_structural_metadata glTF extension",
     "type": "object",
-    "description": "glTF extension that provides structural metadata about geometry and textures in a glTF model.",
+    "description": "glTF extension that provides structural metadata about vertices, texels, and features in a glTF asset.",
     "allOf": [
         {
             "$ref": "glTFProperty.schema.json"
