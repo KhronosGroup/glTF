@@ -283,7 +283,9 @@ Scene aperture can be seen as a simplified automatic exposure control, without s
 If scene contains light contribution that goes above 10 000 then all lightsources will be scaled.  
 It is not intended for gaming like usecases where the viewpoint and environment changes dramitically, for instance from dimly lit outdoor night environments to a highly illuminated hallway.  
 
-This function is a way to avoid having too high scene brightess, that would result in clamping of output values, or to avoid a scene from being too dark.  
+This function is a way to avoid having too high scene brightess, that would result in clamping of output values.  
+
+**Implementation Notes**
 
 pseudocode for scene aperture calculation, this shall be performed before the reference OOTF.  
 Meaning that the resulting `color` parameter shall be passed to BT_2100_OOTF.  
@@ -300,9 +302,10 @@ vec3 aperture(float lightIn, vec3 colorIn) {
 	float factor = lightIn / value
 	return colorIn * factor
 }	
-```
 
-**Implementation Notes**
+vec3 apertureAdjustedColor = aperture(lightIn, color)
+
+```
 
 Since knowledge of overall scene brightness values may be time-consuming to calculate exactly, implementations are free to approximate.  
 This could be done by calculating the max scene value once, adding up punctual and environment lights and then using this value, not taking occlusion of lightrays into account.  
@@ -331,6 +334,7 @@ E {R, G, B} is the linear scene light value.
 Passed to the OOTF these values shall be in the range [0.0 - 1.0]  
 
 Where the rangeExtension and gamma values shall be set according to HDR or SDR display.  
+Note that if the target framebuffer is of a format that uses the sRGB transfer function, the gamma value may be excluded from the OOTF calculation.  
 
 ```
 HDR
@@ -346,7 +350,7 @@ gamma = 2.4
 
 **Implementation Notes** 
 
-At the stage prior to OOTF, values shall have been adjusted for dynamic range and `aperture` if that is declared.   
+At the stage prior to OOTF, values shall have been adjusted for aperture.   
 
 Depending on implementation of OOTF and OETF, RGB values may simply be scaled by 10000 before used in the OOTF.  
 
@@ -364,6 +368,16 @@ BT_2100_OOTF(color, rangeExponent, gamma) {
     }  
     return 100 * pow(nonlinear, gamma);
 }  
+
+vec3 color = apertureAjustedColor
+//If framebuffer uses sRGB transfer function the gamma does not need to be applied here
+if (framebufferFormat is sRGB) {
+    color = BT_2100(color, rangeExponent, 1)
+} else {
+    color = BT_2100(color, rangeExponent, gamma)
+}
+
+
 ```
 
 Where this is calculated per RGB component, note that the color value in this equation must be in range 0.0 - 1.0
