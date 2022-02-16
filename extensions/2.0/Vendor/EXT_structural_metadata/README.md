@@ -215,9 +215,9 @@ Enum values are defined as entries in the `enum.values` array. Duplicate names o
 
 ## Metadata Storage
 
-The classes that defined in the schema are templates describing the data types and meanings of properties. An instance of such a metadata class is referred to as a _metadata entity_, and can be created from a set of values that conform to the structure of the class. This extension defines different ways of storing large amounts of property values inside a glTF asset, in compact binary forms: 
+The classes defined in the schema are templates describing the data types and meanings of properties. An instance of such a metadata class is referred to as a _metadata entity_, and can be created from a set of values that conform to the structure of the class. This extension defines different ways of storing large amounts of property values inside a glTF asset, in compact binary forms: 
 
-- **Property Tables** store property values as numeric arrays in a parallel, column-based binary layout, using standard glTF buffer views. These tables can be accessed with a row index, and allow associating complex, structured metadata with arbitrary types with entities of a glTF asset on different levels of granularity.
+- **Property Tables** store property values as parallel arrays in a column-based binary layout, using standard glTF buffer views. These tables can be accessed with a row index, and allow associating complex, structured metadata with arbitrary types with entities of a glTF asset on different levels of granularity.
 - **Property Mappings** are a way of storing metadata as vertex attributes, using standard glTF accessors. They can be used to associate certain forms of metadata with vertices of a mesh primitive. 
 - **Property Textures** store property values in channels of a texture, suitable for very high-frequency data mapped to less-detailed 3D surfaces. 
 
@@ -337,7 +337,7 @@ The property types that are supported via property mappings are therefore restri
 
 *Defined in [propertyTexture.schema.json](./schema/propertyTexture.schema.json).*
 
-Property textures use texture channels to store property values conforming to a particular class (identified by ID `class`), with those values accessed directly by texture coordinates. Property textures and are especially useful when texture mapping high frequency data to less detailed 3D surfaces. Unlike textures used in glTF materials, property textures are not necessarily visible in a rendered scene. Like property tables, property textures are implementations of the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata).
+Property textures use texture channels to store property values conforming to a particular class (identified by ID `class`), with those values accessed directly by texture coordinates. Property textures are especially useful when texture mapping high frequency data to less detailed 3D surfaces. Unlike textures used in glTF materials, property textures are not necessarily visible in a rendered scene. Like property tables, property textures are implementations of the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata).
 
 Property textures are defined as entries in the `propertyTextures` array of the root-level `EXT_structural_metadata` extension, and may be referenced by extensions on primitive objects. 
 
