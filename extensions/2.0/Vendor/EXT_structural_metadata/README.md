@@ -146,15 +146,18 @@ Class properties are defined as entries in the `class.properties` dictionary, in
 >               },
 >               "birdCount": {
 >                 "description": "Number of birds perching on the tree",
+>                 "type": "SCALAR",
 >                 "componentType": "UINT8",
 >                 "required": true
 >               },
 >               "height": {
 >                 "description": "Height of tree measured from ground level, in meters.",
+>                 "type": "SCALAR",
 >                 "componentType": "FLOAT32"
 >               },
 >               "diameter": {
 >                 "description": "Diameter at trunk base, in meters.",
+>                 "type": "SCALAR",
 >                 "componentType": "FLOAT32"
 >               }
 >             }
