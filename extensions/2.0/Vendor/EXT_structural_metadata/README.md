@@ -212,8 +212,6 @@ Pairs of `(name, value)` entries representing possible values of an enum propert
 Enum values are defined as entries in the `enum.values` array. Duplicate names or duplicate integer values are not allowed.
 
 
-
-
 ## Metadata Storage
 
 The classes defined in the schema are templates describing the data types and meanings of properties. An instance of such a metadata class is referred to as a _metadata entity_, and can be created from a set of values that conform to the structure of the class. This extension defines different ways of storing large amounts of property values inside a glTF asset, in compact binary forms: 
@@ -223,6 +221,8 @@ The classes defined in the schema are templates describing the data types and me
 - **Property Textures** store property values in channels of a texture, suitable for very high-frequency data mapped to less-detailed 3D surfaces. 
 
 The following sections describe these storage formats in more detail.
+
+Each storage type refers to a metadata class, and contains a dictionary of `properties`. Each of these properties corresponds to one property of the metadata class. Each of these properties define the way how the actual property data is stored. These property storage definitions allow to override the [`minimum` and `maximum` values](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#minimum-and-maximum-values) and the [`offset` and `scale`](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#offset-and-scale) from the property definition in the class, to account for the actual range of values that is stored for each property.
 
 ### Property Tables
 
