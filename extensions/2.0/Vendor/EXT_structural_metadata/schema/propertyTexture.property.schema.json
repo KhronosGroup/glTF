@@ -37,6 +37,22 @@
             ],
             "description": "A scale to apply to property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types. Overrides the class property's `scale` if both are defined."
         },
+        "max": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/numericValue"
+                }
+            ],
+            "description": "Maximum value present in the property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types. The `normalized`, `offset`, and `scale` properties have no effect on the maximum, it always corresponds to the actual value."
+        },
+        "min": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/numericValue"
+                }
+            ],
+            "description": "Minimum value present in the property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types. The `normalized`, `offset`, and `scale` properties have no effect on the maximum, it always corresponds to the actual value."
+        },
         "index": {},
         "texCoord": {},
         "extensions": {},

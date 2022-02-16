@@ -98,7 +98,7 @@
                     "$ref": "definitions.schema.json#/definitions/numericValue"
                 }
             ],
-            "description": "Maximum value in the property array. Only applicable to `SCALAR`, `VECN`, and `MATN` types. The `normalized`, `offset`, and `scale` properties have no effect on the maximum, it always corresponds to the actual value."
+            "description": "Maximum value present in the property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types. The `normalized`, `offset`, and `scale` properties have no effect on the maximum, it always corresponds to the actual value."
         },
         "min": {
             "allOf": [
@@ -106,7 +106,7 @@
                     "$ref": "definitions.schema.json#/definitions/numericValue"
                 }
             ],
-            "description": "Minimum value in the property array. Only applicable to `SCALAR`, `VECN`, and `MATN` types. The `normalized`, `offset`, and `scale` properties have no effect on the maximum, it always corresponds to the actual value."
+            "description": "Minimum value present in the property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types. The `normalized`, `offset`, and `scale` properties have no effect on the maximum, it always corresponds to the actual value."
         },
         "extensions": {},
         "extras": {}
