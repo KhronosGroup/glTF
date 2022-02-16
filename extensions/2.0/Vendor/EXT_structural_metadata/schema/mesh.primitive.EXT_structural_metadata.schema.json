@@ -15,15 +15,15 @@
             "description": "An array of indexes of property textures in the root `EXT_structural_metadata` object.",
             "minItems": 1,
             "items": {
-                "$ref": "propertyTexture.schema.json"
+                "type": "integer"
             }
         },
-        "propertyMapping": {
+        "propertyMappings": {
             "type": "array",
             "description": "An array of indexes of property mappings in the root `EXT_structural_metadata` object.",
             "minItems": 1,
             "items": {
-                "$ref": "propertyMapping.schema.json"
+                "type": "integer"
             }
         },
         "extensions": {},
