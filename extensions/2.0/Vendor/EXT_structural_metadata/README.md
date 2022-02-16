@@ -285,7 +285,7 @@ The property types that are supported via property mappings are therefore restri
 > 
 > The schema defines a class called `movement`. It has a `direction` property that is a normalized 3D float vector for the movement direction, and a `magnitude` property that describes the magnitude of the movement. 
 >
-> The top-level `propertyMappings` dictionary defines a property mapping that refers to this class. The `movement` and `direction` properties of the class are associated with attributes called `_DIRECTION` and `_MAGNITUDE`. 
+> The top-level `propertyMappings` array contains a property mapping that refers to this class. The `movement` and `direction` properties of the class are associated with attributes called `_DIRECTION` and `_MAGNITUDE`. 
 > 
 > The mesh primitive defines (non-indexed) vertices with primitive mode 0, and thus, represents a simple point cloud, with the positions of the points being stored in the `POSITION` attribute. Additionally, it defines vertex attributes `_DIRECTION` and `_MAGNITUDE`, which contain the data for the properties from the property mapping. 
 > 
