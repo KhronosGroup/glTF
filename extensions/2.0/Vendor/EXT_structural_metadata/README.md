@@ -283,8 +283,10 @@ The property types that are supported via property mappings are therefore restri
 >
 > An example of a property mapping that represents information about the movement of points in a point cloud. 
 > 
-> The top-level `propertyMapping` refers to a class called `movement` that defines a `direction` and a `magnitude` property. These might, for example, be normalized 3D float vectors for the movement direction, and float values for the velocity. These properties are associated with attributes called `_DIRECTION` and `_MAGNITUDE`. 
+> The schema defines a class called `movement`. It has a `direction` property that is a normalized 3D float vector for the movement direction, and a `magnitude` property that describes the magnitude of the movement. 
 >
+> The top-level `propertyMappings` dictionary defines a property mapping that refers to this class. The `movement` and `direction` properties of the class are associated with attributes called `_DIRECTION` and `_MAGNITUDE`. 
+> 
 > The mesh primitive defines (non-indexed) vertices with primitive mode 0, and thus, represents a simple point cloud, with the positions of the points being stored in the `POSITION` attribute. Additionally, it defines vertex attributes `_DIRECTION` and `_MAGNITUDE`, which contain the data for the properties from the property mapping. 
 > 
 > ![Property Mapping](figures/property-mapping.png)
@@ -294,8 +296,29 @@ The property types that are supported via property mappings are therefore restri
 > {
 >   "extensions": {
 >     "EXT_structural_metadata": {
->       "schema": { ... },
->       "propertyMapping": [{
+>       "schema": {  
+>         "classes": {
+>           "tree": {
+>             "name": "movement",
+>             "description": "The movement of points in a point cloud",
+>             "properties": {
+>               "direction": {
+>                 "description": "The movement direction, as a normalized 3D vector",
+>                 "type": "VEC3",
+>                 "componentType": "FLOAT32",
+>                 "required": true
+>               },
+>               "magnitude": {
+>                 "description": "The magnitude of the movement",
+>                 "type": "SCALAR",
+>                 "componentType": "FLOAT32",
+>                 "required": true
+>               }
+>             }
+>           }
+>         }
+>       },
+>       "propertyMappings": [{
 >         "class": "movement",
 >         "properties": {
 >           "direction": {
