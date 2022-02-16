@@ -140,7 +140,7 @@ Class properties are defined as entries in the `class.properties` dictionary, in
 >             "properties": {
 >               "species": {
 >                 "description": "Type of tree.",
->                 "componentType": "ENUM",
+>                 "type": "ENUM",
 >                 "enumType": "speciesEnum",
 >                 "required": true
 >               },
