@@ -10,6 +10,11 @@
         }
     ],
     "properties": {
+        "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The name of the property table, e.g. for display purposes."
+        },
         "class": {
             "type": "string",
             "description": "The class that property values conform to. The value must be a class ID declared in the `classes` dictionary."
