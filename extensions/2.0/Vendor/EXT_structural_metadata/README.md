@@ -173,7 +173,7 @@ Class properties are defined as entries in the `class.properties` dictionary, in
 
 *Defined in [enum.schema.json](./schema/enum.schema.json).*
 
-Set of categorical types, defined as `(name, value)` pairs. Enum properties use an enum as their component type.
+Set of categorical types, defined as `(name, value)` pairs. Enum properties use an enum as their type.
 
 Enums are defined as entries in the `schema.enums` dictionary, indexed by an alphanumeric enum ID.
 
