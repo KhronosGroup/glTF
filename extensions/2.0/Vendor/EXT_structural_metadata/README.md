@@ -107,6 +107,7 @@ Classes are defined as entries in the `schema.classes` dictionary, indexed by an
 >             "description": "Woody, perennial plant.",
 >             "properties": {
 >               "species": { ... },
+>               "age": { ... },
 >               "height": { ... },
 >               "diameter": { ... }
 >             }
@@ -144,8 +145,8 @@ Class properties are defined as entries in the `class.properties` dictionary, in
 >                 "enumType": "speciesEnum",
 >                 "required": true
 >               },
->               "birdCount": {
->                 "description": "Number of birds perching on the tree",
+>               "age": {
+>                 "description": "The age of the tree, in years",
 >                 "type": "SCALAR",
 >                 "componentType": "UINT8",
 >                 "required": true
@@ -192,7 +193,7 @@ Enums are defined as entries in the `schema.enums` dictionary, indexed by an alp
 >               {"name": "Unspecified", "value": 0},
 >               {"name": "Oak", "value": 1},
 >               {"name": "Pine", "value": 2},
->               {"name": "Walnut", "value": 3}
+>               {"name": "Maple", "value": 3}
 >             ]
 >           }
 >         }
@@ -235,6 +236,11 @@ The property table may provide value arrays for only a subset of the properties 
 
 > **Example:** A `tree_survey_2021-09-29` property table, implementing the `tree` class defined in earlier examples. The table contains observations for 10 trees, with each property defined by a buffer view containing 10 values.
 >
+> The glTF asset contains multiple objects (trees) that are associated with unique identifiers. These identifiers can be assigned to the objects in different ways. For example, using the [`EXT_mesh_features`](../EXT_mesh_features) extension, the [`EXT_instance_features`](../EXT_instance_features) extension, or an application-specific mechanism for identifying the objects. The identifiers then serve as an index into the property table row that stores the property values for the properties that are defined in the `tree` class.
+> 
+> > ![Property Table](figures/property-table.png)
+> 
+>
 > ```jsonc
 > {
 >   "extensions": {
@@ -249,7 +255,7 @@ The property table may provide value arrays for only a subset of the properties 
 >             "bufferView": 2,
 >             "stringOffsetBufferView": 3
 >           },
->           "birdCount": {
+>           "age": {
 >             "bufferView": 1
 >           },
 >           "height": {
