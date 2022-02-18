@@ -304,7 +304,7 @@ The property types that are supported via property attributes are therefore rest
 >     "EXT_structural_metadata": {
 >       "schema": {  
 >         "classes": {
->           "tree": {
+>           "movement": {
 >             "name": "movement",
 >             "description": "The movement of points in a point cloud",
 >             "properties": {
@@ -372,15 +372,6 @@ Property textures are defined as entries in the `propertyTextures` array of the 
 
 A property texture may provide channels for only a subset of the properties of its class, but class properties marked `required: true` must not be omitted.
 
-Several constraints are imposed to ensure compatibility of texture storage with various property types:
-
-* Variable-length arrays are not supported.
-* Data type and bit depth of the image must be compatible with the property type.
-
-Enum values may be encoded in images, as integer values according to their enum value type (see [Enum](#enum)).
-
-> **Implementation note:** Use of floating-point properties in a property texture would require a floating point-compatible image format like KTX2, provided by an additional extension.
-
 > **Example:** Property texture implementing a "wall" class, with property values stored in a glTF texture at index 0 and indexed by `TEXCOORD_0`. Each property of the `"wall"` class is stored in one channel of the texture.
 >
 > ![Property Texture](figures/property-texture.png)
@@ -398,14 +389,17 @@ Enum values may be encoded in images, as integer values according to their enum 
 >             "properties": {
 >               "insideTemperature": {
 >                 "name": "Inside Temperature",
+>                 "type": "SCALAR",
 >                 "componentType": "UINT8"
 >               },
 >               "outsideTemperature": {
 >                 "name": "Outside Temperature",
+>                 "type": "SCALAR",
 >                 "componentType": "UINT8"
 >               },
 >               "insulation": {
 >                 "name": "Insulation Thickness",
+>                 "type": "SCALAR",
 >                 "componentType": "UINT8",
 >                 "normalized": true
 >               }
@@ -416,16 +410,20 @@ Enum values may be encoded in images, as integer values according to their enum 
 >       "propertyTextures": [
 >         {
 >           "class": "wall",
->           "index": 0,
->           "texCoord": 0,
 >           "properties": {
 >             "insideTemperature": {
+>               "index": 0,
+>               "texCoord": 0,
 >               "channels": [0]
 >             },
 >             "outsideTemperature": {
+>               "index": 0,
+>               "texCoord": 0,
 >               "channels": [1]
 >             },
 >             "insulation": {
+>               "index": 0,
+>               "texCoord": 0,
 >               "channels": [2]
 >             }
 >           }
@@ -458,9 +456,9 @@ Enum values may be encoded in images, as integer values according to their enum 
 > }
 > ```
 
-A `propertyTexture` object extends the glTF [`textureInfo`](../../../../specification/2.0/schema/textureInfo.schema.json) object. `texCoord` specifies a texture coordinate set in the referring primitive.
+Each property that is defined in the `propertyTexture` object extends the glTF [`textureInfo`](../../../../specification/2.0/schema/textureInfo.schema.json) object. The `texCoord` specifies a texture coordinate set in the referring primitive. The `index` is the index of the glTF texture object that stores the actual data. Additionally, each property specifies an array of `channels`, which are the indices of the texture channels providing data for the respective property. Channels of an `RGBA` texture are numbered 0–3 respectively. 
 
-The `properties` map specifies the texture channels providing data for available properties. An array of integer index values identifies channels. Channels of an `RGBA` texture are numbered 0–3 respectively, although specialized texture formats may allow additional channels. All values are stored in linear space.
+Texture filtering must be `9728` (NEAREST), `9729` (LINEAR), or undefined, for any texture object referenced as a property texture. All values in the channels of this texture must be stored in linear space.
 
 > **Example:** A property texture for 2D wind velocity samples. The "speed" property values are stored in the red channel. The "direction" property values are stored as a unit-length vector, with X/Y components in the green and blue channels. Both properties are indexed by UV coordinates in a `TEXCOORD_0` attribute.
 >
@@ -484,7 +482,13 @@ The `properties` map specifies the texture channels providing data for available
 >   ]
 > }
 
-Multiple channels can be used to represent individual bytes of larger data types: The values from the selected channels are treated as unsigned 8 bit integers, and represent the bytes of the actual property value, in little-endian order.
+#### Property Texture Data Storage
+
+Multiple channels of a property texture can be used to represent individual bytes of larger data types. The values from the selected channels represent the bytes of the actual property value, in little-endian order.
+
+> **Implementation note:** Specialized texture formats may allow additional channels, or channels with a higher number of bits per channel. The usage of such texture formats for property textures has to be defined by additional extensions.
+
+Certain property types cannot be encoded in property textures. For example, variable-length arrays or strings are not supported. Enum values may be encoded as integer values according to their enum value type (see [Enum](#enum)). For other property types, the number of channels that are selected must match the number of bytes of the property type.
 
 > **Example:** 
 > 
@@ -496,6 +500,7 @@ Multiple channels can be used to represent individual bytes of larger data types
 > uint8 byte2 = rgba[channels[2]];
 > uint8 byte3 = rgba[channels[3]];
 > int32 rawBits = byte0 | (byte1 << 8) | (byte2 << 16) | (byte3 << 24);
+> float32 value = intBitsToFloat(rawBits);
 > ```
 > 
 > If a property has the type `VEC2` with `UIN16` components, or an array with a fixed length of 2 and `UINT16` components, then the respective property can be represented with 4 channels as well:
@@ -508,8 +513,6 @@ Multiple channels can be used to represent individual bytes of larger data types
 > value[0] = byte0 | (byte1 << 8);
 > value[1] = byte2 | (byte3 << 8);
 > ```
-
-Texture filtering must be `9728` (NEAREST), `9729` (LINEAR), or undefined, for any texture object referenced as a property texture.
 
 ## Binary Data Storage
 
