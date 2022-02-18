@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "propertyMapping.schema.json",
-    "title": "Property Mapping Property in EXT_structural_metadata",
+    "$id": "propertyAttribute.property.schema.json",
+    "title": "Property Attribute Property in EXT_structural_metadata",
     "type": "object",
     "description": "An attribute containing property values.",
     "allOf": [

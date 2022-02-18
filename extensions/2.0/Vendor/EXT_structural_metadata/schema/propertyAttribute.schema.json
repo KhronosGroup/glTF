@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "propertyMapping.schema.json",
-    "title": "Property Mapping in EXT_structural_metadata",
+    "$id": "propertyAttribute.schema.json",
+    "title": "Property Attribute in EXT_structural_metadata",
     "type": "object",
     "description": "Properties conforming to a class, organized as property values stored in attributes.",
     "allOf": [
@@ -13,7 +13,7 @@
         "name": {
             "type": "string",
             "minLength": 1,
-            "description": "The name of the property mapping, e.g. for display purposes."
+            "description": "The name of the property attribute, e.g. for display purposes."
         },
         "class": {
             "type": "string",
@@ -24,7 +24,7 @@
             "description": "A dictionary, where each key corresponds to a property ID in the class' `properties` dictionary and each value is an object describing where property values are stored. Required properties must be included in this dictionary.",
             "minProperties": 1,
             "additionalProperties": {
-                "$ref": "propertyMapping.property.schema.json"
+                "$ref": "propertyAttribute.property.schema.json"
             }
         },
         "extensions": {},
