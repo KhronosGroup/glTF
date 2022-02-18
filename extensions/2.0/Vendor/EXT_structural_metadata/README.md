@@ -458,7 +458,7 @@ A property texture may provide channels for only a subset of the properties of i
 
 Each property that is defined in the `propertyTexture` object extends the glTF [`textureInfo`](../../../../specification/2.0/schema/textureInfo.schema.json) object. The `texCoord` specifies a texture coordinate set in the referring primitive. The `index` is the index of the glTF texture object that stores the actual data. Additionally, each property specifies an array of `channels`, which are the indices of the texture channels providing data for the respective property. Channels of an `RGBA` texture are numbered 0–3 respectively. 
 
-Texture filtering must be `9728` (NEAREST), `9729` (LINEAR), or undefined, for any texture object referenced as a property texture. All values in the channels of this texture must be stored in linear space.
+Texture filtering must be `9728` (NEAREST), `9729` (LINEAR), or undefined, for any texture object referenced as a property texture. Texture values must be encoded with a linear transfer function.
 
 > **Example:** A property texture for 2D wind velocity samples. The "speed" property values are stored in the red channel. The "direction" property values are stored as a unit-length vector, with X/Y components in the green and blue channels. Both properties are indexed by UV coordinates in a `TEXCOORD_0` attribute.
 >
