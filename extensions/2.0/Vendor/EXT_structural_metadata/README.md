@@ -36,7 +36,7 @@ Written against the glTF 2.0 specification.
   - [Enum Value](#enum-value)
 - [Metadata Storage](#metadata-storage)
   - [Property Tables](#property-tables)
-  - [Property Mappings](#property-mappings)
+  - [Property Attributes](#property-attributes)
   - [Property Textures](#property-textures)
 - [Binary Data Storage](#binary-data-storage)
 - [Optional vs. Required](#optional-vs-required)
@@ -217,7 +217,7 @@ Enum values are defined as entries in the `enum.values` array. Duplicate names o
 The classes defined in the schema are templates describing the data types and meanings of properties. An instance of such a metadata class is referred to as a _metadata entity_, and can be created from a set of values that conform to the structure of the class. This extension defines different ways of storing large amounts of property values inside a glTF asset, in compact binary forms: 
 
 - **Property Tables** store property values as parallel arrays in a column-based binary layout, using standard glTF buffer views. These tables can be accessed with a row index, and allow associating complex, structured metadata with arbitrary types with entities of a glTF asset on different levels of granularity.
-- **Property Mappings** are a way of storing metadata as vertex attributes, using standard glTF accessors. They can be used to associate certain forms of metadata with vertices of a mesh primitive. 
+- **Property Attributes** are a way of storing metadata as vertex attributes, using standard glTF accessors. They can be used to associate certain forms of metadata with vertices of a mesh primitive. 
 - **Property Textures** store property values in channels of a texture, suitable for very high-frequency data mapped to less-detailed 3D surfaces. 
 
 The following sections describe these storage formats in more detail.
@@ -277,25 +277,25 @@ Each buffer view `byteOffset` must be aligned to a multiple of its component siz
 
 > **Implementation note:** Authoring tools may choose to align all buffer views to 8-byte boundaries for consistency, but client implementations should only depend on 8-byte alignment for buffer views containing 64-bit component types.
 
-### Property Mappings
+### Property Attributes
 
-*Defined in [propertyMapping.schema.json](./schema/propertyMapping.schema.json).*
+*Defined in [propertyAttribute.schema.json](./schema/propertyAttribute.schema.json).*
 
-Property mappings provide a mechanism to store property values for each vertex of a mesh primitive directly as vertex attributes. They refer to a certain class from the schema definition, via their `class` property, and contain a `properties` dictionary that defines a set of properties that conform to this class. Each property refers to an attribute that may be stored in a mesh primitive. 
+Property attributes provide a mechanism to store property values for each vertex of a mesh primitive directly as vertex attributes. They refer to a certain class from the schema definition, via their `class` property, and contain a `properties` dictionary that defines a set of properties that conform to this class. Each property refers to an attribute that may be stored in a mesh primitive. 
 
-The property types that are supported via property mappings are therefore restricted to the types that are supported by standard glTF accessors. These types are a strict subset of the types that are supported with the schema definitions in this extension.
+The property types that are supported via property attributes are therefore restricted to the types that are supported by standard glTF accessors. These types are a strict subset of the types that are supported with the schema definitions in this extension.
 
 > **Example:** 
 >
-> An example of a property mapping that represents information about the movement of points in a point cloud. 
+> An example of a property attribute that represents information about the movement of points in a point cloud. 
 > 
 > The schema defines a class called `movement`. It has a `direction` property that is a normalized 3D float vector for the movement direction, and a `magnitude` property that describes the magnitude of the movement. 
 >
-> The top-level `propertyMappings` array contains a property mapping that refers to this class. The `movement` and `direction` properties of the class are associated with attributes called `_DIRECTION` and `_MAGNITUDE`. 
+> The top-level `propertyAttributes` array contains a property attribute that refers to this class. The `movement` and `direction` properties of the class are associated with attributes called `_DIRECTION` and `_MAGNITUDE`. 
 > 
-> The mesh primitive defines (non-indexed) vertices with primitive mode 0, and thus, represents a simple point cloud, with the positions of the points being stored in the `POSITION` attribute. Additionally, it defines vertex attributes `_DIRECTION` and `_MAGNITUDE`, which contain the data for the properties from the property mapping. 
+> The mesh primitive defines (non-indexed) vertices with primitive mode 0, and thus, represents a simple point cloud, with the positions of the points being stored in the `POSITION` attribute. Additionally, it defines vertex attributes `_DIRECTION` and `_MAGNITUDE`, which contain the data for the properties from the property attribute. 
 > 
-> ![Property Mapping](figures/property-mapping.png)
+> ![Property Attribute](figures/property-attribute.png)
 > 
 > _Top-level extension object:_
 > ```jsonc
@@ -324,7 +324,7 @@ The property types that are supported via property mappings are therefore restri
 >           }
 >         }
 >       },
->       "propertyMappings": [{
+>       "propertyAttributes": [{
 >         "class": "movement",
 >         "properties": {
 >           "direction": {
@@ -353,7 +353,7 @@ The property types that are supported via property mappings are therefore restri
 >       },
 >       "extensions": {
 >         "EXT_structural_metadata": {
->           "propertyMappings": [0]
+>           "propertyAttributes": [0]
 >         }
 >       }
 >     }

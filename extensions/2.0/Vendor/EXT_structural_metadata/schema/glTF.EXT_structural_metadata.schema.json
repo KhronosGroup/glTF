@@ -39,12 +39,12 @@
                 "$ref": "propertyTexture.schema.json"
             }
         },
-        "propertyMappings": {
+        "propertyAttributes": {
             "type": "array",
-            "description": "An array of property mapping definitions, which may be referenced by index.",
+            "description": "An array of property attribute definitions, which may be referenced by index.",
             "minItems": 1,
             "items": {
-                "$ref": "propertyMapping.schema.json"
+                "$ref": "propertyAttribute.schema.json"
             }
         },
         "extensions": {},
