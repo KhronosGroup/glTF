@@ -16,7 +16,7 @@
                 "type": "integer",
                 "minimum": 0
             },
-            "description": "Texture channels containing property values, identified by index.",
+            "description": "Texture channels containing property values, identified by index. The values may be packed into multiple channels if a single channel does not have sufficient bit depth. The values are packed in little-endian order.",
             "default": [
                 0
             ]

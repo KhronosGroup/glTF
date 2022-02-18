@@ -44,7 +44,7 @@
             "description": "An array of property attribute definitions, which may be referenced by index.",
             "minItems": 1,
             "items": {
-                "$ref": "propertyAttributes.schema.json"
+                "$ref": "propertyAttribute.schema.json"
             }
         },
         "extensions": {},
