@@ -1,0 +1,27 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "node.EXT_instance_features.schema.json",
+    "title": "EXT_instance_features glTF Node extension",
+    "type": "object",
+    "description": "An object describing per-instance feature IDs to be used as indices to property arrays in the property table.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "featureIds": {
+            "type": "object",
+            "description": "A dictionary, where each key is the ID of the feature ID set, and each value is an object describing where feature IDs are stored. Set IDs may contain only alphanumeric and underscore characters.",
+            "minProperties": 1,
+            "additionalProperties": {
+                "$ref": "featureId.schema.json"
+            }
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "featureIds"
+    ]
+}

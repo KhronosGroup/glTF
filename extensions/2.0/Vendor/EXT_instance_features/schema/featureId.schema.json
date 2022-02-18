@@ -1,0 +1,36 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "featureId.schema.json",
+    "title": "Feature ID in EXT_instance_features",
+    "type": "object",
+    "description": "Feature IDs stored in a GPU mesh instanting attribute",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "featureCount": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The number of unique features in the attribute."
+        },
+        "nullFeatureId": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "A value that indicates that no feature is associated with this instance."
+        },
+        "attribute": {
+            "description": "An attribute containing feature IDs. When this is omitted, then the feature IDs are assigned to the GPU instances by their index.",
+            "$ref": "featureIdAttribute.schema.json"
+        },
+        "propertyTable": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The index of the property table containing per-feature property values. Only applicable when using the `EXT_structural_metadata` extension."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["featureCount"]
+}
