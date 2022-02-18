@@ -468,13 +468,15 @@ Texture filtering must be `9728` (NEAREST), `9729` (LINEAR), or undefined, for a
 >   "propertyTextures": [
 >     {
 >       "class": "wind",
->       "index": 0,
->       "texCoord": 0,
 >       "properties": {
 >         "speed": {
+>           "index": 0,
+>           "texCoord": 0,
 >           "channels": [0]
 >         },
 >         "direction": {
+>           "index": 0,
+>           "texCoord": 0,
 >           "channels": [1, 2]
 >         }
 >       }
