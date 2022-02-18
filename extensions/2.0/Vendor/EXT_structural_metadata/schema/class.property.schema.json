@@ -100,16 +100,15 @@
             "type": "string",
             "description": "Enum ID as declared in the `enums` dictionary. Required when `type` is `ENUM`."
         },
+        "array": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether the property is an array. When `count` is defined the property is a fixed-length array. Otherwise the property is a variable-length array."
+        },
         "count": {
             "type": "integer",
-            "minimum": 1,
-            "default": 1,
-            "description": "The number of elements in the property. When `count` is greater than 1 the property is a fixed-length array of `count` elements. When `count` is 1 the property is a single element. Only applicable when `hasFixedCount` is true."
-        },
-        "hasFixedCount": {
-            "type": "boolean",
-            "default": true,
-            "description": "When true, indicates the property has a fixed number of elements (see `count`). When false, indicates that the property is a variable-length array."
+            "minimum": 2,
+            "description": "The number of array elements. May only be defined when `array` is true."
         },
         "normalized": {
             "type": "boolean",
