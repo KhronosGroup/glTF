@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "featureIdInstanceAttribute.schema.json",
+    "$id": "featureIdAttribute.schema.json",
     "title": "Feature ID Attribute in EXT_instance_features",
     "type": "integer",
     "minimum": 0,

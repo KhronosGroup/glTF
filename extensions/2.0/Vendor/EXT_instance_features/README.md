@@ -23,7 +23,7 @@ Written against the glTF 2.0 specification. It depends on the [`EXT_mesh_gpu_ins
 
 In most realtime 3D contexts, performance requirements demand minimizing the number of nodes and meshes in an asset. These requirements compete with interactivity, as applications may wish to merge static objects while still supporting interaction or inspection on those objects. A common performance optimizations is GPU instancing, using the `EXT_mesh_gpu_instancing` extension. But this does not allow to uniquely identify the instances that are created during rendering. 
 
-This extension defines a means of associating GPU instances that are created using the `EXT_mesh_gpu_instancing` extension with unique identifiers. These allow identifying the GPU instances as individual _features_, and are therefore referred to as _feature IDs_. 
+This extension defines a means of associating GPU instances that are created using the `EXT_mesh_gpu_instancing` extension with unique identifiers. These allow identifying the GPU instances as individual _features_, and are therefore referred to as _feature IDs_. These feature IDs are similar to the concept that is introduced in the [`EXT_mesh_features`](../EXT_mesh_features) extension. But instead of defining the feature IDs based on vertex attributes, the feature IDs are here defined using instance attributes. 
 
 ### Feature ID by GPU Instance
 
