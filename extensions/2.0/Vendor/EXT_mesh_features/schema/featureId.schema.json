@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "featureId.schema.json",
-    "title": "Feature ID",
+    "title": "Feature ID in EXT_mesh_features",
     "type": "object",
     "description": "Feature IDs stored in an attribute or texture.",
     "allOf": [

@@ -147,7 +147,7 @@ The values from the selected channels are treated as unsigned 8 bit integers, an
 > If a `featureID.texture` defines `"channels": [0, 1]`, then the actual feature ID can be computed as `id = channel[0] | (channel[1] << 8);`. 
 > If a `featureID.texture` defines `"channels": [1, 0, 2]`, then the actual feature ID can be computed as `id = channel[1] | (channel[0] << 8) | (channel[2] << 16);`.
 
-Texture filtering must be `9728` (NEAREST), or undefined, for any texture object referenced as a feature ID texture.
+Texture filtering must be `9728` (NEAREST), or undefined, for any texture object referenced as a feature ID texture. Texture values must be encoded with a linear transfer function.
 
 ### Using Feature IDs
 
