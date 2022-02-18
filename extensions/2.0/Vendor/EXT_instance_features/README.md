@@ -17,7 +17,7 @@ Draft
 
 ## Dependencies
 
-Written against the glTF 2.0 specification. It depends on the [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing) and [`EXT_mesh_features`](../EXT_mesh_features) extensions, to define Feature IDs for GPU instances.
+Written against the glTF 2.0 specification. It depends on the [`EXT_mesh_gpu_instancing`](../EXT_mesh_gpu_instancing) extension. Each node that is extended with `EXT_instance_features` must also define an `EXT_mesh_gpu_instancing` extension object, and is invalid without this dependency.
 
 ## Overview
 
@@ -28,8 +28,6 @@ This extension defines a means of associating GPU instances that are created usi
 ### Feature ID by GPU Instance
 
 *Defined in [node.EXT_instance_features.schema.json](./schema/node.EXT_instance_features.schema.json).*
-
-Nodes with `EXT_instance_features` must also define an `EXT_mesh_gpu_instancing` extension, and are invalid without this dependency.
 
 Feature IDs may be assigned to individual GPU instances using an instance attribute, or generated implicitly by instance index.
 
