@@ -39,7 +39,7 @@ The iridescence materials are defined by adding the `KHR_materials_iridescence` 
             "extensions": {
                 "KHR_materials_iridescence": {
                     "iridescenceFactor": 1.0,
-                    "iridescenceIOR": 1.8,
+                    "iridescenceIOR": 1.3,
                     "iridescenceThicknessMaximum": 1200.0
                 }
             }
@@ -56,7 +56,7 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 | ------------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
 | **iridescenceFactor**           | `number`                                                                                          | The iridescence intensity.                                                                                                            | No, default:`0.0`   |
 | **iridescenceTexture**          | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | The iridescence intensity stored in the red channel of the texture.                                                                   | No                    |
-| **iridescenceIOR**              | `number`                                                                                          | The index of refraction of the dielectric thin-film layer.                                                                            | No, default:`1.8`   |
+| **iridescenceIOR**              | `number`                                                                                          | The index of refraction of the dielectric thin-film layer.                                                                            | No, default:`1.3`   |
 | **iridescenceThicknessMinimum** | `number`                                                                                          | The minimum thickness of the thin-film layer given in nanometers (nm).                                                                | No, default:`100.0` |
 | **iridescenceThicknessMaximum** | `number`                                                                                          | The maximum thickness of the thin-film layer given in nanometers (nm).                                                                | No, default:`400.0` |
 | **iridescenceThicknessTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | The green channel of this texture defines the thickness of the thin-film layer by blending between the minimum and maximum thickness. | No                    |
