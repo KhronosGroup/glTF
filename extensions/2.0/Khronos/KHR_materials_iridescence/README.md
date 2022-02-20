@@ -109,7 +109,7 @@ The iridescence effect is modeled via a microfacet BRDF with a modified Fresnel 
 
 *This section is non-normative.*
 
-For the calculation of `f_specular`, the original Fresnel term `F_schlick` is exchanged with a newly introduced `F_iridescence` term.
+For the calculation of `f_specular`, the original Fresnel term `F_schlick` (see [B.3.4. Fresnel](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#fresnel) in the glTF 2.0 specification) is exchanged with a newly introduced `F_iridescence` term.
 To artistically control the strength of the iridescence effect, the two Fresnel terms are mixed by using the `iridescenceFactor`:
 
 ```
