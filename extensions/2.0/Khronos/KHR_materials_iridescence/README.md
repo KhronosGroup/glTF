@@ -105,6 +105,16 @@ This also has an effect on the optical path difference:
 
 The iridescence effect is modeled via a microfacet BRDF with a modified Fresnel reflectance term that accounts for inter-reflections as shown in [Laurent Belcour and Pascal Barla (2017)](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html).
 
+### Clearcoat
+
+Considering `KHR_materials_clearcoat` extension, the clearcoat layer is evaluated before the thin-film layer.
+Light that is passing through the clearcoat is then processed as described taking into account differences in IOR.
+
+<figure>
+<img width=40% src="./figures/layering.png"/>
+<figcaption><em>When adding clearcoat ontop of the material, the interface between the "outside" and the thin-film changes and the IOR of the clearcoat (usually 1.5) has to be used for the outside IOR.</em></figcaption>
+</figure>
+
 ## Implementation Notes
 
 *This section is non-normative.*
@@ -251,16 +261,6 @@ const mat3 XYZ_TO_REC709 = mat3(
 ```
 
 The full derivation of the fast analytical spectral integration is described in the original publication in section 4 (Analytical Spectral Integration) and will not be described in detail here.
-
-### Clearcoat
-
-Considering `KHR_materials_clearcoat` extension, the clearcoat layer is evaluated before the thin-film layer.
-Light that is passing through the clearcoat is then processed as described taking into account differences in IOR (`outsideIOR`).
-
-<figure>
-<img width=40% src="./figures/layering.png"/>
-<figcaption><em> </em></figcaption>
-</figure>
 
 ## Reference
 
