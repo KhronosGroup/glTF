@@ -64,7 +64,7 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 The values for iridescence intensity can be defined using a factor, a texture, or both.
 `iridescenceFactor` is multiplied with the red channel of `iridescenceTexture` to control the overall strength of the iridescence effect. If the texture is not set, a value of 1.0 is assumed for the texture.
 
-```
+```glsl
 iridescence = iridescenceFactor * iridescenceTexture.r
 ```
 
@@ -73,7 +73,7 @@ All textures in this extension use a single channel in linear space.
 The thickness of the thin-film is set to `iridescenceThicknessMaximum` if `iridescenceThicknessTexture` is not given.
 If `iridescenceThicknessTexture` is set, the thickness of the thin-film varies between  `iridescenceThicknessMinimum` and `iridescenceThicknessMaximum` as follows:
 
-```
+```glsl
 thickness = mix(iridescenceThicknessMinimum, iridescenceThicknessMaximum, iridescenceThicknessTexture.g)
 ```
 
@@ -112,33 +112,150 @@ The iridescence effect is modeled via a microfacet BRDF with a modified Fresnel 
 For the calculation of `f_specular`, the original Fresnel term `F_schlick` (see [B.3.4. Fresnel](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#fresnel) in the glTF 2.0 specification) is exchanged with a newly introduced `F_iridescence` term.
 To artistically control the strength of the iridescence effect, the two Fresnel terms are mixed by using the `iridescenceFactor`:
 
-```
+```glsl
 F = mix(F_schlick, F_iridescence, iridescenceFactor)
 ```
 
-To calculate `F_iridescence` we need to calculate the spectral differences. Additionally, the IOR of the base material must be known. This value is inferred from the base F0 value for both dielectrics and metals:
+The calculation of `F_iridescence` is described in the following sections. For glTF an approximation of the original model (defined in the Mitsuba code example from [Belcour/Barla](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html) is used.
 
+### Material Interfaces
+
+The iridescence model defined by Barla and Belour models two material interfaces - one from the outside to the thin-film layer and another one from the thin-film to the base material. These two interfaces are defined as follows:
+
+```glsl
+// First interface
+float R0 = IorToFresnel0(iridescenceIOR, outsideIOR);
+float R12 = F_Schlick(R0, cosTheta1);
+float R21 = R12;
+float T121 = 1.0 - R12;
+
+// Second interface
+vec3 baseIOR = Fresnel0ToIor(baseF0 + 0.0001); // guard against 1.0
+vec3 R1 = IorToFresnel0(baseIOR, iridescenceIOR);
+vec3 R23 = F_Schlick(R1, cosTheta2);
 ```
-IOR_base = (1.0 + sqrt(F0)) / (1.0 - sqrt(F0))
+
+`iridescenceIOR` is the index of refraction of the thin-film layer, `outsideIOR` the IOR outside the thin-film (e.g. air or the clearcoat material) and `baseIOR` the IOR of the base material. The latter is calculated from its F0 value using the inverse of the special normal incidence case of Fresnel's equations:
+
+```glsl
+// Assume air interface for top
+vec3 Fresnel0ToIor(vec3 F0) {
+    vec3 sqrtF0 = sqrt(F0);
+    return (vec3(1.0) + sqrtF0) / (vec3(1.0) - sqrtF0);
+}
 ```
 
-For the spectral differences, optical path differences (`OPD`) between rays reflected at the thin-film and at the base material have to be calculated:
+This simple formula is used for both dielectrics and metals. While it is physically correct for dielectric materials, it's only an approximation for metals, which are usually described using a complex IOR with an additional extinction factor. Such a value cannot be accurately inferred from the F0 value and is thus assumed to be `0.0`. 
 
+To calculate the reflectance factors at normal incidence of both interfaces (`R0` and `R1`), the special case is used as is:
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle%20R%20=%20\left|\frac{n_1%20-%20n_2%20}{n_1%20%2B%20n_2%20}\right|^2">
+
+```glsl
+float IorToFresnel0(float transmittedIor, float incidentIor) {
+    return pow((transmittedIor - incidentIor) / (transmittedIor + incidentIor), 2.0);
+}
 ```
-OPD = 2.0 * IOR_iridescence * thin_film_thickness * cos(viewAngle)
+
+To calculate the reflectances `R12` and `R23` at the viewing angles `theta1` (angle hitting the thin-film layer) and `theta2` (angle after refraction in the thin-film) Schlick Fresnel is again used. This approximation allows to eliminate the split into S and P polarization for the exact Fresnel equations. 
+
+`theta2` can be calculated using Snell's law like:
+
+```glsl
+float sinTheta2Sq = pow(outsideIOR / iridescenceIOR, 2.0) * (1.0 - pow(cosTheta1, 2.0));
+float cosTheta2 = sqrt(1.0 - sinTheta2Sq);
 ```
 
-With the path difference, the phase shift can be calculated in Fourier space.
+### Phase Shift
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle%20\Delta%20\phi%20=%202%20\pi%20\lambda^{-1}\text{OPD}">
+The phase shift is as follows:
 
-A complete implementation for evaluating `F_iridescence` can be found in the shader file of the Khronos Sample Viewer:
-[iridescence.glsl](https://github.com/PascalSchoen/glTF-Sample-Viewer/blob/feature/KHR_materials_iridescence/source/Renderer/shaders/iridescence.glsl)
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle%20\Delta%20\phi%20=%202%20\pi%20\lambda^{-1}\mathcal{D}">
+
+and depends on the first-order optical path difference <img src="https://render.githubusercontent.com/render/math?math=\displaystyle%20\mathcal{D}"> (or `OPD`):
+
+```glsl
+OPD = 2.0 * iridescenceIOR * iridescenceThickness * cosTheta1;
+```
+
+`phi12` and `phi23` define the base phases per interface and are approximated with `0.0` if the IOR of the hit material (`iridescenceIOR` or `baseIOR`) is higher than the IOR of the previous material (`outsideIOR` or `iridescenceIOR`) and `M_PI` otherwise. Also here, polarization is ignored.
+
+```glsl
+// First interface
+float phi12 = 0.0;
+if (iridescenceIOR < outsideIOR) phi12 = M_PI;
+float phi21 = M_PI - phi12;
+
+// Second interface
+vec3 phi23 = vec3(0.0);
+if (baseIOR[0] < iridescenceIOR) phi23[0] = M_PI;
+if (baseIOR[1] < iridescenceIOR) phi23[1] = M_PI;
+if (baseIOR[2] < iridescenceIOR) phi23[2] = M_PI;
+
+// Phase shift
+vec3 phi = vec3(phi21) + phi23;
+```
+
+### Analytic Spectral Integration
+
+Spectral integration is performed in the Fourier space. 
+
+```glsl
+// Compound terms
+vec3 R123 = clamp(R12 * R23, 1e-5, 0.9999);
+vec3 r123 = sqrt(R123);
+vec3 Rs = sq(T121) * R23 / (vec3(1.0) - R123);
+
+// Reflectance term for m = 0 (DC term amplitude)
+vec3 C0 = R12 + Rs;
+I = C0;
+
+// Reflectance term for m > 0 (pairs of diracs)
+vec3 Cm = Rs - T121;
+for (int m = 1; m <= 2; ++m)
+{
+    Cm *= r123;
+    vec3 Sm = 2.0 * evalSensitivity(float(m) * OPD, float(m) * phi);
+    I += Cm * Sm;
+}
+
+F_iridescence = max(I, vec3(0.0));
+```
+
+With the sensitivity evaluation function being:
+
+```glsl
+vec3 evalSensitivity(float OPD, vec3 shift) {
+    float phase = 2.0 * M_PI * OPD * 1.0e-9;
+    vec3 val = vec3(5.4856e-13, 4.4201e-13, 5.2481e-13);
+    vec3 pos = vec3(1.6810e+06, 1.7953e+06, 2.2084e+06);
+    vec3 var = vec3(4.3278e+09, 9.3046e+09, 6.6121e+09);
+
+    vec3 xyz = val * sqrt(2.0 * M_PI * var) * cos(pos * phase + shift) * exp(-sq(phase) * var);
+    xyz.x += 9.7470e-14 * sqrt(2.0 * M_PI * 4.5282e+09) * cos(2.2399e+06 * phase[0] + shift[0]) * exp(-4.5282e+09 * sq(phase));
+    xyz /= 1.0685e-7;
+
+    vec3 rgb = XYZ_TO_REC709 * xyz;
+    return rgb;
+}
+```
+
+and the color space transformation matrix to convert from XYZ to RGB:
+
+```glsl
+const mat3 XYZ_TO_REC709 = mat3(
+     3.2404542, -0.9692660,  0.0556434,
+    -1.5371385,  1.8760108, -0.2040259,
+    -0.4985314,  0.0415560,  1.0572252
+);
+```
+
+The full derivation of the fast analytical spectral integration is described in the original publication in section 4 (Analytical Spectral Integration) and will not be described in detail here.
 
 ### Clearcoat
 
-Considering KHR_materials_clearcoat extension, the clearcoat layer is evaluated before the thin-film layer.
-Light that is passing through the clearcoat is then processed as described taking into account differences in IOR.
+Considering `KHR_materials_clearcoat` extension, the clearcoat layer is evaluated before the thin-film layer.
+Light that is passing through the clearcoat is then processed as described taking into account differences in IOR (`outsideIOR`).
 
 <figure>
 <img width=40% src="./figures/layering.png"/>
