@@ -267,10 +267,15 @@ The full derivation of the fast analytical spectral integration is described in 
 ### Theory, Documentation and Implementations
 
 [Belcour, L. and Barla, P. (2017): A Practical Extension to Microfacet Theory for the Modeling of Varying Iridescence](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html)
+
 [Autodesk: Arnold for Maya user guide - Thin Film](https://docs.arnoldrenderer.com/display/A5AFMUG/Thin+Film)
+
 [Drobot, M. and Micciulla, A. (2017): Practical Multilayered Materials in Call of Duty: Infinite Warfare](https://blog.selfshadow.com/publications/s2017-shading-course/drobot/s2017_pbs_multilayered.pdf)
+
 [Kneiphof, T., Golla, T. and Klein, R. (2019): Real-time Image-based Lighting of Microfacet BRDFs with Varying Iridescence](https://cg.cs.uni-bonn.de/publication/kneiphof-2019-real-time)
+
 [Akenine-Möller, T., Haines, E., Hoffman, N., Pesce, A., Iwanicki, M., and Hillaire, S. (2018): Real-Time Rendering, Fourth Edition; page 361ff](https://www.realtimerendering.com/)
+
 [Sussenbach, M. (2013): Rendering Iridescent Objects in Real-time](http://dspace.library.uu.nl/handle/1874/287110)
 
 ## Schema
