@@ -159,7 +159,7 @@ This simple formula is used for both dielectrics and metals. While it is physica
 
 To calculate the reflectance factors at normal incidence of both interfaces (`R0` and `R1`), the special case is used as is:
 
-<img src="https://render.githubusercontent.com/render/math?math=\color{gray}\displaystyle%20R%20=%20\left|\frac{n_1%20-%20n_2%20}{n_1%20%2B%20n_2%20}\right|^2">
+<img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20R%20=%20\left|\frac{n_1%20-%20n_2%20}{n_1%20%2B%20n_2%20}\right|^2">
 
 ```glsl
 float IorToFresnel0(float transmittedIor, float incidentIor) {
@@ -180,9 +180,9 @@ float cosTheta2 = sqrt(1.0 - sinTheta2Sq);
 
 The phase shift is as follows:
 
-<img src="https://render.githubusercontent.com/render/math?math=\color{gray}\displaystyle%20\Delta%20\phi%20=%202%20\pi%20\lambda^{-1}\mathcal{D}">
+<img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\Delta%20\phi%20=%202%20\pi%20\lambda^{-1}\mathcal{D}">
 
-and depends on the first-order optical path difference <img src="https://render.githubusercontent.com/render/math?math=\displaystyle%20\mathcal{D}"> (or `OPD`):
+and depends on the first-order optical path difference <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\displaystyle%20\mathcal{D}"> (or `OPD`):
 
 ```glsl
 OPD = 2.0 * iridescenceIOR * iridescenceThickness * cosTheta1;
