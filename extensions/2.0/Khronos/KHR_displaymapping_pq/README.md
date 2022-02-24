@@ -23,16 +23,14 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension is intended for implementations that targets a display with the goal of outputting realtime, or interactive, framerates in either HDR or SDR in a physically correct manner.   
-
-The goal of this extension is to provide a way to convert the resulting (rendered) scene linear light output values to a known range {R,G,B} so that they can be sent to a display.  
-One of the reasons for this is to retain the hue of the source materials under varying light conditions.  
+This extension is intended for implementations that targets a display with the goal of outputting at interactive framerates in either HDR or SDR in a physically correct manner.  
+The goal of this extension is to provide a way to convert the resulting (rendered) scene linear light output values to a known range {R,G,B} that can be output to the display.   
+This conversion shall be done so that hue (or chromaticity) is retained, the goal is to output the unadjusted pixel value calculated in the glTF BRDF.
 Correct representation of hue is important in order to achieve a physically correct visualization and to retain original artistic intent.  
 
 Currently the glTF specification does not define how to output pixels.  
 This results in hue shift and white-out, due to clipping of pixel values as they are written to framebuffer.      
 The result is not desirable when the goal is to display physically correct scenes.  
-
 
 <figure>
 <img src="./images/SampleViewer-100.png"/>
@@ -98,7 +96,7 @@ provide forms suitable for critical viewing.`
 ### glTF asset considerations
 
 The extension affects the output of the entire glTF asset, all scenes and nodes, included in a file that is using this extension.
-This means that the current rendered scene shall be output using the displaymapping declared by this extension whenever the usecase is relevant, ie a realtime renderer with output to a display.  
+This means that the current rendered scene shall be output using the displaymapping declared by this extension whenever the usecase is relevant - a renderer targeting a display at interactive framerates.    
 
 Visualization of multiple glTF assets using this extension is supported and will produce a normative result.  
 
@@ -162,7 +160,7 @@ Overview of where implementations may decide to perform the functions defined by
 
 Output pixel values from a rendered 3D model are generally in a range that is larger than that of a display device.  
 This may not be a problem if the output is a high definition image format or some other target that has the same range and precision as the internal calculations.  
-However, a typical usecase for realtime renderer implementations is that the output is a light emitting display.  
+However, a typical usecase for a renderer targeting interactive framerates is that the output is a light emitting display.  
 Such a display rarely has the range and precision of internal calculations making it necessary to map internal pixel values to match the characteristics of the output.  
 This mapping is generally referred to as tone-mapping, however the exact meaning of tone-mapping varies and can also mean the process of applying artistic intent to the output.  
 For that reason this document will use the term displaymapping.  
@@ -189,7 +187,7 @@ This could for instance be a viewer or engine that implements a physical camera 
 
 <figure>
 <img src="./images/DesignOverview.png"/>
-<figcaption><em>This extension affects the image processing step of realtime rendering.  
+<figcaption><em>This extension affects the image processing step of the renderer.  
 Viewers or engines may choose to implement physical camera, post-processing or other type of features in the world/scene or image space.  
 The extension is fully compatible with such usecases</em></figcaption>
 </figure>
@@ -283,7 +281,9 @@ Scene aperture can be seen as a simplified automatic exposure control, without s
 If scene contains light contribution that goes above 10 000 then all lightsources will be scaled.  
 It is not intended for gaming like usecases where the viewpoint and environment changes dramitically, for instance from dimly lit outdoor night environments to a highly illuminated hallway.  
 
-This function is a way to avoid having too high scene brightess, that would result in clamping of output values, or to avoid a scene from being too dark.  
+This function is a way to avoid having too high scene brightess, that would result in clamping of output values.  
+
+**Implementation Notes**
 
 pseudocode for scene aperture calculation, this shall be performed before the reference OOTF.  
 Meaning that the resulting `color` parameter shall be passed to BT_2100_OOTF.  
@@ -300,9 +300,10 @@ vec3 aperture(float lightIn, vec3 colorIn) {
 	float factor = value / lightIn
 	return colorIn * factor
 }	
-```
 
-**Implementation Notes**
+vec3 apertureAdjustedColor = aperture(lightIn, color)
+
+```
 
 Since knowledge of overall scene brightness values may be time-consuming to calculate exactly, implementations are free to approximate.  
 This could be done by calculating the max scene value once, adding up punctual and environment lights and then using this value, not taking occlusion of lightrays into account.  
@@ -331,6 +332,7 @@ E {R, G, B} is the linear scene light value.
 Passed to the OOTF these values shall be in the range [0.0 - 1.0]  
 
 Where the rangeExtension and gamma values shall be set according to HDR or SDR display.  
+Note that if the target framebuffer is of a format that uses the sRGB transfer function, the gamma value may be excluded from the OOTF calculation.  
 
 ```
 HDR
@@ -346,7 +348,7 @@ gamma = 2.4
 
 **Implementation Notes** 
 
-At the stage prior to OOTF, values shall have been adjusted for dynamic range and `aperture` if that is declared.   
+At the stage prior to OOTF, values shall have been adjusted for aperture.   
 
 Depending on implementation of OOTF and OETF, RGB values may simply be scaled by 10000 before used in the OOTF.  
 
@@ -364,6 +366,16 @@ BT_2100_OOTF(color, rangeExponent, gamma) {
     }  
     return 100 * pow(nonlinear, gamma);
 }  
+
+vec3 color = apertureAjustedColor
+//If framebuffer uses sRGB transfer function the gamma does not need to be applied here
+if (framebufferFormat is sRGB) {
+    color = BT_2100(color, rangeExponent, 1)
+} else {
+    color = BT_2100(color, rangeExponent, gamma)
+}
+
+
 ```
 
 Where this is calculated per RGB component, note that the color value in this equation must be in range 0.0 - 1.0
