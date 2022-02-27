@@ -21,7 +21,7 @@
             "description": "A value that indicates that no feature is associated with this vertex or texel."
         },
         "attribute": {
-            "description": "An attribute containing feature IDs.",
+            "description": "An attribute containing feature IDs. When `attribute` and `texture` are omitted the feature IDs are assigned to vertices by their index.",
             "$ref": "featureIdAttribute.schema.json"
         },
         "texture": {
@@ -36,17 +36,7 @@
         "extensions": {},
         "extras": {}
     },
-    "required": ["featureCount"],
-    "oneOf": [
-        {
-            "required": [
-                "attribute"
-            ]
-        },
-        {
-            "required": [
-                "texture"
-            ]
-        }
+    "required": [
+        "featureCount"
     ]
 }
