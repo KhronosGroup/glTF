@@ -81,7 +81,7 @@ Aside from light direction and IOR, the thickness of the thin-film defines the v
 This effect is the result of constructive and destructive interferences of certain wavelengths.
 If the the optical path difference between the ray reflected at the thin-film and the ray reflected at the base material is half the wavelength (λ), the resulting 180 degree phase shift is cancelling out the reflected light:
 
-<figure>
+<figure style="padding: 10px;">
 <img width=70% src="./figures/interference.png"/>
 <figcaption><em> </em></figcaption>
 </figure>
@@ -90,14 +90,14 @@ With a thin-film thickness near half the wavelength of visible light (380 nm - 7
 By increasing the thin-film thickness, multiples of wavelengths are still causing wave interferences, however, as the optical path distance increases, different rays are mixed in.
 This leads to more pastel colored patterns for increased thickness:
 
-<figure>
+<figure style="padding: 10px;">
 <img src="./figures/thickness-comparison.png"/>
 <figcaption><em>Comparison of different iridescence thickness ranges for a constant iridescence IOR value of 1.3 on a dielectric base material with IOR value of 1.5. </em></figcaption>
 </figure>
 
 The thin-film layer can have a different IOR than the underlying material. With `iridescenceIOR` one can set an IOR value for the thin-film layer independently. The more this value differs from the IOR of the base material, the stronger the iridescence. It also has an effect on the optical path difference as visible here:
 
-<figure>
+<figure style="padding: 10px;">
 <img src="./figures/ior-comparison.png"/>
 <figcaption><em>Comparison of different iridescence IOR values for a thin-film thickness range between 200 nm (bottom) and 800 nm (top) on a dielectric base material with IOR value of 1.5.</em></figcaption>
 </figure>
@@ -149,7 +149,7 @@ The `base_ior` can be changed using the [`KHR_materials_ior`](../KHR_materials_i
 Considering [`KHR_materials_clearcoat`](../KHR_materials_clearcoat) extension, the clearcoat layer is evaluated before the thin-film layer. This modifies the `outside_ior` value to the IOR of the clearcoat material (default: `1.5`).
 Light passing through the clearcoat is then processed as described taking into account differences in IOR.
 
-<figure>
+<figure style="padding: 10px;">
 <img width=40% src="./figures/layering.png"/>
 <figcaption><em>When adding clearcoat ontop of the material, the interface between the "outside" and the thin-film changes and the IOR of the clearcoat (usually 1.5) has to be used for the outside IOR.</em></figcaption>
 </figure>
