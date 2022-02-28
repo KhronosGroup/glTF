@@ -40,7 +40,7 @@ The iridescence materials are defined by adding the `KHR_materials_iridescence` 
                 "KHR_materials_iridescence": {
                     "iridescenceFactor": 1.0,
                     "iridescenceIOR": 1.3,
-                    "iridescenceThicknessMaximum": 1200.0
+                    "iridescenceThicknessMaximum": 400.0
                 }
             }
         }
