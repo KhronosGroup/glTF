@@ -300,7 +300,7 @@ and depends on the first-order optical path difference <img src="https://render.
 OPD = 2.0 * iridescenceIOR * iridescenceThickness * cosTheta1;
 ```
 
-`phi12` and `phi23` define the base phases per interface and are approximated with `0.0` if the IOR of the hit material (`iridescenceIOR` or `baseIOR`) is higher than the IOR of the previous material (`outsideIOR` or `iridescenceIOR`) and <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\displaystyle%20\pi"> otherwise. Also here, polarization is ignored.
+`phi12` and `phi23` define the base phases per interface and are approximated with `0.0` if the IOR of the hit material (`iridescenceIOR` or `baseIOR`) is higher than the IOR of the previous material (`outsideIOR` or `iridescenceIOR`) and *π* otherwise. Also here, polarization is ignored.
 
 ```glsl
 // First interface
