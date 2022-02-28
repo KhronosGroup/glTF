@@ -46,10 +46,11 @@ Features are identified within a 3D asset by **Feature IDs**. A mesh primitive m
 
 Each feature ID set is defined as a set of values that are associated with the conceptual parts of the model. The definition of the feature ID set may include a `nullFeatureId`, which is a value that indicates that a certain part is not considered to be an identifiable object. The definition also includes a `featureCount` value, which is the number of unique features that are identified. 
 
-Feature IDs can be associated with parts of a model in one of two ways:
+Feature IDs can be associated with parts of a model in one of three ways:
 
 * **Feature ID by Vertex:** Feature IDs that are stored as vertex attribute, using a standard glTF accessor. The `featureId.attribute` refers to this accessor, and allows defining feature IDs for each individual vertex.
 * **Feature ID by Texture Coordinates:** Feature IDs that are stored in the channels of a standard glTF texture. The `featureId.texture` refers to this texture, and allows defining feature IDs for regions on the surface of a mesh.
+* **Feature ID by Index**: Feature IDs that are assigned implicitly to the vertices. In this case, the feature ID is given by the index of the vertex.
 
 These concepts are explained in more detail in the following sections.
 
@@ -148,6 +149,11 @@ The values from the selected channels are treated as unsigned 8 bit integers, an
 > If a `featureID.texture` defines `"channels": [1, 0, 2]`, then the actual feature ID can be computed as `id = channel[1] | (channel[0] << 8) | (channel[2] << 16);`.
 
 Texture filtering must be `9728` (NEAREST), or undefined, for any texture object referenced as a feature ID texture. Texture values must be encoded with a linear transfer function.
+
+#### Feature ID by Index
+
+When both `featureId.attribute` and `featureId.texture` are undefined,then the feature ID value for each vertex is given implicitly, via the index of the vertex. In this case, the `featureCount` must match the number of vertices of the mesh primitive. 
+
 
 ### Using Feature IDs
 
