@@ -102,7 +102,7 @@ The thin-film layer can have a different IOR than the underlying material. With 
 <figcaption><em>Comparison of different iridescence IOR values for a thin-film thickness range between 200 nm (bottom) and 800 nm (top) on a dielectric base material with IOR value of 1.5.</em></figcaption>
 </figure>
 
-The iridescence effect is modeled via a microfacet BRDF with a modified Fresnel reflectance term that accounts for inter-reflections as shown in [Laurent Belcour and Pascal Barla (2017)](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html).
+The iridescence effect is modeled via a microfacet BRDF with a modified Fresnel reflectance term that accounts for inter-reflections as shown in the paper from [Belcour/Barla](#theory-documentation-and-implementations).
 
 ## Iridescence BRDF
 
@@ -140,13 +140,13 @@ dielectric_brdf =
       α = roughness ^ 2))
 ```
 
-For transmissive `base` materials, the `diffuse_brdf(...)` will be replaced by the mix between a `diffuse_brdf(...)` and a `specular_btdf(...)` as described in the [`KHR_materials_transmission`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_transmission#transmission-btdf) extension.
+For transmissive `base` materials, the `diffuse_brdf(...)` will be replaced by the mix between a `diffuse_brdf(...)` and a `specular_btdf(...)` as described in the [`KHR_materials_transmission`](../KHR_materials_transmission#transmission-btdf) extension.
 
-The `base_ior` can be changed using the [`KHR_materials_ior`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_ior) extension.
+The `base_ior` can be changed using the [`KHR_materials_ior`](../KHR_materials_ior) extension.
 
 ### Clearcoat
 
-Considering [`KHR_materials_clearcoat`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_clearcoat) extension, the clearcoat layer is evaluated before the thin-film layer. This modifies the `outside_ior` value to the IOR of the clearcoat material (default: `1.5`).
+Considering [`KHR_materials_clearcoat`](../KHR_materials_clearcoat) extension, the clearcoat layer is evaluated before the thin-film layer. This modifies the `outside_ior` value to the IOR of the clearcoat material (default: `1.5`).
 Light passing through the clearcoat is then processed as described taking into account differences in IOR.
 
 <figure>
@@ -214,7 +214,7 @@ function luminance(color) {
 
 *This section is non-normative.*
 
-The calculation of `iridescent_fresnel(...)` is described in the following sections as GLSL code at the viewing angle <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_1">. For glTF an approximation of the original model (defined in the Mitsuba code example from [Belcour/Barla](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html)) is used.
+The calculation of `iridescent_fresnel(...)` is described in the following sections as GLSL code at the viewing angle <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_1">. For glTF an approximation of the original model (defined in the Mitsuba code example from [Belcour/Barla](#theory-documentation-and-implementations)) is used.
 
 ```glsl
 vec3 iridescent_fresnel(outsideIOR, iridescenceIOR, baseF0, iridescenceThickness, cosTheta1) {
@@ -235,7 +235,7 @@ with <img src="https://render.githubusercontent.com/render/math?math=\color{gray
 
 #### **Material Interfaces**
 
-The iridescence model defined by [Belcour/Barla](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html) models two material interfaces - one from the outside to the thin-film layer and another one from the thin-film to the base material. These two interfaces are defined as follows:
+The iridescence model defined by [Belcour/Barla](#theory-documentation-and-implementations) models two material interfaces - one from the outside to the thin-film layer and another one from the thin-film to the base material. These two interfaces are defined as follows:
 
 ```glsl
 // First interface
