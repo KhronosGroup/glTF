@@ -48,7 +48,7 @@ The iridescence materials are defined by adding the `KHR_materials_iridescence` 
 }
 ```
 
-### Iridescence
+## Properties
 
 All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [appendix](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
@@ -91,24 +91,63 @@ By increasing the thin-film thickness, multiples of wavelengths are still causin
 This leads to more pastel colored patterns for increased thickness:
 
 <figure>
-<img src="./figures/thickness-comparison.jpg"/>
-<figcaption><em>Comparison of different iridescence thickness ranges for a constant iridescence IOR value of 1.8. </em></figcaption>
+<img src="./figures/thickness-comparison.png"/>
+<figcaption><em>Comparison of different iridescence thickness ranges for a constant iridescence IOR value of 1.3 on a dielectric base material with IOR value of 1.5. </em></figcaption>
 </figure>
 
-The thin-film layer can have a different IOR than the underlying material. With `iridescenceIOR` one can set an IOR value for the thin-film layer independently.
-This also has an effect on the optical path difference:
+The thin-film layer can have a different IOR than the underlying material. With `iridescenceIOR` one can set an IOR value for the thin-film layer independently. The more this value differs from the IOR of the base material, the stronger the iridescence. It also has an effect on the optical path difference as visible here:
 
 <figure>
-<img src="./figures/ior-comparison.jpg"/>
-<figcaption><em>Comparison of different iridescence IOR values for a thin-film thickness range between 200 nm (bottom) and 800 nm (top).</em></figcaption>
+<img src="./figures/ior-comparison.png"/>
+<figcaption><em>Comparison of different iridescence IOR values for a thin-film thickness range between 200 nm (bottom) and 800 nm (top) on a dielectric base material with IOR value of 1.5.</em></figcaption>
 </figure>
 
 The iridescence effect is modeled via a microfacet BRDF with a modified Fresnel reflectance term that accounts for inter-reflections as shown in [Laurent Belcour and Pascal Barla (2017)](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html).
 
+## Iridescence BRDF
+
+### Metal Base Material
+
+The metal BRDF in the glTF 2.0 core specification in [B.2.1. Metals](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#metals) will be replaced by the following term:
+
+```
+metal_brdf =
+  iridescent_conductor_layer(
+    iridescence_strength = iridescence,
+    iridescence_thickness = iridescenceThickness,
+    iridescence_ior = iridescenceIOR,
+    outside_ior = 1.0,
+    base_f0 = baseColor,
+    specular_brdf = specular_brdf(
+      α = roughness ^ 2)))
+```
+
+### Dielectric Base Material
+
+The dielectric BRDF in the glTF 2.0 core specification in [B.2.2. Dielectrics](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#dielectrics) will be replaced by the following term:
+
+```
+dielectric_brdf =
+  iridescent_dielectric_layer(
+    iridescence_strength = iridescence,
+    iridescence_thickness = iridescenceThickness,
+    iridescence_ior = iridescenceIOR,
+    outside_ior = 1.0,
+    base_ior = 1.5,
+    base = diffuse_brdf(
+      color = baseColor),
+    specular_brdf = specular_brdf(
+      α = roughness ^ 2))
+```
+
+For transmissive `base` materials, the `diffuse_brdf(...)` will be replaced by the mix between a `diffuse_brdf(...)` and a `specular_btdf(...)` as described in the [`KHR_materials_transmission`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_transmission#transmission-btdf) extension.
+
+The `base_ior` can be changed using the [`KHR_materials_ior`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_ior) extension.
+
 ### Clearcoat
 
-Considering `KHR_materials_clearcoat` extension, the clearcoat layer is evaluated before the thin-film layer.
-Light that is passing through the clearcoat is then processed as described taking into account differences in IOR.
+Considering [`KHR_materials_clearcoat`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_clearcoat) extension, the clearcoat layer is evaluated before the thin-film layer. This modifies the `outside_ior` value to the IOR of the clearcoat material (default: `1.5`).
+Light passing through the clearcoat is then processed as described taking into account differences in IOR.
 
 <figure>
 <img width=40% src="./figures/layering.png"/>
@@ -117,20 +156,86 @@ Light that is passing through the clearcoat is then processed as described takin
 
 ## Implementation Notes
 
-*This section is non-normative.*
+### Metal Base Material
 
-For the calculation of `f_specular`, the original Fresnel term `F_schlick` (see [B.3.4. Fresnel](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#fresnel) in the glTF 2.0 specification) is exchanged with a newly introduced `F_iridescence` term.
-To artistically control the strength of the iridescence effect, the two Fresnel terms are mixed by using the `iridescenceFactor`:
-
-```glsl
-F = mix(F_schlick, F_iridescence, iridescenceFactor)
+```
+function iridescent_conductor_layer(iridescence_strength, iridescence_thickness, iridescence_ior, outside_ior, base_f0, specular_brdf) {
+  return mix(
+    conductor_fresnel(base_f0, specular_brdf),
+    specular_brdf * iridescent_fresnel(
+      outside_ior,
+      iridescence_ior,
+      base_f0,
+      iridescence_thickness),
+    iridescence_strength)
+}
 ```
 
-The calculation of `F_iridescence` is described in the following sections. For glTF an approximation of the original model (defined in the Mitsuba code example from [Belcour/Barla](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html) is used.
+### Dielectric Base Material
 
-### Material Interfaces
+```
+function iridescent_dielectric_layer(iridescence_strength, iridescence_thickness, iridescence_ior, outside_ior, base_ior, base, specular_brdf) {
+  base_f0 = ((1-base_ior)/(1+base_ior))^2
 
-The iridescence model defined by Barla and Belour models two material interfaces - one from the outside to the thin-film layer and another one from the thin-film to the base material. These two interfaces are defined as follows:
+  iridescent_f = iridescent_fresnel(
+    outside_ior,
+    iridescence_ior,
+    base_f0,
+    iridescence_thickness)
+
+  return mix(
+    fresnel_mix(base_ior, base, specular_brdf),
+    iridescent_fresnel_mix(iridescent_f, base, specular_brdf),
+    iridescence_strength)
+}
+```
+
+The base BRDF is weighted by the inverse of the perceived luminance value of the iridescence Fresnel color and then added with the specular iridescence BRDF:
+
+```
+function iridescent_fresnel_mix(iridescence_fresnel, base, specular_brdf) {
+    // Get luminance value of iridescence fresnel color
+    iridescence_fresnel_lum = luminance(iridescence_fresnel)
+
+    return (1 - iridescene_fresnel_lum) * base + iridescence_fresnel * specular_brdf
+}
+```
+
+To calculate the luminance of a linear sRGB color, the following formula is used (see [Relative luminance](https://en.wikipedia.org/wiki/Relative_luminance)):
+
+```
+// Relative luminance for linear sRGB colors
+function luminance(color) {
+    return 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b
+}
+```
+
+### Iridescence Fresnel
+
+*This section is non-normative.*
+
+The calculation of `iridescent_fresnel(...)` is described in the following sections as GLSL code at the viewing angle <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_1">. For glTF an approximation of the original model (defined in the Mitsuba code example from [Belcour/Barla](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html) is used.
+
+```glsl
+vec3 iridescent_fresnel(outsideIOR, iridescenceIOR, baseF0, iridescenceThickness, cosTheta1) {
+    vec3 F_iridescence = vec3(0.0);
+
+    // Calculation of the iridescence Fresnel for the viewing angle theta1
+    ...
+
+    return F_iridescence;
+}
+```
+
+The cosine of the angle <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_1"> with which the thin-film layer is hit changes if a clearcoat layer is ontop. The new angle can be calculated using Snell's law:
+
+<img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\cos(\theta_1)%20=%20\sqrt{1-\left(\frac{\eta_0}{\eta_1}\right)^2\cdot\left(1-\cos^2(\theta)\right)}">
+
+with <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta"> being the original viewing angle, <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\eta_0"> the IOR of the surrounding matter (default is air with IOR of `1.0`) and <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\eta_1"> the IOR of the clearcoat layer (defaults to `1.5`)
+
+#### **Material Interfaces**
+
+The iridescence model defined by [Belcour/Barla](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html) models two material interfaces - one from the outside to the thin-film layer and another one from the thin-film to the base material. These two interfaces are defined as follows:
 
 ```glsl
 // First interface
@@ -167,16 +272,23 @@ float IorToFresnel0(float transmittedIor, float incidentIor) {
 }
 ```
 
-To calculate the reflectances `R12` and `R23` at the viewing angles `theta1` (angle hitting the thin-film layer) and `theta2` (angle after refraction in the thin-film) Schlick Fresnel is again used. This approximation allows to eliminate the split into S and P polarization for the exact Fresnel equations. 
+To calculate the reflectances `R12` and `R23` at the viewing angles <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_1"> (angle hitting the thin-film layer) and <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_2"> (angle after refraction in the thin-film) Schlick Fresnel is again used. This approximation allows to eliminate the split into S and P polarization for the exact Fresnel equations. 
 
-`theta2` can be calculated using Snell's law like:
+<img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_2"> can be calculated using Snell's law again:
 
 ```glsl
 float sinTheta2Sq = pow(outsideIOR / iridescenceIOR, 2.0) * (1.0 - pow(cosTheta1, 2.0));
-float cosTheta2 = sqrt(1.0 - sinTheta2Sq);
+float cosTheta2Sq = 1.0 - sinTheta2Sq;
+
+// Handle total internal reflection
+if (cosTheta2Sq < 0.0) {
+    return vec3(1.0);
+}
+
+float cosTheta2 = sqrt(cosTheta2Sq);
 ```
 
-### Phase Shift
+#### **Phase Shift**
 
 The phase shift is as follows:
 
@@ -188,7 +300,7 @@ and depends on the first-order optical path difference <img src="https://render.
 OPD = 2.0 * iridescenceIOR * iridescenceThickness * cosTheta1;
 ```
 
-`phi12` and `phi23` define the base phases per interface and are approximated with `0.0` if the IOR of the hit material (`iridescenceIOR` or `baseIOR`) is higher than the IOR of the previous material (`outsideIOR` or `iridescenceIOR`) and `M_PI` otherwise. Also here, polarization is ignored.
+`phi12` and `phi23` define the base phases per interface and are approximated with `0.0` if the IOR of the hit material (`iridescenceIOR` or `baseIOR`) is higher than the IOR of the previous material (`outsideIOR` or `iridescenceIOR`) and <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\displaystyle%20\pi"> otherwise. Also here, polarization is ignored.
 
 ```glsl
 // First interface
@@ -206,7 +318,7 @@ if (baseIOR[2] < iridescenceIOR) phi23[2] = M_PI;
 vec3 phi = vec3(phi21) + phi23;
 ```
 
-### Analytic Spectral Integration
+#### **Analytic Spectral Integration**
 
 Spectral integration is performed in the Fourier space. 
 
