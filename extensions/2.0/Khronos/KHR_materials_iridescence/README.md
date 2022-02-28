@@ -214,7 +214,7 @@ function luminance(color) {
 
 *This section is non-normative.*
 
-The calculation of `iridescent_fresnel(...)` is described in the following sections as GLSL code at the viewing angle <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_1">. For glTF an approximation of the original model (defined in the Mitsuba code example from [Belcour/Barla](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html) is used.
+The calculation of `iridescent_fresnel(...)` is described in the following sections as GLSL code at the viewing angle <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_1">. For glTF an approximation of the original model (defined in the Mitsuba code example from [Belcour/Barla](https://belcour.github.io/blog/research/publication/2017/05/01/brdf-thin-film.html)) is used.
 
 ```glsl
 vec3 iridescent_fresnel(outsideIOR, iridescenceIOR, baseF0, iridescenceThickness, cosTheta1) {
