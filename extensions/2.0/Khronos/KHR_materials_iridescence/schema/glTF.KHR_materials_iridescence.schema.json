@@ -20,7 +20,7 @@
         "iridescenceIOR": {
             "type": "number",
             "description": "The index of refraction of the dielectric thin-film layer.",
-            "default": 1.8,
+            "default": 1.3,
             "minimum": 1.0
         },
         "iridescenceThicknessMinimum": {
