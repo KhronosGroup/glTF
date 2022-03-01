@@ -190,23 +190,14 @@ function iridescent_dielectric_layer(iridescence_strength, iridescence_thickness
 }
 ```
 
-The base BRDF is weighted by the inverse of the perceived luminance value of the iridescence Fresnel color and then added with the specular iridescence BRDF:
+To ensure energy conservation, the base BRDF is weighted with the inverse of the maximum component value of the iridescence Fresnel color and then added with the specular iridescence BRDF:
 
 ```
 function iridescent_fresnel_mix(iridescence_fresnel, base, specular_brdf) {
-    // Get luminance value of iridescence fresnel color
-    iridescence_fresnel_lum = luminance(iridescence_fresnel)
+    // Get maximum component value of iridescence fresnel color
+    iridescence_fresnel_max = max(iridescence_fresnel.r, iridescence_fresnel.g, iridescence_fresnel.b)
 
-    return (1 - iridescene_fresnel_lum) * base + iridescence_fresnel * specular_brdf
-}
-```
-
-To calculate the luminance of a linear sRGB color, the following formula is used (see [Relative luminance](https://en.wikipedia.org/wiki/Relative_luminance)):
-
-```
-// Relative luminance for linear sRGB colors
-function luminance(color) {
-    return 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b
+    return (1 - iridescene_fresnel_max) * base + iridescence_fresnel * specular_brdf
 }
 ```
 
