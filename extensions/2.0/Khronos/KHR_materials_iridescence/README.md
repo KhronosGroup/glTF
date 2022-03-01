@@ -146,13 +146,7 @@ The `base_ior` can be changed using the [`KHR_materials_ior`](../KHR_materials_i
 
 ### Clearcoat
 
-Considering [`KHR_materials_clearcoat`](../KHR_materials_clearcoat) extension, the clearcoat layer is evaluated before the thin-film layer. This modifies the `outside_ior` value to the IOR of the clearcoat material (default: `1.5`).
-Light passing through the clearcoat is then processed as described taking into account differences in IOR.
-
-<figure style="padding: 10px;">
-<img width=40% src="./figures/layering.png"/>
-<figcaption><em>When adding clearcoat ontop of the material, the interface between the "outside" and the thin-film changes and the IOR of the clearcoat (usually 1.5) has to be used for the outside IOR.</em></figcaption>
-</figure>
+When adding a clearcoat ontop, an additional interface between the clearcoat and thin-film layer would be created. Due to simplicity and artistical friendlyness, this interface is ignored.
 
 ## Implementation Notes
 
@@ -218,12 +212,6 @@ vec3 iridescent_fresnel(outsideIOR, iridescenceIOR, baseF0, iridescenceThickness
 }
 ```
 
-The cosine of the angle <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_1"> with which the thin-film layer is hit changes if a clearcoat layer is ontop. The new angle can be calculated using Snell's law:
-
-<img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\cos(\theta_1)%20=%20\sqrt{1-\left(\frac{\eta_0}{\eta_1}\right)^2\cdot\left(1-\cos^2(\theta)\right)}">
-
-with <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta"> being the original viewing angle, <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\eta_0"> the IOR of the surrounding matter (default is air with IOR of `1.0`) and <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\eta_1"> the IOR of the clearcoat layer (defaults to `1.5`)
-
 #### **Material Interfaces**
 
 The iridescence model defined by [Belcour/Barla](#theory-documentation-and-implementations) models two material interfaces - one from the outside to the thin-film layer and another one from the thin-film to the base material. These two interfaces are defined as follows:
@@ -241,7 +229,7 @@ vec3 R1 = IorToFresnel0(baseIOR, iridescenceIOR);
 vec3 R23 = F_Schlick(R1, cosTheta2);
 ```
 
-`iridescenceIOR` is the index of refraction of the thin-film layer, `outsideIOR` the IOR outside the thin-film (e.g. air or the clearcoat material) and `baseIOR` the IOR of the base material. The latter is calculated from its F0 value using the inverse of the special normal incidence case of Fresnel's equations:
+`iridescenceIOR` is the index of refraction of the thin-film layer, `outsideIOR` the IOR outside the thin-film (usually air) and `baseIOR` the IOR of the base material. The latter is calculated from its F0 value using the inverse of the special normal incidence case of Fresnel's equations:
 
 ```glsl
 // Assume air interface for top
@@ -265,7 +253,9 @@ float IorToFresnel0(float transmittedIor, float incidentIor) {
 
 To calculate the reflectances `R12` and `R23` at the viewing angles <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_1"> (angle hitting the thin-film layer) and <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_2"> (angle after refraction in the thin-film) Schlick Fresnel is again used. This approximation allows to eliminate the split into S and P polarization for the exact Fresnel equations. 
 
-<img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_2"> can be calculated using Snell's law again:
+<img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_2"> can be calculated using Snell's law (with <img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\eta_1"> being `outsideIOR` and <img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\eta_2"> being `iridescenceIOR`):
+
+<img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\cos(\theta_2)%20=%20\sqrt{1-\left(\frac{\eta_1}{\eta_2}\right)^2\cdot\left(1-\cos^2(\theta_1)\right)}">
 
 ```glsl
 float sinTheta2Sq = pow(outsideIOR / iridescenceIOR, 2.0) * (1.0 - pow(cosTheta1, 2.0));
