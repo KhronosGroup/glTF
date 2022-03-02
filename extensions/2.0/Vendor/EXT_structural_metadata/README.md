@@ -28,16 +28,17 @@ Written against the glTF 2.0 specification.
 
 - [Overview](#overview)
 - [Schema Definitions](#schema-definitions)
-  - [Overview](#overview-3)
-  - [Schema](#schema)
-  - [Class](#class)
-  - [Class Property](#class-property)
-  - [Enum](#enum)
-  - [Enum Value](#enum-value)
+    - [Overview](#overview-1)
+    - [Schema](#schema)
+    - [Class](#class)
+    - [Class Property](#class-property)
+    - [Enum](#enum)
+    - [Enum Value](#enum-value)
 - [Metadata Storage](#metadata-storage)
   - [Property Tables](#property-tables)
   - [Property Attributes](#property-attributes)
   - [Property Textures](#property-textures)
+    - [Property Texture Data Storage](#property-texture-data-storage)
 - [Binary Data Storage](#binary-data-storage)
 - [Optional vs. Required](#optional-vs-required)
 - [Schema](#schema-1)
@@ -252,14 +253,14 @@ The property table may provide value arrays for only a subset of the properties 
 >         "count": 10,
 >         "properties": {
 >           "species": {
->             "bufferView": 2,
->             "stringOffsetBufferView": 3
+>             "values": 2,
+>             "stringOffsets": 3
 >           },
 >           "age": {
->             "bufferView": 1
+>             "values": 1
 >           },
 >           "height": {
->             "bufferView": 0
+>             "values": 0
 >           },
 >           // "diameter" is not required and has been omitted from this table.
 >         }
