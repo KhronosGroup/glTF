@@ -44,7 +44,9 @@ A **feature** is a conceptual object in a virtual environment. Similar concepts 
 
 Features are identified within a 3D asset by **Feature IDs**. A mesh primitive may specify multiple sets of feature IDs. These feature ID sets might (for example) identify features at different levels of abstraction: there may be feature IDs that identify individual buildings, and feature IDs that identify different parts of each building.
 
-Each feature ID set is defined as a set of values that are associated with the conceptual parts of the model. The definition of the feature ID set may include a `nullFeatureId`, which is a value that indicates that a certain part is not considered to be an identifiable object. The definition also includes a `featureCount` value, which is the number of unique features that are identified. 
+Each feature ID set is defined as a set of values that are associated with the conceptual parts of the model. The definition of the feature ID set may include a `nullFeatureId`, which is a value that indicates that a certain part is not considered to be an identifiable object. The definition also includes a `featureCount` value, which is the number of unique features that are identified.
+
+The feature ID set may may also include a `label`, and alphanumeric string used to identify feature ID sets across different glTF primitives.
 
 Feature IDs can be associated with parts of a model in one of three ways:
 
@@ -88,12 +90,10 @@ Per-vertex feature IDs can be used to identify individual objects that have been
 >       "mode": 4,
 >       "extensions": {
 >         "EXT_mesh_features": {
->           "featureIds": { 
->             "exampleRectangles" : {
->               "featureCount": 2,
->               "attribute": 0
->             } 
->           }
+>           "featureIds": [{
+>             "featureCount": 2,
+>             "attribute": 0
+>           }]
 >         }
 >       }
 >     }
@@ -123,16 +123,14 @@ Feature ID textures classify the pixels of an image into different features. Som
 >       "material": 0,
 >       "extensions": {
 >         "EXT_mesh_features": {
->           "featureIds": {
->             "buildingComponents" : {
->               "featureCount": 4,     
->               "texture" : {
->                 "index": 0, 
->                 "texCoord": 0, 
->                 "channels": [0]
->               }
->             } 
->           }
+>           "featureIds": [{
+>             "featureCount": 4,    
+>             "texture" : {
+>               "index": 0, 
+>               "texCoord": 0, 
+>               "channels": [0]
+>             }
+>           }]
 >         }
 >       }
 >     }
@@ -169,8 +167,8 @@ When combined with the `EXT_structural_metadata` extension, feature ID sets can 
 > // Primitive:
 > "extensions": {
 >   "EXT_mesh_features": {
->     "featureIds": { 
->       "firstFeatureId" : {
+>     "featureIds": [
+>       {
 >         "featureCount": 4,     
 >         "texture" : {
 >           "index": 0, 
@@ -179,12 +177,12 @@ When combined with the `EXT_structural_metadata` extension, feature ID sets can 
 >         }, 
 >         "propertyTable": 1
 >       },
->       "secondFeatureId": {
+>       {
 >         "featureCount": 2,
 >         "attribute": 0,
 >         "propertyTable": 0
->       } 
->     }
+>       }
+>     ]
 >   }
 > }
 > ```
