@@ -93,7 +93,7 @@ A schema may be embedded in the extension directly or referenced externally with
 
 Template for metadata entities. Classes provide a list of property definitions. Instances of a class can be created from property values that conform to the class's property definitions. 
 
-Classes are defined as entries in the `schema.classes` dictionary, indexed by an alphanumeric class ID.
+Classes are defined as entries in the `schema.classes` dictionary, indexed by class ID. Class IDs must be alphanumeric identifiers matching the regular expression `^[a-zA-Z_][a-zA-Z0-9_]*$`.
 
 > **Example:** A "Tree" class, which might describe a table of tree measurements taken in a park. Property definitions are abbreviated here, and introduced in the next section.
 >
@@ -126,7 +126,7 @@ Classes are defined as entries in the `schema.classes` dictionary, indexed by an
 
 Class properties are defined abstractly in a class. The class is instantiated with specific values conforming to these properties. Class properties support a richer variety of data types than glTF accessors or GPU shading languages allow. Details about the supported types can be found in the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#property).
 
-Class properties are defined as entries in the `class.properties` dictionary, indexed by an alphanumeric property ID. 
+Class properties are defined as entries in the `class.properties` dictionary, indexed by property ID. Property IDs must be alphanumeric identifiers matching the regular expression `^[a-zA-Z_][a-zA-Z0-9_]*$`.
 
 > **Example:** A "Tree" class, which might describe a table of tree measurements taken in a park. Properties include species, height, and diameter of each tree, as well as the number of birds observed in its branches.
 >
@@ -177,7 +177,7 @@ Class properties are defined as entries in the `class.properties` dictionary, in
 
 Set of categorical types, defined as `(name, value)` pairs. Enum properties use an enum as their type.
 
-Enums are defined as entries in the `schema.enums` dictionary, indexed by an alphanumeric enum ID.
+Enums are defined as entries in the `schema.enums` dictionary, indexed by an enum ID. Enum IDs must be alphanumeric identifiers matching the regular expression `^[a-zA-Z_][a-zA-Z0-9_]*$`.
 
 > **Example:** A "Species" enum defining types of trees. An "Unspecified" enum value is optional, but when provided as the `noData` value for a property (see: [3D Metadata → No Data Values](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#required-properties-and-no-data-values)) may be helpful to identify missing data.
 >
