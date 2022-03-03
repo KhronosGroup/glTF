@@ -31,9 +31,6 @@ In most realtime 3D contexts, performance requirements demand minimizing the num
 
 By defining a representation of conceptual objects ("features") distinct from rendered geometry, this extension allows applications to preserve important details of 3D assets for inspection and interaction without compromising runtime performance and draw calls.
 
-See [Examples](#examples) for a more detailed list of use cases for this extension.
-
-
 ### Features
 
 A **feature** is a conceptual object in a virtual environment. Similar concepts exist in various industries and domains. In Geographic Information Systems (GIS) a feature is an entity such as a point, polyline, or polygon that represents some element on a map. In another domain like CAD/BIM, a feature might be a component of a design model, such as a pipe. A feature could also be a 3D building in a city, a tree in a forest, a sample point in a weather model, or a patch of texels on a 3D asset.
@@ -201,18 +198,6 @@ Feature IDs may identify features for use in other extensions or in custom appli
 * [featureId.schema.json](./schema/featureId.schema.json)
 * [featureIdAttribute.schema.json](./schema/featureIdAttribute.schema.json)
 * [featureIdTexture.schema.json](./schema/featureIdTexture.schema.json)
-
-## Examples
-
-_This section is non-normative_
-
-The examples below show possible use cases for this extension.
-
-Example|Description|Image
---|--|--
-Triangle mesh|Feature IDs are assigned to each vertex to distinguish components of a building.|![Building Components](figures/feature-id-building-components.png)
-Multi-point features|A point cloud where groups of points that represent distinct components of the building receive the same feature ID|![Multi-point features](figures/feature-id-building-points.png)
-Material classification|A textured mesh using a feature ID texture to identify regions on the surface of the mesh as distinct features|![Material Classification](figures/feature-id-texture-ids.png)
 
 ## Revision History
 
