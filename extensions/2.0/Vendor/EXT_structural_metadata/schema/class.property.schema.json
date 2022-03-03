@@ -158,7 +158,7 @@
                     "$ref": "definitions.schema.json#/definitions/noDataValue"
                 }
             ],
-            "description": "A `noData` value represents missing data — also known as a sentinel value — wherever it appears. `BOOLEAN` properties may not specify `noData` values."
+            "description": "A `noData` value represents missing data — also known as a sentinel value — wherever it appears. `BOOLEAN` properties may not specify `noData` values. This is given as the plain property value, without the transforms from the `normalized`, `offset`, and `scale` properties."
         },
         "default": {
             "allOf": [
@@ -166,7 +166,7 @@
                     "$ref": "definitions.schema.json#/definitions/anyValue"
                 }
             ],
-            "description": "A default value to use when encountering a `noData` value or an omitted property."
+            "description": "A default value to use when encountering a `noData` value or an omitted property. The value is given in its final form, taking the effect of `normalized`, `offset`, and `scale` properties into account."
         },
         "semantic": {
             "type": "string",
