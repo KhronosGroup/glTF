@@ -119,7 +119,7 @@ metal_brdf =
     outside_ior = 1.0,
     base_f0 = baseColor,
     specular_brdf = specular_brdf(
-      α = roughness ^ 2)))
+      α = roughness ^ 2))
 ```
 
 ### Dielectric Base Material
