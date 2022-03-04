@@ -23,13 +23,17 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension is intended for implementations that targets a display with the goal of outputting at interactive framerates in either HDR or SDR in a physically correct manner.  
-The goal of this extension is to provide a way to convert the resulting (rendered) scene linear light output values to a known range {R,G,B} that can be output to the display.   
-This conversion shall be done so that hue (or chromaticity) is retained, the goal is to output the unadjusted pixel value calculated in the glTF BRDF.
+This extension is intended for implementations that targets a display with the goal of outputting at interactive framerates in either HDR or SDR in a physically correct manner.    
+The goal of this extension is to produce consistent, deterministic and physically correct output under varying light conditions.  
+It does so by specifying a way to map the resulting (rendered) scene linear light output values to a known range {R,G,B} that can be output to display.  
+This mapping shall be done so that hue (or chromaticity) is retained, meaning that the unadjusted color value calculated in the glTF BRDF shall be displayed.    
+It is important that different models that are using this extension can be viewed in the same scene, meaning that configuration of mapping is not possible.  
+
 Correct representation of hue is important in order to achieve a physically correct visualization and to retain original artistic intent.  
+One such important usecase is the 3D Commerce certification process.  
 
 Currently the glTF specification does not define how to output pixels.  
-This results in hue shift and white-out, due to clipping of pixel values as they are written to framebuffer.      
+This results in hue shift and white-out, due to clipping of pixel [RGB] values as they are written to framebuffer.      
 The result is not desirable when the goal is to display physically correct scenes.  
 
 <figure>
@@ -49,7 +53,7 @@ This extension does not declare user defined tone-mapping, s-curve, color lookup
 Another reason to provide means for deterministic brightness (light intensity) values is how the brain perceives brightness.
 According to research (Bernstein et al. 2018) the mind's perception of brightness is mostly the same, regardless of object brightness.  
 The difference in the perception of the object's brightness is based on background color.  
-This means that in order to have deterministic control of perceived brightness it is important to be able to control both object and background color, for instance by a set light contribution range.  
+In order to have deterministic control of perceived brightness it is important to be able to control both object and background color, for instance by a set light contribution range.  
 
 This extension also provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
 
@@ -96,13 +100,15 @@ provide forms suitable for critical viewing.`
 ### glTF asset considerations
 
 The extension affects the output of the entire glTF asset, all scenes and nodes, included in a file that is using this extension.
-This means that the current rendered scene shall be output using the displaymapping declared by this extension whenever the usecase is relevant - a renderer targeting a display at interactive framerates.    
+The current rendered scene shall be output using the displaymapping declared by this extension whenever the usecase is relevant, for instance a renderer targeting a display at interactive framerates.    
 
 Visualization of multiple glTF assets using this extension is supported and will produce a normative result.  
 
 If the glTF asset contains multiple scenes, each one when rendered, shall be output using this extension.  
 
-If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for displaymapping.  
+If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for displaymapping.    
+All nodes added to such scene shall use this extension.  
+
 
 ### Integration points
 
@@ -204,7 +210,7 @@ This does not have an impact on color texture sources since they define values a
 The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in the SMPTE ST 2084 transfer function.  
 
 When using this extension light contribution values shall be aligned to account for 10000 cd/m2 as max output value, meaning that the range {R,G,B} is 0 to 10000.  
-This means that content creators shall be aware of 10000 cd/m2 as the maximum value range.  
+Content creators shall be aware of 10000 cd/m2 as the maximum value range.  
 It does not mean that the display will be capable of outputing this light intensity.  
 
 
@@ -216,7 +222,7 @@ This section describes how a content creator and exporter shall handle lightsour
 As a content creator using this extension the light intensity value of 10 000 lumen / m2 shall be considered scene max intensity.  
 This will give the benefit of a known increased light range as well as providing enough fidelity for most usecases.  
 The below images show how light intensities roughly align with real world illumination.  
-
+[Taken from the \model folder](..\model)
 
 | Sunrise (400 lux) | Overcast (1500 lux) | Bright (5000 lux) | Sunny (10 000 lux) |
 |-----|-----|-------|------|
@@ -358,7 +364,7 @@ Pseudocode for BT.2100 reference OOTF
 `color`is in range [0.0 - 1.0]  
 
 ```
-BT_2100_OOTF(color, rangeExponent, gamma) {  
+vec3 BT_2100_OOTF(vec3 color, rangeExponent, gamma) {  
     if (color <= 0.0003024) {  
         nonlinear = 267.84 * color;  
     else {  
@@ -433,6 +439,11 @@ The `KHR_displaymapping_pq` extension is added to the root of the glTF.
 }
 
 ```
+
+
+## Test models
+
+Sample models for testing purposes are available in the `../models` directory.  
 
 ## References
 
