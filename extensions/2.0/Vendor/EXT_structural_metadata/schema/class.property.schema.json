@@ -121,7 +121,7 @@
                     "$ref": "definitions.schema.json#/definitions/numericValue"
                 }
             ],
-            "description": "An offset to apply to property values. Only applicable when the component type is `FLOAT32` or `FLOAT64`, or when the property is `normalized`."
+            "description": "An offset to apply to property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types when the component type is `FLOAT32` or `FLOAT64`, or when the property is `normalized`."
         },
         "scale": {
             "allOf": [
@@ -129,7 +129,7 @@
                     "$ref": "definitions.schema.json#/definitions/numericValue"
                 }
             ],
-            "description": "A scale to apply to property values. Only applicable when the component type is `FLOAT32` or `FLOAT64`, or when the property is `normalized`."
+            "description": "A scale to apply to property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types when the component type is `FLOAT32` or `FLOAT64`, or when the property is `normalized`."
         },
         "max": {
             "allOf": [
