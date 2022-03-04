@@ -12,8 +12,8 @@
     "properties": {
         "id": {
             "type": "string",
-            "minLength": 1,
-            "description": "Unique identifier for the schema."
+            "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+            "description": "Unique identifier for the schema. Schema IDs must be alphanumeric identifiers matching the regular expression `^[a-zA-Z_][a-zA-Z0-9_]*$`."
         },
         "name": {
             "type": "string",
