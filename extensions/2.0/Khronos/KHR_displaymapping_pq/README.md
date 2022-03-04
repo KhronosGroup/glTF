@@ -25,7 +25,8 @@ Written against the glTF 2.0 spec.
 
 This extension is intended for implementations that targets a display with the goal of outputting at interactive framerates in either HDR or SDR in a physically correct manner.    
 The goal of this extension is to produce consistent, deterministic and physically correct output under varying light conditions.  
-It does so by specifying a way to map the resulting (rendered) scene linear light output values to a known range {R,G,B} that can be output to display.  
+It does so by specifying a way to map the resulting (rendered) scene linear light output values to a known range {R,G,B} that can be output to display. Output units are declared as candela / m2  
+
 This mapping shall be done so that hue (or chromaticity) is retained, meaning that the unadjusted color value calculated in the glTF BRDF shall be displayed.    
 It is important that different models that are using this extension can be viewed in the same scene, meaning that configuration of mapping is not possible.  
 
