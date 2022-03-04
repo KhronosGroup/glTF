@@ -41,7 +41,9 @@ A **feature** is a conceptual object in a virtual environment. Similar concepts 
 
 Features are identified within a 3D asset by **Feature IDs**. A mesh primitive may specify multiple sets of feature IDs. These feature ID sets might (for example) identify features at different levels of abstraction: there may be feature IDs that identify individual buildings, and feature IDs that identify different parts of each building.
 
-Each feature ID set is defined as a set of values that are associated with the conceptual parts of the model. The definition of the feature ID set may include a `nullFeatureId`, which is a value that indicates that a certain part is not considered to be an identifiable object. The definition also includes a `featureCount` value, which is the number of unique features that are identified. 
+Each feature ID set is defined as a set of values that are associated with the conceptual parts of the model. The definition of the feature ID set may include a `nullFeatureId`, which is a value that indicates that a certain part is not considered to be an identifiable object. The definition also includes a `featureCount` value, which is the number of unique features that are identified.
+
+The feature ID set may also include a `label`, an alphanumeric string used to identify feature ID sets across different glTF primitives. Labels must match the regular expression `^[a-zA-Z_][a-zA-Z0-9_]*$`.
 
 Feature IDs can be associated with parts of a model in one of three ways:
 
@@ -85,12 +87,11 @@ Per-vertex feature IDs can be used to identify individual objects that have been
 >       "mode": 4,
 >       "extensions": {
 >         "EXT_mesh_features": {
->           "featureIds": { 
->             "exampleRectangles" : {
->               "featureCount": 2,
->               "attribute": 0
->             } 
->           }
+>           "featureIds": [{
+>             "featureCount": 2,
+>             "attribute": 0,
+>             "label": "buildings"
+>           }]
 >         }
 >       }
 >     }
@@ -104,7 +105,7 @@ Per-vertex feature IDs can be used to identify individual objects that have been
 
 Feature ID textures classify the pixels of an image into different features. Some use cases include image segmentation or marking regions on a map. Often per-texel feature IDs provide finer granularity than per-vertex feature IDs, as in the example below.
 
-> **Example:** A building facade, represented by a single quad. The primitive's `baseColorTexture` displays the visible appearance of the building, and its feature ID texture identifies regions of the quad (walls, door, roof, window) as distinct features. Both textures use the same texture coordinates, `TEXCOORD_0`, in this example.
+> **Example:** A building facade, represented by a single quad. The primitive's `baseColorTexture` displays the visible appearance of the building, and its feature ID texture identifies regions of the quad (door, roof, window) as distinct features. Texels assigned `nullFeatureId` do not belong to a feature. Both textures use the same texture coordinates, `TEXCOORD_0`, in this example.
 >
 > <img src="figures/feature-id-by-texture.png"  alt="Feature ID Texture" width="800">
 >
@@ -120,16 +121,15 @@ Feature ID textures classify the pixels of an image into different features. Som
 >       "material": 0,
 >       "extensions": {
 >         "EXT_mesh_features": {
->           "featureIds": {
->             "buildingComponents" : {
->               "featureCount": 4,     
->               "texture" : {
->                 "index": 0, 
->                 "texCoord": 0, 
->                 "channels": [0]
->               }
->             } 
->           }
+>           "featureIds": [{
+>             "featureCount": 3,    
+>             "texture" : {
+>               "index": 0, 
+>               "texCoord": 0, 
+>               "channels": [0]
+>             },
+>             "nullFeatureId": 0,
+>           }]
 >         }
 >       }
 >     }
@@ -166,8 +166,8 @@ When combined with the `EXT_structural_metadata` extension, feature ID sets can 
 > // Primitive:
 > "extensions": {
 >   "EXT_mesh_features": {
->     "featureIds": { 
->       "firstFeatureId" : {
+>     "featureIds": [
+>       {
 >         "featureCount": 4,     
 >         "texture" : {
 >           "index": 0, 
@@ -176,12 +176,12 @@ When combined with the `EXT_structural_metadata` extension, feature ID sets can 
 >         }, 
 >         "propertyTable": 1
 >       },
->       "secondFeatureId": {
+>       {
 >         "featureCount": 2,
 >         "attribute": 0,
 >         "propertyTable": 0
->       } 
->     }
+>       }
+>     ]
 >   }
 > }
 > ```

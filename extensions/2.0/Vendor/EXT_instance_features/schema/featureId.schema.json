@@ -3,7 +3,7 @@
     "$id": "featureId.schema.json",
     "title": "Feature ID in EXT_instance_features",
     "type": "object",
-    "description": "Feature IDs stored in a GPU mesh instanting attribute",
+    "description": "Feature IDs stored in a GPU mesh instancing attribute",
     "allOf": [
         {
             "$ref": "glTFProperty.schema.json"
@@ -20,6 +20,11 @@
             "minimum": 0,
             "description": "A value that indicates that no feature is associated with this instance."
         },
+        "label": {
+            "type": "string",
+            "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+            "description": "A label assigned to this feature ID set. Labels must be alphanumeric identifiers matching the regular expression `^[a-zA-Z_][a-zA-Z0-9_]*$`."
+        },
         "attribute": {
             "description": "An attribute containing feature IDs. When this is omitted, then the feature IDs are assigned to the GPU instances by their index.",
             "$ref": "featureIdAttribute.schema.json"
@@ -32,5 +37,7 @@
         "extensions": {},
         "extras": {}
     },
-    "required": ["featureCount"]
+    "required": [
+        "featureCount"
+    ]
 }

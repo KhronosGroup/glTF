@@ -50,12 +50,10 @@ When the feature ID definition does not refer to an instance attribute, then the
 >           },
 >         },
 >         "EXT_instance_features": {
->           "featureIds": {
->             "exampleFeatureId": {
->               "featureCount": 10,
->               "attribute": 0
->             }
->           }
+>           "featureIds": [{
+>             "featureCount": 10,
+>             "attribute": 0
+>           }]
 >         }
 >       }
 >     }

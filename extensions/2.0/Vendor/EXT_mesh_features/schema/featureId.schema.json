@@ -20,6 +20,11 @@
             "minimum": 0,
             "description": "A value that indicates that no feature is associated with this vertex or texel."
         },
+        "label": {
+            "type": "string",
+            "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+            "description": "A label assigned to this feature ID set. Labels must be alphanumeric identifiers matching the regular expression `^[a-zA-Z_][a-zA-Z0-9_]*$`."
+        },
         "attribute": {
             "description": "An attribute containing feature IDs. When `attribute` and `texture` are omitted the feature IDs are assigned to vertices by their index.",
             "$ref": "featureIdAttribute.schema.json"
