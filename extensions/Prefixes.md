@@ -47,6 +47,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `MOZ` | Mozilla Corporation | https://www.mozilla.org/ | [#1349](https://github.com/KhronosGroup/glTF/issues/1349) |
 | `MPEG` | The Moving Picture Experts Group | https://mpeg.chiariglione.org/standards/mpeg-i | [#1754](https://github.com/KhronosGroup/glTF/issues/1754) |
 | `MSFT` | Microsoft Corporation | https://www.microsoft.com/ | [#1164](https://github.com/KhronosGroup/glTF/pull/1164) |
+| `MX` | The Matrix.org Foundation | https://matrix.org/ | [#2126](https://github.com/KhronosGroup/glTF/issues/2126) |
 | `NV` | NVIDIA Corporation | https://www.nvidia.com | [#1211](https://github.com/KhronosGroup/glTF/issues/1211) |
 | `OFT` | OppenFuture Technologies | https://www.hololux.cn/en/ | [#1957](https://github.com/KhronosGroup/glTF/issues/1957) |
 | `OMI` | Open Metaverse Interoperability Group | https://github.com/omigroup/OMI | [#2003](https://github.com/KhronosGroup/glTF/issues/2003) |
@@ -61,6 +62,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `SI` | Smithsonian Institution | https://www.si.edu/ | [#1410](https://github.com/KhronosGroup/glTF/issues/1410) |
 | `SKFB` | Sketchfab, Inc. | https://sketchfab.com/ | [#1239](https://github.com/KhronosGroup/glTF/issues/1239) |
 | `SKYLINE` | Skyline Software Systems, Inc. | https://www.skylinesoft.com/ | [#1704](https://github.com/KhronosGroup/glTF/issues/1704) |
+| `SNAP` | Snap, Inc. | https://snap.com/ | [#2125](https://github.com/KhronosGroup/glTF/issues/2125) |
 | `SPECTRUM` | Spectrum | https://spectrumcustomizer.com/ | [#1804](https://github.com/KhronosGroup/glTF/issues/1804) |
 | `TRYON` | TRYON Technology Ltd. | https://tryon.technology | [#1785](https://github.com/KhronosGroup/glTF/issues/1785) |
 | `UX3D` | UX3D GmbH | https://ux3d.io/ | [#1896](https://github.com/KhronosGroup/glTF/pull/1896) |
