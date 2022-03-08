@@ -537,4 +537,4 @@ This extension is optional, meaning it should be placed in the `extensionsUsed` 
 
 ## Revision History
 
-The revision history of this extension can be found in the [common revision history of the 3D Tiles Next extensions](https://github.com/CesiumGS/3d-tiles/blob/extension-revisions/next/REVISION_HISTORY.md).
+The revision history of this extension can be found in the [common revision history of the 3D Tiles Next extensions](https://github.com/CesiumGS/3d-tiles/blob/main/next/REVISION_HISTORY.md).
