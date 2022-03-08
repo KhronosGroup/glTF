@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "schema.schema.json",
-    "title": "Schema in EXT_mesh_features",
+    "title": "Schema in EXT_structural_metadata",
     "type": "object",
     "description": "An object defining classes and enums.",
     "allOf": [
@@ -12,8 +12,8 @@
     "properties": {
         "id": {
             "type": "string",
-            "minLength": 1,
-            "description": "Unique identifier for the schema."
+            "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+            "description": "Unique identifier for the schema. Schema IDs must be alphanumeric identifiers matching the regular expression `^[a-zA-Z_][a-zA-Z0-9_]*$`."
         },
         "name": {
             "type": "string",
@@ -32,7 +32,7 @@
         },
         "classes": {
             "type": "object",
-            "description": "A dictionary, where each key is a class ID and each value is an object defining the class. Class IDs may contain only alphanumeric and underscore characters.",
+            "description": "A dictionary, where each key is a class ID and each value is an object defining the class. Class IDs must be alphanumeric identifiers matching the regular expression `^[a-zA-Z_][a-zA-Z0-9_]*$`.",
             "minProperties": 1,
             "additionalProperties": {
                 "$ref": "class.schema.json"
@@ -40,7 +40,7 @@
         },
         "enums": {
             "type": "object",
-            "description": "A dictionary, where each key is an enum ID and each value is an object defining the values for the enum. Enum IDs may contain only alphanumeric and underscore characters.",
+            "description": "A dictionary, where each key is an enum ID and each value is an object defining the values for the enum. Enum IDs must be alphanumeric identifiers matching the regular expression `^[a-zA-Z_][a-zA-Z0-9_]*$`.",
             "minProperties": 1,
             "additionalProperties": {
                 "$ref": "enum.schema.json"
@@ -48,5 +48,8 @@
         },
         "extensions": {},
         "extras": {}
-    }
+    },
+    "required": [
+        "id"
+    ]
 }

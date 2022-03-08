@@ -1,17 +1,15 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "propertyTexture.schema.json",
-    "title": "Property Texture in EXT_mesh_features",
+    "title": "Property Texture in EXT_structural_metadata",
     "type": "object",
-    "description": "Properties conforming to a class, organized as property values stored in texture channels.",
+    "description": "Properties conforming to a class, organized as property values stored in textures.",
     "allOf": [
         {
-            "$ref": "textureInfo.schema.json"
+            "$ref": "glTFProperty.schema.json"
         }
     ],
     "properties": {
-        "index": {},
-        "texCoord": {},
         "name": {
             "type": "string",
             "minLength": 1,
@@ -19,7 +17,7 @@
         },
         "class": {
             "type": "string",
-            "description": "The class this property texture conforms to. The value must be a class ID declared in the `classes` dictionary."
+            "description": "The class that property values conform to. The value must be a class ID declared in the `classes` dictionary."
         },
         "properties": {
             "type": "object",
