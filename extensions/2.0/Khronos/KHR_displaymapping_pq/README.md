@@ -354,7 +354,7 @@ E {R, G, B} is the linear scene light value.
 Passed to the OOTF these values shall be in the range [0.0 - 1.0]  
 
 Where the rangeExtension and gamma values shall be set according to HDR or SDR display.  
-Note that if the target framebuffer is of a format that uses the sRGB transfer function, the gamma value may be excluded from the OOTF calculation.  
+
 
 ```
 HDR
@@ -380,29 +380,21 @@ Pseudocode for BT.2100 reference OOTF
 `color`is in range [0.0 - 1.0]  
 
 ```
+//Note the BT 2100 specification includes a check for [RGB] values <= 0.0003024
+//if (color <= 0.0003024)
+//        return 100 * pow(267.84 * color, gamma);
+// This can be skipped unless it is known that display has a precision at low brightness levels to match
 vec3 BT_2100_OOTF(vec3 color, rangeExponent, gamma) {  
-    if (color <= 0.0003024) {  
-        nonlinear = 267.84 * color;  
-    else {  
-        nonlinear = 1.099 * pow(rangeExponent * color, 0.45) - 0.099;  
-    }  
+    nonlinear = 1.099 * pow(rangeExponent * color, 0.45) - 0.099;  
     return 100 * pow(nonlinear, gamma);
 }  
 
 vec3 color = apertureAjustedColor
-//If framebuffer uses sRGB transfer function the gamma does not need to be applied here
-if (framebufferFormat is sRGB) {
-    color = BT_2100(color, rangeExponent, 1)
-} else {
-    color = BT_2100(color, rangeExponent, gamma)
-}
-
+color = BT_2100(color, rangeExponent, gamma)
 
 ```
 
 Where this is calculated per RGB component, note that the color value in this equation must be in range 0.0 - 1.0
-It may be estimated that the display will not have the ability to output dark levels in the region of 0.0003024 in which case implementations may ignore that condition and use the same operator for the whole range 0.0 - 1.0  
-
 
 ## Perceptual Quantizer - reference OETF
 
@@ -444,13 +436,17 @@ BT_2100_OETF(vec3 color) {
 
 ## Defining an asset to use KHR_displaymapping_pq
 
-The `KHR_displaymapping_pq` extension is added to the root of the glTF.  
+The `KHR_displaymapping_pq` extension is added to the root of the glTF, the extension has no configurable parameters.    
+Declare using `extensionsRequired` if required by usecase.  
+When declared using `extensionsUsed` keep in mind that the viewer or renderer may disregard the extension and output may not be as expected.   
 
 ```json
 {
+  "extensionsRequired": [
+    "KHR_displaymapping_pq"
+  ],
   "extensions": {
-    "KHR_displaymapping_pq" : {
-    }
+    "KHR_displaymapping_pq" : {}
   }
 }
 
