@@ -6,12 +6,9 @@
         "gltf.clearcolor": "0.9,0.9,0.9,0"
     }
   },
-  "extensionsUsed": [
+  "extensionsRequired": [
     "KHR_lights_punctual",
     "KHR_displaymapping_pq"
-  ],
-  "extensionsRequired": [
-    "KHR_lights_punctual"
   ],
   "extensions": {
     "KHR_lights_punctual": {
@@ -24,10 +21,11 @@
           ],
           "intensity": 10000,
           "type": "directional",
-          "name": "Sun"
+          "name": "Mostly sunny 10000 lumen / m2"
         }
       ]
-    }
+    },
+    "KHR_displaymapping_pq": {}
   },
   "scene": 0,
   "scenes": [

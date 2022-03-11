@@ -3,31 +3,29 @@
     "generator": "Khronos glTF Blender I/O v1.6.16",
     "version": "2.0",
     "extras": {
-        "gltf.clearcolor": "0.7,0.7,0.7,0"
+        "gltf.clearcolor": "0.9,0.9,0.9,0"
     }
   },
-  "extensionsUsed": [
+  "extensionsRequired": [
     "KHR_lights_punctual",
     "KHR_displaymapping_pq"
-  ],
-  "extensionsRequired": [
-    "KHR_lights_punctual"
   ],
   "extensions": {
     "KHR_lights_punctual": {
       "lights": [
         {
           "color": [
-            1.0,
-            1.0,
-            0.8
+            1,
+            0.9,
+            0.2
           ],
           "intensity": 100000,
           "type": "directional",
-          "name": "Sun"
+          "name": "Direct sunlight, close to max brightness"
         }
       ]
-    }
+    },
+    "KHR_displaymapping_pq": {}
   },
   "scene": 0,
   "scenes": [

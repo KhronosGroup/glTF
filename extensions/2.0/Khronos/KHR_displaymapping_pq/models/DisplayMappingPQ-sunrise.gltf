@@ -6,28 +6,26 @@
         "gltf.clearcolor": "0.1,0.1,0.1,0"
     }
   },
-  "extensionsUsed": [
+  "extensionsRequired": [
     "KHR_lights_punctual",
     "KHR_displaymapping_pq"
-  ],
-  "extensionsRequired": [
-    "KHR_lights_punctual"
   ],
   "extensions": {
     "KHR_lights_punctual": {
       "lights": [
         {
           "color": [
-            0.7,
-            0.7,
+            1,
+            1,
             1
           ],
           "intensity": 400,
           "type": "directional",
-          "name": "Sun"
+          "name": "Sunrise 400 lumen / m2"
         }
       ]
-    }
+    },
+    "KHR_displaymapping_pq": {}
   },
   "scene": 0,
   "scenes": [
