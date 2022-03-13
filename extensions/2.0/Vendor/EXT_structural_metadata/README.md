@@ -38,7 +38,6 @@ Written against the glTF 2.0 specification.
   - [Property Tables](#property-tables)
   - [Property Attributes](#property-attributes)
   - [Property Textures](#property-textures)
-    - [Property Texture Data Storage](#property-texture-data-storage)
 - [Binary Data Storage](#binary-data-storage)
 - [Optional vs. Required](#optional-vs-required)
 - [Schema](#schema-1)
@@ -75,7 +74,7 @@ A schema may be embedded in the extension directly or referenced externally with
 >   "extensions": {
 >     "EXT_structural_metadata": {
 >       "schema": {
->         "id": "schema-001",
+>         "id": "schema_001",
 >         "name": "Schema 001",
 >         "description": "An example schema.",
 >         "version": "3.5.1",
@@ -179,7 +178,7 @@ Set of categorical types, defined as `(name, value)` pairs. Enum properties use 
 
 Enums are defined as entries in the `schema.enums` dictionary, indexed by an enum ID. Enum IDs must be alphanumeric identifiers matching the regular expression `^[a-zA-Z_][a-zA-Z0-9_]*$`.
 
-> **Example:** A "Species" enum defining types of trees. An "Unspecified" enum value is optional, but when provided as the `noData` value for a property (see: [3D Metadata → No Data Values](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#required-properties-and-no-data-values)) may be helpful to identify missing data.
+> **Example:** A "Species" enum defining types of trees. An "Unspecified" enum value is optional, but when provided as the `noData` value for a property (see: [3D Metadata → No Data Values](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#required-properties-no-data-values-and-default-values)) may be helpful to identify missing data.
 >
 > ```jsonc
 > {
@@ -218,12 +217,12 @@ Enum values are defined as entries in the `enum.values` array. Duplicate names o
 The classes defined in the schema are templates describing the data types and meanings of properties. An instance of such a metadata class is referred to as a _metadata entity_, and can be created from a set of values that conform to the structure of the class. This extension defines different ways of storing large amounts of property values inside a glTF asset, in compact binary forms: 
 
 - **Property Tables** store property values as parallel arrays in a column-based binary layout, using standard glTF buffer views. These tables can be accessed with a row index, and allow associating complex, structured metadata with arbitrary types with entities of a glTF asset on different levels of granularity.
-- **Property Attributes** are a way of storing metadata as vertex attributes, using standard glTF accessors. They can be used to associate certain forms of metadata with vertices of a mesh primitive. 
+- **Property Attributes** associate vertex attributes of a mesh primitive with a particular metadata class. 
 - **Property Textures** store property values in channels of a texture, suitable for very high-frequency data mapped to less-detailed 3D surfaces. 
 
-The following sections describe these storage formats in more detail.
+Each storage type refers to a metadata class, and contains a dictionary of `properties`. Each of these properties corresponds to one property of the metadata class and defines how the actual property data is stored. These property storage definitions may override the [`minimum` and `maximum` values](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#minimum-and-maximum-values) and the [`offset` and `scale`](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#offset-and-scale) from the property definition in the class, to account for the actual range of values that is stored for each property.
 
-Each storage type refers to a metadata class, and contains a dictionary of `properties`. Each of these properties corresponds to one property of the metadata class. Each of these properties define the way how the actual property data is stored. These property storage definitions allow to override the [`minimum` and `maximum` values](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#minimum-and-maximum-values) and the [`offset` and `scale`](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#offset-and-scale) from the property definition in the class, to account for the actual range of values that is stored for each property.
+The following sections describe these storage formats in more detail.
 
 ### Property Tables
 
@@ -253,14 +252,13 @@ The property table may provide value arrays for only a subset of the properties 
 >         "count": 10,
 >         "properties": {
 >           "species": {
->             "values": 2,
->             "stringOffsets": 3
+>             "values": 0,
 >           },
 >           "age": {
 >             "values": 1
 >           },
 >           "height": {
->             "values": 0
+>             "values": 2
 >           },
 >           // "diameter" is not required and has been omitted from this table.
 >         }
@@ -272,7 +270,7 @@ The property table may provide value arrays for only a subset of the properties 
 
 Property arrays are stored in glTF buffer views and use the binary encoding defined in the [Binary Table Format](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#binary-table-format) section of the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata).
 
-As in the core glTF specification, values of NaN, +Infinity, and -Infinity are never allowed.
+As in the core glTF specification, values of `NaN`, `+Infinity`, and `-Infinity` are never allowed.
 
 Each buffer view `byteOffset` must be aligned to a multiple of its component size.
 
@@ -282,7 +280,7 @@ Each buffer view `byteOffset` must be aligned to a multiple of its component siz
 
 *Defined in [propertyAttribute.schema.json](./schema/propertyAttribute.schema.json).*
 
-Property attributes provide a mechanism to store property values for each vertex of a mesh primitive directly as vertex attributes. They refer to a certain class from the schema definition, via their `class` property, and contain a `properties` dictionary that defines a set of properties that conform to this class. Each property refers to an attribute that may be stored in a mesh primitive. 
+Property attributes associate vertex attributes of a mesh primitive with a metadata class. They refer to a certain class from the schema definition via their `class` property, and contain a `properties` dictionary that defines a set of properties that conform to this class. Each property refers to an attribute that may be stored in a mesh primitive. 
 
 The property types that are supported via property attributes are therefore restricted to the types that are supported by standard glTF accessors. These types are a strict subset of the types that are supported with the schema definitions in this extension.
 
@@ -485,6 +483,7 @@ Texture filtering must be `9728` (NEAREST), `9729` (LINEAR), or undefined, for a
 >   ]
 > }
 
+<!-- omit in toc -->
 #### Property Texture Data Storage
 
 Multiple channels of a property texture can be used to represent individual bytes of larger data types. The values from the selected channels represent the bytes of the actual property value, in little-endian order.
@@ -502,8 +501,8 @@ Certain property types cannot be encoded in property textures. For example, vari
 > uint8 byte1 = rgba[channels[1]];
 > uint8 byte2 = rgba[channels[2]];
 > uint8 byte3 = rgba[channels[3]];
-> int32 rawBits = byte0 | (byte1 << 8) | (byte2 << 16) | (byte3 << 24);
-> float32 value = intBitsToFloat(rawBits);
+> uint32 rawBits = byte0 | (byte1 << 8) | (byte2 << 16) | (byte3 << 24);
+> float32 value = uintBitsToFloat(rawBits);
 > ```
 > 
 > If a property has the type `VEC2` with `UIN16` components, or an array with a fixed length of 2 and `UINT16` components, then the respective property can be represented with 4 channels as well:
