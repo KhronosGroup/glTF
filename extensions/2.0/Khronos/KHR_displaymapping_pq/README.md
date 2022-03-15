@@ -24,18 +24,26 @@ Written against the glTF 2.0 spec.
 ## Overview
 
 This extension is intended for implementations that targets a display with the goal of outputting at interactive framerates in either HDR or SDR in a physically correct manner.    
-The goal of this extension is to produce consistent, deterministic and physically correct output under varying light conditions.  
-It does so by specifying a way to map the resulting (rendered) scene linear light output values to a known range {R,G,B} that can be output to display. Output units are declared as candela / m2  
+Here the term physically correct refers to the calculations of the linear scene light values and the amount of that light that would reach the photoreceptor cells of a human observer (in the scene).  
 
-This mapping shall be done so that hue (or chromaticity) is retained, meaning that the unadjusted color value calculated in the glTF BRDF shall be displayed.    
-It is important that different models that are using this extension can be viewed in the same scene, meaning that configuration of mapping is not possible.  
+This extension aims to:  
+Produce consistent, deterministic and physically correct output under varying light conditions - here called expected output. 
+Produce expected output of a glTF model (nodes) when put into a scene with defined lights.  
+Produce expected output of a scene when the light conditions are dynamically changed.  
+Produce expected output of multiple glTF models (nodes) that are combined into one scene.  
 
-Correct representation of hue is important in order to achieve a physically correct visualization and to retain original artistic intent.  
-One such important usecase is the 3D Commerce certification process.  
+This is done by specifying a way to map or quantize the resulting (rendered) scene linear light output values to a known range of{R,G,B} values that can be output to display.  
+This mapping shall be done so that hue (or chromaticity) is retained in the displayed image.   
+Output units are declared as candela / m2  
+
+Correct output of hue is important in order to achieve a physically correct visualization and to retain original artistic intent.  
+One such important usecase is 3D Commerce and the certification process.  
 
 Currently the glTF specification does not define how to output pixels.  
-This results in hue shift and white-out, due to clipping of pixel [RGB] values as they are written to framebuffer.      
-The result is not desirable when the goal is to display physically correct scenes.  
+This results in hue shift and white-out, due to clipping of pixel [RGB] values when written to framebuffer,  not desirable when the goal is to achieve physically correct output.   
+
+Below is a scene with test spheres, lit with one directional light with intensity of 100 lumen/m2.  
+As can be seen, not much of the surface properties are present in the output. [RGB] values are clipped resulting in hue-shift and white-out.  
 
 <figure>
 <img src="./images/SampleViewer-100.png"/>
@@ -45,18 +53,18 @@ Notice how colors have been clipped and changed hue</em></figcaption>
 
 
 This extension sets out standardize the output from such a scene in a way that the result is predictable and retains hue.    
-The intended use-case for this extension is when light contribution values are expected to go above 1.0 and the output values shall be mapped to an output range {R,G,B} that retains hue.  
-
 When using this extension it is recommended that the light intensity is kept between 0 and 10 000 lumen/m2 in order to utilize the range of the Perceptual Quantizer.  
 
 This extension does not declare user defined tone-mapping, s-curve, color lookup table (LUT) or similar as the process of applying these may be non pysically based and alter the energy conserving nature of the glTF BRDF.  
+It is important that different models that are using this extension can be viewed in the same scene, meaning that configuration of mapping is not possible.  
 
-Another reason to provide means for deterministic brightness (light intensity) values is how the brain perceives brightness.
+Another reason to provide means for deterministic brightness (light intensity) values is how the human brain perceives brightness.
 According to research (Bernstein et al. 2018) the mind's perception of brightness is mostly the same, regardless of object brightness.  
 The difference in the perception of the object's brightness is based on background color.  
-In order to have deterministic control of perceived brightness it is important to be able to control both object and background color, for instance by a set light contribution range.  
+This extension does not seek to model the psychological perception of the human vision system, instead it provides means to reproduce the scene light information as it would be 'captured' by a human observer (in the scene).  
+To accurately do this it is necessary to retain the physically correct contrast of all parts of the output scene.  
 
-This extension also provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
+This extension provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
 
 Here the term renderer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
 This buffer will be referred to as the framebuffer.  
@@ -80,13 +88,10 @@ No clipping of color values, no change in hue.</em></figcaption>
 Why not use a standard such as ACES (Acadamy Color Encoding Specification)?
 
 While the ACES does a very good job of defining how to capture, encode and process image data in a movie type of usecase -   
-it does more than what is needed by this extension.  
-ACES could potentially fit in an extension that has the purpose of defining a camera capture, image process and movie display usecase.  
-However, for the usecase of this extension it is considered to add more functionality and complexity than is needed.    
-This extension is similar to what is defined in the ACES `Output Device Transform` (ODT) which is a sub-step of the ACES 'Output Transform'    
-Please not that the ACES Output Transform is explicitly not neutral in its appearance.  
+it does much more than what is needed by this extension.  
 
-In the field of tone-mapping ACES is sometimes referred to, however the specification is much broader than just a tone-mapping operator.  
+This extension is similar to what is defined in the ACES `Output Device Transform` (ODT) which is a sub-step of the ACES 'Output Transform'    
+Please not that the ACES Output Transform is explicitly not neutral in its appearance, making it unsuable in an output that must retain physical correctness.  
 
 [Good explanation of ACES](https://chrisbrejon.com/cg-cinematography/chapter-1-5-academy-color-encoding-system-aces/)
 
@@ -107,7 +112,8 @@ Visualization of multiple glTF assets using this extension is supported and will
 
 If the glTF asset contains multiple scenes, each one when rendered, shall be output using this extension.  
 
-If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for displaymapping.    
+If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for displaymapping.  
+This could for instance be a 'Main product' type of scenario, where the asset contains the light setup and uses this extension.    
 All nodes added to such scene shall use this extension.  
 
 
@@ -128,8 +134,8 @@ If the display type is considered to be HDR (compatible with ITU BT.2020 color p
 The following steps shall be performed before outputing the calculated pixel value (scene linear light).    
 This would normally be done in the fragment shader.  
 
-3: Scene aperture  
-Scene linear light (normally fragment shader output value) pixel value shall be adjusted to get scaled scene linear light, [see scene aperture](#scene-aperture)      
+3: Scene aperture factor  
+Scene linear light (normally fragment shader output value) pixel value shall be adjusted to get scaled scene linear light.        
 The output from scene aperture calculations shall be used in the next step.  
 [See Scene aperture](#scene-aperture)  
 
@@ -292,23 +298,32 @@ This function is a way to avoid having too high scene brightess, that would resu
 
 **Implementation Notes**
 
-pseudocode for scene aperture calculation, this shall be performed before the reference OOTF.  
-Meaning that the resulting `color` parameter shall be passed to BT_2100_OOTF.  
+pseudocode for scene aperture calculation, this may be performed at beginning of each frame and passing the factor as a uniform.   
 
 Where `lightIn` is the max scene or frame light contribution, ie the scene max intensity value.  
 
 `lightIn = max(max(light.r, light.g), light.b)`  
-
 `float maxComponent = 10000`  
 
+Once per frame, calculate aperture 'factor' and pass to shader as uniform.  
+
 ```
-vec3 aperture(float lightIn, vec3 colorIn) {
+float aperture(float lightIn) {
 	float value = min(lightIn, maxComponent) 
 	float factor = value / lightIn
-	return colorIn * factor
+	return factor;
 }	
 
-vec3 apertureAdjustedColor = aperture(lightIn, color)
+float factor = aperture(lightIn);
+
+```
+
+Fragment shader code performed before passing apertureAdjustedColor BT_2100_OOTF.
+
+```
+uniform float factor;
+
+vec3 apertureAdjustedColor = color * `factor`
 
 ```
 
@@ -339,7 +354,7 @@ E {R, G, B} is the linear scene light value.
 Passed to the OOTF these values shall be in the range [0.0 - 1.0]  
 
 Where the rangeExtension and gamma values shall be set according to HDR or SDR display.  
-Note that if the target framebuffer is of a format that uses the sRGB transfer function, the gamma value may be excluded from the OOTF calculation.  
+
 
 ```
 HDR
@@ -365,29 +380,21 @@ Pseudocode for BT.2100 reference OOTF
 `color`is in range [0.0 - 1.0]  
 
 ```
+//Note the BT 2100 specification includes a check for [RGB] values <= 0.0003024
+//if (color <= 0.0003024)
+//        return 100 * pow(267.84 * color, gamma);
+// This can be skipped unless it is known that display has a precision at low brightness levels to match
 vec3 BT_2100_OOTF(vec3 color, rangeExponent, gamma) {  
-    if (color <= 0.0003024) {  
-        nonlinear = 267.84 * color;  
-    else {  
-        nonlinear = 1.099 * pow(rangeExponent * color, 0.45) - 0.099;  
-    }  
+    nonlinear = 1.099 * pow(rangeExponent * color, 0.45) - 0.099;  
     return 100 * pow(nonlinear, gamma);
 }  
 
 vec3 color = apertureAjustedColor
-//If framebuffer uses sRGB transfer function the gamma does not need to be applied here
-if (framebufferFormat is sRGB) {
-    color = BT_2100(color, rangeExponent, 1)
-} else {
-    color = BT_2100(color, rangeExponent, gamma)
-}
-
+color = BT_2100(color, rangeExponent, gamma)
 
 ```
 
 Where this is calculated per RGB component, note that the color value in this equation must be in range 0.0 - 1.0
-It may be estimated that the display will not have the ability to output dark levels in the region of 0.0003024 in which case implementations may ignore that condition and use the same operator for the whole range 0.0 - 1.0  
-
 
 ## Perceptual Quantizer - reference OETF
 
@@ -429,13 +436,17 @@ BT_2100_OETF(vec3 color) {
 
 ## Defining an asset to use KHR_displaymapping_pq
 
-The `KHR_displaymapping_pq` extension is added to the root of the glTF.  
+The `KHR_displaymapping_pq` extension is added to the root of the glTF, the extension has no configurable parameters.    
+Declare using `extensionsRequired` if required by usecase.  
+When declared using `extensionsUsed` keep in mind that the viewer or renderer may disregard the extension and output may not be as expected.   
 
 ```json
 {
+  "extensionsRequired": [
+    "KHR_displaymapping_pq"
+  ],
   "extensions": {
-    "KHR_displaymapping_pq" : {
-    }
+    "KHR_displaymapping_pq" : {}
   }
 }
 

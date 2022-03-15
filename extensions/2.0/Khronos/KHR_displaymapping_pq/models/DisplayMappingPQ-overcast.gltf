@@ -11,6 +11,8 @@
     "KHR_displaymapping_pq"
   ],
   "extensions": {
+    "KHR_displaymapping_pq" : {
+    },
     "KHR_lights_punctual": {
       "lights": [
         {
