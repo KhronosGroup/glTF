@@ -7,7 +7,7 @@
    viewBox="0 0 210 297"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   inkscape:version="1.1.2 (76b9e6a115, 2022-02-25)"
    sodipodi:docname="property-table.svg"
    inkscape:export-filename="property-table.png"
    inkscape:export-xdpi="189.7816"
@@ -26,13 +26,13 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="in"
      showgrid="true"
-     inkscape:zoom="3.7946873"
-     inkscape:cx="143.35832"
-     inkscape:cy="117.13745"
-     inkscape:window-width="1920"
-     inkscape:window-height="1137"
-     inkscape:window-x="-8"
-     inkscape:window-y="-2"
+     inkscape:zoom="1.3416246"
+     inkscape:cx="-512.06576"
+     inkscape:cy="122.98523"
+     inkscape:window-width="3840"
+     inkscape:window-height="2111"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1">
     <inkscape:grid
@@ -65,7 +65,7 @@
      id="layer1">
     <g
        id="g129753-4-6"
-       transform="matrix(0.16186867,0,0,0.16186867,-50.779057,-253.23825)"
+       transform="matrix(0.16186867,0,0,0.16186867,-50.779057,-269.11335)"
        style="display:inline;stroke-width:1.74353">
       <path
          sodipodi:nodetypes="ccccccssscccccccccccccssccccccc"
@@ -118,7 +118,7 @@
     </g>
     <g
        id="g129757-5"
-       transform="matrix(0.26221868,0,0,0.26221868,-115.22041,-448.85711)"
+       transform="matrix(0.26221868,0,0,0.26221868,-115.22041,-464.73221)"
        style="display:inline;stroke-width:1.07629">
       <path
          sodipodi:nodetypes="ccccccccccccccc"
@@ -139,10 +139,10 @@
        width="13.96999"
        height="13.969997"
        x="49.529984"
-       y="24.638006" />
+       y="8.7630053" />
     <g
        id="g129743"
-       transform="matrix(0.32517089,0,0,0.32517089,-197.85972,-545.1317)"
+       transform="matrix(0.32517089,0,0,0.32517089,-197.85972,-561.0068)"
        style="display:inline;stroke-width:0.86792">
       <path
          sodipodi:nodetypes="ccccccccccccccc"
@@ -159,7 +159,7 @@
     </g>
     <g
        id="g129743-0"
-       transform="matrix(0.44105392,0,0,0.44105392,-235.96661,-751.73503)"
+       transform="matrix(0.44105392,0,0,0.44105392,-235.96661,-767.61013)"
        style="display:inline;stroke-width:0.639882">
       <path
          sodipodi:nodetypes="ccccccccccccccc"
@@ -176,7 +176,7 @@
     </g>
     <g
        id="g129757"
-       transform="matrix(0.26221868,0,0,0.26221868,-144.43041,-450.12711)"
+       transform="matrix(0.26221868,0,0,0.26221868,-144.43041,-466.00221)"
        style="display:inline;stroke-width:1.07629">
       <path
          sodipodi:nodetypes="ccccccccccccccc"
@@ -193,7 +193,7 @@
     </g>
     <g
        id="g129753"
-       transform="matrix(0.35856765,0,0,0.35856765,-225.99724,-604.48626)"
+       transform="matrix(0.35856765,0,0,0.35856765,-225.99724,-620.36136)"
        style="display:inline;stroke-width:0.787082">
       <path
          sodipodi:nodetypes="ccccccssscccccccccccccssccccccc"
@@ -246,7 +246,7 @@
     </g>
     <g
        id="g129753-4"
-       transform="matrix(0.27860853,0,0,0.27860853,-158.01916,-462.79197)"
+       transform="matrix(0.27860853,0,0,0.27860853,-158.01916,-478.66707)"
        style="display:inline;stroke-width:1.01297">
       <path
          sodipodi:nodetypes="ccccccssscccccccccccccssccccccc"
@@ -299,7 +299,7 @@
     </g>
     <g
        id="g129753-0"
-       transform="matrix(0.25241662,0,0,0.25241662,-134.23664,-417.21582)"
+       transform="matrix(0.25241662,0,0,0.25241662,-134.23664,-433.09092)"
        style="display:inline;stroke-width:1.11808">
       <path
          sodipodi:nodetypes="ccccccssscccccccccccccssccccccc"
@@ -354,93 +354,93 @@
        xml:space="preserve"
        style="font-size:3.52778px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;display:inline;stroke-width:0.264583"
        x="3.3539546"
-       y="41.626549"
+       y="25.751534"
        id="text319676-5-3"><tspan
          sodipodi:role="line"
          id="tspan319674-9-9"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold';stroke-width:0.264583"
          x="3.3539546"
-         y="41.626549">ID:</tspan></text>
+         y="25.751534">ID:</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:3.52778px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;display:inline;stroke-width:0.264583"
        x="9.6045055"
-       y="41.647907"
+       y="25.772892"
        id="text319676-9"><tspan
          sodipodi:role="line"
          id="tspan319674-4"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold';stroke-width:0.264583"
          x="9.6045055"
-         y="41.647907">0</tspan></text>
+         y="25.772892">0</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:3.52778px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;display:inline;stroke-width:0.264583"
        x="18.153103"
-       y="41.772621"
+       y="25.897606"
        id="text319676-6-4"><tspan
          sodipodi:role="line"
          id="tspan319674-6-6"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold';stroke-width:0.264583"
          x="18.153103"
-         y="41.772621">1</tspan></text>
+         y="25.897606">1</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:3.52778px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;display:inline;stroke-width:0.264583"
        x="25.121853"
-       y="41.792149"
+       y="25.917133"
        id="text319676-1-4"><tspan
          sodipodi:role="line"
          id="tspan319674-0-6"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold';stroke-width:0.264583"
          x="25.121853"
-         y="41.792149">2</tspan></text>
+         y="25.917133">2</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:3.52778px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;display:inline;stroke-width:0.264583"
        x="31.471859"
-       y="41.792149"
+       y="25.917133"
        id="text319676-1-4-7"><tspan
          sodipodi:role="line"
          id="tspan319674-0-6-3"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold';stroke-width:0.264583"
          x="31.471859"
-         y="41.792149">3</tspan></text>
+         y="25.917133">3</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:3.52778px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;display:inline;stroke-width:0.264583"
        x="37.493141"
-       y="41.827011"
+       y="25.951996"
        id="text319676-1-4-5"><tspan
          sodipodi:role="line"
          id="tspan319674-0-6-6"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold';stroke-width:0.264583"
          x="37.493141"
-         y="41.827011">4</tspan></text>
+         y="25.951996">4</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:3.52778px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;display:inline;stroke-width:0.264583"
        x="45.511566"
-       y="41.737373"
+       y="25.862358"
        id="text319676-1-4-1"><tspan
          sodipodi:role="line"
          id="tspan319674-0-6-2"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold';stroke-width:0.264583"
          x="45.511566"
-         y="41.737373">5</tspan></text>
+         y="25.862358">5</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:3.52778px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;display:inline;stroke-width:0.264583"
        x="53.515045"
-       y="40.880768"
+       y="25.005753"
        id="text319676-1-4-1-2"><tspan
          sodipodi:role="line"
          id="tspan319674-0-6-2-3"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Courier New';-inkscape-font-specification:'Courier New Bold';stroke-width:0.264583"
          x="53.515045"
-         y="40.880768">...</tspan></text>
+         y="25.005753">...</tspan></text>
     <g
        id="g58241"
-       transform="translate(5.08,15.24)">
+       transform="translate(5.08,-0.63500358)">
       <rect
          style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.254;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
          id="rect6030-0-3-62-5-7-0-0-3-8-0-3-9-6"
@@ -1492,51 +1492,9 @@
            y="30.666498"
            id="tspan110831-0-6-1-6-6-8-4-49-7-2-9" /></text>
     </g>
-    <text
-       xml:space="preserve"
-       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;stroke-width:0.264583"
-       x="2.3856778"
-       y="5.7025514"
-       id="text57807"><tspan
-         sodipodi:role="line"
-         style="stroke-width:0.264583"
-         x="2.3856778"
-         y="5.7025514"
-         id="tspan57809">Objects from the glTF asset </tspan><tspan
-         sodipodi:role="line"
-         style="stroke-width:0.264583"
-         x="2.3856778"
-         y="10.112264"
-         id="tspan57813">that are associated with a </tspan><tspan
-         sodipodi:role="line"
-         style="stroke-width:0.264583"
-         x="2.3856778"
-         y="14.521976"
-         id="tspan59411">unique identifier:</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;stroke-width:0.264583"
-       x="69.695641"
-       y="5.7025514"
-       id="text57807-6"><tspan
-         sodipodi:role="line"
-         style="stroke-width:0.264583"
-         x="69.695641"
-         y="5.7025514"
-         id="tspan61401">Property table where property values</tspan><tspan
-         sodipodi:role="line"
-         style="stroke-width:0.264583"
-         x="69.695641"
-         y="10.112264"
-         id="tspan61405">for each object are looked up in the </tspan><tspan
-         sodipodi:role="line"
-         style="stroke-width:0.264583"
-         x="69.695641"
-         y="14.521976"
-         id="tspan61407">row that corresponds to the object ID:</tspan></text>
     <path
        style="fill:none;stroke:#0000ff;stroke-width:1.27;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Send)"
-       d="m 48.26,41.91 c 0,0 5.44446,2.250512 8.89,2.54 3.44554,0.289488 12.446,-1.778 12.446,-1.778"
+       d="m 48.26,26.03499 c 0,0 5.44446,2.250512 8.89,2.54 3.44554,0.289488 12.446,-1.778 12.446,-1.778"
        id="path64881"
        sodipodi:nodetypes="czc" />
   </g>

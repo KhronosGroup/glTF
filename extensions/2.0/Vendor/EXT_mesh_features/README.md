@@ -47,7 +47,7 @@ The feature ID set may also include a `label`, an alphanumeric string used to id
 
 Feature IDs can be associated with parts of a model in one of three ways:
 
-* **Feature ID by Vertex:** Feature IDs that are stored as vertex attribute, using a standard glTF accessor. The `featureId.attribute` refers to this accessor, and allows defining feature IDs for each individual vertex.
+* **Feature ID by Vertex:** Feature IDs that are stored as a vertex attribute, using a standard glTF accessor. The `featureId.attribute` refers to this accessor, and allows defining feature IDs for each individual vertex.
 * **Feature ID by Texture Coordinates:** Feature IDs that are stored in the channels of a standard glTF texture. The `featureId.texture` refers to this texture, and allows defining feature IDs for regions on the surface of a mesh.
 * **Feature ID by Index**: Feature IDs that are assigned implicitly to the vertices. In this case, the feature ID is given by the index of the vertex.
 
@@ -89,8 +89,7 @@ Per-vertex feature IDs can be used to identify individual objects that have been
 >         "EXT_mesh_features": {
 >           "featureIds": [{
 >             "featureCount": 2,
->             "attribute": 0,
->             "label": "buildings"
+>             "attribute": 0
 >           }]
 >         }
 >       }
@@ -105,7 +104,7 @@ Per-vertex feature IDs can be used to identify individual objects that have been
 
 Feature ID textures classify the pixels of an image into different features. Some use cases include image segmentation or marking regions on a map. Often per-texel feature IDs provide finer granularity than per-vertex feature IDs, as in the example below.
 
-> **Example:** A building facade, represented by a single quad. The primitive's `baseColorTexture` displays the visible appearance of the building, and its feature ID texture identifies regions of the quad (door, roof, window) as distinct features. Texels assigned `nullFeatureId` do not belong to a feature. Both textures use the same texture coordinates, `TEXCOORD_0`, in this example.
+> **Example:** A building facade, represented by a single quad. The primitive's `baseColorTexture` displays the visible appearance of the building, and its feature ID texture identifies regions of the quad (door, roof, window) as distinct features. Both textures use the same texture coordinates, `TEXCOORD_0`, in this example. Texels assigned `nullFeatureId` do not belong to a feature. 
 >
 > <img src="figures/feature-id-by-texture.png"  alt="Feature ID Texture" width="800">
 >
@@ -122,13 +121,13 @@ Feature ID textures classify the pixels of an image into different features. Som
 >       "extensions": {
 >         "EXT_mesh_features": {
 >           "featureIds": [{
+>             "nullFeatureId": 0,
 >             "featureCount": 3,    
 >             "texture" : {
 >               "index": 0, 
 >               "texCoord": 0, 
 >               "channels": [0]
->             },
->             "nullFeatureId": 0,
+>             }
 >           }]
 >         }
 >       }
@@ -142,23 +141,23 @@ The `texture` object of a `featureId` extends the glTF [`textureInfo`](../../../
 The values from the selected channels are treated as unsigned 8 bit integers, and represent the bytes of the actual feature ID, in little-endian order. 
 
 > **Example:** 
-> If a `featureID.texture` defines `"channels": [0, 1]`, then the actual feature ID can be computed as `id = channel[0] | (channel[1] << 8);`. 
-> If a `featureID.texture` defines `"channels": [1, 0, 2]`, then the actual feature ID can be computed as `id = channel[1] | (channel[0] << 8) | (channel[2] << 16);`.
+> If a `featureID.texture` defines `"channels": [0, 1]`, then the actual feature ID can be computed as `id = channel[0] | (channel[1] << 8)`. 
+> If a `featureID.texture` defines `"channels": [1, 0, 2]`, then the actual feature ID can be computed as `id = channel[1] | (channel[0] << 8) | (channel[2] << 16)`.
 
 Texture filtering must be `9728` (NEAREST), or undefined, for any texture object referenced as a feature ID texture. Texture values must be encoded with a linear transfer function.
 
 #### Feature ID by Index
 
-When both `featureId.attribute` and `featureId.texture` are undefined,then the feature ID value for each vertex is given implicitly, via the index of the vertex. In this case, the `featureCount` must match the number of vertices of the mesh primitive. 
+When both `featureId.attribute` and `featureId.texture` are undefined, then the feature ID value for each vertex is given implicitly, via the index of the vertex. In this case, the `featureCount` must match the number of vertices of the mesh primitive. 
 
 
 ### Using Feature IDs
 
-The feature ID sets that are associated with mesh primitives can be accessed by client applications, and be used to look up addition information that is associated with these features. Two possible ways of associating features with additional information are presented here.
+The feature ID sets that are associated with mesh primitives can be accessed by client applications, and can be used to look up addition information that is associated with these features. Two possible ways of associating features with additional information are presented here.
 
 #### Referencing Property Tables with Feature IDs
 
-When combined with the `EXT_structural_metadata` extension, feature ID sets can be associated with property tables. A property table maps each feature ID to a set of values that are associated with the respective feature. The feature ID in this case serves as an _index_ for the row of the table. The index of the property table that a certain set of feature IDs is associated with is stored in the `propertyTable` of the feature ID set definition.
+When combined with the [`EXT_structural_metadata`](../EXT_structural_metadata/) extension, feature ID sets can be associated with property tables. A property table maps each feature ID to a set of values that are associated with the respective feature. The feature ID in this case serves as an _index_ for the row of the table. The index of the property table that a certain set of feature IDs is associated with is stored in the `propertyTable` of the feature ID set definition.
 
 > **Example:** This example assumes that an array of property tables is defined in the asset, using the `EXT_structural_metadata` extension. The example shows a primitive with multiple feature ID sets. The first one uses a feature ID texture that contains 4 different features. The second one is defined via a vertex attribute, and defines 2 different features. The first ID set is associated with the property table with index 1. The second one is associated with the property table with index 0. 
 >
@@ -174,12 +173,14 @@ When combined with the `EXT_structural_metadata` extension, feature ID sets can 
 >           "texCoord": 0, 
 >           "channels": [0]
 >         }, 
->         "propertyTable": 1
+>         "propertyTable": 1,
+>         "label": "classification"
 >       },
 >       {
 >         "featureCount": 2,
 >         "attribute": 0,
->         "propertyTable": 0
+>         "propertyTable": 0,
+>         "label": "components"
 >       }
 >     ]
 >   }
