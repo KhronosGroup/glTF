@@ -134,10 +134,10 @@ If the display type is considered to be HDR (compatible with ITU BT.2020 color p
 The following steps shall be performed before outputing the calculated pixel value (scene linear light).    
 This would normally be done in the fragment shader.  
 
-3: Scene aperture factor  
-Scene linear light (normally fragment shader output value) pixel value shall be adjusted to get scaled scene linear light.        
-The output from scene aperture calculations shall be used in the next step.  
-[See Scene aperture](#scene-aperture)  
+3: Scene quantization  
+Scene linear light (normally fragment shader output value) pixel value shall be quantized to get scaled scene linear light.        
+The output from scene quantization shall be used in the next step.  
+[See Scene quantization](#scene-quantization)  
 
 
 4: Perceptual Quantizer - reference OOTF  
@@ -152,7 +152,7 @@ Input values are linear values in the range {R,G,B} [0 - 10000] and output is no
 
 | Input         |   Function    | Output range  | Description   |
 | ------------- | ------------- | ----------- |------------- |
-| [0.0 - X]     | aperture      | 0 - 10 000  | Light adjusted for scene max intensity. |
+| [0.0 - X]     | qantization      | 0 - 10 000  | Light adjusted for scene max intensity. |
 | [0.0 - 1.0]   |     OOTF      | 0 - 10 000  | Reference PQ OOTF  |
 | [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Framebuffer output  |
 
@@ -174,7 +174,7 @@ Overview of where implementations may decide to perform the functions defined by
 Output pixel values from a rendered 3D model are generally in a range that is larger than that of a display device.  
 This may not be a problem if the output is a high definition image format or some other target that has the same range and precision as the internal calculations.  
 However, a typical usecase for a renderer targeting interactive framerates is that the output is a light emitting display.  
-Such a display rarely has the range and precision of internal calculations making it necessary to map internal pixel values to match the characteristics of the output.  
+Such a display rarely has the range and precision of internal calculations making it necessary to quantize internal pixel values to match the characteristics of the output.  
 This mapping is generally referred to as tone-mapping, however the exact meaning of tone-mapping varies and can also mean the process of applying artistic intent to the output.  
 For that reason this document will use the term displaymapping.  
 
@@ -212,7 +212,8 @@ The extension is fully compatible with such usecases</em></figcaption>
 
 This section describes how light contribution values shall be handled.  
 
-When the KHR_displaymapping_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum ouput brightness.  
+When the KHR_displaymapping_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum ouput brightness.    
+Limiting the range of light contribution values to the specified range is done in the Scene quantization step.  
 This does not have an impact on color texture sources since they define values as contribution factor.  
 The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in the SMPTE ST 2084 transfer function.  
 
@@ -287,18 +288,23 @@ The M2 linear color conversion matrix is defined as:
 0.0164 0.0880 0.8956  
 
 
-## Scene aperture
+## Scene quantization
 
 
-Scene aperture can be seen as a simplified automatic exposure control, without shutterspeed and ISO values...
-If scene contains light contribution that goes above 10 000 then all lightsources will be scaled.  
+Scene quantization can be seen as an automatic aperture factor..
+In this step the continous scene light values, in the range [0 - X] are linearly mapped to the range [0 - 10000].  
+
+If total scene light contribution is > 10 000 all lightsources will be down-scaled.  
+Scaling all lightsources linearly means that the light energy contrast will be retained between the lowest and the highest energy lightsource.  
+
 It is not intended for gaming like usecases where the viewpoint and environment changes dramitically, for instance from dimly lit outdoor night environments to a highly illuminated hallway.  
 
-This function is a way to avoid having too high scene brightess, that would result in clamping of output values.  
+This function performed to avoid clipping of values before they are passed to the perceptual quantizer OETF.    
 
 **Implementation Notes**
 
-pseudocode for scene aperture calculation, this may be performed at beginning of each frame and passing the factor as a uniform.   
+pseudocode for scene quantization -here called aperture.
+This may be performed at beginning of each frame and passing the factor as a uniform.   
 
 Where `lightIn` is the max scene or frame light contribution, ie the scene max intensity value.  
 
@@ -370,7 +376,7 @@ gamma = 2.4
 
 **Implementation Notes** 
 
-At the stage prior to OOTF, values shall have been adjusted for aperture.   
+At the stage prior to OOTF, values shall be quantized using the aperture factor.   
 
 Depending on implementation of OOTF and OETF, RGB values may simply be scaled by 10000 before used in the OOTF.  
 
