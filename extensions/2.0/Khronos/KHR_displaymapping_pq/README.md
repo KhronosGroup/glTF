@@ -403,8 +403,8 @@ vec3 BT_2100_OOTF(vec3 color, rangeExponent, gamma) {
     return 100 * pow(nonlinear, gamma);
 }  
 
-vec3 color = apertureAjustedColor
-color = BT_2100(color, rangeExponent, gamma)
+vec3 color = apertureAdjustedColor / 10000;
+color = BT_2100(color, rangeExponent, gamma);
 
 ```
 
