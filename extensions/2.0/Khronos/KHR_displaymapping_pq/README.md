@@ -42,44 +42,52 @@ One such important usecase is 3D Commerce and the certification process.
 Currently the glTF specification does not define how to output pixels.  
 This results in hue shift and white-out, due to clipping of pixel [RGB] values when written to framebuffer,  not desirable when the goal is to achieve physically correct output.   
 
-Below is a scene with test spheres, lit with one directional light with intensity of 100 lumen/m2.  
-As can be seen, not much of the surface properties are present in the output. [RGB] values are clipped resulting in hue-shift and white-out.  
+Below is one of the 3D Commerce certification test models, lit with 1000 lumen / m2.  
+As can be seen, not much of the surface properties are present in the output.   
+[RGB] values are clipped resulting in hue-shift and white-out.  
 
 <figure>
-<img src="./images/SampleViewer-100.png"/>
-<figcaption><em>Sample viewer reference implementation with one directional light at 100 lumen/m2.  
+<img src="./images/certification_chair_1000.png"/>
+<figcaption><em>Sample viewer reference implementation 1000 lumen/m2.  
 Notice how colors have been clipped and changed hue</em></figcaption>
 </figure>
 
 
-This extension sets out standardize the output from such a scene in a way that the result is predictable and retains hue.    
+This extension sets out standardize the output from such a scene in a way that the result is predictable, is physically correct and retains hue.    
 When using this extension it is recommended that the light intensity is kept between 0 and 10 000 lumen/m2 in order to utilize the range of the Perceptual Quantizer.  
 
-This extension does not declare user defined tone-mapping, s-curve, color lookup table (LUT) or similar as the process of applying these may be non pysically based and alter the energy conserving nature of the glTF BRDF.  
+This extension does not declare user defined tone-mapping, s-curve, color lookup table (LUT) or similar as the process of applying these may be non pysically based and alter the energy conserving nature of the glTF BRDF.    
+
 It is important that different models that are using this extension can be viewed in the same scene, meaning that configuration of mapping is not possible.  
 
 Another reason to provide means for deterministic brightness (light intensity) values is how the human brain perceives brightness.
 According to research (Bernstein et al. 2018) the mind's perception of brightness is mostly the same, regardless of object brightness.  
-The difference in the perception of the object's brightness is based on background color.  
-This extension does not seek to model the psychological perception of the human vision system, instead it provides means to reproduce the scene light information as it would be 'captured' by a human observer (in the scene).  
-To accurately do this it is necessary to retain the physically correct contrast of all parts of the output scene.  
+The difference in the perception of the object's brightness is based on background color.    
+Given this relation means it is important to retain the relative brightness of the linear scene light values.  
 
-This extension provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
+This extension does not seek to model the psychological perception of the human vision system, instead it provides means to reproduce the scene light information as it would be 'captured' by a human observer (in the scene).    
+The goal is to replicate the amount of light that would enter into the eye, through the cornea, and end up on the retina.    
+Modelling of biological effects such as photoreceptor fatigue or mind perception is not part of the goal of this extension.    
 
-Here the term renderer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
-This buffer will be referred to as the framebuffer.  
-The framebuffer can be of varying range, precision and colorspace. This has an impact on the color gamut that can be displayed.  
-
-After completion of one framebuffer it is output to the display, this is usually done by means of a swap-chain. The details of how the swap works is outside the scope of this extension.  
-KHR_displaymapping_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
 
 This extension does not take the viewing environment of the display, or eye light adaptation, into consideration.  
 It is assumed that the content is viewed in an environment that is dimly lit (~5 cd / m2) without direct light on the display.  
 Viewer calibration is not part of this extension as this is heavily dependant on the usecase and application.  
 
+This extensions provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
+
+Here the term renderer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
+This buffer will be referred to as the framebuffer.  
+The framebuffer can be of varying range, precision and colorspace. This has an impact on the color gamut that can be displayed.  
+
+After completion of one framebuffer it is output to the display, this is usually done by means of a swap-chain. The details of how the swap-chain works is outside the scope of this extension.  
+KHR_displaymapping_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
+
+
 <figure>
-<img src="./images/DisplayMappingPQ-10000.png"/>
-<figcaption><em>Output using extension, one directional light at intensity 10 000 lumen/m2.
+<img src="./images/certification_chair_1000_pq.png"/>
+<figcaption><em>Output using this extension and lit with  1000 lumen/m2.
+
 No clipping of color values, no change in hue.</em></figcaption>
 </figure>
 
@@ -229,12 +237,12 @@ This section describes how a content creator and exporter shall handle lightsour
 
 As a content creator using this extension the light intensity value of 10 000 lumen / m2 shall be considered scene max intensity.  
 This will give the benefit of a known increased light range as well as providing enough fidelity for most usecases.  
-The below images show how light intensities roughly align with real world illumination.  
-[Taken from the \model folder](..\model)
+The below images show 3D Commerce certification models under different illuminations, note that the light is one directional light.  
 
-| Sunrise (400 lux) | Overcast (1500 lux) | Bright (5000 lux) | Sunny (10 000 lux) |
+
+| Sunrise (directional 400 lux) | Overcast (directional 1500 lux) | Bright (directional 5000 lux) | Sunny (directional 10 000 lux) |
 |-----|-----|-------|------|
-| <img src="./images/PQ-sunrise-400.png" width=200 height=200/> | <img src="./images/PQ-overcast-1500.png" width=200 height=200/> | <img src="./images/PQ-bright-5000.png" width=200 height=200/> | <img src="./images/PQ-sunny-10000.png" width=200 height=200/> |
+| <img src="./images/PQ-sunrise-400.png" width=200 height=125/> | <img src="./images/PQ-overcast-1500.png" width=200 height=125/> | <img src="./images/PQ-bright-5000.png" width=200 height=125/> | <img src="./images/PQ-sunny-10000.png" width=200 height=125/> |
 
 
 
@@ -303,7 +311,7 @@ This function performed to avoid clipping of values before they are passed to th
 
 **Implementation Notes**
 
-pseudocode for scene quantization -here called aperture.
+pseudocode for scene quantization - here called aperture.
 This may be performed at beginning of each frame and passing the factor as a uniform.   
 
 Where `lightIn` is the max scene or frame light contribution, ie the scene max intensity value.  
