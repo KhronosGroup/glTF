@@ -13,8 +13,8 @@
         "featureIds": {
             "type": "array",
             "description": "An array of feature ID sets.",
-            "minProperties": 1,
-            "additionalProperties": {
+            "minItems": 1,
+            "items": {
                 "$ref": "featureId.schema.json"
             }
         },
