@@ -1,9 +1,9 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "mesh.primitive.EXT_mesh_features.schema.json",
-    "title": "EXT_mesh_features glTF Mesh Primitive extension",
+    "$id": "node.EXT_instance_features.schema.json",
+    "title": "EXT_instance_features glTF Node extension",
     "type": "object",
-    "description": "An object describing feature IDs for a mesh primitive.",
+    "description": "An object describing per-instance feature IDs.",
     "allOf": [
         {
             "$ref": "glTFProperty.schema.json"
