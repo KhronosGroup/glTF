@@ -404,7 +404,7 @@ vec3 BT_2100_OOTF(vec3 color, rangeExponent, gamma) {
 }  
 
 vec3 color = apertureAdjustedColor / 10000;
-color = BT_2100(color, rangeExponent, gamma);
+color = BT_2100_OOTF(color, rangeExponent, gamma);
 
 ```
 
