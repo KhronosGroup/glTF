@@ -31,6 +31,8 @@ Produce consistent, deterministic and physically correct output under varying li
 Produce expected output of a glTF model (nodes) when put into a scene with defined lights.  
 Produce expected output of a scene when the light conditions are dynamically changed.  
 Produce expected output of multiple glTF models (nodes) that are combined into one scene.  
+Provide support for both SDR and HDR displays.  
+Be compatible with updates to glTF texture color spaces, for example increased gamut.  
 
 This is done by specifying a way to map or quantize the resulting (rendered) scene linear light output values to a known range of{R,G,B} values that can be output to display.  
 This mapping shall be done so that hue (or chromaticity) is retained in the displayed image.   
@@ -131,12 +133,12 @@ All nodes added to such scene shall use this extension.
 This extension has the following integration points:  
 
 1: Choose display type  
-Decide wether display output and framebuffer format is HDR or SDR.  
+Decide wether display output and framebuffer format is considered to be HDR or SDR.  
 If unknown then choose SDR.  
 [See Display type](#display-type)  
 
 2: Color source images  
-If the display type is considered to be HDR (compatible with ITU BT.2020 color primaries) then color source images may need to be converted to ITU BT.2020 colorspace  
+If the display type is considered to be HDR (compatible SMPTE ST 2084) then color source images may need to be converted to ITU BT.2020 colorspace  
 [See Color source images](#color-source-images)  
 
 The following steps shall be performed before outputing the calculated pixel value (scene linear light).    
@@ -160,9 +162,9 @@ Input values are linear values in the range {R,G,B} [0 - 10000] and output is no
 
 | Input         |   Function    | Output range  | Description   |
 | ------------- | ------------- | ----------- |------------- |
-| [0.0 - X]     | qantization      | 0 - 10 000  | Light adjusted for scene max intensity. |
-| [0.0 - 1.0]   |     OOTF      | 0 - 10 000  | Reference PQ OOTF  |
-| [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Framebuffer output  |
+| [0.0 - X]     | qantization      | 0 - 10 000  | Light adjusted for scene max intensity - relative linear scene light |
+| [0.0 - 1.0]   |     OOTF      | 0 - 10 000  | Reference PQ OOTF - maps relative linear scene light to display linear light |
+| [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Framebuffer output - linear light to nonlinear PQ signal value |
 
 
 **Implementation Notes**
@@ -257,11 +259,16 @@ This section describes how to decide if display type is HDR or SDR.
 ### HDR capable display
 
 
-If the framebuffer format and colorspace is known to the implementation then a format and colorspace shall be chosen to preserve the range and precision of the SMPTE ST 2084 transfer function.  
-If available, a framebuffer colorspace that is compatible with the color primaries of ITU BT.2020 shall be used.  
-If this colorspace is used then the display output value that is written to the framebuffer shall be in a compatible colorspace.  
+If the framebuffer format and colorspace is known to the implementation and one is available, choose a format compatible with color primaries BT.2020 and uses the SMPTE ST 2084 transfer function (perceptual quantizer).  
+In Vulkan this would for instance be:  
+VK_COLOR_SPACE_HDR10_ST2084_EXT  
+VK_COLOR_SPACE_DOLBYVISION_EXT  
 
-For HDR output, a range extension value of 59.5208 and gamma of 2.4 shall be used.  
+For a list of Vulkan colorspaces [see Table 1 of VkColorSpaceKHR](https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkColorSpaceKHR.html)
+
+It is valid to choose a framebuffer with colorspace BT.2020 (or BT.2100) that does not use the SMPTE ST 2084 transfer function, if SMPTE ST 2084 is applied to pixel values before being output to display.  
+
+For HDR output, a range extension value of 59.5208 and gamma of 2.4 shall be used in the OOTF - [see reference OOTF](#Perceptual-Quantizer-reference-OOTF)
 
 **Implementation notes**
 
@@ -271,13 +278,13 @@ Another solution would be to perform render calculation in BT.709 colorspace and
 
 ### SDR capable display
 
-If the framebuffer format or colorspace is not known, or none is available that preserves range, precision and color gamut then lower range framebuffer with sRGB colorspace may be used.  
+If the framebuffer format or colorspace is not known, or none is available that fulfils the HDR requirements, a framebuffer with sRGB colorspace may be used.  
 This is to allow for compatibility with displays that does not support higher range and/or compatible colorspaces.  
-It also allows for implementations where the details of the framebuffer is not known or available.  
+It also allows implementations where the details of the framebuffer is not known or available.  
 
 A SDR capable display is defined as having less than 10 bits per pixel for each colorchannel.  
 
-For SDR output,  a range extension value of 46.42 and gamma of 2.4 shall be used.  
+For SDR output,  a range extension value of 46.42 and gamma of 2.4 shall be used in the OOTF - [see reference OOTF](#Perceptual-Quantizer-reference-OOTF) 
 
 ## Color source images
 
@@ -387,7 +394,6 @@ gamma = 2.4
 At the stage prior to OOTF, values shall be quantized using the aperture factor.   
 
 Depending on implementation of OOTF and OETF, RGB values may simply be scaled by 10000 before used in the OOTF.  
-
 
 Pseudocode for BT.2100 reference OOTF  
 
