@@ -152,7 +152,7 @@ The output from scene quantization shall be used in the next step.
 
 4: Perceptual Quantizer - reference OOTF  
 Apply opto-optical transfer function (OOTF), this will apply the reference 'rendering intent'  
-Input values are in scaled scene linear light in range {R,G,B} [0.0 - 1.0] and output values in the range {R,G,B} [0 - 10000]  
+Input values are in normalized relative linear light in range {R,G,B} [0.0 - 1.0] and output values in the range {R,G,B} [0 - 10000]  
 
 5:   Perceptural Quantizer - reference OETF  
 Apply the opto-electrical transfer function (OETF).  
@@ -162,9 +162,9 @@ Input values are linear values in the range {R,G,B} [0 - 10000] and output is no
 
 | Input         |   Function    | Output range  | Description   |
 | ------------- | ------------- | ----------- |------------- |
-| [0.0 - X]     | qantization      | 0 - 10 000  | Light adjusted for scene max intensity - relative linear scene light |
-| [0.0 - 1.0]   |     OOTF      | 0 - 10 000  | Reference PQ OOTF - maps relative linear scene light to display linear light |
-| [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Framebuffer output - linear light to nonlinear PQ signal value |
+| [0.0 - X]     | quantization      | 0 - 10 000  | Output is relative linear scene light. Maps linear scene light to relative linear scene light |
+| [0.0 - 1.0]   |     OOTF      | 0 - 10 000  | Output is display linear light. Reference PQ OOTF - maps relative linear scene light to display linear light |
+| [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Output is nonlinear PQ signal. Framebuffer output - maps linear display light to nonlinear PQ signal value |
 
 
 **Implementation Notes**
@@ -174,9 +174,13 @@ Overview of where implementations may decide to perform the functions defined by
 
 <figure>
 <img src="./images/RenderProcess.png"/>
-<figcaption><em>Design flow of image space implementation. This shows where implementations may choose to apply the image space functions of this extension.</em></figcaption>
+<figcaption><em>Example design flow of image space implementation. This shows where implementations may choose to apply the image space functions of this extension. Note that this is only one example of how the renderprocess could be implemented. An implementation may need to apply image space operations at different points in process</em></figcaption>
 </figure>
 
+If, for instance a tone-mapping of LUT type of operation shall be performed it can be done at a stage prior to the perceptual quantizer OETF.    
+Exactly where this is performed will depend on in what space the operations shall be performed.  
+To apply a LUT that is operates on normalized color values [0 - 1], call your function before step 4:  
+To apply a tonemapper that operates on unadjusted linear scene light, call your function before step 3:  
 
 
 ### Motivation
