@@ -151,11 +151,13 @@ The output from this step is used as input in step 4:
 
 
 4: Perceptual Quantizer - reference OOTF  
-Apply opto-optical transfer function (OOTF), this will apply the reference 'rendering intent'  
+Apply opto-optical transfer function (OOTF), this will apply the reference PQ OOTF as defined in Rec.2390    
+This operation will map relative linear scene light values to the same displayed luminance regardless of if output is SDR or HDR monitor.  
 Input values are in normalized relative linear light in range {R,G,B} [0.0 - 1.0] and output values in the range {R,G,B} [0 - 10000]  
 
 5:   Perceptural Quantizer - reference OETF  
 Apply the opto-electrical transfer function (OETF).  
+This operation will quantify relative linear scene light to display with minimal amount of banding.  
 Input values are linear values in the range {R,G,B} [0 - 10000] and output is non-linear display values in range {R,G,B} [0.0 - 1.0]  
 
 
