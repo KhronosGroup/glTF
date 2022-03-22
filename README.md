@@ -4,7 +4,7 @@ SPDX-License-Identifier: CC-BY-4.0
 -->
 
 <p align="center">
-<img src="specification/figures/gltf.png" />
+<img src="specification/figures/glTF_RGB_June16.svg" width="340" height="170" />
 </p>
 
 [![Join the Slack group](https://img.shields.io/badge/chat-on%20slack-blue.svg)](https://www.khr.io/slack)

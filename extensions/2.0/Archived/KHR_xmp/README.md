@@ -23,11 +23,9 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status
 
-Complete
+Archived, Ratified by the Khronos Group
 
-### Important Notice
-
-_While this extension is marked as complete, it is under review [pending a potential new version](https://github.com/KhronosGroup/glTF/pull/1893) to align it closer with the [JSON-LD serialization of XMP data ISO specification](https://www.iso.org/standard/79384.html). We recommend waiting to implement KHR_xmp until development the new version is complete._
+Superseded by [KHR_xmp_json_ld](../../Khronos/KHR_xmp_json_ld/README.md)
 
 ## Dependencies
 
@@ -36,7 +34,7 @@ Written against the glTF 2.0 spec.
 ## Overview
 
 This extension adds support for [XMP (Extensible Metadata Platform) (ISO 16684-1)](https://www.iso.org/standard/75163.html) metadata to glTF.
-Metadata is used to transmit information (such as attribution, licensing, creation date) about the glTF asset. Metadata has no normative effect on the glTF asset appearence and rendering.
+Metadata is used to transmit information (such as attribution, licensing, creation date) about the glTF asset. Metadata has no normative effect on the glTF asset appearance and rendering.
 XMP is a technology for embedding metadata into documents and has been [an ISO standard since 2012](https://www.iso.org/files/live/sites/isoorg/files/news/magazine/ISO%20Focus+%20(2010-2013)/en/2012/ISO%20Focus+,%20May%202012.pdf).
 An instance of the XMP data model is called an XMP packet (ISO 16684-1$6.1).
 XMP metadata is embedded in a top-level glTF extension as an array of metadata packets.

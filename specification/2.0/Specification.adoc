@@ -16,7 +16,7 @@ The Khronos{regtitle} 3D Formats Working Group
 :max-width: 100%
 :numbered:
 :source-highlighter: coderay
-:title-logo-image: image:../figures/gltf.png[Logo,pdfwidth=4in,align=right]
+:title-logo-image: image:../figures/glTF_RGB_June16.svg[Logo,pdfwidth=4in,align=right]
 :docinfo: shared-head
 :stem:
 
@@ -87,7 +87,7 @@ indirect, special or consequential damages for lost revenues, lost profits, or
 otherwise, arising from or in connection with these materials.
 
 Khronos® and Vulkan® are registered trademarks, and ANARI™, WebGL™, glTF™, NNEF™, OpenVX™,
-SPIR™, SPIR-V™, SYCL™, OpenVG™ and 3D Commerce™ are trademarks of The Khronos Group Inc.
+SPIR™, SPIR&#8209;V™, SYCL™, OpenVG™ and 3D Commerce™ are trademarks of The Khronos Group Inc.
 OpenXR™ is a trademark owned by The Khronos Group Inc. and is registered as a trademark in
 China, the European Union, Japan and the United Kingdom. OpenCL™ is a trademark of Apple Inc.
 and OpenGL® is a registered trademark and the OpenGL ES™ and OpenGL SC™ logos are trademarks
@@ -110,11 +110,11 @@ glTF is an API-neutral runtime asset delivery format.  glTF bridges the gap betw
 [[introduction-conventions]]
 == Document Conventions
 
-The glTF Specification is intended for use by both implementors of the asset exporters or converters (e.g., digital content creation tools) and application developers seeking to import or load glTF assets, forming a basis for interoperability between these parties.
+The glTF Specification is intended for use by both implementers of the asset exporters or converters (e.g., digital content creation tools) and application developers seeking to import or load glTF assets, forming a basis for interoperability between these parties.
 
 Specification text can address either party; typically, the intended audience can be inferred from context, though some sections are defined to address only one of these parties.
 
-Any requirements, prohibitions, recommendations or options defined by <<introduction-normative-terminology, normative terminology>> are imposed only on the audience of that text.
+Any requirements, prohibitions, recommendations, or options defined by <<introduction-normative-terminology, normative terminology>> are imposed only on the audience of that text.
 
 
 [[introduction-normative-terminology]]
@@ -130,12 +130,9 @@ References to external documents are considered normative if the Specification u
 [[introduction-informative-language]]
 === Informative Language
 
-Some language in the specification is purely informative, intended to give background or suggestions to implementors or developers.
+Some language in the specification is purely informative, intended to give background or suggestions to implementers or developers.
 
 If an entire chapter or section contains only informative language, its title is suffixed with "`(Informative)`". If not designated as informative, all chapters, sections, and appendices in this document are normative.
-
-
-
 
 All Notes, Implementation notes, and Examples are purely informative.
 
@@ -143,7 +140,97 @@ All Notes, Implementation notes, and Examples are purely informative.
 [[introduction-technical-terminology]]
 === Technical Terminology
 
-The glTF Specification makes use of common engineering and graphics terms such as *Vertex*, *Normal*, *Texture*, etc. to identify and describe certain GPU constructs and their attributes, states, and behaviors.
+The glTF Specification makes use of linear algebra terms such as *axis*, *matrix*, *vector*, etc. to identify certain math constructs and their behaviors as defined in the <<iev,International Electrotechnical Vocabulary>>.
+
+The glTF Specification makes use of common engineering and graphics terms such as *image*, *buffer*, *texture*, etc. to identify and describe certain _glTF_ constructs and their attributes, states, and behaviors. This section defines the basic meanings of these terms in the context of the Specification. The Specification text provides fuller definitions of the terms and elaborates, extends, or clarifies the definitions. When a term defined in this section is used in normative language within the Specification, the definitions within the Specification govern and supersede any meanings the terms may have in other technical contexts (i.e. outside the Specification).
+
+accessor::
+An object describing the number and the format of data elements stored in a binary buffer.
+
+animation::
+An object describing the keyframe data, including timestamps, and the target property affected by it.
+
+back-facing::
+See facingness.
+
+buffer::
+An external or embedded resource that represents a linear array of bytes.
+
+buffer view::
+An object that represents a range of a specific buffer, and optional metadata that controls how the buffer's content is interpreted.
+
+camera::
+An object defining the projection parameters that are used to render a scene.
+
+facingness::
+A classification of a triangle as either front-facing or back-facing, depending on the orientation (winding order) of its vertices.
+
+front-facing::
+See facingness.
+
+image::
+A two dimensional array of pixels encoded as a standardized bitstream, such as <<png,PNG>>.
+
+indexed geometry::
+A mesh primitive that uses a separate source of data (index values) to assemble the primitive's topology.
+
+linear blend skinning::
+A skinning method that computes a per-vertex transformation matrix as a linear weighted sum of transformation matrices of the designated nodes.
+
+material::
+A parametrized approximation of visual properties of the real-world object being represented by a mesh primitive.
+
+mesh::
+A collection of mesh primitives.
+
+mesh primitive::
+An object binding indexed or non-indexed geometry with a material.
+
+mipmap::
+A set of image representations consecutively reduced by the factor of 2 in each dimension.
+
+morph target::
+An altered state of a mesh primitive defined as a set of difference values for its vertex attributes.
+
+node::
+An object defining the hierarchy relations and the local transform of its content.
+
+non-indexed geometry::
+A mesh primitive that uses linear order of vertex attribute values to assemble the primitive's topology.
+
+normal::
+A unit XYZ vector defining the perpendicular to the surface.
+
+root node::
+A node that is not a child of any other node.
+
+sampler::
+An object that controls how image data is sampled.
+
+scene::
+An object containing a list of root nodes to render.
+
+skinning::
+The process of computing and applying individual transforms for each vertex of a mesh primitive.
+
+tangent::
+A unit XYZ vector defining a tangential direction on the surface.
+
+texture::
+An object that combines an image and its sampler.
+
+topology type::
+State that controls how vertices are assembled, e.g. as lists of triangles, strips of lines, etc.
+
+vertex attribute::
+A property associated with a vertex.
+
+winding order::
+The relative order in which vertices are defined within a triangle
+
+wrapping::
+A process of selecting an image pixel based on normalized texture coordinates.
+
 
 [[introduction-normative-references]]
 === Normative References
@@ -152,9 +239,25 @@ The following documents are referenced by normative sections of the specificatio
 
 ==== External Specifications
 
+[none]
 * [[bcp14]]
 Bradner, S., _Key words for use in RFCs to Indicate Requirement Levels_, BCP 14, RFC 2119, March 1997. Leiba, B., _Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words_, BCP 14, RFC 8174, May 2017.
 <https://www.rfc-editor.org/info/bcp14>
+
+* [[iev]]
+IEC 60050-102
+_International Electrotechnical Vocabulary (IEV) - Part 102: Mathematics - General concepts and linear algebra_
+<https://webstore.iec.ch/publication/160>
++
+IEC 60050-103
+_International Electrotechnical Vocabulary (IEV) - Part 103: Mathematics - Functions_
+<https://webstore.iec.ch/publication/161>
++
+[NOTE]
+.Note
+====
+An online version of these standards is available at https://www.electropedia.org/
+====
 
 * [[utf8]]
 The Unicode Consortium, _The Unicode Standard_
@@ -164,12 +267,12 @@ The Unicode Consortium, _The Unicode Standard_
 Bray, T., Ed., _The JavaScript Object Notation (JSON) Data Interchange Format_, STD 90, RFC 8259, DOI 10.17487/RFC8259, December 2017, <https://www.rfc-editor.org/info/rfc8259>
 
 * [[ieee-754]]
-ISO/IEC 60559:2020
+ISO/IEC 60559
 _Floating-point arithmetic_
 <https://www.iso.org/standard/80985.html>
 
 * [[png]]
-ISO/IEC 15948:2004
+ISO/IEC 15948
 _Portable Network Graphics (PNG): Functional specification_
 <https://www.iso.org/standard/29581.html>
 +
@@ -180,7 +283,7 @@ A free version of this standard is available from W3C: https://www.w3.org/TR/PNG
 ====
 
 * [[jpeg]]
-ISO/IEC 10918-1:1994
+ISO/IEC 10918-1
 _Digital compression and coding of continuous-tone still images: Requirements and guidelines_
 <https://www.iso.org/standard/18902.html>
 +
@@ -191,7 +294,7 @@ An earlier edition of this standard called ITU Recommendation T.81 is available 
 ====
 
 * [[jfif]]
-ISO/IEC 10918-5:2013
+ISO/IEC 10918-5
 _Digital compression and coding of continuous-tone still images: JPEG File Interchange Format (JFIF)_
 <https://www.iso.org/standard/54989.html>
 +
@@ -219,9 +322,9 @@ Duerst, M. and M. Suignard, _Internationalized Resource Identifiers (IRIs)_, RFC
 Fielding, R., Ed., and J. Reschke, Ed., _Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing_, RFC 7230, DOI 10.17487/RFC7230, June 2014, <https://www.rfc-editor.org/info/rfc7230>
 
 * [[srgb]]
-IEC 61966-2-1:1999
+IEC 61966-2-1
 _Default RGB colour space - sRGB_
-https://webstore.iec.ch/publication/6169
+<https://webstore.iec.ch/publication/6169>
 +
 [NOTE]
 .Note
@@ -231,14 +334,14 @@ The encoding characteristics of sRGB are freely available from ICC: https://www.
 
 * [[bt709]]
 Recommendation ITU-R BT.709-6 _Parameter values for the HDTV standards for production and international programme exchange_
-https://www.itu.int/rec/R-REC-BT.709-6-201506-I
+<https://www.itu.int/rec/R-REC-BT.709-6-201506-I>
 
 * [[mikktspace]]
 _MikkTSpace_
-https://github.com/mmikk/MikkTSpace
+<https://github.com/mmikk/MikkTSpace>
 
 * [[compositing]]
-Thomas Porter and Tom Duff. 1984. _Compositing digital images._ SIGGRAPH Comput. Graph. 18, 3 (July 1984), 253–259. DOI: https://doi.org/10.1145/964965.808606
+Thomas Porter and Tom Duff. 1984. _Compositing digital images._ SIGGRAPH Comput. Graph. 18, 3 (July 1984), 253–259. DOI: <https://doi.org/10.1145/964965.808606>
 +
 [NOTE]
 .Note
@@ -248,6 +351,7 @@ A free version of this paper is available from Pixar: https://graphics.pixar.com
 
 ==== Media Type Registrations
 
+[none]
 * [[gltf-json]]
 IANA.
 _model/gltf+json Media Type_.
@@ -320,8 +424,6 @@ Binary and image resources **MAY** also be embedded directly in JSON using <<dat
 
 A valid glTF asset **MUST** specify its version.
 
-image:figures/files.png[pdfwidth=4in,align=left]
-
 
 [[versioning]]
 == Versioning
@@ -353,7 +455,7 @@ Major version updates **MAY** be incompatible with previous versions.
 [NOTE]
 .Implementation Note
 ====
-Certain Exif chunks, e.g., "`Orientation`", may severely impact asset's portability.
+Certain Exif chunks, e.g., "`Orientation`", may severely impact an asset's portability.
 ====
 
 [[json-encoding]]
@@ -471,7 +573,7 @@ Client implementations **MAY** optionally support additional URI components. For
 [NOTE]
 .Implementation Note
 ====
-This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, or textures, separate files may be preferred to reduce the total amount of data requested. With separate files, applications may progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading. Alternatively, an asset could use GLB container to store JSON and binary data in one file without base64 encoding. See <<glb-file-format-specification,GLB File Format Specification>> for details.
+This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, or textures, separate files may be preferred to reduce the total amount of data requested. With separate files, applications may progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading. Alternatively, an asset could use the GLB container to store JSON and binary data in one file without base64 encoding. See <<glb-file-format-specification,GLB File Format Specification>> for details.
 ====
 
 URIs **SHOULD** undergo syntax-based normalization as defined by <<uri,RFC 3986>>, Section 6.2.2, <<iri,RFC 3987>>, Section 5.3.2, and applicable schema rules (e.g., <<http,RFC 7230>>, Section 2.7.3 for HTTP) on export and/or import.
@@ -489,9 +591,10 @@ While the specification does not explicitly disallow non-normalized URIs, their 
 [[concepts-general]]
 == General
 
-image:figures/dictionary-objects.png[pdfwidth=4in,align=left]
+The figure below shows relations between top-level arrays in a glTF asset.  See the <<properties-reference, Properties Reference>>.
 
-The image above shows relations between top-level arrays in a glTF asset.  See the <<properties-reference, Properties Reference>>.
+.glTF Object Hierarchy
+image::figures/objects.svg[pdfwidth=6in,align=left]
 
 
 [[asset]]
@@ -556,7 +659,8 @@ For property names, glTF usually uses camel case, `likeThis`.
 
 glTF uses a right-handed coordinate system. glTF defines +Y as up, +Z as forward, and -X as right; the front of a glTF asset faces +Z.
 
-image:figures/coordinate-system.png[pdfwidth=4in,align=left]
+.glTF Coordinate System Orientation
+image::figures/coordinate-system.png[pdfwidth=2in,align=left]
 
 The units for all linear distances are meters.
 
@@ -569,7 +673,7 @@ Red, Green, and Blue primary colors use <<bt709,Recommendation ITU-R BT.709>> ch
 [NOTE]
 .Implementation Note
 ====
-Chromaticity coordinates define the interpretation of each primary color channel of the color model. In the context of a typical display, color primaries describe the color of the red, green and blue phosphors or filters. Unless a wide color gamut output is explicitly used, client implementations usually do not need to convert colors. Future specification versions or extensions may allow other color primaries (such as P3).
+Chromaticity coordinates define the interpretation of each primary color channel of the color model. In the context of a typical display, color primaries describe the color of the red, green, and blue phosphors or filters. Unless a wide color gamut output is explicitly used, client implementations usually do not need to convert colors. Future specification versions or extensions may allow other color primaries (such as P3).
 ====
 
 
@@ -652,7 +756,7 @@ The node named `Car` has four children. Each of those nodes could in turn have i
 [[transformations]]
 === Transformations
 
-Any node **MAY** define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as _TRS properties_). `translation` and `scale` are 3D vectors in the local coordinate system. `rotation` is a unit quaternion value, XYZW, in the local coordinate system, where W is the scalar.
+Any node **MAY** define a local space transform either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as _TRS properties_). `translation` and `scale` are 3D vectors in the local coordinate system. `rotation` is a unit quaternion value, XYZW, in the local coordinate system, where W is the scalar.
 
 When `matrix` is defined, it **MUST** be decomposable to TRS properties.
 [NOTE]
@@ -668,12 +772,18 @@ To compose the local transformation matrix, TRS properties **MUST** be converted
 [NOTE]
 .Implementation Note
 ====
-Non-invertible transformations (e.g., scaling one axis to zero) could lead to lighting and/or visibility artifacts.
+Non-invertible transforms (e.g., scaling one axis to zero) could lead to lighting and/or visibility artifacts.
+====
+
+[NOTE]
+.Implementation Note
+====
+When the scale is zero on all three axes (by node transform or by animated scale), implementations are free to optimize away rendering of the node's mesh, and all of the node's children's meshes. This provides a mechanism to animate visibility. Skinned meshes must not use this optimization unless all of the joints in the skin are scaled to zero simultaneously.
 ====
 
 The global transformation matrix of a node is the product of the global transformation matrix of its parent node and its own local transformation matrix. When the node has no parent node, its global transformation matrix is identical to its local transformation matrix.
 
-In the example below, node named `Box` defines non-default rotation and translation.
+In the example below, a node named `Box` defines non-default rotation and translation.
 
 [source,json]
 ----
@@ -702,7 +812,7 @@ In the example below, node named `Box` defines non-default rotation and translat
 }
 ----
 
-The next example defines the transformation for a node with attached camera using the `matrix` property rather than using the individual TRS values:
+The next example defines the transform for a node with attached camera using the `matrix` property rather than using the individual TRS values:
 
 [source,json]
 ----
@@ -818,13 +928,13 @@ Buffers and buffer views do not contain type information. They simply define the
 [[glb-stored-buffer]]
 ==== GLB-stored Buffer
 
-glTF asset **MAY** use GLB file container to pack glTF JSON and one glTF buffer into one file. Data for such buffer is provided via GLB-stored `BIN` chunk.
+The glTF asset **MAY** use the GLB file container to pack glTF JSON and one glTF buffer into one file. Data for such a buffer is provided via the GLB-stored `BIN` chunk.
 
 A buffer with data provided by the GLB-stored `BIN` chunk, **MUST** be the first element of `buffers` array and it **MUST** have its `buffer.uri` property undefined. When such a buffer exists, a `BIN` chunk **MUST** be present.
 
 Any glTF buffer with undefined `buffer.uri` property that is not the first element of `buffers` array does not refer to the GLB-stored BIN chunk, and the behavior of such buffers is left undefined to accommodate future extensions and specification versions.
 
-Byte length of `BIN` chunk **MAY** be up to 3 bytes bigger than JSON-defined `buffer.byteLength` value to satisfy GLB padding requirements.
+The byte length of the `BIN` chunk **MAY** be up to 3 bytes bigger than JSON-defined `buffer.byteLength` value to satisfy GLB padding requirements.
 
 [NOTE]
 .Implementation Note
@@ -1031,17 +1141,14 @@ Accessors of matrix type have data stored in column-major order; start of each c
 
 Only the following three accessor configurations require padding.
 
-*MAT2, 1-byte components*
+.Matrix 2x2, 1-byte Components
+image::figures/padding-mat2-1byte.svg[pdfwidth=2in,align=left]
 
-image:figures/padding-mat2-1byte.svg[pdfwidth=2in,align=left]
+.Matrix 3x3, 1-byte Components
+image::figures/padding-mat3-1byte.svg[pdfwidth=2in,align=left]
 
-*MAT3, 1-byte components*
-
-image:figures/padding-mat3-1byte.svg[pdfwidth=2in,align=left]
-
-*MAT3, 2-byte components*
-
-image:figures/padding-mat3-2byte.svg[pdfwidth=4in,align=left]
+.Matrix 3x3, 2-byte Components
+image::figures/padding-mat3-2byte.svg[pdfwidth=4in,align=left]
 
 Alignment requirements apply only to the start of each column, so trailing bytes **MAY** be omitted if there's no further data.
 
@@ -1122,7 +1229,7 @@ Animation input and vertex position attribute accessors **MUST** have `accessor.
 [[geometry-overview]]
 === Overview
 
-Any node **MAY** contain one mesh, defined in its `mesh` property. Mesh **MAY** be skinned using an information provided in a referenced `skin` object. Mesh **MAY** have morph targets.
+Any node **MAY** contain one mesh, defined in its `mesh` property. The mesh **MAY** be skinned using information provided in a referenced `skin` object. The mesh **MAY** have morph targets.
 
 
 [[meshes]]
@@ -1136,7 +1243,7 @@ Meshes are defined as arrays of _primitives_. Primitives correspond to the data 
 [NOTE]
 .Implementation Note
 ====
-Splitting one mesh into several *primitives* could be useful to limit number of indices per draw call or to assign different materials to different parts of the mesh.
+Splitting one mesh into several *primitives* can be useful to limit the number of indices per draw call or to assign different materials to different parts of the mesh.
 ====
 
 If `material` is undefined, then a <<default-material,default material>> **MUST** be used.
@@ -1182,7 +1289,7 @@ Valid accessor type and component type for each attribute semantic property are 
 | `TANGENT`   | VEC4            | _float_                     | XYZW vertex tangents where the XYZ portion is normalized, and the W component is a sign value (-1 or +1) indicating handedness of the tangent basis
 | `TEXCOORD_n`| VEC2            | _float_ +
                                   _unsigned byte_ normalized +
-                                  _unsigned short_ normalized | UV texture coordinates
+                                  _unsigned short_ normalized | ST texture coordinates
 | `COLOR_n`   | VEC3 +
                 VEC4            | _float_ +
                                   _unsigned byte_ normalized +
@@ -1204,7 +1311,7 @@ All components of each `COLOR_0` accessor element **MUST** be clamped to `[0.0, 
 
 `TEXCOORD_n`, `COLOR_n`, `JOINTS_n`, and `WEIGHTS_n` attribute semantic property names **MUST** be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. All indices for indexed attribute semantics **MUST** start with 0 and be consecutive positive integers: `TEXCOORD_0`, `TEXCOORD_1`, etc. Indices **MUST NOT** use leading zeroes to pad the number of digits (e.g., `TEXCOORD_01` is not allowed).
 
-Client implementations **SHOULD** support at least two UV texture coordinate sets, one vertex color, and one joints/weights set.
+Client implementations **SHOULD** support at least two texture coordinate sets, one vertex color, and one joints/weights set.
 
 All attribute accessors for a given primitive **MUST** have the same `count`. When `indices` property is not defined, attribute accessors' `count` indicates the number of vertices to render; when `indices` property is defined, it indicates the upper (exclusive) bound on the index values in the `indices` accessor, i.e., all index values **MUST** be less than attribute accessors' `count`.
 
@@ -1276,16 +1383,16 @@ When normals are not specified, client implementations **MUST** calculate flat n
 
 Vertices of the same triangle **SHOULD** have the same `tangent.w` value. When vertices of the same triangle have different `tangent.w` values, its tangent space is considered undefined.
 
-The bitangent vectors **MUST** be computed by taking the cross product of the normal and tangent XYZ vectors and multiplying it against the W component of the tangent: `bitangent = cross(normal.xyz, tangent.xyz) * tangent.w`
+The bitangent vectors **MUST** be computed by taking the cross product of the normal and tangent XYZ vectors and multiplying it against the W component of the tangent: `bitangent = cross(normal.xyz, tangent.xyz) * tangent.w`.
 
-Extensions **MAY** add additional attribute names, accessor types, and / or component types.
+Extensions **MAY** add additional attribute names, accessor types, and/or component types.
 
 [[morph-targets]]
 ==== Morph Targets
 
 Morph targets are defined by extending the Mesh concept.
 
-A morph target is a morphable Mesh where primitives' attributes are obtained by adding the original attributes to a weighted sum of targets attributes.
+A morph target is a morphable Mesh where the primitives' attributes are obtained by adding the original attributes to a weighted sum of the target's attributes.
 
 For instance, the morph target vertices `POSITION` for the primitive at index *i* are computed in this way:
 
@@ -1309,7 +1416,7 @@ Attributes present in the base mesh primitive but not included in a given morph 
 This allows skipping zero-filled accessors and implies that different morph targets may contain different sets of attributes.
 ====
 
-Client implementations **SHOULD** support at least three attributes -- `POSITION`, `NORMAL`, and `TANGENT` -- for morphing. Client implementations **MAY** optionally support morphed `TEXCOORD_n` and / or `COLOR_n` attributes.
+Client implementations **SHOULD** support at least three attributes -- `POSITION`, `NORMAL`, and `TANGENT` -- for morphing. Client implementations **MAY** optionally support morphed `TEXCOORD_n` and/or `COLOR_n` attributes.
 
 If morph targets contain application-specific semantics, their names **MUST** be prefixed with an underscore (e.g., `_TEMPERATURE`) like the associated attribute semantics.
 
@@ -1327,7 +1434,7 @@ Accessor type and component type for each morphed attribute semantic property **
                                     _signed byte_ normalized +
                                     _signed short_ normalized +
                                     _unsigned byte_ normalized +
-                                    _unsigned short_ normalized  | UV texture coordinate displacements
+                                    _unsigned short_ normalized  | ST texture coordinate displacements
 | `COLOR_n`    | VEC3 +
                  VEC4             | _float_ +
                                     _signed byte_ normalized +
@@ -1348,9 +1455,9 @@ When `COLOR_n` deltas use an accessor of `"VEC3"` type, their alpha components *
 
 After applying color deltas, all components of each `COLOR_0` morphed accessor element **MUST** be clamped to `[0.0, 1.0]` range.
 
-All morph target's accessors **MUST** have the same `count` as the accessors of the original primitive.
+All morph target accessors **MUST** have the same `count` as the accessors of the original primitive.
 
-A mesh with morph targets **MAY** also define an optional `mesh.weights` property that stores the default targets weights. These weights **MUST** be used when `node.weights` is undefined. When `mesh.weights` is undefined, the default targets weights are zeros.
+A mesh with morph targets **MAY** also define an optional `mesh.weights` property that stores the default targets' weights. These weights **MUST** be used when `node.weights` is undefined. When `mesh.weights` is undefined, the default targets' weights are zeros.
 
 The following example extends the Mesh defined in the previous example to a morphable one by adding two morph targets:
 
@@ -1554,7 +1661,7 @@ All joint values **MUST** be within the range of joints in the skin. Unused join
 [[instantiation]]
 === Instantiation
 
-A mesh is instantiated by `node.mesh` property. The same mesh could be used by many nodes, which could have different transformations. For example:
+A mesh is instantiated by `node.mesh` property. The same mesh could be used by many nodes, which could have different transforms. For example:
 
 [source,json]
 ----
@@ -1576,14 +1683,14 @@ A mesh is instantiated by `node.mesh` property. The same mesh could be used by m
 
 ----
 
-After applying the node's global transformation, mesh vertex position values are meters.
+After applying the node's global transform, mesh vertex position values are meters.
 
 When a mesh primitive uses any triangle-based topology (i.e., _triangles_, _triangle strip_, or _triangle fan_), the determinant of the node's global transform defines the winding order of that primitive. If the determinant is a positive value, the winding order triangle faces is counterclockwise; in the opposite case, the winding order is clockwise.
 
 [NOTE]
 .Implementation Note
 ====
-Switching the winding order to clockwise enables mirroring geometry via negative scale transformations.
+Switching the winding order to clockwise enables mirroring geometry via negative scale transforms.
 ====
 
 When an instantiated mesh has morph targets, it **MUST** use morph weights specified with the `node.weights` property. When the latter is undefined, `mesh.weights` property **MUST** be used instead. When both of these fields are undefined, the mesh is instantiated in a non-morphed state (i.e., with all morph weights set to zeros).
@@ -1727,9 +1834,10 @@ Client implementations **MAY** need to manually determine the media type of some
 
 The image data **MUST** match the `image.mimeType` property when the latter is defined.
 
-The origin of the UV coordinates (0, 0) corresponds to the upper left corner of a texture image. This is illustrated in the following figure, where the respective UV coordinates are shown for all four corners of a normalized UV space:
+The origin of the texture coordinates (0, 0) corresponds to the upper left corner of a texture image. This is illustrated in the following figure, where the respective coordinates are shown for all four corners of a normalized texture space:
 
-image:figures/texcoords.jpg[pdfwidth=4in,align=left]
+.Normalized Texture Coordinates
+image::figures/texcoords.svg[pdfwidth=3in,align=left]
 
 Any colorspace information (such as ICC profiles, intents, gamma values, etc.) from PNG or JPEG images **MUST** be ignored. Effective transfer function (encoding) is defined by a glTF object that refers to the image (in most cases it's a texture that is used by a material).
 
@@ -1760,23 +1868,23 @@ Filtering modes control texture's magnification and minification.
 
 Magnification modes include:
 
-* _Nearest_. For each requested texel coordinates, the sampler selects a texel with the nearest coordinates. This process is sometimes called "`nearest neighbor`".
+* _Nearest_. For each requested texel coordinate, the sampler selects a texel with the nearest coordinates. This process is sometimes called "`nearest neighbor`".
 
-* _Linear_. For each requested texel coordinates, the sampler computes a weighted sum of several adjacent texels. This process is sometimes called "`bilinear interpolation`".
+* _Linear_. For each requested texel coordinate, the sampler computes a weighted sum of several adjacent texels. This process is sometimes called "`bilinear interpolation`".
 
 Minification modes include:
 
-* _Nearest_. For each requested texel coordinates, the sampler selects a texel with the nearest (in Manhattan distance) coordinates from the original image. This process is sometimes called "`nearest neighbor`".
+* _Nearest_. For each requested texel coordinate, the sampler selects a texel with the nearest (in Manhattan distance) coordinates from the original image. This process is sometimes called "`nearest neighbor`".
 
-* _Linear_. For each requested texel coordinates, the sampler computes a weighted sum of several adjacent texels from the original image. This process is sometimes called "`bilinear interpolation`".
+* _Linear_. For each requested texel coordinate, the sampler computes a weighted sum of several adjacent texels from the original image. This process is sometimes called "`bilinear interpolation`".
 
-* _Nearest-mipmap-nearest_. For each requested texel coordinates, the sampler first selects one of pre-minified versions of the original image, and then selects a texel with the nearest (in Manhattan distance) coordinates from it.
+* _Nearest-mipmap-nearest_. For each requested texel coordinate, the sampler first selects one of pre-minified versions of the original image, and then selects a texel with the nearest (in Manhattan distance) coordinates from it.
 
-* _Linear-mipmap-nearest_. For each requested texel coordinates, the sampler first selects one of pre-minified versions of the original image, and then computes a weighted sum of several adjacent texels from it.
+* _Linear-mipmap-nearest_. For each requested texel coordinate, the sampler first selects one of pre-minified versions of the original image, and then computes a weighted sum of several adjacent texels from it.
 
-* _Nearest-mipmap-linear_. For each requested texel coordinates, the sampler first selects two pre-minified versions of the original image, selects a texel with the nearest (in Manhattan distance) coordinates from each of them, and performs final linear interpolation between these two intermediate results.
+* _Nearest-mipmap-linear_. For each requested texel coordinate, the sampler first selects two pre-minified versions of the original image, selects a texel with the nearest (in Manhattan distance) coordinates from each of them, and performs final linear interpolation between these two intermediate results.
 
-* _Linear-mipmap-linear_. For each requested texel coordinates, the sampler first selects two pre-minified versions of the original image, computes a weighted sum of several adjacent texels from each of them, and performs final linear interpolation between these two intermediate results. This process is sometimes called "`trilinear interpolation`".
+* _Linear-mipmap-linear_. For each requested texel coordinate, the sampler first selects two pre-minified versions of the original image, computes a weighted sum of several adjacent texels from each of them, and performs final linear interpolation between these two intermediate results. This process is sometimes called "`trilinear interpolation`".
 
 To properly support mipmap modes, client implementations **SHOULD** generate mipmaps at runtime. When runtime mipmap generation is not possible, client implementations **SHOULD** override the minification filtering mode as follows:
 
@@ -1835,7 +1943,7 @@ The following example defines a sampler with _linear_ magnification filtering, _
 
 ==== Non-power-of-two Textures
 
-Client implementations **SHOULD** resize non power-of-two textures (so that their horizontal and vertical sizes are powers of two) when running on platforms that have limited support for such texture dimensions.
+Client implementations **SHOULD** resize non-power-of-two textures (so that their horizontal and vertical sizes are powers of two) when running on platforms that have limited support for such texture dimensions.
 
 [NOTE]
 .Implementation Note
@@ -1856,7 +1964,8 @@ Specifically, if the `sampler` the texture references:
 
 glTF defines materials using a common set of parameters that are based on widely used material representations from Physically Based Rendering (PBR). Specifically, glTF uses the metallic-roughness material model. Using this declarative representation of materials enables a glTF file to be rendered consistently across platforms.
 
-image:figures/materials.png[pdfwidth=4in,align=left]
+.Physically Based Rendering Example
+image::figures/materials.svg[pdfwidth=6in,align=left]
 
 
 [[metallic-roughness-material]]
@@ -1888,7 +1997,7 @@ The metallic-roughness material model is defined by the following properties:
 
 The _base color_ has two different interpretations depending on the value of _metalness_. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used.
 
-The value for each property **MAY** be defined using factors and / or textures (e.g., `baseColorTexture` and `baseColorFactor`). If a texture is not given, all respective texture components within this material model **MUST** be assumed to have a value of `1.0`. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values. A texture binding is defined by an `index` of a _texture_ object and an optional index of texture coordinates.
+The value for each property **MAY** be defined using factors and/or textures (e.g., `baseColorTexture` and `baseColorFactor`). If a texture is not given, all respective texture components within this material model **MUST** be assumed to have a value of `1.0`. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values. A texture binding is defined by an `index` of a _texture_ object and an optional index of texture coordinates.
 
 The following example shows a material that uses a texture for its _base color_ property.
 
@@ -1932,7 +2041,7 @@ For example, assume an 8-bit RGBA value of `[64, 124, 231, 255]` is sampled from
 
 In addition to the material properties, if a primitive specifies a vertex color using the attribute semantic property `COLOR_0`, then this value acts as an additional linear multiplier to _base color_.
 
-Implementations of the BRDF itself **MAY** vary based on device performance and resource constraints. See <<appendix-b-brdf-implementation,Appendix B>> for more details on the BRDF calculations.
+Implementations of the bidirectional reflectance distribution function (BRDF) itself **MAY** vary based on device performance and resource constraints. See <<appendix-b-brdf-implementation,Appendix B>> for more details on the BRDF calculations.
 
 
 [[additional-textures]]
@@ -2021,7 +2130,7 @@ The `alphaMode` property defines how the alpha value is interpreted. The alpha v
 `alphaMode` can be one of the following values:
 
 * `OPAQUE` - The rendered output is fully opaque and any alpha value is ignored.
-* `MASK` - The rendered output is either fully opaque or fully transparent depending on the alpha value and the specified _alpha cutoff_ value.
+* `MASK` - The rendered output is either fully opaque or fully transparent depending on the alpha value and the specified _alpha cutoff_ value; the exact appearance of the edges **MAY** be subject to implementation-specific techniques such as "`Alpha-to-Coverage`".
 +
 [NOTE]
 .Note
@@ -2033,7 +2142,7 @@ This mode is used to simulate geometry such as tree leaves or wire fences.
 [NOTE]
 .Note
 ====
-This mode is used to simulate geometry such as guaze cloth or animal fur.
+This mode is used to simulate geometry such as gauze cloth or animal fur.
 ====
 
 When `alphaMode` is set to `MASK` the `alphaCutoff` property specifies the cutoff threshold. If the alpha value is greater than or equal to the `alphaCutoff` value then it is rendered as fully opaque, otherwise, it is rendered as fully transparent. `alphaCutoff` value is ignored for other modes.
@@ -2087,18 +2196,18 @@ This specification does not define size or style of non-triangular primitives (s
 [[cameras-overview]]
 === Overview
 
-Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details. A camera is instantiated within a node using `node.camera` property.
+Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details. A camera is instantiated within a node using the `node.camera` property.
 
-A camera object defines the projection matrix that transforms from view to clip coordinates.
+A camera object defines the projection matrix that transforms scene coordinates from the view space to the clip space.
 
-A node containing the camera instance defines the view matrix that transforms from world to view coordinates.
+A node containing the camera instance defines the view matrix that transforms scene coordinates from the global space to the view space.
 
 [[view-matrix]]
 === View Matrix
 
 The camera is defined such that the local +X axis is to the right, the "`lens`" looks towards the local -Z axis, and the top of the camera is aligned with the local +Y axis.
 
-The view matrix is derived from the world transform of the node containing the camera with the scaling ignored. If no transformation is specified, the location of the camera is at the origin.
+The view matrix is derived from the global transform of the node containing the camera with the scaling ignored. If the node's global transform is identity, the location of the camera is at the origin.
 
 [[projection-matrices]]
 === Projection Matrices
@@ -2108,7 +2217,7 @@ The view matrix is derived from the world transform of the node containing the c
 
 The projection can be perspective or orthographic.
 
-There are two subtypes of perspective projections: finite and infinite. When `zfar` property is undefined, the camera defines an infinite projection. Otherwise, the camera defines a finite projection.
+There are two subtypes of perspective projections: finite and infinite. When the `zfar` property is undefined, the camera defines an infinite projection. Otherwise, the camera defines a finite projection.
 
 The following example defines two perspective cameras with supplied values for Y field of view, aspect ratio, and clipping information.
 
@@ -2144,6 +2253,14 @@ Client implementations **SHOULD** use the following projection matrices.
 [[infinite-perspective-projection]]
 ==== Infinite perspective projection
 
+Let
+
+- `a` be the aspect ratio (width over height) of the field of view, set by `camera.perspective.aspectRatio`, or the aspect ratio of the viewport;
+- `y` be the vertical field of view in radians, set by `camera.perspective.yfov`;
+- `n` be the distance to the near clipping plane, set by `camera.perspective.znear`.
+
+Then, the projection matrix is defined as follows.
+
 ifndef::revdate[]
 [NOTE]
 .Note
@@ -2163,15 +2280,19 @@ endif::[]
 \end{bmatrix}
 ++++
 
-where
-
-- `a` equals `camera.perspective.aspectRatio`;
-- `y` equals `camera.perspective.yfov`;
-- `n` equals `camera.perspective.znear`.
-
+When the provided camera's aspect ratio does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** crop or perform non-uniform scaling ("`stretching`") to fill the viewport.
 
 [[finite-perspective-projection]]
 ==== Finite perspective projection
+
+Let
+
+- `a` be the aspect ratio (width over height) of the field of view, set by `camera.perspective.aspectRatio`, or the aspect ratio of the viewport;
+- `y` be the vertical field of view in radians, set by `camera.perspective.yfov`;
+- `f` be the distance to the far clipping plane, set by `camera.perspective.zfar`;
+- `n` be the distance to the near clipping plane, set by `camera.perspective.znear`.
+
+Then, the projection matrix is defined as follows.
 
 ifndef::revdate[]
 [NOTE]
@@ -2192,16 +2313,19 @@ endif::[]
 \end{bmatrix}
 ++++
 
-where
-
-- `a` equals `camera.perspective.aspectRatio`;
-- `y` equals `camera.perspective.yfov`;
-- `f` equals `camera.perspective.zfar`;
-- `n` equals `camera.perspective.znear`.
-
+When the provided camera's aspect ratio does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** crop or perform non-uniform scaling ("`stretching`") to fill the viewport.
 
 [[orthographic-projection]]
 ==== Orthographic projection
+
+Let
+
+- `r` be half the orthographic width, set by `camera.orthographic.xmag`;
+- `t` be half the orthographic height, set by `camera.orthographic.ymag`;
+- `f` be the distance to the far clipping plane, set by `camera.orthographic.zfar`;
+- `n` be the distance to the near clipping plane, set by `camera.orthographic.znear`.
+
+Then, the projection matrix is defined as follows.
 
 ifndef::revdate[]
 [NOTE]
@@ -2222,13 +2346,7 @@ endif::[]
 \end{bmatrix}
 ++++
 
-where
-
-- `r` equals `camera.orthographic.xmag`;
-- `t` equals `camera.orthographic.ymag`;
-- `f` equals `camera.orthographic.zfar`;
-- `n` equals `camera.orthographic.znear`.
-
+When `r / t` does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** crop or perform non-uniform scaling ("`stretching`") to fill the viewport.
 
 [[animations]]
 == Animations
@@ -2240,7 +2358,7 @@ glTF 2.0 also supports animation of instantiated morph targets in a similar fash
 [NOTE]
 .Note
 ====
-glTF 2.0 only supports animating node transforms and morph target weights. Extensions or a future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
+glTF 2.0 only supports animating node transforms and morph target weights. Extensions or a future version of the specification may support animating arbitrary properties, such as material colors and texture transformation matrices.
 ====
 
 [NOTE]
@@ -2257,7 +2375,7 @@ glTF 2.0 does not specifically define how an animation will be used when importe
 
 All animations are stored in the `animations` array of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
 
-The following examples show expected animations usage.
+The following examples show the expected usage of animations.
 
 [source,json]
 ----
@@ -2412,7 +2530,7 @@ Within one animation, each target (a combination of a node and a path) **MUST NO
 This prevents potential ambiguities when one target is affected by two or more overlapping samplers.
 ====
 
-Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating-point scalar values representing linear time in seconds; and a set of vectors or scalars representing the animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, and `CUBICSPLINE`. See <<appendix-c-spline-interpolation,Appendix C>> for additional information about spline interpolation.
+Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating-point scalar values representing linear time in seconds; and a set of vectors or scalars representing the animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, and `CUBICSPLINE`. See <<appendix-c-interpolation,Appendix C>> for additional information about interpolation modes.
 
 The inputs of each sampler are relative to `t = 0`, defined as the beginning of the parent `animations` entry. Before and after the provided input range, output **MUST** be clamped to the nearest end of the input range.
 
@@ -2466,7 +2584,7 @@ Morph target animation is by nature sparse, consider using <<sparse-accessors,Sp
 
 a~1~,a~2~,...a~n~,v~1~,v~2~,...v~n~,b~1~,b~2~,...b~n~
 
-See <<appendix-c-spline-interpolation,Appendix C>> for additional information about spline interpolation.
+See <<appendix-c-interpolation,Appendix C>> for additional information about interpolation modes.
 
 Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
 
@@ -2565,11 +2683,10 @@ The registered media type is `model/gltf-binary`.
 [[binary-gltf-layout-overview]]
 === Overview
 
-Binary glTF is little endian. Figure 1 shows an example of a Binary glTF asset.
+Binary glTF is little endian. The figure below shows an example of a Binary glTF asset.
 
-*Figure 1*: Binary glTF layout.
-
-image:figures/glb2.png[pdfwidth=4in,align=left]
+.Binary glTF Layout
+image::figures/glb2.svg[pdfwidth=6in,align=left]
 
 The following sections describe the structure more in detail.
 
@@ -2610,9 +2727,9 @@ ubyte[] chunkData
 
 * `chunkLength` is the length of `chunkData`, in bytes.
 * `chunkType` indicates the type of chunk. See <<table-chunktypes>> for details.
-* `chunkData` is a binary payload of chunk.
+* `chunkData` is the binary payload of the chunk.
 
-The start and the end of each chunk **MUST** be aligned to 4-byte boundary. See chunks definitions for padding schemes. Chunks **MUST** appear in exactly the order given in <<table-chunktypes>>.
+The start and the end of each chunk **MUST** be aligned to a 4-byte boundary. See chunks definitions for padding schemes. Chunks **MUST** appear in exactly the order given in <<table-chunktypes>>.
 
 [[table-chunktypes]]
 .Chunk types
@@ -2637,7 +2754,7 @@ This chunk holds the glTF JSON, as it would be provided within a .gltf file.
 In a JavaScript implementation, the `TextDecoder` API can be used to extract the glTF content from the ArrayBuffer, and then the JSON can be parsed with `JSON.parse` as usual.
 ====
 
-This chunk **MUST** be the very first chunk of Binary glTF asset. By reading this chunk first, an implementation is able to progressively retrieve resources from subsequent chunks. This way, it is also possible to read only a selected subset of resources from a Binary glTF asset.
+This chunk **MUST** be the very first chunk of a Binary glTF asset. By reading this chunk first, an implementation is able to progressively retrieve resources from subsequent chunks. This way, it is also possible to read only a selected subset of resources from a Binary glTF asset.
 
 This chunk **MUST** be padded with trailing `Space` chars (`0x20`) to satisfy alignment requirements.
 
@@ -2670,7 +2787,7 @@ include::PropertiesReference.adoc[]
 
 
 [[acknowledgments]]
-= Acknowledgments
+= Acknowledgments (Informative)
 
 [[editors]]
 == Editors
@@ -2681,7 +2798,7 @@ include::PropertiesReference.adoc[]
 * Tony Parisi, Unity
 
 [[working-group-and-alumni]]
-== Khronos 3D Formats Working Group and Alumni (Informative)
+== Khronos 3D Formats Working Group and Alumni
 
 * Remi Arnaud, Vario
 * Mike Bond, Adobe
@@ -2752,7 +2869,7 @@ include::JsonSchemaReference.adoc[]
 [[appendix-b-brdf-implementation-general]]
 == General
 
-This chapter presents the bidirectional scattering distribution function (BRDF) of the glTF 2.0 metallic-roughness material. The BRDF describes the reflective properties of the surface of a physically based material. For a pair of directions, the BRDF returns how much light from the incoming direction is scattered from the surface in the outgoing direction.
+This chapter presents the bidirectional reflectance distribution function (BRDF) of the glTF 2.0 metallic-roughness material. The BRDF describes the reflective properties of the surface of a physically based material. For a pair of directions, the BRDF returns how much light from the incoming direction is reflected from the surface in the outgoing direction.
 
 [NOTE]
 .Note
@@ -2876,13 +2993,14 @@ Microfacet models often do not consider multiple scattering. The shadowing term 
 [[complete-model]]
 === Complete Model
 
-The BRDFs and mixing operators used in the metallic-roughness material are summarized in the following image.
+The BRDFs and mixing operators used in the metallic-roughness material are summarized in the following figure.
 
-image:figures/pbr.png[pdfwidth=4in,align=left]
+.BRDFs and Mixing Operators
+image::figures/pbr.svg[pdfwidth=4in,align=left]
 
 The glTF Specification is designed to allow applications to choose different lighting implementations based on their requirements. Some implementations **MAY** focus on an accurate simulation of light transport while others **MAY** choose to deliver real-time performance. Therefore, any implementation that adheres to the rules for mixing BRDFs is conformant to the glTF Specification.
 
-In a physically accurate light simulation, the BRDFs **MUST** follow some basic principles: the BRDF **MUST** be positive, reciprocal and energy conserving. This ensures that the visual output of the simulation is independent of the underlying rendering algorithm, if it is unbiased.
+In a physically accurate light simulation, the BRDFs **MUST** follow some basic principles: the BRDF **MUST** be positive, reciprocal, and energy conserving. This ensures that the visual output of the simulation is independent of the underlying rendering algorithm, if it is unbiased.
 
 The unbiased light simulation with physically realistic BRDFs will be the ground-truth for approximations in real-time renderers that are often biased, but still give visually pleasing results.
 
@@ -3094,7 +3212,7 @@ The model for specular reflection can be improved in several ways. <<Heitz2014,H
 
 Although Schlick's Fresnel is a good approximation for a wide range of metallic and dielectric materials, there are a couple of reasons to use a more sophisticated solution for the Fresnel term.
 
-Metals often exhibit a "`dip`" in reflectance near grazing angles, which is not present in the Schlick Fresnel. <<LazanyiSzirmayKalos2005,Lazányi and Szirmay-Kalos (2005)>> extend the Schlick Fresnel with an error term to account for it. <<Hoffman2019,Hoffman (2019)>> improves the parameterization of this term by introducing an artist-friendly `f82` color, the color at an angle of about 82°. An additional color parameter for metals was also introduced by <<Gulbrandsen2014,Gulbrandsen (2014)>>. Gulbrandson calls it "`edge tint`" and uses it in the full Fresnel equations instead of Schlick's approximation. Even though the full Fresnel equations should give a more accurate result, Hoffman shows that it is worse than Schlick's approximation in the context of RGB renderers. As we target RGB renderers and do not provide an additional color parameter for metals in glTF, we suggest to use the original Schlick Fresnel for metals.
+Metals often exhibit a "`dip`" in reflectance near grazing angles, which is not present in the Schlick Fresnel. <<LazanyiSzirmayKalos2005,Lazányi and Szirmay-Kalos (2005)>> extend the Schlick Fresnel with an error term to account for it. <<Hoffman2019,Hoffman (2019)>> improves the parameterization of this term by introducing an artist-friendly `f82` color, the color at an angle of about 82°. An additional color parameter for metals was also introduced by <<Gulbrandsen2014,Gulbrandsen (2014)>>. Gulbrandson calls it "`edge tint`" and uses it in the full Fresnel equations instead of Schlick's approximation. Even though the full Fresnel equations should give a more accurate result, Hoffman shows that it is worse than Schlick's approximation in the context of RGB renderers. As we target RGB renderers and do not provide an additional color parameter for metals in glTF, we suggest using the original Schlick Fresnel for metals.
 
 The index of refraction of most dielectrics is 1.5. For that reason, the dielectric Fresnel term uses a fixed `f0 = 0.04`. The Schlick Fresnel approximates the full Fresnel equations well for an index of refraction in the range [1.2, 2.2]. The main reason for a material to fall outside this range is transparency and nested objects. If a transparent object overlaps another transparent object and both have the same (or similar) index of refraction, the resulting ratio at the boundary is 1 (or close to 1). According to the full Fresnel equations, there is no (or almost no) reflection in this case. The reflection intensity computed from the Schlick Fresnel approximation will be too high. Implementations that care about accuracy in case of nested dielectrics are encouraged to use the full Fresnel equations for dielectrics. For metals Schlick's approximation is still a good choice.
 
@@ -3133,59 +3251,120 @@ More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework f
 
 
 [appendix]
-[[appendix-c-spline-interpolation]]
-= Spline Interpolation
+[[appendix-c-interpolation]]
+= Animation Sampler Interpolation Modes
 
-glTF animations support cubic spline interpolation.
+== Overview
 
-The keyframes of a cubic spline in glTF have input and output values where each input value corresponds to three output values of the same type: in-tangent, data point, and out-tangent.
+ifndef::revdate[]
+[NOTE]
+.Note
+====
+This appendix contains formulas that may not display correctly in all preview tools.
+View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-c-interpolation[Appendix C: Animation Sampler Interpolation Modes].
+====
+endif::[]
 
-An animation that uses cubic spline interpolation **MUST** have at least 2 keyframes.
+Animation sampler interpolation modes define how to compute values of animated properties for the timestamps located between the keyframes. When the current (requested) timestamp exists in the animation data, its associated property value **MUST** be used as-is, without interpolation.
 
-Given a set of keyframes
+For the following sections, let
 
-{nbsp}{nbsp}{nbsp}{nbsp} Input _t_~_k_~ with Output in-tangent *a*~_k_~, point *v*~_k_~, and out-tangent *b*~_k_~ for _k_ = 1,...,_n_
+[none]
+* stem:[n] be the total number of keyframes, stem:[n > 0];
+* stem:[t_k] be the timestamp of the stem:[k]-th keyframe, stem:[k \in [1,n\]];
+* stem:[v_k] be the animated property value of the stem:[k]-th keyframe;
+* stem:[t_c] be the current (requested) timestamp, stem:[t_k < t_c < t_{k+1}];
+* stem:[t_d = t_{k + 1} - t_k] be the duration of the interpolation segment;
+* stem:[t = (t_c - t_k) / t_d] be the segment-normalized interpolation factor.
 
-a spline segment between two keyframes is represented in a cubic Hermite spline form:
+The scalar-vector multiplications are per vector component.
 
-{nbsp}{nbsp}{nbsp}{nbsp} *p*(_t_) = (2 _t_^3^ - 3 _t_^2^ + 1) *p*~0~ + (_t_^3^ - 2 _t_^2^ + _t_) *m*~0~ + (-2 _t_^3^ + 3 _t_^2^) *p*~1~ + (_t_^3^ - _t_^2^) *m*~1~
 
-where
+== Step Interpolation
 
-{nbsp}{nbsp}{nbsp}{nbsp} _t_ is a value between 0 and 1
+This mode is used when the animation sampler interpolation mode is set to `STEP`.
 
-{nbsp}{nbsp}{nbsp}{nbsp} *p*~0~ is the starting point at _t_ = 0
+The interpolated sampler value stem:[v_t] at the current (requested) timestamp stem:[t_c] is computed as follows.
 
-{nbsp}{nbsp}{nbsp}{nbsp} *m*~0~ is the scaled starting tangent at _t_ = 0
+[latexmath]
+++++
+v_t = v_k
+++++
 
-{nbsp}{nbsp}{nbsp}{nbsp} *p*~1~ is the ending point at _t_ = 1
 
-{nbsp}{nbsp}{nbsp}{nbsp} *m*~1~ is the scaled ending tangent at _t_ = 1
+[[interpolation-lerp]]
+== Linear Interpolation
 
-{nbsp}{nbsp}{nbsp}{nbsp} *p*(_t_) is the resulting point value
+This mode is used when the animation sampler interpolation mode is set to `LINEAR` and the animated property is not `rotation`.
 
-and where at input offset _t_~_current_~ with keyframe index _k_
+The interpolated sampler value stem:[v_t] at the current (requested) timestamp stem:[t_c] is computed as follows.
 
-{nbsp}{nbsp}{nbsp}{nbsp} _t_ = (_t_~_current_~ - _t_~_k_~) / (_t_~_k_+1~ - _t_~_k_~)
+[latexmath]
+++++
+v_t = (1 - t) * v_k + t * v_{k+1}
+++++
 
-{nbsp}{nbsp}{nbsp}{nbsp} *p*~0~ = *v*~_k_~
 
-{nbsp}{nbsp}{nbsp}{nbsp} *m*~0~ = (_t_~_k_+1~ - _t_~_k_~) *b*~_k_~
+[[interpolation-slerp]]
+== Spherical Linear Interpolation
 
-{nbsp}{nbsp}{nbsp}{nbsp} *p*~1~ = *v*~_k_+1~
+This mode is used when the animation sampler interpolation mode is set to `LINEAR` and the animated property is `rotation`, i.e., values of the animated property are unit quaternions.
 
-{nbsp}{nbsp}{nbsp}{nbsp} *m*~1~ = (_t_~_k_+1~ - _t_~_k_~) *a*~_k_+1~
+Let
+[none]
+* stem:[a = arccos(|v_k \cdot v_{k+1}|)] be the arccosine of the absolute value of the dot product of two consecutive quaternions;
+* latexmath:[s = \frac{v_k \cdot v_{k+1}}{|v_k \cdot v_{k+1}|}] be the sign of the dot product of two consecutive quaternions.
 
-The scalar-point multiplications are per point component.
+The interpolated sampler value stem:[v_t] at the timestamp stem:[t_c] is computed as follows.
 
-When the sampler targets a node's rotation property, the resulting *p*(_t_) quaternion **MUST** be normalized before applying the result to the node's rotation.
-
-When writing out rotation output values, exporters **SHOULD** take care to not write out values that can result in an invalid quaternion with all zero values.
+[latexmath]
+++++
+v_t = \frac{sin(a(1 - t))}{sin(a)} * v_k + s * \frac{sin(at)}{sin(a)} * v_{k+1}
+++++
 
 [NOTE]
 .Implementation Note
 ====
-This can be achieved by ensuring the output values never have both -*q* and *q* in the same spline.
+Using the dot product's absolute value for computing stem:[a] and multiplying stem:[v_{k+1}] by the dot product's sign ensure that the spherical interpolation follows the short path along the great circle defined by the two quaternions.
 ====
 
-The first in-tangent *a*~1~ and last out-tangent *b*~*n*~ **SHOULD** be zeros as they are not used in the spline calculations.
+Implementations **MAY** approximate these equations to reach application-specific accuracy and/or performance targets.
+
+[NOTE]
+.Implementation Note
+====
+When stem:[a] is close to zero, spherical linear interpolation turns into regular linear interpolation.
+====
+
+
+[[interpolation-cubic]]
+== Cubic Spline Interpolation
+
+This mode is used when the animation sampler interpolation mode is set to `CUBICSPLINE`.
+
+An animation sampler that uses cubic spline interpolation **MUST** have at least 2 keyframes.
+
+For each timestamp stored in the animation sampler, there are three associated keyframe values: in-tangent, property value, and out-tangent.
+
+Let
+[none]
+* stem:[a_k], stem:[v_k], and stem:[b_k] be the in-tangent, the property value, and the out-tangent of the stem:[k]-th frame respectively.
+
+The interpolated sampler value stem:[v_t] at the timestamp stem:[t_c] is computed as follows.
+
+[latexmath]
+++++
+v_t = (2t^3 - 3t^2 + 1) * v_k + t_d(t^3 - 2t^2 + t) * b_k + (-2t^3 + 3t^2) * v_{k+1} + t_d(t^3 - t^2) * a_{k+1}
+++++
+
+When the animation sampler targets a node's rotation property, the interpolated quaternion **MUST** be normalized before applying the result to the node's rotation.
+
+When writing out rotation values, exporters **SHOULD** take care to not write out values that can result in an invalid quaternion with all zero values being produced by the interpolation.
+
+[NOTE]
+.Implementation Note
+====
+This can be achieved by ensuring that stem:[v_k != -v_{k+1}] for all keyframes.
+====
+
+The first in-tangent stem:[a_1] and last out-tangent stem:[b_n] **SHOULD** be zeros as they are not used in the spline calculations.

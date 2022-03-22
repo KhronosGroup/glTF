@@ -33,13 +33,14 @@ $(GENERATED): $(wildcard schema/*.json)
 # Spec targets for offline generation
 # Requires an up-to-date asciidoctor, asciidoctor-pdf, and
 # asciidoctor-mathematical be installed
-# We recommend using the khronosgroup/vulkan-docs-base image on dockerhub
+# We recommend using the following image on dockerhub:
+# docker pull khronosgroup/docker-images:asciidoctor-spec
 ASCIIDOCTOR = asciidoctor $(ADOCOPTS)
 ADOCOPTS = -d book
-ADOCHTMLOPTS = -a stylesheet=khronos.css
+ADOCHTMLOPTS = -a stylesheet=khronos.css -a sectanchors
 SPECDEPS = $(SPEC).adoc $(GENERATED)
 
-PATCHVERSION = 0
+PATCHVERSION = 1
 SPECREVISION = 2.0.$(PATCHVERSION)
 
 # Spell out ISO 8601 format as not all date commands support --rfc-3339
