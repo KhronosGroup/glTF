@@ -144,10 +144,10 @@ If the display type is considered to be HDR (compatible SMPTE ST 2084) then colo
 The following steps shall be performed before outputing the calculated pixel value (scene linear light).    
 This would normally be done in the fragment shader.  
 
-3: Scene quantization  
-Scene linear light (normally fragment shader output value) pixel value shall be quantized to get scaled scene linear light.        
-The output from scene quantization shall be used in the next step.  
-[See Scene quantization](#scene-quantization)  
+3: Scene relative linear light  
+Scene linear light (normally fragment shader output value) pixel value shall be scaled to relative linear scene light.          
+The output from this step is used as input in step 4:  
+[See Scene relative light scaling](#scene-reltive-light-scaling)  
 
 
 4: Perceptual Quantizer - reference OOTF  
@@ -162,7 +162,7 @@ Input values are linear values in the range {R,G,B} [0 - 10000] and output is no
 
 | Input         |   Function    | Output range  | Description   |
 | ------------- | ------------- | ----------- |------------- |
-| [0.0 - X]     | quantization      | 0 - 10 000  | Output is relative linear scene light. Maps linear scene light to relative linear scene light |
+| [0.0 - X]     | Relative light      | 0 - 10 000  | Output is relative linear scene light. Maps linear scene light to relative linear scene light |
 | [0.0 - 1.0]   |     OOTF      | 0 - 10 000  | Output is display linear light. Reference PQ OOTF - maps relative linear scene light to display linear light |
 | [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Output is nonlinear PQ signal. Framebuffer output - maps linear display light to nonlinear PQ signal value |
 
@@ -188,7 +188,7 @@ To apply a tonemapper that operates on unadjusted linear scene light, call your 
 Output pixel values from a rendered 3D model are generally in a range that is larger than that of a display device.  
 This may not be a problem if the output is a high definition image format or some other target that has the same range and precision as the internal calculations.  
 However, a typical usecase for a renderer targeting interactive framerates is that the output is a light emitting display.  
-Such a display rarely has the range and precision of internal calculations making it necessary to quantize internal pixel values to match the characteristics of the output.  
+Such a display rarely has the range and precision of internal calculations making it necessary to scale internal pixel values to match the characteristics of the output.  
 This mapping is generally referred to as tone-mapping, however the exact meaning of tone-mapping varies and can also mean the process of applying artistic intent to the output.  
 For that reason this document will use the term displaymapping.  
 
@@ -307,11 +307,11 @@ The M2 linear color conversion matrix is defined as:
 0.0164 0.0880 0.8956  
 
 
-## Scene quantization
+## Scene relative light scaling
 
 
-Scene quantization can be seen as an automatic aperture factor..
-In this step the continous scene light values, in the range [0 - X] are linearly mapped to the range [0 - 10000].  
+Scene relative light scaling can be seen as an automatic aperture factor..
+In this step the continous scene light values, in the range [0 - X] are linearly mapped to relative light in the range [0 - 10000].  
 
 If total scene light contribution is > 10 000 all lightsources will be down-scaled.  
 Scaling all lightsources linearly means that the light energy contrast will be retained between the lowest and the highest energy lightsource.  
