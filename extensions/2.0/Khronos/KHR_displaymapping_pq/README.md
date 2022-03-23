@@ -34,7 +34,7 @@ Produce expected output of multiple glTF models (nodes) that are combined into o
 Provide support for both SDR and HDR displays.  
 Be compatible with updates to glTF texture color spaces, for example increased gamut.  
 
-This is done by specifying a way to map or quantize the resulting (rendered) scene linear light output values to a known range of{R,G,B} values that can be output to display.  
+This is done by specifying a way to map or quantize the resulting (rendered) scene linear light output values to a known range of {R,G,B} values that can be output to display.  
 This mapping shall be done so that hue (or chromaticity) is retained in the displayed image.   
 Output units are declared as candela / m2  
 
@@ -56,7 +56,7 @@ Notice how colors have been clipped and changed hue</em></figcaption>
 
 
 This extension sets out standardize the output from such a scene in a way that the result is predictable, is physically correct and retains hue.    
-When using this extension it is recommended that the light intensity is kept between 0 and 10 000 lumen/m2 in order to utilize the range of the Perceptual Quantizer.  
+When using this extension light intensity shall be kept between 0 and 10 000 lumen/m2. Any light intensity value above 10 000 lumen/m2 will be clamped  
 
 This extension does not declare user defined tone-mapping, s-curve, color lookup table (LUT) or similar as the process of applying these may be non pysically based and alter the energy conserving nature of the glTF BRDF.    
 
@@ -129,8 +129,9 @@ All nodes added to such scene shall use this extension.
 
 ### Integration points
 
-
 This extension has the following integration points:  
+
+**At startup or load-time**
 
 1: Choose display type  
 Decide wether display output and framebuffer format is considered to be HDR or SDR.  
@@ -138,34 +139,34 @@ If unknown then choose SDR.
 [See Display type](#display-type)  
 
 2: Color source images  
-If the display type is considered to be HDR (compatible SMPTE ST 2084) then color source images may need to be converted to ITU BT.2020 colorspace  
+If the display type is considered to be HDR then color source images may need to be converted to ITU BT.2020 colorspace  
 [See Color source images](#color-source-images)  
+
+**During each frame**
 
 The following steps shall be performed before outputing the calculated pixel value (scene linear light).    
 This would normally be done in the fragment shader.  
 
-3: Scene relative linear light  
-Scene linear light (normally fragment shader output value) pixel value shall be scaled to relative linear scene light.          
-The output from this step is used as input in step 4:  
-[See Scene relative light scaling](#scene-reltive-light-scaling)  
-
+3: Clamp and normalize relative scene light  
+Clamp incoming light values to 10 000 and divide by 10 000 to get normalized linear values.  
 
 4: Perceptual Quantizer - reference OOTF  
 Apply opto-optical transfer function (OOTF), this will apply the reference PQ OOTF as defined in Rec.2390    
-This operation will map relative linear scene light values to the same displayed luminance regardless of if output is SDR or HDR monitor.  
-Input values are in normalized relative linear light in range {R,G,B} [0.0 - 1.0] and output values in the range {R,G,B} [0 - 10000]  
+This operation will map linear scene light values to display linear light.  
+Input values are in range {R,G,B} [0.0 - 1.0] and output values in the range {R,G,B} [0 - 10000]    
+[see reference OOTF](#Perceptual-Quantizer-reference-OOTF)  
 
 5:   Perceptural Quantizer - reference OETF  
 Apply the opto-electrical transfer function (OETF).  
-This operation will quantify relative linear scene light to display with minimal amount of banding.  
-Input values are linear values in the range {R,G,B} [0 - 10000] and output is non-linear display values in range {R,G,B} [0.0 - 1.0]  
+This operation will quantify display light to output values with minimal amount of banding.  
+Input values are display linear values in the range {R,G,B} [0 - 10000] and output is non-linear display values in range {R,G,B} [0.0 - 1.0]  
 
 
 
 | Input         |   Function    | Output range  | Description   |
 | ------------- | ------------- | ----------- |------------- |
-| [0.0 - X]     | Relative light      | 0 - 10 000  | Output is relative linear scene light. Maps linear scene light to relative linear scene light |
-| [0.0 - 1.0]   |     OOTF      | 0 - 10 000  | Output is display linear light. Reference PQ OOTF - maps relative linear scene light to display linear light |
+| [0.0 - X] | Clamp & normalize | [0.0 - 1.0] | Output is normalized linear light. Clamps values to be <= 10000 and then divides by 10000 |
+| [0.0 - 1.0]|     OOTF      | [0 - 10 000]  | Output is display linear light. Reference PQ OOTF - maps normalized linear scene light to display linear light |
 | [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Output is nonlinear PQ signal. Framebuffer output - maps linear display light to nonlinear PQ signal value |
 
 
@@ -181,7 +182,7 @@ Overview of where implementations may decide to perform the functions defined by
 
 If, for instance a tone-mapping of LUT type of operation shall be performed it can be done at a stage prior to the perceptual quantizer OETF.    
 Exactly where this is performed will depend on in what space the operations shall be performed.  
-To apply a LUT that is operates on normalized color values [0 - 1], call your function before step 4:  
+To apply a LUT that is operates on normalized color values [0 - 1], call your function after step 3  
 To apply a tonemapper that operates on unadjusted linear scene light, call your function before step 3:  
 
 
@@ -229,7 +230,7 @@ The extension is fully compatible with such usecases</em></figcaption>
 This section describes how light contribution values shall be handled.  
 
 When the KHR_displaymapping_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum ouput brightness.    
-Limiting the range of light contribution values to the specified range is done in the Scene quantization step.  
+Limiting the range of light contribution values to the specified range is done as part of the Integration Points.  
 This does not have an impact on color texture sources since they define values as contribution factor.  
 The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in the SMPTE ST 2084 transfer function.  
 
@@ -255,7 +256,7 @@ The below images show 3D Commerce certification models under different illuminat
 
 
 A content creation tool supporting this extension shall sum upp light contribution for a scene before exporting to glTF, this can be a naive addition of all lights included in the scene that adds max values together.  
-If scene max light contribution intensity is above 10000 there is a choice to downscale light values before export.  
+If scene max light contribution intensity is above 10000 there may be a choice to downscale or clamp light values before export..
 
 
 ## Display type
@@ -309,65 +310,14 @@ The M2 linear color conversion matrix is defined as:
 0.0164 0.0880 0.8956  
 
 
-## Scene relative light scaling
-
-
-Scene relative light scaling can be seen as an automatic aperture factor..
-In this step the continous scene light values, in the range [0 - X] are linearly mapped to relative light in the range [0 - 10000].  
-
-If total scene light contribution is > 10 000 all lightsources will be down-scaled.  
-Scaling all lightsources linearly means that the light energy contrast will be retained between the lowest and the highest energy lightsource.  
-
-It is not intended for gaming like usecases where the viewpoint and environment changes dramitically, for instance from dimly lit outdoor night environments to a highly illuminated hallway.  
-
-This function performed to avoid clipping of values before they are passed to the perceptual quantizer OETF.    
-
-**Implementation Notes**
-
-pseudocode for scene quantization - here called aperture.
-This may be performed at beginning of each frame and passing the factor as a uniform.   
-
-Where `lightIn` is the max scene or frame light contribution, ie the scene max intensity value.  
-
-`lightIn = max(max(light.r, light.g), light.b)`  
-`float maxComponent = 10000`  
-
-Once per frame, calculate aperture 'factor' and pass to shader as uniform.  
-
-```
-float aperture(float lightIn) {
-	float value = min(lightIn, maxComponent) 
-	float factor = value / lightIn
-	return factor;
-}	
-
-float factor = aperture(lightIn);
-
-```
-
-Fragment shader code performed before passing apertureAdjustedColor BT_2100_OOTF.
-
-```
-uniform float factor;
-
-vec3 apertureAdjustedColor = color * `factor`
-
-```
-
-Since knowledge of overall scene brightness values may be time-consuming to calculate exactly, implementations are free to approximate.  
-This could be done by calculating the max scene value once, adding up punctual and environment lights and then using this value, not taking occlusion of lightrays into account.  
-This value can be used until light contribution changes.  
-
-
-
 ## Perceptual Quantizer - reference OOTF
 
 
 Opto-optical-transfer-function  
-Input signal to the OOTF is the scene linear light. The OOTF maps relative scene linear light to display linear light.  
-For more information see the ITU BT.2100 specification.  
+Input signal to the OOTF is the relative scene linear light. The OOTF maps scene linear light to display linear light.  
+For more information see the 'Reference PQ OOTF' in ITU BT.2100 and 'OOTF' in ITU BT.2390.  
 
-Resulting linear scene light values (the pixel output) shall be mapped according to the parameter `Reference PQ OOTF` of ITU BT.2100 by applying the transform.   
+Relative scene linear light values (the pixel output) shall be mapped according to the parameter `Reference PQ OOTF` of ITU BT.2100 by applying the transform.  
 The reference transform compatible with both SDR and HDR displays is described in ITU BT.2390 with the use of range extension and gamma values.  
 
 ```
@@ -378,7 +328,7 @@ FD = G1886[E'] = pow(100 E′, gamma)
 
 
 E {R, G, B} is the linear scene light value.  
-Passed to the OOTF these values shall be in the range [0.0 - 1.0]  
+FD is the display light value that shall be passed to the OETF
 
 Where the rangeExtension and gamma values shall be set according to HDR or SDR display.  
 
@@ -397,13 +347,13 @@ gamma = 2.4
 
 **Implementation Notes** 
 
-At the stage prior to OOTF, values shall be quantized using the aperture factor.   
+At the stage prior to OOTF, values shall be clamped to 10 000 and normalized.  
 
-Depending on implementation of OOTF and OETF, RGB values may simply be scaled by 10000 before used in the OOTF.  
 
 Pseudocode for BT.2100 reference OOTF  
 
-`color`is in range [0.0 - 1.0]  
+`color` in the BT_2100_OOTF function is in range [0.0 - 1.0]    
+`sceneColor` is the calculated pixel value from the BRDF.  
 
 ```
 //Note the BT 2100 specification includes a check for [RGB] values <= 0.0003024
@@ -415,8 +365,8 @@ vec3 BT_2100_OOTF(vec3 color, rangeExponent, gamma) {
     return 100 * pow(nonlinear, gamma);
 }  
 
-vec3 color = apertureAdjustedColor / 10000;
-color = BT_2100_OOTF(color, rangeExponent, gamma);
+vec3 clampedNormalizedColor = clamp(10000, sceneColor) / 10000;
+displayColor = BT_2100_OOTF(clampedNormalizedColor, rangeExponent, gamma);
 
 ```
 
@@ -436,7 +386,7 @@ Where the resulting non-linear signal (R,G,B) in the range [0:1] = E
 ```
 E = ((C1 + C2 * pow(FD / 10000, m1)) / (1 + C3 * pow(FD / 10000, m1))  ^ m2 
 
-FD = output from the OOTF  
+FD = displayColor (output from the OOTF)  
 m1 = 2610/16384 = 0.1593017578125 
 m2 = 2523/4096 * 128 = 78.84375 
 c1 = 3424/4096 =0.8359375 = c3 − c2 + 1
@@ -456,6 +406,9 @@ BT_2100_OETF(vec3 color) {
     Ypow = pow(rgb / 10000, m1);
     return pow((c1 + c2 * Ypow) / (1 + c3 * Ypow), m2); 
 }
+
+vec3 outputColor = BT2100_OETF(displayColor);
+
 ```
 
 
