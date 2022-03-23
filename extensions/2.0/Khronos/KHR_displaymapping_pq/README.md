@@ -38,11 +38,11 @@ This is done by specifying a way to map or quantize the resulting (rendered) sce
 This mapping shall be done so that hue (or chromaticity) is retained in the displayed image.   
 Output units are declared as candela / m2  
 
+Currently the glTF specification does not define how to output pixels.  
+This results in hue shift and white-out, due to clipping of pixel [RGB] values when written to framebuffer,  not desirable when the goal is to achieve physically correct output.  
+
 Correct output of hue is important in order to achieve a physically correct visualization and to retain original artistic intent.  
 One such important usecase is 3D Commerce and the certification process.  
-
-Currently the glTF specification does not define how to output pixels.  
-This results in hue shift and white-out, due to clipping of pixel [RGB] values when written to framebuffer,  not desirable when the goal is to achieve physically correct output.   
 
 Below is one of the 3D Commerce certification test models, lit with 1000 lumen / m2.  
 As can be seen, not much of the surface properties are present in the output.   
@@ -55,8 +55,9 @@ Notice how colors have been clipped and changed hue</em></figcaption>
 </figure>
 
 
-This extension sets out standardize the output from such a scene in a way that the result is predictable, is physically correct and retains hue.    
-When using this extension light intensity shall be kept between 0 and 10 000 lumen/m2. Any light intensity value above 10 000 lumen/m2 will be clamped  
+This extension standardizes the output from such a scene in a way that the result is predictable, physically correct and retains hue.  
+When using this extension light intensity shall be kept between 0 and 10 000 lumen/m2.  
+Any light intensity value above 10 000 lumen/m2 will be clamped  
 
 This extension does not declare user defined tone-mapping, s-curve, color lookup table (LUT) or similar as the process of applying these may be non pysically based and alter the energy conserving nature of the glTF BRDF.    
 
@@ -116,7 +117,7 @@ provide forms suitable for critical viewing.`
 ### glTF asset considerations
 
 The extension affects the output of the entire glTF asset, all scenes and nodes, included in a file that is using this extension.
-The current rendered scene shall be output using the displaymapping declared by this extension whenever the usecase is relevant, for instance a renderer targeting a display at interactive framerates.    
+The current rendered scene shall be output using the transfer function declared by this extension whenever the usecase is relevant, for instance a renderer targeting a display at interactive framerates.   
 
 Visualization of multiple glTF assets using this extension is supported and will produce a normative result.  
 
@@ -142,32 +143,37 @@ If unknown then choose SDR.
 If the display type is considered to be HDR then color source images may need to be converted to ITU BT.2020 colorspace  
 [See Color source images](#color-source-images)  
 
-**During each frame**
+**At load time or during each frame**
 
-The following steps shall be performed before outputing the calculated pixel value (scene linear light).    
-This would normally be done in the fragment shader.  
+This step must be performed prior to step 4.  
 
 3: Clamp and normalize relative scene light  
-Clamp incoming light values to 10 000 and divide by 10 000 to get normalized linear values.  
+Clamp light values to 10 000 and divide by 10 000 to get normalized light values.  
+
+
+**During each frame**
+
+The following steps shall be performed before the pixel value is output to display.  
+
 
 4: Perceptual Quantizer - reference OOTF  
 Apply opto-optical transfer function (OOTF), this will apply the reference PQ OOTF as defined in Rec.2390    
-This operation will map linear scene light values to display linear light.  
+This operation will map normalized light values to display light.  
 Input values are in range {R,G,B} [0.0 - 1.0] and output values in the range {R,G,B} [0 - 10000]    
 [see reference OOTF](#Perceptual-Quantizer-reference-OOTF)  
 
 5:   Perceptural Quantizer - reference OETF  
 Apply the opto-electrical transfer function (OETF).  
 This operation will quantify display light to output values with minimal amount of banding.  
-Input values are display linear values in the range {R,G,B} [0 - 10000] and output is non-linear display values in range {R,G,B} [0.0 - 1.0]  
+Input values are display values in the range {R,G,B} [0 - 10000] and output is non-linear display values in range {R,G,B} [0.0 - 1.0]  
 
 
 
 | Input         |   Function    | Output range  | Description   |
 | ------------- | ------------- | ----------- |------------- |
-| [0.0 - X] | Clamp & normalize | [0.0 - 1.0] | Output is normalized linear light. Clamps values to be <= 10000 and then divides by 10000 |
-| [0.0 - 1.0]|     OOTF      | [0 - 10 000]  | Output is display linear light. Reference PQ OOTF - maps normalized linear scene light to display linear light |
-| [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Output is nonlinear PQ signal. Framebuffer output - maps linear display light to nonlinear PQ signal value |
+| [0.0 - X] | Clamp & normalize | [0.0 - 1.0] | Output is normalized light. Clamps values to be <= 10000 and then divide by 10000 |
+| [0.0 - 1.0]|     OOTF      | [0 - 10 000]  | Output is display light. Reference PQ OOTF - maps normalized light to display light |
+| [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Output is nonlinear PQ signal. Framebuffer output - maps display light to nonlinear PQ signal value |
 
 
 **Implementation Notes**
@@ -180,10 +186,11 @@ Overview of where implementations may decide to perform the functions defined by
 <figcaption><em>Example design flow of image space implementation. This shows where implementations may choose to apply the image space functions of this extension. Note that this is only one example of how the renderprocess could be implemented. An implementation may need to apply image space operations at different points in process</em></figcaption>
 </figure>
 
-If, for instance a tone-mapping of LUT type of operation shall be performed it can be done at a stage prior to the perceptual quantizer OETF.    
+If, for instance a tone-mapping or LUT type of operation shall be performed it can be done at a stage prior to the perceptual quantizer OETF.  
 Exactly where this is performed will depend on in what space the operations shall be performed.  
-To apply a LUT that is operates on normalized color values [0 - 1], call your function after step 3  
-To apply a tonemapper that operates on unadjusted linear scene light, call your function before step 3:  
+To apply a LUT that is operates on normalized color values [0.0 - 1.0] - call your function after step 3.  
+To apply a tonemapper that operates on unadjusted linear scene light [0.0 - X] - call your function before step 3.  
+To apply a tonemapper that operates on display light values [0 - 10000] call your funcation after step 4.  
 
 
 ### Motivation
@@ -196,7 +203,7 @@ This mapping is generally referred to as tone-mapping, however the exact meaning
 For that reason this document will use the term displaymapping.  
 
 The displaymapping for this extension is chosen from ITU BT.2100 which is the standard for HDR TV and broadcast content creation.   
-This standard uses the perceptual quantizer as transfer function, ie to go from scene linear values to non linear output values.  
+This standard uses the perceptual quantizer as transfer function, ie to go from display light values to non linear output values.  
 The function is selected based on minimizing visual artefacts from color banding according to the Barten Ramp. Resulting on very slight visible banding on panels with 10 bits per colorchannel.  
 On panels with 12 bits there is no visible banding artefacts when using the perceptual qantizer.  
 
@@ -256,7 +263,7 @@ The below images show 3D Commerce certification models under different illuminat
 
 
 A content creation tool supporting this extension shall sum upp light contribution for a scene before exporting to glTF, this can be a naive addition of all lights included in the scene that adds max values together.  
-If scene max light contribution intensity is above 10000 there may be a choice to downscale or clamp light values before export..
+If scene max light contribution intensity is above 10000 there is a choice to either downscale or clamp light values before export..
 
 
 ## Display type
@@ -314,10 +321,11 @@ The M2 linear color conversion matrix is defined as:
 
 
 Opto-optical-transfer-function  
-Input signal to the OOTF is the relative scene linear light. The OOTF maps scene linear light to display linear light.  
+Input signal to the OOTF is the normalized relative scene light.   
+The OOTF maps scene light to display light.  
 For more information see the 'Reference PQ OOTF' in ITU BT.2100 and 'OOTF' in ITU BT.2390.  
 
-Relative scene linear light values (the pixel output) shall be mapped according to the parameter `Reference PQ OOTF` of ITU BT.2100 by applying the transform.  
+Relative scene light values (the pixel output) shall be mapped according to the parameter `Reference PQ OOTF` of ITU BT.2100 by applying the transform.  
 The reference transform compatible with both SDR and HDR displays is described in ITU BT.2390 with the use of range extension and gamma values.  
 
 ```
@@ -327,10 +335,10 @@ FD = G1886[E'] = pow(100 E′, gamma)
 ```
 
 
-E {R, G, B} is the linear scene light value.  
-FD is the display light value that shall be passed to the OETF
+E {R, G, B} is the clamped and normalized scene light value.  
+FD is the display light value that shall be passed to the OETF.  
 
-Where the rangeExtension and gamma values shall be set according to HDR or SDR display.  
+The rangeExtension and gamma values shall be set according to HDR or SDR display.  
 
 
 ```
@@ -379,7 +387,7 @@ This is specified in ITU BT.2100:
 https://www.itu.int/rec/R-REC-BT.2100/en  
 
 After the OOTF is applied the OETF shall be applied, this will yield a non linear output-signal in the range [0.0 - 1.0] that shall be stored in the display buffer.  
-This shall be done according to the parameter `Reference PQ OETF`of ITU BT.2100    
+This shall be done according to the parameter `Reference PQ OETF`of ITU BT.2100   
 
 Where the resulting non-linear signal (R,G,B) in the range [0:1] = E  
 
