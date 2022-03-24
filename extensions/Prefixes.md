@@ -48,6 +48,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `MPEG` | The Moving Picture Experts Group | https://mpeg.chiariglione.org/standards/mpeg-i | [#1754](https://github.com/KhronosGroup/glTF/issues/1754) |
 | `MSFT` | Microsoft Corporation | https://www.microsoft.com/ | [#1164](https://github.com/KhronosGroup/glTF/pull/1164) |
 | `MX` | The Matrix.org Foundation | https://matrix.org/ | [#2126](https://github.com/KhronosGroup/glTF/issues/2126) |
+| `NEEDLE` | Needle Tools | https://needle.tools/<br>`felix at needle.tools` | [#2131](https://github.com/KhronosGroup/glTF/issues/2131) |
 | `NV` | NVIDIA Corporation | https://www.nvidia.com | [#1211](https://github.com/KhronosGroup/glTF/issues/1211) |
 | `OFT` | OppenFuture Technologies | https://www.hololux.cn/en/ | [#1957](https://github.com/KhronosGroup/glTF/issues/1957) |
 | `OMI` | Open Metaverse Interoperability Group | https://github.com/omigroup/OMI | [#2003](https://github.com/KhronosGroup/glTF/issues/2003) |
@@ -57,6 +58,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `POLUTROPON` | Polutropon Games | https://polutropon.games/<br>`ybalrid at polutropon.games` | [#1632](https://github.com/KhronosGroup/glTF/issues/1632) |
 | `PTC` | PTC Inc. | https://www.ptc.com/ | [#1851](https://github.com/KhronosGroup/glTF/issues/1851) |
 | `S8S` | Soft8Soft | https://www.soft8soft.com/ | [#1240](https://github.com/KhronosGroup/glTF/issues/1240) |
+| `SE` | Schneider Electric SE | https://www.se.com/ | [#2134](https://github.com/KhronosGroup/glTF/issues/2134) |
 | `SEIN` | Hiloteam | https://seinjs.com/ | [#1840](https://github.com/KhronosGroup/glTF/issues/1840) |
 | `SHAPEDIVER` | ShapeDiver GmbH | https://www.shapediver.com/ | [#2103](https://github.com/KhronosGroup/glTF/issues/2103) |
 | `SI` | Smithsonian Institution | https://www.si.edu/ | [#1410](https://github.com/KhronosGroup/glTF/issues/1410) |
@@ -64,6 +66,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `SKYLINE` | Skyline Software Systems, Inc. | https://www.skylinesoft.com/ | [#1704](https://github.com/KhronosGroup/glTF/issues/1704) |
 | `SNAP` | Snap, Inc. | https://snap.com/ | [#2125](https://github.com/KhronosGroup/glTF/issues/2125) |
 | `SPECTRUM` | Spectrum | https://spectrumcustomizer.com/ | [#1804](https://github.com/KhronosGroup/glTF/issues/1804) |
+| `TENCENT` | Tencent, Inc. | https://www.tencent.com/ | [#2118](https://github.com/KhronosGroup/glTF/issues/2118) |
 | `TRYON` | TRYON Technology Ltd. | https://tryon.technology | [#1785](https://github.com/KhronosGroup/glTF/issues/1785) |
 | `UX3D` | UX3D GmbH | https://ux3d.io/ | [#1896](https://github.com/KhronosGroup/glTF/pull/1896) |
 | `VRMC` | VRM Consortium | https://vrm-consortium.org/ | [#1874](https://github.com/KhronosGroup/glTF/issues/1874) |
