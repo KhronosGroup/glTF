@@ -143,37 +143,56 @@ If unknown then choose SDR.
 If the display type is considered to be HDR then color source images may need to be converted to ITU BT.2020 colorspace  
 [See Color source images](#color-source-images)  
 
-**At load time or during each frame**
-
-This step must be performed prior to step 4.  
-
-3: Clamp and normalize relative scene light  
-Clamp light values to 10 000 and divide by 10 000 to get normalized light values.  
-
 
 **During each frame**
 
-The following steps shall be performed before the pixel value is output to display.  
+
+**Clamp**
+ Clamp incoming light values (illumination)  
+Before incoming light values are used in BRDF calculations they must be clamped at 10 000.  
+Total illumination for a pixel output to the display must not go above 10 000.  
+This shall be done in the light (brightness) domain, prior to RGB calculations.  
+
+**BRDF**
+See the glTF BRDF model for more information:  
+https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#complete-model..
+
+RGB light output from the glTF BRDF is here called 'relative linear light' and is in the range [0.0 - 10000]  
 
 
-4: Perceptual Quantizer - reference OOTF  
+**Normalize**
+Normalize relative linear light values  
+
+Divide RGB relative linear light by 10 000 to get normalized light values.  
+
+
+**OOTF**
+Perceptual Quantizer - reference OOTF  
 Apply opto-optical transfer function (OOTF), this will apply the reference PQ OOTF as defined in Rec.2390    
 This operation will map normalized light values to display light.  
 Input values are in range {R,G,B} [0.0 - 1.0] and output values in the range {R,G,B} [0 - 10000]    
 [see reference OOTF](#Perceptual-Quantizer-reference-OOTF)  
 
-5:   Perceptural Quantizer - reference OETF  
+**OETF**
+Perceptural Quantizer - reference OETF  
 Apply the opto-electrical transfer function (OETF).  
 This operation will quantify display light to output values with minimal amount of banding.  
 Input values are display values in the range {R,G,B} [0 - 10000] and output is non-linear display values in range {R,G,B} [0.0 - 1.0]  
+
+If target framebuffer is an encoded non-linear image format, the inverse of that encoding must be applied to the non-linear PQ signal.  
+
+
+**Pipeline**
 
 
 
 | Input         |   Function    | Output range  | Description   |
 | ------------- | ------------- | ----------- |------------- |
-| [0.0 - X] | Clamp & normalize | [0.0 - 1.0] | Output is normalized light. Clamps values to be <= 10000 and then divide by 10000 |
-| [0.0 - 1.0]|     OOTF      | [0 - 10 000]  | Output is display light. Reference PQ OOTF - maps normalized light to display light |
-| [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Output is nonlinear PQ signal. Framebuffer output - maps display light to nonlinear PQ signal value |
+| [0.0 - X] | Clamp | [0.0 - 10000] | Clamps illumination values to be <= 10000. Total illumination for a pixel output to the display must not go above 10 000. Output is relative linear light. |
+| [0.0 - 10000] | BRDF | [0.0 - 10000] | The glTF BRDF calculations. Output is pixel light contribution to be displayed. |
+| [0.0 - 10000] | Normalize | [0.0 - 1.0] | Normalizes the relative linear light by dividing by 10 000. Output is normalized light. |
+| [0.0 - 1.0]|     OOTF      | [0 - 10 000]  | Reference PQ OOTF - maps normalized light to display light. Output is display light. |
+| [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Framebuffer output - maps display light to nonlinear PQ signal value. Output is non-linear PQ signal. |
 
 
 **Implementation Notes**
@@ -183,14 +202,16 @@ Overview of where implementations may decide to perform the functions defined by
 
 <figure>
 <img src="./images/RenderProcess.png"/>
-<figcaption><em>Example design flow of image space implementation. This shows where implementations may choose to apply the image space functions of this extension. Note that this is only one example of how the renderprocess could be implemented. An implementation may need to apply image space operations at different points in process</em></figcaption>
+<figcaption><em>Example design flow of image space implementation. This shows where implementations may choose to apply the image space functions of this extension. Note that this is only one example of how the renderprocess could be implemented. An implementation may need to apply image space operations at different points in the process</em></figcaption>
 </figure>
 
-If, for instance a tone-mapping or LUT type of operation shall be performed it can be done at a stage prior to the perceptual quantizer OETF.  
-Exactly where this is performed will depend on in what space the operations shall be performed.  
-To apply a LUT that is operates on normalized color values [0.0 - 1.0] - call your function after step 3.  
-To apply a tonemapper that operates on unadjusted linear scene light [0.0 - X] - call your function before step 3.  
-To apply a tonemapper that operates on display light values [0 - 10000] call your funcation after step 4.  
+If a pixel processing step shall be performed by a renderer, it can be done prior to **OETF**.  
+
+Exactly where this is performed will depend on in what space the processing shall be performed.  
+To process normalized light color values [0.0 - 1.0] - call your function after **Normalize**.  
+
+To process linear scene light [0.0 - X] - call your function before **Normalize**.  
+To process display light values [0 - 10000] call your function after **BRDF**.  
 
 
 ### Motivation
@@ -232,17 +253,18 @@ The extension is fully compatible with such usecases</em></figcaption>
 
 
 
-## Internal range of light contribution values
+## Internal range of illumination (light contribution) values
 
-This section describes how light contribution values shall be handled.  
 
-When the KHR_displaymapping_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum ouput brightness.    
-Limiting the range of light contribution values to the specified range is done as part of the Integration Points.  
+When the KHR_displaymapping_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum ouput brightness.  
+
+Limiting the range of light contribution values to the specified range is done as part of the Integration Points.    
+[See Integration Points](#Integration-Points)  
+
 This does not have an impact on color texture sources since they define values as contribution factor.  
-The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in the SMPTE ST 2084 transfer function.  
 
-When using this extension light contribution values shall be aligned to account for 10000 cd/m2 as max output value, meaning that the range {R,G,B} is 0 to 10000.  
-Content creators shall be aware of 10000 cd/m2 as the maximum value range.  
+The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in SMPTE ST 2084.. 
+
 It does not mean that the display will be capable of outputing this light intensity.  
 
 
@@ -251,8 +273,13 @@ It does not mean that the display will be capable of outputing this light intens
  
 This section describes how a content creator and exporter shall handle lightsources, such as point, directional, emissive or environment lights, that are saved with the model.  
 
-As a content creator using this extension the light intensity value of 10 000 lumen / m2 shall be considered scene max intensity.  
-This will give the benefit of a known increased light range as well as providing enough fidelity for most usecases.  
+As a content creator using this extension the light intensity value of 10 000 lumen / m2 is the max illumination value for each output pixel.  
+Giving the benefit of a known increased light range as well as providing enough fidelity for most usecases.  
+
+Illumination values are clamped as part of the rendering process during BRDF light calculations meaning that the scene max light values can go above 10 000 lumen / m2.  
+
+Adding illumination above 10 000 lumen / m2 will give the effect of brightening the darker areas without affecting hue.    
+
 The below images show 3D Commerce certification models under different illuminations, note that the light is one directional light.  
 
 
@@ -262,13 +289,10 @@ The below images show 3D Commerce certification models under different illuminat
 
 
 
-A content creation tool supporting this extension shall sum upp light contribution for a scene before exporting to glTF, this can be a naive addition of all lights included in the scene that adds max values together.  
-If scene max light contribution intensity is above 10000 there is a choice to either downscale or clamp light values before export..
-
-
 ## Display type
 
 This section describes how to decide if display type is HDR or SDR.  
+
 
 ### HDR capable display
 
@@ -292,13 +316,15 @@ Another solution would be to perform render calculation in BT.709 colorspace and
 
 ### SDR capable display
 
-If the framebuffer format or colorspace is not known, or none is available that fulfils the HDR requirements, a framebuffer with sRGB colorspace may be used.  
+If a framebuffer format that fulfills the HDR requirements is not available, a framebuffer in sRGB colorspace may be used.    
+
 This is to allow for compatibility with displays that does not support higher range and/or compatible colorspaces.  
 It also allows implementations where the details of the framebuffer is not known or available.  
 
 A SDR capable display is defined as having less than 10 bits per pixel for each colorchannel.  
 
 For SDR output,  a range extension value of 46.42 and gamma of 2.4 shall be used in the OOTF - [see reference OOTF](#Perceptual-Quantizer-reference-OOTF) 
+
 
 ## Color source images
 
@@ -335,7 +361,7 @@ FD = G1886[E'] = pow(100 E′, gamma)
 ```
 
 
-E {R, G, B} is the clamped and normalized scene light value.  
+E {R, G, B} is the normalized light value.  
 FD is the display light value that shall be passed to the OETF.  
 
 The rangeExtension and gamma values shall be set according to HDR or SDR display.  
@@ -353,15 +379,14 @@ range extension = 46.42
 gamma = 2.4  
 ```
 
-**Implementation Notes** 
 
-At the stage prior to OOTF, values shall be clamped to 10 000 and normalized.  
-
+**Implementation notes**
 
 Pseudocode for BT.2100 reference OOTF  
 
 `color` in the BT_2100_OOTF function is in range [0.0 - 1.0]    
-`sceneColor` is the calculated pixel value from the BRDF.  
+`sceneColor` is the relative linear light pixel value from the BRDF.    
+
 
 ```
 //Note the BT 2100 specification includes a check for [RGB] values <= 0.0003024
@@ -373,8 +398,8 @@ vec3 BT_2100_OOTF(vec3 color, rangeExponent, gamma) {
     return 100 * pow(nonlinear, gamma);
 }  
 
-vec3 clampedNormalizedColor = clamp(10000, sceneColor) / 10000;
-displayColor = BT_2100_OOTF(clampedNormalizedColor, rangeExponent, gamma);
+vec3 normalizedColor = sceneColor / 10000;
+displayColor = BT_2100_OOTF(normalizedColor, rangeExponent, gamma);
 
 ```
 
