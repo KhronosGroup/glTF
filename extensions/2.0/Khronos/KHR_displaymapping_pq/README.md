@@ -160,24 +160,11 @@ https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#complete-model..
 RGB light output from the glTF BRDF is here called 'relative linear light' and is in the range [0.0 - 10000]  
 
 
-**Normalize**
-Normalize relative linear light values  
-
-Divide RGB relative linear light by 10 000 to get normalized light values.  
-
-
-**OOTF**
-Perceptual Quantizer - reference OOTF  
-Apply opto-optical transfer function (OOTF), this will apply the reference PQ OOTF as defined in Rec.2390    
-This operation will map normalized light values to display light.  
-Input values are in range {R,G,B} [0.0 - 1.0] and output values in the range {R,G,B} [0 - 10000]    
-[see reference OOTF](#Perceptual-Quantizer-reference-OOTF)  
-
 **OETF**
 Perceptural Quantizer - reference OETF  
 Apply the opto-electrical transfer function (OETF).  
 This operation will quantify display light to output values with minimal amount of banding.  
-Input values are display values in the range {R,G,B} [0 - 10000] and output is non-linear display values in range {R,G,B} [0.0 - 1.0]  
+Input values are relative linear light values in the range {R,G,B} [0 - 10000] and output is non-linear display values in range {R,G,B} [0.0 - 1.0]  
 
 If target framebuffer is an encoded non-linear image format, the inverse of that encoding must be applied to the non-linear PQ signal.  
 
@@ -189,10 +176,8 @@ If target framebuffer is an encoded non-linear image format, the inverse of that
 | Input         |   Function    | Output range  | Description   |
 | ------------- | ------------- | ----------- |------------- |
 | [0.0 - X] | Clamp | [0.0 - 10000] | Clamps illumination values to be <= 10000. Total illumination for a pixel output to the display must not go above 10 000. Output is relative linear light. |
-| [0.0 - 10000] | BRDF | [0.0 - 10000] | The glTF BRDF calculations. Output is pixel light contribution to be displayed. |
-| [0.0 - 10000] | Normalize | [0.0 - 1.0] | Normalizes the relative linear light by dividing by 10 000. Output is normalized light. |
-| [0.0 - 1.0]|     OOTF      | [0 - 10 000]  | Reference PQ OOTF - maps normalized light to display light. Output is display light. |
-| [0 - 10 000]  |     OETF      | [0.0 - 1.0] | Framebuffer output - maps display light to nonlinear PQ signal value. Output is non-linear PQ signal. |
+| [0.0 - 10000] | BRDF | [0.0 - 10000] | The glTF BRDF calculations. Output is pixel light contribution to be displayed - relative linear light.|
+| [0 - 10000]  |     OETF      | [0.0 - 1.0] | Framebuffer output - maps relative linear light to nonlinear PQ signal value. Output is non-linear PQ signal. |
 
 
 **Implementation Notes**
@@ -208,10 +193,10 @@ Overview of where implementations may decide to perform the functions defined by
 If a pixel processing step shall be performed by a renderer, it can be done prior to **OETF**.  
 
 Exactly where this is performed will depend on in what space the processing shall be performed.  
-To process normalized light color values [0.0 - 1.0] - call your function after **Normalize**.  
 
-To process linear scene light [0.0 - X] - call your function before **Normalize**.  
-To process display light values [0 - 10000] call your function after **BRDF**.  
+
+To process linear scene light [0.0 - X] - call your function before **Clamp**.  
+To process relative linear light [0 - 10000] call your function after **BRDF**.  
 
 
 ### Motivation
@@ -224,7 +209,7 @@ This mapping is generally referred to as tone-mapping, however the exact meaning
 For that reason this document will use the term displaymapping.  
 
 The displaymapping for this extension is chosen from ITU BT.2100 which is the standard for HDR TV and broadcast content creation.   
-This standard uses the perceptual quantizer as transfer function, ie to go from display light values to non linear output values.  
+This standard uses the perceptual quantizer as transfer function, ie to go from relative linear light (display light) values to non linear output values.  
 The function is selected based on minimizing visual artefacts from color banding according to the Barten Ramp. Resulting on very slight visible banding on panels with 10 bits per colorchannel.  
 On panels with 12 bits there is no visible banding artefacts when using the perceptual qantizer.  
 
@@ -306,7 +291,6 @@ For a list of Vulkan colorspaces [see Table 1 of VkColorSpaceKHR](https://www.kh
 
 It is valid to choose a framebuffer with colorspace BT.2020 (or BT.2100) that does not use the SMPTE ST 2084 transfer function, if SMPTE ST 2084 is applied to pixel values before being output to display.  
 
-For HDR output, a range extension value of 59.5208 and gamma of 2.4 shall be used in the OOTF - [see reference OOTF](#Perceptual-Quantizer-reference-OOTF)
 
 **Implementation notes**
 
@@ -323,7 +307,6 @@ It also allows implementations where the details of the framebuffer is not known
 
 A SDR capable display is defined as having less than 10 bits per pixel for each colorchannel.  
 
-For SDR output,  a range extension value of 46.42 and gamma of 2.4 shall be used in the OOTF - [see reference OOTF](#Perceptual-Quantizer-reference-OOTF) 
 
 
 ## Color source images
@@ -343,68 +326,6 @@ The M2 linear color conversion matrix is defined as:
 0.0164 0.0880 0.8956  
 
 
-## Perceptual Quantizer - reference OOTF
-
-
-Opto-optical-transfer-function  
-Input signal to the OOTF is the normalized relative scene light.   
-The OOTF maps scene light to display light.  
-For more information see the 'Reference PQ OOTF' in ITU BT.2100 and 'OOTF' in ITU BT.2390.  
-
-Relative scene light values (the pixel output) shall be mapped according to the parameter `Reference PQ OOTF` of ITU BT.2100 by applying the transform.  
-The reference transform compatible with both SDR and HDR displays is described in ITU BT.2390 with the use of range extension and gamma values.  
-
-```
-E′ = G709[E] = pow(1.099 (rangeExtension * E), 0.45) – 0.099 for 1 > E > 0.0003024
-               267.84 * E for 0.0003024 ≥ E ≥ 0
-FD = G1886[E'] = pow(100 E′, gamma)
-```
-
-
-E {R, G, B} is the normalized light value.  
-FD is the display light value that shall be passed to the OETF.  
-
-The rangeExtension and gamma values shall be set according to HDR or SDR display.  
-
-
-```
-HDR
-range extension = 59.5208  
-gamma = 2.4  
-```
-
-```
-SDR
-range extension = 46.42  
-gamma = 2.4  
-```
-
-
-**Implementation notes**
-
-Pseudocode for BT.2100 reference OOTF  
-
-`color` in the BT_2100_OOTF function is in range [0.0 - 1.0]    
-`sceneColor` is the relative linear light pixel value from the BRDF.    
-
-
-```
-//Note the BT 2100 specification includes a check for [RGB] values <= 0.0003024
-//if (color <= 0.0003024)
-//        return 100 * pow(267.84 * color, gamma);
-// This can be skipped unless it is known that display has a precision at low brightness levels to match
-vec3 BT_2100_OOTF(vec3 color, rangeExponent, gamma) {  
-    nonlinear = 1.099 * pow(rangeExponent * color, 0.45) - 0.099;  
-    return 100 * pow(nonlinear, gamma);
-}  
-
-vec3 normalizedColor = sceneColor / 10000;
-displayColor = BT_2100_OOTF(normalizedColor, rangeExponent, gamma);
-
-```
-
-Where this is calculated per RGB component, note that the color value in this equation must be in range 0.0 - 1.0
-
 ## Perceptual Quantizer - reference OETF
 
 To convert to non-linear output value in the range 0.0 - 1.0 the reference PQ OETF shall be used.  
@@ -419,7 +340,7 @@ Where the resulting non-linear signal (R,G,B) in the range [0:1] = E
 ```
 E = ((C1 + C2 * pow(FD / 10000, m1)) / (1 + C3 * pow(FD / 10000, m1))  ^ m2 
 
-FD = displayColor (output from the OOTF)  
+FD = displayColor (output from the BRDF)  
 m1 = 2610/16384 = 0.1593017578125 
 m2 = 2523/4096 * 128 = 78.84375 
 c1 = 3424/4096 =0.8359375 = c3 − c2 + 1
