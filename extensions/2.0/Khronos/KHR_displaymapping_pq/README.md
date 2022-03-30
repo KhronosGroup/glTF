@@ -21,6 +21,23 @@ Written against the glTF 2.0 spec.
 
 ## Exclusions
 
+## Termonilogy
+
+This extension uses the following terms:
+
+
+|NAME|MEANING|
+|------|-----|
+|OETF|The opto-electronic transfer function, which converts linear scene light into the video signal. It is the inverse-EOTF and is sometimes called 'Display Encoding'.|
+|EOTF|The electro-optical Transfer Function, which converts the video signal into the linear light output of the display.|
+|OOTF|opto-optical transfer function, which converts linear scene light to display linear light. Sometimes called 'Tone mapping'.|
+|Linear scene light | Light output from the scene in cd / m2. |
+|Relative linear light | Light output in the range [0 - 10000] cd / m2 where 10000 equals a fully exposed pixel |
+|Tone-mapping | Converts linear light to linear display light. Given the display properties and viewing environment reproduces the perceptual impression that the viewer would have observing the original scene |
+
+
+
+
 ## Overview
 
 This extension is intended for implementations that targets a display with the goal of outputting at interactive framerates in either HDR or SDR in a physically correct manner.    
@@ -56,8 +73,8 @@ Notice how colors have been clipped and changed hue</em></figcaption>
 
 
 This extension standardizes the output from such a scene in a way that the result is predictable, physically correct and retains hue.  
-When using this extension light intensity shall be kept between 0 and 10 000 lumen/m2.  
-Any light intensity value above 10 000 lumen/m2 will be clamped  
+When using this extension light output from the BRDF shall be kept between 0 and 10 000 lumen/m2.  
+This light output is called relative linear light, where 0 is a black pixel and 10000 equals a fully (bright) exposed pixel on the display.
 
 This extension does not declare user defined tone-mapping, s-curve, color lookup table (LUT) or similar as the process of applying these may be non pysically based and alter the energy conserving nature of the glTF BRDF.    
 
@@ -68,10 +85,18 @@ According to research (Bernstein et al. 2018) the mind's perception of brightnes
 The difference in the perception of the object's brightness is based on background color.    
 Given this relation means it is important to retain the relative brightness of the linear scene light values.  
 
+Here the term renderer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
+This buffer will be referred to as the framebuffer.  
+The framebuffer can be of varying range, precision and colorspace. This has an impact on the color gamut that can be displayed.  
+
+After completion of one framebuffer it is output to the display, this is usually done by means of a swap-chain. The details of how the swap-chain works is outside the scope of this extension.  
+KHR_displaymapping_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
+
+This extension does not define an OOTF (or Tone mapping) to convert linear scene light to linear display light.  
+
 This extension does not seek to model the psychological perception of the human vision system, instead it provides means to reproduce the scene light information as it would be 'captured' by a human observer (in the scene).    
 The goal is to replicate the amount of light that would enter into the eye, through the cornea, and end up on the retina.    
 Modelling of biological effects such as photoreceptor fatigue or mind perception is not part of the goal of this extension.    
-
 
 This extension does not take the viewing environment of the display, or eye light adaptation, into consideration.  
 It is assumed that the content is viewed in an environment that is dimly lit (~5 cd / m2) without direct light on the display.  
@@ -79,12 +104,6 @@ Viewer calibration is not part of this extension as this is heavily dependant on
 
 This extensions provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
 
-Here the term renderer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
-This buffer will be referred to as the framebuffer.  
-The framebuffer can be of varying range, precision and colorspace. This has an impact on the color gamut that can be displayed.  
-
-After completion of one framebuffer it is output to the display, this is usually done by means of a swap-chain. The details of how the swap-chain works is outside the scope of this extension.  
-KHR_displaymapping_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
 
 
 <figure>
@@ -123,7 +142,7 @@ Visualization of multiple glTF assets using this extension is supported and will
 
 If the glTF asset contains multiple scenes, each one when rendered, shall be output using this extension.  
 
-If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for displaymapping.  
+If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for the PQ transfer function.  
 This could for instance be a 'Main product' type of scenario, where the asset contains the light setup and uses this extension.    
 All nodes added to such scene shall use this extension.  
 
@@ -147,17 +166,30 @@ If the display type is considered to be HDR then color source images may need to
 **During each frame**
 
 
-**Clamp**
- Clamp incoming light values (illumination)  
-Before incoming light values are used in BRDF calculations they must be clamped at 10 000.  
-Total illumination for a pixel output to the display must not go above 10 000.  
-This shall be done in the light (brightness) domain, prior to RGB calculations.  
-
 **BRDF**
 See the glTF BRDF model for more information:  
 https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#complete-model..
 
 RGB light output from the glTF BRDF is here called 'relative linear light' and is in the range [0.0 - 10000]  
+Light contribution can come from several lightsources. 
+To avoid costly and complex calculation of light contribution prior to the BRDF, values are scaled before sent to the OETF.  
+This scaling, not clamp, shall be done equally to RGB triplets in a way that retains hue.  
+
+** Implementation Notes**
+
+Pseudocode to scale BRDF output.
+
+```
+vec3 BRDF_SCALE(vec3 color) {
+  float factor = min(1, (10000 / max(color.r, max(color.g, b))));
+  return factor * color;
+}
+
+vec3 displayColor = BRDF_SCALE(brdfColor);
+
+```
+
+
 
 
 **OETF**
@@ -175,8 +207,7 @@ If target framebuffer is an encoded non-linear image format, the inverse of that
 
 | Input         |   Function    | Output range  | Description   |
 | ------------- | ------------- | ----------- |------------- |
-| [0.0 - X] | Clamp | [0.0 - 10000] | Clamps illumination values to be <= 10000. Total illumination for a pixel output to the display must not go above 10 000. Output is relative linear light. |
-| [0.0 - 10000] | BRDF | [0.0 - 10000] | The glTF BRDF calculations. Output is pixel light contribution to be displayed - relative linear light.|
+| [0.0 - X] | BRDF | [0.0 - 10000] | The glTF BRDF calculations. Output is scaled pixel value to be displayed - relative linear light. |
 | [0 - 10000]  |     OETF      | [0.0 - 1.0] | Framebuffer output - maps relative linear light to nonlinear PQ signal value. Output is non-linear PQ signal. |
 
 
@@ -190,25 +221,15 @@ Overview of where implementations may decide to perform the functions defined by
 <figcaption><em>Example design flow of image space implementation. This shows where implementations may choose to apply the image space functions of this extension. Note that this is only one example of how the renderprocess could be implemented. An implementation may need to apply image space operations at different points in the process</em></figcaption>
 </figure>
 
-If a pixel processing step shall be performed by a renderer, it can be done prior to **OETF**.  
-
-Exactly where this is performed will depend on in what space the processing shall be performed.  
-
-
-To process linear scene light [0.0 - X] - call your function before **Clamp**.  
-To process relative linear light [0 - 10000] call your function after **BRDF**.  
-
-
 ### Motivation
 
 Output pixel values from a rendered 3D model are generally in a range that is larger than that of a display device.  
 This may not be a problem if the output is a high definition image format or some other target that has the same range and precision as the internal calculations.  
 However, a typical usecase for a renderer targeting interactive framerates is that the output is a light emitting display.  
 Such a display rarely has the range and precision of internal calculations making it necessary to scale internal pixel values to match the characteristics of the output.  
-This mapping is generally referred to as tone-mapping, however the exact meaning of tone-mapping varies and can also mean the process of applying artistic intent to the output.  
-For that reason this document will use the term displaymapping.  
 
-The displaymapping for this extension is chosen from ITU BT.2100 which is the standard for HDR TV and broadcast content creation.   
+
+The transfer function for this extension is chosen from ITU BT.2100 which is the standard for HDR TV and broadcast content creation.   
 This standard uses the perceptual quantizer as transfer function, ie to go from relative linear light (display light) values to non linear output values.  
 The function is selected based on minimizing visual artefacts from color banding according to the Barten Ramp. Resulting on very slight visible banding on panels with 10 bits per colorchannel.  
 On panels with 12 bits there is no visible banding artefacts when using the perceptual qantizer.  
@@ -222,17 +243,11 @@ As the mind will perceive object brightess compared to the background, ie 100 vs
 Apart from being widely supported and used in the TV / movie industry the perceptual quantizer is also embraced by the gaming community, with support in the engines from some of the major game companies.  
 For instance, game engines Frostbite and Lumberyard and also in specific games such as Destiny 2 and Call Of Duty.  
 
-**Implementation Notes**
-
-The extension is compatible with usecases where a different output is wanted.  
-This could for instance be a viewer or engine that implements a physical camera or a post-processing step.  
-
 
 <figure>
 <img src="./images/DesignOverview.png"/>
-<figcaption><em>This extension affects the image processing step of the renderer.  
-Viewers or engines may choose to implement physical camera, post-processing or other type of features in the world/scene or image space.  
-The extension is fully compatible with such usecases</em></figcaption>
+<figcaption><em>Expected output using this extension  
+</em></figcaption>
 </figure>
 
 
@@ -243,14 +258,15 @@ The extension is fully compatible with such usecases</em></figcaption>
 
 When the KHR_displaymapping_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum ouput brightness.  
 
-Limiting the range of light contribution values to the specified range is done as part of the Integration Points.    
+Limiting the range of output brightness values to the specified range is done as part of the Integration Points.    
 [See Integration Points](#Integration-Points)  
 
 This does not have an impact on color texture sources since they define values as contribution factor.  
 
-The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in SMPTE ST 2084.. 
+The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in SMPTE ST 2084..  
+The range [0 - 10000] shall be seen as a relative linear light (display light) where 0 is black and 10000 is full brightness on the display.  
 
-It does not mean that the display will be capable of outputing this light intensity.  
+It does not mean that the display will be capable of outputing at brightness levels up to 10000 cd / m2  
 
 
 
@@ -263,7 +279,10 @@ Giving the benefit of a known increased light range as well as providing enough 
 
 Illumination values are clamped as part of the rendering process during BRDF light calculations meaning that the scene max light values can go above 10 000 lumen / m2.  
 
-Adding illumination above 10 000 lumen / m2 will give the effect of brightening the darker areas without affecting hue.    
+Adding illumination above 10 000 lumen / m2 will give the effect of brightening the darker areas without affecting hue or brightness of fully bright pixels.  
+
+A content creation tool supporting this extension shall display the rendered image according to specification when this extension is enabled for the asset  
+This is to ensure that users see the same output as is expected from a viewer.  
 
 The below images show 3D Commerce certification models under different illuminations, note that the light is one directional light.  
 
@@ -289,7 +308,7 @@ VK_COLOR_SPACE_DOLBYVISION_EXT
 
 For a list of Vulkan colorspaces [see Table 1 of VkColorSpaceKHR](https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkColorSpaceKHR.html)
 
-It is valid to choose a framebuffer with colorspace BT.2020 (or BT.2100) that does not use the SMPTE ST 2084 transfer function, if SMPTE ST 2084 is applied to pixel values before being output to display.  
+It is valid to choose a framebuffer with colorspace BT.2020 (or BT.2100) that does not use the SMPTE ST 2084 transfer function, if SMPTE ST 2084 (PQ EOTF) is applied to pixel values before being output to display.  
 
 
 **Implementation notes**
@@ -332,7 +351,7 @@ To convert to non-linear output value in the range 0.0 - 1.0 the reference PQ OE
 This is specified in ITU BT.2100:
 https://www.itu.int/rec/R-REC-BT.2100/en  
 
-After the OOTF is applied the OETF shall be applied, this will yield a non linear output-signal in the range [0.0 - 1.0] that shall be stored in the display buffer.  
+The OETF shall be applied after the BRDF calculations, this will yield a non linear output-signal in the range [0.0 - 1.0] that shall be stored in the display buffer.  
 This shall be done according to the parameter `Reference PQ OETF`of ITU BT.2100   
 
 Where the resulting non-linear signal (R,G,B) in the range [0:1] = E  
