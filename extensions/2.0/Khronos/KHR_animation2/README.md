@@ -11,6 +11,7 @@
 * Joe Herdman, [@jbherdman](https://github.com/jbherdman)
 * Lewis Weaver, Microsoft
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+* Felix Herbst, prefrontal cortex [@hybridherbst](https://twitter.com/hybridherbst)
 
 Copyright (C) 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -86,6 +87,98 @@ interpretation of the animated values is entirely application specific.
 If this extension is used, the `animation.channel.target.node` **must not** be set.
 Because the node isn’t defined, the channel is ignored and not animated due to the current specification.  
 If this extension is used, the `animation.channel.target.path` **must** contain any of constant values. Even this value is ignored, the unused glTF part is still valid.
+
+### Animating properties of extensions
+
+Extensions created after KHR_animation2 should state which properties can be animated and which cannot.  
+The following extensions have been created before KHR_animation2 and are thus listed here with their animatable properties:  
+
+#### [KHR_draco_mesh_compression](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_draco_mesh_compression)
+❌ No animatable properties.
+
+#### [KHR_lights_punctual](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_lights_punctual)
+| Property | Animatable |
+|:-----|:------|
+| `name` | ❌ |
+| `color` | ✅ |
+| `intensity` | ✅ |
+| `type` | ❌ |
+| `range` | ✅ |
+| `spot.innerConeAngle` | ✅ |
+| `spot.outerConeAngle` | ✅ |
+
+#### [KHR_materials_clearcoat](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_clearcoat)
+| Property | Animatable |
+|:----|:-------|
+| `clearcoatFactor` | ✅ |
+| `clearcoatTexture` | ❌ |
+| `clearcoatRoughnessFactor` | ✅ |
+| `clearcoatRoughnessTexture` | ❌ |
+| `clearcoatNormalTexture` | ❌ |
+
+#### [KHR_materials_ior](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_ior)
+| Property | Animatable |
+|:-----|:------------|
+| `ior` | ✅ |
+
+#### [KHR_materials_sheen](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_sheen)
+| Property | Animatable |
+|:-----|:------------|
+| `sheenColorFactor` | ✅ |
+| `sheenColorTexture` | ❌ |
+| `sheenRoughnessFactor` | ✅ |
+| `sheenRoughnessTexture` | ❌ |
+
+#### [KHR_materials_specular](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_specular)
+| Property | Animatable |
+|:--------|:----------|
+| `specularFactor` | ✅ |
+| `specularTexture` | ❌ |
+| `specularColorFactor` | ✅ |
+| `specularColorTexture` | ❌ |
+
+#### [KHR_materials_transmission](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_transmission)
+| Property | Animatable |
+|:--------|:----------|
+| `transmissionFactor` | ✅ |
+| `transmissionTexture` | ❌ |
+
+#### [KHR_materials_unlit](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_unlit)
+❌ No animatable properties.
+
+#### [KHR_materials_variants](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_variants)
+❌ No animatable properties.
+
+#### [KHR_materials_volume](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_volume)
+| Property | Animatable |
+|:--------|:----------|
+| `thicknessFactor` | ✅ |
+| `thicknessTexture` | ❌ |
+| `attenuationDistance` | ✅ |
+| `attenuationColor` | ✅ |
+
+#### [KHR_mesh_quantization](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_mesh_quantization)
+❌ No animatable properties.
+
+#### [KHR_texture_basisu](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_texture_basisu)
+❌ No animatable properties.
+
+#### [KHR_texture_transform](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_texture_transform)
+| Property | Animatable |
+|:--------|:----------|
+| `offset` | ✅ |
+| `rotation` | ✅ |
+| `scale` | ✅ |
+| `texCoord` | ❌ |
+
+#### [KHR_xmp_json_ld](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_xmp_json_ld)
+❌ No animatable properties.
+
+### Example target templates for extensions
+
+|`path`                                                |Accessor Type|Component Type(s)  |Description                                                   |
+|------------------------------------------------------|-------------|-------------------|--------------------------------------------------------------|
+|`"/materials/{}/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/offset"`                                  |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|XY offset vector                                               |
 
 ## glTF Schema Updates
 
