@@ -287,9 +287,9 @@ This is to ensure that users see the same output as is expected from a viewer.
 The below images show 3D Commerce certification models under different illuminations, note that the light is one directional light.  
 
 
-| Sunrise (directional 400 lux) | Overcast (directional 1500 lux) | Bright (directional 5000 lux) | Sunny (directional 10 000 lux) |
+| Sunrise (~200 lux) | Overcast (~1200 lux) | Bright (~3200 lux) | Sunny (~10000 lux) |
 |-----|-----|-------|------|
-| <img src="./images/PQ-sunrise-400.png" width=200 height=125/> | <img src="./images/PQ-overcast-1500.png" width=200 height=125/> | <img src="./images/PQ-bright-5000.png" width=200 height=125/> | <img src="./images/PQ-sunny-10000.png" width=200 height=125/> |
+| <img src="./images/PQ-sunrise.png" width=200 height=125/> | <img src="./images/PQ-overcast.png" width=200 height=125/> | <img src="./images/PQ-bright.png" width=200 height=125/> | <img src="./images/PQ-sunny.png" width=200 height=125/> |
 
 
 
