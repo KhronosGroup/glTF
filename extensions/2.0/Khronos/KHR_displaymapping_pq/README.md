@@ -181,7 +181,7 @@ Pseudocode to scale BRDF output.
 
 ```
 vec3 BRDF_SCALE(vec3 color) {
-  float factor = min(1, (10000 / max(color.r, max(color.g, b))));
+  float factor = min(1, (10000 / max(color.r, max(color.g, color.b))));
   return factor * color;
 }
 
