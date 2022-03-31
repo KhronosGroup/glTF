@@ -5,13 +5,14 @@
 * Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
 * Alex Jamerson, Amazon
 * Thomas Dideriksen, Amazon
-* Alex Wood, Analytical Graphics, [@abwood](https://twitter.com/abwood)
-* Ed Mackey, Analytical Graphics, [@emackey](https://twitter.com/emackey)
-* Nicolas Savva, Autodesk [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
+* Alex Wood, AGI, [@abwood](https://twitter.com/abwood)
+* Ed Mackey, AGI, [@emackey](https://twitter.com/emackey)
+* Nicolas Savva, Autodesk, [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
 * Henrik Edstrom, Autodesk
-* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
-* Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
-* Emmett Lalish, Google [@elalish](https://github.com/elalish)
+* Tobias Haeussler, Dassault Systemes, [@proog128](https://github.com/proog128)
+* Bastian Sdorra, Dassault Systemes, [@bsdorra](https://github.com/bsdorra)
+* Emmett Lalish, Google, [@elalish](https://github.com/elalish)
+* Richard Sahlin, IKEA, [@rsahlin](https://github.com/rsahlin)
 * Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
 * Bruce Cherniak, Intel
 * Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
@@ -19,7 +20,8 @@
 * Adam Morris, Target [@weegeekps](https://github.com/weegeekps)
 * Sandra Voelker, Target
 * Ben Houston, Threekit, [@bhouston](https://twitter.com/BenHouston3D)
-* Eric Chadwick, Wayfair [echadwick-wayfair](https://github.com/echadwick-wayfair)
+* Norbert Nopper, UX3D, [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+* Eric Chadwick, Wayfair, [echadwick-wayfair](https://github.com/echadwick-wayfair)
 
 Copyright (C) 2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
