@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "Audio Emitter",
+  "type": "object",
+  "description": "A positional or global audio emitter.",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+  "properties": {
+      "type": {
+          "type": "string",
+          "description": "Specifies the audio emitter type.",
+          "anyOf": [
+              {
+                  "enum": [ "positional" ],
+                  "description": "Positional audio emitters."
+              },
+              {
+                  "enum": [ "global" ],
+                  "description": "Global audio emitters are not affected by the position of audio listeners."
+              },
+              {
+                  "type": "string"
+              }
+          ]
+      },
+      "gain": {
+        "description": "Unitless multiplier against original source volume for determining emitter loudness.",
+        "type": "number",
+        "minimum": 0.0,
+        "default": 1.0
+      },
+      "loop": {
+        "description": "Whether or not to loop the specified audio clip when finished.",
+        "type": "boolean",
+        "default": false
+      },
+      "playing": {
+        "description": "Whether or not the specified audio clip is playing. Setting this property true will set the audio clip to play on load (autoplay).",
+        "type": "boolean",
+        "default": false
+      },
+      "source": {
+        "description": "The id of the audio source referenced by this audio emitter.",
+        "allOf": [
+            {
+                "$ref": "glTFid.schema.json"
+            }
+        ]
+      },
+      "positional": {
+        "type": "object",
+        "$ref": "emitter.positional.schema.json"
+      },
+      "name": { },
+      "extensions": { },
+      "extras": { }
+  },
+  "required": [
+      "type"
+  ]
+}
