@@ -48,7 +48,8 @@ Produce consistent, deterministic and physically correct output under varying li
 Produce expected output of a glTF model (nodes) when put into a scene with defined lights.  
 Produce expected output of a scene when the light conditions are dynamically changed.  
 Produce expected output of multiple glTF models (nodes) that are combined into one scene.  
-Provide support for both SDR and HDR displays.  
+Produce expected output when a glTF model is viewed in an editing tool supporting this extension
+Produce expected output on SDR and supported HDR displays.  
 Be compatible with updates to glTF texture color spaces, for example increased gamut.  
 
 This is done by specifying a way to map or quantize the resulting (rendered) scene linear light output values to a known range of {R,G,B} values that can be output to display.  
@@ -85,7 +86,7 @@ According to research (Bernstein et al. 2018) the mind's perception of brightnes
 The difference in the perception of the object's brightness is based on background color.    
 Given this relation means it is important to retain the relative brightness of the linear scene light values.  
 
-Here the term renderer means a rendering engine that consits of a system wherein a buffer containing the pixel values for each frame is prepared. 
+Here the term renderer means a rendering engine that consists of a system wherein a buffer containing the pixel values for each frame is prepared. 
 This buffer will be referred to as the framebuffer.  
 The framebuffer can be of varying range, precision and colorspace. This has an impact on the color gamut that can be displayed.  
 
@@ -100,7 +101,7 @@ Modelling of biological effects such as photoreceptor fatigue or mind perception
 
 This extension does not take the viewing environment of the display, or eye light adaptation, into consideration.  
 It is assumed that the content is viewed in an environment that is dimly lit (~5 cd / m2) without direct light on the display.  
-Viewer calibration is not part of this extension as this is heavily dependant on the usecase and application.  
+Viewer calibration is not part of this extension as this is heavily dependent on the usecase and application.  
 
 This extensions provides the specification for using HDR compatible display outputs while at the same time retaining compatibility with SDR display outputs.  
 
@@ -175,7 +176,7 @@ Light contribution can come from several lightsources.
 To avoid costly and complex calculation of light contribution prior to the BRDF, values are scaled before sent to the OETF.  
 This scaling, not clamp, shall be done equally to RGB triplets in a way that retains hue.  
 
-** Implementation Notes**
+**Implementation Notes**
 
 Pseudocode to scale BRDF output.
 
@@ -230,15 +231,15 @@ Such a display rarely has the range and precision of internal calculations makin
 
 
 The transfer function for this extension is chosen from ITU BT.2100 which is the standard for HDR TV and broadcast content creation.   
-This standard uses the perceptual quantizer as transfer function, ie to go from relative linear light (display light) values to non linear output values.  
+This standard uses the perceptual quantizer as transfer function, i.e. to go from relative linear light (display light) values to non-linear output values.  
 The function is selected based on minimizing visual artefacts from color banding according to the Barten Ramp. Resulting on very slight visible banding on panels with 10 bits per colorchannel.  
 On panels with 12 bits there is no visible banding artefacts when using the perceptual qantizer.  
 
-The need for a known dynamic range comes from the way that the mind perceieves brightness.  
+The need for a known dynamic range comes from the way that the mind perceives brightness.  
 Humans have no way to determine exact brightness of objects, instead the brightness is measured compared to background (Bernstein et al.2018).  
 As an effect of this it is important to know the mapped display brightness for a high dynamic range.  
 Imagine a background with a scene linear brightness around RGB (10.0, 10.0, 10.0) with an object of scene linear brightness around RGB (100.0, 100.0, 100.0).  
-As the mind will perceive object brightess compared to the background, ie 100 vs 10, it is vital to have a known higher dynamic range in order to achieve deterministic display output.     
+As the mind will perceive object brightess compared to the background, i.e. 100 vs 10, it is vital to have a known higher dynamic range in order to achieve deterministic display output.     
 
 Apart from being widely supported and used in the TV / movie industry the perceptual quantizer is also embraced by the gaming community, with support in the engines from some of the major game companies.  
 For instance, game engines Frostbite and Lumberyard and also in specific games such as Destiny 2 and Call Of Duty.  
@@ -256,7 +257,7 @@ For instance, game engines Frostbite and Lumberyard and also in specific games s
 ## Internal range of illumination (light contribution) values
 
 
-When the KHR_displaymapping_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum ouput brightness.  
+When the KHR_displaymapping_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum output brightness.  
 
 Limiting the range of output brightness values to the specified range is done as part of the Integration Points.    
 [See Integration Points](#Integration-Points)  
@@ -266,7 +267,7 @@ This does not have an impact on color texture sources since they define values a
 The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in SMPTE ST 2084..  
 The range [0 - 10000] shall be seen as a relative linear light (display light) where 0 is black and 10000 is full brightness on the display.  
 
-It does not mean that the display will be capable of outputing at brightness levels up to 10000 cd / m2  
+It does not mean that the display will be capable of outputting at brightness levels up to 10000 cd / m2  
 
 
 
@@ -351,7 +352,7 @@ To convert to non-linear output value in the range 0.0 - 1.0 the reference PQ OE
 This is specified in ITU BT.2100:
 https://www.itu.int/rec/R-REC-BT.2100/en  
 
-The OETF shall be applied after the BRDF calculations, this will yield a non linear output-signal in the range [0.0 - 1.0] that shall be stored in the display buffer.  
+The OETF shall be applied after the BRDF calculations, this will yield a non-linear output-signal in the range [0.0 - 1.0] that shall be stored in the display buffer.  
 This shall be done according to the parameter `Reference PQ OETF`of ITU BT.2100   
 
 Where the resulting non-linear signal (R,G,B) in the range [0:1] = E  
@@ -380,7 +381,7 @@ BT_2100_OETF(vec3 color) {
     return pow((c1 + c2 * Ypow) / (1 + c3 * Ypow), m2); 
 }
 
-vec3 outputColor = BT2100_OETF(displayColor);
+vec3 outputColor = BT_2100_OETF(displayColor);
 
 ```
 
