@@ -20,6 +20,7 @@
 * Adam Morris, Target [@weegeekps](https://github.com/weegeekps)
 * Sandra Voelker, Target
 * Ben Houston, Threekit, [@bhouston](https://twitter.com/BenHouston3D)
+* Andreas Atteneder, Unity
 * Norbert Nopper, UX3D, [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
 * Eric Chadwick, Wayfair, [echadwick-wayfair](https://github.com/echadwick-wayfair)
 
