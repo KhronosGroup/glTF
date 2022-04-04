@@ -39,6 +39,7 @@ Written against the glTF 2.0 specification.
   - [Property Attributes](#property-attributes)
   - [Property Textures](#property-textures)
 - [Binary Data Storage](#binary-data-storage)
+- [Node Metadata](#node-metadata)
 - [Optional vs. Required](#optional-vs-required)
 - [Schema](#schema-1)
 - [Revision History](#revision-history)
@@ -230,7 +231,7 @@ The following sections describe these storage formats in more detail.
 
 Each property table defines a specified number (`count`) of metadata entities conforming to a particular class (`class`), with property values stored as parallel arrays in a column-based binary layout. Property tables support a richer variety of data types than glTF accessors or GPU shading languages allow, and are suitable for datasets that can be expressed in a tabular layout.
 
-Property tables are defined as entries in the `propertyTables` array of the root-level `EXT_structural_metadata` extension, and may be referenced by other extensions. 
+Property tables are defined as entries in the `propertyTables` array of the root-level `EXT_structural_metadata` extension, and may be referenced by [node metadata](#structural-metadata-for-nodes), or by other extensions. 
 
 The property table may provide value arrays for only a subset of the properties of its class, but class properties marked `required: true` must not be omitted. Each property value array given by the property table must be defined by a class property with the same alphanumeric property ID, with values matching the data type of the class property.
 
@@ -524,6 +525,24 @@ Property values are stored in a compact binary tabular format described in the [
 - GLB-stored `BIN` chunk must be padded with trailing zeroes (`0x00`) to 8-byte boundary.
 
 As a result, byte length of the `BIN` chunk may be up to 7 bytes larger than JSON-defined `buffer.byteLength` to satisfy alignment requirements.
+
+## Node Metadata
+
+*Defined in [node.EXT_structural_metadata.schema.json](./schema/node.EXT_structural_metadata.schema.json).*
+
+When property values are stored in a [Property Table](#property-tables), then the entries of this table may be associated with nodes of the glTF asset. Each node can contain an `EXT_structural_metadata` object that defines the source of the metadata values for this node. It contains the `propertyTable`, which is the index of the property table in the array of property tables of the root-level `EXT_structural_metadata` extension object, and the `index`, which is the index of the row in this table that contains the metadata values for the respective node.
+
+> **Example:** 
+>
+> An example of node metadata. It associates the given node with the metadata values that are stored in row 4 of the property table with index 1. 
+> 
+> ```jsonc
+> // In a glTF node object:
+> "EXT_structural_metadata": {
+>   "propertyTable": 1,
+>   "index": 4
+> }
+> ```
 
 ## Optional vs. Required
 
