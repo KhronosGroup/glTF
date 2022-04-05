@@ -38,7 +38,8 @@ Written against the glTF 2.0 specification.
   - [Property Tables](#property-tables)
   - [Property Attributes](#property-attributes)
   - [Property Textures](#property-textures)
-- [Binary Data Storage](#binary-data-storage)
+  - [Binary Data Storage](#binary-data-storage)
+- [Assigning Metadata](#assigning-metadata)
 - [Optional vs. Required](#optional-vs-required)
 - [Schema](#schema-1)
 - [Revision History](#revision-history)
@@ -230,7 +231,7 @@ The following sections describe these storage formats in more detail.
 
 Each property table defines a specified number (`count`) of metadata entities conforming to a particular class (`class`), with property values stored as parallel arrays in a column-based binary layout. Property tables support a richer variety of data types than glTF accessors or GPU shading languages allow, and are suitable for datasets that can be expressed in a tabular layout.
 
-Property tables are defined as entries in the `propertyTables` array of the root-level `EXT_structural_metadata` extension, and may be referenced by other extensions. 
+Property tables are defined as entries in the `propertyTables` array of the root-level `EXT_structural_metadata` extension, and may be referenced by [assigning metadata](#assigning-metadata) to glTF elements, or by other extensions. 
 
 The property table may provide value arrays for only a subset of the properties of its class, but class properties marked `required: true` must not be omitted. Each property value array given by the property table must be defined by a class property with the same alphanumeric property ID, with values matching the data type of the class property.
 
@@ -516,7 +517,7 @@ Certain property types cannot be encoded in property textures. For example, vari
 > value[1] = byte2 | (byte3 << 8);
 > ```
 
-## Binary Data Storage
+### Binary Data Storage
 
 Property values are stored in a compact binary tabular format described in the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata), with each property table array occupying a glTF buffer view. `EXT_structural_metadata` imposes 8-byte binary data alignment requirements on an asset, allowing support for 64-bit data types while remaining compatible with the 4-byte alignments in the core glTF specification:
 
@@ -524,6 +525,37 @@ Property values are stored in a compact binary tabular format described in the [
 - GLB-stored `BIN` chunk must be padded with trailing zeroes (`0x00`) to 8-byte boundary.
 
 As a result, byte length of the `BIN` chunk may be up to 7 bytes larger than JSON-defined `buffer.byteLength` to satisfy alignment requirements.
+
+## Assigning Metadata
+
+*Defined in [EXT_structural_metadata.schema.json](./schema/EXT_structural_metadata.schema.json).*
+
+When property values are stored in a [Property Table](#property-tables), then the entries of this table may be referenced from within the glTF asset: Each `node` of the glTF asset can contain an `EXT_structural_metadata` object that defines the source of the metadata values for this node. It contains the `propertyTable`, which is the index of the property table in the array of property tables of the root-level `EXT_structural_metadata` extension object, and the `index`, which is the index of the row in this table that contains the metadata values for the respective node.
+
+> **Example:** 
+>
+> An example of metadata that is assigned to a node. It associates the given node with the metadata values that are stored in row 4 of the property table with index 1, referring to the array of property tables that are defined in the top-level `EXT_structural_metadata` extension object. 
+> 
+> ```jsonc
+> {
+>   "extensions": {
+>     "EXT_structural_metadata": {
+>       "schema": { ... },
+>       "propertyTables": [ ... ]
+>     }
+>   },
+>   "nodes": [
+>     ...
+>     {
+>       "name": "A node with metadata",
+>       "EXT_structural_metadata": {
+>         "propertyTable": 1,
+>         "index": 4
+>       }
+>     }
+>   ]
+> }
+> ```
 
 ## Optional vs. Required
 
