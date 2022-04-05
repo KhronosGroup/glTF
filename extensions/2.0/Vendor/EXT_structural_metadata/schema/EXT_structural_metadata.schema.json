@@ -1,9 +1,9 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "node.EXT_structural_metadata.schema.json",
-    "title": "EXT_structural_metadata glTF Node extension",
+    "$id": "EXT_structural_metadata.schema.json",
+    "title": "EXT_structural_metadata glTF extension",
     "type": "object",
-    "description": "Structural metadata about a glTF node.",
+    "description": "Structural metadata about a glTF element.",
     "allOf": [
         {
             "$ref": "glTFProperty.schema.json"
@@ -18,7 +18,7 @@
         "index": {
             "type": "integer",
             "minimum": 0,
-            "description": "The feature index (row index) used for looking up property values for this node."
+            "description": "The feature index (row index) used for looking up property values for this element."
         },
         "extensions": {},
         "extras": {}

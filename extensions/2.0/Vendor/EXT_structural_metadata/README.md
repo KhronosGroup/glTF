@@ -38,7 +38,7 @@ Written against the glTF 2.0 specification.
   - [Property Tables](#property-tables)
   - [Property Attributes](#property-attributes)
   - [Property Textures](#property-textures)
-- [Binary Data Storage](#binary-data-storage)
+  - [Binary Data Storage](#binary-data-storage)
 - [Assigning Metadata](#assigning-metadata)
 - [Optional vs. Required](#optional-vs-required)
 - [Schema](#schema-1)
@@ -517,7 +517,7 @@ Certain property types cannot be encoded in property textures. For example, vari
 > value[1] = byte2 | (byte3 << 8);
 > ```
 
-## Binary Data Storage
+### Binary Data Storage
 
 Property values are stored in a compact binary tabular format described in the [3D Metadata Specification](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata), with each property table array occupying a glTF buffer view. `EXT_structural_metadata` imposes 8-byte binary data alignment requirements on an asset, allowing support for 64-bit data types while remaining compatible with the 4-byte alignments in the core glTF specification:
 
@@ -528,9 +528,9 @@ As a result, byte length of the `BIN` chunk may be up to 7 bytes larger than JSO
 
 ## Assigning Metadata
 
-*Defined in [glTFChildOfRootProperty.EXT_structural_metadata.schema.json](./schema/glTFChildOfRootProperty.EXT_structural_metadata.schema.json).*
+*Defined in [EXT_structural_metadata.schema.json](./schema/EXT_structural_metadata.schema.json).*
 
-When property values are stored in a [Property Table](#property-tables), then the entries of this table may be associated with elements of the glTF asset. This applies to all elements that are a `glTFChildOfRootProperty`. Each of these elements can contain an `EXT_structural_metadata` object that defines the source of the metadata values for this element. It contains the `propertyTable`, which is the index of the property table in the array of property tables of the root-level `EXT_structural_metadata` extension object, and the `index`, which is the index of the row in this table that contains the metadata values for the respective element.
+When property values are stored in a [Property Table](#property-tables), then the entries of this table may be referenced from within the glTF asset: Each `node` of the glTF asset can contain an `EXT_structural_metadata` object that defines the source of the metadata values for this node. It contains the `propertyTable`, which is the index of the property table in the array of property tables of the root-level `EXT_structural_metadata` extension object, and the `index`, which is the index of the row in this table that contains the metadata values for the respective node.
 
 > **Example:** 
 >
