@@ -4,7 +4,7 @@
 
 -   Johannes Günther, Intel, [@johguenther](https://github.com/johguenther)
 -   Bruce Cherniak, Intel, [@BruceCherniak](https://github.com/BruceCherniak)
--   Isha Sharma, Intel, [@isharma25](https://github.com/isharma25r)
+-   Isha Sharma, Intel, [@isharma25](https://github.com/isharma25)
 
 ## Status
 
@@ -16,11 +16,16 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
+This extension defines parameters for a procedural sun-sky model, an
+environmental light source, which provides natural illumination for the
+scene and which is optionally visible in the background.
+
 ```json
 "extensions": {
     "INTEL_lights_sunsky": {
         "lights": [
             {
+                "visible": true,
                 "intensity": 0.025,
                 "elevation": 1.1,
                 "azimuth": 2.5,
@@ -32,6 +37,7 @@ Written against the glTF 2.0 spec.
     }
 }
 ```
+-   visible: whether seen in the background
 -   intensity: brightness scaling factor, default 0.025 to bring the
     intrinsic radiance into “normal” dynamic range
 -   elevation (in radians, in -pi/2..pi/2), angle to the horizon, i.e.,
