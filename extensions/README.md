@@ -55,6 +55,7 @@ Vendor extensions are not covered by the Khronos IP framework.
 * [AGI_stk_metadata](2.0/Vendor/AGI_stk_metadata/README.md)
 * [CESIUM_primitive_outline](2.0/Vendor/CESIUM_primitive_outline/README.md)
 * [FB_geometry_metadata](2.0/Vendor/FB_geometry_metadata/README.md)
+* [INTEL_lights_sunsky](2.0/Vendor/INTEL_lights_sunsky/README.md)
 * [MSFT_lod](2.0/Vendor/MSFT_lod/README.md)
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
