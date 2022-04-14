@@ -3,6 +3,7 @@
 ## Khronos 3D Formats Working Group
 
 * Pascal Schoen, adidas
+* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
 * Ben Houston, threekit
 * Mathias Kanzler, UX3D
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
@@ -184,7 +185,7 @@ function iridescent_dielectric_layer(iridescence_strength, iridescence_thickness
 }
 ```
 
-To ensure energy conservation, the base BRDF is weighted with the inverse of the maximum component value of the iridescence Fresnel color and then added with the specular iridescence BRDF:
+Similar to [`KHR_materials_specular`](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_specular/README.md#implementation), to ensure energy conservation, the base BRDF is weighted with the inverse of the maximum component value of the iridescence Fresnel color and then added with the specular iridescence BRDF:
 
 ```
 function iridescent_fresnel_mix(iridescence_fresnel, base, specular_brdf) {
@@ -194,6 +195,8 @@ function iridescent_fresnel_mix(iridescence_fresnel, base, specular_brdf) {
     return (1 - iridescene_fresnel_max) * base + iridescence_fresnel * specular_brdf
 }
 ```
+
+If instead `1 - iridescence_fresnel` would be used directly, inverse colors would be created. By using the maximum component value, no energy would be gained.
 
 ### Iridescence Fresnel
 
