@@ -40,7 +40,7 @@ The iridescence materials are defined by adding the `KHR_materials_iridescence` 
             "extensions": {
                 "KHR_materials_iridescence": {
                     "iridescenceFactor": 1.0,
-                    "iridescenceIOR": 1.3,
+                    "iridescenceIor": 1.3,
                     "iridescenceThicknessMaximum": 400.0
                 }
             }
@@ -57,7 +57,7 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 | ------------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
 | **iridescenceFactor**           | `number`                                                                                          | The iridescence intensity.                                                                                                            | No, default:`0.0`   |
 | **iridescenceTexture**          | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | The iridescence intensity stored in the red channel of the texture.                                                                   | No                    |
-| **iridescenceIOR**              | `number`                                                                                          | The index of refraction of the dielectric thin-film layer.                                                                            | No, default:`1.3`   |
+| **iridescenceIor**              | `number`                                                                                          | The index of refraction of the dielectric thin-film layer.                                                                            | No, default:`1.3`   |
 | **iridescenceThicknessMinimum** | `number`                                                                                          | The minimum thickness of the thin-film layer given in nanometers (nm).                                                                | No, default:`100.0` |
 | **iridescenceThicknessMaximum** | `number`                                                                                          | The maximum thickness of the thin-film layer given in nanometers (nm).                                                                | No, default:`400.0` |
 | **iridescenceThicknessTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | The green channel of this texture defines the thickness of the thin-film layer by blending between the minimum and maximum thickness. | No                    |
@@ -96,7 +96,7 @@ This leads to more pastel colored patterns for increased thickness:
 <figcaption><em>Comparison of different iridescence thickness ranges for a constant iridescence IOR value of 1.3 on a dielectric base material with IOR value of 1.5. </em></figcaption>
 </figure>
 
-The thin-film layer can have a different IOR than the underlying material. With `iridescenceIOR` one can set an IOR value for the thin-film layer independently. The more this value differs from the IOR of the base material, the stronger the iridescence. It also has an effect on the optical path difference as visible here:
+The thin-film layer can have a different IOR than the underlying material. With `iridescenceIor` one can set an IOR value for the thin-film layer independently. The more this value differs from the IOR of the base material, the stronger the iridescence. It also has an effect on the optical path difference as visible here:
 
 <figure style="padding: 10px;">
 <img src="./figures/ior-comparison.png"/>
@@ -116,7 +116,7 @@ metal_brdf =
   iridescent_conductor_layer(
     iridescence_strength = iridescence,
     iridescence_thickness = iridescenceThickness,
-    iridescence_ior = iridescenceIOR,
+    iridescence_ior = iridescenceIor,
     outside_ior = 1.0,
     base_f0 = baseColor,
     specular_brdf = specular_brdf(
@@ -132,7 +132,7 @@ dielectric_brdf =
   iridescent_dielectric_layer(
     iridescence_strength = iridescence,
     iridescence_thickness = iridescenceThickness,
-    iridescence_ior = iridescenceIOR,
+    iridescence_ior = iridescenceIor,
     outside_ior = 1.0,
     base_ior = 1.5,
     base = diffuse_brdf(
@@ -205,7 +205,7 @@ If instead `1 - iridescence_fresnel` would be used directly, inverse colors woul
 The calculation of `iridescent_fresnel(...)` is described in the following sections as GLSL code at the viewing angle <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_1">. For glTF an approximation of the original model (defined in the Mitsuba code example from [Belcour/Barla](#theory-documentation-and-implementations)) is used.
 
 ```glsl
-vec3 iridescent_fresnel(outsideIOR, iridescenceIOR, baseF0, iridescenceThickness, cosTheta1) {
+vec3 iridescent_fresnel(outsideIor, iridescenceIor, baseF0, iridescenceThickness, cosTheta1) {
     vec3 F_iridescence = vec3(0.0);
 
     // Calculation of the iridescence Fresnel for the viewing angle theta1
@@ -221,18 +221,18 @@ The iridescence model defined by [Belcour/Barla](#theory-documentation-and-imple
 
 ```glsl
 // First interface
-float R0 = IorToFresnel0(iridescenceIOR, outsideIOR);
+float R0 = IorToFresnel0(iridescenceIor, outsideIor);
 float R12 = F_Schlick(R0, cosTheta1);
 float R21 = R12;
 float T121 = 1.0 - R12;
 
 // Second interface
-vec3 baseIOR = Fresnel0ToIor(baseF0 + 0.0001); // guard against 1.0
-vec3 R1 = IorToFresnel0(baseIOR, iridescenceIOR);
+vec3 baseIor = Fresnel0ToIor(baseF0 + 0.0001); // guard against 1.0
+vec3 R1 = IorToFresnel0(baseIor, iridescenceIor);
 vec3 R23 = F_Schlick(R1, cosTheta2);
 ```
 
-`iridescenceIOR` is the index of refraction of the thin-film layer, `outsideIOR` the IOR outside the thin-film (usually air) and `baseIOR` the IOR of the base material. The latter is calculated from its F0 value using the inverse of the special normal incidence case of Fresnel's equations:
+`iridescenceIor` is the index of refraction of the thin-film layer, `outsideIor` the IOR outside the thin-film (usually air) and `baseIor` the IOR of the base material. The latter is calculated from its F0 value using the inverse of the special normal incidence case of Fresnel's equations:
 
 ```glsl
 // Assume air interface for top
@@ -256,12 +256,12 @@ float IorToFresnel0(float transmittedIor, float incidentIor) {
 
 To calculate the reflectances `R12` and `R23` at the viewing angles <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_1"> (angle hitting the thin-film layer) and <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_2"> (angle after refraction in the thin-film) Schlick Fresnel is again used. This approximation allows to eliminate the split into S and P polarization for the exact Fresnel equations. 
 
-<img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_2"> can be calculated using Snell's law (with <img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\eta_1"> being `outsideIOR` and <img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\eta_2"> being `iridescenceIOR`):
+<img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_2"> can be calculated using Snell's law (with <img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\eta_1"> being `outsideIor` and <img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\eta_2"> being `iridescenceIor`):
 
 <img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\cos(\theta_2)%20=%20\sqrt{1-\left(\frac{\eta_1}{\eta_2}\right)^2\cdot\left(1-\cos^2(\theta_1)\right)}">
 
 ```glsl
-float sinTheta2Sq = pow(outsideIOR / iridescenceIOR, 2.0) * (1.0 - pow(cosTheta1, 2.0));
+float sinTheta2Sq = pow(outsideIor / iridescenceIor, 2.0) * (1.0 - pow(cosTheta1, 2.0));
 float cosTheta2Sq = 1.0 - sinTheta2Sq;
 
 // Handle total internal reflection
@@ -281,22 +281,22 @@ The phase shift is as follows:
 and depends on the first-order optical path difference <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\displaystyle%20\mathcal{D}"> (or `OPD`):
 
 ```glsl
-OPD = 2.0 * iridescenceIOR * iridescenceThickness * cosTheta1;
+OPD = 2.0 * iridescenceIor * iridescenceThickness * cosTheta1;
 ```
 
-`phi12` and `phi23` define the base phases per interface and are approximated with `0.0` if the IOR of the hit material (`iridescenceIOR` or `baseIOR`) is higher than the IOR of the previous material (`outsideIOR` or `iridescenceIOR`) and *π* otherwise. Also here, polarization is ignored.
+`phi12` and `phi23` define the base phases per interface and are approximated with `0.0` if the IOR of the hit material (`iridescenceIor` or `baseIor`) is higher than the IOR of the previous material (`outsideIor` or `iridescenceIor`) and *π* otherwise. Also here, polarization is ignored.
 
 ```glsl
 // First interface
 float phi12 = 0.0;
-if (iridescenceIOR < outsideIOR) phi12 = M_PI;
+if (iridescenceIor < outsideIor) phi12 = M_PI;
 float phi21 = M_PI - phi12;
 
 // Second interface
 vec3 phi23 = vec3(0.0);
-if (baseIOR[0] < iridescenceIOR) phi23[0] = M_PI;
-if (baseIOR[1] < iridescenceIOR) phi23[1] = M_PI;
-if (baseIOR[2] < iridescenceIOR) phi23[2] = M_PI;
+if (baseIor[0] < iridescenceIor) phi23[0] = M_PI;
+if (baseIor[1] < iridescenceIor) phi23[1] = M_PI;
+if (baseIor[2] < iridescenceIor) phi23[2] = M_PI;
 
 // Phase shift
 vec3 phi = vec3(phi21) + phi23;

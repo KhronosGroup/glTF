@@ -17,7 +17,7 @@
             "description": "The iridescence intensity texture.",
             "gltf_detailedDescription": "The iridescence intensity texture. Stored in channel R with default linear value 1.0 of the iridescence texture."
         },
-        "iridescenceIOR": {
+        "iridescenceIor": {
             "type": "number",
             "description": "The index of refraction of the dielectric thin-film layer.",
             "default": 1.3,
