@@ -24,7 +24,7 @@
 * Norbert Nopper, UX3D, [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
 * Eric Chadwick, Wayfair, [echadwick-wayfair](https://github.com/echadwick-wayfair)
 
-Copyright (C) 2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright (C) 2021-2022 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
@@ -97,9 +97,9 @@ would have been.
 
 The following parameters are contributed by the `KHR_materials_emissive_strength` extension:
 
-| Name                   | Type       | Description                                    | Required           |
-|------------------------|------------|------------------------------------------------|--------------------|
-| **emissiveStrength**   | `number`   | The maximum strength of the emissive texture.  | No, default: `1.0` |
+| Name                   | Type       | Description                                                                   | Required           |
+|------------------------|------------|-------------------------------------------------------------------------------|--------------------|
+| **emissiveStrength**   | `number`   | The strength adjustment to be multiplied with the material's emissive value.  | No, default: `1.0` |
 
 
 ## Implementation Notes
@@ -118,7 +118,7 @@ color += emissiveFactor.rgb * sRGB_to_Linear(emissiveTexture.rgb) * emissiveStre
 
 ## Appendix: Full Khronos Copyright Statement
 
-Copyright 2021 The Khronos Group Inc.
+Copyright 2021-2022 The Khronos Group Inc.
 
 This specification is protected by copyright laws and contains material proprietary
 to Khronos. Except as described by these terms, it or any components
