@@ -1,4 +1,4 @@
-# KHR\_animation2
+# KHR\_animation_pointer
 
 ## Contributors
 
@@ -6,14 +6,16 @@
 * Ben Houston, Threekit
 * Bryce Hutchings, Microsoft [@brycehutchings](https://twitter.com/brycehutchings)
 * Don McCurdy
+* Ed Mackey, AGI @emacke
+* Felix Herbst, prefrontal cortex [@hybridherbst](https://twitter.com/hybridherbst)
 * Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
 * Jamie Marconi, Microsoft [@najadojo](https://twitter.com/najadojo)
 * Joe Herdman, [@jbherdman](https://github.com/jbherdman)
 * Lewis Weaver, Microsoft
+* Marco Hutter
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
-* Felix Herbst, prefrontal cortex [@hybridherbst](https://twitter.com/hybridherbst)
 
-Copyright (C) 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright (C) 2018-2022 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
@@ -86,12 +88,12 @@ interpretation of the animated values is entirely application specific.
 
 If this extension is used, the `animation.channel.target.node` **must not** be set.
 Because the node isn’t defined, the channel is ignored and not animated due to the current specification.  
-If this extension is used, the `animation.channel.target.path` **must** contain any of constant values. Even this value is ignored, the unused glTF part is still valid.
+If this extension is used, the `animation.channel.target.path` **must** contain the new `pointer` constant value.
 
 ### Animating properties of extensions
 
-Extensions created after KHR_animation2 should state which properties can be animated and which cannot.  
-The following extensions have been created before KHR_animation2 and are thus listed here with their animatable properties:  
+Extensions created after KHR_animation_pointer should state which properties can be animated and which cannot.  
+The following extensions have been created before KHR_animation_pointer and are thus listed here with their animatable properties:  
 
 #### [KHR_draco_mesh_compression](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_draco_mesh_compression)
 ❌ No animatable properties.
@@ -182,7 +184,7 @@ The following extensions have been created before KHR_animation2 and are thus li
 
 ## glTF Schema Updates
 
-* **JSON schema**: [glTF.KHR_animation2.schema.json](schema/glTF.KHR_animation2.schema.json)
+* **JSON schema**: [glTF.KHR_animation_pointer.schema.json](schema/glTF.KHR_animation_pointer.schema.json)
 
 ## Notes and clarifications
 
@@ -206,10 +208,10 @@ The following snippet shows the changes for [`animations`](https://github.com/Kh
                 "name" : "Targeting x, y, z, w for a rotation of node at index 0."
                 "sampler" : 0,
                 "target" : {
-                    "path" : "rotation"
+                    "path" : "pointer"
                     "extensions": {
-                        "KHR_animation2" : {
-                            "path" : "/nodes/0/rotation"
+                        "KHR_animation_pointer" : {
+                            "pointer" : "/nodes/0/rotation"
                         }
                     }
                }
@@ -228,7 +230,7 @@ The following snippet shows the changes for [`animations`](https://github.com/Kh
 
 ## Appendix: Full Khronos Copyright Statement
 
-Copyright 2018-2021 The Khronos Group Inc.
+Copyright 2018-2022 The Khronos Group Inc.
 
 Some parts of this Specification are purely informative and do not define requirements
 necessary for compliance and so are outside the Scope of this Specification. These
