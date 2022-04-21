@@ -64,9 +64,9 @@ The following parameters are contributed by the `KHR_materials_sheen` extension:
 |                                  | Type                                                                            | Description                            | Required                       |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|--------------------------------|
 |**sheenColorFactor**                   | `array`                                                                         | The sheen color in linear space        | No, default: `[0.0, 0.0, 0.0]` |
-|**sheenColorTexture**         | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The sheen color (RGB).<br> The sheen color is in sRGB transfer function | No               |
+|**sheenColorTexture**         | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo)             | The sheen color (RGB).<br> The sheen color is in sRGB transfer function | No               |
 |**sheenRoughnessFactor**               | `number`                                                                        | The sheen roughness.                   | No, default: `0.0`             |
-|**sheenRoughnessTexture**         | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The sheen roughness (Alpha) texture. | No               |
+|**sheenRoughnessTexture**         | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo)             | The sheen roughness (Alpha) texture. | No               |
 
 The sheen BRDF is layered on top of the glTF 2.0 Metallic-Roughness material. If clearcoat (`KHR_materials_clearcoat`) is active at the same time, clearcoat is layered on top of sheen. The `sheenColorFactor` determines the view-independent intensity of the sheen BRDF. If `sheenColorFactor` is zero, the whole sheen layer is disabled. Implementations of the BRDF itself can vary based on device performance and resource constraints.
 
@@ -89,7 +89,7 @@ Not all incoming light is reflected at a micro-fiber. Some of the light may hit 
 
 *This section is non-normative.*
 
-All implementations should use the same calculations for the BRDF inputs. See [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) for more details on the BRDF calculations.
+All implementations should use the same calculations for the BRDF inputs. See [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
 The sheen formula `f_sheen` follows the common microfacet form:
 
@@ -144,7 +144,7 @@ The Fresnel term may be omitted, i.e., *F* = 1.
 
 #### Albedo-scaling technique
 
-The sheen layer can be combined with the base layer with an albedo-scaling technique described in [Conty and Kulla (2017)](#ContyKulla2017). The base layer *f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub> from [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) is scaled with *sheenAlbedoScaling* to avoid energy gain.
+The sheen layer can be combined with the base layer with an albedo-scaling technique described in [Conty and Kulla (2017)](#ContyKulla2017). The base layer *f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub> from [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) is scaled with *sheenAlbedoScaling* to avoid energy gain.
 
 *f* = *f*<sub>*sheen*</sub> + (*f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub>) * *sheenAlbedoScaling* 
 

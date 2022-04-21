@@ -26,6 +26,7 @@ The following extensions have been ratified by the Khronos Group:
 * [KHR_mesh_quantization](2.0/Khronos/KHR_mesh_quantization/README.md)
 * [KHR_texture_basisu](2.0/Khronos/KHR_texture_basisu/README.md)
 * [KHR_texture_transform](2.0/Khronos/KHR_texture_transform/README.md)
+* [KHR_xmp_json_ld](2.0/Khronos/KHR_xmp_json_ld/README.md)
 
 ### Multi-Vendor Extensions for glTF 2.0
 
@@ -81,7 +82,6 @@ extensions, Khronos extensions, or inclusion in a future version of the glTF spe
 
 | Extension | Status |
 |-----------|--------|
-| [KHR_xmp_json_ld](2.0/Khronos/KHR_xmp_json_ld/README.md) | Ready for use. |
 | [KHR_materials_emissive_strength](https://github.com/KhronosGroup/glTF/pull/1994) | Ready for testing. |
 | [KHR_materials_iridescence](https://github.com/KhronosGroup/glTF/pull/2027) | Ready for testing. |
 | [KHR_materials_anisotropy](https://github.com/KhronosGroup/glTF/pull/1798) | Ready for testing. |

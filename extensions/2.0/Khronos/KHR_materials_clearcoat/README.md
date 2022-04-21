@@ -61,10 +61,10 @@ The following parameters are contributed by the `KHR_materials_clearcoat` extens
 |                                  | Type                                                                            | Description                            | Required             |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|----------------------|
 |**clearcoatFactor**               | `number`                                                                        | The clearcoat layer intensity.         | No, default: `0.0`   |
-|**clearcoatTexture**              | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The clearcoat layer intensity texture. | No                   |
+|**clearcoatTexture**              | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo)             | The clearcoat layer intensity texture. | No                   |
 |**clearcoatRoughnessFactor**      | `number`                                                                        | The clearcoat layer roughness.         | No, default: `0.0`   |
-|**clearcoatRoughnessTexture**     | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The clearcoat layer roughness texture. | No                   |
-|**clearcoatNormalTexture**        | [`normalTextureInfo`](/specification/2.0/README.md#reference-normaltextureinfo) | The clearcoat normal map texture.      | No                   |
+|**clearcoatRoughnessTexture**     | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo)             | The clearcoat layer roughness texture. | No                   |
+|**clearcoatNormalTexture**        | [`normalTextureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-material-normaltextureinfo) | The clearcoat normal map texture.      | No                   |
 
 If `clearcoatFactor` (in the extension) is zero, the whole clearcoat layer is disabled.
 
@@ -108,11 +108,11 @@ Implementations of the BRDF or the layering operator can vary based on device pe
 
 #### Clearcoat BRDF
 
-The specular BRDF for the clearcoat layer `clearcoat_brdf` is computed using the specular term from the glTF 2.0 Metallic-Roughness material, defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation). Roughness and normal are taken from `clearcoatNormal` and `clearcoatRoughness`.
+The specular BRDF for the clearcoat layer `clearcoat_brdf` is computed using the specular term from the glTF 2.0 Metallic-Roughness material, defined in [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation). Roughness and normal are taken from `clearcoatNormal` and `clearcoatRoughness`.
 
 #### Layering
 
-The `fresnel_coat` function is computed using the Schlick Fresnel term from the glTF 2.0 Metallic-Roughness material, defined in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation).
+The `fresnel_coat` function is computed using the Schlick Fresnel term from the glTF 2.0 Metallic-Roughness material, defined in [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation).
 
 ```
 function fresnel_coat(normal, ior, weight, base, layer) {
@@ -128,7 +128,7 @@ Applying the functions we arrive at the coated material
 coated_material = mix(material, clearcoat_brdf(clearcoatRughness^2), clearcoat * (0.04 + (1 - 0.04) * (1 - NdotV)^5))
 ```
 
-and finally, substituting and simplifying, using some symbols from [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) and `Nc` for the clearcoat normal:
+and finally, substituting and simplifying, using some symbols from [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) and `Nc` for the clearcoat normal:
 
 ```
 clearcoatFresnel = 0.04 + (1 - 0.04) * (1 - abs(VdotNc))^5
@@ -158,7 +158,7 @@ The simple layering function ignores many effects that occur between clearcoat a
 * There is no scattering between layers.
 * There is no diffraction.
 
-More sophisticated layering techniques that improve the accuracy of the renderings are described in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation).
+More sophisticated layering techniques that improve the accuracy of the renderings are described in [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation).
 
 ## Schema
 

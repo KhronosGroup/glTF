@@ -1,5 +1,5 @@
 <!--
-Copyright 2018-2020 The Khronos Group Inc.
+Copyright 2018-2021 The Khronos Group Inc.
 SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 -->
 
@@ -26,7 +26,7 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status
 
-Complete, Pending Ratification
+Complete, Ratified by the Khronos Group
 
 Supersedes [KHR_xmp](../../Archived/KHR_xmp/README.md)
 
@@ -37,19 +37,19 @@ Written against the glTF 2.0 spec.
 ## Overview
 
 This extension adds support for [XMP (Extensible Metadata Platform) (ISO 16684-1)](https://www.iso.org/standard/75163.html) metadata to glTF.
-Metadata is used to transmit information (such as attribution, licensing, creation date) about the glTF asset. Metadata has no normative effect on the glTF asset appearence and rendering.
+Metadata is used to transmit information (such as attribution, licensing, creation date) about the glTF asset. Metadata has no normative effect on the glTF asset appearance and rendering.
 XMP is a technology for embedding metadata into documents and has been [an ISO standard since 2012](<https://www.iso.org/files/live/sites/isoorg/files/news/magazine/ISO%20Focus+%20(2010-2013)/en/2012/ISO%20Focus+,%20May%202012.pdf>).
 An instance of the XMP data model is called an XMP packet (ISO 16684-1$6.1).
 XMP metadata is embedded in a top-level glTF extension as an array of metadata packets.
 XMP metadata packets can then be referenced from glTF objects of type: `asset`, `scene`, `node`, `mesh`, `material`, `image`, `animation`.
-XMP metadata referenced by the glTF top level object `asset` applies to the entire glTF asset.
+XMP metadata referenced by the glTF top-level object `asset` applies to the entire glTF asset.
 XMP metadata is organized in namespaces (ISO 16684-1$6.2). This extension enables any XMP metadata namespace to be embedded in a glTF asset.
 XMP metadata packets in glTF use a restricted subset of features from JSON-LD. This allows both JSON parsers and JSON-LD parsers to read the individual packets.
 Serializing XMP metadata using JSON-LD is outlined in [JSON-LD serialization of XMP (ISO 16684-3)](https://www.iso.org/standard/79384.html). The [JSON-LD specification](https://www.w3.org/TR/json-ld11/) outlines the detailed use of JSON-LD 1.1. There are additional restrictions for glTF outlined in [JSON-LD Restrictions and Recommendations](#json-ld-restrictions-and-recommendations).
 
 ## XMP data types
 
-This section describes how [XMP data types (ISO 16684-1$6.3)](https://github.com/adobe/xmp-docs/tree/master/XMPNamespaces/XMPDataTypes) shall be encoded in a glTF JSON.
+This section describes how [XMP data types (ISO 16684-1$6.3)](https://github.com/adobe/xmp-docs/tree/master/XMPNamespaces/XMPDataTypes) shall be encoded in glTF.
 XMP supports three classes of data types: simple, structure and array. XMP structures are encoded via JSON objects. XMP arrays are encoded via JSON arrays.
 XMP simple values are generally encoded via JSON strings with the exception of `Boolean`, `Integer` and `Real` that are encoded as described below.
 
@@ -79,7 +79,7 @@ The following table describes how [XMP Core Properties (ISO 16684-1$8.2)](https:
 ## Defining XMP Metadata
 
 An indirection level is introduced to avoid replicating the same XMP metadata in multiple glTF objects.
-XMP metadatas are defined within a dictionary property in the glTF scene description file by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_xmp_json_ld` object. The `KHR_xmp_json_ld` object defines one property:
+XMP metadata are defined within a dictionary property in the glTF file by adding an `extensions` property to the top-level glTF root object and defining a `KHR_xmp_json_ld` object. The `KHR_xmp_json_ld` object defines one property:
 
 - `packets`: an array of metadata packets. Each packet is JSON-LD compliant (with [additional restrictions](#json-ld-restrictions-and-recommendations)) and requires a `@context` dictionary to be defined which includes references for the namespaces.
 
@@ -216,11 +216,11 @@ These restrictions ensure that `KHR_xmp_json_ld` metadata remains readable regar
 Additionally, the following are recommended:
 
 - XMP data types are always preferred. Only use a non XMP data type if there is no other option.
-- For proper compatibility with [ISO 16684-3](https://www.iso.org/standard/79384.html), an AboutURI should be included at the root level of each packet in an `@id`. For most all purposes the value can be left blank.
+- For proper compatibility with [ISO 16684-3](https://www.iso.org/standard/79384.html), an AboutURI should be included at the root level of each packet in an `@id`. For most purposes the value can be left blank.
 
 #### Lists and Sets
 
-The XMP specification makes a distinction between ordered lists and unordered sets, but in the case of JSON all arrays are considered the be ordered lists. (See [RFC-7159](https://www.rfc-editor.org/rfc/rfc7159.txt).) In order to handle the differences between ordered lists and unordered sets, all arrays within a `packet` must be children of a `@list` or `@set` property to differentiate between ordered lists and unordered sets respectively. Descriptions for the two fields and examples are provided below.
+The XMP specification makes a distinction between ordered lists and unordered sets, but in the case of JSON all arrays are considered to be ordered lists. (See [RFC-7159](https://www.rfc-editor.org/rfc/rfc7159.txt).) In order to handle the differences between ordered lists and unordered sets, all arrays within a `packet` must be children of a `@list` or `@set` property to differentiate between ordered lists and unordered sets respectively. Descriptions for the two fields and examples are provided below.
 
 - `@list` denotes that the child array is an ordered list.
 - `@set` denotes that the child array is an unordered set.

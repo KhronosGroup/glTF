@@ -78,10 +78,10 @@ coverage and doubleSided still apply to unlit materials.
 
 The Unlit material model describes a constantly shaded surface that is
 independent of lighting. The material is defined only by properties already
-present in the [glTF 2.0 material specification](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#material).
-No new properties are added by this extension — it is effectively a boolean
+present in the [glTF 2.0 material specification](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#materials).
+No new properties are added by this extension — it is effectively a Boolean
 flag indicating use of an unlit shading model. Additional properties on the
-extension object are allowed, but may lead to undefined behaviour in conforming
+extension object are allowed, but may lead to undefined behavior in conforming
 viewers.
 
 Color is calculated as:
@@ -90,7 +90,7 @@ Color is calculated as:
 color = <baseColorTerm>
 ```
 
-`<baseColorTerm>` is the product of `baseColorFactor`, `baseColorTexture`, and vertex color (if any), as defined by the [core glTF material specification](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#metallic-roughness-material).
+`<baseColorTerm>` is the product of `baseColorFactor`, `baseColorTexture`, and vertex color (if any), as defined by the [core glTF material specification](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#metallic-roughness-material).
 
 ### Example
 

@@ -94,7 +94,7 @@ Only two properties are introduced with this extension and combine to describe a
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**transmissionFactor** | `number` | The base percentage of light that is transmitted through the surface.| No, Default: `0.0 ` |
-|**transmissionTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the transmission percentage of the surface, stored in the `R` channel. This will be multiplied by `transmissionFactor`. | No |
+|**transmissionTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A texture that defines the transmission percentage of the surface, stored in the `R` channel. This will be multiplied by `transmissionFactor`. | No |
 
 ### transmissionFactor 
 The amount of light that is transmitted by the surface rather than diffusely re-emitted. This is a percentage of all the light that penetrates a surface (i.e. isn’t specularly reflected) rather than a percentage of the total light that hits a surface. A value of 1.0 means that 100% of the light that penetrates the surface is transmitted through.
@@ -113,7 +113,7 @@ The `R` channel of this texture defines the amount of light that is transmitted 
 </figure>
 
 ## Tinting
-The `baseColor` of the material, as defined in the [Metallic-Roughness Material](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#metallic-roughness-material) section of the glTF specification, controls the amount of light at each frequency that is reflected (not absorbed) by the material. Similarily, we also use it to define the light that is transmitted (not absorbed) by a transparent surface. Absorption is usually defined as an amount of light at each frequency that is absorbed over a given distance through a medium (usually described by Beer’s Law). However, since this extension deals exclusively with infinitely thin surfaces, this absorption is constant and equal to `1.0 - baseColor`. The color tinting effects in the above images are defined by the material's `baseColor`. Tinting is very useful for real-world materials like stained glass and tinted plastics.
+The `baseColor` of the material, as defined in the [Metallic-Roughness Material](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#metallic-roughness-material) section of the glTF specification, controls the amount of light at each frequency that is reflected (not absorbed) by the material. Similarily, we also use it to define the light that is transmitted (not absorbed) by a transparent surface. Absorption is usually defined as an amount of light at each frequency that is absorbed over a given distance through a medium (usually described by Beer’s Law). However, since this extension deals exclusively with infinitely thin surfaces, this absorption is constant and equal to `1.0 - baseColor`. The color tinting effects in the above images are defined by the material's `baseColor`. Tinting is very useful for real-world materials like stained glass and tinted plastics.
 <figure>
   <img src="./figures/ConstantTransmission.png"/>
 <figcaption><em>The baseColor of the material (yellow, in this example) is used to tint the light being transmitted.</em></figcaption>
@@ -140,7 +140,7 @@ The metallic parameter of a glTF material effectively scales the `baseColor` of 
 
 ## Transmission BTDF ##
 
-From the core [glTF BRDF](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#appendix-b-brdf-implementation), we have:
+From the core [glTF BRDF](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation), we have:
 
 ```
 dielectric_brdf =
@@ -233,7 +233,7 @@ Various techniques are available to trade off physical accuracy against realtime
 
 [Autodesk Standard Surface - Specular Transmission](https://autodesk.github.io/standard-surface/#closures/speculartransmission)  
 [Blender Transparent BSDF](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/transparent.html#transparent-bsdf)  
-[Enterprise PBR Shading Model - Transparency](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2020x.md.html)  
+[Enterprise PBR Shading Model - Dielectric BSDF for Transparent Surfaces](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2022x.md.html#components/core/dielectricbsdffortransparentsurfaces)
 [Filament Material models - Transmission](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/transmission)  
 [Unreal Engine 4 Material - Refraction](https://docs.unrealengine.com/en-US/Engine/Rendering/Materials/MaterialInputs/index.html#refraction)  
 [Adobe Standard Material - Interior Properties](https://helpx.adobe.com/dimension/using/standard-materials.html#InteriorProperties)
