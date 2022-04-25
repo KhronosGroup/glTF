@@ -10,11 +10,6 @@
         }
     ],
     "properties": {
-        "id": {
-            "type": "string",
-            "minLength": 1,
-            "description": "Unique identifier for the schema."
-        },
         "name": {
             "type": "string",
             "minLength": 1,
