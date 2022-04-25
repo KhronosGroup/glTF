@@ -1,0 +1,71 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.EXT_structural_metadata.schema.json",
+    "title": "EXT_structural_metadata glTF extension",
+    "type": "object",
+    "description": "glTF extension that provides structural metadata about vertices, texels, and features in a glTF asset.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "schema": {
+            "allOf": [
+                {
+                    "$ref": "schema.schema.json"
+                }
+            ],
+            "description": "An object defining classes and enums."
+        },
+        "schemaUri": {
+            "type": "string",
+            "description": "The URI (or IRI) of the external schema file.",
+            "format": "iri-reference"
+        },
+        "propertyTables": {
+            "type": "array",
+            "description": "An array of property table definitions, which may be referenced by index.",
+            "minItems": 1,
+            "items": {
+                "$ref": "propertyTable.schema.json"
+            }
+        },
+        "propertyTextures": {
+            "type": "array",
+            "description": "An array of property texture definitions, which may be referenced by index.",
+            "minItems": 1,
+            "items": {
+                "$ref": "propertyTexture.schema.json"
+            }
+        },
+        "propertyAttributes": {
+            "type": "array",
+            "description": "An array of property attribute definitions, which may be referenced by index.",
+            "minItems": 1,
+            "items": {
+                "$ref": "propertyAttribute.schema.json"
+            }
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "oneOf": [
+        {
+            "description": "External schema, if any.",
+            "not": {
+                "required": [
+                    "schema"
+                ]
+            }
+        },
+        {
+            "description": "Internal schema, if any.",
+            "not": {
+                "required": [
+                    "schemaUri"
+                ]
+            }
+        }
+    ]
+}
