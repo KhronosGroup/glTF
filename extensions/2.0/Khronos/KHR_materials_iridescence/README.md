@@ -185,6 +185,27 @@ function iridescent_dielectric_layer(iridescence_strength, iridescence_thickness
 }
 ```
 
+When using this extension together with the [`KHR_materials_specular`](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_specular/README.md#implementation) extension the `iridescent_dielectric_layer()` function changes slightly:
+
+```
+function iridescent_dielectric_layer(iridescence_strength, iridescence_thickness, iridescence_ior, outside_ior, base_ior, base_f0_color, specular_weight, base, specular_brdf) {
+  base_f0 = ((1-base_ior)/(1+base_ior))^2 * base_f0_color
+  base_f0 = min(base_f0, float3(1.0))
+  fr = base_f0 + (1 - base_f0)*(1 - abs(VdotH))^5
+
+  iridescent_f = iridescent_fresnel(
+    outside_ior,
+    iridescence_ior,
+    specular_weight * base_f0,
+    iridescence_thickness)
+
+  return mix(
+    mix(base, layer, specular_weight * fr),
+    iridescent_fresnel_mix(iridescent_f, base, specular_brdf),
+    iridescence_strength)
+}
+```
+
 Similar to [`KHR_materials_specular`](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_specular/README.md#implementation), to ensure energy conservation, the base BRDF is weighted with the inverse of the maximum component value of the iridescence Fresnel color and then added with the specular iridescence BRDF:
 
 ```
