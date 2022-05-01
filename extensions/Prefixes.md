@@ -48,6 +48,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `MOZ` | Mozilla Corporation | https://www.mozilla.org/ | [#1349](https://github.com/KhronosGroup/glTF/issues/1349) |
 | `MPEG` | The Moving Picture Experts Group | https://mpeg.chiariglione.org/standards/mpeg-i | [#1754](https://github.com/KhronosGroup/glTF/issues/1754) |
 | `MSFT` | Microsoft Corporation | https://www.microsoft.com/ | [#1164](https://github.com/KhronosGroup/glTF/pull/1164) |
+| `MTTR` | Matterport, Inc. | https://matterport.com/ | [#2150](https://github.com/KhronosGroup/glTF/issues/2150) |
 | `MX` | The Matrix.org Foundation | https://matrix.org/ | [#2126](https://github.com/KhronosGroup/glTF/issues/2126) |
 | `NEEDLE` | Needle Tools | https://needle.tools/<br>`felix at needle.tools` | [#2131](https://github.com/KhronosGroup/glTF/issues/2131) |
 | `NV` | NVIDIA Corporation | https://www.nvidia.com | [#1211](https://github.com/KhronosGroup/glTF/issues/1211) |
