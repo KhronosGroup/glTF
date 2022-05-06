@@ -71,14 +71,14 @@ Increasing the strength of the translucency effect using the `translucency` para
 All examples use `translucencyColorTexture` from `baseColorTexture`
 |                No translucency                 | <sub>`translucencyFactor: : 0.25`</sub> | <sub>`translucencyFactor: 0.25`<br>`translucencyColorFactor: [1.0,0.9,0.85]`</sub> |
 | :--------------------------------------------: | :-------------------------------------: | :--------------------------------------------------------------------------------: |
-| ![](figures/teatime_backlit_no_trans.png) <br> |    ![](figures/teatime_backlit.png)     |                      ![](figures/teatime_backlit_colored.png)                      |
-|  ![](figures/teatime_side_no_trans.png) <br>   |      ![](figures/teatime_side.png)      |                       ![](figures/teatime_side_colored.png)                        |
+| ![](figures/teatime_backlit_no_trans.jpg) <br> |    ![](figures/teatime_backlit.jpg)     |                      ![](figures/teatime_backlit_colored.jpg)                      |
+|  ![](figures/teatime_side_no_trans.jpg) <br>   |      ![](figures/teatime_side.jpg)      |                       ![](figures/teatime_side_colored.jpg)                        |
 
 [Tea Set](https://polyhaven.com/a/tea_set_01) by [James Ray Cock](https://www.artstation.com/jamesray), Jurita Burger and [Rico Cilliers](https://www.artstation.com/ricocilliers) on [PolyHaven](https://polyhaven.com)
 
 |         No translucency         | <sub>`translucencyFactor: : 0.5`<br>`translucencyColorFactor: [1,0,0]`</sub> | <sub>`translucencyFactor: : 1.0`<br>`translucencyColorFactor: [1,0,0]`</sub> |
 | :-----------------------------: | :--------------------------------------------------------------------------: | :--------------------------------------------------------------------------: |
-| ![](figures/plant_no_trans.png) |                          ![](figures/plant_0.5.png)                          |                          ![](figures/plant_1.0.png)                          |
+| ![](figures/plant_no_trans.jpg) |                          ![](figures/plant_0.5.jpg)                          |                          ![](figures/plant_1.0.png)                          |
 
 [Potted Plant](https://polyhaven.com/a/potted_plant_02) by [Rico Cilliers](https://www.artstation.com/ricocilliers) on [PolyHaven](https://polyhaven.com)
 
