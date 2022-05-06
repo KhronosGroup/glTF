@@ -22,10 +22,10 @@ Written against the glTF 2.0 spec.
 
 This extension adds a Lambertian diffuse transmission BSDF to the metallic-roughness material. Thin, dielectric objects like leaves or paper transmit some of the incoming light to the opposite side of the surface. For thick media (volumes) with short scattering distances and therefore dense scattering behavior, a diffuse transmission lobe is a phenomenological plausible and cheap approximation.
 
-<p float="left">
+<figure style="text-align:center">
 <img src="figures/leaves.jpg" height="350" /> <img src="figures/thin_translucent.jpg" height="350" />
-<p><em>(Thin) translucent leaves</em></p>
-</p>
+<sub><figcaption><em>(Thin) translucent leaves/foliage</em></figcaption></sub>
+</figure>
 
 ## Extending Materials
 
@@ -72,13 +72,13 @@ All examples use `translucencyColorTexture` from `baseColorTexture`
 |                No translucency                 | <sub>`translucencyFactor: : 0.25`</sub> | <sub>`translucencyFactor: 0.25`<br>`translucencyColorFactor: [1.0,0.9,0.85]`</sub> |
 | :--------------------------------------------: | :-------------------------------------: | :--------------------------------------------------------------------------------: |
 | ![](figures/teatime_backlit_no_trans.png) <br> |    ![](figures/teatime_backlit.png)     |                      ![](figures/teatime_backlit_colored.png)                      |
-| ![](figures/teatime_side_no_trans.png) <br> |    ![](figures/teatime_side.png)     |                      ![](figures/teatime_side_colored.png)                      |
+|  ![](figures/teatime_side_no_trans.png) <br>   |      ![](figures/teatime_side.png)      |                       ![](figures/teatime_side_colored.png)                        |
 
 [Tea Set](https://polyhaven.com/a/tea_set_01) by [James Ray Cock](https://www.artstation.com/jamesray), Jurita Burger and [Rico Cilliers](https://www.artstation.com/ricocilliers) on [PolyHaven](https://polyhaven.com)
 
 |         No translucency         | <sub>`translucencyFactor: : 0.5`<br>`translucencyColorFactor: [1,0,0]`</sub> | <sub>`translucencyFactor: : 1.0`<br>`translucencyColorFactor: [1,0,0]`</sub> |
-| :-----------------------------: | :------------------------------------: | :------------------------------------: |
-| ![](figures/plant_no_trans.png) |       ![](figures/plant_0.5.png)       |       ![](figures/plant_1.0.png)       |
+| :-----------------------------: | :--------------------------------------------------------------------------: | :--------------------------------------------------------------------------: |
+| ![](figures/plant_no_trans.png) |                          ![](figures/plant_0.5.png)                          |                          ![](figures/plant_1.0.png)                          |
 
 [Potted Plant](https://polyhaven.com/a/potted_plant_02) by [Rico Cilliers](https://www.artstation.com/ricocilliers) on [PolyHaven](https://polyhaven.com)
 
