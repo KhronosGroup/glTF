@@ -198,7 +198,7 @@ function iridescent_dielectric_layer(iridescence_strength, iridescence_thickness
 
   return mix(
     fresnel_mix(base_ior, base, specular_brdf),
-    rgb_mix(iridescent_f, base, specular_brdf),
+    rgb_mix(base, specular_brdf, iridescent_f),
     iridescence_strength)
 }
 ```
