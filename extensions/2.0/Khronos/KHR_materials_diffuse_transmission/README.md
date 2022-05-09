@@ -2,10 +2,11 @@
 
 ## Contributors
 
-* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
-* Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
+* Tobias Haeussler, Dassault Systèmes [@proog128](https://github.com/proog128)
+* Bastian Sdorra, Dassault Systèmes [@bsdorra](https://github.com/bsdorra)
 * Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
 
+TODO
 ## Acknowledgments
 
 TODO
@@ -23,8 +24,10 @@ Written against the glTF 2.0 spec.
 This extension adds a Lambertian diffuse transmission BSDF to the metallic-roughness material. Thin, dielectric objects like leaves or paper diffusely transmit incoming light to the opposite side of the surface. For optically thick media (volumes) with short scattering distances and therefore dense scattering behavior, a diffuse transmission lobe is a phenomenological plausible and cheap approximation.
 
 <figure style="text-align:center">
+<p float="left">
 <img src="figures/leaves.jpg" height="350" />
 <img src="figures/thin_translucent.jpg" height="350" />
+</p>
 <sub><figcaption><em>(Thin) translucent leaves/foliage</em></figcaption></sub>
 </figure>
 
@@ -73,22 +76,25 @@ diffuseTransmissionColor = diffuseTransmissionColorFactor * diffuseTransmissionC
 ## Examples
 
 The examples use `diffuseTransmissionColorTexture` from `baseColorTexture`.
-|                No transmission                 | <sub>`diffuseTransmissionFactor: : 0.25`</sub> | <sub>`diffuseTransmissionFactor: 0.25`<br>`diffuseTransmissionColorFactor: [1.0,0.9,0.85]`</sub> |
-| :--------------------------------------------: | :--------------------------------------------: | :----------------------------------------------------------------------------------------------: |
-| ![](figures/teatime_backlit_no_trans.jpg) <br> |        ![](figures/teatime_backlit.jpg)        |                             ![](figures/teatime_backlit_colored.jpg)                             |
-|  ![](figures/teatime_side_no_trans.jpg) <br>   |         ![](figures/teatime_side.jpg)          |                              ![](figures/teatime_side_colored.jpg)                               |
+|                                                               Backlit                                                               |                  Side                  |
+| :---------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------: |
+|                                              ![](figures/teatime_backlit_no_trans.jpg)                                              | ![](figures/teatime_side_no_trans.jpg) |
+|                         ![](figures/teatime_backlit.jpg)<br><sub>`diffuseTransmissionFactor: : 0.25`</sub>                         |     ![](figures/teatime_side.jpg)<br><sub>`diffuseTransmissionFactor: : 0.25`</sub>      |
+| ![](figures/teatime_backlit_colored.jpg)<br><sub>`diffuseTransmissionFactor: 0.25`<br>`diffuseTransmissionColorFactor: [1.0,0.9,0.85]` | ![](figures/teatime_side_colored.jpg)<br><sub>`diffuseTransmissionFactor: 0.25`<br>`diffuseTransmissionColorFactor: [1.0,0.9,0.85]`|
 
 <sub>[Tea Set](https://polyhaven.com/a/tea_set_01) by [James Ray Cock](https://www.artstation.com/jamesray), Jurita Burger and [Rico Cilliers](https://www.artstation.com/ricocilliers) on [PolyHaven](https://polyhaven.com)</sub>
 
-The tea cup renderings demonstrate the effect of `diffuseTransmissionFactor` and `diffuseTransmissionColorFactor`. A strong directional light is direct towards the viewer, casting a strong shadow on the visible side of the tea cup (left). Increasing the `diffuseTransmissionFactor` brightens the shadowed areas by allowing light to diffusely transmit through the surface of the cup (mid). Please note, that this extension only specifies how light will be diffusely transmitted at the surface (volume boundaries). In reality, when light penetrates such a dense volumetric medium, photons become subject to wavelength dependent absorption and scattering events. Since wavelength dependence implies a potential color shift, this extension also introduces a `diffuseTransmissionColorFactor` parameter to provide a simple but effective way to approximate color shifts due to absorption and scattering. The images in the right column demonstrate a subtle use of `diffuseTransmissionColorFactor` by pushing the transmitted light into a warm, yellowish tint. The second row of images show the same scenario from a different angle.
+The tea cup renderings demonstrate the effect of `diffuseTransmissionFactor` and `diffuseTransmissionColorFactor`. A strong directional light is direct towards the viewer, casting a strong shadow on the visible side of the tea cup (left). Increasing the `diffuseTransmissionFactor` brightens the shadowed areas by allowing light to diffusely transmit through the surface of the cup (mid). Please note, that this extension only specifies how light will be diffusely transmitted at the surface (volume boundaries). In reality, when light penetrates such a dense volumetric medium, photons become subject to wavelength dependent absorption and scattering events. Since wavelength dependence implies a potential color shift, this extension also introduces a `diffuseTransmissionColorFactor` parameter to provide a simple but effective way to approximate color shifts due to absorption and scattering. The images in the bottom row demonstrate a subtle use of `diffuseTransmissionColorFactor` by pushing the color of the transmitted light into a warm yellow. The side view of the cup predominantly shows the light facing part of the cup. In the lit part we can hardly notice any difference between the configurations. There's a slight darkening if the highlight area, as with an increasing `diffuseTransmissionFactor` energy is taken away from the diffuse reflection. This effect is much more prominent in the next example.
 
-|         No transmission         | <sub>`diffuseTransmissionFactor: : 0.5`<br>`diffuseTransmissionColorFactor: [1,0,0]`</sub> | <sub>`diffuseTransmissionFactor: : 1.0`<br>`diffuseTransmissionColorFactor: [1,0,0]`</sub> |
-| :-----------------------------: | :----------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------: |
-| ![](figures/plant_no_trans.jpg) |                                 ![](figures/plant_0.5.jpg)                                 |                                 ![](figures/plant_1.0.jpg)                                 |
+||
+| :-----------------------------: |
+|![](figures/plant_no_trans.jpg)|
+|![](figures/plant_0.5.jpg)<br><sub>`diffuseTransmissionFactor: : 0.5`<br>`diffuseTransmissionColorFactor: [1,0,0]`</sub> |
+|![](figures/plant_1.0.jpg)<br><sub>`diffuseTransmissionFactor: : 1.0`<br>`diffuseTransmissionColorFactor: [1,0,0]`</sub> |
 
 <sub>[Potted Plant](https://polyhaven.com/a/potted_plant_02) by [Rico Cilliers](https://www.artstation.com/ricocilliers) on [PolyHaven](https://polyhaven.com)</sub>
 
-The potted plant example exaggerates the use of the diffuse transmission parameters to clearly demonstrate the effects. Where we still see some pure green reflections for `diffuseTransmissionFactor` of 0.5 (mid), we have pure diffuse transmission for the right image. Both use a `diffuseTransmissionColorFactor` of pure red.
+Increasing the `diffuseTransmissionFactor` takes energy from the diffuse reflection and transfers it to the diffuse transmission. In the images above this effect is clearly visible. The green appearance of the leaves is the product of front-lighting and diffuse reflections based on the `baseColorTexture`. With `diffuseTransmissionFactor` approaching `1.0`, the appearance changes to red, as a product of back-lighting and the `diffuseTransmissionColorFactor`. Specular reflections are untouched by this effect.
 
 ## Implementation
 
@@ -180,8 +186,10 @@ dielectric_brdf =
 Since the diffuse BTDF does not have controls for roughness, the roughness parameter acts only on the reflective part of the surface. By decoupling the reflection and transmission parts it is possible to configure materials which have a smooth reflection and a diffuse transmission, as shown in image below (right).
 
 <figure style="text-align:center">
+<p float="left">
  <img src="./figures/transmission-translucency_thin.jpg" width="40%" />
  <img src="./figures/transmission-translucency_thin_angle.jpg" width="39.5%" />
+</p>
 <sub><figcaption><em>Emissive sphere behind material sample. Left: Opaque diffuse. Middle: Rough transmission. Right: Diffuse transmission.</em></figcaption></sub>
 </figure><br>
 
@@ -240,7 +248,7 @@ Consequently, renderers may use diffuse transmission as a cue to switch to diffu
 </figure>
 
 
-### Summary
+### Overview - Extension Combinations & Use-Cases
 |                                  |                                                                                                                                                                                    KHR_materials_transmission                                                                                                                                                                                    |                                                                                                                                                                            KHR_materials_diffuse_transmission                                                                                                                                                                            |
 | :------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | KHR_materials_volume <br>(thin)  | <img src="./figures/nayyara-shabbir-RUZSejG7xig-unsplash.jpg" height="250"/><br/><sub><em><span>Photo by <a href="https://unsplash.com/@nayyaranoor?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Nayyara Shabbir</a> on <a href="https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></em></sub> |       <img src="./figures/jotaka-ospuTF_nBho-unsplash.jpg" height="250"/><br/><sub><em><span>Photo by <a href="https://unsplash.com/@pragmart?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">jötâkå</a> on <a href="https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></em></sub>        |
