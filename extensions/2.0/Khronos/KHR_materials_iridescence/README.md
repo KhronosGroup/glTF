@@ -145,6 +145,24 @@ For transmissive `base` materials, the `diffuse_brdf(...)` will be replaced by t
 
 The `base_ior` can be changed using the [`KHR_materials_ior`](../KHR_materials_ior) extension.
 
+In case of combining `KHR_materials_iridescence` with [`KHR_materials_specular`](../KHR_materials_specular/README.md), `dielectric_brdf` becomes the following:
+
+```
+dielectric_brdf =
+  iridescent_dielectric_layer(
+    iridescence_strength = iridescence,
+    iridescence_thickness = iridescenceThickness,
+    iridescence_ior = iridescenceIor,
+    outside_ior = 1.0,
+    base_ior = 1.5,
+    base_f0_color = specularColor.rgb,
+    specular_weight = specular,
+    base = diffuse_brdf(
+      color = baseColor),
+    specular_brdf = specular_brdf(
+      α = roughness ^ 2))
+```
+
 ### Clearcoat
 
 When adding a clearcoat ontop, an additional interface between the clearcoat and thin-film layer would be created. Due to simplicity and artistical friendlyness, this interface is ignored.
@@ -180,12 +198,24 @@ function iridescent_dielectric_layer(iridescence_strength, iridescence_thickness
 
   return mix(
     fresnel_mix(base_ior, base, specular_brdf),
-    iridescent_fresnel_mix(iridescent_f, base, specular_brdf),
+    rgb_mix(iridescent_f, base, specular_brdf),
     iridescence_strength)
 }
 ```
 
-When using this extension together with the [`KHR_materials_specular`](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_specular/README.md#implementation) extension the `iridescent_dielectric_layer()` function changes slightly:
+Similar to [`KHR_materials_specular`](../KHR_materials_specular/README.md#implementation), to ensure energy conservation, the base BRDF is weighted with the inverse of the maximum component value of the iridescence Fresnel color and then added with the specular iridescence BRDF inside the `rgb_mix()` function:
+
+```
+function rgb_mix(base, specular_brdf, rgb_alpha) {
+    rgb_alpha_max = max(rgb_alpha.r, rgb_alpha.g, rgb_alpha.b)
+
+    return (1 - rgb_alpha_max) * base + rgb_alpha * specular_brdf
+}
+```
+
+If instead `1 - rgb_alpha` would be used directly, inverse colors would be created. By using the maximum component value, no energy would be gained.
+
+When using this extension together with the [`KHR_materials_specular`](../KHR_materials_specular/README.md#implementation) extension the `iridescent_dielectric_layer()` function changes slightly (as already pointed out in the previous section):
 
 ```
 function iridescent_dielectric_layer(iridescence_strength, iridescence_thickness, iridescence_ior, outside_ior, base_ior, base_f0_color, specular_weight, base, specular_brdf) {
@@ -199,25 +229,14 @@ function iridescent_dielectric_layer(iridescence_strength, iridescence_thickness
     specular_weight * base_f0,
     iridescence_thickness)
 
-  return mix(
-    mix(base, layer, specular_weight * fr),
-    iridescent_fresnel_mix(iridescent_f, base, specular_brdf),
-    iridescence_strength)
+  return rgb_mix(
+    base,
+    specular_brdf,
+    mix(specular_weight * fr, iridescent_f, iridescence_strength))
 }
 ```
 
-Similar to [`KHR_materials_specular`](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_specular/README.md#implementation), to ensure energy conservation, the base BRDF is weighted with the inverse of the maximum component value of the iridescence Fresnel color and then added with the specular iridescence BRDF:
-
-```
-function iridescent_fresnel_mix(iridescence_fresnel, base, specular_brdf) {
-    // Get maximum component value of iridescence fresnel color
-    iridescence_fresnel_max = max(iridescence_fresnel.r, iridescence_fresnel.g, iridescence_fresnel.b)
-
-    return (1 - iridescene_fresnel_max) * base + iridescence_fresnel * specular_brdf
-}
-```
-
-If instead `1 - iridescence_fresnel` would be used directly, inverse colors would be created. By using the maximum component value, no energy would be gained.
+The two additional parameters `base_f0_color` and `specular_weight` correspond to `f0_color` and `weight` of the `dielectric_brdf` in [`KHR_materials_specular`](../KHR_materials_specular/README.md#extending-materials).
 
 ### Iridescence Fresnel
 
