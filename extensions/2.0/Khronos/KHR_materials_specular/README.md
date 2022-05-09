@@ -96,7 +96,7 @@ dielectric_brdf =
     layer = specular_brdf(α = roughness^2))
 ```
 
-The `fresnel_mix` function mixes two BSDFs according to a Fresnel term. The `layer` is weighted with `weight * fresnel(ior, f0_color)`. The `base` is weighted with `1 - weight * fresnel(ior, f0_color)`.
+The `fresnel_mix` function mixes two BSDFs according to a Fresnel term. The `layer` is weighted with `weight * fresnel(ior, f0_color)`. The `base` is weighted with `1 - weight * max_value(fresnel(ior, f0_color))`.
 
 The specular factor used as `weight` scales `layer` and `base`. The less energy is reflected by the `layer` (`specular_brdf`), the more can be shifted to the `base` (`diffuse_brdf`). The following image shows specular factor increasing from 0 to 1.
 
@@ -104,7 +104,15 @@ The specular factor used as `weight` scales `layer` and `base`. The less energy 
 
 The specular color is a directional-dependent weight included in the Fresnel term. At normal incidence (`f0`), `specularColor` scales the F0 reflectance `f0_color`. At grazing incidence (`f90`), the reflectance remains at 1. In between the scale factor is smoothly interpolated.
 
-As with specular factor, `base` will be weighted with the directional-dependent remaining energy according to the Fresnel term. `f0_color` is an RGB color, involving the complementary to specular color. To make it easy to use and ensure energy conservation, the RGB color is converted to scalar via `max(r, g, b)`. The following images show specular color increasing from [0,0,0] to [1,1,1] (top) and from [0,0,0] to [1,0,0] (bottom).
+As with specular factor, `base` will be weighted with the directional-dependent remaining energy according to the Fresnel term. `f0_color` is an RGB color, involving the complementary to specular color. To avoid inverse colors and ensure energy conservation, the RGB color is converted to scalar via `max(r, g, b)`:
+
+```
+function max_value(vec3 color) {
+    return max(color.r, color.g, color.b)
+}
+```
+
+The following images show specular color increasing from [0,0,0] to [1,1,1] (top) and from [0,0,0] to [1,0,0] (bottom).
 
 ![](figures/specular-color.png)
 ![](figures/specular-color-2.png)
@@ -122,7 +130,7 @@ function fresnel_mix(f0_color, ior, weight, base, layer) {
   f0 = ((1-ior)/(1+ior))^2 * f0_color
   f0 = min(f0, float3(1.0))
   fr = f0 + (1 - f0)*(1 - abs(VdotH))^5
-  return mix(base, layer, weight * fr)
+  return (1 - weight * max_value(fr)) * base + weight * fr * layer
 }
 ```
 
