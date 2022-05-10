@@ -34,15 +34,15 @@ The only major addition is, that the output values are mapped using a [JSON Poin
   
 ### Motivation
 
-At this point of time, one can only target the transformation or weight data of a node.  
-With this extension, one can technically target any value (`scalar`, `vec2`, `vec3`, `vec4` and scalars in an `array`) in glTF e.g.
+Currently, only the transformation or weight data of a node can be targeted with animation data.  
+With this extension, one can technically target any value (`scalar`, `vec2`, `vec3`, `vec4` and scalars in an `array`) in a glTF asset, for example
 
 * Color factors in materials
 * Camera field of view
 
-Even using a JSON pointer, the targets and their expected behavior are explictly defined.
+Using a JSON pointer, the targets and their expected behavior are explictly defined.
 
-Current and future extensions have to write against this specification to allow to animate specific values.
+Current and future extensions have to write against this specification to allow or disallow animation of specific values.
 
 #### Current and future restrictions
 
@@ -81,7 +81,7 @@ It is not allowed to animate a glTFid property, as it does change the structure 
 
 ##### `extras`
 
-A channel may target `extras` at any allowed JSON Pointer value but
+A channel may target any allowed JSON Pointer value, so values in `extras` can be targeted as well, but
 interpretation of the animated values is entirely application specific.
 
 ## Extension compatibility and fallback behavior
@@ -180,13 +180,17 @@ The following extensions have been created before KHR_animation_pointer and are 
 
 |`path`                                                |Accessor Type|Component Type(s)  |Description                                                   |
 |------------------------------------------------------|-------------|-------------------|--------------------------------------------------------------|
-|`"/materials/{}/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/offset"`                                  |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|XY offset vector                                               |
+|`"/materials/{}/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/offset"`                                  |`"VEC2"`   |`5126`&nbsp;(FLOAT)|XY offset vector |
+|`"/extensions/KHR_lights_punctual/lights/{}/intensity"`                                  |`"SCALAR"`   |`5126`&nbsp;(FLOAT) | Light intensity |
+|`"/materials/{}/extensions/KHR_materials_emissive_strength/emissiveStrength"`                                  |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Emissive strength factor |
 
 ## glTF Schema Updates
 
 * **JSON schema**: [glTF.KHR_animation_pointer.schema.json](schema/glTF.KHR_animation_pointer.schema.json)
 
 ## Notes and clarifications
+
+_This section is non-normative._
 
 ### JSON Pointer
 
@@ -195,6 +199,10 @@ This means, the property is replaced by the interpolated value.
   
 For any other case, the JSON Pointer targets the glTF property as well but must be an `array` property.  
 This means, that the two or more elements do replace the values in the array.  
+
+### Material Animation
+
+Material animation targets materials directly. This means that when animating the material, all nodes using that material are updated together. If individual material animation per node is desired, each of them needs to have its own material to animate.
 
 ## Examples
 
