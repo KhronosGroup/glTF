@@ -1294,7 +1294,7 @@ Valid accessor type and component type for each attribute semantic property are 
                 VEC4            | _float_ +
                                   _unsigned byte_ normalized +
                                   _unsigned short_ normalized | RGB or RGBA vertex color linear multiplier
-| `JOINTS_n`  | VEC4            | _unsigned byte_
+| `JOINTS_n`  | VEC4            | _unsigned byte_ +
                                   _unsigned short_            | See <<skinned-mesh-attributes,Skinned Mesh Attributes>>
 | `WEIGHTS_n` | VEC4            | _float_ +
                                   _unsigned byte_ normalized +
