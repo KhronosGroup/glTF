@@ -12,5 +12,5 @@
         "extensions": { },
         "extras": { }
     },
-    "required": [ "path" ]
+    "required": [ "pointer" ]
 }
