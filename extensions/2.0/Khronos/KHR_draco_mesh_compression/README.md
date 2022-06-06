@@ -1,3 +1,8 @@
+<!--
+Copyright 2013-2017 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+-->
+
 # KHR_draco_mesh_compression
 
 ## Contributors
@@ -8,11 +13,11 @@
 * Kai Ninomiya, Google, <mailto:kainino@google.com>
 * Patrick Cozzi, Cesium, [@pjcozzi](https://twitter.com/pjcozzi)
 
-Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 ## Status
 
-Complete
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 

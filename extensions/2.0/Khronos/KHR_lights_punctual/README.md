@@ -1,3 +1,8 @@
+<!--
+Copyright 2017-2018 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+-->
+
 # KHR\_lights\_punctual
 
 ## Contributors
@@ -7,12 +12,12 @@
 * Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
 * Mike Bond, Adobe, [@MiiBond](https://twitter.com/MiiBond)
 
-Copyright (C) 2017-2018 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2017-2018 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
 
-Complete
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 

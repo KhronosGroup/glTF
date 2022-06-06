@@ -1,0 +1,23 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: glTF
+Source: https://github.com/KhronosGroup/glTF
+
+Files: extensions/0.8/Vendor/CESIUM_binary_glTF/*
+Copyright: 2012-2021 Cesium GS, Inc.
+License: LicenseRef-TBD
+
+Files: extensions/1.0/Vendor/* extensions/2.0/Vendor/*
+Copyright: 2012-2021 Various Authors
+License: LicenseRef-TBD
+
+Files: extensions/1.0/Khronos/* extensions/2.0/Khronos/* extensions/2.0/Archived/*
+Copyright: 2012-2021 The Khronos Group Inc.
+License: LicenseRef-KhronosSpecCopyright
+
+Files: specification/1.0/figures/* specification/1.0/schema/*
+Copyright: 2012-2021 The Khronos Group Inc.
+License: LicenseRef-KhronosSpecCopyright
+
+Files: specification/2.0/schema/* specification/2.0/figures/* specification/figures/*
+Copyright: 2012-2021 The Khronos Group Inc.
+License: LicenseRef-KhronosSpecCopyright

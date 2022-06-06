@@ -1,15 +1,20 @@
+<!--
+Copyright 2017-2018 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+-->
+
 # KHR_texture_transform
 
 ## Contributors
 
 * Steven Vergenz, Microsoft ([steven.vergenz@microsoft.com](mailto:steven.vergenz@microsoft.com))
 
-Copyright (C) 2017-2018 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2017-2018 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
 
-Complete
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 
@@ -105,6 +110,7 @@ This example inverts the T axis, effectively defining a bottom-left origin.
 
 * [UnityGLTF](https://github.com/KhronosGroup/UnityGLTF)
 * [Babylon.js](https://www.babylonjs.com/)
+* [PlayCanvas](https://playcanvas.com/)
 * [Three.js](https://threejs.org/)
 * [Blender](https://docs.blender.org/manual/en/2.81/addons/import_export/io_scene_gltf2.html#uv-mapping)
 * [Gestaltor](https://gestaltor.io/)

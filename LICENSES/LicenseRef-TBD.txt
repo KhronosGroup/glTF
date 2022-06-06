@@ -1,0 +1,9 @@
+To Be Determined License for glTF Vendor Extensions
+
+Copyright 2013-2021 Various Authors
+
+The TBD license is currently used as a placeholder for files that are part
+of vendor extensions with currently unknown copyright terms. Until we can
+reach clarification, it can be assumed that all such files are copyright by
+the vendor responsible for that extension, under terms defined by them but
+allowing Khronos to reproduce on our websites and repositories.

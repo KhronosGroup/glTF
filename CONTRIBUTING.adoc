@@ -1,0 +1,41 @@
+// Copyright 2020-2021 The Khronos Group Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= CONTRIBUTING file for the KhronosGroup/glTF project
+
+Contributions to the KhronosGroup/glTF repository are welcome.
+
+Contributions may be in the form of Issues proposing a change, or Pull
+Requests containing fixes for, or additions to:
+
+  * Specification and Extension text, schemas, and related documentation
+  * Specification scripting / build toolchains and related infrastructure
+
+Please keep contributions focused on solving a single issue or bug.
+
+For contributions to the glTF 2.0 core specification, see:
+link:specification/2.0/README.md#contributing[glTF 2.0 Contributions].
+
+== Copyright Notice and License Template
+
+If you are adding a new file, it must be under one of the following
+licenses:
+
+  * Creative Commons Attribution 4.0 International, for specification text
+    and informative files (for example, this CONTRIBUTING.adoc file or
+    link:specification/2.0/Specification.adoc[`specification/2.0/Specification.adoc`])
+  * Apache 2.0, for all other changes (for example,
+    link:specification/2.0/Makefile[`specification/2.0/Makefile`])
+  * Apache 2.0 OR MIT, for source-like files that may need to used in GPL
+    projects
+
+We use a short license in each file consisting of just the copyright
+statement and the SPDX license identifier of the license applying to that
+file, and link to the full license text from link:LICENSE.adoc.
+
+== Contributor License Agreement
+
+When you propose a pull request on KhronosGroup/glTF you must execute the
+Khronos Mixed Repository Contributor License Agreement, to confirm you own
+your work and are granting Khronos the necessary permissions to redistribute
+it under our licenses.

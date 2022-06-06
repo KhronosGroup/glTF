@@ -1,3 +1,8 @@
+<!--
+Copyright 2020 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+-->
+
 # KHR\_materials\_transmission <!-- omit in toc -->
 
 ## Contributors <!-- omit in toc -->
@@ -12,12 +17,12 @@
 * Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
 
-Copyright (C) 2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status <!-- omit in toc -->
 
-Complete
+Complete, Ratified by the Khronos Group
 
 ## Dependencies <!-- omit in toc -->
 
@@ -89,7 +94,7 @@ Only two properties are introduced with this extension and combine to describe a
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**transmissionFactor** | `number` | The base percentage of light that is transmitted through the surface.| No, Default: `0.0 ` |
-|**transmissionTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the transmission percentage of the surface, stored in the `R` channel. This will be multiplied by `transmissionFactor`. | No |
+|**transmissionTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A texture that defines the transmission percentage of the surface, stored in the `R` channel. This will be multiplied by `transmissionFactor`. | No |
 
 ### transmissionFactor 
 The amount of light that is transmitted by the surface rather than diffusely re-emitted. This is a percentage of all the light that penetrates a surface (i.e. isn’t specularly reflected) rather than a percentage of the total light that hits a surface. A value of 1.0 means that 100% of the light that penetrates the surface is transmitted through.
@@ -108,7 +113,7 @@ The `R` channel of this texture defines the amount of light that is transmitted 
 </figure>
 
 ## Tinting
-The `baseColor` of the material, as defined in the [Metallic-Roughness Material](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#metallic-roughness-material) section of the glTF specification, controls the amount of light at each frequency that is reflected (not absorbed) by the material. Similarily, we also use it to define the light that is transmitted (not absorbed) by a transparent surface. Absorption is usually defined as an amount of light at each frequency that is absorbed over a given distance through a medium (usually described by Beer’s Law). However, since this extension deals exclusively with infinitely thin surfaces, this absorption is constant and equal to `1.0 - baseColor`. The color tinting effects in the above images are defined by the material's `baseColor`. Tinting is very useful for real-world materials like stained glass and tinted plastics.
+The `baseColor` of the material, as defined in the [Metallic-Roughness Material](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#metallic-roughness-material) section of the glTF specification, controls the amount of light at each frequency that is reflected (not absorbed) by the material. Similarily, we also use it to define the light that is transmitted (not absorbed) by a transparent surface. Absorption is usually defined as an amount of light at each frequency that is absorbed over a given distance through a medium (usually described by Beer’s Law). However, since this extension deals exclusively with infinitely thin surfaces, this absorption is constant and equal to `1.0 - baseColor`. The color tinting effects in the above images are defined by the material's `baseColor`. Tinting is very useful for real-world materials like stained glass and tinted plastics.
 <figure>
   <img src="./figures/ConstantTransmission.png"/>
 <figcaption><em>The baseColor of the material (yellow, in this example) is used to tint the light being transmitted.</em></figcaption>
@@ -134,33 +139,82 @@ Metals effectively absorb all refracted light (light that isn't reflected), prev
 The metallic parameter of a glTF material effectively scales the `baseColor` of the material toward black while, at the same time scaling the F0 (reflectivity) value towards 1.0. This makes the material opaque for metallic values of 1.0 because transmitted light is attenuated out by absorption. Therefore, for a material with `metallicFactor=1.0`, the value of `transmissionFactor` doesn't matter.
 
 ## Transmission BTDF ##
-From the core [glTF BRDF](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#appendix-b-brdf-implementation), we have:
 
-*f* = *f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub>
+From the core [glTF BRDF](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation), we have:
 
-*f*<sub>*diffuse*</sub> = (1 - *F*) * *diffuse*
-
-*f*<sub>*specular*</sub> = *F* * *G* * *D* / (4 * dot(*N*, *L*) * dot(*N*, *V*)), where *F* is the Surface Reflection Ratio.
+```
+dielectric_brdf =
+  fresnel_mix(
+    ior = 1.5,
+    base = diffuse_brdf(color = baseColor),
+    layer = specular_brdf(α = roughness^2))
+```
 
 We will now add an additional term for the transmitted light:
 
-*f* = *f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub> + *f*<sub>*transmission*</sub>
+```
+dielectric_brdf =
+  fresnel_mix(
+    ior = 1.5,
+    base = mix(
+      diffuse_brdf(baseColor),
+      specular_btdf(α = roughness^2) * baseColor,
+      transmission),
+    layer = specular_brdf(α = roughness^2))
+```
 
-*f*<sub>*transmission*</sub> = (1 - *F*) * *T* * *baseColor* * *D<sub>T</sub>* * *G<sub>T</sub>* / *(4 * abs(dot(N, L))* * *abs(dot(N, V)))*
+where `transmission` is the transmission percentage defined by this extension's `transmissionFactor` and `transmissionTexture` properties and `specular_btdf` is a bidirectional transmission distribution function (BTDF) based on microfacet theory. The microfacet distribution function is the same Trowbridge-Reitz model used by specular reflection except sampled along the view vector rather than the reflection. The *baseColor* factor causes the transmitted light to be tinted by the surface.
 
-where *T* is the transmission percentage defined by this extension's `transmission` and `transmissionTexture` properties and *D<sub>T</sub>* is the distribution function for the transmitted light. The distribution function is the same Trowbridge-Reitz model used by specular reflection except sampled along the view vector rather than the reflection. *G<sub>T</sub>* is the geometric occlusion function for transmission. The *baseColor* factor causes the transmitted light to be tinted by the surface.
+<figure>
+  <img src="./figures/Nodes.png"/>
+<figcaption><em>KHR_material_transmission adds a specular_btdf to the core glTF BRDF.</em></figcaption>
+</figure>
 
 Note that unless otherwise specified by another extension, this transmissive surface is really two surfaces back-to-back, representing a thin material. As such there is no average refraction, but in the presence of roughness there is refraction at the microfacet level. This is because the distribution function is appled to both the front and back surface microfacets and they are uncorrelated to each other. These microfacet pairs form tiny prisms that cause the roughness map to blur the transmitted light, and as such this effect will be modulated by the material's index of refraction (IOR). Recall that the default IOR from the base spec is 1.5.
 
-Light that penetrates a surface and is transmitted will not be diffusely reflected so we also need to modify the diffuse calculation to account for this.
-*f*<sub>*diffuse*</sub> = (1 - *F*) * (1 - *T*) * *diffuse*
-
-Optical transparency does not require any changes whatsoever to the specular term. So this can all be rearranged so that the transmitted light amounts to a modification of the diffuse lobe.
-*f* = (1 - *F*) * (*T* * *D<sub>T</sub>* * *G<sub>T</sub>* / *(4 * abs(dot(N, L))* * *abs(dot(N, V)))* + (1 - *T*) * *diffuse*) + *f*<sub>*specular*</sub>
+Optical transparency does not require any changes whatsoever to the specular term. So the transmitted light amount to a modification of the `base` layer only.
 
 ## Implementation Notes
 
 *This section is non-normative.*
+
+The specular transmission `specular_btdf(α)` is a microfacet BTDF
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBTDF} = \frac{G_T D_T}{4 \, \left|N \cdot L \right| \, \left| N \cdot V \right|}">
+
+with the Trowbridge-Reitz/GGX microfacet distribution
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle D_T = \frac{\alpha^2 \, \chi^%2B(N \cdot H_T)}{\pi ((N \cdot H_T)^2 (\alpha^2 - 1) %2B 1)^2}">
+
+and the separable form of the Smith joint masking-shadowing function
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle G_T = \frac{2 \, \left| N \cdot L \right| \, \chi^%2B\left(\frac{H_T \cdot L}{N \cdot L}\right)}{\left| N \cdot L \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{2 \, \left| N \cdot V \right| \, \chi^%2B\left(\frac{H_T \cdot V}{N \cdot V}\right)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}">,
+
+using the transmission half vector *H*<sub>*T*</sub>
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle H_T = \text{normalize}(V %2B \, 2 \, \left| N \cdot L \right| \, N %2B L)">.
+
+With the step function χ<sup>+</sup> we ensure that the microsurface is only visible for directions that are on the same side of the macro and microsurfaces. Macro and microsurfaces are oriented according to *N* and *H*<sub>*T*</sub>, respectively.
+
+Introducing the visibility function
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle V_T = \frac{G_T}{4 \, \left| N \cdot L \right| \, \left| N \cdot V \right|}">
+
+simplifies the original microfacet BTDF to
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBTDF} = V_T D_T">
+
+with
+
+<img src="https://render.githubusercontent.com/render/math?math=\displaystyle V_T = \frac{\, \chi^%2B\left(\frac{H_T \cdot L}{N \cdot L}\right)}{\left| N \cdot L\right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^%2B\left(\frac{H_T \cdot V}{N \cdot V}\right)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}">.
+
+Thus we have the function
+
+```
+function specular_btdf(α) {
+  return V_T * D_T
+}
+```
 
 Rendering transparency in a real-time rasterizer in an efficient manner is a difficult problem, especially when an arbitrary number of transparent polygons may be overlapping in view. This is because rendering transparency is order-dependent (i.e. we see background objects through foreground objects) and also because the rendering of absorption and reflections involves two distinct blend operations. Consequently, it may not be possible on the target platform to render every transparent polygon in the correct order, in a reasonable time, and with the correct blending. Therefore, correct ordering is not an absolute requirement when implementing this extension in realtime renderers, nor is rendering all potentially overlapping layers. 
 
@@ -179,7 +233,7 @@ Various techniques are available to trade off physical accuracy against realtime
 
 [Autodesk Standard Surface - Specular Transmission](https://autodesk.github.io/standard-surface/#closures/speculartransmission)  
 [Blender Transparent BSDF](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/transparent.html#transparent-bsdf)  
-[Enterprise PBR Shading Model - Transparency](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2020x.md.html)  
+[Enterprise PBR Shading Model - Dielectric BSDF for Transparent Surfaces](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2022x.md.html#components/core/dielectricbsdffortransparentsurfaces)
 [Filament Material models - Transmission](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/transmission)  
 [Unreal Engine 4 Material - Refraction](https://docs.unrealengine.com/en-US/Engine/Rendering/Materials/MaterialInputs/index.html#refraction)  
 [Adobe Standard Material - Interior Properties](https://helpx.adobe.com/dimension/using/standard-materials.html#InteriorProperties)

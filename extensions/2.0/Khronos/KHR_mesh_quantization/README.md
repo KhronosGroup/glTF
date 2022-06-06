@@ -1,3 +1,8 @@
+<!--
+Copyright 2018-2020 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+-->
+
 # KHR\_mesh\_quantization
 
 ## Contributors
@@ -5,12 +10,12 @@
 * Arseny Kapoulkine, [@zeuxcg](https://twitter.com/zeuxcg)
 * Alexey Knyazev, [@lexaknyazev](https://github.com/lexaknyazev)
 
-Copyright © 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
 
-Complete
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 
@@ -32,14 +37,14 @@ Because the extension does not provide a way to specify both `FLOAT` and quantiz
 
 ## Extending Mesh Attributes
 
-When `KHR_mesh_quantization` extension is supported, the set of types used for storing mesh attributes is expanded according to the table below.
+When `KHR_mesh_quantization` extension is supported, the following **extra** types are allowed for storing mesh attributes in addition to the types defined in [Section 3.7.2.1](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#meshes-overview).
 
-|Name|Accessor Type(s)|Component Type(s)|Description|
-|----|----------------|-----------------|-----------|
-|`POSITION`|`"VEC3"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|XYZ vertex positions|
-|`NORMAL`|`"VEC3"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized|Normalized XYZ vertex normals|
-|`TANGENT`|`"VEC4"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized|XYZW vertex tangents where the *w* component is a sign value (-1 or +1) indicating handedness of the tangent basis|
-|`TEXCOORD_n`|`"VEC2"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|UV texture coordinates for set #n|
+|Name|Accessor Type(s)|Component Type(s)|
+|----|----------------|-----------------|
+|`POSITION`|VEC3|_byte_<br>_byte_&nbsp;normalized<br>_unsigned byte_<br>_unsigned byte_&nbsp;normalized<br>_short_<br>_short_&nbsp;normalized<br>_unsigned short_<br>_unsigned short_&nbsp;normalized|
+|`NORMAL`|VEC3|_byte_&nbsp;normalized<br>_short_&nbsp;normalized|
+|`TANGENT`|VEC4|_byte_&nbsp;normalized<br>_short_&nbsp;normalized|
+|`TEXCOORD_n`|VEC2|_byte_<br>_byte_&nbsp;normalized<br>_unsigned byte_<br>_short_<br>_short_&nbsp;normalized<br>_unsigned short_|
 
 Note that to comply with alignment rules for accessors, each element needs to be aligned to 4-byte boundaries; for example, a `BYTE` normal is expected to have a stride of 4, not 3.
 
@@ -47,15 +52,18 @@ For `POSITION` and `TEXCOORD` attributes, the application is free to choose norm
 
 > **Implementation Note:** As quantization may introduce a non-negligible error, quantized normal and tangent vectors are typically not exactly unit length. Applications are expected to normalize the vectors before using them in lighting equations; this typically can be done after transforming them using the normal matrix. Even if quantization is not used, normal matrix can contain scale/skew so normalization is typically required anyway.
 
+> **Implementation Note:** For quantized data, `accessor.min` and `accessor.max` properties also contain quantized values. Applications that use these properties, e.g. for bounding box computations, will need to dequantize them first.
+
 ## Extending Morph Target Attributes
 
-When `KHR_mesh_quantization` extension is supported, the set of types used for storing morph target attributes is expanded according to the table below.
+When `KHR_mesh_quantization` extension is supported, the following **extra** types are allowed for storing morph target attributes in addition to the types defined in [Section 3.7.2.2](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#morph-targets).
 
-|Name|Accessor Type(s)|Component Type(s)|Description|
-|----|----------------|-----------------|-----------|
-|`POSITION`|`"VEC3"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)<br>`5122`&nbsp;(SHORT)&nbsp;normalized|XYZ vertex position displacements|
-|`NORMAL`|`"VEC3"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized|XYZ vertex normal displacements|
-|`TANGENT`|`"VEC3"`|`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized|XYZ vertex tangent displacements|
+|Name|Accessor Type(s)|Component Type(s)|
+|----|----------------|-----------------|
+|`POSITION`|VEC3|_byte_<br>_byte_&nbsp;normalized<br>_short_<br>_short_&nbsp;normalized|
+|`NORMAL`|VEC3|_byte_&nbsp;normalized<br>_short_&nbsp;normalized|
+|`TANGENT`|VEC3|_byte_&nbsp;normalized<br>_short_&nbsp;normalized|
+|`TEXCOORD_n`|VEC2|_byte_<br>_short_|
 
 Note that to comply with alignment rules for accessors, `"VEC3"` accessors need to be aligned to 4-byte boundaries; for example, a `BYTE` normal is expected to have a stride of 4, not 3.
 
