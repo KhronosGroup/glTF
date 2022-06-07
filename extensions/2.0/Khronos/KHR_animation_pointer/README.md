@@ -56,7 +56,7 @@ It is not allowed to animate a glTFid property, as it does change the structure 
 
 ### Valid target templates
 
-|`path`                                                |Accessor Type|Component Type(s)  |Description                                                   |
+|`pointer`                                             |Accessor Type|Component Type(s)  |Description                                                   |
 |------------------------------------------------------|-------------|-------------------|--------------------------------------------------------------|
 |`"/nodes/{}/matrix"`                                  |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Matrix elements                                               |
 |`"/nodes/{}/rotation"`                                |`"VEC4"`     |`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|XYZW rotation quaternion|
@@ -78,6 +78,10 @@ It is not allowed to animate a glTFid property, as it does change the structure 
 |`"/materials/{}/emissiveFactor"`                      |`"VEC3"`     |`5126`&nbsp;(FLOAT)|The emissive color of the material                            |
 |`"/materials/{}/normalTexture/scale"`                 |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Multiplier applied to each normal vector of the normal texture|
 |`"/materials/{}/occlusionTexture/strength"`           |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Multiplier controlling the amount of occlusion applied        |
+
+It is valid, to set the `pointer` to a property, which is not stored in the glTF.  
+This is the case, when the default value is omitted.  
+However, the parent object and/or extension ***must** exist.  
 
 ##### `extras`
 
