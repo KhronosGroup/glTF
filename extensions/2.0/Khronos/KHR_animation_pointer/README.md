@@ -103,51 +103,56 @@ The following extensions have been created before KHR_animation_pointer and are 
 ❌ No animatable properties.
 
 #### [KHR_lights_punctual](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_lights_punctual)
-| Property | Animatable |
-|:-----|:------|
-| `name` | ❌ |
-| `color` | ✅ |
-| `intensity` | ✅ |
-| `type` | ❌ |
-| `range` | ✅ |
-| `spot.innerConeAngle` | ✅ |
-| `spot.outerConeAngle` | ✅ |
+| Property                    | Animatable |
+|:----------------------------|:-----------|
+| `name`                      | ❌        |
+| `color`                     | ✅        |
+| `intensity`                 | ✅        |
+| `type`                      | ❌        |
+| `range`                     | ✅        |
+| `spot.innerConeAngle`       | ✅        |
+| `spot.outerConeAngle`       | ✅        |
 
 #### [KHR_materials_clearcoat](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_clearcoat)
-| Property | Animatable |
-|:----|:-------|
-| `clearcoatFactor` | ✅ |
-| `clearcoatTexture` | ❌ |
-| `clearcoatRoughnessFactor` | ✅ |
-| `clearcoatRoughnessTexture` | ❌ |
-| `clearcoatNormalTexture` | ❌ |
+| Property                    | Animatable |
+|:----------------------------|:-----------|
+| `clearcoatFactor`           | ✅        |
+| `clearcoatTexture`          | ❌        |
+| `clearcoatRoughnessFactor`  | ✅        |
+| `clearcoatRoughnessTexture` | ❌        |
+| `clearcoatNormalTexture`    | ❌        |
+
+#### [KHR_materials_emissive_strength](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_emissive_strength)
+| Property                    | Animatable |
+|:----------------------------|:-----------|
+| `emissiveStrength`          | ✅         |
 
 #### [KHR_materials_ior](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_ior)
-| Property | Animatable |
-|:-----|:------------|
-| `ior` | ✅ |
+| Property                    | Animatable |
+|:----------------------------|:-----------|
+| `ior`                       | ✅        |
 
 #### [KHR_materials_sheen](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_sheen)
-| Property | Animatable |
-|:-----|:------------|
-| `sheenColorFactor` | ✅ |
-| `sheenColorTexture` | ❌ |
-| `sheenRoughnessFactor` | ✅ |
-| `sheenRoughnessTexture` | ❌ |
+| Property                    | Animatable |
+|:----------------------------|:-----------|
+| `sheenColorFactor`          | ✅        |
+| `sheenColorTexture`         | ❌        |
+| `sheenRoughnessFactor`      | ✅        |
+| `sheenRoughnessTexture`     | ❌        |
 
 #### [KHR_materials_specular](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_specular)
-| Property | Animatable |
-|:--------|:----------|
-| `specularFactor` | ✅ |
-| `specularTexture` | ❌ |
-| `specularColorFactor` | ✅ |
-| `specularColorTexture` | ❌ |
+| Property                    | Animatable |
+|:----------------------------|:-----------|
+| `specularFactor`            | ✅        |
+| `specularTexture`           | ❌        |
+| `specularColorFactor`       | ✅        |
+| `specularColorTexture`      | ❌        |
 
 #### [KHR_materials_transmission](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_transmission)
-| Property | Animatable |
-|:--------|:----------|
-| `transmissionFactor` | ✅ |
-| `transmissionTexture` | ❌ |
+| Property                    | Animatable |
+|:----------------------------|:-----------|
+| `transmissionFactor`        | ✅        |
+| `transmissionTexture`       | ❌        |
 
 #### [KHR_materials_unlit](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_unlit)
 ❌ No animatable properties.
@@ -156,12 +161,12 @@ The following extensions have been created before KHR_animation_pointer and are 
 ❌ No animatable properties.
 
 #### [KHR_materials_volume](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_volume)
-| Property | Animatable |
-|:--------|:----------|
-| `thicknessFactor` | ✅ |
-| `thicknessTexture` | ❌ |
-| `attenuationDistance` | ✅ |
-| `attenuationColor` | ✅ |
+| Property                    | Animatable |
+|:----------------------------|:-----------|
+| `thicknessFactor`           | ✅        |
+| `thicknessTexture`          | ❌        |
+| `attenuationDistance`       | ✅        |
+| `attenuationColor`          | ✅        |
 
 #### [KHR_mesh_quantization](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_mesh_quantization)
 ❌ No animatable properties.
@@ -170,23 +175,23 @@ The following extensions have been created before KHR_animation_pointer and are 
 ❌ No animatable properties.
 
 #### [KHR_texture_transform](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_texture_transform)
-| Property | Animatable |
-|:--------|:----------|
-| `offset` | ✅ |
-| `rotation` | ✅ |
-| `scale` | ✅ |
-| `texCoord` | ❌ |
+| Property                    | Animatable |
+|:----------------------------|:-----------|
+| `offset`                    | ✅        |
+| `rotation`                  | ✅        |
+| `scale`                     | ✅        |
+| `texCoord`                  | ❌        |
 
 #### [KHR_xmp_json_ld](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_xmp_json_ld)
 ❌ No animatable properties.
 
 ### Example target templates for extensions
 
-|`path`                                                |Accessor Type|Component Type(s)  |Description                                                   |
-|------------------------------------------------------|-------------|-------------------|--------------------------------------------------------------|
-|`"/materials/{}/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/offset"`                                  |`"VEC2"`   |`5126`&nbsp;(FLOAT)|XY offset vector |
-|`"/extensions/KHR_lights_punctual/lights/{}/intensity"`                                  |`"SCALAR"`   |`5126`&nbsp;(FLOAT) | Light intensity |
-|`"/materials/{}/extensions/KHR_materials_emissive_strength/emissiveStrength"`                                  |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Emissive strength factor |
+| `pointer`                                                                                       | Accessor Type | Component Type(s)   | Description              |
+|:------------------------------------------------------------------------------------------------|:--------------|:--------------------|:-------------------------|
+| `"/materials/{}/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/offset"` | `"VEC2"`      | `5126`&nbsp;(FLOAT) | XY offset vector         |
+| `"/extensions/KHR_lights_punctual/lights/{}/intensity"`                                         | `"SCALAR"`    | `5126`&nbsp;(FLOAT) | Light intensity          |
+| `"/materials/{}/extensions/KHR_materials_emissive_strength/emissiveStrength"`                   | `"SCALAR"`    | `5126`&nbsp;(FLOAT) | Emissive strength factor |
 
 ## glTF Schema Updates
 
