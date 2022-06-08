@@ -24,29 +24,28 @@ The goal is to enable glTF files to intrinsically denote that they are designed 
 
 ## Anchors
 
-One or more anchors are supported.  An object may be able to both attach on the floor as well as on the wall.  When it is on the wall, it may be attached in a different manner than on the floor, or it may be the same.  This specification allows for flexibility in this regards.
-
-[Question from Ben: Additional extensions will likely want to specify more "types" of anchors in the future.  How should those be supported in this framework?  Separate lists for each type of anchor extension?  I guess that makes sense.]
-
-[Question from Ben: If one allows for multiple plane anchors, how does the placement UI choose between then?  It may be that when it comes to plane anchors you only one a single one?  This is a question to resolve.]
+Only one plane anchor is support for per file at this time.  This is to simplify implementation in the first iteration of this protocol.
 
 ```
+// example one
+
 "extensions": {
     "KHR_anchors_plane" : {
-        "anchors_plane": [
-            {
-                "name": "floor",
-                "type": "horizontal-floor",
-            },
-            {
-                "name": "ceiling-attachment",
-                "type": "vertical-wall",
-                "node": 1,
-                "translation": [ 1, 0, 0 ],
-                "rotation": [ 0, 0, 0, 1 ],
-                "scale": [ 1, 1, 1 ]
-            }
-        ]
+        "name": "floor",
+        "type": "horizontal-floor",
+    }
+}
+
+// example two
+
+"extensions": {
+    "KHR_anchors_plane" : {
+        "name": "ceiling-attachment",
+        "type": "vertical-wall",
+        "node": 1,
+        "translation": [ 1, 0, 0 ],
+        "rotation": [ 0, 0, 0, 1 ],
+        "scale": [ 1, 1, 1 ]
     }
 }
 ```
