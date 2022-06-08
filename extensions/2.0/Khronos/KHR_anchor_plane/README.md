@@ -43,6 +43,7 @@ Only one plane anchor is support for per file at this time.  This is to simplify
         "name": "ceiling-attachment",
         "orientation": "vertical-wall",
         "node": 1,
+        "scalable": false,
     }
 }
 
@@ -52,6 +53,7 @@ Only one plane anchor is support for per file at this time.  This is to simplify
     "KHR_anchors_plane" : {
         "name": "ceiling-attachment",
         "orientation": "vertical-wall",
+        "scalable": true,
         "translation": [ 1, 0, 0 ],
         "rotation": [ 0, 0, 0, 1 ],
         "scale": [ 1, 1, 1 ]
@@ -71,6 +73,9 @@ We are allowing each name to have an optional name.  This enables the anchors to
 
 **horizontal-ceiling** anchors to a horizontal ceiling-like surface.  The orientation of the anchor relative to the ceiling is such that X is to the right, Y is into the ceiling and Z is towards the viewer.
 
+### Scalable
+
+A boolean value that indicates whether the user can resize manually the object away from its default physical scale.  For some objects this makes sense, for others it does not.
 ### Node
 
 [Comment by Ben: This may be too advanced for the first pass at AR anchors.  So this can be removed.  It is more for advanced workflows.]
