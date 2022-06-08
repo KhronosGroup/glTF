@@ -1,5 +1,7 @@
 # KHR_anchor_face_rigid
 
+[Comment by Ben: Other potential names: KHR_anchor_face_landmarks, KHR_anchor_head_landmarks, KHR_anchor_head]
+
 ## Contributors
 
 - Ben Houston, Threekit, @bhouston
@@ -28,7 +30,7 @@ There are AR toolkits that have similar capabilities upon which this extension i
 
 Lens Studio has a similar concept of "Head Bindings."  This capability is documented here: https://docs.snap.com/lens-studio/references/guides/lens-features/tracking/face/face-effects/head-attached-3d-objects/#modifying-the-head-binding
 
-Meta's Sparrk AR toolkit also supports Face Landmakr Patches where specifically rigid transforms can be extracted from a tracked face.  It is described here: https://sparkar.facebook.com/ar-studio/learn/patch-editor/face-landmarks#textures-you-can-make-in-spark-ar-studio
+Meta's Spark AR toolkit also supports Face Landmakr Patches where specifically rigid transforms can be extracted from a tracked face.  It is described here: https://sparkar.facebook.com/ar-studio/learn/patch-editor/face-landmarks#textures-you-can-make-in-spark-ar-studio
 
 Google's FaceMesh capability within MediaPipe tracks the face as a face mask that deforms and tracks on each frame.  The landmarks below can be extracted from that face geometry relatively straight forwardly. https://google.github.io/mediapipe/solutions/face_mesh.html
 
@@ -43,7 +45,7 @@ Only one face anchor per model is supported.  This choice was made to simplify u
 "extensions": {
     "KHR_anchors_face_rigid" : {
         "name": "glasses"
-        "type": "face-center",
+        "landmark": "face-center",
     }
 }
 ```
@@ -52,7 +54,9 @@ Only one face anchor per model is supported.  This choice was made to simplify u
 
 We are allowing each name to have an optional name.  This enables the anchors to be used in the future in more generic fashions, such as support general mate points.
 
-### Types
+### Landmarks
+
+These are the locations on the face/head to which one can attach.
 
 **forehead** anchors to the center both vertically and horizontally of the forehead.  This is useful for hats, headbands and other similar headwear.  The z-axis is oriented such that it goes directly through the skull such that it can be used for aligning a hat on the head, it is not aligned with the slope of the forehead.  The orientation of the anchor relative to the forehead is such that X is to the right, Y is up, and Z is out of the head.
 
