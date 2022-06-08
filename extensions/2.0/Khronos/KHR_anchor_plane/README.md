@@ -26,13 +26,16 @@ The goal is to enable glTF files to intrinsically denote that they are designed 
 
 One or more anchors are supported.  An object may be able to both attach on the floor as well as on the wall.  When it is on the wall, it may be attached in a different manner than on the floor, or it may be the same.  This specification allows for flexibility in this regards.
 
-[Question from Ben Houston: Additional extensions will likely want to specify more "types" of anchors in the future.  How should those be supported in this framework?  Separate lists for each type of anchor extension?  I guess that makes sense.]
+[Question from Ben: Additional extensions will likely want to specify more "types" of anchors in the future.  How should those be supported in this framework?  Separate lists for each type of anchor extension?  I guess that makes sense.]
+
+[Question from Ben: If one allows for multiple plane anchors, how does the placement UI choose between then?  It may be that when it comes to plane anchors you only one a single one?  This is a question to resolve.]
 
 ```
 "extensions": {
     "KHR_anchors_plane" : {
         "anchors_plane": [
             {
+                "name": "floor",
                 "type": "horizontal-floor",
             },
             {
@@ -62,10 +65,14 @@ We are allowing each name to have an optional name.  This enables the anchors to
 
 ### Node
 
+[Comment by Ben: This may be too advanced for the first pass at AR anchors.  So this can be removed.  It is more for advanced workflows.]
+
 This specifies the attachment node.  By default it is assumed that the attachment node is the root of the model.  But in some cases, this may not be desired.  This optional parameter enables more complex attachments.
 
 The scale and sheer of the node is ignored, only its position and rotation is utilized.
 
 ### Transform
+
+[Comment by Ben: This may be too advanced for the first pass at AR anchors.  So this can be removed.  It is more for advanced workflows.]
 
 The optional the anchor relative to its local frame is optional.  In the majority of cases this is not required.  But in some case, specifying the relative transform can make content creation easier.
