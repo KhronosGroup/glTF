@@ -25,24 +25,33 @@ The goal is to enable glTF files to intrinsically denote that they are designed 
 ## Anchors
 
 Only one plane anchor is support for per file at this time.  This is to simplify implementation in the first iteration of this protocol.
-
+]
 ```
 // example one
 
 "extensions": {
     "KHR_anchors_plane" : {
         "name": "floor",
-        "type": "horizontal-floor",
+        "orientation": "horizontal-floor",
     }
 }
 
-// example two
+// example two: reference to this node in the glTF.
 
 "extensions": {
     "KHR_anchors_plane" : {
         "name": "ceiling-attachment",
-        "type": "vertical-wall",
+        "orientation": "vertical-wall",
         "node": 1,
+    }
+}
+
+// example three, reference to this arbitrary transform
+
+"extensions": {
+    "KHR_anchors_plane" : {
+        "name": "ceiling-attachment",
+        "orientation": "vertical-wall",
         "translation": [ 1, 0, 0 ],
         "rotation": [ 0, 0, 0, 1 ],
         "scale": [ 1, 1, 1 ]
@@ -54,7 +63,7 @@ Only one plane anchor is support for per file at this time.  This is to simplify
 
 We are allowing each name to have an optional name.  This enables the anchors to be used in the future in more generic fashions, such as support general mate points.
 
-### Types
+### Orientation
 
 **vertical-wall** anchors to a vertical wall-like surface.  It can also attach to the side of a cabinet or any other vertical wall like structure.  The orientation of the anchor relative to the wall is such that X is to the right, Y is up, and Z is out of the wall.
 
