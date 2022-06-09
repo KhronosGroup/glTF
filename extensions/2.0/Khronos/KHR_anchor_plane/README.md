@@ -89,3 +89,8 @@ The scale and sheer of the node is ignored, only its position and rotation is ut
 [Comment by Ben: This may be too advanced for the first pass at AR anchors.  So this can be removed.  It is more for advanced workflows.]
 
 The optional the anchor relative to its local frame is optional.  In the majority of cases this is not required.  But in some case, specifying the relative transform can make content creation easier.
+
+## Implementation Notes
+
+glTF files use 1m = 1.0 unit in world space.  This is their physical scale.  Objects should appear in augmented reality contexts with that physical scale.  Depending on whether or not "scalable" is enabled, then the user should be able to resize from this default physical scale to something else.
+
