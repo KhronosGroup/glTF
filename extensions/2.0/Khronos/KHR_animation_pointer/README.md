@@ -35,7 +35,7 @@ The only major addition is, that the output values are mapped using a [JSON Poin
 ### Motivation
 
 Currently, only the transformation or weight data of a node can be targeted with animation data.  
-With this extension, one can technically target any value (`scalar`, `vec2`, `vec3`, `vec4` and scalars in an `array`) in a glTF asset, for example
+With this extension, one can technically target any value (`SCALAR`, `VEC2`, `VEC3`, `VEC4`, `MAT2`, `MAT3`, `MAT4`, and scalars in an `array`) in a glTF asset, for example
 
 * Color factors in materials
 * Camera field of view
@@ -62,11 +62,12 @@ It is not allowed to animate a name property in general.
 
 |`pointer`                                             |Accessor Type|Component Type(s)  |Description                                                   |
 |------------------------------------------------------|-------------|-------------------|--------------------------------------------------------------|
-|`"/nodes/{}/matrix"`                                  |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Matrix elements                                               |
+|`"/meshes/{}/weights"`                                |`"array"` of `"SCALAR"`   |`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|Morph target weights                                          |
+|`"/nodes/{}/matrix"`                                  |`"MAT4"`   |`5126`&nbsp;(FLOAT)|Matrix elements                                               |
 |`"/nodes/{}/rotation"`                                |`"VEC4"`     |`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|XYZW rotation quaternion|
 |`"/nodes/{}/scale"`                                   |`"VEC3"`     |`5126`&nbsp;(FLOAT)|XYZ scale vector                                              |
 |`"/nodes/{}/translation"`                             |`"VEC3"`     |`5126`&nbsp;(FLOAT)|XYZ translation vector                                        |
-|`"/nodes/{}/weights"`                                 |`"SCALAR"`   |`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|Morph target weights                                          |
+|`"/nodes/{}/weights"`                                 |`"array"` of `"SCALAR"`   |`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|Morph target weights                                          |
 |`"/cameras/{}/orthographic/xmag"`                     |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Horizontal magnification of the view                          |
 |`"/cameras/{}/orthographic/ymag"`                     |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Vertical magnification of the view                            |
 |`"/cameras/{}/orthographic/zfar"`                     |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Distance to the far clipping plane                            |
@@ -218,15 +219,19 @@ _This section is non-normative._
 
 ### JSON Pointer
 
-For a `scalar` value, the JSON Pointer targets the glTF property.  
+For a `SCALAR` value, the JSON Pointer targets the glTF property.  
 This means, the property is replaced by the interpolated value.
   
-For any other case, the JSON Pointer targets the glTF property as well but must be an `array` property.  
+For any other case, the JSON Pointer targets the glTF property as well but **must** be an `array` property. For clarification, it is not allowed to animate a single element in an `array`.  
 This means, that the two or more elements do replace the values in the array.  
 
 ### Material Animation
 
 Material animation targets materials directly. This means that when animating the material, all nodes using that material are updated together. If individual material animation per node is desired, each of them needs to have its own material to animate.
+
+### Mesh Animation
+
+Mesh animation targets meshes directly. This means that when animating the mesh, all nodes using that mesh are updated together. This is the case, when the `weights` are animated.
 
 ## Examples
 
