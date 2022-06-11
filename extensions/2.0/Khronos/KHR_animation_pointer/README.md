@@ -54,6 +54,10 @@ The calculated values can be out of range of the minimum and maximum value, howe
 
 It is not allowed to animate a glTFid property, as it does change the structure of the glTF in general.
 
+`name`
+
+It is not allowed to animate a name property in general.
+
 ### Valid target templates
 
 |`pointer`                                             |Accessor Type|Component Type(s)  |Description                                                   |
@@ -81,12 +85,11 @@ It is not allowed to animate a glTFid property, as it does change the structure 
 
 It is valid, to set the `pointer` to a property, which is not stored in the glTF.  
 This is the case, when the default value is omitted.  
-However, the parent object and/or extension ***must** exist.  
+However, the parent object and/or extension **must** exist.  
 
 ##### `extras`
 
-A channel may target any allowed JSON Pointer value, so values in `extras` can be targeted as well, but
-interpretation of the animated values is entirely application specific.
+A channel may target any allowed JSON Pointer value, so values in `extras` can be targeted as well, but interpretation of the animated values is entirely application specific.
 
 ## Extension compatibility and fallback behavior
 
@@ -99,13 +102,15 @@ If this extension is used, the `animation.channel.target.path` **must** contain 
 Extensions created after KHR_animation_pointer should state which properties can be animated and which cannot.  
 The following extensions have been created before KHR_animation_pointer and are thus listed here with their animatable properties:  
 
+#### [KHR_animation_pointer](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_animation_pointer)
+❌ No animatable properties.
+
 #### [KHR_draco_mesh_compression](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_draco_mesh_compression)
 ❌ No animatable properties.
 
 #### [KHR_lights_punctual](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_lights_punctual)
 | Property                    | Animatable |
 |:----------------------------|:-----------|
-| `name`                      | ❌        |
 | `color`                     | ✅        |
 | `intensity`                 | ✅        |
 | `type`                      | ❌        |
@@ -131,6 +136,16 @@ The following extensions have been created before KHR_animation_pointer and are 
 | Property                    | Animatable |
 |:----------------------------|:-----------|
 | `ior`                       | ✅        |
+
+#### [KHR_materials_iridescence](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_iridescence)
+| Property                     | Animatable |
+|:-----------------------------|:-----------|
+| `iridescenceFactor`          | ✅        |
+| `iridescenceTexture`         | ❌        |
+| `iridescenceIor`             | ✅        |
+| `iridescenceThicknessMinimum`| ✅        |
+| `iridescenceThicknessMaximum`| ✅        |
+| `iridescenceThicknessTexture`| ❌        |
 
 #### [KHR_materials_sheen](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_sheen)
 | Property                    | Animatable |
