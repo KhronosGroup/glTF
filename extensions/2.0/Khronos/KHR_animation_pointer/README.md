@@ -63,7 +63,6 @@ It is not allowed to animate a name property in general.
 |`pointer`                                             |Accessor Type|Component Type(s)  |Description                                                   |
 |------------------------------------------------------|-------------|-------------------|--------------------------------------------------------------|
 |`"/meshes/{}/weights"`                                |`"array"` of `"SCALAR"`   |`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|Morph target weights                                          |
-|`"/nodes/{}/matrix"`                                  |`"MAT4"`   |`5126`&nbsp;(FLOAT)|Matrix elements                                               |
 |`"/nodes/{}/rotation"`                                |`"VEC4"`     |`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|XYZW rotation quaternion|
 |`"/nodes/{}/scale"`                                   |`"VEC3"`     |`5126`&nbsp;(FLOAT)|XYZ scale vector                                              |
 |`"/nodes/{}/translation"`                             |`"VEC3"`     |`5126`&nbsp;(FLOAT)|XYZ translation vector                                        |
