@@ -20,6 +20,13 @@ This extension defines parameters for a procedural sun-sky model, an
 environmental light source, which provides natural illumination for the
 scene and which is optionally visible in the background.
 
+<figure>
+<img src="./sunsky.png" alt="Sun and sky at day and at dusk." />
+<figcaption aria-hidden="true">Two different settings of the sunsky
+light, affecting illumination and background.</figcaption>
+</figure>
+
+
 ```json
 "extensions": {
     "INTEL_lights_sunsky": {
