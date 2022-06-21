@@ -23,9 +23,11 @@ scene and which is optionally visible in the background.
 <figure>
 <img src="./sunsky.png" alt="Sun and sky at day and at dusk." />
 <figcaption aria-hidden="true">Two different settings of the sunsky
-light, affecting illumination and background.</figcaption>
+light, affecting illumination and background; left: clear sky at day,
+right: hazy sky at dusk.</figcaption>
 </figure>
 
+## Specifying the Sunsky Light
 
 ```json
 "extensions": {
@@ -44,20 +46,39 @@ light, affecting illumination and background.</figcaption>
     }
 }
 ```
--   visible: whether seen in the background
--   intensity: brightness scaling factor, default 0.025 to bring the
-    intrinsic radiance into “normal” dynamic range
--   elevation (in radians, in -pi/2..pi/2), angle to the horizon, i.e.,
-    to the plane with normal +Y (the zenith), default pi/2
--   azimuth (in radians, in 0..2pi), angle to +X in the horizon plane,
-    default 0; increasing azimuth is a counterclockwise rotation around
-    +Y
--   turbidity: atmospheric turbidity due to particles, between 1 (clear
-    sky) and 10 (hazy), default 3
--   a sunsky light is instantiated by referencing it by a `node`, which
-    also allow for rotation and orientation of the light (e.g. place the
-    zenith at +Z in the world)
+A sunsky light is instantiated by referencing it by a `node`, which also
+allow for rotation and orientation of the light (e.g., placing the
+zenith at +Z in the world).
 
+```json
+"nodes" : [
+    {
+        "extensions" : {
+            "INTEL_lights_sunsky" : {
+                "light" : 0
+            }
+        }
+    }            
+]
+```
+
+## Properties
+
+No property is required, all have default values.
+
+| Property   | Description  | Default |
+|------------|--------------|---------|
+| `visible`  | whether seen in the background | `true` |
+| `intensity`| brightness scaling factor | `0.025` to bring the intrinsic radiance into “normal” dynamic range |
+| `elevation`| angle (in `-pi/2`..`pi/2`) to the horizon, i.e., to the plane with normal +Y (the zenith) | `pi/2` |
+| `azimuth`  | angle (in `0`..`2pi`) to +X in the horizon plane; increasing azimuth is a counterclockwise rotation around +Y | `0` |
+| `turbidity`| atmospheric turbidity due to particles, between `1` (clear sky) and `10` (hazy)| `3` |
+| `albedo`   | ground reflectance, in `0`..`1` | `0.3` |
+
+Note that the `azimuth` angle is redundant to a rotation of the node the
+sunsky light is attached to, it is supported for convenience.
+
+<!--
 ## glTF Schema Updates
 
 TODO
@@ -65,6 +86,7 @@ TODO
 ### JSON Schema
 
 TODO: Links to the JSON schema for the new extension properties.
+-->
 
 ## Known Implementations
 
