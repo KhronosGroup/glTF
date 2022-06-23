@@ -70,6 +70,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `SPECTRUM` | Spectrum | https://spectrumcustomizer.com/ | [#1804](https://github.com/KhronosGroup/glTF/issues/1804) |
 | `TENCENT` | Tencent, Inc. | https://www.tencent.com/ | [#2118](https://github.com/KhronosGroup/glTF/issues/2118) |
 | `TRYON` | TRYON Technology Ltd. | https://tryon.technology | [#1785](https://github.com/KhronosGroup/glTF/issues/1785) |
+| `USSF` | US Space Force | https://www.spaceforce.mil/ | [#2177](https://github.com/KhronosGroup/glTF/issues/2177) |
 | `UX3D` | UX3D GmbH | https://ux3d.io/ | [#1896](https://github.com/KhronosGroup/glTF/pull/1896) |
 | `VRMC` | VRM Consortium | https://vrm-consortium.org/ | [#1874](https://github.com/KhronosGroup/glTF/issues/1874) |
 | `WEB3D` | The Web3D Consortium, Inc. | https://www.web3d.org/ |  |
