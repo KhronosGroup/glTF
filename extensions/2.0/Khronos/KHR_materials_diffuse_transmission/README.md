@@ -214,7 +214,7 @@ diffuse_bsdf = mix(
 ```
 
 ### KHR_materials_volume
-If `KHR_materials_diffuse_transmission` is combined with `KHR_materials_volume`, a diffuse transmission BTDF describes the transmission of light through the volume boundary. The object becomes translucent. The roughness parameter only affects the reflection. Scattering and absorption inside the volume are computed as defined in `KHR_materials_volume` and `KHR_materials_sss`, so the random walk through the volume is not affected by the surface BSDF.
+If `KHR_materials_diffuse_transmission` is combined with `KHR_materials_volume`, a diffuse transmission BTDF describes the transmission of light through the volume boundary. The object becomes translucent. The roughness parameter only affects the reflection. The light transport inside the volume is not affected by the surface BSDF.
 
 <figure style="text-align:center">
 <img src="./figures/translucent-roughness.png"/>
@@ -227,20 +227,6 @@ For comparison, below is the result for the same scene with `KHR_materials_trans
 <img src="./figures/transmissive-roughness.png"/>
 <sub><figcaption><em>Transmissive sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption></sub>
 </figure>
-
-### KHR_materials_sss
-
-If the medium exhibits strong subsurface scattering (large values for the scattering coefficient σ<sub>s</sub>) it is recommended to use `KHR_materials_diffuse_transmission` instead of `KHR_materials_transmission`. Examples for such dense scattering materials are skin or wax. The visual difference between diffuse transmission and transmission is small in this case, as the path a light travels is dominated by volume scattering. The scattering interaction at the volume boundary has only a small effect on the final result.
-
-The benefit of using diffuse transmission is that it signals the renderer that a material is dense, without the need to analyze geometry and scattering distance. Typically, the size of the volume in relation to the scattering coefficient determines the density of the object. A tiny object with low scattering coefficient may appear transparent, but increasing the size of the object will make it appear denser, although the scattering coefficient stays the same. If diffuse transmission is being used instead of highly glossy transmission, the material appears to be translucent independent of its size.
-
-Consequently, renderers may use diffuse transmission as a cue to switch to diffusion approximation instead of random walk subsurface scattering. Diffusion approximation gives results that are close to ground-truth for dense materials, but can be much faster. This is crucial for real-time implementations (which cannot do random walk), but also beneficial for offline rendering. [Christensen and Burley (2015)](#ChristensenBurley2015) show how to map the physical parameters for attenuation and subsurface scattering to an appropriate reflectance profile for diffusion approximation and compare results between approximation and ground-truth random walk. [Jimenez et al. (2015)](#Jimenez2015) present a method to render reflectance profiles in real-time by approximating the profile with a separable kernel.
-
-<figure style="text-align:center">
-<img src="./figures/transmission-translucency.png"/>
-<figcaption><em>Comparison of combining subsurface scattering with either transmission or diffuse transmission. Left: Rough transmission and subsurface scattering. Middle: Diffuse transmission and subsurface scattering. Right: Diffuse transmission without subsurface scattering, using a thin-walled material. Colors are adjusted manually so that they look similar in the three configurations. This adjustment is needed in order to account for differences in distances and to minimize the impact of energy loss from the rough microfacet BTDF.</em></figcaption>
-</figure>
-
 
 ### Overview - Extension Combinations & Use-Cases
 |                                  |                                                                                                                                                                                    KHR_materials_transmission                                                                                                                                                                                    |                                                                                                                                                                            KHR_materials_diffuse_transmission                                                                                                                                                                            |
