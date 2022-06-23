@@ -213,12 +213,6 @@ diffuse_bsdf = mix(
     diffuseTransmission)
 ```
 
-<figure style="text-align:center">
- <img src="./figures/star2.jpg" width="500" />
-<sub><figcaption><em>95% transmissive, 5% translucent</em></figcaption></sub>
-</figure>
-
-
 ### KHR_materials_volume
 If `KHR_materials_diffuse_transmission` is combined with `KHR_materials_volume`, a diffuse transmission BTDF describes the transmission of light through the volume boundary. The object becomes translucent. The roughness parameter only affects the reflection. Scattering and absorption inside the volume are computed as defined in `KHR_materials_volume` and `KHR_materials_sss`, so the random walk through the volume is not affected by the surface BSDF.
 
