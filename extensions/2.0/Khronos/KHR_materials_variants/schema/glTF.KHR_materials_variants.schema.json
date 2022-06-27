@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "KHR_materials_variants glTF extension",
     "type": "object",
-    "description": "glTF extension that defines a material variations for mesh primivites",
+    "description": "glTF extension that defines a material variations for mesh primitives",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "variants": {
