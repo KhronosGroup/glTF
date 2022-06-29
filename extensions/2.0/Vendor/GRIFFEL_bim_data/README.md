@@ -4,7 +4,7 @@
 
 * Kiryl Ambrazheichyk, Griffel Studio LLC, [kiryl@griffelstudio.com](mailto:kiryl@griffelstudio.com)
 * Aliaksandr Valodzin, Griffel Studio LLC, [alexander@griffelstudio.com](mailto:alexander@griffelstudio.com)
-* Aliaksandr Nazarau, Griffel Studio LLC
+* Aliaksandr Nazarau, Griffel Studio LLC, [@Alexanderexe](https://github.com/Alexanderexe)
 * Ekaterina Kudelina, Griffel Studio LLC, [@uncio](https://github.com/uncio)
 
 ## Status
@@ -43,11 +43,14 @@ Where:
 Model - is a building,
 Storey - includes all elements which lay or rise up starting from a particular level,
 Category - groups elements by some parameter (columns, furniture, ducts, etc.),
-Element - leaf `node` with `mesh` which represents a real construction product.
+Element - leaf `node` with `mesh` which represents a real construction product and have associated meta data.
+
+This is a recommended approach to compose a gltf file, although the extension doesn't restrict mesh to node attachment - any node can still have a mesh and/or associated meta data. Also nodes hierarchy can be different - depending on the desired logical groupping of elements.
 
 ### Approach
-A single piece of metadata for the node is represented by `property`. Property is a key-value pair, like 'name of the object's parameter' - 'its value'. To keep it simple name and value of the property are `strings`.
+A single piece of metadata for the node is represented by instance `property`. Property is a key-value pair, like 'name of the object's parameter' - 'its value'. To keep it simple name and value of the property are `strings`.
 Node can also have a `type`. Type is a set of properties which is common for many nodes.
+Instance properties override the same type properties (with the same key) for a node.
 #### Example:
 There are two timber doors in the building. Each is 900 mm (3') wide. First is 2,1 m (7') high, second is 2,4 m (8') high.
 In this example properties are: "Width - 900 mm", "Height - 2,1 m", "Height - 2,4 m", "Material - Timber". 
@@ -133,6 +136,9 @@ Given the same two doors from the example above, there are two options to implem
 * ### Write properties to separate binary file
 
 In this case each node points to the buffer where metadata for this node can be found. File is a serialized 'GRIFFEL_bim_data' extension object with additional `nodeProperties` field. This field maps node properties and types to nodes by nodeId.
+
+[MessagePaсk](https://msgpack.org/) must be used for serializing extension object in a separate binary file to achive the most compact file size and the fastest deserialization speed.
+
 ```javascript
 // gltf content:
 "nodes": [
@@ -184,7 +190,8 @@ In this case each node points to the buffer where metadata for this node can be 
 }
 ```
 
-[MessagePaсk](https://msgpack.org/) can be used for serializing extension object in a separate binary file to achive the most compact file size and the fastest deserialization speed.
+So, for each node, if GRIFFEL_bim_data extension has `properties` or `type` - look for them in the same gltf json file. If the extension states `buffer` - look for the data in the separate .meta file by the url from the buffer.
+Nodes can have both embedded and separately stored properties, in that case both are used. Exporters should take care of possible data duplication. Importers should treat embedded values as of higher priority than values, stored in a separate file, as the file may be obsolete or corrupted more likely.
 
 ## glTF Schema Updates
 

@@ -1,0 +1,37 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "GRIFFEL_bim_data Serializable Object",
+    "type": "object",
+    "description": "Contains same properties as embedded version plus properties to node map. Used only when data is saved in a separate file.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "nodeProperties": {
+            "type": "array",
+            "items": {
+                "$ref": "node.properties.schema.json",
+                "description": "Node properties and type."
+            },
+            "description": "Node type and instance properties map. Used only when data is saved in a separate file."
+        },
+        "node": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "Index of the node index in glTF file"
+        },
+        "properties": {
+            "type": "array",
+            "item": {
+                "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                "description": "Index of a property from the root level collection."
+            },
+            "description": "Collection of indices which point to corresponding instance properties of the node. (Instance properties are unique to the node. They override the same type properties.)",
+            "minItems": 1
+        },
+        "type": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "Index of a type in the root level collection. (Type is a set of properties which are common for many nodes.)"
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "node", "properties" ]
+}
