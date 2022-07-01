@@ -8,30 +8,98 @@
         "nodeProperties": {
             "type": "array",
             "items": {
-                "$ref": "node.properties.schema.json",
-                "description": "Node properties and type."
+                "type": "object",
+                "description": "Node properties and type.",
+                "properties": {
+                    "node": {
+                        "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                        "description": "Index of the node in glTF file."
+                    },
+                    "properties": {
+                        "type": "array",
+                        "item": {
+                            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                            "description": "Index of a property in the root level collection."
+                        },
+                        "description": "Collection of indices properties of the node.",
+                        "minItems": 1
+                    },
+                    "type":{
+                        "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                        "description": "Index of the type of the node."
+                    }
+                },
+                "required": [ "properties" ]
             },
             "description": "Node type and instance properties map. Used only when data is saved in a separate file."
         },
-        "node": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "Index of the node index in glTF file"
+        "propertyValues": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "description": "Property value.",
+                "minLength": 1
+            },
+            "minItems": 1,
+            "description": "Collection of unique property values."
+        },
+        "propertyNames": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "description": "Property name.",
+                "minLength": 1
+            },
+            "minItems": 1,
+            "description": "Collection of unique property names."
         },
         "properties": {
             "type": "array",
-            "item": {
-                "allOf": [ { "$ref": "glTFid.schema.json" } ],
-                "description": "Index of a property from the root level collection."
+            "items": {
+                "title": "Node Property",
+                "type": "object",
+                "description": "Key value pair - unique property (instance or type) attached to nodes. Name and value are referenced by index of corresponding root level collection.",
+                "properties": {
+                    "name": {
+                        "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                        "description": "Index of a property name in the root level collection."
+                    },
+                    "value": {
+                        "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                        "description": "Index of a property value in the root level collection."
+                    }
+                },
+                "required": [ "name", "value" ]
             },
-            "description": "Collection of indices which point to corresponding instance properties of the node. (Instance properties are unique to the node. They override the same type properties.)",
-            "minItems": 1
+            "minItems": 1,
+            "description": "Collection of unique property name - property value pairs."
         },
-        "type": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "Index of a type in the root level collection. (Type is a set of properties which are common for many nodes.)"
-        },
-        "extensions": { },
-        "extras": { }
+        "types": {
+            "type": "array",
+            "items": {
+                "title": "Node Type",
+                "type": "object",
+                "description": "Set of properties which are common for many nodes.",
+                "properties": {
+                    "name": {
+                        "type":"string",
+                        "description": "Name of the type."
+                    },
+                    "properties": {
+                        "type": "array",
+                        "item": {
+                            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                            "description": "Index of a property in the root level collection."
+                        },
+                        "description": "Collection of indices which point to corresponding properties of the type.",
+                        "minItems": 1
+                    }
+                },
+                "required": [ "properties" ]
+            },
+            "minItems": 1,
+            "description": "Collection of types - common sets of properties for many nodes."
+        }
     },
     "required": [ "node", "properties" ]
 }
