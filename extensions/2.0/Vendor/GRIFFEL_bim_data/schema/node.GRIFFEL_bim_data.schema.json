@@ -5,9 +5,9 @@
     "description": "References type and instance properties of the node and/or buffer where those properties can be found by node ID.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "buffer": {
+        "bufferView": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "Index of the buffer which contains data for this node."
+            "description": "Index of the buffer view which points to the buffer with the data for this node."
         },
         "properties": {
             "type": "array",

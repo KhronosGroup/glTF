@@ -135,7 +135,7 @@ Given the same two doors from the example above, there are two options to implem
 
 * ### Write properties to separate binary file
 
-In this case each node points to the buffer where metadata for this node can be found. File is a serialized 'GRIFFEL_bim_data' extension object with additional `nodeProperties` field. This field maps node properties and types to nodes by nodeId.
+In this case each node points to the buffer view which references the buffer where metadata for this node can be found. File is a serialized 'GRIFFEL_bim_data' extension object with additional `nodeProperties` field. This field maps node properties and their types to nodes by node ID.
 
 [MessagePaсk](https://msgpack.org/) must be used for serializing extension object in a separate binary file to achive the most compact file size and the fastest deserialization speed.
 
@@ -146,7 +146,7 @@ In this case each node points to the buffer where metadata for this node can be 
     "name": "Door 1",
     "extensions": {
       "GRIFFEL_bim_data": {
-        "buffer": 1
+        "bufferView": 99
       }
     }
   },
@@ -154,12 +154,20 @@ In this case each node points to the buffer where metadata for this node can be 
     "name": "Door 2",
     "extensions": {
       "GRIFFEL_bim_data": {
-        "buffer": 1
+        "bufferView": 99
       }
     }
   }
 ]
 
+"bufferViews": [
+  // buffer view indexed 99:
+  {
+    "buffer": 1,
+    "byteOffset": 0,
+    "byteLength": 1234
+  }
+  
 "buffers": [
   // buffer indexed 1:
   {
@@ -190,7 +198,7 @@ In this case each node points to the buffer where metadata for this node can be 
 }
 ```
 
-So, for each node, if GRIFFEL_bim_data extension has `properties` or `type` - look for them in the same gltf json file. If the extension states `buffer` - look for the data in the separate .meta file by the url from the buffer.
+So, for each node, if GRIFFEL_bim_data extension has `properties` or `type` - look for them in the same gltf json file. If the extension states `bufferView` - look for the data in the separate .meta file by the url from the buffer.
 Nodes can have both embedded and separately stored properties, in that case both are used. Exporters should take care of possible data duplication. Importers should treat embedded values as of higher priority than values, stored in a separate file, as the file may be obsolete or corrupted more likely.
 
 ## glTF Schema Updates
