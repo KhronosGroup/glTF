@@ -3,11 +3,12 @@
 ## Contributors
 
 * Ben Houston, Threekit
+* Jan Hermes, Continental
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
 
 ## Status
 
-Experimental
+Draft
 
 ## Dependencies
 
@@ -15,7 +16,17 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-ToDo: Write motivation, explanation and outlook.
+The animation clip extension allows to easier define the behaviour of one or more animations.  
+  
+In general, a keyframe calculated and provided by a viewer starts at `0.0` and is incremented to infinity. The current calcualted keyframe is the `timestamp`.  
+  
+A glTF animation does have a keyframe start and a keyframe end. Today, it is not clearly defined, if the global keyframe - the `timestamp` - becomes larger than the end value of the animation. Many implementations start to loop the animation, but stopping or reverting the animation is a feasible option as well. This extension is defining this behaviour as well.  
+  
+This extension is defining the calculation of the `timestamp` used for the glTF keyframe animations in a deterministic way.  
+
+### Timestamp is smaller than the smallest keyframe or larger than the largest keyframe
+
+If the `timestamp` is smaller or larger than the animation keyframes, the first or the last keyframe of the animation is used respectively. This means, that the animation seems to be stopped during this timeframe.  
 
 ### Animation clip JSON examples
 
@@ -23,7 +34,9 @@ ToDo: Write motivation, explanation and outlook.
 
 ```json
 {
-	"animation": 0
+	"animations": [
+		0
+	]
 }
 ```
 
@@ -31,7 +44,9 @@ ToDo: Write motivation, explanation and outlook.
 
 ```json
 {
-	"animation": 0,
+	"animations": [
+		0
+	],
 	"name": "Forth and back animation.",
 	"start": 0.0,
 	"end": 10.0,
@@ -55,7 +70,9 @@ ToDo: Write motivation, explanation and outlook.
 
 ```json
 {
-	"animation": 0,
+	"animations": [
+		0
+	],
 	"name": "Example 1",
 	"start": 0.0,
 	"end": 4.0,
@@ -74,7 +91,9 @@ ToDo: Write motivation, explanation and outlook.
 
 ```json
 {
-	"animation": 0,
+	"animations": [
+		0
+	],
 	"name": "Example 2",
 	"start": 2.0,
 	"timestamp": 2.0,
@@ -92,7 +111,9 @@ ToDo: Write motivation, explanation and outlook.
 
 ```json
 {
-	"animation": 0,
+	"animations": [
+		0
+	],
 	"name": "Example 3",
 	"start": 3.0,
 	"end": 8.0,
@@ -111,7 +132,9 @@ ToDo: Write motivation, explanation and outlook.
 
 ```json
 {
-	"animation": 0,
+	"animations": [
+		0
+	],
 	"name": "Example 4",
 	"start": 0.0,
 	"end": 4.0,
@@ -130,7 +153,9 @@ ToDo: Write motivation, explanation and outlook.
 
 ```json
 {
-	"animation": 0,
+	"animations": [
+		0
+	],
 	"name": "Example 5",
 	"start": 0.0,
 	"end": 5.0,
@@ -149,10 +174,12 @@ ToDo: Write motivation, explanation and outlook.
 
 ```json
 {
-	"animation": 0,
+	"animations": [
+		0
+	],
 	"name": "Example 6",
-	"start": 4.0,
-	"end": 0.0,
+	"start": 0.0,
+	"end": 4.0,
 	"timestamp": 4.0,
 	"direction": -0.5,
 	"counter": 2,
