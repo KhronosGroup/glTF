@@ -18,7 +18,7 @@ Written against the glTF 2.0 spec.
 
 The animation clip extension allows to easier define the behaviour of one or more animations.  
   
-In general, a keyframe calculated and provided by a viewer starts at `0.0` and is incremented to infinity. The current calcualted keyframe is the `timestamp`.  
+In general, a keyframe calculated and provided by a viewer starts at `0.0` and is incremented to infinity. The current calculated keyframe is the `timestamp`.  
   
 A glTF animation does have a keyframe start and a keyframe end. Today, it is not clearly defined, if the global keyframe - the `timestamp` - becomes larger than the end value of the animation. Many implementations start to loop the animation, but stopping or reverting the animation is a feasible option as well. This extension is defining this behaviour as well.  
   
