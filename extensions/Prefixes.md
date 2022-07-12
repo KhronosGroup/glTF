@@ -40,6 +40,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `FOXIT` | Foxit Software, Inc. | https://foxitsoftware.com<br>`liqian_mu at foxitsoftware.com` | [#1712](https://github.com/KhronosGroup/glTF/issues/1712) |
 | `GOOGLE` | Google, LLC | https://www.google.com/ | [#1123](https://github.com/KhronosGroup/glTF/issues/1123) |
 | `GRIFFEL` | Griffel Studio | http://griffelstudio.com/ | [#1861](https://github.com/KhronosGroup/glTF/issues/1861) |
+| `HEVOLUS` | Hevolus Srl | https://www.hevolus.it/ | [#2183](https://github.com/KhronosGroup/glTF/issues/2183) |
 | `INTEL` | Intel Corporation | https://www.intel.com/ | [#2142](https://github.com/KhronosGroup/glTF/issues/2142) |
 | `KDAB` | The KDAB Group | https://www.kdab.com/ | [#1728](https://github.com/KhronosGroup/glTF/pull/1728) |
 | `LLQ` | Lifeliqe, Inc. | https://www.lifeliqe.com/ | [#1414](https://github.com/KhronosGroup/glTF/issues/1414) |
@@ -70,6 +71,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `SPECTRUM` | Spectrum | https://spectrumcustomizer.com/ | [#1804](https://github.com/KhronosGroup/glTF/issues/1804) |
 | `TENCENT` | Tencent, Inc. | https://www.tencent.com/ | [#2118](https://github.com/KhronosGroup/glTF/issues/2118) |
 | `TRYON` | TRYON Technology Ltd. | https://tryon.technology | [#1785](https://github.com/KhronosGroup/glTF/issues/1785) |
+| `UNITY` | Unity Software Inc. | https://unity.com | [#2185](https://github.com/KhronosGroup/glTF/issues/2185) |
 | `USSF` | US Space Force | https://www.spaceforce.mil/ | [#2177](https://github.com/KhronosGroup/glTF/issues/2177) |
 | `UX3D` | UX3D GmbH | https://ux3d.io/ | [#1896](https://github.com/KhronosGroup/glTF/pull/1896) |
 | `VRMC` | VRM Consortium | https://vrm-consortium.org/ | [#1874](https://github.com/KhronosGroup/glTF/issues/1874) |
