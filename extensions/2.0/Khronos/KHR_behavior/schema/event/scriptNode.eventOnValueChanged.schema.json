@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "scriptNode/event/OnValueChanged",
+    "type": "object",
+    "description": "Script node event value changed definition.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "pointer": {
+            "type": "string",
+            "description": "JSON pointer of the value to track."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "pointer"
+    ]
+}

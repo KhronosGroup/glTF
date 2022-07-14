@@ -1,0 +1,25 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "scriptNode/branch",
+    "type": "object",
+    "description": "Script node branch definition.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "condition": {
+            "description": "Allowed branching conditions.",
+            "anyOf": [
+                {
+                    "const": "if"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "if"
+    ]
+}

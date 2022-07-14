@@ -6,65 +6,30 @@
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
         "group": {
-            "description": "Allowed groups.",
+            "description": "Allowed types.",
             "anyOf": [
                 {
                     "const": "event"
                 },
                 {
-                    "type": "string"
-                }
-            ]
-        },
-        "type": {
-            "description": "Allowed types.",
-            "anyOf": [
-                {
-                    "const": "OnStart"
+                    "const": "get"
                 },
                 {
-                    "const": "OnUpdate"
+                    "const": "branch"
                 },
                 {
-                    "const": "OnValueChanged"
-                },
-                {
-                    "const": "OnDemand"
-                },
-                {
-                    "const": "OnInteraction"
+                    "const": "set"
                 },
                 {
                     "type": "string"
                 }
             ]
-        },
-        "linkedScriptNodes": {
-            "type": "array",
-            "description": "The indices of the linked script nodes.",
-            "items": {
-                "$ref": "glTFid.schema.json"
-            },
-            "minItems": 1
-        },
-        "valueChanged": {
-            "type": "object",
-            "$ref": "event.valuechanged.schema.json"
-        },
-        "interaction": {
-            "type": "object",
-            "$ref": "event.interaction.schema.json"
         },
         "name": { },
         "extensions": { },
         "extras": { }
     },
     "required": [
-        "group",
-        "type",
-        "linkedScriptNodes"
-    ],
-    "not": {
-        "required": [ "valueChanged", "interaction" ]
-    }
+        "group"
+    ]
 }

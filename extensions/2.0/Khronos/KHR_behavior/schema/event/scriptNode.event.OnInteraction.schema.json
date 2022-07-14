@@ -1,9 +1,9 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "event/interaction",
+    "title": "scriptNode/event/OnInteraction",
     "type": "object",
-    "description": "Event interaction definition.",
-    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "description": "Script node event interaction definition.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "node": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
@@ -25,7 +25,6 @@
             "minItems": 3,
             "maxItems": 3
         },        
-        "name": { },
         "extensions": { },
         "extras": { }
     },

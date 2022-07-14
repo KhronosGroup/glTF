@@ -56,13 +56,13 @@ From these requirements, the main features can be deducted:
 `scriptNode`  
 A script node is a node both available in the Visual Scripting system from Unity and the Unreal Engine. To not conflict with the `node` in glTF, these nodes are called `scriptNode`.
 
-### JSON Schema
+### JSON Schemas
 
-[scriptNode.schema.json](schema/scriptNode.schema.json)
+[schema](schema/)
 
 ### Examples
 
-#### Group event
+#### Group `event`
 
 ```json
 {
@@ -72,64 +72,138 @@ A script node is a node both available in the Visual Scripting system from Unity
                 {
                     "name": "Event is triggered at start",
                     "group": "event",
-                    "type": "OnStart",
-                    "linkedScriptNodes": [ 
-                        0
-                    ]
+                    "event": {
+                        "type": "OnStart",
+                        "linkedScriptNodes": [ 
+                            0
+                        ]
+                    }
                 },
                 {
                     "name": "Event is triggered before every frame update",
                     "group": "event",
-                    "type": "OnUpdate",
-                    "linkedScriptNodes": [ 
-                        1
-                    ]
+                    "event": {
+                        "type": "OnUpdate",
+                        "linkedScriptNodes": [ 
+                            1
+                        ]
+                    }
                 },
                 {
                     "name": "Event is triggered after the value is changed",
                     "group": "event",
-                    "type": "OnValueChanged",
-                    "linkedScriptNodes": [
-                        2
-                    ],
-                    "valueChanged": {
-                        "pointer": "/nodes/0/translation"
+                    "event": {
+                        "type": "OnValueChanged",
+                        "linkedScriptNodes": [
+                            2
+                        ],
+                        "OnValueChanged": {
+                            "pointer": "/nodes/0/translation"
+                        }
                     }
                 },
                 {
                     "name": "Event is triggered by the engine/viewer on demand",
                     "group": "event",
-                    "type": "OnDemand",
-                    "linkedScriptNodes": [
-                        3
-                    ]
+                    "event": {
+                        "type": "OnDemand",
+                        "linkedScriptNodes": [
+                            3
+                        ]
+                    }
                 },
                 {
                     "name": "Event is triggered after user interacted within a bounding sphere",
                     "group": "event",
-                    "type": "OnInteraction",
-                    "linkedScriptNodes": [
-                        4
-                    ],
-                    "interaction": {
-                        "node": 0,
-                        "boundingSphere": 10.0
-                    }
+                    "event": {
+                        "type": "OnInteraction",
+                        "linkedScriptNodes": [
+                            4
+                        ],
+                        "OnInteraction": {
+                            "node": 0,
+                            "boundingSphere": 10.0
+                        }
                 },
                 {
                     "name": "Event is triggered after user interacted within a bounding box",
                     "group": "event",
-                    "type": "OnInteraction",
-                    "linkedScriptNodes": [
-                        5
-                    ],
-                    "interaction": {
-                        "node": 1,
-                        "boundingBox": [
-                            1.0,
-                            2.0,
-                            1.0
-                        ]
+                    "event": {
+                        "type": "OnInteraction",
+                        "linkedScriptNodes": [
+                            5
+                        ],
+                        "OnInteraction": {
+                            "node": 1,
+                            "boundingBox": [
+                                1.0,
+                                2.0,
+                                1.0
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+
+#### Group `get`
+
+```json
+{
+    "extensions": {
+        "KHR_behavior": {
+            "scriptNodes": [
+                {
+                    "name": "Setting the translation of a node",
+                    "group": "get",
+                    "get": {
+                        "pointer" : "/nodes/1/translation"
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+
+#### Group `branch`
+
+```json
+{
+    "extensions": {
+        "KHR_behavior": {
+            "scriptNodes": [
+                {
+                    "name": "Setting the translation of a node",
+                    "group": "branch",
+                    "branch": {
+                        "condition" : "if",
+                        "if": {
+                            "ToDo":"ToDo"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+
+#### Group `set`
+
+```json
+{
+    "extensions": {
+        "KHR_behavior": {
+            "scriptNodes": [
+                {
+                    "name": "Setting the translation of a node",
+                    "group": "set",
+                    "set" : {
+                        "pointer": "/nodes/1/translation"
                     }
                 }
             ]
