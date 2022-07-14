@@ -1,0 +1,70 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "scriptNode",
+    "type": "object",
+    "description": "Script node definition.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "group": {
+            "description": "Allowed groups.",
+            "anyOf": [
+                {
+                    "const": "event"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "type": {
+            "description": "Allowed types.",
+            "anyOf": [
+                {
+                    "const": "OnStart"
+                },
+                {
+                    "const": "OnUpdate"
+                },
+                {
+                    "const": "OnValueChanged"
+                },
+                {
+                    "const": "OnDemand"
+                },
+                {
+                    "const": "OnInteraction"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "linkedScriptNodes": {
+            "type": "array",
+            "description": "The indices of the linked script nodes.",
+            "items": {
+                "$ref": "glTFid.schema.json"
+            },
+            "minItems": 1
+        },
+        "valueChanged": {
+            "type": "object",
+            "$ref": "event.valuechanged.schema.json"
+        },
+        "interaction": {
+            "type": "object",
+            "$ref": "event.interaction.schema.json"
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "group",
+        "type",
+        "linkedScriptNodes"
+    ],
+    "not": {
+        "required": [ "valueChanged", "interaction" ]
+    }
+}

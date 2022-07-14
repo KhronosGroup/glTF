@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "event/valueChanged",
+    "type": "object",
+    "description": "Event value changed definition.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "pointer": {
+            "type": "string",
+            "description": "JSON pointer of the value to track."
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "pointer"
+    ]
+}

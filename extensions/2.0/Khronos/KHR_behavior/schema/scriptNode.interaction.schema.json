@@ -1,0 +1,38 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "event/interaction",
+    "type": "object",
+    "description": "Event interaction definition.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "node": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the node."
+        },
+        "boundingSphere": {
+            "type": "number",
+            "description": "The radius of the bounding sphere. This property **MUST NOT** be defined when `boundingBox` is defined.",
+            "default": 1.0,
+            "minimum": 0.0
+        },
+        "boundingBox": {
+            "type": "array",
+            "items": {
+                "type": "number",
+            },
+            "description": "The vector of the bounding box. This property **MUST NOT** be defined when `boundingSphere` is defined.",
+            "default": [ 1.0, 1.0, 1.0],
+            "minItems": 3,
+            "maxItems": 3
+        },        
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "node"
+    ],
+    "not": {
+        "required": [ "boundingSphere", "boundingBox" ]
+    }
+}
