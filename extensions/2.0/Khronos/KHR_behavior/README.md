@@ -160,6 +160,7 @@ For simplicity, behavior nodes can be connected, even if they do have different 
                             "node": 0,
                             "boundingSphere": 10.0
                         }
+                    }
                 },
                 {
                     "name": "Event is triggered after user interacted within a bounding box",
