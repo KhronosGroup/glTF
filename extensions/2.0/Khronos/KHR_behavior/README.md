@@ -60,6 +60,49 @@ A script node is a node both available in the Visual Scripting system from Unity
 
 [schema](schema/)
 
+### Types
+Only the following types are allowed to read and write to.
+
+* integer
+* number
+* boolean
+
+### Dimension
+Following dimensions are used in the script nodes.
+Arrays or matrices could be accessed by each scalar element.
+
+* scalar
+* vec2
+* vec3
+* vec4
+
+### Math Constants
+* π
+* ℇ
+* Inf
+* NaN
+
+### Automatic casting
+For simplicity, script nodes can be connected, even if they do have different input and output types. Following list provides the rules to cast a type using C/c++ style notation:
+
+|From boolean b|to integer i  |
+|--------------|--------------|
+|b = true      |i = 1         |
+|b = false     |i = 0         |
+
+|From integer i|to boolean b  |
+|--------------|--------------|
+|i != 0	       |b = true|
+|i == 0        |b = false|
+
+|From integer i|to number n   |
+|--------------|--------------|
+|i	           |n = (float)i  |
+
+|From number n |to integer i  |
+|--------------|--------------|
+|n	           |i = (int)n    |
+
 ### Examples
 
 #### Group `event`
@@ -74,9 +117,7 @@ A script node is a node both available in the Visual Scripting system from Unity
                     "group": "event",
                     "event": {
                         "type": "OnStart",
-                        "linkedScriptNodes": [ 
-                            0
-                        ]
+                        "linkedScriptNode": 0 
                     }
                 },
                 {
@@ -84,9 +125,7 @@ A script node is a node both available in the Visual Scripting system from Unity
                     "group": "event",
                     "event": {
                         "type": "OnUpdate",
-                        "linkedScriptNodes": [ 
-                            1
-                        ]
+                        "linkedScriptNode": 1
                     }
                 },
                 {
@@ -94,9 +133,7 @@ A script node is a node both available in the Visual Scripting system from Unity
                     "group": "event",
                     "event": {
                         "type": "OnValueChanged",
-                        "linkedScriptNodes": [
-                            2
-                        ],
+                        "linkedScriptNode": 2,
                         "OnValueChanged": {
                             "pointer": "/nodes/0/translation"
                         }
@@ -107,9 +144,7 @@ A script node is a node both available in the Visual Scripting system from Unity
                     "group": "event",
                     "event": {
                         "type": "OnDemand",
-                        "linkedScriptNodes": [
-                            3
-                        ]
+                        "linkedScriptNode": 3
                     }
                 },
                 {
@@ -117,9 +152,7 @@ A script node is a node both available in the Visual Scripting system from Unity
                     "group": "event",
                     "event": {
                         "type": "OnInteraction",
-                        "linkedScriptNodes": [
-                            4
-                        ],
+                        "linkedScriptNode": 4,
                         "OnInteraction": {
                             "node": 0,
                             "boundingSphere": 10.0
@@ -130,9 +163,7 @@ A script node is a node both available in the Visual Scripting system from Unity
                     "group": "event",
                     "event": {
                         "type": "OnInteraction",
-                        "linkedScriptNodes": [
-                            5
-                        ],
+                        "linkedScriptNode": 5,
                         "OnInteraction": {
                             "node": 1,
                             "boundingBox": [
@@ -169,6 +200,117 @@ A script node is a node both available in the Visual Scripting system from Unity
 }
 ```
 
+#### Group `condition`
+
+```json
+{
+    "extensions": {
+        "KHR_behavior": {
+            "scriptNodes": [
+                {
+                    "name": "",
+                    "group": "condition",
+                    "condition": {
+                        "operator" : "NOT",
+                        "argumentScriptNodes": [
+                            5
+                        ]
+                    }
+                },
+                {
+                    "name": "",
+                    "group": "condition",
+                    "condition": {
+                        "operator" : "OR",
+                        "argumentScriptNodes": [
+                            5,
+                            6
+                        ]
+                    }
+                },
+                {
+                    "name": "",
+                    "group": "condition",
+                    "condition": {
+                        "operator" : "AND",
+                        "argumentScriptNodes": [
+                            5,
+                            6
+                        ]
+                    }
+                },
+                {
+                    "name": "",
+                    "group": "condition",
+                    "condition": {
+                        "operator" : "EQUAL",
+                        "argumentScriptNodes": [
+                            5,
+                            6
+                        ]
+                    }
+                },
+                {
+                    "name": "",
+                    "group": "condition",
+                    "condition": {
+                        "operator" : "UNEQUAL",
+                        "argumentScriptNodes": [
+                            5,
+                            6
+                        ]
+                    }
+                },
+                {
+                    "name": "",
+                    "group": "condition",
+                    "condition": {
+                        "operator" : "LESS",
+                        "argumentScriptNodes": [
+                            5,
+                            6
+                        ]
+                    }
+                },
+                {
+                    "name": "",
+                    "group": "condition",
+                    "condition": {
+                        "operator" : "LARGER",
+                        "argumentScriptNodes": [
+                            5,
+                            6
+                        ]
+                    }
+                },
+                {
+                    "name": "",
+                    "group": "condition",
+                    "condition": {
+                        "operator" : "LESSEQUAL",
+                        "argumentScriptNodes": [
+                            5,
+                            6
+                        ]
+                    }
+                },
+                {
+                    "name": "",
+                    "group": "condition",
+                    "condition": {
+                        "operator" : "LARGEREQUAL",
+                        "argumentScriptNodes": [
+                            5,
+                            6
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+
 #### Group `branch`
 
 ```json
@@ -180,9 +322,10 @@ A script node is a node both available in the Visual Scripting system from Unity
                     "name": "Setting the translation of a node",
                     "group": "branch",
                     "branch": {
-                        "condition" : "if",
+                        "control" : "if",
                         "if": {
-                            "ToDo":"ToDo"
+                            "thenScriptNode": 5,
+                            "elseScriptNode": 6
                         }
                     }
                 }

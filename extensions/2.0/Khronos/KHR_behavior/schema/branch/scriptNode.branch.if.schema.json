@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "scriptNode/branch/if",
+    "type": "object",
+    "description": "Script node brnach if definition.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "conditionScriptNode": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the condition script node."
+        },
+        "thenScriptNode": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the linked script node in the true condition case."
+        },        
+        "elseScriptNode": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the linked script node in the false condition case."
+        },        
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "condition", "thenScriptNode"
+    ]
+}

@@ -1,0 +1,57 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "scriptNode/condition",
+    "type": "object",
+    "description": "Script node condition definition.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "operator": {
+            "description": "Allowed operators.",
+            "anyOf": [
+                {
+                    "const": "NOT"
+                },
+                {
+                    "const": "OR"
+                },
+                {
+                    "const": "AND"
+                },
+                {
+                    "const": "EQUAL"
+                },
+                {
+                    "const": "UNEQUAL"
+                },
+                {
+                    "const": "LESS"
+                },
+                {
+                    "const": "LARGER"
+                },
+                {
+                    "const": "LESSEQUAL"
+                },
+                {
+                    "const": "LARGEREQUAL"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "argumentScriptNodes": {
+            "type": "array",
+            "description": "The indices of this script nodes used as arguments. The number of array elements **MUST** match the required arguments whis is 1 for `NOT` and 2 for the other operators.",
+            "items": {
+                "$ref": "glTFid.schema.json"
+            }
+        },        
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "operator",
+        "argumentScriptNodes"
+    ]
+}

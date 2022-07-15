@@ -5,7 +5,7 @@
     "description": "Script node branch definition.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "condition": {
+        "control": {
             "description": "Allowed branching conditions.",
             "anyOf": [
                 {

@@ -28,14 +28,10 @@
                 }
             ]
         },
-        "linkedScriptNodes": {
-            "type": "array",
-            "description": "The indices of the linked script nodes.",
-            "items": {
-                "$ref": "glTFid.schema.json"
-            },
-            "minItems": 1
-        },
+        "linkedScriptNode": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the linked script node to execute next."
+        },        
         "OnInteraction": {
             "type": "object",
             "$ref": "scriptNode.interaction.schema.json"
@@ -49,7 +45,7 @@
     },
     "required": [
         "type",
-        "linkedScriptNodes"
+        "linkedScriptNode"
     ],
     "not": {
         "required": [ "Oninteraction", "OnValueChanged"]
