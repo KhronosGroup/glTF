@@ -38,18 +38,18 @@ From these requirements, the main features can be deducted:
 
 #### Portability
 
-* Use the intersection set of features from Unity and the Unreal Engine
+* Use the intersection set of Visual Scripting features from Unity and the Unreal Engine
 
 #### Implementation
 
-* Minimum meaningful but extensible feature set
+* Minimum meaningful and extensible feature set
 
 #### Safety
 
 * No loops
 * No recursions
 * No access outside glTF
-* No spawning of glTF instances
+* No spawning of glTF objects
 
 ## New glTF object
 
