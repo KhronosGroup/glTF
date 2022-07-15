@@ -10,12 +10,12 @@
             "description": "The index of the condition node."
         },
         "then": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the ??? node to be executed in the true condition case."
-        },        
+            "allOf": [ { "$ref": "behaviorNode.schema.json" } ],
+            "description": "The index of the behavior node to be executed in the true condition case."
+        },
         "else": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the ??? node to be executed in the false condition case."
+            "allOf": [ { "$ref": "behaviorNode.schema.json" } ],
+            "description": "The index of the behavior node to be executed in the false condition case."
         },        
         "extensions": { },
         "extras": { }

@@ -116,7 +116,11 @@ Constant array is written each frame to the translation of the first node:
             "eventNodes": [
                 {
                     "name": "Event triggered each frame",
-                    "type": "OnUpdate"
+                    "type": "OnUpdate",
+                    "behaviorNode": {
+                        "index": 0,
+                        "arrayName": "setNodes"
+                    }
                 }
             ],
             "variableNodes": [
@@ -154,7 +158,11 @@ Translation from the second node is written each frame to the translation of the
             "eventNodes": [
                 {
                     "name": "Event triggered each frame",
-                    "type": "OnUpdate"
+                    "type": "OnUpdate",
+                    "behaviorNode": {
+                        "index": 0,
+                        "arrayName": "setNodes"
+                    }
                 }
             ],
             "getNodes": [
@@ -167,7 +175,7 @@ Translation from the second node is written each frame to the translation of the
             ],
             "variableNodes": [
                 {
-                    "name": "Constant values",
+                    "name": "Values from a get node",
                     "type": "float",
                     "getNode": 0
                 }
@@ -185,6 +193,109 @@ Translation from the second node is written each frame to the translation of the
     }
 }
 ```
+
+---
+
+ToDo:
+```json
+{
+    "extensions": {
+        "KHR_behavior": {
+            "eventNodes": [
+                {
+                    "name": "Event triggered each frame",
+                    "type": "OnUpdate",
+                    "behaviorNode": {
+                        "index": 0,
+                        "arrayName": "controlNodes"
+                    }
+                }
+            ],
+            "getNodes": [
+                {
+                    "name": "Getting the translation of the second node",
+                    "set": {
+                        "pointer": "/nodes/1/translation"
+                    }
+                }
+            ],
+            "variableNodes": [
+                {
+                    "name": "Constant values",
+                    "type": "float",
+                    "values": [
+                        1.0,
+                        2.0,
+                        3.0
+                    ]
+                },
+                {
+                    "name": "Values from a get node",
+                    "type": "float",
+                    "getNode": 0
+                },
+                {
+                    "type": "integer",
+                    "values": [
+                        1
+                    ]
+                },
+                {
+                    "type": "integer",
+                    "values": [
+                        2
+                    ]
+                }
+            ],
+            "conditionNodes": [
+                {
+                    "operator": "LESS",
+                    "variableNodes": [
+                        2,
+                        3
+                    ]
+                }
+            ],
+            "controlNodes": [
+                {
+                    "name": "",
+                    "branch": "if",
+                    "if": {
+                        "condition": 0,
+                        "then": {
+                            "index": 0,
+                            "arrayName": "setNodes"
+                        },
+                        "else": {
+                            "index": 1,
+                            "arrayName": "setNodes"
+                        }
+                    }
+                }
+            ],
+            "setNodes": [
+                {
+                    "name": "Setting the translation of the first node",
+                    "set": {
+                        "pointer": "/nodes/0/translation",
+                        "variableNode": 0 
+                    }
+                }
+            ],
+            "setNodes": [
+                {
+                    "name": "Setting the translation of the first node",
+                    "set": {
+                        "pointer": "/nodes/0/translation",
+                        "variableNode": 1 
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+
 
 ## References
 

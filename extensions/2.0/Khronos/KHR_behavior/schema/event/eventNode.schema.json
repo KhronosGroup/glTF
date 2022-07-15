@@ -28,10 +28,9 @@
                 }
             ]
         },
-        "next": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the next ??? node to execute."
-        },        
+        "behaviorNode": {
+            "allOf": [ { "$ref": "behaviorNode.schema.json" } ]
+        },
         "OnInteraction": {
             "type": "object",
             "$ref": "eventNode.OnInteraction.schema.json"
@@ -46,7 +45,7 @@
     },
     "required": [
         "type",
-        "next"
+        "behaviorNode"
     ],
     "not": {
         "required": [ "OnInteraction", "OnValueChanged"]
