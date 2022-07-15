@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "scriptNode/condition",
+    "title": "behaviorNode/condition",
     "type": "object",
-    "description": "Script node condition definition.",
+    "description": "Behavior node condition definition.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "operator": {
@@ -40,9 +40,9 @@
                 }
             ]
         },
-        "argumentScriptNodes": {
+        "inputBehaviorNodes": {
             "type": "array",
-            "description": "The indices of this script nodes used as arguments. The number of array elements **MUST** match the required arguments whis is 1 for `NOT` and 2 for the other operators.",
+            "description": "The indices of behavior nodes used as input arguments. The number of array elements **MUST** match the required arguments which is 1 for `NOT` and 2 for the other operators.",
             "items": {
                 "$ref": "glTFid.schema.json"
             }
@@ -52,6 +52,6 @@
     },
     "required": [
         "operator",
-        "argumentScriptNodes"
+        "inputBehaviorNodes"
     ]
 }

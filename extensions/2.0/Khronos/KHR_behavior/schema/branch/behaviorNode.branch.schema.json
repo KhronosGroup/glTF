@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "scriptNode/branch",
+    "title": "behaviorNode/branch",
     "type": "object",
-    "description": "Script node branch definition.",
+    "description": "Behavior node branch definition.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "control": {
@@ -15,6 +15,10 @@
                     "type": "string"
                 }
             ]
+        },
+        "if": {
+            "type": "object",
+            "$ref": "behaviorNode.branch.if.schema.json"
         },
         "extensions": { },
         "extras": { }

@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "scriptNode/event/OnInteraction",
+    "title": "behaviorNode/event/OnInteraction",
     "type": "object",
-    "description": "Script node event interaction definition.",
+    "description": "Behavior node event interaction definition.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "node": {

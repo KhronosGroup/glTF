@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "scriptNode/event",
+    "title": "behaviorNode/event",
     "type": "object",
-    "description": "Script node event definition.",
+    "description": "Behavior node event definition.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "type": {
@@ -28,26 +28,26 @@
                 }
             ]
         },
-        "linkedScriptNode": {
+        "nextBehaviorNode": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the linked script node to execute next."
+            "description": "The index of the next behavior node to execute."
         },        
         "OnInteraction": {
             "type": "object",
-            "$ref": "scriptNode.interaction.schema.json"
+            "$ref": "behaviorNode.interaction.schema.json"
         },
         "OnValueChanged": {
             "type": "object",
-            "$ref": "scriptNode.valuechanged.schema.json"
+            "$ref": "behaviorNode.valuechanged.schema.json"
         },
         "extensions": { },
         "extras": { }
     },
     "required": [
         "type",
-        "linkedScriptNode"
+        "nextBehaviorNode"
     ],
     "not": {
-        "required": [ "Oninteraction", "OnValueChanged"]
+        "required": [ "OnInteraction", "OnValueChanged"]
     }
 }

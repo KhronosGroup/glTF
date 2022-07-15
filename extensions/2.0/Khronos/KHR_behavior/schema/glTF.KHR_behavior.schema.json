@@ -4,11 +4,11 @@
     "type": "object",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "scriptNodes": {
+        "behaviorNodes": {
             "type": "array",
             "items": {
                 "type": "object",
-                "$ref": "scriptNode.schema.json"
+                "$ref": "behaviorNode.schema.json"
             },
             "minItems": 1
         },
@@ -16,6 +16,6 @@
         "extras": { }
     },
     "required": [
-        "scriptNodes"
+        "behaviorNodes"
     ]
 }

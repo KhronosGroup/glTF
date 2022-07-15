@@ -2,12 +2,12 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "behaviorNode/get",
     "type": "object",
-    "deBehaviorion": "Get value definition.",
+    "description": "Get value definition.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "pointer": {
             "type": "string",
-            "deBehaviorion": "JSON pointer of the value to read from."
+            "description": "JSON pointer of the value to read from."
         },
         "extensions": { },
         "extras": { }

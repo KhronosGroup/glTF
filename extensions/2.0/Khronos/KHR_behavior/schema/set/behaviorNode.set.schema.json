@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "scriptNode/set",
+    "title": "behaviorNode/set",
     "type": "object",
     "description": "Set value definition.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

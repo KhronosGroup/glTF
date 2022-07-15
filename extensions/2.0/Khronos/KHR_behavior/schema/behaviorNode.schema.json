@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "scriptNode",
+    "title": "behaviorNode",
     "type": "object",
-    "description": "Script node definition.",
+    "description": "Behavior node definition.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
         "group": {

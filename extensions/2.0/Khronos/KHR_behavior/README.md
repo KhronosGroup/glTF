@@ -11,7 +11,7 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status
 
-Draft
+Early Draft
 
 ## Dependencies
 
@@ -43,6 +43,7 @@ From these requirements, the main features can be deducted:
 #### Implementation
 
 * Minimum meaningful and extensible feature set
+* One input execution flow socket
 
 #### Safety
 
@@ -53,8 +54,8 @@ From these requirements, the main features can be deducted:
 
 ## New glTF object
 
-`scriptNode`  
-A script node is a node both available in the Visual Scripting system from Unity and the Unreal Engine. To not conflict with the `node` in glTF, these nodes are called `scriptNode`.
+`behaviorNode`  
+A behavior node is a node both available in the Visual Scripting system from Unity and the Unreal Engine. To not conflict with the `node` in glTF, these nodes are called `behaviorNode`.
 
 ### JSON Schemas
 
@@ -64,11 +65,11 @@ A script node is a node both available in the Visual Scripting system from Unity
 Only the following types are allowed to read and write to.
 
 * integer
-* number
+* float
 * boolean
 
 ### Dimension
-Following dimensions are used in the script nodes.
+Following dimensions are used in the behavior nodes.
 Arrays or matrices could be accessed by each scalar element.
 
 * scalar
@@ -77,13 +78,15 @@ Arrays or matrices could be accessed by each scalar element.
 * vec4
 
 ### Math Constants
+Following math constants have to be available.
+
 * π
 * ℇ
 * Inf
 * NaN
 
 ### Automatic casting
-For simplicity, script nodes can be connected, even if they do have different input and output types. Following list provides the rules to cast a type using C/c++ style notation:
+For simplicity, behavior nodes can be connected, even if they do have different input and output types. Following list provides the rules to cast a type using C/c++ style notation:
 
 |From boolean b|to integer i  |
 |--------------|--------------|
@@ -92,16 +95,16 @@ For simplicity, script nodes can be connected, even if they do have different in
 
 |From integer i|to boolean b  |
 |--------------|--------------|
-|i != 0	       |b = true|
-|i == 0        |b = false|
+|i != 0	       |b = true      |
+|i == 0        |b = false     |
 
-|From integer i|to number n   |
+|From integer i|to float f    |
 |--------------|--------------|
-|i	           |n = (float)i  |
+|i	           |f = (float)i  |
 
-|From number n |to integer i  |
+|From float f  |to integer i  |
 |--------------|--------------|
-|n	           |i = (int)n    |
+|f	           |i = (int)f    |
 
 ### Examples
 
@@ -111,13 +114,13 @@ For simplicity, script nodes can be connected, even if they do have different in
 {
     "extensions": {
         "KHR_behavior": {
-            "scriptNodes": [
+            "behaviorNodes": [
                 {
                     "name": "Event is triggered at start",
                     "group": "event",
                     "event": {
                         "type": "OnStart",
-                        "linkedScriptNode": 0 
+                        "nextBehaviorNode": 0 
                     }
                 },
                 {
@@ -125,7 +128,7 @@ For simplicity, script nodes can be connected, even if they do have different in
                     "group": "event",
                     "event": {
                         "type": "OnUpdate",
-                        "linkedScriptNode": 1
+                        "nextBehaviorNode": 1
                     }
                 },
                 {
@@ -133,7 +136,7 @@ For simplicity, script nodes can be connected, even if they do have different in
                     "group": "event",
                     "event": {
                         "type": "OnValueChanged",
-                        "linkedScriptNode": 2,
+                        "nextBehaviorNode": 2,
                         "OnValueChanged": {
                             "pointer": "/nodes/0/translation"
                         }
@@ -144,7 +147,7 @@ For simplicity, script nodes can be connected, even if they do have different in
                     "group": "event",
                     "event": {
                         "type": "OnDemand",
-                        "linkedScriptNode": 3
+                        "nextBehaviorNode": 3
                     }
                 },
                 {
@@ -152,7 +155,7 @@ For simplicity, script nodes can be connected, even if they do have different in
                     "group": "event",
                     "event": {
                         "type": "OnInteraction",
-                        "linkedScriptNode": 4,
+                        "nextBehaviorNode": 4,
                         "OnInteraction": {
                             "node": 0,
                             "boundingSphere": 10.0
@@ -163,7 +166,7 @@ For simplicity, script nodes can be connected, even if they do have different in
                     "group": "event",
                     "event": {
                         "type": "OnInteraction",
-                        "linkedScriptNode": 5,
+                        "nextBehaviorNode": 5,
                         "OnInteraction": {
                             "node": 1,
                             "boundingBox": [
@@ -186,7 +189,7 @@ For simplicity, script nodes can be connected, even if they do have different in
 {
     "extensions": {
         "KHR_behavior": {
-            "scriptNodes": [
+            "behaviorNodes": [
                 {
                     "name": "Setting the translation of a node",
                     "group": "get",
@@ -206,13 +209,13 @@ For simplicity, script nodes can be connected, even if they do have different in
 {
     "extensions": {
         "KHR_behavior": {
-            "scriptNodes": [
+            "behaviorNodes": [
                 {
                     "name": "",
                     "group": "condition",
                     "condition": {
                         "operator" : "NOT",
-                        "argumentScriptNodes": [
+                        "inputBehaviorNodes": [
                             5
                         ]
                     }
@@ -222,7 +225,7 @@ For simplicity, script nodes can be connected, even if they do have different in
                     "group": "condition",
                     "condition": {
                         "operator" : "OR",
-                        "argumentScriptNodes": [
+                        "inputBehaviorNodes": [
                             5,
                             6
                         ]
@@ -233,7 +236,7 @@ For simplicity, script nodes can be connected, even if they do have different in
                     "group": "condition",
                     "condition": {
                         "operator" : "AND",
-                        "argumentScriptNodes": [
+                        "inputBehaviorNodes": [
                             5,
                             6
                         ]
@@ -244,7 +247,7 @@ For simplicity, script nodes can be connected, even if they do have different in
                     "group": "condition",
                     "condition": {
                         "operator" : "EQUAL",
-                        "argumentScriptNodes": [
+                        "inputBehaviorNodes": [
                             5,
                             6
                         ]
@@ -255,7 +258,7 @@ For simplicity, script nodes can be connected, even if they do have different in
                     "group": "condition",
                     "condition": {
                         "operator" : "UNEQUAL",
-                        "argumentScriptNodes": [
+                        "inputBehaviorNodes": [
                             5,
                             6
                         ]
@@ -266,7 +269,7 @@ For simplicity, script nodes can be connected, even if they do have different in
                     "group": "condition",
                     "condition": {
                         "operator" : "LESS",
-                        "argumentScriptNodes": [
+                        "inputBehaviorNodes": [
                             5,
                             6
                         ]
@@ -277,7 +280,7 @@ For simplicity, script nodes can be connected, even if they do have different in
                     "group": "condition",
                     "condition": {
                         "operator" : "LARGER",
-                        "argumentScriptNodes": [
+                        "inputBehaviorNodes": [
                             5,
                             6
                         ]
@@ -288,7 +291,7 @@ For simplicity, script nodes can be connected, even if they do have different in
                     "group": "condition",
                     "condition": {
                         "operator" : "LESSEQUAL",
-                        "argumentScriptNodes": [
+                        "inputBehaviorNodes": [
                             5,
                             6
                         ]
@@ -299,7 +302,7 @@ For simplicity, script nodes can be connected, even if they do have different in
                     "group": "condition",
                     "condition": {
                         "operator" : "LARGEREQUAL",
-                        "argumentScriptNodes": [
+                        "inputBehaviorNodes": [
                             5,
                             6
                         ]
@@ -317,15 +320,15 @@ For simplicity, script nodes can be connected, even if they do have different in
 {
     "extensions": {
         "KHR_behavior": {
-            "scriptNodes": [
+            "behaviorNodes": [
                 {
                     "name": "Setting the translation of a node",
                     "group": "branch",
                     "branch": {
-                        "control" : "if",
+                        "condition" : "if",
                         "if": {
-                            "thenScriptNode": 5,
-                            "elseScriptNode": 6
+                            "then": 5,
+                            "else": 6
                         }
                     }
                 }
@@ -341,7 +344,7 @@ For simplicity, script nodes can be connected, even if they do have different in
 {
     "extensions": {
         "KHR_behavior": {
-            "scriptNodes": [
+            "behaviorNodes": [
                 {
                     "name": "Setting the translation of a node",
                     "group": "set",
