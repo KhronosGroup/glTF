@@ -119,7 +119,7 @@ Constant array is written each frame to the translation of the first node:
                     "type": "OnUpdate",
                     "behaviorNode": {
                         "index": 0,
-                        "arrayName": "setNodes"
+                        "group": "setNode"
                     }
                 }
             ],
@@ -161,7 +161,7 @@ Translation from the second node is written each frame to the translation of the
                     "type": "OnUpdate",
                     "behaviorNode": {
                         "index": 0,
-                        "arrayName": "setNodes"
+                        "group": "setNode"
                     }
                 }
             ],
@@ -207,7 +207,7 @@ ToDo:
                     "type": "OnUpdate",
                     "behaviorNode": {
                         "index": 0,
-                        "arrayName": "controlNodes"
+                        "group": "controlNode"
                     }
                 }
             ],
@@ -264,11 +264,11 @@ ToDo:
                         "condition": 0,
                         "then": {
                             "index": 0,
-                            "arrayName": "setNodes"
+                            "group": "setNode"
                         },
                         "else": {
                             "index": 1,
-                            "arrayName": "setNodes"
+                            "group": "setNode"
                         }
                     }
                 }

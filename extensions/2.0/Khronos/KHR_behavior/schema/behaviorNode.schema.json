@@ -9,14 +9,14 @@
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The index of the behavior node to execute."
         },        
-        "arrayName": {
-            "description": "The name of the behaviour node array.",
+        "group": {
+            "description": "The group of the behaviour nodes.",
             "anyOf": [
                 {
-                    "const": "controlNodes"
+                    "const": "controlNode"
                 },
                 {
-                    "const": "setNodes"
+                    "const": "setNode"
                 },
                 {
                     "type": "string"
@@ -28,6 +28,6 @@
     },
     "required": [
         "index",
-        "arrayName"
+        "group"
     ]
 }
