@@ -30,7 +30,7 @@ Goal is to have a glTF extension which is providing bevavior to glTF with follow
 
 * 100% portable with the major game engines from day one
 * Easy to implement on major platforms
-* Safe excution
+* Safe execution
 
 From these requirements, the main features can be deducted:
 

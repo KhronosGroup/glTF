@@ -18,7 +18,7 @@
         "boundingBox": {
             "type": "array",
             "items": {
-                "type": "number",
+                "type": "number"
             },
             "description": "The vector of the bounding box. This property **MUST NOT** be defined when `boundingSphere` is defined.",
             "default": [ 1.0, 1.0, 1.0],
