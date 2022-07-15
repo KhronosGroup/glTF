@@ -1,21 +1,21 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "behaviorNode/branch/if",
+    "title": "controlNode/if",
     "type": "object",
-    "description": "Behavior node brnach if definition.",
+    "description": "If definition.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "condition": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the condition behavior node."
+            "description": "The index of the condition node."
         },
         "then": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the next behavior node to be executed in the true condition case."
+            "description": "The index of the ??? node to be executed in the true condition case."
         },        
         "else": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the next behavior node to be executed in the false condition case."
+            "description": "The index of the ??? node to be executed in the false condition case."
         },        
         "extensions": { },
         "extras": { }

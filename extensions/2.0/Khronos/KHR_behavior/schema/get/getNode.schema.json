@@ -1,14 +1,15 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "behaviorNode/get",
+    "title": "getNode",
     "type": "object",
-    "deBehaviorion": "Get value definition.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "description": "Get node definition.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
         "pointer": {
             "type": "string",
-            "deBehaviorion": "JSON pointer of the value to read from."
+            "description": "JSON pointer of the property to read from."
         },
+        "name": { },
         "extensions": { },
         "extras": { }
     },

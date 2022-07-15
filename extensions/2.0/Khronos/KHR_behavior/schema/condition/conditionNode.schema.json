@@ -1,9 +1,9 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "behaviorNode/condition",
+    "title": "conditionNode",
     "type": "object",
-    "description": "Behavior node condition definition.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "description": "Condition node definition.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
         "operator": {
             "description": "Allowed operators.",
@@ -40,18 +40,19 @@
                 }
             ]
         },
-        "inputBehaviorNodes": {
+        "inputVariableNodes": {
             "type": "array",
-            "description": "The indices of behavior nodes used as input arguments. The number of array elements **MUST** match the required arguments which is 1 for `NOT` and 2 for the other operators.",
+            "description": "The indices of variable nodes. The number of array elements **MUST** match the required arguments which is 1 for `NOT` and 2 for the other operators.",
             "items": {
                 "$ref": "glTFid.schema.json"
             }
         },        
+        "name": { },
         "extensions": { },
         "extras": { }
     },
     "required": [
         "operator",
-        "inputBehaviorNodes"
+        "inputVariableNodes"
     ]
 }

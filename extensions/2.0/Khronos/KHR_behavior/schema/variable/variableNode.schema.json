@@ -1,0 +1,52 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "variableNode",
+    "type": "object",
+    "description": "Variable node definition.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "type": {
+            "description": "Allowed types.",
+            "anyOf": [
+                {
+                    "const": "integer"
+                },
+                {
+                    "const": "float"
+                },
+                {
+                    "const": "boolean"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "values": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "number"
+                    }, 
+                    {
+                        "type": "boolean"
+                    }
+                ]
+            }
+        },
+        "getNode": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the get node."
+        },        
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "type"
+    ],
+    "not": {
+        "required": [ "values", "getNode" ]
+    }
+}

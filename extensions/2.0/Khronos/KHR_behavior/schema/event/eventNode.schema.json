@@ -1,9 +1,9 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "behaviorNode/event",
+    "title": "eventNode",
     "type": "object",
-    "description": "Behavior node event definition.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "description": "Event node definition.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
         "type": {
             "description": "Allowed types.",
@@ -28,24 +28,25 @@
                 }
             ]
         },
-        "nextBehaviorNode": {
+        "next": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the next behavior node to execute."
+            "description": "The index of the next ??? node to execute."
         },        
         "OnInteraction": {
             "type": "object",
-            "$ref": "behaviorNode.interaction.schema.json"
+            "$ref": "eventNode.OnInteraction.schema.json"
         },
         "OnValueChanged": {
             "type": "object",
-            "$ref": "behaviorNode.valuechanged.schema.json"
+            "$ref": "eventNode.OnValuechanged.schema.json"
         },
+        "name": { },
         "extensions": { },
         "extras": { }
     },
     "required": [
         "type",
-        "nextBehaviorNode"
+        "next"
     ],
     "not": {
         "required": [ "OnInteraction", "OnValueChanged"]

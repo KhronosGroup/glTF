@@ -108,249 +108,33 @@ For simplicity, behavior nodes can be connected, even if they do have different 
 
 ### Examples
 
-#### Group `event`
-
 ```json
 {
     "extensions": {
         "KHR_behavior": {
-            "behaviorNodes": [
+            "eventNodes": [
                 {
-                    "name": "Event is triggered at start",
-                    "group": "event",
-                    "event": {
-                        "type": "OnStart",
-                        "nextBehaviorNode": 0 
-                    }
-                },
-                {
-                    "name": "Event is triggered before every frame update",
-                    "group": "event",
-                    "event": {
-                        "type": "OnUpdate",
-                        "nextBehaviorNode": 1
-                    }
-                },
-                {
-                    "name": "Event is triggered after the value is changed",
-                    "group": "event",
-                    "event": {
-                        "type": "OnValueChanged",
-                        "nextBehaviorNode": 2,
-                        "OnValueChanged": {
-                            "pointer": "/nodes/0/translation"
-                        }
-                    }
-                },
-                {
-                    "name": "Event is triggered by the engine/viewer on demand",
-                    "group": "event",
-                    "event": {
-                        "type": "OnDemand",
-                        "nextBehaviorNode": 3
-                    }
-                },
-                {
-                    "name": "Event is triggered after user interacted within a bounding sphere",
-                    "group": "event",
-                    "event": {
-                        "type": "OnInteraction",
-                        "nextBehaviorNode": 4,
-                        "OnInteraction": {
-                            "node": 0,
-                            "boundingSphere": 10.0
-                        }
-                    }
-                },
-                {
-                    "name": "Event is triggered after user interacted within a bounding box",
-                    "group": "event",
-                    "event": {
-                        "type": "OnInteraction",
-                        "nextBehaviorNode": 5,
-                        "OnInteraction": {
-                            "node": 1,
-                            "boundingBox": [
-                                1.0,
-                                2.0,
-                                1.0
-                            ]
-                        }
-                    }
+                    "name": "Event triggered each frame",
+                    "type": "OnUpdate"
                 }
-            ]
-        }
-    }
-}
-```
-
-#### Group `get`
-
-```json
-{
-    "extensions": {
-        "KHR_behavior": {
-            "behaviorNodes": [
+            ],
+            "variableNodes": [
                 {
-                    "name": "Setting the translation of a node",
-                    "group": "get",
-                    "get": {
-                        "pointer" : "/nodes/1/translation"
-                    }
+                    "name": "Constant values",
+                    "type": "float",
+                    "values": [
+                        1.0,
+                        2.0,
+                        3.0
+                    ]
                 }
-            ]
-        }
-    }
-}
-```
-
-#### Group `condition`
-
-```json
-{
-    "extensions": {
-        "KHR_behavior": {
-            "behaviorNodes": [
+            ],
+            "setNodes": [
                 {
-                    "name": "",
-                    "group": "condition",
-                    "condition": {
-                        "operator" : "NOT",
-                        "inputBehaviorNodes": [
-                            5
-                        ]
-                    }
-                },
-                {
-                    "name": "",
-                    "group": "condition",
-                    "condition": {
-                        "operator" : "OR",
-                        "inputBehaviorNodes": [
-                            5,
-                            6
-                        ]
-                    }
-                },
-                {
-                    "name": "",
-                    "group": "condition",
-                    "condition": {
-                        "operator" : "AND",
-                        "inputBehaviorNodes": [
-                            5,
-                            6
-                        ]
-                    }
-                },
-                {
-                    "name": "",
-                    "group": "condition",
-                    "condition": {
-                        "operator" : "EQUAL",
-                        "inputBehaviorNodes": [
-                            5,
-                            6
-                        ]
-                    }
-                },
-                {
-                    "name": "",
-                    "group": "condition",
-                    "condition": {
-                        "operator" : "UNEQUAL",
-                        "inputBehaviorNodes": [
-                            5,
-                            6
-                        ]
-                    }
-                },
-                {
-                    "name": "",
-                    "group": "condition",
-                    "condition": {
-                        "operator" : "LESS",
-                        "inputBehaviorNodes": [
-                            5,
-                            6
-                        ]
-                    }
-                },
-                {
-                    "name": "",
-                    "group": "condition",
-                    "condition": {
-                        "operator" : "LARGER",
-                        "inputBehaviorNodes": [
-                            5,
-                            6
-                        ]
-                    }
-                },
-                {
-                    "name": "",
-                    "group": "condition",
-                    "condition": {
-                        "operator" : "LESSEQUAL",
-                        "inputBehaviorNodes": [
-                            5,
-                            6
-                        ]
-                    }
-                },
-                {
-                    "name": "",
-                    "group": "condition",
-                    "condition": {
-                        "operator" : "LARGEREQUAL",
-                        "inputBehaviorNodes": [
-                            5,
-                            6
-                        ]
-                    }
-                }
-            ]
-        }
-    }
-}
-```
-
-#### Group `branch`
-
-```json
-{
-    "extensions": {
-        "KHR_behavior": {
-            "behaviorNodes": [
-                {
-                    "name": "Setting the translation of a node",
-                    "group": "branch",
-                    "branch": {
-                        "condition" : "if",
-                        "if": {
-                            "then": 5,
-                            "else": 6
-                        }
-                    }
-                }
-            ]
-        }
-    }
-}
-```
-
-#### Group `set`
-
-```json
-{
-    "extensions": {
-        "KHR_behavior": {
-            "behaviorNodes": [
-                {
-                    "name": "Setting the translation of a node",
-                    "group": "set",
-                    "set" : {
-                        "pointer": "/nodes/1/translation"
+                    "name": "Setting the translation of the first node",
+                    "set": {
+                        "pointer": "/nodes/0/translation",
+                        "inputVariableNode": 0 
                     }
                 }
             ]

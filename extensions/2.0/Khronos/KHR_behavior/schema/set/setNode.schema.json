@@ -1,0 +1,23 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "setNode",
+    "type": "object",
+    "description": "Set node definition.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "pointer": {
+            "type": "string",
+            "description": "JSON pointer of the property to write to."
+        },
+        "inputVariableNode": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the variable node the written values are taken from."
+        },        
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "pointer"
+    ]
+}

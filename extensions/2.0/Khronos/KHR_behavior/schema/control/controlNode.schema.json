@@ -1,11 +1,11 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "behaviorNode/branch",
+    "title": "controlNode",
     "type": "object",
-    "description": "Behavior node branch definition.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "description": "Contro node definition.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
-        "control": {
+        "branch": {
             "description": "Allowed branching conditions.",
             "anyOf": [
                 {
@@ -18,8 +18,9 @@
         },
         "if": {
             "type": "object",
-            "$ref": "behaviorNode.branch.if.schema.json"
+            "$ref": "controlNode.if.schema.json"
         },
+        "name": { },
         "extensions": { },
         "extras": { }
     },

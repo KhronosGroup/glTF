@@ -1,13 +1,13 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "behaviorNode/set",
+    "title": "eventNode/OnValueChanged",
     "type": "object",
-    "description": "Set value definition.",
+    "description": "Event node on value changed definition.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "pointer": {
             "type": "string",
-            "description": "JSON pointer of the value to change and write to."
+            "description": "JSON pointer of the value to track."
         },
         "extensions": { },
         "extras": { }

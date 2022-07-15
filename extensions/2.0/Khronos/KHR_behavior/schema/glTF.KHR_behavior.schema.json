@@ -4,18 +4,49 @@
     "type": "object",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "behaviorNodes": {
+        "conditionNodes": {
             "type": "array",
             "items": {
                 "type": "object",
-                "$ref": "behaviorNode.schema.json"
-            },
-            "minItems": 1
+                "$ref": "condition/conditionNode.schema.json"
+            }
+        },
+        "controlNodes": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "control/controlNode.schema.json"
+            }
+        },
+        "eventNodes": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "event/eventNode.schema.json"
+            }
+        },
+        "getNodes": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "get/getNode.schema.json"
+            }
+        },
+        "setNodes": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "set/setNode.schema.json"
+            }
+        },
+        "variableNodes": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "variable/variableNode.schema.json"
+            }
         },
         "extensions": { },
         "extras": { }
-    },
-    "required": [
-        "behaviorNodes"
-    ]
+    }
 }
