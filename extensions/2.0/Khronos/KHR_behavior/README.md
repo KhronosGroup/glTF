@@ -108,6 +108,7 @@ For simplicity, behavior nodes can be connected, even if they do have different 
 
 ### Examples
 
+Constant array is written each frame to the translation of the first node:
 ```json
 {
     "extensions": {
@@ -134,7 +135,49 @@ For simplicity, behavior nodes can be connected, even if they do have different 
                     "name": "Setting the translation of the first node",
                     "set": {
                         "pointer": "/nodes/0/translation",
-                        "inputVariableNode": 0 
+                        "variableNode": 0 
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+
+---
+  
+Translation from the second node is written each frame to the translation of the first node:
+```json
+{
+    "extensions": {
+        "KHR_behavior": {
+            "eventNodes": [
+                {
+                    "name": "Event triggered each frame",
+                    "type": "OnUpdate"
+                }
+            ],
+            "getNodes": [
+                {
+                    "name": "Getting the translation of the second node",
+                    "set": {
+                        "pointer": "/nodes/1/translation"
+                    }
+                }
+            ],
+            "variableNodes": [
+                {
+                    "name": "Constant values",
+                    "type": "float",
+                    "getNode": 0
+                }
+            ],
+            "setNodes": [
+                {
+                    "name": "Setting the translation of the first node",
+                    "set": {
+                        "pointer": "/nodes/0/translation",
+                        "variableNode": 0 
                     }
                 }
             ]

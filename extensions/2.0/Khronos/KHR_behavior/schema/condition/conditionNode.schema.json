@@ -40,7 +40,7 @@
                 }
             ]
         },
-        "inputVariableNodes": {
+        "variableNodes": {
             "type": "array",
             "description": "The indices of variable nodes. The number of array elements **MUST** match the required arguments which is 1 for `NOT` and 2 for the other operators.",
             "items": {
@@ -53,6 +53,6 @@
     },
     "required": [
         "operator",
-        "inputVariableNodes"
+        "variableNodes"
     ]
 }
