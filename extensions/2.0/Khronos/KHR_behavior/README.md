@@ -119,7 +119,7 @@ Constant array is written each frame to the translation of the first node:
                     "type": "OnUpdate",
                     "behaviorNode": {
                         "index": 0,
-                        "group": "setNode"
+                        "group": "setNodes"
                     }
                 }
             ],
@@ -161,7 +161,7 @@ Translation from the second node is written each frame to the translation of the
                     "type": "OnUpdate",
                     "behaviorNode": {
                         "index": 0,
-                        "group": "setNode"
+                        "group": "setNodes"
                     }
                 }
             ],
@@ -196,7 +196,7 @@ Translation from the second node is written each frame to the translation of the
 
 ---
 
-ToDo:
+Translation is written each frame to the first or second node depending on a condition:
 ```json
 {
     "extensions": {
@@ -207,7 +207,7 @@ ToDo:
                     "type": "OnUpdate",
                     "behaviorNode": {
                         "index": 0,
-                        "group": "controlNode"
+                        "group": "controlNodes"
                     }
                 }
             ],
@@ -264,11 +264,11 @@ ToDo:
                         "condition": 0,
                         "then": {
                             "index": 0,
-                            "group": "setNode"
+                            "group": "setNodes"
                         },
                         "else": {
                             "index": 1,
-                            "group": "setNode"
+                            "group": "setNodes"
                         }
                     }
                 }

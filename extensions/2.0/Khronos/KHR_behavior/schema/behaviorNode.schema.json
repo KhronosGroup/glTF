@@ -10,13 +10,13 @@
             "description": "The index of the behavior node to execute."
         },        
         "group": {
-            "description": "The group of the behaviour nodes.",
+            "description": "The allowed group of the behaviour nodes.",
             "anyOf": [
                 {
-                    "const": "controlNode"
+                    "const": "controlNodes"
                 },
                 {
-                    "const": "setNode"
+                    "const": "setNodes"
                 },
                 {
                     "type": "string"
