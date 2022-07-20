@@ -22,11 +22,21 @@
         },
         "minItems": 1
     },
+    "audio": {
+        "description": "An array of audio that can be referenced by nodes.",
+        "type": "array",
+        "items": {
+            "type": "object",
+            "$ref": "audio.schema.json"
+        },
+        "minItems": 1
+    },
       "extensions": { },
       "extras": { }
   },
   "required": [
       "sources",
-      "emitters"
+      "emitters",
+      "audio"
   ]
 }

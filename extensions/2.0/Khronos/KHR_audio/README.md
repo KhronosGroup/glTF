@@ -29,33 +29,12 @@ Audio emitter objects may be added to 3D nodes for positional audio or to the sc
 {
   "extensions": {
     "KHR_audio": {
-      "sources": [
-        {
-          "name": "environment",
-          "uri": "./environment.mp3"
-        },
-        {
-          "name": "quack",
-          "mimeType": "audio/mpeg",
-          "bufferView": 5
-        }
-      ],
       "emitters": [
         {
-          "name": "environment emitter",
-          "type": "global",
-          "gain": 1.0,
-          "loop": true,
-          "playing": true,
-          "source": 0
-        },
-        {
-          "name": "duck emitter",
+          "name": "Positional Emitter",
           "type": "positional",
           "gain": 0.8,
-          "loop": false,
-          "playing": false,
-          "source": 1,
+          "sources": [0, 1],
           "positional": {
             "coneInnerAngle": 6.283185307179586,
             "coneOuterAngle": 6.283185307179586,
@@ -65,6 +44,31 @@ Audio emitter objects may be added to 3D nodes for positional audio or to the sc
             "refDistance": 1.0,
             "rolloffFactor": 0.8
           }
+        }
+      ],
+      "sources": [
+        {
+          "name": "Clip 1",
+          "gain": 0.6,
+          "autoPlay": true,
+          "loop": true,
+          "audio": 0
+        },
+        {
+          "name": "Clip 2",
+          "gain": 0.6,
+          "autoPlay": true,
+          "loop": true,
+          "audio": 1
+        }
+      ],
+      "audio": [
+        {
+          "uri": "audio1.mp3",
+        },
+        {
+          "bufferView": 0,
+          "mimeType": "audio/mpeg"
         }
       ]
     }

@@ -28,22 +28,13 @@
         "minimum": 0.0,
         "default": 1.0
       },
-      "loop": {
-        "description": "Whether or not to loop the specified audio clip when finished.",
-        "type": "boolean",
-        "default": false
-      },
-      "playing": {
-        "description": "Whether or not the specified audio clip is playing. Setting this property true will set the audio clip to play on load (autoplay).",
-        "type": "boolean",
-        "default": false
-      },
-      "source": {
-        "description": "The id of the audio source referenced by this audio emitter.",
+      "sources": {
+        "description": "An array of audio sources used by the audio emitter.",
+        "type": "array",
         "allOf": [
-            {
-                "$ref": "glTFid.schema.json"
-            }
+          {
+              "$ref": "glTFid.schema.json"
+          }
         ]
       },
       "positional": {

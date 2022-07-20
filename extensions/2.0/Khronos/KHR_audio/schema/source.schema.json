@@ -1,42 +1,36 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "Audio Source",
+  "title": "Source",
   "type": "object",
-  "description": "A source for audio data referenced in Audio Emitters Audio can be referenced by URI or `bufferView` index. `mimeType` is required when `bufferView` is used.",
+  "description": "A source audio clip with defined properties about the behavior of that audio.",
   "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
   "properties": {
-      "uri": {
-          "type": "string",
-          "description": "The uri of the audio file.",
-          "format": "uriref",
-          "gltf_detailedDescription": "The uri of the audio file. Relative paths are relative to the .gltf file.",
-          "gltf_uriType": "audio"
-      },
-      "mimeType": {
-          "type": "string",
-          "description": "The audio's MIME type. Required if `bufferView` is defined. Unless specified by another extension, the only supported mimeType is `audio/mpeg`.",
-          "anyOf": [
-                {
-                    "enum": [ "audio/mpeg" ]
-                },
-                {
-                    "type": "string"
-                }
-            ]
-      },
-      "bufferView": {
-          "allOf": [ { "$ref": "glTFid.schema.json" } ],
-          "description": "The index of the bufferView that contains the audio data. Use this instead of the audio source's uri property."
-      },
-      "name": { },
-      "extensions": { },
-      "extras": { }
-  },
-  "dependencies": {
-    "bufferView": [ "mimeType" ]
-  },
-  "oneOf": [
-      { "required": [ "uri" ] },
-      { "required": [ "bufferView" ] }
-  ]
+    "autoPlay": {
+        "description": "Whether or not the specified audio clip is playing. Setting this property true will set the audio clip to play on load (autoplay).",
+        "type": "boolean",
+        "default": false
+    },
+    "gain": {
+        "description": "Unitless multiplier against original source volume for determining emitter loudness.",
+        "type": "number",
+        "minimum": 0.0,
+        "default": 1.0
+    },
+    "loop": {
+        "description": "Whether or not to loop the specified audio clip when finished.",
+        "type": "boolean",
+        "default": false
+    },
+    "audio": {
+        "description": "The id of the audio file assigned to this clip.",
+        "allOf": [
+            {
+                "$ref": "glTFid.schema.json"
+            }
+        ]
+    },
+    "name": { },
+    "extensions": { },
+    "extras": { }
+  }
 }
