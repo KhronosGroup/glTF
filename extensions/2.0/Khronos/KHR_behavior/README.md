@@ -13,6 +13,10 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 Early Draft
 
+ToDo:
+- Condition can reference another condition instead of a variable for having a complex condition.
+- Math node e.g. `+` to combine a variable result.
+
 ## Dependencies
 
 Written against the glTF 2.0 spec.
