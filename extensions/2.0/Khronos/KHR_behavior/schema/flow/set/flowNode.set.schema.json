@@ -1,9 +1,9 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "setNode",
+    "title": "flowNode/set",
     "type": "object",
-    "description": "Set node definition.",
-    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "description": "Set definition.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "pointer": {
             "type": "string",

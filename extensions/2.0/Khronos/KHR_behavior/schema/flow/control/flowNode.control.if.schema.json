@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "controlNode/if",
+    "title": "flowNode/control/if",
     "type": "object",
     "description": "If definition.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
@@ -10,12 +10,12 @@
             "description": "The index of the condition node."
         },
         "then": {
-            "allOf": [ { "$ref": "behaviorNode.schema.json" } ],
-            "description": "The index of the behavior node to be executed in the true condition case."
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the flow node to be executed in the true condition case."
         },
         "else": {
-            "allOf": [ { "$ref": "behaviorNode.schema.json" } ],
-            "description": "The index of the behavior node to be executed in the false condition case."
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the flow node to be executed in the false condition case."
         },        
         "extensions": { },
         "extras": { }

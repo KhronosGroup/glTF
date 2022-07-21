@@ -117,9 +117,16 @@ Constant array is written each frame to the translation of the first node:
                 {
                     "name": "Event triggered each frame",
                     "type": "OnUpdate",
-                    "behaviorNode": {
-                        "index": 0,
-                        "group": "setNodes"
+                    "flowNode": 0
+                }
+            ],
+            "flowNodes": [
+                {
+                    "name": "Setting the translation of the first node",
+                    "group": "set",
+                    "set": {
+                        "pointer": "/nodes/0/translation",
+                        "variableNode": 0 
                     }
                 }
             ],
@@ -132,15 +139,6 @@ Constant array is written each frame to the translation of the first node:
                         2.0,
                         3.0
                     ]
-                }
-            ],
-            "setNodes": [
-                {
-                    "name": "Setting the translation of the first node",
-                    "set": {
-                        "pointer": "/nodes/0/translation",
-                        "variableNode": 0 
-                    }
                 }
             ]
         }
@@ -159,9 +157,16 @@ Translation from the second node is written each frame to the translation of the
                 {
                     "name": "Event triggered each frame",
                     "type": "OnUpdate",
-                    "behaviorNode": {
-                        "index": 0,
-                        "group": "setNodes"
+                    "flowNode": 0
+                }
+            ],
+            "flowNodes": [
+                {
+                    "name": "Setting the translation of the first node",
+                    "group": "set",
+                    "set": {
+                        "pointer": "/nodes/0/translation",
+                        "variableNode": 0 
                     }
                 }
             ],
@@ -179,15 +184,6 @@ Translation from the second node is written each frame to the translation of the
                     "type": "float",
                     "getNode": 0
                 }
-            ],
-            "setNodes": [
-                {
-                    "name": "Setting the translation of the first node",
-                    "set": {
-                        "pointer": "/nodes/0/translation",
-                        "variableNode": 0 
-                    }
-                }
             ]
         }
     }
@@ -201,13 +197,50 @@ Translation is written each frame to the first or second node depending on a con
 {
     "extensions": {
         "KHR_behavior": {
+            "conditionNodes": [
+                {
+                    "name": "Comparing two values",
+                    "operator": "LESS",
+                    "variableNodes": [
+                        2,
+                        3
+                    ]
+                }
+            ],
             "eventNodes": [
                 {
                     "name": "Event triggered each frame",
                     "type": "OnUpdate",
-                    "behaviorNode": {
-                        "index": 0,
-                        "group": "controlNodes"
+                    "flowNode": 0
+                }
+            ],
+            "flowNodes": [
+                {
+                    "name": "Basic if condition",
+                    "group": "control",
+                    "control": {
+                        "branch": "if",
+                        "if": {
+                            "condition": 0,
+                            "then": 1,
+                            "else": 2
+                        }
+                    }
+                },
+                {
+                    "name": "Setting the translation of the first node from the true condition case",
+                    "group": "set",
+                    "set": {
+                        "pointer": "/nodes/0/translation",
+                        "variableNode": 0 
+                    }
+                },
+                {
+                    "name": "Setting the translation of the first node from the false condition case",
+                    "group": "set",
+                    "set": {
+                        "pointer": "/nodes/0/translation",
+                        "variableNode": 1 
                     }
                 }
             ],
@@ -235,60 +268,18 @@ Translation is written each frame to the first or second node depending on a con
                     "getNode": 0
                 },
                 {
+                    "name": "Constant integer value used in the condition as the first parameter",
                     "type": "integer",
                     "values": [
                         1
                     ]
                 },
                 {
+                    "name": "Constant integer value used in the condition as the second parameter",
                     "type": "integer",
                     "values": [
                         2
                     ]
-                }
-            ],
-            "conditionNodes": [
-                {
-                    "operator": "LESS",
-                    "variableNodes": [
-                        2,
-                        3
-                    ]
-                }
-            ],
-            "controlNodes": [
-                {
-                    "name": "",
-                    "branch": "if",
-                    "if": {
-                        "condition": 0,
-                        "then": {
-                            "index": 0,
-                            "group": "setNodes"
-                        },
-                        "else": {
-                            "index": 1,
-                            "group": "setNodes"
-                        }
-                    }
-                }
-            ],
-            "setNodes": [
-                {
-                    "name": "Setting the translation of the first node",
-                    "set": {
-                        "pointer": "/nodes/0/translation",
-                        "variableNode": 0 
-                    }
-                }
-            ],
-            "setNodes": [
-                {
-                    "name": "Setting the translation of the first node",
-                    "set": {
-                        "pointer": "/nodes/0/translation",
-                        "variableNode": 1 
-                    }
                 }
             ]
         }

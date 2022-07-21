@@ -28,8 +28,9 @@
                 }
             ]
         },
-        "behaviorNode": {
-            "allOf": [ { "$ref": "behaviorNode.schema.json" } ]
+        "flowNode": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the flow node to be executed."
         },
         "OnInteraction": {
             "type": "object",
@@ -45,7 +46,7 @@
     },
     "required": [
         "type",
-        "behaviorNode"
+        "flowNode"
     ],
     "not": {
         "required": [ "OnInteraction", "OnValueChanged"]

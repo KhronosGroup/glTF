@@ -11,13 +11,6 @@
                 "$ref": "condition/conditionNode.schema.json"
             }
         },
-        "controlNodes": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "$ref": "control/controlNode.schema.json"
-            }
-        },
         "eventNodes": {
             "type": "array",
             "items": {
@@ -25,18 +18,18 @@
                 "$ref": "event/eventNode.schema.json"
             }
         },
+        "flowNodes": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "flow/flowNode.schema.json"
+            }
+        },
         "getNodes": {
             "type": "array",
             "items": {
                 "type": "object",
                 "$ref": "get/getNode.schema.json"
-            }
-        },
-        "setNodes": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "$ref": "set/setNode.schema.json"
             }
         },
         "variableNodes": {

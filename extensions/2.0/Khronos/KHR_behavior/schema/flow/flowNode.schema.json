@@ -1,0 +1,39 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "flowNode",
+    "type": "object",
+    "description": "Flow node definition.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "group": {
+            "description": "The allowed nodes in a flow graph.",
+            "anyOf": [
+                {
+                    "const": "control"
+                },
+                {
+                    "const": "set"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        }, 
+        "control": {
+            "type": "object",
+            "$ref": "control/control.schema.json"
+        },
+        "set": {
+            "type": "object",
+            "$ref": "set/set.schema.json"
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "group"
+    ],
+    "not": {
+        "required": [ "control", "set"]
+    }
+}

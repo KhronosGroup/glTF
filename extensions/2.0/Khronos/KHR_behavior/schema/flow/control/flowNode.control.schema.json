@@ -1,9 +1,9 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "controlNode",
+    "title": "flowNode/control",
     "type": "object",
-    "description": "Contro node definition.",
-    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "description": "Control definition.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "branch": {
             "description": "Allowed branching conditions.",
@@ -18,7 +18,7 @@
         },
         "if": {
             "type": "object",
-            "$ref": "controlNode.if.schema.json"
+            "$ref": "flowNode.control.if.schema.json"
         },
         "name": { },
         "extensions": { },
