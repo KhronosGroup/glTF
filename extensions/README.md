@@ -18,6 +18,7 @@ The following extensions have been ratified by the Khronos Group:
 * [KHR_materials_clearcoat](2.0/Khronos/KHR_materials_clearcoat/README.md)
 * [KHR_materials_emissive_strength](2.0/Khronos/[KHR_materials_clearcoat](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_emissive_strength)/README.md)
 * [KHR_materials_ior](2.0/Khronos/KHR_materials_ior/README.md)
+* [KHR_materials_iridescence](2.0/Khronos/KHR_materials_iridescence/README.md)
 * [KHR_materials_sheen](2.0/Khronos/KHR_materials_sheen/README.md)
 * [KHR_materials_specular](2.0/Khronos/KHR_materials_specular/README.md)
 * [KHR_materials_transmission](2.0/Khronos/KHR_materials_transmission/README.md)
@@ -83,7 +84,6 @@ extensions, Khronos extensions, or inclusion in a future version of the glTF spe
 
 | Extension | Status |
 |-----------|--------|
-| [KHR_materials_iridescence](https://github.com/KhronosGroup/glTF/pull/2027) | Release Candidate. |
 | [KHR_animation_pointer](https://github.com/KhronosGroup/glTF/pull/2147) | Ready for testing. |
 | [KHR_audio](https://github.com/KhronosGroup/glTF/pull/2137) | Ready for testing. |
 | [KHR_materials_anisotropy](https://github.com/KhronosGroup/glTF/pull/1798) | Ready for testing. |
