@@ -81,6 +81,8 @@ Arrays or matrices could be accessed by each scalar element.
 * vec3
 * vec4
 
+## Math
+
 ### Math Constants
 Following math constants have to be available.
 
@@ -109,6 +111,48 @@ For simplicity, behavior nodes can be connected, even if they do have different 
 |From float f  |to integer i  |
 |--------------|--------------|
 |f	           |i = (int)f    |
+
+### Math Nodes
+The elements and the wording are inspired by MaterialX (see "MaterialX Specification"):  
+  
+* add : add two values  
+* subtract : subtract two values  
+* multiply : multiply two values  
+* divide : divide two values  
+* modulo : the remaining fraction after dividing a value by another value  
+* absval : the per-channel absolute value  
+* floor : the per-channel nearest integer value less than or equal to the incoming value  
+* ceil : the per-channel nearest integer value greater than or equal to the incoming value  
+* round : round each channel of the incoming values to the nearest integer value  
+* power : raise incoming values to the specified exponent  
+* sin : the sine of the incoming value, which is expected to be expressed in radians  
+* cos : the cosine of the incoming value, which is expected to be expressed in radians  
+* tan : the tangent of the incoming value, which is expected to be expressed in radians  
+* asin : the arcsine of the incoming value; the output will be expressed in radians  
+* acos : the arccosine of the incoming value; the output will be expressed in radians  
+* atan2 : the arctangent of the expression (iny/inx); the output will be expressed in radians  
+* sqrt : the square root of the incoming value  
+* ln : the natural log of the incoming value  
+* exp : "e" to the power of the incoming value  
+* clamp : clamp incoming values  
+* min : select the minimum of the two incoming values  
+* max : select the maximum of the two incoming values  
+* normalize : output the normalized vector N from the incoming vector N  
+* magnitude : output the float magnitude (vector length) of the incoming vector N  
+* dotproduct : output the (float) dot product of two incoming vector N  
+* crossproduct : output the (vector3) cross product of two incoming vector3  
+* rotate2d : rotate a vector2 value about the origin in 2D  
+* rotate3d : rotate a vector3 value about a specified unit axis vector  
+
+### Channel Nodes
+The elements and the wording are inspired by MaterialX (see "MaterialX Specification"):  
+
+* combine2 : Combine 2 separate input values into one array  
+* combine3 : Combine 3 separate input values into one array  
+* combine4 : Combine 4 separate input values into one array  
+* extract2 : Extracts array into 2 separate output values  
+* extract3 : Extracts array into 3 separate output values  
+* extract4 : Extracts array into 4 separate output values  
 
 ### Examples
 
@@ -294,6 +338,7 @@ Translation is written each frame to the first or second node depending on a con
 
 ## References
 
+* [MaterialX Specification](https://www.materialx.org/Specification.html)
 * [McKinsey & Company, Value creation in the metaverse, June 2022, page 49](https://www.mckinsey.com/business-functions/growth-marketing-and-sales/our-insights/value-creation-in-the-metaverse)
 * [Unity Visual Scripting](https://docs.unity3d.com/Packages/com.unity.visualscripting@1.7/manual/index.html)
 * [Unreal Engine Blueprint Visual Scripting](https://docs.unrealengine.com/5.0/en-US/blueprints-visual-scripting-in-unreal-engine/)
