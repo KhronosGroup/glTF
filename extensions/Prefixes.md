@@ -52,6 +52,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `MTTR` | Matterport, Inc. | https://matterport.com/ | [#2150](https://github.com/KhronosGroup/glTF/issues/2150) |
 | `MX` | The Matrix.org Foundation | https://matrix.org/ | [#2126](https://github.com/KhronosGroup/glTF/issues/2126) |
 | `NEEDLE` | Needle Tools | https://needle.tools/<br>`felix at needle.tools` | [#2131](https://github.com/KhronosGroup/glTF/issues/2131) |
+| `NTAR` | Nextech AR Solutions Inc. | https://www.nextechar.com/<br>`mitch at nextechar.com` | [#2188](https://github.com/KhronosGroup/glTF/issues/2188) |
 | `NV` | NVIDIA Corporation | https://www.nvidia.com | [#1211](https://github.com/KhronosGroup/glTF/issues/1211) |
 | `OFT` | OppenFuture Technologies | https://www.hololux.cn/en/ | [#1957](https://github.com/KhronosGroup/glTF/issues/1957) |
 | `OMI` | Open Metaverse Interoperability Group | https://github.com/omigroup/OMI | [#2003](https://github.com/KhronosGroup/glTF/issues/2003) |
