@@ -3,6 +3,7 @@
 ## Contributors
 
 * Kiryl Ambrazheichyk, Griffel Studio LLC, [kiryl@griffelstudio.com](mailto:kiryl@griffelstudio.com)
+* Alexey Knyazev, The Khronos Group, [@lexaknyazev](https://github.com/lexaknyazev)
 * Aliaksandr Valodzin, Griffel Studio LLC, [alexander@griffelstudio.com](mailto:alexander@griffelstudio.com)
 * Aliaksandr Nazarau, Griffel Studio LLC, [@Alexanderexe](https://github.com/Alexanderexe)
 * Ekaterina Kudelina, Griffel Studio LLC, [@uncio](https://github.com/uncio)
@@ -199,7 +200,7 @@ In this case each node points to the buffer view which references the buffer whe
 ```
 
 So, for each node, if GRIFFEL_bim_data extension has `properties` or `type` - look for them in the same gltf json file. If the extension states `bufferView` - look for the data in the separate .meta file by the url from the buffer.
-Nodes can have both embedded and separately stored properties, in that case both are used. Exporters should take care of possible data duplication. Importers should treat embedded values as of higher priority than values, stored in a separate file, as the file may be obsolete or corrupted more likely.
+Nodes can have both embedded and separately stored properties, in that case any or both can be used. Exporters should take care of possible data duplication. Though, cross references between embedded and external data are not allowed. Importers should treat embedded values as of higher priority than values, stored in a separate file, as the file may be obsolete or corrupted more likely. If separately stored data references same node many times specifying new or additional properties for it, it is up to Importer: ignore duplicates or apply them all.
 
 ## glTF Schema Updates
 

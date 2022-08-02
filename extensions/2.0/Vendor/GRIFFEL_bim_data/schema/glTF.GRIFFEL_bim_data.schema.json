@@ -7,16 +7,17 @@
     "properties": {
         "propertyValues": {
             "type": "array",
+            "uniqueItems": true,
             "items": {
                 "type": "string",
-                "description": "Property value.",
-                "minLength": 1
+                "description": "Property value."
             },
             "minItems": 1,
             "description": "Collection of unique property values."
         },
         "propertyNames": {
             "type": "array",
+            "uniqueItems": true,
             "items": {
                 "type": "string",
                 "description": "Property name.",
@@ -27,6 +28,7 @@
         },
         "properties": {
             "type": "array",
+            "uniqueItems": true,
             "items": {
                 "title": "Node Property",
                 "type": "object",

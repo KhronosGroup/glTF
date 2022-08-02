@@ -3,7 +3,6 @@
     "title": "GRIFFEL_bim_data Serializable Object",
     "type": "object",
     "description": "Contains same properties as embedded version plus properties to node map. Used only when data is saved in a separate file.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "nodeProperties": {
             "type": "array",
@@ -13,38 +12,45 @@
                 "properties": {
                     "node": {
                         "allOf": [ { "$ref": "glTFid.schema.json" } ],
-                        "description": "Index of the node in glTF file."
+                        "description": "Index of the node in glTF file.",
                     },
                     "properties": {
                         "type": "array",
+                        "uniqueItems": true,
                         "item": {
                             "allOf": [ { "$ref": "glTFid.schema.json" } ],
                             "description": "Index of a property in the root level collection."
                         },
-                        "description": "Collection of indices properties of the node.",
-                        "minItems": 1
+                        "minItems": 1,
+                        "description": "Collection of indices properties of the node."
                     },
-                    "type":{
+                    "type": {
                         "allOf": [ { "$ref": "glTFid.schema.json" } ],
                         "description": "Index of the type of the node."
                     }
                 },
-                "required": [ "properties" ]
+                "required": [ "node" ],
+                "anyOf": [
+                    { "required": [ "properties" ] },
+                    { "required": [ "type" ] }
+                ]
             },
+            "minItems": 1,
             "description": "Node type and instance properties map. Used only when data is saved in a separate file."
         },
         "propertyValues": {
             "type": "array",
+            "uniqueItems": true,
             "items": {
                 "type": "string",
-                "description": "Property value.",
-                "minLength": 1
+                "description": "Property value."
             },
             "minItems": 1,
             "description": "Collection of unique property values."
         },
         "propertyNames": {
             "type": "array",
+            "uniqueItems": true,
             "items": {
                 "type": "string",
                 "description": "Property name.",
@@ -55,6 +61,7 @@
         },
         "properties": {
             "type": "array",
+            "uniqueItems": true,
             "items": {
                 "title": "Node Property",
                 "type": "object",
@@ -101,5 +108,5 @@
             "description": "Collection of types - common sets of properties for many nodes."
         }
     },
-    "required": [ "node", "properties" ]
+    "required": [ "nodeProperties", "propertyValues", "propertyNames", "properties" ]
 }

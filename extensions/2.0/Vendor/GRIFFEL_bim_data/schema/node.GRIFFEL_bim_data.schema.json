@@ -11,10 +11,12 @@
         },
         "properties": {
             "type": "array",
+            "uniqueItems": true,
             "items": {
                 "allOf": [ { "$ref": "glTFid.schema.json" } ],
                 "description": "Index of a property in the root level collection."
             },
+            "minItems": 1,
             "description": "Collection of indices which point to corresponding instance properties of the node. (Instance properties are unique to the node. They override the same type properties.)"
         },
         "type": {
@@ -24,5 +26,5 @@
         "extensions": { },
         "extras": { }
     },
-    "required": [ "properties" ]
+    "required": [ "bufferView", "properties" ]
 }
