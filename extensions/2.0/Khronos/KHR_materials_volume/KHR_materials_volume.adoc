@@ -193,17 +193,23 @@ The latexmath:[D_T] and latexmath:[G_{TR}] terms are the same as in the specular
 
 The Fresnel term also makes use of the modified half vector and, in addition, needs to take internal reflection into account. When using the Schlick approximation, care must be taken to use the angle that is on the dense side of the boundary, i.e., the side with the medium that has a higher IOR. In addition, total internal reflection has to be considered. Therefore, we have three cases:
 
-Light enters medium with higher IOR: latexmath:[\eta_o \geq \eta_i].
-
+1. Light enters medium with higher IOR: latexmath:[\eta_o \geq \eta_i].
++
+--
 latexmath:[F_{TR}^{+} = f_0 + (1 - f_0) (1 - \left| V \cdot H_{TR} \right| )^5]
+--
 
-Light enters medium with lower IOR and there is no total internal reflection: latexmath:[\eta_o \leq \eta_i] and latexmath:[\sin^2(\theta_o) < 1]. The angle at the transmitted side of the boundary (medium with lower IOR) latexmath:[\theta_o] is computed from the angle of incidence via latexmath:[\sin^2(\theta_o) = (\eta_i / \eta_o)^2 (1 - (V \cdot H_{TR})^2)] and thus latexmath:[\cos(\theta_o) = \sqrt{1 - \sin^2(\theta_o)].
+2. Light enters medium with lower IOR and there is no total internal reflection: latexmath:[\eta_o \leq \eta_i] and latexmath:[\sin^2(\theta_o) < 1]. The angle at the transmitted side of the boundary (medium with lower IOR) latexmath:[\theta_o] is computed from the angle of incidence via latexmath:[\sin^2(\theta_o) = (\eta_i / \eta_o)^2 (1 - (V \cdot H_{TR})^2)] and thus latexmath:[\cos(\theta_o) = \sqrt{1 - \sin^2(\theta_o)].
++
+--
+latexmath:[F_{TR}^{-} = f_0 + (1 - f_0) (1 - \left| \cos\theta_o \right| )^5]
+--
 
-latexmath:[F_{TR}^{-} = f_0 + (1 - f_0) (1 - \left| \cos\,\theta_o \right| )^5]
-
-Light enters medium with lower IOR and there is total internal reflection: latexmath:[\eta_o < \eta_i] and latexmath:[\sin^2(\theta_o) \geq 1].
-
+3. Light enters medium with lower IOR and there is total internal reflection: latexmath:[\eta_o < \eta_i] and latexmath:[\sin^2(\theta_o) \geq 1].
++
+--
 latexmath:[F_{TR}^\text{TIR} = 1]
+--
 
 = Interaction with other extensions
 
