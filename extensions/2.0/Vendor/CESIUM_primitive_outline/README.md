@@ -8,4 +8,4 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 This extension specification has been converted from Markdown to Asciidoctor markup format.
 You can view the generated specification in the glTF Registry at
 https://www.khronos.org/registry/glTF/extensions/CESIUM_primitive_outline.html .
-The Asciidoctor markup starts with [CESIUM_primitive_outline.adoc](CESIUM_primitive_outline.adoc) in this folder.
+The Asciidoctor markup starts with [CESIUM_primitive_outline.adoc](CESIUM_primitive_outline.adoc) in this folder
