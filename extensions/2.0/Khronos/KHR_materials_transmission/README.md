@@ -180,33 +180,47 @@ Optical transparency does not require any changes whatsoever to the specular ter
 
 The specular transmission `specular_btdf(α)` is a microfacet BTDF
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBTDF} = \frac{G_T D_T}{4 \, \left|N \cdot L \right| \, \left| N \cdot V \right|}">
+$$
+\text{MicrofacetBTDF} = \frac{G_T D_T}{4 \left|N \cdot L \right| \left| N \cdot V \right|}
+$$
 
 with the Trowbridge-Reitz/GGX microfacet distribution
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle D_T = \frac{\alpha^2 \, \chi^%2B(N \cdot H_T)}{\pi ((N \cdot H_T)^2 (\alpha^2 - 1) %2B 1)^2}">
+$$
+D_T = \frac{\alpha^2 \chi^+(N \cdot H_T)}{\pi ((N \cdot H_T)^2 (\alpha^2 - 1) + 1)^2}
+$$
 
 and the separable form of the Smith joint masking-shadowing function
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle G_T = \frac{2 \, \left| N \cdot L \right| \, \chi^%2B\left(\frac{H_T \cdot L}{N \cdot L}\right)}{\left| N \cdot L \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{2 \, \left| N \cdot V \right| \, \chi^%2B\left(\frac{H_T \cdot V}{N \cdot V}\right)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}">,
+$$
+G_T = \frac{2 \left| N \cdot L \right| \chi^+\left(\frac{H_T \cdot L}{N \cdot L}\right)}{\left| N \cdot L \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2}} \frac{2 \left| N \cdot V \right| \chi^+\left(\frac{H_T \cdot V}{N \cdot V}\right)}{\left| N \cdot V \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
+$$
 
-using the transmission half vector *H*<sub>*T*</sub>
+using the transmission half vector $H_T$
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle H_T = \text{normalize}(V %2B \, 2 \, \left| N \cdot L \right| \, N %2B L)">.
+$$
+H_T = \text{normalize}(V + 2 \left| N \cdot L \right| N + L)
+$$
 
-With the step function χ<sup>+</sup> we ensure that the microsurface is only visible for directions that are on the same side of the macro and microsurfaces. Macro and microsurfaces are oriented according to *N* and *H*<sub>*T*</sub>, respectively.
+With the step function $\chi^+$ we ensure that the microsurface is only visible for directions that are on the same side of the macro and microsurfaces. Macro and microsurfaces are oriented according to $N$ and $H_T$, respectively.
 
 Introducing the visibility function
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle V_T = \frac{G_T}{4 \, \left| N \cdot L \right| \, \left| N \cdot V \right|}">
+$$
+V_T = \frac{G_T}{4 \left| N \cdot L \right| \left| N \cdot V \right|}
+$$
 
 simplifies the original microfacet BTDF to
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBTDF} = V_T D_T">
+$$
+\text{MicrofacetBTDF} = V_T D_T
+$$
 
 with
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle V_T = \frac{\, \chi^%2B\left(\frac{H_T \cdot L}{N \cdot L}\right)}{\left| N \cdot L\right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^%2B\left(\frac{H_T \cdot V}{N \cdot V}\right)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}">.
+$$
+V_T = \frac{\chi^+\left(\frac{H_T \cdot L}{N \cdot L}\right)}{\left| N \cdot L\right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2}} \frac{\chi^+\left(\frac{H_T \cdot V}{N \cdot V}\right)}{\left| N \cdot V \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
+$$
 
 Thus we have the function
 
