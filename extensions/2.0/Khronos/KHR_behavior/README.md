@@ -156,33 +156,71 @@ The elements and the wording are inspired by MaterialX (see "MaterialX Specifica
 
 ### Examples
 
-Constant array is written each frame to the translation of the first node:
+#### Setting a nodes' translation
+
+
 ```json
 {
+    // ...
     "extensions": {
         "KHR_behavior": {
-            "eventNodes": [
+            "events": [
                 {
                     "name": "Event triggered each frame",
-                    "type": "OnUpdate",
-                    "flowNode": 0
-                }
-            ],
-            "flowNodes": [
-                {
-                    "name": "Setting the translation of the first node",
-                    "group": "set",
-                    "set": {
-                        "pointer": "/nodes/0/translation",
-                        "variableNode": 0 
+                    "type": "onUpdate",
+                    "flow": {
+                        "next": 0
                     }
                 }
             ],
-            "variableNodes": [
+            "operations": [
+                {
+                    "name": "Setting the translation of the first node",
+                    "type": "set",
+                    "parameters": {
+                        "target": "/nodes/0/translation",
+                        "value": [1.0, 2.0, 3.0]
+                    },
+                },
+            ]
+        }
+    }
+    //...
+}
+```
+
+The same example can also be implemented with a constant variable
+
+```json
+{
+    // ...
+    "extensions": {
+        "KHR_behavior": {
+            "events": [
+                {
+                    "name": "Event triggered each frame",
+                    "type": "onUpdate",
+                    "flow": {
+                        "next": 0
+                    }
+                }
+            ],
+            "operations": [
+                {
+                    "name": "Setting the translation of the first node",
+                    "type": "set",
+                    "parameters": {
+                        "target": "/nodes/0/translation",
+                        "value": { "$variable": 0 }
+                    },
+                },
+            ],
+            "variables": [
                 {
                     "name": "Constant values",
-                    "type": "float",
-                    "values": [
+                    "type": "vec3",
+                    "componentType": "float",
+                    "initialValue": [
                         1.0,
                         2.0,
                         3.0
@@ -191,46 +229,44 @@ Constant array is written each frame to the translation of the first node:
             ]
         }
     }
+    //...
 }
 ```
 
----
-  
+#### Getting the translation value from a node
+
 Translation from the second node is written each frame to the translation of the first node:
 ```json
 {
     "extensions": {
         "KHR_behavior": {
-            "eventNodes": [
+            "events": [
                 {
                     "name": "Event triggered each frame",
-                    "type": "OnUpdate",
-                    "flowNode": 0
-                }
-            ],
-            "flowNodes": [
-                {
-                    "name": "Setting the translation of the first node",
-                    "group": "set",
-                    "set": {
-                        "pointer": "/nodes/0/translation",
-                        "variableNode": 0 
+                    "type": "onUpdate",
+                    "flow": {
+                        "next": 0
                     }
                 }
             ],
-            "getNodes": [
+            "operations": [
                 {
                     "name": "Getting the translation of the second node",
-                    "set": {
-                        "pointer": "/nodes/1/translation"
+                    "type": "get",
+                    "parameters": {
+                        "source": "/nodes/1/translation"
+                    },
+                    "flow": {
+                        "next": 1
                     }
-                }
-            ],
-            "variableNodes": [
+                },
                 {
-                    "name": "Values from a get node",
-                    "type": "float",
-                    "getNode": 0
+                    "name": "Setting the translation of the first node",
+                    "type": "set",
+                    "parameters": {
+                        "target": "/nodes/0/translation",
+                        "value": { "$operation": 0 }
+                    }
                 }
             ]
         }
@@ -238,96 +274,57 @@ Translation from the second node is written each frame to the translation of the
 }
 ```
 
----
+#### Conditional flow
 
 Translation is written each frame to the first or second node depending on a condition:
 ```json
 {
     "extensions": {
         "KHR_behavior": {
-            "conditionNodes": [
-                {
-                    "name": "Comparing two values",
-                    "operator": "LESS",
-                    "variableNodes": [
-                        2,
-                        3
-                    ]
-                }
-            ],
-            "eventNodes": [
+            "events": [
                 {
                     "name": "Event triggered each frame",
-                    "type": "OnUpdate",
-                    "flowNode": 0
+                    "type": "onUpdate",
+                    "flow": {
+                        "next": 0
+                    }
                 }
             ],
-            "flowNodes": [
+            "operations": [
+                {
+                    "name": "Comparing two values",
+                    "type": "less",
+                    "parameters": {
+                        "first": 1,
+                        "second": 2
+                    }
+                },
                 {
                     "name": "Basic if condition",
-                    "group": "control",
-                    "control": {
-                        "branch": "if",
-                        "if": {
-                            "condition": 0,
-                            "then": 1,
-                            "else": 2
-                        }
+                    "type": "branch",
+                    "parameters": {
+                        "condition": { "$operation": 1 }
+                    },
+                    "flow": {
+                        "true": 2,
+                        "false": 3
                     }
                 },
                 {
                     "name": "Setting the translation of the first node from the true condition case",
-                    "group": "set",
-                    "set": {
-                        "pointer": "/nodes/0/translation",
-                        "variableNode": 0 
+                    "type": "set",
+                    "parameters": {
+                        "target": "/nodes/0/translation",
+                        "value": [1.0, 1.0, 1.0 ]
                     }
                 },
                 {
                     "name": "Setting the translation of the first node from the false condition case",
-                    "group": "set",
-                    "set": {
-                        "pointer": "/nodes/0/translation",
-                        "variableNode": 1 
+                    "type": "set",
+                    "parameters": {
+                        "target": "/nodes/0/translation",
+                        "value": [0.0, 0.0, 0.0 ]
                     }
-                }
-            ],
-            "getNodes": [
-                {
-                    "name": "Getting the translation of the second node",
-                    "set": {
-                        "pointer": "/nodes/1/translation"
-                    }
-                }
-            ],
-            "variableNodes": [
-                {
-                    "name": "Constant values",
-                    "type": "float",
-                    "values": [
-                        1.0,
-                        2.0,
-                        3.0
-                    ]
-                },
-                {
-                    "name": "Values from a get node",
-                    "type": "float",
-                    "getNode": 0
-                },
-                {
-                    "name": "Constant integer value used in the condition as the first parameter",
-                    "type": "integer",
-                    "values": [
-                        1
-                    ]
-                },
-                {
-                    "name": "Constant integer value used in the condition as the second parameter",
-                    "type": "integer",
-                    "values": [
-                        2
-                    ]
                 }
             ]
         }
