@@ -1,0 +1,14 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "behavior.value.reference.schema.json",
+    "title": "Behavior Value Reference",
+    "oneOf": [
+        {
+            "type": "string",
+            "description": "Reference to a json value property in json pointer syntax"
+        },
+        {
+            "$ref": "behavior.variable.reference.schema.json"
+        }
+    ]
+}

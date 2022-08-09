@@ -1,0 +1,13 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "behavior.variable.reference.schema.json",
+    "title": "Behavior Variable Reference",
+    "type": "object",
+    "properties": {
+        "$variable": {
+            "type": "number"
+        }
+    },
+    "required": ["$variable"],
+    "description": "Reference into the behavior's variable array"
+}

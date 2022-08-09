@@ -1,45 +1,14 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "KHR_behavior glTF extension",
     "type": "object",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
-        "conditionNodes": {
+        "behaviors": { 
             "type": "array",
             "items": {
-                "type": "object",
-                "$ref": "condition/conditionNode.schema.json"
+                "$ref": "behavior.schema.json"
             }
-        },
-        "eventNodes": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "$ref": "event/eventNode.schema.json"
-            }
-        },
-        "flowNodes": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "$ref": "flow/flowNode.schema.json"
-            }
-        },
-        "getNodes": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "$ref": "get/getNode.schema.json"
-            }
-        },
-        "variableNodes": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "$ref": "variable/variableNode.schema.json"
-            }
-        },
-        "extensions": { },
-        "extras": { }
+        }
     }
 }
