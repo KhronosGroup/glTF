@@ -5,6 +5,7 @@
 * Ben Houston, Threekit
 * Jan Hermes, Continental
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+* Moritz Becher, UX3D [@mobecher](https://twitter.com/mobecher)
 
 Copyright 2018-2022 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
