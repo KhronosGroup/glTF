@@ -164,19 +164,17 @@ The elements and the wording are inspired by MaterialX (see "MaterialX Specifica
     // ...
     "extensions": {
         "KHR_behavior": {
-            "events": [
+            "nodes": [
                 {
                     "name": "Event triggered each frame",
-                    "type": "onUpdate",
+                    "type": "event/onUpdate",
                     "flow": {
                         "next": 0
                     }
-                }
-            ],
-            "operations": [
+                },
                 {
                     "name": "Setting the translation of the first node",
-                    "type": "set",
+                    "type": "action/set",
                     "parameters": {
                         "target": "/nodes/0/translation",
                         "value": [1.0, 2.0, 3.0]
@@ -196,19 +194,17 @@ The same example can also be implemented with a constant variable
     // ...
     "extensions": {
         "KHR_behavior": {
-            "events": [
+            "nodes": [
                 {
                     "name": "Event triggered each frame",
-                    "type": "onUpdate",
+                    "type": "event/onUpdate",
                     "flow": {
                         "next": 0
                     }
-                }
-            ],
-            "operations": [
+                },
                 {
                     "name": "Setting the translation of the first node",
-                    "type": "set",
+                    "type": "action/set",
                     "parameters": {
                         "target": "/nodes/0/translation",
                         "value": { "$variable": 0 }
@@ -240,19 +236,17 @@ Translation from the second node is written each frame to the translation of the
 {
     "extensions": {
         "KHR_behavior": {
-            "events": [
+            "nodes": [
                 {
                     "name": "Event triggered each frame",
-                    "type": "onUpdate",
+                    "type": "event/onUpdate",
                     "flow": {
                         "next": 0
                     }
-                }
-            ],
-            "operations": [
+                },
                 {
                     "name": "Getting the translation of the second node",
-                    "type": "get",
+                    "type": "action/get",
                     "parameters": {
                         "source": "/nodes/1/translation"
                     },
@@ -262,7 +256,7 @@ Translation from the second node is written each frame to the translation of the
                 },
                 {
                     "name": "Setting the translation of the first node",
-                    "type": "set",
+                    "type": "action/set",
                     "parameters": {
                         "target": "/nodes/0/translation",
                         "value": { "$operation": 0 }
@@ -281,27 +275,28 @@ Translation is written each frame to the first or second node depending on a con
 {
     "extensions": {
         "KHR_behavior": {
-            "events": [
+            "nodes": [
                 {
                     "name": "Event triggered each frame",
-                    "type": "onUpdate",
+                    "type": "event/onUpdate",
                     "flow": {
                         "next": 0
                     }
-                }
-            ],
-            "operations": [
+                },
                 {
                     "name": "Comparing two values",
-                    "type": "less",
+                    "type": "logic/less",
                     "parameters": {
                         "first": 1,
                         "second": 2
+                    },
+                    "flow": {
+                        "next": 1
                     }
                 },
                 {
                     "name": "Basic if condition",
-                    "type": "branch",
+                    "type": "flow/branch",
                     "parameters": {
                         "condition": { "$operation": 1 }
                     },
@@ -312,7 +307,7 @@ Translation is written each frame to the first or second node depending on a con
                 },
                 {
                     "name": "Setting the translation of the first node from the true condition case",
-                    "type": "set",
+                    "type": "action/set",
                     "parameters": {
                         "target": "/nodes/0/translation",
                         "value": [1.0, 1.0, 1.0 ]
@@ -320,7 +315,7 @@ Translation is written each frame to the first or second node depending on a con
                 },
                 {
                     "name": "Setting the translation of the first node from the false condition case",
-                    "type": "set",
+                    "type": "action/set",
                     "parameters": {
                         "target": "/nodes/0/translation",
                         "value": [0.0, 0.0, 0.0 ]
