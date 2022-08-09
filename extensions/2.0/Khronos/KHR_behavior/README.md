@@ -70,27 +70,11 @@ A behavior node is a node both available in the Visual Scripting system from Uni
 Only the following types are allowed to read and write to.
 
 * integer
-* float
 * boolean
-
-### Dimension
-Following dimensions are used in the behavior nodes.
-Arrays or matrices could be accessed by each scalar element.
-
-* scalar
+* float (scalar)
 * vec2
 * vec3
 * vec4
-
-## Math
-
-### Math Constants
-Following math constants have to be available.
-
-* π
-* ℇ
-* Inf
-* NaN
 
 ### Automatic casting
 For simplicity, behavior nodes can be connected, even if they do have different input and output types. Following list provides the rules to cast a type using C/c++ style notation:
@@ -162,29 +146,32 @@ The elements and the wording are inspired by MaterialX (see "MaterialX Specifica
 
 ```json
 {
-    // ...
     "extensions": {
         "KHR_behavior": {
-            "nodes": [
+            "behaviors": [
                 {
-                    "name": "Event triggered each frame",
-                    "type": "event/onUpdate",
-                    "flow": {
-                        "next": 0
-                    }
-                },
-                {
-                    "name": "Setting the translation of the first node",
-                    "type": "action/set",
-                    "parameters": {
-                        "target": "/nodes/0/translation",
-                        "value": [1.0, 2.0, 3.0]
-                    },
-                },
+                    "nodes": [
+                        {
+                            "name": "Event triggered each frame",
+                            "type": "event/onUpdate",
+                            "flow": {
+                                "next": 0
+                            }
+                        },
+                        {
+                            "name": "Setting the translation of the first node",
+                            "type": "action/set",
+                            "parameters": {
+                                "target": "/nodes/0/translation",
+                                "value": [1.0, 2.0, 3.0]
+                            },
+                        },
+                    ]
+                }
             ]
+
         }
     }
-    //...
 }
 ```
 
@@ -192,41 +179,35 @@ The same example can also be implemented with a constant variable
 
 ```json
 {
-    // ...
-    "extensions": {
-        "KHR_behavior": {
-            "nodes": [
-                {
-                    "name": "Event triggered each frame",
-                    "type": "event/onUpdate",
-                    "flow": {
-                        "next": 0
-                    }
-                },
-                {
-                    "name": "Setting the translation of the first node",
-                    "type": "action/set",
-                    "parameters": {
-                        "target": "/nodes/0/translation",
-                        "value": { "$variable": 0 }
-                    },
-                },
-            ],
-            "variables": [
-                {
-                    "name": "Constant values",
-                    "type": "vec3",
-                    "componentType": "float",
-                    "initialValue": [
-                        1.0,
-                        2.0,
-                        3.0
-                    ]
-                }
+    "nodes": [
+        {
+            "name": "Event triggered each frame",
+            "type": "event/onUpdate",
+            "flow": {
+                "next": 0
+            }
+        },
+        {
+            "name": "Setting the translation of the first node",
+            "type": "action/set",
+            "parameters": {
+                "target": "/nodes/0/translation",
+                "value": { "$variable": 0 }
+            },
+        },
+    ],
+    "variables": [
+        {
+            "name": "Constant values",
+            "type": "vec3",
+            "componentType": "float",
+            "initialValue": [
+                1.0,
+                2.0,
+                3.0
             ]
         }
-    }
-    //...
+    ]
 }
 ```
 
@@ -235,37 +216,33 @@ The same example can also be implemented with a constant variable
 Translation from the second node is written each frame to the translation of the first node:
 ```json
 {
-    "extensions": {
-        "KHR_behavior": {
-            "nodes": [
-                {
-                    "name": "Event triggered each frame",
-                    "type": "event/onUpdate",
-                    "flow": {
-                        "next": 0
-                    }
-                },
-                {
-                    "name": "Getting the translation of the second node",
-                    "type": "action/get",
-                    "parameters": {
-                        "source": "/nodes/1/translation"
-                    },
-                    "flow": {
-                        "next": 1
-                    }
-                },
-                {
-                    "name": "Setting the translation of the first node",
-                    "type": "action/set",
-                    "parameters": {
-                        "target": "/nodes/0/translation",
-                        "value": { "$operation": 0 }
-                    }
-                }
-            ]
+    "nodes": [
+        {
+            "name": "Event triggered each frame",
+            "type": "event/onUpdate",
+            "flow": {
+                "next": 0
+            }
+        },
+        {
+            "name": "Getting the translation of the second node",
+            "type": "action/get",
+            "parameters": {
+                "source": "/nodes/1/translation"
+            },
+            "flow": {
+                "next": 1
+            }
+        },
+        {
+            "name": "Setting the translation of the first node",
+            "type": "action/set",
+            "parameters": {
+                "target": "/nodes/0/translation",
+                "value": { "$operation": 0 }
+            }
         }
-    }
+    ]
 }
 ```
 
@@ -274,57 +251,53 @@ Translation from the second node is written each frame to the translation of the
 Translation is written each frame to the first or second node depending on a condition:
 ```json
 {
-    "extensions": {
-        "KHR_behavior": {
-            "nodes": [
-                {
-                    "name": "Event triggered each frame",
-                    "type": "event/onUpdate",
-                    "flow": {
-                        "next": 0
-                    }
-                },
-                {
-                    "name": "Comparing two values",
-                    "type": "logic/less",
-                    "parameters": {
-                        "first": 1,
-                        "second": 2
-                    },
-                    "flow": {
-                        "next": 1
-                    }
-                },
-                {
-                    "name": "Basic if condition",
-                    "type": "flow/branch",
-                    "parameters": {
-                        "condition": { "$operation": 1 }
-                    },
-                    "flow": {
-                        "true": 2,
-                        "false": 3
-                    }
-                },
-                {
-                    "name": "Setting the translation of the first node from the true condition case",
-                    "type": "action/set",
-                    "parameters": {
-                        "target": "/nodes/0/translation",
-                        "value": [1.0, 1.0, 1.0 ]
-                    }
-                },
-                {
-                    "name": "Setting the translation of the first node from the false condition case",
-                    "type": "action/set",
-                    "parameters": {
-                        "target": "/nodes/0/translation",
-                        "value": [0.0, 0.0, 0.0 ]
-                    }
-                }
-            ]
+    "nodes": [
+        {
+            "name": "Event triggered each frame",
+            "type": "event/onUpdate",
+            "flow": {
+                "next": 0
+            }
+        },
+        {
+            "name": "Comparing two values",
+            "type": "logic/less",
+            "parameters": {
+                "first": 1,
+                "second": 2
+            },
+            "flow": {
+                "next": 1
+            }
+        },
+        {
+            "name": "Basic if condition",
+            "type": "flow/branch",
+            "parameters": {
+                "condition": { "$operation": 1 }
+            },
+            "flow": {
+                "true": 2,
+                "false": 3
+            }
+        },
+        {
+            "name": "Setting the translation of the first node from the true condition case",
+            "type": "action/set",
+            "parameters": {
+                "target": "/nodes/0/translation",
+                "value": [1.0, 1.0, 1.0 ]
+            }
+        },
+        {
+            "name": "Setting the translation of the first node from the false condition case",
+            "type": "action/set",
+            "parameters": {
+                "target": "/nodes/0/translation",
+                "value": [0.0, 0.0, 0.0 ]
+            }
         }
-    }
+    ]
 }
 ```
 
