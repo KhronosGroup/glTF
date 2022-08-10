@@ -12,7 +12,7 @@
                 "properties": {
                     "node": {
                         "allOf": [ { "$ref": "glTFid.schema.json" } ],
-                        "description": "Index of the node in glTF file.",
+                        "description": "Index of the node in glTF file."
                     },
                     "properties": {
                         "type": "array",
@@ -94,6 +94,7 @@
                     },
                     "properties": {
                         "type": "array",
+                        "uniqueItems": true,
                         "item": {
                             "allOf": [ { "$ref": "glTFid.schema.json" } ],
                             "description": "Index of a property in the root level collection."

@@ -26,5 +26,9 @@
         "extensions": { },
         "extras": { }
     },
-    "required": [ "bufferView", "properties" ]
+    "anyOf": [
+        { "required": [ "bufferView" ] },
+        { "required": [ "properties" ] },
+        { "required": [ "type" ] }
+    ]
 }

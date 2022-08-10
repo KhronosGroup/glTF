@@ -3,7 +3,6 @@
 ## Contributors
 
 * Kiryl Ambrazheichyk, Griffel Studio LLC, [kiryl@griffelstudio.com](mailto:kiryl@griffelstudio.com)
-* Alexey Knyazev, The Khronos Group, [@lexaknyazev](https://github.com/lexaknyazev)
 * Aliaksandr Valodzin, Griffel Studio LLC, [alexander@griffelstudio.com](mailto:alexander@griffelstudio.com)
 * Aliaksandr Nazarau, Griffel Studio LLC, [@Alexanderexe](https://github.com/Alexanderexe)
 * Ekaterina Kudelina, Griffel Studio LLC, [@uncio](https://github.com/uncio)

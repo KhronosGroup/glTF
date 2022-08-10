@@ -3,7 +3,6 @@
     "title": "GRIFFEL_bim_data glTF Extension",
     "type": "object",
     "description": "Domain specific properties for glTF nodes.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "propertyValues": {
             "type": "array",
@@ -41,9 +40,7 @@
                     "value": {
                         "allOf": [ { "$ref": "glTFid.schema.json" } ],
                         "description": "Index of a property value in the root level collection."
-                    },
-                    "extensions": { },
-                    "extras": { }
+                    }
                 },
                 "required": [ "name", "value" ]
             },
@@ -63,23 +60,20 @@
                     },
                     "properties": {
                         "type": "array",
+                        "uniqueItems": true,
                         "item": {
                             "allOf": [ { "$ref": "glTFid.schema.json" } ],
                             "description": "Index of a property in the root level collection."
                         },
                         "description": "Collection of indices which point to corresponding properties of the type.",
                         "minItems": 1
-                    },
-                    "extensions": { },
-                    "extras": { }
+                    }
                 },
                 "required": [ "properties" ]
             },
             "minItems": 1,
             "description": "Collection of types - common sets of properties for many nodes."
-        },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "propertyValues", "propertyNames", "properties" ]
 }
