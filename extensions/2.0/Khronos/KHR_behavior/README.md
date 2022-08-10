@@ -132,13 +132,13 @@ The node can define which of the paths in the `flow` property are followed durin
 
 ### Parameters
 
-In addition to specifying the required parameter names, nodes also define the type of the parameter. Automatic type conversions according to the rules in [Automatic casting](#automatic-casting) take place when connecting compatible types to the parameter.
-
 Parameters can be passed a [Type](#types) compatible json value, a reference to another node's output socket or a reference to a variable.
+
+In addition to specifying the required parameter names, nodes also define the type of the parameter. Automatic type conversions according to the rules in [Automatic casting](#automatic-casting) take place when connecting compatible types to the parameter as output socket reference or variable reference. Automatic casting does not apply to json values, these must be of the same type as the node's parameter.
 
 #### Json Value
 
-For constant values that are not evaluated by previous nodes in the behavior graph, constant json values can be passed to parameters.
+Constant json values can directly be passed to parameters. Passing a value that doesn't correspond to the parameters type is invalid, e.g passing a `1.0` number literal to a boolean parameter is not allowed.
 
 ```json
 {
@@ -204,6 +204,7 @@ The elements and the wording are inspired by MaterialX (see "MaterialX Specifica
 * crossproduct : output the (vector3) cross product of two incoming vector3  
 * rotate2d : rotate a vector2 value about the origin in 2D  
 * rotate3d : rotate a vector3 value about a specified unit axis vector  
+* less : Compare two numbers and return a boolean with the result of the comparison
 
 ### Channel Nodes
 The elements and the wording are inspired by MaterialX (see "MaterialX Specification"):  
@@ -214,8 +215,6 @@ The elements and the wording are inspired by MaterialX (see "MaterialX Specifica
 * extract2 : Extracts array into 2 separate output values  
 * extract3 : Extracts array into 3 separate output values  
 * extract4 : Extracts array into 4 separate output values  
-
-### Logic Nodes 
 
 ### Flow Nodes
 
@@ -291,7 +290,6 @@ The same example can also be implemented with a constant variable
         {
             "name": "Constant values",
             "type": "vec3",
-            "componentType": "float",
             "initialValue": [
                 1.0,
                 2.0,
@@ -352,7 +350,7 @@ Translation is written each frame to the first or second node depending on a con
         },
         {
             "name": "Comparing two values",
-            "type": "logic/less",
+            "type": "math/less",
             "parameters": {
                 "first": 1,
                 "second": 2
