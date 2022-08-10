@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "KHR_behavior glTF extension",
     "type": "object",
-    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "behaviors": { 
             "type": "array",

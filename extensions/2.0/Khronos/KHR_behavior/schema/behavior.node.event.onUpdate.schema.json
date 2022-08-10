@@ -1,9 +1,5 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "nodes/event/onUpdate.schema.json",
     "title": "onUpdate Event Node",
-    "type": "object",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "type": {
             "const": "event/onUpdate"

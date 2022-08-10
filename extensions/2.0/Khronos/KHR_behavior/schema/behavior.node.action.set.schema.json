@@ -1,9 +1,5 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "nodes/actions/set.schema.json",
     "title": "Set Value Node",
-    "type": "object",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "type": {
             "const": "action/set"
