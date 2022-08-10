@@ -1,12 +1,19 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Vec3 Value",
-    "type": "array",
-    "items": [
+    "oneOf": [
         {
-            "type": "number"
+            "type": "array",
+            "items": [
+                {
+                    "type": "number"
+                }
+            ],
+            "minItems": 3,
+            "maxItems": 3
+        },
+        {
+            "$ref": "behavior.types.reference.schema.json"
         }
-    ],
-    "minItems": 3,
-    "maxItems": 3
+    ]
 }
