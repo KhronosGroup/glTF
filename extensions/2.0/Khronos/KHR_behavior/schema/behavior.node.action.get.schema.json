@@ -1,0 +1,26 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Get Value Node",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "type": {
+            "type": "string",
+            "enum": ["action/get"]
+        },
+        "flow": {
+            "type": "object",
+            "properties": {
+                "next": { "$ref": "behavior.types.flow.schema.json" }
+            }
+        },
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "source": { "$ref": "behavior.types.pointer.schmea.json" }
+            },
+            "required": ["target", "value"]
+        }
+    },
+    "required": ["type", "parameters"]
+}
