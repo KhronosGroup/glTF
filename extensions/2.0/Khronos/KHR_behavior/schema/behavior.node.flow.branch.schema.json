@@ -19,5 +19,6 @@
             "required": ["condition"]
         }
     },
+    "sockets": [],
     "required": ["type", "parameters"]
 }

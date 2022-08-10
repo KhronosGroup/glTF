@@ -19,5 +19,6 @@
             "required": ["target", "value"]
         }
     },
+    "sockets": [],
     "required": ["type", "parameters"]
 }

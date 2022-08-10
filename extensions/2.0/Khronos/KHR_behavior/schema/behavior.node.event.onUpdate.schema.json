@@ -12,5 +12,6 @@
             "required": ["next"]
         }
     },
+    "sockets": [],
     "required": ["type", "flow"]
 }
