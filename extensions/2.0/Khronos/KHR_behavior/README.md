@@ -245,7 +245,7 @@ Flow nodes can be used to define a more complex control flow inside the node gra
                             "name": "Event triggered each frame",
                             "type": "event/onUpdate",
                             "flow": {
-                                "next": 0
+                                "next": 1
                             }
                         },
                         {
@@ -274,7 +274,7 @@ The same example can also be implemented with a constant variable
             "name": "Event triggered each frame",
             "type": "event/onUpdate",
             "flow": {
-                "next": 0
+                "next": 1
             }
         },
         {
@@ -310,7 +310,7 @@ Translation from the second node is written each frame to the translation of the
             "name": "Event triggered each frame",
             "type": "event/onUpdate",
             "flow": {
-                "next": 0
+                "next": 1
             }
         },
         {
@@ -320,7 +320,7 @@ Translation from the second node is written each frame to the translation of the
                 "source": "/nodes/1/translation"
             },
             "flow": {
-                "next": 1
+                "next": 2
             }
         },
         {
@@ -328,7 +328,7 @@ Translation from the second node is written each frame to the translation of the
             "type": "action/set",
             "parameters": {
                 "target": "/nodes/0/translation",
-                "value": { "$operation": 0 }
+                "value": { "$operation": 1 }
             }
         }
     ]
@@ -345,7 +345,7 @@ Translation is written each frame to the first or second node depending on a con
             "name": "Event triggered each frame",
             "type": "event/onUpdate",
             "flow": {
-                "next": 0
+                "next": 1
             }
         },
         {
@@ -356,7 +356,7 @@ Translation is written each frame to the first or second node depending on a con
                 "second": 2
             },
             "flow": {
-                "next": 1
+                "next": 2
             }
         },
         {
@@ -366,8 +366,8 @@ Translation is written each frame to the first or second node depending on a con
                 "condition": { "$operation": 1 }
             },
             "flow": {
-                "true": 2,
-                "false": 3
+                "true": 3,
+                "false": 4
             }
         },
         {
