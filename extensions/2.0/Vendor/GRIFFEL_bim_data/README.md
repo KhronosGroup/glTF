@@ -33,7 +33,6 @@ Each node with a mesh represents a real world object.
 Node tree represents some logical hierarchy of real world objects. For a construction site with two buildings it might look like this:
 
 ```text
-
 Model 1
 Model 2
 ├Storey 1
@@ -42,7 +41,6 @@ Model 2
  └Category 2
   ├Element 1
   └Element 2
-
 ```
 
 Where:
@@ -77,7 +75,6 @@ Given the same two doors from the example above, there are two options to implem
 ### Embed properties into glTF json
 
 ```javascript
-
 "nodes": [
   {
     "name": "Door 1",
@@ -143,7 +140,6 @@ Given the same two doors from the example above, there are two options to implem
     ]
   }
 ]
-
 ```
 
 ### Write properties to separate binary file
@@ -153,7 +149,6 @@ In this case each node points to the buffer view which references the buffer whe
 [MessagePack](https://msgpack.org/) must be used for serializing extension object in a separate binary file to achive the most compact file size and the fastest deserialization speed.
 
 ```javascript
-
 // gltf content:
 "nodes": [
   {
@@ -210,7 +205,6 @@ In this case each node points to the buffer view which references the buffer whe
   ],
   // propertyNames, propertyValues, properties and types collections are the same
 }
-
 ```
 
 So, for each node, if GRIFFEL_bim_data extension has `properties` or `type` - look for them in the same gltf json file. If the extension states `bufferView` - look for the data in the separate .meta file by the url from the buffer.
