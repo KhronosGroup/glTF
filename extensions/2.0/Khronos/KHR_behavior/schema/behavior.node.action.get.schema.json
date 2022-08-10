@@ -5,8 +5,7 @@
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "type": {
-            "type": "string",
-            "enum": ["action/get"]
+            "const": "action/get"
         },
         "flow": {
             "type": "object",

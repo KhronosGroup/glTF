@@ -6,8 +6,7 @@
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "type": {
-            "type": "string",
-            "enum": ["event/onUpdate"]
+            "const": "event/onUpdate"
         },
         "flow": {
             "type": "object",
