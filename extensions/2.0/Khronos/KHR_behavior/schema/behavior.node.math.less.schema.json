@@ -1,13 +1,12 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "nodes/actions/set.schema.json",
-    "title": "Set Value Node",
+    "title": "Less Comparison Node",
     "type": "object",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "type": {
             "type": "string",
-            "enum": ["action/set"]
+            "enum": ["math/less"]
         },
         "flow": {
             "type": "object",
@@ -18,10 +17,9 @@
         "parameters": {
             "type": "object",
             "properties": {
-                "target": { "$ref": "behavior.value.reference.schema.json" },
-                "value": { "$ref": "behavior.value.schema.json"}
+                "condition": { "$ref": "behavior.types.boolean.schema.json" }
             },
-            "required": ["target", "value"]
+            "required": ["condition"]
         }
     },
     "required": ["type", "parameters"]
