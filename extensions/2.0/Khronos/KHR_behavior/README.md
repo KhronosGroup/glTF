@@ -5,6 +5,7 @@
 * Ben Houston, Threekit
 * Jan Hermes, Continental
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+* Moritz Becher, UX3D [@mobecher](https://twitter.com/mobecher)
 
 Copyright 2018-2022 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -69,27 +70,11 @@ A behavior node is a node both available in the Visual Scripting system from Uni
 Only the following types are allowed to read and write to.
 
 * integer
-* float
 * boolean
-
-### Dimension
-Following dimensions are used in the behavior nodes.
-Arrays or matrices could be accessed by each scalar element.
-
-* scalar
+* float (scalar)
 * vec2
 * vec3
 * vec4
-
-## Math
-
-### Math Constants
-Following math constants have to be available.
-
-* π
-* ℇ
-* Inf
-* NaN
 
 ### Automatic casting
 For simplicity, behavior nodes can be connected, even if they do have different input and output types. Following list provides the rules to cast a type using C/c++ style notation:
@@ -111,6 +96,82 @@ For simplicity, behavior nodes can be connected, even if they do have different 
 |From float f  |to integer i  |
 |--------------|--------------|
 |f	           |i = (int)f    |
+
+#### Dimensionality
+
+Automatic casting may not take place for types that differ in dimensionality, such as `vec2`, `vec3` and `vec4`. 
+
+## Behavior Graph Nodes
+
+Nodes are json objects with properties `type`, `parameters`, `flow` and `name`. Based on the `type` the node must have a specific set of properties in `parameters` and `flow`. 
+
+```json
+{
+    "name": "Some Node",
+    "type": "logic/branch",
+    "parameters": {
+        "condition": true
+    },
+    "flow": {
+        "true": 1,
+        "false": 2
+    }
+}
+```
+*Example of a `logic/branch` node with a condition parameter and two flow outputs*
+
+The parameters and flow outputs corresponding to a specific node type can be found in the schema. 
+
+### Flow
+
+Nodes may define a `flow` property containing references to other nodes in the behavior's `nodes` array that should follow the current node in certain conditions. 
+
+If the node doesn't define a `flow` property or if it's value is an empty object literal, the behavior **terminates** at the node.
+
+The node can define which of the paths in the `flow` property are followed during execution of the behavior based on some rules defined in the node's specification. 
+
+### Parameters
+
+Parameters can be passed a [Type](#types) compatible json value, a reference to another node's output socket or a reference to a variable.
+
+In addition to specifying the required parameter names, nodes also define the type of the parameter. Automatic type conversions according to the rules in [Automatic casting](#automatic-casting) take place when connecting compatible types to the parameter as output socket reference or variable reference. Automatic casting does not apply to json values, these must be of the same type as the node's parameter.
+
+#### Json Value
+
+Constant json values can directly be passed to parameters. Passing a value that doesn't correspond to the parameters type is invalid, e.g passing a `1.0` number literal to a boolean parameter is not allowed.
+
+```json
+{
+    "condition": true
+}
+```
+
+#### Output Socket References
+
+Each node type also implicitly defines a set of output sockets, where each output is referenced with a string key. For example the "condition" parameter of the `logic/branch` node above could be connected to the output value of a previous node like in the following example.
+
+```json
+{
+    "condition": {
+        "$node": 0,
+        "socket": "result"
+    }
+}
+```
+
+#### Variable References
+
+Variables that are defined in the behavior can be referenced in a parameter with the *Variable Reference* object literal 
+
+```json
+{
+    "condition": {
+        "$variable": 0
+    }
+}
+
+```
+
 
 ### Math Nodes
 The elements and the wording are inspired by MaterialX (see "MaterialX Specification"):  
@@ -143,6 +204,7 @@ The elements and the wording are inspired by MaterialX (see "MaterialX Specifica
 * crossproduct : output the (vector3) cross product of two incoming vector3  
 * rotate2d : rotate a vector2 value about the origin in 2D  
 * rotate3d : rotate a vector3 value about a specified unit axis vector  
+* less : Compare two numbers and return a boolean with the result of the comparison
 
 ### Channel Nodes
 The elements and the wording are inspired by MaterialX (see "MaterialX Specification"):  
@@ -154,184 +216,177 @@ The elements and the wording are inspired by MaterialX (see "MaterialX Specifica
 * extract3 : Extracts array into 3 separate output values  
 * extract4 : Extracts array into 4 separate output values  
 
+### Flow Nodes
+
+Flow nodes can be used to define a more complex control flow inside the node graph. 
+
+* branch : Branch the control flow based on a condition
+
+### Action Nodes
+
+* set : Set a value of glTF object properties or of one of the behavior's variables
+* get : Get a value from glTF object properties or from one of the behavior's variables
+
+
+
 ### Examples
 
-Constant array is written each frame to the translation of the first node:
+#### Setting a nodes' translation
+
+
 ```json
 {
     "extensions": {
         "KHR_behavior": {
-            "eventNodes": [
+            "behaviors": [
                 {
-                    "name": "Event triggered each frame",
-                    "type": "OnUpdate",
-                    "flowNode": 0
-                }
-            ],
-            "flowNodes": [
-                {
-                    "name": "Setting the translation of the first node",
-                    "group": "set",
-                    "set": {
-                        "pointer": "/nodes/0/translation",
-                        "variableNode": 0 
-                    }
-                }
-            ],
-            "variableNodes": [
-                {
-                    "name": "Constant values",
-                    "type": "float",
-                    "values": [
-                        1.0,
-                        2.0,
-                        3.0
+                    "nodes": [
+                        {
+                            "name": "Event triggered each frame",
+                            "type": "event/onUpdate",
+                            "flow": {
+                                "next": 1
+                            }
+                        },
+                        {
+                            "name": "Setting the translation of the first node",
+                            "type": "action/set",
+                            "parameters": {
+                                "target": "/nodes/0/translation",
+                                "value": [1.0, 2.0, 3.0]
+                            },
+                        },
                     ]
                 }
             ]
+
         }
     }
 }
 ```
 
----
-  
+The same example can also be implemented with a constant variable
+
+```json
+{
+    "nodes": [
+        {
+            "name": "Event triggered each frame",
+            "type": "event/onUpdate",
+            "flow": {
+                "next": 1
+            }
+        },
+        {
+            "name": "Setting the translation of the first node",
+            "type": "action/set",
+            "parameters": {
+                "target": "/nodes/0/translation",
+                "value": { "$variable": 0 }
+            },
+        },
+    ],
+    "variables": [
+        {
+            "name": "Constant values",
+            "type": "vec3",
+            "initialValue": [
+                1.0,
+                2.0,
+                3.0
+            ]
+        }
+    ]
+}
+```
+
+#### Getting the translation value from a node
+
 Translation from the second node is written each frame to the translation of the first node:
 ```json
 {
-    "extensions": {
-        "KHR_behavior": {
-            "eventNodes": [
-                {
-                    "name": "Event triggered each frame",
-                    "type": "OnUpdate",
-                    "flowNode": 0
-                }
-            ],
-            "flowNodes": [
-                {
-                    "name": "Setting the translation of the first node",
-                    "group": "set",
-                    "set": {
-                        "pointer": "/nodes/0/translation",
-                        "variableNode": 0 
-                    }
-                }
-            ],
-            "getNodes": [
-                {
-                    "name": "Getting the translation of the second node",
-                    "set": {
-                        "pointer": "/nodes/1/translation"
-                    }
-                }
-            ],
-            "variableNodes": [
-                {
-                    "name": "Values from a get node",
-                    "type": "float",
-                    "getNode": 0
-                }
-            ]
+    "nodes": [
+        {
+            "name": "Event triggered each frame",
+            "type": "event/onUpdate",
+            "flow": {
+                "next": 1
+            }
+        },
+        {
+            "name": "Getting the translation of the second node",
+            "type": "action/get",
+            "parameters": {
+                "source": "/nodes/1/translation"
+            },
+            "flow": {
+                "next": 2
+            }
+        },
+        {
+            "name": "Setting the translation of the first node",
+            "type": "action/set",
+            "parameters": {
+                "target": "/nodes/0/translation",
+                "value": { "$operation": 1 }
+            }
         }
-    }
+    ]
 }
 ```
 
----
+#### Conditional flow
 
 Translation is written each frame to the first or second node depending on a condition:
 ```json
 {
-    "extensions": {
-        "KHR_behavior": {
-            "conditionNodes": [
-                {
-                    "name": "Comparing two values",
-                    "operator": "LESS",
-                    "variableNodes": [
-                        2,
-                        3
-                    ]
-                }
-            ],
-            "eventNodes": [
-                {
-                    "name": "Event triggered each frame",
-                    "type": "OnUpdate",
-                    "flowNode": 0
-                }
-            ],
-            "flowNodes": [
-                {
-                    "name": "Basic if condition",
-                    "group": "control",
-                    "control": {
-                        "branch": "if",
-                        "if": {
-                            "condition": 0,
-                            "then": 1,
-                            "else": 2
-                        }
-                    }
-                },
-                {
-                    "name": "Setting the translation of the first node from the true condition case",
-                    "group": "set",
-                    "set": {
-                        "pointer": "/nodes/0/translation",
-                        "variableNode": 0 
-                    }
-                },
-                {
-                    "name": "Setting the translation of the first node from the false condition case",
-                    "group": "set",
-                    "set": {
-                        "pointer": "/nodes/0/translation",
-                        "variableNode": 1 
-                    }
-                }
-            ],
-            "getNodes": [
-                {
-                    "name": "Getting the translation of the second node",
-                    "set": {
-                        "pointer": "/nodes/1/translation"
-                    }
-                }
-            ],
-            "variableNodes": [
-                {
-                    "name": "Constant values",
-                    "type": "float",
-                    "values": [
-                        1.0,
-                        2.0,
-                        3.0
-                    ]
-                },
-                {
-                    "name": "Values from a get node",
-                    "type": "float",
-                    "getNode": 0
-                },
-                {
-                    "name": "Constant integer value used in the condition as the first parameter",
-                    "type": "integer",
-                    "values": [
-                        1
-                    ]
-                },
-                {
-                    "name": "Constant integer value used in the condition as the second parameter",
-                    "type": "integer",
-                    "values": [
-                        2
-                    ]
-                }
-            ]
+    "nodes": [
+        {
+            "name": "Event triggered each frame",
+            "type": "event/onUpdate",
+            "flow": {
+                "next": 1
+            }
+        },
+        {
+            "name": "Comparing two values",
+            "type": "math/less",
+            "parameters": {
+                "first": 1,
+                "second": 2
+            },
+            "flow": {
+                "next": 2
+            }
+        },
+        {
+            "name": "Basic if condition",
+            "type": "flow/branch",
+            "parameters": {
+                "condition": { "$operation": 1 }
+            },
+            "flow": {
+                "true": 3,
+                "false": 4
+            }
+        },
+        {
+            "name": "Setting the translation of the first node from the true condition case",
+            "type": "action/set",
+            "parameters": {
+                "target": "/nodes/0/translation",
+                "value": [1.0, 1.0, 1.0 ]
+            }
+        },
+        {
+            "name": "Setting the translation of the first node from the false condition case",
+            "type": "action/set",
+            "parameters": {
+                "target": "/nodes/0/translation",
+                "value": [0.0, 0.0, 0.0 ]
+            }
         }
-    }
+    ]
 }
 ```
 

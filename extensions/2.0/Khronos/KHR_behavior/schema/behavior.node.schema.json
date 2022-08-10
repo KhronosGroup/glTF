@@ -1,0 +1,19 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "behavior.node.schema.json",
+    "title": "KHR_behavior Node",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "oneOf": [
+        { "$ref": "behavior.node.event.onUpdate.schema.json" },
+        { "$ref": "behavior.node.action.set.schema.json" },
+        { "$ref": "behavior.node.action.get.schema.json" },
+        { "$ref": "behavior.node.flow.branch.schema.json" },
+        { "$ref": "behavior.node.logic.less.schema.json" }
+    ],
+    "properties": {
+        "name": {
+            "type": "string"
+        }
+    }
+}

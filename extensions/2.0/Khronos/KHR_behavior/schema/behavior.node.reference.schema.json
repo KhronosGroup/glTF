@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "behavior.node.reference.schema.json",
+    "title": "Behavior Node Reference",
+    "oneOf": [
+        {
+            "type": "object",
+            "description": "Reference into the behavor's node array at a specific socket of the referenced node",
+            "properties": {
+                "node": {
+                    "type": "number"
+                },
+                "socket": {
+                    "type": "string"
+                }
+            }
+        },
+        {
+            "type": "number",
+            "description": "Reference into the behavior's node array for nodes with just"
+        }
+    ]
+}
