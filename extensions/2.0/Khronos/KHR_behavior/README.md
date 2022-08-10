@@ -97,6 +97,82 @@ For simplicity, behavior nodes can be connected, even if they do have different 
 |--------------|--------------|
 |f	           |i = (int)f    |
 
+#### Dimensionality
+
+Automatic casting may not take place for types that differ in dimensionality, such as `vec2`, `vec3` and `vec4`. 
+
+## Behavior Graph Nodes
+
+Nodes are json objects with properties `type`, `parameters`, `flow` and `name`. Based on the `type` the node must have a specific set of properties in `parameters` and `flow`. 
+
+```json
+{
+    "name": "Some Node",
+    "type": "logic/branch",
+    "parameters": {
+        "condition": true
+    },
+    "flow": {
+        "true": 1,
+        "false": 2
+    }
+}
+```
+*Example of a `logic/branch` node with a condition parameter and two flow outputs*
+
+The parameters and flow outputs corresponding to a specific node type can be found in the schema. 
+
+### Flow
+
+Nodes may define a `flow` property containing references to other nodes in the behavior's `nodes` array that should follow the current node in certain conditions. 
+
+If the node doesn't define a `flow` property or if it's value is an empty object literal, the behavior **terminates** at the node.
+
+The node can define which of the paths in the `flow` property are followed during execution of the behavior based on some rules defined in the node's specification. 
+
+### Parameters
+
+In addition to specifying the required parameter names, nodes also define the type of the parameter. Automatic type conversions according to the rules in [Automatic casting](#automatic-casting) take place when connecting compatible types to the parameter.
+
+Parameters can be passed a [Type](#types) compatible json value, a reference to another node's output socket or a reference to a variable.
+
+#### Json Value
+
+For constant values that are not evaluated by previous nodes in the behavior graph, constant json values can be passed to parameters.
+
+```json
+{
+    "condition": true
+}
+```
+
+#### Output Socket References
+
+Each node type also implicitly defines a set of output sockets, where each output is referenced with a string key. For example the "condition" parameter of the `logic/branch` node above could be connected to the output value of a previous node like in the following example.
+
+```json
+{
+    "condition": {
+        "$node": 0,
+        "socket": "result"
+    }
+}
+```
+
+#### Variable References
+
+Variables that are defined in the behavior can be referenced in a parameter with the *Variable Reference* object literal 
+
+```json
+{
+    "condition": {
+        "$variable": 0
+    }
+}
+
+```
+
+
 ### Math Nodes
 The elements and the wording are inspired by MaterialX (see "MaterialX Specification"):  
   
@@ -138,6 +214,21 @@ The elements and the wording are inspired by MaterialX (see "MaterialX Specifica
 * extract2 : Extracts array into 2 separate output values  
 * extract3 : Extracts array into 3 separate output values  
 * extract4 : Extracts array into 4 separate output values  
+
+### Logic Nodes 
+
+### Flow Nodes
+
+Flow nodes can be used to define a more complex control flow inside the node graph. 
+
+* branch : Branch the control flow based on a condition
+
+### Action Nodes
+
+* set : Set a value of glTF object properties or of one of the behavior's variables
+* get : Get a value from glTF object properties or from one of the behavior's variables
+
+
 
 ### Examples
 
