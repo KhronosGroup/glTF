@@ -12,8 +12,9 @@
         "flow": {
             "type": "object",
             "properties": {
-                "next": { "$ref": "behavior.node.flow.reference.schema.json"}
-            }
+                "next": { "$ref": "behavior.types.flow.schema.json"}
+            },
+            "required": ["next"]
         }
     },
     "required": ["type", "flow"]

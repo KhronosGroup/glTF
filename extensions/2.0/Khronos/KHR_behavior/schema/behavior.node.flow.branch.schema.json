@@ -1,27 +1,27 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "nodes/actions/set.schema.json",
-    "title": "Set Value Node",
+    "title": "Branch Flow Node",
     "type": "object",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "type": {
             "type": "string",
-            "enum": ["action/set"]
+            "enum": ["flow/branch"]
         },
         "flow": {
             "type": "object",
             "properties": {
-                "next": { "$ref": "behavior.node.flow.reference.schema.json" }
+                "true": { "$ref": "behavior.types.flow.schema.json" },
+                "false": { "$ref": "behavior.types.flow.schema.json" }
             }
         },
         "parameters": {
             "type": "object",
             "properties": {
-                "target": { "$ref": "behavior.value.reference.schema.json" },
-                "value": { "$ref": "behavior.value.schema.json"}
-            }
+                "condition": { "$ref": "behavior.types.boolean.schema.json" }
+            },
+            "required": ["condition"]
         }
     },
-    "required": ["type", "flow"]
+    "required": ["type", "parameters"]
 }

@@ -1,0 +1,28 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "nodes/actions/set.schema.json",
+    "title": "Set Value Node",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "type": {
+            "type": "string",
+            "enum": ["action/set"]
+        },
+        "flow": {
+            "type": "object",
+            "properties": {
+                "next": { "$ref": "behavior.node.flow.reference.schema.json" }
+            }
+        },
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "target": { "$ref": "behavior.value.reference.schema.json" },
+                "value": { "$ref": "behavior.value.schema.json"}
+            },
+            "required": ["target", "value"]
+        }
+    },
+    "required": ["type", "parameters"]
+}
