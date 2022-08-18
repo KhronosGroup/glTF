@@ -1,0 +1,23 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "parallaxMapping",
+    "type": "object",
+    "description": "Reference to a heightmap for parallax mapping.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "heightTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "A texture that describes the surface height.",
+        },
+        "heightFactor": {
+            "type": "number",
+            "description": "Used to scale the height map.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "gltf_detailedDescription": "This parameter scales the heightmap. A smaller number makes the effect less noticable, a higher number more prominent."
+
+        },
+        "extensions": { },
+        "extras": { }
+    },
+}
