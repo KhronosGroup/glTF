@@ -231,8 +231,7 @@ Flow nodes can be used to define a more complex control flow inside the node gra
 
 ### Examples
 
-#### Setting a nodes' translation
-
+#### Events
 
 ```json
 {
@@ -248,24 +247,16 @@ Flow nodes can be used to define a more complex control flow inside the node gra
                                 "next": 1
                             }
                         },
-                        {
-                            "name": "Setting the translation of the first node",
-                            "type": "action/set",
-                            "parameters": {
-                                "target": "/nodes/0/translation",
-                                "value": [1.0, 2.0, 3.0]
-                            },
-                        },
                     ]
                 }
             ]
-
         }
     }
 }
 ```
 
-The same example can also be implemented with a constant variable
+#### Setting a nodes' translation
+
 
 ```json
 {
@@ -282,13 +273,25 @@ The same example can also be implemented with a constant variable
             "type": "action/set",
             "parameters": {
                 "target": "/nodes/0/translation",
-                "value": { "$variable": 0 }
+                "value": [1.0, 2.0, 3.0]
             },
         },
+    ]
+}
+```
+
+#### Defining variables
+
+Behaviors can contain variables like the following, e.g. to store state of the behavior or to parameterize the behavior
+
+```json
+{
+    "nodes": [
+        ...
     ],
     "variables": [
         {
-            "name": "Constant values",
+            "name": "Offset",
             "type": "vec3",
             "initialValue": [
                 1.0,
@@ -299,6 +302,8 @@ The same example can also be implemented with a constant variable
     ]
 }
 ```
+
+
 
 #### Getting the translation value from a node
 
@@ -337,7 +342,7 @@ Translation from the second node is written each frame to the translation of the
 
 #### Conditional flow
 
-Translation is written each frame to the first or second node depending on a condition:
+
 ```json
 {
     "nodes": [
