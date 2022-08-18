@@ -25,6 +25,11 @@ A glTF animation does have a keyframe start and a keyframe end. Today, it is not
 
 This extension is defining the calculation of the *time stamp* used for the glTF keyframe animations in a deterministic way.
 
+## *Time stamp* out of bounds
+
+The *time stamp* is clamped to the first and last calculated keyframes. Thus an animation stops playing if it has reached its end.
+Due to repetition, the last keyframe is not necessarily equal to the specified end time.
+
 ## Properties
 
 See the [schema](schema/clip.schema.json).
