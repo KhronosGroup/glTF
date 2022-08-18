@@ -96,7 +96,7 @@ Animation clip with all values set:
     ],
     "name": "Example 2",
     "start": 2.0,
-    "offset": 2.0,
+    "offset": 0.0,
     "speed": 1.0,
     "repetitions": -1,
     "reverse": false
@@ -117,7 +117,7 @@ Animation clip with all values set:
     "name": "Example 3",
     "start": 3.0,
     "end": 8.0,
-    "offset": 3.0,
+    "offset": 0.0,
     "speed": 1.0,
     "repetitions": -1,
     "reverse": false
@@ -149,7 +149,7 @@ Animation clip with all values set:
 
 | Total Time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
 | ---------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Time Stamp | 00  | 01  | 02  | 03  | 04  | 05  | 04  | 03  | 02  | 01  | 00  | 01  | 02  | 03  | 04  | 05  | 05  | 05  | 05  | 05  | 05  |
+| Time Stamp | 03  | 04  | 05  | 04  | 03  | 02  | 01  | 02  | 03  | 04  | 05  | 04  | 03  | 02  | 01  | 01  | 01  | 01  | 01  | 01  | 01  |
 
 ```json
 {
@@ -157,11 +157,11 @@ Animation clip with all values set:
         0
     ],
     "name": "Example 5",
-    "start": 0.0,
+    "start": 1.0,
     "end": 5.0,
-    "offset": 0.0,
+    "offset": 2.0,
     "speed": 1.0,
-    "repetitions": 3,
+    "repetitions": 4,
     "reverse": true
 }
 ```
