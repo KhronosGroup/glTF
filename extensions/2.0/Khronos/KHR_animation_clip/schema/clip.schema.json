@@ -22,12 +22,12 @@
             "type": "number",
             "minimum": 0.0,
             "default": 0.0,
-            "description": "The lower bound of an animation clip.",
+            "description": "The lower time bound of an animation clip.",
             "gltf_detailedDescription": ""
         },
         "end": {
             "type": "number",
-            "description": "The upper bound of an animation clip.",
+            "description": "The upper time bound of an animation clip.",
             "gltf_detailedDescription": "When defined, `end` **MUST** be greater or equal than `start`. If `end` is undefined, client implementations **SHOULD** use an infinite floating number value."
         },
         "timestamp": {
