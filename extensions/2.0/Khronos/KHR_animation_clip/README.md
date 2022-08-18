@@ -53,7 +53,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"timestamp": 0.0,
 	"direction": 1.0,
 	"repetitions": 2,
-	"bounce": true
+	"reverse": true
 }
 ```
 
@@ -79,7 +79,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"timestamp": 0.0,
 	"direction": 1.0,
 	"repetitions": -1,
-	"bounce": false
+	"reverse": false
 }
 ```
 
@@ -99,7 +99,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"timestamp": 2.0,
 	"direction": 1.0,
 	"repetitions": -1,
-	"bounce": false
+	"reverse": false
 }
 ```
 
@@ -120,7 +120,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"timestamp": 3.0,
 	"direction": 1.0,
 	"repetitions": -1,
-	"bounce": false
+	"reverse": false
 }
 ```
 
@@ -141,7 +141,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"timestamp": 0.0,
 	"direction": 1.0,
 	"repetitions": 1,
-	"bounce": false
+	"reverse": false
 }
 ```
 
@@ -162,7 +162,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"timestamp": 0.0,
 	"direction": 1.0,
 	"repetitions": 3,
-	"bounce": true
+	"reverse": true
 }
 ```
 
@@ -183,7 +183,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"timestamp": 4.0,
 	"direction": -0.5,
 	"repetitions": 2,
-	"bounce": true
+	"reverse": true
 }
 ```
 
@@ -208,7 +208,7 @@ void updateTimestamp(float deltaTime, AnimationClip& ac)
 	{
 		float overtime = ac.timestamp - ac.end;
 
-		if (ac.bounce)
+		if (ac.reverse)
 		{
 			ac.timestamp = ac.end - overtime;
 
@@ -229,7 +229,7 @@ void updateTimestamp(float deltaTime, AnimationClip& ac)
 	{
 		float overtime = ac.start - ac.timestamp;
 
-		if (ac.bounce)
+		if (ac.reverse)
 		{
 			ac.timestamp = ac.start + overtime;
 

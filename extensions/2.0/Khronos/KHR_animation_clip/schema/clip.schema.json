@@ -50,11 +50,11 @@
             "description": "The number of times the animation is looped.",
             "gltf_detailedDescription": "Not defined or -1 means infinite loops. 0 means the animation is not played at all. 1 means the animation is played once. A value of n > 1 means the animation is repeated n times."
         },
-        "bounce": {
+        "reverse": {
             "type": "boolean",
             "default": false,
-            "description": "Specifies whether the animation should bounce or loop.",
-            "gltf_detailedDescription": "If an animation is repeated, the animation begins from the `start` (`end` for a backward animation.) again. If an animation is bounced, `direction` becomes -1.0 * `direction` if the `timestamp` gets larger or smaller than `end` or `start`."
+            "description": "Specifies whether the animation should reverse when repeated.",
+            "gltf_detailedDescription": "If true, the animation's time direction will be reversed on each repetition. Otherwise, the animation is repeated identically."
         },
         "name": {},
         "extensions": {},
