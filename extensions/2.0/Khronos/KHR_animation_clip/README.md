@@ -18,20 +18,20 @@ Written against the glTF 2.0 spec.
 ## Overview
 
 The animation clip extension allows to easier define the behaviour of one or more animations.
-  
-In general, a keyframe calculated and provided by a viewer starts at `0.0` and is incremented to infinity. The current calculated keyframe is the `offset`.
-  
-A glTF animation does have a keyframe start and a keyframe end. Today, it is not clearly defined, if the global keyframe - the `offset` - becomes larger than the end value of the animation. Many implementations start to loop the animation, but stopping or reverting the animation is a feasible option as well. This extension is defining this behaviour as well.
-  
-This extension is defining the calculation of the `offset` used for the glTF keyframe animations in a deterministic way.
 
-### offset is smaller than the smallest keyframe or larger than the largest keyframe
+In general, a keyframe calculated and provided by a viewer starts at zero and is incremented to infinity. The current calculated keyframe is called the *time stamp*.
 
-If the `offset` is smaller or larger than the animation keyframes, the first or the last keyframe of the animation is used respectively. This means, that the animation seems to be stopped during this timeframe.
+A glTF animation does have a keyframe start and a keyframe end. Today, it is not clearly defined, if the global keyframe - the *time stamp* - becomes larger than the end value of the animation. Many implementations start to loop the animation, but stopping or reverting the animation are feasible options as well. This extension is defining this behaviour as well.
 
-### Animation clip JSON examples
+This extension is defining the calculation of the *time stamp* used for the glTF keyframe animations in a deterministic way.
 
-#### Minimum valid animation clip entry referencing animation 0.
+## Properties
+
+See the [schema](schema/clip.schema.json).
+
+## Examples
+
+Minimum valid animation clip entry referencing animation 0:
 
 ```json
 {
@@ -41,7 +41,7 @@ If the `offset` is smaller or larger than the animation keyframes, the first or 
 }
 ```
 
-#### Animation clip with all values set.
+Animation clip with all values set:
 
 ```json
 {
@@ -58,16 +58,15 @@ If the `offset` is smaller or larger than the animation keyframes, the first or 
 }
 ```
 
-### Examples
+*Total Time* is the accumulated time in seconds since the start of rendering.
 
-`Total time` is the accumulated time in seconds since the start of rendering.
-`offset` is the internal time in seconds of the animation clip.
+*Time Stamp* is the internal time in seconds of the animation clip.
 
-#### Example 1
+### Example 1
 
-| Total time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
+| Total Time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
 | ---------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| offset     | 00  | 01  | 02  | 03  | 04  | 00  | 01  | 02  | 03  | 04  | 00  | 01  | 02  | 03  | 04  | 00  | 01  | 02  | 03  | 04  | 00  |
+| Time Stamp | 00  | 01  | 02  | 03  | 04  | 00  | 01  | 02  | 03  | 04  | 00  | 01  | 02  | 03  | 04  | 00  | 01  | 02  | 03  | 04  | 00  |
 
 ```json
 {
@@ -84,11 +83,11 @@ If the `offset` is smaller or larger than the animation keyframes, the first or 
 }
 ```
 
-#### Example 2
+### Example 2
 
-| Total time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
+| Total Time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
 | ---------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| offset     | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  | 21  | 22  |
+| Time Stamp | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  | 21  | 22  |
 
 ```json
 {
@@ -104,11 +103,11 @@ If the `offset` is smaller or larger than the animation keyframes, the first or 
 }
 ```
 
-#### Example 3
+### Example 3
 
-| Total time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
+| Total Time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
 | ---------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| offset     | 03  | 04  | 05  | 06  | 07  | 08  | 03  | 04  | 05  | 06  | 07  | 08  | 03  | 04  | 05  | 06  | 07  | 08  | 03  | 04  | 05  |
+| Time Stamp | 03  | 04  | 05  | 06  | 07  | 08  | 03  | 04  | 05  | 06  | 07  | 08  | 03  | 04  | 05  | 06  | 07  | 08  | 03  | 04  | 05  |
 
 ```json
 {
@@ -125,11 +124,11 @@ If the `offset` is smaller or larger than the animation keyframes, the first or 
 }
 ```
 
-#### Example 4
+### Example 4
 
-| Total time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
+| Total Time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
 | ---------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| offset     | 00  | 01  | 02  | 03  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  |
+| Time Stamp | 00  | 01  | 02  | 03  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  |
 
 ```json
 {
@@ -146,11 +145,11 @@ If the `offset` is smaller or larger than the animation keyframes, the first or 
 }
 ```
 
-#### Example 5
+### Example 5
 
-| Total time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
+| Total Time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
 | ---------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| offset     | 00  | 01  | 02  | 03  | 04  | 05  | 04  | 03  | 02  | 01  | 00  | 01  | 02  | 03  | 04  | 05  | 05  | 05  | 05  | 05  | 05  |
+| Time Stamp | 00  | 01  | 02  | 03  | 04  | 05  | 04  | 03  | 02  | 01  | 00  | 01  | 02  | 03  | 04  | 05  | 05  | 05  | 05  | 05  | 05  |
 
 ```json
 {
@@ -167,11 +166,11 @@ If the `offset` is smaller or larger than the animation keyframes, the first or 
 }
 ```
 
-#### Example 6
+### Example 6
 
-| Total time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
+| Total Time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
 | ---------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| offset     | 04  | 04  | 03  | 03  | 02  | 02  | 01  | 01  | 00  | 00  | 01  | 01  | 02  | 02  | 03  | 03  | 04  | 04  | 04  | 04  | 04  |
+| Time Stamp | 04  | 04  | 03  | 03  | 02  | 02  | 01  | 01  | 00  | 00  | 01  | 01  | 02  | 02  | 03  | 03  | 04  | 04  | 04  | 04  | 04  |
 
 ```json
 {
