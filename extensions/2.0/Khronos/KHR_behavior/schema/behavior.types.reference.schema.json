@@ -1,30 +1,10 @@
 {
     "oneOf": [
         {
-            "title": "Variable Reference",
-            "description": "Reference to a variable defined in the same behavior by using the index of the variable in the behavior's variale array",
-            "type": "object",
-            "properties": {
-                "$variable": {
-                    "type": "integer"
-                }
-            },
-            "required": ["$variable"]
+            "$ref": "behavior.types.reference.variable.schema.json"
         },
         {
-            "title": "Node Return Value Reference",
-            "description": "Reference to the returned value of another node.",
-            "type": "object",
-            "properties": {
-                "$node": {
-                    "type": "integer"
-                },
-                "socket": {
-                    "description": "Identifier ",
-                    "type": "string"
-                }
-            },
-            "required": ["$node"]
+            "$ref": "behavior.types.reference.outputSocket.schema.json"
         }
     ]
 }
