@@ -19,15 +19,15 @@ Written against the glTF 2.0 spec.
 
 The animation clip extension allows to easier define the behaviour of one or more animations.
   
-In general, a keyframe calculated and provided by a viewer starts at `0.0` and is incremented to infinity. The current calculated keyframe is the `timestamp`.
+In general, a keyframe calculated and provided by a viewer starts at `0.0` and is incremented to infinity. The current calculated keyframe is the `offset`.
   
-A glTF animation does have a keyframe start and a keyframe end. Today, it is not clearly defined, if the global keyframe - the `timestamp` - becomes larger than the end value of the animation. Many implementations start to loop the animation, but stopping or reverting the animation is a feasible option as well. This extension is defining this behaviour as well.
+A glTF animation does have a keyframe start and a keyframe end. Today, it is not clearly defined, if the global keyframe - the `offset` - becomes larger than the end value of the animation. Many implementations start to loop the animation, but stopping or reverting the animation is a feasible option as well. This extension is defining this behaviour as well.
   
-This extension is defining the calculation of the `timestamp` used for the glTF keyframe animations in a deterministic way.
+This extension is defining the calculation of the `offset` used for the glTF keyframe animations in a deterministic way.
 
-### Timestamp is smaller than the smallest keyframe or larger than the largest keyframe
+### offset is smaller than the smallest keyframe or larger than the largest keyframe
 
-If the `timestamp` is smaller or larger than the animation keyframes, the first or the last keyframe of the animation is used respectively. This means, that the animation seems to be stopped during this timeframe.
+If the `offset` is smaller or larger than the animation keyframes, the first or the last keyframe of the animation is used respectively. This means, that the animation seems to be stopped during this timeframe.
 
 ### Animation clip JSON examples
 
@@ -51,7 +51,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"name": "Forth and back animation.",
 	"start": 0.0,
 	"end": 10.0,
-	"timestamp": 0.0,
+	"offset": 0.0,
 	"speed": 1.0,
 	"repetitions": 2,
 	"reverse": true
@@ -61,13 +61,13 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 ### Examples
 
 `Total time` is the accumulated time in seconds since the start of rendering.
-`timestamp` is the internal time in seconds of the animation clip.
+`offset` is the internal time in seconds of the animation clip.
 
 #### Example 1
 
 | Total time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
 | ---------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| timestamp  | 00  | 01  | 02  | 03  | 04  | 00  | 01  | 02  | 03  | 04  | 00  | 01  | 02  | 03  | 04  | 00  | 01  | 02  | 03  | 04  | 00  |
+| offset     | 00  | 01  | 02  | 03  | 04  | 00  | 01  | 02  | 03  | 04  | 00  | 01  | 02  | 03  | 04  | 00  | 01  | 02  | 03  | 04  | 00  |
 
 ```json
 {
@@ -77,7 +77,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"name": "Example 1",
 	"start": 0.0,
 	"end": 4.0,
-	"timestamp": 0.0,
+	"offset": 0.0,
 	"speed": 1.0,
 	"repetitions": -1,
 	"reverse": false
@@ -88,7 +88,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 
 | Total time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
 | ---------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| timestamp  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  | 21  | 22  |
+| offset     | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  | 21  | 22  |
 
 ```json
 {
@@ -97,7 +97,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	],
 	"name": "Example 2",
 	"start": 2.0,
-	"timestamp": 2.0,
+	"offset": 2.0,
 	"speed": 1.0,
 	"repetitions": -1,
 	"reverse": false
@@ -108,7 +108,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 
 | Total time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
 | ---------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| timestamp  | 03  | 04  | 05  | 06  | 07  | 08  | 03  | 04  | 05  | 06  | 07  | 08  | 03  | 04  | 05  | 06  | 07  | 08  | 03  | 04  | 05  |
+| offset     | 03  | 04  | 05  | 06  | 07  | 08  | 03  | 04  | 05  | 06  | 07  | 08  | 03  | 04  | 05  | 06  | 07  | 08  | 03  | 04  | 05  |
 
 ```json
 {
@@ -118,7 +118,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"name": "Example 3",
 	"start": 3.0,
 	"end": 8.0,
-	"timestamp": 3.0,
+	"offset": 3.0,
 	"speed": 1.0,
 	"repetitions": -1,
 	"reverse": false
@@ -129,7 +129,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 
 | Total time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
 | ---------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| timestamp  | 00  | 01  | 02  | 03  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  |
+| offset     | 00  | 01  | 02  | 03  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  | 04  |
 
 ```json
 {
@@ -139,7 +139,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"name": "Example 4",
 	"start": 0.0,
 	"end": 4.0,
-	"timestamp": 0.0,
+	"offset": 0.0,
 	"speed": 1.0,
 	"repetitions": 1,
 	"reverse": false
@@ -150,7 +150,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 
 | Total time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
 | ---------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| timestamp  | 00  | 01  | 02  | 03  | 04  | 05  | 04  | 03  | 02  | 01  | 00  | 01  | 02  | 03  | 04  | 05  | 05  | 05  | 05  | 05  | 05  |
+| offset     | 00  | 01  | 02  | 03  | 04  | 05  | 04  | 03  | 02  | 01  | 00  | 01  | 02  | 03  | 04  | 05  | 05  | 05  | 05  | 05  | 05  |
 
 ```json
 {
@@ -160,7 +160,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"name": "Example 5",
 	"start": 0.0,
 	"end": 5.0,
-	"timestamp": 0.0,
+	"offset": 0.0,
 	"speed": 1.0,
 	"repetitions": 3,
 	"reverse": true
@@ -171,7 +171,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 
 | Total time | 00  | 01  | 02  | 03  | 04  | 05  | 06  | 07  | 08  | 09  | 10  | 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  |
 | ---------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| timestamp  | 04  | 04  | 03  | 03  | 02  | 02  | 01  | 01  | 00  | 00  | 01  | 01  | 02  | 02  | 03  | 03  | 04  | 04  | 04  | 04  | 04  |
+| offset     | 04  | 04  | 03  | 03  | 02  | 02  | 01  | 01  | 00  | 00  | 01  | 01  | 02  | 02  | 03  | 03  | 04  | 04  | 04  | 04  | 04  |
 
 ```json
 {
@@ -181,7 +181,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"name": "Example 6",
 	"start": 0.0,
 	"end": 4.0,
-	"timestamp": 4.0,
+	"offset": 4.0,
 	"speed": -0.5,
 	"repetitions": 2,
 	"reverse": true
@@ -201,23 +201,23 @@ void updateTimestamp(float deltaTime, AnimationClip& ac)
 		return;
 	}
 
-	// Increase timestamp depending on delta time and speed.
-	ac.timestamp += ac.speed * deltaTime;
+	// Increase offset depending on delta time and speed.
+	ac.offset += ac.speed * deltaTime;
 
-	// Check, if the timestamp is larger or smaller than the bounds.	
-	if (ac.timestamp > ac.end)
+	// Check, if the offset is larger or smaller than the bounds.	
+	if (ac.offset > ac.end)
 	{
-		float overtime = ac.timestamp - ac.end;
+		float overtime = ac.offset - ac.end;
 
 		if (ac.reverse)
 		{
-			ac.timestamp = ac.end - overtime;
+			ac.offset = ac.end - overtime;
 
 			ac.speed *= -1.0f;
 		}
 		else
 		{
-			ac.timestamp = ac.start + overtime;
+			ac.offset = ac.start + overtime;
 		}
 
 		// Note: repetitions = -1 is infinite execution, repetitions = 0 is animation off.
@@ -226,19 +226,19 @@ void updateTimestamp(float deltaTime, AnimationClip& ac)
 			ac.repetitions--;
 		}
 	}
-	else if (ac.timestamp < ac.start)
+	else if (ac.offset < ac.start)
 	{
-		float overtime = ac.start - ac.timestamp;
+		float overtime = ac.start - ac.offset;
 
 		if (ac.reverse)
 		{
-			ac.timestamp = ac.start + overtime;
+			ac.offset = ac.start + overtime;
 
 			ac.speed *= -1.0f;
 		}
 		else
 		{
-			ac.timestamp = ac.end - overtime;
+			ac.offset = ac.end - overtime;
 		}
 
 		// Note: repetitions = -1 is infinite execution, repetitions = 0 is animation off.
@@ -248,15 +248,15 @@ void updateTimestamp(float deltaTime, AnimationClip& ac)
 		}
 	}
 
-	// Always keep start <= timestamp <= end.
+	// Always keep start <= offset <= end.
 	// Required for repetitions = -1 or robustness (very small differences between start and end).
-	if (ac.timestamp < ac.start)
+	if (ac.offset < ac.start)
 	{
-		ac.timestamp = ac.start;
+		ac.offset = ac.start;
 	}
-	else if (ac.timestamp > ac.end)
+	else if (ac.offset > ac.end)
 	{
-		ac.timestamp = ac.end;
+		ac.offset = ac.end;
 	}
 }
 ```

@@ -30,17 +30,17 @@
             "description": "The upper time bound of an animation clip.",
             "gltf_detailedDescription": "When defined, `end` **MUST** be greater or equal than `start`. If `end` is undefined, client implementations **SHOULD** use an infinite floating number value."
         },
-        "timestamp": {
+        "offset": {
             "type": "number",
             "minimum": 0.0,
             "default": 0.0,
-            "description": "The current timestamp.",
-            "gltf_detailedDescription": "This value **MUST** be greater or equal than `start` and smaller or equal than `end`."
+            "description": "The initial time offset.",
+            "gltf_detailedDescription": "If defined, the animation starts at an offset time point which is relative to the animation's starting time point. This only affects the beginning of the animation, not subsequent repetitions."
         },
         "speed": {
             "type": "number",
             "default": 1.0,
-            "description": "The signed speed used for updating the `timestamp`.",
+            "description": "A signed speed to modify animation frequency.",
             "gltf_detailedDescription": "This value allows to run an animation forward (`speed` > 0.0) or backward (`speed` < 0.0). It allows to increase (abs(`speed`) > 1.0) or decrease (abs(`speed`) < 1.0) the speed of the animation. `speed` = 0.0 stops the animation clip."
         },
         "repetitions": {
