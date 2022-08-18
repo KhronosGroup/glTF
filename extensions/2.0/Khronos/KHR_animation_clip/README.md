@@ -16,17 +16,17 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-The animation clip extension allows to easier define the behaviour of one or more animations.  
+The animation clip extension allows to easier define the behaviour of one or more animations.
   
-In general, a keyframe calculated and provided by a viewer starts at `0.0` and is incremented to infinity. The current calculated keyframe is the `timestamp`.  
+In general, a keyframe calculated and provided by a viewer starts at `0.0` and is incremented to infinity. The current calculated keyframe is the `timestamp`.
   
-A glTF animation does have a keyframe start and a keyframe end. Today, it is not clearly defined, if the global keyframe - the `timestamp` - becomes larger than the end value of the animation. Many implementations start to loop the animation, but stopping or reverting the animation is a feasible option as well. This extension is defining this behaviour as well.  
+A glTF animation does have a keyframe start and a keyframe end. Today, it is not clearly defined, if the global keyframe - the `timestamp` - becomes larger than the end value of the animation. Many implementations start to loop the animation, but stopping or reverting the animation is a feasible option as well. This extension is defining this behaviour as well.
   
-This extension is defining the calculation of the `timestamp` used for the glTF keyframe animations in a deterministic way.  
+This extension is defining the calculation of the `timestamp` used for the glTF keyframe animations in a deterministic way.
 
 ### Timestamp is smaller than the smallest keyframe or larger than the largest keyframe
 
-If the `timestamp` is smaller or larger than the animation keyframes, the first or the last keyframe of the animation is used respectively. This means, that the animation seems to be stopped during this timeframe.  
+If the `timestamp` is smaller or larger than the animation keyframes, the first or the last keyframe of the animation is used respectively. This means, that the animation seems to be stopped during this timeframe.
 
 ### Animation clip JSON examples
 
@@ -59,8 +59,8 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 
 ### Examples
 
-`Total time` is the accumulated time in seconds since the start of rendering.  
-`timestamp` is the internal time in seconds of the animation clip.  
+`Total time` is the accumulated time in seconds since the start of rendering.
+`timestamp` is the internal time in seconds of the animation clip.
 
 #### Example 1
 
