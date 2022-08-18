@@ -18,5 +18,6 @@
             "required": ["source"]
         }
     },
+    "sockets": ["result"],
     "required": ["type", "parameters"]
 }
