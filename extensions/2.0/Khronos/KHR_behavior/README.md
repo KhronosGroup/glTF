@@ -172,6 +172,14 @@ Variables that are defined in the behavior can be referenced in a parameter with
 
 ```
 
+### Event Nodes
+Event nodes serve a special purpose, as they can initiate the execution of a behavior.
+
+* onUpdate: fires on every update of the scene (usually multiple times per second)
+* onLoad: fires once after the glTF is loaded
+* onKeyDown: fires when a specific key is depressed
+* onKeyUp: fires when a specific key is released
+
 
 ### Math Nodes
 The elements and the wording are inspired by MaterialX (see "MaterialX Specification"):  
