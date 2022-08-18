@@ -67,7 +67,7 @@ A behavior node is a node both available in the Visual Scripting system from Uni
 [schema](schema/)
 
 ### Types
-Only the following types are allowed to read and write to.
+The following value types are known to the behavior extension:
 
 * integer
 * boolean
@@ -99,11 +99,11 @@ For simplicity, behavior nodes can be connected, even if they do have different 
 
 #### Dimensionality
 
-Automatic casting may not take place for types that differ in dimensionality, such as `vec2`, `vec3` and `vec4`. 
+Automatic casting may not take place for types that differ in their dimensionalities, such as `vec2`, `vec3` and `vec4`. 
 
 ## Behavior Graph Nodes
 
-Nodes are json objects with properties `type`, `parameters`, `flow` and `name`. Based on the `type` the node must have a specific set of properties in `parameters` and `flow`. 
+Nodes are JSON objects with properties `type`, `parameters`, `flow` and `name`. Based on the `type` the node must have a specific set of properties in `parameters` and `flow`. 
 
 ```json
 {
@@ -122,23 +122,21 @@ Nodes are json objects with properties `type`, `parameters`, `flow` and `name`. 
 
 The parameters and flow outputs corresponding to a specific node type can be found in the schema. 
 
-### Flow
+### Parameter Input Sockets
 
-Nodes may define a `flow` property containing references to other nodes in the behavior's `nodes` array that should follow the current node in certain conditions. 
+`parameters` is an object containing the value inputs of the node. 
 
-If the node doesn't define a `flow` property or if it's value is an empty object literal, the behavior **terminates** at the node.
+Each node defines which parameters it expects, specified by a *name* and a [type](#types).
 
-The node can define which of the paths in the `flow` property are followed during execution of the behavior based on some rules defined in the node's specification. 
+Parameters can be passed a [JSON value](#json-value), a [reference to another node's output socket](#output-socket-references) or a [reference to a variable](#variable-references). 
 
-### Parameters
+All values have to be *ready* at the time of execution of the node, i.e. if the parameter is a reference to another node's output socket, this node has to already have been executed.
 
-Parameters can be passed a [Type](#types) compatible json value, a reference to another node's output socket or a reference to a variable.
+Automatic type conversions according to the rules in [Automatic casting](#automatic-casting) take place when connecting compatible types to the parameter as output socket reference or variable reference. Automatic casting does not apply to JSON values, these must be of the same type as the node's parameter.
 
-In addition to specifying the required parameter names, nodes also define the type of the parameter. Automatic type conversions according to the rules in [Automatic casting](#automatic-casting) take place when connecting compatible types to the parameter as output socket reference or variable reference. Automatic casting does not apply to json values, these must be of the same type as the node's parameter.
+#### JSON Value
 
-#### Json Value
-
-Constant json values can directly be passed to parameters. Passing a value that doesn't correspond to the parameters type is invalid, e.g passing a `1.0` number literal to a boolean parameter is not allowed.
+Constant JSON values can directly be passed to parameters. It is invalid to pass a value that doesn't correspond to the type of the parameter, e.g passing a `1.0` number literal to a boolean parameter is not allowed.
 
 ```json
 {
@@ -148,7 +146,7 @@ Constant json values can directly be passed to parameters. Passing a value that 
 
 #### Output Socket References
 
-Each node type also implicitly defines a set of output sockets, where each output is referenced with a string key. For example the "condition" parameter of the `logic/branch` node above could be connected to the output value of a previous node like in the following example.
+Each node type also implicitly defines a set of output sockets, where each output is referenced with a string key. For example, the "condition" parameter of the `logic/branch` node above could be connected to the output value of a previous node like in the following example.
 
 ```json
 {
@@ -159,9 +157,13 @@ Each node type also implicitly defines a set of output sockets, where each outpu
 }
 ```
 
+If the referenced node only provides one output socket, it is allowed to omit the "socket" property in the output socket reference.
+
 #### Variable References
 
-Variables that are defined in the behavior can be referenced in a parameter with the *Variable Reference* object literal 
+Variables that are defined in the behavior can be referenced in a parameter with the *Variable Reference* object literal. 
+- The Reference is an index into the `variables` array of the behavior
+- Only variables defined in the same behavior can be referenced
 
 ```json
 {
@@ -171,6 +173,20 @@ Variables that are defined in the behavior can be referenced in a parameter with
 }
 
 ```
+
+### Flow Output Sockets
+
+Nodes may define a `flow` property containing references to other nodes in the behavior's *nodes* array that should succeed the current node's execution in certain conditions. 
+
+If the node doesn't define a `flow` property or if its value is an empty object literal, the behavior **terminates** at the node.
+
+The node can define which of the paths in the `flow` property are followed during the execution of the behavior e.g. based on the evaluation of an *input parameter*.
+
+### Value Output Sockets
+
+Nodes define a set of output values that become available after the execution of the node. Subsequent nodes can therefore reference these output values via the node's so-called *output sockets* (see [Output Socket References](#output-socket-references)).
+
+The output sockets are defined in the node schema with a type and a socket name.
 
 ### Event Nodes
 Event nodes serve a special purpose, as they can initiate the execution of a behavior.
