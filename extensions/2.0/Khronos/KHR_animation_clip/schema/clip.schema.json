@@ -35,7 +35,7 @@
             "minimum": 0.0,
             "default": 0.0,
             "description": "The initial time offset.",
-            "gltf_detailedDescription": "If defined, the animation starts at an offset time point which is relative to the animation's starting time point. This only affects the beginning of the animation, not subsequent repetitions."
+            "gltf_detailedDescription": "If defined, the animation starts at an offset time point which is relative to the animation's starting time point. This only affects the beginning of the animation, not subsequent repetitions. The offset **MUST** be smaller or equal to the animation clip's duration. "
         },
         "speed": {
             "type": "number",
