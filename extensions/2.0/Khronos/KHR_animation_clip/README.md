@@ -35,9 +35,9 @@ Minimum valid animation clip entry referencing animation 0:
 
 ```json
 {
-	"animations": [
-		0
-	]
+    "animations": [
+        0
+    ]
 }
 ```
 
@@ -45,16 +45,16 @@ Animation clip with all values set:
 
 ```json
 {
-	"animations": [
-		0
-	],
-	"name": "Forth and back animation.",
-	"start": 0.0,
-	"end": 10.0,
-	"offset": 0.0,
-	"speed": 1.0,
-	"repetitions": 2,
-	"reverse": true
+    "animations": [
+        0
+    ],
+    "name": "Forth and back animation.",
+    "start": 0.0,
+    "end": 10.0,
+    "offset": 0.0,
+    "speed": 1.0,
+    "repetitions": 2,
+    "reverse": true
 }
 ```
 
@@ -70,16 +70,16 @@ Animation clip with all values set:
 
 ```json
 {
-	"animations": [
-		0
-	],
-	"name": "Example 1",
-	"start": 0.0,
-	"end": 4.0,
-	"offset": 0.0,
-	"speed": 1.0,
-	"repetitions": -1,
-	"reverse": false
+    "animations": [
+        0
+    ],
+    "name": "Example 1",
+    "start": 0.0,
+    "end": 4.0,
+    "offset": 0.0,
+    "speed": 1.0,
+    "repetitions": -1,
+    "reverse": false
 }
 ```
 
@@ -91,15 +91,15 @@ Animation clip with all values set:
 
 ```json
 {
-	"animations": [
-		0
-	],
-	"name": "Example 2",
-	"start": 2.0,
-	"offset": 2.0,
-	"speed": 1.0,
-	"repetitions": -1,
-	"reverse": false
+    "animations": [
+        0
+    ],
+    "name": "Example 2",
+    "start": 2.0,
+    "offset": 2.0,
+    "speed": 1.0,
+    "repetitions": -1,
+    "reverse": false
 }
 ```
 
@@ -111,16 +111,16 @@ Animation clip with all values set:
 
 ```json
 {
-	"animations": [
-		0
-	],
-	"name": "Example 3",
-	"start": 3.0,
-	"end": 8.0,
-	"offset": 3.0,
-	"speed": 1.0,
-	"repetitions": -1,
-	"reverse": false
+    "animations": [
+        0
+    ],
+    "name": "Example 3",
+    "start": 3.0,
+    "end": 8.0,
+    "offset": 3.0,
+    "speed": 1.0,
+    "repetitions": -1,
+    "reverse": false
 }
 ```
 
@@ -132,16 +132,16 @@ Animation clip with all values set:
 
 ```json
 {
-	"animations": [
-		0
-	],
-	"name": "Example 4",
-	"start": 0.0,
-	"end": 4.0,
-	"offset": 0.0,
-	"speed": 1.0,
-	"repetitions": 1,
-	"reverse": false
+    "animations": [
+        0
+    ],
+    "name": "Example 4",
+    "start": 0.0,
+    "end": 4.0,
+    "offset": 0.0,
+    "speed": 1.0,
+    "repetitions": 1,
+    "reverse": false
 }
 ```
 
@@ -153,16 +153,16 @@ Animation clip with all values set:
 
 ```json
 {
-	"animations": [
-		0
-	],
-	"name": "Example 5",
-	"start": 0.0,
-	"end": 5.0,
-	"offset": 0.0,
-	"speed": 1.0,
-	"repetitions": 3,
-	"reverse": true
+    "animations": [
+        0
+    ],
+    "name": "Example 5",
+    "start": 0.0,
+    "end": 5.0,
+    "offset": 0.0,
+    "speed": 1.0,
+    "repetitions": 3,
+    "reverse": true
 }
 ```
 
@@ -174,16 +174,16 @@ Animation clip with all values set:
 
 ```json
 {
-	"animations": [
-		0
-	],
-	"name": "Example 6",
-	"start": 0.0,
-	"end": 4.0,
-	"offset": 4.0,
-	"speed": -0.5,
-	"repetitions": 2,
-	"reverse": true
+    "animations": [
+        0
+    ],
+    "name": "Example 6",
+    "start": 0.0,
+    "end": 4.0,
+    "offset": 4.0,
+    "speed": -0.5,
+    "repetitions": 2,
+    "reverse": true
 }
 ```
 
@@ -193,69 +193,69 @@ Animation clip with all values set:
 // Delta time is in seconds. Delta time is the time executed between the current and last frame.
 void updateTimestamp(float deltaTime, AnimationClip& ac)
 {
-	// Animation clip is off.
-	// Early quit for performance and not having to change the speed value.
-	if (ac.repetitions == 0 || ac.speed == 0.0f)
-	{
-		return;
-	}
+    // Animation clip is off.
+    // Early quit for performance and not having to change the speed value.
+    if (ac.repetitions == 0 || ac.speed == 0.0f)
+    {
+        return;
+    }
 
-	// Increase offset depending on delta time and speed.
-	ac.offset += ac.speed * deltaTime;
+    // Increase offset depending on delta time and speed.
+    ac.offset += ac.speed * deltaTime;
 
-	// Check, if the offset is larger or smaller than the bounds.	
-	if (ac.offset > ac.end)
-	{
-		float overtime = ac.offset - ac.end;
+    // Check, if the offset is larger or smaller than the bounds.    
+    if (ac.offset > ac.end)
+    {
+        float overtime = ac.offset - ac.end;
 
-		if (ac.reverse)
-		{
-			ac.offset = ac.end - overtime;
+        if (ac.reverse)
+        {
+            ac.offset = ac.end - overtime;
 
-			ac.speed *= -1.0f;
-		}
-		else
-		{
-			ac.offset = ac.start + overtime;
-		}
+            ac.speed *= -1.0f;
+        }
+        else
+        {
+            ac.offset = ac.start + overtime;
+        }
 
-		// Note: repetitions = -1 is infinite execution, repetitions = 0 is animation off.
-		if (ac.repetitions > 0)
-		{
-			ac.repetitions--;
-		}
-	}
-	else if (ac.offset < ac.start)
-	{
-		float overtime = ac.start - ac.offset;
+        // Note: repetitions = -1 is infinite execution, repetitions = 0 is animation off.
+        if (ac.repetitions > 0)
+        {
+            ac.repetitions--;
+        }
+    }
+    else if (ac.offset < ac.start)
+    {
+        float overtime = ac.start - ac.offset;
 
-		if (ac.reverse)
-		{
-			ac.offset = ac.start + overtime;
+        if (ac.reverse)
+        {
+            ac.offset = ac.start + overtime;
 
-			ac.speed *= -1.0f;
-		}
-		else
-		{
-			ac.offset = ac.end - overtime;
-		}
+            ac.speed *= -1.0f;
+        }
+        else
+        {
+            ac.offset = ac.end - overtime;
+        }
 
-		// Note: repetitions = -1 is infinite execution, repetitions = 0 is animation off.
-		if (ac.repetitions > 0)
-		{
-			ac.repetitions--;
-		}
-	}
+        // Note: repetitions = -1 is infinite execution, repetitions = 0 is animation off.
+        if (ac.repetitions > 0)
+        {
+            ac.repetitions--;
+        }
+    }
 
-	// Always keep start <= offset <= end.
-	// Required for repetitions = -1 or robustness (very small differences between start and end).
-	if (ac.offset < ac.start)
-	{
-		ac.offset = ac.start;
-	}
-	else if (ac.offset > ac.end)
-	{
-		ac.offset = ac.end;
-	}
+    // Always keep start <= offset <= end.
+    // Required for repetitions = -1 or robustness (very small differences between start and end).
+    if (ac.offset < ac.start)
+    {
+        ac.offset = ac.start;
+    }
+    else if (ac.offset > ac.end)
+    {
+        ac.offset = ac.end;
+    }
 }
 ```
