@@ -51,7 +51,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"start": 0.0,
 	"end": 10.0,
 	"timestamp": 0.0,
-	"direction": 1.0,
+	"speed": 1.0,
 	"repetitions": 2,
 	"reverse": true
 }
@@ -77,7 +77,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"start": 0.0,
 	"end": 4.0,
 	"timestamp": 0.0,
-	"direction": 1.0,
+	"speed": 1.0,
 	"repetitions": -1,
 	"reverse": false
 }
@@ -97,7 +97,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"name": "Example 2",
 	"start": 2.0,
 	"timestamp": 2.0,
-	"direction": 1.0,
+	"speed": 1.0,
 	"repetitions": -1,
 	"reverse": false
 }
@@ -118,7 +118,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"start": 3.0,
 	"end": 8.0,
 	"timestamp": 3.0,
-	"direction": 1.0,
+	"speed": 1.0,
 	"repetitions": -1,
 	"reverse": false
 }
@@ -139,7 +139,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"start": 0.0,
 	"end": 4.0,
 	"timestamp": 0.0,
-	"direction": 1.0,
+	"speed": 1.0,
 	"repetitions": 1,
 	"reverse": false
 }
@@ -160,7 +160,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"start": 0.0,
 	"end": 5.0,
 	"timestamp": 0.0,
-	"direction": 1.0,
+	"speed": 1.0,
 	"repetitions": 3,
 	"reverse": true
 }
@@ -181,7 +181,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"start": 0.0,
 	"end": 4.0,
 	"timestamp": 4.0,
-	"direction": -0.5,
+	"speed": -0.5,
 	"repetitions": 2,
 	"reverse": true
 }
@@ -194,14 +194,14 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 void updateTimestamp(float deltaTime, AnimationClip& ac)
 {
 	// Animation clip is off.
-	// Early quit for performance and not having to change the direction value.
-	if (ac.repetitions == 0 || ac.direction == 0.0f)
+	// Early quit for performance and not having to change the speed value.
+	if (ac.repetitions == 0 || ac.speed == 0.0f)
 	{
 		return;
 	}
 
-	// Increase timestamp depending on delta time and direction.
-	ac.timestamp += ac.direction * deltaTime;
+	// Increase timestamp depending on delta time and speed.
+	ac.timestamp += ac.speed * deltaTime;
 
 	// Check, if the timestamp is larger or smaller than the bounds.	
 	if (ac.timestamp > ac.end)
@@ -212,7 +212,7 @@ void updateTimestamp(float deltaTime, AnimationClip& ac)
 		{
 			ac.timestamp = ac.end - overtime;
 
-			ac.direction *= -1.0f;
+			ac.speed *= -1.0f;
 		}
 		else
 		{
@@ -233,7 +233,7 @@ void updateTimestamp(float deltaTime, AnimationClip& ac)
 		{
 			ac.timestamp = ac.start + overtime;
 
-			ac.direction *= -1.0f;
+			ac.speed *= -1.0f;
 		}
 		else
 		{

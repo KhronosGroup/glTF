@@ -37,11 +37,11 @@
             "description": "The current timestamp.",
             "gltf_detailedDescription": "This value **MUST** be greater or equal than `start` and smaller or equal than `end`."
         },
-        "direction": {
+        "speed": {
             "type": "number",
             "default": 1.0,
-            "description": "The direction and speed used for updating the `timestamp`.",
-            "gltf_detailedDescription": "This value allows to run an animation forward (`direction` > 0.0) or backward (`direction` < 0.0). It allows to increase (abs(`direction`) > 1.0) or decrease (abs(`direction`) < 1.0) the speed of the animation. `direction` = 0.0 stops the animation clip."
+            "description": "The signed speed used for updating the `timestamp`.",
+            "gltf_detailedDescription": "This value allows to run an animation forward (`speed` > 0.0) or backward (`speed` < 0.0). It allows to increase (abs(`speed`) > 1.0) or decrease (abs(`speed`) < 1.0) the speed of the animation. `speed` = 0.0 stops the animation clip."
         },
         "repetitions": {
             "type": "integer",
