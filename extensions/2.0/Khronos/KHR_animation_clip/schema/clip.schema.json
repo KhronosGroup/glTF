@@ -3,7 +3,11 @@
     "title": "clip",
     "type": "object",
     "description": "An animation clip.",
-    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "allOf": [
+        {
+            "$ref": "glTFChildOfRootProperty.schema.json"
+        }
+    ],
     "properties": {
         "animations": {
             "type": "array",
@@ -13,32 +17,32 @@
             },
             "uniqueItems": true,
             "minItems": 1
-        },        
+        },
         "start": {
             "type": "number",
             "minimum": 0.0,
             "default": 0.0,
             "description": "The lower bound of an animation clip.",
             "gltf_detailedDescription": ""
-        },                
+        },
         "end": {
             "type": "number",
             "description": "The upper bound of an animation clip.",
             "gltf_detailedDescription": "When defined, `end` **MUST** be greater or equal than `start`. If `end` is undefined, client implementations **SHOULD** use an infinite floating number value."
-        },                
+        },
         "timestamp": {
             "type": "number",
             "minimum": 0.0,
             "default": 0.0,
             "description": "The current timestamp.",
             "gltf_detailedDescription": "This value **MUST** be greater or equal than `start` and smaller or equal than `end`."
-        },                
+        },
         "direction": {
             "type": "number",
             "default": 1.0,
             "description": "The direction and speed used for updating the `timestamp`.",
             "gltf_detailedDescription": "This value allows to run an animation forward (`direction` > 0.0) or backward (`direction` < 0.0). It allows to increase (abs(`direction`) > 1.0) or decrease (abs(`direction`) < 1.0) the speed of the animation. `direction` = 0.0 stops the animation clip."
-        },                
+        },
         "repetitions": {
             "type": "integer",
             "minimum": -1,
@@ -51,10 +55,10 @@
             "default": false,
             "description": "Specifies whether the animation should bounce or loop.",
             "gltf_detailedDescription": "If an animation is repeated, the animation begins from the `start` (`end` for a backward animation.) again. If an animation is bounced, `direction` becomes -1.0 * `direction` if the `timestamp` gets larger or smaller than `end` or `start`."
-        },                        
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        },
+        "name": {},
+        "extensions": {},
+        "extras": {}
     },
     "required": [
         "animations"
