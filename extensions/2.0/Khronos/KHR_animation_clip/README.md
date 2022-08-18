@@ -52,7 +52,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"end": 10.0,
 	"timestamp": 0.0,
 	"direction": 1.0,
-	"counter": 2,
+	"repetitions": 2,
 	"bounce": true
 }
 ```
@@ -78,7 +78,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"end": 4.0,
 	"timestamp": 0.0,
 	"direction": 1.0,
-	"counter": -1,
+	"repetitions": -1,
 	"bounce": false
 }
 ```
@@ -98,7 +98,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"start": 2.0,
 	"timestamp": 2.0,
 	"direction": 1.0,
-	"counter": -1,
+	"repetitions": -1,
 	"bounce": false
 }
 ```
@@ -119,7 +119,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"end": 8.0,
 	"timestamp": 3.0,
 	"direction": 1.0,
-	"counter": -1,
+	"repetitions": -1,
 	"bounce": false
 }
 ```
@@ -140,7 +140,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"end": 4.0,
 	"timestamp": 0.0,
 	"direction": 1.0,
-	"counter": 1,
+	"repetitions": 1,
 	"bounce": false
 }
 ```
@@ -161,7 +161,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"end": 5.0,
 	"timestamp": 0.0,
 	"direction": 1.0,
-	"counter": 3,
+	"repetitions": 3,
 	"bounce": true
 }
 ```
@@ -182,7 +182,7 @@ If the `timestamp` is smaller or larger than the animation keyframes, the first 
 	"end": 4.0,
 	"timestamp": 4.0,
 	"direction": -0.5,
-	"counter": 2,
+	"repetitions": 2,
 	"bounce": true
 }
 ```
@@ -195,7 +195,7 @@ void updateTimestamp(float deltaTime, AnimationClip& ac)
 {
 	// Animation clip is off.
 	// Early quit for performance and not having to change the direction value.
-	if (ac.counter == 0 || ac.direction == 0.0f)
+	if (ac.repetitions == 0 || ac.direction == 0.0f)
 	{
 		return;
 	}
@@ -219,10 +219,10 @@ void updateTimestamp(float deltaTime, AnimationClip& ac)
 			ac.timestamp = ac.start + overtime;
 		}
 
-		// Note: counter = -1 is infinite execution, counter = 0 is animation off.
-		if (ac.counter > 0)
+		// Note: repetitions = -1 is infinite execution, repetitions = 0 is animation off.
+		if (ac.repetitions > 0)
 		{
-			ac.counter--;
+			ac.repetitions--;
 		}
 	}
 	else if (ac.timestamp < ac.start)
@@ -240,15 +240,15 @@ void updateTimestamp(float deltaTime, AnimationClip& ac)
 			ac.timestamp = ac.end - overtime;
 		}
 
-		// Note: counter = -1 is infinite execution, counter = 0 is animation off.
-		if (ac.counter > 0)
+		// Note: repetitions = -1 is infinite execution, repetitions = 0 is animation off.
+		if (ac.repetitions > 0)
 		{
-			ac.counter--;
+			ac.repetitions--;
 		}
 	}
 
 	// Always keep start <= timestamp <= end.
-	// Required for counter = -1 or robustness (very small differences between start and end).
+	// Required for repetitions = -1 or robustness (very small differences between start and end).
 	if (ac.timestamp < ac.start)
 	{
 		ac.timestamp = ac.start;

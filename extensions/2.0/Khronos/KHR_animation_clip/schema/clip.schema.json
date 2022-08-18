@@ -39,12 +39,12 @@
             "description": "The direction and speed used for updating the `timestamp`.",
             "gltf_detailedDescription": "This value allows to run an animation forward (`direction` > 0.0) or backward (`direction` < 0.0). It allows to increase (abs(`direction`) > 1.0) or decrease (abs(`direction`) < 1.0) the speed of the animation. `direction` = 0.0 stops the animation clip."
         },                
-        "counter": {
+        "repetitions": {
             "type": "integer",
             "minimum": -1,
             "default": -1,
-            "description": "The amount of times the animation is looped.",
-            "gltf_detailedDescription": "Not defined or -1 means infinite loops. 0 means no more loops and the animation controller is stopped. If the counter is larger > 0 and `timestamp` becomes smaller than `start` or `timwstamp` becomes larger than `end`, the counter is decremented by one."
+            "description": "The number of times the animation is looped.",
+            "gltf_detailedDescription": "Not defined or -1 means infinite loops. 0 means the animation is not played at all. 1 means the animation is played once. A value of n > 1 means the animation is repeated n times."
         },
         "bounce": {
             "type": "boolean",
