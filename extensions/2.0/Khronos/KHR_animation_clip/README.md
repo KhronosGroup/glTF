@@ -190,33 +190,39 @@ Animation clip with all values set:
 ### Sample implementation
 
 ```cpp
-// Delta time is in seconds. Delta time is the time executed between the current and last frame.
-void updateTimestamp(float deltaTime, AnimationClip& ac)
-{
-    // Animation clip is off.
-    // Early quit for performance and not having to change the speed value.
-    if (ac.repetitions == 0 || ac.speed == 0.0f)
-    {
+void initTimestamp(AnimationClip& ac, float& timestamp) {
+    assert(ac.offset >= 0);
+    assert(ac.offset <= ac.end);
+    timestamp = ac.start + ac.offset;
+}
+
+// Delta time is in seconds. Delta time is the time passed between the current and last frame.
+void updateTimestamp(float deltaTime, AnimationClip& ac, float& timestamp) {
+    // Early exit if the animation has been repeated the specified number of times.
+    if (ac.repetitions == 0) {
+        return;
+    }
+    
+    // Early exit if the animation is essentially frozen because its speed is zero.
+    if (ac.speed == 0.0f) {
         return;
     }
 
-    // Increase offset depending on delta time and speed.
-    ac.offset += ac.speed * deltaTime;
+    // Increase timestamp depending on delta time and speed.
+    timestamp += ac.speed * deltaTime;
 
-    // Check, if the offset is larger or smaller than the bounds.    
-    if (ac.offset > ac.end)
-    {
-        float overtime = ac.offset - ac.end;
+    // Test if the timestamp is out of the time bounds.
+    if (timestamp > ac.end) {
+        float overtime = timestamp - ac.end;
 
         if (ac.reverse)
         {
-            ac.offset = ac.end - overtime;
-
+            timestamp = ac.end - overtime;
             ac.speed *= -1.0f;
         }
         else
         {
-            ac.offset = ac.start + overtime;
+            timestamp = ac.start + overtime;
         }
 
         // Note: repetitions = -1 is infinite execution, repetitions = 0 is animation off.
@@ -225,37 +231,30 @@ void updateTimestamp(float deltaTime, AnimationClip& ac)
             ac.repetitions--;
         }
     }
-    else if (ac.offset < ac.start)
-    {
-        float overtime = ac.start - ac.offset;
+    else if (timestamp < ac.start) {
+        float overtime = ac.start - timestamp;
 
-        if (ac.reverse)
-        {
-            ac.offset = ac.start + overtime;
-
+        if (ac.reverse) {
+            timestamp = ac.start + overtime;
             ac.speed *= -1.0f;
         }
-        else
-        {
-            ac.offset = ac.end - overtime;
+        else {
+            timestamp = ac.end - overtime;
         }
 
         // Note: repetitions = -1 is infinite execution, repetitions = 0 is animation off.
-        if (ac.repetitions > 0)
-        {
+        if (ac.repetitions > 0) {
             ac.repetitions--;
         }
     }
 
-    // Always keep start <= offset <= end.
+    // Always keep start <= timestamp <= end.
     // Required for repetitions = -1 or robustness (very small differences between start and end).
-    if (ac.offset < ac.start)
-    {
-        ac.offset = ac.start;
+    if (timestamp < ac.start) {
+        timestamp = ac.start;
     }
-    else if (ac.offset > ac.end)
-    {
-        ac.offset = ac.end;
+    else if (timestamp > ac.end) {
+        timestamp = ac.end;
     }
 }
 ```
