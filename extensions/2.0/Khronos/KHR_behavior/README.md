@@ -144,7 +144,7 @@ Constant JSON values can directly be passed to parameters. It is invalid to pass
 }
 ```
 
-#### Output Socket References
+#### [Output Socket References](schema/behavior.types.reference.outputSocket.schema.json)
 
 Each node type also implicitly defines a set of output sockets, where each output is referenced with a string key. For example, the "condition" parameter of the `logic/branch` node above could be connected to the output value of a previous node like in the following example.
 
@@ -159,7 +159,7 @@ Each node type also implicitly defines a set of output sockets, where each outpu
 
 If the referenced node only provides one output socket, it is allowed to omit the "socket" property in the output socket reference.
 
-#### Variable References
+#### [Variable References](schema/behavior.types.reference.variable.schema.json)
 
 Variables that are defined in the behavior can be referenced in a parameter with the *Variable Reference* object literal. 
 - The Reference is an index into the `variables` array of the behavior
@@ -195,7 +195,6 @@ Event nodes serve a special purpose, as they can initiate the execution of a beh
 * onLoad: fires once after the glTF is loaded
 * onKeyDown: fires when a specific key is depressed
 * onKeyUp: fires when a specific key is released
-
 
 ### Math Nodes
 The elements and the wording are inspired by MaterialX (see "MaterialX Specification"):  
@@ -233,12 +232,12 @@ The elements and the wording are inspired by MaterialX (see "MaterialX Specifica
 ### Channel Nodes
 The elements and the wording are inspired by MaterialX (see "MaterialX Specification"):  
 
-* combine2 : Combine 2 separate input values into one array  
-* combine3 : Combine 3 separate input values into one array  
-* combine4 : Combine 4 separate input values into one array  
-* extract2 : Extracts array into 2 separate output values  
-* extract3 : Extracts array into 3 separate output values  
-* extract4 : Extracts array into 4 separate output values  
+* combine2 : Combine 2 separate input values into a vec2  
+* combine3 : Combine 3 separate input values into a vec3
+* combine4 : Combine 4 separate input values into a vec4
+* extract2 : Extracts vec2 into 2 separate output values  
+* extract3 : Extracts vec3 into 3 separate output values  
+* extract4 : Extracts vec4 into 4 separate output values  
 
 ### Flow Nodes
 
@@ -250,7 +249,6 @@ Flow nodes can be used to define a more complex control flow inside the node gra
 
 * set : Set a value of glTF object properties or of one of the behavior's variables
 * get : Get a value from glTF object properties or from one of the behavior's variables
-
 
 
 ### Examples
