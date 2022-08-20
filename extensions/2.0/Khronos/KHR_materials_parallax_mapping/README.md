@@ -1,5 +1,5 @@
 <!--
-Copyright 2015-2021 The Khronos Group Inc.
+Copyright 2015-2022 The Khronos Group Inc.
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
@@ -49,8 +49,11 @@ This extension does _not_ require the geometry of the object this material is ap
 
 ## Known Implementations
 
-None.
+Although no implementations of this extension are known, these techniques are used widely by the industry.
 
 ## Resources
 * [Introduction](https://en.wikipedia.org/wiki/Parallax_mapping)
 * [Discussion about different implementations](https://learnopengl.com/Advanced-Lighting/Parallax-Mapping)
+* [GPU Gems 2 - Per-Pixel Displacement Mapping with Distance Functions](https://developer.nvidia.com/gpugems/gpugems2/part-i-geometric-complexity/chapter-8-pixel-displacement-mapping-distance-functions)
+* [GPU Gems 3 - Relaxed Cone Stepping for Relief Mapping](https://developer.nvidia.com/gpugems/gpugems3/part-iii-rendering/chapter-18-relaxed-cone-stepping-relief-mapping)
+* [SIGGRAPH Asia 2021 - Tessellation-Free Displacement Mapping for Ray Tracing](https://perso.telecom-paristech.fr/boubek/papers/TFDM/)
