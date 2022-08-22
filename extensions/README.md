@@ -16,7 +16,7 @@ The following extensions have been ratified by the Khronos Group:
 * [KHR_draco_mesh_compression](2.0/Khronos/KHR_draco_mesh_compression/README.md)
 * [KHR_lights_punctual](2.0/Khronos/KHR_lights_punctual/README.md)
 * [KHR_materials_clearcoat](2.0/Khronos/KHR_materials_clearcoat/README.md)
-* [KHR_materials_emissive_strength](2.0/Khronos/[KHR_materials_clearcoat](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_emissive_strength)/README.md)
+* [KHR_materials_emissive_strength](2.0/Khronos/KHR_materials_emissive_strength/README.md)
 * [KHR_materials_ior](2.0/Khronos/KHR_materials_ior/README.md)
 * [KHR_materials_iridescence](2.0/Khronos/KHR_materials_iridescence/README.md)
 * [KHR_materials_sheen](2.0/Khronos/KHR_materials_sheen/README.md)
