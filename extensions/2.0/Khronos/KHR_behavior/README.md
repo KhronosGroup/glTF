@@ -128,11 +128,11 @@ The parameters and flow outputs corresponding to a specific node type can be fou
 
 Each node defines which parameters it expects, specified by a *name* and a [type](#types).
 
-Parameters can be passed a [JSON value](#json-value), a [reference to another node's output socket](#output-socket-references) or a [reference to a variable](#variable-references). 
+Parameters can be passed a [JSON value](#json-value) oe a [reference to another node's output socket](#output-socket-references). 
 
 All values have to be *ready* at the time of execution of the node, i.e. if the parameter is a reference to another node's output socket, this node has to already have been executed.
 
-Automatic type conversions according to the rules in [Automatic casting](#automatic-casting) take place when connecting compatible types to the parameter as output socket reference or variable reference. Automatic casting does not apply to JSON values, these must be of the same type as the node's parameter.
+Automatic type conversions according to the rules in [Automatic casting](#automatic-casting) take place when connecting compatible types to the parameter as output socket reference. Automatic casting does not apply to JSON values, these must be of the same type as the node's parameter.
 
 #### JSON Value
 
@@ -155,23 +155,6 @@ Each node type also implicitly defines a set of output sockets, where each outpu
         "socket": "result"
     }
 }
-```
-
-If the referenced node only provides one output socket, it is allowed to omit the "socket" property in the output socket reference.
-
-#### [Variable References](schema/behavior.types.reference.variable.schema.json)
-
-Variables that are defined in the behavior can be referenced in a parameter with the *Variable Reference* object literal. 
-- The Reference is an index into the `variables` array of the behavior
-- Only variables defined in the same behavior can be referenced
-
-```json
-{
-    "condition": {
-        "$variable": 0
-    }
-}
-
 ```
 
 ### Flow Output Sockets

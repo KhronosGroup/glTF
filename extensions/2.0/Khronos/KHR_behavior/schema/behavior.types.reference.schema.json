@@ -1,9 +1,6 @@
 {
     "oneOf": [
         {
-            "$ref": "behavior.types.reference.variable.schema.json"
-        },
-        {
             "$ref": "behavior.types.reference.outputSocket.schema.json"
         }
     ]
