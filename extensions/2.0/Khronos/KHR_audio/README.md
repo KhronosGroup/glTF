@@ -99,8 +99,7 @@ Audio emitter objects may be added to 3D nodes for positional audio or to the sc
 
 ## glTF Schema Updates
 
-This extension consists of two primary data structures: Audio Sources and Audio Emitters. Both sources and emitters are defined on an `KHR_audio` object added to the `extensions`
- object on the document root.
+This extension consists of three primary data structures: Audio Data, Audio Sources, and Audio Emitters. Data, sources and emitters are defined on an `KHR_audio` object added to the `extensions` object on the document root.
 
 The extension must be added to the file's `extensionsUsed` array and because it is optional, it does not need to be added to the `extensionsRequired` array.
 
@@ -118,6 +117,7 @@ The extension must be added to the file's `extensionsUsed` array and because it 
     "nodes": [...],
     "extensions": {
         "KHR_audio": {
+            "audio": [...],
             "sources": [...],
             "emitters": [...]
         }
@@ -125,11 +125,9 @@ The extension must be added to the file's `extensionsUsed` array and because it 
 }
 ```
 
-### Audio Sources
+### Audio Data
 
-Audio source objects define audio data to be used in audio emitters. Multiple audio emitters may use the same audio source.
-
-Audio sources can store their data in either a buffer view or reference an external file via uri.
+Audio data objects define where audio data is located. Data is either accessed via a bufferView or uri.
 
 When storing audio data in a buffer view, the `mimeType` field must be specified. Currently the only supported mime type is `audio/mpeg`.
 
@@ -143,7 +141,7 @@ The audio's MIME type. Required if `bufferView` is defined. Unless specified by 
 
 #### `uri`
 
-The uri of the audio file. Relative paths are relative to the glTF file.
+The uri of the audio file. Relative paths are relative to the .gltf file.
 
 #### MP3 Audio Format
 
@@ -151,7 +149,29 @@ Provides a space efficient format that can also be tuned to satisfy audio engine
 
 The MPEG3 Audio Format is commonly available and freely licensed.
 
+### Audio Sources
+
+Audio sources define the playing state for a given audio data. They connect one audio data to zero to many audio emitters.
+
+#### `gain`
+
+Unitless multiplier against original audio file volume for determining audio source loudness.
+
+#### `loop`
+
+Whether or not to loop the specified audio when finished.
+
+#### `autoPlay`
+
+Whether or not to play the specified audio when the glTF is loaded.
+
+#### `audio`
+
+The index of the audio data assigned to this clip.
+
 ### Audio Emitter
+
+Positional or global sinks for playing back audio sources.
 
 #### `type`
 
@@ -172,9 +192,9 @@ Whether or not to loop the specified audio clip when finished.
 
 Whether or not the specified audio clip is playing. Setting this property `true` will set the audio clip to play on load (autoplay).
 
-#### `source`
+#### `sources`
 
-The id of the audio source referenced by this audio emitter.
+An array of audio source indices used by the audio emitter. This array may be empty.
 
 #### `positional`
 

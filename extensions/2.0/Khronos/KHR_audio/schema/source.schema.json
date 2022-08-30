@@ -6,23 +6,23 @@
   "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
   "properties": {
     "autoPlay": {
-        "description": "Whether or not the specified audio clip is playing. Setting this property true will set the audio clip to play on load (autoplay).",
+        "description": "Whether or not to play the specified audio when the glTF is loaded.",
         "type": "boolean",
         "default": false
     },
     "gain": {
-        "description": "Unitless multiplier against original source volume for determining emitter loudness.",
+        "description": "Unitless multiplier against original audio file volume for determining audio source loudness.",
         "type": "number",
         "minimum": 0.0,
         "default": 1.0
     },
     "loop": {
-        "description": "Whether or not to loop the specified audio clip when finished.",
+        "description": "Whether or not to loop the specified audio when finished.",
         "type": "boolean",
         "default": false
     },
     "audio": {
-        "description": "The id of the audio file assigned to this clip.",
+        "description": "The index of the audio data assigned to this clip.",
         "allOf": [
             {
                 "$ref": "glTFid.schema.json"

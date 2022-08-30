@@ -29,7 +29,7 @@
         "default": 1.0
       },
       "sources": {
-        "description": "An array of audio sources used by the audio emitter.",
+        "description": "An array of audio source indices used by the audio emitter. This array may be empty.",
         "type": "array",
         "allOf": [
           {
