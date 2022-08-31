@@ -46,17 +46,17 @@ Adding reflectivity information to the clearcoat can be done by adding the `ADOB
 
 ### Clearcoat Reflectivity
 
-All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) for more details on the BRDF calculations.
+All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
-As with the core glTF 2.0 spec, all coloured textures are assumed to be sRGB and all coloured factors are assumed to be linear.
+As with the core glTF 2.0 spec, all colored textures are assumed to be sRGB and all colored factors are assumed to be linear.
 
 |                                  | Type                                                                            | Description                            | Required             |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|----------------------|
 |**clearcoatIor**               | `number`                                                                        | The clearcoat IOR.         | No, default: `1.5`   |
 |**clearcoatSpecularFactor**               | `number`                                                                        | The clearcoat specular factor.         | No, default: `1.0`   |
-|**clearcoatSpecularTexture**              | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The clearcoat layer's specular amount, stored in the `B` channel of a texture. | No                   |
+|**clearcoatSpecularTexture**              | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo)             | The clearcoat layer's specular amount, stored in the `B` channel of a texture. | No                   |
 
-The clearcoat Fresnel contribution is usually calculated just as described for the base layer in [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation).
+The clearcoat Fresnel contribution is usually calculated just as described for the base layer in [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation).
 This extension modifies the Fresnel contribution of clearcoat as follows:
 The `clearcoatIor` can be used to calculate the reflectance at normal incidence for the coating (`coatBaseF0`) that will replace the default `F0` of `0.04`.
 

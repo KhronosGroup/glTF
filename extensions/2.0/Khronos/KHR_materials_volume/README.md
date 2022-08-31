@@ -34,7 +34,7 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status
 
-Complete
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 
@@ -90,7 +90,7 @@ If the extension is combined with `KHR_materials_transmission`, a refractive mic
 The volumetric properties are defined by adding the `KHR_materials_volume` extension to any glTF material. A non-zero thickness switches from thin-walled to volumetric behavior. This requires a manifold/closed mesh. The properties of the medium are not texturable, it is assumed to be homogeneous.
 
 ```json
-materials: [
+"materials": [
     {
         "extensions": {
             "KHR_materials_volume": {
@@ -109,14 +109,14 @@ The extension defines the following parameters to describe the volume.
 
 | | Type | Description | Required |
 |-|------|-------------|----------|
-| **thicknessFactor** | `number` | The thickness of the volume beneath the surface. The value is given in the coordinate space of the mesh. If the value is 0 the material is thin-walled. Otherwise the material is a volume boundary. The `doubleSided` property has no effect on volume boundaries. | No, default: `0`. |
-| **thicknessTexture** | `textureInfo` | A texture that defines the thickness, stored in the G channel. This will be multiplied by `thicknessFactor`. | No |
-| **attenuationDistance** | `number` | Density of the medium given as the average distance that light travels in the medium before interacting with a particle. The value is given in world space. | No, default: +Infinity |
+| **thicknessFactor** | `number` | The thickness of the volume beneath the surface. The value is given in the coordinate space of the mesh. If the value is 0 the material is thin-walled. Otherwise the material is a volume boundary. The `doubleSided` property has no effect on volume boundaries. Range is \[0, +inf). | No, default: `0`. |
+| **thicknessTexture** | `textureInfo` | A texture that defines the thickness, stored in the G channel. This will be multiplied by `thicknessFactor`. Range is \[0, 1]. | No |
+| **attenuationDistance** | `number` | Density of the medium given as the average distance that light travels in the medium before interacting with a particle. The value is given in world space. Range is (0, +inf). | No, default: +Infinity |
 | **attenuationColor** | `number[3]` | The color that white light turns into due to absorption when reaching the attenuation distance. | No, default: `[1, 1, 1]` |
 
 ## Thickness Texture
 
-The thickness of a volume enclosed by the mesh is typically quite difficult to compute at run-time in a rasterizer. Since glTF is primarily used with real-time rasterizers, this extension allows for the thickness of the volume to be baked into a thickness map. Thickness is given in the coordinate space of the mesh. Any transformations applied to the mesh's node will also be applied to the thickness. Thickness is an absolute value and defined as the product of thickness factor and thickness texture value. The thickness factor is defined in the range (0, inf), whereas the thickness texture value range is limited to (0,1]. An exemplary configuration could set the thickness factor to the longest edge of the bounding box of a mesh, and the texture scales this value so that it corresponds to the actual thickness underneath each surface point.
+The thickness of a volume enclosed by the mesh is typically quite difficult to compute at run-time in a rasterizer. Since glTF is primarily used with real-time rasterizers, this extension allows for the thickness of the volume to be baked into a thickness map. Thickness is given in the coordinate space of the mesh. Any transformations applied to the mesh's node will also be applied to the thickness. Thickness is an absolute value and defined as the product of thickness factor and thickness texture value. The thickness factor is defined in the range \[0, +inf), whereas the thickness texture value range is limited to \[0, 1]. An exemplary configuration could set the thickness factor to the longest edge of the bounding box of a mesh, and the texture scales this value so that it corresponds to the actual thickness underneath each surface point.
 
 Baking thickness into a map is similar to ambient occlusion baking, but rays are cast into the opposite direction of the surface normal. Dark values represent thin parts, bright values represent thick parts of the model.
 
@@ -135,7 +135,7 @@ Light rays falling through the volume boundary are refracted according to the in
 
 ## Attenuation
 
-The way in which a volumetric medium interacts with light and, therefore, determines its appearance is commonly specified by the attenuation coefficient σ<sub>t</sub> (also know as *extinction* coefficient). It is the probability density that light interacts with a particle per unit distance traveled in the medium. σ<sub>t</sub> is a wavelength-dependent value. It's defined in the range [0, inf] with m<sup>-1</sup> as unit. 
+The way in which a volumetric medium interacts with light and, therefore, determines its appearance is commonly specified by the attenuation coefficient σ<sub>t</sub> (also know as *extinction* coefficient). It is the probability density that light interacts with a particle per unit distance traveled in the medium. σ<sub>t</sub> is a wavelength-dependent value. It's defined in the range [0, +inf) with m<sup>-1</sup> as unit.
 
 There are two types of interaction between light photons and particles: absorption and scattering. Absorption removes the light energy from the photon and translates it to other forms of energy, e.g., heat. Scattering preserves the energy, but changes the direction of the light. Both act in wavelength-dependent manner. Based on these two possibilities, the attenuation coefficient is defined as the sum of two other coefficients: the absorption coefficient σ<sub>a</sub> and the scattering coefficient σ<sub>s</sub>.
 
@@ -155,11 +155,11 @@ In a homogenous medium, σ<sub>t</sub> is constant, and we can compute the fract
 
 T(*x*) = e<sup>-σ<sub>t</sub>*x*</sup>
 
-where T is commonly referred to as *transmittance*. 
+where T is commonly referred to as *transmittance*.
 
 Substituting σ<sub>t</sub> in the previous equation by its definition via *attenuation color* and *attenuation distance*, as defined above, and setting *x* = *d* we get
 
-T(d<sub>a</sub>) = e<sup>(-log(*c*) / *d*) * *d*</sup> = *c*
+T(d<sub>a</sub>) = e<sup>(log(*c*) / *d*) * *d*</sup> = *c*
 
 So, after traveling distance *d* through the medium we get attenuation color *c*.
 
@@ -178,31 +178,41 @@ Base color and absorption both have an effect on the final color of a volumetric
 
 The specular transmission `specular_btdf(α)` defined in `KHR_materials_transmission` now takes refraction into account. That means that we use Snell's law to compute the modified half vector:
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle H_{TR} = -\text{normalize}(\eta_i V %2B \eta_o L)">.
+$$
+H_{TR} = -\text{normalize}(\eta_i V + \eta_o L)
+$$
 
-*η<sub>i</sub>* and *η<sub>o</sub>* denote the IOR of the incident and transmitted side of the surface, respectively. *V* is the vector pointing to the camera, *L* points to the light. In a path tracer, *V* corresponds to the incident side of the surface, which is the side of the medium with *η<sub>i</sub>*.
+$\eta_i$ and $\eta_o$ denote the IOR of the incident and transmitted side of the surface, respectively. $V$ is the vector pointing to the camera, $L$ points to the light. In a path tracer, $V$ corresponds to the incident side of the surface, which is the side of the medium with $\eta_i$.
 
 Incident and transmitted IOR have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through overlapping objects was described by [Schmidt and Budge (2002)](#SchmidtBudge2002).
 
 The refractive microfacet BTDF is normalized in a different way.
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBTDF} = \frac{\left| H_{TR} \cdot L \right| \left| H_{TR} \cdot V \right|}{\left| N \cdot L \right| \left| N \cdot V \right|} \frac{\eta_o^2 G_{T} D_{TR}}{\left(\eta_i (H_{TR} \cdot V) %2B \eta_o (H_{TR} \cdot L)\right)^2}">
+$$
+\text{MicrofacetBTDF} = \frac{\left| H_{TR} \cdot L \right| \left| H_{TR} \cdot V \right|}{\left| N \cdot L \right| \left| N \cdot V \right|} \frac{\eta_o^2 G_{T} D_{TR}}{\left(\eta_i (H_{TR} \cdot V) + \eta_o (H_{TR} \cdot L)\right)^2}
+$$
 
-The *D<sub>T</sub>* and *G<sub>TR</sub>* terms are the same as in the specular transmission in `KHR_materials_transmission` except using the modified half vector *H<sub>TR</sub>* calculated from the refraction direction. See [Walter et al. (2007)](#Walter2007) for details.
+The $D_T$ and $G_{TR}$ terms are the same as in the specular transmission in `KHR_materials_transmission` except using the modified half vector $H_{TR}$ calculated from the refraction direction. See [Walter et al. (2007)](#Walter2007) for details.
 
 The Fresnel term also makes use of the modified half vector and, in addition, needs to take internal reflection into account. When using the Schlick approximation, care must be taken to use the angle that is on the dense side of the boundary, i.e., the side with the medium that has a higher IOR. In addition, total internal reflection has to be considered. Therefore, we have three cases:
 
-Light enters medium with higher IOR: *η<sub>o</sub>* ≥ *η<sub>i</sub>*.
+1. Light enters medium with higher IOR: $\eta_o \ge \eta_i$.
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle F_{TR}^%2B = f_0 %2B (1 - f_0) (1 - \left| V \cdot H_{TR} \right| )^5">
+$$
+F_{TR}^{+} = f_0 + (1 - f_0) (1 - \left| V \cdot H_{TR} \right| )^5
+$$
 
-Light enters medium with lower IOR and there is no total internal reflection: *η<sub>o</sub>* < *η<sub>i</sub>* and sin<sup>2</sup>(*θ<sub>o</sub>*) < 1. The angle at the transmitted side of the boundary (medium with lower IOR) *θ<sub>o</sub>* is computed from the angle of incidence via sin<sup>2</sup>(*θ<sub>o</sub>*) = (*η<sub>i</sub>* / *η<sub>o</sub>*)<sup>2</sup> (1 - dot(*V*, *H<sub>TR</sub>*)<sup>2</sup>) and thus cos(*θ<sub>o</sub>*) = sqrt(1 - sin<sup>2</sup>(*θ<sub>o</sub>*)).
+2. Light enters medium with lower IOR and there is no total internal reflection: $\eta_o < \eta_i$ and $\sin^2 \theta_o < 1$. The angle at the transmitted side of the boundary (medium with lower IOR) $\theta_o$ is computed from the angle of incidence via $\sin^2 \theta_o = \left(\frac{\eta_i}{\eta_o}\right)^2 (1 - (V \cdot H_{TR})^2)$ and thus $\cos \theta_o = \sqrt{1 - \sin^2 \theta_o}$.
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle F_{TR}^{-} = f_0 %2B (1 - f_0) (1 - \left| \cos\,\theta_o \right| )^5">
+$$
+F_{TR}^{-} = f_0 + (1 - f_0) (1 - \left| \cos\theta_o \right| )^5
+$$
 
-Light enters medium with lower IOR and there is total internal reflection: *η<sub>o</sub>* < *η<sub>i</sub>* and sin<sup>2</sup>(*θ<sub>o</sub>*) ≥ 1.
+3. Light enters medium with lower IOR and there is total internal reflection: $\eta_o < \eta_i$ and and $\sin^2 \theta_o \ge 1$.
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle F_{TR}^\text{TIR} = 1">
+$$
+F_{TR}^\text{TIR} = 1
+$$
 
 ## Interaction with other extensions
 
