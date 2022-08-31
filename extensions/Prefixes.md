@@ -33,13 +33,16 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `CITRUS` | Citrus Toolbox | https://github.com/KenzieMac130/CitrusToolbox | [#1962](https://github.com/KhronosGroup/glTF/issues/1962) |
 | `CLO` | CLO Virtual Fashion | https://www.clo3d.com | [#1944](https://github.com/KhronosGroup/glTF/issues/1944) |
 | `CVTOOLS` | Canvas Tools | https://github.com/MackeyK24/CanvasTools | [#1389](https://github.com/KhronosGroup/glTF/issues/1389) |
+| `DOTV` | DotVision | https://dotvision.com<br>`guillaume.pelletier at dotvision.com` | [#2192](https://github.com/KhronosGroup/glTF/issues/2192) |
 | `EMBARK` | Embark Studios AB | https://www.embark-studios.com/ | [#2097](https://github.com/KhronosGroup/glTF/issues/2097) |
 | `EPIC` | Epic Games, Inc. | https://www.epicgames.com/ | [#1905](https://github.com/KhronosGroup/glTF/issues/1905) |
 | `F8` | Forum8 Co., Ltd. | https://www.forum8.com/ | [#1999](https://github.com/KhronosGroup/glTF/issues/1999) |
 | `FB` | Facebook, Inc. | https://www.facebook.com/ | [#1139](https://github.com/KhronosGroup/glTF/pull/1139) |
 | `FOXIT` | Foxit Software, Inc. | https://foxitsoftware.com<br>`liqian_mu at foxitsoftware.com` | [#1712](https://github.com/KhronosGroup/glTF/issues/1712) |
 | `GOOGLE` | Google, LLC | https://www.google.com/ | [#1123](https://github.com/KhronosGroup/glTF/issues/1123) |
-| `GRIFFEL` | Griffel Studio | http://griffelstudio.com/ | [#1861](https://github.com/KhronosGroup/glTF/issues/1861) |
+| `GRIFFEL` | Griffel Studio | https://griffelstudio.com/ | [#1861](https://github.com/KhronosGroup/glTF/issues/1861) |
+| `HEVOLUS` | Hevolus Srl | https://www.hevolus.it/ | [#2183](https://github.com/KhronosGroup/glTF/issues/2183) |
+| `INTEL` | Intel Corporation | https://www.intel.com/ | [#2142](https://github.com/KhronosGroup/glTF/issues/2142) |
 | `KDAB` | The KDAB Group | https://www.kdab.com/ | [#1728](https://github.com/KhronosGroup/glTF/pull/1728) |
 | `LLQ` | Lifeliqe, Inc. | https://www.lifeliqe.com/ | [#1414](https://github.com/KhronosGroup/glTF/issues/1414) |
 | `MAXAR` | Maxar Technologies | https://www.maxar.com/ | [#1869](https://github.com/KhronosGroup/glTF/issues/1869) |
@@ -47,7 +50,10 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `MOZ` | Mozilla Corporation | https://www.mozilla.org/ | [#1349](https://github.com/KhronosGroup/glTF/issues/1349) |
 | `MPEG` | The Moving Picture Experts Group | https://mpeg.chiariglione.org/standards/mpeg-i | [#1754](https://github.com/KhronosGroup/glTF/issues/1754) |
 | `MSFT` | Microsoft Corporation | https://www.microsoft.com/ | [#1164](https://github.com/KhronosGroup/glTF/pull/1164) |
+| `MTTR` | Matterport, Inc. | https://matterport.com/ | [#2150](https://github.com/KhronosGroup/glTF/issues/2150) |
 | `MX` | The Matrix.org Foundation | https://matrix.org/ | [#2126](https://github.com/KhronosGroup/glTF/issues/2126) |
+| `NEEDLE` | Needle Tools | https://needle.tools/<br>`felix at needle.tools` | [#2131](https://github.com/KhronosGroup/glTF/issues/2131) |
+| `NTAR` | Nextech AR Solutions Inc. | https://www.nextechar.com/<br>`mitch at nextechar.com` | [#2188](https://github.com/KhronosGroup/glTF/issues/2188) |
 | `NV` | NVIDIA Corporation | https://www.nvidia.com | [#1211](https://github.com/KhronosGroup/glTF/issues/1211) |
 | `OFT` | OppenFuture Technologies | https://www.hololux.cn/en/ | [#1957](https://github.com/KhronosGroup/glTF/issues/1957) |
 | `OMI` | Open Metaverse Interoperability Group | https://github.com/omigroup/OMI | [#2003](https://github.com/KhronosGroup/glTF/issues/2003) |
@@ -57,6 +63,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `POLUTROPON` | Polutropon Games | https://polutropon.games/<br>`ybalrid at polutropon.games` | [#1632](https://github.com/KhronosGroup/glTF/issues/1632) |
 | `PTC` | PTC Inc. | https://www.ptc.com/ | [#1851](https://github.com/KhronosGroup/glTF/issues/1851) |
 | `S8S` | Soft8Soft | https://www.soft8soft.com/ | [#1240](https://github.com/KhronosGroup/glTF/issues/1240) |
+| `SE` | Schneider Electric SE | https://www.se.com/ | [#2134](https://github.com/KhronosGroup/glTF/issues/2134) |
 | `SEIN` | Hiloteam | https://seinjs.com/ | [#1840](https://github.com/KhronosGroup/glTF/issues/1840) |
 | `SHAPEDIVER` | ShapeDiver GmbH | https://www.shapediver.com/ | [#2103](https://github.com/KhronosGroup/glTF/issues/2103) |
 | `SI` | Smithsonian Institution | https://www.si.edu/ | [#1410](https://github.com/KhronosGroup/glTF/issues/1410) |
@@ -64,7 +71,10 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `SKYLINE` | Skyline Software Systems, Inc. | https://www.skylinesoft.com/ | [#1704](https://github.com/KhronosGroup/glTF/issues/1704) |
 | `SNAP` | Snap, Inc. | https://snap.com/ | [#2125](https://github.com/KhronosGroup/glTF/issues/2125) |
 | `SPECTRUM` | Spectrum | https://spectrumcustomizer.com/ | [#1804](https://github.com/KhronosGroup/glTF/issues/1804) |
+| `TENCENT` | Tencent, Inc. | https://www.tencent.com/ | [#2118](https://github.com/KhronosGroup/glTF/issues/2118) |
 | `TRYON` | TRYON Technology Ltd. | https://tryon.technology | [#1785](https://github.com/KhronosGroup/glTF/issues/1785) |
+| `UNITY` | Unity Software Inc. | https://unity.com | [#2185](https://github.com/KhronosGroup/glTF/issues/2185) |
+| `USSF` | US Space Force | https://www.spaceforce.mil/ | [#2177](https://github.com/KhronosGroup/glTF/issues/2177) |
 | `UX3D` | UX3D GmbH | https://ux3d.io/ | [#1896](https://github.com/KhronosGroup/glTF/pull/1896) |
 | `VRMC` | VRM Consortium | https://vrm-consortium.org/ | [#1874](https://github.com/KhronosGroup/glTF/issues/1874) |
 | `WEB3D` | The Web3D Consortium, Inc. | https://www.web3d.org/ |  |
