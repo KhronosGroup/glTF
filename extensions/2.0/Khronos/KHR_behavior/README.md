@@ -176,8 +176,7 @@ Event nodes serve a special purpose, as they can initiate the execution of a beh
 
 * onUpdate: fires on every update of the scene (usually multiple times per second)
 * onLoad: fires once after the glTF is loaded
-* onKeyDown: fires when a specific key is depressed
-* onKeyUp: fires when a specific key is released
+* on<*Name*>Event: generic event specified by a name. The implementation is responsible for determining when the event should fire. This can for example be used to react to user input
 
 ### Math Nodes
 The elements and the wording are inspired by MaterialX (see "MaterialX Specification"):  
