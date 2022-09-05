@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_lights_ies node extension",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "light": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The id of the light profile referenced by this node."
+        },
+        "multiplier": {
+            "type": "number",
+            "minimum": 0.0,
+            "default": 1.0,
+            "description": "Non-negative factor to scale the light distribution intensity."
+        },
+        "orientation": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 4,
+            "maxItems": 4,
+            "default": [ 0.0, 0.0, 0.0, 1.0 ],
+            "description": "Unit quaternion in the order (x, y, z, w) that defines the orientation of the light distribution."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "light"
+    ]
+}
