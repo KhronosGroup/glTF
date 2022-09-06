@@ -35,7 +35,9 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status
 
-Complete
+Complete, Ratified by the Khronos Group
+
+Supersedes [KHR_materials_pbrSpecularGlossiness](../../Archived/KHR_materials_pbrSpecularGlossiness/README.md)
 
 ## Dependencies
 
@@ -78,9 +80,9 @@ Factor and texture are combined by multiplication to describe a single value.
 | |Type|Description|Required|
 |-|----|-----------|--------|
 | **specularFactor** | `number` | The strength of the specular reflection. | No, default: `1.0`|
-| **specularTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the strength of the specular reflection, stored in the alpha (`A`) channel. This will be multiplied by specularFactor. | No |
+| **specularTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A texture that defines the strength of the specular reflection, stored in the alpha (`A`) channel. This will be multiplied by specularFactor. | No |
 | **specularColorFactor** | `number[3]` | The F0 color of the specular reflection (linear RGB). | No, default: `[1.0, 1.0, 1.0]`|
-| **specularColorTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the F0 color of the specular reflection, stored in the `RGB` channels and encoded in sRGB. This texture will be multiplied by specularColorFactor. | No |
+| **specularColorTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A texture that defines the F0 color of the specular reflection, stored in the `RGB` channels and encoded in sRGB. This texture will be multiplied by specularColorFactor. | No |
 
 The `specular` and `specularColor` parameters affect the `dielectric_brdf` of the glTF 2.0 metallic-roughness material.
 
@@ -94,7 +96,7 @@ dielectric_brdf =
     layer = specular_brdf(α = roughness^2))
 ```
 
-The `fresnel_mix` function mixes two BSDFs according to a Fresnel term. The `layer` is weighted with `weight * fresnel(ior, f0_color)`. The `base` is weighted with `1 - weight * fresnel(ior, f0_color)`.
+The `fresnel_mix` function mixes two BSDFs according to a Fresnel term. The `layer` is weighted with `weight * fresnel(ior, f0_color)`. The `base` is weighted with `1 - weight * max_value(fresnel(ior, f0_color))`.
 
 The specular factor used as `weight` scales `layer` and `base`. The less energy is reflected by the `layer` (`specular_brdf`), the more can be shifted to the `base` (`diffuse_brdf`). The following image shows specular factor increasing from 0 to 1.
 
@@ -102,7 +104,15 @@ The specular factor used as `weight` scales `layer` and `base`. The less energy 
 
 The specular color is a directional-dependent weight included in the Fresnel term. At normal incidence (`f0`), `specularColor` scales the F0 reflectance `f0_color`. At grazing incidence (`f90`), the reflectance remains at 1. In between the scale factor is smoothly interpolated.
 
-As with specular factor, `base` will be weighted with the directional-dependent remaining energy according to the Fresnel term. `f0_color` is an RGB color, involving the complementary to specular color. To make it easy to use and ensure energy conservation, the RGB color is converted to scalar via `max(r, g, b)`. The following images show specular color increasing from [0,0,0] to [1,1,1] (top) and from [0,0,0] to [1,0,0] (bottom).
+As with specular factor, `base` will be weighted with the directional-dependent remaining energy according to the Fresnel term. `f0_color` is an RGB color, involving the complementary to specular color. To avoid inverse colors and ensure energy conservation, the RGB color is converted to scalar via `max(r, g, b)`:
+
+```
+function max_value(vec3 color) {
+    return max(color.r, color.g, color.b)
+}
+```
+
+The following images show specular color increasing from [0,0,0] to [1,1,1] (top) and from [0,0,0] to [1,0,0] (bottom).
 
 ![](figures/specular-color.png)
 ![](figures/specular-color-2.png)
@@ -113,14 +123,14 @@ The specular color factor is allowed to be set to values greater than [1, 1, 1].
 
 *This section is non-normative.*
 
-[Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) defines the function `fresnel_mix`. In this extension, we add two additional arguments called `weight` and `f0_color`. It scales `f0` computed inside the function:
+[Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) defines the function `fresnel_mix`. In this extension, we add two additional arguments called `weight` and `f0_color`. It scales `f0` computed inside the function:
 
 ```
 function fresnel_mix(f0_color, ior, weight, base, layer) {
   f0 = ((1-ior)/(1+ior))^2 * f0_color
   f0 = min(f0, float3(1.0))
   fr = f0 + (1 - f0)*(1 - abs(VdotH))^5
-  return mix(base, layer, weight * fr)
+  return (1 - weight * max_value(fr)) * base + weight * fr * layer
 }
 ```
 
@@ -142,7 +152,7 @@ Note that in `dielectricSpecularF0` we clamp the product of specular color and f
 In the diffuse component we have to account for the fact that `F` is now an RGB value.
 
 ```
-c_diff = lerp(baseColor.rgb * (1 - max(F0.r, F0.g, F0.b)), black, metallic)
+c_diff = lerp(baseColor.rgb, black, metallic)
 diffuse = c_diff / PI
 f_diffuse = (1 - max(F.r, F.g, F.b)) * diffuse
 ```
