@@ -248,7 +248,7 @@ Flow nodes can be used to define a more complex control flow inside the node gra
 
 * set : Set a value of glTF object properties or of one of the behavior's variables
 * get : Get a value from glTF object properties or from one of the behavior's variables
-
+* setVariable: Set the value of a variable
 
 ### Examples
 
