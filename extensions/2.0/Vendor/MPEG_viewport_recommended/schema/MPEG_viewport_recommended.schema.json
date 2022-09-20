@@ -1,0 +1,16 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema",
+	"title": "MPEG_viewport_recommended",
+	"description": "glTF extension for specifying an set of recommended viewports.",
+	"allOf": [ { "$ref": "glTFProperty.schema.json"} ],
+	"properties": {
+		"viewports": {
+			"type": "array",
+			"items": {"$ref": "MPEG_viewport_recommended.viewport.schema.json"},
+			"minItems": 1
+		},
+        "extensions": {},
+        "extras": {}
+	},
+	"required": ["viewports"]
+}
