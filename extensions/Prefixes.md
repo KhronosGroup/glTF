@@ -36,6 +36,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `DOTV` | DotVision | https://dotvision.com<br>`guillaume.pelletier at dotvision.com` | [#2192](https://github.com/KhronosGroup/glTF/issues/2192) |
 | `EMBARK` | Embark Studios AB | https://www.embark-studios.com/ | [#2097](https://github.com/KhronosGroup/glTF/issues/2097) |
 | `EPIC` | Epic Games, Inc. | https://www.epicgames.com/ | [#1905](https://github.com/KhronosGroup/glTF/issues/1905) |
+| `ESSILORLUXOTTICA` | Luxottica Group S.p.A. | https://www.essilorluxottica.com/ | [#2204](https://github.com/KhronosGroup/glTF/issues/2204) |
 | `F8` | Forum8 Co., Ltd. | https://www.forum8.com/ | [#1999](https://github.com/KhronosGroup/glTF/issues/1999) |
 | `FB` | Facebook, Inc. | https://www.facebook.com/ | [#1139](https://github.com/KhronosGroup/glTF/pull/1139) |
 | `FOXIT` | Foxit Software, Inc. | https://foxitsoftware.com<br>`liqian_mu at foxitsoftware.com` | [#1712](https://github.com/KhronosGroup/glTF/issues/1712) |
