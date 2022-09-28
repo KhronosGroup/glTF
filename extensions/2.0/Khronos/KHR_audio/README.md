@@ -11,7 +11,7 @@
 
 ## Status
 
-Open Metaverse Interoperability Group Stage 2 Proposal
+Draft
 
 ## Dependencies
 
@@ -129,7 +129,9 @@ The extension must be added to the file's `extensionsUsed` array and because it 
 
 Audio data objects define where audio data is located. Data is either accessed via a bufferView or uri.
 
-When storing audio data in a buffer view, the `mimeType` field must be specified. Currently the only supported mime type is `audio/mpeg`.
+When storing audio data in a buffer view, the `mimeType` field must be specified. Currently the only supported mime type is `audio/mpeg` for use with MP3 files. MP3 was chosen due to its wide support across browsers and 3D engines as well as its lossy compression with variable bitrate. Other supported audio formats may be added via another extension.
+
+Note that in tools that process glTF files, but do not implement the KHR_audio extension, external files referenced via the `uri` field may not be properly copied to their final destination or baked into the final binary glTF file. In these cases, using the `bufferView` property may be a better choice assuming the referenced `bufferView` index is not changed by the tool. The `uri` field might be a better choice when you want to be able to quickly change the referenced audio asset.
 
 #### `bufferView`
 
@@ -142,12 +144,6 @@ The audio's MIME type. Required if `bufferView` is defined. Unless specified by 
 #### `uri`
 
 The uri of the audio file. Relative paths are relative to the .gltf file.
-
-#### MP3 Audio Format
-
-Provides a space efficient format that can also be tuned to satisfy audio engineers.
-
-The MPEG3 Audio Format is commonly available and freely licensed.
 
 ### Audio Sources
 
