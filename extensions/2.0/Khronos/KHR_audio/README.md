@@ -309,5 +309,6 @@ Radians are used for rotations matching glTF2.
 
 Prior Art:
 * [W3C Web Audio API](https://www.w3.org/TR/webaudio/)
+* [MSFT_audio_emitter](https://github.com/KhronosGroup/glTF/pull/1400)
 * [MOZ_hubs_components Audio](https://github.com/MozillaReality/hubs-blender-exporter/blob/04fc1d1/default-config.json#L298-L324)
 
