@@ -44,8 +44,6 @@ mat3 matrix = translation * rotation * scale;
 vec2 uvTransformed = ( matrix * vec3(Uv.xy, 1) ).xy;
 ```
 
-Note that non-uniform texture scaling is not supported by all clients that implement this extension.
-
 ## glTF Schema Updates
 
 The `KHR_texture_transform` extension may be defined on `textureInfo` structures. It may contain the following properties:
