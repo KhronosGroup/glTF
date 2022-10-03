@@ -53,7 +53,7 @@ The `KHR_texture_transform` extension may be defined on `textureInfo` structures
 | Name       | Type       | Default      | Description
 |------------|------------|--------------|---------------------------------
 | `offset`   | `array[2]` | `[0.0, 0.0]` | The offset of the UV coordinate origin as a factor of the texture dimensions.
-| `rotation` | `number`   | `0.0`        | Rotate the UV coordinates counter-clockwise (in U-right, V-down space) by this many radians around the origin. This is equivalent to a similar rotation of the image clockwise.
+| `rotation` | `number`   | `0.0`        | Rotate the UV coordinates counter-clockwise (in U-right, V-down space) by this many radians around the origin.
 | `scale`    | `array[2]` | `[1.0, 1.0]` | The scale factor applied to the components of the UV coordinates.
 | `texCoord` | `integer`  |              | Overrides the textureInfo texCoord value if supplied, and if this extension is supported.
 
