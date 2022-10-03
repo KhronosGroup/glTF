@@ -1,27 +1,28 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "camera.schema.json",
     "title": "Camera",
     "type": "object",
-    "description": "A camera's projection.  A node can reference a camera to apply a transform to place the camera in the scene.",
+    "description": "A camera's projection.  A node **MAY** reference a camera to apply a transform to place the camera in the scene.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
         "orthographic": {
             "allOf": [ { "$ref": "camera.orthographic.schema.json" } ],
-            "description": "An orthographic camera containing properties to create an orthographic projection matrix."
+            "description": "An orthographic camera containing properties to create an orthographic projection matrix. This property **MUST NOT** be defined when `perspective` is defined."
         },
         "perspective": {
             "allOf": [ { "$ref": "camera.perspective.schema.json" } ],
-            "description": "A perspective camera containing properties to create a perspective projection matrix."
+            "description": "A perspective camera containing properties to create a perspective projection matrix. This property **MUST NOT** be defined when `orthographic` is defined."
         },
         "type": {
             "description": "Specifies if the camera uses a perspective or orthographic projection.",
-            "gltf_detailedDescription": "Specifies if the camera uses a perspective or orthographic projection.  Based on this, either the camera's `perspective` or `orthographic` property will be defined.",
+            "gltf_detailedDescription": "Specifies if the camera uses a perspective or orthographic projection.  Based on this, either the camera's `perspective` or `orthographic` property **MUST** be defined.",
             "anyOf": [
                 {
-                    "enum": [ "perspective" ]
+                    "const": "perspective"
                 },
                 {
-                    "enum": [ "orthographic" ]
+                    "const": "orthographic"
                 },
                 {
                     "type": "string"

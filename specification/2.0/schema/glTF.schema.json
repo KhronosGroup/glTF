@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.schema.json",
     "title": "glTF",
     "type": "object",
     "description": "The root object for a glTF asset.",
@@ -7,7 +8,7 @@
     "properties": {
         "extensionsUsed": {
             "type": "array",
-            "description": "Names of glTF extensions used somewhere in this asset.",
+            "description": "Names of glTF extensions used in this asset.",
             "items": {
                 "type": "string"
             },
@@ -117,7 +118,8 @@
         },
         "scene": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the default scene."
+            "description": "The index of the default scene.",
+            "gltf_detailedDescription": "The index of the default scene.  This property **MUST NOT** be defined, when `scenes` is undefined."
         },
         "scenes": {
             "type": "array",

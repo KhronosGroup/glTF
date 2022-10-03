@@ -84,7 +84,7 @@ Absorption is usually defined as an amount of light at each frequency that is ab
 
 ### Implementing Absorption ###
 
-Modeling absorption is relatively straightforward. From the [glTF BRDF](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#appendix-b-brdf-implementation), we have:
+Modeling absorption is relatively straightforward. From the [glTF BRDF](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation), we have:
 
 *f* = *f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub>
 *f*<sub>*diffuse*</sub> = (1 - *F*) * *diffuse*
