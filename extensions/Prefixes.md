@@ -78,5 +78,5 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `USSF` | US Space Force | https://www.spaceforce.mil/ | [#2177](https://github.com/KhronosGroup/glTF/issues/2177) |
 | `UX3D` | UX3D GmbH | https://ux3d.io/ | [#1896](https://github.com/KhronosGroup/glTF/pull/1896) |
 | `VRMC` | VRM Consortium | https://vrm-consortium.org/ | [#1874](https://github.com/KhronosGroup/glTF/issues/1874) |
-| `VSEKAI` | V-Sekai | https://v-sekai.org/<br>`ernest.lee at chibifire.com`<br>`xn.lyuma at gmail.com`| [#2206](https://github.com/KhronosGroup/glTF/issues/2206) |
+| `VSEKAI` | V-Sekai | https://v-sekai.org/<br>`ernest.lee at chibifire.com`<br>`xn.lyuma at gmail.com` | [#2206](https://github.com/KhronosGroup/glTF/issues/2206) |
 | `WEB3D` | The Web3D Consortium, Inc. | https://www.web3d.org/ |  |
