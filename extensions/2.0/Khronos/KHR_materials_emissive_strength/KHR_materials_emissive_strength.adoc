@@ -1,0 +1,155 @@
+// Copyright 2021-2022 The Khronos Group Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= KHR_materials_emissive_strength
+:tmtitle: pass:q,r[^™^]
+:regtitle: pass:q,r[^®^]
+The Khronos{regtitle} 3D Formats Working Group
+:data-uri:
+:icons: font
+:toc2:
+:toclevels: 10
+:sectnumlevels: 10
+:max-width: 100%
+:numbered:
+:source-highlighter: coderay
+:docinfo: shared-head
+:docinfodir: ../..
+:stem:
+
+// :xrefstyle: short
+// :listing-caption: Listing
+:leveloffset: 1
+
+= Contributors
+
+  * Mike Bond, Adobe https://github.com/MiiBond[@miibond]
+  * Alex Jamerson, Amazon
+  * Thomas Dideriksen, Amazon
+  * Alex Wood, AGI https://twitter.com/abwood[@abwood]
+  * Ed Mackey, AGI https://twitter.com/emackey[@emackey]
+  * Nicolas Savva, Autodesk https://github.com/nicolassavva-autodesk[@nicolassavva-autodesk]
+  * Henrik Edstrom, Autodesk
+  * Tobias Haeussler, Dassault Systemes https://github.com/proog128[@proog128]
+  * Bastian Sdorra, Dassault Systemes https://github.com/bsdorra[@bsdorra]
+  * Emmett Lalish, Google https://github.com/elalish[@elalish]
+  * Richard Sahlin, IKEA https://github.com/rsahlin[@rsahlin]
+  * Alexey Knyazev, Individual Contributor https://github.com/lexaknyazev[@lexaknyazev]
+  * Bruce Cherniak, Intel
+  * Gary Hsu, Microsoft https://twitter.com/bghgary[@bghgary]
+  * Nicholas Barlow, Microsoft
+  * Adam Morris, Target https://github.com/weegeekps[@weegeekps]
+  * Sandra Voelker, Target
+  * Ben Houston, Threekit https://twitter.com/BenHouston3D[@bhouston]
+  * Andreas Atteneder, Unity
+  * Norbert Nopper, UX3D https://twitter.com/UX3DGpuSoftware[@UX3DGpuSoftware]
+  * Eric Chadwick, Wayfair https://github.com/echadwick-wayfair[echadwick-wayfair]
+
+Copyright 2021-2022 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+See <<full-copyright, the appendix>> for the full Khronos Copyright Statement.
+
+= Status
+
+Complete, Ratified by the Khronos Group
+
+= Dependencies
+
+Written against the glTF 2.0 spec.
+
+= Exclusions
+
+  * This extension must not be used on a material that also uses `KHR_materials_unlit`.
+
+= Overview
+
+The core glTF 2.0 material model includes an `emissiveFactor` and an `emissiveTexture` to control the color and
+intensity of the light being emitted by the material, clamped to the range [0.0, 1.0]. However, in PBR environments
+with high-dynamic range reflections and lighting, stronger emission effects may be desirable.
+
+In this extension, a new `emissiveStrength` scalar factor is supplied, that governs the upper limit of emissive
+strength per material.
+
+[NOTE]
+.Implementation Note
+====
+This strength can be colored and tempered using the core material's `emissiveFactor`
+and `emissiveTexture` controls, permitting the strength to vary across the surface of the material.
+Supplying values above 1.0 for `emissiveStrength` can have an influence on
+reflections, tonemapping, blooming, and more.
+====
+
+== Physical Units
+
+This extension supplies a unitless multiplier to the glTF 2.0 specification's emissive factor and
+texture.  Including this multiplier does not alter the physical units defined in glTF 2.0's
+https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#additional-textures[additional textures section]
+under the *emissive* texture.
+
+= Extending Materials
+
+_This section is non-normative._
+
+Any material with an `emissiveFactor` (and optionally an `emissiveTexture`) can have its strength modulated
+or amplified by the inclusion of this extension.  For example:
+
+[source,json]
+----
+{
+    "materials": [
+        {
+            "emissiveFactor": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "emissiveTexture": {
+                "index": 3
+            },
+            "extensions": {
+                "KHR_materials_emissive_strength": {
+                    "emissiveStrength": 5.0
+                }
+            }
+        }
+    ]
+}
+----
+
+In the above example, the `emissiveFactor` has been set to its maximum value, to enable the `emissiveTexture`.
+The `emissiveStrength` has been set to 5.0, making the texture five times brighter than it otherwise
+would have been.
+
+== Parameters
+
+The following parameters are contributed by the `KHR_materials_emissive_strength` extension:
+
+[options="header"]
+|====
+| Name                 | Type       | Description                                                                   | Required
+| *emissiveStrength*   | `number`   | The strength adjustment to be multiplied with the material's emissive value.  | No, default: `1.0`
+|====
+
+
+= Implementation Notes
+
+_This section is non-normative._
+
+A typical (pseudocode) implementation might look like the following:
+
+[source]
+----
+color += emissiveFactor.rgb * sRGB_to_Linear(emissiveTexture.rgb) * emissiveStrength;
+----
+
+= glTF Schema Updates
+
+  * *JSON schema*: link:schema/glTF.KHR_materials_emissive_strength.schema.json[glTF.KHR_materials_emissive_strength.schema.json]
+
+:numbered!:
+
+[appendix]
+[[full-copyright]]
+= Full Khronos Copyright Statement
+
+:copyyears: 2021-2022
+include::../../speccopyright.txt[]

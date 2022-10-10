@@ -1,0 +1,235 @@
+// Copyright 2018-2022 The Khronos Group Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= KHR_materials_volume
+:tmtitle: pass:q,r[^™^]
+:regtitle: pass:q,r[^®^]
+The Khronos{regtitle} 3D Formats Working Group
+:data-uri:
+:icons: font
+:toc2:
+:toclevels: 10
+:sectnumlevels: 10
+:max-width: 100%
+:numbered:
+:source-highlighter: coderay
+:docinfo: shared-head
+:docinfodir: ../..
+:stem:
+
+// :xrefstyle: short
+// :listing-caption: Listing
+:leveloffset: 1
+
+= Contributors
+
+  * Tobias Haeussler, Dassault Systemes https://github.com/proog128[@proog128]
+  * Bastian Sdorra, Dassault Systemes https://github.com/bsdorra[@bsdorra]
+  * Mike Bond, Adobe, https://github.com/MiiBond[@miibond]
+  * Emmett Lalish, Google https://github.com/elalish[@elalish]
+  * Don McCurdy, Google https://twitter.com/donrmccurdy[@donrmccurdy]
+  * Norbert Nopper, UX3D https://twitter.com/UX3DGpuSoftware[@UX3DGpuSoftware]
+  * Richard Sahlin, IKEA https://github.com/rsahlin[@rsahlin]
+  * Eric Chadwick, Wayfair https://github.com/echadwick-wayfair[echadwick-wayfair]
+  * Ben Houston, ThreeKit https://github.com/bhouston[@bhouston]
+  * Gary Hsu, Microsoft https://twitter.com/bghgary[@bghgary]
+  * Sebastien Vandenberghe, Microsoft https://twitter.com/sebavanjs[@sebavanjs]
+  * Nicholas Barlow, Microsoft
+  * Nicolas Savva, Autodesk https://github.com/nicolassavva-autodesk[@nicolassavva-autodesk]
+  * Henrik Edstrom, Autodesk
+  * Bruce Cherniak, Intel
+  * Adam Morris, Target https://github.com/weegeekps[@weegeekps]
+  * Sandra Voelker, Target
+  * Alex Jamerson, Amazon
+  * Thomas Dideriksen, Amazon
+  * Alex Wood, AGI https://twitter.com/abwood[@abwood]
+  * Ed Mackey, AGI https://twitter.com/emackey[@emackey]
+
+Copyright 2018-2022 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+See <<full-copyright, the appendix>> for the full Khronos Copyright Statement.
+
+= Status
+
+Complete, Ratified by the Khronos Group
+
+= Dependencies
+
+Written against the glTF 2.0 spec. The volume extension needs to be combined with an extension which allows light to transmit through the surface, e.g. `KHR_materials_transmission`.
+
+= Exclusions
+
+  * This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+  * This extension must not be used on a material that also uses `KHR_materials_unlit`.
+
+= Overview
+
+By default, a glTF 2.0 material describes the scattering properties of a surface enclosing an infinitely thin volume. The surface defined by the mesh represents a thin wall. The volume extension makes it possible to turn the surface into an interface between volumes. The mesh to which the material is attached defines the boundaries of an homogeneous medium and therefore must be manifold. Volumes provide effects like refraction, absorption and scattering. Scattering is not subject of this extension.
+
+image::figures/thin-thick-rendering.png[align="center"]
+
+.Renderings of various objects (top) and corresponding top-down slice through the scene (bottom). The solid line represents the mesh. The gray area represents the volume. Thin-walled materials can be applied to open (left) and closed meshes (middle). The dashed line indicates the imaginary bounds of the infinitely thin volume. The volumetric material can only be applied to closed meshes (right), resulting in volumetric effects like refraction.
+image::figures/thin-thick.svg[align="center"]
+
+The volume extension needs to be combined with an extension that allows light rays to pass through the surface into the volume, e.g. `KHR_materials_transmission`. Only if light is allowed to penetrate the surface, the volume extensions comes into effect. Once the volume is entered however, the simulation of volumetric effects inside the medium is independent of the surface properties. When hitting the surface from inside the volume, the light will leave the volume, depending on incident direction.
+
+
+.A light ray being refracted in a volume. The volume is homogeneous and has an index of refraction of 1.5. At the boundaries, the direction of the light ray is bent according to the indices of refraction at incident and outgoing side. Inside the volume, light is attenuated as it travels through the medium into the direction of the eye. The longer it travels, the more it is attenuated. The index of refraction is taken from `KHR_materials_ior`</figcaption>
+image::figures/refraction-absorption.svg[align="center"]
+
+
+If the extension is combined with `KHR_materials_transmission`, a refractive microfacet BTDF describes the transmission of light through the volume boundary. The refraction occurs on microfacets, and thus the roughness parameter affects both reflection and transmission. An exemplatory implementation is shown in <<implementation, Implementation>>.
+
+.Transmissive sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.
+image::figures/transmissive-roughness.png[align="center"]
+
+
+= Extending Materials
+
+The volumetric properties are defined by adding the `KHR_materials_volume` extension to any glTF material. A non-zero thickness switches from thin-walled to volumetric behavior. This requires a manifold/closed mesh. The properties of the medium are not texturable, it is assumed to be homogeneous.
+
+[source,json]
+----
+"materials": [
+    {
+        "extensions": {
+            "KHR_materials_volume": {
+                "thicknessFactor": 1.0,
+                "attenuationDistance":  0.006,
+                "attenuationColor": [ 0.5, 0.5, 0.5 ]
+            }
+        }
+    }
+]
+----
+
+[[properties]]
+= Properties
+
+The extension defines the following parameters to describe the volume.
+
+[options="header"]
+|====
+|                       | Type          | Description | Required
+| *thicknessFactor*     | `number`      | The thickness of the volume beneath the surface. The value is given in the coordinate space of the mesh. If the value is 0 the material is thin-walled. Otherwise the material is a volume boundary. The `doubleSided` property has no effect on volume boundaries. Range is [0, +inf). | No, default: `0`.
+| *thicknessTexture*    | `textureInfo` | A texture that defines the thickness, stored in the G channel. This will be multiplied by `thicknessFactor`. Range is [0, 1]. | No
+| *attenuationDistance* | `number`      | Density of the medium given as the average distance that light travels in the medium before interacting with a particle. The value is given in world space. Range is (0, +inf). | No, default: +Infinity
+| *attenuationColor*    | `number[3]`   | The color that white light turns into due to absorption when reaching the attenuation distance. | No, default: `[1, 1, 1]`
+|====
+
+= Thickness Texture
+
+The thickness of a volume enclosed by the mesh is typically quite difficult to compute at run-time in a rasterizer. Since glTF is primarily used with real-time rasterizers, this extension allows for the thickness of the volume to be baked into a thickness map. Thickness is given in the coordinate space of the mesh. Any transformations applied to the mesh's node will also be applied to the thickness. Thickness is an absolute value and defined as the product of thickness factor and thickness texture value. The thickness factor is defined in the range [0, +inf), whereas the thickness texture value range is limited to [0, 1]. An exemplary configuration could set the thickness factor to the longest edge of the bounding box of a mesh, and the texture scales this value so that it corresponds to the actual thickness underneath each surface point.
+
+Baking thickness into a map is similar to ambient occlusion baking, but rays are cast into the opposite direction of the surface normal. Dark values represent thin parts, bright values represent thick parts of the model.
+
+Computing volumetric effects with a thickness map is a lossy process. We use the thickness map to estimate the distance that a light ray will travel until it exists the volume. The estimation takes place at the entrance point, where we fetch the thickness from the thickness map. The actual distance, however, varies with the angle of incidence at the entrance point, as this angle determines the direction into which the light ray will travel through the mesh.
+
+Ray-tracers should ignore the thickness texture and use the actual, ray-traced distance instead. For this reason it is important that thickness factor and texture represent the actual thickness as accurate as possible. An accurate representation ensures that visual results look consistent across different rendering techniques. Note that it is still necessary to check the `thicknessFactor` to determine whether the object is thin-walled or volumetric.
+
+= Refraction
+
+Light rays falling through the volume boundary are refracted according to the index of refraction (IOR) given in `KHR_materials_ior`. The IOR determines the refraction angle. If `KHR_materials_ior` is not available, the IOR is 1.5.
+
+.Transmissive sphere with varying index of refraction. From left to right: 1.1, 1.5, 1.9.
+image::figures/ior.png[align="center"]
+
+= Attenuation
+
+The way in which a volumetric medium interacts with light and, therefore, determines its appearance is commonly specified by the attenuation coefficient latexmath:[\sigma_t] (also know as _extinction_ coefficient). It is the probability density that light interacts with a particle per unit distance traveled in the medium. latexmath:[\sigma_t] is a wavelength-dependent value. It's defined in the range [0, +inf) with m^-1^ as unit.
+
+There are two types of interaction between light photons and particles: absorption and scattering. Absorption removes the light energy from the photon and translates it to other forms of energy, e.g., heat. Scattering preserves the energy, but changes the direction of the light. Both act in wavelength-dependent manner. Based on these two possibilities, the attenuation coefficient is defined as the sum of two other coefficients: the absorption coefficient latexmath:[\sigma_a] and the scattering coefficient latexmath:[\sigma_s].
+
+latexmath:[\sigma_t = \sigma_a + \sigma_s]
+
+[NOTE]
+.Note
+====
+This extension does not define the scattering part of the volumetric light transport. For all further definitions we assume the scattering coefficient latexmath:[\sigma_s] to be zero for all wavelength, and therefore latexmath:[\sigma_t = \sigma_a].
+====
+
+The infinite range of the coefficient makes it rather unintuitive to control by users. To provide a convenient parameterization, this extension exposes two derived parameters: _attenuation color c_ and _attenuation distance d_ (see <<properties, Properties>>). The relation between the two parameters and the attenuation coefficient latexmath:[\sigma_t] is defined as
+
+latexmath:[\sigma_t = \frac{-log(c)}{d}]
+
+For rendering, we are interested in the change of light when traversing the medium. So we need to integrate the attenuation coefficient along a path of a certain length.
+
+In a homogenous medium, latexmath:[\sigma_t] is constant, and we can compute the fraction of light (radiance) transmitted after traveling a distance _x_ via Beer's law:
+
+latexmath:[T(x) = e^{-\sigma_t x}]
+
+where T is commonly referred to as _transmittance_.
+
+Substituting latexmath:[\sigma_t] in the previous equation by its definition via _attenuation color_ and _attenuation distance_, as defined above, and setting latexmath:[x = d] we get
+
+latexmath:[T(d_a) = e^{\frac{\log(c)}{d} \times d)} = c]
+
+So, after traveling distance _d_ through the medium we get attenuation color _c_.
+
+= Base Color and Absorption
+
+Base color and absorption both have an effect on the final color of a volumetric object, but the behavior is different. Base color changes the color of light at the volume boundary. Absorption occurs while the light is traveling through the volume. Depending on the distance the light travels, more or less of it is absorbed, making the overall color of the object dependent on its shape.
+
+.Base color changes the amount of light passing through the volume boundary (left). The overall color of the object is the same everywhere, as if the object is covered with a colored, transparent foil. Absorption changes the amount of light traveling through the volume (right). The overall color depends on the distance the light traveled through it; at small distances (tail of the dragon) less light is absorbed and the color is brighter than at large distances.
+image::figures/base-color-absorption.png[align="center"]
+
+[[implementation]]
+= Implementation
+
+_This section is non-normative._
+
+The specular transmission `specular_btdf({alpha})` defined in `KHR_materials_transmission` now takes refraction into account. That means that we use Snell's law to compute the modified half vector:
+
+latexmath:[H_{TR} = -\text{normalize}(\eta_i V + \eta_o L)].
+
+latexmath:[\eta_i] and latexmath:[\eta_o] denote the IOR of the incident and transmitted side of the surface, respectively. _V_ is the vector pointing to the camera, _L_ points to the light. In a path tracer, _V_ corresponds to the incident side of the surface, which is the side of the medium with latexmath:[\eta_i].
+
+Incident and transmitted IOR have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through overlapping objects was described by <<SchmidtBudge2002, Schmidt and Budge (2002)>>.
+
+The refractive microfacet BTDF is normalized in a different way.
+
+latexmath:[\text{MicrofacetBTDF} = \frac{\left| H_{TR} \cdot L \right| \left| H_{TR} \cdot V \right|}{\left| N \cdot L \right| \left| N \cdot V \right|} \frac{\eta_o^2 G_{T} D_{TR}}{\left(\eta_i (H_{TR} \cdot V) + \eta_o (H_{TR} \cdot L)\right)^2}]
+
+The latexmath:[D_T] and latexmath:[G_{TR}] terms are the same as in the specular transmission in `KHR_materials_transmission` except using the modified half vector latexmath:[H_{TR}] calculated from the refraction direction. See <<Walter2007, [Walter et al. (2007)>> for details.
+
+The Fresnel term also makes use of the modified half vector and, in addition, needs to take internal reflection into account. When using the Schlick approximation, care must be taken to use the angle that is on the dense side of the boundary, i.e., the side with the medium that has a higher IOR. In addition, total internal reflection has to be considered. Therefore, we have three cases:
+
+1. Light enters medium with higher IOR: latexmath:[\eta_o \geq \eta_i].
++
+--
+latexmath:[F_{TR}^{+} = f_0 + (1 - f_0) (1 - \left| V \cdot H_{TR} \right| )^5]
+--
+
+2. Light enters medium with lower IOR and there is no total internal reflection: latexmath:[\eta_o \leq \eta_i] and latexmath:[\sin^2(\theta_o) < 1]. The angle at the transmitted side of the boundary (medium with lower IOR) latexmath:[\theta_o] is computed from the angle of incidence via latexmath:[\sin^2(\theta_o) = (\eta_i / \eta_o)^2 (1 - (V \cdot H_{TR})^2)] and thus latexmath:[\cos(\theta_o) = \sqrt{1 - \sin^2(\theta_o)].
++
+--
+latexmath:[F_{TR}^{-} = f_0 + (1 - f_0) (1 - \left| \cos\theta_o \right| )^5]
+--
+
+3. Light enters medium with lower IOR and there is total internal reflection: latexmath:[\eta_o < \eta_i] and latexmath:[\sin^2(\theta_o) \geq 1].
++
+--
+latexmath:[F_{TR}^\text{TIR} = 1]
+--
+
+= Interaction with other extensions
+
+If `KHR_materials_specular` is used in combination with `KHR_materials_volume`, specular color and specular modify F0 and F90 of the Fresnel as usual, but with one exception: In case of total internal reflection, F90 is not scaled by the specular parameter of `KHR_materials_specular`. This allows users to change the specular component of a refractive object without introducing artifacts, i.e., dark appearance in areas where total internal reflection occurs.
+
+= glTF Schema Updates
+
+  * *JSON schema*: link:schema/glTF.KHR_materials_volume.schema.json[glTF.KHR_materials_volume.schema.json]
+
+= References
+
+  * [[KullaConty2017]] https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf[Kulla C., Conty A. (2017): Revisiting Physically Based Shading at Imageworks]
+  * [[Walter2007]] https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf[Walter B., Marschner S., Li H., Torrance K. (2007): Microfacet Models for Refraction through Rough Surfaces].
+  * [[SchmidtBudge2002]] https://www.researchgate.net/profile/Brian_Budge/publication/247523037_Simple_Nested_Dielectrics_in_Ray_Traced_Images/links/00b7d52e001e1b88a3000000/Simple-Nested-Dielectrics-in-Ray-Traced-Images.pdf[Schmidt C., Budge B. (2002): Simple Nested Dielectrics in Ray Traced Images].
+
+:numbered!:
+
+[appendix]
+[[full-copyright]]
+= Full Khronos Copyright Statement
+
+:copyyears: 2018-2022
+include::../../speccopyright.txt[]

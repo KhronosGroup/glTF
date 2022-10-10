@@ -1,0 +1,189 @@
+// Copyright 2017-2022 The Khronos Group Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= KHR_materials_unlit
+:tmtitle: pass:q,r[^™^]
+:regtitle: pass:q,r[^®^]
+The Khronos{regtitle} 3D Formats Working Group
+:data-uri:
+:icons: font
+:toc2:
+:toclevels: 10
+:sectnumlevels: 10
+:max-width: 100%
+:numbered:
+:source-highlighter: coderay
+:docinfo: shared-head
+:docinfodir: ../..
+:stem:
+
+// :xrefstyle: short
+// :listing-caption: Listing
+:leveloffset: 1
+
+= Contributors
+
+  * Don McCurdy, Google, https://twitter.com/donrmccurdy[@donrmccurdy]
+  * Norbert Nopper, UX3D, link:mailto:nopper@ux3d.io[nopper@ux3d.io]
+  * Gary Hsu, Microsoft, https://twitter.com/bghgary[@bghgary]
+  * Scott Nagy, Microsoft, https://twitter.com/visageofscott[@visageofscott]
+  * Pär Winzell, Facebook, https://twitter.com/zellski[@zellski]
+  * Michael Feldstein, Facebook, https://twitter.com/msfeldstein[@msfeldstein]
+  * Robert Long, Mozilla, https://twitter.com/arobertlong[@arobertlong]
+
+Copyright 2017-2022 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+See <<full-copyright, the appendix>> for the full Khronos Copyright Statement.
+
+= Status
+
+Complete, Ratified by the Khronos Group
+
+= Dependencies
+
+Written against the glTF 2.0 spec.
+
+= Overview
+
+This extension defines an unlit shading model for use in glTF 2.0
+materials, as an alternative to the Physically Based Rendering (PBR) shading
+models provided by the core specification. Three motivating uses cases for
+unlit materials include:
+
+  * Mobile devices with limited resources, where unlit materials offer a
+    performant alternative to higher-quality shading models.
+  * Photogrammetry, in which lighting information is already present and
+    additional lighting should not be applied.
+  * Stylized materials (such as "`anime`" or "`hand-drawn`" looks) in which lighting is
+    undesirable for aesthetic reasons.
+
+These use cases are not mutually exclusive: artists may pick an unlit material
+for performance reasons, and make aesthetic decisions to complement that
+choice. As a result, client implementations capable of rendering PBR should not
+automatically "`upgrade`" to fully-shaded PBR. Any core PBR properties specified
+on an unlit material (except `baseColor`) are meant only as fallbacks for
+clients that do not support the `KHR_materials_unlit` extension. The extension,
+whether required or optional within the asset, indicates preference for an
+unlit visual style.
+
+= Extending Materials
+
+The common Unlit material is defined by adding the
+`KHR_materials_unlit` extension to any glTF material. When present, the
+extension indicates that a material should be unlit and use available
+`baseColor` values, alpha values, and vertex colors while ignoring all
+properties of the default PBR model related to lighting or color. Alpha
+coverage and doubleSided still apply to unlit materials.
+
+[source,json]
+----
+{
+    "materials": [
+        {
+            "name": "MyUnlitMaterial",
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [ 0.5, 0.8, 0.0, 1.0 ]
+            },
+            "extensions": {
+                "KHR_materials_unlit": {}
+            }
+        }
+    ]
+}
+----
+
+== Definition
+
+The Unlit material model describes a constantly shaded surface that is
+independent of lighting. The material is defined only by properties already
+present in the https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#materials[glTF 2.0 material specification].
+No new properties are added by this extension -- it is effectively a Boolean
+flag indicating use of an unlit shading model. Additional properties on the
+extension object are allowed, but may lead to undefined behavior in conforming
+viewers.
+
+Color is calculated as:
+
+[source]
+----
+color = <baseColorTerm>
+----
+
+`<baseColorTerm>` is the product of `baseColorFactor`, `baseColorTexture`, and vertex color (if any), as defined by the https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#metallic-roughness-material[core glTF material specification].
+
+== Example
+
+The following example defines an unlit material with a constant red color.
+
+[source,json]
+----
+"materials": [
+    {
+        "name": "red_unlit_material",
+        "pbrMetallicRoughness": {
+            "baseColorFactor": [ 1.0, 0.0, 0.0, 1.0 ]
+        },
+        "extensions": {
+            "KHR_materials_unlit": {}
+        }
+    }
+]
+----
+
+== Extension compatibility and fallback materials
+
+When possible, authoring tools should provide a fallback material definition
+and mark the `KHR_materials_unlit` extension as optional. Models
+including the extension optionally will still render in all clients that
+support the core glTF 2.0 specification, falling back to a PBR metal/rough
+material. In clients that do not support the extension, direct lighting will
+be applied and performance may be degraded.
+
+Defining a fallback to the default PBR shading model is achieved by setting
+appropriate parameters on the default material.
+
+[source,json]
+----
+"materials": [
+    {
+        "name": "unlit_with_fallback",
+        "pbrMetallicRoughness": {
+            "baseColorFactor": [ 1.0, 1.0, 1.0, 1.0 ],
+            "baseColorTexture": { "index": 0 },
+            "roughnessFactor": 0.9,
+            "metallicFactor": 0.0
+        },
+        "extensions": {
+            "KHR_materials_unlit": {}
+        }
+    }
+]
+----
+
+[NOTE]
+.Implementation Note
+====
+For best fallback behavior in clients that do not
+implement the `KHR_materials_unlit` extension, authoring tools may use:
+
+  * `metallicFactor` is `0` and `emissiveFactor` is `[0, 0, 0]`.
+  * `roughnessFactor` is greater than `0.5`.
+  * Omit `metallicRoughnessTexture`, `occlusionTexture`, `emissiveTexture`,
+    and `normalTexture`.
+====
+
+[NOTE]
+.Implementation Note
+====
+When `KHR_materials_unlit` is included with another
+extension specifying a shading model on the same material, the result is
+undefined.
+====
+
+:numbered!:
+
+[appendix]
+[[full-copyright]]
+= Full Khronos Copyright Statement
+
+:copyyears: 2017-2022
+include::../../speccopyright.txt[]
