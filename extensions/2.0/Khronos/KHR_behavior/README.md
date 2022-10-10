@@ -1,11 +1,16 @@
 # KHR\_behavior
 
+NOTE: Currently we are merging this proposal with the Adobe behavior extension.
+
 ## Contributors
 
-* Ben Houston, Threekit
-* Jan Hermes, Continental
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
 * Moritz Becher, UX3D [@mobecher](https://twitter.com/mobecher)
+* Ben Houston, Threekit
+* Jan Hermes, Continental
+* Dwight Rogers, Adobe
+* Emmet Lalish, Google
+* Ken Xu, NVIDIA
 
 Copyright 2018-2022 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
