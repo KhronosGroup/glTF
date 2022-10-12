@@ -79,9 +79,9 @@ For light types that have a direction (`directional` and `spot` lights), the lig
 
 ## Light Types
 
-All light types share the common set of properties listed below.
-
 ### Light Shared Properties
+
+All light types share the common set of properties listed below.
 
 | Property | Description | Required |
 |:-----------------------|:------------------------------------------| :--------------------------|
@@ -95,7 +95,7 @@ Light properties are unaffected by node transforms — for example, `range` and 
 
 The `intensity` represents the radiant flux density that the light would emit if it were colored pure white (`[1.0, 1.0, 1.0]`). The `color` property acts as a wavelength-specific multiplier for this power.
 
-## Range Property
+#### Range Property
 
 The range property (allowed only on point and spot lights) defines a distance cutoff at which the light's intensity must be considered zero, meaning the light no longer affects the surrounding area. This can be useful to cull geometry that a light may not visibly affect, potentially having a significant positive impact on rendering performance. It is required that, when given a non-zero value, rendering engines ignore the light beyond this range.
 
@@ -107,7 +107,7 @@ A recommended implementation for this attenuation with a cutoff range is as foll
 
 ### Directional
 
-Directional lights are light sources that act as though they are infinitely far away and emit light in the direction of the local -z axis. This light type inherits the orientation of the node that it belongs to; position and scale are ignored except for their effect on the inherited node orientation. Because it is at an infinite distance, the light is not attenuated. Its intensity is defined in watts per square metre (W/m<sup>2</sup>).
+Directional lights are light sources that act as though they are infinitely far away and emit light in the direction of the local -z axis. This light type inherits the orientation of the node that it belongs to; position and scale are ignored except for their effect on the inherited node orientation. Because it is at an infinite distance, the light is not attenuated. Directional light intensity is defined in watts per square metre (W/m<sup>2</sup>).
 
 ### Point
 
