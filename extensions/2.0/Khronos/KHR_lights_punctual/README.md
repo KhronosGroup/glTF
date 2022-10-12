@@ -86,12 +86,14 @@ All light types share the common set of properties listed below.
 | Property | Description | Required |
 |:-----------------------|:------------------------------------------| :--------------------------|
 | `name` | Name of the light. | No, Default: `""` |
-| `color` | RGB value for light's color in linear space. | No, Default: `[1.0, 1.0, 1.0]` |
-| `intensity` | Brightness of light in. The units that this is defined in depend on the type of light. `point` and `spot` lights use luminous intensity in W/sr while `directional` lights use illuminance in W/m<sup>2</sup> | No, Default: `1.0` |
+| `color` | RGB value for the light's color in linear space. | No, Default: `[1.0, 1.0, 1.0]` |
+| `intensity` | Brightness of the light. The units that this is defined in depend on the type of light. `point` and `spot` lights use luminous intensity in W/sr while `directional` lights use illuminance in W/m<sup>2</sup>. | No, Default: `1.0` |
 | `type` | Declares the type of the light. | :white_check_mark: Yes |
 | `range` | Hint defining a distance cutoff at which the light's intensity may be considered to have reached zero. Supported only for `point` and `spot` lights. Must be > 0. When undefined, range is assumed to be infinite. | No |
 
 Light properties are unaffected by node transforms — for example, `range` and `intensity` do not change with scale.
+
+The `intensity` represents the radiant flux density that the light would emit if it were colored pure white (`[1.0, 1.0, 1.0]`). The `color` property acts as a wavelength-specific multiplier for this power.
 
 ## Range Property
 
