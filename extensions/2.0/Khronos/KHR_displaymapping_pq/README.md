@@ -1,4 +1,4 @@
-# KHR_displaymapping_pq
+# KHR_displayencoding_pq
 
 ## Contributors
 
@@ -33,7 +33,8 @@ This extension uses the following terms:
 |OOTF|opto-optical transfer function, which converts linear scene light to display linear light. Sometimes called 'Tone mapping'.|
 |Linear scene light | Light output from the scene in cd / m2. |
 |Relative linear light | Light output in the range [0 - 10000] cd / m2 where 10000 equals a fully exposed pixel |
-|Tone-mapping | Converts linear light to linear display light. Given the display properties and viewing environment reproduces the perceptual impression that the viewer would have observing the original scene |
+|Tone-mapping | The intent to change the visual appearance of the display output. In this context with the intent to reproduce the perceptual impression the viewer 
+would have observing the original scene |
 
 
 
@@ -52,8 +53,8 @@ Produce expected output when a glTF model is viewed in an editing tool supportin
 Produce expected output on SDR and supported HDR displays.  
 Be compatible with updates to glTF texture color spaces, for example increased gamut.  
 
-This is done by specifying a way to map or quantize the resulting (rendered) scene linear light output values to a known range of {R,G,B} values that can be output to display.  
-This mapping shall be done so that hue (or chromaticity) is retained in the displayed image.   
+This is done by specifying a way to encode or quantize the resulting (rendered) scene linear light output values to a known range of {R,G,B} values that can be output to display.  
+This encoding shall be done so that hue (or chromaticity) is retained in the displayed image.   
 Output units are declared as candela / m2  
 
 Currently the glTF specification does not define how to output pixels.  
@@ -84,20 +85,19 @@ It is important that different models that are using this extension can be viewe
 Another reason to provide means for deterministic brightness (light intensity) values is how the human brain perceives brightness.
 According to research (Bernstein et al. 2018) the mind's perception of brightness is mostly the same, regardless of object brightness.  
 The difference in the perception of the object's brightness is based on background color.    
-Given this relation means it is important to retain the relative brightness of the linear scene light values.  
+Given this relation means it is important to retain the relative brightness and colors of the calculated scene, without doing any filtering, tone-mapping or post-processing.    
 
 Here the term renderer means a rendering engine that consists of a system wherein a buffer containing the pixel values for each frame is prepared. 
 This buffer will be referred to as the framebuffer.  
 The framebuffer can be of varying range, precision and colorspace. This has an impact on the color gamut that can be displayed.  
 
 After completion of one framebuffer it is output to the display, this is usually done by means of a swap-chain. The details of how the swap-chain works is outside the scope of this extension.  
-KHR_displaymapping_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
+KHR_displayencoding_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
 
 This extension does not define an OOTF (or Tone mapping) to convert linear scene light to linear display light.  
 
-This extension does not seek to model the psychological perception of the human vision system, instead it provides means to reproduce the scene light information as it would be 'captured' by a human observer (in the scene).    
-The goal is to replicate the amount of light that would enter into the eye, through the cornea, and end up on the retina.    
-Modelling of biological effects such as photoreceptor fatigue or mind perception is not part of the goal of this extension.    
+This extension does not seek to model the psychological perception of the human vision system, instead it provides means to reproduce the scene light information as it would be 'captured' by an observer (in the scene).    
+Modelling biological effects such as photoreceptor fatigue, visual perception such as color constancy or simultaneous contrast is not part of this extension.    
 
 This extension does not take the viewing environment of the display, or eye light adaptation, into consideration.  
 It is assumed that the content is viewed in an environment that is dimly lit (~5 cd / m2) without direct light on the display.  
@@ -257,7 +257,7 @@ For instance, game engines Frostbite and Lumberyard and also in specific games s
 ## Internal range of illumination (light contribution) values
 
 
-When the KHR_displaymapping_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum output brightness.  
+When the KHR_displayencoding_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum output brightness.  
 
 Limiting the range of output brightness values to the specified range is done as part of the Integration Points.    
 [See Integration Points](#Integration-Points)  
@@ -387,19 +387,19 @@ vec3 outputColor = BT_2100_OETF(displayColor);
 
 
 
-## Defining an asset to use KHR_displaymapping_pq
+## Defining an asset to use KHR_displayencoding_pq
 
-The `KHR_displaymapping_pq` extension is added to the root of the glTF, the extension has no configurable parameters.    
+The `KHR_displayencoding_pq` extension is added to the root of the glTF, the extension has no configurable parameters.    
 Declare using `extensionsRequired` if required by usecase.  
 When declared using `extensionsUsed` keep in mind that the viewer or renderer may disregard the extension and output may not be as expected.   
 
 ```json
 {
   "extensionsRequired": [
-    "KHR_displaymapping_pq"
+    "KHR_displayencoding_pq"
   ],
   "extensions": {
-    "KHR_displaymapping_pq" : {}
+    "KHR_displayencoding_pq" : {}
   }
 }
 
