@@ -28,12 +28,13 @@ This extension uses the following terms:
 
 |NAME|MEANING|
 |------|-----|
-|OETF|The opto-electronic transfer function, which converts linear scene light into the video signal. It is the inverse-EOTF and is sometimes called 'Display Encoding'. Performed prior to writing the output value into the framebuffer. | 
+|OETF|The opto-electronic transfer function, which converts linear scene light into the video signal. It is the inverse-EOTF and is sometimes called 'Display Encoding'. Performed prior to writing the output value into the framebuffer. Inverse of the EOTF | 
 |EOTF|The electro-optical Transfer Function, which converts the video signal into the linear light output of the display. Performed in the display device. |
 |OOTF|opto-optical transfer function, which converts linear scene light to display linear light. Sometimes called 'Tone mapping'.|
 |Linear scene light | Light output from the scene in cd / m2. |
 |Relative linear light | Light output in the range [0 - 10000] cd / m2 where 10000 equals a fully exposed pixel |
 |Tone-mapping | The intent to change the visual appearance of the display output. In this context with the intent to reproduce the perceptual impression the viewer would have observing the original scene |
+| Perceptual Quantizer | The EOTF defined in SMPTE ST-2084, also defines the inverse (the OETF) |
 
 
 
@@ -133,13 +134,13 @@ provide forms suitable for critical viewing.`
 ### glTF asset considerations
 
 The extension affects the output of the entire glTF asset, all scenes and nodes, included in a file that is using this extension.
-The current rendered scene shall be output using the transfer function declared by this extension whenever the usecase is relevant, for instance a renderer targeting a display at interactive framerates.   
+The current rendered scene shall be output using the opto electrical transfer function (OETF) declared by this extension whenever the usecase is relevant, for instance a renderer targeting a display at interactive framerates.   
 
 Visualization of multiple glTF assets using this extension is supported and will produce a normative result.  
 
 If the glTF asset contains multiple scenes, each one when rendered, shall be output using this extension.  
 
-If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for the PQ transfer function.  
+If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for the PQ OETF.  
 This could for instance be a 'Main product' type of scenario, where the asset contains the light setup and uses this extension.    
 All nodes added to such scene shall use this extension.  
 
@@ -226,19 +227,12 @@ However, a typical usecase for a renderer targeting interactive framerates is th
 Such a display rarely has the range and precision of internal calculations making it necessary to scale internal pixel values to match the characteristics of the output.  
 
 
-The transfer function for this extension is chosen from ITU BT.2100 which is the standard for HDR TV and broadcast content creation.   
-This standard uses the perceptual quantizer as transfer function, i.e. to go from relative linear light (display light) values to non-linear output values.  
-The function is selected based on minimizing visual artefacts from color banding according to the Barten Ramp. Resulting on very slight visible banding on panels with 10 bits per colorchannel.  
+The OETF for this extension is chosen from ITU BT.2100 which is the standard for HDR TV and broadcast content creation.   
+This standard uses the Perceptual Quantizer (PQ) as OETF which is defined in SMPTE ST-2084.  
+PQ is selected based on minimizing visual artefacts from color banding according to the Barten Ramp. Resulting on very slight visible banding on panels with 10 bits per colorchannel.  
 On panels with 12 bits there is no visible banding artefacts when using the perceptual qantizer.  
 
-The need for a known dynamic range comes from the way that the mind perceives brightness.  
-Humans have no way to determine exact brightness of objects, instead the brightness is measured compared to background (Bernstein et al.2018).  
-As an effect of this it is important to know the mapped display brightness for a high dynamic range.  
-Imagine a background with a scene linear brightness around RGB (10.0, 10.0, 10.0) with an object of scene linear brightness around RGB (100.0, 100.0, 100.0).  
-As the mind will perceive object brightess compared to the background, i.e. 100 vs 10, it is vital to have a known higher dynamic range in order to achieve deterministic display output.     
-
-Apart from being widely supported and used in the TV / movie industry the perceptual quantizer is also embraced by the gaming community, with support in the engines from some of the major game companies.  
-For instance, game engines Frostbite and Lumberyard and also in specific games such as Destiny 2 and Call Of Duty.  
+SMPTE ST-2084, or PQ, is widely supported and used in the TV / movie industry, it is the de-facto standard on desctop OS'es that support HDR such as Windows 10/11 and MacOS.  
 
 
 <figure>
@@ -260,7 +254,7 @@ Limiting the range of output brightness values to the specified range is done as
 
 This does not have an impact on color texture sources since they define values as contribution factor.  
 
-The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ) used in SMPTE ST 2084..  
+The value 10000 cd / m2 for an output pixel with full brightness is chosen to be compatible with the Perceptual Quantizer (PQ).  
 The range [0 - 10000] shall be seen as a relative linear light (display light) where 0 is black and 10000 is full brightness on the display.  
 
 It does not mean that the display will be capable of outputting at brightness levels up to 10000 cd / m2  
@@ -274,7 +268,7 @@ This section describes how a content creator and exporter shall handle lightsour
 As a content creator using this extension the light intensity value of 10 000 lumen / m2 is the max illumination value for each output pixel.  
 Giving the benefit of a known increased light range as well as providing enough fidelity for most usecases.  
 
-Illumination values are clamped as part of the rendering process during BRDF light calculations meaning that the scene max light values can go above 10 000 lumen / m2.  
+Illumination values are clamped as part of the rendering process after BRDF light calculations meaning that the scene max light values can go above 10 000 lumen / m2.  
 
 Adding illumination above 10 000 lumen / m2 will give the effect of brightening the darker areas without affecting hue or brightness of fully bright pixels.  
 
@@ -298,14 +292,14 @@ This section describes how to decide if display type is HDR or SDR.
 ### HDR capable display
 
 
-If the framebuffer format and colorspace is known to the implementation and one is available, choose a format compatible with color primaries BT.2020 and uses the SMPTE ST 2084 transfer function (perceptual quantizer).  
+If the framebuffer format and colorspace is known to the implementation and one is available, choose a format compatible with color primaries ITU BT.2020 and uses the SMPTE ST 2084 transfer function (perceptual quantizer).  
 In Vulkan this would for instance be:  
 VK_COLOR_SPACE_HDR10_ST2084_EXT  
 VK_COLOR_SPACE_DOLBYVISION_EXT  
 
 For a list of Vulkan colorspaces [see Table 1 of VkColorSpaceKHR](https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkColorSpaceKHR.html)
 
-It is valid to choose a framebuffer with colorspace BT.2020 (or BT.2100) that does not use the SMPTE ST 2084 transfer function, if SMPTE ST 2084 (PQ EOTF) is applied to pixel values before being output to display.  
+It is valid to choose a framebuffer with colorspace ITU BT.2020 (or BT.2100) that does not use the SMPTE ST 2084 transfer function, if SMPTE ST 2084 (PQ EOTF) is applied to pixel values before being output to display.  
 
 
 **Implementation notes**
