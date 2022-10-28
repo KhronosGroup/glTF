@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "light",
+    "type": "object",
+    "description": "A photometric light profile.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+      "intensityDistribution": {
+        "description": "luminous intensity distribution (float values, 2D for asymetric illumination, column-major)",
+        "dimensions": [1, 0],
+        "data": [1.0]
+      },
+      "extras": {
+        "test": "Test ABC",
+        "testlab": "Lab ABC",
+        "manufacturer": "Manufacturer ABC"
+      },
+      "name": { },
+      "extensions": { }
+    }
+}
