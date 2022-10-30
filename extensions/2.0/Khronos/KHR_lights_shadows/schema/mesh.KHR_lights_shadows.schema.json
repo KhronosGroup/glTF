@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "KHR_lights_shadows mesh extension",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "castShadows": {
+            "type": "boolean",
+            "description": "Whether the mesh casts shadows."
+        },
+        "receiveShadows": {
+            "type": "boolean",
+            "description": "Whether the mesh receives shadows."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
