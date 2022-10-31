@@ -31,30 +31,28 @@ cast shadows.
 ## Cast/Receive shadows for Meshes
 
 Whether a mesh casts shadows and whether it receives shadows are defined by
-adding `extensions.KHR_lights_shadows` property to a `mesh` definition
+adding `extensions.KHR_lights_shadows` property to a `mesh.primitive` definition
 with `castShadows` and `receiveShadows` boolean properties inside it.
 
 ```
 "meshes": [{
-    "primitives": [
+    "primitives": [{
         ...
-    ],
-    "extensions": {
-        "KHR_lights_shadows": {
-            "castShadows": false,
-            "receiveShadows": true
+        "extensions": {
+            "KHR_lights_shadows": {
+                "castShadows": false,
+                "receiveShadows": true
+            }
         }
-    }
-}, {
-    "primitives": [
+    }, {
         ...
-    ],
-    "extensions": {
-        "KHR_lights_shadows": {
-            "castShadows": false,
-            "receiveShadows": true
+        "extensions": {
+            "KHR_lights_shadows": {
+                "castShadows": true,
+                "receiveShadows": false
+            }
         }
-    }
+    }]
 }]
 ```
 
@@ -69,8 +67,7 @@ inside it.
 "extensions": {
     "KHR_lights_punctual": {
         "lights": [{
-            "type": ...,
-            "color": ...,
+            ...,
             "extensions": {
                 "KHR_lights_shadows": {
                     "castShadows": true
@@ -81,12 +78,12 @@ inside it.
 }]
 ```
 
-## Cast/Receive Shadows properties for Mesh
+## Cast/Receive Shadows properties for Mesh primitive
 
 | Property | Type | Description | Requires |
 |:------|:------|:------|:------|
-| `castShadows` | `boolean` | Whether the mesh casts shadows | No, default: `true` |
-| `receiveShadows` | `boolean` | Whether the mesh receives shadows | No, default: `true` |
+| `castShadows` | `boolean` | Whether the mesh primitive casts shadows | No, default: `true` |
+| `receiveShadows` | `boolean` | Whether the mesh primitive receives shadows | No, default: `true` |
 
 ## Cast shadows property for Light
 
@@ -97,7 +94,7 @@ inside it.
 ## glTF Schema Updates
 
 * **JSON schema**:
-  * [mesh.KHR_lights_shadows.schema.json](schema/mesh.KHR_lights_shadows.schema.json)
+  * [mesh.primitive.KHR_lights_shadows.schema.json](schema/mesh.primitive.KHR_lights_shadows.schema.json)
   * [glTF.KHR_lights_punctual.KHR_lights_shadows.schema.json](schema/glTF.KHR_lights_punctual.KHR_lights_shadows.schema.json)
 
 ## Implementation Note
@@ -105,6 +102,6 @@ inside it.
 This extension doesn't define shadow rendering techniques (ie. Shadow Map) or
 shadow types (ie. PCF). They should be application or engine specific.
 
-`castShadows` and `receiveShadows` properties for Meshes don't define whether the
-mesh is visible. Similarly `castShadows` property for Lights doesn't define whether
-the light is active.
+The `castShadows` and `receiveShadows` properties for Mesh primitives don't
+define whether the mesh primitives are visible. Similarly the `castShadows`
+property for Lights doesn't define whether the lights are active.
