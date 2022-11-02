@@ -35,6 +35,8 @@ This extension uses the following terms:
 |Relative linear light | Light output in the range [0 - 10000] cd / m2 where 10000 equals a fully exposed pixel |
 |Tone-mapping | The intent to change the visual appearance of the display output. In this context with the intent to reproduce the perceptual impression the viewer would have observing the original scene |
 | Perceptual Quantizer | The EOTF defined in SMPTE ST-2084, also defines the inverse (the OETF) |
+| HDR | High dynamic range. High range of luminosity values, an increase in brightness. In this context it is synonymous with higher precision, or bit-depth |
+| WCG | Wide color gamut. High range of color values, an increase in color. |
 
 
 
@@ -45,14 +47,14 @@ This extension is intended for implementations that targets a display with the g
 Here the term physically correct refers to the brdf calculations of the linear scene light and the display output value passed to the display encoding step.  
 
 This extension aims to:  
-Produce consistent, deterministic and physically correct output under varying light conditions - here called expected output. 
+Produce consistent, deterministic and physically correct output under varying light conditions - here called expected output.  
 Produce expected output of a glTF model (nodes) when put into a scene with defined lights.  
 Produce expected output of a scene when the light conditions are dynamically changed.  
 Produce expected output of multiple glTF models (nodes) that are combined into one scene.  
 Produce expected output when a glTF model is viewed in an editing tool supporting this extension.
 Produce expected output on SDR and supported HDR displays.  
 Provide a way to have light interoperability by defining output range.  
-Be compatible with updates to glTF texture color spaces, for example increased gamut.  
+Be compatible with updates to glTF texture color spaces, for example increased color gamut.  
 
 This is done by specifying a way to encode the resulting (rendered) scene linear light output values to a known range of {R,G,B} values that can be output to display.  
 This encoding shall be done so that hue (or chromaticity) is retained in the displayed image.     
