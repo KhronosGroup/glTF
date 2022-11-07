@@ -221,24 +221,27 @@ The elements and the wording are inspired by MaterialX (see "MaterialX Specifica
 Flow nodes can be used to define a more complex control flow inside the node graph. 
 
 * branch : Branch the control flow based on a condition
-* gate : Bllow for multiple trigger events to be combined.
+* gate : llow for multiple trigger events to be combined.
 * delay
 * debounce
+
 ### Action Nodes
 
-* set : Set a value of glTF object properties or of one of the behavior's variables
-* get : Get a value from glTF object properties or from one of the behavior's variables
-* animation play/cancel
+* set : Set a value of glTF object properties or of one of the behavior's variables, relies upon the KHR_animation_pointer extension
+* get : Get a value from glTF object properties or from one of the behavior's variables, relies upon the KHR_animation_pointer extension
+* animation play/cancel : start, stop animations
+* sound play/cancel : start, stop sounds, relies upon the KHR_sound extension
+
 ### Event Nodes
 
 #### Lifecycle
 
-* Start
-* Tick
+* start : Triggered on the start of execution for the object
+* Tick : Triggered on a per-frame update for the object, may not fire on every frame if there isn't sufficient resources
 
 #### Mouse/Touch
 
-* Hover Start/End
+* Hover Start/End - 
 * Select (AKA Tap/Click)
 
 #### Camera
