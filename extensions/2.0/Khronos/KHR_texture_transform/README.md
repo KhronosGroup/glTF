@@ -24,7 +24,7 @@ Written against the glTF 2.0 spec.
 
 Many techniques can be used to optimize resource usage for a 3d scene. Chief among them is the ability to minimize the number of textures the GPU must load. To achieve this, many engines encourage packing many objects' low-resolution textures into a single large texture atlas. The region of the resulting atlas that corresponds with each object is then defined by vertical and horizontal offsets, and the width and height of the region.
 
-To support this use case, this extension adds `offset`, `rotation`, and `scale` properties to textureInfo structures. These properties would typically be implemented as an affine transform on the UV coordinates. In the following GLSL sample, the typical rotation matrix is transposed because glTF's vertical (`V`) axis is down, with the origin in the upper-left.  The direction of "counter-clockwise" must be interpreted within that space.
+To support this use case, this extension adds `offset`, `rotation`, and `scale` properties to textureInfo structures. These properties apply to the texture coordinates supplied by glTF (not device-local texture coordinates, if transformed), and would typically be implemented as an affine transform on the UV coordinates. In the following GLSL sample, the typical rotation matrix is transposed because glTF's vertical (`V`) axis is down, with the origin in the upper-left.  The direction of "counter-clockwise" must be interpreted within that space.
 
 ```glsl
 varying in vec2 Uv;
