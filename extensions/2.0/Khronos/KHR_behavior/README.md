@@ -224,6 +224,8 @@ Flow nodes can be used to define a more complex control flow inside the node gra
 * gate : llow for multiple trigger events to be combined.
 * delay
 * debounce
+* flipflop : 
+* multi-gate : each time there is a new trigger, it 
 
 ### Action Nodes
 
@@ -231,23 +233,25 @@ Flow nodes can be used to define a more complex control flow inside the node gra
 * get : Get a value from glTF object properties or from one of the behavior's variables, relies upon the KHR_animation_pointer extension
 * animation play/cancel : start, stop animations
 * sound play/cancel : start, stop sounds, relies upon the KHR_sound extension
+* interpolate to: takes the current value and target value along with delta time, and easing function and executes that in the background, relies upon the KHR_animation_pointer extension.
+TODO: Determine how we can manipulate node visibility, currently this isn't supported in glTF.  There is the extension KHR_nodes_disable.
 
 ### Event Nodes
 
 #### Lifecycle
 
 * start : Triggered on the start of execution for the object
-* Tick : Triggered on a per-frame update for the object, may not fire on every frame if there isn't sufficient resources
+* tick : Triggered on a per-frame update for the object, may not fire on every frame if there isn't sufficient resources (not available in level 0)
 
 #### Mouse/Touch
 
-* Hover Start/End - 
-* Select (AKA Tap/Click)
+* hover : Start and end events for hoving on a node, compatible with at least VR and mouse interactions
+* select : The equivalent of tap, click for mouse, touch or VR.
 
 #### Camera
 
-* Proximity In/Out
-* View In/Out
+* proximity - In and Out In/Out
+* view frustum - In/Out
 
 ### Examples
 
