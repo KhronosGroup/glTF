@@ -221,11 +221,12 @@ The elements and the wording are inspired by MaterialX (see "MaterialX Specifica
 Flow nodes can be used to define a more complex control flow inside the node graph. 
 
 * branch : Branch the control flow based on a condition
-* gate : llow for multiple trigger events to be combined.
-* delay
-* debounce
-* flipflop : 
-* multi-gate : each time there is a new trigger, it 
+* gate : allow for multiple trigger events to be combined.
+* delay : after the trigger, it will fire the output after the user specified delay.  it will not respond to any other triggers during that delay.   it is not a queue.
+* debounce : a delay combined with a gate, such that if there is a duration delay between the trigger and the cancel, it will fire the output
+* flipflop : each time it is triggered it will fire either its first or second output subsequently
+* multi-gate : each time there is a new trigger, it will fire a subsequent output, it can optionally loop and it can be reset to start against
+* do-once : it will trigger its output the first time it is triggered, but subsequent triggers will do nothing until it is reset
 
 ### Action Nodes
 
