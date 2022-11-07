@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_lights_ies glTF extension",
+    "title": "EXT_lights_ies glTF extension",
     "type": "object",
     "description": "glTF extension that enables the use of IES light profiles.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

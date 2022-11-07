@@ -24,6 +24,16 @@
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The index of the bufferView that contains the IES light profile. This field **MUST NOT** be defined when `uri` is defined."
         },
+        "orientation": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 4,
+            "maxItems": 4,
+            "default": [ 0.0, 0.0, 0.0, 1.0 ],
+            "description": "Unit quaternion in the order (x, y, z, w) that defines the orientation of the light distribution."
+        },
         "name": { },
         "extensions": { },
         "extras": { }
