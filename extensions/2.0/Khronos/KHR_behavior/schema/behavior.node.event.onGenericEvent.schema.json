@@ -1,8 +1,9 @@
 {
-    "title": "onUpdate Event Node",
+    "title": "on<Name>Event Node",
     "properties": {
         "type": {
-            "const": "event/onUpdate"
+            "type": "string",
+            "pattern": "^events\/on(.+)Event$"
         },
         "flow": {
             "type": "object",

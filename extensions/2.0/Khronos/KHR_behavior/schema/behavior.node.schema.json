@@ -1,6 +1,4 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "behavior.node.schema.json",
     "title": "KHR_behavior Node",
     "type": "object",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
@@ -15,5 +13,6 @@
         "name": {
             "type": "string"
         }
-    }
+    },
+    "sockets": []
 }

@@ -1,0 +1,10 @@
+{
+    "oneOf": [
+        { "$ref": "behavior.types.boolean.schema.json" },
+        { "$ref": "behavior.types.float.schema.json" },
+        { "$ref": "behavior.types.integer.schema.json" },
+        { "$ref": "behavior.types.vec2.schema.json" },
+        { "$ref": "behavior.types.vec3.schema.json" },
+        { "$ref": "behavior.types.vec4.schema.json" }
+    ]
+}

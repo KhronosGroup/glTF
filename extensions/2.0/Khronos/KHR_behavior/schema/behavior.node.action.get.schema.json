@@ -1,8 +1,8 @@
 {
-    "title": "Set Value Node",
+    "title": "Get Value Node",
     "properties": {
         "type": {
-            "const": "action/set"
+            "const": "action/get"
         },
         "flow": {
             "type": "object",
@@ -13,12 +13,11 @@
         "parameters": {
             "type": "object",
             "properties": {
-                "target": { "$ref": "behavior.types.pointer.schema.json" },
-                "value": { "$ref": "behavior.types.any.schema.json"}
+                "source": { "$ref": "behavior.types.pointer.schmea.json" }
             },
-            "required": ["target", "value"]
+            "required": ["source"]
         }
     },
-    "sockets": [],
+    "sockets": ["result"],
     "required": ["type", "parameters"]
 }

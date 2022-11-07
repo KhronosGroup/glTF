@@ -1,11 +1,16 @@
 # KHR\_behavior
 
+NOTE: Currently we are merging this proposal with the Adobe behavior extension.
+
 ## Contributors
 
-* Ben Houston, Threekit
-* Jan Hermes, Continental
 * Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
 * Moritz Becher, UX3D [@mobecher](https://twitter.com/mobecher)
+* Ben Houston, Threekit
+* Jan Hermes, Continental
+* Dwight Rogers, Adobe
+* Emmet Lalish, Google
+* Ken Xu, NVIDIA
 
 Copyright 2018-2022 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -67,7 +72,7 @@ A behavior node is a node both available in the Visual Scripting system from Uni
 [schema](schema/)
 
 ### Types
-Only the following types are allowed to read and write to.
+The following value types are known to the behavior extension:
 
 * integer (TODO: Specify precision, i32 or i64, and what happens at overflow)
 * boolean
@@ -99,11 +104,11 @@ For simplicity, behavior nodes can be connected, even if they do have different 
 
 #### Dimensionality
 
-Automatic casting may not take place for types that differ in dimensionality, such as `vec2`, `vec3` and `vec4`. 
+Automatic casting may not take place for types that differ in their dimensionalities, such as `vec2`, `vec3` and `vec4`. 
 
 ## Behavior Graph Nodes
 
-Nodes are json objects with properties `type`, `parameters`, `flow` and `name`. Based on the `type` the node must have a specific set of properties in `parameters` and `flow`. 
+Nodes are JSON objects with properties `type`, `parameters`, `flow` and `name`. Based on the `type` the node must have a specific set of properties in `parameters` and `flow`. 
 
 ```json
 {
@@ -122,23 +127,21 @@ Nodes are json objects with properties `type`, `parameters`, `flow` and `name`. 
 
 The parameters and flow outputs corresponding to a specific node type can be found in the schema. 
 
-### Flow
+### Parameter Input Sockets
 
-Nodes may define a `flow` property containing references to other nodes in the behavior's `nodes` array that should follow the current node in certain conditions. 
+`parameters` is an object containing the value inputs of the node. 
 
-If the node doesn't define a `flow` property or if it's value is an empty object literal, the behavior **terminates** at the node.
+Each node defines which parameters it expects, specified by a *name* and a [type](#types).
 
-The node can define which of the paths in the `flow` property are followed during execution of the behavior based on some rules defined in the node's specification. 
+Parameters can be passed a [JSON value](#json-value), a [reference to another node's output socket](#output-socket-references) or a [reference to a variable](#variable-references). 
 
-### Parameters
+All values have to be *ready* at the time of execution of the node, i.e. if the parameter is a reference to another node's output socket, this node has to already have been executed.
 
-Parameters can be passed a [Type](#types) compatible json value, a reference to another node's output socket or a reference to a variable.
+Automatic type conversions according to the rules in [Automatic casting](#automatic-casting) take place when connecting compatible types to the parameter as output socket reference or variable reference. Automatic casting does not apply to JSON values, these must be of the same type as the node's parameter.
 
-In addition to specifying the required parameter names, nodes also define the type of the parameter. Automatic type conversions according to the rules in [Automatic casting](#automatic-casting) take place when connecting compatible types to the parameter as output socket reference or variable reference. Automatic casting does not apply to json values, these must be of the same type as the node's parameter.
+#### JSON Value
 
-#### Json Value
-
-Constant json values can directly be passed to parameters. Passing a value that doesn't correspond to the parameters type is invalid, e.g passing a `1.0` number literal to a boolean parameter is not allowed.
+Constant JSON values can directly be passed to parameters. It is invalid to pass a value that doesn't correspond to the type of the parameter, e.g passing a `1.0` number literal to a boolean parameter is not allowed.
 
 ```json
 {
@@ -146,9 +149,9 @@ Constant json values can directly be passed to parameters. Passing a value that 
 }
 ```
 
-#### Output Socket References
+#### [Output Socket References](schema/behavior.types.reference.outputSocket.schema.json)
 
-Each node type also implicitly defines a set of output sockets, where each output is referenced with a string key. For example the "condition" parameter of the `logic/branch` node above could be connected to the output value of a previous node like in the following example.
+Each node type also implicitly defines a set of output sockets, where each output is referenced with a string key. For example, the "condition" parameter of the `logic/branch` node above could be connected to the output value of a previous node like in the following example.
 
 ```json
 {
@@ -159,9 +162,13 @@ Each node type also implicitly defines a set of output sockets, where each outpu
 }
 ```
 
-#### Variable References
+If the referenced node only provides one output socket, it is allowed to omit the "socket" property in the output socket reference.
 
-Variables that are defined in the behavior can be referenced in a parameter with the *Variable Reference* object literal 
+#### [Variable References](schema/behavior.types.reference.variable.schema.json)
+
+Variables that are defined in the behavior can be referenced in a parameter with the *Variable Reference* object literal. 
+- The Reference is an index into the `variables` array of the behavior
+- Only variables defined in the same behavior can be referenced
 
 ```json
 {
@@ -171,6 +178,40 @@ Variables that are defined in the behavior can be referenced in a parameter with
 }
 
 ```
+
+### Flow Output Sockets
+
+Nodes may define a `flow` property containing references to other nodes in the behavior's *nodes* array that should succeed the current node's execution in certain conditions. 
+
+If the node doesn't define a `flow` property or if its value is an empty object literal, the behavior **terminates** at the node.
+
+The node can define which of the paths in the `flow` property are followed during the execution of the behavior e.g. based on the evaluation of an *input parameter*.
+
+### Value Output Sockets
+
+Nodes define a set of output values that become available after the execution of the node. Subsequent nodes can therefore reference these output values via the node's so-called *output sockets* (see [Output Socket References](#output-socket-references)).
+
+The output sockets are defined in the node schema with a type and a socket name.
+
+### Event Nodes
+
+Event nodes serve a special purpose, as they can initiate the execution of a behavior.
+
+#### Lifecycle
+
+* start/load : Triggered on the start of execution for the object
+* update/tick : Triggered on a per-frame update for the object, may not fire on every frame if there isn't sufficient resources (not available in level 0)
+* on<*Name*>Event: generic event specified by a name. The implementation is responsible for determining when the event should fire. This can for example be used to react to user input
+
+#### Mouse/Touch
+
+* hover : Start and end events for hoving on a node, compatible with at least VR and mouse interactions
+* select : The equivalent of tap, click for mouse, touch or VR.
+
+#### Camera
+
+* proximity - In and Out In/Out
+* view frustum - In/Out
 
 
 ### Math Nodes
@@ -209,12 +250,12 @@ The elements and the wording are inspired by MaterialX (see "MaterialX Specifica
 ### Channel Nodes
 The elements and the wording are inspired by MaterialX (see "MaterialX Specification"):  
 
-* combine2 : Combine 2 separate input values into one array  
-* combine3 : Combine 3 separate input values into one array  
-* combine4 : Combine 4 separate input values into one array  
-* extract2 : Extracts array into 2 separate output values  
-* extract3 : Extracts array into 3 separate output values  
-* extract4 : Extracts array into 4 separate output values  
+* combine2 : Combine 2 separate input values into a vec2  
+* combine3 : Combine 3 separate input values into a vec3
+* combine4 : Combine 4 separate input values into a vec4
+* extract2 : Extracts vec2 into 2 separate output values  
+* extract3 : Extracts vec3 into 3 separate output values  
+* extract4 : Extracts vec4 into 4 separate output values  
 
 ### Flow Nodes
 
@@ -235,29 +276,15 @@ Flow nodes can be used to define a more complex control flow inside the node gra
 * animation play/cancel : start, stop animations
 * sound play/cancel : start, stop sounds, relies upon the KHR_sound extension
 * interpolate to: takes the current value and target value along with delta time, and easing function and executes that in the background, relies upon the KHR_animation_pointer extension.
+* setVariable: Set the value of a variable
+
 TODO: Determine how we can manipulate node visibility, currently this isn't supported in glTF.  There is the extension KHR_nodes_disable.
 
-### Event Nodes
 
-#### Lifecycle
-
-* start : Triggered on the start of execution for the object
-* tick : Triggered on a per-frame update for the object, may not fire on every frame if there isn't sufficient resources (not available in level 0)
-
-#### Mouse/Touch
-
-* hover : Start and end events for hoving on a node, compatible with at least VR and mouse interactions
-* select : The equivalent of tap, click for mouse, touch or VR.
-
-#### Camera
-
-* proximity - In and Out In/Out
-* view frustum - In/Out
 
 ### Examples
 
-#### Setting a nodes' translation
-
+#### Events
 
 ```json
 {
@@ -273,24 +300,16 @@ TODO: Determine how we can manipulate node visibility, currently this isn't supp
                                 "next": 1
                             }
                         },
-                        {
-                            "name": "Setting the translation of the first node",
-                            "type": "action/set",
-                            "parameters": {
-                                "target": "/nodes/0/translation",
-                                "value": [1.0, 2.0, 3.0]
-                            },
-                        },
                     ]
                 }
             ]
-
         }
     }
 }
 ```
 
-The same example can also be implemented with a constant variable
+#### Setting a nodes' translation
+
 
 ```json
 {
@@ -307,13 +326,25 @@ The same example can also be implemented with a constant variable
             "type": "action/set",
             "parameters": {
                 "target": "/nodes/0/translation",
-                "value": { "$variable": 0 }
+                "value": [1.0, 2.0, 3.0]
             },
         },
+    ]
+}
+```
+
+#### Defining variables
+
+Behaviors can contain variables like the following, e.g. to store state of the behavior or to parameterize the behavior
+
+```json
+{
+    "nodes": [
+        ...
     ],
     "variables": [
         {
-            "name": "Constant values",
+            "name": "Offset",
             "type": "vec3",
             "initialValue": [
                 1.0,
@@ -324,6 +355,8 @@ The same example can also be implemented with a constant variable
     ]
 }
 ```
+
+
 
 #### Getting the translation value from a node
 
@@ -362,7 +395,7 @@ Translation from the second node is written each frame to the translation of the
 
 #### Conditional flow
 
-Translation is written each frame to the first or second node depending on a condition:
+
 ```json
 {
     "nodes": [
