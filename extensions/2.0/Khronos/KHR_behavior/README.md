@@ -69,9 +69,9 @@ A behavior node is a node both available in the Visual Scripting system from Uni
 ### Types
 Only the following types are allowed to read and write to.
 
-* integer
+* integer (TODO: Specify precision, i32 or i64, and what happens at overflow)
 * boolean
-* float (scalar)
+* float/scalar (TODO: Specify precision, fp32 or fp64, and what happens at overflow)
 * vec2
 * vec3
 * vec4
@@ -221,13 +221,30 @@ The elements and the wording are inspired by MaterialX (see "MaterialX Specifica
 Flow nodes can be used to define a more complex control flow inside the node graph. 
 
 * branch : Branch the control flow based on a condition
-
+* gate : Bllow for multiple trigger events to be combined.
+* delay
+* debounce
 ### Action Nodes
 
 * set : Set a value of glTF object properties or of one of the behavior's variables
 * get : Get a value from glTF object properties or from one of the behavior's variables
+* animation play/cancel
+### Event Nodes
 
+#### Lifecycle
 
+* Start
+* Tick
+
+#### Mouse/Touch
+
+* Hover Start/End
+* Select (AKA Tap/Click)
+
+#### Camera
+
+* Proximity In/Out
+* View In/Out
 
 ### Examples
 
