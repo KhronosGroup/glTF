@@ -23,11 +23,13 @@ The light profiles are referenced by nodes and inherit their transform. This als
 
 A conforming implementation of this extension must be able to load the light profiles defined in the asset and render the asset using those lights. The following IES light profile standards need to be supported: `IES LM-63-95`, `ANSI/IESNA LM-63-02`, and `ANSI/IES LM-63-19`. Please see the [implementation details](#implementation-details) for a description of the differences between the standard versions relevant for this extension.
 
-The following keywords and values defined in IES light profile files are not required to be supported for conformance:
+Not all fields of the IES light profile standard need to be supported for conformance. The following fields are not required to be supported:
 
-* Any keywords listed after the first line and before the `TILT=` line.
-* `TILT=INCLUDE`, `TILT=<filename>` and related values.
-* Light profiles with the photometric type `Type A`.
+* Any meta data listed after the first line and before the `TILT` section.
+* The `TILT` section (`TILT=INCLUDE`, `TILT=<filename>` and related values).
+* Light profiles of `Type A` photometry.
+* `<number of lamps>`, `<lumens per lamp>`, `<units type>`, `<width>`, `<length>`, `<height>`, and `<input watts>`.
+
 
 ## Defining Light Profiles
 
@@ -41,7 +43,7 @@ By default, the light profile's `(0.0, 0.0)` point on the photometric web, the p
 * Type B: `(90H, 0V)`
 * Type C: `(90V, 270L)`
 
-Thus, the X/Y plane is the horizontal photometric plane and the X/Z plane is the vertical photometric plane for all angular data specified. Each light profile can define the `orientation` property to change the direction to which the profile's `(0.0, 0.0)` corresponds to. This is needed in the case of illformed IES light profiles.
+Thus, the X/Y plane is the horizontal photometric plane and the X/Z plane is the vertical photometric plane for all angular data specified. Each light profile can define the `orientation` property to change the direction to which the profile's `(0.0, 0.0)` point corresponds to. This is needed in the case of illformed IES light profiles.
 
 ```javascript
 "extensions": {
