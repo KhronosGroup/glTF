@@ -8,26 +8,26 @@
   },
   "extensionsRequired": [
     "KHR_lights_punctual",
-    "KHR_displaymapping_pq"
+    "KHR_displayencoding_pq"
   ],
   "extensions": {
-    "KHR_displaymapping_pq" : {
+    "KHR_displayencoding_pq" : {
     },
     "KHR_lights_punctual": {
       "lights": [
         {
           "color": [
             1,
-            0.9,
-            0.2
+            1,
+            1
           ],
-          "intensity": 100000,
+          "intensity": 10000,
           "type": "directional",
-          "name": "Direct sunlight, close to max brightness"
+          "name": "Mostly sunny 10000 lumen / m2"
         }
       ]
     },
-    "KHR_displaymapping_pq": {}
+    "KHR_displayencoding_pq": {}
   },
   "scene": 0,
   "scenes": [
@@ -102,7 +102,7 @@
           "index": 0
         },
         "metallicFactor": 0,
-        "roughnessFactor": 0
+        "roughnessFactor": 1
       }
     }
   ],
@@ -131,7 +131,7 @@
   "images": [
     {
       "name": "basecolor",
-      "uri": "DisplayMappingPQ_image0.png"
+      "uri": "DisplayEncodingPQ_image0.png"
     }
   ],
   "accessors": [
@@ -203,7 +203,7 @@
   "buffers": [
     {
       "byteLength": 677728,
-      "uri": "DisplayMappingPQ.bin"
+      "uri": "DisplayEncodingPQ.bin"
     }
   ]
 }

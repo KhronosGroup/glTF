@@ -3,15 +3,15 @@
     "generator": "Khronos glTF Blender I/O v1.6.16",
     "version": "2.0",
     "extras": {
-        "gltf.clearcolor": "0.2,0.2,0.2,0"
+        "gltf.clearcolor": "0.1,0.1,0.1,0"
     }
   },
   "extensionsRequired": [
     "KHR_lights_punctual",
-    "KHR_displaymapping_pq"
+    "KHR_displayencoding_pq"
   ],
   "extensions": {
-    "KHR_displaymapping_pq" : {
+    "KHR_displayencoding_pq" : {
     },
     "KHR_lights_punctual": {
       "lights": [
@@ -21,13 +21,13 @@
             1,
             1
           ],
-          "intensity": 1500,
+          "intensity": 400,
           "type": "directional",
-          "name": "Overcast day 1500 lumen / m2"
+          "name": "Sunrise 400 lumen / m2"
         }
       ]
     },
-    "KHR_displaymapping_pq": {}
+    "KHR_displayencoding_pq": {}
   },
   "scene": 0,
   "scenes": [
@@ -131,7 +131,7 @@
   "images": [
     {
       "name": "basecolor",
-      "uri": "DisplayMappingPQ_image0.png"
+      "uri": "DisplayEncodingPQ_image0.png"
     }
   ],
   "accessors": [
@@ -203,7 +203,7 @@
   "buffers": [
     {
       "byteLength": 677728,
-      "uri": "DisplayMappingPQ.bin"
+      "uri": "DisplayEncodingPQ.bin"
     }
   ]
 }
