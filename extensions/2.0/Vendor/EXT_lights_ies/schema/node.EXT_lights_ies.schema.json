@@ -12,7 +12,7 @@
             "type": "number",
             "minimum": 0.0,
             "default": 1.0,
-            "description": "Non-negative factor to scale the light distribution intensity."
+            "description": "Non-negative factor to scale the light's intensity."
         },
         "color": {
             "type": "array",
@@ -24,7 +24,7 @@
             "minItems": 3,
             "maxItems": 3,
             "default": [ 1.0, 1.0, 1.0 ],
-            "description": "Non-negative tint factor."
+            "description": "RGB value for the light's color in linear space."
         },
         "extensions": { },
         "extras": { }
