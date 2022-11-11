@@ -1,4 +1,4 @@
-# KHR_displayencoding_pq
+# KHR_displayencoding
 
 ## Contributors
 
@@ -92,7 +92,7 @@ The framebuffer can be of varying range, precision and colorspace. This has an i
 
 After completion of one framebuffer, it is output to the display.  
 This is usually done by means of a swap-chain. The details of how the swap-chain works is outside the scope of this extension.  
-KHR_displayencoding_pq specifies one method of mapping internal pixel values to that of the framebuffer.  
+KHR_displayencoding specifies one method of mapping internal pixel values to that of the framebuffer.  
 
 This extension does not define an OOTF (or Tone mapping) to convert linear scene light to linear display light.  
 
@@ -142,7 +142,7 @@ Visualization of multiple glTF assets using this extension is supported and will
 
 If the glTF asset contains multiple scenes, each one when rendered, shall be output using this extension.  
 
-If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for the PQ OETF.  
+If the glTF asset contains this extension but no scene or model data then it may be treated as an enabler for the displayencoding extension.  
 This could for instance be a 'Main product' type of scenario, where the asset contains the light setup and uses this extension.    
 All nodes added to such scene shall use this extension.  
 
@@ -174,6 +174,7 @@ RGB light output from the glTF BRDF is here called 'relative linear light' and i
 Light contribution can come from several lightsources. 
 To avoid costly and complex calculation of light contribution prior to the BRDF, values are scaled before sent to the OETF.  
 This scaling, not clamp, shall be done equally to RGB triplets in a way that retains hue.  
+The RGB value for each pixel is then stored in the framebuffer using OETF (display encoding) depending on colorspace.  
 
 **Implementation Notes**
 
@@ -193,12 +194,28 @@ vec3 displayColor = BRDF_SCALE(brdfColor);
 
 
 **OETF**
-Perceptural Quantizer - reference OETF  
-Apply the opto-electrical transfer function (OETF).  
+
+Opto-Electric Transfer Function shall be selected based on framebuffer colorspace.  
+
+Colorspace:  
+HDR10 ST2084  
+DOLBYVISION  
+
+Perceptural Quantizer reference OETF shall be used  
+The Reference PQ OETF shall be used as defined in:  
+https://www.itu.int/rec/R-REC-BT.2100/en    
+
 This operation will quantify display light to output values with minimal amount of banding.  
 Input values are relative linear light values in the range {R,G,B} [0 - 10000] and output is non-linear display values in range {R,G,B} [0.0 - 1.0]  
 
-If target framebuffer is an encoded non-linear image format, the inverse of that encoding must be applied to the non-linear PQ signal.  
+Colorspace:  
+sRGB
+
+sRGB OETF shall be used  
+The sRGB color component transfer function (OETF) shall be used as defined in:  
+https://www.w3.org/Graphics/Color/srgb  
+
+Input values are relative linear light values {R,G,B} / 10000 in the range [0.0 - 1.0] and output is non-linear display values in range [R,G,B} [0.0 - 1.0]  
 
 
 **Pipeline**
@@ -208,7 +225,7 @@ If target framebuffer is an encoded non-linear image format, the inverse of that
 | Input         |   Function    | Output range  | Description   |
 | ------------- | ------------- | ----------- |------------- |
 | [0.0 - X] | BRDF | [0.0 - 10000] | The glTF BRDF calculations. Output is scaled pixel value to be displayed - relative linear light. |
-| [0 - 10000]  |     OETF      | [0.0 - 1.0] | Framebuffer output - maps relative linear light to nonlinear PQ signal value. Output is non-linear PQ signal. |
+| [0 - 10000]  |     OETF      | [0.0 - 1.0] | Framebuffer output - maps relative linear light to nonlinear signal value. |
 
 
 **Implementation Notes**
@@ -229,13 +246,14 @@ However, a typical usecase for a renderer targeting interactive framerates is th
 Such a display rarely has the range and precision of internal calculations making it necessary to scale internal pixel values to match the characteristics of the output.  
 
 
-The OETF for this extension is chosen from ITU BT.2100 which is the standard for HDR TV and broadcast content creation.   
+The HDR OETF for this extension is chosen from ITU BT.2100 which is the standard for HDR TV and broadcast content creation.   
 This standard uses the Perceptual Quantizer (PQ) as OETF which is defined in SMPTE ST-2084.  
 PQ is selected based on minimizing visual artefacts from color banding according to the Barten Ramp. Resulting on very slight visible banding on panels with 10 bits per colorchannel.  
 On panels with 12 bits there is no visible banding artefacts when using the perceptual qantizer.  
 
 SMPTE ST-2084, or PQ, is widely supported and used in the TV / movie industry, it is the de-facto standard on desctop OS'es that support HDR such as Windows 10/11 and MacOS.  
 
+This extension seeks to provide support for displays that can be either SDR or HDR, with the goal of providing a display output that retains the hue of BRDF light calculations.  
 
 <figure>
 <img src="./images/DesignOverview.png"/>
@@ -249,7 +267,7 @@ SMPTE ST-2084, or PQ, is widely supported and used in the TV / movie industry, i
 ## Internal range of illumination (light contribution) values
 
 
-When the KHR_displayencoding_pq extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum output brightness.  
+When the KHR_displayencoding extension is used all lighting and pixel calculations shall be done using the value 10000 (cd / m2) as the maximum output brightness.  
 
 Limiting the range of output brightness values to the specified range is done as part of the Integration Points.    
 [See Integration Points](#Integration-Points)  
@@ -318,6 +336,7 @@ This is to allow for compatibility with displays that does not support higher ra
 It also allows implementations where the details of the framebuffer is not known or available.  
 
 A SDR capable display is defined as having less than 10 bits per pixel for each colorchannel.  
+This will typically have a framebuffer in the sRGB colorspace.   
 
 
 
@@ -379,19 +398,19 @@ vec3 outputColor = BT_2100_OETF(displayColor);
 
 
 
-## Defining an asset to use KHR_displayencoding_pq
+## Defining an asset to use KHR_displayencoding
 
-The `KHR_displayencoding_pq` extension is added to the root of the glTF, the extension has no configurable parameters.    
+The `KHR_displayencoding` extension is added to the root of the glTF, the extension has no configurable parameters.    
 Declare using `extensionsRequired` if required by usecase.  
 When declared using `extensionsUsed` keep in mind that the viewer or renderer may disregard the extension and output may not be as expected.   
 
 ```json
 {
   "extensionsRequired": [
-    "KHR_displayencoding_pq"
+    "KHR_displayencoding"
   ],
   "extensions": {
-    "KHR_displayencoding_pq" : {}
+    "KHR_displayencoding" : {}
   }
 }
 
@@ -410,13 +429,6 @@ Sample models for testing purposes are available in the `../models` directory.
 
 [ITU Rec BT 2390 High dynamic range television for production and international programme exchange](https://www.itu.int/pub/R-REP-BT.2390)  
 
-[PQ in the Frostbite engine by EA](https://www.youtube.com/watch?v=7z_EIjNG0pQ&list=PL3Bn4v5NMqSsbgK4Crj9YBzBSmeiTAGNT&index=1)  
-
-[PQ in the Call Of Duty engine](https://www.youtube.com/watch?v=EN1Uk6vJqRw)  
-
-[PQ in the Lumberyard engine](https://www.youtube.com/watch?v=LQlJGUcDYy4&t=1488s)  
-
-[PQ in the Destiny 2 engine](https://www.youtube.com/watch?v=9jvhM8B63ng)  
 
 ## Appendix: Full Khronos Copyright Statement
 
