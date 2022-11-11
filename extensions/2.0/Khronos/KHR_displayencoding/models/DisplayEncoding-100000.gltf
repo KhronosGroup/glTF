@@ -8,26 +8,26 @@
   },
   "extensionsRequired": [
     "KHR_lights_punctual",
-    "KHR_displayencoding_pq"
+    "KHRdisplayencoding_pq"
   ],
   "extensions": {
-    "KHR_displayencoding_pq" : {
+    "KHRdisplayencoding_pq" : {
     },
     "KHR_lights_punctual": {
       "lights": [
         {
           "color": [
             1,
-            1,
-            1
+            0.9,
+            0.2
           ],
-          "intensity": 10000,
+          "intensity": 100000,
           "type": "directional",
-          "name": "Mostly sunny 10000 lumen / m2"
+          "name": "Direct sunlight, close to max brightness"
         }
       ]
     },
-    "KHR_displayencoding_pq": {}
+    "KHRdisplayencoding_pq": {}
   },
   "scene": 0,
   "scenes": [
@@ -102,7 +102,7 @@
           "index": 0
         },
         "metallicFactor": 0,
-        "roughnessFactor": 1
+        "roughnessFactor": 0
       }
     }
   ],
@@ -131,7 +131,7 @@
   "images": [
     {
       "name": "basecolor",
-      "uri": "DisplayEncodingPQ_image0.png"
+      "uri": "DisplayEncoding_image0.png"
     }
   ],
   "accessors": [
