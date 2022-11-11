@@ -200,8 +200,8 @@ Application-specific data.
 |   |Type|Description|Required|
 |---|---|---|---|
 |**frequency**|`number`|Frequency for RT60 and DSR values| &#10003; Yes|
-|**RT60**|`number`|Specifies RT60 value in `second` for the frequency provided in the `frequency` field| &#10003; Yes|
-|**DSR**|`number`|Specifies Diffuse-to-Source Ratio value in `dB` for the frequency provided in the `frequency` field.| &#10003; Yes|
+|**RT60**|`number`|Specifies RT60 value in seconds for the frequency provided in the `frequency` field| &#10003; Yes|
+|**DSR**|`number`|Specifies Diffuse-to-Source Ratio value in dB for the frequency provided in the `frequency` field.| &#10003; Yes|
 |**extensions**|`object`|JSON object with extension-specific objects.|No|
 |**extras**|[`any`](#reference-any)|Application-specific data.|No|
 
@@ -218,7 +218,7 @@ Frequency for the provided RT60 and DSR values.
 
 ### MPEG_audio_spatial.reverb.property.RT60
 
-Specifies RT60 value in `second` for the frequency provided in the `frequency` field
+Specifies RT60 value in seconds for the frequency provided in the `frequency` field
 
 * **Type**: `number`
 * **Required**:  &#10003; Yes
@@ -265,7 +265,7 @@ Application-specific data.
 |**attenuation**|[`any`](#reference-any)|A function used to calculate the attenuation of the audio source.|No, default: `linearDistance`|
 |**attenuationParameters**|`number` `[1-*]`|An array of attenuation parameters|No|
 |**referenceDistance**|`number`|A distance in meters.|No, default: `1`|
-|**accessors**|`integer` `[1-*]`|An array of accessors that describe the audio source| &#10003; Yes|
+|**accessors**|`integer` `[1-*]`|An array of `accessors` that describe the audio source| &#10003; Yes|
 |**reverbFeed**|`integer` `[]`|An array of pointers to reverb units|No|
 |**reverbFeedGain**|`number` `[]`|An array of gain values|No|
 |**extensions**|`object`|JSON object with extension-specific objects.|No|
@@ -339,7 +339,7 @@ Provides the distance in meters for which the distance gain is implicitly includ
 
 ### MPEG_audio_spatial.source.accessors
 
-An array of accessor references, by specifying the accessors indices in accessors array, that describe the buffers where the decoded audio will be made available.
+An array of `accessor` references, by specifying the `accessors` indices in `accessors array, that describe the buffers where the decoded audio will be made available.
 
 * **Type**: `integer` `[1-*]`
     * Each element in the array **MUST** be greater than or equal to `0`.
@@ -381,6 +381,7 @@ The `MPEG_audio_spatial` works with the `MPEG_accessor_timed` to reference audio
 ## Known Implementations
 
 * [ISO/IEC WD 23090-24](https://www.iso.org/standard/83696.html)
+
 ## Resources
 
 * [ISO/IEC FDIS 23090-14](https://www.iso.org/standard/80900.html), Information technology — Coded representation of immersive media — Part 14: Scene Description 

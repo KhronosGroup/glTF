@@ -9,7 +9,7 @@
             "type": "boolean",
             "default": true,
             "description": "This flag indicates if the accessor information may change over time",
-            "gltf_detailedDescription": "This flag equal to false indicates the accessor information componentType, type, and normalize may change over time. The changing values of componentType, type and normalize are provided through accessor information header. This flag equal to true indicates the accessor information componentType, type, and normalize do not change over time and are not present in the accessor information header. Note that count, max, min, and byteOffset are expected to change and are always included as part of the timed accessor information header."
+            "gltf_detailedDescription": "This flag equal to false indicates the accessor information componentType, type, and normalized may change over time. The changing values of componentType, type and normalized are provided through accessor information header. This flag equal to true indicates the accessor information componentType, type, and normalized do not change over time and are not present in the accessor information header. Note that count, max, min, and byteOffset are expected to change and are always included as part of the timed accessor information header."
         },
         "bufferView": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
@@ -20,7 +20,7 @@
             "type": "number",
             "default": 25.0,
             "minimum": 0.0,
-            "description": "This property provides the frequency at which the renderer is recommended to poll the underlying buffer for new data..",
+            "description": "This property provides the frequency at which the renderer is recommended to poll the underlying buffer for new data.",
             "gltf_detailedDescription": "The suggestedUpdateRate provides the frequency at which the renderer is recommended to poll the underlying buffer for new data. The rate is provided in number of changes per second."
         },
         "extensions": {},

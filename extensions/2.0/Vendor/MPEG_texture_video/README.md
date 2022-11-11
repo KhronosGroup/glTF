@@ -66,7 +66,7 @@ Provides the maximum height of the texture.
 
 ### MPEG_texture_video.format
 
-Indicates the format of the pixel data for this video texture. The semantics of these values are defined in Table 8.3 of OpenGL specification. The number of components shall match the type indicated by the referenced `accessor`. Normalization of the pixel data shall be indicated by the normalized attribute of the accessor.
+Indicates the format of the pixel data for this video texture. The semantics of these values are defined in Table 8.3 of OpenGL 4.6 specification. The number of components shall match the type indicated by the referenced `accessor`. Normalization of the pixel data shall be indicated by the normalized attribute of the accessor.
 
 * **Type**: `string`
 * **Required**: No, default: `"RGB"`

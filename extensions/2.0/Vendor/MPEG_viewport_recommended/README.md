@@ -125,7 +125,7 @@ provides the type of camera.
 
 ### MPEG_viewport_recommended.viewport.parameters
 
-Provides a reference to `accessor` where the timed data for the perspective or orthographic camera parameters will be made available. The componentType of the referenced accessor shall be `FLOAT` and the type shall be `VEC4`. When the type of the camera object which includes this extension is perspective, `FLOAT_VEC4` means (aspectRatio, yfov,  zfar, znear). When orthographic type, `FLOAT_VEC4` means (xmag, ymag, zfar, znear). The requirements on the camera parameters from ISO/IEC DIS 12113:2021  shall apply.
+Provides a reference to `accessor` where the timed data for the perspective or orthographic camera parameters will be made available. The componentType of the referenced accessor shall be `FLOAT` and the type shall be `VEC4`. When the type of the camera object which includes this extension is perspective, `FLOAT_VEC4` means (aspectRatio, yfov,  zfar, znear). When orthographic type, `FLOAT_VEC4` means (xmag, ymag, zfar, znear). The requirements on the camera parameters from ISO/IEC 12113:2021  shall apply.
 
 * **Type**: `integer`
 * **Required**: No
@@ -149,6 +149,7 @@ Application-specific data.
 ## Known Implementations
 
 * [ISO/IEC WD 23090-24](https://www.iso.org/standard/83696.html)
+
 ## Resources
 
 * [ISO/IEC FDIS 23090-14](https://www.iso.org/standard/80900.html), Information technology — Coded representation of immersive media — Part 14: Scene Description 

@@ -33,7 +33,7 @@ Additional properties are allowed.
 
 ### MPEG_animation_timing.accessor
 
-Provides a reference to `accessor`, by specifying the accessor's index in accessors array, that describes the buffer where the animation timing data will be made available. The sample format shall be as defined in ISO/IEC 23090-14:7.6.3. The componentType of the referenced accessor shall be `BYTE` and the type shall be `SCALAR`.
+Provides a reference to `accessor`, by specifying the `accessor`'s index in `accessors` array, that describes the buffer where the animation timing data will be made available. The sample format shall be as defined in ISO/IEC 23090-14:7.6.3. The componentType of the referenced `accessor` shall be `BYTE` and the type shall be `SCALAR`.
 
 * **Type**: `integer`
 * **Required**:  &#10003; Yes

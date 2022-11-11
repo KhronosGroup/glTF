@@ -34,8 +34,8 @@ glTF extension to specify timed accessor format formats
 |   |Type|Description|Required|
 |---|---|---|---|
 |**immutable**|`boolean`|This flag indicates if the accessor information may change over time|No, default: `true`|
-|**bufferView**|`integer`|This property provides the index in the bufferViews array to a bufferView element that points to the timed accessor information header. |No|
-|**suggestedUpdateRate**|`number`|This property provides the frequency at which the renderer is recommended to poll the underlying buffer for new data..|No, default: `25`|
+|**bufferView**|`integer`|This property provides the index in the `bufferViews` array to a `bufferView` element that points to the timed accessor information header. |No|
+|**suggestedUpdateRate**|`number`|This property provides the frequency at which the renderer is recommended to poll the underlying buffer for new data.|No, default: `25`|
 |**extensions**|`object`|JSON object with extension-specific objects.|No|
 |**extras**|[`any`](#reference-any)|Application-specific data.|No|
 
@@ -45,14 +45,14 @@ Additional properties are allowed.
 
 ### MPEG_accessor_timed.immutable
 
-This flag equal to false indicates the accessor information componentType, type, and normalize may change over time. The changing values of componentType, type and normalize are provided through accessor information header. This flag equal to true indicates the accessor information componentType, type, and normalize do not change over time and are not present in the accessor information header. Note that count, max, min, and byteOffset are expected to change and are always included as part of the timed accessor information header.
+This flag equal to false indicates the accessor information `componentType`, `type`, and `normalized` may change over time. The changing values of `componentType`, `type` and `normalized` are provided through accessor information header. This flag equal to true indicates the accessor information `componentType`, `type`, and `normalized` do not change over time and are not present in the accessor information header. Note that count, max, min, and byteOffset are expected to change and are always included as part of the timed accessor information header.
 
 * **Type**: `boolean`
 * **Required**: No, default: `true`
 
 ### MPEG_accessor_timed.bufferView
 
-This property provides the index in the bufferViews array to a bufferView element that points to the timed accessor information header as described in ISO/IEC 23090-14:Table 8. byteLength field of the bufferView element indicates the size of the timed accessor information header. The buffer properties in the bufferView element shall point to the same buffer as the bufferView in the containing accessor object. In the absence of the bufferView attribute, it shall be assumed that the buffer has no dynamic header. In that case, the immutable flag shall be present and shall be set to True.
+This property provides the index in the `bufferViews` array to a `bufferView` element that points to the timed accessor information header as described in ISO/IEC 23090-14:Table 8. byteLength field of the `bufferView` element indicates the size of the timed accessor information header. The buffer properties in the `bufferView` element shall point to the same buffer as the `bufferView` in the containing accessor object. In the absence of the `bufferView` attribute, it shall be assumed that the buffer has no dynamic header. In that case, the immutable flag shall be present and shall be set to true.
 
 * **Type**: `integer`
 * **Required**: No
@@ -85,6 +85,7 @@ Application-specific data.
 ## Known Implementations
 
 * [ISO/IEC WD 23090-24](https://www.iso.org/standard/83696.html)
+
 ## Resources
 
 * [ISO/IEC FDIS 23090-14](https://www.iso.org/standard/80900.html), Information technology — Coded representation of immersive media — Part 14: Scene Description 

@@ -33,13 +33,13 @@
             "type": "boolean",
             "default": true,
             "description": "Specifies that the media start playing as soon as it is ready.",
-            "gltf_detailedDescription": "Specifies that the media will start playing as soon as it is ready. Either startTime or autoplay shall be present for a media item description. Rendering of all media for which the autoplay flag is set to True should happen simultaneously."
+            "gltf_detailedDescription": "Specifies that the media will start playing as soon as it is ready. Either startTime or autoplay shall be present for a media item description. Rendering of all media for which the autoplay flag is set to true should happen simultaneously."
 
         },
         "autoplayGroup": {
             "type": "integer",            
             "description": "Specifies that playback starts simultaneously for all media sources with the autoplay flag set to true.",
-            "gltf_detailedDescription": "All media that have the same autoplayGroup identifier shall start playing synchronously as soon as all autoplayGroup media are ready. autoplayGroup is only allowed if autoplay is set to True."
+            "gltf_detailedDescription": "All media that have the same autoplayGroup identifier shall start playing synchronously as soon as all autoplayGroup media are ready. autoplayGroup is only allowed if autoplay is set to true."
         },
         "loop": {
             "type": "boolean",
