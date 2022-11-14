@@ -269,10 +269,13 @@ Flow nodes can be used to define a more complex control flow inside the node gra
 * multi-gate : each time there is a new trigger, it will fire a subsequent output, it can optionally loop and it can be reset to start against
 * do-once : it will trigger its output the first time it is triggered, but subsequent triggers will do nothing until it is reset
 
+### Query Nodes
+
+* set : Set a value of glTF object properties or of one of the behavior's variables, relies upon the KHR_animation_pointer extension, with the caveat below for additional paths.
+
 ### Action Nodes
 
-* set : Set a value of glTF object properties or of one of the behavior's variables, relies upon the KHR_animation_pointer extension
-* get : Get a value from glTF object properties or from one of the behavior's variables, relies upon the KHR_animation_pointer extension
+* get : Get a value from glTF object properties or from one of the behavior's variables, relies upon the KHR_animation_pointer extension, with the caveat below for additional paths.
 * animation play/cancel : start, stop animations
 * sound play/cancel : start, stop sounds, relies upon the KHR_sound extension
 * interpolate to: takes the current value and target value along with delta time, and easing function and executes that in the background, relies upon the KHR_animation_pointer extension.
@@ -281,6 +284,14 @@ Flow nodes can be used to define a more complex control flow inside the node gra
 TODO: Determine how we can manipulate node visibility, currently this isn't supported in glTF.  There is the extension KHR_nodes_disable.
 
 
+### KHR_Animation_Pointer caveats
+
+Much of the queries and action capabilities of this extension are mediated through the KHR_Animation_Pointer extension.
+* For layer 0, we will not allow for queries using KHR_animation_pointer.
+* For layer 1, we will support all capoabilities of KHT_animation_pointer for both queries and actions.
+* We will support a namespace extension to the KHR_animation_pointer for querying and setting the viewport camera.  The format for this is "/viewer/camera/" The supported camera properties are are all of those on the camera.schema.json along with the properties on either orthpgraphic or perspective schema.json dependent on the camera type.  We also allow you to query "cameraIndex" which if this is a camera specified by the original glTF file, it will be a non-negative index to that camera, otherwise it will be a negative number.  We also support accessing the current location and orientation of the camera via the path /globalTransform/{rotation|scale|position}."
+
+* For disabling and enabling nodes and node trees, we will rely upon the KHT_nodes_disable extension.
 
 ### Examples
 
