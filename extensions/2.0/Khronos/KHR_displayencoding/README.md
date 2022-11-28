@@ -17,7 +17,7 @@ Draft
 
 ## Dependencies
 
-Written against the glTF 2.0 spec.
+Written against the glTF 2.01 spec.
 
 ## Exclusions
 
@@ -43,7 +43,7 @@ This extension uses the following terms:
 
 ## Overview
 
-This extension is intended for implementations that targets a display with the goal of outputting at interactive framerates in either HDR or SDR in a physically correct manner.    
+This extension is intended for implementations that targets a light emitting display with the goal of outputting interactive framerates in a physically correct manner.    
 Here the term physically correct refers to the brdf calculations of the linear scene light and the display output value passed to the display encoding step.  
 
 This extension aims to:  
@@ -57,10 +57,15 @@ Provide a way to have light interoperability by defining output range.
 Be compatible with updates to glTF texture color spaces, for example increased color gamut.  
 
 This is done by specifying a way to encode the resulting (rendered) scene linear light output values to a known range of {R,G,B} values that can be output to display.  
-This encoding shall be done so that hue (or chromaticity) is retained in the displayed image.     
+This encoding shall be done so that hue (chromaticity) is retained in the displayed image.     
 Output units are declared as candela / m2  
 
 Currently the glTF specification does not define how to output pixels.  
+
+`Runtime-independence. glTF is purely an asset format and does not mandate any runtime
+behavior. This enables its use by any application for any purpose, including display using any
+rendering technology, up to and including path tracing renderers.`
+
 This results in hue shift and white-out, due to clipping of pixel [RGB] values when written to framebuffer,  not desirable when the goal is to achieve physically correct output.  
 
 Correct output of hue is important in order to achieve a physically correct visualization and to retain original artistic intent.  
