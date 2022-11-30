@@ -94,15 +94,14 @@ stretching (interpolating) the horizon. The amount of stretch, the
 fraction of the lower hemisphere to cover can be controlled by the
 optional parameter `horizonExtension` (in `0`..`1`, default `0.01`).
 
-<!--
-## glTF Schema Updates
 
-TODO
+## glTF Schema Updates
 
 ### JSON Schema
 
-TODO: Links to the JSON schema for the new extension properties.
--->
+-   [glTF.INTEL_lights_sunsky.schema.json](schema/glTF.INTEL_lights_sunsky.schema.json)
+-   [light.schema.json](schema/light.schema.json)
+-   [node.INTEL_lights_sunsky.schema.json](schema/node.INTEL_lights_sunsky.schema.json)
 
 ## Known Implementations
 
