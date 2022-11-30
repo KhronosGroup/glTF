@@ -48,7 +48,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `MAXAR` | Maxar Technologies | https://www.maxar.com/ | [#1869](https://github.com/KhronosGroup/glTF/issues/1869) |
 | `MESHOPT` | meshoptimizer | https://meshoptimizer.org/ | [#1634](https://github.com/KhronosGroup/glTF/issues/1634) |
 | `MOZ` | Mozilla Corporation | https://www.mozilla.org/ | [#1349](https://github.com/KhronosGroup/glTF/issues/1349) |
-| `MPEG` | The Moving Picture Experts Group | http://mpeg.org | [#1754](https://github.com/KhronosGroup/glTF/issues/1754) |
+| `MPEG` | The Moving Picture Experts Group | http://www.mpeg.org | [#1754](https://github.com/KhronosGroup/glTF/issues/1754) |
 | `MSFT` | Microsoft Corporation | https://www.microsoft.com/ | [#1164](https://github.com/KhronosGroup/glTF/pull/1164) |
 | `MTTR` | Matterport, Inc. | https://matterport.com/ | [#2150](https://github.com/KhronosGroup/glTF/issues/2150) |
 | `MX` | The Matrix.org Foundation | https://matrix.org/ | [#2126](https://github.com/KhronosGroup/glTF/issues/2126) |

@@ -83,7 +83,7 @@ Media used to create a texture, audio source, or any other media type.
 |**autoplayGroup**|`integer`|Specifies that playback starts simultaneously for all media sources with the autoplay flag set to true.|No|
 |**loop**|`boolean`|Specifies that the media start over again, every time it is finished.|No, default: `false`|
 |**controls**|`boolean`|Specifies that media controls should be exposed to end user|No, default: `false`|
-|**alternatives**|[`MPEG_media.media.alternative`](#reference-mpeg_media-media-alternative) `[1-*]`|An array of alternatives of the same media (e.g. different video code used)| &#10003; Yes|
+|**alternatives**|[`MPEG_media.media.alternative`](#reference-mpeg_media-media-alternative) `[1-*]`|An array of alternatives of the same media (e.g. different codecs used)| &#10003; Yes|
 |**extensions**|`object`|JSON object with extension-specific objects.|No|
 |**extras**|[`any`](#reference-any)|Application-specific data.|No|
 
@@ -124,14 +124,14 @@ The endTimeOffset indicates the end time offset into the source, up to which the
 
 ### MPEG_media.media.autoplay
 
-Specifies that the media will start playing as soon as it is ready. Either startTime or autoplay shall be present for a media item description. Rendering of all media for which the autoplay flag is set to True should happen simultaneously.
+Specifies that the media will start playing as soon as it is ready. Either startTime or autoplay shall be present for a media item description. Rendering of all media for which the autoplay flag is set to true should happen simultaneously.
 
 * **Type**: `boolean`
 * **Required**: No, default: `true`
 
 ### MPEG_media.media.autoplayGroup
 
-All media that have the same autoplayGroup identifier shall start playing synchronously as soon as all autoplayGroup media are ready. autoplayGroup is only allowed if autoplay is set to True.
+All media that have the same autoplayGroup identifier shall start playing synchronously as soon as all autoplayGroup media are ready. autoplayGroup is only allowed if autoplay is set to true.
 
 * **Type**: `integer`
 * **Required**: No
@@ -292,6 +292,7 @@ Application-specific data.
 ## Known Implementations
 
 * [ISO/IEC WD 23090-24](https://www.iso.org/standard/83696.html)
+
 ## Resources
 
 * [ISO/IEC FDIS 23090-14](https://www.iso.org/standard/80900.html), Information technology — Coded representation of immersive media — Part 14: Scene Description 
@@ -299,15 +300,7 @@ Application-specific data.
 
 ## License
 
-The copyright in this software is being made available under the BSD License, included below. This software may be subject to other third party and contributor rights, including patentrights, and no such rights are granted under this license.
+Copyright (c), ISO/IEC
 
-Copyright (c) 2010-2021, ISO/IEC
-All rights reserved.
+The use of the "MPEG scene description extensions" is subject to the license as accessible here: https://standards.iso.org/ and is subject to the IPR policy as accessible here: https://www.iso.org/iso-standards-and-patents.html.
 
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-* Neither the name of the ISO/IEC nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

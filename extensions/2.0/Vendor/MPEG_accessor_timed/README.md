@@ -34,8 +34,8 @@ glTF extension to specify timed accessor format formats
 |   |Type|Description|Required|
 |---|---|---|---|
 |**immutable**|`boolean`|This flag indicates if the accessor information may change over time|No, default: `true`|
-|**bufferView**|`integer`|This property provides the index in the bufferViews array to a bufferView element that points to the timed accessor information header. |No|
-|**suggestedUpdateRate**|`number`|This property provides the frequency at which the renderer is recommended to poll the underlying buffer for new data..|No, default: `25`|
+|**bufferView**|`integer`|This property provides the index in the `bufferViews` array to a `bufferView` element that points to the timed accessor information header. |No|
+|**suggestedUpdateRate**|`number`|This property provides the frequency at which the renderer is recommended to poll the underlying buffer for new data.|No, default: `25`|
 |**extensions**|`object`|JSON object with extension-specific objects.|No|
 |**extras**|[`any`](#reference-any)|Application-specific data.|No|
 
@@ -45,14 +45,14 @@ Additional properties are allowed.
 
 ### MPEG_accessor_timed.immutable
 
-This flag equal to false indicates the accessor information componentType, type, and normalize may change over time. The changing values of componentType, type and normalize are provided through accessor information header. This flag equal to true indicates the accessor information componentType, type, and normalize do not change over time and are not present in the accessor information header. Note that count, max, min, and byteOffset are expected to change and are always included as part of the timed accessor information header.
+This flag equal to false indicates the accessor information `componentType`, `type`, and `normalized` may change over time. The changing values of `componentType`, `type` and `normalized` are provided through accessor information header. This flag equal to true indicates the accessor information `componentType`, `type`, and `normalized` do not change over time and are not present in the accessor information header. Note that count, max, min, and byteOffset are expected to change and are always included as part of the timed accessor information header.
 
 * **Type**: `boolean`
 * **Required**: No, default: `true`
 
 ### MPEG_accessor_timed.bufferView
 
-This property provides the index in the bufferViews array to a bufferView element that points to the timed accessor information header as described in ISO/IEC 23090-14:Table 8. byteLength field of the bufferView element indicates the size of the timed accessor information header. The buffer properties in the bufferView element shall point to the same buffer as the bufferView in the containing accessor object. In the absence of the bufferView attribute, it shall be assumed that the buffer has no dynamic header. In that case, the immutable flag shall be present and shall be set to True.
+This property provides the index in the `bufferViews` array to a `bufferView` element that points to the timed accessor information header as described in ISO/IEC 23090-14:Table 8. byteLength field of the `bufferView` element indicates the size of the timed accessor information header. The buffer properties in the `bufferView` element shall point to the same buffer as the `bufferView` in the containing accessor object. In the absence of the `bufferView` attribute, it shall be assumed that the buffer has no dynamic header. In that case, the immutable flag shall be present and shall be set to true.
 
 * **Type**: `integer`
 * **Required**: No
@@ -85,6 +85,7 @@ Application-specific data.
 ## Known Implementations
 
 * [ISO/IEC WD 23090-24](https://www.iso.org/standard/83696.html)
+
 ## Resources
 
 * [ISO/IEC FDIS 23090-14](https://www.iso.org/standard/80900.html), Information technology — Coded representation of immersive media — Part 14: Scene Description 
@@ -92,15 +93,6 @@ Application-specific data.
 
 ## License
 
-The copyright in this software is being made available under the BSD License, included below. This software may be subject to other third party and contributor rights, including patentrights, and no such rights are granted under this license.
+Copyright (c), ISO/IEC
 
-Copyright (c) 2010-2021, ISO/IEC
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-* Neither the name of the ISO/IEC nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+The use of the "MPEG scene description extensions" is subject to the license as accessible here: https://standards.iso.org/ and is subject to the IPR policy as accessible here: https://www.iso.org/iso-standards-and-patents.html.
