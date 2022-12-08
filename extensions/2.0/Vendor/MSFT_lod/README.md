@@ -126,4 +126,5 @@ If both node level and material level LODs are specified then the material level
 * Windows Mixed Reality Home and 3D Launchers for Windows Mixed Reality use `MSFT_lod` at the `node` level to support switching LODs based on the render distance.
 
 ## License
+
 Microsoft has made this Specification available under the Open Web Foundation Agreement Version 1.0, which is available at https://www.openwebfoundation.org/the-agreements/the-owf-1-0-agreements-granted-claims/owfa-1-0.
