@@ -125,4 +125,6 @@ If both node level and material level LODs are specified then the material level
 * [BabylonJS](https://github.com/BabylonJS/Babylon.js/tree/master/loaders/src/glTF) has support for `MSFT_lod` extension defined at the material or node level. The current implementation progressively loads each LOD to improve the initial load time of the asset.  
 * Windows Mixed Reality Home and 3D Launchers for Windows Mixed Reality use `MSFT_lod` at the `node` level to support switching LODs based on the render distance.
 
+## License
 
+Microsoft has made this Specification available under the Open Web Foundation Agreement Version 1.0, which is available at https://www.openwebfoundation.org/the-agreements/the-owf-1-0-agreements-granted-claims/owfa-1-0.
