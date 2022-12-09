@@ -47,6 +47,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `INTEL` | Intel Corporation | https://www.intel.com/ | [#2142](https://github.com/KhronosGroup/glTF/issues/2142) |
 | `KDAB` | The KDAB Group | https://www.kdab.com/ | [#1728](https://github.com/KhronosGroup/glTF/pull/1728) |
 | `LLQ` | Lifeliqe, Inc. | https://www.lifeliqe.com/ | [#1414](https://github.com/KhronosGroup/glTF/issues/1414) |
+| `MAGNUM` | Magnum Engine | https://magnum.graphics/<br>`info at magnum.graphics` | [#2222](https://github.com/KhronosGroup/glTF/issues/2222) |
 | `MAXAR` | Maxar Technologies | https://www.maxar.com/ | [#1869](https://github.com/KhronosGroup/glTF/issues/1869) |
 | `MESHOPT` | meshoptimizer | https://meshoptimizer.org/ | [#1634](https://github.com/KhronosGroup/glTF/issues/1634) |
 | `MOZ` | Mozilla Corporation | https://www.mozilla.org/ | [#1349](https://github.com/KhronosGroup/glTF/issues/1349) |
