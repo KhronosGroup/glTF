@@ -2,12 +2,13 @@
 
 ## Contributors
 
-- Omar Shehata, Cesium, [@OmarShehata](https://github.com/OmarShehata)
-- Pascal Massimino, Google, [@Skal65535](https://github.com/skal65535)
+- Leon Radley, [@leon](https://github.com/leon)
+- Don McCurdy, [@donmccurdy](https://github.com/donmccurdy)
+- Alexey Knyazev, [@lexaknyazev](https://github.com/lexaknyazev)
 
 ## Status
 
-Complete
+Draft
 
 ## Dependencies
 
@@ -17,8 +18,7 @@ Written against the glTF 2.0 spec.
 
 This extension allows glTF models to use AVIF as a valid image format. A client that does not implement this extension can ignore the provided AVIF image and continue to rely on the PNG and JPG textures available in the base specification. Defining a fallback texture is optional. The [best practices](#best-practices) section describes the intended use case of this extension and the expected behavior when using it without a fallback texture.
 
-AVIF is an image format developed by Netflix that uses the AV1 VideoCodec [specification](https://aomediacodec.github.io/av1-avif/).
-The format has gained popularity and you can see in what browsers it is supported here [caniuse](https://caniuse.com/avif)
+AVIF is an image format developed by the The Alliance for Open Media.
 
 ## glTF Schema Updates
 
@@ -78,8 +78,8 @@ When used in the glTF Binary (.glb) format the `images` node that points to the 
 
 ## Best Practices
 
-Since AVIF is not as widely supported as JPEG and PNG, it is recommended to use this extension only when transmission size is a significant bottleneck. For example, in geospatial applications the total texture payload can range from gigabytes to terabytes of data. In those situations, AVIF textures can be used without a fallback to improve storage and transmission.
-
+Since AVIF is not as widely supported as JPEG and PNG, until [browser support](https://caniuse.com/avif) is good you will have to create a separate version of your asset with this extension and then do feature detection to load the avif version.
+AVIF has support for image sequences much like GIF, but this extension is only targeting using AVIF as a replacement for jpeg and png.
 When a fallback image is defined, this extension should not be present in `extensionsRequired`. This will allow all clients to render the glTF correctly, and those that support this extension can request the optimized AVIF version of the textures.
 
 ### Using Without a Fallback
@@ -106,4 +106,5 @@ If a glTF contains a AVIF with no fallback texture and the browser does not supp
 
 - [AVIF specification](https://aomediacodec.github.io/av1-avif/)
 - [AVIF reference implementation](https://github.com/AOMediaCodec/libavif/).
+- [Can I Use Browser Support](https://caniuse.com/avif)
 - [Sharp](https://sharp.pixelplumbing.com/) is a NodeJS library for fast encode/decode of AVIF using native modules (built on top of libvips which has support for AVIF.
