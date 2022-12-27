@@ -127,7 +127,7 @@ Since the surface is considered to be infinitely thin, we will ignore macroscopi
 </figure>
 
 ## Blend Mode
-The glTF `blendMode` is used for alpha-as-coverage, NOT for physically-based transparency (i.e. this extension). If alpha-as-coverage is not being used, the blend mode of the material should be set to "OPAQUE" even though it is transparent. Again, it's helpful to think of alpha-as-coverage as whether the physical surface is there or not. `transmission` applies to the surface material that exists.
+The glTF `alphaMode` is used for alpha-as-coverage, NOT for physically-based transparency (i.e. this extension). If alpha-as-coverage is not being used, the blend mode of the material should be set to "OPAQUE" even though it is transparent. Again, it's helpful to think of alpha-as-coverage as whether the physical surface is there or not. `transmission` applies to the surface material that exists.
 Note that alpha-as-coverage can still be used along with transmission as shown in the example below.
 <figure>
   <img src="./figures/TransmissionWithMask.png"/>
