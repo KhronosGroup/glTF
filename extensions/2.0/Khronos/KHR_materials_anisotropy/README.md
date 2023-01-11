@@ -2,11 +2,11 @@
 
 ## Contributors
 
-* Jim Eckerlein, Norbert Nopper, UX3D
+Jim Eckerlein, Norbert Nopper, Emmett Lalish, Ben Houston, Eric Chadwick, Bruce Cherniak, Ed Mackey, Don McCurdy
 
 ## Status
 
-Suggestion
+Draft
 
 ## Dependencies
 
@@ -15,10 +15,10 @@ Written against the glTF 2.0 spec.
 ## Overview
 
 This extension defines the anisotropic property of a material as observable with brushed metals for instance.
-An asymetric specular lobe model is introduced to allow for such phenomena.
+An asymmetric specular lobe model is introduced to allow for such phenomena.
 The visually distinct feature of that lobe is the elongated appearance of the specular reflection.
 For a single punctual light source, the specular reflection will eventually degenerate into a zero width line in the limit,
-that is where the material is fully anisotropic, as opposed to be fully isotropic in which case the specular reflecation is radially symmetric.
+that is where the material is fully anisotropic, as opposed to be fully isotropic in which case the specular reflection is radially symmetric.
 
 ## Extending Materials
 
@@ -30,8 +30,11 @@ Sample values:
         {
             "extensions": {
                 "KHR_materials_anisotropy": {
-                    "anisotropy": 0.6,
-                    "anisotropyDirection": [0.0, 1.0, 0.0]
+                    "anisotropyFactor": 0.6,
+                    "anisotropyDirectionFactor": [1.0, -1.0, 0.0],
+                    "anisotropyDirectionTexture": {
+                        "index": 0
+                    }
                 }
             }
         }
@@ -41,18 +44,16 @@ Sample values:
 
 |                               | Type                                                                 | Description                       | Required                       |
 |-------------------------------|----------------------------------------------------------------------|-----------------------------------|--------------------------------|
-|**anisotropy**                 | `number`                                                             | The anisotropy.                   | No, default: `0.0`             |
-|**anisotropyTexture**          | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)  | The anisotropy texture.           | No                             |
-|**anisotropyDirection**        | `array`                                                              | The anisotropy direction.         | No, default: `[1.0, 0.0, 0.0]` |
+|**anisotropyFactor**           | `number`                                                             | The anisotropy strength.          | No, default: `0.0`             |
+|**anisotropyDirectionFactor**  | `array`                                                              | The anisotropy direction.         | No, default: `[1.0, 1.0, 0.0]` |
 |**anisotropyDirectionTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)  | The anisotropy direction texture. | No                             |
 
 ## Anisotropy
 
 Two new material properties are introduced: an explicit anisotropy parameter and the direction in which the specular reflection elongates relative to the surface tangents.
-The anisotropy parameter is a dimensionaless number in `[-1, 1]` and forms an injective relation to the roughness distribution along two orthogonal directions, one of which is the direction parameter and the other the result of crossing the direction and the geometric normal.
+The anisotropy parameter is a dimensionless number in `[-1, 1]` and forms an injective relation to the roughness distribution along two orthogonal directions, one of which is the direction parameter and the other the result of crossing the direction and the geometric normal.
 
-An anisotropy of `1` means that the specular reflection will elongate along the given direction,
-while a value of `-1` will elongate it along the computed orthogonal direction.
+An anisotropy of `1` means that the specular reflection will elongate along the given direction, while a value of `-1` will elongate it along the computed orthogonal direction.
 
 | | 0.5 | 0.0 | -0.5 |
 | --- | --- | --- | --- |
@@ -68,7 +69,7 @@ To achieve certain surface finishes, it is possible to define the anisotropy and
 
 ## Implementation
 
-While uniform and textured anisotropy are multiplied, uniform and textured direction defintions are mutual exclusive and the latter overrides the former. (While it is surely possible to add both directions in terms of their complex argument, the computional overhead may not justify the additional editorial convenience.)
+While uniform and textured anisotropy are multiplied, uniform and textured direction definitions are mutually exclusive and the latter overrides the former. (While it is surely possible to add both directions in terms of their complex argument, the computational overhead may not justify the additional editorial convenience.)
 
 ```glsl
 float anisotropy = u_Anisotropy;
