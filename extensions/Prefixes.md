@@ -41,6 +41,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `F8` | Forum8 Co., Ltd. | https://www.forum8.com/ | [#1999](https://github.com/KhronosGroup/glTF/issues/1999) |
 | `FB` | Facebook, Inc. | https://www.facebook.com/ | [#1139](https://github.com/KhronosGroup/glTF/pull/1139) |
 | `FOXIT` | Foxit Software, Inc. | https://foxitsoftware.com/<br>`liqian_mu at foxitsoftware.com` | [#1712](https://github.com/KhronosGroup/glTF/issues/1712) |
+| `GODOT` | Godot Engine | https://godotengine.org/<br>`ernest.lee at chibifire.com`<br>`juan at godotengine.org`<br>`contact at godotengine.org` | [#2240](https://github.com/KhronosGroup/glTF/issues/2240) |
 | `GOOGLE` | Google, LLC | https://www.google.com/ | [#1123](https://github.com/KhronosGroup/glTF/issues/1123) |
 | `GRIFFEL` | Griffel Studio | https://griffelstudio.com/ | [#1861](https://github.com/KhronosGroup/glTF/issues/1861) |
 | `HEVOLUS` | Hevolus Srl | https://www.hevolus.it/ | [#2183](https://github.com/KhronosGroup/glTF/issues/2183) |
