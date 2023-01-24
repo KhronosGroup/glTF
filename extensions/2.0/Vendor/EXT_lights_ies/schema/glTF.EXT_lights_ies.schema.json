@@ -9,7 +9,7 @@
             "type": "array",
             "items": {
                 "type": "object",
-                "$ref": "light.schema.json"
+                "$ref": "lightProfile.schema.json"
             },
             "minItems": 1
         },

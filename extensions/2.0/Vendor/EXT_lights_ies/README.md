@@ -8,8 +8,7 @@
 
 ## Status
 
-Draft
-<!--TODO: Draft or Stable-->
+Complete
 
 ## Dependencies
 
@@ -21,15 +20,15 @@ This extension enables the use of IES light profiles as light sources within a s
 
 Many 3D tools and engines support IES light profiles. Using this extension, tools can export and engines can import scenes containing lights described by IES light profiles.
 
-These lights are referenced by nodes and inherit their transform. This also allows changing the light's orientation.
+The light profiles are referenced by nodes and inherit the transform of that node. They describe point light sources within the scene. These light sources are defined as parameterized, infinitely small points that emit light in all directions with angularly varying intensities.
 
-A conforming implementation of this extension must be able to load the light profiles defined in the asset and render the asset using those lights. The following IES light profile standards need to be supported: `IES LM-63-95`, `ANSI/IESNA LM-63-02`, and `ANSI/IES LM-63-19`. Please see the [implementation details](#implementation-details) for a list of fields that are not required and a description of the relevant differences between the aforementioned standard versions.
+A conforming implementation of this extension must be able to load the light profiles defined in the asset and render the asset using those lights. The following IES light profile standards need to be supported: `IES LM-63-95`, `ANSI/IESNA LM-63-02`, and `ANSI/IES LM-63-19`. Implementations must support light profiles of `Type B` and `Type C` photometry. Support for light profiles of `Type A` photometry is optional. Please see the [implementation details](#implementation-details) for a list of fields that are not required and a description of the relevant differences between the aforementioned standard versions.
 
 ## Defining Light Profiles
 
-Light profiles are defined within the array `lights` which is defined in the `extensions.KHR_lights_ies` property located in the top-level object of the asset.
+Light profiles are defined within the array `lights` which is defined in the `extensions.EXT_lights_ies` property located in the top-level object of the asset.
 
-Each light profile defines either the `uri` property, which contains the URI (or IRI) of an IES file, or the `bufferView` property, which points to a bufferView object that contains an IES light profile file. If the `bufferView` property is used then `mimeType` must also be defined and have the value `application/x-ies-lm-63`.
+Each light profile defines either the `uri` property, which contains the URI (or IRI) of an external IES file or a data-URI with embedded data, or the `bufferView` property, which points to a bufferView object that contains an IES light profile file. If the `bufferView` property is used then `mimeType` must also be defined and have the value `application/x-ies-lm-63`.
 
 ```javascript
 "extensions": {
@@ -58,7 +57,7 @@ Each light profile defines either the `uri` property, which contains the URI (or
 
 ## Adding Light Profile Instances to Nodes
 
-Light profiles can be attached to a node by defining the `extensions.KHR_lights_ies` property and, within that, the `light` property which defines an index into the `lights` array. Optionally, the `multiplier` and `color` properties can be defined to scale the light's intensity and tint the light, respectively. The `color` property acts as a per-wavelength multiplier.
+Light profiles can be attached to a node by defining the `extensions.EXT_lights_ies` property and, within that, the `light` property which defines an index into the `lights` array. Optionally, the `multiplier` and `color` properties can be defined to scale the light's intensity and tint the light, respectively. The RGB value of the `color` property is in linear space, clamped to the `[0, 1]` range, and acts as a per-wavelength multiplier. Note that values other than `1.0` for `multiplier` and `(1.0, 1.0, 1.0)` for `color` change the energy output of the light source. An energy preserving tint can be achieved by modifying `multiplier` to compensate for the energy loss: `multiplier *= 3 / dot(color, color)`.
 
 ```javascript
 "nodes": [
@@ -72,7 +71,7 @@ Light profiles can be attached to a node by defining the `extensions.KHR_lights_
 ]
 ```
 
-The light will inherit the transform of the node. The light's direction is defined as the 3-vector `(0.0, 0.0, -1.0)` and the rotation of the node orients the light accordingly. That is, an untransformed light points down the -Z axis. The light's transform is affected by the node's world scale, but the light's intensity is unaffected.
+The light will inherit the transform of the node. The light's direction is defined as the 3-vector `(0.0, 0.0, -1.0)` and the rotation of the node orients the light accordingly. That is, an untransformed light points down the -Z axis. The light's intensity is unaffected by the node's global scale. The brightness of the light attenuates in a physically correct manner as distance increases from the light's position (i.e. brightness is inversely proportional to the square of the distance).
 
 ### Light Profile Instance Properties
 
@@ -86,14 +85,6 @@ The light will inherit the transform of the node. The light's direction is defin
 
 The light source measurement sample locations on the spherical photometric web are defined by pairs of vertical and horizontal angles. The zero point `(0.0, 0.0)`, the point at which both angles are zero and the measured light source is generally aimed at, is mapped to the direction `(0.0, 0.0, -1.0)`. That is, the untransformed light points in the direction of the glTF coordinate system's -Z axis.
 
-The mapping of the +X axis depends on the photometric type of the light profile. The following points on the spherical photometric web are in the notation used in `IES LM-75-01/R12` and denote the points to which the +X axis is aimed at for each photometric type:
-
-* Type A: `(0Y, 90X)`
-* Type B: `(90H, 0V)`
-* Type C: `(90V, 270L)`
-
-Lastly, the +Y axis can be computed as the cross product between the +X and -Z axes. 
-
 Thus, the X/Y plane is the horizontal photometric plane and the X/Z plane is the vertical photometric plane for all angular data specified. Note that for light profiles of `Type A` and `Type B` photometry the horizontal angles are specified in clockwise order, while positive rotation in the glTF coordinate system is counter-clockwise.
 
 ## Implementation Details
@@ -102,7 +93,6 @@ The following IES light profile fields are not required to be supported:
 
 * Any keyword data listed after the first line and before the `TILT` section.
 * The `TILT` section (`TILT=INCLUDE`, `TILT=<filename>` and related values).
-* Light profiles of `Type A` photometry.
 * `<number of lamps>`, `<lumens per lamp>`, `<units type>`, `<width>`, `<length>`, `<height>`, `<file generation type>`, and `<input watts>`.
 
 Furthermore, implementations should be aware of the following differences between IES standard versions:
@@ -114,13 +104,13 @@ Furthermore, implementations should be aware of the following differences betwee
 
 * [glTF.EXT_lights_ies.schema.json](schema/glTF.EXT_lights_ies.schema.json)
 * [node.EXT_lights_ies.schema.json](schema/node.EXT_lights_ies.schema.json)
-* [light.schema.json](schema/light.schema.json)
+* [lightProfile.schema.json](schema/lightProfile.schema.json)
 
 ## Known Implementations
 
 * [NVIDIA Omniverse](https://www.nvidia.com/en-us/omniverse/)
+* [NVIDIA Material Definition Language SDK](https://github.com/NVIDIA/MDL-SDK)
 
 ## Resources
 
-* [IES LM-63-19 (IES Standard File Format for Electronic Transfer of Photometric Data and Related Information), IES Computer Committee](http://www.iesna.org)
-* [IES LM-75-01/R12 (Goniophotometer Types and Photometric Coordinates), IES Computer Commitee](http://www.iesna.org)
+* [IES LM-63-19 (IES Standard File Format for Electronic Transfer of Photometric Data and Related Information), IES Computer Committee](https://store.ies.org/product/lm-63-19-approved-method-ies-standard-file-format-for-the-electronic-transfer-of-photometric-data-and-related-information/)

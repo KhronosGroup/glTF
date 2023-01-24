@@ -7,7 +7,9 @@
     "properties": {
         "uri": {
             "type": "string",
-            "description": "The URI (or IRI) of the light profile. This field **MUST NOT** be defined if `bufferView` is defined."
+            "description": "The URI (or IRI) of the light profile.",
+            "format": "iri-reference",
+            "gltf_detailedDescription": "The URI (or IRI) of the light profile.  Relative paths are relative to the current glTF asset.  Instead of referencing an external file, this field **MAY** contain a `data:`-URI. This field **MUST NOT** be defined when `bufferView` is defined."
         },
         "mimeType": {
             "anyOf": [
