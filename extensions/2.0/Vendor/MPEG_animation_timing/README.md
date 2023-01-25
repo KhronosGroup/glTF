@@ -70,6 +70,6 @@ Application-specific data.
 
 ## License
 
-Copyright (c), ISO/IEC
+Copyright ISO/IEC 2022
 
 The use of the "MPEG scene description extensions" is subject to the license as accessible here: https://standards.iso.org/ and is subject to the IPR policy as accessible here: https://www.iso.org/iso-standards-and-patents.html.
