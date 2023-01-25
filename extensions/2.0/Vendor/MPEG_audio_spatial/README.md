@@ -159,7 +159,7 @@ Indicates if the reverb unit can be bypassed if the audio renderer does not supp
 
 ### MPEG_audio_spatial.reverb.properties
 
-Array of items that contains reverbProperties objects describing reverb unit specific parameters
+Array of items that contains reverb property objects describing reverb unit specific parameters
 
 * **Type**: [`MPEG_audio_spatial.reverb.property`](#reference-mpeg_audio_spatial-reverb-property) `[1-*]`
 * **Required**:  &#10003; Yes
@@ -225,7 +225,7 @@ Specifies RT60 value in seconds for the frequency provided in the `frequency` fi
 
 ### MPEG_audio_spatial.reverb.property.DSR
 
-Specifies Diffuse-to-Source Ratio value in `dB` for the frequency provided in the `frequency` field. For details see ISO/IEC 23090-14:5.4.1.4.
+Specifies Diffuse-to-Source Ratio value in dB for the frequency provided in the `frequency` field. For details see ISO/IEC 23090-14:5.4.1.4.
 
 * **Type**: `number`
 * **Required**:  &#10003; Yes
@@ -389,7 +389,7 @@ The `MPEG_audio_spatial` works with the `MPEG_accessor_timed` to reference audio
 
 ## License
 
-Copyright (c), ISO/IEC
+Copyright ISO/IEC 2022
 
 The use of the "MPEG scene description extensions" is subject to the license as accessible here: https://standards.iso.org/ and is subject to the IPR policy as accessible here: https://www.iso.org/iso-standards-and-patents.html.
 

@@ -16,8 +16,8 @@
             "type": "number"
         },
         "DSR": {
-            "description": "Specifies Diffuse-to-Source Ratio value in `dB` for the frequency provided in the `frequency` field.",
-            "gltf_detailedDescription": "Specifies Diffuse-to-Source Ratio value in `dB` for the frequency provided in the `frequency` field. For details see ISO/IEC 23090-14:5.4.1.4.",
+            "description": "Specifies Diffuse-to-Source Ratio value in dB for the frequency provided in the `frequency` field.",
+            "gltf_detailedDescription": "Specifies Diffuse-to-Source Ratio value in dB for the frequency provided in the `frequency` field. For details see ISO/IEC 23090-14:5.4.1.4.",
             "type": "number"
         },
         "extensions": {},
