@@ -175,6 +175,8 @@ Additionally it's important to identify tracks with the same output value and us
 
 To reduce the size of each keyframe, rotation data should be quantized using 16-bit normalized components; for additional compression, the use of filter 2 (quaternion) is recommended. Translation/scale data can be compressed using filter 3 (exponential) with the same exponent used for all three vector components.
 
+Note that animation inputs that specify time values require enough precision to avoid animation distortion. It's recommended to either not use any filters for animation inputs to avoid any precision loss (attribute encoder can still be efficient at reducing the size of animation input track even without filters when the inputs are uniformly spaced), or use filter 3 (exponential) with maximum mantissa bit count (23).
+
 After pre-processing, both input and output data should be stored using mode 0 (attributes).
 
 # Appendix A: Bitstream
