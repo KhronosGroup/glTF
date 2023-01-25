@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "light",
+    "title": "lightProfile",
     "type": "object",
     "description": "An IES light profile.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],

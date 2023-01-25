@@ -57,7 +57,7 @@ Each light profile defines either the `uri` property, which contains the URI (or
 
 ## Adding Light Profile Instances to Nodes
 
-Light profiles can be attached to a node by defining the `extensions.EXT_lights_ies` property and, within that, the `light` property which defines an index into the `lights` array. Optionally, the `multiplier` and `color` properties can be defined to scale the light's intensity and tint the light, respectively. The RGB value of the `color` property is in linear space, clamped to the `[0, 1]` range, and acts as a per-wavelength multiplier. Note that values other than `1.0` for `multiplier` and `(1.0, 1.0, 1.0)` for `color` change the energy output of the light source. An energy preserving tint can be achieved by modifying `multiplier` to compensate for the energy loss: `multiplier *= 3 / dot(color, color)`.
+Light profiles can be attached to a node by defining the `extensions.EXT_lights_ies` property and, within that, the `light` property which defines an index into the `lights` array. Optionally, the `multiplier` and `color` properties can be defined to scale the light's intensity and tint the light, respectively. The RGB value of the `color` property is in linear space, clamped to the `[0, 1]` range, and acts as a per color channel multiplier. Note that values other than `1.0` for `multiplier` and `(1.0, 1.0, 1.0)` for `color` change the energy output of the light source. An energy preserving tint can be achieved by modifying `multiplier` to compensate for the energy loss: `multiplier *= 3 / dot(color, color)`.
 
 ```javascript
 "nodes": [
