@@ -37,6 +37,7 @@ When an extension is implemented by more than one vendor, its name can use the r
 * [EXT_lights_image_based](2.0/Vendor/EXT_lights_image_based/README.md)
 * [EXT_mesh_gpu_instancing](2.0/Vendor/EXT_mesh_gpu_instancing/README.md)
 * [EXT_meshopt_compression](2.0/Vendor/EXT_meshopt_compression/README.md)
+* [EXT_texture_qoi](2.0/Vendor/EXT_texture_qoi/README.md)
 * [EXT_texture_webp](2.0/Vendor/EXT_texture_webp/README.md)
 
 ### Vendor Extensions for glTF 2.0
