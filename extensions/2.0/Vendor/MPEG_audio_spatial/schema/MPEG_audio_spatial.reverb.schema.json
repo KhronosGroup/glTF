@@ -18,7 +18,7 @@
         },
         "properties": {
             "description": "An array of property items",
-            "gltf_detailedDescription": "Array of items that contains reverbProperties objects describing reverb unit specific parameters",
+            "gltf_detailedDescription": "Array of items that contains reverb property objects describing reverb unit specific parameters",
             "type": "array",
             "items": {
                 "$ref": "MPEG_audio_spatial.reverb.property.schema.json"
