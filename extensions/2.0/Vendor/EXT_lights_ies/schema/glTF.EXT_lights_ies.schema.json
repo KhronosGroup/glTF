@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_lights_ies glTF extension",
+    "type": "object",
+    "description": "glTF extension that enables the use of IES light profiles.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "lights": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "lightProfile.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "lights"
+    ]
+}
