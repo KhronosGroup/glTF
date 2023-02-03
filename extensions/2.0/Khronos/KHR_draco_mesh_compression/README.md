@@ -144,8 +144,6 @@ Draco compression may change the order and number of vertices in a mesh. To sati
 
 *This section is non-normative.*
 
-
-
 * [Draco Open Source Library](https://github.com/google/draco)
 * three.js [GLTFLoader.js](https://github.com/mrdoob/three.js/blob/r149/examples/jsm/loaders/GLTFLoader.js) and [DracoLoader.js](https://github.com/mrdoob/three.js/blob/r149/examples/jsm/loaders/DRACOLoader.js)
 * [Khronos glTF 2.0 Sample Viewer Draco decoder](https://github.com/KhronosGroup/glTF-Sample-Viewer/blob/v.1.0.9/source/gltf/primitive.js)
