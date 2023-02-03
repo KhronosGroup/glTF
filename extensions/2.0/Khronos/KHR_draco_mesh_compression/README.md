@@ -129,7 +129,7 @@ Below is the recommended process when a loader encounters a glTF asset with the 
 * If the loader does support the Draco extension, but will not process `KHR_draco_mesh_compression`, then the loader must load the glTF asset ignoring `KHR_draco_mesh_compression` in `primitive`.
 * If the loader does support the Draco extension, and will process `KHR_draco_mesh_compression` then:
     * The loader must process `KHR_draco_mesh_compression` first. The loader must get the data from `KHR_draco_mesh_compression`'s `bufferView` property and decompress the data using a Draco decoder to a Draco geometry.
-    * Then the loader must process `attributes` and `indices` properties of the `primitive`. When loading each `accessor`, you must ignore the `bufferView` and `byteOffset` of the `accessor` and go to the previously decoded Draco geometry in the `primitive` to get the data of indices and attributes. A loader must use the decompressed data to fill the `accessors` or render the decompressed Draco geometry directly (e.g. [ThreeJS (non-normative)](https://github.com/mrdoob/three.js/blob/dev/examples/js/loaders/DRACOLoader.js)).
+    * Then the loader must process `attributes` and `indices` properties of the `primitive`. When loading each `accessor`, you must ignore the `bufferView` and `byteOffset` of the `accessor` and go to the previously decoded Draco geometry in the `primitive` to get the data of indices and attributes. A loader must use the decompressed data to fill the `accessors` or render the decompressed Draco geometry directly.
     * If additional attributes are defined in `primitive`'s `attributes`, but not defined in `KHR_draco_mesh_compression`'s `attributes`, then the loader must process the additional attributes as usual.
 
 ## Implementation note
@@ -144,11 +144,12 @@ Draco compression may change the order and number of vertices in a mesh. To sati
 
 *This section is non-normative.*
 
+
+
 * [Draco Open Source Library](https://github.com/google/draco)
-* [ThreeJS
-  Loader](https://github.com/mrdoob/three.js/blob/dev/examples/js/loaders/DRACOLoader.js)
-  and
-  [example](https://github.com/mrdoob/three.js/blob/dev/examples/webgl_loader_draco.html)
+* three.js [GLTFLoader.js](https://github.com/mrdoob/three.js/blob/r149/examples/jsm/loaders/GLTFLoader.js) and [DracoLoader.js](https://github.com/mrdoob/three.js/blob/r149/examples/jsm/loaders/DRACOLoader.js)
+* [Khronos glTF 2.0 Sample Viewer Draco decoder](https://github.com/KhronosGroup/glTF-Sample-Viewer/blob/v.1.0.9/source/gltf/primitive.js)
+* [glTF Transform Draco decoder](https://github.com/donmccurdy/glTF-Transform/blob/v2.5.1/packages/extensions/src/khr-draco-mesh-compression/draco-mesh-compression.ts#L165-L223)
 
 ## Appendix: Full Khronos Copyright Statement
 
