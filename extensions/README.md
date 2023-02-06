@@ -34,6 +34,7 @@ The following extensions have been ratified by the Khronos Group:
 
 When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix. Multi-vendor extensions are not covered by the Khronos IP framework.
 
+* [EXT_lights_ies](2.0/Vendor/EXT_lights_ies/README.md)
 * [EXT_lights_image_based](2.0/Vendor/EXT_lights_image_based/README.md)
 * [EXT_mesh_gpu_instancing](2.0/Vendor/EXT_mesh_gpu_instancing/README.md)
 * [EXT_meshopt_compression](2.0/Vendor/EXT_meshopt_compression/README.md)
