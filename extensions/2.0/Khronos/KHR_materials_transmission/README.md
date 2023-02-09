@@ -199,7 +199,7 @@ $$
 using the transmission half vector $H_T$
 
 $$
-H_T = \text{normalize}(V + 2 \left( N \cdot -L \right) N + L)
+H_T = \text{normalize}(V - 2 \left( N \cdot L \right) N + L)
 $$
 
 With the step function $\chi^+$ we ensure that the microsurface is only visible for directions that are on the same side of the macro and microsurfaces. Macro and microsurfaces are oriented according to $N$ and $H_T$, respectively.
