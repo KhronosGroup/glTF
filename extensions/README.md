@@ -65,7 +65,6 @@ Vendor extensions are not covered by the Khronos IP framework.
 * [MPEG_mesh_linking](2.0/Vendor/MPEG_mesh_linking/README.md)
 * [MPEG_scene_dynamic](2.0/Vendor/MPEG_scene_dynamic/README.md)
 * [MPEG_texture_video](2.0/Vendor/MPEG_texture_video/README.md)
-* [MPEG_scene_dynamic](2.0/Vendor/MPEG_scene_dynamic/README.md)
 * [MPEG_viewport_recommended](2.0/Vendor/MPEG_viewport_recommended/README.md)
 * [MSFT_lod](2.0/Vendor/MSFT_lod/README.md)
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
