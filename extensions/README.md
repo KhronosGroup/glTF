@@ -58,7 +58,6 @@ Vendor extensions are not covered by the Khronos IP framework.
 * [FB_geometry_metadata](2.0/Vendor/FB_geometry_metadata/README.md)
 * [MPEG_accessor_timed](2.0/Vendor/MPEG_accessor_timed/README.md)
 * [MPEG_animation_timing](2.0/Vendor/MPEG_animation_timing/README.md)
-* [MPEG_accessor_timed](2.0/Vendor/MPEG_accessor_timed/README.md)
 * [MPEG_audio_spatial](2.0/Vendor/MPEG_audio_spatial/README.md)
 * [MPEG_buffer_circular](2.0/Vendor/MPEG_buffer_circular/README.md)
 * [MPEG_media](2.0/Vendor/MPEG_media/README.md)
