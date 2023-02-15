@@ -1,0 +1,23 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "MSFT_CollisionPrimitives glTF extension",
+    "type" : "object",
+    "description" : "Parameters describing a box collider.",
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties" : {
+        "size" : {
+            "type" : "array",
+            "description" : "The extents of the box in each axis in local space.",
+            "items" : {
+                "type": "number",
+                "minimum": 0.0
+            },
+            "minItems" : 3,
+            "maxItems" : 3,
+            "default" : [ 1.0, 1.0, 1.0 ]
+        },
+        "extensions" : {},
+        "extras" : {}
+    },
+    "required": ["size"]
+}

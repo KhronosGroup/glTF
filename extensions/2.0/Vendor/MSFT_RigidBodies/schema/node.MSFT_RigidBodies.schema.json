@@ -1,0 +1,25 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "MSFT_RigidBodies glTF extension",
+    "type" : "object",
+    "description" : "Physics properties for a node.",
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties" : {
+        "rigidBody" : {
+            "allOf" : [ { "$ref" : "node.MSFT_RigidBodies.rigidBody.schema.json" } ],
+            "description" : "A set of parameter values that enable this node and its children to be moved by physics simuation."
+        },
+        "collider" : {
+            "allOf" : [ { "$ref" : "node.MSFT_RigidBodies.collider.schema.json" } ],
+            "description" : "A set of parameter values that are used to provide a collision geometry for physics simulation."
+        },
+        "physicsMaterial" : {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the physics material in the top level physicsMaterials array."
+        },
+        "joint" : {
+            "allOf" : [ { "$ref" : "node.MSFT_RigidBodies.joint.schema.json" } ],
+            "description" : "A set of parameter values that are used to constrain how this node moves relative to another during physics simulation."
+        }
+    }
+}

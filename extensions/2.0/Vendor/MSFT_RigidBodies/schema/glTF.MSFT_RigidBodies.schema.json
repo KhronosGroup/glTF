@@ -1,0 +1,25 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "MSFT_RigidBodies glTF extension",
+    "type" : "object",
+    "description" : "Top level physics properties.",
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties" : {
+        "physicsMaterials" : {
+            "type": "array",
+            "description": "An array of physics materials.",
+            "items": {
+                "$ref" : "glTF.MSFT_RigidBodies.material.schema.json"
+            },
+            "minItems": 1
+        },
+        "physicsJointLimits" : {
+            "type": "array",
+            "description": "An array of physics joint limit descriptions.",
+            "items": {
+                "$ref" : "glTF.MSFT_RigidBodies.jointLimit.schema.json"
+            },
+            "minItems": 1
+        }
+     }
+}

@@ -1,0 +1,24 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "MSFT_CollisionPrimitives glTF extension",
+    "type" : "object",
+    "description" : "Parameters describing a capsule collider.",
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties" : {
+        "height" : {
+            "type" : "number",
+            "description": "The height of the capsule, centered along the Y axis.",
+            "minimum": 0.0,
+            "default" : 0.5
+        },
+        "radius" : {
+            "type" : "number",
+            "description": "The radius of the capsule.",
+            "minimum": 0.0,
+            "default" : 0.25
+        },
+        "extensions" : {},
+        "extras" : {}
+    },
+    "required": ["height", "radius"]
+}

@@ -1,0 +1,39 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "MSFT_RigidBodies glTF extension",
+    "type" : "object",
+    "description" : "Parameters describing how an object should respond to collisions during physics simulation.",
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties" : {
+        "staticFriction" : {
+            "type" : "number",
+            "description" : "The friction used when an object is laying still on a surface. Usually a value from 0 to 1. A value of zero feels like ice, a value of 1 will make it very hard to get the object moving.",
+            "minimum": 0.0,
+            "default" : 0.6
+        },
+        "dynamicFriction" : {
+            "type" : "number",
+            "description" : "The friction used when already moving. Usually a value from 0 to 1. A value of zero feels like ice, a value of 1 will make it come to rest very quickly unless a lot of force or gravity pushes the object.",
+            "minimum": 0.0,
+            "default" : 0.6
+        },
+        "restitution" : {
+            "type" : "number",
+            "description" : "How bouncy is the surface? A value of 0 will not bounce. A value of 1 will bounce without any loss of energy, certain approximations are to be expected though that might add small amounts of energy to the simulation.",
+            "minimum" : 0.0,
+            "default" : 0.0
+        },
+        "frictionCombine": {
+            "type": "string",
+            "description" : "Determines how friction should be combined when two objects interact.",
+            "enum" : ["AVERAGE", "MINIMUM", "MAXIMUM", "MULTIPLY"]
+        },
+        "restitutionCombine": {
+            "type": "string",
+            "description" : "Determines how restitution should be combined when two objects interact.",
+            "enum" : ["AVERAGE", "MINIMUM", "MAXIMUM", "MULTIPLY"]
+        },
+        "extensions" : {},
+        "extras" : {}
+    }
+}

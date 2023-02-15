@@ -1,0 +1,18 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "MSFT_CollisionPrimitives glTF extension",
+    "type" : "object",
+    "description" : "Parameters describing a sphere collider.",
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties" : {
+        "radius" : {
+            "type" : "number",
+            "description": "The radius of the sphere.",
+            "minimum": 0.0,
+            "default" : 0.5
+        },
+        "extensions" : {},
+        "extras" : {}
+    },
+    "required": ["radius"]
+}
