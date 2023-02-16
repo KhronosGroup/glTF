@@ -1,0 +1,36 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensions": {
+        "OMI_collider": {
+            "colliders": [
+                {
+                    "radius": 0.5,
+                    "type": "sphere"
+                }
+            ]
+        }
+    },
+    "extensionsUsed": [
+        "OMI_collider"
+    ],
+    "nodes": [
+        {
+            "extensions": {
+                "OMI_collider": {
+                    "collider": 0
+                }
+            },
+            "name": "SphereCollider"
+        }
+    ],
+    "scene": 0,
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ]
+}

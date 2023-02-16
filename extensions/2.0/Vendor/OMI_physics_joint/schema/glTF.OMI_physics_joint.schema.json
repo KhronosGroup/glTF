@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "OMI_physics_joint glTF Document Extension",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "required": [
+        "constraints"
+    ],
+    "properties": {
+        "constraints": {
+            "description": "An array of physics joint constraints that can be referenced by nodes.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "joint_constraint.schema.json"
+            },
+            "minItems": 1
+        }
+    }
+}

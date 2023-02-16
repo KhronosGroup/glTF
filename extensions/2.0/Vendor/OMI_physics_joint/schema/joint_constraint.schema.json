@@ -1,0 +1,40 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "OMI_physics_joint Joint Constraint",
+    "type": "object",
+    "required": [
+        "type"
+    ],
+    "properties": {
+        "linearAxes": {
+            "type": "array",
+            "description": "The linear axes to constrain. Can only contain 0 (X), 1 (Y), or 2 (Z).",
+            "default": []
+        },
+        "angularAxes": {
+            "type": "array",
+            "description": "The angular axes to constrain. Can only contain 0 (X), 1 (Y), or 2 (Z).",
+            "default": []
+        },
+        "lowerLimit": {
+            "type": "number",
+            "description": "The lower limit of the constraint, in meters or radians.",
+            "default": 0.0
+        },
+        "upperLimit": {
+            "type": "number",
+            "description": "The upper limit of the constraint, in meters or radians.",
+            "default": 0.0
+        },
+        "stiffness": {
+            "type": "number",
+            "description": "When beyond the limits, the stiffness of springing back.",
+            "default": "Infinity"
+        },
+        "damping": {
+            "type": "number",
+            "description": "When beyond the limits, the damping of the springing back motion.",
+            "default": 1.0
+        }
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensions": {
+        "OMI_collider": {
+            "colliders": [
+                {
+                    "height": 2.0,
+                    "radius": 0.5,
+                    "type": "capsule"
+                }
+            ]
+        }
+    },
+    "extensionsUsed": [
+        "OMI_collider"
+    ],
+    "nodes": [
+        {
+            "extensions": {
+                "OMI_collider": {
+                    "collider": 0
+                }
+            },
+            "name": "CapsuleCollider"
+        }
+    ],
+    "scene": 0,
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ]
+}

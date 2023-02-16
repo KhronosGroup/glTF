@@ -1,0 +1,66 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensions": {
+        "OMI_collider": {
+            "colliders": [
+                {
+                    "size": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "type": "box"
+                },
+                {
+                    "isTrigger": true,
+                    "radius": 2,
+                    "type": "sphere"
+                }
+            ]
+        }
+    },
+    "extensionsUsed": [
+        "OMI_collider",
+        "OMI_physics_body"
+    ],
+    "nodes": [
+        {
+            "children": [
+                1,
+                2
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "type": "static"
+                }
+            },
+            "name": "StaticBox"
+        },
+        {
+            "extensions": {
+                "OMI_collider": {
+                    "collider": 0
+                }
+            },
+            "name": "StaticCollider"
+        },
+        {
+            "extensions": {
+                "OMI_collider": {
+                    "collider": 1
+                }
+            },
+            "name": "TriggerCollider"
+        }
+    ],
+    "scene": 0,
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ]
+}

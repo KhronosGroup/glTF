@@ -1,0 +1,137 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "OMI_collider Collider",
+    "type": "object",
+    "required": [
+        "type"
+    ],
+    "properties": {
+        "type": {
+            "type": "string",
+            "description": "The type of collider this node represents.",
+            "enum": [
+                "box",
+                "sphere",
+                "capsule",
+                "cylinder",
+                "hull",
+                "trimesh"
+            ]
+        },
+        "isTrigger": {
+            "type": "boolean",
+            "description": "When true this collider will not be solid to physics bodies in the scene, and instead the shape will act as a trigger detection area.",
+            "default": false
+        }
+    },
+    "oneOf": [
+        {
+            "required": [
+                "type",
+                "size"
+            ],
+            "properties": {
+                "type": {
+                    "const": "box"
+                },
+                "size": {
+                    "type": "array",
+                    "description": "Three number array representing the width, height, and depth of the box (x, y, z)."
+                }
+            }
+        },
+        {
+            "required": [
+                "type",
+                "radius"
+            ],
+            "properties": {
+                "type": {
+                    "const": "sphere"
+                },
+                "radius": {
+                    "type": "number",
+                    "description": "The radius to use for the sphere shape."
+                }
+            }
+        },
+        {
+            "required": [
+                "type",
+                "radius",
+                "height"
+            ],
+            "properties": {
+                "type": {
+                    "const": "capsule"
+                },
+                "radius": {
+                    "type": "number",
+                    "description": "The radius to use for the capsule shape."
+                },
+                "height": {
+                    "type": "number",
+                    "description": "The full height of the capsule shape."
+                }
+            }
+        },
+        {
+            "required": [
+                "type",
+                "radius",
+                "height"
+            ],
+            "properties": {
+                "type": {
+                    "const": "cylinder"
+                },
+                "radius": {
+                    "type": "number",
+                    "description": "The radius to use for the cylinder shape."
+                },
+                "height": {
+                    "type": "number",
+                    "description": "The height of the cylinder shape."
+                }
+            }
+        },
+        {
+            "required": [
+                "type",
+                "mesh"
+            ],
+            "properties": {
+                "type": {
+                    "const": "trimesh"
+                },
+                "mesh": {
+                    "description": "A reference to the mesh in the glTF meshes array to use for this concave trimesh shape. The mesh MUST be a trimesh and have at least one triangle.",
+                    "allOf": [
+                        {
+                            "$ref": "glTFid.schema.json"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "required": [
+                "type",
+                "mesh"
+            ],
+            "properties": {
+                "type": {
+                    "const": "hull"
+                },
+                "mesh": {
+                    "description": "A reference to the mesh in the glTF meshes array to use for this concave trimesh shape. The mesh MUST be a trimesh and have at least one triangle. The hull computed from this mesh should have no more than 255 points in total.",
+                    "allOf": [
+                        {
+                            "$ref": "glTFid.schema.json"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,240 @@
+{
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                1,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 24,
+            "max": [
+                23
+            ],
+            "min": [
+                0
+            ],
+            "normalized": false,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 20,
+            "max": [
+                1,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 20,
+            "max": [
+                0.999969,
+                0,
+                0.999969,
+                1
+            ],
+            "min": [
+                -0.999969,
+                -0.007936,
+                -1,
+                1
+            ],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 20,
+            "max": [
+                0.894377,
+                0.447188,
+                1
+            ],
+            "min": [
+                -0.894377,
+                -1,
+                -1
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 20,
+            "max": [
+                1,
+                1
+            ],
+            "min": [
+                0,
+                0
+            ],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 6,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 24,
+            "max": [
+                19
+            ],
+            "min": [
+                2
+            ],
+            "normalized": false,
+            "type": "SCALAR"
+        }
+    ],
+    "asset": {
+        "version": "2.0"
+    },
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 288,
+            "byteOffset": 0
+        },
+        {
+            "buffer": 0,
+            "byteLength": 96,
+            "byteOffset": 288
+        },
+        {
+            "buffer": 0,
+            "byteLength": 240,
+            "byteOffset": 384
+        },
+        {
+            "buffer": 0,
+            "byteLength": 320,
+            "byteOffset": 624
+        },
+        {
+            "buffer": 0,
+            "byteLength": 240,
+            "byteOffset": 944
+        },
+        {
+            "buffer": 0,
+            "byteLength": 160,
+            "byteOffset": 1184
+        },
+        {
+            "buffer": 0,
+            "byteLength": 96,
+            "byteOffset": 1344
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 1440,
+            "uri": "convex_hull0.bin"
+        }
+    ],
+    "extensions": {
+        "OMI_collider": {
+            "colliders": [
+                {
+                    "mesh": 0,
+                    "type": "hull"
+                }
+            ]
+        }
+    },
+    "extensionsUsed": [
+        "OMI_collider"
+    ],
+    "meshes": [
+        {
+            "extras": {
+                "targetNames": []
+            },
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0
+                    },
+                    "indices": 1,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": {
+                "targetNames": []
+            },
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 4,
+                        "POSITION": 2,
+                        "TANGENT": 3,
+                        "TEXCOORD_0": 5
+                    },
+                    "indices": 6,
+                    "mode": 4
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "children": [
+                1
+            ],
+            "extensions": {
+                "OMI_collider": {
+                    "collider": 0
+                }
+            },
+            "name": "ConvexHull"
+        },
+        {
+            "extensions": {},
+            "mesh": 1,
+            "name": "ConvexMesh"
+        }
+    ],
+    "scene": 0,
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ]
+}

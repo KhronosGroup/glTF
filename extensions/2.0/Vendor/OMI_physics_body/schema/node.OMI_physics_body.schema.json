@@ -1,0 +1,42 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "OMI_physics_body glTF Node Extension",
+    "type": "object",
+    "required": [
+        "type"
+    ],
+    "properties": {
+        "type": {
+            "type": "string",
+            "description": "The body type of this physics body as a string.",
+            "enum": [
+                "static",
+                "kinematic",
+                "character",
+                "rigid",
+                "vehicle",
+                "trigger"
+            ]
+        },
+        "mass": {
+            "type": "number",
+            "description": "The mass of this physics body in kilograms.",
+            "default": 1.0
+        },
+        "linearVelocity": {
+            "type": "array",
+            "description": "The initial linear velocity of the body in meters per second.",
+            "default": [0.0, 0.0, 0.0]
+        },
+        "angularVelocity": {
+            "type": "array",
+            "description": "The initial angular velocity of the body in radians per second.",
+            "default": [0.0, 0.0, 0.0]
+        },
+        "inertiaTensor": {
+            "type": "array",
+            "description": "The inertia tensor 3x3 symmetric matrix of the body in kilogram meter squared.",
+            "default": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        }
+    }
+}

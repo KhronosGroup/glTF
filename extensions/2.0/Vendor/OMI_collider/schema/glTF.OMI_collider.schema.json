@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "OMI_collider glTF Document Extension",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "colliders": {
+            "description": "An array of colliders that can be referenced by nodes.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "collider.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "colliders"
+    ]
+}

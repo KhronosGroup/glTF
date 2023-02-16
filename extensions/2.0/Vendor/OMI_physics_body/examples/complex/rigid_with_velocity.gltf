@@ -1,0 +1,58 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensions": {
+        "OMI_collider": {
+            "colliders": [
+                {
+                    "radius": 0.5,
+                    "type": "sphere"
+                }
+            ]
+        }
+    },
+    "extensionsUsed": [
+        "OMI_collider",
+        "OMI_physics_body"
+    ],
+    "nodes": [
+        {
+            "children": [
+                1
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "angularVelocity": [
+                        4,
+                        5,
+                        6
+                    ],
+                    "linearVelocity": [
+                        1,
+                        2,
+                        3
+                    ],
+                    "type": "rigid"
+                }
+            },
+            "name": "RigidWithVelocity"
+        },
+        {
+            "extensions": {
+                "OMI_collider": {
+                    "collider": 0
+                }
+            },
+            "name": "SphereCollider"
+        }
+    ],
+    "scene": 0,
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ]
+}

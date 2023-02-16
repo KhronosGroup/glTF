@@ -1,0 +1,98 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensions": {
+        "OMI_collider": {
+            "colliders": [
+                {
+                    "size": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "type": "box"
+                },
+                {
+                    "isTrigger": true,
+                    "size": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "type": "box"
+                }
+            ]
+        }
+    },
+    "extensionsUsed": [
+        "OMI_collider",
+        "OMI_physics_body"
+    ],
+    "nodes": [
+        {
+            "children": [
+                1,
+                3
+            ],
+            "extensions": {},
+            "name": "TwoBoxes"
+        },
+        {
+            "children": [
+                2
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "type": "static"
+                }
+            },
+            "name": "StaticBox",
+            "translation": [
+                -1,
+                0,
+                0
+            ]
+        },
+        {
+            "extensions": {
+                "OMI_collider": {
+                    "collider": 0
+                }
+            },
+            "name": "StaticShape"
+        },
+        {
+            "children": [
+                4
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "type": "trigger"
+                }
+            },
+            "name": "TriggerBox",
+            "translation": [
+                1,
+                0,
+                0
+            ]
+        },
+        {
+            "extensions": {
+                "OMI_collider": {
+                    "collider": 1
+                }
+            },
+            "name": "TriggerShape"
+        }
+    ],
+    "scene": 0,
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ]
+}

@@ -1,0 +1,40 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensions": {
+        "OMI_collider": {
+            "colliders": [
+                {
+                    "size": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "type": "box"
+                }
+            ]
+        }
+    },
+    "extensionsUsed": [
+        "OMI_collider"
+    ],
+    "nodes": [
+        {
+            "extensions": {
+                "OMI_collider": {
+                    "collider": 0
+                }
+            },
+            "name": "BoxCollider"
+        }
+    ],
+    "scene": 0,
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ]
+}
