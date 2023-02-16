@@ -1,0 +1,51 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "light",
+    "type": "object",
+    "description": "A procedural sun-sky model, an environmental light source.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "visible": {
+            "type": "boolean",
+            "description": "Whether seen in the background.",
+            "default": true
+        },
+        "intensity": {
+            "type": "number",
+            "description": "Brightness scaling factor.",
+            "default": 0.025,
+            "minimum": 0
+        },
+        "elevation": {
+            "type": "number",
+            "description": "Angle of the sun to the horizon, i.e., to the plane with normal +Y (the zenith).",
+            "default": 1.5707963267948966,
+            "minimum": -1.5707963267948966,
+            "maximum": 1.5707963267948966
+        },
+        "azimuth": {
+            "type": "number",
+            "description": "Angle of the sun to +X in the horizon plane; increasing azimuth is a counterclockwise rotation around +Y.",
+            "default": 0,
+            "minimum": 0,
+            "maximum": 6.283185307179586
+        },
+        "turbidity": {
+            "type": "number",
+            "description": "Atmospheric turbidity due to particles, between `1` (clear sky) and `10` (hazy).",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "albedo": {
+            "type": "number",
+            "description": "Ground reflectance.",
+            "default": 0.3,
+            "minimum": 0,
+            "maximum": 1
+        },
+        "name": {},
+        "extensions": {},
+        "extras": {}
+    }
+}
