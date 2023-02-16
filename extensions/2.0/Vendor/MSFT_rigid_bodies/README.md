@@ -1,4 +1,4 @@
-# MSFT\_RigidBodies
+# MSFT\_rigid_bodies
 
 ## Contributors
 
@@ -24,7 +24,7 @@ Note, since all physics engines behave differently to each other, deterministic 
 
 ## glTF Schema Updates
 
-The `MSFT_RigidBodies` extension can be added to any `node` to define one or more of the following properties:
+The `MSFT_rigid_bodies` extension can be added to any `node` to define one or more of the following properties:
 
 | |Type|Description|
 |-|-|-|
@@ -66,7 +66,7 @@ Rigid bodies have the following properties:
 
 ### Colliders
 
-To specify the geometry used to detect overlaps, we use the MSFT\_CollisionPrimitives extension. By default, a node with a collision primitive should not participate in the physics simulation, as that geometry may be used for application-specific use-cases. In order to indicate that a `collider` should be used in the physics simulation, that node should have a `physicsMaterial` property, which indicates that it generates some physical response from interactions with other colliders. A collider attached to a node with `MSFT_RigidBodies` should be interpreted as an object which cannot generate a collision response (i.e. no impulses are applied as a result of collision detection), but instead, should be used as a "trigger", which the application may utilize to generate callbacks for implementation of application-specific logic.
+To specify the geometry used to detect overlaps, we use the MSFT\_collision\_primitives extension. By default, a node with a collision primitive should not participate in the physics simulation, as that geometry may be used for application-specific use-cases. In order to indicate that a `collider` should be used in the physics simulation, that node should have a `physicsMaterial` property, which indicates that it generates some physical response from interactions with other colliders. A collider attached to a node with `MSFT_rigid_bodies` should be interpreted as an object which cannot generate a collision response (i.e. no impulses are applied as a result of collision detection), but instead, should be used as a "trigger", which the application may utilize to generate callbacks for implementation of application-specific logic.
 If the node is part of a rigid body (i.e. itself or an ascendent has `rigidBody` properties) then the collider belongs to that rigid body and should move with it during simulation.
 Otherwise the collider exists as a static object in the physics simulation which can be collided with but can not be moved.
 
@@ -84,7 +84,7 @@ You can control how objects should respond during collisions by tweaking their f
 |**collider**|`integer`|The index of a top level `Collider`.|
 
 
-The top level array of `physicsMaterial` objects is provided by adding the `MSFT_RigidBodies` extension to any root `glTF` object, while the colliers array is provided by the `MSFT_CollisionPrimitives` extension. If a collider has no physics material assigned, that collider should not generate impulses when overlapping with other colliders - implementations may use this behaviour to trigger callbacks, which can implement application-specific logic; such objects are typically called "triggers", "phantoms", "sensors", or "overlap volumes" in physics simulation engines.
+The top level array of `physicsMaterial` objects is provided by adding the `MSFT_rigid_bodies` extension to any root `glTF` object, while the colliers array is provided by the `MSFT_collision_primitives` extension. If a collider has no physics material assigned, that collider should not generate impulses when overlapping with other colliders - implementations may use this behaviour to trigger callbacks, which can implement application-specific logic; such objects are typically called "triggers", "phantoms", "sensors", or "overlap volumes" in physics simulation engines.
 
 Physics materials offer the following properties:
 
@@ -110,7 +110,7 @@ In order for the joint to have any effect on the simulation, at least one of the
 
 The transform of the node (or the `connectedNode`) from the first parent `rigidBody` defines the constraint space - for example if a joint were to eliminate all degrees of freedom, the physics simulation should attempt to move the rigidBody nodes such that the transforms of the constrained child nodes become aligned with each other.
 
-The top level array of `physicsJointLimits` objects is provided by adding the `MSFT_RigidBodies` extension to any root `glTF` object and contains an array of joints. Joints must contain one of more `constraint` objects.
+The top level array of `physicsJointLimits` objects is provided by adding the `MSFT_rigid_bodies` extension to any root `glTF` object and contains an array of joints. Joints must contain one of more `constraint` objects.
 Each of these constraints removes some of the relative movement permitted between the two connected nodes.
 Each constraint should be one of the following:
 
@@ -146,7 +146,7 @@ For example, a pulley, which needs a third transform in order to calculate a dis
 
 ### JSON Schema
 
-* **JSON schema**: [glTF.MSFT_RigidBodies.schema.json](schema/glTF.MSFT_RigidBodies.schema.json)
+* **JSON schema**: [glTF.MSFT_rigid_bodies.schema.json](schema/glTF.MSFT_rigid_bodies.schema.json)
 
 ## Known Implementations
 

@@ -1,4 +1,4 @@
-# MSFT\_CollisionPrimitives
+# MSFT\_collision_primitives
 
 ## Status
 
@@ -10,11 +10,11 @@ Written against glTF 2.0 spec.
 
 ## Overview
 
-This extension adds the ability to specify collision primitives inside a glTF asset. This extension does not mandate any particular behaviour for those objects aside from their collision geometry. These types may be used in combination with additional extensions or application-specific business logic. The MSFT\_RigidBodies extension uses primitives defined in this spec to provide geometric primitives for collision detection in a rigid body simulation.
+This extension adds the ability to specify collision primitives inside a glTF asset. This extension does not mandate any particular behaviour for those objects aside from their collision geometry. These types may be used in combination with additional extensions or application-specific business logic. The MSFT\_rigid_bodies extension uses primitives defined in this spec to provide geometric primitives for collision detection in a rigid body simulation.
 
 ## glTF Schema Updates
 
-The `MSFT_CollisionPrimitives` extension can be added to any `node` to define one or more of the following properties:
+The `MSFT_collision_primitives` extension can be added to any `node` to define one or more of the following properties:
 
 | |Type|Description|
 |-|-|-|
@@ -62,7 +62,7 @@ Note, that this can generate asymmetric states - `A` might determine that it _do
 
 ### JSON Schema
 
-* **JSON schema**: [glTF.MSFT_CollisionPrimitives.schema.json](schema/glTF.MSFT_CollisionPrimitives.schema.json)
+* **JSON schema**: [glTF.MSFT_collision_primitives.schema.json](schema/glTF.MSFT_collision_primitives.schema.json)
 
 ## Known Implementations
 

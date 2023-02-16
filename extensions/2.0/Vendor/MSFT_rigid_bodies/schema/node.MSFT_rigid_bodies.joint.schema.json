@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "MSFT_RigidBodies glTF extension",
+    "title" : "MSFT_rigid_bodies glTF extension",
     "type" : "object",
     "description" : "Parameters describing how the relative motion of a pair of nodes is constrained.",
     "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],

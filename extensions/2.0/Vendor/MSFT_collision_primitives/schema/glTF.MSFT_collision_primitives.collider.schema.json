@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "MSFT_CollisionPrimitives glTF extension",
+    "title" : "MSFT_collision_primitives glTF extension",
     "type" : "object",
     "description" : "Parameters describing a node's physics collision geometry.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
@@ -36,7 +36,7 @@
             "properties": {
                 "sphere": {
                     "type": "object",
-                    "$ref" : "glTF.MSFT_CollisionPrimitives.collider.sphere.schema.json"
+                    "$ref" : "glTF.MSFT_collision_primitives.collider.sphere.schema.json"
                 }
             },
             "required": ["sphere"]
@@ -47,7 +47,7 @@
             "properties": {
                 "box": {
                     "type": "object",
-                    "$ref" : "glTF.MSFT_CollisionPrimitives.collider.box.schema.json"
+                    "$ref" : "glTF.MSFT_collision_primitives.collider.box.schema.json"
                 }
             },
             "required": ["box"]
@@ -58,7 +58,7 @@
             "properties": {
                 "capsule": {
                     "type": "object",
-                    "$ref" : "glTF.MSFT_CollisionPrimitives.collider.capsule.schema.json"
+                    "$ref" : "glTF.MSFT_collision_primitives.collider.capsule.schema.json"
                 }
             },
             "required": ["capsule"]
@@ -69,7 +69,7 @@
             "properties": {
                 "cylinder": {
                     "type": "object",
-                    "$ref" : "glTF.MSFT_CollisionPrimitives.collider.cylinder.schema.json"
+                    "$ref" : "glTF.MSFT_collision_primitives.collider.cylinder.schema.json"
                 }
             },
             "required": ["cylinder"]
@@ -80,7 +80,7 @@
             "properties": {
                 "convex": {
                     "type": "object",
-                    "$ref" : "glTF.MSFT_CollisionPrimitives.collider.convex.schema.json"
+                    "$ref" : "glTF.MSFT_collision_primitives.collider.convex.schema.json"
                 }
             },
             "required": ["convex"]
@@ -91,7 +91,7 @@
             "properties": {
                 "mesh": {
                     "type": "object",
-                    "$ref" : "glTF.MSFT_CollisionPrimitives.collider.trimesh.schema.json"
+                    "$ref" : "glTF.MSFT_collision_primitives.collider.trimesh.schema.json"
                 }
             },
             "required": ["trimesh"]
