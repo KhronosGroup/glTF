@@ -7,7 +7,7 @@
     "properties" : {
         "rigidBody" : {
             "allOf" : [ { "$ref" : "node.MSFT_rigid_bodies.rigid_body.schema.json" } ],
-            "description" : "A set of parameter values that enable this node and its children to be moved by physics simuation."
+            "description" : "A set of parameter values that enable this node and its children to be moved by physics simulation."
         },
         "collider" : {
             "allOf" : [ { "$ref" : "node.MSFT_rigid_bodies.collider.schema.json" } ],

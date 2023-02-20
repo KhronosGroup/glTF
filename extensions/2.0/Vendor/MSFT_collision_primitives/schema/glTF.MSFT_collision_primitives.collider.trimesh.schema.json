@@ -6,7 +6,7 @@
     "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
         "mesh" : {
-            "description": "The ID of the mesh from which to build the physics represenation.",
+            "description": "The ID of the mesh from which to build the physics representation.",
             "allOf": [{"$ref": "glTFid.schema.json"}]
         },
         "extensions" : {},

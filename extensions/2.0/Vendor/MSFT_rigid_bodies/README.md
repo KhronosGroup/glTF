@@ -67,12 +67,12 @@ Rigid bodies have the following properties:
 ### Colliders
 
 To specify the geometry used to detect overlaps, we use the MSFT\_collision\_primitives extension. By default, a node with a collision primitive should not participate in the physics simulation, as that geometry may be used for application-specific use-cases. In order to indicate that a `collider` should be used in the physics simulation, that node should have a `physicsMaterial` property, which indicates that it generates some physical response from interactions with other colliders. A collider attached to a node with `MSFT_rigid_bodies` should be interpreted as an object which cannot generate a collision response (i.e. no impulses are applied as a result of collision detection), but instead, should be used as a "trigger", which the application may utilize to generate callbacks for implementation of application-specific logic.
-If the node is part of a rigid body (i.e. itself or an ascendent has `rigidBody` properties) then the collider belongs to that rigid body and should move with it during simulation.
+If the node is part of a rigid body (i.e., the node itself or an ascendant has `rigidBody` properties) then the collider belongs to that rigid body and should move with it during simulation.
 Otherwise the collider exists as a static object in the physics simulation which can be collided with but can not be moved.
 
 Implementations of this extension should ensure that collider transforms are always kept in sync with node transforms - for example animated node transforms should be applied to the physics engine (even for static colliders).
 
-Note that, depending on the simulation engine in use, `convex` and `trimesh` colliders may impose a large computational cost when converting to native types if the source mesh contains many vertices. In addition, real-time engines generally prefer to avoid collisions between two `trimesh` objects. For best performance and behaviour, consult the manual for the physics simulation engine you are using.
+Note that, depending on the simulation engine in use, `convex` and `trimesh` colliders may impose a large computational cost when converting to native types if the source mesh contains many vertices. In addition, real-time engines generally prefer to avoid collisions between two `trimesh` objects. For best performance and behavior, consult the manual for the physics simulation engine you are using.
 
 **Collision Response**
 
@@ -84,7 +84,7 @@ You can control how objects should respond during collisions by tweaking their f
 |**collider**|`integer`|The index of a top level `Collider`.|
 
 
-The top level array of `physicsMaterial` objects is provided by adding the `MSFT_rigid_bodies` extension to any root `glTF` object, while the colliers array is provided by the `MSFT_collision_primitives` extension. If a collider has no physics material assigned, that collider should not generate impulses when overlapping with other colliders - implementations may use this behaviour to trigger callbacks, which can implement application-specific logic; such objects are typically called "triggers", "phantoms", "sensors", or "overlap volumes" in physics simulation engines.
+The top level array of `physicsMaterial` objects is provided by adding the `MSFT_rigid_bodies` extension to any root `glTF` object, while the colliers array is provided by the `MSFT_collision_primitives` extension. If a collider has no physics material assigned, that collider should not generate impulses when overlapping with other colliders - implementations may use this behavior to trigger callbacks, which can implement application-specific logic; such objects are typically called "triggers", "phantoms", "sensors", or "overlap volumes" in physics simulation engines.
 
 Physics materials offer the following properties:
 
@@ -92,7 +92,7 @@ Physics materials offer the following properties:
 |-|-|-|
 |**staticFriction**|`number`|The friction used when an object is laying still on a surface.<br/>Typical range from 0 to 1.|
 |**dynamicFriction**|`number`|The friction used when already moving.<br/>Typical range from 0 to 1.|
-|**restitution**|`number`|The bouncyness of the surface.<br/>Typical range from 0 to 1.|
+|**restitution**|`number`|The bounciness of the surface.<br/>Typical range from 0 to 1.|
 |**frictionCombine**|`string`|How to combine two friction values.<br/>"AVERAGE", "MINIMUM", "MAXIMUM", or "MULTIPLY".|
 |**restitutionCombine**|`string`|How to combine two restitution values.<br/>"AVERAGE", "MINIMUM", "MAXIMUM", or "MULTIPLY".|
 
@@ -127,7 +127,7 @@ Each constraint must provide an array of axes which are restricted.
 These axes refer to the columns of the basis defined by the transform of the connected nodes and as such, should be in the range 0 to 2.
 The number of axes provided determines whether is should be a 1, 2 or 3 dimensional constraint as follows:
 * For linear constraints, a 1D constraint will keep that axis within the `min` and `max` distance from the infinite plane defined by the other two axes.
-A 2D constraint will keep the node translations within a certain distance from an infinite line (i.e., within an infinite cylinder) and a 3D constraint will keep the nodes within a certain distance from a point (i.e. within a sphere).
+A 2D constraint will keep the node translations within a certain distance from an infinite line (i.e., within an infinite cylinder) and a 3D constraint will keep the nodes within a certain distance from a point (i.e., within a sphere).
 * For angular constraints, a 1D constraint restricts angular movement about one axis, as in a universal joint.
 A 2D constraint restricts angular movement about two - keeping the pivots within a cone.
 
