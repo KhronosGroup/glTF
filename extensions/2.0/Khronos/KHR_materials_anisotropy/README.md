@@ -31,8 +31,8 @@ Sample values:
             "extensions": {
                 "KHR_materials_anisotropy": {
                     "anisotropyFactor": 0.6,
-                    "anisotropyDirectionFactor": [1.0, -1.0, 0.0],
-                    "anisotropyDirectionTexture": {
+                    "anisotropyDirection": [1.0, -1.0],
+                    "anisotropyTexture": {
                         "index": 0
                     }
                 }
@@ -42,29 +42,27 @@ Sample values:
 }
 ```
 
-|                               | Type                                                                 | Description                       | Required                       |
-|-------------------------------|----------------------------------------------------------------------|-----------------------------------|--------------------------------|
-|**anisotropyFactor**           | `number`                                                             | The anisotropy strength.          | No, default: `0.0`             |
-|**anisotropyDirectionFactor**  | `array`                                                              | The anisotropy direction.         | No, default: `[1.0, 1.0, 0.0]` |
-|**anisotropyDirectionTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)  | The anisotropy direction texture. | No                             |
+|                         | Type                                                                | Description               | Required                  |
+| ----------------------- | ------------------------------------------------------------------- | ------------------------- | ------------------------- |
+| **anisotropyFactor**    | `number`                                                            | The anisotropy strength.  | No, default: `0.0`        |
+| **anisotropyDirection** | `array`                                                             | The anisotropy direction. | No, default: `[1.0, 0.0]` |
+| **anisotropyTexture**   | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The anisotropy texture, red and green channels represent the anisotropy direction and the magnitude of this vector represents the anisotropy strength.   | No                        |
 
 ## Anisotropy
 
-Two new material properties are introduced: an explicit anisotropy parameter and the direction in which the specular reflection elongates relative to the surface tangents.
-The anisotropy parameter is a dimensionless number in `[-1, 1]` and forms an injective relation to the roughness distribution along two orthogonal directions, one of which is the direction parameter and the other the result of crossing the direction and the geometric normal.
+Two new material properties are introduced: an explicit anisotropyFactor parameter and the direction in which the specular reflection elongates relative to the surface tangents.
+The anisotropyFactor parameter is a dimensionless number in `[0, 1]` and forms an injective relation to the roughness distribution along two orthogonal directions, one of which is the direction parameter and the other the result of crossing the direction and the geometric normal.
 
-An anisotropy of `1` means that the specular reflection will elongate along the given direction, while a value of `-1` will elongate it along the computed orthogonal direction.
-
-| | 0.5 | 0.0 | -0.5 |
-| --- | --- | --- | --- |
-| `[1.0, 0.0, 0.0]` | ![Fig. 3](figures/fig3.jpg) | ![Fig. 2](figures/fig2.jpg) | ![Fig. 1](figures/fig1.jpg)
-| `[1.0, 1.0, 0.0]` | ![Fig. 6](figures/fig6.jpg) | ![Fig. 5](figures/fig5.jpg) | ![Fig. 4](figures/fig4.jpg)
+|              | 0.5                         | 0.0                         |
+| ------------ | --------------------------- | --------------------------- |
+| `[1.0, 0.0]` | ![Fig. 3](figures/fig3.jpg) | ![Fig. 2](figures/fig2.jpg) |
+| `[1.0, 1.0]` | ![Fig. 6](figures/fig6.jpg) | ![Fig. 5](figures/fig5.jpg) |
 
 To achieve certain surface finishes, it is possible to define the anisotropy and its direction using a texture.
 
-| Anisotropy | Direction |
-|:---:|:---:|
-| ![Fig. 7](figures/fig7.jpg) | ![Fig. 8](figures/fig8.jpg) |
+|         Anisotropy          |           Direction           |
+| :-------------------------: | :---------------------------: |
+| ![Fig. 7](figures/fig7.jpg) |  ![Fig. 8](figures/fig8.jpg)  |
 | ![Fig. 9](figures/fig9.jpg) | ![Fig. 10](figures/fig10.jpg) |
 
 ## Implementation
@@ -73,14 +71,11 @@ While uniform and textured anisotropy are multiplied, uniform and textured direc
 
 ```glsl
 float anisotropy = u_Anisotropy;
-#if HAS_ANISOTROPY_MAP
-anisotropy *= texture(uv, u_AnisotropySampler).r * 2.0 - 1.0;
-#endif
+vec3 direction = normalize(u_AnisotropyDirection);
 
-#if HAS_ANISOTROPY_DIRECTION_MAP
-vec3 direction = texture(uv, u_AnisotropyDirectionSampler).xyz * 2.0 - vec3(1.0);
-#else
-vec3 direction = u_AnisotropyDirection;
+#if HAS_ANISOTROPY_MAP
+direction = texture(uv, u_AnisotropyDirectionSampler).xy * 2.0 - vec2(1.0);
+anisotropy *= length(direction);
 #endif
 
 vec3 anisotropicT = normalize(TBN * direction);
