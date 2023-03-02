@@ -1,0 +1,42 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_anisotropy glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines anisotropy.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "anisotropy": {
+            "type": "number",
+            "description": "Amount of anisotropy.",
+            "default": 0.0,
+            "minimum": -1.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": ""
+        },
+        "anisotropyTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "Anisotropy texture",
+            "gltf_detailedDescription": "The uniform and per pixel anisotropy values are multiplied."
+        },
+        "anisotropyDirection": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "description": "Anisotropic direction",
+            "gltf_detailedDescription": "The direction of the anisotropy. Does not need to be normalized.",
+            "default": [1, 0, 0]
+        },
+        "anisotropyDirectionTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "Anisotropy direction texture",
+            "gltf_detailedDescription": "When defined, these per pixel direction values override the uniform direction value."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
