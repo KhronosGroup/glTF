@@ -5,18 +5,13 @@
     "description": "glTF extension that defines anisotropy.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "anisotropy": {
+        "anisotropyFactor": {
             "type": "number",
-            "description": "Amount of anisotropy.",
+            "description": "The anisotropy strength.",
             "default": 0.0,
-            "minimum": -1.0,
+            "minimum": 0.0,
             "maximum": 1.0,
             "gltf_detailedDescription": ""
-        },
-        "anisotropyTexture": {
-            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "Anisotropy texture",
-            "gltf_detailedDescription": "The uniform and per pixel anisotropy values are multiplied."
         },
         "anisotropyDirection": {
             "type": "array",
@@ -25,16 +20,16 @@
                 "minimum": -1.0,
                 "maximum": 1.0
             },
-            "minItems": 3,
-            "maxItems": 3,
+            "minItems": 2,
+            "maxItems": 2,
             "description": "Anisotropic direction",
-            "gltf_detailedDescription": "The direction of the anisotropy. Does not need to be normalized.",
-            "default": [1, 0, 0]
+            "gltf_detailedDescription": "The direction of the anisotropy in tangent, bitangent space. The reader is expected to normalize this. The presence of anisotropyTexture completely overrides this value.",
+            "default": [1, 0]
         },
-        "anisotropyDirectionTexture": {
+        "anisotropyTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "Anisotropy direction texture",
-            "gltf_detailedDescription": "When defined, these per pixel direction values override the uniform direction value."
+            "description": "Anisotropy texture",
+            "gltf_detailedDescription": "The anisotropy texture. Red and green channels represent the anisotropy direction in [-1, 1] tangent, bitangent space. The magnitude of this vector is multiplied by anisotropyFactor to obtain the anisotropy strength."
         },
         "extensions": { },
         "extras": { }
