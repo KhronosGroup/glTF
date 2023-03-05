@@ -15,7 +15,7 @@ In the following, extensions are roughly classified by their maturity. This desc
 - **Complete Extensions:** An extension that has been marked as complete and final, and is now hosted in the Khronos glTF GitHub repository.
 - **Ratified Extensions:** An extension that went through the formal process of being ratified by Khronos. More details on that are given in section [TODO LINK].
 - **Promoted to Core:** An extension that has become part of the glTF core specification (hypothetical)
-- **Archived Axtensions:** An extension that is kept for compatibility reasons, but should no longer be used in new glTF assets.
+- **Archived Extensions:** An extension that is kept for compatibility reasons, but should no longer be used in new glTF assets.
   
 An extension will usually go through all these states. Most of the development will happen when the extension is in the _Draft extension proposal_ state. 
 
