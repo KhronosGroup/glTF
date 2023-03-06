@@ -5,7 +5,7 @@
     "description": "glTF extension that defines anisotropy.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "anisotropyFactor": {
+        "anisotropyStrength": {
             "type": "number",
             "description": "The anisotropy strength.",
             "default": 0.0,
@@ -14,17 +14,10 @@
             "gltf_detailedDescription": ""
         },
         "anisotropyDirection": {
-            "type": "array",
-            "items": {
-                "type": "number",
-                "minimum": -1.0,
-                "maximum": 1.0
-            },
-            "minItems": 2,
-            "maxItems": 2,
+            "type": "number",
             "description": "Anisotropic direction",
-            "gltf_detailedDescription": "The direction of the anisotropy in tangent, bitangent space. The reader is expected to normalize this. The presence of anisotropyTexture completely overrides this value.",
-            "default": [1, 0]
+            "default": 0.0,
+            "gltf_detailedDescription": "The direction of the anisotropy in tangent, bitangent space, measured in radians counter-clockwise from the tangent. When anisotropyTexture is present, anisotropyDirection provides additional rotation to the vectors in the texture."
         },
         "anisotropyTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],

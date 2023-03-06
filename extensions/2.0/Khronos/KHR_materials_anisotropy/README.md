@@ -44,8 +44,8 @@ Sample values:
         {
             "extensions": {
                 "KHR_materials_anisotropy": {
-                    "anisotropyFactor": 0.6,
-                    "anisotropyDirection": [1.0, -1.0],
+                    "anisotropyStrength": 0.6,
+                    "anisotropyDirection": 1.57,
                     "anisotropyTexture": {
                         "index": 0
                     }
@@ -56,22 +56,22 @@ Sample values:
 }
 ```
 
-|                         | Type                                                                | Description               | Required                  |
-| ----------------------- | ------------------------------------------------------------------- | ------------------------- | ------------------------- |
-| **anisotropyFactor**    | `number`                                                            | The anisotropy strength.  | No, default: `0.0`        |
-| **anisotropyDirection** | `array`                                                             | The direction of the anisotropy in tangent, bitangent space. The reader is expected to normalize this. The presence of anisotropyTexture completely overrides this value. | No, default: `[1.0, 0.0]` |
-| **anisotropyTexture**   | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The anisotropy texture. Red and green channels represent the anisotropy direction in [-1, 1] tangent, bitangent space. The magnitude of this vector is multiplied by anisotropyFactor to obtain the anisotropy strength.   | No                        |
+|                         | Type     | Description               | Required           |
+| ----------------------- | -------- | ------------------------- | ------------------ |
+| **anisotropyStrength**  | `number` | The anisotropy strength.  | No, default: `0.0` |
+| **anisotropyDirection** | `number` | The direction of the anisotropy in tangent, bitangent space, measured in radians counter-clockwise from the tangent. When anisotropyTexture is present, anisotropyDirection provides additional rotation to the vectors in the texture. | No, default: `0.0` |
+| **anisotropyTexture**   | [`textureInfo`](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | The anisotropy texture. Red and green channels represent the anisotropy direction in [-1, 1] tangent, bitangent space. The magnitude of this vector is multiplied by anisotropyFactor to obtain the anisotropy strength. | No |
 
 ## Anisotropy
 
-Two new material properties are introduced: an explicit anisotropyFactor parameter and the direction in which the specular reflection elongates relative to the surface tangents.
-The anisotropyFactor parameter is a dimensionless number in the range `[0, 1]` and forms an injective relation to the roughness distribution along two orthogonal directions, one of which is the direction parameter and the other the result of crossing the direction and the geometric normal.
+Two new material properties are introduced: an explicit strength parameter and the direction in which the specular reflection elongates relative to the surface tangents.
+The strength parameter is a dimensionless number in the range `[0, 1]` and forms an injective relation to the roughness distribution along two orthogonal directions, one of which is the direction parameter and the other the result of crossing the direction and the geometric normal.
 
-| Direction    | Anisotropy 0.5              | Anisotropy 0.0              |
+| Direction    | Strength 0.5                | Strength 0.0                |
 | ------------ | --------------------------- | --------------------------- |
-| `[1.0, 0.0]` | ![Fig. 3](figures/fig3.jpg) | ![Fig. 2](figures/fig2.jpg) |
-| `[1.0, 1.0]` | ![Fig. 6](figures/fig6.jpg) | ![Fig. 5](figures/fig5.jpg) |
-| `[0.0, 1.0]` | ![Fig. 1](figures/fig1.jpg) | ![Fig. 5](figures/fig5.jpg) |
+| `0.0`        | ![Fig. 3](figures/fig3.jpg) | ![Fig. 2](figures/fig2.jpg) |
+| `0.78539816` | ![Fig. 6](figures/fig6.jpg) | ![Fig. 5](figures/fig5.jpg) |
+| `1.57079633` | ![Fig. 1](figures/fig1.jpg) | ![Fig. 5](figures/fig5.jpg) |
 
 To achieve certain surface finishes, it is possible to define the anisotropy and its direction using a texture.
 
@@ -80,18 +80,24 @@ To achieve certain surface finishes, it is possible to define the anisotropy and
 
 ## Implementation
 
-While uniform and textured anisotropy are multiplied, uniform and textured direction definitions are mutually exclusive and the latter overrides the former. (While it is surely possible to add both directions in terms of their complex argument, the computational overhead may not justify the additional editorial convenience.)
+In the following example, `u_AnisotropyStrength` is set to this extension's `anisotropyStrength`, and `u_AnisotropyDirection` is initialized as `[ cos(anisotropyDirection), sin(anisotropyDirection) ]`.
+
+The default value of `anisotropyDirection` is zero, so when this parameter is not supplied by glTF, `u_AnisotropyDirection` will be `[ 1.0, 0.0 ]`.
 
 ```glsl
-float anisotropy = u_Anisotropy;
-vec3 direction = normalize(vec3(u_AnisotropyDirection, 0.0));
+uniform float u_AnisotropyStrength;
+uniform vec2 u_AnisotropyDirection;
+
+float anisotropy = u_AnisotropyStrength;
+vec2 direction = u_AnisotropyDirection;
 
 #if HAS_ANISOTROPY_MAP
-direction = texture(uv, u_AnisotropyDirectionSampler).xy * 2.0 - vec2(1.0);
-anisotropy *= length(direction);
+vec2 anisotropyTexture = texture(uv, u_AnisotropyTextureSampler).rg * 2.0 - vec2(1.0);
+anisotropy *= length(anisotropyTexture);
+direction = mat2(direction.x, -direction.y, direction.y, direction.x) * normalize(anisotropyTexture);
 #endif
 
-vec3 anisotropicT = normalize(TBN * direction);
+vec3 anisotropicT = normalize(TBN * vec3(direction, 0.0));
 vec3 anisotropicB = normalize(cross(normal_geometric, anisotropicT));
 
 float TdotL = dot(anisotropicT, l);
