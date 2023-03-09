@@ -8,7 +8,7 @@
 
 ## Status
 
-Experimental
+Release Candidate
 
 ## Dependencies
 
