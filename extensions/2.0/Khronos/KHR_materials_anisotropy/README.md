@@ -60,7 +60,7 @@ Sample values:
 | ----------------------- | -------- | ------------------------- | ------------------ |
 | **anisotropyStrength**  | `number` | The anisotropy strength.  | No, default: `0.0` |
 | **anisotropyDirection** | `number` | The direction of the anisotropy in tangent, bitangent space, measured in radians counter-clockwise from the tangent. When anisotropyTexture is present, anisotropyDirection provides additional rotation to the vectors in the texture. | No, default: `0.0` |
-| **anisotropyTexture**   | [`textureInfo`](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | The anisotropy texture. Red and green channels represent the anisotropy direction in [-1, 1] tangent, bitangent space. The magnitude of this vector is multiplied by anisotropyFactor to obtain the anisotropy strength. | No |
+| **anisotropyTexture**   | [`textureInfo`](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | The anisotropy texture. Red and green channels represent the anisotropy direction in [-1, 1] tangent, bitangent space. The vector is rotated by anisotropyDirection, and multiplied by anisotropyStrength, to obtain the final anisotropy direction and strength. | No |
 
 ## Anisotropy
 
