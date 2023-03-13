@@ -28,6 +28,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `ASOBO` | Asobo Studio | https://www.asobostudio.com/ | [#1989](https://github.com/KhronosGroup/glTF/issues/1989) |
 | `AUDACES` | Audaces Automacao Industrial | https://audaces.com/<br>`edward.boszczowski at audaces.com` | [#2231](https://github.com/KhronosGroup/glTF/issues/2231) |
 | `AVR` | AltspaceVR, Inc. | https://altvr.com/ | [#1009](https://github.com/KhronosGroup/glTF/issues/1009) |
+| `BENTLEY` | Bentley Systems, Inc. | https://www.bentley.com/<br>`paul.connelly at bentley.com` | [#2259](https://github.com/KhronosGroup/glTF/issues/2259) |
 | `BLENDER` | Blender Foundation | https://www.blender.org/ | [#865](https://github.com/KhronosGroup/glTF/issues/865) |
 | `CAPTURE` | Capture Visualisation AB | https://www.capture.se/ | [#1732](https://github.com/KhronosGroup/glTF/issues/1732) |
 | `CESIUM` | Cesium GS, Inc. | https://cesium.com/ |  |
