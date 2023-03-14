@@ -27,7 +27,7 @@ Written against the glTF 2.0 spec.
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_scene_dynamic.schema.json](/Extensions/MPEG_scene_dynamic/schema/MPEG_scene_dynamic.schema.json)
+* **JSON schema**: [MPEG_scene_dynamic.schema.json](./schema/MPEG_scene_dynamic.schema.json)
 
 ### MPEG_scene_dynamic extension.media
 
