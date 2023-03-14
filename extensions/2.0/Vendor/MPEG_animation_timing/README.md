@@ -29,7 +29,7 @@ glTF extension to specify timing information that allow to synchronized animatio
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_animation_timing.schema.json](/Extensions/MPEG_animation_timing/schema/MPEG_animation_timing.schema.json)
+* **JSON schema**: [MPEG_animation_timing.schema.json](./schema/MPEG_animation_timing.schema.json)
 
 ### MPEG_animation_timing.accessor
 
