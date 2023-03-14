@@ -41,7 +41,7 @@ glTF extension to specify timed accessor format formats
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_accessor_timed.schema.json](/Extensions/MPEG_accessor_timed/schema/MPEG_accessor_timed.schema.json)
+* **JSON schema**: [MPEG_accessor_timed.schema.json](./schema/MPEG_accessor_timed.schema.json)
 
 ### MPEG_accessor_timed.immutable
 
