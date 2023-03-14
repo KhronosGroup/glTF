@@ -38,7 +38,7 @@ The `MPEG_audio_spatial` extension supports three different node types:
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_audio_spatial.schema.json](/schema/MPEG_audio_spatial.schema.json)
+* **JSON schema**: [MPEG_audio_spatial.schema.json](./schema/MPEG_audio_spatial.schema.json)
 
 ### MPEG_audio_spatial.sources
 
