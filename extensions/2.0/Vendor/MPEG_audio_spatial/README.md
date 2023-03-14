@@ -38,7 +38,7 @@ The `MPEG_audio_spatial` extension supports three different node types:
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_audio_spatial.schema.json](/Extensions/MPEG_audio_spatial/schema/MPEG_audio_spatial.schema.json)
+* **JSON schema**: [MPEG_audio_spatial.schema.json](./schema/MPEG_audio_spatial.schema.json)
 
 ### MPEG_audio_spatial.sources
 
@@ -95,7 +95,7 @@ Application-specific data.
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_audio_spatial.listener.schema.json](/Extensions/MPEG_audio_spatial/schema/MPEG_audio_spatial.listener.schema.json)
+* **JSON schema**: [MPEG_audio_spatial.listener.schema.json](./schema/MPEG_audio_spatial.listener.schema.json)
 
 ### MPEG_audio_spatial.listener.id
 
@@ -141,7 +141,7 @@ Application-specific data.
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_audio_spatial.reverb.schema.json](/Extensions/MPEG_audio_spatial/schema/MPEG_audio_spatial.reverb.schema.json)
+* **JSON schema**: [MPEG_audio_spatial.reverb.schema.json](./schema/MPEG_audio_spatial.reverb.schema.json)
 
 ### MPEG_audio_spatial.reverb.id
 
@@ -207,7 +207,7 @@ Application-specific data.
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_audio_spatial.reverb.property.schema.json](/Extensions/MPEG_audio_spatial/schema/MPEG_audio_spatial.reverb.property.schema.json)
+* **JSON schema**: [MPEG_audio_spatial.reverb.property.schema.json](./schema/MPEG_audio_spatial.reverb.property.schema.json)
 
 ### MPEG_audio_spatial.reverb.property.frequency
 
@@ -273,7 +273,7 @@ Application-specific data.
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_audio_spatial.source.schema.json](/Extensions/MPEG_audio_spatial/schema/MPEG_audio_spatial.source.schema.json)
+* **JSON schema**: [MPEG_audio_spatial.source.schema.json](./schema/MPEG_audio_spatial.source.schema.json)
 
 ### MPEG_audio_spatial.source.id
 

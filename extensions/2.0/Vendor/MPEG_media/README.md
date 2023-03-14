@@ -31,7 +31,7 @@ extensions in glTF document.
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_media.schema.json](/Extensions/MPEG_media/schema/MPEG_media.schema.json)
+* **JSON schema**: [MPEG_media.schema.json](./schema/MPEG_media.schema.json)
 
 ### MPEG_media.media
 
@@ -89,7 +89,7 @@ Media used to create a texture, audio source, or any other media type.
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_media.media.schema.json](/Extensions/MPEG_media/schema/MPEG_media.media.schema.json)
+* **JSON schema**: [MPEG_media.media.schema.json](./schema/MPEG_media.media.schema.json)
 
 ### MPEG_media.media.name
 
@@ -192,7 +192,7 @@ Application-specific data.
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_media.media.alternative.schema.json](/Extensions/MPEG_media/schema/MPEG_media.media.alternative.schema.json)
+* **JSON schema**: [MPEG_media.media.alternative.schema.json](./schema/MPEG_media.media.alternative.schema.json)
 
 ### MPEG_media.media.alternative.uri
 
@@ -258,7 +258,7 @@ Application-specific data.
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_media.media.alternative.track.schema.json](/Extensions/MPEG_media/schema/MPEG_media.media.alternative.track.schema.json)
+* **JSON schema**: [MPEG_media.media.alternative.track.schema.json](./schema/MPEG_media.media.alternative.track.schema.json)
 
 ### MPEG_media.media.alternative.track.track
 

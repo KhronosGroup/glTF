@@ -40,7 +40,7 @@ should filled by data described by the standard glTF source object.
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_texture_video.schema.json](/Extensions/MPEG_texture_video/schema/MPEG_texture_video.schema.json)
+* **JSON schema**: [MPEG_texture_video.schema.json](./schema/MPEG_texture_video.schema.json)
 
 ### MPEG_texture_video.accessor
 

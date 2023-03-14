@@ -43,7 +43,7 @@ changed information.
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_viewport_recommended.schema.json](/Extensions/MPEG_viewport_recommended/schema/MPEG_viewport_recommended.schema.json)
+* **JSON schema**: [MPEG_viewport_recommended.schema.json](./schema/MPEG_viewport_recommended.schema.json)
 
 ### MPEG_viewport_recommended.viewports
 
@@ -88,7 +88,7 @@ specifying a recommended viewport.
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_viewport_recommended.viewport.schema.json](/Extensions/MPEG_viewport_recommended/schema/MPEG_viewport_recommended.viewport.schema.json)
+* **JSON schema**: [MPEG_viewport_recommended.viewport.schema.json](./schema/MPEG_viewport_recommended.viewport.schema.json)
 
 ### MPEG_viewport_recommended.viewport.name
 
