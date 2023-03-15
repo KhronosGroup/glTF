@@ -13,16 +13,16 @@
             "maximum": 1.0,
             "gltf_detailedDescription": ""
         },
-        "anisotropyDirection": {
+        "anisotropyRotation": {
             "type": "number",
-            "description": "Anisotropic direction",
+            "description": "Anisotropic rotation",
             "default": 0.0,
-            "gltf_detailedDescription": "The direction of the anisotropy in tangent, bitangent space, measured in radians counter-clockwise from the tangent. When anisotropyTexture is present, anisotropyDirection provides additional rotation to the vectors in the texture."
+            "gltf_detailedDescription": "The rotation of the anisotropy in tangent, bitangent space, measured in radians counter-clockwise from the tangent. When anisotropyTexture is present, anisotropyRotation provides additional rotation to the vectors in the texture."
         },
         "anisotropyTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "Anisotropy texture",
-            "gltf_detailedDescription": "The anisotropy texture. Red and green channels represent the anisotropy direction in [-1, 1] tangent, bitangent space. The vector is rotated by anisotropyDirection, and multiplied by anisotropyStrength, to obtain the final anisotropy direction and strength."
+            "gltf_detailedDescription": "The anisotropy texture. Red and green channels represent the anisotropy direction in [-1, 1] tangent, bitangent space. The vector is rotated by anisotropyRotation, and multiplied by anisotropyStrength, to obtain the final anisotropy direction and strength."
         },
         "extensions": { },
         "extras": { }
