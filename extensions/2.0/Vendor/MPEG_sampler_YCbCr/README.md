@@ -1,4 +1,4 @@
-# MPEG_haptics
+# MPEG_sampler_YCbCr
 
 ## Contributors
 
@@ -16,11 +16,13 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-MPEG_haptic provides ... 
+MPEG_sampler_YCbCr provides ... 
 
-**`MPEG_haptic` Properties**
+**`MPEG_sampler_YCbCr` Properties**
 
-* **JSON schema**: [MPEG_haptic.schema.json](./schema/MPEG_haptic.schema.json)
+* **JSON schema**: 
+
+  * [MPEG_sampler_YCbCr.schema.json](./schema/MPEG_sampler_YCbCr.schema.json)
 
 ## Known Implementations
 
