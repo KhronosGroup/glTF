@@ -8,7 +8,7 @@
 
 ## Status
 
-Based on [ISO/IEC FDIS 23090-14/CD Amd.2](https://www.iso.org/standard/86439.html)
+Based on [ISO/IEC FDIS 23090-14/CD Amd.2](https://www.iso.org/standard/86439.html), available as [WG03_N0797 (https://mpeg.expert/live/nextcloud/index.php/s/f6prqzxWMdDM3r2)
 
 ## Dependencies
 
