@@ -22,9 +22,9 @@ MPEG_node_anchor provides ...
 
 * **JSON schema**: 
 
-** [MPEG_scenenode_anchor.anchor.schema.json](./schema/MPEG_scenenode_anchor.anchor.schema.json)
-** [MPEG_scenenode_anchor.schema.json](./schema/MPEG_scenenode_anchor.schema.json)
-** [MPEG_scenenode_anchor.trackable.schema.json](./schema/MPEG_scenenode_anchor.trackable.schema.json)
+  * [MPEG_scenenode_anchor.anchor.schema.json](./schema/MPEG_scenenode_anchor.anchor.schema.json)
+  * [MPEG_scenenode_anchor.schema.json](./schema/MPEG_scenenode_anchor.schema.json)
+  * [MPEG_scenenode_anchor.trackable.schema.json](./schema/MPEG_scenenode_anchor.trackable.schema.json)
 
 ## Known Implementations
 
