@@ -1,4 +1,5 @@
-# MPEG_haptics
+# MPEG_primitive_V3C
+
 
 ## Contributors
 
@@ -8,7 +9,7 @@
 
 ## Status
 
-Based on [ISO/IEC FDIS 23090-14/CD Amd.2](https://www.iso.org/standard/86439.html), available as [WG03_N0797 (https://mpeg.expert/live/nextcloud/index.php/s/f6prqzxWMdDM3r2)
+Based on [ISO/IEC 23090-14/DAmd 1](https://www.iso.org/standard/84769.html), available as [WG03_N0795](https://mpeg.expert/live/nextcloud/index.php/s/f9TY6TBDGxXkMjS)
 
 ## Dependencies
 
@@ -16,11 +17,16 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-MPEG_haptic provides ... 
+MPEG_primitive_V3C provides ... 
 
-**`MPEG_haptic` Properties**
+**`MPEG_primitive_V3C` Properties**
 
-* **JSON schema**: [MPEG_haptic.schema.json](./schema/MPEG_haptic.schema.json)
+* **JSON schema**: 
+
+  * [MPEG_primitive_V3C.CAD.schema.json](./schema/MPEG_primitive_V3C.CAD.schema.json)
+  * [MPEG_primitive_V3C.atlas.schema.json](./schema/MPEG_primitive_V3C.atlas.schema.json)
+  * [MPEG_primitive_V3C.attribute.schema.json](./schema/MPEG_primitive_V3C.attribute.schema.json)
+  * [MPEG_primitive_V3C.schema.json](./schema/MPEG_primitive_V3C.schema.json)
 
 ## Known Implementations
 
@@ -28,7 +34,7 @@ MPEG_haptic provides ...
 
 ## Resources
 
-* [ISO/IEC 23090-14/CD Amd 2](https://www.iso.org/standard/86439.html), Information technology — Coded representation of immersive media — Part 14: Scene description — Amendment 2: Support for haptics, augmented reality, avatars, Interactivity, MPEG-I audio, and lighting 
+* [ISO/IEC 23090-14/DAmd 1](https://www.iso.org/standard/84769.html), Information technology — Coded representation of immersive media — Part 14: Scene description — Amendment 1: Support for immersive media codecs in scene description 
 * [ISO/IEC WD 23090-24](https://www.iso.org/standard/83696.html), Information technology — Coded representation of immersive media — Part 24: Conformance and Reference Software for Scene Description for MPEG Media
 
 ## License
