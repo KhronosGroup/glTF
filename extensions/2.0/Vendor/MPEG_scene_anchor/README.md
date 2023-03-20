@@ -1,4 +1,4 @@
-# MPEG_haptics
+# MPEG_scene_anchor
 
 ## Contributors
 
@@ -16,11 +16,15 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-MPEG_haptic provides ... 
+MPEG_scene_anchor provides ... 
 
-**`MPEG_haptic` Properties**
+**`MPEG_scene_anchor` Properties**
 
-* **JSON schema**: [MPEG_haptic.schema.json](./schema/MPEG_haptic.schema.json)
+* **JSON schema**: 
+
+  * [MPEG_scenenode_anchor.anchor.schema.json](./schema/MPEG_scenenode_anchor.anchor.schema.json)
+  * [MPEG_scenenode_anchor.schema.json](./schema/MPEG_scenenode_anchor.schema.json)
+  * [MPEG_scenenode_anchor.trackable.schema.json](./schema/MPEG_scenenode_anchor.trackable.schema.json)
 
 ## Known Implementations
 
