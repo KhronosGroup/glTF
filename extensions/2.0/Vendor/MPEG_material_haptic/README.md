@@ -1,4 +1,4 @@
-# MPEG_haptics
+# MPEG_material_haptics
 
 ## Contributors
 
@@ -16,11 +16,11 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-MPEG_haptic provides ... 
+MPEG_material_haptic provides ... 
 
-**`MPEG_haptic` Properties**
+**`MPEG_material_haptic` Properties**
 
-* **JSON schema**: [MPEG_haptic.schema.json](./schema/MPEG_haptic.schema.json)
+* **JSON schema**: [MPEG_material_haptic.schema.json](./schema/MPEG_material_haptic.schema.json)
 
 ## Known Implementations
 
