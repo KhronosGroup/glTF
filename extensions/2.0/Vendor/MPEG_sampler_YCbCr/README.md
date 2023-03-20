@@ -30,7 +30,7 @@ MPEG_sampler_YCbCr provides ...
 
 ## Resources
 
-* [ISO/IEC 23090-14/CD Amd 2](https://www.iso.org/standard/86439.html), Information technology — Coded representation of immersive media — Part 14: Scene description — Amendment 2: Support for haptics, augmented reality, avatars, Interactivity, MPEG-I audio, and lighting 
+* [ISO/IEC 23090-14/DAmd 1](https://www.iso.org/standard/84769.html), Information technology — Coded representation of immersive media — Part 14: Scene description — Amendment 1: Support for immersive media codecs in scene description 
 * [ISO/IEC WD 23090-24](https://www.iso.org/standard/83696.html), Information technology — Coded representation of immersive media — Part 24: Conformance and Reference Software for Scene Description for MPEG Media
 
 ## License
