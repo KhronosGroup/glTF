@@ -1,4 +1,5 @@
-# MPEG_haptics
+# MPEG_lights_texture_based
+
 
 ## Contributors
 
@@ -16,11 +17,14 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-MPEG_haptic provides ... 
+MPEG_lights_texture_based provides ... 
 
-**`MPEG_haptic` Properties**
+**`MPEG_lights_texture_based` Properties**
 
-* **JSON schema**: [MPEG_haptic.schema.json](./schema/MPEG_haptic.schema.json)
+* **JSON schema**: 
+
+  * [MPEG_lights_texture_based.light.schema.json](./schema/MPEG_lights_texture_based.light.schema.json)
+  * [MPEG_lights_texture_based.schema.json](./schema/MPEG_lights_texture_based.schema.json)
 
 ## Known Implementations
 
