@@ -1,4 +1,4 @@
-# MPEG_haptics
+# MPEG_node_interactivity
 
 ## Contributors
 
@@ -16,11 +16,14 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-MPEG_haptic provides ... 
+MPEG_node_interactivity provides ... 
 
-**`MPEG_haptic` Properties**
+**`MPEG_node_interactivity` Properties**
 
-* **JSON schema**: [MPEG_haptic.schema.json](./schema/MPEG_haptic.schema.json)
+* **JSON schema**: 
+
+  * [MPEG_node_interactivity.trigger.schema.json](./schema/MPEG_node_interactivity.trigger.schema.json)
+  * [MPEG_node_interactivity.triggers.node.schema.json](./schema/MPEG_node_interactivity.triggers.node.schema.json)
 
 ## Known Implementations
 
