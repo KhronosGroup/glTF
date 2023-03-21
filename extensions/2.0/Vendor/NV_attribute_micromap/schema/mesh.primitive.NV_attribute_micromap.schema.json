@@ -1,0 +1,55 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "mesh.primitive.NV_attribute_micromap.schema.json",
+    "title": "NV_attribute_micromap",
+    "type": "object",
+    "description": "Allows glTF micromeshes to have arbitrary attribute data for vertices and/or faces of microtriangles. Micromaps are also known as *attribute micromaps* (AMMs) when used to store data for microtriangle attributes.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "micromap": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the micromap in the NV_micromaps micromaps array to use for displacement information."
+        },
+		"attributes": {
+		    "type": "object",
+			"description": "A plain JSON object. For each key-value pair, the key corresponds to a mesh attribute semantic, and each value is the index of the micromap containing the data to use for microtriangles.",
+			"minProperties": 1,
+			"additionalProperties": {
+                "$ref": "glTFid.schema.json"
+            }
+		},
+		"mapIndicesOffset": {
+            "type": "integer",
+            "description": "The element offset into the DMM's index mapping buffer.",
+			"gltf_detailedDescription": "The element offset into the DMM's index mapping buffer (in the BARY format, this is the `eMeshTriangleMappings` standard property). Its data can be overridden by `mapIndices`. If the DMM contains no index mapping buffer, then it defaults to the identity mapping: triangle ID `i` uses mesh primitive `i`.",
+            "minimum": 0,
+            "default": 0
+        },
+		"mapIndices": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the accessor providing the index mapping buffer. Overrides `mapIndicesOffset`.",
+            "gltf_detailedDescription": "The index of the `accessor`whose data overrides that referenced by `mapIndicesOffset`. The accessor's `type` **MUST** be `SCALAR`, and its `componentType` **MUST** be 5121, 5123, or 5125 (unsigned byte, unsigned short, or unsigned int)."
+        },
+		"mapOffset": {
+            "type": "integer",
+            "description": "An offset to be added to each value of the index mapping buffer.",
+            "minimum": 0,
+            "default": 0
+        },
+		"primitiveFlagsOffset": {
+            "type": "integer",
+            "description": "The element offset into the DMM's flags per base mesh primitive.",
+			"gltf_detailedDescription": "The element offset into the DMM's flags per base mesh primitive, such as adjacency bits for bridging between triangles with different subdivision levels. (In the BARY format, this is the `eMeshTriangleFlags` standard property). Its data can be overridden by `primitiveFlags`. If the DMM does not contain primitive flags, then they default to all 0.",
+            "minimum": 0,
+            "default": 0
+        },
+		"primitiveFlags": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the accessor providing the flags per base mesh primitive. Overrides `primitiveFlagsOffset`.",
+            "gltf_detailedDescription": "The index of the `accessor` whose data overrides that referenced by `primitiveFlagsOffset`. The accessor's `type` **MUST** be `SCALAR`, and its `componentType` **MUST** be 5121 (unsigned byte)."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "micromap", "attributes" ]
+}
