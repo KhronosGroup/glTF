@@ -6,7 +6,12 @@
         "nature": {
             "type": "string",
             "description": "indicates whether the lighting information corresponds to physical light, virtual light, both, or unknown.",
-            "enum": ["physical", "virtual", "both", "unknown"]
+            "enum": [
+                "physical",
+                "virtual",
+                "both",
+                "unknown"
+            ]
         },
         "position": {
             "type": "array",
@@ -16,37 +21,63 @@
             },
             "minItems": 3,
             "maxItems": 3,
-            "default": [0.0, 0.0, 0.0]
+            "default": [
+                0.0,
+                0.0,
+                0.0
+            ]
         },
         "projection": {
             "type": "string",
             "description": "provides the projection type of the specular images",
-            "enum": ["equirectangular", "cubemap"]
+            "enum": [
+                "equirectangular",
+                "cubemap"
+            ]
         },
         "rotation_accessor": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
             "description": "provides a reference to the accessor giving a sequence of quaternions"
         },
         "intensity_accessor": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
             "description": "provides a reference to the accessor giving a sequence of intensity values"
         },
         "irradiance_accessor": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
             "description": "provides a reference to the accessor giving a sequence of irradiance coefficient samples"
-        }, 
+        },
         "specular_images": {
             "type": "array",
             "description": "provides a list of references to textures providing specular images (environment maps)",
             "items": {
-                "allOf": [ { "$ref": "glTFid.schema.json" } ]
+                "allOf": [
+                    {
+                        "$ref": "glTFid.schema.json"
+                    }
+                ]
             },
             "minItems": 1,
             "maxItems": 6
-        },        
+        },
         "name": {},
         "extensions": {},
         "extras": {}
     },
-    "required": ["irradiance_accessor", "specular_images"]
+    "required": [
+        "irradiance_accessor",
+        "specular_images"
+    ]
 }

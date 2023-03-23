@@ -17,14 +17,108 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-MPEG_lights_texture_based provides ... 
+---------------------------------------
+<a name="reference-mpeg_lights_texture_based-light"></a>
 
-**`MPEG_lights_texture_based` Properties**
+## MPEG_lights_texture_based.light
 
-* **JSON schema**: 
+Extension to support texture-based lights
 
-  * [MPEG_lights_texture_based.light.schema.json](./schema/MPEG_lights_texture_based.light.schema.json)
-  * [MPEG_lights_texture_based.schema.json](./schema/MPEG_lights_texture_based.schema.json)
+**`MPEG_lights_texture_based.light` Properties**
+
+|   |Type|Description|Required|
+|---|---|---|---|
+|**nature**|`string`|indicates whether the lighting information corresponds to physical light, virtual light, both, or unknown.|No|
+|**position**|`number` `[3]`|position of both light and reflection probes associated with the lighting information|No, default: `[0,0,0]`|
+|**projection**|`string`|provides the projection type of the specular images|No|
+|**rotation_accessor**|`integer`|provides a reference to the accessor giving a sequence of quaternions|No|
+|**intensity_accessor**|`integer`|provides a reference to the accessor giving a sequence of intensity values|No|
+|**irradiance_accessor**|`integer`|provides a reference to the accessor giving a sequence of irradiance coefficient samples| &#10003; Yes|
+|**specular_images**|`integer` `[1-6]`|provides a list of references to textures providing specular images (environment maps)| &#10003; Yes|
+|**name**|[`any`](#reference-any)||No|
+|**extensions**|[`any`](#reference-any)||No|
+|**extras**|[`any`](#reference-any)||No|
+
+Additional properties are allowed.
+
+* **JSON schema**: [MPEG_lights_texture_based.light.schema.json](/schema/MPEG_lights_texture_based.light.schema.json)
+
+### MPEG_lights_texture_based.light.nature
+
+indicates whether the lighting information corresponds to physical light, virtual light, both, or unknown.
+
+* **Type**: `string`
+* **Required**: No
+* **Allowed values**:
+  * `"physical"`
+  * `"virtual"`
+  * `"both"`
+  * `"unknown"`
+
+### MPEG_lights_texture_based.light.position
+
+position of both light and reflection probes associated with the lighting information
+
+* **Type**: `number` `[3]`
+* **Required**: No, default: `[0,0,0]`
+
+### MPEG_lights_texture_based.light.projection
+
+provides the projection type of the specular images
+
+* **Type**: `string`
+* **Required**: No
+* **Allowed values**:
+  * `"equirectangular"`
+  * `"cubemap"`
+
+### MPEG_lights_texture_based.light.rotation_accessor
+
+provides a reference to the accessor giving a sequence of quaternions
+
+* **Type**: `integer`
+* **Required**: No
+* **Minimum**: `>= 0`
+
+### MPEG_lights_texture_based.light.intensity_accessor
+
+provides a reference to the accessor giving a sequence of intensity values
+
+* **Type**: `integer`
+* **Required**: No
+* **Minimum**: `>= 0`
+
+### MPEG_lights_texture_based.light.irradiance_accessor
+
+provides a reference to the accessor giving a sequence of irradiance coefficient samples
+
+* **Type**: `integer`
+* **Required**:  &#10003; Yes
+* **Minimum**: `>= 0`
+
+### MPEG_lights_texture_based.light.specular_images
+
+provides a list of references to textures providing specular images (environment maps)
+
+* **Type**: `integer` `[1-6]`
+  * Each element in the array **MUST** be greater than or equal to `0`.
+* **Required**:  &#10003; Yes
+
+### MPEG_lights_texture_based.light.name
+
+* **Type**: [`any`](#reference-any)
+* **Required**: No
+
+### MPEG_lights_texture_based.light.extensions
+
+* **Type**: [`any`](#reference-any)
+* **Required**: No
+
+### MPEG_lights_texture_based.light.extras
+
+* **Type**: [`any`](#reference-any)
+* **Required**: No
+
 
 ## Known Implementations
 

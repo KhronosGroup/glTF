@@ -1,4 +1,5 @@
 {
+    "$schema": "http://json-schema.org/draft-07/schema",
     "title": "MPEG_lights_texture_based.light",
     "type": "object",
     "description": "Extension to support texture-based lights",
