@@ -7,10 +7,10 @@
         "triggers": {
             "type": "array",
             "items": {
-                "$ref": "MPEG_node_interactivity.trigger.schema.json"
+                "$ref": "trigger.node.schema.json"
             },
             "minItems": 1,
-            "description": "Array of node triggers . Only distinct types are allowed.The minimum size of this array is 1, and the maximum size is size of trigger types of AMD2."
+            "description": "Array of node triggers . Only distinct types are allowed.The minimum size of this array is 0, and the maximum size is size of trigger types of AMD2."
         },
         "extensions": {},
         "extras": {}

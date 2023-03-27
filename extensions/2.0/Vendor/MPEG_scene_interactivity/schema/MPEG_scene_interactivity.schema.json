@@ -9,7 +9,7 @@
             "type": "array",
             "description": "An array of triggers descriptions.",
             "items": {
-                "$ref" : "MPEG_scene_interactivity.trigger.schema.json"
+                "$ref" : "trigger.schema.json"
             },
             "minItems": 1
         },
@@ -17,7 +17,7 @@
             "type": "array",
             "description": "An array of actions descriptions.",
             "items": {
-                "$ref" : "MPEG_scene_interactivity.action.schema.json"
+                "$ref" : "action.schema.json"
             },
             "minItems": 1
         },
@@ -25,7 +25,7 @@
             "type": "array",
             "description": "An array of behaviors descriptions.",
             "items": {
-                "$ref" : "MPEG_scene_interactivity.behavior.schema.json"
+                "$ref" : "behavior.schema.json"
             },
             "minItems": 1
         },
