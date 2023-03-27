@@ -165,7 +165,7 @@
           },
           "mediaControl": {
             "type": "string",
-            "description": "defines the control of the media.Value is oneOf MEDIA_PLAY, MEDIA_PAUSE, MEDIA_STOP, MEDIA_RESUME and can be extended"
+            "description": "defines the control of the animation.Value is oneOf MEDIA_PLAY, MEDIA_PAUSE, MEDIA_STOP, MEDIA_RESUME and can be extended"
           }
         },
         "required": [
@@ -198,7 +198,7 @@
           },
           "manipulate_action_type": {
             "type": "string",
-            "description": "defines the manipulation.Value is oneOf ACTION_MANIPULATE_FREE, ACTION_MANIPULATE_SLIDE, ACTION_MANIPULATE_TRANSLATE, ACTION_MANIPULATE_ROTATE,ACTION_MANIPULATE_SCALE and can be extended"
+            "description": "defines the control of the animation.Value is oneOf ACTION_MANIPULATE_FREE, ACTION_MANIPULATE_SLIDE, ACTION_MANIPULATE_TRANSLATE, ACTION_MANIPULATE_ROTATE,ACTION_MANIPULATE_SCALE and can be extended"
           },
           "nodes": {
             "type": "array",

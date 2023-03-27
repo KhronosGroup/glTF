@@ -34,12 +34,12 @@
           },
           "static": {
             "type": "boolean",
-            "default": true,
+            "default": "true",
             "description": "If True, the collider is defined as a static collider"
           },
           "usePhysics": {
             "type": "boolean",
-            "default": false,
+            "default": "false",
             "description": "Indicates if the object shall be considered by the physics simulation"
           }
         },
@@ -64,26 +64,26 @@
               "properties": {
                 "useGravity": {
                   "type": "boolean",
-                  "default": true,
+                  "default": "true",
                   "description": "Indicates if the gravity affects the object"
                 },
                 "mass": {
                   "type": "number",
-                  "default": 1.0,
+                  "default": "1.0",
                   "description": "Mass of the object in kilogram"
                 },
                 "bounciness": {
                   "type": "number",
-                  "default": 0.0,
-                  "minimum": 0.0,
-                  "maximum": 1.0,
+                  "default": "0.0",
+                  "minimum": "0.0",
+                  "maximun": "1.0",
                   "description": "Provides the amount that an object bounces in response to a collision"
                 },
                 "roughness": {
                   "type": "number",
-                  "default": 0.5,
-                  "minimum": 0.0,
-                  "maximum": 1.0,
+                  "default": "0.5",
+                  "minimum": "0.0",
+                  "maximun": "1.0",
                   "description": "Provides the roughness of an object which affects how much the object moves in response to a collision"
                 }
               },
@@ -117,17 +117,17 @@
           },
           "allow_occlusion": {
             "type": "boolean",
-            "default": true,
+            "default": "true",
             "description": "Indicates if occlusion by other nodes should be considered"
           },
           "upper_distance_weight": {
             "type": "number",
-            "default": 1.0,
+            "default": "1.0",
             "description": "The weight applied to the distanceUpperLimit parameter defined at scene level "
           },
           "lower_distance_weight": {
             "type": "number",
-            "default": 1.0,
+            "default": "1.0",
             "description": "The weight applied to the distanceLowerLimit parameter defined at scene level "
           }
         },
@@ -204,7 +204,7 @@
         "properties": {
           "visibilityFull": {
             "type": "boolean",
-            "default": true,
+            "default": "true",
             "description": "Indicates if the visibility shall be full or partial to activate the trigger"
           },
           "nodes": {
