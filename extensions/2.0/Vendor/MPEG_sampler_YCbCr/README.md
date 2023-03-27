@@ -16,86 +16,13 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-defines an extension to support YCbCr formatted textures.
+MPEG_sampler_YCbCr provides ... 
 
-**Properties**
+**`MPEG_sampler_YCbCr` Properties**
 
-|   |Type|Description|Required|
-|---|---|---|---|
-|**ycbcrModel**|`integer`|color matrix conversion model|No|
-|**ycbcrRange**|`integer`|range used for the color encoding|No|
-|**chromaFilter**|`integer`|filter for chroma reconstruction|No|
-|**components**|`integer` `[1-*]`|swizzle applied to the RGBA components prior to range expansion and color model conversion|No|
-|**xChromaOffset**|`integer`|sample location associated with downsampled chroma in the x dimension|No|
-|**yChromaOffset**|`integer`|sample location associated with downsampled chroma in the y dimension|No|
-|**extensions**|`object`|JSON object with extension-specific objects.|No|
-|**extras**|[`any`](#reference-any)|Application-specific data.|No|
+* **JSON schema**: 
 
-Additional properties are allowed.
-
-* **JSON schema**: [MPEG_sampler_YCbCr.schema.json](/schema/MPEG_sampler_YCbCr.schema.json)
-
-### .ycbcrModel
-
-color matrix conversion model
-
-* **Type**: `integer`
-* **Required**: No
-* **Minimum**: `>= 0`
-
-### .ycbcrRange
-
-range used for the color encoding
-
-* **Type**: `integer`
-* **Required**: No
-* **Minimum**: `>= 0`
-
-### .chromaFilter
-
-filter for chroma reconstruction
-
-* **Type**: `integer`
-* **Required**: No
-* **Minimum**: `>= 0`
-
-### .components
-
-swizzle applied to the RGBA components prior to range expansion and color model conversion
-
-* **Type**: `integer` `[1-*]`
-* **Required**: No
-
-### .xChromaOffset
-
-sample location associated with downsampled chroma in the x dimension
-
-* **Type**: `integer`
-* **Required**: No
-* **Minimum**: `>= 0`
-
-### .yChromaOffset
-
-sample location associated with downsampled chroma in the y dimension
-
-* **Type**: `integer`
-* **Required**: No
-* **Minimum**: `>= 0`
-
-### .extensions
-
-JSON object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: Extension
-
-### .extras
-
-Application-specific data.
-
-* **Type**: [`any`](#reference-any)
-* **Required**: No
+  * [MPEG_sampler_YCbCr.schema.json](./schema/MPEG_sampler_YCbCr.schema.json)
 
 ## Known Implementations
 
