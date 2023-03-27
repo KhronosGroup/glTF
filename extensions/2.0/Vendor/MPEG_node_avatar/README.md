@@ -16,47 +16,11 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
----------------------------------------
-<a name="reference-mpeg_node_avatar"></a>
-
-## MPEG_node_avatar
-
-glTF extension to specify support for avatars
+MPEG_node_avatar provides ... 
 
 **`MPEG_node_avatar` Properties**
 
-|   |Type|Description|Required|
-|---|---|---|---|
-|**isAvatar**|`boolean`|An avatar node.|No, default: `false`|
-|**extensions**|`object`|JSON object with extension-specific objects.|No|
-|**extras**|[`any`](#reference-any)|Application-specific data.|No|
-
-Additional properties are allowed.
-
-* **JSON schema**: [MPEG_node_avatar.schema.json](/schema/MPEG_node_avatar.schema.json)
-
-### MPEG_node_avatar.isAvatar
-
-A node that is the root of an avatar.
-
-* **Type**: `boolean`
-* **Required**: No, default: `false`
-
-### MPEG_node_avatar.extensions
-
-JSON object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: Extension
-
-### MPEG_node_avatar.extras
-
-Application-specific data.
-
-* **Type**: [`any`](#reference-any)
-* **Required**: No
-
+* **JSON schema**: [MPEG_node_avatar.schema.json](./schema/MPEG_node_avatar.schema.json)
 
 ## Known Implementations
 
