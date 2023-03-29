@@ -31,7 +31,7 @@ In order to support timed data access, the buffer element is extended to provide
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_buffer_circular.schema.json](/Extensions/MPEG_buffer_circular/schema/MPEG_buffer_circular.schema.json)
+* **JSON schema**: [MPEG_buffer_circular.schema.json](./schema/MPEG_buffer_circular.schema.json)
 
 ### MPEG_buffer_circular.count
 

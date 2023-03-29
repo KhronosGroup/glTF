@@ -41,7 +41,7 @@ achieving the ability to apply transformation onto the dependent mesh.
 
 Additional properties are allowed.
 
-* **JSON schema**: [MPEG_mesh_linking.schema.json](/Extensions/MPEG_mesh_linking/schema/MPEG_mesh_linking.schema.json)
+* **JSON schema**: [MPEG_mesh_linking.schema.json](./schema/MPEG_mesh_linking.schema.json)
 
 ### MPEG_mesh_linking.correspondence
 
