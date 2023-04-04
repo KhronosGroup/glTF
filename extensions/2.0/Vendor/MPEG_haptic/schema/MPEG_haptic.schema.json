@@ -5,7 +5,7 @@
     "description": "Haptic data referencing MPEG medias.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
-        "media_reference": {
+        "mediaReference": {
             "type": "array",
             "items": {
                 "type":"integer",

@@ -43,7 +43,7 @@
                 }
             }
         },
-        "vibrotactile_texture": {
+        "vibrotactileTexture": {
             "type": "array",
             "items": {
                 "type":"object",
