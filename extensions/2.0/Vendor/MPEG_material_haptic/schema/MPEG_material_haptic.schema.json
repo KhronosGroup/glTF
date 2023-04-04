@@ -1,0 +1,126 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "MPEG_material_haptic",
+    "type": "object",
+    "description": "A haptic material.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "stiffness": {
+            "type": "array",
+            "items": {
+                "type":"object",
+                "properties":{
+                    "texture": {
+                        "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+                        "description": "A stiffness material.",
+                        "gltf_detailedDescription": "Stiffness texture described with a 2D texture storing the stiffness coefficients."
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["High_Resolution", "Low_Resolution", "Reference", "Other"],
+                        "description": "Indicates the type of stiffness texture",
+                        "default": "High_Resolution"
+                    }
+                }
+            }
+        },
+        "friction": {
+            "type": "array",
+            "items": {
+                "type":"object",
+                "properties":{
+                    "texture": {
+                        "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+                        "description": "A friction material.",
+                        "gltf_detailedDescription": "Friction texture described with a 2D texture storing the coefficient of friction."
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["High_Resolution", "Low_Resolution", "Reference", "Other"],
+                        "description": "Indicates the type of haptic texture",
+                        "default": "High_Resolution"
+                    }
+                }
+            }
+        },
+        "vibrotactile_texture": {
+            "type": "array",
+            "items": {
+                "type":"object",
+                "properties":{
+                    "texture": {
+                        "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+                        "description": "A vibrotactile texture material.",
+                        "gltf_detailedDescription": "It is described with a 2D texture. The texture may store directly the surface height or references to Haptic media sources."
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["High_Resolution", "Low_Resolution", "Reference", "Other"],
+                        "description": "Indicates the type of haptic texture"
+                        "default": "High_Resolution"
+                    }
+                }
+            }
+        },
+        "temperature": {
+            "type": "array",
+            "items": {
+                "type":"object",
+                "properties":{
+                    "texture": {
+                        "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+                        "description": "A temperature material",
+                        "gltf_detailedDescription": "Temperature described with a 2D texture storing the temperature distribution"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["High_Resolution", "Low_Resolution", "Reference", "Other"],
+                        "description": "Indicates the type of haptic texture",
+                        "default": "High_Resolution"
+                    }
+                }
+            }
+        },
+        "vibration": {
+            "type": "array",
+            "items": {
+                "type":"object",
+                "properties":{
+                    "texture": {
+                        "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+                        "description": "A vibration material.",
+                        "gltf_detailedDescription": "Vibration texture signal described with a reference to a Haptic media source."
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["High_Resolution", "Low_Resolution", "Reference", "Other"],
+                        "description": "Indicates the type of haptic texture",
+                        "default": "High_Resolution"
+                    }
+                }
+            }
+        },
+        "custom": {
+            "type": "array",
+            "items": {
+                "type":"object",
+                "properties":{
+                    "texture": {
+                        "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+                        "description": "A custom material.",
+                        "gltf_detailedDescription": "Texture containing custom haptic data"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["High_Resolution", "Low_Resolution", "Reference", "Other"],
+                        "description": "Indicates the type of haptic texture",
+                        "default": "High_Resolution"
+                    }
+                }
+            }
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    }
+}
