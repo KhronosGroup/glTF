@@ -90,13 +90,13 @@ uniform float u_AnisotropyStrength;
 uniform vec2 u_AnisotropyRotation;
 
 float anisotropy = u_AnisotropyStrength;
-vec2 direction = u_AnisotropyRotation;
+vec2 direction = vec2(1.0, 0.0);
 
 #if HAS_ANISOTROPY_MAP
-vec2 anisotropyTexture = texture(uv, u_AnisotropyTextureSampler).rg * 2.0 - vec2(1.0);
-anisotropy *= length(anisotropyTexture);
-direction = mat2(direction.x, direction.y, -direction.y, direction.x) * normalize(anisotropyTexture);
+direction = normalize(texture(u_AnisotropyTextureSampler, uv).rg * 2.0 - vec2(1.0));
+anisotropy *= length(direction);
 #endif
+direction = mat2(u_AnisotropyRotation.x, u_AnisotropyRotation.y, -u_AnisotropyRotation.y, u_AnisotropyRotation.x) * direction;
 
 vec3 anisotropicT = normalize(TBN * vec3(direction, 0.0));
 vec3 anisotropicB = normalize(cross(normal_geometric, anisotropicT));
@@ -146,7 +146,7 @@ float V_GGX_anisotropic(float NdotL, float NdotV, float BdotV, float TdotV, floa
 }
 ```
 
-The parametrization of `at` and `ab`, denoting roughness values along both anisotropic directions respectively, is taken from [4].
+The parametrization of `at` and `ab`, denoting linear roughness values along both anisotropic directions respectively.
 
 ## Reference
 
