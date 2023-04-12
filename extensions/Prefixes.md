@@ -30,6 +30,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `AVR` | AltspaceVR, Inc. | https://altvr.com/ | [#1009](https://github.com/KhronosGroup/glTF/issues/1009) |
 | `BENTLEY` | Bentley Systems, Inc. | https://www.bentley.com/<br>`paul.connelly at bentley.com` | [#2259](https://github.com/KhronosGroup/glTF/issues/2259) |
 | `BLENDER` | Blender Foundation | https://www.blender.org/ | [#865](https://github.com/KhronosGroup/glTF/issues/865) |
+| `C3D` | Core3D, Inc. | https://core3d.io/ | [#2264](https://github.com/KhronosGroup/glTF/issues/2264) |
 | `CAPTURE` | Capture Visualisation AB | https://www.capture.se/ | [#1732](https://github.com/KhronosGroup/glTF/issues/1732) |
 | `CESIUM` | Cesium GS, Inc. | https://cesium.com/ |  |
 | `CITRUS` | Citrus Toolbox | https://github.com/KenzieMac130/CitrusToolbox | [#1962](https://github.com/KhronosGroup/glTF/issues/1962) |
