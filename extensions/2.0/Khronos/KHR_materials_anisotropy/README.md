@@ -8,7 +8,7 @@
 * Nicolas Savva, Autodesk, [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
 * Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
 * Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
-* Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
+* Don McCurdy, Individual Contributor [@donrmccurdy](https://github.com/donmccurdy)
 * Emmett Lalish, Google [@elalish](https://github.com/elalish)
 * Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
 * Bruce Cherniak, Intel
