@@ -56,26 +56,30 @@ Sample values:
 
 |                         | Type     | Description               | Required           |
 | ----------------------- | -------- | ------------------------- | ------------------ |
-| **anisotropyStrength**  | `number` | The anisotropy strength.  | No, default: `0.0` |
+| **anisotropyStrength**  | `number` | The anisotropy strength. When anisotropyTexture is present, this value is multiplied by the blue channel. | No, default: `0.0` |
 | **anisotropyRotation**  | `number` | The rotation of the anisotropy in tangent, bitangent space, measured in radians counter-clockwise from the tangent. When anisotropyTexture is present, anisotropyRotation provides additional rotation to the vectors in the texture. | No, default: `0.0` |
-| **anisotropyTexture**   | [`textureInfo`](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | The anisotropy texture. Red and green channels represent the anisotropy direction in [-1, 1] tangent, bitangent space. The vector is rotated by anisotropyRotation, and multiplied by anisotropyStrength, to obtain the final anisotropy direction and strength. | No |
+| **anisotropyTexture**   | [`textureInfo`](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | The anisotropy texture. Red and green channels represent the anisotropy direction in [-1, 1] tangent, bitangent space, to be rotated by anisotropyRotation. The blue channel contains strength as [0, 1] to be multiplied by anisotropyStrength. | No |
 
 ## Anisotropy
 
 Two new material properties are introduced: a strength parameter and the direction in which the specular reflection elongates relative to the surface tangents.
 The strength parameter is a dimensionless number in the range `[0, 1]` and increases the roughness along a chosen direction. The default direction aligns with the tangent to the mesh as described in the glTF 2.0 specification, [Meshes section](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#meshes).
 
-All meshes that use nonzero anisotropy strength **SHOULD** supply `TANGENT` vectors as a mesh attribute.  If `TANGENT` vectors are not supplied for such a mesh, `TEXCOORD_0` **MUST** be supplied instead, such that tangent vectors can be automatically calculated.
+All meshes that use nonzero `anisotropyStrength` **SHOULD** supply `TANGENT` vectors as a mesh attribute.  If `TANGENT` vectors are not supplied for such a mesh, the mesh **MUST** supply an alternate method of computing tangents, for example by supplying `TEXCOORD_0`. A mesh using nonzero `anisotropyStrength` **SHOULD NOT** supply multiple different tangents, for example supplying different texture coordinates on a normalTexture and anisotropyTexture.
 
-The `anisotropyTexture`, when supplied, specifies a 2D vector in the red and green channels.  The texture encodes XY components of the vector in tangent space as red and green values stored with linear transfer function. After dequantization, texel values **MUST** be mapped as follows: red [0.0 .. 1.0] to X [-1 .. 1], green [0.0 .. 1.0] to Y [-1 .. 1].  When `anisotropyTexture` is not supplied, the default value is red 1.0 (X 1.0) and green 0.5 (Y 0.0).  The direction of this vector specifies the per-texel direction of increased anisotropy roughness in tangent, bitangent space, prior to being rotated by `anisotropyRotation`.  The magnitude of this vector is multiplied by `anisotropyStrength` to determine the per-texel anisotropy strength.
+The `anisotropyTexture`, when supplied, specifies a 2D vector in the red and green channels.  The texture encodes XY components of the vector in tangent space as red and green values, and strength as blue values, all stored with linear transfer function. After dequantization, red and green texel values **MUST** be mapped as follows: red [0.0 .. 1.0] to X [-1 .. 1], green [0.0 .. 1.0] to Y [-1 .. 1].  Blue does not require remapping.  When `anisotropyTexture` is not supplied, the default value is red 1.0 (X 1.0), green 0.5 (Y 0.0), and blue 1.0 (strength 1.0).  The direction of this XY vector specifies the per-texel direction of increased anisotropy roughness in tangent, bitangent space, prior to being rotated by `anisotropyRotation`.  The blue channel contains strength as [0.0 .. 1.0] to be multiplied by `anisotropyStrength` to determine the per-texel anisotropy strength.
 
-The direction of increased anisotropy roughness (as determined above, by default the tangent direction), has its "alpha roughness" (the square of the roughness) altered according to the following formulas:
+The direction of increased anisotropy roughness (as determined above, by default the tangent direction), has its "alpha roughness" (the square of the roughness) increased according to the following formula:
 
-alpha_roughness = material_roughness<sup>2</sup>
+*directionAlphaRoughness* = mix( *materialAlphaRoughness*, 1.0, *strength*<sup>2</sup> )
 
-direction_alpha_roughness = mix( alpha_roughness, 1.0, strength<sup>2</sup> )
+In the above, *materialAlphaRoughness* is defined as:
 
-mix( x, y, m ) = x * ( 1.0 - m ) + ( y * m )
+*materialAlphaRoughness* = *materialRoughness*<sup>2</sup>
+
+Finally, *mix* is defined as:
+
+mix( *x*, *y*, *m* ) = *x* * ( 1.0 - *m* ) + ( *y* * *m* )
 
 The roughness of the perpendicular direction (by default, the bitangent direction) is equal to the material's specified roughness.
 
@@ -93,9 +97,10 @@ float anisotropy = u_AnisotropyStrength;
 vec2 direction = u_AnisotropyRotation;
 
 #if HAS_ANISOTROPY_MAP
-direction = texture(u_AnisotropyTextureSampler, uv).rg * 2.0 - vec2(1.0);
-anisotropy *= length(direction);
+vec3 anisotropyTex = texture(u_AnisotropyTextureSampler, uv);
+direction = anisotropyTex.rg * 2.0 - vec2(1.0);
 direction = mat2(u_AnisotropyRotation.x, u_AnisotropyRotation.y, -u_AnisotropyRotation.y, u_AnisotropyRotation.x) * normalize(direction);
+anisotropy *= anisotropyTex.b;
 #endif
 
 vec3 anisotropicT = normalize(TBN * vec3(direction, 0.0));
