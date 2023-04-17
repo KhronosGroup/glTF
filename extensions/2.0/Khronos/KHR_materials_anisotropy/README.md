@@ -97,7 +97,7 @@ float anisotropy = u_AnisotropyStrength;
 vec2 direction = u_AnisotropyRotation;
 
 #if HAS_ANISOTROPY_MAP
-vec3 anisotropyTex = texture(u_AnisotropyTextureSampler, uv);
+vec3 anisotropyTex = texture(u_AnisotropyTextureSampler, uv).rgb;
 direction = anisotropyTex.rg * 2.0 - vec2(1.0);
 direction = mat2(u_AnisotropyRotation.x, u_AnisotropyRotation.y, -u_AnisotropyRotation.y, u_AnisotropyRotation.x) * normalize(direction);
 anisotropy *= anisotropyTex.b;
