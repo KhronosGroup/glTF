@@ -32,7 +32,7 @@ The following glTF will load `texture.webm` in clients that support this extensi
         "source": 0,
         "extensions": {
             "KHR_texture_video": {
-                "source": 1,
+                "source": 0,
                 "playhead": 0,
                 "autoplay": true,
                 "loop": true
@@ -40,12 +40,16 @@ The following glTF will load `texture.webm` in clients that support this extensi
         }
     }
 ],
+"extensions": {
+    "KHR_texture_video": {
+        "videos": [
+            "uri": "texture.webm"
+        ]
+    }
+}
 "images": [
     {
         "uri": "image.png"
-    },
-    {
-        "uri": "texture.webm"
     }
 ]
 ```
@@ -67,10 +71,14 @@ When used in the glTF Binary (.glb) format the `images` node that points to the 
     {
         "mimeType": "image/png",
         "bufferView": 1
-    },
-    {
-        "mimeType": "video/webm;codecs=vp8",
-        "bufferView": 2
+    }
+]
+"extensions": {
+    "KHR_texture_video": {
+        "videos": [
+            "mimeType": "video/webm;codecs=vp8",
+            "bufferView": 2
+        ]
     }
 ]
 ```
