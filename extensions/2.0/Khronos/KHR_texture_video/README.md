@@ -45,7 +45,9 @@ The following glTF will load `texture.webm` in clients that support this extensi
 "extensions": {
     "KHR_texture_video": {
         "videos": [
-            "uri": "texture.webm"
+            {
+                "uri": "texture.webm"
+            }
         ]
     }
 }
