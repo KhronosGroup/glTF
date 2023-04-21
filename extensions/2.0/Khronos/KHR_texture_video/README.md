@@ -78,8 +78,10 @@ When used in the glTF Binary (.glb) format the `videos` node that points to the 
 "extensions": {
     "KHR_texture_video": {
         "videos": [
-            "mimeType": "video/webm;codecs=vp8",
-            "bufferView": 2
+            {
+                "mimeType": "video/webm;codecs=vp8",
+                "bufferView": 2
+            }
         ]
     }
 ]
