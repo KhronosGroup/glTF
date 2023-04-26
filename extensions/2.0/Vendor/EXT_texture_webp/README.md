@@ -7,7 +7,7 @@
 
 ## Status
 
-Complete
+Complete, Release Candidate
 
 ## Dependencies
 
