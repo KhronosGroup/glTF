@@ -8,7 +8,7 @@
 
 ## Status
 
-Release Candidate
+Complete, Release Candidate for Khronos Ratification
 
 ## Dependencies
 
