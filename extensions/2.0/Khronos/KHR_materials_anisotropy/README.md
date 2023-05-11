@@ -69,6 +69,8 @@ All meshes with materials that use anisotropy **SHOULD** supply `TANGENT` vector
 
 The `anisotropyTexture`, when supplied, encodes XY components of the direction vector in tangent space as red and green values, and strength as blue values, all stored with linear transfer function. After dequantization, red and green texel values **MUST** be mapped as follows: red [0.0 .. 1.0] to X [-1 .. 1], green [0.0 .. 1.0] to Y [-1 .. 1].  Blue does not require remapping.  When `anisotropyTexture` is not supplied, the default value is red 1.0 (X 1.0), green 0.5 (Y 0.0), and blue 1.0 (strength 1.0).  The direction of this XY vector specifies the per-texel direction of increased anisotropy roughness in tangent, bitangent space, prior to being rotated by `anisotropyRotation`.  The blue channel contains strength as [0.0 .. 1.0] to be multiplied by `anisotropyStrength` to determine the per-texel anisotropy strength.
 
+> **Note:** The direction vector of the anisotropy is the direction in which highlights will be stretched. The direction of the micro-grooves in the material causing the anisotropy will run perpendicular. 
+
 The direction of increased anisotropy roughness (as determined above, by default the tangent direction), has its "alpha roughness" (the square of the roughness) increased according to the following formula:
 
 *directionAlphaRoughness* = mix( *materialAlphaRoughness*, 1.0, *strength*<sup>2</sup> )
@@ -83,11 +85,25 @@ mix( *x*, *y*, *m* ) = *x* * ( 1.0 - *m* ) + ( *y* * *m* )
 
 The roughness of the perpendicular direction (by default, the bitangent direction) is equal to the material's specified roughness.
 
+These two different *alphaRoughness* values, call them *&alpha;<sub>t</sub>* and *&alpha;<sub>b</sub>* contribute to an extended BRDF distribution term from Burley, parameterized here in terms of the halfway vector, $\boldsymbol h$, between the view and light directions:
+
+$$
+D(\boldsymbol h) = \frac{1}{\pi \alpha_t \alpha_b\left( (\boldsymbol h \cdot \boldsymbol t)^2/\alpha_t^2 + (\boldsymbol h \cdot \boldsymbol b)^2/\alpha_b^2 + (\boldsymbol h \cdot \boldsymbol n)^2 \right)^2}
+$$
+
+From this distribution function a masking/shadowing function approximation can also be derived, similarly as for the single-$\alpha$ distribution function.
+
 ## Implementation
+
+*This section is non-normative.*
 
 In the following example, `u_AnisotropyStrength` is set to this extension's `anisotropyStrength`, and `u_AnisotropyRotation` is initialized as `[ cos(anisotropyRotation), sin(anisotropyRotation) ]`.
 
 The default value of `anisotropyRotation` is zero, so when this parameter is not supplied by glTF, `u_AnisotropyRotation` will be `[ 1.0, 0.0 ]`.
+
+### Individual lights
+
+For a directional or point light where the light direction is a single vector, the following provides a sample implementation:
 
 ```glsl
 uniform float u_AnisotropyStrength;
@@ -116,7 +132,7 @@ f_specular += intensity * NdotL * BRDF_specularAnisotropicGGX(f0, f90, alphaRoug
     BdotV, TdotV, TdotL, BdotL, TdotH, BdotH, anisotropy);
 ```
 
-The anisotropic GGX is defined as follows:
+The anisotropic GGX can be approximated as follows:
 
 ```glsl
 vec3 BRDF_specularAnisotropicGGX(vec3 f0, vec3 f90, float alphaRoughness,
@@ -152,6 +168,28 @@ float V_GGX_anisotropic(float NdotL, float NdotV, float BdotV, float TdotV, floa
 ```
 
 The parametrization of `at` and `ab`, denoting linear roughness values along both anisotropic directions respectively.
+
+### Image-based lighting
+
+For image-based lighting (IBL), generally some form of PMREM (prefiltered mipmapped radiance environment map) is used since calculating the contribution from each pixel individually is too slow for realtime graphics. In this case one must sample from this PMREM since a light vector is not available. 
+
+Since the PMREM is sampled for a single roughness value and direction, one sample is not in general enough to get a very accurate approximation of the lighting. Implementors are encouraged to trade off speed and accuracy with their sampling strategies. 
+
+The two $\alpha$ values are defined in such a way that the material's base roughness (also the minimum of the two directions) is a good choice for sampling the PMREM. The center of the reflection distribution is a good direction to start sampling, especially if using only a single sample. This can be approximated with the bent normal technique:
+
+```glsl
+vec3 bentNormal = cross(anisotropicB, viewDir);
+bentNormal = normalize(cross(bentNormal, anisotropicB));
+// This heuristic can probably be improved upon
+float a = pow2(pow2(1.0 - anisotropy * (1.0 - roughness)));
+bentNormal = normalize(mix(bentNormal, normal, a));
+vec3 reflectVec = reflect(-viewDir, bentNormal);
+// Mixing the reflection with the normal is more accurate both with and without anisotropy and keeps rough objects from gathering light from behind their tangent plane.
+reflectVec = normalize(mix(reflectVec, bentNormal, roughness * roughness));
+f_specular += SamplePMREM(envMap, reflectVec, roughness);
+```
+
+Further samples should be placed on both sides along the `anisotropicT` direction, spaced according to $\alpha_t$. This is more important when $\alpha_b$ is small, meaning the base material is shiny.
 
 ## Reference
 
