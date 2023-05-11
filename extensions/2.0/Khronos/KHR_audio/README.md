@@ -216,7 +216,7 @@ Specifies the distance model for the audio emitter.
 
 - `linear` A linear distance model calculating the gain induced by the distance according to: 
     `1.0 - rolloffFactor * (distance - refDistance) / (maxDistance - refDistance)`
-- `inverse ` (default) An inverse distance model calculating the gain induced by the distance according to:
+- `inverse` (default) An inverse distance model calculating the gain induced by the distance according to:
     `refDistance / (refDistance + rolloffFactor * (Math.max(distance, refDistance) - refDistance))`
 - `exponential` An exponential distance model calculating the gain induced by the distance according to:
     `pow((Math.max(distance, refDistance) / refDistance, -rolloffFactor))`
