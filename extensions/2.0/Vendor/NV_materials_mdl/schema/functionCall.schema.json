@@ -1,0 +1,38 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "$id": "functionCall.schema.json",
+    "title": "Function Call",
+    "type": "object",
+    "description": "Function call with its list of arguments. Can represent the entry point into a function call graph or be a node in such a graph.",
+    "allOf": [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "module": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The ID of the containing module. If a built-in function is specified then the referenced module **MUST** the empty string."
+        },
+        "functionName": {
+            "type": "string",
+            "description": "The unqualified name of the function."
+        },
+        "type": {
+            "allOf": [ { "$ref": "type.schema.json" } ],
+            "description": "The return type of the function."
+        },
+        "arguments": {
+            "type": "array",
+            "items": {
+                "$ref": "functionCall.argument.schema.json"
+            },
+            "default": [],
+            "minItems": 1,
+            "description": "A list of named value and/or function call arguments."
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "functionName",
+        "type"
+    ]
+}

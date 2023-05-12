@@ -1,0 +1,49 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "$id": "type.schema.json",
+    "title": "Type",
+    "type": "object",
+    "description": "MDL type describing either a builtin or user-defined type, or an array of a builtin or user-defined type.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "module": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The ID of the containing module."
+        },
+        "typeName": {
+            "type": "string",
+            "description": "The unqualified name of the type."
+        },
+        "arraySize": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The array size. If this field is defined the type is considered to be a array."
+        },
+        "modifier": {
+            "anyOf": [
+                {
+                    "type": "string",
+                    "const": ""
+                },
+                {
+                    "type": "string",
+                    "const": "varying"
+                },
+                {
+                    "type": "string",
+                    "const": "uniform"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "default": "",
+            "description": "The name of the type modifier."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "typeName"
+    ]
+}
