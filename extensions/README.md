@@ -69,6 +69,8 @@ Vendor extensions are not covered by the Khronos IP framework.
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
+* [NV_image_exr](2.0/Vendor/NV_image_exr/README.md)
+* [NV_image_vdb](2.0/Vendor/NV_image_vdb/README.md)
 * [NV_materials_mdl](2.0/Vendor/NV_materials_mdl/README.md)
 
 ### Archived Extensions for glTF 2.0
