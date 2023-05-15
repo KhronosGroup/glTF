@@ -20,7 +20,7 @@
 
 ## Status
 
-Draft
+Release Candidate
 
 ## Dependencies
 
