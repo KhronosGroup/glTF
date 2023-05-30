@@ -1,0 +1,44 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_media.media.alternative",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json"} ],
+    "properties": {
+        "uri": {
+            "type": "string",
+            "format": "iri-reference",
+            "description": "The uri of the media.",
+            "gltf_detailedDescription": "The uri of the media. Relative paths are relative to the .gltf file. If the reference media is a real-time media stream, then the uri may follow the referencing scheme defined in ISO/IEC 23090-14:Annex C. If the tracks element is present, the last part of the URI (i.e. the stream identifier such as the mid) is provided by the tracks information.",
+            "gltf_uriType": "media"
+        },
+        "mimeType": {
+            "description": "The media's MIME type.",
+            "gltf_detailedDescription": "The media's MIME type. The profiles parameter, as defined in IETF RFC6381, may be included as a part of the mimeType to specify the profile of the media container. (e.g. the profiles parameter indicates the DASH profile when the uri specifies a DASH manifest)",
+            "anyOf": [
+                {
+                    "type": "string",
+                    "enum": [ "video/mp4", "application/dash+xml" ]
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "tracks": {
+            "type": "array",
+            "description": "An array of items that lists the components of the referenced media source that are to be used.",
+            "gltf_detailedDescription": "An array of items that lists the components of the referenced media source that are to be used. These can e.g. be a track number of an ISOBMFF, a DASH/CMAF SwitchingSet identifier, or a media id of an RTP stream.",
+            "items": { "$ref": "MPEG_media.media.alternative.track.schema.json"},
+            "minItems": 1
+        },
+        "extraParams": {
+            "type": "object",
+            "description": "An object that may contain any additional media-specific parameters.",
+            "gltf_detailedDescription": "An object that may contain any additional media-specific parameters."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["uri", "mimeType" ]
+  }
+  
