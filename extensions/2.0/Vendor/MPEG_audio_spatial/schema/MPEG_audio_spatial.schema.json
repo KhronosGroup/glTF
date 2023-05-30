@@ -1,0 +1,35 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",    
+    "title" : "MPEG_audio_spatial",
+    "type" : "object",
+    "description": "glTF extension to specify spatial audio support",
+    "allOf": [ { "$ref": "glTFProperty.schema.json"} ],
+    "properties" : {
+        "sources": {
+            "type": "array",
+            "items": {
+                "$ref": "MPEG_audio_spatial.source.schema.json"
+            },
+            "description": "An array of audio sources.",
+            "gltf_detailedDescription": "An array of audio sources.",
+            "minItems": 1
+
+        },
+        "listener": {
+            "$ref": "MPEG_audio_spatial.listener.schema.json",
+            "description": "An audio listener item",
+            "gltf_detailedDescription": "A listener object that places an audio listener node in the scene that should be attached to a parent camera node. The audio listener characteristics depend on the available audio output devices."
+        },
+        "reverbs": {
+            "type": "array",
+		    "items": {
+                "$ref": "MPEG_audio_spatial.reverb.schema.json"
+            },
+            "description": "An array of reverb items",
+            "gltf_detailedDescription": "An array of reverb items",
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}
