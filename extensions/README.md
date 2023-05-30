@@ -34,6 +34,7 @@ The following extensions have been ratified by the Khronos Group:
 
 When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix. Multi-vendor extensions are not covered by the Khronos IP framework.
 
+* [EXT_lights_ies](2.0/Vendor/EXT_lights_ies/README.md)
 * [EXT_lights_image_based](2.0/Vendor/EXT_lights_image_based/README.md)
 * [EXT_mesh_gpu_instancing](2.0/Vendor/EXT_mesh_gpu_instancing/README.md)
 * [EXT_meshopt_compression](2.0/Vendor/EXT_meshopt_compression/README.md)
@@ -55,6 +56,15 @@ Vendor extensions are not covered by the Khronos IP framework.
 * [AGI_stk_metadata](2.0/Vendor/AGI_stk_metadata/README.md)
 * [CESIUM_primitive_outline](2.0/Vendor/CESIUM_primitive_outline/README.md)
 * [FB_geometry_metadata](2.0/Vendor/FB_geometry_metadata/README.md)
+* [MPEG_accessor_timed](2.0/Vendor/MPEG_accessor_timed/README.md)
+* [MPEG_animation_timing](2.0/Vendor/MPEG_animation_timing/README.md)
+* [MPEG_audio_spatial](2.0/Vendor/MPEG_audio_spatial/README.md)
+* [MPEG_buffer_circular](2.0/Vendor/MPEG_buffer_circular/README.md)
+* [MPEG_media](2.0/Vendor/MPEG_media/README.md)
+* [MPEG_mesh_linking](2.0/Vendor/MPEG_mesh_linking/README.md)
+* [MPEG_scene_dynamic](2.0/Vendor/MPEG_scene_dynamic/README.md)
+* [MPEG_texture_video](2.0/Vendor/MPEG_texture_video/README.md)
+* [MPEG_viewport_recommended](2.0/Vendor/MPEG_viewport_recommended/README.md)
 * [MSFT_lod](2.0/Vendor/MSFT_lod/README.md)
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)

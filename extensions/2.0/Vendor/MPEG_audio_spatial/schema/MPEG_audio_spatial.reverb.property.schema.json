@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_audio_spatial.reverb.property",
+    "type": "object",
+    "description": "",
+    "allOf": [ { "$ref": "glTFProperty.schema.json"} ],
+    "properties": {
+        "frequency": {
+            "description": "Frequency for RT60 and DSR values",
+            "gltf_detailedDescription": "Frequency for the provided RT60 and DSR values.",
+            "type": "number"
+        },
+        "RT60": {
+            "description": "Specifies RT60 value in `second` for the frequency provided in the `frequency` field",
+            "gltf_detailedDescription": "Specifies RT60 value in `second` for the frequency provided in the `frequency` field",
+            "type": "number"
+        },
+        "DSR": {
+            "description": "Specifies Diffuse-to-Source Ratio value in dB for the frequency provided in the `frequency` field.",
+            "gltf_detailedDescription": "Specifies Diffuse-to-Source Ratio value in dB for the frequency provided in the `frequency` field. For details see ISO/IEC 23090-14:5.4.1.4.",
+            "type": "number"
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["frequency", "RT60", "DSR"]
+}
