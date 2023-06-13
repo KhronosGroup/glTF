@@ -7,7 +7,7 @@
     "properties": {
         "anisotropyStrength": {
             "type": "number",
-            "description": "Anisotropic strength",
+            "description": "The anisotropy strength.",
             "default": 0.0,
             "minimum": 0.0,
             "maximum": 1.0,
@@ -15,13 +15,13 @@
         },
         "anisotropyRotation": {
             "type": "number",
-            "description": "Anisotropic rotation",
+            "description": "The rotation of the anisotropy.",
             "default": 0.0,
             "gltf_detailedDescription": "The rotation of the anisotropy in tangent, bitangent space, measured in radians counter-clockwise from the tangent. When anisotropyTexture is present, anisotropyRotation provides additional rotation to the vectors in the texture."
         },
         "anisotropyTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "Anisotropy texture",
+            "description": "The anisotropy texture.",
             "gltf_detailedDescription": "The anisotropy texture. Red and green channels represent the anisotropy direction in [-1, 1] tangent, bitangent space, to be rotated by anisotropyRotation. The blue channel contains strength as [0, 1] to be multiplied by anisotropyStrength."
         },
         "extensions": { },
