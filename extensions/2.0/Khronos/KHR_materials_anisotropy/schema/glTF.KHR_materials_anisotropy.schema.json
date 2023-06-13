@@ -7,11 +7,11 @@
     "properties": {
         "anisotropyStrength": {
             "type": "number",
-            "description": "The anisotropy strength. When anisotropyTexture is present, this value is multiplied by the blue channel.",
+            "description": "Anisotropic strength",
             "default": 0.0,
             "minimum": 0.0,
             "maximum": 1.0,
-            "gltf_detailedDescription": ""
+            "gltf_detailedDescription": "The anisotropy strength. When anisotropyTexture is present, this value is multiplied by the blue channel."
         },
         "anisotropyRotation": {
             "type": "number",
