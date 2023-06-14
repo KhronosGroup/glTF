@@ -1,5 +1,5 @@
 
-# KHR_lights_environment
+# KHR_environment_map
 
 ## Contributors
 
@@ -20,39 +20,40 @@ Draft
 Written against the glTF 2.0 spec.  
 
 ## Overview
-This extension provides the ability to define environment light contribution to a glTF using KTX v2 images and irradiance coefficients.    
-The extension provide two ways of supplying environmental light contribution.  
-Image-based by means of a cubemap and irradiance by means of spherical harmonics.  
+This extension provides the ability to define one or moreenvironment maps to a glTF using KTX v2 cubemaps and/or irradiance coefficients.    
+The extension provide two ways of supplying the surrounding environment.
+Texture-based by means of a cubemap and irradiance coefficients by means of spherical harmonics.  
 
-The environment light cubemap can be seen as capturing the directed specular conntribution as well as the reflections.  
-The irradiance coefficients contain the non-directed light contribution from the scene, these may be supplied or can be calculated by the implementations.    
+The texture cubemap can be seen as a way of representing the environment in which one or more glTF models are placed.  
+The irradiance coefficients contain the non-directed light contribution integrated from the scene, these may be supplied or can be calculated by the implementations.    
 
-This extension can be used on it's own - ie a glTF asset with only environment map data - for a usecase where the environmental light needs to be distributed.  
+This extension can be used on it's own - ie a glTF asset with only environment map data - for a usecase where the environmental map needs to be distributed.  
 It may also be used together with model data, for usecases where a model shall be displayed in a controlled environment.  
 
-Many 3D tools and engines support image-based global illumination but the exact technique and data formats employed vary.  
-Using this extension, tools can export and engines can import image-based lights and the result should be highly consistent.   
+Many 3D tools and engines support image-based 'global illumination' but the exact technique and data formats employed vary.  
+Using this extension, tools can export and engines can import environment maps and the result should be highly consistent.   
 
 This extension specifies exactly one way to format and reference the environment map to be used, the goals of this are two-fold.  
 First, it makes implementing support for this extension easier.  
-Secondly, it ensures that rendering of the image-based lighting is consistent across runtimes.
+Secondly, it ensures that rendering of the environment map is consistent across runtimes.
 
-A conforming implementation of this extension must be able to load the environment data and render the PBR materials using this lighting.  
+A conforming implementation of this extension must be able to load the environment data and render the PBR materials using this.  
 
-Cubemap environment light images are declared as an array of images in the extension, this extension is then placed in the glTF root.  
+Cubemap environment images are declared as an array of images in the extension, this extension is then placed in the glTF root.  
 These images shall be supplied using a KTX V2 file containing at least one cubemap.  
 
 ### Pre Filtering Of Cubemaps
 
-The environment light is defined by a cubemap, this is to simplify realtime implementations as these are likely to use cubemap texture format.  
-Cubemaps shall be supplied without pre-filtered mip-maps for roughness values > 0, pre-filtering shall be done by the client.  
+The environment is defined by a cubemap, this is to simplify realtime implementations as these are likely to use cubemap texture format.  
+Cubemaps shall be supplied without pre-filtered mip-maps for roughness values > 0, pre-filtering shall be done by the client  
+- unless for compressed texture image formats that may include pre-filtered mip-maps.    
 [See Specular radiance cubemaps](#specular-radiance-cubemaps)  
 
 
-## Declaring An Environment Light
+## Declaring An Environment Map
 
-The KHR_lights_environment extension defines an array of environment light cubemaps at the root of the glTF, each scene can reference one these lights.    
-Each environment light definition consists a single cubemap that describes the specular radiance of the scene, the l=2 spherical harmonics coefficients for irradiance, luminance factor and bounding box for localized cubemap.  
+The KHR_environment_map extension defines an array of environment cubemaps at the root of the glTF, each scene can reference one these cubemaps.    
+Each environment definition consists a single cubemap that describes the incoming radiance to the scene, the l=2 spherical harmonics coefficients for irradiance, luminance factor and bounding box for localized cubemap.  
 
 The cubemap is defined as an integer reference to one of the texture sources declared in the this extension. 
 This texture source shall contain a cubemap at the layer defined by the texture.   
@@ -69,11 +70,11 @@ The following will declare one cubemap to be referenced by a scene.
 "version": "2.0"
 },
 "extensionsUsed": [
-    "KHR_lights_environment"
+    "KHR_environment_map"
 ],
 
 "extensions": {
-    "KHR_lights_environment" : {
+    "KHR_environment_map" : {
         "cubemaps": [
             {
                 "source": 0
@@ -87,9 +88,9 @@ The following will declare one cubemap to be referenced by a scene.
                 "mimeType": "image/ktx2"
             }
         ],  
-        "lights": [
+        "environment_maps": [
             {
-                "name": "environment light 0",
+                "name": "environment map 0",
                 "irradianceCoefficients": [...3 x 9 array of floats...],
                 "boundingBoxMin": [-100, -100, -100],
                 "boundingBoxMax": [100, 100, 100],
@@ -100,7 +101,7 @@ The following will declare one cubemap to be referenced by a scene.
 }
 ```
 
-## Specular Radiance Cubemaps
+## Radiance Cubemaps
 
 The cubemap used for specular radiance is defined as a cubemap containing separate images for each cube face.  
 The data in the maps represents illuminance in candela per square meter.  
@@ -129,9 +130,8 @@ The texture references defines the largest dimension of mip 0 and should give th
 
 In a realtime renderer the cubemap textures may be used as a source for radiance, irradiance and reflection.  
 A performant way of achieving this is to store the reflection at different roughness values in mip-levels,   
-where mip-level 0 is for a mirror like reflection (roughness = 0) and the last mip-level is for maximum roughness (roughness = 1).  
-The lod level is calculated like this:  
-lod = roughness * (numberOfMipLevels - 1)  
+where mip-level 0 is for a mirror like reflection (roughness = 0) and the last mip-level, where one texel lookup equals the normal distribution over the hemisphere (roughness = 1).  
+
 
 [Runtime filtering of mip-levels](https://developer.nvidia.com/gpugems/gpugems3/part-iii-rendering/chapter-20-gpu-based-importance-sampling)  
 [Creating prefiltered reflection map](https://docs.imgtec.com/Graphics_Techniques/PBR_with_IBL_for_PVR/topics/Assets/pbr_ibl__the_prefiltered_map.html)
@@ -141,7 +141,7 @@ lod = roughness * (numberOfMipLevels - 1)
 
 The cubemaps may use a technique called localized cubemaps, also called local cubemaps or box projected cubemaps.  
 This introduces a boundingbox (min / max) that makes it possible to calculate a local corrected reflection vector.  
-Meaning that models displayed within the cubemap environment does not have to rely on the centerpoint for light and reflection lookup from an infinite distance.    
+Meaning that models displayed within the cubemap environment does not have to rely on the centerpoint for reflection lookup from an infinite distance.    
 Instead it is possible to place objects and the camera within this environment.  The cubemap boundingbox is declared as a pair of 3D coordinates for min / max.  
 
 
@@ -157,7 +157,7 @@ Here is an example of a realtime implementation of reflections using local cubem
 
 ## Irradiance Coefficients
 
-This extension may use spherical harmonic coefficients to define irradiance as a contribution for diffuse lighting.  
+This extension may use spherical harmonic coefficients to define irradiance as a contribution for diffuse (lambertian) lighting.  
 Coefficients are calculated for the first 3 SH bands (l=2) and take the form of a 9x3 array.  
 
 If irradiance coefficients are supplied the specular radiance cubemaps shall not be used as a contribution to diffuse lighting calculations, instead the irradiance coefficients shall be used.   
@@ -172,10 +172,10 @@ This section is non-normative
 If irradiance coefficients are not defined, implementations may calculate irradiance from the specular radiance cubemap.  
 One possible benefit with spherical harmonics is that it is generally enough evaluate the harmonics on a per vertex basis, instead of sampling a cubemap on a per fragment basis. 
 
-### Using the environment light
+### Using the environment map
 
-The environment light is utilized by a scene.  
-Each scene can have a single environment light attached to it by defining the `extensions.KHR_lights_environment` property and, within that, an index into the `lights` array using the `light` property.
+The environment map is utilized by a scene.  
+Each scene can have a single environment map attached to it by defining the `extensions.KHR_environment_map` property and, within that, an index into the `environment_maps` array using the `environment_map` property.
 
 ```json
 "scenes": [
@@ -184,8 +184,8 @@ Each scene can have a single environment light attached to it by defining the `e
             0
         ],
         "extensions": {
-            "KHR_lights_environment": {
-                "light": 0
+            "KHR_environment_map": {
+                "environment_map": 0
             }
         }
     }
@@ -193,9 +193,9 @@ Each scene can have a single environment light attached to it by defining the `e
 ```
 
 
-### Environment Light Properties
+### Environment Map Properties
 
-The environment light declaration present in the root of the glTF object must contain one or more cubemaps and images specification.  
+The environment map declaration present in the root of the glTF object must contain one or more cubemaps and images specification.  
 Cubemaps are declared as an array of image and layer indexes.   
 Images are declared as an array of image objects referencing KTX v2 image files.  
 
@@ -213,11 +213,11 @@ Images are declared as an array of image objects referencing KTX v2 image files.
 | `images` | Image [1-* ]  | Array of images that reference KTX V 2 file containing at least one cubemap. Mimetype must be 'image/ktx2'. |  :white_check_mark: Yes |  
 
 
-`light` 
+`environment_map` 
 
 | Property | Type   |  Description | Required |
 |:-----------------------|:-----------|:------------------------------------------| :--------------------------|
-| `name` | String | Name of the light. | No |
+| `name` | String | Name of the environment map. | No |
 | `irradianceCoefficients` | number[9][3] | Declares spherical harmonic coefficients for irradiance up to l=2. This is a 9x3 array. | No |
 | `boundingBoxMin` | number[3]  | Local boundingbox min. The minimum 3D point of the cubemap boundingbox. In world coordinates (meters) |  No |
 | `boundingBoxMax` | number[3]  | Local boundingbox max. The maximum 3D point of the cubemap boundingbox. In world coordinates (meters) |  No |
