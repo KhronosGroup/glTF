@@ -1,7 +1,9 @@
-# KHR_materials_sss
+# KHR_materials_subsurface
 
 ## Contributors
 
+* Bastian Sdorra, Dassault Systèmes [@bsdorra](https://github.com/bsdorra)
+* Tobias Haeussler, Dassault Systèmes [@proog128](https://github.com/proog128)
 * TODO: Name, affiliation, and contact info for each contributor
 
 ## Status
@@ -40,13 +42,13 @@ Written against the glTF 2.0 spec. Needs to be combined with `KHR_materials_volu
 </em></figure>
 
 ## Extending Materials
-The scattering properties are defined by adding the `KHR_materials_sss` extension to any glTF material.
+The scattering properties are defined by adding the `KHR_materials_subsurface` extension to any glTF material.
 
 ```json
 materials: [
     {
         "extensions": {
-            "KHR_materials_sss": {
+            "KHR_materials_subsurface": {
                 "scatterDistance": 0.01,
                 "scatterColor": [ 0.572, 0.227, 0.075 ]
             }
@@ -139,7 +141,7 @@ $$ \rho_{ss} = 1 - (4.09712 + 4.20863 \rho_{ms} - \sqrt{9.59217 + 41.6808 \rho_{
 
 ## Schema
 
-- [glTF.KHR_materials_sss.schema.json](schema/glTF.KHR_materials_sss.schema.json)
+- [glTF.KHR_materials_subsurface.schema.json](schema/glTF.KHR_materials_subsurface.schema.json)
 
 ## References
 
