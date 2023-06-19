@@ -69,6 +69,7 @@ Vendor extensions are not covered by the Khronos IP framework.
 * [MSFT_packing_normalRoughnessMetallic](2.0/Vendor/MSFT_packing_normalRoughnessMetallic/README.md)
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
+* [PANDA3D_physics_collision_shapes](2.0/Vendor/PANDA3D_physics_collision_shapes/README.md)
 
 ### Archived Extensions for glTF 2.0
 
