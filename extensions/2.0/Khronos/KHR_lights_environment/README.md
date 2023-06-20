@@ -52,7 +52,8 @@ Cubemaps shall be supplied without pre-filtered mip-maps for roughness values > 
 
 ## Declaring An Environment Map
 
-The KHR_environment_map extension defines an array of environment cubemaps at the root of the glTF, each scene can reference one these cubemaps.    
+The KHR_environment_map extension defines an array of environment cubemaps in the extensions root of the glTF, each scene can reference one these cubemaps.    
+Each environment may reference one cubemap, consisting of 6 textures. Cubemaps are declared in the root `images` array and reference a KTX V2 file.   
 Each environment definition consists a single cubemap that describes the incoming radiance to the scene, the l=2 spherical harmonics coefficients for irradiance, luminance factor and bounding box for localized cubemap.  
 
 The cubemap is defined as an integer reference to one of the texture sources declared in the this extension. 
@@ -81,13 +82,6 @@ The following will declare one cubemap to be referenced by a scene.
                 "layer": 0
             }
         ],
-        "images": [
-            {
-                "name": "environment cubemap 0",
-                "uri": "cubemap0.ktx2",
-                "mimeType": "image/ktx2"
-            }
-        ],  
         "environment_maps": [
             {
                 "name": "environment map 0",
@@ -98,7 +92,15 @@ The following will declare one cubemap to be referenced by a scene.
             }
         ]
     }
-}
+},
+"images": [
+    {
+        "name": "environment cubemap 0",
+        "uri": "cubemap0.ktx2",
+        "mimeType": "image/ktx2"
+    }
+]  
+
 ```
 
 ## Radiance Cubemaps
@@ -203,9 +205,9 @@ Images are declared as an array of image objects referencing KTX v2 image files.
 
 | Property | Type   |  Description | Required |
 |:-----------------------|:-----------|:------------------------------------------| :--------------------------|
-| `source` | integer  | Index of KTX V2 file containing cubemap in the specified layer |  :white_check_mark: Yes |  
-| `layer` | integer  | Layer of the KTX V2 file containing the cubemap, if no value is supplied the default value of 0 is used |  No |  
-
+| `source` | integer  | Index of KTX V2 file containing cubemap in the specified layer |  :white_check_mark: Yes |
+| `layer` | integer  | Layer of the KTX V2 file containing the cubemap, if no value is supplied the default value of 0 is used |  No |
+| `intensity`| number | Intensity of cubemap values. The cubemap texel values shall be scaled by this value. Defaults to 1 if no value specified. | No |
 
 `images`  
 | Property | Type   |  Description | Required |
@@ -219,9 +221,11 @@ Images are declared as an array of image objects referencing KTX v2 image files.
 |:-----------------------|:-----------|:------------------------------------------| :--------------------------|
 | `name` | String | Name of the environment map. | No |
 | `irradianceCoefficients` | number[9][3] | Declares spherical harmonic coefficients for irradiance up to l=2. This is a 9x3 array. | No |
+| `irradianceFactor` | Scale factor for irradiance coefficients. Each irradiance coefficient shall be scaled by this factor. Defaults to 1 of not specified | No |
 | `boundingBoxMin` | number[3]  | Local boundingbox min. The minimum 3D point of the cubemap boundingbox. In world coordinates (meters) |  No |
 | `boundingBoxMax` | number[3]  | Local boundingbox max. The maximum 3D point of the cubemap boundingbox. In world coordinates (meters) |  No |
 | `cubemap` | integer  | Reference to texture source to be used as specular radiance cubemap, this references one of the images declared by this extensions images array.  | :white_check_mark: Yes |
+| `ior` | number | Index of refraction of the media within the environment. If scene and environment is stand-alone the IOR is considered to be infinite. If glTF is referenced, for instance by glXF, the media shall be considered to be contained within the boundingbox. If no value is specified the IOR shall default to 1.0 for air. | No |
 
 
 ## KTX v2 Images  
