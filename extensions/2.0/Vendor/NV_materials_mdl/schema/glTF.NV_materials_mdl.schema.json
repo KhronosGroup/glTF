@@ -14,14 +14,6 @@
             "minItems": 1,
             "description": "The list of all MDL modules."
         },
-        "userTypes": {
-            "type": "array",
-            "items": {
-                "$ref": "userType.schema.json"
-            },
-            "minItems": 1,
-            "description": "The list of all user-defined types."
-        },
         "functionCalls": {
             "type": "array",
             "items": {

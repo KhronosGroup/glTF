@@ -12,17 +12,6 @@
             "format": "iri-reference",
             "gltf_detailedDescription": "The URI (or IRI) of the MDL module.  Relative paths are relative to the current glTF asset.  Instead of referencing an external file, this field **MAY** contain a `data:`-URI. This field **MUST NOT** be defined when `bufferView` is defined."
         },
-        "mimeType": {
-            "anyOf": [
-                {
-                    "const": "application/vnd.mdl"
-                },
-                {
-                    "type": "string"
-                }
-            ],
-            "description": "The MDL module's media type. This field **MUST** be defined when `bufferView` is defined."
-        },
         "bufferView": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The ID of the bufferView containing the MDL module. This field **MUST NOT** be defined if `uri` is defined."
@@ -36,7 +25,7 @@
         "extras": { }
     },
     "dependencies": {
-        "bufferView": [ "mimeType", "modulePath" ]
+        "bufferView": [ "modulePath" ]
     },
     "oneOf": [
         { "required": [ "uri" ] },

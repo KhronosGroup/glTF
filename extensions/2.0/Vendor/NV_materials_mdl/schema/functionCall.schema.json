@@ -23,8 +23,8 @@
             "items": {
                 "$ref": "functionCall.argument.schema.json"
             },
-            "default": [],
             "minItems": 1,
+            "uniqueItems": true,
             "description": "A list of named value and/or function call arguments."
         },
         "name": { },
