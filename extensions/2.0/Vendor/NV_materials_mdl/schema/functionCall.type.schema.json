@@ -12,6 +12,7 @@
         },
         "typeName": {
             "type": "string",
+            "minLength": 1,
             "description": "The unqualified name of the type."
         },
         "arraySize": {
