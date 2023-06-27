@@ -14,7 +14,7 @@
         },
         "bufferView": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The ID of the bufferView containing the MBSDF. This field **MUST NOT** be defined if `uri` is defined."
+            "description": "The ID of the bufferView containing the MBSDF.  This field **MUST NOT** be defined if `uri` is defined."
         },
         "name": { },
         "extensions": { },

@@ -1,14 +1,14 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "$id": "type.schema.json",
+    "$id": "functionCall.type.schema.json",
     "title": "Type",
     "type": "object",
-    "description": "MDL type describing either a builtin or user-defined type, or an array of a builtin or user-defined type.",
+    "description": "MDL type describing either a built-in or user-defined type, or an array of a built-in or user-defined type.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "module": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The ID of the containing module."
+            "description": "The ID of the containing module.  This field **MUST NOT** be defined if a built-in type is specified."
         },
         "typeName": {
             "type": "string",

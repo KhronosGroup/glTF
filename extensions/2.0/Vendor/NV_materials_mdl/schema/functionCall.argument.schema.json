@@ -12,12 +12,12 @@
             "description": "The name of the named argument."
         },
         "type": {
-            "allOf": [ { "$ref": "type.schema.json" } ],
-            "description": "The type of the value argument. This field **MUST** be defined if the `value` field is defined and **MUST NOT** be defined if the `functionCall` field is defined."
+            "allOf": [ { "$ref": "functionCall.type.schema.json" } ],
+            "description": "The type of the value argument.  This field **MUST** be defined if `value` is defined and **MUST NOT** be defined if `functionCall` is defined."
         },
         "functionCall": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The ID of a function call. This field **MUST NOT** be defined if the `value` field is defined."
+            "description": "The ID of a function call.  This field **MUST NOT** be defined if `value` is defined."
         },
         "value": {
             "anyOf": [
@@ -77,7 +77,7 @@
                     }
                 }
             ],
-            "description": "The literal value of the value argument. This field **MUST NOT** be defined if the `functionCall` field is defined."
+            "description": "The literal value of the value argument.  This field **MUST NOT** be defined if `functionCall` is defined."
         },
         "extensions": { },
         "extras": { }

@@ -76,7 +76,7 @@ All modules that are referenced by the function calls in the `functionCalls` arr
 | `modulePath` | `string` | Relative path of the module. | No |
 | `name` | `string` | glTF name of the module. | No |
 
-Each module defines either the `uri` property, which contains the URI (or IRI) of an external MDL module file or a data-URI with embedded data, or the `bufferView` property, which points to a buffer view object that contains an MDL module. The media type of a data-URI containing an MDL module must be `application/vnd.mdl`. If a data-URI or buffer view object is used, then the `modulePath` property must be defined, which specifies a path relative to the glTF file that is used for importing by other modules, e.g., if an MDL module that has the path `./my/embedded/module.mdl` relative to the glTF file is embedded into a buffer view object, then the `modulePath` property must have this path as its value.
+Each module defines either the `uri` property, which contains the URI (or IRI) of an external MDL module file or a data-URI with embedded data, or the `bufferView` property, which points to a buffer view object that contains an MDL module. The media type of a data-URI containing an MDL module must be `application/vnd.mdl`. If a data-URI or buffer view object is used, then the `modulePath` property must be defined, which specifies a path relative to the glTF file that is used for importing by other modules, e.g., if an MDL module that has the path `./my/embedded/module.mdl` relative to the glTF file is embedded into a buffer view object, then the `modulePath` property must have this path as its value. If `uri` contains a valid path to an external MDL module file, then `modulePath` must not be defined.
 
 MDL modules can be located in MDL search paths as defined in Section 2.2 and Appendix F of the [MDL Language Specification](https://github.com/NVIDIA/MDL-SDK/tree/master/doc/specification). If this is the case, then the URI must have the `mdl://` scheme prefix. For example, `./my/module.mdl` and `my/module.mdl` are paths relative to the glTF file, whereas `mdl:///base.mdl` and `mdl:///vMaterials_2/Wood/Wood_Bark.mdl` are paths relative to the MDL search paths.
 
@@ -129,14 +129,14 @@ Function calls are listed in the `functionCalls` array. A `functionCall` can hav
 |:---------|:-----|:------------|:---------|
 | `module` | `integer` | The containing module's index. | No |
 | `functionName` | `string` | The unqualified function name. | :white_check_mark: Yes |
-| `type` | `Type` | The function's return type. | :white_check_mark: Yes |
+| `type` | `functionCall.type` | The function's return type. | :white_check_mark: Yes |
 | `arguments` | `array` | A list of function arguments. | No |
 | `name` | `string` | glTF name of the function call. | No |
 
 For built-in functions, e.g., the `float3` and `texture_2d` constructors, the `module` property must not be defined. The operator functions as defined in Section 12.10 of the [MDL Language Specification](https://github.com/NVIDIA/MDL-SDK/tree/master/doc/specification) are valid built-in functions.
 
 ### Function and Argument Types
-The `Type` object is used to specify the return type of function calls and value function arguments. It's defined by the following properties:
+The `functionCall.type` object is used to specify the return type of function calls and value function arguments. It's defined by the following properties:
 
 | Property | Type | Description | Required |
 |:---------|:-----|:------------|:---------|
@@ -156,7 +156,7 @@ Function argument objects can have the following properties:
 |:---------|:-----|:------------|:---------|
 | `name` | `string` | The argument name as defined in the MDL function declaration. | :white_check_mark: Yes |
 | `functionCall` | `integer` | The index of the referenced function call. | No |
-| `type` | `Type` | The type of the literal value. | No |
+| `type` | `functionCall.type` | The type of the literal value. | No |
 | `value` | `any` | The literal value. | No |
 
 Function arguments can either be value or call arguments, depending on if the `functionCall` or `value` properties are specified. If the `value` property is specified, then the `type` property must also be specified. A call argument references a function call who's return value is used as the argument's value. A value argument's value is defined directly as a literal. The following types are supported as value arguments and can be specified as literals:
@@ -301,15 +301,7 @@ Example:
     "arguments": [
         {
             "name": "a",
-            "type": {
-                "typeName": "float2",
-                "arraySize": 3
-            },
-            "value": [
-                [ 1.0, 2.0 ],
-                [ 3.0, 4.0 ],
-                [ 5.0, 6.0 ]
-            ]
+            "functionCall": 1
         }
     ]
 }

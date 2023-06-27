@@ -14,11 +14,11 @@
         },
         "bufferView": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The ID of the bufferView containing the MDL module. This field **MUST NOT** be defined if `uri` is defined."
+            "description": "The ID of the bufferView containing the MDL module.  This field **MUST NOT** be defined if `uri` is defined."
         },
         "modulePath": {
             "type": "string",
-            "description": "Relative path of the module. This field **MUST** be defined when `bufferView` is defined or `uri` contains a data-URI."
+            "description": "Relative path of the module.  This field **MUST** be defined if `bufferView` is defined or `uri` is defined and contains a data-URI, otherwise this field **MUST NOT** be defined."
         },
         "name": { },
         "extensions": { },

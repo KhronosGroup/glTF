@@ -8,7 +8,7 @@
     "properties": {
         "functionCall": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the MDL function call. The reference function call **MUST** represent the entry point to a function graph and have the return type `material`."
+            "description": "The index of the MDL function call. The reference function call **MUST** represent the entry point to a function call graph and have the return type `material`."
         },
         "extensions": { },
         "extras": { }
