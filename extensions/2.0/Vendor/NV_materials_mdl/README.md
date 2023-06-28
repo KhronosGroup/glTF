@@ -486,7 +486,7 @@ When a fallback material is provided, `NV_materials_mdl` should only be present 
 * [material.NV_materials_mdl.schema.json](schema/material.NV_materials_mdl.schema.json)
 * [functionCall.schema.json](schema/functionCall.schema.json)
 * [functionCall.argument.schema.json](schema/functionCall.argument.schema.json)
-* [type.schema.json](schema/type.schema.json)
+* [functionCall.type.schema.json](schema/functionCall.type.schema.json)
 * [module.schema.json](schema/module.schema.json)
 * [bsdfMeasurement.schema.json](schema/bsdfMeasurement.schema.json)
 
