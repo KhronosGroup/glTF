@@ -14,7 +14,9 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-A mesh is considered manifold when it topologically represents a solid object with well-defined volume, sometimes known as water-tight. Manifoldness has many definitions, so we are specifically using the same definition as the 3MF spec (3D Manufacturing Format) for maximum interoperability: an oriented 2-manifold triangle mesh.
+A mesh is typically considered manifold when it topologically represents a solid object with well-defined volume, sometimes known as watertight. For the purpose of this extension, a mesh is considered manifold when it is an oriented 2-manifold triangle mesh, meaning for each halfedge (each of the three ordered vertex index pairs around a triangle) there is exactly one other halfedge with swapped vertices, and no other halfedge with the same vertices.
+
+>NOTE: This is the same definition as used in the 3D Manufacturing Format (3MF) for maximum interoperability.
 
 Manifoldness is critical for reliability of geometric algorithms that operate on solid objects, and so is important in CAD, FEA (Finite Element Analysis), CFD (Computational Fluid Dynamics), and more. However, GPU-friendly formats like glTF with indexed triangles lose manifoldness data because anywhere vertex properties change at an edge (e.g. change of materials, UV swatch, or normals at a crease) the entire vertex must be duplicated and referenced separately. This means the only way to determine linked edges is by merging vertices with identical positions, but this geometric check cannot losslessly recreate the topology, as some separate vertices may happen to coincide in position.
 
@@ -22,11 +24,21 @@ This extension allows authors to denote that the contained mesh data is in fact 
 
 ## Extending Meshes With Manifold Data
 
-Manifoldness is implied by adding the `EXT_manifold` extension to a glTF `mesh`. The `primitives` of the `mesh` **should** use the same set of attributes and each attribute sematic **must** consistently reference the same accessor. The `indices` **must** be present and the referenced `accessor` **must** in turn reference a single `bufferView` for the set of primitives. 
+A glTF mesh is denoted as a manifold by adding an `EXT_manifold` extension object to it and obeying the following restrictions:
 
-The `manifoldPrimitive` added in the extension is an alternative `primitive` which **must** have only the `POSITION` `attribute`, which **must** reference the same position `accessor` as the other primitives use. The `indices` reference an `accessor` which **must** in turn reference the same `bufferView` as the other primitives' `indices`. This `accessor` **may** include a `sparse` accessor that defines which vertices are to be merged. Every index merged **must** have identical position values for the before and after vertices referenced. 
+- all primitives **MUST** use the `TRIANGLES` topology type;
+- same attributes of different mesh primitives **MUST** reference the same accessor;
+- the `indices` property **MUST** be defined for all primitives and the referenced accessors with index data **MUST** reference the same buffer view.
 
-If the `indices` `accessor` is sparse, then `mergeIndices` and `mergeValues` **must** be included and reference `accessors` which are equivalent to the sparse indices and values. This is a convenience as many glTF APIs do not expose the internals of the sparse representations.
+The `manifoldPrimitive` added in the extension is an alternative `primitive` with additional restrictions:
+- it **MUST** use the `TRIANGLES` topology type;
+- it **MUST** have only the `POSITION` `attribute`, which **MUST** reference the same position `accessor` as the other primitives use; 
+- its `indices` **MUST** reference an `accessor` which **MUST** in turn reference the same `bufferView` as the other primitives' `indices`;
+- its `indices` `accessor` **MAY** include a `sparse` accessor that defines which vertices are to be merged, but every index merged **MUST** have identical position values for the before and after vertices referenced, so that the geometry is unchanged;
+- it **MUST NOT** contain a material;
+- it **MUST NOT** contain morph targets, though the other primitives can.
+
+If the `indices` `accessor` is sparse, then `mergeIndices` and `mergeValues` **MUST** be included and reference `accessors` which are equivalent to the sparse indices and values. This small amount of JSON is duplicated here because sparsity is generally considered an internal detail of compression, but here it also represents the relationship between the separate materials and the unified manifold. 
 
 An example is given below, representing a portion of the included sample's JSON. This object has two materials/primitives with a single shared vertex attribute array. The triangle indices are also a single shared array, partitioned into separate primitive accessors. 
 
@@ -154,6 +166,6 @@ An example is given below, representing a portion of the included sample's JSON.
 
 While this extension places additional restrictions on how a mesh is stored, it is still a valid glTF 2.0 and thus will render properly even on software that does not implement support for this extension. For software that needs a manifold mesh rather than a rendering mesh, the simplest path is to simply replace the set of `primitives` with the `manifoldPrimitive`, which is still a valid glTF, but is simply missing all non-position `attributes`. 
 
-As an oriented 2-manifold, it **must** be true that after applying the sparse accessor, every edge of every triangle has exactly one paired edge that has indices in the opposite order. In the case of a `mesh` consisting of just a single manifold `primitive`, the `manifoldPrimitive` **should** be identical aside from missing the non-position `attributes`. 
+As an oriented 2-manifold, it **MUST** be true that after applying the sparse accessor, every halfedge of every triangle has exactly one paired halfedge that has indices in the opposite order. In the case of a `mesh` consisting of just a single manifold `primitive`, the `manifoldPrimitive` **SHOULD** match aside from missing the non-position `attributes`. 
 
 In practice, the amount of extra data to represent manifoldness is very small since the sparse accessors only need to be defined along the boundaries between discontinuous vertex properties. The properties themselves are untouched.
