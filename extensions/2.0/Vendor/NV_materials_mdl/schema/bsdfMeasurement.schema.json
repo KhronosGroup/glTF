@@ -16,9 +16,24 @@
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The ID of the bufferView containing the MBSDF.  This field **MUST NOT** be defined if `uri` is defined."
         },
+        "mimeType": {
+            "anyOf": [
+                {
+                    "type": "string",
+                    "const": "application/vnd.mdl-mbsdf"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "description": "The BSDF measurement's media type.  This field **MUST** be defined when `bufferView` is defined."
+        },
         "name": { },
         "extensions": { },
         "extras": { }
+    },
+    "dependencies": {
+        "bufferView": [ "mimeType" ]
     },
     "oneOf": [
         { "required": [ "uri" ] },

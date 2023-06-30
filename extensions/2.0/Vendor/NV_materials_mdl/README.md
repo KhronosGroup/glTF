@@ -73,6 +73,7 @@ All modules that are referenced by the function calls in the `functionCalls` arr
 |:---------|:-----|:------------|:---------|
 | `uri` | `string` | The URI (or IRI) of the MDL module. | No |
 | `bufferView` | `integer` | The index of the buffer view that contains the MDL module. | No |
+| `mimeType` | `string` | The MDL module's media type. | No |
 | `modulePath` | `string` | Relative path of the module. | No |
 | `name` | `string` | glTF name of the module. | No |
 
@@ -93,6 +94,7 @@ Example:
     },
     {
         "bufferView": 0,
+        "mimeType": "application/vnd.mdl",
         "modulePath": "some/embedded/module.mdl"
     }
 ]
@@ -106,6 +108,7 @@ BSDF measurements (MBSDFs) as defined in Appendix B of the [MDL Language Specifi
 |:---------|:-----|:------------|:---------|
 | `uri` | `string` | The URI (or IRI) of the MBSDF. | No |
 | `bufferView` | `integer` | The index of the buffer view that contains the MBSDF. | No |
+| `mimeType` | `string` | The BSDF measurement's media type. | No |
 | `name` | `string` | glTF name of the BSDF measurement. | No |
 
 Each BSDF measurement defines either the `uri` property, which contains the URI (or IRI) of an external MBSDF file or a data-URI with embedded data, or the `bufferView` property, which points to a buffer view object that contains an MBSDF file. The media type of a data-URI containing an MBSDF file must be `application/vnd.mdl-mbsdf`.
@@ -117,7 +120,8 @@ Example:
         "uri": "measurement.mbsdf"
     },
     {
-        "bufferView": 0
+        "bufferView": 0,
+        "mimeType": "application/vnd.mdl-mbsdf"
     }
 ]
 ```
