@@ -1,0 +1,224 @@
+// Copyright 2013-2023 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+// :regtitle: is explained in
+// https://discuss.asciidoctor.org/How-to-add-markup-to-author-information-in-document-title-td6488.html
+= glTF{tmtitle} 2.0 Interactivity Extension Specification
+:tmtitle: pass:q,r[^™^]
+:regtitle: pass:q,r[^®^]
+The Khronos{regtitle} 3D Formats Working Group
+:data-uri:
+:icons: font
+:toc2:
+:toclevels: 10
+:sectnumlevels: 10
+:max-width: 100%
+:numbered:
+:source-highlighter: coderay
+:title-logo-image: image:../figures/glTF_RGB_June16.svg[Logo,pdfwidth=4in,align=right]
+:docinfo: shared-head
+:docinfodir: ../../../../specification/2.0
+:stem:
+
+// This causes cross references to chapters, sections, and tables to be
+// rendered as "Section A.B" (for example) rather than rendering the reference
+// as the text of the section title.  It also enables cross references to
+// [source] blocks as "Listing N", but only if the [source] block has a title.
+:xrefstyle: short
+:listing-caption: Listing
+
+ifndef::revdate[]
+:toc-placement!:
+
+[NOTE]
+.Note
+====
+Khronos posts the AsciiDoc source of the glTF specification to enable community
+feedback and remixing under CC-BY 4.0. Published versions of the Specification
+are located in the https://www.khronos.org/registry/glTF[glTF Registry].
+====
+endif::[]
+
+// Table of contents is inserted here
+toc::[]
+
+:leveloffset: 1
+
+[[foreword]]
+= Foreword
+
+Copyright 2013-2023 The Khronos Group Inc.
+
+This specification is protected by copyright laws and contains material proprietary
+to Khronos. Except as described by these terms, it or any components
+may not be reproduced, republished, distributed, transmitted, displayed, broadcast,
+or otherwise exploited in any manner without the express prior written permission
+of Khronos.
+
+This specification has been created under the Khronos Intellectual Property Rights
+Policy, which is Attachment A of the Khronos Group Membership Agreement available at
+https://www.khronos.org/files/member_agreement.pdf. Khronos grants a conditional
+copyright license to use and reproduce the unmodified specification for any purpose,
+without fee or royalty, EXCEPT no licenses to any patent, trademark or other
+intellectual property rights are granted under these terms. Parties desiring to
+implement the specification and make use of Khronos trademarks in relation to that
+implementation, and receive reciprocal patent license protection under the Khronos
+IP Policy must become Adopters under the process defined by Khronos for this specification;
+see https://www.khronos.org/conformance/adopters/file-format-adopter-program.
+
+Some parts of this Specification are non-normative through being explicitly identified as
+purely informative, and do not define requirements necessary for compliance and so are
+outside the Scope of this Specification.
+
+Where this Specification includes normative references to external documents, only the
+specifically identified sections and functionality of those external documents are in
+Scope. Requirements defined by external documents not created by Khronos may contain
+contributions from non-members of Khronos not covered by the Khronos Intellectual
+Property Rights Policy.
+
+Khronos makes no, and expressly disclaims any, representations or warranties,
+express or implied, regarding this specification, including, without limitation:
+merchantability, fitness for a particular purpose, non-infringement of any
+intellectual property, correctness, accuracy, completeness, timeliness, and
+reliability. Under no circumstances will Khronos, or any of its Promoters,
+Contributors or Members, or their respective partners, officers, directors,
+employees, agents or representatives be liable for any damages, whether direct,
+indirect, special or consequential damages for lost revenues, lost profits, or
+otherwise, arising from or in connection with these materials.
+
+Khronos® and Vulkan® are registered trademarks, and ANARI™, WebGL™, glTF™, NNEF™, OpenVX™,
+SPIR™, SPIR&#8209;V™, SYCL™, OpenVG™ and 3D Commerce™ are trademarks of The Khronos Group Inc.
+OpenXR™ is a trademark owned by The Khronos Group Inc. and is registered as a trademark in
+China, the European Union, Japan and the United Kingdom. OpenCL™ is a trademark of Apple Inc.
+and OpenGL® is a registered trademark and the OpenGL ES™ and OpenGL SC™ logos are trademarks
+of Hewlett Packard Enterprise used under license by Khronos. ASTC is a trademark of
+ARM Holdings PLC. All other product names, trademarks, and/or company names are used solely
+for identification and belong to their respective owners.
+
+
+[[introduction]]
+= Introduction
+
+[[introduction-general]]
+== General
+
+This document, referred to as the "`glTF Interactivity Extension Specification`" or just the "`Specification`" hereafter, describes the `KHR_interactivity` glTF extension.
+
+This extension aims to enhance glTF 2.0 by adding the ability to encode behavior and interactivity in 3D assets.
+
+[NOTE]
+.Note
+====
+This specification is for single user experiences only and does not deal with any of the complexity involved in multi-user networked experiences.
+====
+
+[[introduction-conventions]]
+== Document Conventions
+
+The glTF Interactivity Extension Specification is intended for use by both implementers of the asset exporters or converters (e.g., digital content creation tools) and application developers seeking to import or load interactive glTF assets, forming a basis for interoperability between these parties.
+
+Specification text can address either party; typically, the intended audience can be inferred from context, though some sections are defined to address only one of these parties.
+
+Any requirements, prohibitions, recommendations, or options defined by <<introduction-normative-terminology, normative terminology>> are imposed only on the audience of that text.
+
+[[introduction-normative-terminology]]
+=== Normative Terminology and References
+
+The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**,  **MAY**, and **OPTIONAL** in this document are to be interpreted as described in <<bcp14,BCP 14>>.
+
+These key words are highlighted in the specification for clarity.
+
+References to external documents are considered normative if the Specification uses any of the normative terms defined in this section to refer to them or their requirements, either as a whole or in part.
+
+[[introduction-informative-language]]
+=== Informative Language
+
+Some language in the specification is purely informative, intended to give background or suggestions to implementers or developers.
+
+If an entire chapter or section contains only informative language, its title is suffixed with "`(Informative)`". If not designated as informative, all chapters, sections, and appendices in this document are normative.
+
+All Notes, Implementation notes, and Examples are purely informative.
+
+[[introduction-technical-terminology]]
+=== Technical Terminology
+
+TBD
+
+[[introduction-normative-references]]
+=== Normative References
+
+The following documents are referenced by normative sections of the specification:
+
+==== External Specifications
+
+[none]
+* [[bcp14]]
+Bradner, S., _Key words for use in RFCs to Indicate Requirement Levels_, BCP 14, RFC 2119, March 1997. Leiba, B., _Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words_, BCP 14, RFC 8174, May 2017.
+<https://www.rfc-editor.org/info/bcp14>
+
+[[motivation]]
+== Motivation and Design Goals (Informative)
+
+glTF 2.0 assets are widely used in various industries, including automotive, e-commerce, and gaming. There is a growing demand for adding logic and behavior to glTF assets, particularly in the metaverse. This extension aims to fulfill this demand by providing a portable, easily implementable, safe, and visually accessible solution for adding behavior to glTF assets. The extension is inspired by visual scripting features of leading game engines and aims to deliver a minimum meaningful and extensible feature set.
+
+=== What Is a Behavior Graph?
+A behavior graph is a series of interconnected nodes that represent behaviors and interactions in a 3D asset. It can respond to events and cause changes in the asset's appearance and behavior.
+
+=== What Problems Can They Solve?
+Behavior graphs offer a flexible and multi-functional approach to encoding behavior, making them useful for various applications. For instance, they can be used to create smart assets with behavior and interactions, AR experiences with user interactions, and immersive game levels with dynamic assets and objectives.
+
+=== What Do They Not Solve?
+Behavior graphs are not designed to handle UI presentation or arbitrary scripting. Creating a 3D UI using behavior graphs would be complex, not portable, and not accessible. Similarly, arbitrary scripting is challenging to make safe, portable across platforms, and has a vast surface area.
+
+=== Comparison with Trigger-Action Lists
+Behavior graphs and trigger-action lists are the two common models for representing and executing behaviors in the digital world. Common 3D experience commerce tools use trigger-action lists, while behavior graphs are typically used by high-end game engines. In this section, we will explore the differences and similarities between these two models, and explain why glTF chose to adopt behavior graphs.
+
+Behavior graphs and trigger-action lists share common features, such as being safe and sandboxed, offering limited execution models controlled by the viewer, and both supporting the “trigger” and “action” node categories. However, there are also significant differences between the two models. Trigger-action lists lack “Queries”, “Logic”, and “Control Flow” nodes, meaning that sophisticated behavior based on queries, logic, or control flow branches is not possible. This lack of functionality greatly affects the ability to create complex behavior and control structures and rules out the implementation of advanced control flow structures in the future.
+
+On the other hand, behavior graphs are a superset of trigger-action lists, meaning that the former can support everything that trigger-action lists can, and more. Behavior graphs support “Queries”, “Logic” and “Control Flow” nodes, making them more expressive and capable of creating more sophisticated behaviors. This makes behavior graphs the preferred method of choice for high-end game engines, as it offers an identical safety model as trigger-action lists while being more expressive.
+
+=== Turing Completeness
+The execution model and node choices for this extension mean that it is Turing-complete. This means that an implementation of this can execute any computation and it is also hard to predict if it will run forever (e.g. halt or not.)
+
+While this may present security implications, it is not a major hindrance and can be safely mitigated so that any implementation does not become susceptible to denial of services by badly behaving behavior graphs, whether intention or not.
+
+The main way to mitigate the risk of non-halting behavior graphs is to limit the amount of time given to them for execution, both in terms of individual time slice as well as overall execution time.
+
+=== Implementation Limitations
+There will be limitations in engines and devices to such as:
+
+* Number of nodes in the graph
+* Number of variables
+* Number of custom events
+* Number of concurrent pending events/async nodes
+* Number of nodes executed per time slice
+* Speed of graph execution
+
+These limitations are not defined in this specification.
+
+
+[[concepts]]
+= Concepts
+
+[[concepts-general]]
+== Graphs
+
+A behavior graph is a JSON object containing nodes. It **MAY** also contain custom variables and custom events.
+
+Behavior graphs are directed graphs with no directed cycles.
+
+[[nodes]]
+== Nodes
+
+A node is a JSON object, which represents an executable item. A node is executed when its input flow socket is reached by or when one of its output value sockets is requested by the behavior graph engine. The node executes its logic and can then execute any number (including zero) of outgoing flow sockets.
+
+A node **MAY** have a set of parameters, each of which **MUST** be provided statically in the node object, resolved at runtime through subgraph executions, or have a default value. Nodes **MAY** be configurable through static properties that **MAY** affect the node's behavior and the number of its sockets.
+
+Node's sockets and configurations are defined by its _type_. Node types should follow `domain/operation` naming pattern.
+
+=== Sockets
+
+== Custom Events
+
+== Variables
