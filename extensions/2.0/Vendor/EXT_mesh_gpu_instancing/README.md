@@ -8,7 +8,7 @@
 
 ## Status
 
-Experimental
+Complete, Release Candidate for Khronos Ratification
 
 ## Dependencies
 
