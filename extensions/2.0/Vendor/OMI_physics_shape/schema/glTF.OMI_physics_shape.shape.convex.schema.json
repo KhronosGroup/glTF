@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "OMI_physics_shape Convex Shape",
+    "type": "object",
+    "properties": {
+        "mesh": {
+            "description": "A reference to the mesh in the glTF meshes array to use for this convex hull shape. The mesh MUST be a trimesh and have at least one triangle.",
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ]
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

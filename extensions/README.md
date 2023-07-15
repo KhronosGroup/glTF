@@ -70,8 +70,9 @@ Vendor extensions are not covered by the Khronos IP framework.
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 * [NV_materials_mdl](2.0/Vendor/NV_materials_mdl/README.md)
-* [OMI_collider](2.0/Vendor/OMI_collider/README.md)
 * [OMI_physics_body](2.0/Vendor/OMI_physics_body/README.md)
+* [OMI_physics_joint](2.0/Vendor/OMI_physics_joint/README.md)
+* [OMI_physics_shape](2.0/Vendor/OMI_physics_shape/README.md)
 
 ### Archived Extensions for glTF 2.0
 

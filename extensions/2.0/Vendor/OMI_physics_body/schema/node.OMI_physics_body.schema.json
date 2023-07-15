@@ -37,6 +37,8 @@
             "type": "array",
             "description": "The inertia tensor 3x3 symmetric matrix of the body in kilogram meter squared.",
             "default": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-        }
+        },
+        "extensions": { },
+        "extras": { }
     }
 }

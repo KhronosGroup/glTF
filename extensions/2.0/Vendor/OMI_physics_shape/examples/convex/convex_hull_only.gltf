@@ -4,16 +4,16 @@
             "bufferView": 0,
             "byteOffset": 0,
             "componentType": 5126,
-            "count": 36,
+            "count": 24,
             "max": [
-                0.5,
-                0.5,
-                0.5
+                1,
+                1,
+                1
             ],
             "min": [
-                -0.5,
-                -0.5,
-                -0.5
+                -1,
+                -1,
+                -1
             ],
             "normalized": false,
             "type": "VEC3"
@@ -22,9 +22,9 @@
             "bufferView": 1,
             "byteOffset": 0,
             "componentType": 5125,
-            "count": 36,
+            "count": 24,
             "max": [
-                35
+                23
             ],
             "min": [
                 0
@@ -39,33 +39,36 @@
     "bufferViews": [
         {
             "buffer": 0,
-            "byteLength": 432,
+            "byteLength": 288,
             "byteOffset": 0
         },
         {
             "buffer": 0,
-            "byteLength": 144,
-            "byteOffset": 432
+            "byteLength": 96,
+            "byteOffset": 288
         }
     ],
     "buffers": [
         {
-            "byteLength": 576,
-            "uri": "concave_trimesh_only0.bin"
+            "byteLength": 384,
+            "uri": "convex_hull_only0.bin"
         }
     ],
     "extensions": {
-        "OMI_collider": {
-            "colliders": [
+        "OMI_physics_shape": {
+            "shapes": [
                 {
-                    "mesh": 0,
-                    "type": "trimesh"
+                    "type": "convex",
+                    "convex": {
+                        "mesh": 0
+                    }
                 }
             ]
         }
     },
     "extensionsUsed": [
-        "OMI_collider"
+        "OMI_physics_body",
+        "OMI_physics_shape"
     ],
     "meshes": [
         {
@@ -85,18 +88,21 @@
     ],
     "nodes": [
         {
-            "children": [
-                1
-            ],
-            "name": "ConcaveTrimeshOnly"
+            "children": [1],
+            "extensions": {
+                "OMI_physics_body": {
+                    "type": "static"
+                }
+            },
+            "name": "StaticBody"
         },
         {
             "extensions": {
-                "OMI_collider": {
-                    "collider": 0
+                "OMI_physics_shape": {
+                    "shape": 0
                 }
             },
-            "name": "ConcaveTrimeshCollider"
+            "name": "ConvexHull"
         }
     ],
     "scene": 0,

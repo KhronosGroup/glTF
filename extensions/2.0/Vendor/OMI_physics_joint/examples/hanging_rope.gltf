@@ -462,26 +462,26 @@
             "perspective": {
                 "yfov": 1.30899691581726,
                 "zfar": 4000,
-                "znear": 0.0500000007450581
+                "znear": 0.05
             },
             "type": "perspective"
         }
     ],
     "extensions": {
-        "OMI_collider": {
-            "colliders": [
+        "OMI_physics_shape": {
+            "shapes": [
                 {
-                    "size": [
-                        0.5,
-                        0.5,
-                        0.5
-                    ],
-                    "type": "box"
+                    "type": "box",
+                    "box": {
+                        "size": [0.5, 0.5, 0.5]
+                    }
                 },
                 {
-                    "height": 0.5,
-                    "radius": 0.0500000007450581,
-                    "type": "capsule"
+                    "type": "capsule",
+                    "capsule": {
+                        "height": 0.5,
+                        "radius": 0.05
+                    }
                 }
             ]
         },
@@ -499,9 +499,9 @@
         }
     },
     "extensionsUsed": [
-        "OMI_collider",
         "OMI_physics_body",
-        "OMI_physics_joint"
+        "OMI_physics_joint",
+        "OMI_physics_shape"
     ],
     "materials": [
         {
@@ -667,11 +667,11 @@
                 3
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 0
+                "OMI_physics_shape": {
+                    "shape": 0
                 }
             },
-            "name": "CeilingCollider"
+            "name": "CeilingShape"
         },
         {
             "extensions": {},
@@ -722,11 +722,11 @@
                 7
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 1
+                "OMI_physics_shape": {
+                    "shape": 1
                 }
             },
-            "name": "RopeColliderTop",
+            "name": "RopeShapeTop",
             "rotation": [
                 0.000000000000000246629630339969,
                 0.00000000000000000000000935848017,
@@ -783,11 +783,11 @@
                 11
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 1
+                "OMI_physics_shape": {
+                    "shape": 1
                 }
             },
-            "name": "RopeColliderMiddle",
+            "name": "RopeShapeMiddle",
             "rotation": [
                 0.000000000000000246629630339969,
                 0.00000000000000000000000935848017,
@@ -838,11 +838,11 @@
                 15
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 1
+                "OMI_physics_shape": {
+                    "shape": 1
                 }
             },
-            "name": "RopeColliderBottom",
+            "name": "RopeShapeBottom",
             "rotation": [
                 0.000000000000000246629630339969,
                 0.00000000000000000000000935848017,

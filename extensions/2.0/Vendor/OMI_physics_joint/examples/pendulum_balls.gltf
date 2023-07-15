@@ -801,19 +801,19 @@
         }
     ],
     "extensions": {
-        "OMI_collider": {
-            "colliders": [
+        "OMI_physics_shape": {
+            "shapes": [
                 {
-                    "size": [
-                        2,
-                        0.200000002980232,
-                        0.200000002980232
-                    ],
-                    "type": "box"
+                    "type": "box",
+                    "box": {
+                        "size": [2, 0.2, 0.2]
+                    }
                 },
                 {
-                    "radius": 0.25,
-                    "type": "sphere"
+                    "type": "sphere",
+                    "sphere": {
+                        "radius": 0.25
+                    }
                 }
             ]
         },
@@ -838,9 +838,9 @@
         }
     },
     "extensionsUsed": [
-        "OMI_collider",
         "OMI_physics_body",
-        "OMI_physics_joint"
+        "OMI_physics_joint",
+        "OMI_physics_shape"
     ],
     "materials": [
         {
@@ -1099,8 +1099,8 @@
                 3
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 0
+                "OMI_physics_shape": {
+                    "shape": 0
                 }
             },
             "name": "TopBodyShape"
@@ -1150,8 +1150,8 @@
                 7
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 1
+                "OMI_physics_shape": {
+                    "shape": 1
                 }
             },
             "name": "BallShape1"
@@ -1217,8 +1217,8 @@
                 12
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 1
+                "OMI_physics_shape": {
+                    "shape": 1
                 }
             },
             "name": "BallShape2"
@@ -1290,8 +1290,8 @@
                 17
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 1
+                "OMI_physics_shape": {
+                    "shape": 1
                 }
             },
             "name": "BallShape22"

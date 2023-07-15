@@ -35,6 +35,8 @@
             "type": "number",
             "description": "When beyond the limits, the damping of the springing back motion.",
             "default": 1.0
-        }
+        },
+        "extensions": { },
+        "extras": { }
     }
 }

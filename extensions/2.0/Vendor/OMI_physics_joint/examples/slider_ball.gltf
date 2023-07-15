@@ -246,19 +246,19 @@
         }
     ],
     "extensions": {
-        "OMI_collider": {
-            "colliders": [
+        "OMI_physics_shape": {
+            "shapes": [
                 {
-                    "size": [
-                        2,
-                        0.100000001490116,
-                        0.100000001490116
-                    ],
-                    "type": "box"
+                    "type": "box",
+                    "box": {
+                        "size": [2, 0.1, 0.1]
+                    }
                 },
                 {
-                    "radius": 0.25,
-                    "type": "sphere"
+                    "type": "sphere",
+                    "sphere": {
+                        "radius": 0.25
+                    }
                 }
             ]
         },
@@ -298,9 +298,9 @@
         }
     },
     "extensionsUsed": [
-        "OMI_collider",
         "OMI_physics_body",
-        "OMI_physics_joint"
+        "OMI_physics_joint",
+        "OMI_physics_shape"
     ],
     "materials": [
         {
@@ -395,8 +395,8 @@
                 3
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 0
+                "OMI_physics_shape": {
+                    "shape": 0
                 }
             },
             "name": "SliderLineShape"
@@ -457,8 +457,8 @@
                 7
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 1
+                "OMI_physics_shape": {
+                    "shape": 1
                 }
             },
             "name": "BallShape"

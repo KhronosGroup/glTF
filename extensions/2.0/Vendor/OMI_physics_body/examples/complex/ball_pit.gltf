@@ -1022,42 +1022,38 @@
         }
     ],
     "extensions": {
-        "OMI_collider": {
-            "colliders": [
+        "OMI_physics_shape": {
+            "shapes": [
                 {
-                    "size": [
-                        8,
-                        0.100000001490116,
-                        8
-                    ],
-                    "type": "box"
+                    "type": "box",
+                    "box": {
+                        "size": [8, 0.1, 8]
+                    }
                 },
                 {
-                    "size": [
-                        0.100000001490116,
-                        1,
-                        8
-                    ],
-                    "type": "box"
+                    "type": "box",
+                    "box": {
+                        "size": [0.1, 1, 8]
+                    }
                 },
                 {
-                    "size": [
-                        8,
-                        1,
-                        0.100000001490116
-                    ],
-                    "type": "box"
+                    "type": "box",
+                    "box": {
+                        "size": [8, 1, 0.1]
+                    }
                 },
                 {
-                    "radius": 0.5,
-                    "type": "sphere"
+                    "type": "sphere",
+                    "sphere": {
+                        "radius": 0.5
+                    }
                 }
             ]
         }
     },
     "extensionsUsed": [
-        "OMI_collider",
-        "OMI_physics_body"
+        "OMI_physics_body",
+        "OMI_physics_shape"
     ],
     "materials": [
         {
@@ -1366,8 +1362,8 @@
                 3
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 0
+                "OMI_physics_shape": {
+                    "shape": 0
                 }
             },
             "name": "Floor"
@@ -1382,8 +1378,8 @@
                 5
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 1
+                "OMI_physics_shape": {
+                    "shape": 1
                 }
             },
             "name": "WallEast",
@@ -1403,8 +1399,8 @@
                 7
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 1
+                "OMI_physics_shape": {
+                    "shape": 1
                 }
             },
             "name": "WallWest",
@@ -1424,8 +1420,8 @@
                 9
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 2
+                "OMI_physics_shape": {
+                    "shape": 2
                 }
             },
             "name": "WallNorth",
@@ -1462,8 +1458,8 @@
                 12
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 3
+                "OMI_physics_shape": {
+                    "shape": 3
                 }
             },
             "name": "SphereShape1"
@@ -1495,8 +1491,8 @@
                 15
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 3
+                "OMI_physics_shape": {
+                    "shape": 3
                 }
             },
             "name": "SphereShape2"
@@ -1528,8 +1524,8 @@
                 18
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 3
+                "OMI_physics_shape": {
+                    "shape": 3
                 }
             },
             "name": "SphereShape3"
@@ -1561,8 +1557,8 @@
                 21
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 3
+                "OMI_physics_shape": {
+                    "shape": 3
                 }
             },
             "name": "SphereShape4"
@@ -1594,8 +1590,8 @@
                 24
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 3
+                "OMI_physics_shape": {
+                    "shape": 3
                 }
             },
             "name": "SphereShape5"

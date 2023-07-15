@@ -29,6 +29,8 @@
             "description": "The id of the second node.",
             "type": "number",
             "$ref": "glTFid.schema.json"
-        }
+        },
+        "extensions": { },
+        "extras": { }
     }
 }

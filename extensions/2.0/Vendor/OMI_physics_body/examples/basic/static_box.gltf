@@ -3,28 +3,24 @@
         "version": "2.0"
     },
     "extensions": {
-        "OMI_collider": {
-            "colliders": [
+        "OMI_physics_shape": {
+            "shapes": [
                 {
-                    "size": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "type": "box"
+                    "type": "box",
+                    "box": {
+                        "size": [1, 1, 1]
+                    }
                 }
             ]
         }
     },
     "extensionsUsed": [
-        "OMI_collider",
-        "OMI_physics_body"
+        "OMI_physics_body",
+        "OMI_physics_shape"
     ],
     "nodes": [
         {
-            "children": [
-                1
-            ],
+            "children": [1],
             "extensions": {
                 "OMI_physics_body": {
                     "type": "static"
@@ -34,19 +30,17 @@
         },
         {
             "extensions": {
-                "OMI_collider": {
-                    "collider": 0
+                "OMI_physics_shape": {
+                    "shape": 0
                 }
             },
-            "name": "StaticShape"
+            "name": "BoxShape"
         }
     ],
     "scene": 0,
     "scenes": [
         {
-            "nodes": [
-                0
-            ]
+            "nodes": [0]
         }
     ]
 }

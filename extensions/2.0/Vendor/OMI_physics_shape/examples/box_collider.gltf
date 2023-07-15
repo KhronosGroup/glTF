@@ -23,10 +23,10 @@
             "children": [1],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "trigger"
+                    "type": "static"
                 }
             },
-            "name": "TriggerBox"
+            "name": "StaticBody"
         },
         {
             "extensions": {
@@ -40,9 +40,7 @@
     "scene": 0,
     "scenes": [
         {
-            "nodes": [
-                0
-            ]
+            "nodes": [0]
         }
     ]
 }

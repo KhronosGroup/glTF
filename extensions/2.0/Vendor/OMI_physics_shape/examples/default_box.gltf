@@ -6,10 +6,7 @@
         "OMI_physics_shape": {
             "shapes": [
                 {
-                    "type": "box",
-                    "box": {
-                        "size": [1, 1, 1]
-                    }
+                    "type": "box"
                 }
             ]
         }
@@ -23,10 +20,10 @@
             "children": [1],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "trigger"
+                    "type": "static"
                 }
             },
-            "name": "TriggerBox"
+            "name": "StaticBody"
         },
         {
             "extensions": {
@@ -34,15 +31,13 @@
                     "shape": 0
                 }
             },
-            "name": "BoxShape"
+            "name": "DefaultBoxShape"
         }
     ],
     "scene": 0,
     "scenes": [
         {
-            "nodes": [
-                0
-            ]
+            "nodes": [0]
         }
     ]
 }

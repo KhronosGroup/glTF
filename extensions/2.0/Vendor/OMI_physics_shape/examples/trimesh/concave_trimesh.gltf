@@ -124,17 +124,20 @@
         }
     ],
     "extensions": {
-        "OMI_collider": {
-            "colliders": [
+        "OMI_physics_shape": {
+            "shapes": [
                 {
-                    "mesh": 0,
-                    "type": "trimesh"
+                    "type": "trimesh",
+                    "trimesh": {
+                        "mesh": 0
+                    }
                 }
             ]
         }
     },
     "extensionsUsed": [
-        "OMI_collider"
+        "OMI_physics_body",
+        "OMI_physics_shape"
     ],
     "materials": [
         {
@@ -172,11 +175,13 @@
     ],
     "nodes": [
         {
-            "children": [
-                1,
-                2
-            ],
-            "name": "ConcaveTrimesh"
+            "children": [1, 2],
+            "extensions": {
+                "OMI_physics_body": {
+                    "type": "static"
+                }
+            },
+            "name": "StaticBody"
         },
         {
             "extensions": {},
@@ -185,11 +190,11 @@
         },
         {
             "extensions": {
-                "OMI_collider": {
-                    "collider": 0
+                "OMI_physics_shape": {
+                    "shape": 0
                 }
             },
-            "name": "ConcaveTrimeshCollider"
+            "name": "ConcaveTrimeshShape"
         }
     ],
     "scene": 0,

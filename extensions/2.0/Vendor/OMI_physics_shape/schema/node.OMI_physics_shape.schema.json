@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "OMI_collider glTF Node Extension",
+    "title": "OMI_physics_shape glTF Node Extension",
     "type": "object",
     "allOf": [
         {
@@ -8,18 +8,18 @@
         }
     ],
     "properties": {
-        "collider": {
-            "description": "The id of the collider referenced by this node.",
+        "shape": {
+            "description": "The id of the shape referenced by this node.",
             "allOf": [
                 {
                     "$ref": "glTFid.schema.json"
                 }
             ]
         },
-        "extensions": {},
-        "extras": {}
+        "extensions": { },
+        "extras": { }
     },
     "required": [
-        "collider"
+        "shape"
     ]
 }

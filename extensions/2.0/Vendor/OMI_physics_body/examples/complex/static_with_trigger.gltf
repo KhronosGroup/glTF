@@ -10,6 +10,12 @@
                     "box": {
                         "size": [1, 1, 1]
                     }
+                },
+                {
+                    "type": "sphere",
+                    "sphere": {
+                        "radius": 2
+                    }
                 }
             ]
         }
@@ -20,13 +26,13 @@
     ],
     "nodes": [
         {
-            "children": [1],
+            "children": [1, 2],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "trigger"
+                    "type": "static"
                 }
             },
-            "name": "TriggerBox"
+            "name": "StaticBox"
         },
         {
             "extensions": {
@@ -34,15 +40,30 @@
                     "shape": 0
                 }
             },
-            "name": "BoxShape"
+            "name": "StaticShape"
+        },
+        {
+            "children": [3],
+            "extensions": {
+                "OMI_physics_body": {
+                    "type": "trigger"
+                }
+            },
+            "name": "TriggerBody"
+        },
+        {
+            "extensions": {
+                "OMI_physics_shape": {
+                    "shape": 1
+                }
+            },
+            "name": "TriggerShape"
         }
     ],
     "scene": 0,
     "scenes": [
         {
-            "nodes": [
-                0
-            ]
+            "nodes": [0]
         }
     ]
 }

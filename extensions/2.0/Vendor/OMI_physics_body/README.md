@@ -13,15 +13,17 @@ Open Metaverse Interoperability Group Stage 1 Proposal
 
 Written against the glTF 2.0 spec.
 
-Depends on the `OMI_collider` spec to be useful.
+Depends on the `OMI_physics_shape` spec to be useful.
 
 ## Overview
 
 This extension allows for specifying the type of physics body in glTF scenes.
 
-Physics bodies are defined with a type and a mass. Nodes with collider shapes defined using the `OMI_collider` spec should be added as direct children of physics bodies. In order to be associated with a `OMI_physics_body` glTF node, `OMI_collider` glTF nodes must be direct children, not indirect children.
+Physics bodies are defined with a string enum for the type. Nodes with physics shapes defined using the `OMI_physics_shape` spec should be added as children of a `OMI_physics_body` glTF node.
 
-Each glTF node with `OMI_collider` may be associated with zero or one `OMI_physics_body` glTF node as its direct parent. Each glTF node with `OMI_physics_body` should have one or many `OMI_collider` glTF node direct children (zero is valid but not recommended, since physics bodies have no function if they have zero collider shape children). Multiple `OMI_collider` direct children of a body with the same `isTrigger` setting may be treated as a single "compound collider" in game engines that support them.
+Each glTF node with `OMI_physics_shape` may be associated with zero or one `OMI_physics_body` glTF node as its ancestor. Each glTF node with `OMI_physics_body` should have one or many `OMI_physics_shape` glTF node descendants (zero is valid but not recommended, since physics bodies without collision shapes on them will not collide with anything). If a glTF node with `OMI_physics_shape` does not have a body, it should be a static solid object that does not move.
+
+Nodes with `OMI_physics_shape` are recommended to be direct child nodes of physics bodies they apply to, since this results in a very clear and portable document structure, and allows colliders to be transformed relative to the parent body via glTF node transforms. However, `OMI_physics_shape` may also be placed on the same glTF node as the physics body to accomodate very simple use cases, and may be placed on indirect descendants to allow for more complex objects with colliders on separate levels in the node hierarchy. A glTF node with `OMI_physics_shape` may only apply to one body, which is the `OMI_physics_body` on the same glTF node, or the nearest ancestor with `OMI_physics_body`.
 
 ### Example:
 
@@ -33,28 +35,24 @@ This example defines a static body node which has a single box collider as a chi
         "version": "2.0"
     },
     "extensions": {
-        "OMI_collider": {
-            "colliders": [
+        "OMI_physics_shape": {
+            "shapes": [
                 {
-                    "size": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "type": "box"
+                    "type": "box",
+                    "box": {
+                        "size": [1, 2, 3]
+                    }
                 }
             ]
         }
     },
     "extensionsUsed": [
-        "OMI_collider",
-        "OMI_physics_body"
+        "OMI_physics_body",
+        "OMI_physics_shape"
     ],
     "nodes": [
         {
-            "children": [
-                1
-            ],
+            "children": [1],
             "extensions": {
                 "OMI_physics_body": {
                     "type": "static"
@@ -64,8 +62,8 @@ This example defines a static body node which has a single box collider as a chi
         },
         {
             "extensions": {
-                "OMI_collider": {
-                    "collider": 0
+                "OMI_physics_shape": {
+                    "shape": 0
                 }
             },
             "name": "StaticShape"
@@ -74,15 +72,13 @@ This example defines a static body node which has a single box collider as a chi
     "scene": 0,
     "scenes": [
         {
-            "nodes": [
-                0
-            ]
+            "nodes": [0]
         }
     ]
 }
 ```
 
-More example assets can be found in the [examples/](examples/) folder. All of these examples use both `OMI_collider` and `OMI_physics_body`.
+More example assets can be found in the [examples/](examples/) folder. All of these examples use both `OMI_physics_shape` and `OMI_physics_body`.
 
 ## glTF Schema Updates
 
@@ -90,7 +86,7 @@ This extension consists of a new `OMI_physics_body` data structure which can be 
 
 The extension must also be added to the glTF's `extensionsUsed` array and because it is optional, it does not need to be added to the `extensionsRequired` array.
 
-The extension is intended to be used together with `OMI_collider`. Physics bodies without collision shapes on them will not have any function.
+The extension is intended to be used together with `OMI_physics_shape`. Physics bodies without collision shapes on them are valid but will not collide with anything.
 
 ### Property Summary
 
@@ -100,6 +96,7 @@ The extension is intended to be used together with `OMI_collider`. Physics bodie
 | **mass**            | `number`    | The mass of the physics body in kilograms.                       | 1.0                  |
 | **linearVelocity**  | `number[3]` | The initial linear velocity of the body in meters per second.    | [0.0, 0.0, 0.0]      |
 | **angularVelocity** | `number[3]` | The initial angular velocity of the body in radians per second.  | [0.0, 0.0, 0.0]      |
+| **centerOfMass**    | `number[3]` | The center of mass offset from the origin in meters.             | [0.0, 0.0, 0.0]      |
 | **inertiaTensor**   | `number[9]` | The inertia tensor 3x3 matrix in kilogram meter squared (kg⋅m²). | [0.0, ..., 0.0]      |
 
 ### Physics Body Types
@@ -139,9 +136,7 @@ Vehicle bodies are like rigid bodies, except are designed for vehicles. If an en
 
 #### Trigger
 
-Trigger bodies do not collide with other objects, but can generate events when another physics body "enters" them. For example, a "goal" area which triggers whenever a ball gets thrown into it.
-
-If an `OMI_collider`'s `"isTrigger"` setting does not match the body it's a part of, implementations should ensure the per-collider setting is preserved.
+Trigger bodies do not collide with other objects, but can generate events when another physics body "enters" them. For example, a "goal" area which triggers whenever a ball gets thrown into it. Trigger bodies can be added as children of other bodies to attach a trigger volume to another body.
 
 ### Mass
 
@@ -154,6 +149,12 @@ The `"linearVelocity"` property is an array of three numbers that defines how mu
 ### Angular Velocity
 
 The `"angularVelocity"` property is an array of three numbers that defines how much angular velocity this physics body starts with in radians per second. Not all body types can make use of angular velocity, such as non-moving bodies, in which case the angular velocity can be ignored. If not specified, the default value is zero.
+
+### Center of Mass
+
+The `"centerOfMass"` property is an array of three numbers that defines the position offset in meters of the center of mass in the body's local space.
+
+This property is useful when converting assets with a center of mass, but when creating new assets it is recommended to leave the center of mass at the body's origin. Some physics engines support the center of mass being offset from the origin, but not all of them do. Implementations without support for a center of mass offset would have to adjust the node positions to make this work, which may be undesired.
 
 ### Inertia Tensor
 

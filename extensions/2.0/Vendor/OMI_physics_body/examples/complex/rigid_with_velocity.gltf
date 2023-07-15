@@ -3,18 +3,20 @@
         "version": "2.0"
     },
     "extensions": {
-        "OMI_collider": {
-            "colliders": [
+        "OMI_physics_shape": {
+            "shapes": [
                 {
-                    "radius": 0.5,
-                    "type": "sphere"
+                    "type": "sphere",
+                    "sphere": {
+                        "radius": 0.5
+                    }
                 }
             ]
         }
     },
     "extensionsUsed": [
-        "OMI_collider",
-        "OMI_physics_body"
+        "OMI_physics_body",
+        "OMI_physics_shape"
     ],
     "nodes": [
         {
@@ -23,16 +25,8 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "angularVelocity": [
-                        4,
-                        5,
-                        6
-                    ],
-                    "linearVelocity": [
-                        1,
-                        2,
-                        3
-                    ],
+                    "angularVelocity": [4, 5, 6],
+                    "linearVelocity": [1, 2, 3],
                     "type": "rigid"
                 }
             },
@@ -40,19 +34,17 @@
         },
         {
             "extensions": {
-                "OMI_collider": {
-                    "collider": 0
+                "OMI_physics_shape": {
+                    "shape": 0
                 }
             },
-            "name": "SphereCollider"
+            "name": "SphereShape"
         }
     ],
     "scene": 0,
     "scenes": [
         {
-            "nodes": [
-                0
-            ]
+            "nodes": [0]
         }
     ]
 }

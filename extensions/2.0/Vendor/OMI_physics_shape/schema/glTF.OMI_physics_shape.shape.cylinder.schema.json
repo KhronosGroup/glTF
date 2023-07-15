@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "OMI_physics_shape Cylinder Shape",
+    "type": "object",
+    "properties": {
+        "radius": {
+            "type": "number",
+            "description": "The radius to use for the cylinder shape."
+        },
+        "height": {
+            "type": "number",
+            "description": "The height of the cylinder shape."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

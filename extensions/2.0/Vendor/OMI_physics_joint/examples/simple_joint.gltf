@@ -357,16 +357,20 @@
         }
     ],
     "extensions": {
-        "OMI_collider": {
-            "colliders": [
+        "OMI_physics_shape": {
+            "shapes": [
                 {
-                    "height": 0.5,
-                    "radius": 0.05,
-                    "type": "capsule"
+                    "type": "capsule",
+                    "capsule": {
+                        "height": 0.5,
+                        "radius": 0.05
+                    }
                 },
                 {
-                    "size": [1, 0.25, 1],
-                    "type": "box"
+                    "type": "box",
+                    "box": {
+                        "size": [1, 0.25, 1]
+                    }
                 }
             ]
         },
@@ -379,9 +383,9 @@
         }
     },
     "extensionsUsed": [
-        "OMI_collider",
         "OMI_physics_body",
-        "OMI_physics_joint"
+        "OMI_physics_joint",
+        "OMI_physics_shape"
     ],
     "materials": [
         {
@@ -521,11 +525,11 @@
         {
             "children": [5],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 0
+                "OMI_physics_shape": {
+                    "shape": 0
                 }
             },
-            "name": "ColliderA",
+            "name": "ShapeA",
             "rotation": [0.0, 0.0, 0.70710676908493, 0.70710676908493]
         },
         {
@@ -536,11 +540,11 @@
         {
             "children": [7],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 0
+                "OMI_physics_shape": {
+                    "shape": 0
                 }
             },
-            "name": "ColliderB",
+            "name": "ShapeB",
             "rotation": [0.0, 0.0, 0.70710676908493, 0.70710676908493]
         },
         {
@@ -561,8 +565,8 @@
         {
             "children": [10],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 1
+                "OMI_physics_shape": {
+                    "shape": 1
                 }
             },
             "name": "FloorShape"

@@ -19,6 +19,8 @@
                 "$ref": "joint_constraint.schema.json"
             },
             "minItems": 1
-        }
+        },
+        "extensions": { },
+        "extras": { }
     }
 }

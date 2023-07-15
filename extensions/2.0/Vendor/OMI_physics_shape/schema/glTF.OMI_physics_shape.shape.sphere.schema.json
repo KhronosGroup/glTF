@@ -1,0 +1,13 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "OMI_physics_shape Sphere Shape",
+    "type": "object",
+    "properties": {
+        "radius": {
+            "type": "number",
+            "description": "The radius to use for the sphere shape."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

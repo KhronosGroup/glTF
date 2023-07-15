@@ -801,20 +801,20 @@
         }
     ],
     "extensions": {
-        "OMI_collider": {
-            "colliders": [
+        "OMI_physics_shape": {
+            "shapes": [
                 {
-                    "size": [
-                        0.150000005960464,
-                        1.10000002384186,
-                        0.150000005960464
-                    ],
-                    "type": "box"
+                    "type": "box",
+                    "box": {
+                        "size": [0.15, 1.1, 0.15]
+                    }
                 },
                 {
-                    "height": 0.5,
-                    "radius": 0.0500000007450581,
-                    "type": "capsule"
+                    "type": "capsule",
+                    "capsule": {
+                        "height": 0.5,
+                        "radius": 0.05
+                    }
                 }
             ]
         },
@@ -832,9 +832,9 @@
         }
     },
     "extensionsUsed": [
-        "OMI_collider",
         "OMI_physics_body",
-        "OMI_physics_joint"
+        "OMI_physics_joint",
+        "OMI_physics_shape"
     ],
     "materials": [
         {
@@ -1099,11 +1099,11 @@
                 3
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 0
+                "OMI_physics_shape": {
+                    "shape": 0
                 }
             },
-            "name": "PoleColliderLeft"
+            "name": "PoleShapeLeft"
         },
         {
             "extensions": {},
@@ -1154,11 +1154,11 @@
                 7
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 1
+                "OMI_physics_shape": {
+                    "shape": 1
                 }
             },
-            "name": "RopeColliderLeft",
+            "name": "RopeShapeLeft",
             "rotation": [
                 0.000000000000000246629630339969,
                 0.00000000000000000000000935848017,
@@ -1215,11 +1215,11 @@
                 11
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 1
+                "OMI_physics_shape": {
+                    "shape": 1
                 }
             },
-            "name": "RopeColliderLeftMiddle",
+            "name": "RopeShapeLeftMiddle",
             "rotation": [
                 0.000000000000000246629630339969,
                 0.00000000000000000000000935848017,
@@ -1270,11 +1270,11 @@
                 15
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 1
+                "OMI_physics_shape": {
+                    "shape": 1
                 }
             },
-            "name": "RopeColliderMiddle",
+            "name": "RopeShapeMiddle",
             "rotation": [
                 0.000000000000000246629630339969,
                 0.00000000000000000000000935848017,
@@ -1331,11 +1331,11 @@
                 19
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 1
+                "OMI_physics_shape": {
+                    "shape": 1
                 }
             },
-            "name": "RopeColliderRightMiddle",
+            "name": "RopeShapeRightMiddle",
             "rotation": [
                 0.000000000000000246629630339969,
                 0.00000000000000000000000935848017,
@@ -1392,11 +1392,11 @@
                 23
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 1
+                "OMI_physics_shape": {
+                    "shape": 1
                 }
             },
-            "name": "RopeColliderRight",
+            "name": "RopeShapeRight",
             "rotation": [
                 0.000000000000000246629630339969,
                 0.00000000000000000000000935848017,
@@ -1447,11 +1447,11 @@
                 27
             ],
             "extensions": {
-                "OMI_collider": {
-                    "collider": 0
+                "OMI_physics_shape": {
+                    "shape": 0
                 }
             },
-            "name": "PoleColliderRight"
+            "name": "PoleShapeRight"
         },
         {
             "extensions": {},

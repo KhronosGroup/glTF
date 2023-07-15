@@ -12,7 +12,7 @@ Open Metaverse Interoperability Group Stage 1 Proposal
 
 Written against the glTF 2.0 spec.
 
-Depends on the `OMI_physics_body` spec, which depends on the `OMI_collider` spec.
+Depends on the `OMI_physics_body` spec, which depends on the `OMI_physics_shape` spec.
 
 ## Overview
 
@@ -22,7 +22,7 @@ Each physics joint node is a separate node that references the two bodies it joi
 
 Each physics joint node must reference one or more joint constraints defined in the document-level joint constraints array.
 
-A joint should be on its own glTF node, it should not be on the same node as a mesh, camera, light, collider, physics body, etc.
+A joint should be on its own glTF node, it should not be on the same node as a mesh, camera, light, physics body, physics shape, etc.
 
 ### Example:
 
@@ -34,20 +34,11 @@ This example defines 2 rigid bodies that are connected with a joint that constra
         "version": "2.0"
     },
     "extensionsUsed": [
-        "OMI_collider",
         "OMI_physics_body",
-        "OMI_physics_joint"
+        "OMI_physics_joint",
+        "OMI_physics_shape"
     ],
     "extensions": {
-        "OMI_collider": {
-            "colliders": [
-                {
-                    "height": 0.5,
-                    "radius": 0.05,
-                    "type": "capsule"
-                }
-            ]
-        },
         "OMI_physics_joint": {
             "constraints": [
                 {
