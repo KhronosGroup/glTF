@@ -21,7 +21,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `ADOBE` | Adobe, Inc. | https://adobe.com/ | [#1431](https://github.com/KhronosGroup/glTF/issues/1431) |
 | `AGI` | Analytical Graphics, Inc. | https://agi.com/ | [#1405](https://github.com/KhronosGroup/glTF/pull/1405) |
 | `AGT` | Augment SAS | https://www.augment.com/ | [#1571](https://github.com/KhronosGroup/glTF/issues/1571) |
-| `ALCM` | Alchemisten AG | https://alchemisten.ag/<br>`viktor.spadi at alchemisten.ag` | [#1708](https://github.com/KhronosGroup/glTF/issues/1708) |
+| `ALCM` | Alchemisten AG | https://alchemisten.ag/<br>`viktor.gerbert at alchemisten.ag` | [#1708](https://github.com/KhronosGroup/glTF/issues/1708) |
 | `ALI` | Alibaba Group | https://www.alibaba.com/ | [#1160](https://github.com/KhronosGroup/glTF/pull/1160) |
 | `AMZN` | Amazon | https://www.amazon.com/<br>`jasoncan at amazon.com` | [#1233](https://github.com/KhronosGroup/glTF/issues/1233) |
 | `ANIMECH` | Animech AB | http://animech.com/ | [#1780](https://github.com/KhronosGroup/glTF/issues/1780) |
