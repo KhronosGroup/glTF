@@ -548,9 +548,11 @@ When property values are stored in a [Property Table](#property-tables), then th
 >     ...
 >     {
 >       "name": "A node with metadata",
->       "EXT_structural_metadata": {
->         "propertyTable": 1,
->         "index": 4
+>       "extensions": {
+>         "EXT_structural_metadata": {
+>           "propertyTable": 1,
+>           "index": 4
+>         }
 >       }
 >     }
 >   ]
