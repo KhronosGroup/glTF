@@ -43,8 +43,8 @@ The effect is activated by adding the `KHR_materials_diffuse_transmission` exten
                 "KHR_materials_diffuse_transmission": {
                     "diffuseTransmissionFactor": 0.25,
                     "diffuseTransmissionTexture": {
-                      "index": 0,
-                    }
+                      "index": 0
+                    },
                     "diffuseTransmissionColorFactor": [
                       1.0,
                       0.9,
