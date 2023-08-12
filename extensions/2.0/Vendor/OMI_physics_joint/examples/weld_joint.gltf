@@ -495,7 +495,7 @@
             "children": [2],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "BodyA",
@@ -534,7 +534,7 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "BodyB",

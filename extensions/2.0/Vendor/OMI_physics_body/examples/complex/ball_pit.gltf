@@ -1443,7 +1443,7 @@
             "extensions": {
                 "OMI_physics_body": {
                     "mass": 1,
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "Ball1",
@@ -1476,7 +1476,7 @@
             "extensions": {
                 "OMI_physics_body": {
                     "mass": 1,
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "Ball2",
@@ -1509,7 +1509,7 @@
             "extensions": {
                 "OMI_physics_body": {
                     "mass": 1,
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "Ball3",
@@ -1542,7 +1542,7 @@
             "extensions": {
                 "OMI_physics_body": {
                     "mass": 1,
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "Ball4",
@@ -1575,7 +1575,7 @@
             "extensions": {
                 "OMI_physics_body": {
                     "mass": 1,
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "Ball5",

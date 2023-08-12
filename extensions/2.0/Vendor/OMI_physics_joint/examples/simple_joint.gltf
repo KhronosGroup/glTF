@@ -500,7 +500,7 @@
             "children": [4],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "BodyA",
@@ -511,7 +511,7 @@
             "children": [6],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "BodyB",

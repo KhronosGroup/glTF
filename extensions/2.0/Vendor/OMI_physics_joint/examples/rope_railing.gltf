@@ -1133,7 +1133,7 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "RopeSegmentLeft",
@@ -1194,7 +1194,7 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "RopeSegmentLeftMiddle",
@@ -1255,7 +1255,7 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "RopeSegmentMiddle",
@@ -1310,7 +1310,7 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "RopeSegmentRightMiddle",
@@ -1371,7 +1371,7 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "RopeSegmentRight",

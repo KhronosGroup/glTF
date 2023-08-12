@@ -27,10 +27,10 @@
                 "OMI_physics_body": {
                     "angularVelocity": [4, 5, 6],
                     "linearVelocity": [1, 2, 3],
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
-            "name": "RigidWithVelocity"
+            "name": "DynamicWithVelocity"
         },
         {
             "extensions": {
@@ -42,9 +42,5 @@
         }
     ],
     "scene": 0,
-    "scenes": [
-        {
-            "nodes": [0]
-        }
-    ]
+    "scenes": [{ "nodes": [0] }]
 }

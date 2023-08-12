@@ -701,7 +701,7 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "RopeSegmentTop",
@@ -762,7 +762,7 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "RopeSegmentMiddle",
@@ -823,7 +823,7 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "rigid"
+                    "type": "dynamic"
                 }
             },
             "name": "RopeSegmentBottom",

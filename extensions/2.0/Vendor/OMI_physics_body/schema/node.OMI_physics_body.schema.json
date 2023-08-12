@@ -12,9 +12,7 @@
             "enum": [
                 "static",
                 "kinematic",
-                "character",
-                "rigid",
-                "vehicle",
+                "dynamic",
                 "trigger"
             ]
         },

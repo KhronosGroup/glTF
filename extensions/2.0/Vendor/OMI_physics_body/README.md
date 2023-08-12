@@ -109,30 +109,20 @@ Here is a table listing the mapping between the `OMI_physics_body` type and the 
 | --------- | --------------------- | ------------- | ---------------- | -------------------------------------- |
 | Static    | Collider              | StaticBody    | StaticBody3D     | WorldStatic, Simulate Physics = false  |
 | Kinematic | Rigidbody.isKinematic | KinematicBody | AnimatableBody3D | WorldDynamic, Simulate Physics = false |
-| Character | Rigidbody.isKinematic | KinematicBody | CharacterBody3D  | Pawn, Simulate Physics = false         |
-| Rigid     | Rigidbody             | RigidBody     | RigidBody3D      | PhysicsBody, Simulate Physics = true   |
-| Vehicle   | Rigidbody             | VehicleBody   | VehicleBody3D    | Vehicle, Simulate Physics = true       |
+| Dynamic   | Rigidbody             | RigidBody     | RigidBody3D      | PhysicsBody, Simulate Physics = true   |
 | Trigger   | Collider.isTrigger    | Area          | Area3D           | Generate Overlap Events = true         |
 
 #### Static
 
-Static bodies can be collided with, but do not move. They are usually used for level geometry.
+Static bodies can be collided with, but do not have simulated movement. They are usually used for level geometry.
 
 #### Kinematic
 
-Kinematic bodies collide with other bodies, and can be moved using scripts or animations. They can be used for moving platforms.
+Kinematic bodies can be collided with, and can be moved using scripts or animations. They can be used for moving platforms.
 
-#### Character
+#### Dynamic
 
-Character bodies are like kinematic bodies, except are designed for characters. If an engine does not have a dedicated character type, treat this as kinematic instead.
-
-#### Rigid
-
-Rigid bodies collide with other bodies, and move around on their own in the physics simulation. They are affected by gravity. They can be used for props that move around in the world.
-
-#### Vehicle
-
-Vehicle bodies are like rigid bodies, except are designed for vehicles. If an engine does not have a dedicated vehicle type, treat this as rigid instead.
+Dynamic bodies are bodies simulated with [rigid body dynamics](https://en.wikipedia.org/wiki/Rigid_body_dynamics). They collide with other bodies, and move around on their own in the physics simulation. They are affected by gravity. They can be used for props that move around in the world.
 
 #### Trigger
 
@@ -158,7 +148,7 @@ This property is useful when converting assets with a center of mass, but when c
 
 ### Inertia Tensor
 
-The `"inertiaTensor"` property is an array of 9 numbers that defines the inertia tensor 3x3 matrix of the body in kilogram meter squared (kg⋅m²). We specify "tensor" in the name because this defines inertia in multiple directions and is different from linear momentum inertia. Only "rigid" and "vehicle" body types can make use of inertia. If zero or not specified, the inertia should be automatically calculated by the physics engine.
+The `"inertiaTensor"` property is an array of 9 numbers that defines the inertia tensor 3x3 matrix of the body in kilogram meter squared (kg⋅m²). We specify "tensor" in the name because this defines inertia in multiple directions and is different from linear momentum inertia. Only the "dynamic" body type can make use of inertia. If zero or not specified, the inertia should be automatically calculated by the physics engine.
 
 The inertia tensor matrix is a symmetric matrix. The inertia matrix represents the mass distribution of the body and determines how hard the body is to rotate. The values on the diagonal represent the inertia around the 3 principle axes (X, Y, Z), while the values not on the diagonal represent the 3 coupling values between the axes (XY, XZ, YZ). For more information, refer to the Wikipedia article.
 
