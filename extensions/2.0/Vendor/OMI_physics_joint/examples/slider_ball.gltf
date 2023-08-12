@@ -385,7 +385,9 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "static"
+                    "motion": {
+                        "type": "static"
+                    }
                 }
             },
             "name": "SliderLine"
@@ -395,8 +397,10 @@
                 3
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 0
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
                 }
             },
             "name": "SliderLineShape"
@@ -432,17 +436,19 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "angularVelocity": [
-                        0.0174532998353243,
-                        0.0174532998353243,
-                        0.0174532998353243
-                    ],
-                    "linearVelocity": [
-                        1,
-                        0.00000000000208164995657567,
-                        0.00000000000208164995657567
-                    ],
-                    "type": "dynamic"
+                    "motion": {
+                        "angularVelocity": [
+                            0.0174532998353243,
+                            0.0174532998353243,
+                            0.0174532998353243
+                        ],
+                        "linearVelocity": [
+                            1,
+                            0.00000000000208164995657567,
+                            0.00000000000208164995657567
+                        ],
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "Ball",
@@ -457,8 +463,10 @@
                 7
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 1
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 1
+                    }
                 }
             },
             "name": "BallShape"

@@ -1352,7 +1352,9 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "static"
+                    "motion": {
+                        "type": "static"
+                    }
                 }
             },
             "name": "Pit"
@@ -1362,8 +1364,10 @@
                 3
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 0
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
                 }
             },
             "name": "Floor"
@@ -1378,8 +1382,10 @@
                 5
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 1
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 1
+                    }
                 }
             },
             "name": "WallEast",
@@ -1399,8 +1405,10 @@
                 7
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 1
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 1
+                    }
                 }
             },
             "name": "WallWest",
@@ -1420,8 +1428,10 @@
                 9
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 2
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 2
+                    }
                 }
             },
             "name": "WallNorth",
@@ -1442,8 +1452,10 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "mass": 1,
-                    "type": "dynamic"
+                    "motion": {
+                        "mass": 1,
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "Ball1",
@@ -1458,8 +1470,10 @@
                 12
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 3
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 3
+                    }
                 }
             },
             "name": "SphereShape1"
@@ -1475,8 +1489,10 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "mass": 1,
-                    "type": "dynamic"
+                    "motion": {
+                        "mass": 1,
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "Ball2",
@@ -1491,8 +1507,10 @@
                 15
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 3
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 3
+                    }
                 }
             },
             "name": "SphereShape2"
@@ -1508,8 +1526,10 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "mass": 1,
-                    "type": "dynamic"
+                    "motion": {
+                        "mass": 1,
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "Ball3",
@@ -1524,8 +1544,10 @@
                 18
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 3
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 3
+                    }
                 }
             },
             "name": "SphereShape3"
@@ -1541,8 +1563,10 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "mass": 1,
-                    "type": "dynamic"
+                    "motion": {
+                        "mass": 1,
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "Ball4",
@@ -1557,8 +1581,10 @@
                 21
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 3
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 3
+                    }
                 }
             },
             "name": "SphereShape4"
@@ -1574,8 +1600,10 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "mass": 1,
-                    "type": "dynamic"
+                    "motion": {
+                        "mass": 1,
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "Ball5",
@@ -1590,8 +1618,10 @@
                 24
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 3
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 3
+                    }
                 }
             },
             "name": "SphereShape5"
@@ -1619,11 +1649,5 @@
         }
     ],
     "scene": 0,
-    "scenes": [
-        {
-            "nodes": [
-                0
-            ]
-        }
-    ]
+    "scenes": [{ "nodes": [0] }]
 }

@@ -18,15 +18,15 @@ Does nothing on its own. Designed to be used together with the `OMI_physics_body
 
 ## Overview
 
-Physics shapes can be added to glTF nodes along with information about the "type" of shape it is representing.
+This extension allows specifying physics shapes to be used in glTF scenes.
 
-This extension allows specifying physics shapes to be used in glTF scenes. `OMI_physics_shape` can be added to glTF nodes, which references the document-level list of physics shapes. They are meant to be used by `OMI_physics_body`. Without a body or another extension using it, this extension does not mandate any particular behavior for the nodes aside from their geometric shape. The precise usage of these physics shape primitives SHOULD be specified by the extenions which utilize them. In general, these physics shapes are used to specify geometry which can be used for collision detection.
+All types of physics shapes defined in this extension are intended to be used for physics simulations and to be portable between many engines. Without another extension using it, this extension does not mandate any particular behavior for the shapes aside from their geometric properties. The precise usage of these physics shape primitives SHOULD be specified by the extenions which utilize them. In general, these physics shapes are used to specify geometry which can be used for collision detection.
 
-The `OMI_physics_body` extension specifes the behavior of attached shapes, including static, kinematic, rigid, and non-solid triggers. Implementations MUST also implement `OMI_physics_body` to determine the behavior of the shapes, or else the shapes do not have defined behavior. Even for a scene with physics shapes that do not move, the body extension contains crucial information about how the shape should be treated, notably whether the shape is solid or not (a trigger body's shapes are not solid).
+The `OMI_physics_shape` extension is intended to be used together with the `OMI_physics_body` extension, which allows attaching shapes to glTF nodes and specifying their behavior, including static, kinematic, dynamic, and non-solid triggers. The `OMI_physics_body` extension refers to a shape using an index of a shape in the `OMI_physics_shape` document-level shapes array.
 
 ### Example:
 
-This example defines a single box shape with a size of 1 meter in all dimensions as a child of a static body:
+This example defines a single box shape with a size of 1 meter in all dimensions:
 
 ```json
 {
@@ -46,33 +46,7 @@ This example defines a single box shape with a size of 1 meter in all dimensions
         }
     },
     "extensionsUsed": [
-        "OMI_physics_body",
         "OMI_physics_shape"
-    ],
-    "nodes": [
-        {
-            "children": [1],
-            "extensions": {
-                "OMI_physics_body": {
-                    "type": "static"
-                }
-            },
-            "name": "StaticBox"
-        },
-        {
-            "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 0
-                }
-            },
-            "name": "BoxShape"
-        }
-    ],
-    "scene": 0,
-    "scenes": [
-        {
-            "nodes": [0]
-        }
     ]
 }
 ```
@@ -131,11 +105,11 @@ Sphere shapes describe a uniform "ball" shape. They have a `radius` property whi
 
 #### Capsule
 
-Capsule shapes describe a "pill" shape. They have a `radius` and `height` property. The height is aligned with the node's local vertical axis. If you wish to align it along a different axis, rotate the glTF node. If the `radius` property is omitted, the default radius is `0.5`, and if the `height` property is omitted, the default height is `2.0`. The height describes the total height from bottom to top. The height of the capsule must be at least twice as much as the radius. The "mid-height" between the centers of each spherical cap end can be found with `height - radius * 2.0`.
+Capsule shapes describe a "pill" shape. They have a `radius` and `height` property. The height is aligned with the node's local vertical axis. If it's desired to align it along a different axis, rotate the glTF node. If the `radius` property is omitted, the default radius is `0.5`, and if the `height` property is omitted, the default height is `2.0`. The height describes the total height from bottom to top. The height of the capsule must be at least twice as much as the radius. The "mid-height" between the centers of each spherical cap end can be found with `height - radius * 2.0`.
 
 #### Cylinder
 
-Cylinder shapes describe a "tall circle" shape. They are similar in structure to capsules, they have a `radius` and `height` property. The height is aligned with the node's local vertical axis. If you wish to align it along a different axis, rotate the glTF node. If the `radius` property is omitted, the default radius is `0.5`, and if the `height` property is omitted, the default height is `2.0`.
+Cylinder shapes describe a "tall circle" shape. They are similar in structure to capsules, they have a `radius` and `height` property. The height is aligned with the node's local vertical axis. If it's desired to align it along a different axis, rotate the glTF node. If the `radius` property is omitted, the default radius is `0.5`, and if the `height` property is omitted, the default height is `2.0`.
 
 The use of cylinder is discouraged if another shape would work well in its place. Cylinders are harder to calculate than boxes, spheres, and capsules. Not all game engines support cylinder shapes. Engines that do not support cylinder shapes should use an approximation, such as a convex hull roughly shaped like a cylinder. Cylinders over twice as tall as they are wide can use another approximation: a convex hull combined with an embedded capsule (to allow for smooth rolling), by copying the cylinder's values into a new capsule shape.
 
@@ -151,7 +125,7 @@ When convex hulls are used, asset creators should try to limit the number of ver
 
 Trimesh shapes represent a concave triangle mesh. They are defined with a `mesh` property with an index of a mesh in the glTF `meshes` array. The glTF mesh in the array MUST be a `trimesh` to work, and should be made of only one glTF mesh primitive (one surface). Valid trimesh shapes must contain at least one triangle.
 
-Avoid using a trimesh shape for most objects, they are the slowest shapes to calculate and have several limitations. Most physics engines do not support moving trimesh shapes or calculating collisions between multiple trimesh shapes. Trimesh shapes will not work reliably with trigger bodies or with pushing objects out due to not having an "interior" space, they only have a surface. Trimesh shapes are typically used for complex level geometry (for example, things that you can go inside of). If your shape can be represented with a combination of simpler primitives, or a convex hull, or multiple convex hulls, prefer that instead.
+Avoid using a trimesh shape for most objects, they are the slowest shapes to calculate and have several limitations. Most physics engines do not support moving trimesh shapes or calculating collisions between multiple trimesh shapes. Trimesh shapes will not work reliably with trigger bodies or with pushing objects out due to not having an "interior" space, they only have a surface. Trimesh shapes are typically used for complex level geometry (for example, things that objects can go inside of). If a shape can be represented with a combination of simpler primitives, or a convex hull, or multiple convex hulls, prefer that instead.
 
 ### JSON Schema
 
@@ -159,7 +133,7 @@ See [schema/glTF.OMI_physics_shape.shape.schema.json](schema/glTF.OMI_physics_sh
 
 ## Known Implementations
 
-* None
+* Godot Engine: https://github.com/godotengine/godot/pull/78967
 
 ## Resources:
 

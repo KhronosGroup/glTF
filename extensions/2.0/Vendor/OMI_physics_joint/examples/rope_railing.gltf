@@ -1084,7 +1084,9 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "static"
+                    "motion": {
+                        "type": "static"
+                    }
                 }
             },
             "name": "PoleLeft",
@@ -1099,8 +1101,10 @@
                 3
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 0
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
                 }
             },
             "name": "PoleShapeLeft"
@@ -1133,7 +1137,9 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "dynamic"
+                    "motion": {
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "RopeSegmentLeft",
@@ -1154,8 +1160,10 @@
                 7
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 1
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 1
+                    }
                 }
             },
             "name": "RopeShapeLeft",
@@ -1194,7 +1202,9 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "dynamic"
+                    "motion": {
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "RopeSegmentLeftMiddle",
@@ -1215,8 +1225,10 @@
                 11
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 1
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 1
+                    }
                 }
             },
             "name": "RopeShapeLeftMiddle",
@@ -1255,7 +1267,9 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "dynamic"
+                    "motion": {
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "RopeSegmentMiddle",
@@ -1270,8 +1284,10 @@
                 15
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 1
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 1
+                    }
                 }
             },
             "name": "RopeShapeMiddle",
@@ -1310,7 +1326,9 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "dynamic"
+                    "motion": {
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "RopeSegmentRightMiddle",
@@ -1331,8 +1349,10 @@
                 19
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 1
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 1
+                    }
                 }
             },
             "name": "RopeShapeRightMiddle",
@@ -1371,7 +1391,9 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "dynamic"
+                    "motion": {
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "RopeSegmentRight",
@@ -1392,8 +1414,10 @@
                 23
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 1
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 1
+                    }
                 }
             },
             "name": "RopeShapeRight",
@@ -1432,7 +1456,9 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "static"
+                    "motion": {
+                        "type": "static"
+                    }
                 }
             },
             "name": "PoleRight",
@@ -1447,8 +1473,10 @@
                 27
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 0
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
                 }
             },
             "name": "PoleShapeRight"

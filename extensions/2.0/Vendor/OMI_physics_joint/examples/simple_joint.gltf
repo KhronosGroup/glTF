@@ -500,7 +500,9 @@
             "children": [4],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "dynamic"
+                    "motion": {
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "BodyA",
@@ -511,7 +513,9 @@
             "children": [6],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "dynamic"
+                    "motion": {
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "BodyB",
@@ -525,8 +529,10 @@
         {
             "children": [5],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 0
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
                 }
             },
             "name": "ShapeA",
@@ -540,8 +546,10 @@
         {
             "children": [7],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 0
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
                 }
             },
             "name": "ShapeB",
@@ -556,7 +564,9 @@
             "children": [9],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "static"
+                    "motion": {
+                        "type": "static"
+                    }
                 }
             },
             "name": "FloorBody",
@@ -565,8 +575,10 @@
         {
             "children": [10],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 1
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 1
+                    }
                 }
             },
             "name": "FloorShape"

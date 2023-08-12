@@ -2,39 +2,21 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "OMI_physics_body glTF Node Extension",
     "type": "object",
-    "required": [
-        "type"
-    ],
     "properties": {
-        "type": {
-            "type": "string",
-            "description": "The body type of this physics body as a string.",
-            "enum": [
-                "static",
-                "kinematic",
-                "dynamic",
-                "trigger"
-            ]
+        "motion": {
+            "type": "object",
+            "description": "If present, this node has its motion controlled by physics, specified by these motion parameters.",
+            "$ref": "glTF.OMI_physics_body.motion.schema.json"
         },
-        "mass": {
-            "type": "number",
-            "description": "The mass of this physics body in kilograms.",
-            "default": 1.0
+        "collider": {
+            "type": "object",
+            "description": "If present, this node is solid and can be collided with, specified by these collider parameters.",
+            "$ref": "glTF.OMI_physics_body.collider.schema.json"
         },
-        "linearVelocity": {
-            "type": "array",
-            "description": "The initial linear velocity of the body in meters per second.",
-            "default": [0.0, 0.0, 0.0]
-        },
-        "angularVelocity": {
-            "type": "array",
-            "description": "The initial angular velocity of the body in radians per second.",
-            "default": [0.0, 0.0, 0.0]
-        },
-        "inertiaTensor": {
-            "type": "array",
-            "description": "The inertia tensor 3x3 symmetric matrix of the body in kilogram meter squared.",
-            "default": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        "trigger": {
+            "type": "object",
+            "description": "If present, this node is non-solid and can act as a trigger, specified by these trigger parameters.",
+            "$ref": "glTF.OMI_physics_body.trigger.schema.json"
         },
         "extensions": { },
         "extras": { }

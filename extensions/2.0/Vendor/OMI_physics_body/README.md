@@ -17,13 +17,11 @@ Depends on the `OMI_physics_shape` spec to be useful.
 
 ## Overview
 
-This extension allows for specifying the type of physics body in glTF scenes.
+This extension allows for specifying physics bodies in glTF scenes.
 
-Physics bodies are defined with a string enum for the type. Nodes with physics shapes defined using the `OMI_physics_shape` spec should be added as children of a `OMI_physics_body` glTF node.
+Nodes with the `OMI_physics_body` extension may define motion, collider, and trigger properties.
 
-Each glTF node with `OMI_physics_shape` may be associated with zero or one `OMI_physics_body` glTF node as its ancestor. Each glTF node with `OMI_physics_body` should have one or many `OMI_physics_shape` glTF node descendants (zero is valid but not recommended, since physics bodies without collision shapes on them will not collide with anything). If a glTF node with `OMI_physics_shape` does not have a body, it should be a static solid object that does not move.
-
-Nodes with `OMI_physics_shape` are recommended to be direct child nodes of physics bodies they apply to, since this results in a very clear and portable document structure, and allows colliders to be transformed relative to the parent body via glTF node transforms. However, `OMI_physics_shape` may also be placed on the same glTF node as the physics body to accomodate very simple use cases, and may be placed on indirect descendants to allow for more complex objects with colliders on separate levels in the node hierarchy. A glTF node with `OMI_physics_shape` may only apply to one body, which is the `OMI_physics_body` on the same glTF node, or the nearest ancestor with `OMI_physics_body`.
+If a node with a collider shape does not have a motion property, , it should be a static solid object that does not move.
 
 ### Example:
 
@@ -52,31 +50,25 @@ This example defines a static body node which has a single box collider as a chi
     ],
     "nodes": [
         {
-            "children": [1],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "static"
+                    "motion": {
+                        "type": "dynamic"
+                    },
+                    "collider": {
+                        "shape": 0
+                    }
                 }
             },
-            "name": "StaticBox"
-        },
-        {
-            "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 0
-                }
-            },
-            "name": "StaticShape"
+            "name": "DynamicBox"
         }
     ],
     "scene": 0,
-    "scenes": [
-        {
-            "nodes": [0]
-        }
-    ]
+    "scenes": [{ "nodes": [0] }]
 }
 ```
+
+The above example shows dynamic motion and collision shape specified on one node. A nearly identical example using 2 nodes can be found in [examples/basic/dynamic_box.gltf](examples/basic/dynamic_box.gltf).
 
 More example assets can be found in the [examples/](examples/) folder. All of these examples use both `OMI_physics_shape` and `OMI_physics_body`.
 
@@ -86,81 +78,46 @@ This extension consists of a new `OMI_physics_body` data structure which can be 
 
 The extension must also be added to the glTF's `extensionsUsed` array and because it is optional, it does not need to be added to the `extensionsRequired` array.
 
-The extension is intended to be used together with `OMI_physics_shape`. Physics bodies without collision shapes on them are valid but will not collide with anything.
+The extension is intended to be used together with `OMI_physics_shape`, which defines the shapes used by the `"shape"` properties inside of the `"collider"` and `"trigger"` sub-JSON properties.
 
 ### Property Summary
 
-|                     | Type        | Description                                                      | Default value        |
-| ------------------- | ----------- | ---------------------------------------------------------------- | -------------------- |
-| **type**            | `string`    | The type of the physics body as a string.                        | Required, no default |
-| **mass**            | `number`    | The mass of the physics body in kilograms.                       | 1.0                  |
-| **linearVelocity**  | `number[3]` | The initial linear velocity of the body in meters per second.    | [0.0, 0.0, 0.0]      |
-| **angularVelocity** | `number[3]` | The initial angular velocity of the body in radians per second.  | [0.0, 0.0, 0.0]      |
-| **centerOfMass**    | `number[3]` | The center of mass offset from the origin in meters.             | [0.0, 0.0, 0.0]      |
-| **inertiaTensor**   | `number[9]` | The inertia tensor 3x3 matrix in kilogram meter squared (kg⋅m²). | [0.0, ..., 0.0]      |
+|              | Type | Description                                                  | Default value |
+| ------------ | ---- | ------------------------------------------------------------ | ------------- |
+| **motion**   | JSON | If present, this node has its motion controlled by physics.  | `null`        |
+| **collider** | JSON | If present, this node is solid and can be collided with.     | `null`        |
+| **trigger**  | JSON | If present, this node is non-solid and can act as a trigger. | `null`        |
 
-### Physics Body Types
+Each of these properties are recommended to be defined on separate nodes. This results in a very clear, simple, and portable document structure, and ensures that each behavior has its own transform. However, they may also be all defined on the same node. Implementations must support all of these cases in order to be compliant.
 
-The `"type"` property is a lowercase string that defines what type of physics body this is. Different types of physics bodies have different interactions with physics systems and other bodies within a scene.
+#### Motion
 
-Here is a table listing the mapping between the `OMI_physics_body` type and the equivalent types in major game engines.
+If a node has the `"motion"` property defined, its transform is driven by the physics engine.
 
-| Body Type | Unity                 | Godot 3       | Godot 4          | Unreal                                 |
-| --------- | --------------------- | ------------- | ---------------- | -------------------------------------- |
-| Static    | Collider              | StaticBody    | StaticBody3D     | WorldStatic, Simulate Physics = false  |
-| Kinematic | Rigidbody.isKinematic | KinematicBody | AnimatableBody3D | WorldDynamic, Simulate Physics = false |
-| Dynamic   | Rigidbody             | RigidBody     | RigidBody3D      | PhysicsBody, Simulate Physics = true   |
-| Trigger   | Collider.isTrigger    | Area          | Area3D           | Generate Overlap Events = true         |
+The list of motion properties and their details can be found in the [README.motion.md](README.motion.md) file.
 
-#### Static
+#### Collider
 
-Static bodies can be collided with, but do not have simulated movement. They are usually used for level geometry.
+If a node has the `"collider"` property defined, it is a solid collider node that objects can collide with.
 
-#### Kinematic
-
-Kinematic bodies can be collided with, and can be moved using scripts or animations. They can be used for moving platforms.
-
-#### Dynamic
-
-Dynamic bodies are bodies simulated with [rigid body dynamics](https://en.wikipedia.org/wiki/Rigid_body_dynamics). They collide with other bodies, and move around on their own in the physics simulation. They are affected by gravity. They can be used for props that move around in the world.
+The list of collider properties and their details can be found in the [README.collider.md](README.collider.md) file.
 
 #### Trigger
 
-Trigger bodies do not collide with other objects, but can generate events when another physics body "enters" them. For example, a "goal" area which triggers whenever a ball gets thrown into it. Trigger bodies can be added as children of other bodies to attach a trigger volume to another body.
+If a node has the `"trigger"` property defined, it is a non-solid trigger that can detect when objects enter it.
 
-### Mass
-
-The `"mass"` property is a number that defines how much mass this physics body has in kilograms. Not all body types can make use of mass, such as triggers or non-moving bodies, in which case the mass can be ignored. If not specified, the default value is 1 kilogram.
-
-### Linear Velocity
-
-The `"linearVelocity"` property is an array of three numbers that defines how much linear velocity this physics body starts with in meters per second. Not all body types can make use of linear velocity, such as non-moving bodies, in which case the linear velocity can be ignored. If not specified, the default value is zero.
-
-### Angular Velocity
-
-The `"angularVelocity"` property is an array of three numbers that defines how much angular velocity this physics body starts with in radians per second. Not all body types can make use of angular velocity, such as non-moving bodies, in which case the angular velocity can be ignored. If not specified, the default value is zero.
-
-### Center of Mass
-
-The `"centerOfMass"` property is an array of three numbers that defines the position offset in meters of the center of mass in the body's local space.
-
-This property is useful when converting assets with a center of mass, but when creating new assets it is recommended to leave the center of mass at the body's origin. Some physics engines support the center of mass being offset from the origin, but not all of them do. Implementations without support for a center of mass offset would have to adjust the node positions to make this work, which may be undesired.
-
-### Inertia Tensor
-
-The `"inertiaTensor"` property is an array of 9 numbers that defines the inertia tensor 3x3 matrix of the body in kilogram meter squared (kg⋅m²). We specify "tensor" in the name because this defines inertia in multiple directions and is different from linear momentum inertia. Only the "dynamic" body type can make use of inertia. If zero or not specified, the inertia should be automatically calculated by the physics engine.
-
-The inertia tensor matrix is a symmetric matrix. The inertia matrix represents the mass distribution of the body and determines how hard the body is to rotate. The values on the diagonal represent the inertia around the 3 principle axes (X, Y, Z), while the values not on the diagonal represent the 3 coupling values between the axes (XY, XZ, YZ). For more information, refer to the Wikipedia article.
-
-Some engines only support specifying the inertia around the principle axes as a Vector3. In those engines, when importing a glTF file and reading the inertia matrix, only the diagonal principle axis values should be used, and the non-diagonal coupling values should be discarded. Similarly, when exporting a glTF file while writing the inertia matrix, write the Vector3 values to the matrix diagonal principle axis values, and set the non-diagonal coupling values to zero.
+The list of trigger properties and their details can be found in the [README.trigger.md](README.trigger.md) file.
 
 ### JSON Schema
 
-See [schema/node.OMI_physics_body.schema.json](schema/node.OMI_physics_body.schema.json).
+See [schema/node.OMI_physics_body.schema.json](schema/node.OMI_physics_body.schema.json) for the main schema, and these for the sub-JSON schemas:
+* Motion: [schema/node.OMI_physics_body.motion.schema.json](schema/node.OMI_physics_body.motion.schema.json)
+* Collider: [schema/node.OMI_physics_body.collider.schema.json](schema/node.OMI_physics_body.collider.schema.json)
+* Trigger: [schema/node.OMI_physics_body.trigger.schema.json](schema/node.OMI_physics_body.trigger.schema.json)
 
 ## Known Implementations
 
-* Godot Engine: https://github.com/godotengine/godot/pull/69266
+* Godot Engine: https://github.com/godotengine/godot/pull/78967
 
 ## Resources:
 
@@ -169,4 +126,5 @@ See [schema/node.OMI_physics_body.schema.json](schema/node.OMI_physics_body.sche
 * Godot Physics Body: https://docs.godotengine.org/en/stable/classes/class_physicsbody.html
 * Godot Area: https://docs.godotengine.org/en/stable/classes/class_area.html
 * Godot RigidBody3D: https://docs.godotengine.org/en/latest/classes/class_rigidbody3d.html
-* Wikipedia Moment of Inertia and Inertia Tensor https://en.wikipedia.org/wiki/Moment_of_inertia#Inertia_tensor
+* Wikipedia Moment of Inertia: https://en.wikipedia.org/wiki/Moment_of_inertia
+* Wikipedia Rigid Body Dynamics: https://en.wikipedia.org/wiki/Rigid_body_dynamics

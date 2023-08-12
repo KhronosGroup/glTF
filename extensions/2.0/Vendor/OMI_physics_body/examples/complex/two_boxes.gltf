@@ -28,16 +28,20 @@
             "children": [2],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "static"
+                    "motion": {
+                        "type": "static"
+                    }
                 }
             },
-            "name": "StaticBox",
+            "name": "StaticBody",
             "translation": [-1, 0, 0]
         },
         {
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 0
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
                 }
             },
             "name": "StaticBoxShape"
@@ -46,25 +50,23 @@
             "children": [4],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "trigger"
+                    "trigger": {}
                 }
             },
-            "name": "TriggerBox",
+            "name": "TriggerBody",
             "translation": [1, 0, 0]
         },
         {
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 0
+                "OMI_physics_body": {
+                    "trigger": {
+                        "shape": 0
+                    }
                 }
             },
             "name": "TriggerBoxShape"
         }
     ],
     "scene": 0,
-    "scenes": [
-        {
-            "nodes": [0]
-        }
-    ]
+    "scenes": [{ "nodes": [0] }]
 }

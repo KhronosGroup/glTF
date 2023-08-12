@@ -495,7 +495,9 @@
             "children": [2],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "dynamic"
+                    "motion": {
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "BodyA",
@@ -505,8 +507,10 @@
         {
             "children": [3],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 0
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
                 }
             },
             "name": "ShapeA",
@@ -534,7 +538,9 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "dynamic"
+                    "motion": {
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "BodyB",
@@ -545,8 +551,10 @@
                 7
             ],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 0
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
                 }
             },
             "name": "ShapeB",
@@ -563,7 +571,9 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "static"
+                    "motion": {
+                        "type": "static"
+                    }
                 }
             },
             "name": "FloorBody",
@@ -572,8 +582,10 @@
         {
             "children": [10],
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 1
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 1
+                    }
                 }
             },
             "name": "FloorShape"

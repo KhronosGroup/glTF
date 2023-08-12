@@ -25,17 +25,21 @@
             ],
             "extensions": {
                 "OMI_physics_body": {
-                    "angularVelocity": [4, 5, 6],
-                    "linearVelocity": [1, 2, 3],
-                    "type": "dynamic"
+                    "motion": {
+                        "angularVelocity": [4, 5, 6],
+                        "linearVelocity": [1, 2, 3],
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "DynamicWithVelocity"
         },
         {
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 0
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
                 }
             },
             "name": "SphereShape"

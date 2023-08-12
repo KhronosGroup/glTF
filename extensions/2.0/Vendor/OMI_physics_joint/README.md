@@ -62,7 +62,9 @@ This example defines 2 rigid bodies that are connected with a joint that constra
         {
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "dynamic"
+                    "motion": {
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "BodyA",
@@ -72,7 +74,9 @@ This example defines 2 rigid bodies that are connected with a joint that constra
         {
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "dynamic"
+                    "motion": {
+                        "type": "dynamic"
+                    }
                 }
             },
             "name": "BodyB",

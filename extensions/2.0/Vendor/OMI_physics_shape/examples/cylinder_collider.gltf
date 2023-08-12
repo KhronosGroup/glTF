@@ -21,27 +21,16 @@
     ],
     "nodes": [
         {
-            "children": [1],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "static"
-                }
-            },
-            "name": "StaticBody"
-        },
-        {
-            "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 0
+                    "collider": {
+                        "shape": 0
+                    }
                 }
             },
             "name": "CylinderShape"
         }
     ],
-    "scene": 0,
-    "scenes": [
-        {
-            "nodes": [0]
-        }
-    ]
+	"scene": 0,
+	"scenes": [{ "nodes": [0] }]
 }

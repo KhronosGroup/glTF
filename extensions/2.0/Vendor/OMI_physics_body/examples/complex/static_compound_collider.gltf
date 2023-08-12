@@ -8,7 +8,7 @@
                 {
                     "type": "box",
                     "box": {
-                        "size": [1, 1, 1]
+                        "size": [1, 2, 3]
                     }
                 }
             ]
@@ -23,24 +23,22 @@
             "children": [1],
             "extensions": {
                 "OMI_physics_body": {
-                    "type": "static"
+                    "collider": {}
                 }
             },
-            "name": "StaticBox"
+            "name": "StaticCompoundCollider"
         },
         {
             "extensions": {
-                "OMI_physics_shape": {
-                    "shape": 0
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
                 }
             },
             "name": "BoxShape"
         }
     ],
     "scene": 0,
-    "scenes": [
-        {
-            "nodes": [0]
-        }
-    ]
+    "scenes": [{ "nodes": [0] }]
 }

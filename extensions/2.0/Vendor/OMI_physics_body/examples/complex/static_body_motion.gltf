@@ -8,7 +8,7 @@
                 {
                     "type": "box",
                     "box": {
-                        "size": [1, 1, 1]
+                        "size": [1, 2, 3]
                     }
                 }
             ]
@@ -20,14 +20,25 @@
     ],
     "nodes": [
         {
+            "children": [1],
             "extensions": {
                 "OMI_physics_body": {
-                    "trigger": {
+                    "motion": {
+                        "type": "static"
+                    }
+                }
+            },
+            "name": "StaticBodyMotion"
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": {
+                    "collider": {
                         "shape": 0
                     }
                 }
             },
-            "name": "TriggerBox"
+            "name": "BoxShape"
         }
     ],
     "scene": 0,

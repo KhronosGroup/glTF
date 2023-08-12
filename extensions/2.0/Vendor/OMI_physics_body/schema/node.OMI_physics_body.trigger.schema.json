@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "OMI_physics_shape glTF Node Extension",
+    "title": "OMI_physics_body Trigger Property",
     "type": "object",
     "allOf": [
         {
@@ -14,12 +14,10 @@
                 {
                     "$ref": "glTFid.schema.json"
                 }
-            ]
+            ],
+            "default": -1
         },
         "extensions": { },
         "extras": { }
-    },
-    "required": [
-        "shape"
-    ]
+    }
 }
