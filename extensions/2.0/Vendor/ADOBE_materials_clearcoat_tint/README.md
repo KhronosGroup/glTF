@@ -69,7 +69,7 @@ The `clearcoat_tint` modifies the formula for `f_clearcoat` (as defined in [KHR_
 clearcoatBlendFactor = clearcoatTexture.r * clearcoatFactor
 clearcoatFresnel = fresnel(0.04, NdotV)
 
-color = clearcoat_tint * (f_emissive + f_diffuse + f_specular) * (1.0 - clearcoatBlendFactor * clearcoatFresnel) +
+color = mix(vec3(1.0), clearcoat_tint, clearcoatBlendFactor) * (f_emissive + f_diffuse + f_specular) * (1.0 - clearcoatBlendFactor * clearcoatFresnel) +
         f_clearcoat * clearcoatBlendFactor
 ```
 
