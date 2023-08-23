@@ -421,7 +421,7 @@ The full derivation of the fast analytical spectral integration is described in 
 
 ## Schema
 
-[glTF.KHR_materials_iridescence.schema.json](schema/glTF.KHR_materials_iridescence.schema.json)
+[material.KHR_materials_iridescence.schema.json](schema/material.KHR_materials_iridescence.schema.json)
 
 ## Appendix: Full Khronos Copyright Statement
 

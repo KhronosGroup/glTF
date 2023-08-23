@@ -255,7 +255,7 @@ This makes it possible to add advanced effects like clearcoat (`KHR_materials_cl
 
 ## Schema
 
-- [glTF.KHR_materials_specular.schema.json](schema/glTF.KHR_materials_specular.schema.json)
+- [material.KHR_materials_specular.schema.json](schema/material.KHR_materials_specular.schema.json)
 
 ## Appendix: Full Khronos Copyright Statement
 

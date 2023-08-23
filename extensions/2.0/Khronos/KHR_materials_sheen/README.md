@@ -169,6 +169,10 @@ environmentIrradiance_indirect *= sheenAlbedoScaling
 specularEnvironmentReflectance_indirect *= sheenAlbedoScaling
 ```
 
+## Schema
+
+- [material.KHR_materials_sheen.schema.json](schema/material.KHR_materials_sheen.schema.json)
+
 ## Reference
 
 ### Theory, Documentation and Implementations

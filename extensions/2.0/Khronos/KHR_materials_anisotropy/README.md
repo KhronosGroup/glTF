@@ -196,7 +196,7 @@ Further samples should be placed on both sides along the `anisotropicT` directio
 
 ## Schema
 
-- [glTF.KHR_materials_anisotropy.schema.json](schema/glTF.KHR_materials_anisotropy.schema.json)
+- [material.KHR_materials_anisotropy.schema.json](schema/material.KHR_materials_anisotropy.schema.json)
 
 ## Reference
 

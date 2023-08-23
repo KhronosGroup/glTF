@@ -220,7 +220,7 @@ If `KHR_materials_specular` is used in combination with `KHR_materials_volume`, 
 
 ## Schema
 
-- [glTF.KHR_materials_volume.schema.json](schema/glTF.KHR_materials_volume.schema.json)
+- [material.KHR_materials_volume.schema.json](schema/material.KHR_materials_volume.schema.json)
 
 ## References
 
