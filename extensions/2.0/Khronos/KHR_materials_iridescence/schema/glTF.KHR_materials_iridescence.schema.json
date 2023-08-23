@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_materials_iridescence glTF extension",
+    "title": "KHR_materials_iridescence glTF Material Extension",
     "type": "object",
     "description": "glTF extension that defines an iridescence effect.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
