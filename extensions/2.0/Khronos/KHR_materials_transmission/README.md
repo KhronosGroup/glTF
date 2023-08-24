@@ -7,15 +7,15 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Contributors <!-- omit in toc -->
 
-* Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
-* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
-* Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
-* Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
-* Emmett Lalish, Google [@elalish](https://github.com/elalish)
-* Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
-* Alex Wood, AGI [@abwood](https://twitter.com/abwood)
-* Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
-* Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+- Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
+- Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
+- Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
+- Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
+- Emmett Lalish, Google [@elalish](https://github.com/elalish)
+- Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
+- Alex Wood, AGI [@abwood](https://twitter.com/abwood)
+- Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
+- Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
 
 Copyright 2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -48,8 +48,8 @@ Written against the glTF 2.0 spec.
 
 ## Exclusions
 
-* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
-* This extension must not be used on a material that also uses `KHR_materials_unlit`. 
+- This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+- This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Overview
 
@@ -88,15 +88,15 @@ materials: [
 ]
 ```
 
-## Properties 
-Only two properties are introduced with this extension and combine to describe a single value; the percentage of light that is transmitted through the surface of the material. These properties work together with the existing properties of the material to define the way light is modified as it passes through the substance. 
+## Properties
+Only two properties are introduced with this extension and combine to describe a single value; the percentage of light that is transmitted through the surface of the material. These properties work together with the existing properties of the material to define the way light is modified as it passes through the substance.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**transmissionFactor** | `number` | The base percentage of light that is transmitted through the surface.| No, Default: `0.0 ` |
 |**transmissionTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A texture that defines the transmission percentage of the surface, stored in the `R` channel. This will be multiplied by `transmissionFactor`. | No |
 
-### transmissionFactor 
+### transmissionFactor
 The amount of light that is transmitted by the surface rather than diffusely re-emitted. This is a percentage of all the light that penetrates a surface (i.e. isn’t specularly reflected) rather than a percentage of the total light that hits a surface. A value of 1.0 means that 100% of the light that penetrates the surface is transmitted through.
 
 <figure>
@@ -104,7 +104,7 @@ The amount of light that is transmitted by the surface rather than diffusely re-
 <figcaption><em>Yellow baseColor with transmissionFactor = 1.0.</em></figcaption>
 </figure>
 
-### transmissionTexture 
+### transmissionTexture
 The `R` channel of this texture defines the amount of light that is transmitted by the surface rather than diffusely re-emitted. A value of 1.0 in the red channel means that 100% of the light that penetrates the surface (i.e. isn’t specularly reflected) is transmitted through. The value is linear and is multiplied by the transmissionFactor to determine the total transmission value.
 
 <figure>
@@ -230,7 +230,7 @@ function specular_btdf(α) {
 }
 ```
 
-Rendering transparency in a real-time rasterizer in an efficient manner is a difficult problem, especially when an arbitrary number of transparent polygons may be overlapping in view. This is because rendering transparency is order-dependent (i.e. we see background objects through foreground objects) and also because the rendering of absorption and reflections involves two distinct blend operations. Consequently, it may not be possible on the target platform to render every transparent polygon in the correct order, in a reasonable time, and with the correct blending. Therefore, correct ordering is not an absolute requirement when implementing this extension in realtime renderers, nor is rendering all potentially overlapping layers. 
+Rendering transparency in a real-time rasterizer in an efficient manner is a difficult problem, especially when an arbitrary number of transparent polygons may be overlapping in view. This is because rendering transparency is order-dependent (i.e. we see background objects through foreground objects) and also because the rendering of absorption and reflections involves two distinct blend operations. Consequently, it may not be possible on the target platform to render every transparent polygon in the correct order, in a reasonable time, and with the correct blending. Therefore, correct ordering is not an absolute requirement when implementing this extension in realtime renderers, nor is rendering all potentially overlapping layers.
 
 Various techniques are available to trade off physical accuracy against realtime performance requirements in client implementations. This extension does not mandate any particular technique. However, be aware that the simplest such technique — transmitting only the IBL and no scene objects — will often fall short of what a model's author intended. We recommend that client implementations aim to display at least opaque objects through a transmissive material. When that is not feasible, it may be preferable to fall back to simple alpha blending with 0 < alpha < 1.
 
@@ -245,12 +245,12 @@ Various techniques are available to trade off physical accuracy against realtime
 
 ## Reference
 
-[Autodesk Standard Surface - Specular Transmission](https://autodesk.github.io/standard-surface/#closures/speculartransmission)  
-[Blender Transparent BSDF](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/transparent.html#transparent-bsdf)  
-[Enterprise PBR Shading Model - Dielectric BSDF for Transparent Surfaces](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2022x.md.html#components/core/dielectricbsdffortransparentsurfaces)
-[Filament Material models - Transmission](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/transmission)  
-[Unreal Engine 4 Material - Refraction](https://docs.unrealengine.com/en-US/Engine/Rendering/Materials/MaterialInputs/index.html#refraction)  
-[Adobe Standard Material - Interior Properties](https://helpx.adobe.com/dimension/using/standard-materials.html#InteriorProperties)
+- [Autodesk Standard Surface - Specular Transmission](https://autodesk.github.io/standard-surface/#closures/speculartransmission)
+- [Blender Transparent BSDF](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/transparent.html#transparent-bsdf)
+- [Enterprise PBR Shading Model - Dielectric BSDF for Transparent Surfaces](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2022x.md.html#components/core/dielectricbsdffortransparentsurfaces)
+- [Filament Material models - Transmission](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/transmission)
+- [Unreal Engine 4 Material - Refraction](https://docs.unrealengine.com/en-US/Engine/Rendering/Materials/MaterialInputs/index.html#refraction)
+- [Adobe Standard Material - Interior Properties](https://helpx.adobe.com/dimension/using/standard-materials.html#InteriorProperties)
 
 ## Appendix: Full Khronos Copyright Statement
 

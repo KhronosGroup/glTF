@@ -7,27 +7,27 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Contributors
 
-* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
-* Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
-* Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
-* Emmett Lalish, Google [@elalish](https://github.com/elalish)
-* Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
-* Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
-* Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
-* Eric Chadwick, Wayfair [echadwick-wayfair](https://github.com/echadwick-wayfair)
-* Ben Houston, ThreeKit [@bhouston](https://github.com/bhouston)
-* Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
-* Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
-* Nicholas Barlow, Microsoft
-* Nicolas Savva, Autodesk [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
-* Henrik Edstrom, Autodesk
-* Bruce Cherniak, Intel
-* Adam Morris, Target [@weegeekps](https://github.com/weegeekps)
-* Sandra Voelker, Target
-* Alex Jamerson, Amazon
-* Thomas Dideriksen, Amazon
-* Alex Wood, AGI [@abwood](https://twitter.com/abwood)
-* Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
+- Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
+- Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
+- Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
+- Emmett Lalish, Google [@elalish](https://github.com/elalish)
+- Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
+- Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+- Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
+- Eric Chadwick, Wayfair [echadwick-wayfair](https://github.com/echadwick-wayfair)
+- Ben Houston, ThreeKit [@bhouston](https://github.com/bhouston)
+- Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
+- Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
+- Nicholas Barlow, Microsoft
+- Nicolas Savva, Autodesk [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
+- Henrik Edstrom, Autodesk
+- Bruce Cherniak, Intel
+- Adam Morris, Target [@weegeekps](https://github.com/weegeekps)
+- Sandra Voelker, Target
+- Alex Jamerson, Amazon
+- Thomas Dideriksen, Amazon
+- Alex Wood, AGI [@abwood](https://twitter.com/abwood)
+- Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
 
 Copyright 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -42,8 +42,8 @@ Written against the glTF 2.0 spec. The volume extension needs to be combined wit
 
 ## Exclusions
 
-* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
-* This extension must not be used on a material that also uses `KHR_materials_unlit`.
+- This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+- This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Table of Contents
 
@@ -224,9 +224,9 @@ If `KHR_materials_specular` is used in combination with `KHR_materials_volume`, 
 
 ## References
 
-* [Kulla C., Conty A. (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf)<a name="KullaConty2017"></a>
-* [Walter B., Marschner S., Li H., Torrance K. (2007): Microfacet Models for Refraction through Rough Surfaces](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf)<a name="Walter2007"></a>
-* [Schmidt C., Budge B. (2002): Simple Nested Dielectrics in Ray Traced Images](https://www.researchgate.net/profile/Brian_Budge/publication/247523037_Simple_Nested_Dielectrics_in_Ray_Traced_Images/links/00b7d52e001e1b88a3000000/Simple-Nested-Dielectrics-in-Ray-Traced-Images.pdf)<a name="SchmidtBudge2002"></a>
+- [Kulla C., Conty A. (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf)<a name="KullaConty2017"></a>
+- [Walter B., Marschner S., Li H., Torrance K. (2007): Microfacet Models for Refraction through Rough Surfaces](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf)<a name="Walter2007"></a>
+- [Schmidt C., Budge B. (2002): Simple Nested Dielectrics in Ray Traced Images](https://www.researchgate.net/profile/Brian_Budge/publication/247523037_Simple_Nested_Dielectrics_in_Ray_Traced_Images/links/00b7d52e001e1b88a3000000/Simple-Nested-Dielectrics-in-Ray-Traced-Images.pdf)<a name="SchmidtBudge2002"></a>
 
 ## Appendix: Full Khronos Copyright Statement
 

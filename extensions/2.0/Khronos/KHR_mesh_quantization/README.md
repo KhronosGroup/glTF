@@ -7,8 +7,8 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Contributors
 
-* Arseny Kapoulkine, [@zeuxcg](https://twitter.com/zeuxcg)
-* Alexey Knyazev, [@lexaknyazev](https://github.com/lexaknyazev)
+- Arseny Kapoulkine, [@zeuxcg](https://twitter.com/zeuxcg)
+- Alexey Knyazev, [@lexaknyazev](https://github.com/lexaknyazev)
 
 Copyright 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
