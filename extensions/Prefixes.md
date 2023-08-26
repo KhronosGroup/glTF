@@ -88,3 +88,4 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `VRMC` | VRM Consortium | https://vrm-consortium.org/ | [#1874](https://github.com/KhronosGroup/glTF/issues/1874) |
 | `VSEKAI` | V-Sekai | https://v-sekai.org/<br>`ernest.lee at chibifire.com`<br>`xn.lyuma at gmail.com` | [#2206](https://github.com/KhronosGroup/glTF/issues/2206) |
 | `WEB3D` | The Web3D Consortium, Inc. | https://www.web3d.org/ |  |
+| `WGE` | Webgears Inc. | https://webgears.app/<br>`contact at webgears.app` | [#2299](https://github.com/KhronosGroup/glTF/issues/2299) |
