@@ -50,15 +50,15 @@ Adding tint to clearcoat materials can be done by adding the `ADOBE_materials_cl
 
 ### Clearcoat Tint
 
-All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix B](/specification/2.0/README.md#appendix-b-brdf-implementation) for more details on the BRDF calculations.
+All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix B](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
 As with the core glTF 2.0 spec, all coloured textures are assumed to be sRGB and all coloured factors are assumed to be linear.
 
 |                                  | Type                                                                            | Description                            | Required             |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|----------------------|
-|**clearcoatTintFactor**               | `number[3]`                                                                        | The clearcoat tint's colour factor.         | No, default: `[1.0, 1.0, 1.0]`   |
-|**clearcoatTintTexture**              | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo)             | The clearcoat layer's tint texture. | No                   |
-  
+|**clearcoatTintFactor**    | `number[3]`                                                                                       | The clearcoat tint's colour factor.  | No, default: `[1.0, 1.0, 1.0]`   |
+|**clearcoatTintTexture**   | [`textureInfo`](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo)  | The clearcoat layer's tint texture.  | No                               |
+
 The clearcoat tint defines the transmittance of light through the coat. That is, it defines what colour of light is allowed to pass through. As with other factor/texture combinations, these two values are multiplied.
 ```
 clearcoat_tint.rgb = clearcoatTintFactor.rgb * clearcoatTintTexture.rgb
