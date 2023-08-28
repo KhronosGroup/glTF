@@ -75,5 +75,5 @@ color = mix(vec3(1.0), clearcoat_tint, clearcoatBlendFactor) * (f_emissive + f_d
 
 ## Schema
 
-- [glTF.ADOBE_materials_clearcoat_tint.schema.json](schema/glTF.KHR_materials_clearcoat.schema.json)
+- [glTF.ADOBE_materials_clearcoat_tint.schema.json](schema/glTF.ADOBE_materials_clearcoat_tint.schema.json)
  
