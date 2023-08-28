@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_materials_ior glTF extension",
+    "title": "KHR_materials_ior glTF Material Extension",
     "type": "object",
     "description": "glTF extension that defines the index of refraction of a material.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
