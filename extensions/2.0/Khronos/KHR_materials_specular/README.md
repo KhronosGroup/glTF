@@ -7,28 +7,28 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Contributors
 
-* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
-* Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
-* Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
-* Emmett Lalish, Google [@elalish](https://github.com/elalish)
-* Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
-* Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
-* Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
-* Eric Chadwick, Wayfair [echadwick-wayfair](https://github.com/echadwick-wayfair)
-* Ben Houston, ThreeKit [@bhouston](https://github.com/bhouston)
-* Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
-* Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
-* Nicholas Barlow, Microsoft
-* Nicolas Savva, Autodesk [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
-* Henrik Edstrom, Autodesk
-* Bruce Cherniak, Intel
-* Adam Morris, Target [@weegeekps](https://github.com/weegeekps)
-* Sandra Voelker, Target
-* Alex Jamerson, Amazon
-* Thomas Dideriksen, Amazon
-* Alex Wood, AGI [@abwood](https://twitter.com/abwood)
-* Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
-* Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)
+- Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
+- Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
+- Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
+- Emmett Lalish, Google [@elalish](https://github.com/elalish)
+- Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
+- Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+- Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
+- Eric Chadwick, Wayfair [echadwick-wayfair](https://github.com/echadwick-wayfair)
+- Ben Houston, ThreeKit [@bhouston](https://github.com/bhouston)
+- Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
+- Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
+- Nicholas Barlow, Microsoft
+- Nicolas Savva, Autodesk [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
+- Henrik Edstrom, Autodesk
+- Bruce Cherniak, Intel
+- Adam Morris, Target [@weegeekps](https://github.com/weegeekps)
+- Sandra Voelker, Target
+- Alex Jamerson, Amazon
+- Thomas Dideriksen, Amazon
+- Alex Wood, AGI [@abwood](https://twitter.com/abwood)
+- Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
+- Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)
 
 Copyright 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -45,8 +45,8 @@ Written against the glTF 2.0 spec.
 
 ## Exclusions
 
-* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
-* This extension must not be used on a material that also uses `KHR_materials_unlit`.
+- This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+- This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Overview
 

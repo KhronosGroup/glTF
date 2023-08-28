@@ -7,16 +7,16 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Contributors
 
-* Sebastien Vandenberghe, Microsoft, [@sebavan](https://github.com/sebavan)
-* Alexis Vaginay, Microsoft, [@Popov72](https://github.com/Popov72)
-* Tobias Häußler, Dassault System, [@proog128](https://github.com/proog128)
-* Ed Mackey, Analytical Graphics, Inc.
-* Romain Guy, Google, [@romainguy](https://github.com/romainguy)
-* Mike Bond, Adobe, [@MiiBond](https://github.com/MiiBond)
-* Don McCurdy, Google, [@donmccurdy](https://twitter.com/donrmccurdy)
-* Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
-* Jekfer Bichon, Dassault System, [@EliphasNUIT](https://github.com/EliphasNUIT)
-* Aidin Abedi, Animech, [@aidinabedi](https://github.com/aidinabedi)
+- Sebastien Vandenberghe, Microsoft, [@sebavan](https://github.com/sebavan)
+- Alexis Vaginay, Microsoft, [@Popov72](https://github.com/Popov72)
+- Tobias Häußler, Dassault System, [@proog128](https://github.com/proog128)
+- Ed Mackey, Analytical Graphics, Inc.
+- Romain Guy, Google, [@romainguy](https://github.com/romainguy)
+- Mike Bond, Adobe, [@MiiBond](https://github.com/MiiBond)
+- Don McCurdy, Google, [@donmccurdy](https://twitter.com/donrmccurdy)
+- Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
+- Jekfer Bichon, Dassault System, [@EliphasNUIT](https://github.com/EliphasNUIT)
+- Aidin Abedi, Animech, [@aidinabedi](https://github.com/aidinabedi)
 
 Copyright 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -30,8 +30,8 @@ Complete, Ratified by the Khronos Group
 Written against the glTF 2.0 spec.
 
 ## Exclusions
-* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
-* This extension must not be used on a material that also uses `KHR_materials_unlit`.
+- This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+- This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Overview
 
@@ -39,7 +39,7 @@ This extension defines a sheen that can be layered on top of an existing glTF ma
 
 ## Extending Materials
 
-The PBR sheen materials are defined by adding the `KHR_materials_sheen` extension to any compatible glTF material (excluding those listed above). 
+The PBR sheen materials are defined by adding the `KHR_materials_sheen` extension to any compatible glTF material (excluding those listed above).
 For example, the following defines a material like velvet.
 
 ```json
@@ -72,8 +72,8 @@ The sheen BRDF is layered on top of the glTF 2.0 Metallic-Roughness material. If
 
 If a texture is defined:
 
-* The sheen color is computed with : `sheenColor = sheenColorFactor * sampleLinear(sheenColorTexture).rgb`.
-* The sheen roughness is computed with : `sheenRoughness = sheenRoughnessFactor * sample(sheenRoughnessTexture).a`.
+- The sheen color is computed with : `sheenColor = sheenColorFactor * sampleLinear(sheenColorTexture).rgb`.
+- The sheen roughness is computed with : `sheenRoughness = sheenRoughnessFactor * sample(sheenRoughnessTexture).a`.
 
 Otherwise, `sheenColor = sheenColorFactor` and `sheenRoughness = sheenRoughnessFactor`
 
@@ -146,7 +146,7 @@ The Fresnel term may be omitted, i.e., *F* = 1.
 
 The sheen layer can be combined with the base layer with an albedo-scaling technique described in [Conty and Kulla (2017)](#ContyKulla2017). The base layer *f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub> from [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) is scaled with *sheenAlbedoScaling* to avoid energy gain.
 
-*f* = *f*<sub>*sheen*</sub> + (*f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub>) * *sheenAlbedoScaling* 
+*f* = *f*<sub>*sheen*</sub> + (*f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub>) * *sheenAlbedoScaling*
 
 ```glsl
 float max3(vec3 v) { return max(max(v.x, v.y), v.z); }
