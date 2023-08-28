@@ -2,7 +2,7 @@
 
 ## Contributors
 
-* Mike Bond, Adobe, [@miibond](https://twitter.com/miibond)
+- Mike Bond, Adobe, [@miibond](https://twitter.com/miibond)
 
 ## Status
 
@@ -11,12 +11,12 @@ Complete
 ## Dependencies
 
 Written against the glTF 2.0 spec.
-* Requires the `KHR_materials_clearcoat` extension to also be defined on the material
+- Requires the `KHR_materials_clearcoat` extension to also be defined on the material
 
 ## Exclusions
 
-* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
-* This extension must not be used on a material that also uses `KHR_materials_unlit`.
+- This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+- This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Overview
 
