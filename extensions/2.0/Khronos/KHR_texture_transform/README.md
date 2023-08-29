@@ -65,7 +65,7 @@ Though this extension's values are unbounded, they will only produce sane result
 
 ### JSON Schema
 
-[KHR_texture_transform.textureInfo.schema.json](schema/KHR_texture_transform.textureInfo.schema.json)
+[textureInfo.KHR_texture_transform.schema.json](schema/textureInfo.KHR_texture_transform.schema.json)
 
 ### Example JSON
 

@@ -241,7 +241,7 @@ Various techniques are available to trade off physical accuracy against realtime
 
 ## Schema
 
-- [glTF.KHR_materials_transmission.schema.json](schema/glTF.KHR_materials_transmission.schema.json)
+- [material.KHR_materials_transmission.schema.json](schema/material.KHR_materials_transmission.schema.json)
 
 ## Reference
 

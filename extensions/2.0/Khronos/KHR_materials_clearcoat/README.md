@@ -162,7 +162,7 @@ More sophisticated layering techniques that improve the accuracy of the renderin
 
 ## Schema
 
-- [glTF.KHR_materials_clearcoat.schema.json](schema/glTF.KHR_materials_clearcoat.schema.json)
+- [material.KHR_materials_clearcoat.schema.json](schema/material.KHR_materials_clearcoat.schema.json)
 
 ## Reference
 

@@ -114,7 +114,7 @@ color += emissiveFactor.rgb * sRGB_to_Linear(emissiveTexture.rgb) * emissiveStre
 
 ## Schema
 
-- [glTF.KHR_materials_emissive_strength.schema.json](schema/glTF.KHR_materials_emissive_strength.schema.json)
+- [material.KHR_materials_emissive_strength.schema.json](schema/material.KHR_materials_emissive_strength.schema.json)
 
 ## Appendix: Full Khronos Copyright Statement
 

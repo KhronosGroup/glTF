@@ -151,6 +151,10 @@ appropriate parameters on the default material.
 > extension specifying a shading model on the same material, the result is
 > undefined.
 
+## Schema
+
+- [material.KHR_materials_unlit.schema.json](schema/material.KHR_materials_unlit.schema.json)
+
 ## Appendix: Full Khronos Copyright Statement
 
 Copyright 2017-2018 The Khronos Group Inc.
