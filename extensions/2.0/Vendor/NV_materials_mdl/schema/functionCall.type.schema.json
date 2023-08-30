@@ -24,10 +24,6 @@
             "anyOf": [
                 {
                     "type": "string",
-                    "const": ""
-                },
-                {
-                    "type": "string",
                     "const": "varying"
                 },
                 {
@@ -38,7 +34,6 @@
                     "type": "string"
                 }
             ],
-            "default": "",
             "description": "The name of the type modifier."
         },
         "extensions": { },
