@@ -77,7 +77,9 @@ All modules that are referenced by the function calls in the `functionCalls` arr
 | `modulePath` | `string` | Relative path of the module. | No |
 | `name` | `string` | glTF name of the module. | No |
 
-Each module defines either the `uri` property, which contains the URI (or IRI) of an external MDL module file or a data-URI with embedded data, or the `bufferView` property, which points to a buffer view object that contains an MDL module. When the `bufferView` property is defined, then the `mimeType` property must also be defined. The module format must match the `mimeType` property when the latter is defined. The media type of a data-URI containing an MDL module must be `application/vnd.mdl`. If a data-URI or buffer view object is used, then the `modulePath` property must be defined, which specifies a path relative to the glTF file that is used for importing by other modules, e.g., if an MDL module that has the path `./my/embedded/module.mdl` relative to the glTF file is embedded into a buffer view object, then the `modulePath` property must have this path as its value. If `uri` contains a valid path to an external MDL module file, then `modulePath` must not be defined.
+Each module defines either the `uri` property, which contains the URI (or IRI) of an external MDL module file or a data-URI with embedded data, or the `bufferView` property, which points to a buffer view object that contains an MDL module. When the `bufferView` property is defined, then the `mimeType` property must also be defined. The module format must match the `mimeType` property when the latter is defined. If a data-URI or buffer view object is used, then the `modulePath` property must be defined, which specifies a path relative to the glTF file that is used for importing by other modules, e.g., if an MDL module that has the path `./my/embedded/module.mdl` relative to the glTF file is embedded into a buffer view object, then the `modulePath` property must have this path as its value. If `uri` contains a valid path to an external MDL module file, then `modulePath` must not be defined.
+
+This extension currently supports only MDL modules of `application/vnd.mdl` media type.
 
 MDL modules can be located in MDL search paths as defined in Section 2.2 and Appendix F of the [MDL Language Specification](https://github.com/NVIDIA/MDL-SDK/tree/master/doc/specification). If this is the case, then the URI must have the `mdl://` scheme prefix. For example, `./my/module.mdl` and `my/module.mdl` are paths relative to the glTF file, whereas `mdl:///base.mdl` and `mdl:///vMaterials_2/Wood/Wood_Bark.mdl` are paths relative to the MDL search paths.
 
@@ -111,7 +113,9 @@ BSDF measurements (MBSDFs) as defined in Appendix B of the [MDL Language Specifi
 | `mimeType` | `string` | The BSDF measurement's media type. | No |
 | `name` | `string` | glTF name of the BSDF measurement. | No |
 
-Each BSDF measurement defines either the `uri` property, which contains the URI (or IRI) of an external MBSDF file or a data-URI with embedded data, or the `bufferView` property, which points to a buffer view object that contains an MBSDF file. When the `bufferView` property is defined, then the `mimeType` property must also be defined. The MBSDF format must match the `mimeType` property when the latter is defined. The media type of a data-URI containing an MBSDF file must be `application/vnd.mdl-mbsdf`.
+Each BSDF measurement defines either the `uri` property, which contains the URI (or IRI) of an external MBSDF file or a data-URI with embedded data, or the `bufferView` property, which points to a buffer view object that contains an MBSDF file. When the `bufferView` property is defined, then the `mimeType` property must also be defined. The MBSDF format must match the `mimeType` property when the latter is defined.
+
+This extension currently supports only MBSDFs of `application/vnd.mdl-mbsdf` media type.
 
 Example:
 ```json
@@ -147,7 +151,7 @@ The `functionCall.type` object is used to specify the return type of function ca
 | `module` | `integer` | The containing module's index. | No |
 | `typeName` | `string` | The unqualified type name. | :white_check_mark: Yes |
 | `arraySize` | `integer` | The array size. | No |
-| `modifier` | `string` | The type modifier (`"uniform"`, `"varying"`, or `""`). | No, Default: `""` |
+| `modifier` | `string` | The type modifier (`"uniform"` or `"varying"`). | No |
 
 For the built-in MDL data types listed in Section 6 of the [MDL Language Specification](https://github.com/NVIDIA/MDL-SDK/tree/master/doc/specification) the `module` property must not be defined.
 
