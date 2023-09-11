@@ -1,18 +1,23 @@
+<!--
+Copyright 2017-2018 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
+-->
+
 # KHR\_lights\_punctual
 
 ## Contributors
 
-* Norbert Nopper, UX3D, <mailto:nopper@ux3d.io>
-* Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)
-* Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
-* Mike Bond, Adobe, [@MiiBond](https://twitter.com/MiiBond)
+- Norbert Nopper, UX3D, <mailto:nopper@ux3d.io>
+- Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)
+- Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
+- Mike Bond, Adobe, [@MiiBond](https://twitter.com/MiiBond)
 
-Copyright (C) 2017-2018 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2017-2018 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
 
-Complete
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 
@@ -22,13 +27,13 @@ Written against the glTF 2.0 spec.
 
 This extension defines a set of lights for use with glTF 2.0. Lights define light sources within a scene.
 
-Many 3D tools and engines support built-in implementations of light types. Using this extension, tools can export and engines can import these lights. 
+Many 3D tools and engines support built-in implementations of light types. Using this extension, tools can export and engines can import these lights.
 
 This extension defines three "punctual" light types: `directional`, `point` and `spot`. Punctual lights are defined as parameterized, infinitely small points that emit light in well-defined directions and intensities.
 
 These lights are referenced by nodes and inherit the transform of that node.
 
-A conforming implementation of this extension must be able to load light data defined in the asset and has to render the asset using those lights. 
+A conforming implementation of this extension must be able to load light data defined in the asset and has to render the asset using those lights.
 
 ## Defining Lights
 
@@ -65,7 +70,7 @@ Lights must be attached to a node by defining the `extensions.KHR_lights_punctua
                 "light" : 0
             }
         }
-    }            
+    }
 ]
 ```
 
@@ -142,7 +147,7 @@ When a light's `type` is `spot`, the `spot` property on the light is required. I
 
 ## Inner and Outer Cone Angles
 
-There should be a smooth attenuation of brightness between the `innerConeAngle` and `outerConeAngle` angles. In reality, this "angular" attenuation is very complex as it depends on the physical size of the spotlight and the shape of the sheath around the bulb. 
+There should be a smooth attenuation of brightness between the `innerConeAngle` and `outerConeAngle` angles. In reality, this "angular" attenuation is very complex as it depends on the physical size of the spotlight and the shape of the sheath around the bulb.
 
 Conforming implementations will model this angular attenuation with a curve that follows a steeper decline in brightness before leveling off when moving from the inner to the outer angle.
 

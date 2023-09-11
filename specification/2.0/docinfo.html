@@ -1,0 +1,131 @@
+<style>
+/*
+ * Additional style rules for the glTF 2.0 Specification.
+ * Copyright 2021 The Khronos Group Inc.
+ * SPDX-License-Identifier: CC-BY-4.0
+ */
+#header {
+    margin-top: 25px;
+}
+#header .details {
+    padding-top: 1em;
+}
+#footer-text {
+    text-align: center;
+}
+.toc-expander {
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+.toc-expander::before {
+    content: '\f0da';
+    font: normal normal normal 14px/1 FontAwesome;
+    display: block;
+    position: relative;
+    top: -1px;
+    left: -20px;
+    color: rgba(0, 104, 176, 0.4);
+    transition: color 0.25s ease-in-out;
+    margin: 0;
+    padding: 4px 13px 4px 9px;
+    cursor: pointer;
+}
+@media only screen and (min-width: 768px) {
+    .toc-expander::before {
+        color: rgba(0, 104, 176, 0.0);
+    }
+}
+#toc:hover .toc-expander::before {
+    color: rgba(0, 104, 176, 0.4);
+}
+#toc .toc-expander:hover::before {
+    color: #333;
+}
+.toc-expanded > .toc-expander::before {
+    content: '\f0d7';
+}
+.toc-expandable > ul {
+    display: none;
+}
+.toc-expanded > ul {
+    display: block;
+}
+@media only screen and (min-width: 1010px) {
+    #content {
+        max-width: 768px !important;
+        border-left: 1px solid #eee;
+        border-right: 1px solid #eee;
+        padding-left: 60px;
+        padding-right: 60px;
+    }
+    #header {
+        max-width: 768px !important;
+        padding-left: 60px;
+        padding-right: 60px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+@media only screen and (min-width:1400px) {
+    #content {
+        max-width: 1080px !important;
+        padding-left: 100px;
+        padding-right: 100px;
+    }
+    #header {
+        max-width: 1080px !important;
+        padding-left: 100px;
+        padding-right: 100px;
+    }
+}
+#header::before {
+    content: ' ';
+    display: block;
+    width: 340px;
+    height: 170px;
+    background-image: url(data:image/svg+xml;base64,CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMTAwMCA1MDAiPjxwYXRoIGZpbGw9IiM4NkM1NDAiIGQ9Ik00MTkuNjcxIDQwMy43MjdjMTQuNzU3LTE2LjU1NCAyMi41NjEtNDAuNzM1IDIyLjU2MS03My4zMTZWMTQ4LjM3aC0zMS4xNzR2MjguNDhoLS4zODVjLTUuOTA1LTExLjAyOS0xNC4xMTMtMTkuMzAzLTI0LjYzMS0yNC44MjMtMTAuNTI0LTUuNTE1LTIyLjA2OS04LjI3NS0zNC42MzctOC4yNzUtMTcuMTkzIDAtMzEuNjkxIDMuMjcxLTQzLjQ5IDkuODE0LTExLjgwNCA2LjU0My0yMS4yOTkgMTQuOTUtMjguNDc5IDI1LjIwOS03LjE4NyAxMC4yNjQtMTIuMzE1IDIxLjU1Mi0xNS4zOTUgMzMuODY4LTMuMDc5IDEyLjMxNS00LjYxOCAyNC4zNzgtNC42MTggMzYuMTc3IDAgMTMuNjAzIDEuODU4IDI2LjQ5NiA1LjU4MSAzOC42NzkgMy43MTYgMTIuMTkgOS4yOTYgMjIuOSAxNi43NDEgMzIuMTM3IDcuNDM5IDkuMjM2IDE2LjY3NSAxNi41NDggMjcuNzEgMjEuOTM2IDExLjAzNSA1LjM4OCAyMy45OTQgOC4wODIgMzguODc3IDguMDgyIDYuMTU4IDAgMTIuMzc2LS43NjkgMTguNjY1LTIuMzA5IDYuMjkxLTEuNTM5IDEyLjE5LTMuNzgyIDE3LjcxLTYuNzM1IDUuNTE0LTIuOTQ2IDEwLjQ1Mi02LjY2OSAxNC44MTctMTEuMTYgNC4zNi00LjQ4NyA3Ljk1LTkuODEzIDEwLjc3Ni0xNS45NzJoLjc1N3YxMy4wODRjMCAxMS4yOTMtMS4wOTQgMjEuNTUzLTMuMjcyIDMwLjc5LTIuMTgyIDkuMjM3LTUuNzEyIDE3LjEyNy0xMC41ODMgMjMuNjY4LTQuODc3IDYuNTQzLTExLjAzNSAxMS42NzItMTguNDc0IDE1LjM5NS03LjQ0NSAzLjcxNy0xNi41NDkgNS41ODEtMjcuMzI1IDUuNTgxLTUuMzg5IDAtMTEuMDM1LS41NzktMTYuOTM1LTEuNzMyLTIuMTMtLjQxNi00LjItLjkyOC02LjIxMS0xLjUzLTIuMTg4LS43NzItNC4zNTgtMS41NTctNi41MS0yLjM1Ni0uMi0uMDg1LS4zOTktLjE3Mi0uNTk4LS4yNTl2LjAzNmMtODQuNTI3LTMxLjU3Mi0xNDAuMTU3LTg1LjI0Ni0xNDAuMTU3LTE0Ni4xNTIgMC05Ny4xNDcgMTQxLjUyMy0xNzUuODk5IDMxNi4xLTE3NS44OTkgOTcuMjUzIDAgMTg0LjQ1MSAyMi4xNSAyNDIuNDM2IDYwLjU5M0M2NzYuMjQgNzAuMjgzIDU2Mi43NTcgMjUuMDIyIDQzMy4wMDUgMjUgMjM0LjI4MiAyNC45NjUgNzMuMTcgMTI1LjY3NCA3My4xNTMgMjQ5LjkzOGMtLjAxMiA4NC44MjEgNzUuMDQyIDE1OC42OTcgMTg1Ljg5MyAxOTcuMDU4IDg4LjkxOSAzLjA0NCAxMzQuMDQ4LTEzLjQ1OSAxNjAuNjI1LTQzLjI2OXptLTEzLjQyMy0xMzIuMjAxYy0yLjE4MiA5LjIzNi01LjU4IDE3LjUxMi0xMC4xOTkgMjQuODIzLTQuNjE3IDcuMzE0LTEwLjcxNSAxMy4yMTktMTguMjggMTcuNzAzLTcuNTcxIDQuNDkzLTE2Ljc0MiA2LjczNS0yNy41MTcgNi43MzUtMTAuNzc3IDAtMTkuNzYxLTIuMjQyLTI2Ljk0MS02LjczNS03LjE4Ni00LjQ4NC0xMi45NTktMTAuMzktMTcuMzE5LTE3LjcwMy00LjM2Ni03LjMxMS03LjQ0NC0xNS40NTQtOS4yMzctMjQuNDM5LTEuNzk3LTguOTc4LTIuNjk0LTE3Ljk1Ni0yLjY5NC0yNi45NCAwLTkuNDg5IDEuMDg4LTE4LjYgMy4yNzEtMjcuMzI2IDIuMTc4LTguNzE5IDUuNjQxLTE2LjQxNyAxMC4zOTItMjMuMDkyIDQuNzQ1LTYuNjY5IDEwLjgzNy0xMS45OTEgMTguMjgxLTE1Ljk3MiA3LjQzOS0zLjk3NSAxNi40MTctNS45NjUgMjYuOTQxLTUuOTY1IDEwLjI1OSAwIDE4Ljk4NCAyLjA1NyAyNi4xNyA2LjE1OCA3LjE4IDQuMTA3IDEzLjAxOSA5LjU2MSAxNy41MTEgMTYuMzU2IDQuNDg2IDYuODAxIDcuNzU4IDE0LjQzMiA5LjgxNCAyMi44OTkgMi4wNTEgOC40NjcgMy4wNzkgMTcuMDY2IDMuMDc5IDI1Ljc4NiAwIDkuMjM4LTEuMDk1IDE4LjQ3NS0zLjI3MiAyNy43MTJ6bTI4LjYwMSAxNTAuOTU5Yy0xOC44NTQgMTcuMTEzLTUyLjUzMiAzNi42NDctOTguMzk3IDQ0LjMxNiAzMC43MDcgNS4zMzkgNjMuMDY1IDguMTk0IDk2LjQ5IDguMTk4IDEyOS4yMzYuMDI1IDI0Mi40MjUtNDUuMDkxIDMwNS44ODEtMTA5LjA1NS01Ny45ODQgMzguMjA2LTE0NC44MyA1OS45NTEtMjQxLjcyOCA1OS45NTEtMjMuMDE4LjAwMi00MC42MjYtLjgwOS02Mi4yNDYtMy40MXoiLz48cGF0aCBmaWxsPSIjODZDNTQwIiBkPSJNNjMzLjg0IDM0Ny45MDhoLTQ2Ljk2NVYxODkuNzA1aC01OC45MjJ2LTQwLjIzNGgxNjQuODF2NDAuMjM0SDYzMy44NHYxNTguMjAzem0xMzAuMzMzIDBoLTQ2Ljk2N1YxNDkuNDcxaDE0NC45ODh2NDAuMjM0aC05OC4wMjF2MzcuMTI4aDg1LjgwM3Y0MC4yMzNoLTg1LjgwM3Y4MC44NDJ6TTQ2OS41NTQgMTAwLjAzMWgzMi43MTR2MjQ3LjMxM2gtMzIuNzE0VjEwMC4wMzF6bTQzMy4yMjkgNTUuMjU4aC03LjM0OFYxNzQuNGgtNi40MTh2LTE5LjExMWgtNy4zNDd2LTUuNTJoMjEuMTEydjUuNTJ6bTIuODY0LTUuNTJoOS40NTNsNC4yNDIgMTYuNDIxaC4wNjlsNC4yNDMtMTYuNDIxaDkuNDUzVjE3NC40aC02LjAzOHYtMTguNjk3aC0uMDY4bC01LjE3NSAxOC42OTdoLTQuODk3bC01LjE3Ny0xOC42OTdoLS4wNjlWMTc0LjRoLTYuMDM2di0yNC42MzF6Ii8+PC9zdmc+);
+}
+</style>
+<script>
+// Add collapsable sections to HTML TOC.
+function expandFromHash() {
+    var hash = window.location.hash.substring(1);
+    if (hash.length > 0) {
+        var ele = document.getElementById(hash);
+        if (ele) {
+            var match = ele.textContent;
+            document.querySelectorAll('#toc li > a').forEach(function(a) {
+                if (a.textContent === match) {
+                    var p = a.parentNode;
+                    while (p && p.id !== 'toc') {
+                        if (p.classList.contains('toc-expandable'))
+                        {
+                            p.classList.add('toc-expanded');
+                        }
+                        p = p.parentNode;
+                    }
+                }
+            });
+        }
+    }
+}
+window.addEventListener('hashchange', expandFromHash, false);
+window.addEventListener('DOMContentLoaded', function() {
+    function addToggle(li, triangle) {
+        triangle.addEventListener('click', function() {
+            li.classList.toggle('toc-expanded');
+        }, false);
+    }
+    document.querySelectorAll('#toc li').forEach(function(li) {
+        if (li.querySelector('ul')) {
+            li.classList.add('toc-expandable');
+            var triangle = document.createElement('div');
+            triangle.className = 'toc-expander';
+            li.insertBefore(triangle, li.childNodes[0]);
+            addToggle(li, triangle);
+        }
+    });
+    expandFromHash();
+}, false);
+</script>

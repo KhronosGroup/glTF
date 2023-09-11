@@ -7,7 +7,7 @@
 
 ## Status
 
-Complete
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 
@@ -109,4 +109,4 @@ CesiumJS uses it to significantly cut load times for massive models that contain
 
 Google's [WebP developer page](https://developers.google.com/speed/webp/) provides information about the format as well as [pre-compiled and source code versions](https://developers.google.com/speed/webp/download) of an encoder and a decoder. The [WebP Compression Study](https://developers.google.com/speed/webp/docs/webp_study) is a detailed comparison between JPEG and WebP.
 
-For browsers that do not natively support WebP, the libraries [libwebpjs](http://libwebpjs.appspot.com) and [webp_js](https://webmproject.github.io/libwebp-demo/webp_js/index.html) decode WebP images in JavaScript. [Sharp](http://sharp.pixelplumbing.com/en/stable/) is a NodeJS library for fast encode/decode of WebP using native modules (built on top of Google's implementation above).
+For browsers that do not natively support WebP, [webp_js](https://chromium.googlesource.com/webm/libwebp/+/HEAD/webp_js/README.md) decodes WebP images in JavaScript. [Sharp](http://sharp.pixelplumbing.com/en/stable/) is a NodeJS library for fast encode/decode of WebP using native modules (built on top of Google's implementation above).

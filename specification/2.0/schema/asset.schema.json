@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "asset.schema.json",
     "title": "Asset",
     "type": "object",
     "description": "Metadata about the glTF asset.",
@@ -15,12 +16,12 @@
         },
         "version": {
             "type": "string",
-            "description": "The glTF version that this asset targets.",
+            "description": "The glTF version in the form of `<major>.<minor>` that this asset targets.",
             "pattern": "^[0-9]+\\.[0-9]+$"
         },
         "minVersion": {
             "type": "string",
-            "description": "The minimum glTF version that this asset targets.",
+            "description": "The minimum glTF version in the form of `<major>.<minor>` that this asset targets. This property **MUST NOT** be greater than the asset version.",
             "pattern": "^[0-9]+\\.[0-9]+$"
         },
         "extensions": { },

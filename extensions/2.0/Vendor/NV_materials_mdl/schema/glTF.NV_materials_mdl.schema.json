@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "$id": "glTF.NV_materials_mdl.schema.json",
+    "title": "NV_materials_mdl glTF extension",
+    "type": "object",
+    "description": "glTF extension that enables using MDL materials.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "modules": {
+            "type": "array",
+            "items": {
+                "$ref": "module.schema.json"
+            },
+            "minItems": 1,
+            "description": "The list of all MDL modules."
+        },
+        "functionCalls": {
+            "type": "array",
+            "items": {
+                "$ref": "functionCall.schema.json"
+            },
+            "minItems": 1,
+            "description": "The list of all function calls."
+        },
+        "bsdfMeasurements": {
+            "type": "array",
+            "items": {
+                "$ref": "bsdfMeasurement.schema.json"
+            },
+            "minItems": 1,
+            "description": "The list of all BSDF measurements."
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}

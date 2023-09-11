@@ -1,0 +1,46 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_variants glTF Mesh Primitive Extension",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "mappings": {
+            "type": "array",
+            "description": "A list of material to variant mappings",
+            "gltf_detailedDescription": "An array of object values that associate an indexed material to a set of variants.",
+            "items": {
+                "type": "object",
+                "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+                "properties": {
+                    "variants": {
+                        "uniqueItems": true,
+                        "type": "array",
+                        "description": "An array of variant index values.",
+                        "items": {
+                            "allOf": [ {"$ref": "glTFid.schema.json" } ]
+                        },
+                        "minItems": 1,
+                        "gltf_detailedDescription": "An array of index values that reference variants defined in the glTF root's extension object."
+                    },
+                    "material": {
+                        "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                        "description": "The material associated with the set of variants.",
+                        "gltf_detailedDescription": "A reference to the material associated with the given array of variants."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The user-defined name of this variant material mapping.",
+                        "gltf_detailedDescription": "The optional user-defined name of this variant material mapping.  This is not necessarily unique."
+                    },
+                    "extras": { },
+                    "extensions": { }
+                },
+                "required": [ "variants", "material" ]
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "mappings" ]
+}

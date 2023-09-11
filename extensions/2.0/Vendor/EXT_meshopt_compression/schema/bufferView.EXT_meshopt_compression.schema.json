@@ -1,0 +1,51 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_meshopt_compression bufferView extension",
+    "type": "object",
+    "description": "Compressed data for bufferView.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "buffer": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the buffer with compressed data."
+        },
+        "byteOffset": {
+            "type": "integer",
+            "description": "The offset into the buffer in bytes.",
+            "minimum": 0,
+            "default": 0
+        },
+        "byteLength": {
+            "type": "integer",
+            "description": "The length of the compressed data in bytes.",
+            "minimum": 1
+        },
+        "byteStride": {
+            "type": "integer",
+            "description": "The stride, in bytes.",
+            "minimum": 2,
+            "maximum": 256
+        },
+        "count": {
+            "type": "integer",
+            "description": "The number of elements.",
+            "minimum": 1
+        },
+        "mode": {
+            "type": "string",
+            "description": "The compression mode.",
+            "enum": [ "ATTRIBUTES", "TRIANGLES", "INDICES" ]
+        },
+        "filter": {
+            "type": "string",
+            "description": "The compression filter.",
+            "enum": [ "NONE", "OCTAHEDRAL", "QUATERNION", "EXPONENTIAL" ],
+            "default": "NONE"
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "buffer", "byteLength", "byteStride", "count", "mode"
+    ]
+}

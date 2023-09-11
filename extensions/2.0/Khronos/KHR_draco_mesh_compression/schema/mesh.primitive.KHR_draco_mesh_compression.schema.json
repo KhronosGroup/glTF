@@ -1,0 +1,23 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_draco_mesh_compression glTF Mesh Primitive Extension",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "bufferView": {
+            "allOf": [ { "$ref" : "glTFid.schema.json" } ],
+            "description": "The index of the bufferView."
+        },
+        "attributes": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+                "$ref": "glTFid.schema.json"
+            },
+            "description": "A dictionary object, where each key corresponds to an attribute and its unique attribute id stored in the compressed geometry."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "bufferView", "attributes" ]
+}

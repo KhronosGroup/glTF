@@ -1,0 +1,92 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "$id": "functionCall.argument.schema.json",
+    "title": "Function Call Argument",
+    "type": "object",
+    "description": "Named function call argument. Can be another function call or a constant value.",
+    "allOf": [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The name of the named argument."
+        },
+        "type": {
+            "allOf": [ { "$ref": "functionCall.type.schema.json" } ],
+            "description": "The type of the value argument.  This field **MUST** be defined if `value` is defined and **MUST NOT** be defined if `functionCall` is defined."
+        },
+        "functionCall": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The ID of a function call.  This field **MUST NOT** be defined if `value` is defined."
+        },
+        "value": {
+            "anyOf": [
+                { "type": "boolean" },
+                { "type": "integer" },
+                { "type": "number" },
+                { "type": "string" },
+                {
+                    "type": "array",
+                    "items": { 
+                        "anyOf": [
+                            { "type": "boolean" },
+                            { "type": "integer" },
+                            { "type": "number" }
+                        ]
+                    },
+                    "minItems": 2,
+                    "maxItems": 4
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 4,
+                    "maxItems": 16
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            { "type": "boolean" },
+                            { "type": "integer" },
+                            { "type": "number" },
+                            { "type": "string" },
+                            {
+                                "type": "array",
+                                "items": { 
+                                    "anyOf": [
+                                        { "type": "boolean" },
+                                        { "type": "integer" },
+                                        { "type": "number" }
+                                    ]
+                                },
+                                "minItems": 2,
+                                "maxItems": 4
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                },
+                                "minItems": 4,
+                                "maxItems": 16
+                            }
+                        ]
+                    }
+                }
+            ],
+            "description": "The literal value of the value argument.  This field **MUST NOT** be defined if `functionCall` is defined."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "dependencies": {
+        "value": [ "type" ]
+    },
+    "oneOf": [
+        { "required": [ "name", "functionCall" ] },
+        { "required": [ "name", "value" ] }
+    ]
+}

@@ -1,0 +1,37 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title" : "MPEG_accessor_timed",
+    "type" : "object",
+    "description": "glTF extension to specify timed accessor format formats",
+    "allOf": [ { "$ref": "glTFProperty.schema.json"} ],
+    "properties" : {
+        "immutable": {
+            "type": "boolean",
+            "default": true,
+            "description": "This flag indicates if the accessor information may change over time",
+            "gltf_detailedDescription": "This flag equal to false indicates the accessor information componentType, type, and normalized may change over time. The changing values of componentType, type and normalized are provided through accessor information header. This flag equal to true indicates the accessor information componentType, type, and normalized do not change over time and are not present in the accessor information header. Note that count, max, min, and byteOffset are expected to change and are always included as part of the timed accessor information header."
+        },
+        "bufferView": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "This property provides the index in the bufferViews array to a bufferView element that points to the timed accessor information header. ",
+            "gltf_detailedDescription": "This property provides the index in the bufferViews array to a bufferView element that points to the timed accessor information header as described in ISO/IEC 23090-14:Table 8. byteLength field of the bufferView element indicates the size of the timed accessor information header. The buffer properties in the bufferView element shall point to the same buffer as the bufferView in the containing accessor object. In the absence of the bufferView attribute, it shall be assumed that the buffer has no dynamic header. In that case, the immutable flag shall be present and shall be set to True."
+        },
+        "suggestedUpdateRate": {
+            "type": "number",
+            "default": 25.0,
+            "minimum": 0.0,
+            "description": "This property provides the frequency at which the renderer is recommended to poll the underlying buffer for new data.",
+            "gltf_detailedDescription": "The suggestedUpdateRate provides the frequency at which the renderer is recommended to poll the underlying buffer for new data. The rate is provided in number of changes per second."
+        },
+        "extensions": {},
+        "extras": {}
+
+    },
+    "if": {
+        "properties": { "immutable": {"const": false} },
+        "required": ["immutable"]
+    },
+    "then": {
+        "required": ["bufferView"]
+    }    
+}

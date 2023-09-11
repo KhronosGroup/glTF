@@ -67,7 +67,7 @@ Cube faces are defined in the following order and adhere to the standard orienta
 <figcaption><em>Cube map orientation reference.<br>Image by <a href="//commons.wikimedia.org/w/index.php?title=User:Microwerx&amp;action=edit&amp;redlink=1" class="new" title="User:Microwerx (page does not exist)">Microwerx</a> - <span class="int-own-work" lang="en">Own work</span>, <a href="https://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0">CC BY-SA 4.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=48935423">Link</a></em></figcaption>
 </figure>
 
-Note that for this extension, each saved image must be flipped about its vertical axis to correspond with the way <a href="https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#images">glTF references texture space</a>.
+Note that for this extension, each saved image must be flipped about its vertical axis to correspond with the way <a href="https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#images">glTF references texture space</a>.
 
 https://en.wikipedia.org/wiki/Cube_mapping
 
@@ -111,7 +111,7 @@ Each scene can have a single IBL light attached to it by defining the `extension
                 "light" : 0
             }
         }
-    }            
+    }
 ]
 ```
 
@@ -126,3 +126,6 @@ Each scene can have a single IBL light attached to it by defining the `extension
 | `specularImages` | Declares an array of the first N mips of the prefiltered cubemap. Each mip is, in turn, defined with an array of 6 images, one for each cube face. i.e. this is an Nx6 array. | :white_check_mark: Yes |
 | `specularImageSize` | The dimension (in pixels) of the first specular mip. This is needed to determine, pre-load, the total number of mips needed. | :white_check_mark: Yes |
 
+## License
+
+Adobe and Microsoft have made this Specification available under the Open Web Foundation Agreement Version 1.0, which is available at https://www.openwebfoundation.org/the-agreements/the-owf-1-0-agreements-granted-claims/owfa-1-0.
