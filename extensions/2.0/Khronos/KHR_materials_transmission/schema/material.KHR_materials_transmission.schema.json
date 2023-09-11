@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_materials_transmission glTF extension",
+    "title": "KHR_materials_transmission glTF Material Extension",
     "type": "object",
     "description": "glTF extension that defines the optical transmission of a material.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

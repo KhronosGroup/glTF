@@ -1522,7 +1522,7 @@ The order of joints is defined by the `skin.joints` array and it **MUST** match 
 Although the `skeleton` property is not needed for computing skinning transforms, it may be used to provide a specific "`pivot point`" for the skinned geometry.
 ====
 
-An accessor referenced by `inverseBindMatrices` **MUST** have floating-point components of `"MAT4"` type. The number of elements of the accessor referenced by `inverseBindMatrices` **MUST** greater than or equal to the number of `joints` elements. The fourth row of each matrix **MUST** be set to `[0.0, 0.0, 0.0, 1.0]`.
+An accessor referenced by `inverseBindMatrices` **MUST** have floating-point components of `"MAT4"` type. The number of elements of the accessor referenced by `inverseBindMatrices` **MUST** be greater than or equal to the number of `joints` elements. The fourth row of each matrix **MUST** be set to `[0.0, 0.0, 0.0, 1.0]`.
 
 [NOTE]
 .Implementation Note

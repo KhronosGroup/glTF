@@ -7,14 +7,14 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Contributors
 
-* Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
-* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
-* Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)
-* Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
-* Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
-* Romain Guy, Google [@romainguy](https://twitter.com/romainguy)
-* Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
-* Alex Wood, AGI [@abwood](https://twitter.com/abwood)
+- Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+- Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
+- Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)
+- Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
+- Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
+- Romain Guy, Google [@romainguy](https://twitter.com/romainguy)
+- Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
+- Alex Wood, AGI [@abwood](https://twitter.com/abwood)
 
 Copyright 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -29,8 +29,8 @@ Written against the glTF 2.0 spec.
 
 ## Exclusions
 
-* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
-* This extension must not be used on a material that also uses `KHR_materials_unlit`.
+- This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+- This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Overview
 
@@ -153,32 +153,32 @@ coated_emission = emission * (0.04 + (1 - 0.04) * (1 - NdotV)^5)
 In order to make the material energy conserving with a simple layering function, we compute the microfacet Fresnel term with `NdotV` instead of `VdotH`. That means that we ignore the orientation of the microsurface. As the clearcoat roughness is usually very low the microfacets orientation is very close to the normal direction, and `NdotV ≈ NdotL`.
 
 The simple layering function ignores many effects that occur between clearcoat and base layer. For example:
-* The clearcoat layer is assumed to be infinitely thin. There is no refraction.
-* The index of refraction of clearcoat and base layer do not influence each other. The Fresnel terms are computed independently.
-* There is no scattering between layers.
-* There is no diffraction.
+- The clearcoat layer is assumed to be infinitely thin. There is no refraction.
+- The index of refraction of clearcoat and base layer do not influence each other. The Fresnel terms are computed independently.
+- There is no scattering between layers.
+- There is no diffraction.
 
 More sophisticated layering techniques that improve the accuracy of the renderings are described in [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation).
 
 ## Schema
 
-- [glTF.KHR_materials_clearcoat.schema.json](schema/glTF.KHR_materials_clearcoat.schema.json)
+- [material.KHR_materials_clearcoat.schema.json](schema/material.KHR_materials_clearcoat.schema.json)
 
 ## Reference
 
 ### Theory, Documentation and Implementations
 
-[Autodesk Standard Surface - Coating](https://autodesk.github.io/standard-surface/#closures/coating)  
-[AxF - Appearance exchange Format](https://www.xrite.com/-/media/xrite/files/whitepaper_pdfs/axf/axf_whitepaper_en.pdf)  
-[Blender Principled BSDF](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/principled.html)  
-[Disney BRDF Explorer - disney.brdf](https://github.com/wdas/brdf/blob/master/src/brdfs/disney.brdf)  
-[Enterprise PBR Shading Model - Clearcoat](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2020x.md.html#components/clearcoat)  
-[Filament Material models - Clear coat](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/clearcoat)   
-[Physically-Based Shading at Disney](https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf)  
-[Substance Painter - Updated Clear Coat Shader](https://docs.substance3d.com/spdoc/version-2018-3-172823522.html#Version2018.3-UpdatedClearCoatShader)  
-[THE PBR GUIDE BY ALLEGORITHMIC - PART 1](https://academy.substance3d.com/courses/the-pbr-guide-part-1)  
-[THE PBR GUIDE BY ALLEGORITHMIC - PART 2](https://academy.substance3d.com/courses/the-pbr-guide-part-2)  
-[Unreal Engine 4 Material - Clear Coat](https://docs.unrealengine.com/en-US/Engine/Rendering/Materials/MaterialInputs/index.html#clearcoat)  
+- [Autodesk Standard Surface - Coating](https://autodesk.github.io/standard-surface/#closures/coating)
+- [AxF - Appearance exchange Format](https://www.xrite.com/-/media/xrite/files/whitepaper_pdfs/axf/axf_whitepaper_en.pdf)
+- [Blender Principled BSDF](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/principled.html)
+- [Disney BRDF Explorer - disney.brdf](https://github.com/wdas/brdf/blob/master/src/brdfs/disney.brdf)
+- [Enterprise PBR Shading Model - Clearcoat](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2020x.md.html#components/clearcoat)
+- [Filament Material models - Clear coat](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/clearcoat)
+- [Physically-Based Shading at Disney](https://disney-animation.s3.amazonaws.com/library/s2012_pbs_disney_brdf_notes_v2.pdf)
+- [Substance Painter - Updated Clear Coat Shader](https://docs.substance3d.com/spdoc/version-2018-3-172823522.html#Version2018.3-UpdatedClearCoatShader)
+- [THE PBR GUIDE BY ALLEGORITHMIC - PART 1](https://academy.substance3d.com/courses/the-pbr-guide-part-1)
+- [THE PBR GUIDE BY ALLEGORITHMIC - PART 2](https://academy.substance3d.com/courses/the-pbr-guide-part-2)
+- [Unreal Engine 4 Material - Clear Coat](https://docs.unrealengine.com/en-US/Engine/Rendering/Materials/MaterialInputs/index.html#clearcoat)
 
 ## Appendix: Full Khronos Copyright Statement
 

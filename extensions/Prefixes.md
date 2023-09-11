@@ -21,19 +21,22 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `ADOBE` | Adobe, Inc. | https://adobe.com/ | [#1431](https://github.com/KhronosGroup/glTF/issues/1431) |
 | `AGI` | Analytical Graphics, Inc. | https://agi.com/ | [#1405](https://github.com/KhronosGroup/glTF/pull/1405) |
 | `AGT` | Augment SAS | https://www.augment.com/ | [#1571](https://github.com/KhronosGroup/glTF/issues/1571) |
-| `ALCM` | Alchemisten AG | https://alchemisten.ag/<br>`viktor.spadi at alchemisten.ag` | [#1708](https://github.com/KhronosGroup/glTF/issues/1708) |
+| `ALCM` | Alchemisten AG | https://alchemisten.ag/<br>`viktor.gerbert at alchemisten.ag` | [#1708](https://github.com/KhronosGroup/glTF/issues/1708) |
 | `ALI` | Alibaba Group | https://www.alibaba.com/ | [#1160](https://github.com/KhronosGroup/glTF/pull/1160) |
 | `AMZN` | Amazon | https://www.amazon.com/<br>`jasoncan at amazon.com` | [#1233](https://github.com/KhronosGroup/glTF/issues/1233) |
 | `ANIMECH` | Animech AB | http://animech.com/ | [#1780](https://github.com/KhronosGroup/glTF/issues/1780) |
 | `ASOBO` | Asobo Studio | https://www.asobostudio.com/ | [#1989](https://github.com/KhronosGroup/glTF/issues/1989) |
 | `AUDACES` | Audaces Automacao Industrial | https://audaces.com/<br>`edward.boszczowski at audaces.com` | [#2231](https://github.com/KhronosGroup/glTF/issues/2231) |
 | `AVR` | AltspaceVR, Inc. | https://altvr.com/ | [#1009](https://github.com/KhronosGroup/glTF/issues/1009) |
+| `BENTLEY` | Bentley Systems, Inc. | https://www.bentley.com/<br>`paul.connelly at bentley.com` | [#2259](https://github.com/KhronosGroup/glTF/issues/2259) |
 | `BLENDER` | Blender Foundation | https://www.blender.org/ | [#865](https://github.com/KhronosGroup/glTF/issues/865) |
+| `C3D` | Core3D, Inc. | https://core3d.io/ | [#2264](https://github.com/KhronosGroup/glTF/issues/2264) |
 | `CAPTURE` | Capture Visualisation AB | https://www.capture.se/ | [#1732](https://github.com/KhronosGroup/glTF/issues/1732) |
 | `CESIUM` | Cesium GS, Inc. | https://cesium.com/ |  |
 | `CITRUS` | Citrus Toolbox | https://github.com/KenzieMac130/CitrusToolbox | [#1962](https://github.com/KhronosGroup/glTF/issues/1962) |
 | `CLO` | CLO Virtual Fashion | https://www.clo3d.com/ | [#1944](https://github.com/KhronosGroup/glTF/issues/1944) |
 | `CVTOOLS` | Canvas Tools | https://github.com/MackeyK24/CanvasTools | [#1389](https://github.com/KhronosGroup/glTF/issues/1389) |
+| `DGG` | Darmstadt Graphics Group GmbH | https://dgg3d.com/ | [#2303](https://github.com/KhronosGroup/glTF/issues/2303) |
 | `DOTV` | DotVision | https://dotvision.com/<br>`guillaume.pelletier at dotvision.com` | [#2192](https://github.com/KhronosGroup/glTF/issues/2192) |
 | `EMBARK` | Embark Studios AB | https://www.embark-studios.com/ | [#2097](https://github.com/KhronosGroup/glTF/issues/2097) |
 | `EPIC` | Epic Games, Inc. | https://www.epicgames.com/ | [#1905](https://github.com/KhronosGroup/glTF/issues/1905) |
@@ -54,7 +57,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `MESHOPT` | meshoptimizer | https://meshoptimizer.org/ | [#1634](https://github.com/KhronosGroup/glTF/issues/1634) |
 | `MIRROR` | The Mirror Megaverse Inc. | https://www.themirror.space/<br>`khronos at themirror.space` | [#2230](https://github.com/KhronosGroup/glTF/issues/2230) |
 | `MOZ` | Mozilla Corporation | https://www.mozilla.org/ | [#1349](https://github.com/KhronosGroup/glTF/issues/1349) |
-| `MPEG` | The Moving Picture Experts Group | https://mpeg.chiariglione.org/standards/mpeg-i | [#1754](https://github.com/KhronosGroup/glTF/issues/1754) |
+| `MPEG` | The Moving Picture Experts Group | https://www.mpeg.org | [#1754](https://github.com/KhronosGroup/glTF/issues/1754) |
 | `MSFT` | Microsoft Corporation | https://www.microsoft.com/ | [#1164](https://github.com/KhronosGroup/glTF/pull/1164) |
 | `MTTR` | Matterport, Inc. | https://matterport.com/ | [#2150](https://github.com/KhronosGroup/glTF/issues/2150) |
 | `MX` | The Matrix.org Foundation | https://matrix.org/ | [#2126](https://github.com/KhronosGroup/glTF/issues/2126) |
@@ -85,3 +88,4 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `VRMC` | VRM Consortium | https://vrm-consortium.org/ | [#1874](https://github.com/KhronosGroup/glTF/issues/1874) |
 | `VSEKAI` | V-Sekai | https://v-sekai.org/<br>`ernest.lee at chibifire.com`<br>`xn.lyuma at gmail.com` | [#2206](https://github.com/KhronosGroup/glTF/issues/2206) |
 | `WEB3D` | The Web3D Consortium, Inc. | https://www.web3d.org/ |  |
+| `WGE` | Webgears Inc. | https://webgears.app/<br>`contact at webgears.app` | [#2299](https://github.com/KhronosGroup/glTF/issues/2299) |

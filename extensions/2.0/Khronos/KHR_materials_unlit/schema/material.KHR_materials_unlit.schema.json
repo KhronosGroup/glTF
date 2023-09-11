@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_materials_unlit glTF extension",
+    "title": "KHR_materials_unlit glTF Material Extension",
     "type": "object",
     "description": "glTF extension that defines the unlit material model.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

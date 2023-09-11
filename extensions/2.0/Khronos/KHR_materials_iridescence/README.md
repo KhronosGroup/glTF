@@ -2,16 +2,16 @@
 
 ## Contributors
 
-* Pascal Schoen, Adidas
-* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
-* Ben Houston, Threekit, [@bhouston](https://twitter.com/BenHouston3D)
-* Mathias Kanzler, UX3D
-* Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
-* Jim Eckerlein, UX3D
-* Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
-* Eric Chadwick, Wayfair, [echadwick-wayfair](https://github.com/echadwick-wayfair)
-* Alex Wood, AGI [@abwood](https://twitter.com/abwood)
-* Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
+- Pascal Schoen, Adidas
+- Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
+- Ben Houston, Threekit, [@bhouston](https://twitter.com/BenHouston3D)
+- Mathias Kanzler, UX3D
+- Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+- Jim Eckerlein, UX3D
+- Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
+- Eric Chadwick, Wayfair, [echadwick-wayfair](https://github.com/echadwick-wayfair)
+- Alex Wood, AGI [@abwood](https://twitter.com/abwood)
+- Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
 
 Copyright (C) 2018-2022 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -26,8 +26,8 @@ Written against the glTF 2.0 spec.
 
 ## Exclusions
 
-* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
-* This extension must not be used on a material that also uses `KHR_materials_unlit`.
+- This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+- This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Overview
 
@@ -287,7 +287,7 @@ vec3 Fresnel0ToIor(vec3 F0) {
 }
 ```
 
-This simple formula is used for both dielectrics and metals. While it is physically correct for dielectric materials, it's only an approximation for metals, which are usually described using a complex IOR with an additional extinction factor. Such a value cannot be accurately inferred from the F0 value and is thus assumed to be `0.0`. 
+This simple formula is used for both dielectrics and metals. While it is physically correct for dielectric materials, it's only an approximation for metals, which are usually described using a complex IOR with an additional extinction factor. Such a value cannot be accurately inferred from the F0 value and is thus assumed to be `0.0`.
 
 To calculate the reflectance factors at normal incidence of both interfaces (`R0` and `R1`), the special case is used as is:
 
@@ -299,7 +299,7 @@ float IorToFresnel0(float transmittedIor, float incidentIor) {
 }
 ```
 
-To calculate the reflectances `R12` and `R23` at the viewing angles <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_1"> (angle hitting the thin-film layer) and <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_2"> (angle after refraction in the thin-film) Schlick Fresnel is again used. This approximation allows to eliminate the split into S and P polarization for the exact Fresnel equations. 
+To calculate the reflectances `R12` and `R23` at the viewing angles <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_1"> (angle hitting the thin-film layer) and <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_2"> (angle after refraction in the thin-film) Schlick Fresnel is again used. This approximation allows to eliminate the split into S and P polarization for the exact Fresnel equations.
 
 <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_2"> can be calculated using Snell's law (with <img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\eta_1"> being `outsideIor` and <img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\eta_2"> being `iridescenceIor`):
 
@@ -349,7 +349,7 @@ vec3 phi = vec3(phi21) + phi23;
 
 #### **Analytic Spectral Integration**
 
-Spectral integration is performed in the Fourier space. 
+Spectral integration is performed in the Fourier space.
 
 ```glsl
 // Compound terms
@@ -421,7 +421,7 @@ The full derivation of the fast analytical spectral integration is described in 
 
 ## Schema
 
-[glTF.KHR_materials_iridescence.schema.json](schema/glTF.KHR_materials_iridescence.schema.json)
+[material.KHR_materials_iridescence.schema.json](schema/material.KHR_materials_iridescence.schema.json)
 
 ## Appendix: Full Khronos Copyright Statement
 

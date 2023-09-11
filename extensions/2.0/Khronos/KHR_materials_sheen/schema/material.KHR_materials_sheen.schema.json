@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_materials_sheen glTF extension",
+    "title": "KHR_materials_sheen glTF Material Extension",
     "type": "object",
     "description": "glTF extension that defines the sheen material model.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
