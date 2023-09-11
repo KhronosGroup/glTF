@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "ADOBE_materials_clearcoat_tint glTF extension",
+    "title": "ADOBE_materials_clearcoat_tint glTF Material Extension",
     "type": "object",
     "description": "glTF extension that defines the colour tint of the clearcoat.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
