@@ -120,9 +120,9 @@ While the extension JSON specifies a separate buffer to source compressed data f
 { "byteLength": 1432878 }
 ```
 
-The `byteLength` property of such a dummy buffer **MUST** be sufficiently large to contain all uncompressed bufferViews referencing it.
+The `byteLength` property of such a placeholder buffer **MUST** be sufficiently large to contain all uncompressed bufferViews referencing it.
 
-When stored in a GLB file, the dummy buffer should have index 1 or above, to avoid conflicts with GLB binary buffer.
+When stored in a GLB file, the placeholder buffer should have index 1 or above, to avoid conflicts with GLB binary buffer.
 
 This extension allows buffers to be optionally tagged as fallback by using the `fallback` attribute as follows:
 
