@@ -120,7 +120,7 @@ While the extension JSON specifies a separate buffer to source compressed data f
 { "byteLength": 1432878 }
 ```
 
-The `byteLength` property of such a placeholder buffer **MUST** be sufficiently large to contain all uncompressed bufferViews referencing it.
+The `byteLength` property of such a placeholder buffer **MUST** be sufficiently large to contain all uncompressed buffer views referencing it.
 
 When stored in a GLB file, the placeholder buffer should have index 1 or above, to avoid conflicts with GLB binary buffer.
 
