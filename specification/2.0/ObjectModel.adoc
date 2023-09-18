@@ -149,13 +149,13 @@ float3::
 a three-component vector of *float* values read from or set to JSON array elements with indices 0, 1, and 2
 
 float4::
-a three-component vector of *float* values read from or set to JSON array elements with indices 0, 1, 2, and 3
+a four-component vector of *float* values read from or set to JSON array elements with indices 0, 1, 2, and 3
 
 float4x4::
 a 4x4 matrix of *float* values
 
 int::
-an integer type with width of at least 32 bits
+a signed integer type with width of at least 32 bits
 
 [[core-pointers]]
 = Core Pointers
