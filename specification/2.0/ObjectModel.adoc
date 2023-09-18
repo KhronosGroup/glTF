@@ -239,6 +239,8 @@ The following pointer templates represent mutable properties defined in glTF 2.0
 | `/materials/{}/pbrMetallicRoughness/metallicRoughnessTexture/extensions/KHR_texture_transform/scale`    | `float2`
 |====
 
+By definition, this extension applies to all properties of `textureInfo` type, including texture properties defined in other glTF 2.0 extensions.
+
 == KHR_lights_punctual
 
 [options="header",cols="50%,15%"]
@@ -421,6 +423,59 @@ Additional read-only properties
 | `/materials/{}/extensions/KHR_materials_volume/thicknessTexture/extensions/KHR_texture_transform/offset`   | `float2`
 | `/materials/{}/extensions/KHR_materials_volume/thicknessTexture/extensions/KHR_texture_transform/rotation` | `float`
 | `/materials/{}/extensions/KHR_materials_volume/thicknessTexture/extensions/KHR_texture_transform/scale`    | `float2`
+|====
+
+== EXT_lights_ies
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                          |  Type
+| `/nodes/{}/extensions/EXT_lights_ies/multiplier` | `float`
+| `/nodes/{}/extensions/EXT_lights_ies/color`      | `float3`
+|====
+
+Additional read-only properties
+
+[options="header",cols="50%,15%,35%"]
+|====
+| Pointer                                    |  Type | Comment
+| `/extensions/EXT_lights_ies/lights.length` | `int` | Number of IES light profiles
+|====
+
+== EXT_lights_image_based
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                  |  Type
+| `/extensions/EXT_lights_image_based/lights/{}/rotation`  | `float4`
+| `/extensions/EXT_lights_image_based/lights/{}/intensity` | `float`
+|====
+
+Additional read-only properties
+
+[options="header",cols="50%,15%,35%"]
+|====
+| Pointer                                            |  Type | Comment
+| `/extensions/EXT_lights_image_based/lights.length` | `int` | Number of image-based lights
+|====
+
+== ADOBE_materials_clearcoat_specular
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                               |  Type
+| `/materials/{}/extensions/ADOBE_materials_clearcoat_specular/clearcoatIor`            | `float`
+| `/materials/{}/extensions/ADOBE_materials_clearcoat_specular/clearcoatSpecularFactor` | `float`
+|====
+
+=== Interaction with KHR_texture_transform
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                                                                          |  Type
+| `/materials/{}/extensions/ADOBE_materials_clearcoat_specular/clearcoatSpecularTexture/extensions/KHR_texture_transform/offset`   | `float2`
+| `/materials/{}/extensions/ADOBE_materials_clearcoat_specular/clearcoatSpecularTexture/extensions/KHR_texture_transform/rotation` | `float`
+| `/materials/{}/extensions/ADOBE_materials_clearcoat_specular/clearcoatSpecularTexture/extensions/KHR_texture_transform/scale`    | `float2`
 |====
 
 == ADOBE_materials_clearcoat_tint
