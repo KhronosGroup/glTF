@@ -157,6 +157,16 @@ The following documents are referenced by normative sections of the specificatio
 Bradner, S., _Key words for use in RFCs to Indicate Requirement Levels_, BCP 14, RFC 2119, March 1997. Leiba, B., _Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words_, BCP 14, RFC 8174, May 2017.
 <https://www.rfc-editor.org/info/bcp14>
 
+* [[ieee-754]]
+ISO/IEC 60559
+_Floating-point arithmetic_
+<https://www.iso.org/standard/80985.html>
+
+* [[ecma-262]]
+ECMA-262
+_ECMAScript® Language Specification_
+<https://www.ecma-international.org/publications-and-standards/standards/ecma-262/>
+
 [[motivation]]
 == Motivation and Design Goals (Informative)
 
@@ -204,21 +214,520 @@ These limitations are not defined in this specification.
 [[concepts-general]]
 == Graphs
 
-A behavior graph is a JSON object containing nodes. It **MAY** also contain custom variables and custom events.
+A behavior graph is a JSON object containing _nodes_. It **MAY** also contain custom variables and custom events.
 
 Behavior graphs are directed graphs with no directed cycles.
 
 [[nodes]]
-== Nodes
+== Nodes and Sockets
 
-A node is a JSON object, which represents an executable item. A node is executed when its input flow socket is reached by or when one of its output value sockets is requested by the behavior graph engine. The node executes its logic and can then execute any number (including zero) of outgoing flow sockets.
+A _node_ is a JSON object, which represents an executable item. Each node is defined by its _type_ and a set of _sockets_. There are four kinds of sockets.
 
-A node **MAY** have a set of parameters, each of which **MUST** be provided statically in the node object, resolved at runtime through subgraph executions, or have a default value. Nodes **MAY** be configurable through static properties that **MAY** affect the node's behavior and the number of its sockets.
+_Output value sockets_ represent data initialized by the node or produced during its execution. For example, it could be results of math operations or parts of the node's internal state. Accessing these sockets either triggers computing the return value on the fly by executing the node or returns a value based on the node's internal state. Exact behavior depends on the node's type.
 
-Node's sockets and configurations are defined by its _type_. Node types should follow `domain/operation` naming pattern.
+_Input value sockets_ represent data accessed during the node's execution. For example, it could be arguments of math operations or execution parameters such as iteration count for loop nodes or duration for time-related nodes. These sockets **MUST** either be given a static value in the node object or connected to an output value socket of a different node. The node **MAY** access its input value sockets multiple times during the execution. The runtime **MUST** guarantee that all input value sockets have defined values when the node execution starts.
 
-=== Sockets
+_Output flow sockets_ represent "`function pointers`" that the node will call to advance the graph execution. For example, bodies and branches of flow control nodes are output flow sockets that drive further execution when certain condition are fulfilled. Output flow sockets **MAY** be unconnected; in such a case graph execution proceeds as if such sockets are no-ops.
 
+_Input flow sockets_ represent "`methods`" that could be called on the node. For example, flow control nodes (such as loops and conditions) usually have an `in` input flow socket that starts node's execution. Additional operations **MAY** also be defined such as `reset` for nodes having an internal state.
+
+Nodes **MAY** be configurable through static properties collectively called "`node's configuration`" that **MAY** affect the node's behavior and the number of its sockets, such as the number of cases for a switch-case control flow node. 
+
+Input and output value sockets have associated data types, e.g., floats, integers, booleans, etc.
+
+Node's sockets and configurations are defined by its _type_. Node types follow `domain/operation` naming pattern.
+
+A node is executed when its input flow socket is reached by or when one of its output value sockets is requested by another node. Usually, the node executes its dependencies (if any), its own logic, and any number (including zero) of outgoing flow sockets.
+
+[[types]]
+== Value Types
+
+TBD
+
+[[events]]
 == Custom Events
 
+TBD
+
+[[variables]]
 == Variables
+
+TBD
+
+== Node Types
+
+=== Math Nodes
+
+In this section, `floatN` is a placeholder for any of `float`, `float2`, `float3`, `float4`, or `float4x4` types. All value sockets of `floatN` types have the same type within a node.
+
+==== Constants
+
+===== E
+
+[cols="1h,1,2"]
+|===
+| Type | `math/e` | Euler's number
+| Output value sockets | `float value` | 2.718281828459045
+|===
+
+===== Pi
+
+[cols="1h,1,2"]
+|===
+| Type | `math/pi` | Ratio of a circle's circumference to its diameter
+| Output value sockets | `float value` | 3.141592653589793
+|===
+
+==== Arithmetic Nodes
+
+These all operate component-wise. The description is per component.
+
+If any input value is _NaN_, the output value is also _NaN_.
+
+===== Absolute Value
+
+[cols="1h,1,2"]
+|===
+| Type | `math/abs` | Absolute value operation
+| Input value sockets
+| `floatN a` | Argument
+| Output value sockets
+| `floatN value` | latexmath:[\begin{cases}a, \text{if } a \ge 0.0 \\ -a, \text{if } a < 0.0 \end{cases}]
+|===
+
+===== Sign
+
+[cols="1h,1,2"]
+|===
+| Type | `math/sign` | Sign operation
+| Input value sockets
+| `floatN a` | Argument
+| Output value sockets
+| `floatN value` | latexmath:[\begin{cases}-1.0, \text{if } a < 0.0 \\ a, \text{if } a = \pm0.0 \\ 1.0, \text{if } a > 0.0 \end{cases}]
+|===
+
+===== Truncate
+
+[cols="1h,1,2"]
+|===
+| Type | `math/trunc` | Truncate operation
+| Input value sockets
+| `floatN a` | Argument
+| Output value sockets
+| `floatN value` | Integer value equal to the nearest integer to stem:[a] whose absolute value is not larger than the absolute value of stem:[a]
+|===
+
+If the argument is infinity, it is returned unchanged.
+
+===== Floor
+
+[cols="1h,1,2"]
+|===
+| Type | `math/floor` | Floor operation
+| Input value sockets
+| `floatN a` | Argument
+| Output value sockets
+| `floatN value` | Value equal to the nearest integer that is less than or equal to stem:[a]
+|===
+
+If the argument is infinity, it is returned unchanged.
+
+===== Ceil
+
+[cols="1h,1,2"]
+|===
+| Type | `math/ceil` | Ceil operation
+| Input value sockets
+| `floatN a` | Argument
+| Output value sockets
+| `floatN value` | Value equal to the nearest integer that is greater than or equal to stem:[a]
+|===
+
+If the argument is infinity, it is returned unchanged.
+
+===== Negation
+
+[cols="1h,1,2"]
+|===
+| Type | `math/neg` | Negation operation
+| Input value sockets
+| `floatN a` | Argument
+| Output value sockets
+| `floatN value` | stem:[-a]
+|===
+
+===== Addition
+
+[cols="1h,1,2"]
+|===
+| Type | `math/add` | Addition operation
+.2+| Input value sockets
+| `floatN a` | First addend
+| `floatN b` | Second addend
+| Output value sockets
+| `floatN value` | Sum, stem:[a + b]
+|===
+
+===== Subtraction
+
+[cols="1h,1,2"]
+|===
+| Type | `math/sub` | Subtraction operation
+.2+| Input value sockets
+| `floatN a` | Minuend
+| `floatN b` | Subtrahend
+| Output value sockets
+| `floatN value` | Difference, stem:[a - b]
+|===
+
+===== Multiplication
+
+[cols="1h,1,2"]
+|===
+| Type | `math/mul` | Multiplication operation
+.2+| Input value sockets
+| `floatN a` | First factor
+| `floatN b` | Second factor
+| Output value sockets
+| `floatN value` | Product, stem:[a * b]
+|===
+
+===== Division
+
+[cols="1h,1,2"]
+|===
+| Type | `math/div` | Division operation
+.2+| Input value sockets
+| `floatN a` | Dividend
+| `floatN b` | Divisor
+| Output value sockets
+| `floatN value` | Quotient, stem:[a / b]
+|===
+
+===== Remainder
+
+[cols="1h,1,2"]
+|===
+| Type | `math/rem` | Remainder operation
+.2+| Input value sockets
+| `floatN a` | Dividend
+| `floatN b` | Divisor
+| Output value sockets
+| `floatN value` | latexmath:[a - (b \cdot trunc(\frac{a}{b}))]
+|===
+
+===== Minimum
+
+[cols="1h,1,2"]
+|===
+| Type | `math/min` | Minimum operation
+.2+| Input value sockets
+| `floatN a` | First argument
+| `floatN b` | Second argument
+| Output value sockets
+| `floatN value` | Smallest of the arguments
+|===
+
+===== Maximum
+
+[cols="1h,1,2"]
+|===
+| Type | `math/max` | Maximum operation
+.2+| Input value sockets
+| `floatN a` | First argument
+| `floatN b` | Second argument
+| Output value sockets
+| `floatN value` | Largest of the arguments
+|===
+
+===== Clamp
+
+[cols="1h,1,2"]
+|===
+| Type | `math/clamp` | Clamp operation
+.3+| Input value sockets
+| `floatN a` | Value to clamp
+| `floatN b` | Lower boundary
+| `floatN c` | Upper boundary
+| Output value sockets
+| `floatN value` | latexmath:[min(max(a, b), c)]
+|===
+
+===== Saturate
+
+[cols="1h,1,2"]
+|===
+| Type | `math/saturate` | Saturate operation
+| Input value sockets
+| `floatN a` | Value to saturate
+| Output value sockets
+| `floatN value` | latexmath:[clamp(a, 0, 1)]
+|===
+
+==== Angle and Trigonometry Nodes
+
+Node parameters specified as angle are assumed to be in units of radians.
+
+These all operate component-wise. The description is per component.
+
+If any input value is _NaN_, the output value is also _NaN_.
+
+===== Degrees-To-Radians
+
+[cols="1h,1,2"]
+|===
+| Type | `math/rad` | Converts degrees to radians
+| Input value sockets
+| `floatN a` | Value in degrees
+| Output value sockets
+| `floatN value` | stem:[a * pi / 180.0]
+|===
+
+===== Radians-To-Degrees
+
+[cols="1h,1,2"]
+|===
+| Type | `math/deg` | Converts radians to degrees
+| Input value sockets
+| `floatN a` | Value in radians
+| Output value sockets
+| `floatN value` | stem:[a * 180.0 / pi]
+|===
+
+===== Sine
+
+[cols="1h,1,2"]
+|===
+| Type | `math/sin` | Sine function
+| Input value sockets
+| `floatN a` | Angle
+| Output value sockets
+| `floatN value` | latexmath:[\begin{cases}sin(a), \text{if } a \ne \pm\infty \\ \mathit{NaN}, \text{if } a = \pm\infty\end{cases}]
+|===
+
+===== Cosine
+
+[cols="1h,1,2"]
+|===
+| Type | `math/cos` | Cosine function
+| Input value sockets
+| `floatN a` | Angle
+| Output value sockets
+| `floatN value` | latexmath:[\begin{cases}cos(a), \text{if } a \ne \pm\infty \\ \mathit{NaN}, \text{if } a = \pm\infty\end{cases}]
+|===
+
+===== Tangent
+
+[cols="1h,1,2"]
+|===
+| Type | `math/tan` | Tangent function
+| Input value sockets
+| `floatN a` | Angle
+| Output value sockets
+| `floatN value` | latexmath:[\begin{cases}tan(a), \text{if } a \ne \pm\infty \\ \mathit{NaN}, \text{if } a = \pm\infty\end{cases}]
+|===
+
+===== Arcsine
+
+[cols="1h,1,2"]
+|===
+| Type | `math/asin` | Arcsine function
+| Input value sockets
+| `floatN a` | Sine value
+| Output value sockets
+| `floatN value` | latexmath:[\begin{cases}arcsin(a) \in [-\frac{\pi}{2}; \frac{\pi}{2}\], \text{if } \|a\| \le 1 \\ \mathit{NaN}, \text{if } \|a\| > 1\end{cases}]
+|===
+
+===== Arccosine
+
+[cols="1h,1,2"]
+|===
+| Type | `math/acos` | Arccosine function
+| Input value sockets
+| `floatN a` | Cosine value
+| Output value sockets
+| `floatN value` | latexmath:[\begin{cases}arccos(a) \in [0; \pi\], \text{if } \|a\| \le 1 \\ \mathit{NaN}, \text{if } \|a\| > 1\end{cases}]
+|===
+
+===== Arctangent
+
+[cols="1h,1,2"]
+|===
+| Type | `math/atan` | Arctangent function
+| Input value sockets
+| `floatN a` | Tangent value
+| Output value sockets
+| `floatN value` | latexmath:[arctan(a) \in [-\frac{\pi}{2}; \frac{\pi}{2}\]]
+|===
+
+===== Arctangent 2
+
+[cols="1h,1,2"]
+|===
+| Type | `math/atan2` | Arctangent 2 function
+.2+| Input value sockets
+| `floatN a` | Y coordinate
+| `floatN b` | X coordinate
+| Output value sockets
+| `floatN value` | Angle between the positive X-axis and the vector from the stem:[(0, 0)] origin to the stem:[(X, Y)] point on a 2D plane
+|===
+
+Zero and infinity argument values are handled according to <<ecma-262,ECMA-262>> or <<ieee-754,IEEE 754>> standards.
+
+==== Hyperbolic Functions
+
+These all operate component-wise. The description is per component.
+
+If any input value is _NaN_, the output value is also _NaN_.
+
+===== Hyperbolic Sine
+
+[cols="1h,1,2"]
+|===
+| Type |`math/sinh`| Hyperbolic sine function
+| Input value sockets
+| `floatN a` | Hyperbolic angle value
+|Output value sockets
+| `floatN value` | latexmath:[\dfrac{e^a-e^{-a}}{2}]
+|===
+
+===== Hyperbolic Cosine
+
+[cols="1h,1,2"]
+|===
+| Type |`math/cosh`| Hyperbolic cosine function
+| Input value sockets
+| `floatN a` | Hyperbolic angle value
+|Output value sockets
+| `floatN value` | latexmath:[\dfrac{e^a+e^{-a}}{2}]
+|===
+
+===== Hyperbolic Tangent
+
+[cols="1h,1,2"]
+|===
+| Type |`math/tanh`| Hyperbolic tangent function
+| Input value sockets
+| `floatN a` | Hyperbolic angle value
+|Output value sockets
+| `floatN value` | latexmath:[\dfrac{e^a-e^{-a}}{e^a+e^{-a}}]
+|===
+
+===== Inverse Hyperbolic Sine
+
+[cols="1h,1,2"]
+|===
+| Type |`math/asinh`| Inverse hyperbolic sine function
+| Input value sockets
+| `floatN a` | Hyperbolic sine value
+|Output value sockets
+| `floatN value` | latexmath:[ln(a+\sqrt{a^2+1})]
+|===
+
+===== Inverse Hyperbolic Cosine
+
+[cols="1h,1,2"]
+|===
+| Type |`math/acosh`| Inverse hyperbolic cosine function
+| Input value sockets
+| `floatN a` | Hyperbolic cosine value
+|Output value sockets
+| `floatN value` | latexmath:[\begin{cases}ln(a+\sqrt{a^2-1}), \text{if } a \ge 1 \\ \mathit{NaN}, \text{if } a < 1\end{cases}]
+|===
+
+===== Inverse Hyperbolic Tangent
+
+[cols="1h,1,2"]
+|===
+| Type |`math/atanh`| Inverse hyperbolic tangent function
+| Input value sockets
+| `floatN a` | Hyperbolic tangent value
+|Output value sockets
+| `floatN value` | latexmath:[\begin{cases}\dfrac{1}{2}ln\dfrac{1+a}{1-a}, \text{if } \|a\| \le 1 \\ \mathit{NaN}, \text{if } \|a\| > 1\end{cases}]
+|===
+
+==== Exponential Functions
+
+These all operate component-wise. The description is per component.
+
+If any input value is _NaN_, the output value is also _NaN_.
+
+===== Exponent
+
+[cols="1h,1,2"]
+|===
+| Type | `math/exp` | Exponent function
+| Input value sockets
+| `floatN a` | Power value
+|Output value sockets
+| `floatN value` | stem:[e^a]
+|===
+
+===== Natural Logarithm
+
+[cols="1h,1,2"]
+|===
+| Type | `math/log` | Natural logarithm function
+| Input value sockets
+| `floatN a` | Argument value
+|Output value sockets
+| `floatN value` | latexmath:[\begin{cases}ln(a), \text{if } a \ge 0 \\ \mathit{NaN}, \text{if } a < 0\end{cases}]
+|===
+
+===== Base-2 Logarithm
+
+[cols="1h,1,2"]
+|===
+| Type | `math/log2` | Base-2 logarithm function
+| Input value sockets
+| `floatN a` | Argument
+|Output value sockets
+| `floatN value` | latexmath:[\begin{cases}log_2(a), \text{if } a \ge 0 \\ \mathit{NaN}, \text{if } a < 0\end{cases}]
+|===
+
+===== Base-10 Logarithm
+
+[cols="1h,1,2"]
+|===
+| Type | `math/log10` | Base-10 logarithm function
+| Input value sockets
+| `floatN a` | Argument
+|Output value sockets
+| `floatN value` | latexmath:[\begin{cases}log_{10}(a), \text{if } a \ge 0 \\ \mathit{NaN}, \text{if } a < 0\end{cases}]
+|===
+
+===== Square Root
+
+[cols="1h,1,2"]
+|===
+| Type | `math/sqrt` | Square root function
+| Input value sockets
+| `floatN a` | Radicand
+|Output value sockets
+| `floatN value` | latexmath:[\begin{cases}\sqrt{a}, \text{if } a \ge 0 \\ \mathit{NaN}, \text{if } a < 0\end{cases}]
+|===
+
+===== Cube Root
+
+[cols="1h,1,2"]
+|===
+| Type | `math/cbrt` | Cube root function
+| Input value sockets
+| `floatN a` | Radicand
+|Output value sockets
+| `floatN value` | latexmath:[\sqrt[3\]{a}]
+|===
+
+===== Power
+
+[cols="1h,1,2"]
+|===
+| Type | `math/pow` | Power function
+.2+| Input value sockets
+| `floatN a` | Base
+| `floatN b` | Exponent
+| Output value sockets
+| `floatN value` | stem:[a^b]
+|===
+
+Zero and infinity argument values are handled according to the <<ecma-262,ECMA-262>> standard.
