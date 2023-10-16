@@ -231,7 +231,7 @@ _Output flow sockets_ represent "`function pointers`" that the node will call to
 
 _Input flow sockets_ represent "`methods`" that could be called on the node. For example, flow control nodes (such as loops and conditions) usually have an `in` input flow socket that starts node's execution. Additional operations **MAY** also be defined such as `reset` for nodes having an internal state.
 
-Nodes **MAY** be configurable through static properties collectively called "`node's configuration`" that **MAY** affect the node's behavior and the number of its sockets, such as the number of cases for a switch-case control flow node. 
+Nodes **MAY** be configurable through static properties collectively called "`node's configuration`" that **MAY** affect the node's behavior and the number of its sockets, such as the number of cases for a switch-case control flow node.
 
 Input and output value sockets have associated data types, e.g., floats, integers, booleans, etc.
 
@@ -327,7 +327,7 @@ If the argument is infinity, it is returned unchanged.
 | Input value sockets
 | `floatN a` | Argument
 | Output value sockets
-| `floatN value` | Value equal to the nearest integer that is less than or equal to stem:[a]
+| `floatN value` | stem:[floor(a)], value equal to the nearest integer that is less than or equal to stem:[a]
 |===
 
 If the argument is infinity, it is returned unchanged.
@@ -340,10 +340,21 @@ If the argument is infinity, it is returned unchanged.
 | Input value sockets
 | `floatN a` | Argument
 | Output value sockets
-| `floatN value` | Value equal to the nearest integer that is greater than or equal to stem:[a]
+| `floatN value` | stem:[ceil(a)], value equal to the nearest integer that is greater than or equal to stem:[a]
 |===
 
 If the argument is infinity, it is returned unchanged.
+
+===== Fraction
+
+[cols="1h,1,2"]
+|===
+| Type | `math/fract` | Fractional operation
+| Input value sockets
+| `floatN a` | Argument
+| Output value sockets
+| `floatN value` | stem:[a - floor(a)]
+|===
 
 ===== Negation
 
@@ -464,6 +475,19 @@ If the argument is infinity, it is returned unchanged.
 | `floatN value` | latexmath:[clamp(a, 0, 1)]
 |===
 
+===== Interpolate
+
+[cols="1h,1,2"]
+|===
+| Type | `math/mix` | Linear interpolation operation
+.3+| Input value sockets
+| `floatN a` | Interpolated value at stem:[0.0]
+| `floatN b` | Interpolated value at stem:[1.0]
+| `floatN c` | Unclamped interpolation coefficient
+| Output value sockets
+| `floatN value` | stem:[(1.0 - c) * a + c * b]
+|===
+
 ==== Angle and Trigonometry Nodes
 
 Node parameters specified as angle are assumed to be in units of radians.
@@ -574,7 +598,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 Zero and infinity argument values are handled according to <<ecma-262,ECMA-262>> or <<ieee-754,IEEE 754>> standards.
 
-==== Hyperbolic Functions
+==== Hyperbolic Nodes
 
 These all operate component-wise. The description is per component.
 
@@ -587,7 +611,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Type |`math/sinh`| Hyperbolic sine function
 | Input value sockets
 | `floatN a` | Hyperbolic angle value
-|Output value sockets
+| Output value sockets
 | `floatN value` | latexmath:[\dfrac{e^a-e^{-a}}{2}]
 |===
 
@@ -598,7 +622,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Type |`math/cosh`| Hyperbolic cosine function
 | Input value sockets
 | `floatN a` | Hyperbolic angle value
-|Output value sockets
+| Output value sockets
 | `floatN value` | latexmath:[\dfrac{e^a+e^{-a}}{2}]
 |===
 
@@ -609,7 +633,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Type |`math/tanh`| Hyperbolic tangent function
 | Input value sockets
 | `floatN a` | Hyperbolic angle value
-|Output value sockets
+| Output value sockets
 | `floatN value` | latexmath:[\dfrac{e^a-e^{-a}}{e^a+e^{-a}}]
 |===
 
@@ -620,7 +644,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Type |`math/asinh`| Inverse hyperbolic sine function
 | Input value sockets
 | `floatN a` | Hyperbolic sine value
-|Output value sockets
+| Output value sockets
 | `floatN value` | latexmath:[ln(a+\sqrt{a^2+1})]
 |===
 
@@ -631,7 +655,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Type |`math/acosh`| Inverse hyperbolic cosine function
 | Input value sockets
 | `floatN a` | Hyperbolic cosine value
-|Output value sockets
+| Output value sockets
 | `floatN value` | latexmath:[\begin{cases}ln(a+\sqrt{a^2-1}), \text{if } a \ge 1 \\ \mathit{NaN}, \text{if } a < 1\end{cases}]
 |===
 
@@ -642,11 +666,11 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Type |`math/atanh`| Inverse hyperbolic tangent function
 | Input value sockets
 | `floatN a` | Hyperbolic tangent value
-|Output value sockets
+| Output value sockets
 | `floatN value` | latexmath:[\begin{cases}\dfrac{1}{2}ln\dfrac{1+a}{1-a}, \text{if } \|a\| \le 1 \\ \mathit{NaN}, \text{if } \|a\| > 1\end{cases}]
 |===
 
-==== Exponential Functions
+==== Exponential Nodes
 
 These all operate component-wise. The description is per component.
 
@@ -659,7 +683,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Type | `math/exp` | Exponent function
 | Input value sockets
 | `floatN a` | Power value
-|Output value sockets
+| Output value sockets
 | `floatN value` | stem:[e^a]
 |===
 
@@ -670,7 +694,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Type | `math/log` | Natural logarithm function
 | Input value sockets
 | `floatN a` | Argument value
-|Output value sockets
+| Output value sockets
 | `floatN value` | latexmath:[\begin{cases}ln(a), \text{if } a \ge 0 \\ \mathit{NaN}, \text{if } a < 0\end{cases}]
 |===
 
@@ -681,7 +705,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Type | `math/log2` | Base-2 logarithm function
 | Input value sockets
 | `floatN a` | Argument
-|Output value sockets
+| Output value sockets
 | `floatN value` | latexmath:[\begin{cases}log_2(a), \text{if } a \ge 0 \\ \mathit{NaN}, \text{if } a < 0\end{cases}]
 |===
 
@@ -692,7 +716,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Type | `math/log10` | Base-10 logarithm function
 | Input value sockets
 | `floatN a` | Argument
-|Output value sockets
+| Output value sockets
 | `floatN value` | latexmath:[\begin{cases}log_{10}(a), \text{if } a \ge 0 \\ \mathit{NaN}, \text{if } a < 0\end{cases}]
 |===
 
@@ -703,7 +727,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Type | `math/sqrt` | Square root function
 | Input value sockets
 | `floatN a` | Radicand
-|Output value sockets
+| Output value sockets
 | `floatN value` | latexmath:[\begin{cases}\sqrt{a}, \text{if } a \ge 0 \\ \mathit{NaN}, \text{if } a < 0\end{cases}]
 |===
 
@@ -714,7 +738,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Type | `math/cbrt` | Cube root function
 | Input value sockets
 | `floatN a` | Radicand
-|Output value sockets
+| Output value sockets
 | `floatN value` | latexmath:[\sqrt[3\]{a}]
 |===
 
@@ -731,3 +755,80 @@ If any input value is _NaN_, the output value is also _NaN_.
 |===
 
 Zero and infinity argument values are handled according to the <<ecma-262,ECMA-262>> standard.
+
+==== Vector Nodes
+
+If any input value is _NaN_, the output value is also _NaN_.
+
+===== Length
+
+[cols="1h,1,2"]
+|===
+| Type | `math/length` | Vector length
+| Input value sockets
+| `float{2\|3\|4} a` | Vector
+| Output value sockets
+| `float value` | Length of stem:[a], e.g., stem:[sqrt(a_x^2 + a_y^2)] for `float2`
+|===
+
+===== Normalize
+
+[cols="1h,1,2"]
+|===
+| Type | `math/normalize` | Vector normalization
+| Input value sockets
+| `float{2\|3\|4} a` | Vector
+| Output value sockets
+| `floatN value` | Vector in the same direction as stem:[a] but with a unit length, e.g., stem:[a/sqrt(a_x^2 + a_y^2)] for `float2`
+|===
+
+===== Dot Product
+
+[cols="1h,1,2"]
+|===
+| Type | `math/dot` | Dot product
+.2+| Input value sockets
+| `float{2\|3\|4} a` | First vector
+| `float{2\|3\|4} b` | Second vector of the same type as stem:[a]
+| Output value sockets
+| `float value` | Sum of per-component products of stem:[a] and stem:[b], e.g., stem:[a_x * b_x + a_y * b_y] for `float2`
+|===
+
+===== Cross Product
+
+[cols="1h,1,2"]
+|===
+| Type | `math/cross` | Cross product
+.2+| Input value sockets
+| `float3 a` | Vector
+| `float3 b` | Vector
+| Output value sockets
+| `float3 value` | Cross product of stem:[a] and stem:[b], i.e., stem:[(a_y * b_z - a_z * b_y, a_z * b_x - a_x * b_z, a_x * b_y - a_y * b_x)]
+|===
+
+===== Rotate 2D
+
+[cols="1h,1,2"]
+|===
+| Type | `math/rotate` | 2D rotation
+.2+| Input value sockets
+| `float2 a` | Vector to rotate
+| `float b`  | Angle in radians
+| Output value sockets
+| `float2 value` | Vector stem:[a] rotated counter-clockwise by stem:[b]
+|===
+
+===== Rotate 3D
+
+[cols="1h,1,2"]
+|===
+| Type | `math/rotate` | 3D rotation
+.3+| Input value sockets
+| `float3 a` | Vector to rotate
+| `float3 b` | Vector representing an axis to rotate around
+| `float c`  | Angle in radians
+| Output value sockets
+| `float3 value` | Vector stem:[a] rotated around vector stem:[b] counter-clockwise by stem:[c]
+|===
+
+If the vector stem:[b] is not unit, rotation results may be undefined.
