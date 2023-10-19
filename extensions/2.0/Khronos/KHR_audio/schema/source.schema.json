@@ -1,36 +1,36 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "Source",
-  "type": "object",
-  "description": "A source audio clip with defined properties about the behavior of that audio.",
-  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
-  "properties": {
-    "autoPlay": {
-        "description": "Whether or not to play the specified audio when the glTF is loaded.",
-        "type": "boolean",
-        "default": false
-    },
-    "gain": {
-        "description": "Unitless multiplier against original audio file volume for determining audio source loudness.",
-        "type": "number",
-        "minimum": 0.0,
-        "default": 1.0
-    },
-    "loop": {
-        "description": "Whether or not to loop the specified audio when finished.",
-        "type": "boolean",
-        "default": false
-    },
-    "audio": {
-        "description": "The index of the audio data assigned to this clip.",
-        "allOf": [
-            {
-                "$ref": "glTFid.schema.json"
-            }
-        ]
-    },
-    "name": { },
-    "extensions": { },
-    "extras": { }
-  }
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio Audio Source",
+    "type": "object",
+    "description": "A source audio clip with defined properties about the behavior of that audio.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "autoPlay": {
+            "description": "Whether or not to play the specified audio when the glTF is loaded.",
+            "type": "boolean",
+            "default": false
+        },
+        "gain": {
+            "description": "Unitless multiplier against original audio file volume for determining audio source loudness.",
+            "type": "number",
+            "minimum": 0.0,
+            "default": 1.0
+        },
+        "loop": {
+            "description": "Whether or not to loop the specified audio when finished.",
+            "type": "boolean",
+            "default": false
+        },
+        "audio": {
+            "description": "The index of the audio data assigned to this clip.",
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ]
+        },
+        "name": {},
+        "extensions": {},
+        "extras": {}
+    }
 }

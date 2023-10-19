@@ -1,51 +1,49 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "Audio Emitter",
-  "type": "object",
-  "description": "A positional or global audio emitter.",
-  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
-  "properties": {
-      "type": {
-          "type": "string",
-          "description": "Specifies the audio emitter type.",
-          "anyOf": [
-              {
-                  "enum": [ "positional" ],
-                  "description": "Positional audio emitters."
-              },
-              {
-                  "enum": [ "global" ],
-                  "description": "Global audio emitters are not affected by the position of audio listeners."
-              },
-              {
-                  "type": "string"
-              }
-          ]
-      },
-      "gain": {
-        "description": "Unitless multiplier against original source volume for determining emitter loudness.",
-        "type": "number",
-        "minimum": 0.0,
-        "default": 1.0
-      },
-      "sources": {
-        "description": "An array of audio source indices used by the audio emitter. This array may be empty.",
-        "type": "array",
-        "allOf": [
-          {
-              "$ref": "glTFid.schema.json"
-          }
-        ]
-      },
-      "positional": {
-        "type": "object",
-        "$ref": "emitter.positional.schema.json"
-      },
-      "name": { },
-      "extensions": { },
-      "extras": { }
-  },
-  "required": [
-      "type"
-  ]
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio Audio Emitter",
+    "type": "object",
+    "description": "A positional or global audio emitter.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "type": {
+            "type": "string",
+            "description": "Specifies the audio emitter type.",
+            "anyOf": [
+                {
+                    "enum": ["positional"],
+                    "description": "Positional audio emitters."
+                },
+                {
+                    "enum": ["global"],
+                    "description": "Global audio emitters are not affected by the position of audio listeners."
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "gain": {
+            "description": "Unitless linear multiplier against original source volume for determining emitter loudness.",
+            "type": "number",
+            "minimum": 0.0,
+            "default": 1.0
+        },
+        "sources": {
+            "description": "An array of audio source indices used by the audio emitter. This array may be empty.",
+            "type": "array",
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ]
+        },
+        "positional": {
+            "type": "object",
+            "$ref": "emitter.positional.schema.json"
+        },
+        "name": {},
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["type"]
 }

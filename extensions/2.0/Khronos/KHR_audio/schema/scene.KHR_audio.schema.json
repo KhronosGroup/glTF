@@ -1,22 +1,20 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "KHR_audio node extension",
-  "type": "object",
-  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
-  "properties": {
-    "emitters": {
-      "type": "array",
-          "description": "The indices of each global audio emitter. Positional audio emitters may not be added to the scene node.",
-          "items": {
-              "$ref": "glTFid.schema.json"
-          },
-          "uniqueItems": true,
-          "minItems": 1
-      },
-      "extensions": { },
-      "extras": { }
-  },
-  "required": [
-      "emitters"
-  ]
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio glTF Scene Extension",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "emitters": {
+            "type": "array",
+            "description": "The indices of each global audio emitter. Positional audio emitters may not be added to the scene node.",
+            "items": {
+                "$ref": "glTFid.schema.json"
+            },
+            "uniqueItems": true,
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["emitters"]
 }
