@@ -1,42 +1,38 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "KHR_audio glTF extension",
-  "type": "object",
-  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
-  "properties": {
-      "sources": {
-          "description": "An array of audio sources to be used in audio emitters.",
-          "type": "array",
-          "items": {
-              "type": "object",
-              "$ref": "source.schema.json"
-          },
-          "minItems": 1
-      },
-      "emitters": {
-        "description": "An array of positional or global audio emitters that can be referenced by nodes or scenes.",
-        "type": "array",
-        "items": {
-            "type": "object",
-            "$ref": "emitter.schema.json"
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio glTF Document Extension",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "sources": {
+            "description": "An array of audio sources to be used in audio emitters.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "source.schema.json"
+            },
+            "minItems": 1
         },
-        "minItems": 1
-    },
-    "audio": {
-        "description": "An array of audio that can be referenced by nodes.",
-        "type": "array",
-        "items": {
-            "type": "object",
-            "$ref": "audio.schema.json"
+        "emitters": {
+            "description": "An array of positional or global audio emitters that can be referenced by nodes or scenes.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "emitter.schema.json"
+            },
+            "minItems": 1
         },
-        "minItems": 1
+        "audio": {
+            "description": "An array of audio that can be referenced by nodes.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "audio.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
     },
-      "extensions": { },
-      "extras": { }
-  },
-  "required": [
-      "sources",
-      "emitters",
-      "audio"
-  ]
+    "required": ["sources", "emitters", "audio"]
 }

@@ -1,42 +1,39 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "Audio Source",
-  "type": "object",
-  "description": "A source for audio data referenced in Audio Emitters Audio can be referenced by URI or `bufferView` index. `mimeType` is required when `bufferView` is used.",
-  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
-  "properties": {
-      "uri": {
-          "type": "string",
-          "description": "The uri of the audio file.",
-          "format": "uriref",
-          "gltf_detailedDescription": "The uri of the audio file. Relative paths are relative to the .gltf file.",
-          "gltf_uriType": "audio"
-      },
-      "mimeType": {
-          "type": "string",
-          "description": "The audio's MIME type. Required if `bufferView` is defined. Unless specified by another extension, the only supported mimeType is `audio/mpeg`.",
-          "anyOf": [
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio Audio Data",
+    "type": "object",
+    "description": "A source for audio data referenced in Audio Emitters Audio can be referenced by URI or `bufferView` index. `mimeType` is required when `bufferView` is used.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "uri": {
+            "type": "string",
+            "description": "The uri of the audio file.",
+            "format": "uriref",
+            "gltf_detailedDescription": "The uri of the audio file. Relative paths are relative to the .gltf file.",
+            "gltf_uriType": "audio"
+        },
+        "mimeType": {
+            "type": "string",
+            "description": "The audio's MIME type. Required if `bufferView` is defined. Unless specified by another extension, the only supported mimeType is `audio/mpeg`.",
+            "anyOf": [
                 {
-                    "enum": [ "audio/mpeg" ]
+                    "enum": ["audio/mpeg"]
                 },
                 {
                     "type": "string"
                 }
             ]
-      },
-      "bufferView": {
-          "allOf": [ { "$ref": "glTFid.schema.json" } ],
-          "description": "The index of the bufferView that contains the audio data. Use this instead of the audio source's uri property."
-      },
-      "name": { },
-      "extensions": { },
-      "extras": { }
-  },
-  "dependencies": {
-    "bufferView": [ "mimeType" ]
-  },
-  "oneOf": [
-      { "required": [ "uri" ] },
-      { "required": [ "bufferView" ] }
-  ]
+        },
+        "bufferView": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "The index of the bufferView that contains the audio data. Use this instead of the audio source's uri property."
+        },
+        "name": {},
+        "extensions": {},
+        "extras": {}
+    },
+    "dependencies": {
+        "bufferView": ["mimeType"]
+    },
+    "oneOf": [{ "required": ["uri"] }, { "required": ["bufferView"] }]
 }

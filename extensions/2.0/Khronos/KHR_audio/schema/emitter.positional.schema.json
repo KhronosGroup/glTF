@@ -1,71 +1,70 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "Positional Audio Emitter",
-  "type": "object",
-  "description": "Positional audio emitter properties.",
-  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
-  "properties": {
-      "coneInnerAngle": {
-        "description": "The angle, in radians, of a cone inside of which there will be no volume reduction.",
-        "type": "number",
-        "minimum": 0.0,
-        "maximum": 6.283185307179586,
-        "default": 6.283185307179586
-      },
-      "coneOuterAngle": {
-        "description": "The angle, in radians, of a cone outside of which the volume will be reduced to a constant value of`coneOuterGain`.",
-        "type": "number",
-        "minimum": 0.0,
-        "maximum": 6.283185307179586,
-        "default": 6.283185307179586
-      },
-      "coneOuterGain": {
-        "description": "The gain of the audio emitter set when outside the cone defined by the `coneOuterAngle` property. It is a linear value (not dB).",
-        "type": "number",
-        "minimum": 0.0,
-        "maximum": 1.0,
-        "default": 0.0
-      },
-      "distanceModel": {
-          "type": "string",
-          "description": "Specifies the distance model for the audio emitter.",
-          "anyOf": [
-              {
-                  "enum": [ "linear" ],
-                  "description": "A linear distance model calculating the gain induced by the distance according to: 1.0 - rolloffFactor * (distance - refDistance) / (maxDistance - refDistance)"
-              },
-              {
-                  "enum": [ "inverse" ],
-                  "description": "An inverse distance model calculating the gain induced by the distance according to: refDistance / (refDistance + rolloffFactor * (Math.max(distance, refDistance) - refDistance))"
-              },
-              {
-                "enum": [ "exponential" ],
-                "description": "An exponential distance model calculating the gain induced by the distance according to: pow((Math.max(distance, refDistance) / refDistance, -rolloffFactor))"
-              }
-          ],
-          "default": "inverse"
-      },
-      "maxDistance": {
-        "description": "The maximum distance between the emitter and listener, after which the volume will not be reduced any further. `maximumDistance` may only be applied when the distanceModel is set to linear. Otherwise, it should be ignored.",
-        "type": "number",
-        "minimum": 0.0,
-        "exclusiveMinimum": true,
-        "default": 10000.0
-      },
-      "refDistance": {
-        "description": "A reference distance for reducing volume as the emitter moves further from the listener. For distances less than this, the volume is not reduced.",
-        "type": "number",
-        "minimum": 0.0,
-        "default": 1.0
-      },
-      "rolloffFactor": {
-        "type": "number",
-        "description": "Describes how quickly the volume is reduced as the emitter moves away from listener. When distanceModel is set to linear, the maximum value is 1 otherwise there is no upper limit.",
-        "minimum": 0.0,
-        "default": 1.0
-      },
-      "extensions": { },
-      "extras": { }
-  }
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio Positional Audio Emitter",
+    "type": "object",
+    "description": "Positional audio emitter properties.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "coneInnerAngle": {
+            "description": "The angle, in radians, of a cone inside of which there will be no volume reduction.",
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 6.283185307179586,
+            "default": 6.283185307179586
+        },
+        "coneOuterAngle": {
+            "description": "The angle, in radians, of a cone outside of which the volume will be reduced to a constant value of`coneOuterGain`.",
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 6.283185307179586,
+            "default": 6.283185307179586
+        },
+        "coneOuterGain": {
+            "description": "The gain of the audio emitter set when outside the cone defined by the `coneOuterAngle` property. It is a linear value (not dB).",
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 0.0
+        },
+        "distanceModel": {
+            "type": "string",
+            "description": "Specifies the distance model for the audio emitter.",
+            "anyOf": [
+                {
+                    "enum": ["linear"],
+                    "description": "A linear distance model calculating the gain induced by the distance according to: 1.0 - rolloffFactor * (distance - refDistance) / (maxDistance - refDistance)"
+                },
+                {
+                    "enum": ["inverse"],
+                    "description": "An inverse distance model calculating the gain induced by the distance according to: refDistance / (refDistance + rolloffFactor * (Math.max(distance, refDistance) - refDistance))"
+                },
+                {
+                    "enum": ["exponential"],
+                    "description": "An exponential distance model calculating the gain induced by the distance according to: pow((Math.max(distance, refDistance) / refDistance, -rolloffFactor))"
+                }
+            ],
+            "default": "inverse"
+        },
+        "maxDistance": {
+            "description": "The maximum distance between the emitter and listener, after which the volume will not be reduced any further. `maximumDistance` may only be applied when the distanceModel is set to linear. Otherwise, it should be ignored.",
+            "type": "number",
+            "minimum": 0.0,
+            "exclusiveMinimum": true,
+            "default": 10000.0
+        },
+        "refDistance": {
+            "description": "A reference distance for reducing volume as the emitter moves further from the listener. For distances less than this, the volume is not reduced.",
+            "type": "number",
+            "minimum": 0.0,
+            "default": 1.0
+        },
+        "rolloffFactor": {
+            "type": "number",
+            "description": "Describes how quickly the volume is reduced as the emitter moves away from listener. When distanceModel is set to linear, the maximum value is 1 otherwise there is no upper limit.",
+            "minimum": 0.0,
+            "default": 1.0
+        },
+        "extensions": {},
+        "extras": {}
+    }
 }
-
