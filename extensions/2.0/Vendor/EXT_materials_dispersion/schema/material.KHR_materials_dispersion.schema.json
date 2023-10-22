@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_dispersion glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines the strength of dispersion.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "dispersion": {
+            "type": "number",
+            "description": "The strength of the dispersion.",
+            "default": 59.0,
+            "minimum": 1.0,
+            "maximum": 1000.0,
+            "gltf_detailedDescription": "This parameter defines dispersion in terms of the Abby number formulation."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
