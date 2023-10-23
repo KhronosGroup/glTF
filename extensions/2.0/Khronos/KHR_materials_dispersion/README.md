@@ -1,4 +1,4 @@
-# EXT\_materials\_disperson
+# KHR\_materials\_disperson
 
 ## Contributors
 
@@ -24,19 +24,39 @@ Written against the glTF 2.0 spec.
 
 This extension adds one parameters to the metallic-roughness material: `dispersion`.
 
-`disperson` allows users to configure the strength of the dispersion effect in terms of its Abby number. The dispersion effect is a result of the wavelength-dependent index of refraction of a material. It is also known as chromatic aberration.
+`dispersion` allows users to configure the strength of the angular separation of colors (chromatic aberration) transmitting through a relatively clear volume.  Dispersion is represented in terms of the Abbe number parameterization.  The dispersion effect is a result of the wavelength-dependent index of refraction of a material.  Dispersion is a widely adopted parameter in modern PBR models.  It is present in both OpenPBR and the Dassault Enterprise PBR Shading Model.
+
+The Abbe number \( V \) is computed from the index of refraction at three wavelengths of visible light: 486.1 nm (short wavelength blue, Ns), 587.6 nm (central yellow, Nc), and 656.3 nm (long wavelength red, Nl).  The Abbe number makes the simplifying assumption that the index of refraction variance is linear:
+
+\[
+V = \frac{N_c - 1}{N_l - N_s}
+\]
+
+To calculate the index of refraction at a specific wavelength \( \lambda \), given an Abbe number \( V \) and the central index of refraction (assumed to be at the color blue, \( N_d \), as specified by the KHR_materials_ior extension):
+
+\[
+B = \frac{N_c - 1}{V \times \left( \frac{1}{\lambda_s} - \frac{1}{\lambda_l} \right)}
+\]
+\[
+A = N_c - \frac{B}{\lambda_c}
+\]
+\[
+N(\lambda) = A + \frac{B}{\lambda^2}
+\]
+
+![Dispersion on a Gem](./figures/Dispersion.jpg)
 
 ## Extending Materials
 
-The dispersion, defined in terms of Abby number, is defined by adding the `KHR_materials_dispersion` extension to any glTF material.
+The dispersion, defined in terms of Abbe number, is defined by adding the `KHR_materials_dispersion` extension to any glTF material.
 
 ```json
 {
     "materials": [
         {
             "extensions": {
-                "EXT_materials_dispersion": {
-                    "dispersion": 42
+                "KHR_materials_dispersion": {
+                    "dispersion": 55
                 }
             }
         }
@@ -48,24 +68,44 @@ Factor and texture are combined by multiplication to describe a single value.
 
 | |Type|Description|Required|
 |-|----|-----------|--------|
-| **dispersion** | `number` | The strength of the dispersion effect, specified as an Abby number. | No, default: `59`|
+| **dispersion** | `number` | The strength of the dispersion effect, specified as an Abbe number. | No, default: `0`|
 
-The default value of 59 is taken from the low dispersion of crown glass.
+The default value of 0 has a special meaning in that no dispersion should be used.  This is the default value for backwards compatibility.  Any value other than zero is considered to be a valid dispersion value.
+
+Here is a table of common material dispersion Abbe numbers:
+
+| Material | Abbe Number |
+| -------- | ----------- |
+| Polycarbonate | 32 |
+| Diamond | 55 |
+| Water | 55 |
+| Crown Glass | 59 |
 
 ## Implementation
 
 *This section is non-normative.*
 
-*TODO*
+One real-time method for rendering dispersion effects is to trace volume transmission separately for each of color channel accounting for the per channel ior as determined by the Abbe number.  The resulting composite image will show color separation between the channels as a result.
 
 ## Interaction with other extensions
 
-*TODO*
 
 
 ## Schema
 
 - [material.KHR_materials_dispersion.schema.json](schema/material.KHR_materials_dispersion.schema.json)
+
+## Reference
+
+### Theory, Documentation and Implementations
+
+[Abbe Number - Wikipedia](https://en.wikipedia.org/wiki/Abbe_number)
+
+[Abbe Number - Wolfram Formula Repository](https://resources.wolframcloud.com/FormulaRepository/resources/Abbe-Number#:~:text=The%20Abbe%20number%2C%20also%20known,of%20V%20indicating%20low%20dispersion.)
+
+[OpenPBR Surface specification](https://academysoftwarefoundation.github.io/OpenPBR/)
+
+[Enterprise PBR Shading Model](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2022x.md.html)
 
 ## Appendix: Full Khronos Copyright Statement
 
