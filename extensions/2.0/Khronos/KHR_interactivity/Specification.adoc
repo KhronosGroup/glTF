@@ -488,6 +488,94 @@ If the argument is infinity, it is returned unchanged.
 | `floatN value` | stem:[(1.0 - c) * a + c * b]
 |===
 
+==== Comparison Nodes
+
+If any input value is _NaN_, the output value is false.
+
+===== Equality
+
+[cols="1h,1,2"]
+|===
+| Type | `math/eq` | Equality operation
+.2+| Input value sockets
+| `floatN a` | First argument
+| `floatN b` | Second argument
+| Output value sockets
+| `bool value` | True if the input arguments are equal, per-component; false otherwise
+|===
+
+===== Less Than
+
+[cols="1h,1,2"]
+|===
+| Type | `math/lt` | Less than operation
+.2+| Input value sockets
+| `float a` | First argument
+| `float b` | Second argument
+| Output value sockets
+| `bool value` | True if stem:[a < b]; false otherwise
+|===
+
+===== Less Than Or Equal To
+
+[cols="1h,1,2"]
+|===
+| Type | `math/le` | Less than or equal to operation
+.2+| Input value sockets
+| `float a` | First argument
+| `float b` | Second argument
+| Output value sockets
+| `bool value` | True if stem:[a <= b]; false otherwise
+|===
+
+===== Greater Than
+
+[cols="1h,1,2"]
+|===
+| Type | `math/gt` | Greater than operation
+.2+| Input value sockets
+| `float a` | First argument
+| `float b` | Second argument
+| Output value sockets
+| `bool value` | True if stem:[a > b]; false otherwise
+|===
+
+===== Greater Than Or Equal To
+
+[cols="1h,1,2"]
+|===
+| Type | `math/ge` | Greater than or equal operation
+.2+| Input value sockets
+| `float a` | First argument
+| `float b` | Second argument
+| Output value sockets
+| `bool value` | True if stem:[a >= b]; false otherwise
+|===
+
+==== Special Floating-Point Nodes
+
+===== Is Not a Number
+
+[cols="1h,1,2"]
+|===
+| Type | `math/isnan` | Not a Number check operation
+| Input value sockets
+| `float a` | Argument
+| Output value sockets
+| `bool value` | True if stem:[a] is _NaN_; false otherwise
+|===
+
+===== Is Infinity
+
+[cols="1h,1,2"]
+|===
+| Type | `math/isinf` | Infinity check operation
+| Input value sockets
+| `float a` | Argument
+| Output value sockets
+| `bool value` | True if stem:[a] is positive or negative infinity; false otherwise
+|===
+
 ==== Angle and Trigonometry Nodes
 
 Node parameters specified as angle are assumed to be in units of radians.
@@ -810,7 +898,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/rotate` | 2D rotation
+| Type | `math/rotate2d` | 2D rotation
 .2+| Input value sockets
 | `float2 a` | Vector to rotate
 | `float b`  | Angle in radians
@@ -822,7 +910,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/rotate` | 3D rotation
+| Type | `math/rotate3d` | 3D rotation
 .3+| Input value sockets
 | `float3 a` | Vector to rotate
 | `float3 b` | Vector representing an axis to rotate around
