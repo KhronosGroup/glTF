@@ -32,6 +32,8 @@ Benefits of bump maps are primarily these two:
 
 2. Bump maps are useful for capturing small details in combination with a normal map for large scale structures.  For example, when rendering human faces, there are usually two layers of surface pertubation detail, the unwrapped normal map is used for representing wrinkles, and then a repeating bump map is used for skin pore details.  This is also the case for many other materials such as wood, metal, and stone, where there is both macro and micro details.
 
+Additionally, maybe WebGL rendering engines, including both ThreeJS and BabylonJS, already support both bump mapping and normal maps in their default materials.  Without this extension, these engines can not save or load this information via glTF files.
+
 ## Extending Materials
 
 The `KHR_materials_bump` extension can be specified in the `extensions` property of the material:
