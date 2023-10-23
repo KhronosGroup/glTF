@@ -9,7 +9,7 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status
 
-Draft, Ratified by the Khronos Group
+Draft
 
 ## Dependencies
 
