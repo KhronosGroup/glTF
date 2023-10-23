@@ -24,25 +24,23 @@ Written against the glTF 2.0 spec.
 
 This extension adds one parameters to the metallic-roughness material: `dispersion`.
 
-`dispersion` allows users to configure the strength of the angular separation of colors (chromatic aberration) transmitting through a relatively clear volume.  Dispersion is represented in terms of the Abbe number parameterization.  The dispersion effect is a result of the wavelength-dependent index of refraction of a material.  Dispersion is a widely adopted parameter in modern PBR models.  It is present in both OpenPBR and the Dassault Enterprise PBR Shading Model.
+`dispersion` allows users to configure the strength of the angular separation of colors (chromatic aberration) transmitting through a relatively clear volume.  Dispersion is represented in terms of the Abbe number parameterization \( $V$ \).  The dispersion effect is a result of the wavelength-dependent index of refraction of a material.  Dispersion is a widely adopted parameter in modern PBR models.  It is present in both OpenPBR and the Dassault Enterprise PBR Shading Model.
 
-The Abbe number \( V \) is computed from the index of refraction at three wavelengths of visible light: 486.1 nm (short wavelength blue, Ns), 587.6 nm (central yellow, Nc), and 656.3 nm (long wavelength red, Nl).  The Abbe number makes the simplifying assumption that the index of refraction variance is linear:
+The Abbe number \( $V$ \) is computed from the index of refraction at three wavelengths of visible light: 486.1 nm (short wavelength blue, $N_s$), 587.6 nm (central yellow, $N_c$), and 656.3 nm (long wavelength red, $N_l$).  The Abbe number makes the simplifying assumption that the index of refraction variance is linear:
 
-\[
-V = \frac{N_c - 1}{N_l - N_s}
-\]
+$$V = \frac{N_c - 1}{N_l - N_s}$$
 
-To calculate the index of refraction at a specific wavelength \( \lambda \), given an Abbe number \( V \) and the central index of refraction (assumed to be at the color blue, \( N_d \), as specified by the KHR_materials_ior extension):
+To calculate the index of refraction at a specific wavelength \( $\lambda$ \), given an Abbe number \( $V$ \) and the central index of refraction (assumed to be at the color blue, \( $N_d$ \), as specified by the KHR_materials_ior extension):
 
-\[
+$$
 B = \frac{N_c - 1}{V \times \left( \frac{1}{\lambda_s} - \frac{1}{\lambda_l} \right)}
-\]
-\[
+$$
+$$
 A = N_c - \frac{B}{\lambda_c}
-\]
-\[
+$$
+$$
 N(\lambda) = A + \frac{B}{\lambda^2}
-\]
+$$
 
 ![Dispersion on a Gem](./figures/Dispersion.jpg)
 
@@ -74,7 +72,7 @@ The default value of 0 has a special meaning in that no dispersion should be use
 
 Here is a table of common material dispersion Abbe numbers:
 
-| Material | Abbe Number |
+| Material | Abbe Number (V) |
 | -------- | ----------- |
 | Polycarbonate | 32 |
 | Diamond | 55 |
