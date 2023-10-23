@@ -77,6 +77,7 @@ Here is a table of common material dispersion Abbe numbers:
 
 | Material | Abbe Number (V) |
 | -------- | ----------- |
+| Rutile | 9.8 |
 | Polycarbonate | 32 |
 | Diamond | 55 |
 | Water | 55 |
@@ -103,6 +104,11 @@ One real-time method for rendering dispersion effects is to trace volume transmi
 [OpenPBR Surface specification](https://academysoftwarefoundation.github.io/OpenPBR/)
 
 [Enterprise PBR Shading Model](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2022x.md.html)
+
+[Mikhail N. Polyanskiy. Refractive Index Database (2023)](https://refractiveindex.info)
+
+[SCHOTT. Interactive Abbe Diagram (2023)](https://www.schott.com/en-gb/special-selection-tools/interactive-abbe-diagram)
+
 
 ## Appendix: Full Khronos Copyright Statement
 
