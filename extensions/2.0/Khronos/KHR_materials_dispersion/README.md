@@ -68,7 +68,7 @@ Factor and texture are combined by multiplication to describe a single value.
 |-|----|-----------|--------|
 | **dispersion** | `number` | The strength of the dispersion effect, specified as an Abbe number. | No, default: `0`|
 
-The default value of 0 has a special meaning in that no dispersion should be used.  This is the default value for backwards compatibility.  Any value other than zero is considered to be a valid dispersion value.
+The default value of 0 has a special meaning in that no dispersion should be used.  This is the default value for backwards compatibility.  Any value in the valid range [0, 1000] other than zero is considered to be a valid dispersion value.
 
 Here is a table of common material dispersion Abbe numbers:
 
