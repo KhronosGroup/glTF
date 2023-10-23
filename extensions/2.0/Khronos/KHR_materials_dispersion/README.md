@@ -13,7 +13,8 @@ Draft
 
 ## Dependencies
 
-Written against the glTF 2.0 spec.
+- Written against the glTF 2.0 spec.
+- The `KHR_materials_volume` extension as it builds upon its volumetric effect.
 
 ## Exclusions
 
@@ -24,7 +25,9 @@ Written against the glTF 2.0 spec.
 
 This extension adds one parameters to the metallic-roughness material: `dispersion`.
 
-`dispersion` allows users to configure the strength of the angular separation of colors (chromatic aberration) transmitting through a relatively clear volume.  Dispersion is represented in terms of the Abbe number parameterization \( $V$ \).  The dispersion effect is a result of the wavelength-dependent index of refraction of a material.  Dispersion is a widely adopted parameter in modern PBR models.  It is present in both OpenPBR and the Dassault Enterprise PBR Shading Model.
+`dispersion` enables configuring the strength of the angular separation of colors (chromatic aberration) transmitting through a relatively clear volume.  It is an enhancement to the default KHR_materials_volume transmission model which assumes no dispersion.
+
+Dispersion is represented in terms of the Abbe number parameterization \( $V$ \).  The dispersion effect is a result of the wavelength-dependent index of refraction of a material.  Dispersion is a widely adopted parameter in modern PBR models.  It is present in both OpenPBR and the Dassault Enterprise PBR Shading Model.
 
 The Abbe number \( $V$ \) is computed from the index of refraction at three wavelengths of visible light: 486.1 nm (short wavelength blue, $N_s$), 587.6 nm (central yellow, $N_c$), and 656.3 nm (long wavelength red, $N_l$).  The Abbe number makes the simplifying assumption that the index of refraction variance is linear:
 
