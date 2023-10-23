@@ -27,7 +27,7 @@ This extension adds one parameters to the metallic-roughness material: `dispersi
 
 `dispersion` enables configuring the strength of the angular separation of colors (chromatic aberration) transmitting through a relatively clear volume.  It is an enhancement to the default KHR_materials_volume transmission model which assumes no dispersion.
 
-Dispersion is represented in terms of the Abbe number parameterization \( $V$ \).  The dispersion effect is a result of the wavelength-dependent index of refraction of a material.  Dispersion is a widely adopted parameter in modern PBR models.  It is present in both OpenPBR and the Dassault Enterprise PBR Shading Model.
+Optical dispersion is represented in terms of the Abbe number parameterization \( $V$ \).  The dispersion effect is a result of the wavelength-dependent index of refraction of a material.  Dispersion is a widely adopted parameter in modern PBR models.  It is present in both OpenPBR (as *transmission_dispersion_abbe_number*) and the Dassault Enterprise PBR Shading Model (as $V_d$).
 
 The Abbe number \( $V$ \) is computed from the index of refraction at three wavelengths of visible light: 486.1 nm (short wavelength blue, $N_s$), 587.6 nm (central yellow, $N_c$), and 656.3 nm (long wavelength red, $N_l$).  The Abbe number makes the simplifying assumption that the index of refraction variance is linear:
 
@@ -87,10 +87,6 @@ Here is a table of common material dispersion Abbe numbers:
 *This section is non-normative.*
 
 One real-time method for rendering dispersion effects is to trace volume transmission separately for each of color channel accounting for the per channel ior as determined by the Abbe number.  The resulting composite image will show color separation between the channels as a result.
-
-## Interaction with other extensions
-
-
 
 ## Schema
 
