@@ -26,6 +26,12 @@ This extension adds one parameters to the metallic-roughness material: `bump`.
 
 `bump` allows users to perturb the surface normal via a bump map. The bump map is a grayscale texture, where the value of each texel represents the height of the surface at that texel.  The height is then used to perturb the normal direction.
 
+Benefits of bump maps are primarily these two:
+
+1. Bump maps are much more compact that normal maps and lead to smaller glTF files as well as less GPU memory requirements.  This is because the normal map has to store a full 3D vector per texel, while the bump map only needs to store a single scalar value per texel.  Thus bump maps require 3 times less data than normal maps for transmission and GPU storage.  Normal maps are also very sensitive to texture compressions methods, while bump maps are less sensitive.
+
+2. Bump maps are useful for capturing small details in combination with a normal map for large scale structures.  For example, when rendering human faces, there are usually two layers of surface pertubation detail, the unwrapped normal map is used for representing wrinkles, and then a repeating bump map is used for skin pore details.  This is also the case for many other materials such as wood, metal, and stone, where there is both macro and micro details.
+
 ## Extending Materials
 
 The `KHR_materials_bump` extension can be specified in the `extensions` property of the material:
@@ -59,7 +65,7 @@ The `bump` parameters affect the normal used in `dielectric_brdf` of the glTF 2.
 
 The `bump` parameter is used to perturb the normal direction. The normal direction is perturbed by the value of the bump map at the texel corresponding to the fragment. The perturbed normal is then used in the `dielectric_brdf` function of the glTF 2.0 metallic-roughness material.
 
-** TODO Derive Normal from Bump **
+### Blending Normal and Bump Perturbations
 
 In order to properly blend the bump map with a normal map, please follow the recommendation of https://blog.selfshadow.com/publications/blending-in-detail/.
 
@@ -69,6 +75,14 @@ vec3 u = bumpNormal.xyz * vec3( -2, -2, 2 ) + vec3( 1,  1, -1 );
 vec3 r = normalize( t * dot(t, u) / t.z - u ); // not required if t and u are pre-normalized
 vec3 blendedNormal = r * 0.5 + 0.5;
 ```
+
+### Conversion of bump to normal
+
+*TODO*
+
+### Coneersion of normal to bump
+
+*TODO*
 
 ## Schema
 
