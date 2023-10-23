@@ -1,4 +1,4 @@
-# KHR\_materials\_disperson
+# KHR\_materials\_dispersion
 
 ## Contributors
 
