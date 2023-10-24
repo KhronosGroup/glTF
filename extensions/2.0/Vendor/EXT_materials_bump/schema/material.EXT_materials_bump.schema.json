@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_materials_bump glTF Material Extension",
+    "title": "EXT_materials_bump glTF Material Extension",
     "type": "object",
     "description": "glTF extension that defines a bump which perturbs the surface normal.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
@@ -10,7 +10,7 @@
             "description": "The strength of the bump displacement.",
             "default": 1.0,
             "minimum": 0.0,
-            "maximum": 1.0,
+            "maximum": 100.0,
             "gltf_detailedDescription": "This parameter scales the amount of normal perturbation by the bump map on the surface normal."
         },
         "bumpTexture": {

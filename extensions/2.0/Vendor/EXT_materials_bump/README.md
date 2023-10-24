@@ -84,7 +84,7 @@ vec3 blendedNormal = r * 0.5 + 0.5;
 
 ## Schema
 
-- [material.KHR_materials_bump.schema.json](schema/material.KHR_materials_bump.schema.json)
+- [material.EXT_materials_bump.schema.json](schema/material.EXT_materials_bump.schema.json)
 
 ## References
 
