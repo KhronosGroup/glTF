@@ -26,13 +26,17 @@ This extension adds one parameters to the metallic-roughness material: `bump`.
 
 `bump` allows users to perturb the surface normal via a bump map. The bump map is a grayscale texture, where the value of each texel represents the height of the surface at that texel.  The height is then used to perturb the normal direction.
 
-Benefits of bump maps are primarily these two:
+Bump maps were introduced into computer graphics in 1978 by Blinn in "Simulation of Wrinkled Surfaces, while normal maps were introduced in 1989 by Cohen et al, "Appearance-Preserving Simplification."
 
-1. Bump maps are much more compact that normal maps and lead to smaller glTF files as well as less GPU memory requirements.  This is because the normal map has to store a full 3D vector per texel, while the bump map only needs to store a single scalar value per texel.  Thus bump maps require 3 times less data than normal maps for transmission and GPU storage.  Normal maps are also very sensitive to texture compressions methods, while bump maps are less sensitive.
+Benefits of bump maps over normal maps are primarily these two:
+
+1. Bump maps are much more compact that normal maps and lead to smaller glTF files as well as less GPU memory requirements.  This is because the normal map has to store a full 3D vector per texel with floating point precision, while the bump map only needs to store a single scalar value per texel.  Thus bump maps require 3 times less data than normal maps for transmission and GPU storage.  Normal maps are also very sensitive to texture compressions methods, while bump maps are less sensitive.
 
 2. Bump maps are useful for capturing small details in combination with a normal map for large scale structures.  For example, when rendering human faces, there are usually two layers of surface pertubation detail, the unwrapped normal map is used for representing wrinkles, and then a repeating bump map is used for skin pore details.  This is also the case for many other materials such as wood, metal, and stone, where there is both macro and micro details.
 
-Additionally, maybe WebGL rendering engines, including both ThreeJS and BabylonJS, already support both bump mapping and normal maps in their default materials.  Without this extension, these engines can not save or load this information via glTF files.
+Normal maps are more resistant to artifacts when undergoing going magnification as compared to bump maps, thus they are better suited for large scale smooth detail.  This limitation of bump maps is not significant though when bump maps are being used for detail textures where the magnification is small and they align roughly with the same texel resolution as the color map.
+
+Additionally, maybe WebGL rendering engines, including both ThreeJS and Sketchfab, already support simultaneous bump maps and normal maps in their default materials.  Without this extension, these engines can not save or load this information via glTF files.
 
 ## Extending Materials
 
@@ -78,17 +82,17 @@ vec3 r = normalize( t * dot(t, u) / t.z - u ); // not required if t and u are pr
 vec3 blendedNormal = r * 0.5 + 0.5;
 ```
 
-### Conversion of bump to normal
-
-*TODO*
-
-### Coneersion of normal to bump
-
-*TODO*
-
 ## Schema
 
 - [material.KHR_materials_bump.schema.json](schema/material.KHR_materials_bump.schema.json)
+
+## References
+
+[Blinn, J.F., "Simulation of Wrinkled Surfaces" (1978)](https://www.microsoft.com/en-us/research/wp-content/uploads/1978/01/p286-blinn.pdf)
+
+[Cohen, J. et al. "Appearance-Preserving Simplification" (1989)](http://www.cs.unc.edu/~geom/APS/APS.pdf)
+
+[Waveren, J.M.P. et al. "Real-Time Normal Map DXT Compression" (2008)](https://developer.download.nvidia.com/whitepapers/2008/real-time-normal-map-dxt-compression.pdf)
 
 ## Appendix: Full Khronos Copyright Statement
 
