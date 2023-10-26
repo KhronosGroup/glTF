@@ -61,7 +61,7 @@ Factor and texture are combined by multiplication to describe a single value.
 | |Type|Description|Required|
 |-|----|-----------|--------|
 | **bumpFactor** | `number` | The strength of the specular reflection. | No, default: `1.0`|
-| **bumpTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A texture that defines the strength of the specular reflection, stored in the alpha (`A`) channel. This will be multiplied by bumpFactor. | No |
+| **bumpTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A texture that defines the strength of the specular reflection, stored in the red (`R`) channel. This will be multiplied by bumpFactor. | No |
 
 The `bump` parameters affect the normal used in `dielectric_brdf` of the glTF 2.0 metallic-roughness material.
 

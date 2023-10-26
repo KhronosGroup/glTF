@@ -15,8 +15,8 @@
         },
         "bumpTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "A texture that defines the displacement in the alpha channel.",
-            "gltf_detailedDescription": "A texture that defines the displacement in the alpha channel. This will be multiplied by bumpFactor."
+            "description": "A texture that defines the displacement in the red channel.",
+            "gltf_detailedDescription": "A texture that defines the displacement in the red channel. This will be multiplied by bumpFactor."
         },
         "extensions": { },
         "extras": { }
