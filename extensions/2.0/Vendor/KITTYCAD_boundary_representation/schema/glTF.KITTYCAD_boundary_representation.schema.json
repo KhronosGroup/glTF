@@ -1,0 +1,831 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "KittyCadBoundaryRepresentation",
+  "type": "object",
+  "required": [
+    "curves",
+    "edges",
+    "faces",
+    "loops",
+    "shells",
+    "solids",
+    "surfaces",
+    "vertices"
+  ],
+  "properties": {
+    "curves": {
+      "description": "Curve definitions.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Curve"
+      }
+    },
+    "edges": {
+      "description": "Edge definitions.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Edge"
+      }
+    },
+    "faces": {
+      "description": "Face definitions.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Face"
+      }
+    },
+    "loops": {
+      "description": "Loop definitions.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Loop"
+      }
+    },
+    "shells": {
+      "description": "Shell definitions.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Shell"
+      }
+    },
+    "solids": {
+      "description": "Solid boundary representation instances.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Solid"
+      }
+    },
+    "surfaces": {
+      "description": "Surface definitions.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Surface"
+      }
+    },
+    "vertices": {
+      "description": "Vertices in 3D space joining edges.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Vertex"
+      }
+    }
+  },
+  "definitions": {
+    "Circle": {
+      "description": "Circular curve definition.\n\nλ(u) := O + R(cos(u)x + sin(u)y), where: * O = `self.origin`, * R = `self.radius`, * x = `self.xbasis`, * y = `self.normal` × `self.xbasis`, * u ∈ {0, 2π}.\n\nThe `xbasis` and `normal` vectors form an orthonormal set.",
+      "type": "object",
+      "required": [
+        "normal",
+        "radius",
+        "xbasis"
+      ],
+      "properties": {
+        "normal": {
+          "description": "Unit vector normal to the plane containing the circle.\n\nThis serves as the Z basis in the parametric co-ordinate space.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        },
+        "origin": {
+          "description": "Position at the center of the circle.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        },
+        "radius": {
+          "description": "Distance from the center position to all points on the circle.",
+          "type": "number",
+          "format": "double"
+        },
+        "xbasis": {
+          "description": "Unit vector in the direction from the origin to the point on the circle evaluated at λ(0).\n\nDue to floating point precision, this vector may not lie exactly in the plane. If this is the case then the X vector will be treated as the projection of this vector onto the plane.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        }
+      }
+    },
+    "Curve": {
+      "description": "Abstract curve data.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "circle": {
+          "description": "Additional parameters for a circular curve.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Circle"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "domain": {
+          "description": "Parameter domain.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Domain"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "line": {
+          "description": "Additional parameters for a line curve.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Line"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "description": "Optional name for this surface.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nurbs": {
+          "description": "Additional parameters for a NURBS curve.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Nurbs2"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "description": "Discriminant.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Type"
+            }
+          ]
+        }
+      }
+    },
+    "Cylinder": {
+      "description": "Parametric cylindrical surface definition.\n\nσ(u, v) := O + R(cos(u)x + sin(u)y) + vz, where: * O = `self.circle.origin`, * R = `self.circle.radius`, * x = `self.circle.xbasis`, * y = `self.circle.normal` × `self.circle.xbasis`, * z = `self.circle.normal`, * h = `self.height`, * u ∈ {0, 2π}, * v ∈ {0, h}.\n\nCylinders are defined in reference to a circle that is extruded along the circle normal vector.",
+      "type": "object",
+      "required": [
+        "circle",
+        "height"
+      ],
+      "properties": {
+        "circle": {
+          "description": "The extruded circle.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Circle"
+            }
+          ]
+        },
+        "height": {
+          "description": "Height of the extruded circle.",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "Domain": {
+      "description": "Curve parameter domain.",
+      "type": "object",
+      "required": [
+        "max",
+        "min"
+      ],
+      "properties": {
+        "max": {
+          "description": "Maximum domain value.",
+          "type": "number",
+          "format": "double"
+        },
+        "min": {
+          "description": "Minimum domain value.",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "Domain2": {
+      "description": "Domain of surface parameters.",
+      "type": "object",
+      "required": [
+        "max",
+        "min"
+      ],
+      "properties": {
+        "max": {
+          "description": "Maximum domain values.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "min": {
+          "description": "Minimum domain values.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 2,
+          "minItems": 2
+        }
+      }
+    },
+    "Edge": {
+      "description": "Pair of vertices on a face plus an optional trim domain.",
+      "type": "object",
+      "required": [
+        "closed",
+        "curve"
+      ],
+      "properties": {
+        "closed": {
+          "description": "Marker for a closed edge.",
+          "type": "boolean"
+        },
+        "curve": {
+          "description": "The edge curve geometry in 3D (or homogeneous 4D) space.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/IndexWithOrientation"
+            }
+          ]
+        },
+        "end": {
+          "description": "Edge end vertex.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/index"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "start": {
+          "description": "Edge start vertex.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/index"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "subdomain": {
+          "description": "Optional domain to select a subset of the edge curve geometry.\n\nWhen `None`, the domain is the same as the edge curve geometry domain.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Domain"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "Face": {
+      "description": "Set of loops defined on an abstract surface.",
+      "type": "object",
+      "required": [
+        "outerLoop",
+        "surface"
+      ],
+      "properties": {
+        "innerLoops": {
+          "description": "Face inner bounds.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IndexWithOrientation"
+          }
+        },
+        "outerLoop": {
+          "description": "Face outer bound.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/IndexWithOrientation"
+            }
+          ]
+        },
+        "surface": {
+          "description": "Surface the face edges and vertices reside on.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/IndexWithOrientation"
+            }
+          ]
+        }
+      }
+    },
+    "IndexWithOrientation": {
+      "type": "number",
+      "format": "double"
+    },
+    "Line": {
+      "description": "Line curve definition.\n\nEither end or direction must be set.",
+      "type": "object",
+      "required": [
+        "start"
+      ],
+      "properties": {
+        "direction": {
+          "description": "Unit vector pointing away from the origin position.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        },
+        "end": {
+          "description": "End position.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        },
+        "start": {
+          "description": "Origin position.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        }
+      }
+    },
+    "Loop": {
+      "description": "Edge loop.",
+      "type": "object",
+      "required": [
+        "edges"
+      ],
+      "properties": {
+        "edges": {
+          "description": "Oriented edges forming the loop.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IndexWithOrientation"
+          }
+        },
+        "uvCurves": {
+          "description": "Optional 1:1 pairing of UV curves to edges.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IndexWithOrientation"
+          }
+        }
+      }
+    },
+    "Nurbs": {
+      "description": "NURBS surface definition.",
+      "type": "object",
+      "required": [
+        "controlPoints",
+        "knotVector",
+        "numControlPoints",
+        "numKnots",
+        "order"
+      ],
+      "properties": {
+        "controlPoints": {
+          "description": "Matrix of control point vertices.",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "double"
+            },
+            "maxItems": 4,
+            "minItems": 4
+          }
+        },
+        "knotVector": {
+          "description": "Knot vector.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "numControlPoints": {
+          "description": "Dimensions of control point vertex matrix.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint32",
+            "minimum": 0.0
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "numKnots": {
+          "description": "Number of knots in U and V.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint32",
+            "minimum": 0.0
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "order": {
+          "description": "Order of basis splines.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint32",
+            "minimum": 0.0
+          },
+          "maxItems": 2,
+          "minItems": 2
+        }
+      }
+    },
+    "Nurbs2": {
+      "description": "NURBS curve definition.",
+      "type": "object",
+      "required": [
+        "controlPoints",
+        "knotVector",
+        "order"
+      ],
+      "properties": {
+        "controlPoints": {
+          "description": "Array of control vertices.",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "double"
+            },
+            "maxItems": 4,
+            "minItems": 4
+          }
+        },
+        "knotVector": {
+          "description": "Knot vector.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "order": {
+          "description": "Order of basis splines.",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        }
+      }
+    },
+    "Plane": {
+      "description": "Plane surface definition.",
+      "type": "object",
+      "required": [
+        "normal"
+      ],
+      "properties": {
+        "constant": {
+          "description": "The value of `d` in the plane equation `n.r = d`.",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "normal": {
+          "description": "Normal vector to the plane.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        },
+        "point": {
+          "description": "An arbitrary point that lies on the plane.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        }
+      }
+    },
+    "Shell": {
+      "description": "Boundary representation volume.",
+      "type": "object",
+      "required": [
+        "faces"
+      ],
+      "properties": {
+        "faces": {
+          "description": "Set of connected faces forming a closed 'watertight' volume.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IndexWithOrientation"
+          }
+        },
+        "name": {
+          "description": "Optional name for this shell.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Solid": {
+      "description": "Solid boundary representation structure.",
+      "type": "object",
+      "required": [
+        "outerShell"
+      ],
+      "properties": {
+        "innerShells": {
+          "description": "Optional set of inner shells, defining hollow regions of otherwise wholly solid objects.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IndexWithOrientation"
+          }
+        },
+        "mesh": {
+          "description": "Optional mesh approximation of this solid.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/index"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "description": "Optional name for this solid.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "outerShell": {
+          "description": "The outer boundary of the solid surface.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/IndexWithOrientation"
+            }
+          ]
+        }
+      }
+    },
+    "Sphere": {
+      "description": "Parametric spherical surface definition.\n\nσ(u, v) := O + Rcos(v)(cos(u)x + sin(u)y) + Rsin(v)z, where: * O = `self.horizon.origin`, * R = `self.horizon.radius`, * x = `self.horizon.xbasis`, * y = `self.horizon.normal` × `self.horizon.xbasis`, * z = `self.horizon.normal`, * u ∈ {0, 2π}, * v ∈ {0, 2π}.\n\nSpheres are defined in reference to a circle at zero inclination.",
+      "type": "object",
+      "required": [
+        "horizon"
+      ],
+      "properties": {
+        "horizon": {
+          "description": "The circle at zero inclination.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Circle"
+            }
+          ]
+        }
+      }
+    },
+    "Surface": {
+      "description": "Abstract surface data.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "cylinder": {
+          "description": "Arguments for a cylindrical surface.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Cylinder"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "domain": {
+          "description": "Surface parameter domain.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Domain2"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "description": "Optional name for this surface.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nurbs": {
+          "description": "Arguments for a NURBS surface.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Nurbs"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "plane": {
+          "description": "Arguments for a planar surface.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Plane"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sphere": {
+          "description": "Arguments for a spherical surface.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Sphere"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "torus": {
+          "description": "Arguments for a toroidal surface.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Torus"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "description": "Discriminant.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Type"
+            }
+          ]
+        }
+      }
+    },
+    "Torus": {
+      "description": "Toroidal surface definition.\n\nσ(u, v) := O + (R + rcos(v))(cos(u)x + sin(u)y) + rsin(v)z, where: * O = `self.origin`, * R = `self.radius`, * r = `self.circle.radius`, * x = `self.circle.xbasis`, * y = `self.circle.normal` × `self.circle.xbasis`, * z = `self.circle.normal`, * u, v ∈ {0, 2π}.\n\nTori are defined in reference to a circle that is revolved about an origin at a specified distance. This distance is called the major radius. The radius of the circle of revolution is called the minor radius.",
+      "type": "object",
+      "required": [
+        "circle",
+        "origin",
+        "radius"
+      ],
+      "properties": {
+        "circle": {
+          "description": "Circle of revolution.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Circle"
+            }
+          ]
+        },
+        "origin": {
+          "description": "The center of the torus.\n\nThe axis of revolution passes through the origin of the torus.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        },
+        "radius": {
+          "description": "Distance from the torus origin to the origin of the revolved circle.",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "Type": {
+      "description": "Discriminant for `Surface` data.",
+      "oneOf": [
+        {
+          "description": "Cylindrical surface.",
+          "type": "string",
+          "enum": [
+            "Cylinder"
+          ]
+        },
+        {
+          "description": "NURBS surface.",
+          "type": "string",
+          "enum": [
+            "Nurbs"
+          ]
+        },
+        {
+          "description": "Planar surface.",
+          "type": "string",
+          "enum": [
+            "Plane"
+          ]
+        },
+        {
+          "description": "Spherical surface.",
+          "type": "string",
+          "enum": [
+            "Sphere"
+          ]
+        },
+        {
+          "description": "Torus surface.",
+          "type": "string",
+          "enum": [
+            "Torus"
+          ]
+        }
+      ]
+    },
+    "Vertex": {
+      "description": "Junctions of edges in 3D space.",
+      "type": "array",
+      "items": {
+        "type": "number",
+        "format": "double"
+      },
+      "maxItems": 3,
+      "minItems": 3
+    },
+    "index": {
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0.0
+    }
+  }
+}
