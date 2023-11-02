@@ -51,6 +51,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `ICOSA` | Icosa Foundation | https://icosa.foundation/ | [#2208](https://github.com/KhronosGroup/glTF/issues/2208) |
 | `INTEL` | Intel Corporation | https://www.intel.com/ | [#2142](https://github.com/KhronosGroup/glTF/issues/2142) |
 | `KDAB` | The KDAB Group | https://www.kdab.com/ | [#1728](https://github.com/KhronosGroup/glTF/pull/1728) |
+| `KITTYCAD` | KittyCAD Inc. | https://kittycad.io/<br>`david at kittycad.io` | [#2344](https://github.com/KhronosGroup/glTF/issues/2344) |
 | `LLQ` | Lifeliqe, Inc. | https://www.lifeliqe.com/ | [#1414](https://github.com/KhronosGroup/glTF/issues/1414) |
 | `MAGNUM` | Magnum Engine | https://magnum.graphics/<br>`info at magnum.graphics` | [#2222](https://github.com/KhronosGroup/glTF/issues/2222) |
 | `MAXAR` | Maxar Technologies | https://www.maxar.com/ | [#1869](https://github.com/KhronosGroup/glTF/issues/1869) |
