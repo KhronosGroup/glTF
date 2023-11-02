@@ -54,6 +54,162 @@ A _loop_ is a set of _edges_ that combine to form a closed circuit. Edges are re
 
 ![loop-example](figures/loop.png)
 
+### Curve
+
+A _curve_ defines a function that evaluates a single parameter to a point in either 2D or 3D space, depending on context.
+
+Curves are referenced by _edges_ to define the boundary between _faces_ in 3D space. Supplementary curves may be referenced by _loops_ to define the same boundary between _faces_ in 2D _surface_ parameter space.
+
+#### Base structure
+
+```json
+{
+  "type": "curveType",
+  "curveType": {
+    "curveSpecificValue": 1
+  },
+  "domain": {
+    "min": 0,
+    "max": 1
+  }
+}
+```
+
+#### Line (start & direction)
+
+```json
+"line": {
+  "start": [-1, -1, -1],
+  "direction": [1, 1, 1],
+}
+```
+
+#### Line (start & end)
+
+
+```json
+"line": {
+  "start": [-1, -1, -1],
+  "end": [1, 1, 1],
+}
+```
+
+#### Circle
+
+
+```json
+"circle": {
+  "radius": 1,
+  "origin": [0, 0, 0],
+  "normal": [0, 0, 1],
+  "xbasis": [1, 0, 0]
+}
+```
+
+#### [NURBS](https://en.wikipedia.org/wiki/Non-uniform_rational_B-spline)
+
+
+```json
+"nurbs": {
+  "controlPoints": [
+    [1.0, 0.0, 0.0, 1.0],
+    [1.0, 1.0, 0.0, 0.7071],
+    [0.0, 1.0, 0.0, 1.0]
+  ],
+  "knotVector": [0, 0, 0, 1, 1, 1],
+  "order": 3
+}
+```
+
+## Surface
+
+A _surface_ defines a function that evaluates two parameters to a point in 3D space.
+
+Surfaces are referenced by _faces_ to define the implicit geometry bounded by _loops_.
+
+#### Base structure
+
+```json
+{
+  "type": "surfaceType",
+  "surfaceType": {
+    "surfaceSpecificValue": 1
+  },
+  "domain": {
+    "min": [0, 0],
+    "max": [1, 1]
+  }
+}
+```
+
+#### Plane
+
+```json
+"plane": {
+  "normal": [0, 0, 1],
+  "point": [0, 0, 0]
+}
+```
+
+#### Cylinder (extruded circle)
+
+```json
+"cylinder": {
+  "circle":  {
+    "radius": 1,
+    "origin": [0, 0, 0],
+    "normal": [0, 0, 1],
+    "xbasis": [1, 0, 0]
+  }
+}
+```
+
+#### Torus (revolved circle)
+
+```json
+"torus": {
+  "origin": [0, 0, 0],
+  "radius": 5,
+  "circle":  {
+    "radius": 1,
+    "normal": [0, 0, 1],
+    "xbasis": [1, 0, 0]
+  }
+}
+```
+
+#### Sphere
+
+```json
+"sphere": {
+  "horizon": {
+    "origin": [0, 0, 0],
+    "radius": 1,
+    "normal": [0, 0, 1],
+    "xbasis": [1, 0, 0]
+  }
+}
+```
+
+#### [NURBS](https://en.wikipedia.org/wiki/Non-uniform_rational_B-spline)
+
+```json
+"nurbs": {
+  "controlPoints": [
+    [0, 0, -1, 1]
+    [0, 2, -1, 1],
+    [1, 0, -1, 0.7071],
+    [1, 2, -1, 0.7071],
+    [1, 0, 0, 1],
+    [1, 2, 0, 1],
+  ],
+  "numControlPoints": [3, 2],
+  "numKnots": [6, 4],
+  "knotVector": [3, 3, 3, 4, 4, 4, 0, 0, 2, 2],
+  "order": [3, 2]
+}
+```
+
 ## Orientation
 
 Many objects in boundary representation have two _orientation states_. Such objects are called _orientable_ objects. These are often given colloquial terms such as 'right/wrong side', 'up/down', 'in/out', 'forward/backward', et cetera. When referencing orientable objects, it is important to state which orientation of the object is desired. The orientation of a referenced object is described as being 'same-sense' or 'opposite-sense'. This extension utilizes the sign bit of floating point numbers to select the desired orientation. A positive sign selects the 'same-sense' and a negative sign selects the 'opposite-sense'.
