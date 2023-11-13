@@ -39,9 +39,13 @@ $$
 B = \frac{n_d - 1}{V \left( {\lambda_F^{-2}} - {\lambda_C^{-2}} \right)}
 $$
 
+And then:
+
 $$
 A = n_d - \frac{B}{\lambda_d^2}
 $$
+
+And finally:
 
 $$
 n(\lambda) = A + \frac{B}{\lambda^2}
