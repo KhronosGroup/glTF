@@ -33,7 +33,7 @@ The Abbe number \( $V$ \) is computed from the index of refraction at three wave
 
 $$V = \frac{n_d - 1}{n_F - n_C}$$
 
-To calculate the index of refraction at a specific wavelength \( $\lambda$ \), given an Abbe number \( $V$ \) and the central index of refraction (assumed to be at the color blue, \( $N_d$ \), as specified by the KHR_materials_ior extension):
+To calculate the index of refraction at a specific wavelength \( $\lambda$ \), given an Abbe number \( $V$ \) and the central index of refraction (assumed to be at the central wavelength, \( $N_d$ \), as specified by the KHR_materials_ior extension):
 
 $$
 B = \frac{n_d - 1}{V \left( {\lambda_F^{-2}} - {\lambda_C^{-2}} \right)}
