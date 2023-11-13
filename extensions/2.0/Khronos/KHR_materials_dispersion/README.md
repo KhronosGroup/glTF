@@ -38,9 +38,11 @@ To calculate the index of refraction at a specific wavelength \( $\lambda$ \), g
 $$
 B = \frac{n_d - 1}{V \left( {\lambda_F^{-2}} - {\lambda_C^{-2}} \right)}
 $$
+
 $$
 A = n_d - \frac{B}{\lambda_d^2}
 $$
+
 $$
 n(\lambda) = A + \frac{B}{\lambda^2}
 $$
