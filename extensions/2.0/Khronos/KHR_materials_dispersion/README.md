@@ -29,25 +29,25 @@ This extension adds one parameters to the metallic-roughness material: `dispersi
 
 Optical dispersion is represented in terms of the Abbe number parameterization \( $V$ \).  The dispersion effect is a result of the wavelength-dependent index of refraction of a material.  Dispersion is a widely adopted parameter in modern PBR models.  It is present in both OpenPBR (as *transmission_dispersion_abbe_number*) and the Dassault Enterprise PBR Shading Model (as $V_d$).
 
-The Abbe number \( $V$ \) is computed from the index of refraction at three wavelengths of visible light: 486.1 nm (short wavelength blue, $N_s$), 587.6 nm (central yellow, $N_c$), and 656.3 nm (long wavelength red, $N_l$).  The Abbe number makes the simplifying assumption that the index of refraction variance is linear:
+The Abbe number \( $V$ \) is computed from the index of refraction at three wavelengths of visible light: 486.1 nm (short wavelength blue, $n_F$), 587.6 nm (central wavelength, $n_d$), and 656.3 nm (long wavelength red, $n_C$).  The Abbe number makes the simplifying assumption that the index of refraction variance is linear:
 
-$$V = \frac{N_c - 1}{N_l - N_s}$$
+$$V = \frac{n_d - 1}{n_F - n_C}$$
 
 To calculate the index of refraction at a specific wavelength \( $\lambda$ \), given an Abbe number \( $V$ \) and the central index of refraction (assumed to be at the color blue, \( $N_d$ \), as specified by the KHR_materials_ior extension):
 
 $$
-B = \frac{N_c - 1}{V \times \left( \frac{1}{\lambda_s} - \frac{1}{\lambda_l} \right)}
+B = \frac{n_d - 1}{V \left( {\lambda_F^{-2}} - {\lambda_C^{-2}} \right)}
 $$
 $$
-A = N_c - \frac{B}{\lambda_c}
+A = n_d - \frac{B}{\lambda_d^2}
 $$
 $$
-N(\lambda) = A + \frac{B}{\lambda^2}
+n(\lambda) = A + \frac{B}{\lambda^2}
 $$
 
 ![Dispersion on a Gem](./figures/Dispersion.jpg)
 
-In this extension, we store a transformed dispersion instead of the Abbe number directly.  Specifically we store 20/V so that a value of 1.0 is equivalent to V=20, which is about the lowest Adde number for real materials. Values over 1.0 are still valid for artists that want to exaggerate the effect. Decreasing values lower the amount of dispersion down to 0.0.  Aside from being more intuitive for artists, this mapping also has the added benefit of being more easily defined with a texture.  This is the same transform used by both Adobe Standard Material and OpenPBR.
+In this extension, we store a transformed dispersion instead of the Abbe number directly.  Specifically we store $20/V$ so that a value of 1.0 is equivalent to $V=20$, which is about the lowest Adde number for normal materials. Values over 1.0 are still valid for artists that want to exaggerate the effect. Decreasing values lower the amount of dispersion down to 0.0.  Aside from being more intuitive for artists, this mapping also has the added benefit of being more easily defined with a texture.  This is the same transform used by both Adobe Standard Material and OpenPBR.
 
 ## Extending Materials
 
@@ -75,7 +75,7 @@ Factor and texture are combined by multiplication to describe a single value.
 
 The default value of 0 has a special meaning in that no dispersion should be used.  This is the default value for backwards compatibility.  Any value in the valid range [0, 100] other than zero is considered to be a valid dispersion value, although the range between [0 , 1] is the range of realistic values.
 
-Here is a table of common material dispersion Abbe numbers:
+Here is a table of some material dispersion Abbe numbers, including the outlier of Rutile which is a very high dispersion material:
 
 | Material | Abbe Number (V) |
 | -------- | ----------- |
