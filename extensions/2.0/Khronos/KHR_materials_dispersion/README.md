@@ -47,6 +47,8 @@ $$
 
 ![Dispersion on a Gem](./figures/Dispersion.jpg)
 
+In this extension, we store a transformed dispersion instead of the Abbe number directly.  Specifically we store 20/V so that a value of 1.0 is equivalent to V=20, which is about the lowest Adde number for real materials. Values over 1.0 are still valid for artists that want to exaggerate the effect. Decreasing values lower the amount of dispersion down to 0.0.  Aside from being more intuitive for artists, this mapping also has the added benefit of being more easily defined with a texture.  This is the same transform used by both Adobe Standard Material and OpenPBR.
+
 ## Extending Materials
 
 The dispersion, defined in terms of Abbe number, is defined by adding the `KHR_materials_dispersion` extension to any glTF material.
@@ -57,7 +59,7 @@ The dispersion, defined in terms of Abbe number, is defined by adding the `KHR_m
         {
             "extensions": {
                 "KHR_materials_dispersion": {
-                    "dispersion": 55
+                    "dispersion": 0.1
                 }
             }
         }
@@ -69,9 +71,9 @@ Factor and texture are combined by multiplication to describe a single value.
 
 | |Type|Description|Required|
 |-|----|-----------|--------|
-| **dispersion** | `number` | The strength of the dispersion effect, specified as an Abbe number. | No, default: `0`|
+| **dispersion** | `number` | The strength of the dispersion effect, specified as 20/Abbe number. | No, default: `0`|
 
-The default value of 0 has a special meaning in that no dispersion should be used.  This is the default value for backwards compatibility.  Any value in the valid range [0, 1000] other than zero is considered to be a valid dispersion value.
+The default value of 0 has a special meaning in that no dispersion should be used.  This is the default value for backwards compatibility.  Any value in the valid range [0, 100] other than zero is considered to be a valid dispersion value, although the range between [0 , 1] is the range of realistic values.
 
 Here is a table of common material dispersion Abbe numbers:
 
