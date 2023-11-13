@@ -33,7 +33,7 @@ The Abbe number \( $V$ \) is computed from the index of refraction at three wave
 
 $$V = \frac{n_d - 1}{n_F - n_C}$$
 
-To calculate the index of refraction at a specific wavelength \( $\lambda$ \), given an Abbe number \( $V$ \) and the central index of refraction (assumed to be at the central wavelength, \( $N_d$ \), as specified by the KHR_materials_ior extension):
+To calculate the index of refraction at a specific wavelength \( $\lambda$ \), given an Abbe number \( $V$ \) and the central index of refraction as specified by the KHR_materials_ior extension (assumed to be at the central wavelength, \( $N_d$ \)):
 
 $$
 B = \frac{n_d - 1}{V \left( {\lambda_F^{-2}} - {\lambda_C^{-2}} \right)}
@@ -79,7 +79,7 @@ Factor and texture are combined by multiplication to describe a single value.
 |-|----|-----------|--------|
 | **dispersion** | `number` | The strength of the dispersion effect, specified as 20/Abbe number. | No, default: `0`|
 
-The default value of 0 has a special meaning in that no dispersion should be used.  This is the default value for backwards compatibility.  Any value in the valid range [0, 100] other than zero is considered to be a valid dispersion value, although the range between [0 , 1] is the range of realistic values.
+The default value of 0 has a special meaning in that no dispersion should be used.  This is the default value for backwards compatibility.  Any value zero or larger is considered to be a valid dispersion value, although the range between [0 , 1] is the range of realistic values.
 
 Here is a table of some material dispersion Abbe numbers, including the outlier of Rutile which is a very high dispersion material:
 

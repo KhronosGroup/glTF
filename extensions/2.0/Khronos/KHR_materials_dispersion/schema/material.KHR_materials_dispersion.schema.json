@@ -9,9 +9,8 @@
             "type": "number",
             "description": "The strength of the dispersion.",
             "default": 0.0,
-            "minimum": 1.0,
-            "maximum": 1000.0,
-            "gltf_detailedDescription": "This parameter defines dispersion in terms of the Abby number formulation."
+            "minimum": 0.0,
+            "gltf_detailedDescription": "This parameter defines dispersion in terms of the 20/Abbe number formulation."
         },
         "extensions": { },
         "extras": { }
