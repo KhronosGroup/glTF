@@ -308,7 +308,11 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Input value sockets
 | `floatN a` | Argument
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}a, \text{if } a \ge 0.0 \\ -a, \text{if } a < 0.0 \end{cases}]
+| `floatN value` | latexmath:[\begin{cases}
+                                -a & \text{if } a \lt 0 \\
+                                 0 & \text{if } a = 0 \\
+                                 a & \text{if } a \gt 0
+                              \end{cases}]
 |===
 
 ===== Sign
@@ -319,7 +323,11 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Input value sockets
 | `floatN a` | Argument
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}-1.0, \text{if } a < 0.0 \\ a, \text{if } a = \pm0.0 \\ 1.0, \text{if } a > 0.0 \end{cases}]
+| `floatN value` | latexmath:[\begin{cases}
+                                -1 & \text{if } a \lt 0 \\
+                                 a & \text{if } a = \pm0 \\
+                                +1 & \text{if } a \gt 0
+                              \end{cases}]
 |===
 
 ===== Truncate
@@ -419,6 +427,12 @@ If the argument is infinity, it is returned unchanged.
 | `floatN value` | Product, stem:[a * b]
 |===
 
+[NOTE]
+.Note
+====
+For `float4x4` arguments, this operation performs per-component multiplication.
+====
+
 ===== Division
 
 [cols="1h,1,2"]
@@ -440,7 +454,11 @@ If the argument is infinity, it is returned unchanged.
 | `floatN a` | Dividend
 | `floatN b` | Divisor
 | Output value sockets
-| `floatN value` | latexmath:[a - (b \cdot trunc(\frac{a}{b}))]
+| `floatN value` | latexmath:[\begin{cases}
+                                \mathit{NaN} & \text{if } a = \pm \infty \text{ or } b = \pm 0 \\
+                                a & \text{if } a \ne \pm \infty \text{ and } b = \pm \infty \\
+                                a - (b \cdot trunc(\frac{a}{b})) & \text{otherwise}
+                              \end{cases}]
 |===
 
 ===== Minimum
@@ -474,11 +492,17 @@ If the argument is infinity, it is returned unchanged.
 | Type | `math/clamp` | Clamp operation
 .3+| Input value sockets
 | `floatN a` | Value to clamp
-| `floatN b` | Lower boundary
-| `floatN c` | Upper boundary
+| `floatN b` | First boundary
+| `floatN c` | Second boundary
 | Output value sockets
-| `floatN value` | latexmath:[min(max(a, b), c)]
+| `floatN value` | latexmath:[min(max(a, min(b, c)), max(b, c))]
 |===
+
+[NOTE]
+.Note
+====
+This operation correctly handles a case when stem:[b] is greater than stem:[c].
+====
 
 ===== Saturate
 
@@ -488,7 +512,7 @@ If the argument is infinity, it is returned unchanged.
 | Input value sockets
 | `floatN a` | Value to saturate
 | Output value sockets
-| `floatN value` | latexmath:[clamp(a, 0, 1)]
+| `floatN value` | latexmath:[min(max(a, 0), 1)]
 |===
 
 ===== Interpolate
@@ -497,11 +521,11 @@ If the argument is infinity, it is returned unchanged.
 |===
 | Type | `math/mix` | Linear interpolation operation
 .3+| Input value sockets
-| `floatN a` | Interpolated value at stem:[0.0]
-| `floatN b` | Interpolated value at stem:[1.0]
+| `floatN a` | Interpolated value at stem:[0]
+| `floatN b` | Interpolated value at stem:[1]
 | `floatN c` | Unclamped interpolation coefficient
 | Output value sockets
-| `floatN value` | stem:[(1.0 - c) * a + c * b]
+| `floatN value` | stem:[(1 - c) * a + c * b]
 |===
 
 ==== Comparison Nodes
@@ -608,7 +632,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Input value sockets
 | `floatN a` | Value in degrees
 | Output value sockets
-| `floatN value` | stem:[a * pi / 180.0]
+| `floatN value` | stem:[a * pi / 180]
 |===
 
 ===== Radians-To-Degrees
@@ -619,7 +643,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Input value sockets
 | `floatN a` | Value in radians
 | Output value sockets
-| `floatN value` | stem:[a * 180.0 / pi]
+| `floatN value` | stem:[a * 180 / pi]
 |===
 
 ===== Sine
@@ -630,7 +654,10 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Input value sockets
 | `floatN a` | Angle
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}sin(a), \text{if } a \ne \pm\infty \\ \mathit{NaN}, \text{if } a = \pm\infty\end{cases}]
+| `floatN value` | latexmath:[\begin{cases}
+                                sin(a) & \text{if } a \ne \pm\infty \\
+                                \mathit{NaN} & \text{if } a = \pm\infty
+                              \end{cases}]
 |===
 
 ===== Cosine
@@ -641,7 +668,10 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Input value sockets
 | `floatN a` | Angle
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}cos(a), \text{if } a \ne \pm\infty \\ \mathit{NaN}, \text{if } a = \pm\infty\end{cases}]
+| `floatN value` | latexmath:[\begin{cases}
+                                cos(a) & \text{if } a \ne \pm\infty \\
+                                \mathit{NaN} & \text{if } a = \pm\infty
+                              \end{cases}]
 |===
 
 ===== Tangent
@@ -652,7 +682,10 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Input value sockets
 | `floatN a` | Angle
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}tan(a), \text{if } a \ne \pm\infty \\ \mathit{NaN}, \text{if } a = \pm\infty\end{cases}]
+| `floatN value` | latexmath:[\begin{cases}
+                                tan(a) & \text{if } a \ne \pm\infty \\
+                                \mathit{NaN} & \text{if } a = \pm\infty
+                              \end{cases}]
 |===
 
 ===== Arcsine
@@ -663,7 +696,10 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Input value sockets
 | `floatN a` | Sine value
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}arcsin(a) \in [-\frac{\pi}{2}; \frac{\pi}{2}\], \text{if } \|a\| \le 1 \\ \mathit{NaN}, \text{if } \|a\| > 1\end{cases}]
+| `floatN value` | latexmath:[\begin{cases}
+                                arcsin(a) \in [-\frac{\pi}{2}; \frac{\pi}{2}\] & \text{if } \|a\| \le 1 \\
+                                \mathit{NaN} & \text{if } \|a\| \gt 1
+                              \end{cases}]
 |===
 
 ===== Arccosine
@@ -674,7 +710,10 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Input value sockets
 | `floatN a` | Cosine value
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}arccos(a) \in [0; \pi\], \text{if } \|a\| \le 1 \\ \mathit{NaN}, \text{if } \|a\| > 1\end{cases}]
+| `floatN value` | latexmath:[\begin{cases}
+                                arccos(a) \in [0; \pi\] & \text{if } \|a\| \le 1 \\
+                                \mathit{NaN} & \text{if } \|a\| \gt 1
+                              \end{cases}]
 |===
 
 ===== Arctangent
@@ -760,7 +799,10 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Input value sockets
 | `floatN a` | Hyperbolic cosine value
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}ln(a+\sqrt{a^2-1}), \text{if } a \ge 1 \\ \mathit{NaN}, \text{if } a < 1\end{cases}]
+| `floatN value` | latexmath:[\begin{cases}
+                                ln(a+\sqrt{a^2-1}) & \text{if } a \ge 1 \\
+                                \mathit{NaN} & \text{if } a \lt 1
+                              \end{cases}]
 |===
 
 ===== Inverse Hyperbolic Tangent
@@ -771,7 +813,11 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Input value sockets
 | `floatN a` | Hyperbolic tangent value
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}\dfrac{1}{2}ln\dfrac{1+a}{1-a}, \text{if } \|a\| \le 1 \\ \mathit{NaN}, \text{if } \|a\| > 1\end{cases}]
+| `floatN value` | latexmath:[\begin{cases}
+                                \dfrac{1}{2}ln\dfrac{1+a}{1-a} & \text{if } \|a\| \lt 1 \\
+                                \pm\infty & \text{if } a = \pm1 \\
+                                \mathit{NaN} & \text{if } \|a\| \gt 1
+                              \end{cases}]
 |===
 
 ==== Exponential Nodes
@@ -799,7 +845,11 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Input value sockets
 | `floatN a` | Argument value
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}ln(a), \text{if } a \ge 0 \\ \mathit{NaN}, \text{if } a < 0\end{cases}]
+| `floatN value` | latexmath:[\begin{cases}
+                                ln(a) & \text{if } a \gt 0 \\
+                                -\infty & \text{if } a = 0 \\
+                                \mathit{NaN} & \text{if } a \lt 0
+                              \end{cases}]
 |===
 
 ===== Base-2 Logarithm
@@ -810,7 +860,11 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Input value sockets
 | `floatN a` | Argument
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}log_2(a), \text{if } a \ge 0 \\ \mathit{NaN}, \text{if } a < 0\end{cases}]
+| `floatN value` | latexmath:[\begin{cases}
+                                log_2(a) & \text{if } a \gt 0 \\
+                                -\infty & \text{if } a = 0 \\
+                                \mathit{NaN} & \text{if } a \lt 0
+                              \end{cases}]
 |===
 
 ===== Base-10 Logarithm
@@ -821,7 +875,11 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Input value sockets
 | `floatN a` | Argument
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}log_{10}(a), \text{if } a \ge 0 \\ \mathit{NaN}, \text{if } a < 0\end{cases}]
+| `floatN value` | latexmath:[\begin{cases}
+                                log_{10}(a) & \text{if } a \gt 0 \\
+                                -\infty & \text{if } a = 0 \\
+                                \mathit{NaN} & \text{if } a \lt 0
+                              \end{cases}]
 |===
 
 ===== Square Root
@@ -832,7 +890,10 @@ If any input value is _NaN_, the output value is also _NaN_.
 | Input value sockets
 | `floatN a` | Radicand
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}\sqrt{a}, \text{if } a \ge 0 \\ \mathit{NaN}, \text{if } a < 0\end{cases}]
+| `floatN value` | latexmath:[\begin{cases}
+                                \sqrt{a} & \text{if } a \ge 0 \\
+                                \mathit{NaN} & \text{if } a \lt 0
+                              \end{cases}]
 |===
 
 ===== Cube Root
@@ -936,3 +997,522 @@ If any input value is _NaN_, the output value is also _NaN_.
 |===
 
 If the vector stem:[b] is not unit, rotation results may be undefined.
+
+===== Transform
+
+[cols="1h,1,2"]
+|===
+| Type | `math/transform` | Vector transformation
+.2+| Input value sockets
+| `float4 a`   | Vector to transform
+| `float4x4 b` | Transformation matrix
+| Output value sockets
+| `float4 value` | Transformed vector
+|===
+
+==== Matrix Nodes
+
+===== Transpose
+
+[cols="1h,1,2"]
+|===
+| Type | `math/transpose` | Transpose operation
+| Input value sockets
+| `float4x4 a` | Matrix to transpose
+| Output value sockets
+| `float4x4 value` | Matrix that is the transpose of stem:[a]
+|===
+
+===== Determinant
+
+[cols="1h,1,2"]
+|===
+| Type | `math/determinant` | Dot product
+| Input value sockets
+| `float4x4 a` | Matrix
+| Output value sockets
+| `float value` | Determinant of stem:[a]
+|===
+
+===== Inverse
+
+[cols="1h,1,2"]
+|===
+| Type | `math/inverse` | Inverse operation
+| Input value sockets
+| `float4x4 a` | Matrix to inverse
+| Output value sockets
+| `float4x4 value` | Matrix that is the inverse of stem:[a]
+|===
+
+===== Multiplication
+
+[cols="1h,1,2"]
+|===
+| Type | `math/matmul` | Matrix multiplication operation
+.2+| Input value sockets
+| `float4x4 a` | First matrix
+| `float4x4 b` | Second matrix
+| Output value sockets
+| `float4x4 value` | Matrix product
+|===
+
+==== Integer Arithmetic Nodes
+
+All inputs to these nodes are two's complement 32-bit signed integers.
+
+===== Absolute Value
+
+[cols="1h,1,2"]
+|===
+| Type | `math/abs` | Absolute value operation
+| Input value sockets
+| `int a` | Argument
+| Output value sockets
+| `int value` | latexmath:[\begin{cases}
+                             -a & \text{if } a \lt 0 \\
+                              a & \text{if } a \ge 0
+                           \end{cases}]
+|===
+
+As this node is defined in terms of the negation node (see below), the absolute value of `-2147483648` is `-2147483648`.
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+Math.abs(a)|0
+----
+====
+
+===== Sign
+
+[cols="1h,1,2"]
+|===
+| Type | `math/sign` | Sign operation
+| Input value sockets
+| `int a` | Argument
+| Output value sockets
+| `int value` | latexmath:[\begin{cases}
+                             -1 & \text{if } a \lt 0 \\
+                              0 & \text{if } a = 0 \\
+                             +1 & \text{if } a \gt 0
+                           \end{cases}]
+|===
+
+===== Negation
+
+[cols="1h,1,2"]
+|===
+| Type | `math/neg` | Negation operation
+| Input value sockets
+| `int a` | Argument
+| Output value sockets
+| `int value` | stem:[-a]
+|===
+
+Negating `-2147483648` **MUST** return `-2147483648`.
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+(-a)|0
+----
+====
+
+===== Addition
+
+[cols="1h,1,2"]
+|===
+| Type | `math/add` | Addition operation
+.2+| Input value sockets
+| `int a` | First addend
+| `int b` | Second addend
+| Output value sockets
+| `int value` | Sum, stem:[a + b]
+|===
+
+Arithmetic overflow **MUST** wrap around, for example:
+
+[source]
+----
+2147483647 + 1 == -2147483648
+----
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+(a + b)|0
+----
+====
+
+===== Subtraction
+
+[cols="1h,1,2"]
+|===
+| Type | `math/sub` | Subtraction operation
+.2+| Input value sockets
+| `int a` | Minuend
+| `int b` | Subtrahend
+| Output value sockets
+| `int value` | Difference, stem:[a - b]
+|===
+
+Arithmetic overflow **MUST** wrap around, for example:
+
+[source]
+----
+-2147483648 - 1 == 2147483647
+----
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+(a - b)|0
+----
+====
+
+===== Multiplication
+
+[cols="1h,1,2"]
+|===
+| Type | `math/mul` | Multiplication operation
+.2+| Input value sockets
+| `int a` | First factor
+| `int b` | Second factor
+| Output value sockets
+| `int value` | Product, stem:[a * b]
+|===
+
+Arithmetic overflow **MUST** wrap around, for example:
+
+[source]
+----
+ 2147483647 * 2147483647 == 1
+
+-2147483648 * (-1)       == -2147483648
+----
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+Math.imul(a, b)
+----
+====
+
+===== Division
+
+[cols="1h,1,2"]
+|===
+| Type | `math/div` | Division operation
+.2+| Input value sockets
+| `int a` | Dividend
+| `int b` | Divisor
+| Output value sockets
+| `int value` | latexmath:[\begin{cases}
+                             \frac{a}{b} & \text{if } b \ne 0 \\
+                             0 & \text{if } b = 0
+                           \end{cases}]
+|===
+
+The quotient **MUST** be truncated towards zero.
+
+Arithmetic overflow is defined as follows:
+[source]
+----
+-2147483648 / (-1) == -2147483648
+----
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+(a / b)|0
+----
+====
+
+===== Remainder
+
+[cols="1h,1,2"]
+|===
+| Type | `math/rem` | Remainder operation
+.2+| Input value sockets
+| `int a` | Dividend
+| `int b` | Divisor
+| Output value sockets
+| `int value` | latexmath:[\begin{cases}
+                             a - (b \cdot trunc(\frac{a}{b})) & \text{if } b \ne 0 \\
+                             0 & \text{if } b = 0
+                           \end{cases}]
+|===
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+(a % b)|0
+----
+====
+
+===== Minimum
+
+[cols="1h,1,2"]
+|===
+| Type | `math/min` | Minimum operation
+.2+| Input value sockets
+| `int a` | First argument
+| `int b` | Second argument
+| Output value sockets
+| `int value` | Smallest of the arguments
+|===
+
+===== Maximum
+
+[cols="1h,1,2"]
+|===
+| Type | `math/max` | Maximum operation
+.2+| Input value sockets
+| `int a` | First argument
+| `int b` | Second argument
+| Output value sockets
+| `int value` | Largest of the arguments
+|===
+
+===== Clamp
+
+[cols="1h,1,2"]
+|===
+| Type | `math/clamp` | Clamp operation
+.3+| Input value sockets
+| `int a` | Value to clamp
+| `int b` | First boundary
+| `int c` | Second boundary
+| Output value sockets
+| `int value` | latexmath:[min(max(a, min(b, c)), max(b, c))]
+|===
+
+[NOTE]
+.Note
+====
+This operation correctly handles a case when stem:[b] is greater than stem:[c].
+====
+
+==== Integer Comparison Nodes
+
+All inputs to these nodes are two's complement 32-bit signed integers.
+
+===== Equality
+
+[cols="1h,1,2"]
+|===
+| Type | `math/eq` | Equality operation
+.2+| Input value sockets
+| `int a` | First argument
+| `int b` | Second argument
+| Output value sockets
+| `bool value` | True if the input arguments are equal; false otherwise
+|===
+
+===== Less Than
+
+[cols="1h,1,2"]
+|===
+| Type | `math/lt` | Less than operation
+.2+| Input value sockets
+| `int a` | First argument
+| `int b` | Second argument
+| Output value sockets
+| `bool value` | True if stem:[a < b]; false otherwise
+|===
+
+===== Less Than Or Equal To
+
+[cols="1h,1,2"]
+|===
+| Type | `math/le` | Less than or equal to operation
+.2+| Input value sockets
+| `int a` | First argument
+| `int b` | Second argument
+| Output value sockets
+| `bool value` | True if stem:[a <= b]; false otherwise
+|===
+
+===== Greater Than
+
+[cols="1h,1,2"]
+|===
+| Type | `math/gt` | Greater than operation
+.2+| Input value sockets
+| `int a` | First argument
+| `int b` | Second argument
+| Output value sockets
+| `bool value` | True if stem:[a > b]; false otherwise
+|===
+
+===== Greater Than Or Equal To
+
+[cols="1h,1,2"]
+|===
+| Type | `math/ge` | Greater than or equal operation
+.2+| Input value sockets
+| `int a` | First argument
+| `int b` | Second argument
+| Output value sockets
+| `bool value` | True if stem:[a >= b]; false otherwise
+|===
+
+==== Integer Bitwise Nodes
+
+All inputs to these nodes are two's complement 32-bit signed integers.
+
+===== Bitwise NOT
+
+[cols="1h,1,2"]
+|===
+| Type | `math/not` | Bitwise NOT operation
+| Input value sockets
+| `int a` | Argument
+| Output value sockets
+| `int value` | `~a`
+|===
+
+===== Bitwise AND
+
+[cols="1h,1,2"]
+|===
+| Type | `math/and` | Bitwise AND operation
+.2+| Input value sockets
+| `int a` | First argument
+| `int b` | Second argument
+| Output value sockets
+| `int value` | `a & b`
+|===
+
+===== Bitwise OR
+
+[cols="1h,1,2"]
+|===
+| Type | `math/or` | Bitwise OR operation
+.2+| Input value sockets
+| `int a` | First argument
+| `int b` | Second argument
+| Output value sockets
+| `int value` | `a \| b`
+|===
+
+===== Bitwise XOR
+
+[cols="1h,1,2"]
+|===
+| Type | `math/xor` | Bitwise XOR operation
+.2+| Input value sockets
+| `int a` | First argument
+| `int b` | Second argument
+| Output value sockets
+| `int value` | `a ^ b`
+|===
+
+===== Right Shift
+
+[cols="1h,1,2"]
+|===
+| Type | `math/asr` | Right Shift
+.2+| Input value sockets
+| `int a` | Value to be shifted
+| `int b` | Number of bits to shift by
+| Output value sockets
+| `int value` | `a >> b`
+|===
+
+Only the lowest 5 bits of stem:[b] are considered, i.e., its effective range is [0, 31]. The result **MUST** be truncated to 32 bits and interpreted as a two's complement signed integer. The most significant bit of stem:[a] **MUST** be propagated.
+
+===== Left Shift
+
+[cols="1h,1,2"]
+|===
+| Type | `math/lsl` | Left Shift
+.2+| Input value sockets
+| `int a` | Value to be shifted
+| `int b` | Number of bits to shift by
+| Output value sockets
+| `int value` | `a << b`
+|===
+
+Only the lowest 5 bits of stem:[b] are considered, i.e., its effective range is [0, 31]. The result **MUST** be truncated to 32 bits and interpreted as a two's complement signed integer.
+
+===== Count Leading Zeros
+
+[cols="1h,1,2"]
+|===
+| Type | `math/clz` | Count leading zeros operation
+| Input value sockets
+| `int a` | Argument
+| Output value sockets
+| `int value` | Number of leading zero bits in stem:[a]
+|===
+
+If stem:[a] is 0, the operation returns 32; if stem:[a] is negative, the operation returns 0.
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+Math.clz32(a)
+----
+====
+
+===== Count Trailing Zeros
+
+[cols="1h,1,2"]
+|===
+| Type | `math/ctz` | Count trailing zeros operation
+| Input value sockets
+| `int a` | Argument
+| Output value sockets
+| `int value` | Number of trailing zero bits in stem:[a]
+|===
+
+If stem:[a] is 0, the operation returns 32.
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+a ? (31 - Math.clz32(a & -a)) : 32;
+----
+====
+
+===== Count One Bits
+
+[cols="1h,1,2"]
+|===
+| Type | `math/popcnt` | Count set bits operation
+| Input value sockets
+| `int a` | Argument
+| Output value sockets
+| `int value` | Number of set bits in stem:[a]
+|===
+
+If stem:[a] is 0, the operation returns 0; if stem:[a] is -1, the operation returns 32.
