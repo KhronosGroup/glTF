@@ -12,19 +12,190 @@ Draft
 
 Written against the glTF 2.0 spec.
 
-# Overview
+## Overview
 
 A [boundary representation](https://en.wikipedia.org/wiki/Boundary_representation) (abbreviated as 'B-rep') provides an exact definition of solid volumes. B-reps can represent smooth surfaces such as spheres more precisely than polygonal meshes.
 
-B-reps need to be tessellated to be able to be rendered using standard graphics APIs such as Vulkan and OpenGL. For backward compatibility, this extension allows for B-reps to be associated with a tessellation (i.e., a mesh) that has been precomputed. When this is the case, the extension will appear in the `extensionsUsed` property. Where tessellations are not provided, the extension is listed in the `extensionsRequired` property and nodes are permitted to reference a sole B-rep item.
+B-reps must be tessellated to be able to be rendered using standard graphics APIs such as Vulkan and OpenGL. For this reason, this extension is intended to be used as supplementary information to meshes. Alternatively, to reduce the file size, solids defined using this extension may be used in place of meshes; in this case, the extension must be listed in the `extensionsRequired` property.
 
-## Concepts
+### Basic usage
+
+#### Instantiation of a mesh with supplementary B-rep information.
+
+```json
+{
+    "meshes": [
+        {
+           "name": "a normal mesh approximating a solid volume",
+           ...
+        }
+    ],
+    "nodes": [
+        {
+            "mesh": 0,
+            "extensions": {
+                "KITTYCAD_boundary_representation": {
+                    "solid": 0
+                }
+            }
+        }
+    ]
+    "extensionsUsed": [
+        "KITTYCAD_boundary_representation"
+    ],
+    "extensions": {
+        "KITTYCAD_boundary_representation": {
+            "solids": [
+                {
+                    "name": "a B-rep expressing an exact solid volume",
+                    "mesh": 0,
+                    ...
+                }
+            ],
+            ...
+        }
+    }
+}
+```
+
+Solids are instantiated in the same way as meshes; however, applications are free to process either the mesh or the B-rep. In this case, `"KITTYCAD_boundary_representation"` must appear under `extensionsUsed` but not under `extensionsRequired`.
+
+#### Instantiation of a solid without a mesh approximation
+
+```json
+{
+    ...,
+    "nodes": [
+        {
+            "extensions": {
+                "KITTYCAD_boundary_representation": {
+                    "solid": 0
+                }
+            }
+        }
+    ]
+    "extensionsUsed": ["KITTYCAD_boundary_representation"],
+    "extensionsRequired": ["KITTYCAD_boundary_representation"],
+    "extensions": {
+        "KITTYCAD_boundary_representation": {
+            "solids": [
+                {
+                    "name": "a B-rep expressing an exact solid volume",
+                    ...
+                }
+            ],
+            ...
+        }
+    }
+}
+```
+
+The file size may be reduced by omitting the mesh approximation. In this case, `"KITTYCAD_boundary_representation"` must appear under both `extensionsUsed` and `extensionsRequired`. Applications process B-rep data directly.
+
+Note: conversion from B-rep to mesh is a non-trivial operation. Mesh approximations should be provided for optimal interoperability.
+
+#### Root extension structure
+
+Boundary representation data extends the root data structure of the JSON portion of the glTF document. Each entry at the root may be referenced by index by other data structures.
+
+```json
+{
+    ...,
+    "extensions": {
+        "KITTYCAD_boundary_representation": {
+            "solids": [],
+            "shells": [],
+            "faces": [],
+            "loops": [],
+            "edges": [],
+            "vertices": []
+        }
+    }
+}
+```
+
+The `shells`, `faces`, `loops`, and `edges` arrays define _orientable_ objects. An important detail of this extension is that orientable objects may be referenced in their reverse-sense using a negative index.
+
+```json
+{
+    ...,
+    "extensions": {
+        "KITTYCAD_boundary_representation": {
+            ...,
+            "faces": [
+                {
+                    "outerLoop": 0,
+                    "surface": 0
+                }
+            ],
+            "loops": [
+                {
+                    "edges": [0, 1, -2]
+                }
+            ],
+            "edges": [
+                {
+                    "start": 0,
+                    "end": 1,
+                    "curve": 0
+                },
+                {
+                    "start": 1,
+                    "end": 2,
+                    "curve": 1
+                },
+                {
+                    "start": 0,
+                    "end": 2,
+                    "curve": -2
+                }
+            ],
+            "curves": [
+                {
+                    "type": "line",
+                    "start": [-1, -1, 0],
+                    "end": [1, -1, 0]
+                },
+                {
+                    "type": "line",
+                    "start": [1, -1, 0],
+                    "end": [0, 1, 0]
+                },
+                {
+                    "type": "line",
+                    "start": [0, 1, 0],
+                    "end": [-1, -1, 0]
+                }
+            ],
+            "surfaces": [
+                {
+                    "type": "plane",
+                    "point": [0, 0, 0],
+                    "normal": [0, 0, 1],
+                    "xbasis": [1, 0, 0]
+                }
+            ],
+            "vertices": [
+                [-1, -1, 0],
+                [1, -1, 0],
+                [0, 1, 0]
+            ]
+        }
+    }
+}
+```
+
+This example demonstrates how a single triangle could be represented using the B-rep method, demonstrating the use of negative indices for reverse orientation.
+
+Note: this is an incomplete example as a single triangle is insufficient to represent a solid volume.
+
+## Boundary Representation Concepts
 
 ### Solid
 
-A _solid_ represents a single volume of solid material. The boundary of the volume is called the solid's _outer shell_. In addition to its outer shell, a solid may have internal hollow regions; such regions are called _inner shells_. Both outer shells and inner shells are represented by the `Shell` data structure.
-
 ![solid-example](figures/solid.png)
+
+A _solid_ represents a single volume of solid material. The boundary of the volume is called the solid's _outer shell_. In addition to its outer shell, a solid may have internal hollow regions; such regions are called _inner shells_. Both outer shells and inner shells are represented by the `Shell` data structure.
 
 #### Example
 
@@ -147,7 +318,8 @@ Surfaces are referenced by _faces_ to define the implicit geometry bounded by _l
 ```json
 "plane": {
   "normal": [0, 0, 1],
-  "point": [0, 0, 0]
+  "point": [0, 0, 0],
+  "xbasis": [1, 0, 0]
 }
 ```
 
