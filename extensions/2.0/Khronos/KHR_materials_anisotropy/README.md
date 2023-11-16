@@ -31,6 +31,7 @@ Written against the glTF 2.0 spec.
 
 ## Exclusions
 
+- This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
 - This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Overview
