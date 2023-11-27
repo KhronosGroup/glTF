@@ -53,7 +53,7 @@ $$
 
 ![Dispersion on a Gem](./figures/Dispersion.jpg)
 
-In this extension, we store a transformed dispersion instead of the Abbe number directly.  Specifically we store $20/V$ so that a value of 1.0 is equivalent to $V=20$, which is about the lowest Abbe number for normal materials. Values over 1.0 are still valid for artists that want to exaggerate the effect. Decreasing values lower the amount of dispersion down to 0.0.  Aside from being more intuitive for artists, this mapping also has the added benefit of being more easily defined with a texture.  This is the same transform used by both Adobe Standard Material and OpenPBR.
+In this extension, we store a transformed dispersion instead of the Abbe number directly.  Specifically we store $20/V$ so that a value of 1.0 is equivalent to $V=20$, which is about the lowest Abbe number for normal materials. Values over 1.0 are still valid for artists that want to exaggerate the effect. Decreasing values lower the amount of dispersion down to 0.0.  This is the same transform used by both Adobe Standard Material and OpenPBR.
 
 ## Extending Materials
 
