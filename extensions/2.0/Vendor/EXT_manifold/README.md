@@ -24,7 +24,7 @@ This extension allows authors to denote that the contained mesh data is in fact 
 
 ## Extending Meshes With Manifold Data
 
-A glTF mesh is denoted as a manifold by adding an `EXT_manifold` extension object to it and obeying the following restrictions:
+A glTF mesh is denoted as a manifold by adding an `EXT_mesh_manifold` extension object to it and obeying the following restrictions:
 
 - all primitives **MUST** use the `TRIANGLES` topology type;
 - same attributes of different mesh primitives **MUST** reference the same accessor;
@@ -66,7 +66,7 @@ An example is given below, representing a portion of the included sample's JSON.
         }
       ],
       "extensions": {
-        "EXT_manifold": {
+        "EXT_mesh_manifold": {
           "manifoldPrimitive": {
             "indices": 2,
             "mode": 4,

@@ -166,7 +166,7 @@
         }
       ],
       "extensions": {
-        "EXT_manifold": {
+        "EXT_mesh_manifold": {
           "manifoldPrimitive": {
             "indices": 2,
             "mode": 4,
@@ -193,7 +193,7 @@
     }
   ],
   "extensionsUsed": [
-    "EXT_manifold"
+    "EXT_mesh_manifold"
   ],
   "scene": 0
 }
