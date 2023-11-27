@@ -23,9 +23,9 @@ Draft
 
 ## Overview
 
-This extension adds one parameters to the metallic-roughness material: `dispersion`.
+This extension adds one parameter to the metallic-roughness material: `dispersion`.
 
-`dispersion` enables configuring the strength of the angular separation of colors (chromatic aberration) transmitting through a relatively clear volume.  It is an enhancement to the default KHR_materials_volume transmission model which assumes no dispersion.
+`dispersion` enables configuring the strength of the angular separation of colors (chromatic aberration) transmitting through a relatively clear volume.  It is an enhancement to the default ```KHR_materials_volume``` transmission model which assumes no dispersion.
 
 Optical dispersion is represented in terms of the Abbe number parameterization \( $V$ \).  The dispersion effect is a result of the wavelength-dependent index of refraction of a material.  Dispersion is a widely adopted parameter in modern PBR models.  It is present in both OpenPBR (as *transmission_dispersion_abbe_number*) and the Dassault Enterprise PBR Shading Model (as $V_d$).
 
@@ -33,7 +33,7 @@ The Abbe number \( $V$ \) is computed from the index of refraction at three wave
 
 $$V = \frac{n_d - 1}{n_F - n_C}$$
 
-To calculate the index of refraction at a specific wavelength \( $\lambda$ \), given an Abbe number \( $V$ \) and the central index of refraction as specified by the KHR_materials_ior extension (assumed to be at the central wavelength, \( $N_d$ \)):
+To calculate the index of refraction at a specific wavelength \( $\lambda$ \), given an Abbe number \( $V$ \) and the central index of refraction as specified by the ```KHR_materials_ior``` extension (assumed to be at the central wavelength, \( $N_d$ \)):
 
 $$
 B = \frac{n_d - 1}{V \left( {\lambda_F^{-2}} - {\lambda_C^{-2}} \right)}
@@ -53,7 +53,7 @@ $$
 
 ![Dispersion on a Gem](./figures/Dispersion.jpg)
 
-In this extension, we store a transformed dispersion instead of the Abbe number directly.  Specifically we store $20/V$ so that a value of 1.0 is equivalent to $V=20$, which is about the lowest Adde number for normal materials. Values over 1.0 are still valid for artists that want to exaggerate the effect. Decreasing values lower the amount of dispersion down to 0.0.  Aside from being more intuitive for artists, this mapping also has the added benefit of being more easily defined with a texture.  This is the same transform used by both Adobe Standard Material and OpenPBR.
+In this extension, we store a transformed dispersion instead of the Abbe number directly.  Specifically we store $20/V$ so that a value of 1.0 is equivalent to $V=20$, which is about the lowest Abbe number for normal materials. Values over 1.0 are still valid for artists that want to exaggerate the effect. Decreasing values lower the amount of dispersion down to 0.0.  Aside from being more intuitive for artists, this mapping also has the added benefit of being more easily defined with a texture.  This is the same transform used by both Adobe Standard Material and OpenPBR.
 
 ## Extending Materials
 
@@ -73,8 +73,6 @@ The dispersion, defined in terms of Abbe number, is defined by adding the `KHR_m
 }
 ```
 
-Factor and texture are combined by multiplication to describe a single value.
-
 | |Type|Description|Required|
 |-|----|-----------|--------|
 | **dispersion** | `number` | The strength of the dispersion effect, specified as 20/Abbe number. | No, default: `0`|
@@ -83,19 +81,19 @@ The default value of 0 has a special meaning in that no dispersion should be use
 
 Here is a table of some material dispersion Abbe numbers, including the outlier of Rutile which is a very high dispersion material:
 
-| Material | Abbe Number (V) |
-| -------- | ----------- |
-| Rutile | 9.8 |
-| Polycarbonate | 32 |
-| Diamond | 55 |
-| Water | 55 |
-| Crown Glass | 59 |
+| Material | Abbe Number (V) | Dispersion (20/V) |
+| -------- | ----------- | -------------- |
+| Rutile | 9.8 | 2.04 |
+| Polycarbonate | 32 | 0.625 |
+| Diamond | 55 | 0.36 |
+| Water | 55 | 0.36 |
+| Crown Glass | 59 | 0.33 |
 
 ## Implementation
 
 *This section is non-normative.*
 
-One real-time method for rendering dispersion effects is to trace volume transmission separately for each of color channel accounting for the per channel ior as determined by the Abbe number.  The resulting composite image will show color separation between the channels as a result.
+One real-time method for rendering dispersion effects is to trace volume transmission separately for each of color channel accounting for the per channel IOR as determined by the Abbe number.  The resulting composite image will show color separation between the channels as a result.
 
 ## Schema
 

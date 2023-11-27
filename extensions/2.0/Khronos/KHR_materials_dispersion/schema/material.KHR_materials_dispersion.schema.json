@@ -7,7 +7,7 @@
     "properties": {
         "dispersion": {
             "type": "number",
-            "description": "The strength of the dispersion.",
+            "description": "This parameter defines dispersion in terms of the 20/Abbe number formulation.",
             "default": 0.0,
             "minimum": 0.0,
             "gltf_detailedDescription": "This parameter defines dispersion in terms of the 20/Abbe number formulation."
