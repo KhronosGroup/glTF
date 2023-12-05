@@ -33,12 +33,18 @@ A glTF mesh is denoted as a manifold by adding an `EXT_mesh_manifold` extension 
 The required `manifoldPrimitive` property added in the extension is an alternative `primitive` with additional restrictions:
 - it **MUST** use the `TRIANGLES` topology type;
 - it **MUST** have only the `POSITION` `attribute`, which **MUST** reference the same position `accessor` as the other primitives use; 
-- its `indices` property **MUST** reference an `accessor`, which **MUST** in turn reference the same `bufferView` as the indices accessors of other primitives of the same mesh;
-- when its `indices` `accessor` includes a `sparse` property, the sparse data also defines which vertices are to be merged, but every index merged **MUST** have identical position values for the before and after vertices referenced, so that the geometry is unchanged;
+- its `indices` property references an `accessor`, which **SHOULD** in turn reference the same `bufferView` as the indices accessors of other primitives of the same mesh;
+- when its `indices` differ from the primitives' `indices`, its `indices` accessor **SHOULD** include a `sparse` property, to represent the changes compactly;
+- the resulting `indices` **MUST** form an oriented 2-manifold;
 - it **MUST NOT** contain a material;
 - it **MUST NOT** contain morph targets, though the other primitives can.
 
-If the `indices` `accessor` is sparse, then `mergeIndices` and `mergeValues` **MUST** be included and reference `accessors` which are equivalent to the sparse indices and values, by referencing the same buffer views, offsets, component type, and count. This small amount of JSON is duplicated here because sparsity is generally considered an internal detail of compression, but here it also represents the relationship between the separate primitives and the unified manifold. If the mesh contains only primitives that are already disjoint and independently manifold, then no sparsity or merge `accessors` are needed.
+If the manifold `indices` differ from the combined primitives' `indices`, then `mergeIndices` and `mergeValues` **MUST** be included and reference accessors which are equivalent to the sparse indices and values needed to convert the primitives' `indices` into the `indices` of the `manifoldPrimitive`.
+
+- Every index merged **MUST** have identical position values for the before and after vertices referenced, so that the geometry is unchanged.
+- Implementations **MUST** rely on `mergeIndices` and `mergeValues` accessors (when present) to relate the vertices of the separate primitives that are merged to form the unified manifold.
+- The manifold's `indices` accessor **SHOULD** be sparse and it **SHOULD** use the same buffer views, offsets, component type, and count for its sparse properties as the `mergeIndices` and `mergeValues` accessors to avoid binary data duplication.
+- If the mesh contains only primitives that are already disjoint and independently manifold, then no merge accessors or sparsity are needed.
 
 An example is given below, representing a portion of the included sample's JSON. This object has two materials/primitives with a single shared vertex attribute array. The triangle indices are also a single shared array, partitioned into separate primitive accessors. 
 
