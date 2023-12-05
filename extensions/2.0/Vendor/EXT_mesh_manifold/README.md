@@ -33,11 +33,11 @@ A glTF mesh is denoted as a manifold by adding an `EXT_mesh_manifold` extension 
 The required `manifoldPrimitive` property added in the extension is an alternative `primitive` with additional restrictions:
 - it **MUST** use the `TRIANGLES` topology type;
 - it **MUST** have only the `POSITION` `attribute`, which **MUST** reference the same position `accessor` as the other primitives use; 
-- its `indices` property references an `accessor`, which **SHOULD** in turn reference the same `bufferView` as the indices accessors of other primitives of the same mesh;
-- when its `indices` differ from the primitives' `indices`, its `indices` accessor **SHOULD** include a `sparse` property, to represent the changes compactly;
-- the resulting `indices` **MUST** form an oriented 2-manifold;
 - it **MUST NOT** contain a material;
 - it **MUST NOT** contain morph targets, though the other primitives can.
+- its `indices` property references an `accessor`, which **SHOULD** in turn reference the same `bufferView` as the indices accessors of other primitives of the same mesh;
+- when its `indices` differ from the primitives' `indices`, its `indices` accessor **SHOULD** include a `sparse` property, to represent the changes compactly;
+- the resulting `indices` **MUST** form an oriented 2-manifold, meaning every halfedge of every triangle matches exactly one other halfedge that has the same indices in the opposite order;
 
 If the manifold `indices` differ from the combined primitives' `indices`, then `mergeIndices` and `mergeValues` **MUST** be included and reference accessors which are equivalent to the sparse indices and values needed to convert the primitives' `indices` into the `indices` of the `manifoldPrimitive`.
 
@@ -170,8 +170,6 @@ An example is given below, representing a portion of the included sample's JSON.
 
 ## Usage
 
-While this extension places additional restrictions on how a mesh is stored, it is still a valid glTF 2.0 and thus will render properly even on software that does not implement support for this extension. For software that needs a manifold mesh rather than a rendering mesh, the simplest path is to simply replace the set of `primitives` with the `manifoldPrimitive`, which is still a valid glTF, but is simply missing all non-position `attributes`. 
-
-As an oriented 2-manifold, it **MUST** be true that after applying the sparse accessor, every halfedge of every triangle has exactly one paired halfedge that has indices in the opposite order. In the case of a `mesh` consisting of just a single manifold `primitive`, the `manifoldPrimitive` **SHOULD** match aside from missing the non-position `attributes`. 
+While this extension places additional restrictions on how a mesh is stored, it is still a valid glTF 2.0 and thus will render properly even on software that does not implement support for this extension. Software that needs only manifold geometry rather than a rendering mesh **SHOULD** ignore the original mesh primitives and use the `manifoldPrimitive` instead.
 
 In practice, the amount of extra data to represent manifoldness is very small since the sparse accessors only need to be defined along the boundaries between discontinuous vertex properties. The properties themselves are untouched.
