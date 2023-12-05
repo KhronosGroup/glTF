@@ -34,10 +34,10 @@ The required `manifoldPrimitive` property added in the extension is an alternati
 - it **MUST** use the `TRIANGLES` topology type;
 - it **MUST** have only the `POSITION` `attribute`, which **MUST** reference the same position `accessor` as the other primitives use; 
 - it **MUST NOT** contain a material;
-- it **MUST NOT** contain morph targets, though the other primitives can.
+- it **MUST NOT** contain morph targets, though the other primitives can;
 - its `indices` property references an `accessor`, which **SHOULD** in turn reference the same `bufferView` as the indices accessors of other primitives of the same mesh;
 - when its `indices` differ from the primitives' `indices`, its `indices` accessor **SHOULD** include a `sparse` property, to represent the changes compactly;
-- the resulting `indices` **MUST** form an oriented 2-manifold, meaning every halfedge of every triangle matches exactly one other halfedge that has the same indices in the opposite order;
+- the resulting `indices` **MUST** form an oriented 2-manifold, meaning every halfedge of every triangle matches exactly one other halfedge that has the same indices in the opposite order.
 
 If the manifold `indices` differ from the combined primitives' `indices`, then `mergeIndices` and `mergeValues` **MUST** be included and reference accessors which are equivalent to the sparse indices and values needed to convert the primitives' `indices` into the `indices` of the `manifoldPrimitive`.
 
