@@ -77,7 +77,7 @@ This glTF extension has no schema.
 
 ## Known Implementations
 
-* Godot Engine: https://github.com/godotengine/godot/pull/81851
+* Godot Engine 4.2 or later: https://github.com/godotengine/godot/pull/81851
 
 ## Resources:
 
