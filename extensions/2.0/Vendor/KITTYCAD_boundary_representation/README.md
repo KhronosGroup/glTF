@@ -114,7 +114,7 @@ Boundary representation data extends the root data structure of the JSON portion
 }
 ```
 
-The `shells`, `faces`, `loops`, and `edges` arrays define _orientable_ objects. An important detail of this extension is that orientable objects may be referenced in their reverse-sense using a negative index.
+The `shells`, `faces`, `loops`, and `edges` arrays define _orientable_ objects. An important detail of this extension is that orientable objects are referenced along with their desired orientation using a pair of integers: the first is the index and the second the desired orientation represented by ±1.
 
 ```json
 {
@@ -125,29 +125,29 @@ The `shells`, `faces`, `loops`, and `edges` arrays define _orientable_ objects. 
             "faces": [
                 {
                     "outerLoop": 0,
-                    "surface": 0
+                    "surface": [0, 1]
                 }
             ],
             "loops": [
                 {
-                    "edges": [0, 1, -2]
+                    "edges": [[0, 1], [1, 1], [2, -1]]
                 }
             ],
             "edges": [
                 {
                     "start": 0,
                     "end": 1,
-                    "curve": 0
+                    "curve": [0, 1]
                 },
                 {
                     "start": 1,
                     "end": 2,
-                    "curve": 1
+                    "curve": [1, 1]
                 },
                 {
                     "start": 0,
                     "end": 2,
-                    "curve": -2
+                    "curve": [2, -1]
                 }
             ],
             "curves": [
@@ -185,7 +185,7 @@ The `shells`, `faces`, `loops`, and `edges` arrays define _orientable_ objects. 
 }
 ```
 
-This example demonstrates how a single triangle could be represented using the B-rep method, demonstrating the use of negative indices for reverse orientation.
+This example demonstrates how a single triangle could be represented using the B-rep method, demonstrating the use of index/orientation pairs for same-sense and reverse-sense orientation.
 
 Note: this is an incomplete example as a single triangle is insufficient to represent a solid volume.
 
@@ -384,17 +384,17 @@ Surfaces are referenced by _faces_ to define the implicit geometry bounded by _l
 
 ## Orientation
 
-Many objects in boundary representation have two _orientation states_. Such objects are called _orientable_ objects. These are often given colloquial terms such as 'right/wrong side', 'up/down', 'in/out', 'forward/backward', et cetera. When referencing orientable objects, it is important to state which orientation of the object is desired. The orientation of a referenced object is described as being 'same-sense' or 'opposite-sense'. This extension utilizes the sign bit of floating point numbers to select the desired orientation. A positive sign selects the 'same-sense' and a negative sign selects the 'opposite-sense'.
+Many objects in boundary representation have two _orientation states_. Such objects are called _orientable_ objects. These are often given colloquial terms such as 'right/wrong side', 'up/down', 'in/out', 'forward/backward', et cetera. When referencing orientable objects, it is important to state which orientation of the object is desired. The orientation of a referenced object is described as being 'same-sense' or 'opposite-sense'. This extension uses index/orientation pairs where orientation is important where +1 selects the 'same-sense' and -1 selects the 'opposite-sense'.
 
 #### Example
 
 ```json
 "loops": [
   {
-    "edges": [0, 1]
+    "edges": [[0, 1], [1, 1], [2, -1]]
   },
   {
-    "edges": [-0, -1]
+    "edges": [[0, -1], [1, -1], [2, 1]]
   }
 ]
 ```

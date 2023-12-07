@@ -246,167 +246,346 @@
     "KITTYCAD_boundary_representation": {
       "solids": [
         {
-          "outerShell": 0,
+          "shells": [
+            [
+              0,
+              1
+            ]
+          ],
           "mesh": 0
         }
       ],
       "shells": [
         {
           "faces": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              1
+            ]
           ]
         }
       ],
       "faces": [
         {
-          "surface": 0,
-          "outerLoop": 0
+          "surface": [
+            0,
+            -1
+          ],
+          "loops": [
+            [
+              0,
+              -1
+            ]
+          ]
         },
         {
-          "surface": 1,
-          "outerLoop": 1
+          "surface": [
+            1,
+            -1
+          ],
+          "loops": [
+            [
+              1,
+              -1
+            ]
+          ]
         },
         {
-          "surface": 2,
-          "outerLoop": 2
+          "surface": [
+            2,
+            -1
+          ],
+          "loops": [
+            [
+              2,
+              -1
+            ]
+          ]
         },
         {
-          "surface": 3,
-          "outerLoop": 3
+          "surface": [
+            3,
+            -1
+          ],
+          "loops": [
+            [
+              3,
+              -1
+            ]
+          ]
         },
         {
-          "surface": 4,
-          "outerLoop": 4
+          "surface": [
+            4,
+            1
+          ],
+          "loops": [
+            [
+              4,
+              1
+            ]
+          ]
         },
         {
-          "surface": 5,
-          "outerLoop": 5
+          "surface": [
+            5,
+            -1
+          ],
+          "loops": [
+            [
+              5,
+              -1
+            ]
+          ]
         }
       ],
       "loops": [
         {
           "edges": [
-            0,
-            -1,
-            -2,
-            3
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              2,
+              -1
+            ],
+            [
+              3,
+              1
+            ]
           ]
         },
         {
           "edges": [
-            4,
-            -5,
-            -6,
-            1
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              -1
+            ],
+            [
+              6,
+              -1
+            ],
+            [
+              1,
+              1
+            ]
           ]
         },
         {
           "edges": [
-            7,
-            -8,
-            -9,
-            5
+            [
+              7,
+              1
+            ],
+            [
+              8,
+              -1
+            ],
+            [
+              9,
+              -1
+            ],
+            [
+              5,
+              1
+            ]
           ]
         },
         {
           "edges": [
-            10,
-            -3,
-            -11,
-            8
+            [
+              10,
+              1
+            ],
+            [
+              3,
+              -1
+            ],
+            [
+              11,
+              -1
+            ],
+            [
+              8,
+              1
+            ]
           ]
         },
         {
           "edges": [
-            2,
-            6,
-            9,
-            11
+            [
+              2,
+              1
+            ],
+            [
+              6,
+              1
+            ],
+            [
+              9,
+              1
+            ],
+            [
+              11,
+              1
+            ]
           ]
         },
         {
           "edges": [
-            -0,
-            -10,
-            -7,
-            -4
+            [
+              0,
+              -1
+            ],
+            [
+              10,
+              -1
+            ],
+            [
+              7,
+              -1
+            ],
+            [
+              4,
+              -1
+            ]
           ]
         }
       ],
       "edges": [
         {
-          "curve": 0,
+          "curve": [
+            0,
+            1
+          ],
           "start": 0,
           "end": 1,
           "closed": false
         },
         {
-          "curve": 1,
+          "curve": [
+            1,
+            1
+          ],
           "start": 2,
           "end": 1,
           "closed": false
         },
         {
-          "curve": 2,
+          "curve": [
+            2,
+            1
+          ],
           "start": 3,
           "end": 2,
           "closed": false
         },
         {
-          "curve": 3,
+          "curve": [
+            3,
+            1
+          ],
           "start": 3,
           "end": 0,
           "closed": false
         },
         {
-          "curve": 4,
+          "curve": [
+            4,
+            1
+          ],
           "start": 1,
           "end": 4,
           "closed": false
         },
         {
-          "curve": 5,
+          "curve": [
+            5,
+            1
+          ],
           "start": 5,
           "end": 4,
           "closed": false
         },
         {
-          "curve": 6,
+          "curve": [
+            6,
+            1
+          ],
           "start": 2,
           "end": 5,
           "closed": false
         },
         {
-          "curve": 7,
+          "curve": [
+            7,
+            1
+          ],
           "start": 4,
           "end": 6,
           "closed": false
         },
         {
-          "curve": 8,
+          "curve": [
+            8,
+            1
+          ],
           "start": 7,
           "end": 6,
           "closed": false
         },
         {
-          "curve": 9,
+          "curve": [
+            9,
+            1
+          ],
           "start": 5,
           "end": 7,
           "closed": false
         },
         {
-          "curve": 10,
+          "curve": [
+            10,
+            1
+          ],
           "start": 6,
           "end": 0,
           "closed": false
         },
         {
-          "curve": 11,
+          "curve": [
+            11,
+            1
+          ],
           "start": 7,
           "end": 3,
           "closed": false
