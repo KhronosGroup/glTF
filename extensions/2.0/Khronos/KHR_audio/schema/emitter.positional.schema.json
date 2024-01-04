@@ -6,24 +6,23 @@
     "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
         "coneInnerAngle": {
-            "description": "The angle, in radians, of a cone inside of which there will be no volume reduction.",
+            "description": "The angle, in radians, of a cone inside of which there will be no volume reduction. This angle represents the angular diameter of the cone, from side to side. If not specified, the angle of Tau radians (360 degrees) is used, which means the audio emits in all directions (not in a cone).",
             "type": "number",
             "minimum": 0.0,
-            "maximum": 6.283185307179586,
-            "default": 6.283185307179586
+            "maximum": 6.2831853071795864,
+            "default": 6.2831853071795864
         },
         "coneOuterAngle": {
-            "description": "The angle, in radians, of a cone outside of which the volume will be reduced to a constant value of`coneOuterGain`.",
+            "description": "The angle, in radians, of a cone outside of which the volume will be reduced to a constant value of `coneOuterGain`. This angle represents the angular diameter of the cone, from side to side. If not specified, the angle of Tau radians (360 degrees) is used, which means some audio will emit in all directions.",
             "type": "number",
             "minimum": 0.0,
-            "maximum": 6.283185307179586,
-            "default": 6.283185307179586
+            "maximum": 6.2831853071795864,
+            "default": 6.2831853071795864
         },
         "coneOuterGain": {
-            "description": "The gain of the audio emitter set when outside the cone defined by the `coneOuterAngle` property. It is a linear value (not dB).",
+            "description": "The linear volume gain of the audio emitter set when outside the cone defined by the `coneOuterAngle` property. It is a linear value (not dB). If not specified, the cone outer gain is `0.0`, meaning the audio will be silent outside of the cone.",
             "type": "number",
             "minimum": 0.0,
-            "maximum": 1.0,
             "default": 0.0
         },
         "distanceModel": {
@@ -46,21 +45,21 @@
             "default": "inverse"
         },
         "maxDistance": {
-            "description": "The maximum distance between the emitter and listener, after which the volume will not be reduced any further. `maximumDistance` may only be applied when the distanceModel is set to linear. Otherwise, it should be ignored.",
+            "description": "The maximum distance between the emitter and listener, after which the volume will not be reduced any further. If zero or not specified, the audio emitter does not have a maximum distance, and it can be heard from any distance.",
+            "type": "number",
+            "minimum": 0.0,
+            "default": 0.0
+        },
+        "refDistance": {
+            "description": "A reference distance for reducing volume as the emitter moves further from the listener. For distances less than this, the volume is not reduced. This value cannot be zero or a negative number. If not specified, the default value is `1.0`.",
             "type": "number",
             "minimum": 0.0,
             "exclusiveMinimum": true,
-            "default": 10000.0
-        },
-        "refDistance": {
-            "description": "A reference distance for reducing volume as the emitter moves further from the listener. For distances less than this, the volume is not reduced.",
-            "type": "number",
-            "minimum": 0.0,
             "default": 1.0
         },
         "rolloffFactor": {
             "type": "number",
-            "description": "Describes how quickly the volume is reduced as the emitter moves away from listener. When distanceModel is set to linear, the maximum value is 1 otherwise there is no upper limit.",
+            "description": "Describes how quickly the volume is reduced as the emitter moves away from listener. When distanceModel is set to linear, the maximum value is 1. Otherwise, there is no upper limit to the rolloff factor. If not specified, the default value is `1.0`.",
             "minimum": 0.0,
             "default": 1.0
         },

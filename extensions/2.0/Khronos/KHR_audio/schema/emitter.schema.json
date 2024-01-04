@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "KHR_audio Audio Emitter",
     "type": "object",
-    "description": "A positional or global audio emitter.",
+    "description": "Audio emitters define how audio sources are played back. Emitter properties are defined at the document level and are references by nodes. Audio may be played globally or positionally. Positional audio has further properties that define how audio volume scales with distance and angle.",
     "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
         "type": {
@@ -10,12 +10,12 @@
             "description": "Specifies the audio emitter type.",
             "anyOf": [
                 {
-                    "enum": ["positional"],
-                    "description": "Positional audio emitters."
+                    "enum": ["global"],
+                    "description": "Global audio emitters are not affected by the position of audio listeners. All `positional` properties may not be defined on global audio emitters."
                 },
                 {
-                    "enum": ["global"],
-                    "description": "Global audio emitters are not affected by the position of audio listeners."
+                    "enum": ["positional"],
+                    "description": "Positional audio emitters play audio at a position in the scene. The properties are defined in the `positional` object."
                 },
                 {
                     "type": "string"

@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "KHR_audio Audio Data",
     "type": "object",
-    "description": "A source for audio data referenced in Audio Emitters Audio can be referenced by URI or `bufferView` index. `mimeType` is required when `bufferView` is used.",
+    "description": "Audio data objects define where audio data is located and what format the data is in. The data is either accessed via a bufferView or uri. `mimeType` is required when `bufferView` is used.",
     "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
         "uri": {
@@ -14,10 +14,13 @@
         },
         "mimeType": {
             "type": "string",
-            "description": "The audio's MIME type. Required if `bufferView` is defined. Unless specified by another extension, the only supported mimeType is `audio/mpeg`.",
+            "description": "The audio's MIME type. Required if `bufferView` is defined. Unless specified by another extension, the only supported mimeTypes are `audio/mpeg` and `audio/wav`.",
             "anyOf": [
                 {
                     "enum": ["audio/mpeg"]
+                },
+                {
+                    "enum": ["audio/wav"]
                 },
                 {
                     "type": "string"

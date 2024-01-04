@@ -134,7 +134,7 @@ The extension must be added to the file's `extensionsUsed` array and because it 
 
 ### Audio Data
 
-Audio data objects define where audio data is located. Data is either accessed via a bufferView or uri.
+Audio data objects define where audio data is located and what format the data is in. The data is either accessed via a bufferView or uri.
 
 When storing audio data in a buffer view, the `mimeType` field must be specified. The base specification supports `audio/mpeg` and `audio/wav` MIME types. These were chosen with consideration for the wide support for these types acrosss 3D engines and common use cases. Other supported audio formats may be added via extensions.
 
@@ -154,68 +154,96 @@ The uri of the audio file. Relative paths are relative to the .gltf file.
 
 ### Audio Sources
 
-Audio sources define the playing state for a given audio data. They connect one audio data to zero to many audio emitters.
+Audio sources reference audio data and define playback properties for it. Audio sources may be used by zero to many audio emitters.
+
+#### Property Summary
+
+|              | Type      | Description                                                                                               | Default value        |
+| ------------ | --------- | --------------------------------------------------------------------------------------------------------- | -------------------- |
+| **gain**     | `number`  | Unitless linear multiplier against original audio file volume used for determining audio source loudness. | 1.0                  |
+| **loop**     | `boolean` | Whether or not to loop the specified audio when finished.                                                 | false                |
+| **autoPlay** | `boolean` | Whether or not to play the specified audio when the glTF is loaded.                                       | false                |
+| **audio**    | `number`  | The index of the audio data assigned to this clip.                                                        | Required, no default |
 
 #### `gain`
 
-Unitless linear multiplier against original audio file volume used for determining audio source loudness.
+Unitless linear multiplier against original audio file volume used for determining audio source loudness. If not specified, the audio source volume gain is `1.0`.
+
+This value is linear, a value of `0.0` is no volume, `0.5` is half volume, `1.0` is the original volume, `2.0` is double the volume, etc. The final volume of the audio is a combination of this value, the audio emitter's gain, and if the audio emitter is positional, the relative positions of the emitter and listener.
 
 #### `loop`
 
-Whether or not to loop the specified audio when finished.
+Whether or not to loop the specified audio when finished. If `false` or not specified, the audio source does not loop.
 
 #### `autoPlay`
 
-Whether or not to play the specified audio when the glTF is loaded.
+Whether or not to play the specified audio when the glTF is loaded. If `false` or not specified, the audio source does not play automatically.
 
 #### `audio`
 
-The index of the audio data assigned to this clip.
+The index of the audio data in the "audio" array assigned to this audio source. This property is required.
 
 ### Audio Emitter
 
-Positional or global sinks for playing back audio sources.
+Audio emitters define how audio sources are played back. Emitter properties are defined at the document level and are references by nodes. Audio may be played globally or positionally. Positional audio has further properties that define how audio volume scales with distance and angle.
+
+#### Property Summary
+
+|                | Type       | Description                                                                                         | Default value        |
+| -------------- | ---------- | --------------------------------------------------------------------------------------------------- | -------------------- |
+| **type**       | `string`   | The emitter type of this audio emitter: `global` or `positional`.                                   | Required, no default |
+| **gain**       | `number`   | Unitless linear multiplier against audio source volume used for determining audio emitter loudness. | 1.0                  |
+| **sources**    | `number[]` | An array of audio source indices used by the audio emitter. This array may be empty.                | []                   |
+| **positional** | `object`   | A sub-JSON containing the positional audio emitter properties.                                      | {}                   |
 
 #### `type`
 
-Specifies the audio emitter type.
+Specifies the audio emitter type. This property is required.
 
-- `positional` Positional audio emitters. Using sound cones, the orientation is `-Z` having the same emission direction as [`KHR_lights_punctual`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_lights_punctual) and [glTF cameras](https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_016_Cameras.md).
-- `global` Global audio emitters are not affected by the position of audio listeners. `coneInnerAngle`, `coneOuterAngle`, `coneOuterGain`, `distanceModel`, `maxDistance`, `refDistance`, and `rolloffFactor` should all be ignored when set.
+- `global` Global audio emitters are not affected by the position of audio listeners. All `positional` properties may not be defined on global audio emitters.
+- `positional` Positional audio emitters play audio at a position in the scene. The properties are defined in the `positional` object. Using sound cones, the orientation is `-Z` having the same emission direction as [`KHR_lights_punctual`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_lights_punctual) and [glTF cameras](https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_016_Cameras.md).
 
 #### `gain`
 
-Unitless multiplier against original source volume for determining emitter loudness.
+Unitless linear multiplier against audio source volume used for determining audio emitter loudness. If not specified, the audio emitter volume gain is `1.0`.
 
-#### `loop`
-
-Whether or not to loop the specified audio clip when finished.
-
-#### `playing`
-
-Whether or not the specified audio clip is playing. Setting this property `true` will set the audio clip to play on load (autoplay).
+This value is linear, a value of `0.0` is no volume, `0.5` is half volume, `1.0` is the original volume, `2.0` is double the volume, etc. The final volume of the audio is a combination of this value, the audio source's gain, and if the audio emitter is positional, the relative positions of the emitter and listener.
 
 #### `sources`
 
-An array of audio source indices used by the audio emitter. This array may be empty.
+An array of audio source indices used by the audio emitter. This array may be empty. If empty or not specified, this emitter can be used to define how audio should emit from a node, but not which audio source to play.
 
 #### `positional`
 
-An object containing the positional audio emitter properties. This may only be defined if `type` is set to `positional`.
+A sub-JSON object containing the positional audio emitter properties. This may only be defined if `type` is set to `positional`.
 
 ### Positional Audio Emitter Properties
 
+When the audio emitter type is set to `positional`, additional properties may be defined on the `positional` object.
+
+#### Property Summary
+
+|                    | Type     | Description                                                                                                         | Default value                       |
+| ------------------ | -------- | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| **coneInnerAngle** | `number` | The anglular diameter of a cone inside of which there will be no angular volume reduction.                          | 6.2831853... (τ or 2π rad, 360 deg) |
+| **coneOuterAngle** | `number` | The anglular diameter of a cone outside of which the volume will be reduced to a constant value of `coneOuterGain`. | 6.2831853... (τ or 2π rad, 360 deg) |
+| **coneOuterGain**  | `number` | The linear volume gain of the audio emitter set when outside the cone defined by the `coneOuterAngle` property.     | 0.0                                 |
+| **distanceModel**  | `string` | Specifies the distance model for the audio emitter.                                                                 | `"inverse"`                         |
+| **maxDistance**    | `number` | The maximum distance between the emitter and listener, beyond which the audio cannot be heard.                      | 0.0                                 |
+| **refDistance**    | `number` | A reference distance for reducing volume as the emitter moves further from the listener.                            | 1.0                                 |
+| **rolloffFactor**  | `number` | Describes how quickly the volume is reduced as the emitter moves away from listener.                                | 1.0                                 |
+
 #### `coneInnerAngle`
 
-The angle, in radians, of a cone inside of which there will be no volume reduction.
+The angle, in radians, of a cone inside of which there will be no volume reduction. This angle represents the angular "diameter" of the cone, from side to side. If not specified, the angle of Tau radians (`6.283185307179586476925286766559` or 360 degrees) is used, which means the audio emits in all directions (not in a cone).
 
 #### `coneOuterAngle`
 
-The angle, in radians, of a cone outside of which the volume will be reduced to a constant value of`coneOuterGain`.
+The angle, in radians, of a cone outside of which the volume will be reduced to a constant value of `coneOuterGain`. This angle represents the angular "diameter" of the cone, from side to side. If not specified, the angle of Tau radians (`6.283185307179586476925286766559` or 360 degrees) is used, which means some audio will emit in all directions.
 
 #### `coneOuterGain`
 
-The gain of the audio emitter set when outside the cone defined by the `coneOuterAngle` property. It is a linear value (not dB).
+The linear volume gain of the audio emitter set when outside the cone defined by the `coneOuterAngle` property. It is a linear value (not dB). If not specified, the cone outer gain is `0.0`, meaning the audio will be silent outside of the cone.
 
 #### `distanceModel`
 
@@ -230,15 +258,17 @@ Specifies the distance model for the audio emitter.
 
 #### `maxDistance`
 
-The maximum distance between the emitter and listener, after which the volume will not be reduced any further. `maximumDistance` may only be applied when the distanceModel is set to linear. Otherwise, it should be ignored.
+The maximum distance between the emitter and listener, after which the volume will not be reduced any further. If zero or not specified, the audio emitter does not have a maximum distance, and it can be heard from any distance.
+
+For the linear distance model, the max distance must be greater than the ref distance. For all distance models, max distance cannot be a negative number.
 
 #### `refDistance`
 
-A reference distance for reducing volume as the emitter moves further from the listener. For distances less than this, the volume is not reduced.
+A reference distance for reducing volume as the emitter moves further from the listener. For distances less than this, the volume is not reduced. This value cannot be zero or a negative number. If not specified, the default value is `1.0`.
 
 #### `rolloffFactor`
 
-Describes how quickly the volume is reduced as the emitter moves away from listener. When distanceModel is set to linear, the maximum value is 1 otherwise there is no upper limit.
+Describes how quickly the volume is reduced as the emitter moves away from listener. When distanceModel is set to linear, the maximum value is `1.0`. Otherwise, there is no upper limit to the rolloff factor. If not specified, the default value is `1.0`.
 
 ### Using Audio Emitters
 
@@ -318,9 +348,9 @@ The cone properties relate to the `PannerNode` interface and determine the amoun
 
 The gain relative to cone properties is determined in a similar way as described in the web audio api with the difference that this audio emitter extension uses radians in place of degrees. [Cone Gain Algorithm Example](https://webaudio.github.io/web-audio-api/#Spatialization-sound-cones)
 
-### Units for Rotations
+### Unit for Angles
 
-Radians are used for rotations matching glTF2.
+Radians are used for angles matching glTF2.
 
 ### JSON Schema
 
