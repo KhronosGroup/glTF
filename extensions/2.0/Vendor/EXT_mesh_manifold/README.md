@@ -6,7 +6,7 @@
 
 ## Status
 
-Draft
+Complete - open source I/O available [here](https://github.com/elalish/manifold/blob/master/bindings/wasm/examples/manifold-gltf.ts).
 
 ## Dependencies
 
