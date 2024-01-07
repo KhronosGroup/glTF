@@ -6,7 +6,7 @@
 
 ## Status
 
-Complete - open source I/O available [here](https://github.com/elalish/manifold/blob/master/bindings/wasm/examples/manifold-gltf.ts).
+Complete
 
 ## Dependencies
 
@@ -173,3 +173,9 @@ An example is given below, representing a portion of the included sample's JSON.
 While this extension places additional restrictions on how a mesh is stored, it is still a valid glTF 2.0 and thus will render properly even on software that does not implement support for this extension. Software that needs only manifold geometry rather than a rendering mesh **SHOULD** ignore the original mesh primitives and use the `manifoldPrimitive` instead.
 
 In practice, the amount of extra data to represent manifoldness is very small since the sparse accessors only need to be defined along the boundaries between discontinuous vertex properties. The properties themselves are untouched.
+
+## References
+
+- Open source TypeScript I/O library available [here](https://github.com/elalish/manifold/blob/master/bindings/wasm/examples/manifold-gltf.ts).
+- Add this extension automatically to a mostly-manifold glTF [here](https://manifoldcad.org/make-manifold).
+- Build manifold models and download them as GLB with this extension at [ManifoldCAD.org](https://manifoldcad.org/).
