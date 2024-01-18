@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "KHR_audio Audio Source",
     "type": "object",
-    "description": "A source audio clip with defined properties about the behavior of that audio.",
+    "description": "Audio sources reference audio data and define playback properties for it. Audio sources may be used by zero to many audio emitters.",
     "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
         "autoPlay": {

@@ -1,19 +1,19 @@
 {
-	"$schema": "http://json-schema.org/draft-04/schema",
-	"title": "KHR_audio glTF Node Extension",
-	"type": "object",
-	"allOf": [{ "$ref": "glTFProperty.schema.json" }],
-	"properties": {
-		"emitter": {
-			"description": "The id of the positional audio emitter referenced by this node.",
-			"allOf": [
-				{
-					"$ref": "glTFid.schema.json"
-				}
-			]
-		},
-		"extensions": {},
-		"extras": {}
-	},
-	"required": ["emitter"]
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio glTF Node Extension",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "emitter": {
+            "description": "The id of the positional audio emitter referenced by this node.",
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ]
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["emitter"]
 }
