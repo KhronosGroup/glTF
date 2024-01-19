@@ -4,7 +4,7 @@
 
 - Ben Houston, Threekit [@bhouston](https://github.com/bhouston)
 
-Copyright 2023 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2024 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
@@ -14,7 +14,7 @@ Draft
 ## Dependencies
 
 - Written against the glTF 2.0 spec.
-- The `KHR_materials_volume` extension as it builds upon its volumetric effect.
+- The `KHR_materials_volume` extension as this builds upon its volumetric effect.
 
 ## Exclusions
 
@@ -33,7 +33,7 @@ The Abbe number \( $V$ \) is computed from the index of refraction at three wave
 
 $$V = \frac{n_d - 1}{n_F - n_C}$$
 
-To calculate the index of refraction at a specific wavelength \( $\lambda$ \), given an Abbe number \( $V$ \) and the central index of refraction as specified by the ```KHR_materials_ior``` extension (assumed to be at the central wavelength, \( $N_d$ \)):
+To calculate the index of refraction at a specific wavelength \( $\lambda$ \), given an Abbe number \( $V$ \) and the central index of refraction as specified by the ```KHR_materials_ior``` extension (assumed to be at the central wavelength, \( $n_d$ \)):
 
 $$
 B = \frac{n_d - 1}{V \left( {\lambda_F^{-2}} - {\lambda_C^{-2}} \right)}
@@ -50,8 +50,6 @@ And finally:
 $$
 n(\lambda) = A + \frac{B}{\lambda^2}
 $$
-
-![Dispersion on a Gem](./figures/Dispersion.jpg)
 
 In this extension, we store a transformed dispersion instead of the Abbe number directly.  Specifically we store $20/V$ so that a value of 1.0 is equivalent to $V=20$, which is about the lowest Abbe number for normal materials. Values over 1.0 are still valid for artists that want to exaggerate the effect. Decreasing values lower the amount of dispersion down to 0.0.  This is the same transform used by both Adobe Standard Material and OpenPBR.
 
@@ -93,7 +91,33 @@ Here is a table of some material dispersion Abbe numbers, including the outlier 
 
 *This section is non-normative.*
 
+Dispersion can have a large influence on the look of objects such as gemstones.  However, note that gemstones have many internal reflections, and dispersion alone is not enough to capture their look in a real-time rasterizer.  Here is a path-traced example of a gemstone with dispersion (left) and without.
+
+![Dispersion on a Gem](./figures/Dispersion.jpg)
+
 One real-time method for rendering dispersion effects is to trace volume transmission separately for each of color channel accounting for the per channel IOR as determined by the Abbe number.  The resulting composite image will show color separation between the channels as a result.
+
+For this method, use the material's IOR value (from `KHR_materials_ior`, or the default `1.5`) for the green channel's IOR ($n_d$).  The full spread of IOR values from the blue to red channel's IORs ($n_F - n_C$) can be calculated from the following equation.  Only half of this spread is used to calculate the distance between green's IOR and red or blue.
+
+$$n_F - n_C = \frac{n_d - 1}{V}$$
+
+This extension defines `dispersion` as $20/V$.  Taking this into account, the following GLSL sample will calculate three IOR values for use in the red, green, and blue channels:
+
+```glsl
+    // Dispersion will spread out the ior values for each r,g,b channel
+    float halfSpread = (ior - 1.0) * 0.025 * dispersion;
+    vec3 iors = vec3(ior - halfSpread, ior, ior + halfSpread);
+```
+
+The red channel will always have the smallest IOR value.  In extreme cases, a clamp may be required to prevent this value falling below `1.0`.
+
+The following screenshot demonstrates the above technique as rendered in real-time by BabylonJS:
+
+![Dispersion sample screenshot from BabylonJS](./figures/Dispersion_BabylonJS.jpg)
+
+For comparison, here is the same sample model path-traced in Adobe Substance 3D Stager:
+
+![Dispersion sample screenshot from Stager](./figures/Dispersion_AdobeStager.jpg)
 
 ## Schema
 
@@ -105,11 +129,11 @@ One real-time method for rendering dispersion effects is to trace volume transmi
 
 [Abbe Number - Wikipedia](https://en.wikipedia.org/wiki/Abbe_number)
 
-[Abbe Number - Wolfram Formula Repository](https://resources.wolframcloud.com/FormulaRepository/resources/Abbe-Number#:~:text=The%20Abbe%20number%2C%20also%20known,of%20V%20indicating%20low%20dispersion.)
+[Abbe Number - Wolfram Formula Repository](https://resources.wolframcloud.com/FormulaRepository/resources/Abbe-Number)
 
 [OpenPBR Surface specification](https://academysoftwarefoundation.github.io/OpenPBR/)
 
-[Enterprise PBR Shading Model](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2022x.md.html)
+[Enterprise PBR Shading Model](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2022x.md.html#components/dispersion)
 
 [Mikhail N. Polyanskiy. Refractive Index Database (2023)](https://refractiveindex.info)
 
@@ -118,7 +142,7 @@ One real-time method for rendering dispersion effects is to trace volume transmi
 
 ## Appendix: Full Khronos Copyright Statement
 
-Copyright 2023 The Khronos Group Inc.
+Copyright 2024 The Khronos Group Inc.
 
 Some parts of this Specification are purely informative and do not define requirements
 necessary for compliance and so are outside the Scope of this Specification. These
