@@ -2,20 +2,20 @@
 
 ## Contributors
 
-* Alexey Knyazev
-* Ben Houston, Threekit
-* Bryce Hutchings, Microsoft [@brycehutchings](https://twitter.com/brycehutchings)
-* Don McCurdy
-* Ed Mackey, AGI @emacke
-* Felix Herbst, prefrontal cortex [@hybridherbst](https://twitter.com/hybridherbst)
-* Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
-* Jamie Marconi, Microsoft [@najadojo](https://twitter.com/najadojo)
-* Joe Herdman, [@jbherdman](https://github.com/jbherdman)
-* Lewis Weaver, Microsoft
-* Marco Hutter
-* Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+- Alexey Knyazev
+- Ben Houston, Threekit
+- Bryce Hutchings, Microsoft [@brycehutchings](https://twitter.com/brycehutchings)
+- Don McCurdy
+- Ed Mackey, AGI [@emackey](https://github.com/emackey)
+- Felix Herbst, prefrontal cortex [@hybridherbst](https://twitter.com/hybridherbst)
+- Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
+- Jamie Marconi, Microsoft [@najadojo](https://twitter.com/najadojo)
+- Joe Herdman, [@jbherdman](https://github.com/jbherdman)
+- Lewis Weaver, Microsoft
+- Marco Hutter
+- Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
 
-Copyright (C) 2018-2022 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2024 The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
@@ -28,223 +28,94 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension is based on the animation features of glTF 2.0. The structure of the schemas stay the same.  
-  
-The only major addition is, that the output values are mapped using a [JSON Pointer](https://datatracker.ietf.org/doc/html/rfc6901).
-  
+This extension provides a standardized way of animating arbitrary glTF properties according to the **glTF 2.0 Asset Object Model**.
+
 ### Motivation
 
-Currently, only the transformation or weight data of a node can be targeted with animation data.  
-With this extension, one can technically target any value (`SCALAR`, `VEC2`, `VEC3`, `VEC4`, `MAT2`, `MAT3`, `MAT4`, and scalars in an `array`) in a glTF asset, for example
+The base glTF 2.0 specification supports animating only node transformation or morph target weights. With this extension, an animation can target any mutable property in a glTF asset such as material factors or camera field of view.
 
-* Color factors in materials
-* Camera field of view
+The **glTF 2.0 Asset Object Model** defines JSON pointers and data types of the mutable glTF properties.
 
-Using a JSON pointer, the targets and their expected behavior are explictly defined.
+### Operation
 
-Current and future extensions have to write against this specification to allow or disallow animation of specific values.
+Each animation target specified by the JSON Pointer is resolved to the corresponding glTF asset property and the value of the latter is dynamically updated using values provided by the animation channel output accessor. The property being animated **MUST** be mutable as defined by the **glTF 2.0 Asset Object Model**.
 
-#### Current and future restrictions
+The JSON Pointer **MUST** point to a property defined in the asset. A property is considered defined if it is present in the asset explicitly or if it has a default value and its enclosing object is present.
 
-The calculated values can be out of range of the minimum and maximum value, however the values have to be clamped using the properties min and max value before setting the value.
+In the following example, both the `/materials/0/pbrMetallicRoughness/baseColorFactor` and `/materials/0/pbrMetallicRoughness/metallicFactor` are valid pointers: the base color factor is defined explicitly while the metallic factor has a spec-defined default value and the `pbrMetallicRoughness` object is defined.
 
-##### Not animatable properties
+```json
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "materials": [
+        {
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [ 1.0, 0.0, 0.0, 1.0 ],
+            }
+        }
+    ]
+}
+```
 
-`glTFid`
+Pointers to the asset properties that do not have a spec-defined default value, such as `/cameras/0/perspective/zfar` are invalid if the property is not defined in the asset explicitly.
 
-It is not allowed to animate a glTFid property, as it does change the structure of the glTF in general.
+The output accessor **MUST** be compatible with the animated property data type (see the table below) and the values provided by it **MUST** be valid for the property being animated.
 
-`name`
+| Asset Object Model Data Type | Output Accessor Type |
+|------------|---|
+| `bool`     | SCALAR |
+| `float`    | SCALAR |
+| `float[]`  | SCALAR |
+| `float2`   | VEC2 |
+| `float3`   | VEC3 |
+| `float4`   | VEC4 |
+| `float2x2` | MAT2 |
+| `float3x3` | MAT3 |
+| `float4x4` | MAT4 |
+| `int`      | SCALAR |
 
-It is not allowed to animate a name property in general.
+#### Output Accessor Component Types
 
-### Valid target templates
+If the Object Model Data Type is one of the `float*` types, the output accessor values are converted based on the accessor's component type as follows:
 
-|`pointer`                                             |Accessor Type|Component Type(s)  |Description                                                   |
-|------------------------------------------------------|-------------|-------------------|--------------------------------------------------------------|
-|`"/meshes/{}/weights"`                                |`"array"` of `"SCALAR"`   |`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|Morph target weights                                          |
-|`"/nodes/{}/rotation"`                                |`"VEC4"`     |`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|XYZW rotation quaternion|
-|`"/nodes/{}/scale"`                                   |`"VEC3"`     |`5126`&nbsp;(FLOAT)|XYZ scale vector                                              |
-|`"/nodes/{}/translation"`                             |`"VEC3"`     |`5126`&nbsp;(FLOAT)|XYZ translation vector                                        |
-|`"/nodes/{}/weights"`                                 |`"array"` of `"SCALAR"`   |`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|Morph target weights                                          |
-|`"/cameras/{}/orthographic/xmag"`                     |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Horizontal magnification of the view                          |
-|`"/cameras/{}/orthographic/ymag"`                     |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Vertical magnification of the view                            |
-|`"/cameras/{}/orthographic/zfar"`                     |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Distance to the far clipping plane                            |
-|`"/cameras/{}/orthographic/znear"`                    |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Distance to the near clipping plane                           |
-|`"/cameras/{}/perspective/aspectRatio"`               |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Aspect ratio of the field of view                             |
-|`"/cameras/{}/perspective/yfov"`                      |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Vertical field of view in radians                             |
-|`"/cameras/{}/perspective/zfar"`                      |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Distance to the far clipping plane                            |
-|`"/cameras/{}/perspective/znear"`                     |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Distance to the near clipping plane                           |
-|`"/materials/{}/pbrMetallicRoughness/baseColorFactor"`|`"VEC4"`     |`5126`&nbsp;(FLOAT)<br>`5120`&nbsp;(BYTE)&nbsp;normalized<br>`5121`&nbsp;(UNSIGNED_BYTE)&nbsp;normalized<br>`5122`&nbsp;(SHORT)&nbsp;normalized<br>`5123`&nbsp;(UNSIGNED_SHORT)&nbsp;normalized|The material's base color factor|
-|`"/materials/{}/pbrMetallicRoughness/metallicFactor"` |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|The metalness of the material                                 |
-|`"/materials/{}/pbrMetallicRoughness/roughnessFactor"`|`"SCALAR"`   |`5126`&nbsp;(FLOAT)|The roughness of the material                                 |
-|`"/materials/{}/alphaCutoff"`                         |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|The alpha cutoff value of the material                        |
-|`"/materials/{}/emissiveFactor"`                      |`"VEC3"`     |`5126`&nbsp;(FLOAT)|The emissive color of the material                            |
-|`"/materials/{}/normalTexture/scale"`                 |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Multiplier applied to each normal vector of the normal texture|
-|`"/materials/{}/occlusionTexture/strength"`           |`"SCALAR"`   |`5126`&nbsp;(FLOAT)|Multiplier controlling the amount of occlusion applied        |
+- float accessor values are used as-is;
+- non-normalized integer accessor values are converted to the equal floating-point values, e.g., `1` to `1.0`;
+- normalized integer accessor values are converted using the equations from the [Animations section of the glTF 2.0 specification](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#animations).
 
-It is valid, to set the `pointer` to a property, which is not stored in the glTF.  
-This is the case, when the default value is omitted.  
-However, the parent object and/or extension **must** exist.  
+Keyframe interpolation **MUST** happen after type conversions, using floating-point values.
 
-##### `extras`
+If the Object Model Data Type is `int`, the output accessor component type **MUST** be one of the non-normalized integer types and its values are used as-is.
 
-A channel may target any allowed JSON Pointer value, so values in `extras` can be targeted as well, but interpretation of the animated values is entirely application specific.
+If the Object Model Data Type is `bool`, the output accessor component type **MUST** be _unsigned byte_; `0` is converted to `false`, any other value is converted to `true`.
 
-## Extension compatibility and fallback behavior
+#### `extras`
 
-If this extension is used, the `animation.channel.target.node` **must not** be set.
-Because the node isn’t defined, the channel is ignored and not animated due to the current specification.  
-If this extension is used, the `animation.channel.target.path` **must** contain the new `pointer` constant value.
+Properties located in `extras` objects **MAY** be targeted as well, but validity and interpretation of the animated values is entirely application specific.
 
-### Animating properties of extensions
+## Extension Usage
 
-Extensions created after KHR_animation_pointer should state which properties can be animated and which cannot.  
-The following extensions have been created before KHR_animation_pointer and are thus listed here with their animatable properties:  
+To use this extension, the animation channel target path **MUST** be set to `"pointer"` and the actual JSON pointer value is provided in the extension object's `pointer` property. The animation channel `node` property **MUST NOT** be set.
 
-#### [KHR_animation_pointer](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_animation_pointer)
-❌ No animatable properties.
-
-#### [KHR_draco_mesh_compression](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_draco_mesh_compression)
-❌ No animatable properties.
-
-#### [KHR_lights_punctual](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_lights_punctual)
-| Property                    | Animatable |
-|:----------------------------|:-----------|
-| `color`                     | ✅        |
-| `intensity`                 | ✅        |
-| `type`                      | ❌        |
-| `range`                     | ✅        |
-| `spot.innerConeAngle`       | ✅        |
-| `spot.outerConeAngle`       | ✅        |
-
-#### [KHR_materials_clearcoat](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_clearcoat)
-| Property                    | Animatable |
-|:----------------------------|:-----------|
-| `clearcoatFactor`           | ✅        |
-| `clearcoatTexture`          | ❌        |
-| `clearcoatRoughnessFactor`  | ✅        |
-| `clearcoatRoughnessTexture` | ❌        |
-| `clearcoatNormalTexture`    | ❌        |
-
-#### [KHR_materials_emissive_strength](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_emissive_strength)
-| Property                    | Animatable |
-|:----------------------------|:-----------|
-| `emissiveStrength`          | ✅         |
-
-#### [KHR_materials_ior](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_ior)
-| Property                    | Animatable |
-|:----------------------------|:-----------|
-| `ior`                       | ✅        |
-
-#### [KHR_materials_iridescence](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_iridescence)
-| Property                     | Animatable |
-|:-----------------------------|:-----------|
-| `iridescenceFactor`          | ✅        |
-| `iridescenceTexture`         | ❌        |
-| `iridescenceIor`             | ✅        |
-| `iridescenceThicknessMinimum`| ✅        |
-| `iridescenceThicknessMaximum`| ✅        |
-| `iridescenceThicknessTexture`| ❌        |
-
-#### [KHR_materials_sheen](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_sheen)
-| Property                    | Animatable |
-|:----------------------------|:-----------|
-| `sheenColorFactor`          | ✅        |
-| `sheenColorTexture`         | ❌        |
-| `sheenRoughnessFactor`      | ✅        |
-| `sheenRoughnessTexture`     | ❌        |
-
-#### [KHR_materials_specular](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_specular)
-| Property                    | Animatable |
-|:----------------------------|:-----------|
-| `specularFactor`            | ✅        |
-| `specularTexture`           | ❌        |
-| `specularColorFactor`       | ✅        |
-| `specularColorTexture`      | ❌        |
-
-#### [KHR_materials_transmission](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_transmission)
-| Property                    | Animatable |
-|:----------------------------|:-----------|
-| `transmissionFactor`        | ✅        |
-| `transmissionTexture`       | ❌        |
-
-#### [KHR_materials_unlit](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_unlit)
-❌ No animatable properties.
-
-#### [KHR_materials_variants](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_variants)
-❌ No animatable properties.
-
-#### [KHR_materials_volume](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_volume)
-| Property                    | Animatable |
-|:----------------------------|:-----------|
-| `thicknessFactor`           | ✅        |
-| `thicknessTexture`          | ❌        |
-| `attenuationDistance`       | ✅        |
-| `attenuationColor`          | ✅        |
-
-#### [KHR_mesh_quantization](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_mesh_quantization)
-❌ No animatable properties.
-
-#### [KHR_texture_basisu](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_texture_basisu)
-❌ No animatable properties.
-
-#### [KHR_texture_transform](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_texture_transform)
-| Property                    | Animatable |
-|:----------------------------|:-----------|
-| `offset`                    | ✅        |
-| `rotation`                  | ✅        |
-| `scale`                     | ✅        |
-| `texCoord`                  | ❌        |
-
-#### [KHR_xmp_json_ld](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_xmp_json_ld)
-❌ No animatable properties.
-
-### Example target templates for extensions
-
-| `pointer`                                                                                       | Accessor Type | Component Type(s)   | Description              |
-|:------------------------------------------------------------------------------------------------|:--------------|:--------------------|:-------------------------|
-| `"/materials/{}/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/offset"` | `"VEC2"`      | `5126`&nbsp;(FLOAT) | XY offset vector         |
-| `"/extensions/KHR_lights_punctual/lights/{}/intensity"`                                         | `"SCALAR"`    | `5126`&nbsp;(FLOAT) | Light intensity          |
-| `"/materials/{}/extensions/KHR_materials_emissive_strength/emissiveStrength"`                   | `"SCALAR"`    | `5126`&nbsp;(FLOAT) | Emissive strength factor |
+> [!NOTE]
+> Implementations not supporting this extension will ignore animation channels with undefined `node` properties according to the base glTF 2.0 specification.
 
 ## glTF Schema Updates
 
-* **JSON schema**: [glTF.KHR_animation_pointer.schema.json](schema/glTF.KHR_animation_pointer.schema.json)
+- **JSON schema**: [glTF.KHR_animation_pointer.schema.json](schema/glTF.KHR_animation_pointer.schema.json)
 
-## Notes and clarifications
+## Example
 
-_This section is non-normative._
-
-### JSON Pointer
-
-For a `SCALAR` value, the JSON Pointer targets the glTF property.  
-This means, the property is replaced by the interpolated value.
-  
-For any other case, the JSON Pointer targets the glTF property as well but **must** be an `array` property. For clarification, it is not allowed to animate a single element in an `array`.  
-This means, that the two or more elements do replace the values in the array.  
-
-### Material Animation
-
-Material animation targets materials directly. This means that when animating the material, all nodes using that material are updated together. If individual material animation per node is desired, each of them needs to have its own material to animate.
-
-### Mesh Animation
-
-Mesh animation targets meshes directly. This means that when animating the mesh, all nodes using that mesh are updated together. This is the case, when the `weights` are animated.
-
-## Examples
-
-The following snippet shows the changes for [`animations`](https://github.com/KhronosGroup/glTF-Sample-Models/blob/master/2.0/AnimatedCube/glTF/AnimatedCube.gltf#L117) from the [AnimatedCube](https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/AnimatedCube) asset.
-
-```javascript
+```json
 "animations" : [
     {
         "channels" : [
             {
-                "name" : "Targeting x, y, z, w for a rotation of node at index 0."
+                "name" : "Targeting x, y, z, w for a rotation of node at index 0.",
                 "sampler" : 0,
                 "target" : {
-                    "path" : "pointer"
+                    "path" : "pointer",
                     "extensions": {
                         "KHR_animation_pointer" : {
                             "pointer" : "/nodes/0/rotation"
@@ -266,39 +137,20 @@ The following snippet shows the changes for [`animations`](https://github.com/Kh
 
 ## Appendix: Full Khronos Copyright Statement
 
-Copyright 2018-2022 The Khronos Group Inc.
+Copyright 2024 The Khronos Group Inc.
 
-Some parts of this Specification are purely informative and do not define requirements
-necessary for compliance and so are outside the Scope of this Specification. These
-parts of the Specification are marked as being non-normative, or identified as
-**Implementation Notes**.
-
-Where this Specification includes normative references to external documents, only the
-specifically identified sections and functionality of those external documents are in
-Scope. Requirements defined by external documents not created by Khronos may contain
-contributions from non-members of Khronos not covered by the Khronos Intellectual
-Property Rights Policy.
-
-This specification is protected by copyright laws and contains material proprietary
+This Specification is protected by copyright laws and contains material proprietary
 to Khronos. Except as described by these terms, it or any components
 may not be reproduced, republished, distributed, transmitted, displayed, broadcast
 or otherwise exploited in any manner without the express prior written permission
 of Khronos.
 
-This specification has been created under the Khronos Intellectual Property Rights
-Policy, which is Attachment A of the Khronos Group Membership Agreement available at
-www.khronos.org/files/member_agreement.pdf. Khronos grants a conditional
-copyright license to use and reproduce the unmodified specification for any purpose,
-without fee or royalty, EXCEPT no licenses to any patent, trademark or other
-intellectual property rights are granted under these terms. Parties desiring to
-implement the specification and make use of Khronos trademarks in relation to that
-implementation, and receive reciprocal patent license protection under the Khronos
-IP Policy must become Adopters and confirm the implementation as conformant under
-the process defined by Khronos for this specification;
-see https://www.khronos.org/adopters.
+Khronos grants a conditional copyright license to use and reproduce the unmodified
+Specification for any purpose, without fee or royalty, EXCEPT no licenses to any patent,
+trademark or other intellectual property rights are granted under these terms.
 
 Khronos makes no, and expressly disclaims any, representations or warranties,
-express or implied, regarding this specification, including, without limitation:
+express or implied, regarding this Specification, including, without limitation:
 merchantability, fitness for a particular purpose, non-infringement of any
 intellectual property, correctness, accuracy, completeness, timeliness, and
 reliability. Under no circumstances will Khronos, or any of its Promoters,
@@ -307,12 +159,25 @@ employees, agents or representatives be liable for any damages, whether direct,
 indirect, special or consequential damages for lost revenues, lost profits, or
 otherwise, arising from or in connection with these materials.
 
-Vulkan is a registered trademark and Khronos, OpenXR, SPIR, SPIR-V, SYCL, WebGL,
-WebCL, OpenVX, OpenVG, EGL, COLLADA, glTF, NNEF, OpenKODE, OpenKCAM, StreamInput,
-OpenWF, OpenSL ES, OpenMAX, OpenMAX AL, OpenMAX IL, OpenMAX DL, OpenML and DevU are
-trademarks of The Khronos Group Inc. ASTC is a trademark of ARM Holdings PLC,
-OpenCL is a trademark of Apple Inc. and OpenGL and OpenML are registered trademarks
-and the OpenGL ES and OpenGL SC logos are trademarks of Silicon Graphics
-International used under license by Khronos. All other product names, trademarks,
-and/or company names are used solely for identification and belong to their
-respective owners.
+This specification has been created under the Khronos Intellectual Property Rights
+Policy, which is Attachment A of the Khronos Group Membership Agreement available at
+https://www.khronos.org/files/member_agreement.pdf. Khronos grants a conditional
+copyright license to use and reproduce the unmodified specification for any purpose,
+without fee or royalty, EXCEPT no licenses to any patent, trademark or other
+intellectual property rights are granted under these terms. Parties desiring to
+implement the specification and make use of Khronos trademarks in relation to that
+implementation, and receive reciprocal patent license protection under the Khronos
+IP Policy must become Adopters and confirm the implementation as conformant under
+the process defined by Khronos for this specification;
+see https://www.khronos.org/conformance/adopters/file-format-adopter-program.
+
+Where this Specification identifies specific sections of external references, only those
+specifically identified sections define normative functionality. The Khronos Intellectual
+Property Rights Policy excludes external references to materials and associated enabling
+technology not created by Khronos from the Scope of this Specification, and any licenses
+that may be required to implement such referenced materials and associated technologies
+must be obtained separately and may involve royalty payments.
+
+Khronos® is a registered trademark, and glTF™ is a trademark of The Khronos Group Inc. All
+other product names, trademarks, and/or company names are used solely for identification
+and belong to their respective owners.
