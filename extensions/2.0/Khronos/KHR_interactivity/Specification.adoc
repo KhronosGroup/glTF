@@ -688,6 +688,13 @@ If any input value is _NaN_, the output value is also _NaN_.
                               \end{cases}]
 |===
 
+[NOTE]
+.Note
+====
+Since stem:[a] cannot exactly represent latexmath:[\pm\frac{\pi}{2}], this function does not return infinity.
+The closest representable argument values would likely produce latexmath:[\pm16331239353195370].
+====
+
 ===== Arcsine
 
 [cols="1h,1,2"]
