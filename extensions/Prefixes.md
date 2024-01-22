@@ -39,6 +39,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `DGG` | Darmstadt Graphics Group GmbH | https://dgg3d.com/ | [#2303](https://github.com/KhronosGroup/glTF/issues/2303) |
 | `DOTV` | DotVision | https://dotvision.com/<br>`guillaume.pelletier at dotvision.com` | [#2192](https://github.com/KhronosGroup/glTF/issues/2192) |
 | `EMBARK` | Embark Studios AB | https://www.embark-studios.com/ | [#2097](https://github.com/KhronosGroup/glTF/issues/2097) |
+| `ENVOKE` | Envoke | https://envoke-demos.com/ | [#2363](https://github.com/KhronosGroup/glTF/issues/2363) |
 | `EPIC` | Epic Games, Inc. | https://www.epicgames.com/ | [#1905](https://github.com/KhronosGroup/glTF/issues/1905) |
 | `ESSILORLUXOTTICA` | Luxottica Group S.p.A. | https://www.essilorluxottica.com/ | [#2204](https://github.com/KhronosGroup/glTF/issues/2204) |
 | `F8` | Forum8 Co., Ltd. | https://www.forum8.com/ | [#1999](https://github.com/KhronosGroup/glTF/issues/1999) |
