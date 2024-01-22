@@ -103,7 +103,7 @@ To use this extension, the animation channel target path **MUST** be set to `"po
 
 ## glTF Schema Updates
 
-- **JSON schema**: [glTF.KHR_animation_pointer.schema.json](schema/glTF.KHR_animation_pointer.schema.json)
+- **JSON schema**: [animation.channel.target.KHR_animation_pointer.schema.json](schema/animation.channel.target.KHR_animation_pointer.schema.json)
 
 ## Example
 
