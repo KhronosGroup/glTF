@@ -29,7 +29,7 @@ This extension adds one parameter to the metallic-roughness material: `dispersio
 
 Optical dispersion is represented in terms of the Abbe number parameterization \( $V$ \).  The dispersion effect is a result of the wavelength-dependent index of refraction of a material.  Dispersion is a widely adopted parameter in modern PBR models.  It is present in both OpenPBR (as *transmission_dispersion_abbe_number*) and the Dassault Enterprise PBR Shading Model (as $V_d$).
 
-The Abbe number \( $V$ \) is computed from the index of refraction at three wavelengths of visible light: 486.1 nm (short wavelength blue, $n_F$), 587.6 nm (central wavelength, $n_d$), and 656.3 nm (long wavelength red, $n_C$).  The Abbe number makes the simplifying assumption that the index of refraction variance is linear:
+The Abbe number \( $V$ \) for visible light is computed from the index of refraction at three wavelengths of Fraunhofer's spectral lines: 486.1 nm (short wavelength blue, $n_F$), 587.6 nm (central wavelength, $n_d$), and 656.3 nm (long wavelength red, $n_C$). The Abbe number makes the simplifying assumption that the index of refraction variance is linear:
 
 $$V = \frac{n_d - 1}{n_F - n_C}$$
 
