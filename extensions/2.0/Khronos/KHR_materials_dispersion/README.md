@@ -3,6 +3,11 @@
 ## Contributors
 
 - Ben Houston, Threekit [@bhouston](https://github.com/bhouston)
+- Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
+- Tobias Haeussler [@proog128](https://github.com/proog128)
+- Mike Bond, Adobe [@miibond](https://github.com/MiiBond)
+- Alex Wood, AGI [@abwood](https://github.com/abwood)
+- Ed Mackey, AGI [@emackey](https://github.com/emackey)
 
 Copyright 2024 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -27,16 +32,16 @@ This extension adds one parameter to the metallic-roughness material: `dispersio
 
 `dispersion` enables configuring the strength of the angular separation of colors (chromatic aberration) transmitting through a relatively clear volume.  It is an enhancement to the default ```KHR_materials_volume``` transmission model which assumes no dispersion.
 
-Optical dispersion is represented in terms of the Abbe number parameterization \( $V$ \).  The dispersion effect is a result of the wavelength-dependent index of refraction of a material.  Dispersion is a widely adopted parameter in modern PBR models.  It is present in both OpenPBR (as *transmission_dispersion_abbe_number*) and the Dassault Enterprise PBR Shading Model (as $V_d$).
+Optical dispersion is represented in terms of the Abbe number parameterization \( $V_d$ \).  The dispersion effect is a result of the wavelength-dependent index of refraction of a material.  Dispersion is a widely adopted parameter in modern PBR models.  It is present in both OpenPBR (as *transmission_dispersion_abbe_number*) and the Dassault Enterprise PBR Shading Model (as $V_d$).
 
-The Abbe number \( $V$ \) for visible light is computed from the index of refraction at three wavelengths of Fraunhofer's spectral lines: 486.1 nm (short wavelength blue, $n_F$), 587.6 nm (central wavelength, $n_d$), and 656.3 nm (long wavelength red, $n_C$). The Abbe number makes the simplifying assumption that the index of refraction variance is linear:
+The Abbe number \( $V_d$ \) for visible light is computed from the index of refraction at three wavelengths of Fraunhofer's spectral lines: 486.1 nm (short wavelength blue, $n_F$), 587.6 nm (central wavelength, $n_d$), and 656.3 nm (long wavelength red, $n_C$). The Abbe number makes the simplifying assumption that the index of refraction variance is linear:
 
-$$V = \frac{n_d - 1}{n_F - n_C}$$
+$$V_d = \frac{n_d - 1}{n_F - n_C}$$
 
-To calculate the index of refraction at a specific wavelength \( $\lambda$ \), given an Abbe number \( $V$ \) and the central index of refraction as specified by the ```KHR_materials_ior``` extension (assumed to be at the central wavelength, \( $n_d$ \)):
+To calculate the index of refraction at a specific wavelength \( $\lambda$ \), given an Abbe number \( $V_d$ \) and the central index of refraction as specified by the ```KHR_materials_ior``` extension (assumed to be at the central wavelength, \( $n_d$ \)):
 
 $$
-B = \frac{n_d - 1}{V \left( {\lambda_F^{-2}} - {\lambda_C^{-2}} \right)}
+B = \frac{n_d - 1}{V_d \left( {\lambda_F^{-2}} - {\lambda_C^{-2}} \right)}
 $$
 
 And then:
@@ -51,7 +56,7 @@ $$
 n(\lambda) = A + \frac{B}{\lambda^2}
 $$
 
-In this extension, we store a transformed dispersion instead of the Abbe number directly.  Specifically we store $20/V$ so that a value of 1.0 is equivalent to $V=20$, which is about the lowest Abbe number for normal materials. Values over 1.0 are still valid for artists that want to exaggerate the effect. Decreasing values lower the amount of dispersion down to 0.0.  This is the same transform used by both Adobe Standard Material and OpenPBR.
+In this extension, we store a transformed dispersion instead of the Abbe number directly.  Specifically we store $20/V_d$ so that a value of 1.0 is equivalent to $V_d=20$, which is about the lowest Abbe number for normal materials. Values over 1.0 are still valid for artists that want to exaggerate the effect. Decreasing values lower the amount of dispersion down to 0.0.  This is the same transform used by both Adobe Standard Material and OpenPBR.
 
 ## Extending Materials
 
@@ -99,9 +104,9 @@ One real-time method for rendering dispersion effects is to trace volume transmi
 
 For this method, use the material's IOR value (from `KHR_materials_ior`, or the default `1.5`) for the green channel's IOR ($n_d$).  The full spread of IOR values from the blue to red channel's IORs ($n_F - n_C$) can be calculated from the following equation.  Only half of this spread is used to calculate the distance between green's IOR and red or blue.
 
-$$n_F - n_C = \frac{n_d - 1}{V}$$
+$$n_F - n_C = \frac{n_d - 1}{V_d}$$
 
-This extension defines `dispersion` as $20/V$.  Taking this into account, the following GLSL sample will calculate three IOR values for use in the red, green, and blue channels:
+This extension defines `dispersion` as $20/V_d$.  Taking this into account, the following GLSL sample will calculate three IOR values for use in the red, green, and blue channels:
 
 ```glsl
     // Dispersion will spread out the ior values for each r,g,b channel
@@ -118,6 +123,8 @@ The following screenshot demonstrates the above technique as rendered in real-ti
 For comparison, here is the same sample model path-traced in Adobe Substance 3D Stager:
 
 ![Dispersion sample screenshot from Stager](./figures/Dispersion_AdobeStager.jpg)
+
+In general, higher IOR values result in more visible dispersion, up until the point where the IOR values become so high that the light encounters total internal reflection within a volume.
 
 ## Schema
 
