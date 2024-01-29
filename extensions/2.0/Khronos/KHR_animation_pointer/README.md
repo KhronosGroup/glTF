@@ -61,6 +61,12 @@ In the following example, both the `/materials/0/pbrMetallicRoughness/baseColorF
 
 Pointers to the asset properties that do not have a spec-defined default value, such as `/cameras/0/perspective/zfar` are invalid if the property is not defined in the asset explicitly.
 
+The same property **MUST NOT** be targeted more than once in one animation, i.e., different channels of the same animation **MUST NOT**:
+
+- have identical pointers;
+- target an array property and individual elements of the same array;
+- target the same node property with a pointer and with an unextended animation target object.
+
 The output accessor **MUST** be compatible with the animated property data type (see the table below) and the values provided by it **MUST** be valid for the property being animated.
 
 | Asset Object Model Data Type | Output Accessor Type |
@@ -76,6 +82,9 @@ The output accessor **MUST** be compatible with the animated property data type 
 | `float4x4` | MAT4 |
 | `int`      | SCALAR |
 
+> [!NOTE]
+> There are currently no mutable properties of matrix types in the ratified glTF 2.0 specification or extensions.
+
 #### Output Accessor Component Types
 
 If the Object Model Data Type is one of the `float*` types, the output accessor values are converted based on the accessor's component type as follows:
@@ -89,6 +98,8 @@ Keyframe interpolation **MUST** happen after type conversions, using floating-po
 If the Object Model Data Type is `int`, the output accessor component type **MUST** be one of the non-normalized integer types and its values are used as-is.
 
 If the Object Model Data Type is `bool`, the output accessor component type **MUST** be _unsigned byte_; `0` is converted to `false`, any other value is converted to `true`.
+
+Animation samplers used with `int` or `bool` Object Model Data Types **MUST** use `STEP` interpolation.
 
 #### `extras`
 
@@ -105,30 +116,87 @@ To use this extension, the animation channel target path **MUST** be set to `"po
 
 - **JSON schema**: [animation.channel.target.KHR_animation_pointer.schema.json](schema/animation.channel.target.KHR_animation_pointer.schema.json)
 
-## Example
+## Examples
+
+### Node Rotation
+
+The following two snippets represent the same animation expressed with an unextended animation target and with the animation pointer extension.
 
 ```json
-"animations" : [
+"animations": [
     {
-        "channels" : [
+        "channels": [
             {
-                "name" : "Targeting x, y, z, w for a rotation of node at index 0.",
-                "sampler" : 0,
-                "target" : {
-                    "path" : "pointer",
-                    "extensions": {
-                        "KHR_animation_pointer" : {
-                            "pointer" : "/nodes/0/rotation"
-                        }
-                    }
-               }
+                "sampler": 0,
+                "target": {
+                    "node": 0,
+                    "path": "rotation"
+                }
             }
         ],
-        "samplers" : [
+        "samplers": [
             {
-                "input" : 0,
-                "interpolation" : "LINEAR",
-                "output" : 1
+                "input": 0,
+                "interpolation": "LINEAR",
+                "output": 1
+            }
+        ]
+    }
+]
+```
+
+```json
+"animations": [
+    {
+        "channels": [
+            {
+                "sampler": 0,
+                "target": {
+                    "path": "pointer",
+                    "extensions": {
+                        "KHR_animation_pointer": {
+                            "pointer": "/nodes/0/rotation"
+                        }
+                    }
+                }
+            }
+        ],
+        "samplers": [
+            {
+                "input": 0,
+                "interpolation": "LINEAR",
+                "output": 1
+            }
+        ]
+    }
+]
+```
+
+### Base Color
+
+The following animation uses the animation pointer extension to target a base color factor.
+
+```json
+"animations": [
+    {
+        "channels": [
+            {
+                "sampler": 0,
+                "target": {
+                    "path": "pointer",
+                    "extensions": {
+                        "KHR_animation_pointer": {
+                            "pointer": "/materials/0/pbrMetallicRoughness/baseColorFactor"
+                        }
+                    }
+                }
+            }
+        ],
+        "samplers": [
+            {
+                "input": 0,
+                "interpolation": "LINEAR",
+                "output": 1
             }
         ]
     }
