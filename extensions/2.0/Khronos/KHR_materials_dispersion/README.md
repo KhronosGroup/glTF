@@ -60,7 +60,6 @@ By substituting the symbolic wavelength constants $n_d$, $n_F$ and $n_C$ with th
 
 $$
 n(\lambda) = \max(n_d + \frac{n_d-1}{V_d} \left( \frac{523655}{\lambda^2} - 1.5168 \right), 1)
-
 $$
 
 In this extension, we store a transformed dispersion instead of the Abbe number directly.  Specifically we store $20/V_d$ so that a value of 1.0 is equivalent to $V_d=20$, which is about the lowest Abbe number for normal materials. Values over 1.0 are still valid for artists that want to exaggerate the effect. Decreasing values lower the amount of dispersion down to 0.0.  This is the same transform used by both Adobe Standard Material and OpenPBR.
