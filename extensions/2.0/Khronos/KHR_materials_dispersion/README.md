@@ -6,6 +6,8 @@
 - Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
 - Tobias Haeussler [@proog128](https://github.com/proog128)
 - Mike Bond, Adobe [@miibond](https://github.com/MiiBond)
+- Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
+- Eric Chadwick, DGG, [@echadwick-artist](https://github.com/echadwick-artist)
 - Alex Wood, AGI [@abwood](https://github.com/abwood)
 - Ed Mackey, AGI [@emackey](https://github.com/emackey)
 
