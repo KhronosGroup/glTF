@@ -38,22 +38,29 @@ The Abbe number \( $V_d$ \) for visible light is computed from the index of refr
 
 $$V_d = \frac{n_d - 1}{n_F - n_C}$$
 
-To calculate the index of refraction at a specific wavelength \( $\lambda$ \), given an Abbe number \( $V_d$ \) and the central index of refraction as specified by the ```KHR_materials_ior``` extension (assumed to be at the central wavelength, \( $n_d$ \)):
+To calculate the index of refraction at a specific wavelength \( $\lambda$ \), we use the first two terms of Cauchy's equation:
+
+$$
+n(\lambda) = A + \frac{B}{\lambda^2}
+$$
+
+Given an Abbe number \( $V_d$ \) and the central index of refraction as specified by the ```KHR_materials_ior``` extension (assumed to be at the central wavelength, \( $n_d$ \)), the coefficients are defined as:
 
 $$
 B = \frac{n_d - 1}{V_d \left( {\lambda_F^{-2}} - {\lambda_C^{-2}} \right)}
 $$
 
-And then:
+And:
 
 $$
 A = n_d - \frac{B}{\lambda_d^2}
 $$
 
-And finally:
+By substituting the symbolic wavelength constants $n_d$, $n_F$ and $n_C$ with the values provided above we get:
 
 $$
-n(\lambda) = A + \frac{B}{\lambda^2}
+n(\lambda) = \max(n_d + \frac{n_d-1}{V_d} \left( \frac{523655}{\lambda^2} - 1.5168 \right), 1)
+
 $$
 
 In this extension, we store a transformed dispersion instead of the Abbe number directly.  Specifically we store $20/V_d$ so that a value of 1.0 is equivalent to $V_d=20$, which is about the lowest Abbe number for normal materials. Values over 1.0 are still valid for artists that want to exaggerate the effect. Decreasing values lower the amount of dispersion down to 0.0.  This is the same transform used by both Adobe Standard Material and OpenPBR.
