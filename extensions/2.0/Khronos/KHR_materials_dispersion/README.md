@@ -56,7 +56,7 @@ $$
 A = n_d - \frac{B}{\lambda_d^2}
 $$
 
-By substituting the symbolic wavelength constants $n_d$, $n_F$ and $n_C$ with the values provided above we get:
+By substituting the symbolic wavelength constants $\lambda_d$, $\lambda_F$, and $\lambda_C$ with the values provided above we get:
 
 $$
 n(\lambda) = \max(n_d + \frac{n_d-1}{V_d} \left( \frac{523655}{\lambda^2} - 1.5168 \right), 1)
