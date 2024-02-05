@@ -1,4 +1,4 @@
-# KHR\_animation_pointer
+# KHR\_animation\_pointer
 
 ## Contributors
 
@@ -20,7 +20,7 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status
 
-Draft
+Release Candidate
 
 ## Dependencies
 
@@ -32,7 +32,7 @@ This extension provides a standardized way of animating arbitrary glTF propertie
 
 ### Motivation
 
-The base glTF 2.0 specification supports animating only node transformation or morph target weights. With this extension, an animation can target any mutable property in a glTF asset such as material factors or camera field of view.
+The base glTF 2.0 specification supports animating only node transformation or morph target weights. With this extension, an animation can target any mutable property in a glTF asset, such as material factors or camera field of view.
 
 The **glTF 2.0 Asset Object Model** defines JSON pointers and data types of the mutable glTF properties.
 
@@ -59,7 +59,7 @@ In the following example, both the `/materials/0/pbrMetallicRoughness/baseColorF
 }
 ```
 
-Pointers to the asset properties that do not have a spec-defined default value, such as `/cameras/0/perspective/zfar` are invalid if the property is not defined in the asset explicitly.
+Pointers to the asset properties that do not have a spec-defined default value, such as `/cameras/0/perspective/zfar`, are invalid if the property is not defined in the asset explicitly.
 
 The same property **MUST NOT** be targeted more than once in one animation, i.e., different channels of the same animation **MUST NOT**:
 
