@@ -108,7 +108,10 @@ Boundary representation data extends the root data structure of the JSON portion
             "faces": [],
             "loops": [],
             "edges": [],
-            "vertices": []
+            "vertices": [],
+            "curves2D": [],
+            "curves3D": [],
+            "surfaces": []
         }
     }
 }
@@ -124,7 +127,7 @@ The `shells`, `faces`, `loops`, and `edges` arrays define _orientable_ objects. 
             ...,
             "faces": [
                 {
-                    "outerLoop": 0,
+                    "loops": [[0, 1]],
                     "surface": [0, 1]
                 }
             ],
@@ -138,41 +141,50 @@ The `shells`, `faces`, `loops`, and `edges` arrays define _orientable_ objects. 
                     "start": 0,
                     "end": 1,
                     "curve": [0, 1]
+                    "t": [-1, 1]
                 },
                 {
                     "start": 1,
                     "end": 2,
-                    "curve": [1, 1]
+                    "curve": [1, 1],
+                    "t": [0, 2.236]
                 },
                 {
                     "start": 0,
                     "end": 2,
-                    "curve": [2, -1]
+                    "curve": [2, -1],
+                    "t": [0, 2.236]
                 }
             ],
             "curves": [
                 {
                     "type": "line",
-                    "start": [-1, -1, 0],
-                    "end": [1, -1, 0]
+                    "line": {
+                        "origin": [0, -1, 0],
+                        "direction": [1, 0, 0]
+                    }
                 },
                 {
                     "type": "line",
-                    "start": [1, -1, 0],
-                    "end": [0, 1, 0]
+                    "line": {
+                        "origin": [1, -1, 0],
+                        "direction": [-0.4472, 0.8944, 0]
+                    }
                 },
                 {
                     "type": "line",
-                    "start": [0, 1, 0],
-                    "end": [-1, -1, 0]
+                    "line": {
+                        "origin": [0, 1, 0],
+                        "direction": [-0.4472, -0.8944, 0]
+                    }
                 }
             ],
             "surfaces": [
                 {
                     "type": "plane",
-                    "point": [0, 0, 0],
-                    "normal": [0, 0, 1],
-                    "xbasis": [1, 0, 0]
+                    "origin": [0, 0, 0],
+                    "xAxis": [1, 0, 0],
+                    "yAxis": [0, 1, 0]
                 }
             ],
             "vertices": [
@@ -238,30 +250,16 @@ Curves are referenced by _edges_ to define the boundary between _faces_ in 3D sp
   "type": "curveType",
   "curveType": {
     "curveSpecificValue": 1
-  },
-  "domain": {
-    "min": 0,
-    "max": 1
   }
 }
 ```
 
-#### Line (start & direction)
+#### Line
 
 ```json
 "line": {
-  "start": [-1, -1, -1],
+  "origin": [-1, -1, -1],
   "direction": [1, 1, 1],
-}
-```
-
-#### Line (start & end)
-
-
-```json
-"line": {
-  "start": [-1, -1, -1],
-  "end": [1, 1, 1],
 }
 ```
 
@@ -272,23 +270,23 @@ Curves are referenced by _edges_ to define the boundary between _faces_ in 3D sp
 "circle": {
   "radius": 1,
   "origin": [0, 0, 0],
-  "normal": [0, 0, 1],
-  "xbasis": [1, 0, 0]
+  "xAxis": [0, 0, 1],
+  "yAxis": [1, 0, 0]
 }
 ```
 
 #### [NURBS](https://en.wikipedia.org/wiki/Non-uniform_rational_B-spline)
-
-
+    
 ```json
 "nurbs": {
   "controlPoints": [
-    [1.0, 0.0, 0.0, 1.0],
-    [1.0, 1.0, 0.0, 0.7071],
-    [0.0, 1.0, 0.0, 1.0]
+    [1.0, 0.0, 0.0],
+    [1.0, 1.0, 0.0],
+    [0.0, 1.0, 0.0]
   ],
   "knotVector": [0, 0, 0, 1, 1, 1],
-  "order": 3
+  "order": 3,
+  "weights": [1.0, 0.7071, 1.0]
 }
 ```
 
@@ -305,10 +303,6 @@ Surfaces are referenced by _faces_ to define the implicit geometry bounded by _l
   "type": "surfaceType",
   "surfaceType": {
     "surfaceSpecificValue": 1
-  },
-  "domain": {
-    "min": [0, 0],
-    "max": [1, 1]
   }
 }
 ```
@@ -317,36 +311,32 @@ Surfaces are referenced by _faces_ to define the implicit geometry bounded by _l
 
 ```json
 "plane": {
-  "normal": [0, 0, 1],
-  "point": [0, 0, 0],
-  "xbasis": [1, 0, 0]
+  "origin": [0, 0, 1],
+  "xAxis": [1, 0, 0],
+  "yAxis": [0, 1, 0]
 }
 ```
 
-#### Cylinder (extruded circle)
+#### Cylinder
 
 ```json
 "cylinder": {
-  "circle":  {
-    "radius": 1,
-    "origin": [0, 0, 0],
-    "normal": [0, 0, 1],
-    "xbasis": [1, 0, 0]
-  }
+  "radius": 1,
+  "origin": [0, 0, 0],
+  "xAxis": [0, 0, 1],
+  "yAxis": [1, 0, 0]
 }
 ```
 
-#### Torus (revolved circle)
+#### Torus
 
 ```json
 "torus": {
   "origin": [0, 0, 0],
-  "radius": 5,
-  "circle":  {
-    "radius": 1,
-    "normal": [0, 0, 1],
-    "xbasis": [1, 0, 0]
-  }
+  "minorRadius": 5,
+  "majorRadius": 1,
+  "xAxis": [0, 0, 1],
+  "yAxis": [1, 0, 0]
 }
 ```
 
@@ -354,12 +344,10 @@ Surfaces are referenced by _faces_ to define the implicit geometry bounded by _l
 
 ```json
 "sphere": {
-  "horizon": {
-    "origin": [0, 0, 0],
-    "radius": 1,
-    "normal": [0, 0, 1],
-    "xbasis": [1, 0, 0]
-  }
+  "origin": [0, 0, 0],
+  "radius": 1,
+  "xAxis": [0, 0, 1],
+  "yAxis": [1, 0, 0]
 }
 ```
 
@@ -368,16 +356,17 @@ Surfaces are referenced by _faces_ to define the implicit geometry bounded by _l
 ```json
 "nurbs": {
   "controlPoints": [
-    [0, 0, -1, 1]
-    [0, 2, -1, 1],
-    [1, 0, -1, 0.7071],
-    [1, 2, -1, 0.7071],
-    [1, 0, 0, 1],
-    [1, 2, 0, 1],
+    [0, 0, -1]
+    [0, 2, -1],
+    [1, 0, -1],
+    [1, 2, -1],
+    [1, 0, 0],
+    [1, 2, 0],
   ],
   "numControlPoints": [3, 2],
   "numKnots": [6, 4],
   "knotVector": [3, 3, 3, 4, 4, 4, 0, 0, 2, 2],
+  "weights": [1, 1, 0.7071, 0.7071, 1, 1],
   "order": [3, 2]
 }
 ```

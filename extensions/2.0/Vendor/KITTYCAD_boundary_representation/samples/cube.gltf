@@ -8,12 +8,12 @@
       "type": "VEC3",
       "min": [
         0.5,
-        0,
+        -0.5,
         -0.5
       ],
       "max": [
         0.5,
-        1,
+        0.5,
         0.5
       ]
     },
@@ -39,13 +39,13 @@
       "type": "VEC3",
       "min": [
         -0.5,
-        0,
-        -0.5
+        -0.5,
+        0.5
       ],
       "max": [
         0.5,
-        1,
-        -0.5
+        0.5,
+        0.5
       ]
     },
     {
@@ -70,12 +70,12 @@
       "type": "VEC3",
       "min": [
         -0.5,
-        0,
+        -0.5,
         -0.5
       ],
       "max": [
         -0.5,
-        1,
+        0.5,
         0.5
       ]
     },
@@ -101,13 +101,13 @@
       "type": "VEC3",
       "min": [
         -0.5,
-        0,
-        0.5
+        -0.5,
+        -0.5
       ],
       "max": [
         0.5,
-        1,
-        0.5
+        0.5,
+        -0.5
       ]
     },
     {
@@ -132,12 +132,12 @@
       "type": "VEC3",
       "min": [
         -0.5,
-        1,
+        -0.5,
         -0.5
       ],
       "max": [
         0.5,
-        1,
+        -0.5,
         0.5
       ]
     },
@@ -163,12 +163,12 @@
       "type": "VEC3",
       "min": [
         -0.5,
-        0,
+        0.5,
         -0.5
       ],
       "max": [
         0.5,
-        0,
+        0.5,
         0.5
       ]
     },
@@ -188,13 +188,13 @@
     }
   ],
   "asset": {
-    "generator": "kittycad.io",
+    "generator": "zoo.dev",
     "version": "2.0"
   },
   "buffers": [
     {
       "byteLength": 2304,
-      "uri": "data:application/octet-stream;base64,AAAAPwAAAAAAAAC/AACAPwAAAIAAAACAAAAAAAAAesQAAAA/AAAAPwAAAAAAAIA/AAAAgAAAAIAAAPpDAAD6wwAAAD8AAAAAAAAAPwAAgD8AAACAAAAAgAAAekQAAHrEAAAAPwAAgD8AAAA/AACAPwAAAIAAAACAAAB6RAAAAAAAAAA/AAAAPwAAAAAAAIA/AAAAgAAAAIAAAPpDAAD6wwAAAD8AAIA/AAAAvwAAgD8AAACAAAAAgAAAAAAAAAAAAAAAPwAAAD8AAAAAAACAPwAAAIAAAACAAAD6QwAA+sMAAAA/AACAPwAAAD8AAIA/AAAAgAAAAIAAAHpEAAAAAAAAAD8AAAAAAAAAPwAAgD8AAACAAAAAgAAAekQAAHrEAAAAPwAAAD8AAAAAAACAPwAAAIAAAACAAAD6QwAA+sMAAAA/AAAAAAAAAL8AAIA/AAAAgAAAAIAAAAAAAAB6xAAAAD8AAIA/AAAAvwAAgD8AAACAAAAAgAAAAAAAAAAAAAAAvwAAAAAAAAC/AAAAgAAAAIAAAIC/AAAAAAAAesQAAAAAAAAAPwAAAL8AAACAAAAAgAAAgL8AAPpDAAD6wwAAAD8AAAAAAAAAvwAAAIAAAACAAACAvwAAekQAAHrEAAAAPwAAgD8AAAC/AAAAgAAAAIAAAIC/AAB6RAAAAAAAAAAAAAAAPwAAAL8AAACAAAAAgAAAgL8AAPpDAAD6wwAAAL8AAIA/AAAAvwAAAIAAAACAAACAvwAAAAAAAAAAAAAAAAAAAD8AAAC/AAAAgAAAAIAAAIC/AAD6QwAA+sMAAAA/AACAPwAAAL8AAACAAAAAgAAAgL8AAHpEAAAAAAAAAD8AAAAAAAAAvwAAAIAAAACAAACAvwAAekQAAHrEAAAAAAAAAD8AAAC/AAAAgAAAAIAAAIC/AAD6QwAA+sMAAAC/AAAAAAAAAL8AAACAAAAAgAAAgL8AAAAAAAB6xAAAAL8AAIA/AAAAvwAAAIAAAACAAACAvwAAAAAAAAAAAAAAvwAAAAAAAAA/AACAvwAAAIAAAACAAAB6xAAAesQAAAC/AAAAPwAAAAAAAIC/AAAAgAAAAIAAAPrDAAD6wwAAAL8AAAAAAAAAvwAAgL8AAACAAAAAgAAAAAAAAHrEAAAAvwAAgD8AAAC/AACAvwAAAIAAAACAAAAAAAAAAAAAAAC/AAAAPwAAAAAAAIC/AAAAgAAAAIAAAPrDAAD6wwAAAL8AAIA/AAAAPwAAgL8AAACAAAAAgAAAesQAAAAAAAAAvwAAAD8AAAAAAACAvwAAAIAAAACAAAD6wwAA+sMAAAC/AACAPwAAAL8AAIC/AAAAgAAAAIAAAAAAAAAAAAAAAL8AAAAAAAAAvwAAgL8AAACAAAAAgAAAAAAAAHrEAAAAvwAAAD8AAAAAAACAvwAAAIAAAACAAAD6wwAA+sMAAAC/AAAAAAAAAD8AAIC/AAAAgAAAAIAAAHrEAAB6xAAAAL8AAIA/AAAAPwAAgL8AAACAAAAAgAAAesQAAAAAAAAAPwAAAAAAAAA/AAAAgAAAAIAAAIA/AAB6xAAAesQAAAAAAAAAPwAAAD8AAACAAAAAgAAAgD8AAPrDAAD6wwAAAL8AAAAAAAAAPwAAAIAAAACAAACAPwAAAAAAAHrEAAAAvwAAgD8AAAA/AAAAgAAAAIAAAIA/AAAAAAAAAAAAAAAAAAAAPwAAAD8AAACAAAAAgAAAgD8AAPrDAAD6wwAAAD8AAIA/AAAAPwAAAIAAAACAAACAPwAAesQAAAAAAAAAAAAAAD8AAAA/AAAAgAAAAIAAAIA/AAD6wwAA+sMAAAC/AACAPwAAAD8AAACAAAAAgAAAgD8AAAAAAAAAAAAAAL8AAAAAAAAAPwAAAIAAAACAAACAPwAAAAAAAHrEAAAAAAAAAD8AAAA/AAAAgAAAAIAAAIA/AAD6wwAA+sMAAAA/AAAAAAAAAD8AAACAAAAAgAAAgD8AAHrEAAB6xAAAAD8AAIA/AAAAPwAAAIAAAACAAACAPwAAesQAAAAAAAAAPwAAgD8AAAA/AAAAAAAAgD8AAAAAAAD6QwAA+kMAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAL8AAIA/AAAAPwAAAAAAAIA/AAAAAAAA+kMAAPrDAAAAvwAAgD8AAAC/AAAAAAAAgD8AAAAAAAD6wwAA+sMAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAD8AAIA/AAAAvwAAAAAAAIA/AAAAAAAA+sMAAPpDAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAC/AACAPwAAAL8AAAAAAACAPwAAAAAAAPrDAAD6wwAAAL8AAIA/AAAAPwAAAAAAAIA/AAAAAAAA+kMAAPrDAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAA/AACAPwAAAD8AAAAAAACAPwAAAAAAAPpDAAD6QwAAAD8AAIA/AAAAvwAAAAAAAIA/AAAAAAAA+sMAAPpDAAAAPwAAAAAAAAA/AAAAgAAAgL8AAACAAAD6QwAA+kMAAAAAAAAAAAAAAAAAAACAAACAvwAAAIAAAAAAAAAAAAAAAD8AAAAAAAAAvwAAAIAAAIC/AAAAgAAA+sMAAPpDAAAAvwAAAAAAAAC/AAAAgAAAgL8AAACAAAD6wwAA+sMAAAAAAAAAAAAAAAAAAACAAACAvwAAAIAAAAAAAAAAAAAAAL8AAAAAAAAAPwAAAIAAAIC/AAAAgAAA+kMAAPrDAAAAAAAAAAAAAAAAAAAAgAAAgL8AAACAAAAAAAAAAAAAAAC/AAAAAAAAAL8AAACAAACAvwAAAIAAAPrDAAD6wwAAAD8AAAAAAAAAvwAAAIAAAIC/AAAAgAAA+sMAAPpDAAAAAAAAAAAAAAAAAAAAgAAAgL8AAACAAAAAAAAAAAAAAAA/AAAAAAAAAD8AAACAAACAvwAAAIAAAPpDAAD6QwAAAL8AAAAAAAAAPwAAAIAAAIC/AAAAgAAA+kMAAPrD"
+      "uri": "data:application/octet-stream;base64,AAAAPwAAAD8AAAC/AACAPwAAAAAAAAAAAACAPwAAgD8AAAA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAAA/AAAAPwAAAD8AAAC/AAAAvwAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAPwAAAL8AAAA/AACAPwAAAAAAAAAAAAAAAAAAAAAAAAA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAAA/AAAAPwAAAD8AAAA/AAAAPwAAgD8AAAAAAAAAAAAAAAAAAIA/AAAAPwAAAAAAAAAAAACAPwAAAAAAAAAAAAAAPwAAAD8AAAA/AAAAvwAAAD8AAIA/AAAAAAAAAAAAAAAAAAAAAAAAAD8AAAC/AAAAvwAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAPwAAAAAAAAAAAACAPwAAAAAAAAAAAAAAPwAAAD8AAAA/AAAAPwAAAL8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAD8AAAA/AAAAPwAAgD8AAAAAAAAAAAAAAAAAAIA/AAAAPwAAAD8AAAA/AAAAAAAAAAAAAIA/AACAPwAAgD8AAAAAAAAAAAAAAD8AAAAAAAAAAAAAgD8AAAA/AAAAPwAAAD8AAAC/AAAAPwAAAAAAAAAAAACAPwAAgD8AAAAAAAAAvwAAAL8AAAA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAD8AAAAAAAAAAAAAgD8AAAA/AAAAPwAAAL8AAAA/AAAAPwAAAAAAAAAAAACAPwAAAAAAAIA/AAAAAAAAAAAAAAA/AAAAAAAAAAAAAIA/AAAAPwAAAD8AAAC/AAAAvwAAAD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAAD8AAAC/AAAAPwAAAAAAAAAAAACAPwAAgD8AAAAAAAAAAAAAAAAAAAA/AAAAAAAAAAAAAIA/AAAAPwAAAD8AAAA/AAAAPwAAAD8AAAAAAAAAAAAAgD8AAIA/AACAPwAAAL8AAAA/AAAAPwAAAAAAAAAAAACAPwAAAAAAAIA/AAAAvwAAAD8AAAA/AACAvwAAAAAAAAAAAAAAAAAAgD8AAAC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAAC/AAAAPwAAAL8AAAC/AAAAPwAAgL8AAAAAAAAAAAAAAAAAAAAAAAAAvwAAAL8AAAC/AACAvwAAAAAAAAAAAACAvwAAAAAAAAC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAAC/AAAAPwAAAL8AAAA/AAAAvwAAgL8AAAAAAAAAAAAAgL8AAIA/AAAAvwAAAAAAAAAAAACAvwAAAAAAAAAAAAAAvwAAAD8AAAC/AAAAvwAAAL8AAIC/AAAAAAAAAAAAAIC/AAAAAAAAAL8AAAC/AAAAPwAAgL8AAAAAAAAAAAAAAAAAAAAAAAAAvwAAAAAAAAAAAACAvwAAAAAAAAAAAAAAvwAAAD8AAAC/AAAAPwAAAD8AAIC/AAAAAAAAAAAAAAAAAACAPwAAAL8AAAA/AAAAvwAAgL8AAAAAAAAAAAAAgL8AAIA/AAAAvwAAAD8AAAC/AAAAAAAAAAAAAIC/AAAAAAAAgD8AAAAAAAAAAAAAAL8AAAAAAAAAAAAAgL8AAAC/AAAAPwAAAL8AAAC/AAAAvwAAAAAAAAAAAACAvwAAAAAAAAAAAAAAPwAAAL8AAAC/AAAAAAAAAAAAAIC/AACAvwAAAAAAAAAAAAAAAAAAAL8AAAAAAAAAAAAAgL8AAAC/AAAAPwAAAD8AAAA/AAAAvwAAAAAAAAAAAACAvwAAgL8AAIA/AAAAAAAAAAAAAAC/AAAAAAAAAAAAAIC/AAAAvwAAAD8AAAA/AAAAvwAAAL8AAAAAAAAAAAAAgL8AAIC/AAAAAAAAAL8AAAC/AAAAvwAAAAAAAAAAAACAvwAAAAAAAAAAAAAAAAAAAAAAAAC/AAAAAAAAAAAAAIC/AAAAvwAAAD8AAAC/AAAAPwAAAL8AAAAAAAAAAAAAgL8AAAAAAACAPwAAAD8AAAA/AAAAvwAAAAAAAAAAAACAvwAAgL8AAIA/AAAAPwAAAL8AAAC/AAAAAAAAgL8AAAAAAAAAPwAAAD8AAAAAAAAAvwAAAAAAAAAAAACAvwAAAAAAAAAAAAAAAAAAAL8AAAC/AAAAvwAAAAAAAIC/AAAAAAAAAD8AAAC/AAAAvwAAAL8AAAA/AAAAAAAAgL8AAAAAAAAAvwAAAL8AAAAAAAAAvwAAAAAAAAAAAACAvwAAAAAAAAAAAAAAAAAAAD8AAAC/AAAAPwAAAAAAAIC/AAAAAAAAAL8AAAA/AAAAAAAAAL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAAAAAAAC/AAAAvwAAAD8AAAAAAACAvwAAAAAAAAC/AAAAvwAAAL8AAAC/AAAAvwAAAAAAAIC/AAAAAAAAAD8AAAC/AAAAAAAAAL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAAAAAAAA/AAAAvwAAAL8AAAAAAACAvwAAAAAAAAA/AAAAPwAAAD8AAAC/AAAAPwAAAAAAAIC/AAAAAAAAAL8AAAA/AAAAPwAAAD8AAAC/AAAAgAAAgD8AAACAAAAAPwAAAD8AAAAAAAAAPwAAAAAAAACAAACAPwAAAIAAAAAAAAAAAAAAAD8AAAA/AAAAPwAAAIAAAIA/AAAAgAAAAL8AAAA/AAAAvwAAAD8AAAA/AAAAgAAAgD8AAACAAAAAvwAAAL8AAAAAAAAAPwAAAAAAAACAAACAPwAAAIAAAAAAAAAAAAAAAL8AAAA/AAAAvwAAAIAAAIA/AAAAgAAAAD8AAAC/AAAAAAAAAD8AAAAAAAAAgAAAgD8AAACAAAAAAAAAAAAAAAC/AAAAPwAAAD8AAACAAACAPwAAAIAAAAC/AAAAvwAAAD8AAAA/AAAAPwAAAIAAAIA/AAAAgAAAAL8AAAA/AAAAAAAAAD8AAAAAAAAAgAAAgD8AAACAAAAAAAAAAAAAAAA/AAAAPwAAAL8AAACAAACAPwAAAIAAAAA/AAAAPwAAAL8AAAA/AAAAvwAAAIAAAIA/AAAAgAAAAD8AAAC/"
     }
   ],
   "bufferViews": [
@@ -289,48 +289,48 @@
         {
           "surface": [
             0,
-            -1
+            1
           ],
           "loops": [
             [
               0,
-              -1
+              1
             ]
           ]
         },
         {
           "surface": [
             1,
-            -1
+            1
           ],
           "loops": [
             [
               1,
-              -1
+              1
             ]
           ]
         },
         {
           "surface": [
             2,
-            -1
+            1
           ],
           "loops": [
             [
               2,
-              -1
+              1
             ]
           ]
         },
         {
           "surface": [
             3,
-            -1
+            1
           ],
           "loops": [
             [
               3,
-              -1
+              1
             ]
           ]
         },
@@ -383,100 +383,100 @@
         {
           "edges": [
             [
-              4,
-              1
-            ],
-            [
-              5,
-              -1
-            ],
-            [
-              6,
-              -1
-            ],
-            [
-              1,
-              1
-            ]
-          ]
-        },
-        {
-          "edges": [
-            [
-              7,
-              1
-            ],
-            [
-              8,
-              -1
-            ],
-            [
-              9,
-              -1
-            ],
-            [
-              5,
-              1
-            ]
-          ]
-        },
-        {
-          "edges": [
-            [
-              10,
-              1
-            ],
-            [
-              3,
-              -1
-            ],
-            [
-              11,
-              -1
-            ],
-            [
-              8,
-              1
-            ]
-          ]
-        },
-        {
-          "edges": [
-            [
               2,
               1
             ],
             [
+              4,
+              -1
+            ],
+            [
+              5,
+              -1
+            ],
+            [
               6,
-              1
-            ],
-            [
-              9,
-              1
-            ],
-            [
-              11,
               1
             ]
           ]
         },
         {
           "edges": [
+            [
+              5,
+              1
+            ],
+            [
+              7,
+              -1
+            ],
+            [
+              8,
+              -1
+            ],
+            [
+              9,
+              1
+            ]
+          ]
+        },
+        {
+          "edges": [
+            [
+              8,
+              1
+            ],
+            [
+              10,
+              -1
+            ],
             [
               0,
               -1
             ],
             [
-              10,
+              11,
+              1
+            ]
+          ]
+        },
+        {
+          "edges": [
+            [
+              3,
               -1
+            ],
+            [
+              6,
+              -1
+            ],
+            [
+              9,
+              -1
+            ],
+            [
+              11,
+              -1
+            ]
+          ]
+        },
+        {
+          "edges": [
+            [
+              1,
+              1
+            ],
+            [
+              10,
+              1
             ],
             [
               7,
-              -1
+              1
             ],
             [
               4,
-              -1
+              1
             ]
           ]
         }
@@ -489,7 +489,10 @@
           ],
           "start": 0,
           "end": 1,
-          "closed": false
+          "t": [
+            0,
+            1
+          ]
         },
         {
           "curve": [
@@ -498,7 +501,10 @@
           ],
           "start": 2,
           "end": 1,
-          "closed": false
+          "t": [
+            0,
+            1
+          ]
         },
         {
           "curve": [
@@ -507,7 +513,10 @@
           ],
           "start": 3,
           "end": 2,
-          "closed": false
+          "t": [
+            0,
+            1
+          ]
         },
         {
           "curve": [
@@ -516,16 +525,22 @@
           ],
           "start": 3,
           "end": 0,
-          "closed": false
+          "t": [
+            0,
+            1
+          ]
         },
         {
           "curve": [
             4,
             1
           ],
-          "start": 1,
-          "end": 4,
-          "closed": false
+          "start": 4,
+          "end": 2,
+          "t": [
+            0,
+            1
+          ]
         },
         {
           "curve": [
@@ -534,25 +549,34 @@
           ],
           "start": 5,
           "end": 4,
-          "closed": false
+          "t": [
+            0,
+            1
+          ]
         },
         {
           "curve": [
             6,
             1
           ],
-          "start": 2,
-          "end": 5,
-          "closed": false
+          "start": 5,
+          "end": 3,
+          "t": [
+            0,
+            1
+          ]
         },
         {
           "curve": [
             7,
             1
           ],
-          "start": 4,
-          "end": 6,
-          "closed": false
+          "start": 6,
+          "end": 4,
+          "t": [
+            -1,
+            0
+          ]
         },
         {
           "curve": [
@@ -561,150 +585,187 @@
           ],
           "start": 7,
           "end": 6,
-          "closed": false
+          "t": [
+            0,
+            1
+          ]
         },
         {
           "curve": [
             9,
             1
           ],
-          "start": 5,
-          "end": 7,
-          "closed": false
+          "start": 7,
+          "end": 5,
+          "t": [
+            -1,
+            0
+          ]
         },
         {
           "curve": [
             10,
             1
           ],
-          "start": 6,
-          "end": 0,
-          "closed": false
+          "start": 1,
+          "end": 6,
+          "t": [
+            -1,
+            0
+          ]
         },
         {
           "curve": [
             11,
             1
           ],
-          "start": 7,
-          "end": 3,
-          "closed": false
+          "start": 0,
+          "end": 7,
+          "t": [
+            -1,
+            0
+          ]
         }
       ],
       "vertices": [
         [
-          0.5000000000000001,
-          0,
-          0.5000000000000001
+          0.5,
+          -0.5,
+          -0.5
         ],
         [
-          0.5000000000000001,
-          0,
-          -0.5000000000000001
+          0.5,
+          0.5,
+          -0.5
         ],
         [
-          0.5000000000000001,
-          1.0000000000000002,
-          -0.5000000000000001
+          0.5,
+          0.5,
+          0.5
         ],
         [
-          0.5000000000000001,
-          1.0000000000000002,
-          0.5000000000000001
+          0.5,
+          -0.5,
+          0.5
         ],
         [
-          -0.5000000000000001,
-          0,
-          -0.5000000000000001
+          -0.5,
+          0.5,
+          0.5
         ],
         [
-          -0.5000000000000001,
-          1.0000000000000002,
-          -0.5000000000000001
+          -0.5,
+          -0.5,
+          0.5
         ],
         [
-          -0.5000000000000001,
-          0,
-          0.5000000000000001
+          -0.5,
+          0.5,
+          -0.5
         ],
         [
-          -0.5000000000000001,
-          1.0000000000000002,
-          0.5000000000000001
+          -0.5,
+          -0.5,
+          -0.5
         ]
       ],
       "surfaces": [
         {
           "type": "plane",
           "plane": {
-            "normal": [
-              -1,
-              0,
-              0
-            ],
-            "point": [
-              0.5000000000000001,
-              1.0000000000000002,
-              -0.5000000000000001
-            ]
-          }
-        },
-        {
-          "type": "plane",
-          "plane": {
-            "normal": [
-              0,
-              0,
-              1
-            ],
-            "point": [
-              -0.5000000000000001,
-              1.0000000000000002,
-              -0.5000000000000001
-            ]
-          }
-        },
-        {
-          "type": "plane",
-          "plane": {
-            "normal": [
-              1,
-              0,
-              0
-            ],
-            "point": [
-              -0.5000000000000001,
-              1.0000000000000002,
-              -0.5000000000000001
-            ]
-          }
-        },
-        {
-          "type": "plane",
-          "plane": {
-            "normal": [
+            "xAxis": [
               0,
               0,
               -1
             ],
-            "point": [
-              -0.5000000000000001,
-              1.0000000000000002,
-              0.5000000000000001
+            "yAxis": [
+              0,
+              1,
+              0
+            ],
+            "origin": [
+              0.5,
+              -0.5,
+              0.5
             ]
           }
         },
         {
           "type": "plane",
           "plane": {
-            "normal": [
+            "xAxis": [
+              1,
+              0,
+              -0
+            ],
+            "yAxis": [
+              -0,
+              1,
+              0
+            ],
+            "origin": [
+              -0.5,
+              -0.5,
+              0.5
+            ]
+          }
+        },
+        {
+          "type": "plane",
+          "plane": {
+            "xAxis": [
+              0,
+              0,
+              1
+            ],
+            "yAxis": [
+              0,
+              1,
+              -0
+            ],
+            "origin": [
+              -0.5,
+              -0.5,
+              0.5
+            ]
+          }
+        },
+        {
+          "type": "plane",
+          "plane": {
+            "xAxis": [
+              -1,
+              0,
+              -0
+            ],
+            "yAxis": [
               0,
               1,
               0
             ],
-            "point": [
+            "origin": [
+              -0.5,
+              -0.5,
+              -0.5
+            ]
+          }
+        },
+        {
+          "type": "plane",
+          "plane": {
+            "xAxis": [
               0,
-              1.0000000000000002,
+              -0,
+              -1
+            ],
+            "yAxis": [
+              1,
+              0,
+              0
+            ],
+            "origin": [
+              0,
+              -0.5,
               0
             ]
           }
@@ -712,246 +773,203 @@
         {
           "type": "plane",
           "plane": {
-            "normal": [
+            "xAxis": [
               0,
+              -0,
+              -1
+            ],
+            "yAxis": [
               1,
+              0,
               0
             ],
-            "point": [
+            "origin": [
               0,
-              0,
+              0.5,
               0
             ]
           }
         }
       ],
-      "curves": [
+      "curves3D": [
         {
           "type": "line",
           "line": {
-            "start": [
-              0.5000000000000001,
+            "origin": [
+              0.5,
+              -0.5,
+              -0.5
+            ],
+            "direction": [
               0,
-              0.5000000000000001
+              1,
+              0
+            ]
+          }
+        },
+        {
+          "type": "line",
+          "line": {
+            "origin": [
+              0.5,
+              0.5,
+              0.5
             ],
             "direction": [
               0,
               0,
               -1
             ]
-          },
-          "domain": {
-            "min": 0,
-            "max": 1.0000000000000002
           }
         },
         {
           "type": "line",
           "line": {
-            "start": [
-              0.5000000000000001,
-              1.0000000000000002,
-              -0.5000000000000001
+            "origin": [
+              0.5,
+              -0.5,
+              0.5
             ],
             "direction": [
               0,
-              -1,
+              1,
               0
             ]
-          },
-          "domain": {
-            "min": 0,
-            "max": 1.0000000000000002
           }
         },
         {
           "type": "line",
           "line": {
-            "start": [
-              0.5000000000000001,
-              1.0000000000000002,
-              0.5000000000000001
+            "origin": [
+              0.5,
+              -0.5,
+              0.5
             ],
             "direction": [
               0,
               0,
               -1
             ]
-          },
-          "domain": {
-            "min": 0,
-            "max": 1.0000000000000002
           }
         },
         {
           "type": "line",
           "line": {
-            "start": [
-              0.5000000000000001,
-              1.0000000000000002,
-              0.5000000000000001
-            ],
-            "direction": [
-              0,
-              -1,
-              0
-            ]
-          },
-          "domain": {
-            "min": 0,
-            "max": 1.0000000000000002
-          }
-        },
-        {
-          "type": "line",
-          "line": {
-            "start": [
-              0.5000000000000001,
-              0,
-              -0.5000000000000001
-            ],
-            "direction": [
-              -1,
-              0,
-              0
-            ]
-          },
-          "domain": {
-            "min": 0,
-            "max": 1.0000000000000002
-          }
-        },
-        {
-          "type": "line",
-          "line": {
-            "start": [
-              -0.5000000000000001,
-              1.0000000000000002,
-              -0.5000000000000001
-            ],
-            "direction": [
-              0,
-              -1,
-              0
-            ]
-          },
-          "domain": {
-            "min": 0,
-            "max": 1.0000000000000002
-          }
-        },
-        {
-          "type": "line",
-          "line": {
-            "start": [
-              0.5000000000000001,
-              1.0000000000000002,
-              -0.5000000000000001
-            ],
-            "direction": [
-              -1,
-              0,
-              0
-            ]
-          },
-          "domain": {
-            "min": 0,
-            "max": 1.0000000000000002
-          }
-        },
-        {
-          "type": "line",
-          "line": {
-            "start": [
-              -0.5000000000000001,
-              0,
-              -0.5000000000000001
-            ],
-            "direction": [
-              0,
-              0,
-              1
-            ]
-          },
-          "domain": {
-            "min": 0,
-            "max": 1.0000000000000002
-          }
-        },
-        {
-          "type": "line",
-          "line": {
-            "start": [
-              -0.5000000000000001,
-              1.0000000000000002,
-              0.5000000000000001
-            ],
-            "direction": [
-              0,
-              -1,
-              0
-            ]
-          },
-          "domain": {
-            "min": 0,
-            "max": 1.0000000000000002
-          }
-        },
-        {
-          "type": "line",
-          "line": {
-            "start": [
-              -0.5000000000000001,
-              1.0000000000000002,
-              -0.5000000000000001
-            ],
-            "direction": [
-              0,
-              0,
-              1
-            ]
-          },
-          "domain": {
-            "min": 0,
-            "max": 1.0000000000000002
-          }
-        },
-        {
-          "type": "line",
-          "line": {
-            "start": [
-              -0.5000000000000001,
-              0,
-              0.5000000000000001
+            "origin": [
+              -0.5,
+              0.5,
+              0.5
             ],
             "direction": [
               1,
               0,
               -0
             ]
-          },
-          "domain": {
-            "min": 0,
-            "max": 1.0000000000000002
           }
         },
         {
           "type": "line",
           "line": {
-            "start": [
-              -0.5000000000000001,
-              1.0000000000000002,
-              0.5000000000000001
+            "origin": [
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "direction": [
+              0,
+              1,
+              0
+            ]
+          }
+        },
+        {
+          "type": "line",
+          "line": {
+            "origin": [
+              -0.5,
+              -0.5,
+              0.5
             ],
             "direction": [
               1,
               0,
               -0
             ]
-          },
-          "domain": {
-            "min": 0,
-            "max": 1.0000000000000002
+          }
+        },
+        {
+          "type": "line",
+          "line": {
+            "origin": [
+              -0.5,
+              0.5,
+              0.5
+            ],
+            "direction": [
+              0,
+              -0,
+              1
+            ]
+          }
+        },
+        {
+          "type": "line",
+          "line": {
+            "origin": [
+              -0.5,
+              -0.5,
+              -0.5
+            ],
+            "direction": [
+              0,
+              1,
+              0
+            ]
+          }
+        },
+        {
+          "type": "line",
+          "line": {
+            "origin": [
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "direction": [
+              0,
+              -0,
+              1
+            ]
+          }
+        },
+        {
+          "type": "line",
+          "line": {
+            "origin": [
+              -0.5,
+              0.5,
+              -0.5
+            ],
+            "direction": [
+              -1,
+              0,
+              -0
+            ]
+          }
+        },
+        {
+          "type": "line",
+          "line": {
+            "origin": [
+              -0.5,
+              -0.5,
+              -0.5
+            ],
+            "direction": [
+              -1,
+              0,
+              -0
+            ]
           }
         }
       ]
@@ -1017,6 +1035,11 @@
     {
       "children": [
         2
+      ]
+    },
+    {
+      "children": [
+        3
       ]
     },
     {

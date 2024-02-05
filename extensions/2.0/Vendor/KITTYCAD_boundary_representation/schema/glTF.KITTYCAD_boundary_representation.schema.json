@@ -2,22 +2,20 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "KITTYCAD_boundary_representation",
   "type": "object",
-  "required": [
-    "curves",
-    "edges",
-    "faces",
-    "loops",
-    "shells",
-    "solids",
-    "surfaces",
-    "vertices"
-  ],
   "properties": {
-    "curves": {
-      "description": "Curve definitions.",
+    "curves2D": {
+      "description": "2D curve definitions.",
       "type": "array",
       "items": {
-        "$ref": "#/definitions/curve"
+        "$ref": "#/definitions/curve3D"
+      }
+    },
+    "curves3D": {
+      "description": "3D curve definitions.",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/curve3D"
       }
     },
     "edges": {
@@ -71,7 +69,187 @@
     }
   },
   "definitions": {
-    "curve": {
+    "Trace": {
+      "description": "Curve tracing the path of an edge in 2D surface space.",
+      "type": "object",
+      "required": [
+        "curve",
+        "t"
+      ],
+      "properties": {
+        "closed": {
+          "description": "Marker for a closed trace.",
+          "type": "boolean"
+        },
+        "curve": {
+          "description": "The trace curve geometry in 2D (or homogeneous 3D) space.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/indexWithOrientation"
+            }
+          ]
+        },
+        "t": {
+          "description": "Interval for the curve 't' parameter.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/interval"
+            }
+          ]
+        }
+      }
+    },
+    "curve.circle2D": {
+      "description": "Circular curve definition.\n\nλ(u) := O + R(cos(u)x + sin(u)y), where: * O = `self.origin`, * R = `self.radius`, * x = `self.axes.x`, * y = `self.axes.y`.",
+      "type": "object",
+      "required": [
+        "radius"
+      ],
+      "properties": {
+        "origin": {
+          "description": "Position at the center of the circle.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "radius": {
+          "description": "Distance from the center position to all points on the circle.",
+          "type": "number",
+          "format": "double"
+        },
+        "xAxis": {
+          "description": "The 'x' co-ordinate axis.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "yAxis": {
+          "description": "The 'y' co-ordinate axis.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 2,
+          "minItems": 2
+        }
+      }
+    },
+    "curve.line2D": {
+      "description": "Line curve definition.\n\nλ(u) := O + ux, where: * O = `self.origin`, * x = `self.direction`.",
+      "type": "object",
+      "required": [
+        "direction"
+      ],
+      "properties": {
+        "direction": {
+          "description": "Unit vector pointing away from the origin position.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "origin": {
+          "description": "Origin position.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 2,
+          "minItems": 2
+        }
+      }
+    },
+    "curve.nurbs2D": {
+      "description": "Non-uniform rational basis spline curve definition.",
+      "type": "object",
+      "required": [
+        "controlPoints",
+        "order"
+      ],
+      "properties": {
+        "controlPoints": {
+          "description": "Array of control vertices.",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "double"
+            },
+            "maxItems": 2,
+            "minItems": 2
+          }
+        },
+        "knotVector": {
+          "description": "Knot vector.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "order": {
+          "description": "Order of the basis splines.",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "weights": {
+          "description": "Weights accompanying control points.\n\nMay be omitted for non-rational B-splines.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      }
+    },
+    "curve.type": {
+      "description": "Discriminant for `Curve` data.",
+      "oneOf": [
+        {
+          "description": "Circle curve.",
+          "type": "string",
+          "enum": [
+            "circle"
+          ]
+        },
+        {
+          "description": "Line curve.",
+          "type": "string",
+          "enum": [
+            "line"
+          ]
+        },
+        {
+          "description": "NURBS curve.",
+          "type": "string",
+          "enum": [
+            "nurbs"
+          ]
+        }
+      ]
+    },
+    "curve3D": {
       "description": "Abstract curve data.",
       "type": "object",
       "oneOf": [
@@ -83,7 +261,7 @@
           ],
           "properties": {
             "circle": {
-              "$ref": "#/definitions/curve.circle"
+              "$ref": "#/definitions/curve.circle2D"
             }
           },
           "additionalProperties": false
@@ -96,7 +274,7 @@
           ],
           "properties": {
             "line": {
-              "$ref": "#/definitions/curve.line"
+              "$ref": "#/definitions/curve.line2D"
             }
           },
           "additionalProperties": false
@@ -109,7 +287,7 @@
           ],
           "properties": {
             "nurbs": {
-              "$ref": "#/definitions/curve.nurbs"
+              "$ref": "#/definitions/curve.nurbs2D"
             }
           },
           "additionalProperties": false
@@ -119,17 +297,6 @@
         "type"
       ],
       "properties": {
-        "domain": {
-          "description": "Parameter domain.",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/curve.domain"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "name": {
           "description": "Optional name for this surface.",
           "type": [
@@ -147,190 +314,12 @@
         }
       }
     },
-    "curve.circle": {
-      "description": "Circular curve definition.\n\nλ(u) := O + R(cos(u)x + sin(u)y), where: * O = `self.origin`, * R = `self.radius`, * x = `self.xbasis`, * y = `self.normal` × `self.xbasis`, * u ∈ {0, 2π}.\n\nThe `xbasis` and `normal` vectors form an orthonormal set.",
-      "type": "object",
-      "required": [
-        "normal",
-        "radius",
-        "xbasis"
-      ],
-      "properties": {
-        "normal": {
-          "description": "Unit vector normal to the plane containing the circle.\n\nThis serves as the Z basis in the parametric co-ordinate space.",
-          "type": "array",
-          "items": {
-            "type": "number",
-            "format": "double"
-          },
-          "maxItems": 3,
-          "minItems": 3
-        },
-        "origin": {
-          "description": "Position at the center of the circle.",
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": "number",
-            "format": "double"
-          },
-          "maxItems": 3,
-          "minItems": 3
-        },
-        "radius": {
-          "description": "Distance from the center position to all points on the circle.",
-          "type": "number",
-          "format": "double"
-        },
-        "xbasis": {
-          "description": "Unit vector in the direction from the origin to the point on the circle evaluated at λ(0).\n\nDue to floating point precision, this vector may not lie exactly in the plane. If this is the case then the X vector will be treated as the projection of this vector onto the plane.",
-          "type": "array",
-          "items": {
-            "type": "number",
-            "format": "double"
-          },
-          "maxItems": 3,
-          "minItems": 3
-        }
-      }
-    },
-    "curve.domain": {
-      "description": "Curve parameter domain.",
-      "type": "object",
-      "required": [
-        "max",
-        "min"
-      ],
-      "properties": {
-        "max": {
-          "description": "Maximum domain value.",
-          "type": "number",
-          "format": "double"
-        },
-        "min": {
-          "description": "Minimum domain value.",
-          "type": "number",
-          "format": "double"
-        }
-      }
-    },
-    "curve.line": {
-      "description": "Line curve definition.\n\nEither end or direction must be set.",
-      "type": "object",
-      "required": [
-        "start"
-      ],
-      "properties": {
-        "direction": {
-          "description": "Unit vector pointing away from the origin position.",
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": "number",
-            "format": "double"
-          },
-          "maxItems": 3,
-          "minItems": 3
-        },
-        "end": {
-          "description": "End position.",
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": "number",
-            "format": "double"
-          },
-          "maxItems": 3,
-          "minItems": 3
-        },
-        "start": {
-          "description": "Origin position.",
-          "type": "array",
-          "items": {
-            "type": "number",
-            "format": "double"
-          },
-          "maxItems": 3,
-          "minItems": 3
-        }
-      }
-    },
-    "curve.nurbs": {
-      "description": "NURBS curve definition.",
-      "type": "object",
-      "required": [
-        "controlPoints",
-        "knotVector",
-        "order"
-      ],
-      "properties": {
-        "controlPoints": {
-          "description": "Array of control vertices.",
-          "type": "array",
-          "items": {
-            "type": "array",
-            "items": {
-              "type": "number",
-              "format": "double"
-            },
-            "maxItems": 4,
-            "minItems": 4
-          }
-        },
-        "knotVector": {
-          "description": "Knot vector.",
-          "type": "array",
-          "items": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "order": {
-          "description": "Order of basis splines.",
-          "type": "integer",
-          "format": "uint32",
-          "minimum": 0.0
-        }
-      }
-    },
-    "curve.type": {
-      "description": "Discriminant for `Curve` data.",
-      "oneOf": [
-        {
-          "description": "Circular curve.",
-          "type": "string",
-          "enum": [
-            "Circle"
-          ]
-        },
-        {
-          "description": "Line curve.",
-          "type": "string",
-          "enum": [
-            "Line"
-          ]
-        },
-        {
-          "description": "NURBS curve.",
-          "type": "string",
-          "enum": [
-            "Nurbs"
-          ]
-        }
-      ]
-    },
     "edge": {
-      "description": "Pair of vertices on a face plus an optional trim domain.",
+      "description": "Pair of vertices on a face with an accompanying 3D curve..",
       "type": "object",
       "required": [
-        "closed",
-        "curve"
+        "curve",
+        "t"
       ],
       "properties": {
         "closed": {
@@ -367,14 +356,11 @@
             }
           ]
         },
-        "subdomain": {
-          "description": "Optional domain to select a subset of the edge curve geometry.\n\nWhen `None`, the domain is the same as the edge curve geometry domain.",
-          "anyOf": [
+        "t": {
+          "description": "Interval for the curve's 't' parameter.",
+          "allOf": [
             {
-              "$ref": "#/definitions/curve.domain"
-            },
-            {
-              "type": "null"
+              "$ref": "#/definitions/interval"
             }
           ]
         }
@@ -424,6 +410,22 @@
       "maxItems": 2,
       "minItems": 2
     },
+    "interval": {
+      "description": "A pair of endpoint arguments for a single parameter.\n\nThe interval is closed at both ends.",
+      "type": "array",
+      "items": [
+        {
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "maxItems": 2,
+      "minItems": 2
+    },
     "loop": {
       "description": "Edge loop.",
       "type": "object",
@@ -438,11 +440,11 @@
             "$ref": "#/definitions/indexWithOrientation"
           }
         },
-        "uvCurves": {
-          "description": "Optional 1:1 pairing of UV curves to edges.",
+        "traces": {
+          "description": "Optional 1:1 pairing of traces to edges.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/indexWithOrientation"
+            "$ref": "#/definitions/Trace"
           }
         }
       }
@@ -597,17 +599,6 @@
         "type"
       ],
       "properties": {
-        "domain": {
-          "description": "Surface parameter domain.",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/surface.domain"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "name": {
           "description": "Optional name for this surface.",
           "type": [
@@ -626,55 +617,49 @@
       }
     },
     "surface.cylinder": {
-      "description": "Parametric cylindrical surface definition.\n\nσ(u, v) := O + R(cos(u)x + sin(u)y) + vz, where: * O = `self.circle.origin`, * R = `self.circle.radius`, * x = `self.circle.xbasis`, * y = `self.circle.normal` × `self.circle.xbasis`, * z = `self.circle.normal`, * h = `self.height`, * u ∈ {0, 2π}, * v ∈ {0, h}.\n\nCylinders are defined in reference to a circle that is extruded along the circle normal vector.",
+      "description": "Parametric cylindrical surface definition.\n\nσ(u, v) := O + R(cos(u)x + sin(u)y) + vz, where: * O = `self.origin`, * R = `self.radius`, * x = `self.axes.x`, * y = `self.axes.y`, * z = `self.axes.x` × `self.axes.y`.\n\nCylinders are defined in reference to a circle that is extruded along the circle normal vector.",
       "type": "object",
       "required": [
-        "circle",
-        "height"
+        "radius"
       ],
       "properties": {
-        "circle": {
-          "description": "The extruded circle.",
-          "allOf": [
-            {
-              "$ref": "#/definitions/curve.circle"
-            }
-          ]
+        "origin": {
+          "description": "Position at the center of the circle.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
         },
-        "height": {
-          "description": "Height of the extruded circle.",
+        "radius": {
+          "description": "Distance from the center position to all points on the circle.",
           "type": "number",
           "format": "double"
-        }
-      }
-    },
-    "surface.domain": {
-      "description": "Domain of surface parameters.",
-      "type": "object",
-      "required": [
-        "max",
-        "min"
-      ],
-      "properties": {
-        "max": {
-          "description": "Maximum domain values.",
-          "type": "array",
-          "items": {
-            "type": "number",
-            "format": "double"
-          },
-          "maxItems": 2,
-          "minItems": 2
         },
-        "min": {
-          "description": "Minimum domain values.",
+        "xAxis": {
+          "description": "The 'x' co-ordinate axis.",
           "type": "array",
           "items": {
             "type": "number",
             "format": "double"
           },
-          "maxItems": 2,
-          "minItems": 2
+          "maxItems": 3,
+          "minItems": 3
+        },
+        "yAxis": {
+          "description": "The 'y' co-ordinate axis.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
         }
       }
     },
@@ -683,7 +668,6 @@
       "type": "object",
       "required": [
         "controlPoints",
-        "knotVector",
         "numControlPoints",
         "numKnots",
         "order"
@@ -698,8 +682,8 @@
               "type": "number",
               "format": "double"
             },
-            "maxItems": 4,
-            "minItems": 4
+            "maxItems": 3,
+            "minItems": 3
           }
         },
         "knotVector": {
@@ -742,35 +726,22 @@
           },
           "maxItems": 2,
           "minItems": 2
-        }
-      }
-    },
-    "surface.plane": {
-      "description": "Plane surface definition.",
-      "type": "object",
-      "required": [
-        "normal"
-      ],
-      "properties": {
-        "constant": {
-          "description": "The value of `d` in the plane equation `n.r = d`.",
-          "type": [
-            "number",
-            "null"
-          ],
-          "format": "double"
         },
-        "normal": {
-          "description": "Normal vector to the plane.",
+        "weights": {
+          "description": "Weights.\n\nMay be omitted for non-rational B-splines.",
           "type": "array",
           "items": {
             "type": "number",
             "format": "double"
-          },
-          "maxItems": 3,
-          "minItems": 3
-        },
-        "point": {
+          }
+        }
+      }
+    },
+    "surface.plane": {
+      "description": "Plane surface definition.\n\nσ(u, v) := O + ux + vy, where: * O = `self.origin`, * x = `self.axes.x`, * y = `self.axes.y`.",
+      "type": "object",
+      "properties": {
+        "origin": {
           "description": "An arbitrary point that lies on the plane.",
           "type": [
             "array",
@@ -782,45 +753,9 @@
           },
           "maxItems": 3,
           "minItems": 3
-        }
-      }
-    },
-    "surface.sphere": {
-      "description": "Parametric spherical surface definition.\n\nσ(u, v) := O + Rcos(v)(cos(u)x + sin(u)y) + Rsin(v)z, where: * O = `self.horizon.origin`, * R = `self.horizon.radius`, * x = `self.horizon.xbasis`, * y = `self.horizon.normal` × `self.horizon.xbasis`, * z = `self.horizon.normal`, * u ∈ {0, 2π}, * v ∈ {0, 2π}.\n\nSpheres are defined in reference to a circle at zero inclination.",
-      "type": "object",
-      "required": [
-        "horizon"
-      ],
-      "properties": {
-        "horizon": {
-          "description": "The circle at zero inclination.",
-          "allOf": [
-            {
-              "$ref": "#/definitions/curve.circle"
-            }
-          ]
-        }
-      }
-    },
-    "surface.torus": {
-      "description": "Toroidal surface definition.\n\nσ(u, v) := O + (R + rcos(v))(cos(u)x + sin(u)y) + rsin(v)z, where: * O = `self.origin`, * R = `self.radius`, * r = `self.circle.radius`, * x = `self.circle.xbasis`, * y = `self.circle.normal` × `self.circle.xbasis`, * z = `self.circle.normal`, * u, v ∈ {0, 2π}.\n\nTori are defined in reference to a circle that is revolved about an origin at a specified distance. This distance is called the major radius. The radius of the circle of revolution is called the minor radius.",
-      "type": "object",
-      "required": [
-        "circle",
-        "origin",
-        "radius"
-      ],
-      "properties": {
-        "circle": {
-          "description": "Circle of revolution.",
-          "allOf": [
-            {
-              "$ref": "#/definitions/curve.circle"
-            }
-          ]
         },
-        "origin": {
-          "description": "The center of the torus.\n\nThe axis of revolution passes through the origin of the torus.",
+        "xAxis": {
+          "description": "The 'x' co-ordinate axis.",
           "type": "array",
           "items": {
             "type": "number",
@@ -829,10 +764,115 @@
           "maxItems": 3,
           "minItems": 3
         },
+        "yAxis": {
+          "description": "The 'y' co-ordinate axis.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        }
+      }
+    },
+    "surface.sphere": {
+      "description": "Parametric spherical surface definition.\n\nσ(u, v) := O + Rcos(v)(cos(u)x + sin(u)y) + Rsin(v)z, where: * O = `self.origin`, * R = `self.radius`, * x = `self.axes.x`, * y = `self.axes.y`, * z = `self.axes.x` × `self.axes.y`.\n\nSpheres are defined in reference to a circle at zero inclination.",
+      "type": "object",
+      "required": [
+        "radius"
+      ],
+      "properties": {
+        "origin": {
+          "description": "Position at the center of the circle.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        },
         "radius": {
+          "description": "Distance from the center position to all points on the circle.",
+          "type": "number",
+          "format": "double"
+        },
+        "xAxis": {
+          "description": "The 'x' co-ordinate axis.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        },
+        "yAxis": {
+          "description": "The 'y' co-ordinate axis.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        }
+      }
+    },
+    "surface.torus": {
+      "description": "Toroidal surface definition.\n\nσ(u, v) := O + (R + rcos(v))(cos(u)x + sin(u)y) + rsin(v)z, where: * O = `self.origin`, * R = `self.major_radius`, * r = `self.minor_radius`, * x = `self.axes.x`, * y = `self.axes.y`, * z = `self.axes.x` × `self.axes.y`.\n\nTori are defined in reference to a circle that is revolved about an origin at a specified distance. This distance is called the major radius. The radius of the circle of revolution is called the minor radius.",
+      "type": "object",
+      "required": [
+        "majorRadius",
+        "minorRadius"
+      ],
+      "properties": {
+        "majorRadius": {
           "description": "Distance from the torus origin to the origin of the revolved circle.",
           "type": "number",
           "format": "double"
+        },
+        "minorRadius": {
+          "description": "Distance of points away from the center of the revolved circle.",
+          "type": "number",
+          "format": "double"
+        },
+        "origin": {
+          "description": "The center of the torus.\n\nThe axis of revolution passes through the origin of the torus.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        },
+        "xAxis": {
+          "description": "The 'x' co-ordinate axis.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        },
+        "yAxis": {
+          "description": "The 'y' co-ordinate axis.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
         }
       }
     },
@@ -843,35 +883,35 @@
           "description": "Cylindrical surface.",
           "type": "string",
           "enum": [
-            "Cylinder"
+            "cylinder"
           ]
         },
         {
           "description": "NURBS surface.",
           "type": "string",
           "enum": [
-            "Nurbs"
+            "nurbs"
           ]
         },
         {
           "description": "Planar surface.",
           "type": "string",
           "enum": [
-            "Plane"
+            "plane"
           ]
         },
         {
           "description": "Spherical surface.",
           "type": "string",
           "enum": [
-            "Sphere"
+            "sphere"
           ]
         },
         {
           "description": "Torus surface.",
           "type": "string",
           "enum": [
-            "Torus"
+            "torus"
           ]
         }
       ]

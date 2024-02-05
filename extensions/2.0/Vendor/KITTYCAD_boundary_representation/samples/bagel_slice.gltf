@@ -64,7 +64,7 @@
     }
   ],
   "asset": {
-    "generator": "kittycad.io",
+    "generator": "zoo.dev",
     "version": "2.0"
   },
   "buffers": [
@@ -193,7 +193,11 @@
           ],
           "start": null,
           "end": null,
-          "closed": true
+          "closed": true,
+          "t": [
+            0,
+            6.28319
+          ]
         },
         {
           "curve": [
@@ -202,7 +206,11 @@
           ],
           "start": null,
           "end": null,
-          "closed": true
+          "closed": true,
+          "t": [
+            0,
+            6.28319
+          ]
         }
       ],
       "vertices": [
@@ -221,12 +229,17 @@
         {
           "type": "plane",
           "plane": {
-            "normal": [
+            "xAxis": [
+              -1,
               0,
-              0,
-              -1
+              0
             ],
-            "point": [
+            "yAxis": [
+              0,
+              1,
+              0
+            ],
+            "origin": [
               0,
               0,
               0
@@ -236,77 +249,67 @@
         {
           "type": "torus",
           "torus": {
-            "origin": [
-              0,
-              0,
-              0
-            ],
-            "circle": {
-              "radius": 0.05018,
-              "normal": [
-                0,
-                0,
-                1
-              ],
-              "xbasis": [
-                1,
-                0,
-                0
-              ]
-            },
-            "radius": 0.1
-          }
-        }
-      ],
-      "curves": [
-        {
-          "type": "circle",
-          "circle": {
-            "origin": [
-              0,
-              0,
-              0
-            ],
-            "radius": 0.15018,
-            "normal": [
-              0,
-              0,
-              1
-            ],
-            "xbasis": [
+            "xAxis": [
               1,
               0,
               0
-            ]
-          },
-          "domain": {
-            "min": 0,
-            "max": 6.28319
+            ],
+            "yAxis": [
+              0,
+              1,
+              0
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "majorRadius": 0.1,
+            "minorRadius": 0.05018
+          }
+        }
+      ],
+      "curves3D": [
+        {
+          "type": "circle",
+          "circle": {
+            "xAxis": [
+              1,
+              0,
+              0
+            ],
+            "yAxis": [
+              0,
+              1,
+              0
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "radius": 0.15018
           }
         },
         {
           "type": "circle",
           "circle": {
+            "xAxis": [
+              -1,
+              0,
+              0
+            ],
+            "yAxis": [
+              0,
+              1,
+              0
+            ],
             "origin": [
               0,
               0,
               0
             ],
-            "radius": 0.04982,
-            "normal": [
-              0,
-              0,
-              -1
-            ],
-            "xbasis": [
-              -1,
-              0,
-              0
-            ]
-          },
-          "domain": {
-            "min": 0,
-            "max": 6.28319
+            "radius": 0.04982
           }
         }
       ]
