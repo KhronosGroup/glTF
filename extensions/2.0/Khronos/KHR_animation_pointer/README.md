@@ -28,7 +28,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension provides a standardized way of animating arbitrary glTF properties according to the **glTF 2.0 Asset Object Model**.
+This extension provides a standardized way of animating arbitrary glTF properties according to the [glTF 2.0 Asset Object Model](../../../../specification/2.0/ObjectModel.adoc).
 
 ### Motivation
 
@@ -202,6 +202,12 @@ The following animation uses the animation pointer extension to target a base co
     }
 ]
 ```
+
+## References
+
+- [glTF 2.0 Asset Object Model](../../../../specification/2.0/ObjectModel.adoc)
+
+- [JavaScript Object Notation (JSON) Pointer, RFC 6901](https://www.rfc-editor.org/info/rfc6901)
 
 ## Appendix: Full Khronos Copyright Statement
 
