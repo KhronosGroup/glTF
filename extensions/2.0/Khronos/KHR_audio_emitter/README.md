@@ -1,4 +1,4 @@
-# KHR_audio
+# KHR_audio_emitter
 
 ## Contributors
 
@@ -29,7 +29,7 @@ Audio emitter objects may be added to 3D nodes for positional audio or to the sc
 ```json
 {
     "extensions": {
-        "KHR_audio": {
+        "KHR_audio_emitter": {
             "emitters": [
                 {
                     "name": "Positional Emitter",
@@ -84,7 +84,7 @@ Audio emitter objects may be added to 3D nodes for positional audio or to the sc
         {
             "name": "Default Scene",
             "extensions": {
-                "KHR_audio": {
+                "KHR_audio_emitter": {
                     "emitters": [1]
                 }
             }
@@ -95,7 +95,7 @@ Audio emitter objects may be added to 3D nodes for positional audio or to the sc
             "name": "Duck",
             "translation": [1.0, 2.0, 3.0],
             "extensions": {
-                "KHR_audio": {
+                "KHR_audio_emitter": {
                     "emitter": 0
                 }
             }
@@ -106,7 +106,7 @@ Audio emitter objects may be added to 3D nodes for positional audio or to the sc
 
 ## glTF Schema Updates
 
-This extension consists of three primary data structures: Audio Data, Audio Sources, and Audio Emitters. Data, sources and emitters are defined on an `KHR_audio` object added to the `extensions` object on the document root.
+This extension consists of three primary data structures: Audio Data, Audio Sources, and Audio Emitters. Data, sources and emitters are defined on an `KHR_audio_emitter` object added to the `extensions` object on the document root.
 
 The extension must be added to the file's `extensionsUsed` array and because it is optional, it does not need to be added to the `extensionsRequired` array.
 
@@ -118,12 +118,12 @@ The extension must be added to the file's `extensionsUsed` array and because it 
         "version": "2.0"
     },
     "extensionsUsed": [
-        "KHR_audio"
+        "KHR_audio_emitter"
     ],
     "scenes": [...],
     "nodes": [...],
     "extensions": {
-        "KHR_audio": {
+        "KHR_audio_emitter": {
             "audio": [...],
             "sources": [...],
             "emitters": [...]
@@ -138,7 +138,7 @@ Audio data objects define where audio data is located and what format the data i
 
 When storing audio data in a buffer view, the `mimeType` field must be specified. The base specification supports `audio/mpeg` and `audio/wav` MIME types. These were chosen with consideration for the wide support for these types acrosss 3D engines and common use cases. Other supported audio formats may be added via extensions.
 
-Note that in tools that process glTF files, but do not implement the KHR_audio extension, external files referenced via the `uri` field may not be properly copied to their final destination or baked into the final binary glTF file. In these cases, using the `bufferView` property may be a better choice assuming the referenced `bufferView` index is not changed by the tool. The `uri` field might be a better choice when you want to be able to quickly change the referenced audio asset.
+Note that in tools that process glTF files, but do not implement the `KHR_audio_emitter` extension, external files referenced via the `uri` field may not be properly copied to their final destination or baked into the final binary glTF file. In these cases, using the `bufferView` property may be a better choice assuming the referenced `bufferView` index is not changed by the tool. The `uri` field might be a better choice when you want to be able to quickly change the referenced audio asset.
 
 #### `bufferView`
 
@@ -279,7 +279,7 @@ Audio emitters of type `global` may be added to scenes using the following synta
     "scenes": [
         {
             "extensions": {
-                "KHR_audio": {
+                "KHR_audio_emitter": {
                     "emitters": [1, 3]
                 }
             }
@@ -295,7 +295,7 @@ Audio emitters of type `global` may be added to nodes using the following syntax
     "nodes": [
         {
             "extensions": {
-                "KHR_audio": {
+                "KHR_audio_emitter": {
                     "emitter": 1
                 }
             }
@@ -311,7 +311,7 @@ Audio emitters of type `positional` may be added to nodes using the following sy
     "nodes": [
         {
             "extensions": {
-                "KHR_audio": {
+                "KHR_audio_emitter": {
                     "emitter": 0
                 }
             }
@@ -354,7 +354,7 @@ Radians are used for angles matching glTF2.
 
 ### JSON Schema
 
-[glTF.KHR_audio.schema.json](/extensions/2.0/KHR_audio/schema/glTF.KHR_audio.schema.json)
+[glTF.KHR_audio_emitter.schema.json](/extensions/2.0/KHR_audio_emitter/schema/glTF.KHR_audio_emitter.schema.json)
 
 ## Known Implementations
 
