@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_audio Audio Data",
+    "title": "KHR_audio_emitter Audio Data",
     "type": "object",
     "description": "Audio data objects define where audio data is located and what format the data is in. The data is either accessed via a bufferView or uri. `mimeType` is required when `bufferView` is used.",
     "allOf": [{ "$ref": "glTFProperty.schema.json" }],

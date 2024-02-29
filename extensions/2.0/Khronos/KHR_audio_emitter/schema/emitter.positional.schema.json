@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_audio Positional Audio Emitter",
+    "title": "KHR_audio_emitter Positional Audio Emitter",
     "type": "object",
     "description": "Positional audio emitter properties.",
     "allOf": [{ "$ref": "glTFProperty.schema.json" }],

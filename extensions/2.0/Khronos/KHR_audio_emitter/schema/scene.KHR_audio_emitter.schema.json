@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_audio glTF Scene Extension",
+    "title": "KHR_audio_emitter glTF Scene Extension",
     "type": "object",
     "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
