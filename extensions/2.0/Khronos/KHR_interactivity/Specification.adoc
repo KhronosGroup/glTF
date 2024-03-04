@@ -1761,3 +1761,44 @@ When any of the `<i>` input flows is activated:
 .. activate the `completed` output flow.
 3. If the `remainingInputs` value is not zero:
 .. activate the `out` output flow.
+
+===== Throttle
+
+[cols="1h,1,2"]
+|===
+| Type | `flow/throttle` | Activate the output flow unless it has been activated less than a certain time ago
+.2+| Input flow sockets
+|   `in`  | The entry flow into this node
+| `reset` | When this flow is activated, the output flow throttling state is reset
+| Input value sockets
+| `float duration` | The time, in seconds, to wait after an output flow activation before allowing subsequent output flow activations
+.2+| Output flow sockets
+| `out` | The flow to be activated if the output flow is not currently throttled
+| `err` | The flow to be activated if the `duration` input value is negative, infinite, or NaN
+| Output value sockets
+| `float lastRemainingTime` | The remaining throttling time, in seconds, at the moment of the last valid activation of the input flow or NaN if the input flow has never been activated with a valid `duration` input value
+|===
+
+The internal state of this node consists of an uninitialized _timestamp_ value of an implementation-defined high-precision type and a floating-point `lastRemainingTime` value initialized to NaN.
+
+When the `reset` input flow is activated:
+
+1. Reset the `lastRemainingTime` value to NaN.
+
+When the `in` input flow is activated:
+
+1. Evaluate the `duration` input value.
+2. If the `duration` input value is NaN, infinite, or negative,
+.. activate the `err` output flow and skip the next steps.
+3. If the `lastRemainingTime` value is not NaN:
+.. Let `elapsed` be a non-negative difference, in seconds, between the _timestamp_ and the current time.
+.. If the `duration` input value is less than or equal to the `elapsed` value,
+... set the _timestamp_ value to the current time;
+... set the `lastRemainingTime` value to zero;
+... activate the `out` output flow.
+.. If the `duration` input value is greater than the `elapsed` value,
+... set the `lastRemainingTime` value to the positive difference, in seconds, between the `duration` and `elapsed` values.
+4. If the `lastRemainingTime` value is NaN,
+.. set the _timestamp_ value to the current time;
+.. set the `lastRemainingTime` value to zero;
+.. activate the `out` output flow.
