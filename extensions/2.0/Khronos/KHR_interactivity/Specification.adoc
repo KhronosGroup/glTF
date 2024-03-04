@@ -1536,19 +1536,12 @@ If stem:[a] is 0, the operation returns 0; if stem:[a] is -1, the operation retu
 | Input flow sockets
 |  `in`  | The entry flow into this node
 | Output flow sockets
-| `<i>`  | The `i`-th output flow, `i` is a non-negative integer decimal number less than or equal to 2147483647.
+| `<name>` | One or more output flows; their names are purely informative
 |===
 
 This node has no internal state.
 
-When the `in` input flow is activated:
-
-1. Let a temporary variable `index` be -1.
-2. Let a temporary variable `maxIndex` be the maximum output flow name value.
-3. If `index` is less than `maxIndex`:
-.. increment `index` by 1;
-.. activate the output flow named `<index>` if it exists and is connected;
-.. goto step 3.
+When the `in` input flow is activated, all output flows are activated one by one in the order they are defined in JSON.
 
 ===== Branch
 
@@ -1574,15 +1567,19 @@ The `condition` input value is evaluated each time the node is executed.
 |===
 | Type | `flow/switch` | Conditionally route the execution flow to one of the outputs
 | Configuration
-| `int[] cases` | The cases on which to perform the switch on; values **MUST** be unique integers
+| `int[] cases` | The cases on which to perform the switch on; values **MUST** be unique 32-bit signed integers; at least one value **MUST** be present
 | Input flow sockets
 |   `in`  | The entry flow into this node
 | Input value sockets
 | `int selection` | The value on which the switch operates
 .2+| Output flow sockets
-| `<i>`  | The `i`-th output flow, `i` is an integer decimal number; it **MUST** be present in the `cases` configuration
-| `default` | The output flow used when the `selection` input value is not present in the `cases` configuration
+| `<case>`  | The output flow, `case` is an integer decimal number present in the `cases` configuration array
+| `default` | The output flow used when the `selection` input value is not present in the `cases` configuration array
 |===
+
+The node has one or more `<case>` output flow sockets named as decimal integers equal to the elements of the `cases` configuration array. Encoded as JSON strings, these output flow socket names **MUST** contain only decimal integers (ASCII characters `0x30 ... 0x39`) and optionally a leading minus sign (ASCII character `0x2D`); other characters and leading zeros are not allowed.
+
+For example, if the `cases` configuration array is `[-1, 0, 1]`, the output socket names are exactly `"-1"`, `"0"`, and `"1"`.
 
 This node has no internal state.
 
@@ -1686,45 +1683,46 @@ When the `in` input flow is activated:
 [cols="1h,1,2"]
 |===
 | Type | `flow/multiGate` | Route the execution flow to one of the outputs sequentially or randomly
-.3+| Configuration
-| `int outputFlows` | The number of output flows, **MUST** be greater than 0
+.2+| Configuration
 | `bool isRandom` | If set to true, output flows are executed in random order, picking a random not used output flow each time until all are done
 | `bool loop` | If set to true, the outputs will repeat in a loop continuously after all are done
 .2+| Input flow sockets
 |   `in`  | The entry flow into this node
 | `reset` | When this flow is activated, the `lastIndex` value is reset to -1 and all outputs are marked as not used
 | Output flow sockets
-| `<i>`  | The `i`-th output flow, `i` is a non-negative integer decimal number less than the `outputFlows` configuration value
+| `<name>`  | One or more output flows; their names are purely informative
 | Output value sockets
 | `int lastIndex` | The index of the last used output; `-1` if the node has not been activated
 |===
 
-The internal state of this node consists of one 32-bit signed integer value `lastIndex` initialized to -1 and a map of booleans with all values initialized to false representing used output flows. The size of the boolean map is equal to the number of connected output flows, i.e., unconnected output flows are ignored.
+The internal state of this node consists of one 32-bit signed integer value `lastIndex` initialized to -1 and an array of booleans with all values initialized to false representing used output flows. The size of the boolean array is equal to the number of output flows.
+
+The output flows are ordered as they are defined in JSON.
 
 When the `reset` input flow is activated:
 
 1. Reset the `lastIndex` value to -1.
-2. Mark all connected output flows as not used in the boolean map.
+2. Mark all output flows as not used in the boolean array.
 
 When the `in` input flow is activated:
 
-1. If the `isRandom` input value is false,
-.. let `i` be the smallest connected not used output flow index according to the boolean map or -1 if all flows are marked as used.
-2. If the `isRandom` input value is true,
-.. let `i` be a random not used connected output flow index according to the boolean map or -1 if all flows are marked as used.
+1. If the `isRandom` configuration value is false,
+.. let `i` be the smallest not used output flow index according to the boolean array or -1 if all output flows are marked as used.
+2. If the `isRandom` configuration value is true,
+.. let `i` be a random not used output flow index according to the boolean array or -1 if all output flows are marked as used.
 3. If `i` is greater than -1,
-.. mark the `i`-th output as used in the boolean map;
+.. mark the output flow with index `i` as used in the boolean array;
 .. set the `lastIndex` value to `i`;
-.. activate the output flow `i`.
-4. If `i` is equal to -1 and the `loop` input value is true,
-.. mark all connected output flows as not used in the boolean map;
-.. if the `isRandom` input value is false,
-... set `i` to the smallest connected output flow index;
-.. if the `isRandom` input value is true,
-... set `i` be a random connected output flow index;
-.. mark the `i`-th output flow as used in the boolean map;
+.. activate the output flow with index `i`.
+4. If `i` is equal to -1 and the `loop` configuration value is true,
+.. mark all output flows as not used in the boolean array;
+.. if the `isRandom` configuration value is false,
+... set `i` to 0;
+.. if the `isRandom` configuration value is true,
+... set `i` to a random output flow index;
+.. mark the output flow with index `i` as used in the boolean array;
 .. set the `lastIndex` value to `i`;
-.. activate the output flow `i`.
+.. activate the output flow with index `i`.
 
 ===== Wait All
 
@@ -1732,7 +1730,7 @@ When the `in` input flow is activated:
 |===
 | Type | `flow/waitAll` | Activate the output flow when all input flows have been activated at least once.
 | Configuration
-| `int inputFlows` | The number of input flows, **MUST** be greater than 0
+| `int inputFlows` | The number of input flows, **MUST** be greater than 0 and less than or equal to 2147483647
 .2+| Input flow sockets
 |   `<i>`  | The `i`-th input flow, `i` is a non-negative integer decimal number less than the `inputFlows` configuration value
 | `reset` | When this flow is activated, all input flows are marked as unused
@@ -1742,6 +1740,10 @@ When the `in` input flow is activated:
 | Output value sockets
 | `int remainingInputs` | The number of not yet activated input flows
 |===
+
+The node has one or more input flow sockets named as sequential non-negative decimal integers depending on the `inputFlows` configuration value. Encoded as JSON strings, these input flow socket names contain only decimal integers (ASCII characters `0x30 ... 0x39`); other characters and leading zeros are not allowed.
+
+For example, if `inputFlows` is 3, the input socket names are `"0"`, `"1"`, and `"2"` exactly.
 
 The internal state of this node consists of one 32-bit signed integer value `remainingInputs` initialized to the number of connected input flows not including the `reset` input flow and a map of booleans with all values initialized to false representing used input flow sockets. The size of the boolean map is equal to the initial `remainingInputs` value.
 
