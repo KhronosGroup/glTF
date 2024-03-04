@@ -1779,7 +1779,7 @@ When any of the `<i>` input flows is activated:
 | `float lastRemainingTime` | The remaining throttling time, in seconds, at the moment of the last valid activation of the input flow or NaN if the input flow has never been activated with a valid `duration` input value
 |===
 
-The internal state of this node consists of an uninitialized _timestamp_ value of an implementation-defined high-precision type and a floating-point `lastRemainingTime` value initialized to NaN.
+The internal state of this node consists of an uninitialized _timestamp_ value of an implementation-defined high-precision time type and a floating-point `lastRemainingTime` value initialized to NaN.
 
 When the `reset` input flow is activated:
 
@@ -1802,3 +1802,33 @@ When the `in` input flow is activated:
 .. set the _timestamp_ value to the current time;
 .. set the `lastRemainingTime` value to zero;
 .. activate the `out` output flow.
+
+==== Async Nodes
+
+===== Delay
+
+[cols="1h,1,2"]
+|===
+| Type | `flow/delay` | Schedule the output flow activation after a certain delay
+| Input flow sockets
+| `in` | The entry flow into this node
+| Input value sockets
+| `float duration` | The duration, in seconds, to delay
+.3+| Output flow sockets
+| `out` | The flow to be activated if the `duration` value is valid
+| `err` | The flow to be activated if the `duration` value is invalid
+| `completed` | The flow to be activated after the delay
+|===
+
+The internal state of this node consists of an _activationTime_ value of an implementation-defined high-precision time type initialized to epoch.
+
+When the `in` input flow is activated:
+
+1. Evaluate the `duration` input value.
+2. If the `duration` input value is NaN, infinite, or negative,
+.. activate the `err` output flow and skip the next steps.
+3. Let _currentTime_ be an implementation-defined high-precision time value representing the current time.
+4. If the _activationTime_ value is less than the _currentTime_ value,
+.. set the _activationTime_ value to the sum of the _currentTime_ value and the `duration` input value converted to the same implementation-specific high-precision time type;
+.. schedule the `completed` output flow activation at the _activationTime_ time.
+5. Activate the `out` output flow.
