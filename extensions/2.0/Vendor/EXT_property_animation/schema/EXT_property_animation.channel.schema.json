@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Animation Channel",
+    "type": "object",
+    "description": "Targets an animation's sampler at a node's property.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "sampler": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of a sampler in this animation used to compute the value for the target.",
+            "gltf_detailedDescription": "The index of a sampler in this animation used to compute the value for the target."
+        },
+        "target": {
+            "description": "The JSON Pointer of the property to be animated.",
+            "gltf_detailedDescription": "Must reference a leaf property on an object that fits the data types supported by accessor elements; animation of boolean or enum values is prevented as well as any indexed object reference within the glTF JSON.",
+            "type": "string"
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "sampler", "target" ]
+}
