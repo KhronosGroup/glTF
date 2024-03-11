@@ -1835,6 +1835,48 @@ The graph execution **MAY** be terminated when the amount of pending activations
 
 === State Manipulation Nodes
 
+==== Custom Variable Access
+
+===== Variable Get
+
+[cols="1h,1,2"]
+|===
+| Type | `variable/get` | Get a custom variable value
+| Configuration
+| `int variable` | The custom variable index
+| Output value sockets
+| `T value`  | The custom variable value
+|===
+
+This node gets a custom variable value using the variable index provided by the `variable` configuration value. The type `T` is determined by the referenced variable. The variable index **MUST** be non-negative and less than the total number of custom variables, otherwise the node is invalid.
+
+This node has no internal state.
+
+===== Variable Set
+
+[cols="1h,1,2"]
+|===
+| Type | `variable/set` | Set a custom variable value
+| Configuration
+| `int variable` | The custom variable index
+| Input flow sockets
+| `in` | The entry flow into this node
+| Input value sockets
+| `T value` | The new variable value
+| Output flow sockets
+| `out` | The flow to be activated after the value is set
+|===
+
+This node sets a custom variable value using the variable index provided by the `variable` configuration value and the `value` input value. The type `T` is determined by the referenced variable. The variable index **MUST** be non-negative and less than the total number of custom variables, otherwise the node is invalid.
+
+This node has no internal state.
+
+When the `in` input flow is activated:
+
+1. Evaluate the `value` input value.
+2. Set the custom variable with the `variable` configuration value index to the `value` input value.
+3. Activate the `out` output flow.
+
 ==== Object Model Access
 
 ===== Pointer Get
