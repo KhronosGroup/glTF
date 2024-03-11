@@ -1832,3 +1832,83 @@ When the `in` input flow is activated:
 5. Activate the `out` output flow.
 
 The graph execution **MAY** be terminated when the amount of pending activations exceeds an implementation-defined value.
+
+=== State Manipulation Nodes
+
+==== Object Model Access
+
+===== Pointer Get
+
+[cols="1h,1,2"]
+|===
+| Type | `pointer/get` | Get an object model property value
+| Configuration
+| `string pointer` | The JSON pointer or JSON pointer template
+| Input value sockets
+| `int <segment>` | The JSON pointer template path segment to be substituted at runtime
+.2+| Output value sockets
+| `T value`  | The resolved property value
+| `bool isValid`  | True if the property value can be resolved, false otherwise
+|===
+
+This node gets a glTF Asset Object Model value using the provided JSON pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the type of the pointer cannot be statically determined, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
+
+[NOTE]
+.Examples
+====
+The `pointer` configuration value `"/nodes/0/scale"` is valid; its output value socket is of `float3` type.
+
+The `pointer` configuration value `"/myProperty"` is invalid because this path is not defined.
+====
+
+The pointer string **MAY** be a template pointer string, i.e., it **MAY** contain path segments substituted at runtime using the input values. All input values **MUST** be of `int` type. Path segments, if used, **MUST** substitute only array indices in the pointer templates as listed in the glTF Asset Object Model Specification.
+
+[NOTE]
+.Example
+====
+If the `pointer` configuration value is `"/nodes/{myId}/scale"`, the node has the `myId` input value socket, which value denotes the node index.
+====
+
+This node has no internal state.
+
+If the pointer or the pointer template with all its substitutions applied can be resolved, the `value` output value is the resolved property value and the `isValid` output value is true.
+
+If the pointer or the pointer template with all its substitutions applied cannot be resolved, the `value` output value is the default value for its type and the `isValid` output value is false.
+
+[NOTE]
+.Note
+====
+Unresolvable pointers include those with negative or out-of-bounds array indices and/or non-existent JSON objects.
+====
+
+===== Pointer Set
+
+[cols="1h,1,2"]
+|===
+| Type | `pointer/set` | Set an object model property value
+| Configuration
+| `string pointer` | The JSON pointer or JSON pointer template
+| Input flow sockets
+| `in` | The entry flow into this node
+.2+| Input value sockets
+| `int <segment>` | The JSON pointer template path segment to be substituted at runtime
+| `T value` | The new property value
+.2+| Output flow sockets
+| `out` | The flow to be activated if the JSON pointer can be resolved
+| `err` | The flow to be activated if the JSON pointer cannot be resolved
+|===
+
+This node sets a glTF Asset Object Model value using the provided JSON pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the type of the pointer cannot be statically determined, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
+
+The pointer string **MAY** be a template pointer string, i.e., it **MAY** contain path segments substituted at runtime using the input values. All input values used for path segment substitutions **MUST** be of `int` type. Path segments, if used, **MUST** substitute only array indices in the pointer templates as listed in the glTF Asset Object Model Specification.
+
+This node has no internal state.
+
+When the `in` input flow is activated:
+
+1. Evaluate all input values.
+2. If the pointer or the pointer template with all its substitutions applied can be resolved,
+.. set the resolved property to the `value` input value;
+.. activate the `out` output flow.
+3. If the pointer or the pointer template with all its substitutions applied cannot be resolved,
+.. activate the `err` output flow.
