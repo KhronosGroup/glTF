@@ -1830,3 +1830,5 @@ When the `in` input flow is activated:
 3. Let _activationTime_ be an implementation-defined high-precision time value equal to the sum of the current time value and the `duration` input value converted to the same time type.
 4. Schedule the `completed` output flow activation at the _activationTime_ time.
 5. Activate the `out` output flow.
+
+The graph execution **MAY** be terminated when the amount of pending activations exceeds an implementation-defined value.
