@@ -1685,7 +1685,7 @@ When the `in` input flow is activated:
 | Type | `flow/multiGate` | Route the execution flow to one of the outputs sequentially or randomly
 .2+| Configuration
 | `bool isRandom` | If set to true, output flows are executed in random order, picking a random not used output flow each time until all are done
-| `bool loop` | If set to true, the outputs will repeat in a loop continuously after all are done
+| `bool isLoop` | If set to true, the outputs will repeat in a loop continuously after all are done
 .2+| Input flow sockets
 |   `in`  | The entry flow into this node
 | `reset` | When this flow is activated, the `lastIndex` value is reset to -1 and all outputs are marked as not used
@@ -1714,7 +1714,7 @@ When the `in` input flow is activated:
 .. mark the output flow with index `i` as used in the boolean array;
 .. set the `lastIndex` value to `i`;
 .. activate the output flow with index `i`.
-4. If `i` is equal to -1 and the `loop` configuration value is true,
+4. If `i` is equal to -1 and the `isLoop` configuration value is true,
 .. mark all output flows as not used in the boolean array;
 .. if the `isRandom` configuration value is false,
 ... set `i` to 0;
@@ -1813,22 +1813,20 @@ When the `in` input flow is activated:
 | Input flow sockets
 | `in` | The entry flow into this node
 | Input value sockets
-| `float duration` | The duration, in seconds, to delay
+| `float duration` | The duration, in seconds, to delay the `completed` output flow activation
 .3+| Output flow sockets
 | `out` | The flow to be activated if the `duration` value is valid
 | `err` | The flow to be activated if the `duration` value is invalid
 | `completed` | The flow to be activated after the delay
 |===
 
-The internal state of this node consists of an _activationTime_ value of an implementation-defined high-precision time type initialized to epoch.
+This node has no internal state.
 
 When the `in` input flow is activated:
 
 1. Evaluate the `duration` input value.
 2. If the `duration` input value is NaN, infinite, or negative,
 .. activate the `err` output flow and skip the next steps.
-3. Let _currentTime_ be an implementation-defined high-precision time value representing the current time.
-4. If the _activationTime_ value is less than the _currentTime_ value,
-.. set the _activationTime_ value to the sum of the _currentTime_ value and the `duration` input value converted to the same implementation-specific high-precision time type;
-.. schedule the `completed` output flow activation at the _activationTime_ time.
+3. Let _activationTime_ be an implementation-defined high-precision time value equal to the sum of the current time value and the `duration` input value converted to the same time type.
+4. Schedule the `completed` output flow activation at the _activationTime_ time.
 5. Activate the `out` output flow.
