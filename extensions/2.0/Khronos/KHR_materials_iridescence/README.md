@@ -326,7 +326,7 @@ $$\Delta\phi=2\pi\lambda^{-1}\mathcal{D}$$
 and depends on the first-order optical path difference $\mathcal{D}$ (or `OPD`):
 
 ```glsl
-OPD = 2.0 * iridescenceIor * iridescenceThickness * cosTheta1;
+OPD = 2.0 * iridescenceIor * iridescenceThickness * cosTheta2;
 ```
 
 `phi12` and `phi23` define the base phases per interface and are approximated with `0.0` if the IOR of the hit material (`iridescenceIor` or `baseIor`) is higher than the IOR of the previous material (`outsideIor` or `iridescenceIor`) and *π* otherwise. Also here, polarization is ignored.
