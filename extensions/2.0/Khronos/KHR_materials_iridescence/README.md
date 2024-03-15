@@ -247,7 +247,7 @@ The two additional parameters `base_f0_color` and `specular_weight` correspond t
 
 *This section is non-normative.*
 
-The calculation of `iridescent_fresnel(...)` is described in the following sections as GLSL code at the viewing angle <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_1">. For glTF an approximation of the original model (defined in the Mitsuba code example from [Belcour/Barla](#theory-documentation-and-implementations)) is used.
+The calculation of `iridescent_fresnel(...)` is described in the following sections as GLSL code at the viewing angle $\theta_1$. For glTF an approximation of the original model (defined in the Mitsuba code example from [Belcour/Barla](#theory-documentation-and-implementations)) is used.
 
 ```glsl
 vec3 iridescent_fresnel(outsideIor, iridescenceIor, baseF0, iridescenceThickness, cosTheta1) {
@@ -291,7 +291,7 @@ This simple formula is used for both dielectrics and metals. While it is physica
 
 To calculate the reflectance factors at normal incidence of both interfaces (`R0` and `R1`), the special case is used as is:
 
-<img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20R%20=%20\left|\frac{n_1%20-%20n_2%20}{n_1%20%2B%20n_2%20}\right|^2">
+$$R = \left|\frac{n_1 - n_2}{n_1 + n_2 }\right|^2$$
 
 ```glsl
 float IorToFresnel0(float transmittedIor, float incidentIor) {
@@ -299,11 +299,11 @@ float IorToFresnel0(float transmittedIor, float incidentIor) {
 }
 ```
 
-To calculate the reflectances `R12` and `R23` at the viewing angles <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_1"> (angle hitting the thin-film layer) and <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_2"> (angle after refraction in the thin-film) Schlick Fresnel is again used. This approximation allows to eliminate the split into S and P polarization for the exact Fresnel equations.
+To calculate the reflectances `R12` and `R23` at the viewing angles $\theta_1$ (angle hitting the thin-film layer) and $\theta_2$ (angle after refraction in the thin-film) Schlick Fresnel is again used. This approximation allows to eliminate the split into S and P polarization for the exact Fresnel equations.
 
-<img src="https://render.githubusercontent.com/render/math?math=\color{gray}\theta_2"> can be calculated using Snell's law (with <img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\eta_1"> being `outsideIor` and <img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\eta_2"> being `iridescenceIor`):
+$\theta_2$ can be calculated using Snell's law (with $\eta_1$ being `outsideIor` and $\eta_2$ being `iridescenceIor`):
 
-<img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\cos(\theta_2)%20=%20\sqrt{1-\left(\frac{\eta_1}{\eta_2}\right)^2\cdot\left(1-\cos^2(\theta_1)\right)}">
+$$\cos(\theta_2) = \sqrt{1-\left(\frac{\eta_1}{\eta_2}\right)^2\left(1-\cos^2(\theta_1)\right)}$$
 
 ```glsl
 float sinTheta2Sq = pow(outsideIor / iridescenceIor, 2.0) * (1.0 - pow(cosTheta1, 2.0));
@@ -321,12 +321,12 @@ float cosTheta2 = sqrt(cosTheta2Sq);
 
 The phase shift is as follows:
 
-<img src="https://render.githubusercontent.com/render/math?math=\large\color{gray}\displaystyle%20\Delta%20\phi%20=%202%20\pi%20\lambda^{-1}\mathcal{D}">
+$$\Delta\phi=2\pi\lambda^{-1}\mathcal{D}$$
 
-and depends on the first-order optical path difference <img src="https://render.githubusercontent.com/render/math?math=\color{gray}\displaystyle%20\mathcal{D}"> (or `OPD`):
+and depends on the first-order optical path difference $\mathcal{D}$ (or `OPD`):
 
 ```glsl
-OPD = 2.0 * iridescenceIor * iridescenceThickness * cosTheta1;
+OPD = 2.0 * iridescenceIor * iridescenceThickness * cosTheta2;
 ```
 
 `phi12` and `phi23` define the base phases per interface and are approximated with `0.0` if the IOR of the hit material (`iridescenceIor` or `baseIor`) is higher than the IOR of the previous material (`outsideIor` or `iridescenceIor`) and *π* otherwise. Also here, polarization is ignored.
