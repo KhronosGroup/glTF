@@ -1,0 +1,47 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "featureId.schema.json",
+    "title": "Feature ID in EXT_mesh_features",
+    "type": "object",
+    "description": "Feature IDs stored in an attribute or texture.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "featureCount": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The number of unique features in the attribute or texture."
+        },
+        "nullFeatureId": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "A value that indicates that no feature is associated with this vertex or texel."
+        },
+        "label": {
+            "type": "string",
+            "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+            "description": "A label assigned to this feature ID set. Labels must be alphanumeric identifiers matching the regular expression `^[a-zA-Z_][a-zA-Z0-9_]*$`."
+        },
+        "attribute": {
+            "description": "An attribute containing feature IDs. When `attribute` and `texture` are omitted the feature IDs are assigned to vertices by their index.",
+            "$ref": "featureIdAttribute.schema.json"
+        },
+        "texture": {
+            "description": "A texture containing feature IDs.",
+            "$ref": "featureIdTexture.schema.json"
+        },
+        "propertyTable": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The index of the property table containing per-feature property values. Only applicable when using the `EXT_structural_metadata` extension."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "featureCount"
+    ]
+}
