@@ -1,0 +1,209 @@
+{
+  "asset": {
+    "generator": "Khronos glTF Blender I/O v1.6.16",
+    "version": "2.0",
+    "extras": {
+        "gltf.clearcolor": "0.4,0.4,0.4,0"
+    }
+  },
+  "extensionsRequired": [
+    "KHR_lights_punctual",
+    "KHR_displayencoding_pq"
+  ],
+  "extensions": {
+    "KHR_displayencoding_pq" : {
+    },
+    "KHR_lights_punctual": {
+      "lights": [
+        {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "intensity": 5000,
+          "type": "directional",
+          "name": "Daylight 5000 lumen / m2"
+        }
+      ]
+    },
+    "KHR_displayencoding_pq": {}
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Scene",
+      "nodes": [
+        1,
+        0
+      ]
+    }
+  ],
+  "nodes": [
+    {
+        "extensions" : {
+            "KHR_lights_punctual" : {
+                "light" : 0
+            }
+        },
+        "name" : "Sun_Orientation",
+        "rotation" : [
+        0, 0, 0, 1
+        ]
+    },
+    {
+      "mesh": 0,
+      "children": [2],
+      "name": "RootNode",
+        "rotation": [
+            0.0, 0.0, 0.0, 1.0
+        ],
+        "scale": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "translation": [
+            0.0,
+            0.0,
+            0.0
+        ]
+      
+    },
+        {
+            "camera": 0,
+            "name": "Generated Camera",
+            "rotation": [
+                0.0, 0.0, 0.0, 1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.24870499968528748
+            ]
+        }
+  ],
+    "cameras": [
+        {
+            "name": "Generated Camera",
+            "perspective": {
+                "yfov": 0.8,
+                "zfar": 37.232540130615234,
+                "znear": 0.0037232539616525173
+            },
+            "type": "perspective"
+        }
+  ],
+  "materials": [
+    {
+      "name": "Displaymapping spheres",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0,
+        "roughnessFactor": 1
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "RootMesh",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    }
+  ],
+  "images": [
+    {
+      "name": "basecolor",
+      "uri": "DisplayEncoding_image0.png"
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 16049,
+      "max": [
+        0.072499997913837433,
+        0.072499997913837433,
+        0.0099999997764825821
+      ],
+      "min": [
+        -0.072499997913837433,
+        -0.072499997913837433,
+        -0.0099999997764825821
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 16049,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 16049,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5123,
+      "count": 82080,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 192588,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 192588,
+      "byteOffset": 192588
+    },
+    {
+      "buffer": 0,
+      "byteLength": 128392,
+      "byteOffset": 385176
+    },
+    {
+      "buffer": 0,
+      "byteLength": 164160,
+      "byteOffset": 513568
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 33071,
+      "wrapT": 33071
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 677728,
+      "uri": "DisplayEncodingPQ.bin"
+    }
+  ]
+}
