@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_collision_shapes Trimesh Shape",
+    "type": "object",
+    "description": "Parameters describing a mesh shape.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "mesh": {
+            "description": "The ID of the mesh from which to build the collision representation.",
+            "allOf": [{"$ref": "glTFid.schema.json"}]
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "mesh"
+    ]
+}

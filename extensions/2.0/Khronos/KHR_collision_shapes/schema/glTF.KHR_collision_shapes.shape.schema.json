@@ -1,0 +1,114 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_collision_shapes Shape Resource",
+    "type": "object",
+    "description": "Parameters describing a node's physics collision geometry.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "type": {
+            "description": "Specifies the shape type.",
+            "anyOf": [
+                {
+                    "enum": [ "sphere" ],
+                    "description": "A sphere with a specified radius, centered at the origin in local space."
+                },
+                {
+                    "enum": [ "box" ],
+                    "description": "An axis-aligned box with a size per-axis, centered at the origin in local space"
+                },
+                {
+                    "enum": [ "capsule" ],
+                    "description": "A capsule shape, centered at the origin in local space, equivalent to the convex hull of two spheres of radius `radius` located along the Y axis (in local space) at a distance `height` from each other. i.e., the sphere centers are located at (0, ±height/2, 0)"
+                },
+                {
+                    "enum": [ "cylinder" ],
+                    "description": "A cylinder shape, centered at the origin in local space, equivalent to the convex hull of two circles in the X/Z plane of radius `radius` located along the Y axis (in local space) at a distance `height` from each other. i.e., the circle centers are located at (0, ±height/2, 0)"
+                },
+                {
+                    "enum": [ "convex" ],
+                    "description": "A shape defined as the convex hull of a referenced `mesh` (which itself need not be convex) in local space."
+                },
+                {
+                    "enum": [ "trimesh" ],
+                    "description": "An infinitely thin surface defined by the triangles in the referenced `mesh` in local space."
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "oneOf": [
+        {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a sphere shape.",
+            "properties": {
+                "sphere": {
+                    "type": "object",
+                    "$ref": "glTF.KHR_collision_shapes.shape.sphere.schema.json"
+                }
+            },
+            "required": ["sphere"]
+        },
+        {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a box shape.",
+            "properties": {
+                "box": {
+                    "type": "object",
+                    "$ref": "glTF.KHR_collision_shapes.shape.box.schema.json"
+                }
+            },
+            "required": ["box"]
+        },
+        {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a capsule shape.",
+            "properties": {
+                "capsule": {
+                    "type": "object",
+                    "$ref": "glTF.KHR_collision_shapes.shape.capsule.schema.json"
+                }
+            },
+            "required": ["capsule"]
+        },
+        {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a cylinder shape.",
+            "properties": {
+                "cylinder": {
+                    "type": "object",
+                    "$ref": "glTF.KHR_collision_shapes.shape.cylinder.schema.json"
+                }
+            },
+            "required": ["cylinder"]
+        },
+        {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a convex shape.",
+            "properties": {
+                "convex": {
+                    "type": "object",
+                    "$ref": "glTF.KHR_collision_shapes.shape.convex.schema.json"
+                }
+            },
+            "required": ["convex"]
+        },
+        {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a mesh shape.",
+            "properties": {
+                "mesh": {
+                    "type": "object",
+                    "$ref": "glTF.KHR_collision_shapes.shape.trimesh.schema.json"
+                }
+            },
+            "required": ["trimesh"]
+        }
+    ],
+    "required": [
+        "type"
+    ]
+}
