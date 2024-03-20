@@ -178,6 +178,7 @@ Regardless of the format used, these additional restrictions apply for compatibi
   - For textures with **non-color data** (e.g., normal maps),
     - `colorPrimaries` MUST be `KHR_DF_PRIMARIES_UNSPECIFIED`;
     - `transferFunction` MUST be `KHR_DF_TRANSFER_LINEAR`.
+- `pixelWidth` and `pixelHeight` MUST be multiples of 4.
 - When a texture refers to a sampler with mipmap minification, the KTX image MUST contain a full mip pyramid.
 - When a texture referencing a KTX v2 image with ASTC compression is used for glTF 2.0 material maps (both color and non-color), the KTX v2 image MUST be of **2D** type as defined in the KTX v2 Specification, Section 4.1.
 - `KHR_DF_FLAG_ALPHA_PREMULTIPLIED` flag MUST NOT be set unless the material's specification requires premultiplied alpha.
