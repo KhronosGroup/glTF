@@ -42,6 +42,8 @@ The sphere, box, capsule, cylinder and convex types all represent convex objects
 
 If a shape is required to have an offset from the local space of the node the shape is associated with (for example a sphere _not_ centered at local origin or a rotated box,) a child node should be added with the desired offset applied, and the shape properties should be added to that child.
 
+As both the `convex` and `trimesh` shapes reference a `mesh`, they additionally allow for optional `skin` and `weights` properties, which has the same semantics and requirements enforced by the properties of the same name associated with a `node`. When specified on a `convex` object, the resulting collision shape should be the convex hull of the deformed mesh. As collision detection is typically performed on CPU, the performance impact of deforming a mesh in such a use-case is typically higher than inside a vertex shader. As such, use of this functionality should be given careful consideration with respect to performance.
+
 ### JSON Schema
 
 * **JSON schema**: [glTF.KHR_collision_shapes.schema.json](schema/glTF.KHR_collision_shapes.schema.json)
@@ -60,6 +62,8 @@ With consideration to the glTF 2.0 Asset Object Model Specification document, th
 | `/extensions/KHR_collision_shapes/shapes/{}/cylinder/radiusBottom` | `float`|
 | `/extensions/KHR_collision_shapes/shapes/{}/cylinder/radiusTop` | `float`|
 | `/extensions/KHR_collision_shapes/shapes/{}/sphere/radius` | `float`|
+| `/extensions/KHR_collision_shapes/shapes/{}/convex/weights` | `float[]`|
+| `/extensions/KHR_collision_shapes/shapes/{}/trimesh/weights` | `float[]`|
 
 Additional read-only properties
 

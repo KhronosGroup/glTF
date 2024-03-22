@@ -9,6 +9,18 @@
             "description": "The ID of the mesh from which to build the collision representation.",
             "allOf": [{"$ref": "glTFid.schema.json"}]
         },
+        "skin": {
+            "description": "The index of a skin with which to deform the mesh.",
+            "allOf": [ { "$ref": "glTFid.schema.json" } ]
+        },
+        "weights": {
+            "type": "array",
+            "description": "The weights of the instantiated morph target.",
+            "minItems": 1,
+            "items": {
+                "type": "number"
+            }
+        },
         "extensions": { },
         "extras": { }
     },
