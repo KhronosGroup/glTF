@@ -1788,7 +1788,7 @@ When the `reset` input flow is activated:
 When the `in` input flow is activated:
 
 1. Evaluate the `duration` input value.
-2. If the `duration` input value is NaN, infinite, or negative,
+2. If the `duration` input value is NaN, infinite, negative, or not convertible into an implementation-specific time type used for the internal _timestamp_ value,
 .. activate the `err` output flow and skip the next steps.
 3. If the `lastRemainingTime` value is not NaN:
 .. Let `elapsed` be a non-negative difference, in seconds, between the _timestamp_ and the current time.
