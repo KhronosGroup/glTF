@@ -1803,35 +1803,77 @@ When the `in` input flow is activated:
 .. set the `lastRemainingTime` value to zero;
 .. activate the `out` output flow.
 
-==== Async Nodes
+==== Delay Nodes
 
-===== Delay
+===== Set Delay
 
 [cols="1h,1,2"]
 |===
-| Type | `flow/delay` | Schedule the output flow activation after a certain delay
-| Input flow sockets
-| `in` | The entry flow into this node
+| Type | `flow/setDelay` | Schedule the output flow activation after a certain delay
+.2+| Input flow sockets
+|   `in`   | The entry flow into this node
+| `cancel` | When this flow is activated, all delayed activations scheduled by this node are cancelled
 | Input value sockets
 | `float duration` | The duration, in seconds, to delay the `completed` output flow activation
+| Output value sockets
+| `int lastDelayIndex` | The delay index assigned during the last successful node execution
 .3+| Output flow sockets
 | `out` | The flow to be activated if the `duration` value is valid
 | `err` | The flow to be activated if the `duration` value is invalid
 | `completed` | The flow to be activated after the delay
 |===
 
-This node has no internal state.
+The internal state of this node consists of an integer `lastDelayIndex` value initialized to -1 and a dynamic array of activation indices scheduled by the node. This array is initially empty and its maximum size is implementation-specific.
+
+The internal state of an execution graph having one or more `flow/setDelay` nodes includes a dynamic array of activation indices scheduled from all such nodes. This array is initially empty and its maximum size is implementation-specific.
 
 When the `in` input flow is activated:
 
 1. Evaluate the `duration` input value.
-2. If the `duration` input value is NaN, infinite, or negative,
+2. If the `duration` input value is NaN, infinite, negative, or not convertible into an implementation-specific time type,
 .. activate the `err` output flow and skip the next steps.
-3. Let _activationTime_ be an implementation-defined high-precision time value equal to the sum of the current time value and the `duration` input value converted to the same time type.
-4. Schedule the `completed` output flow activation at the _activationTime_ time.
-5. Activate the `out` output flow.
+3. If scheduling a new activation exceeds any implementation-specific limit,
+.. activate the `err` output flow and skip the next steps.
+4. Let _activationTime_ be an implementation-defined high-precision time value equal to the sum of the current time value and the `duration` input value converted to the same time type.
+5. If _activationTime_ is not valid according to implementation-specific validation rules, e.g., it exceeds an internal threshold value,
+.. activate the `err` output flow and skip the next steps.
+6. Set `lastDelayIndex` to a positive value representing the delayed flow activation being scheduled. This value **MUST** be unique across all previous activations of all `flow/setDelay` nodes of the graph.
+7. Push the value of `lastDelayIndex` to the graph and node arrays of activation indices.
+8. Schedule the following actions at the _activationTime_ time:
+.. Removal of the activation index value from both arrays of activation indices.
+.. Activation of the `completed` output flow.
+9. Activate the `out` output flow.
 
-The graph execution **MAY** be terminated when the amount of pending activations exceeds an implementation-defined value.
+When the `cancel` input flow is activated:
+
+1. Set the `lastDelayIndex` value to -1.
+2. For each activation index value in the node's array of activation indices:
+.. Remove this activation index value from the node's and the graph's arrays of activation indices.
+.. Cancel the corresponding scheduled activation.
+
+===== Cancel Delay
+
+[cols="1h,1,2"]
+|===
+| Type | `flow/cancelDelay` | Cancel a previously scheduled output flow activation
+| Input flow sockets
+| `in` | The entry flow into this node
+| Input value sockets
+| `int delayIndex` | The index value of the scheduled activation to be cancelled
+| Output flow sockets
+| `out` | The flow to be activated after executing this node
+|===
+
+This node has no internal state but its execution **MAY** affect internal states of other nodes and the graph. 
+
+When the `in` input flow is activated:
+
+1. Evaluate the `delayIndex` input value.
+2. Remove this activation index value from all arrays of activation indices if it exists.
+3. Cancel the corresponding scheduled activation if it exists.
+4. Activate the `out` output flow.
+
+Non-positive or not existing delay index values **MUST NOT** cause any runtime errors.
 
 === State Manipulation Nodes
 
