@@ -23,7 +23,9 @@ This extension allows glTF files (and animation and interactivity) to control se
 Selectability is intended to be a dynamic state that can be manipulated at runtime by either the `KHR_animation_pointer` or `KHR_interactivity` extensions or both, if present.
 
 ## glTF Schema Updates
-The `KHR_selectability` extension is added to the objects within the `nodes` array. The `KHR_selectability` extension object contains two objects `selectable`, which may be true or false, and `shape`, which is optional and, if present, must be the index of a top level `KHR_collision_shapes.shape`, which provides the geometry of the collider. `selectable` is read/write accessible through json pointers and influences selectability of all nodes below in the heirarchy. 
+The `KHR_selectability` extension is added to the objects within the `nodes` array. The `KHR_selectability` extension object contains two objects `selectable`, which may be true or false, and `shape`, which is optional and, if present, must be the index of a top level `KHR_collision_shapes.shape`, which provides the geometry of the collider. `selectable` is read/write accessible through json pointers and influences selectability of all nodes below in the heirarchy. A value of false causes all nodes below in the hierarchy to be omitted from selection, even any nodes below that have a value of true. The absence of the KHR_selectability extension from a node behaves the same way as if the KHR_selectability extension is applied with a `selectable` value of `true` and no `shape` property.
+
+In other words, any node that has a `KHR_selectability/shape` should react to a select event based on the logical OR of its `selectable` property and that of all of its parents, with `selectable` defaulting to true for all nodes. This allows a single change of a `selectable` flag at a high level of the hierarchy to enable or disable selection on complex (multi-node) objects.
 
 ```
 "nodes": [
@@ -40,18 +42,13 @@ The `KHR_selectability` extension is added to the objects within the `nodes` arr
 ]
 ```
 
+Note that selectability is independent of visibility. An object may be invisible but selectable or vice-versa.
+
 ### JSON Schema
 
 todo: update
 [glTF.KHR_texture_video.schema.json](schema/glTF.KHR_texture_video.schema.json)
 
-## Selectability calculation
-
-Whether a `select` action on an object should cause a select event for that object, or whether it should proceed to the next object further along the selection ray is calculated as follows: if there are, in the current dynamic state of the data model, no nodes at or above the current node with `KHR_selectability/selectable` having a value of `false`, AND, if there is at least one node at or above the current node with `KHR_selectability/selectable` having a value of `true` AND the same node has a `KHR_selectability/shape` value, then the select event will be fired for the lowest object in the hierarchy that has both a `shape` and `selectable=true`, and may proceed up the heirarchy as defined in `KHR_interactivity` or in application specific responses to select. Otherwise, selection may proceed to the next mesh further along the selection ray until these requirements are satisfied or all objects along the ray have been exhausted.
-
-In summary, selectability requires a shape and is controlled by the logical AND of selectability of the node and all of its parents, excluding from the calculation those parents for whom selectability is undefined. This allows a single change of selectability at high levels of the hierarchy to, at runtime, enable or disable the selectability of complex (multi-node) objects below in the hierarchy.
-
-Note that selectability is independent of visibility. An object may be invisible but selectable or vice-versa.
 
 ## Control by animation
 
@@ -76,14 +73,14 @@ Note that selectability is independent of visibility. An object may be invisible
     ...
 ```
 
-In this example, the selectability for node zero and all nodes below it in the hierarchy is controlled by this sampler.
-Note that, as long as the gltf file uses the KHR_selectability extension, the /nodes/x/extensions/KHR_selectability/selectable is writeable for all nodes x, regardless of whether KHR_selectability is defined in the gltf on those nodes. Once written to, the node behaves as though KHR_selectability is defined on the given node.
+In this example, the selectability for node zero (influencing all nodes below it in the hierarchy) is controlled by this sampler.
+Note that, as long as the gltf file uses the `KHR_selectability` extension, the `/nodes/x/extensions/KHR_selectability/selectable` is writeable for all nodes x, regardless of whether `KHR_selectability` is defined in the gltf on those nodes.
 
 ## Control by interactivity
 
 Controlling selectability via interactivity in conjunction with `KHR_interactivity` can be done by writing or reading the value at the json path `/nodes/{nodenumber}/extensions/KHR_selectability/selectable`
 
-Note that, as long as the gltf file uses the KHR_selectability extension, the /nodes/x/extensions/KHR_selectability/selectable is writable for all nodes x, regardless of whether KHR_selectability is defined in the gltf on those nodes. When read, selectability is undefined on a given node unless KHR_selectability has been defined on the node in the gltf OR it has been written by KHR_animation_pointer, KHR_interactivity, or similar.
+Note that, as long as the gltf file uses the `KHR_selectability` extension, the `/nodes/x/extensions/KHR_selectability/selectable` is readable and writable for all nodes x, regardless of whether `KHR_selectability` is defined in the gltf on those nodes. It defaults to `true` if `KHR_selectability` extension has not been defined on the node AND it has not been written by `KHR_animation_pointer`, `KHR_interactivity`, or similar.
 
 
 ## Known Implementations
