@@ -1,0 +1,16 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "MSFT_collision_primitives glTF extension",
+    "type" : "object",
+    "description" : "Parameters describing a convex collider.",
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties" : {
+        "mesh" : {
+            "description": "The ID of the mesh from which to build the convex hull.",
+            "allOf": [{"$ref": "glTFid.schema.json"}]
+        },
+        "extensions" : {},
+        "extras" : {}
+    },
+    "required": ["mesh"]
+}

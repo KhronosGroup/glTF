@@ -1,0 +1,67 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "MSFT_rigid_bodies glTF extension",
+    "type" : "object",
+    "description" : "Parameters describing how the relative motion of a pair of nodes is constrained.",
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties" : {
+        "min" : {
+            "type": "number",
+            "description" : "The minimum of the allowed range of relative distance/angle."
+        },
+        "max" : {
+            "type": "number",
+            "description" : "The maximum of the allowed range of relative distance/angle."
+        },
+        "springConstant" : {
+            "type": "number",
+            "description" : "If present, use soft limits instead of hard limits, with the given spring constant.",
+            "minimum" : 0
+        },
+        "springDamping" : {
+            "type": "number",
+            "description" : "If present, use soft limits instead of hard limits, with the given spring damping value.",
+            "minimum" : 0
+        },
+        "extensions" : {},
+        "extras" : {}
+    },
+    "oneOf": [
+        {
+            "type": "object",
+            "properties": {
+                "linearAxes": {
+                    "description": "The indices of the linear axes which are limited, constraining the linear motion in 1, 2 or 3 dimensions. 1D keeps an object some distance from an infinite plane. 2D keeps an object some distance from an infinite line. 3D keeps an object some distance from a point.",
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 2
+                    },
+                    "minItems": 1,
+                    "maxItems": 3,
+                    "uniqueItems": true
+                }
+            },
+            "required": ["linearAxes"]
+        },
+        {
+            "type": "object",
+            "properties": {
+                "angularAxes" :{
+                "description": "The indices of the angular axes which are limited, constraining the angular motion in 1, 2 or 3 dimensions. 1D limits rotation about one axis (e.g. a universal joint). 2D limits rotation about two axes (e.g. a cone). 3D limits rotation about all three axes.",
+                "type": "array",
+                "items": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2
+                    },
+                "minItems": 1,
+                "maxItems": 3,
+                "uniqueItems": true
+                }
+            },
+            "required": ["angularAxes"]
+        }
+    ]
+}
