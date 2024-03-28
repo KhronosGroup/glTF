@@ -32,6 +32,7 @@ The following extensions have been ratified by the Khronos Group:
 * [KHR_xmp_json_ld](2.0/Khronos/KHR_xmp_json_ld/README.md)
 * [EXT_mesh_gpu_instancing](2.0/Vendor/EXT_mesh_gpu_instancing/README.md)
 * [EXT_meshopt_compression](2.0/Vendor/EXT_meshopt_compression/README.md)
+* [EXT_texture_qoi](2.0/Vendor/EXT_texture_qoi/README.md)
 * [EXT_texture_webp](2.0/Vendor/EXT_texture_webp/README.md)
 
 ### Multi-Vendor Extensions for glTF 2.0
