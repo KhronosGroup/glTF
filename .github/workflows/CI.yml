@@ -38,3 +38,15 @@ jobs:
           path: |
             specification/2.0/Specification.html
             specification/2.0/Specification.pdf
+
+      - name: Build interactivity extension targets
+        run: |
+          cd extensions/2.0/Khronos/KHR_interactivity
+          make Specification.html
+
+      - name: Archive generated files
+        uses: actions/upload-artifact@v2
+        with:
+          name: interactivity-outputs
+          path: |
+            extensions/2.0/Khronos/KHR_interactivity/Specification.html
