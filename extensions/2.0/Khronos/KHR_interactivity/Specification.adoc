@@ -1827,6 +1827,8 @@ The internal state of this node consists of an integer `lastDelayIndex` value in
 
 The internal state of an execution graph having one or more `flow/setDelay` nodes includes a dynamic array of activation indices scheduled from all such nodes. This array is initially empty and its maximum size is implementation-specific.
 
+Implementations **MUST** be aware of their effective limit on the maximum supported `duration` input value to avoid any implicit behavior changes, e.g., due to numeric overflows; exceeding such value **MUST** lead to the `err` output flow activation as described below.
+
 When the `in` input flow is activated:
 
 1. Evaluate the `duration` input value.
