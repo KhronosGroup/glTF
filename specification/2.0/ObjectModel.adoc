@@ -294,13 +294,24 @@ Additional read-only properties
 
 [options="header",cols="50%,15%"]
 |====
-| Pointer                                                                                                             |  Type
-| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatTexture/extensions/KHR_texture_transform/offset`         | `float2`
-| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatTexture/extensions/KHR_texture_transform/rotation`       | `float`
-| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatTexture/extensions/KHR_texture_transform/scale`          | `float2`
-| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatNormalTexture/extensions/KHR_texture_transform/offset`   | `float2`
-| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatNormalTexture/extensions/KHR_texture_transform/rotation` | `float`
-| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatNormalTexture/extensions/KHR_texture_transform/scale`    | `float2`
+| Pointer                                                                                                                |  Type
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatTexture/extensions/KHR_texture_transform/offset`            | `float2`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatTexture/extensions/KHR_texture_transform/rotation`          | `float`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatTexture/extensions/KHR_texture_transform/scale`             | `float2`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatRoughnessTexture/extensions/KHR_texture_transform/offset`   | `float2`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatRoughnessTexture/extensions/KHR_texture_transform/rotation` | `float`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatRoughnessTexture/extensions/KHR_texture_transform/scale`    | `float2`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatNormalTexture/extensions/KHR_texture_transform/offset`      | `float2`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatNormalTexture/extensions/KHR_texture_transform/rotation`    | `float`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatNormalTexture/extensions/KHR_texture_transform/scale`       | `float2`
+|====
+
+== KHR_materials_dispersion
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                        |  Type
+| `/materials/{}/extensions/KHR_materials_dispersion/dispersion` | `float`
 |====
 
 == KHR_materials_emissive_strength
