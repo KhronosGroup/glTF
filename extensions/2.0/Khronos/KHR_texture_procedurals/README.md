@@ -57,17 +57,19 @@ Textures represented as procedural graphs provides a way to extend the capabilit
 
     For the first version of this extension nodes which are used to define shading models are not allowed. Please refer to the [resources](#resources) section for links to supported  MaterialX node definitions.
 
-2. **Fidelity**: Provide the ability to generate complex patterns, noise, or other effects that currently must be "baked" into texture maps. Reduce runtime memory usage by generating textures programmatically.
+2. **Fidelity**: Provide the ability to generate complex patterns, noise, or other effects that currently must be "baked" into texture maps. Provide the ability to provide mappings from one shading model to another without baking in a consistent manner via procedural graphs. Provide the ability to support NPR effects for unlit materials. Reduces runtime memory usage by generating patterns / shading programmatically.
 
 3. **Editability and Extensibility**: Extend runtime editability by exposing logic and interfaces for procedural graphs as well as providing a means to create new or extend existing node definitions.
 
 4. **Validity**: Ensure that procedurals graphs can be validated both against a schema as well as against reference rendering implementations.
 
+5. **Flexibility**: Support for procedural graphs is additive and can be used in conjunction with traditional texture maps. This allows for a hybrid approach where some textures can be baked and others are generated at runtime or both can be specified.
+
 | Original | Baked |
 | :---: | :---: |
 | <img src="./figures/procedural_marble.png" width=100%> | <img src="./figures/baked_marble.png" width=100%> |
 
-<super>Example of fully procedural vs baked 3D marble texture</super>
+<super>Example of a procedural versus a baked 3D marble texture. In this case re-baking is required for each geometry bound or / and when geometry is transformed</super>
 
 ### Definitions
 
@@ -124,6 +126,12 @@ The correspond version is specified in a MaterialX XML document as follows:
 The version in the mimetype __is not__ the extension version. If in the future the schema needs to be modified (perhaps due to changes in MaterialX) then a new extension version would be required.
 
 The `procedurals` array specifies the procedural graphs that are used in the glTF asset. 
+
+### Versioning
+
+Elements from different versions of MaterialX is disallowed. External tooling must handle this (e.g. by performing an "upgrade" operation).
+
+<img src="./figures//version_upgrade.svg" width=100%>
 
 ## Representation
 
@@ -559,7 +567,28 @@ The JSON schema for this extension is defined in the schema folder.
 
 The following is a "checkerboard" pattern which is defined as a procedural graph. This graph is mapped to the "base color" on a material.
 
-<img src="./figures/checker_graph.svg" width=100%>
+```mermaid
+
+graph LR; 
+    NG_checkerboard_color3_N_mtlxmix[mix] --> NG_checkerboard_color3_out([out])
+    style NG_checkerboard_color3_out fill:#0C0, color:#111
+    NG_checkerboard_color3_color2INT([color2]) ==.bg==> NG_checkerboard_color3_N_mtlxmix[mix]
+    style NG_checkerboard_color3_color2INT fill:#0CF, color:#111
+    NG_checkerboard_color3_color1INT([color1]) ==.fg==> NG_checkerboard_color3_N_mtlxmix[mix]
+    style NG_checkerboard_color3_color1INT fill:#0CF, color:#111
+    NG_checkerboard_color3_N_modulo[modulo] --".mix"--> NG_checkerboard_color3_N_mtlxmix[mix]
+    NG_checkerboard_color3_N_mtlxdotproduct[dotproduct] --".in1"--> NG_checkerboard_color3_N_modulo[modulo]
+    NG_checkerboard_color3_N_mtlxfloor[floor] --".in1"--> NG_checkerboard_color3_N_mtlxdotproduct[dotproduct]
+    NG_checkerboard_color3_N_mtlxsubtract[subtract] --".in"--> NG_checkerboard_color3_N_mtlxfloor[floor]
+    NG_checkerboard_color3_uvoffsetINT([uvoffset]) ==.in2==> NG_checkerboard_color3_N_mtlxsubtract[subtract]
+    style NG_checkerboard_color3_uvoffsetINT fill:#0CF, color:#111
+    NG_checkerboard_color3_N_mtlxmult[multiply] --".in1"--> NG_checkerboard_color3_N_mtlxsubtract[subtract]
+    NG_checkerboard_color3_texcoordINT([texcoord]) ==.in1==> NG_checkerboard_color3_N_mtlxmult[multiply]
+    style NG_checkerboard_color3_texcoordINT fill:#0CF, color:#111
+    NG_checkerboard_color3_uvtilingINT([uvtiling]) ==.in2==> NG_checkerboard_color3_N_mtlxmult[multiply]
+    style NG_checkerboard_color3_uvtilingINT fill:#0CF, color:#111
+```
+<sub>Example `checkerboard` graph from MaterialX</sub>
 
 <details>
 <summary>glTF Graph</summary>
@@ -892,6 +921,81 @@ The equivalent MaterialX representation is:
   </surfacematerial>
 </materialx>
 ```
+
+</details>
+
+<p>
+The OpenUSD representation looks like this:
+
+<details>
+<summary>OpenUSD Graph</summary>
+
+```c++
+def "NodeGraphs"
+    {
+        def Shader "N_mtlxmix"
+        {
+            uniform token info:id = "ND_mix_color3"
+            color3f inputs:bg = (0, 0, 0)
+            color3f inputs:fg = (1, 1, 1)
+            float inputs:mix = 0
+            float inputs:mix.connect = </MaterialX/NodeGraphs/N_modulo.outputs:out>
+            color3f outputs:out
+        }
+
+        def Shader "N_mtlxdotproduct"
+        {
+            uniform token info:id = "ND_dotproduct_vector2"
+            float2 inputs:in1 = (0, 0)
+            float2 inputs:in1.connect = </MaterialX/NodeGraphs/N_mtlxfloor.outputs:out>
+            float2 inputs:in2 = (1, 1)
+            float outputs:out
+        }
+
+        def Shader "N_mtlxmult"
+        {
+            uniform token info:id = "ND_multiply_vector2"
+            float2 inputs:in1 = (0, 0)
+            float2 inputs:in1.connect = </MaterialX/NodeGraphs/Texcoord.outputs:out>
+            float2 inputs:in2 = (8, 8)
+            float2 outputs:out
+        }
+
+        def Shader "N_mtlxsubtract"
+        {
+            uniform token info:id = "ND_subtract_vector2"
+            float2 inputs:in1 = (0, 0)
+            float2 inputs:in1.connect = </MaterialX/NodeGraphs/N_mtlxmult.outputs:out>
+            float2 inputs:in2 = (0, 0)
+            float2 outputs:out
+        }
+
+        def Shader "N_mtlxfloor"
+        {
+            uniform token info:id = "ND_floor_vector2"
+            float2 inputs:in = (0, 0)
+            float2 inputs:in.connect = </MaterialX/NodeGraphs/N_mtlxsubtract.outputs:out>
+            float2 outputs:out
+        }
+
+        def Shader "N_modulo"
+        {
+            uniform token info:id = "ND_modulo_float"
+            float inputs:in1 = 0
+            float inputs:in1.connect = </MaterialX/NodeGraphs/N_mtlxdotproduct.outputs:out>
+            float inputs:in2 = 2
+            float outputs:out
+        }
+
+        def Shader "Texcoord"
+        {
+            uniform token info:id = "ND_texcoord_vector2"
+            int inputs:index = 0
+            float2 outputs:out
+        }
+    }
+```
+
 </details>
 
 #### Checkerboard Variants
@@ -1023,6 +1127,32 @@ These procedural graphs can be bound to downstream materials as desired by chosi
 - [USDShade Schema](https://openusd.org/dev/api/usd_shade_page_front.html)
 - [glTF stream names](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html). Note that currently there are no stream names for multiple sets of _tangents_, _bitangents_, _normals_ or _positions_.
 
+### glTF Versus MaterialX and OpenUSD
+
+The aim is (as  much as possible) to preserve the"simplest" most consistent conventions from glTF, MaterialX and OpenUSD.
+
+| Feature | <img src="./figures/materialx.svg" width=48px> | <img src="./figures/OpenUSD.png" width=120px> | <img src="./figures/glTF.svg" width=64px> |
+| --- | --- | --- | --- |
+| **Component String Identifiers** | Yes | Yes | Optional |
+| **Numeric Tuples** | string | list () | array [] |
+| **Connection Syntax**" | string (name in context) | Absolute Path | numeric index |
+| **Explicit Node Outputs** | No | Yes | Yes |
+| **Node Type Grouping** | No | No | Yes |
+| **Reference to nodedef on node instance** | Yes | Yes | No |
+| **NodeGraph Nesting** | "Yes" (not implemented) | Yes | No |
+| **Optional Input Overrides on Nodes** | Yes | Yes | Yes |
+| **Referencing** | Yes | Yes | No |
+| **Definition Versioning** | Yes | Yes | Yes |
+| **Meta-Data** | Yes | Yes | Yes |
+| **Node Definition** | Yes | Yes | Yes |
+
+* Component string names are optional and thus cannot be used as a key / reference.
+* Conversely inputs, outputs, nodes, nodegraphs, and definitions are collected into arrays and are referenced by numeric index.
+   * References to specific outputs on a node with multiple outputs are also numeric indices.
+   * i.e. connections are **numeric indices** to arrays versus string (MaterialX) / path (OpenUSD) references
+* Numeric tuples are stored in JSON array format versus strings (MaterialX) or mathematical notation (OpenUSD)
+* Output ports are always explicitly defined for both node and node graph instances for validation purposes. (Same as OpenUSD, differs from MaterialX)
+* Input ports are optional override values for instances of nodes (same for all)
 
 ## Appendix: Full Khronos Copyright Statement
 
