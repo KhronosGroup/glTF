@@ -23,11 +23,31 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension provides a standardized way to represent
-procedural graphs which can be mapped to material channels in glTF.
+This extension provides a standardized way to represent procedural graphs which can be mapped to material channels in glTF.
+
+### Table of Contents
+
+- [Motivation](#motivation)
+- [Definitions](#definitions)
+- [Extension Declaration](#extension-declaration)
+- [Representation](#representation)
+  - [Data Types](#data-types)
+  - [Procedural Graphs](#procedural-graphs)
+  - [Procedural Nodes](#procedural-nodes)
+  - [Node Graph Connections](#node-graph-connections)
+  - [Material Binding](#material-binding)
+  - [Resource Binding](#resource-binding)
+    - [Uniform Binding](#uniform-binding)
+    - [Texture Binding](#texture-binding)
+    - [Input Stream Binding](#input-stream-binding)
+  - [Procedural Definitions](#procedural-definitions)
+    - [Structure](#structure)
+- [Structure Review](#structure-review)
+- [JSON Schema](#json-schema)
+- [Checkerboard Example](#checkerboard-example)
+- [Resources](#resources)
 
 ### Motivation
-
 
 Textures represented as procedural graphs provides a way to extend the capabilities of glTF materials beyond what is possible with traditional texture maps. Key objectives includes:
 
@@ -37,7 +57,7 @@ Textures represented as procedural graphs provides a way to extend the capabilit
 
     For the first version of this extension nodes which are used to define shading models are not allowed. Please refer to the [resources](#resources) section for links to supported  MaterialX node definitions.
 
-2. **Fidelity**: Provide the ability to generate complex patterns, noise, or other effects that are currently must be "baked" into texture maps. Reduce in runtime memory usage by generating textures programmatically.
+2. **Fidelity**: Provide the ability to generate complex patterns, noise, or other effects that currently must be "baked" into texture maps. Reduce runtime memory usage by generating textures programmatically.
 
 3. **Editability and Extensibility**: Extend runtime editability by exposing logic and interfaces for procedural graphs as well as providing a means to create new or extend existing node definitions.
 
@@ -47,7 +67,7 @@ Textures represented as procedural graphs provides a way to extend the capabilit
 | :---: | :---: |
 | <img src="./figures/procedural_marble.png" width=100%> | <img src="./figures/baked_marble.png" width=100%> |
 
-<super>Example of fully procedural vs baked marble texture</super>
+<super>Example of fully procedural vs baked 3D marble texture</super>
 
 ### Definitions
 
@@ -61,17 +81,17 @@ The following is a set of definitions using MaterialX nomenclature to provide co
 
 * A **Pattern** is a node that generates or processes simple scalar, vector, and color data, and has access to local properties of any geometry that has been bound to a given material.
 
-* A **Node Graph** is a directed acyclic graph (DAG) of nodes, which may be used to define arbitrarily complex generation or processing networks.  Node Graphs describe a network of "pattern" nodes flowing into shader inputs, or to define a complex or layered node in terms of simpler nodes. The former is called a **compound nodegraph** and the latter a **functional nodegraph**.
+* A **Node Graph** is a directed acyclic graph (DAG) of nodes, which may be used to define arbitrarily complex generation or processing networks.  Node Graphs describe a network of "pattern" nodes flowing into shader inputs, or define a complex or layered node in terms of simpler nodes. The former is called a **compound nodegraph** and the latter a **functional nodegraph**.
 
-* A Node Graphs's:
-  * **Inputs** are nodes that define the interface for a node graph’s incoming data.
-  * **Outputs** are nodes that define the interface for a node graph’s outgoing data.
+* Node Graph:
+  * **Inputs** are nodes that define the interface for a graph’s incoming data.
+  * **Outputs** are nodes that define the interface for a graph’s outgoing data.
 
-* A **Node Definition** is a specification for a unique function with a given set of input and output ports. The logic for each functions is represented either as a `functional graph` or as shader code. 
+* A **Node Definition** is a specification for a unique function with a given set of inputs and outputs. The logic for each function is represented either as a `functional graph` or as code. 
 
 ## Extension Declaration
 
-To use the extension the `KHR_texture_procedurals` extension identifier must be added to the `extensionsUsed` array in the asset object.
+Usage is indicated by adding the `KHR_texture_procedurals` extension identifier to the `extensionsUsed` array.
 
 ```json
 {
@@ -80,7 +100,7 @@ To use the extension the `KHR_texture_procedurals` extension identifier must be 
     ]
 }
 ``` 
-with the extension object defined as follows:
+with the extension object defined in the `extensions array:
 
 ```json
 {
@@ -92,9 +112,9 @@ with the extension object defined as follows:
     }
 }
 ```
-It is assumed that a mimetype is always required. As part of the mimetype a version `<MaterialX_version>` is specified. This is the version of the MaterialX library specification used when writing to glTF. The version is specified as a string in the form of `<major>.<minor>`. For example, if the MaterialX library version is 1.39, the mimetype would be `application/mtlx+json;version=1.39`.
+It is assumed that a mimetype is always required. As part of the mimetype a version `<MaterialX_version>` is specified. This is the version of the MaterialX library specification used when writing to glTF. The version is specified as a string in the form of `<major version>.<minor version>`. For example, if the MaterialX library version is 1.39, the mimetype would be `application/mtlx+json;version=1.39`.
 
-This corresponds to the following XML element in MaterialX:
+The correspond version is specified in a MaterialX XML document as follows:
 
 ```xml
 <materialx version="1.39">
@@ -107,7 +127,7 @@ The `procedurals` array specifies the procedural graphs that are used in the glT
 
 ## Representation
 
-For all applicable JSON objects, any / all supported MaterialX  meta-data information may be specified. This includes information such as UI hints, node placement, and documentation, colorspace, and real world units to support interoperability or editability.
+For all applicable JSON objects, any / all supported MaterialX  meta-data information may be specified. This includes information such as UI hints, node placement, documentation, colorspace, and real world units in order to support better interoperability or editability.
 
 Information which is used for resolving input data identifiers is not supported. For example specification of a `fileprefix` at the graph level is not supported. 
 
@@ -124,82 +144,84 @@ The supported data types are:
     * `vector2`, `vector3`, `vector4` : 2, 3, 4 channel float vector
     * `integer2`, `integer3`, `integer4` : 2, 3, 4 channel integer vector
 * matrix:
-    * `matrix3x3`, and `matrix4x4` : Matrices of floats of size 3 or 4.
+    * `matrix3x3`, and `matrix4x4` : Row-major matrices of floats of size 3 or 4.
 
-Tuples and matrices are represented as arrays of values. For example, a `color3` is represented as an array of 3 floats.
+Tuples and matrices are represented as arrays of values. For example, a `color3` is represented as an array of 3 floats: `[r, g, b]`.
 
 ### Procedural Graphs
 
 One ore more procedurals graphs can be defined in the `procedurals` array. 
 
-A graph __cannot__ be nested (contain another graph), as is allowed for *OpenUSD* for instance. Any such configurations must be “flattened” to single level graphs. ( As MaterialX does not support nested graphs OpenUSD utilities perform flattening upon conversion to MaterialX. ) 
+A graph __cannot__ be nested (contain another graph), as is allowed for *OpenUSD*. Any such configurations must be “flattened” to single level graphs. ( As MaterialX does not support nested graphs OpenUSD utilities must perform flattening upon conversion to MaterialX. )
 
 Each procedural graph object is composed of:
 
   * An optional string `name` identifier
-  * A `nodetype` which must be `nodegraph`
+  * A `nodetype` category which must be `nodegraph`
   * A `type` which is the output type of the graph. This is a supported data type, or `multioutput` if there is more than one output node for the graph.
-  * A set of children nodes:
-    * `inputs` input "interface" nodes for passing data into the graph.
-    * `outputs` output "interface" nodes for passing data out of the graph. See [Node Graph Connections](#node-graph-connections) for connection information.
-    * `nodes` processing nodes.
+  * Three array children:
+    * `inputs` : lists input "interface" nodes for passing data into the graph.
+    * `outputs` : lists output "interface" nodes for passing data out of the graph. See [Node Graph Connections](#node-graph-connections) for connection information.
+    * `nodes` : processing nodes.
     
-The structure of atomic nodes is described in  ["Procedural" Nodes](#procedural-nodes) section. 
+The structure of atomic nodes is described in  [Procedural Nodes](#procedural-nodes) section. 
 
 Note that input and output node types are `input` and `output` respectively.
 
-#### Procedural Graph Object
+#### Graph Structure
 
 ```JSON
 { 
-  name": "my_procedural", 
+  "name": "<optional name>", 
   "nodetype": "nodegraph",
   "type": "<data-type>",
-  "inputs": [...list of input nodes...],
-  "outputs": [...list of output nodes...],
-  "nodes": [...List of processing nodes...],
+  "inputs": [],
+  "outputs": [],
+  "nodes": []
 }
 ```
 
-### "Procedural" Nodes
+### Procedural Nodes
 
 * An atomic function is represented as a single node with the following properties:
 
     * An optional string `name` identifier
 
-    * A `nodetype` which is a string identifier for the node type. This is a MaterialX node type or a custom node type.
+    * `nodetype` : a string identifier for the node type. This is a MaterialX node type or a custom node type.
 
-    * A `type` which is the output type of the node. This is a supported data type or `multioutput` if there is more than one output port on a node.
+    * `type` : the output type of the node. This is a supported data type or `multioutput` if there is more than one output for the node.
 
     * A list of input ports under an `inputs` array.
-    If an input is specified it's input value overrides that of the node definition default.
-    * A list of output ports under an `outputs` array. Every output port defined for the corresponding node definition must be specified. 
+    If an `input` is specified it's input value overrides that of the node definition default.
+    
+    * A list of output ports under an `outputs` array. Every `output` defined by the node's definition __must__ be specified. 
 
-    - Each input port:
-        * Must have a node type: `input` for input ports and `output` for output ports.
-        * May have an optional string name identifier
-        * Must have a type which is a supported data type.
+    * Each input port:
+        * Must have a node type: `input`
+        * May have an optional string `name` identifier
+        * Must have a `type` which is a supported data type.
         * Either:
           * A `value` which is a constant value for the node. or
-          * A connection. See [Node Graph Connections](#node-graph-connections) for more information.
-        * An `input` which is a reference to another node in the graph. This is only valid for `output` nodes.
-    * All `output` ports specified on a node’s corresponding definition must be specified for each node instance. Each output port:
+          * A connection specifier. See [Node Graph Connections](#node-graph-connections) for allowed connections.
+    
+    * All `output` ports specified by the node's definition must be specified for each node instance. Each output port:
         * Must have a node type: `output`
-        * Must have a type which is a supported data type.
+        * Must have a `type` which is a supported data type.
 
-
-#### Procedural Graph Node
+#### Node Structure
 
 ```JSON
 {
   "name": "<node name>",
   "nodetype": "<node type>",
   "type": "<data type>",
-  "inputs": [...optional list of input ports...],
-  "outputs": [...required list of output ports...]
+  "inputs": [],
+  "outputs": []
 }
 ```
-Where an input port has the following structure:
+
+where an each input port in the `inputs` array  has the following structure:
+
 ```JSON
 {
   "name": "<input name>",
@@ -207,11 +229,11 @@ Where an input port has the following structure:
   "type": "<data type>",
   "value": <value> or
   "node": <processing node index> or
-  "input": <input node index>
+  "input": <input node index> or
   "output": <output node index>
 }
 ```
-and an output port has the following structure:
+and each output port in the `outputs` array has the following structure:
 
 ```JSON
 {
@@ -223,17 +245,17 @@ and an output port has the following structure:
 
 ### Node Graph Connections
 
-Connections inside a graph can be made between:
+Connections inside a graph can be made:
 
 * Between to a `node input` from a an `nodegraph input` by specifying a `input` index
 * Between to a `node input` from a node `output` by specifying a `node` index.
 * Between to a nodegraph output` from a node `output` and an ` by specifying a `node` index
 
-If the upstream node has multiple outputs, then the an `output` index __must__ additionally be specified. 
+If the upstream node has multiple outputs, then the an index into the upstream `outputs` array  __must__ additionally be specified. 
 
 ### Material Binding
 
-To connect a graph output to a surface or displacement shader input the procedural extension can be declared within the a texture reference for a given material in the `materials` array.
+To connect a graph `output` to a surface or displacement shader input the procedural extension can be declared within the a texture reference for a given material in the `materials` array.
 
 For the first version of this extension only those material inputs which already support texture binding can support procedural graphs. This includes bindings such as:
 
@@ -243,7 +265,7 @@ For the first version of this extension only those material inputs which already
 - `emissiveTexture`
 - `diffuseTexture`
 
-In this example the extension is specified on the "baseColorTexture" entry. The `index` value is a reference into the `procedurals` array.  If the procedural graph has multiple outputs than an `output` index must be specified to indicate which output in the graphs `outputs` array to use.
+In this example the extension is specified on the `baseColorTexture` entry. The `index` value is a reference into the `procedurals` array.  If the procedural graph has multiple outputs than an `output` index must be specified to indicate which output in the graphs `outputs` array to use.
 
 ```JSON
 "materials": [
@@ -253,18 +275,19 @@ In this example the extension is specified on the "baseColorTexture" entry. The 
          "index": 0,
          "extensions": {
            "KHR_texture_procedurals": {
-             "index": <"procedurals" array index>
-             "output": <optional "outputs" array index>
+             "index": <"procedurals" array index>,
+             "output": <"outputs" array index>
            }
          }
        }
      }
    }
+]
 ``` 
 
 __Notes__
 
-If a texture binding packs values into a single output then a procedural graph must also pack the values into a single output. For example, a `metallicRoughnessTexture` is a multi-channel texture where the red channel is metallic and the green channel is roughness. If a procedural graph is used to generate this texture then the graph must output a multi-channel  color.
+If an existing texture binding packs values into a single tuple then a procedural graph must also pack the values into a single tuple. For example, a `metallicRoughnessTexture` is a multi-channel texture metallic and roughness are packed into different tuple channels. If a procedural graph is used to instead of texture then the graph must output a appropriate packed tuple.
 
 At the current time each texture reference requires an `index` entry to be specified. This can be used to reference the "fallback" texture to use instead of the procedural graph. This could be the “baked” version of the graph, or simply reference an embedded 1 pixel “dummy” image that resides inside the glTF document.
 
@@ -282,15 +305,15 @@ At the current time each texture reference requires an `index` entry to be speci
  ]
 }
 ```
-<super>Example embedded "dummy" image</super>
+<super>Example of embedded "dummy" image</super>
 
 ### Resource Binding
 
-A procedural graph's `input`s nodes can either be bound to
+A procedural graph's `input` nodes can be bound to either :
 
-* A uniform value.
-* A texture
-* A geometric stream: An input reference to a stream is specified using a meshes `primitive` index number.
+* a uniform value,
+* a texture, or
+* a geometric stream
 
 #### Uniform Binding
 
@@ -300,97 +323,103 @@ It is assumed that the existing animation declarations can be used to reference 
 
 #### Texture Binding
 
-An `input` reference to an image is represented by an index to a `texture` element  within the `textures` array object. If mapping from a MaterialX `filename`, then this `filename` string is used as the corresponding `image` source.
+An `input` reference to an image is represented by an index to a `texture` element within the `textures` array object. If mapping from a MaterialX `filename`, then the resolved `filename` string can be used for the corresponding `image` source uri.
 
-Placement is specified by the procedural graph and __supersedes__ any placement information on the texture reference. That is, texture transforms are procedural in nature are not "baked" into  a single texture coordinate matrix transform.
+Placement is specified by the procedural graph and __supersedes__ any placement information on the `texture` reference. That is, texture transforms are procedural in nature are not "baked" into a single texture coordinate matrix transform.
 
-( For interop from glTF to MaterialX any embedded images must be extracted and stored in a separate file. The `uri` field in the MaterialX `image` object is used to store the path to the extracted image. )
+( For interop from glTF to MaterialX any embedded images must be extracted and stored in a separate file. The `uri` field in the MaterialX `image` node can then be used to reference the path to the extracted image. )
 
 #### Input Stream Binding
 
-Streams must be explicitly specified by a procedural node as such as a `texcoord` node for texture coordinates.
-There are two variants of such nodes:
-  1. Ones which specify the stream by index
-  2. Ones which specify the stream by string identifier.
+Streams must be explicitly specified by a geometric procedural node such as a `texcoord` node for texture coordinates.
 
-Only the first is supported.
+There are two variants for these types of nodes:
+  1. Ones which specify the stream by number / index.
+  2. Ones which specify the stream by a string identifier.
 
-The index is a zero-based index used to lookup the corresponding stream type in a bound mesh's `primitives` array. 
+Only the first is supported. Others must be remapped to a numbered streams.
 
-For the texture coordinate example if the stream id is 1, then implementations must check for a stream with a label of `TEXCOORD_1` in a given meshes primitives. The mesh to search would be the one assigned to the material using the procedural graph.
+The stream number is a zero-based index used to lookup the corresponding stream type in a bound mesh's `primitives` array. 
 
-As another example a `geomcolor` node would be used to specify a color stream. A value of 1 means that an implicit binding to color stream `COLOR_1` is desired.
+For the texture coordinate example if the stream number is 1, the binding is to stream: `TEXCOORD_1` The mesh to check would be the one assigned to the material using the procedural graph.
 
-## Procedural Definitions
+For colors, a `geomcolor` procedural node would be used to specify a color stream. A value of 1 would
+imply a binding to color stream `COLOR_1`.
 
-Procedural definitions specify the interfaces (inputs and outputs) and its associated node graph implementation. This allows for custom definitions to be specified within a glTF document.
+### Procedural Definitions
 
-The structure for declaring definitions matches that used in MaterialX. This allows for these definitions to be convertible back into MaterialX and hence be consumable by OpenUSD (added to it's SDR - shading node registry). Iit is thus possible to create custom definitions within glTF which are inherently supported by OpenUSD integrations which support MaterialX definitions.
+Procedural definitions can be added to custom 
+node definitions. Minimally the nodes interfaces (`inputs` and `outputs`) and a corresponding procedural graph implementation are required.
 
-### Structure
+The structure and semantics for declaring definitions matches that used in MaterialX. This allows for these definitions to be convertible to / from MaterialX and hence be consumable by `OpenUSD` (which can declare MaterialX definitions within it's shading node registry (`SDR`)). 
+
+It is possible to create collections of definitions for reuse as desired. As there is no concept of a "library" in glTF, these definitions need to be declared in the `procedural_definitions` array for each glTF asset. (*Note*: If referencing of definitions is allowed then custom "library" reuse could be possible)
+
+#### Structure
 
 All declarations and functional graphs are specified in a separate `procedural_definitions` array within the KHR_texture_procedurals extension parent.
 
-These elements **cannot be connected to nor modified**.
+These elements are considered to be **immutable**
+and **unconnectable**.
 
 The properties for a definition include:
 
-* `nodetype`: Must be `nodedef`
+* `nodetype`: This must be be `nodedef`
 * `node`: The name of the node type. Can be used wherever `nodetype` is specified for a node instance.
 * `version`: An optional version string. If not specified then it is assumed to be the default version.
 * `default`: A boolean flag to indicate if this is the default version of the definition. If not specified then it is assumed to be false.
-* `nodegraph` The semantic grouping for this node. The final name for this will correspond with the matching release of MaterialX. The assumption is this will be `procedural` for the first version.
-* `doc` An optional string for documentation purposes.
+* `nodegroup` The semantic grouping for this node. The final name for this will correspond with the matching release of MaterialX. The assumption is this will be `procedural` for the first version. 
 
 * Child arrays of `inputs` and `outputs`. This is specified in the same manner as for a procedural graph. 
 
-Each input __must__ have a `value` specified. This is the default value for the input when not specified for an instance of the node (*)
+Each input __must__ have a `value` specified. This is the default value for the input when not specified on an instance of the node (*)
 
-For each input it is useful to provide the following the following information as applicable:
-    * `name` : A user friendly name for the input.
-    * `unit` : The real-world unit of the input. This is used for interop with MaterialX and OpenUSD.
-    * `colorspace` : The color space of the input. This is used for interop with MaterialX and OpenUSD.
-    * `doc` : An optional string for documentation purposes.
-    * `uimin`, `uimax`, `uistep`, `uifolder`: UI hints for the input. This is used to support editability for node editors.
+For each input it is useful to provide the following the following additional information as applicable:
+
+  * `name` : A user friendly name for the input. It is strongy recommended to provide a name which starts with `ND_` to indicate that this is a node definition.
+  * `unit` : The real-world unit of the input. This is used for interop with MaterialX and OpenUSD.
+  * `colorspace` : The color space of the input. This is used for interop with MaterialX and OpenUSD.
+  * `doc` : An optional string for documentation purposes.
+  * `uimin`, `uimax`, `uistep`, `uifolder`: UI hints for the input. This is used to support editability for node editors.
 
 Example:
 ```JSON
 "procedural_definitions": [
    {
-     // Definition
-     "name": <definition_name>,
+     "name": "<definition_name>",
      "nodetype": "nodedef", 
-     "node": <node type name>, 
-     "nodegroup": "procedural", // optional but recommended to be interpreted as a "procedural"
+     "node": "<node type name>", 
+     "nodegroup": "procedural", 
      "inputs": [],
-     "outpputs": [...]
+     "outputs":[]
    }
-}
+]
 ```
 
 <super>(*) Note that default geometric streams can be specified for some input types using the `defaultgeomprop` meta-data specifier. This would need to be converted to a numbered stream (_TBD how to map this_ )
 </super>
 
-For a functional nodegraph
+A functional nodegraph has the following properties: 
 
+* `name`: A unique name for the graph. It is strongly recommended to start the name with `NG_` to indicate that this is a node graph.
 * `nodetype`: Must be `nodegraph`
-* `nodedef` : Index into the `procedural_definitions` array to indicate the correspondence definition entry.
+* `nodedef` : Index into the `procedural_definitions` array to indicate the corresponding definition entry.
 * A child array of `outputs`. The outputs must match those of the definition.
-* It is considered invalid to specify a list of inputs.
+
+  It is considered invalid to specify a list of `inputs`.
 
 ```JSON
-// Functional node graph
 {
   "name": "<unique graph name",
   "nodetype": "nodegraph", 
   "type": "<output data type>", 
-  "nodedef": <definition number>, 
-  "outputs": [...],
-  "nodes": [...]
+  "nodedef": <definition index>, 
+  "outputs": [],
+  "nodes": []
 }
-```  
+```
 
-Below is the actual interface for the “checkboard” definition as specified within MaterialX. The graph nodes have been omitted for clarity.
+Below is the actual interface for the “checkerboard” definition as specified within MaterialX. The graph nodes have been omitted for clarity.
 
 <details>
 <summary>glTF definition</summary>
@@ -401,9 +430,9 @@ Below is the actual interface for the “checkboard” definition as specified w
    {
      // Definition
      "name": "ND_checkerboard_color3",
-     "nodetype": "nodedef", // required
-     "node": "checkerboard", // required - "nodetype" for instances of this definition
-     "nodegroup": "procedural", // optional but recommended to be interpreted as a "procedural"
+     "nodetype": "nodedef", 
+     "node": "checkerboard", 
+     "nodegroup": "procedural", 
      "inputs": [
        {
          "name": "color1",
@@ -457,12 +486,13 @@ Below is the actual interface for the “checkboard” definition as specified w
        }
      ]
    },
-   // Functional node graph
+
+// Functional node graph
    {
      "name": "NG_checkerboard_color3",
-     "nodetype": "nodegraph", // required
-     "type": "color3", // required
-     "nodedef": 0, // required definition reference
+     "nodetype": "nodegraph", 
+     "type": "color3", 
+     "nodedef": 0, 
      "outputs": [
        {
          "name": "out",
@@ -512,20 +542,22 @@ The corresponding definition and functional graph in MaterialX looks like this.
 
 The following diagrams show the overall structure of the extension.
 
-This diagram shows the bindings between materials and compound graphs as well as structure and connections for a graph.
+The following diagram shows the bindings between materials and compound graphs as well as structure and connections for a graph.
 <img src="./figures/breakdown.svg" width=100%>
 
-This diagram shows the breakdown of a procedural graph definition and its associated node functional graph implementation.
+The following diagram shows the breakdown of a procedural graph definition and its associated node functional graph implementation.
 <img src="./figures/breakdown2.svg" width=100%>
 
 
 ## JSON Schema
 
+The JSON schema for this extension is defined in the schema folder. 
+
 [material.KHR_texture_procedurals.schema.json](schema/material.KHR_texture_procedurals_schema.json)
 
-### "Checkerboard" Example
+## Checkerboard Example
 
-This example shows a "checkerboard" pattern which is defined as a procedural graph. This graph is mapped to the "base color" on a material.
+The following is a "checkerboard" pattern which is defined as a procedural graph. This graph is mapped to the "base color" on a material.
 
 <img src="./figures/checker_graph.svg" width=100%>
 
@@ -819,43 +851,43 @@ The equivalent MaterialX representation is:
 <?xml version="1.0"?>
 <materialx version="1.38">
   <nodegraph name="My_Checker">
-    <input name="color1" type="color3" uiname="Color 1" value="1, 0, 0" doc="The first color used in the checkerboard pattern." xpos="10.144928" ypos="-1.482759" />
-    <input name="color2" type="color3" uiname="Color 2" value="0, 1, 0" doc="The second color used in the checkerboard pattern." xpos="10.144928" ypos="-0.146552" />
-    <input name="uvtiling" type="vector2" uiname="UV Tiling" value="8, 8" doc="The tiling of the checkerboard pattern along each axis, with higher values producing smaller squares. Default is (8, 8)." xpos="-7.971014" ypos="0.370690" />
-    <input name="uvoffset" type="vector2" uiname="UV Offset" value="0, 0" doc="The offset of the checkerboard pattern along each axis. Default is (0, 0)." xpos="-4.347826" ypos="0.448276" />
-    <multiply name="N_mtlxmult" type="vector2" xpos="-4.347826" ypos="-1.172414">
+    <input name="color1" type="color3" uiname="Color 1" value="1, 0, 0" doc="The first color used in the checkerboard pattern." />
+    <input name="color2" type="color3" uiname="Color 2" value="0, 1, 0" doc="The second color used in the checkerboard pattern."  />
+    <input name="uvtiling" type="vector2" uiname="UV Tiling" value="8, 8" doc="The tiling of the checkerboard pattern along each axis, with higher values producing smaller squares. Default is (8, 8)." />
+    <input name="uvoffset" type="vector2" uiname="UV Offset" value="0, 0" doc="The offset of the checkerboard pattern along each axis. Default is (0, 0)." />
+    <multiply name="N_mtlxmult" type="vector2" >
       <input name="in1" type="vector2" nodename="texcoord" />
       <input name="in2" type="vector2" interfacename="uvtiling" />
     </multiply>
-    <subtract name="N_mtlxsubtract" type="vector2" xpos="-0.724638" ypos="-0.508621">
+    <subtract name="N_mtlxsubtract" type="vector2">
       <input name="in1" type="vector2" nodename="N_mtlxmult" />
       <input name="in2" type="vector2" interfacename="uvoffset" />
     </subtract>
-    <floor name="N_mtlxfloor" type="vector2" xpos="2.898551" ypos="-0.267241">
+    <floor name="N_mtlxfloor" type="vector2">
       <input name="in" type="vector2" nodename="N_mtlxsubtract" />
     </floor>
-    <dotproduct name="N_mtlxdotproduct" type="float" xpos="6.521739" ypos="-0.327586">
+    <dotproduct name="N_mtlxdotproduct" type="float">
       <input name="in1" type="vector2" nodename="N_mtlxfloor" />
       <input name="in2" type="vector2" value="1, 1" />
     </dotproduct>
-    <modulo name="N_modulo" type="float" xpos="10.144928" ypos="1.189655">
+    <modulo name="N_modulo" type="float">
       <input name="in1" type="float" nodename="N_mtlxdotproduct" />
       <input name="in2" type="float" value="2" />
     </modulo>
-    <mix name="N_mtlxmix" type="color3" xpos="13.768116" ypos="-0.379310">
+    <mix name="N_mtlxmix" type="color3">
       <input name="bg" type="color3" interfacename="color2" />
       <input name="fg" type="color3" interfacename="color1" />
       <input name="mix" type="float" nodename="N_modulo" />
     </mix>
-    <output name="out" type="color3" nodename="N_mtlxmix" xpos="17.391304" ypos="0.000000" />
-    <texcoord name="texcoord" type="vector2" xpos="-7.913043" ypos="-1.362069">
+    <output name="out" type="color3" nodename="N_mtlxmix"/>
+    <texcoord name="texcoord" type="vector2">
       <input name="index" type="integer" value="1" />
     </texcoord>
   </nodegraph>
-  <gltf_pbr name="gltf_pbr_surfaceshader" type="surfaceshader" xpos="13.768116" ypos="-0.086207">
+  <gltf_pbr name="gltf_pbr_surfaceshader" type="surfaceshader" >
     <input name="base_color" type="color3" nodegraph="My_Checker" />
   </gltf_pbr>
-  <surfacematerial name="surfacematerial" type="material" xpos="17.391304" ypos="0.000000">
+  <surfacematerial name="surfacematerial" type="material">
     <input name="surfaceshader" type="surfaceshader" nodename="gltf_pbr_surfaceshader" />
   </surfacematerial>
 </materialx>
@@ -864,7 +896,9 @@ The equivalent MaterialX representation is:
 
 #### Checkerboard Variants
 
-In the example below we create variants by declaring “checkerboard” node instances within a graph. We modify the inputs on each node to create a “red” and “green” variants.
+In the example below we create variants by declaring custom `checkerboard definition and using instances of this definition instances within a graph.
+
+The inputs on each node instance are specified to to create a “red” and “green” variants.
 
 <details>
 <summary>Variants</summary>
@@ -878,11 +912,10 @@ In the example below we create variants by declaring “checkerboard” node ins
      "nodetype": "nodegraph",
       "nodes": [
         {
-          "name": "checkerboard_green",
-          "nodetype": "checkerboard", // Instance of a checkerboard
+          "name": "green_checkerboard",
+          "nodetype": "checkerboard", 
           "type": "color3",
-         // Override one input's value so that it is "green"
-         "inputs": [
+          "inputs": [
             {
               "name": "color1",
               "type": "color3",
@@ -901,7 +934,7 @@ In the example below we create variants by declaring “checkerboard” node ins
           ]
         },
         {
-          "name" : "checkboard_red",
+          "name" : "red_checkboard",
           "nodetype": "checkerboard",
           "type": "color3",
           "inputs": [
