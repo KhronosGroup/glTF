@@ -255,11 +255,97 @@ and each output port in the `outputs` array has the following structure:
 
 Connections inside a graph can be made:
 
-* Between to a `node input` from a an `nodegraph input` by specifying a `input` index
-* Between to a `node input` from a node `output` by specifying a `node` index.
-* Between to a nodegraph output` from a node `output` and an ` by specifying a `node` index
+* To a `node input` from a an `nodegraph input` by specifying a `input` value which is an index into the graph's `inputs` array.
+* To a `node input` from a node `output` by specifying a `node` value which is an index into the graph's `nodes` array.
+* To a nodegraph `output` from a node `output` by specifying a `node` value which is an index into the graph's `nodes` array.
 
-If the upstream node has multiple outputs, then the an index into the upstream `outputs` array  __must__ additionally be specified. 
+If the upstream node has multiple outputs, then an `output` value which is an index into the the upstream nodes `outputs` array  __must__ additionally be specified. 
+
+
+
+The following example shows all the combinations of connections are shown. The sample logic adds two colors together and outputs the result. 
+
+* One color is exposed as a graph input (`graph_in`), while the other is internal to the graph as a constant node (`constant1`). 
+* The add node (`add1`) has two input ports which take as input the result of `graph_in` and `constant1`.
+* The output node on the graph (`graph_out`) is used to route the output value from the add node.
+
+Note that the output ports are specified even if the upstream node only has one output port.
+
+<details>
+<summary>Example</summary>
+
+```JSON
+{
+  "procedurals" [
+    {
+      "name": "nodegraph1",
+      "nodetype": "nodegraph",
+      "type": "color3",
+      "inputs": [
+        {
+          "name": "graph_in",
+          "nodetype": "input",
+          "type": "color3",
+          "value": [ 1, 0, 0 ]
+        }
+      ],
+      "nodes" [
+          {
+            "name": "constant1",
+            "nodetype": "constant",
+            "type": "color3",
+            "value": [ 1, 1, 0 ],
+            "outputs": [
+              {
+                "name": "out",
+                "nodetype": "output",
+                "type": "color3"
+              }
+            ]
+          },
+          {
+            "name": "add1",
+            "nodetype": "add",
+            "type": "color3",
+            "inputs": [
+              {
+                "name": "in1",
+                "nodetype": "input",
+                "type": "color3",
+                "value": [ 1, 0, 0 ]
+              },
+              {
+                "name": "in2",
+                "nodetype": "input",
+                "type": "color3",
+                "node": 0,
+                "output": 0
+              }
+            ],
+            "outputs": [
+              {
+                "name": "out",
+                "nodetype": "output",
+                "type": "color3"                
+              }
+            ]
+          }
+        ],
+
+        "outputs" [
+          {
+            "name": "graph_out",
+            "nodetype": "output",
+            "type": "color3",
+            "node": 1,
+            "output": 0
+          },
+        ]
+    }
+}
+```
+
+</details>
 
 ### Material Binding
 
@@ -313,7 +399,7 @@ At the current time each texture reference requires an `index` entry to be speci
  ]
 }
 ```
-<super>Example of embedded "dummy" image</super>
+<super>Figure: Example of embedded "dummy" image</super>
 
 ### Resource Binding
 
@@ -333,7 +419,53 @@ It is assumed that the existing animation declarations can be used to reference 
 
 An `input` reference to an image is represented by an index to a `texture` element within the `textures` array object. If mapping from a MaterialX `filename`, then the resolved `filename` string can be used for the corresponding `image` source uri.
 
-Placement is specified by the procedural graph and __supersedes__ any placement information on the `texture` reference. That is, texture transforms are procedural in nature are not "baked" into a single texture coordinate matrix transform.
+```JSON
+{
+ "images": [
+   {
+    "name": "image_color3",
+    "mimeType": "image/webp",
+    "url": "my_filename.wepb"
+   }
+ ],
+ "textures": [
+   {
+    "name": "image_color3",
+    "source": 1
+   }
+ ]
+}
+```
+<super>Figure: This example shows a texture reference to an image with a `filename` of `"myfilename.wepb"`</super>
+
+with the corresponding MaterialX being:
+```xml
+<image name="image_color3" type="color3">
+  <input name="file" type="filename" value="my_filename.webp" colorspace="srgb_texture" />
+  <input name="default" type="color3" value="0.9511, 0.0255797, 0.0255797" />
+  <input name="texcoord" type="vector2" nodename="place2d_vector2" />
+</image>
+
+<place2d name="place2d_vector2" type="vector2">
+  <input name="texcoord" type="vector2" nodename="texcoord_vector2" />
+  <input name="pivot" type="vector2" value="0.1, 0.5" />
+  <input name="scale" type="vector2" value="0.3, 0.4" />
+  <input name="rotate" type="float" value="45" />
+  <input name="offset" type="vector2" value="0.01, 0.01" />
+  <input name="operationorder" type="integer" value="1" />
+</place2d>
+```
+<super>Figure: Note that an explicit `colorspace` will avoid any ambiguity for interop with MaterialX and OpenUSD.
+
+It is useful to include a `mimeType` for the image to indicate the desired codec support. This can include any codecs not supported by default -- such as `exr` format.
+The alternative is to pre-convert the image to a default supported format.
+</super>
+
+There is no equivalent notion of specifying a fallback for glTF images as with MaterialX. If a fallback is required then a dummy image could be generated based on the `default` value of the image node.
+
+##### Texture Placement
+This is specified by the procedural graph and __supersedes__ any placement information on the `texture` reference. That is, texture transforms are procedural in nature are not "baked" into a single texture coordinate matrix transform.
+In the example above the `place2d` node is used to specify the texture coordinate transform. This is a common pattern in MaterialX to specify texture transforms.
 
 ( For interop from glTF to MaterialX any embedded images must be extracted and stored in a separate file. The `uri` field in the MaterialX `image` node can then be used to reference the path to the extracted image. )
 
@@ -351,8 +483,87 @@ The stream number is a zero-based index used to lookup the corresponding stream 
 
 For the texture coordinate example if the stream number is 1, the binding is to stream: `TEXCOORD_1` The mesh to check would be the one assigned to the material using the procedural graph.
 
-For colors, a `geomcolor` procedural node would be used to specify a color stream. A value of 1 would
-imply a binding to color stream `COLOR_1`.
+For colors, a `geomcolor` procedural node would be used to specify a color stream. A value of 1 would imply a binding to color stream `COLOR_1`.
+
+<details>
+<summary>Example graph using color and texture coordinate streams</summary>
+
+```JSON
+{
+  "extensions": {
+    "KHR_texture_procedurals": {
+      "mimetype": "application/mtlx+json;version=1.39",
+      "procedurals": [
+        {
+          "name": "nodegraph1",
+          "nodetype": "nodegraph",
+          "type": "color3",
+          "nodes": [
+            {
+              "name": "geomcolor_color3",
+              "nodetype": "geomcolor",
+              "type": "color3",
+              "inputs": [
+                {
+                  "name": "index",
+                  "nodetype": "input",
+                  "type": "integer",
+                  "value": 1
+                }
+              ],
+              "outputs": [
+                {
+                  "nodetype": "output",
+                  "name": "out",
+                  "type": "color3"
+                }
+              ]
+            },
+            {
+              "name": "texcoord_vector2",
+              "nodetype": "texcoord",
+              "type": "vector2",
+              "inputs": [
+                {
+                  "name": "index",
+                  "nodetype": "input",
+                  "type": "integer",
+                  "value": 1
+                }
+              ],
+              "outputs": [
+                {
+                  "nodetype": "output",
+                  "name": "out",
+                  "type": "vector2"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+```
+
+<super>Figure: Note that the `value` for the `index` input is 1. This implies that the binding is to streams `TEXCOORD_1` and `COLOR_1` for nodes `texcoord_vector2` and `geomcolor_color3` respectively.</super>
+
+The corresponding MaterialX representation would look like this:
+
+```xml
+<nodegraph name="nodegraph1">
+  <geomcolor name="geomcolor_color3" type="color3">
+    <input name="index" type="integer" value="1" />
+  </geomcolor>
+  <texcoord name="texcoord_vector2" type="vector2">
+    <input name="index" type="integer" value="1" />
+  </texcoord>
+</nodegraph>
+```
+
+</details>
+
 
 ### Procedural Definitions
 
@@ -1123,9 +1334,30 @@ These procedural graphs can be bound to downstream materials as desired by chosi
 
 ## Resources
 
-- [MaterialX Specification Documents](https://github.com/AcademySoftwareFoundation/MaterialX/tree/main/documents/Specification)
-- [USDShade Schema](https://openusd.org/dev/api/usd_shade_page_front.html)
-- [glTF stream names](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html). Note that currently there are no stream names for multiple sets of _tangents_, _bitangents_, _normals_ or _positions_.
+- [MaterialX Specification Documents](https://github.com/AcademySoftwareFoundation/MaterialX/tree/main/documents/Specification). Refer top level folder documents only. The *v1.38* folder contains the specification which is not the target.
+- Libraries usable for procedural definitions:
+    - [stdlib](https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/stdlib/stdlib_defs.mtlx) : Standard library nodes.
+    - [nprlib](https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/nprlib/nprlib_defs.mtlx) : Non-photo-realistic rendering nodes
+    - [cmlib](https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/cmlib/cmlib_defs.mtlx) : Color managenement nodes (OCIO based)
+    - The nodes listed by group (`nodegroup`) are listed [here](
+        https://materialx.nanmucreative.com/documents/definitions/definitions_by_group.html)
+      - Groups of interest include:
+        - `adjustment` : Smothstep is probably of most interest. Suggest to move to `math` group.  
+        - `channel` : Tuple channel operations
+        - `colortransform` : Color space transformations
+        - `conditional` : Conditional logic
+        - `math` : Mathematical operations
+        - `npr` : Base nodes for non-photo-realistic rendering nodes
+        - `procedural*` : Procedural nodes. This grouping will be clarified for the 1.39 release. Includes noise functions.
+        - `textur2d` : 2D texture nodes including texture lookups
+        - `geometric` : Geometry binding nodes
+        - `translation` : Shading mode translation.
+
+- OpenUSD
+  - [USDShade Schema](https://openusd.org/dev/api/usd_shade_page_front.html)
+  - [Shader Definition Registry](https://openusd.org/docs/api/sdr_page_front.html)
+- glTF
+  - [glTF stream names](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html). Note that currently there are no stream names for multiple sets of _tangents_, _bitangents_, _normals_ or _positions_.
 
 ### glTF Versus MaterialX and OpenUSD
 
@@ -1133,7 +1365,7 @@ The aim is (as  much as possible) to preserve the"simplest" most consistent conv
 
 | Feature | <img src="./figures/materialx.svg" width=48px> | <img src="./figures/OpenUSD.png" width=120px> | <img src="./figures/glTF.svg" width=64px> |
 | --- | --- | --- | --- |
-| **Component String Identifiers** | Yes | Yes | Optional |
+| **Object String Identifiers** | Yes | Yes | Optional |
 | **Numeric Tuples** | string | list () | array [] |
 | **Connection Syntax**" | string (name in context) | Absolute Path | numeric index |
 | **Explicit Node Outputs** | No | Yes | Yes |
@@ -1145,14 +1377,6 @@ The aim is (as  much as possible) to preserve the"simplest" most consistent conv
 | **Definition Versioning** | Yes | Yes | Yes |
 | **Meta-Data** | Yes | Yes | Yes |
 | **Node Definition** | Yes | Yes | Yes |
-
-* Component string names are optional and thus cannot be used as a key / reference.
-* Conversely inputs, outputs, nodes, nodegraphs, and definitions are collected into arrays and are referenced by numeric index.
-   * References to specific outputs on a node with multiple outputs are also numeric indices.
-   * i.e. connections are **numeric indices** to arrays versus string (MaterialX) / path (OpenUSD) references
-* Numeric tuples are stored in JSON array format versus strings (MaterialX) or mathematical notation (OpenUSD)
-* Output ports are always explicitly defined for both node and node graph instances for validation purposes. (Same as OpenUSD, differs from MaterialX)
-* Input ports are optional override values for instances of nodes (same for all)
 
 ## Appendix: Full Khronos Copyright Statement
 
