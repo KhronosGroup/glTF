@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_dispersion glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines the strength of dispersion.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "dispersion": {
+            "type": "number",
+            "description": "This parameter defines dispersion in terms of the 20/Abbe number formulation.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "gltf_detailedDescription": "This parameter defines dispersion in terms of the 20/Abbe number formulation."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

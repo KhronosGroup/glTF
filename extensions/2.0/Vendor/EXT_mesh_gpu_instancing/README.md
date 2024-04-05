@@ -8,7 +8,7 @@
 
 ## Status
 
-Experimental
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 

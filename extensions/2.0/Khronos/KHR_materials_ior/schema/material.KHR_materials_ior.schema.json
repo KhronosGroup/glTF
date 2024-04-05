@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_ior glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines the index of refraction of a material.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "ior": {
+            "type": "number",
+            "description": "The index of refraction.",
+            "default": 1.5,
+            "oneOf": [
+                {
+                    "minimum": 0.0,
+                    "maximum": 0.0
+                },
+                {
+                    "minimum": 1.0
+                }
+            ],
+            "gltf_detailedDescription": "The index of refraction (IOR) is a measured physical number usually in the range between 1 and 2 that determines how much the path of light is bent, or refracted, when entering a material. It also influences the ratio between reflected and transmitted light, calculated from the Fresnel equations."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

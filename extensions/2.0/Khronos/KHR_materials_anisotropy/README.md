@@ -2,32 +2,37 @@
 
 ## Contributors
 
-* Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
-* Ed Mackey, AGI [@emackey](https://github.com/emackey)
-* Alex Wood, AGI [@abwood](https://twitter.com/abwood)
-* Nicolas Savva, Autodesk, [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
-* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
-* Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
-* Don McCurdy, Individual Contributor [@donrmccurdy](https://github.com/donmccurdy)
-* Emmett Lalish, Google [@elalish](https://github.com/elalish)
-* Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
-* Bruce Cherniak, Intel
-* Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
-* Ben Houston, Threekit, [@bhouston](https://twitter.com/BenHouston3D)
-* Jim Eckerlein, UX3D
-* Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
-* Eric Chadwick, Wayfair, [echadwick-wayfair](https://github.com/echadwick-wayfair)
+- Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
+- Ed Mackey, AGI [@emackey](https://github.com/emackey)
+- Alex Wood, AGI [@abwood](https://twitter.com/abwood)
+- Nicolas Savva, Autodesk, [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
+- Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
+- Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
+- Don McCurdy, Individual Contributor [@donrmccurdy](https://github.com/donmccurdy)
+- Emmett Lalish, Google [@elalish](https://github.com/elalish)
+- Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
+- Bruce Cherniak, Intel
+- Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
+- Ben Houston, Threekit, [@bhouston](https://twitter.com/BenHouston3D)
+- Jim Eckerlein, UX3D
+- Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+- Eric Chadwick, Wayfair, [echadwick-wayfair](https://github.com/echadwick-wayfair)
 
 Copyright (C) 2021-2023 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
 
-Release Candidate
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 
 Written against the glTF 2.0 spec.
+
+## Exclusions
+
+- This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+- This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Overview
 
@@ -72,7 +77,7 @@ All meshes with materials that use anisotropy **SHOULD** supply `TANGENT` vector
 
 The `anisotropyTexture`, when supplied, encodes XY components of the direction vector in tangent space as red and green values, and strength as blue values, all stored with linear transfer function. After dequantization, red and green texel values **MUST** be mapped as follows: red [0.0 .. 1.0] to X [-1 .. 1], green [0.0 .. 1.0] to Y [-1 .. 1].  Blue does not require remapping.  When `anisotropyTexture` is not supplied, the default value is red 1.0 (X 1.0), green 0.5 (Y 0.0), and blue 1.0 (strength 1.0).  The direction of this XY vector specifies the per-texel direction of increased anisotropy roughness in tangent, bitangent space, prior to being rotated by `anisotropyRotation`.  The blue channel contains strength as [0.0 .. 1.0] to be multiplied by `anisotropyStrength` to determine the per-texel anisotropy strength.
 
-> **Note:** The direction vector of the anisotropy is the direction in which highlights will be stretched. The direction of the micro-grooves in the material causing the anisotropy will run perpendicular. 
+> **Note:** The direction vector of the anisotropy is the direction in which highlights will be stretched. The direction of the micro-grooves in the material causing the anisotropy will run perpendicular.
 
 The direction of increased anisotropy roughness (as determined above, by default the tangent direction), has its "alpha roughness" (the square of the roughness) increased according to the following formula:
 
@@ -174,9 +179,9 @@ The parametrization of `at` and `ab`, denoting linear roughness values along bot
 
 ### Image-based lighting
 
-For image-based lighting (IBL), generally some form of PMREM (prefiltered mipmapped radiance environment map) is used since calculating the contribution from each pixel individually is too slow for realtime graphics. In this case one must sample from this PMREM since a light vector is not available. 
+For image-based lighting (IBL), generally some form of PMREM (prefiltered mipmapped radiance environment map) is used since calculating the contribution from each pixel individually is too slow for realtime graphics. In this case one must sample from this PMREM since a light vector is not available.
 
-Since the PMREM is sampled for a single roughness value and direction, one sample is not in general enough to get a very accurate approximation of the lighting. Implementors are encouraged to trade off speed and accuracy with their sampling strategies. 
+Since the PMREM is sampled for a single roughness value and direction, one sample is not in general enough to get a very accurate approximation of the lighting. Implementors are encouraged to trade off speed and accuracy with their sampling strategies.
 
 The two $\alpha$ values are defined in such a way that the material's base roughness (also the minimum of the two directions) is a good choice for sampling the PMREM. The center of the reflection distribution is a good direction to start sampling, especially if using only a single sample. This can be approximated with the bent normal technique:
 
@@ -196,14 +201,14 @@ Further samples should be placed on both sides along the `anisotropicT` directio
 
 ## Schema
 
-- [glTF.KHR_materials_anisotropy.schema.json](schema/glTF.KHR_materials_anisotropy.schema.json)
+- [material.KHR_materials_anisotropy.schema.json](schema/material.KHR_materials_anisotropy.schema.json)
 
 ## Reference
 
-1. [Google Filament - Anisotropic model](https://google.github.io/filament/Filament.md.html#materialsystem/anisotropicmodel)
-2. [Google Filament Materials Guide - Anisotropic model](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/anisotropy)
-3. [Blender Principled BSDF](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/principled.html)
-4. [Christopher Kulla and Alejandro Conty. 2017. Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf)
+- [Google Filament - Anisotropic model](https://google.github.io/filament/Filament.md.html#materialsystem/anisotropicmodel)
+- [Google Filament Materials Guide - Anisotropic model](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/anisotropy)
+- [Blender Principled BSDF](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/principled.html)
+- [Christopher Kulla and Alejandro Conty. 2017. Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf)
 
 ## Appendix: Full Khronos Copyright Statement
 

@@ -7,7 +7,7 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Contributors
 
-* Steven Vergenz, Microsoft ([steven.vergenz@microsoft.com](mailto:steven.vergenz@microsoft.com))
+- Steven Vergenz, Microsoft ([steven.vergenz@microsoft.com](mailto:steven.vergenz@microsoft.com))
 
 Copyright 2017-2018 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -65,7 +65,7 @@ Though this extension's values are unbounded, they will only produce sane result
 
 ### JSON Schema
 
-[KHR_texture_transform.textureInfo.schema.json](schema/KHR_texture_transform.textureInfo.schema.json)
+[textureInfo.KHR_texture_transform.schema.json](schema/textureInfo.KHR_texture_transform.schema.json)
 
 ### Example JSON
 
@@ -108,12 +108,12 @@ This example inverts the T axis, effectively defining a bottom-left origin.
 
 ## Known Implementations
 
-* [UnityGLTF](https://github.com/KhronosGroup/UnityGLTF)
-* [Babylon.js](https://www.babylonjs.com/)
-* [PlayCanvas](https://playcanvas.com/)
-* [Three.js](https://threejs.org/)
-* [Blender](https://docs.blender.org/manual/en/2.81/addons/import_export/io_scene_gltf2.html#uv-mapping)
-* [Gestaltor](https://gestaltor.io/)
+- [UnityGLTF](https://github.com/KhronosGroup/UnityGLTF)
+- [Babylon.js](https://www.babylonjs.com/)
+- [PlayCanvas](https://playcanvas.com/)
+- [Three.js](https://threejs.org/)
+- [Blender](https://docs.blender.org/manual/en/2.81/addons/import_export/io_scene_gltf2.html#uv-mapping)
+- [Gestaltor](https://gestaltor.io/)
 
 ## Appendix: Full Khronos Copyright Statement
 

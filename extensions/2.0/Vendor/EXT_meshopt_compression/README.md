@@ -7,7 +7,7 @@
 
 ## Status
 
-Complete
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 
@@ -72,7 +72,7 @@ Each `bufferView` can contain an extension object with the following properties:
 For the extension object to be valid, the following must hold:
 
 - When parent `bufferView` has `byteStride` defined, it matches `byteStride` in the extension JSON
-- Buffer view length is equal to `byteStride` times `count`
+- The parent `bufferView.byteLength` is equal to `byteStride` times `count`
 - When `mode` is `"ATTRIBUTES"`, `byteStride` must be divisible by 4 and must be <= 256.
 - When `mode` is `"TRIANGLES"`, `count` must be divisible by 3
 - When `mode` is `"TRIANGLES"` or `"INDICES"`, `byteStride` must be equal to 2 or 4
@@ -82,6 +82,8 @@ For the extension object to be valid, the following must hold:
 - When `filter` is `"EXPONENTIAL"`, `byteStride` must be divisible by 4
 
 The type of compressed data must match the bitstream specification (note that each `mode` specifies a different bitstream format).
+
+The parent `bufferView` properties define a layout which can hold the data decompressed from the extension object.
 
 ## Compression modes and filters
 
@@ -118,7 +120,9 @@ While the extension JSON specifies a separate buffer to source compressed data f
 { "byteLength": 1432878 }
 ```
 
-When stored in a GLB file, the dummy buffer should have index 1 or above, to avoid conflicts with GLB binary buffer.
+The `byteLength` property of such a placeholder buffer **MUST** be sufficiently large to contain all uncompressed buffer views referencing it.
+
+When stored in a GLB file, the placeholder buffer should have index 1 or above, to avoid conflicts with GLB binary buffer.
 
 This extension allows buffers to be optionally tagged as fallback by using the `fallback` attribute as follows:
 
