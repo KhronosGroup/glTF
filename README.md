@@ -26,7 +26,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 ### Overview
 
 <p align="center">
-<a href="specification/2.0/figures/gltfOverview-2.0.0b.png"><img src="specification/2.0/figures/gltfOverview-2.0.0b-small.png" /></a>
+<a href="specification/2.0/figures/gltfOverview-2.0.0d.png"><img src="specification/2.0/figures/gltfOverview-2.0.0d-small.png" /></a>
   <sup>
     From <a href=https://github.com/javagl/gltfOverview/>github.com/javagl/gltfOverview/</a> |
     <a href="https://www.khronos.org/files/gltf20-reference-guide.pdf">PDF</a> |

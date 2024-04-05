@@ -23,7 +23,7 @@ Some proven real-world applications for this information:
 
 ## Specifying Geometry Data
 
-The summary data is defined as an optional extension to a glTF `scene`, by adding an `extensions` property and defining a `KHR_lights_punctual` property with a `lights` array inside it:
+The summary data is defined as an optional extension to a glTF `scene`, by adding an `extensions` property and defining a `FB_geometry_metadata` property with the scene metadata inside it:
 
 ```javascript
 "extensions": {

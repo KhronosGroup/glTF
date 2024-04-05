@@ -21,7 +21,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `ADOBE` | Adobe, Inc. | https://adobe.com/ | [#1431](https://github.com/KhronosGroup/glTF/issues/1431) |
 | `AGI` | Analytical Graphics, Inc. | https://agi.com/ | [#1405](https://github.com/KhronosGroup/glTF/pull/1405) |
 | `AGT` | Augment SAS | https://www.augment.com/ | [#1571](https://github.com/KhronosGroup/glTF/issues/1571) |
-| `ALCM` | Alchemisten AG | https://alchemisten.ag/<br>`viktor.spadi at alchemisten.ag` | [#1708](https://github.com/KhronosGroup/glTF/issues/1708) |
+| `ALCM` | Alchemisten AG | https://alchemisten.ag/<br>`viktor.gerbert at alchemisten.ag` | [#1708](https://github.com/KhronosGroup/glTF/issues/1708) |
 | `ALI` | Alibaba Group | https://www.alibaba.com/ | [#1160](https://github.com/KhronosGroup/glTF/pull/1160) |
 | `AMZN` | Amazon | https://www.amazon.com/<br>`jasoncan at amazon.com` | [#1233](https://github.com/KhronosGroup/glTF/issues/1233) |
 | `ANIMECH` | Animech AB | http://animech.com/ | [#1780](https://github.com/KhronosGroup/glTF/issues/1780) |
@@ -36,8 +36,10 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `CITRUS` | Citrus Toolbox | https://github.com/KenzieMac130/CitrusToolbox | [#1962](https://github.com/KhronosGroup/glTF/issues/1962) |
 | `CLO` | CLO Virtual Fashion | https://www.clo3d.com/ | [#1944](https://github.com/KhronosGroup/glTF/issues/1944) |
 | `CVTOOLS` | Canvas Tools | https://github.com/MackeyK24/CanvasTools | [#1389](https://github.com/KhronosGroup/glTF/issues/1389) |
+| `DGG` | Darmstadt Graphics Group GmbH | https://dgg3d.com/ | [#2303](https://github.com/KhronosGroup/glTF/issues/2303) |
 | `DOTV` | DotVision | https://dotvision.com/<br>`guillaume.pelletier at dotvision.com` | [#2192](https://github.com/KhronosGroup/glTF/issues/2192) |
 | `EMBARK` | Embark Studios AB | https://www.embark-studios.com/ | [#2097](https://github.com/KhronosGroup/glTF/issues/2097) |
+| `ENVOKE` | Envoke | https://envoke-demos.com/ | [#2363](https://github.com/KhronosGroup/glTF/issues/2363) |
 | `EPIC` | Epic Games, Inc. | https://www.epicgames.com/ | [#1905](https://github.com/KhronosGroup/glTF/issues/1905) |
 | `ESSILORLUXOTTICA` | Luxottica Group S.p.A. | https://www.essilorluxottica.com/ | [#2204](https://github.com/KhronosGroup/glTF/issues/2204) |
 | `F8` | Forum8 Co., Ltd. | https://www.forum8.com/ | [#1999](https://github.com/KhronosGroup/glTF/issues/1999) |
@@ -50,6 +52,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `ICOSA` | Icosa Foundation | https://icosa.foundation/ | [#2208](https://github.com/KhronosGroup/glTF/issues/2208) |
 | `INTEL` | Intel Corporation | https://www.intel.com/ | [#2142](https://github.com/KhronosGroup/glTF/issues/2142) |
 | `KDAB` | The KDAB Group | https://www.kdab.com/ | [#1728](https://github.com/KhronosGroup/glTF/pull/1728) |
+| `KITTYCAD` | KittyCAD, Inc. | https://kittycad.io/<br>`david at kittycad.io` | [#2344](https://github.com/KhronosGroup/glTF/issues/2344) |
 | `LLQ` | Lifeliqe, Inc. | https://www.lifeliqe.com/ | [#1414](https://github.com/KhronosGroup/glTF/issues/1414) |
 | `MAGNUM` | Magnum Engine | https://magnum.graphics/<br>`info at magnum.graphics` | [#2222](https://github.com/KhronosGroup/glTF/issues/2222) |
 | `MAXAR` | Maxar Technologies | https://www.maxar.com/ | [#1869](https://github.com/KhronosGroup/glTF/issues/1869) |
@@ -87,3 +90,4 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `VRMC` | VRM Consortium | https://vrm-consortium.org/ | [#1874](https://github.com/KhronosGroup/glTF/issues/1874) |
 | `VSEKAI` | V-Sekai | https://v-sekai.org/<br>`ernest.lee at chibifire.com`<br>`xn.lyuma at gmail.com` | [#2206](https://github.com/KhronosGroup/glTF/issues/2206) |
 | `WEB3D` | The Web3D Consortium, Inc. | https://www.web3d.org/ |  |
+| `WGE` | Webgears Inc. | https://webgears.app/<br>`contact at webgears.app` | [#2299](https://github.com/KhronosGroup/glTF/issues/2299) |
