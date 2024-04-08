@@ -592,7 +592,7 @@ If any input value is _NaN_, the output value is false.
 | `bool value` | True if stem:[a >= b]; false otherwise
 |===
 
-==== Special Floating-Point Nodes
+==== Special Nodes
 
 ===== Is Not a Number
 
@@ -615,6 +615,21 @@ If any input value is _NaN_, the output value is false.
 | Output value sockets
 | `bool value` | True if stem:[a] is positive or negative infinity; false otherwise
 |===
+
+===== Select
+
+[cols="1h,1,2"]
+|===
+| Type | `math/select` | Conditional selection operation
+.3+| Input value sockets
+| `bool condition` | Value selecting the value returned
+| `T a` | Positive selection option
+| `T b` | Negative selection option
+| Output value sockets
+| `T value` | stem:[a] if the the `condition` input value is true; stem:[b] otherwise
+|===
+
+The type `T` represents any type. It **MUST** be the same for the output value socket and the input value sockets stem:[a] and stem:[b], otherwise the node is invalid.
 
 ==== Angle and Trigonometry Nodes
 
