@@ -1988,6 +1988,8 @@ This node sets a glTF Asset Object Model value using the provided JSON pointer. 
 
 The pointer string **MAY** be a template pointer string, i.e., it **MAY** contain path segments substituted at runtime using the input values. All input values used for path segment substitutions **MUST** be of `int` type. Path segments, if used, **MUST** substitute only array indices in the pointer templates as listed in the glTF Asset Object Model Specification.
 
+If the `value` input value is not valid for the resolved property, the effective property value becomes implementation-defined and subsequent `pointer/get` evaluations of the property **MAY** return any value of the corresponding type until the property is updated with a valid value.
+
 This node has no internal state.
 
 When the `in` input flow is activated:
