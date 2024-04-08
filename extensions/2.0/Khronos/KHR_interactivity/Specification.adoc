@@ -1573,6 +1573,145 @@ If stem:[a] is 0, the operation returns 0; if stem:[a] is -1, the operation retu
 | `bool value` | False if and only if both stem:[a] and stem:[b] are false; true otherwise
 |===
 
+=== Type Conversion Nodes
+
+==== Boolean Conversion Nodes
+
+===== Boolean to Integer
+
+[cols="1h,1,2"]
+|===
+| Type | `type/boolToInt` | Boolean to integer conversion
+| Input value sockets
+| `bool a` | Argument
+| Output value sockets
+| `int value` | stem:[1] if stem:[a] is true; stem:[0] otherwise
+|===
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+a|0
+----
+====
+
+===== Boolean to Float
+
+[cols="1h,1,2"]
+|===
+| Type | `type/boolToFloat` | Boolean to float conversion
+| Input value sockets
+| `bool a` | Argument
+| Output value sockets
+| `float value` | stem:[1] if stem:[a] is true; stem:[0] otherwise
+|===
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
++a
+----
+====
+
+==== Integer Conversion Nodes
+
+===== Integer to Boolean
+
+[cols="1h,1,2"]
+|===
+| Type | `type/intToBool` | Integer to boolean conversion
+| Input value sockets
+| `int a` | Argument
+| Output value sockets
+| `bool value` | True if stem:[a] is not equal to zero; false otherwise
+|===
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+!!a
+----
+====
+
+===== Integer to Float
+
+[cols="1h,1,2"]
+|===
+| Type | `type/intToFloat` | Integer to float conversion
+| Input value sockets
+| `int a` | Argument
+| Output value sockets
+| `float value` | Floating-point value equal to stem:[a]
+|===
+
+Since floating-point values have double precision, this conversion **MUST** be lossless.
+
+This operation **MUST NOT** produce negative zero.
+
+[NOTE]
+.Note
+====
+This operation is no-op in ECMAScript.
+====
+
+==== Float Conversion Nodes
+
+===== Float to Boolean
+
+[cols="1h,1,2"]
+|===
+| Type | `type/floatToBool` | Float to boolean conversion
+| Input value sockets
+| `float a` | Argument
+| Output value sockets
+| `bool value` | False if stem:[a] is NaN or equal to zero; true otherwise
+|===
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+!!a
+----
+====
+
+===== Float to Integer
+
+[cols="1h,1,2"]
+|===
+| Type | `type/floatToInt` | Float to integer conversion
+| Input value sockets
+| `float a` | Argument
+| Output value sockets
+| `int value` | Integer value produced as described below
+|===
+
+1. If the stem:[a] input value is zero, infinite, or NaN, return zero and skip the next steps.
+2. Let stem:[t] be stem:[a] with its fractional part removed by rounding towards zero.
+3. Let stem:[k] be a value of the same sign as stem:[t] such that its absolute value is less than stem:[2^32] and stem:[k] is equal to stem:[t - q * 2^32] for some integer stem:[q].
+4. If stem:[k] is greater than or equal to stem:[2^31], return stem:[k - 2^32]; otherwise return stem:[k].
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+a|0
+----
+====
+
 === Control Flow Nodes
 
 ==== Sync Nodes
