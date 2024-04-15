@@ -1588,6 +1588,18 @@ If stem:[a] is 0, the operation returns 0; if stem:[a] is -1, the operation retu
 | `bool value` | False if and only if both stem:[a] and stem:[b] are false; true otherwise
 |===
 
+===== Boolean XOR
+
+[cols="1h,1,2"]
+|===
+| Type | `math/xor` | Boolean XOR operation
+.2+| Input value sockets
+| `bool a` | First argument
+| `bool b` | Second argument
+| Output value sockets
+| `bool value` | True if and only if stem:[a] is not equal to stem:[b]; false otherwise
+|===
+
 === Type Conversion Nodes
 
 ==== Boolean Conversion Nodes
