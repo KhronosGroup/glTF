@@ -20,7 +20,7 @@ See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copy
 
 ## Status
 
-Release Candidate
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 

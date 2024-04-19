@@ -13,10 +13,12 @@ Khronos extensions use the reserved `KHR` prefix. Once ratified by the Khronos G
 
 The following extensions have been ratified by the Khronos Group:
 
+* [KHR_animation_pointer](2.0/Khronos/KHR_animation_pointer/README.md)
 * [KHR_draco_mesh_compression](2.0/Khronos/KHR_draco_mesh_compression/README.md)
 * [KHR_lights_punctual](2.0/Khronos/KHR_lights_punctual/README.md)
 * [KHR_materials_anisotropy](2.0/Khronos/KHR_materials_anisotropy/README.md)
 * [KHR_materials_clearcoat](2.0/Khronos/KHR_materials_clearcoat/README.md)
+* [KHR_materials_dispersion](2.0/Khronos/KHR_materials_dispersion/README.md)
 * [KHR_materials_emissive_strength](2.0/Khronos/KHR_materials_emissive_strength/README.md)
 * [KHR_materials_ior](2.0/Khronos/KHR_materials_ior/README.md)
 * [KHR_materials_iridescence](2.0/Khronos/KHR_materials_iridescence/README.md)
@@ -99,10 +101,8 @@ extensions, Khronos extensions, or inclusion in a future version of the glTF spe
 
 | Extension | Status |
 |-----------|--------|
-| [KHR_animation_pointer](https://github.com/KhronosGroup/glTF/pull/2147) | Ready for testing. |
 | [KHR_audio](https://github.com/KhronosGroup/glTF/pull/2137) | Ready for testing. |
 | [KHR_materials_diffuse_transmission](https://github.com/KhronosGroup/glTF/pull/1825) | Ready for testing. |
-| [KHR_materials_dispersion](https://github.com/KhronosGroup/glTF/pull/2340) | Ready for testing. |
 | [KHR_materials_sss](https://github.com/KhronosGroup/glTF/pull/1928) | In development. |
 
 # About glTF Extensions
