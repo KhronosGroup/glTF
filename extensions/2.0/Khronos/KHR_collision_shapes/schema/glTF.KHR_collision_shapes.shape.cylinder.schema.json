@@ -8,7 +8,7 @@
         "height": {
             "type": "number",
             "description": "The height of the cylinder, centered along the Y axis.",
-            "minimum": 0.0,
+            "exclusiveMinimum": 0.0,
             "default": 0.5
         },
         "radiusBottom": {

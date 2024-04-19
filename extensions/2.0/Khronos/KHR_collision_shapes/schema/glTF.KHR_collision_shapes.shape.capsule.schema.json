@@ -8,7 +8,7 @@
         "height": {
             "type": "number",
             "description": "The distance between the centers of the two capping spheres of capsule.",
-            "minimum": 0.0,
+            "exclusiveMinimum": 0.0,
             "default": 0.5
         },
         "radiusBottom": {

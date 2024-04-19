@@ -8,7 +8,7 @@
         "radius": {
             "type": "number",
             "description": "The radius of the sphere.",
-            "minimum": 0.0,
+            "exclusiveMinimum": 0.0,
             "default": 0.5
         },
         "extensions": { },

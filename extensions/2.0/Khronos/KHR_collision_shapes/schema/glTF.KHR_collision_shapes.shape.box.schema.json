@@ -10,7 +10,7 @@
             "description": "The extents of the box in each axis in local space.",
             "items": {
                 "type": "number",
-                "minimum": 0.0
+                "exclusiveMinimum": 0.0
             },
             "minItems": 3,
             "maxItems": 3,
