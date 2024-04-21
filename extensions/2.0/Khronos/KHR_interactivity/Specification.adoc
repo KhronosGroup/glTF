@@ -1032,6 +1032,76 @@ If the vector stem:[b] is not unit, rotation results may be undefined.
 | `float4 value` | Transformed vector
 |===
 
+===== Combine
+
+[cols="1h,1,2"]
+|===
+| Type | `math/combine2` | Combine two floats into a two-component vector
+.2+| Input value sockets
+| `float a` | First component
+| `float b` | Second component
+| Output value sockets
+| `float2 value` | Vector
+|===
+
+[cols="1h,1,2"]
+|===
+| Type | `math/combine3` | Combine three floats into a three-component vector
+.3+| Input value sockets
+| `float a` | First component
+| `float b` | Second component
+| `float c` | Third component
+| Output value sockets
+| `float3 value` | Vector
+|===
+
+[cols="1h,1,2"]
+|===
+| Type | `math/combine4` | Combine four floats into a four-component vector
+.4+| Input value sockets
+| `float a` | First component
+| `float b` | Second component
+| `float c` | Third component
+| `float d` | Fourth component
+| Output value sockets
+| `float4 value` | Vector
+|===
+
+===== Extract
+
+[cols="1h,1,2"]
+|===
+| Type | `math/extract2` | Extract two floats from a two-component vector
+| Input value sockets
+| `float2 a` | Vector
+.2+| Output value sockets
+| `float 0` | First component
+| `float 1` | Second component
+|===
+
+[cols="1h,1,2"]
+|===
+| Type | `math/extract3` | Extract three floats from a three-component vector
+| Input value sockets
+| `float3 a` | Vector
+.3+| Output value sockets
+| `float 0` | First component
+| `float 1` | Second component
+| `float 2` | Third component
+|===
+
+[cols="1h,1,2"]
+|===
+| Type | `math/extract4` | Extract four floats from a four-component vector
+| Input value sockets
+| `float4 a` | Vector
+.4+| Output value sockets
+| `float 0` | First component
+| `float 1` | Second component
+| `float 2` | Third component
+| `float 3` | Fourth component
+|===
+
 ==== Matrix Nodes
 
 ===== Transpose
@@ -1077,6 +1147,58 @@ If the vector stem:[b] is not unit, rotation results may be undefined.
 | `float4x4 b` | Second matrix
 | Output value sockets
 | `float4x4 value` | Matrix product
+|===
+
+===== Combine
+
+[cols="1h,1,2"]
+|===
+| Type | `math/combine4x4` | Combine 16 floats into a 4x4 matrix
+.16+| Input value sockets
+| `float a` | First row, first column element
+| `float b` | Second row, first column element
+| `float c` | Third row, first column element
+| `float d` | Fourth row, first column element
+| `float e` | First row, second column element
+| `float f` | Second row, second column element
+| `float g` | Third row, second column element
+| `float h` | Fourth row, second column element
+| `float i` | First row, third column element
+| `float j` | Second row, third column element
+| `float k` | Third row, third column element
+| `float l` | Fourth row, third column element
+| `float m` | First row, fourth column element
+| `float n` | Second row, fourth column element
+| `float o` | Third row, fourth column element
+| `float p` | Fourth row, fourth column element
+| Output value sockets
+| `float4x4 value` | Matrix
+|===
+
+===== Extract
+
+[cols="1h,1,2"]
+|===
+| Type | `math/extract4x4` | Extract 16 floats from a 4x4 matrix
+| Input value sockets
+| `float4x4 a` | Matrix
+.16+| Output value sockets
+| `float 0`  | First row, first column element
+| `float 1`  | Second row, first column element
+| `float 2`  | Third row, first column element
+| `float 3`  | Fourth row, first column element
+| `float 4`  | First row, second column element
+| `float 5`  | Second row, second column element
+| `float 6`  | Third row, second column element
+| `float 7`  | Fourth row, second column element
+| `float 8`  | First row, third column element
+| `float 9`  | Second row, third column element
+| `float 10` | Third row, third column element
+| `float 11` | Fourth row, third column element
+| `float 12` | First row, fourth column element
+| `float 13` | Second row, fourth column element
+| `float 14` | Third row, fourth column element
+| `float 15` | Fourth row, fourth column element
 |===
 
 ==== Integer Arithmetic Nodes
