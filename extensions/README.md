@@ -103,7 +103,7 @@ extensions, Khronos extensions, or inclusion in a future version of the glTF spe
 |-----------|--------|
 | [KHR_audio](https://github.com/KhronosGroup/glTF/pull/2137) | Ready for testing. |
 | [KHR_materials_diffuse_transmission](https://github.com/KhronosGroup/glTF/pull/1825) | Ready for testing. |
-| [KHR_materials_sss](https://github.com/KhronosGroup/glTF/pull/1928) | In development. |
+| [KHR_materials_subsurface](https://github.com/KhronosGroup/glTF/pull/1928) | In development. |
 
 # About glTF Extensions
 
