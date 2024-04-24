@@ -35,14 +35,13 @@ To describe the geometry which represents the object, shapes must define at most
 |**box**|`object`|An axis-aligned box centered at the origin in local space.|
 |**cylinder**|`object`|A cylinder centered at the origin and aligned along the Y axis in local space, with potentially different radii at each end.|
 |**capsule**|`object`|A capsule (cylinder with hemispherical ends) centered at the origin and defined by two "capping" spheres with potentially different radii, aligned along the Y axis in local space.|
-|**convex**|`object`|A convex hull wrapping a `mesh` object.|
-|**trimesh**|`object`|A triangulated representation of a `mesh` object.|
+|**mesh**|`object`|A shape generated from a `mesh` object.|
 
-The sphere, box, capsule, cylinder and convex types all represent convex objects with a volume, however, the trimesh type always represents an infinitely thin shell or sheet - for example a trimesh created from a `mesh` object in the shape of a box will be represented as a hollow box.
+The sphere, box, capsule, and cylinder all represent convex objects with a volume. However, the mesh type always represents an infinitely thin shell or sheet - for example a trimesh created from a `mesh` object in the shape of a box will be represented as a hollow box.
 
-If a shape is required to have an offset from the local space of the node the shape is associated with (for example a sphere _not_ centered at local origin or a rotated box,) a child node should be added with the desired offset applied, and the shape properties should be added to that child.
+If a shape is required to have an offset from the local space of the node the shape is associated with (for example a sphere _not_ centered at local origin or a rotated box,) a child node should be added with the desired offset applied, and the shape properties added to that child.
 
-As both the `convex` and `trimesh` shapes reference a `mesh`, they additionally allow for optional `skin` and `weights` properties, which has the same semantics and requirements enforced by the properties of the same name associated with a `node`. When specified on a `convex` object, the resulting collision shape should be the convex hull of the deformed mesh. As collision detection is typically performed on CPU, the performance impact of deforming a mesh in such a use-case is typically higher than inside a vertex shader. As such, use of this functionality should be given careful consideration with respect to performance.
+As both the `mesh` shape references a `mesh`, it additionally allows for optional `skin` and `weights` properties, which have the same semantics and requirements enforced by the properties of the same name associated with a `node`. When specified on a `mesh` whose `convex` property is `true`, the resulting collision shape should be the convex hull of the deformed mesh. As collision detection is typically performed on CPU, the performance impact of deforming a mesh in such a use-case is typically higher than inside a vertex shader. As such, use of this functionality should be given careful consideration with respect to performance. When `convex` is `true`, the referenced mesh need not necessarily be convex itself, nor is there any requirement for the geometry to be closed. An implementation must generate a convex hull from the input vertices.
 
 ### JSON Schema
 
@@ -62,18 +61,16 @@ With consideration to the glTF 2.0 Asset Object Model Specification document, th
 | `/extensions/KHR_collision_shapes/shapes/{}/cylinder/radiusBottom` | `float`|
 | `/extensions/KHR_collision_shapes/shapes/{}/cylinder/radiusTop` | `float`|
 | `/extensions/KHR_collision_shapes/shapes/{}/sphere/radius` | `float`|
-| `/extensions/KHR_collision_shapes/shapes/{}/convex/weights/{}` | `float`|
-| `/extensions/KHR_collision_shapes/shapes/{}/convex/weights` | `float[]`|
-| `/extensions/KHR_collision_shapes/shapes/{}/trimesh/weights/{}` | `float`|
-| `/extensions/KHR_collision_shapes/shapes/{}/trimesh/weights` | `float[]`|
+| `/extensions/KHR_collision_shapes/shapes/{}/mesh/weights/{}` | `float`|
+| `/extensions/KHR_collision_shapes/shapes/{}/mesh/weights` | `float[]`|
 
 Additional read-only properties
 
 | Pointer | Type|
 |-|-|
 | `/extensions/KHR_collision_shapes/shapes.length` | `int`|
-| `/extensions/KHR_collision_shapes/shapes/{}/convex/weights.length` | `int`|
-| `/extensions/KHR_collision_shapes/shapes/{}/trimesh/weights.length` | `int`|
+| `/extensions/KHR_collision_shapes/shapes/{}/mesh/weights.length` | `int`|
+| `/extensions/KHR_collision_shapes/shapes/{}/mesh/convex` | `boolean`|
 
 ## Known Implementations
 

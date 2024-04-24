@@ -25,12 +25,8 @@
                     "description": "A cylinder shape, centered at the origin in local space, equivalent to the convex hull of two circles in the X/Z plane positioned along the Y axis at a specified distance."
                 },
                 {
-                    "enum": [ "convex" ],
-                    "description": "A shape defined as the convex hull of a referenced `mesh` (which itself need not be convex) in local space."
-                },
-                {
-                    "enum": [ "trimesh" ],
-                    "description": "An infinitely thin surface defined by the triangles in the referenced `mesh` in local space."
+                    "enum": [ "mesh" ],
+                    "description": "A shape generated from a referenced `mesh` object"
                 },
                 {
                     "type": "string"
@@ -57,15 +53,10 @@
             "description": "A set of parameter values that are used to define a cylinder shape.",
             "$ref": "glTF.KHR_collision_shapes.shape.cylinder.schema.json"
         },
-        "convex": {
+        "mesh": {
             "type": "object",
-            "description": "A set of parameter values that are used to define a convex shape.",
-            "$ref": "glTF.KHR_collision_shapes.shape.convex.schema.json"
-        },
-        "trimesh": {
-            "type": "object",
-            "description": "A set of parameter values that are used to define a mesh shape.",
-            "$ref": "glTF.KHR_collision_shapes.shape.trimesh.schema.json"
+            "description": "A set of parameter values that are used to define a shape derived from a mesh.",
+            "$ref": "glTF.KHR_collision_shapes.shape.mesh.schema.json"
         },
         "name": { },
         "extensions": { },
@@ -76,8 +67,7 @@
         { "required": ["box"] },
         { "required": ["capsule"] },
         { "required": ["cylinder"] },
-        { "required": ["convex"] },
-        { "required": ["trimesh"] }
+        { "required": ["mesh"] }
     ],
     "required": [
         "type"
