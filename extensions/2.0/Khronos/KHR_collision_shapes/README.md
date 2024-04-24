@@ -43,6 +43,8 @@ If a shape is required to have an offset from the local space of the node the sh
 
 As both the `mesh` shape references a `mesh`, it additionally allows for optional `skin` and `weights` properties, which have the same semantics and requirements enforced by the properties of the same name associated with a `node`. When specified on a `mesh` whose `convex` property is `true`, the resulting collision shape should be the convex hull of the deformed mesh. As collision detection is typically performed on CPU, the performance impact of deforming a mesh in such a use-case is typically higher than inside a vertex shader. As such, use of this functionality should be given careful consideration with respect to performance. When `convex` is `true`, the referenced mesh need not necessarily be convex itself, nor is there any requirement for the geometry to be closed. An implementation must generate a convex hull from the input vertices.
 
+Degenerate shapes are prohibited. A `sphere` must have a positive, non-zero radius. `box` shapes must have positive non-zero values for each component of `size`. `cylinder` and `capsule` shapes must have a positive, non-zero `height` and both `radiusTop` and `radiusBottom` should be positive; at least one of the radii should be non-zero. For `mesh` shapes whose `convex` property is `false`, the referenced mesh must contain at least one non-degenerate triangle primitive. For `mesh` shapes whose `convex` property is `true`, the referenced mesh must contain contain primitives with at least four non-coplanar vertices.
+
 ### JSON Schema
 
 * **JSON schema**: [glTF.KHR_collision_shapes.schema.json](schema/glTF.KHR_collision_shapes.schema.json)
