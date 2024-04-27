@@ -103,10 +103,10 @@ Valid values for `ior` are numbers greater than or equal to 1. In addition, a va
 The extension changes the computation of the Fresnel term defined in [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) to the following:
 
 ```
-const dielectricSpecular = ((ior - 1)/(ior + 1))^2
+const dielectric_f0 = ((ior - 1)/(ior + 1))^2
 ```
 
-Note that for the default index of refraction `ior = 1.5` this term evaluates to `dielectricSpecular = 0.04`.
+Note that for the default index of refraction `ior = 1.5` this term evaluates to `dielectric_f0 = 0.04`.
 
 ## Interaction with other extensions
 
