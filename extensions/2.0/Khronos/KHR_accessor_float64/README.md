@@ -42,8 +42,9 @@ When the extension is supported, the following data type is valid for accessors 
 Such accessors **MUST** adhere to the following additional rules:
 
 - their `normalized` property **MUST NOT** be set to true;
-- their effective byte offsets **MUST** be aligned to 8-byte boundaries;
-- when referring to data in a GLB-stored buffer, the start of the buffer **MUST** be aligned to 8-byte boundaries by adding necessary padding bytes to the JSON chunk as defined in [Section 4.4.3.2](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#structured-json-content).
+- their effective byte offsets, as defined in [Section 3.6.2.4](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#data-alignment), **MUST** be aligned to 8-byte boundaries.
+
+When referring to data in a GLB-stored buffer, the start of the buffer **SHOULD** be aligned to an 8-byte boundary by adding necessary trailing padding bytes to the JSON chunk as defined in [Section 4.4.3.2](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#structured-json-content).
 
 ## Extending Accessor Usage
 
