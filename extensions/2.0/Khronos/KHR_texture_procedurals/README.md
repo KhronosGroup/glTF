@@ -57,7 +57,7 @@ Textures represented as procedural graphs provides a way to extend the capabilit
 
     For the first version of this extension nodes which are used to define shading models are not allowed. Please refer to the [resources](#resources) section for links to supported  MaterialX node definitions.
 
-2. **Fidelity**: Provide the ability to generate complex patterns, noise, or other effects that currently must be "baked" into texture maps. Provide the ability to provide mappings from one shading model to another without baking in a consistent manner via procedural graphs. Provide the ability to support NPR effects for unlit materials. Reduces runtime memory usage by generating patterns / shading programmatically.
+2. **Fidelity**: Provide the ability to generate complex patterns, noise, or other effects that currently must be "baked" into texture maps. Provide the ability to provide mappings from one shading model to another without baking in a consistent manner via procedural graphs. Provide the ability to map procedurals graphs to unlit materials. Reduces runtime memory usage by generating patterns / shading programmatically.
 
 3. **Editability and Extensibility**: Extend runtime editability by exposing logic and interfaces for procedural graphs as well as providing a means to create new or extend existing node definitions.
 
@@ -93,7 +93,7 @@ The following is a set of definitions using MaterialX nomenclature to provide co
 
 ## Extension Declaration
 
-Usage is indicated by adding the `KHR_texture_procedurals` extension identifier to the `extensionsUsed` array.
+Usage of the procedural structure is indicated by adding the `KHR_texture_procedurals` extension identifier to the `extensionsUsed` array.
 
 ```json
 {
@@ -102,36 +102,39 @@ Usage is indicated by adding the `KHR_texture_procedurals` extension identifier 
     ]
 }
 ``` 
-with the extension object defined in the `extensions array:
+To indicate the usage of a specific set of definitions an additional entry must be added to `extensionsUsd`. For example usage of definitions from a version of the MaterialX would look like this:
+```json
+{
+    "extensionsUsed": [
+        "KHR_texture_procedurals"
+        "KHR_texture_procedurals_MaterialX_<version>"
+    ]
+}
+```
+where `<version>` is specified as a string in the form of `<major version>.<minor version>`. For example, if the MaterialX library version is 1.39, the extension string would be: `KHR_texture_procedurals_MaterialX_1.39`. 
 
+Note that two versions of the same library **cannot** be used in the same glTF asset. For example the following is considered to be invalid: 
+```json
+{
+    "extensionsUsed": [
+        "KHR_texture_procedurals"
+        "KHR_texture_procedurals_MaterialX_1.39"
+        "KHR_texture_procedurals_MaterialX_2.0>"
+    ]
+}
+```
+
+Usage of a given extension is defined in the `extensions` object as follows:
 ```json
 {
     "extensions": {
-        "KHR_texture_procedurals": {
-            "mimetype": "application/mtlx+json;version=<MaterialX_version>",
+        "KHR_texture_procedurals_MaterialX_1.39": {
             "procedurals": []
         }
     }
 }
 ```
-It is assumed that a mimetype is always required. As part of the mimetype a version `<MaterialX_version>` is specified. This is the version of the MaterialX library specification used when writing to glTF. The version is specified as a string in the form of `<major version>.<minor version>`. For example, if the MaterialX library version is 1.39, the mimetype would be `application/mtlx+json;version=1.39`.
-
-The correspond version is specified in a MaterialX XML document as follows:
-
-```xml
-<materialx version="1.39">
-</materialx>
-```
-
-The version in the mimetype __is not__ the extension version. If in the future the schema needs to be modified (perhaps due to changes in MaterialX) then a new extension version would be required.
-
-The `procedurals` array specifies the procedural graphs that are used in the glTF asset. 
-
-### Versioning
-
-Elements from different versions of MaterialX is disallowed. External tooling must handle this (e.g. by performing an "upgrade" operation).
-
-<img src="./figures//version_upgrade.svg" width=100%>
+The `procedurals` array specifies the procedural graphs for a given set of nodes that are used in the glTF asset. 
 
 ## Representation
 
