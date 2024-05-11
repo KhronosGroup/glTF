@@ -135,7 +135,7 @@ clearcoat_fresnel = 0.04 + (1 - 0.04) * (1 - abs(VdotNc))^5
 clearcoat_alpha = clearcoatRoughness^2
 clearcoat_brdf = D(clearcoat_alpha) * G(clearcoat_alpha) / (4 * abs(VdotNc) * abs(LdotNc))
 
-coated_material = clearcoat * clearcoat_fresnel * clearcoat_brdf + (1 - clearcoat * clearcoat_fresnel) * material
+coated_material = mix(material, clearcoat_brdf, clearcoat * clearcoat_fresnel)
 ```
 
 #### Emission

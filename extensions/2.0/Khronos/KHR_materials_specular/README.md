@@ -144,7 +144,7 @@ Therefore, the Fresnel term `dielectric_fresnel` in the final BRDF of the materi
 ```
 dielectric_f0  = min(0.04 * specularColor, float3(1.0)) * specular
 dielectric_f90 = specular
-dielectric_fresnel = dielectric_f0 + (dielectric_f90 - dielectric_f0) * fresnel_w
+dielectric_fresnel = mix(dielectric_f0, dielectric_f90, fresnel_w)
 ```
 
 Note that in `dielectric_f0` we clamp the product of specular color and f0 reflectance from IOR (`0.04`), before multiplying by `specular`.
