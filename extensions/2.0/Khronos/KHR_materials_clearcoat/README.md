@@ -117,7 +117,7 @@ The `fresnel_coat` function is computed using the Schlick Fresnel term from the 
 ```
 function fresnel_coat(normal, ior, weight, base, layer) {
   f0 = ((1-ior)/(1+ior))^2
-  fr = f0 + (1 - f0)*(1 - abs(VdotNc))^5   // Nc = normal
+  fr = f0 + (1 - f0)*(1 - abs(dot(V, normal)))^5
   return mix(base, layer, weight * fr)
 }
 ```
@@ -125,7 +125,7 @@ function fresnel_coat(normal, ior, weight, base, layer) {
 Applying the functions we arrive at the coated material
 
 ```
-coated_material = mix(material, clearcoat_brdf(clearcoatRoughness^2), clearcoat * (0.04 + (1 - 0.04) * (1 - VotNc)^5))
+coated_material = mix(material, clearcoat_brdf(clearcoatRoughness^2), clearcoat * (0.04 + (1 - 0.04) * (1 - VdotNc)^5))
 ```
 
 and finally, substituting and simplifying, using some symbols from [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) and `Nc` for the clearcoat normal:
@@ -143,7 +143,7 @@ coated_material = clearcoat * clearcoat_fresnel * clearcoat_brdf + (1 - clearcoa
 The clearcoat layer is on top of emission in the layering stack. Consequently, the emission is darkened by the Fresnel term.
 
 ```
-coated_emission = emission * (0.04 + (1 - 0.04) * (1 - VdotNc)^5)
+coated_emission = emission * (1 - clearcoat * clearcoat_fresnel)
 ```
 
 #### Discussion
