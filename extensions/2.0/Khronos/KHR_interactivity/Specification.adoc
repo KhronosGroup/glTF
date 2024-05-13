@@ -473,6 +473,18 @@ For `float4x4` arguments, this operation performs per-component multiplication.
 | `floatN value` | Smallest of the arguments
 |===
 
+For the purposes of this node, negative zero is less than positive zero.
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+Math.min(a, b)
+----
+====
+
 ===== Maximum
 
 [cols="1h,1,2"]
@@ -484,6 +496,18 @@ For `float4x4` arguments, this operation performs per-component multiplication.
 | Output value sockets
 | `floatN value` | Largest of the arguments
 |===
+
+For the purposes of this node, negative zero is less than positive zero.
+
+[NOTE]
+.Note
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+Math.max(a, b)
+----
+====
 
 ===== Clamp
 
@@ -497,6 +521,8 @@ For `float4x4` arguments, this operation performs per-component multiplication.
 | Output value sockets
 | `floatN value` | latexmath:[min(max(a, min(b, c)), max(b, c))]
 |===
+
+This node relies on `math/min` and `math/max` nodes defined above.
 
 [NOTE]
 .Note
