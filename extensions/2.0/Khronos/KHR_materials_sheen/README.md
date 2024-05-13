@@ -126,9 +126,9 @@ float l(float x, float alpha_g)
     return a / (1.0 + b * pow(x, c)) + d * x + e;
 }
 
-float lambda_sheen(float cosTheta, float alpha_g)
+float lambda_sheen(float cos_theta, float alpha_g)
 {
-    return abs(cosTheta) < 0.5 ? exp(l(cosTheta, alpha_g)) : exp(2.0 * l(0.5, alpha_g) - l(1.0 - cosTheta, alpha_g));
+    return abs(cos_theta) < 0.5 ? exp(l(cos_theta, alpha_g)) : exp(2.0 * l(0.5, alpha_g) - l(1.0 - cos_theta, alpha_g));
 }
 
 sheen_visibility = 1.0 / ((1.0 + lambda_sheen(NdotV, alpha_g) + lambda_sheen(NdotL, alpha_g)) * (4.0 * NdotV * NdotL));
