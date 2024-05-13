@@ -2203,7 +2203,7 @@ When the `cancel` input flow is activated:
 | `out` | The flow to be activated after executing this node
 |===
 
-This node has no internal state but its execution **MAY** affect internal states of other nodes and the graph. 
+This node has no internal state but its execution **MAY** affect internal states of other nodes and the graph.
 
 When the `in` input flow is activated:
 
@@ -2379,8 +2379,6 @@ When a node of this type is used in the behavior graph, the global graph state i
 - Implementation-specific pointer to the `done` output flow of the node that has added this entry
 
 This array is initially empty and its maximum size is implementation-specific.
-
-This node has no internal state.
 
 When the `in` input flow is activated:
 
