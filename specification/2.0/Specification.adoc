@@ -3188,10 +3188,10 @@ diffuse_brdf = (1 / π) * baseColor.rgb
 specular_brdf = D(roughness^2) * G(roughness^2) / (4 * abs(VdotN) * abs(LdotN))
 
 dielectric_f0 = 0.04
-dielectric_fresnel = mix(dielectric_f0, 1, fresnel_w);
+dielectric_fresnel = dielectric_f0 + (1 - dielectric_f0) * fresnel_w
 dielectric_brdf = mix(diffuse_brdf, specular_brdf, dielectric_fresnel)
 
-metal_fresnel = mix(baseColor.rgb, 1, fresnel_w);
+metal_fresnel = baseColor.rgb + (1 - baseColor.rgb) * fresnel_w
 metal_brdf = metal_fresnel * specular_brdf
 
 material = mix(dielectric_brdf, metal_brdf, metallic)
