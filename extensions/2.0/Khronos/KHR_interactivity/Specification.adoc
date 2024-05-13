@@ -2333,7 +2333,85 @@ When the `in` input flow is activated:
 
 1. Evaluate all input values.
 2. If the pointer or the pointer template with all its substitutions applied can be resolved,
+.. if the _pointer interpolation state dynamic array_ (defined below) contains an entry with the same resolved JSON Pointer value, remove it from the array;
 .. set the resolved property to the `value` input value;
 .. activate the `out` output flow.
 3. If the pointer or the pointer template with all its substitutions applied cannot be resolved,
 .. activate the `err` output flow.
+
+===== Pointer Interpolate
+
+[cols="1h,1,2"]
+|===
+| Type | `pointer/interpolate` | Interpolate an object model property value
+| Configuration
+| `string pointer` | The JSON pointer or JSON pointer template
+| Input flow sockets
+| `in` | The entry flow into this node
+.5+| Input value sockets
+| `int <segment>` | The JSON pointer template path segment to be substituted at runtime
+| `T value` | The target property value
+| `float duration` | The time, in seconds, in which the property **SHOULD** reach the target value
+| `float2 p1` | Control point P1
+| `float2 p2` | Control point P2
+.3+| Output flow sockets
+| `out` | The flow to be activated if the JSON pointer can be resolved and the input values are valid
+| `err` | The flow to be activated if the JSON pointer cannot be resolved or the input values are invalid
+| `done` | The flow to be activated when the property reaches the target value
+|===
+
+This node interpolates and updates the specified glTF Asset Object Model property multiple times over the specified duration using the provided JSON pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the type of the pointer cannot be statically determined or if it is integer or boolean, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
+
+The pointer string **MAY** be a template pointer string, i.e., it **MAY** contain path segments substituted at runtime using the input values. All input values used for path segment substitutions **MUST** be of `int` type. Path segments, if used, **MUST** substitute only array indices in the pointer templates as listed in the glTF Asset Object Model Specification.
+
+If the `value` input value or any intermediate interpolated value are not valid for the resolved property, the effective property value becomes implementation-defined and subsequent `pointer/get` evaluations of the property **MAY** return any value of the corresponding type until the property is updated with a valid value.
+
+This node has no internal state.
+
+When a node of this type is used in the behavior graph, the global graph state includes an implementation-defined _pointer interpolation state dynamic array_ each element of which contains the following data:
+
+- The resolved JSON Pointer to the Object Model property being interpolated
+- Implementation-defined high precision timestamp value representing the interpolation start time
+- Interpolation duration value converted to the implementation-defined high precision time type
+- Object Model property value at the time of the successful node activation
+- Information needed for cubic Bézier spline evaluation derived from the node's input values
+- Target property value
+- Implementation-specific pointer to the `done` output flow of the node that has added this entry
+
+This array is initially empty and its maximum size is implementation-specific.
+
+This node has no internal state.
+
+When the `in` input flow is activated:
+
+1. Evaluate all input values.
+2. If the pointer or the pointer template with all its substitutions applied cannot be resolved,
+.. activate the `err` output flow and skip the next steps.
+3. If the `duration` input value is NaN, infinite, negative, or not convertible into an implementation-specific time type used for the internal interpolation start time value,
+.. activate the `err` output flow and skip the next steps.
+4. If any component of the `p1` or `p2` input values is NaN or infinite or if any of the first components of these input values is negative or greater than 1,
+.. activate the `err` output flow and skip the next steps.
+5. If starting a new pointer interpolation exceeds any implementation-specific limit,
+.. activate the `err` output flow and skip the next steps.
+6. If the _pointer interpolation state dynamic array_ contains an entry with the same resolved JSON Pointer value,
+.. remove it from the array.
+7. Using the implicitly-defined end points stem:[P_0 (0, 0)] and stem:[P_3 (1, 1)] together with the control points stem:[P_1] and stem:[P_2] provided via the input values construct a cubic Bézier easing function for the stem:[[0, 1]] input range.
+8. Add a new entry to the _pointer interpolation state dynamic array_ filling it with the required information based on the evaluated input values.
+9. Activate the `out` output flow.
+
+On each asset animation update, for each entry in the _pointer interpolation state dynamic array_:
+
+1. Compute the current input progress position _t_ as the time passed since the interpolation start divided by the interpolation's duration.
+2. If _t_ is less than or equal to zero
+.. skip the next steps.
+3. If _t_ is NaN or greater than or equal to 1,
+.. set the Object Model property to the target value;
+.. remove the current entry from the _pointer interpolation state dynamic array_;
+.. activate the `done` output flow linked to the current entry
+.. skip the next steps.
+4. Using the cubic Bézier spline information, compute the output progress position _q_ based on the _t_ value. This step implies that latexmath:[t \in [0; 1\]].
+5. Set the linked Object Model property to the new value computed as a linear interpolation between the original and the target property values using the output progress position _q_ as the interpolation coefficient.
+
+If the Object Model property is a quaternion, spherical linear interpolation expression **SHOULD** be used.
+
+Intermediate output progress values **MAY** be less than zero or greater than one.
