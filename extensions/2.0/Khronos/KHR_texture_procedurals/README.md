@@ -102,24 +102,25 @@ Usage of the procedural structure is indicated by adding the `KHR_texture_proced
     ]
 }
 ``` 
-To indicate the usage of a specific set of definitions an additional entry must be added to `extensionsUsd`. For example usage of definitions from a version of the MaterialX would look like this:
+To indicate the usage of a specific set of definitions an additional entry must be added to `extensionsUsed`. For example usage of definitions from a version of the MaterialX would look like this:
+
 ```json
 {
     "extensionsUsed": [
-        "KHR_texture_procedurals"
-        "KHR_texture_procedurals_MaterialX_<version>"
+        "KHR_texture_procedurals",
+        "EXT_texture_procedurals_mx_x_y_z"
     ]
 }
 ```
-where `<version>` is specified as a string in the form of `<major version>.<minor version>`. For example, if the MaterialX library version is 1.39, the extension string would be: `KHR_texture_procedurals_MaterialX_1.39`. 
+where `<version>` is specified as a string in the form of `<major version>.<minor version>.<patch version>`. For example, if the MaterialX library version is 1.39, the extension string would be: `EXT_texture_procedurals_mx_1_39`. 
 
 Note that two versions of the same library **cannot** be used in the same glTF asset. For example the following is considered to be invalid: 
 ```json
 {
     "extensionsUsed": [
-        "KHR_texture_procedurals"
-        "KHR_texture_procedurals_MaterialX_1.39"
-        "KHR_texture_procedurals_MaterialX_2.0>"
+        "KHR_texture_procedurals",
+        "EXT_texture_procedurals_mx_1_39",
+        "EXT_texture_procedurals_mx_2_0"
     ]
 }
 ```
@@ -128,7 +129,8 @@ Usage of a given extension is defined in the `extensions` object as follows:
 ```json
 {
     "extensions": {
-        "KHR_texture_procedurals_MaterialX_1.39": {
+        "EXT_texture_procedurals_mx_1_39":{},
+        "KHR_texture_procedurals": {
             "procedurals": []
         }
     }
