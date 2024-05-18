@@ -11,8 +11,7 @@
     ],
     "properties": {
         "propertyTable": {
-            "type": "integer",
-            "minimum": 0,
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The index of the property table containing per-feature property values."
         },
         "index": {
