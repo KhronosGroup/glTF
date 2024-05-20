@@ -15,7 +15,7 @@
             "description": "An array of indexes of property textures in the root `EXT_structural_metadata` object.",
             "minItems": 1,
             "items": {
-                "type": "integer"
+                "allOf": [ { "$ref": "glTFid.schema.json" } ]
             }
         },
         "propertyAttributes": {
@@ -23,7 +23,7 @@
             "description": "An array of indexes of property attributes in the root `EXT_structural_metadata` object.",
             "minItems": 1,
             "items": {
-                "type": "integer"
+                "allOf": [ { "$ref": "glTFid.schema.json" } ]
             }
         },
         "extensions": {},
