@@ -34,8 +34,7 @@
             "$ref": "featureIdTexture.schema.json"
         },
         "propertyTable": {
-            "type": "integer",
-            "minimum": 0,
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The index of the property table containing per-feature property values. Only applicable when using the `EXT_structural_metadata` extension."
         },
         "extensions": {},
