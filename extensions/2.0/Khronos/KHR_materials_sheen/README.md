@@ -91,10 +91,10 @@ Not all incoming light is reflected at a micro-fiber. Some of the light may hit 
 
 All implementations should use the same calculations for the BRDF inputs. See [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
-The sheen formula follows the common microfacet form with visibility term $\mathcal{V}_s$:
+The sheen formula follows the common microfacet form with visibility term $\nu_s$:
 
 $$
-\text{SheenBRDF} = \frac{G_S D_S}{4 \, \left|N \cdot L \right| \, \left| N \cdot V \right|} = \mathcal{V}_S D_S
+\text{SheenBRDF} = \frac{G_S D_S}{4 \, \left|N \cdot L \right| \, \left| N \cdot V \right|} = \nu_S D_S
 $$
 
 
@@ -112,7 +112,7 @@ sheen_distribution = (2 + inv_r) * pow(sin2h, inv_r * 0.5) / (2 * PI);
 
 ### Sheen visibility
 
-The "Charlie" sheen visibility $\mathcal{V}_s = \frac{G_s}{4 \, \left|N \cdot L \right| \, \left| N \cdot V \right|}$ is also defined in the same document:
+The "Charlie" sheen visibility $\nu_s = \frac{G_s}{4 \, \left|N \cdot L \right| \, \left| N \cdot V \right|}$ is also defined in the same document:
 
 ```glsl
 float l(float x, float alpha_g)
