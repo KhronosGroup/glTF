@@ -3058,25 +3058,25 @@ G = \frac{2 \, \left| N \cdot L \right| \, \chi^{+}(H \cdot L)}{\left| N \cdot L
 
 where χ^+^(*x*) denotes the Heaviside function: 1 if *x* > 0 and 0 if *x* <= 0. See <<Heitz2014,Heitz (2014)>> for a derivation of the formulas.
 
-Introducing the visibility function latexmath:[\mathcal{V}]
+Introducing the visibility function latexmath:[\nu]
 
 [latexmath]
 ++++
-\mathcal{V} = \frac{G}{4 \, \left| N \cdot L \right| \, \left| N \cdot V \right|}
+\nu = \frac{G}{4 \, \left| N \cdot L \right| \, \left| N \cdot V \right|}
 ++++
 
 simplifies the original microfacet BRDF to
 
 [latexmath]
 ++++
-\text{MicrofacetBRDF} = \mathcal{V} D
+\text{MicrofacetBRDF} = \nu D
 ++++
 
 with
 
 [latexmath]
 ++++
-\mathcal{V} = \frac{\, \chi^{+}(H \cdot L)}{\left| N \cdot L\right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^{+}(H \cdot V)}{\left| N \cdot V \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
+\nu = \frac{\, \chi^{+}(H \cdot L)}{\left| N \cdot L\right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^{+}(H \cdot V)}{\left| N \cdot V \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
 ++++
 
 Thus, we have the function
