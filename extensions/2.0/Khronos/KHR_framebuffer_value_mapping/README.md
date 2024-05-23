@@ -28,34 +28,52 @@ framebuffer_max_value : The maximum value that can be stored in the framebuffer,
 ## Overview
 
 This extension is intended for implementations that targets a light emitting display with the goal of outputting interactive framerates in a physically correct manner.    
-The purpose is to define how light calculation output values are mapped to framebuffer values.  
+The purpose is to define how light calculation output values, that may be in a large range, are mapped to framebuffer values, that have a limited range.  
+This extension can work in conjunction with post-processing effects such as tonemapping.  
 
 There are two main goals for this extension:  
   
-1: Provide a method to linearly scale RGB values to the framebuffer format of the target device - called lightScaleFactor.  
+1: Provide a method to linearly scale RGB values to the framebuffer format of the target device - the light intensity factor.  
   
-2: Define how to limit values prior to writing them to framebuffer when the scaled value exceeds the maximum range of the framebuffer - called RGBThreshold.  
+2: Define how to limit values prior to writing them to framebuffer when the scaled value exceeds the maximum range of the framebuffer - the  RGB threshold.  
   
   
-## Calculation of the lightScaleFactor  
+## Calculation of the lightIntensityFactor  
 
-The light scale factor is calculated from the extension "maxLight" value.  
+The light intensity factor is calculated from the extension "maxLight" value.  
 This value defines the light intensity (lm/m2) value that will be mapped to the maximum value of the framebuffer.  
  
   
-float lightScaleFactor = framebuffer_max_value / maxLight  
+float lightIntensityFactor = framebuffer_max_value / maxLight  
  
-Each calculated RGB pixel value shall be scaled by the lightScaleFactor at some point prior to being output to display.  
+Each calculated RGB pixel value shall be scaled by the lightIntensityFactor at some point prior to being output to display.  
 Exactly how this is done is an implementation detail, the normal usecase would be to scale the value in the fragment shader.   
 
 ## Limit of RGB pixel values before output to framebuffer  
     
-If, after applying the lightScaleFactor, RGB values exceed the maximum value of the framebuffer then the RGB triplet must be scaled.  
+If, after applying the lightIntensityFactor, RGB values exceed the maximum value of the framebuffer then the RGB triplet must be scaled.  
 The scaling shall be done using the max component value from the RGB triplet, ensuring that color is retained.  
   
 pseudocode for scaling.  
 vec3 scaledRGB = RGB / max(R, max(G,B));  
   
+## Example images  
+  
+The following images are using different maxLight values, the scene contains pointlight and emissive material with an intensity of 1500 lumen/m2.  
+Please note that the maxLight value will give bright or dark image depending on scene illumination.  
+A scene with an average illumination of 10 000 lumen/m2 and a maxLight value of 100 000 will give a dark result.  
+A scene with an average illumination of 10 000 lumen/m2 and a maxLight value of 10 00 will give a bright result.  
+  
+  
+<table>
+  <tr>
+    <td> <img src="https://github.com/KhronosGroup/glTF/assets/3063192/2593ba3e-92de-4036-9095-01b386af9e48"  alt="Higher maxLight value giving darker image" width = 360px></td>
+    <td> <img src="https://github.com/KhronosGroup/glTF/assets/3063192/d928cec9-c27f-4f3a-87a8-1773f1bcad88"  alt="Mid maxLight value" width = 360px></td>
+    <td> <img src="https://github.com/KhronosGroup/glTF/assets/3063192/54528477-c032-4c34-922a-bc2ab9378835"  alt="Lower maxLight value giving brighter image " width = 360px></td>
+  </tr>
+</table>
+
+
 
 ## Defining an asset to use KHR_framebuffer_value_mapping
   
