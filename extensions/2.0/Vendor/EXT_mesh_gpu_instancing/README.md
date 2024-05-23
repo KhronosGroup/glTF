@@ -47,7 +47,7 @@ Instancing is defined by adding the `EXT_mesh_gpu_instancing` extension to any g
 
 Nodes with `EXT_mesh_gpu_instancing` extension **must** have a mesh.
 
-Nodes with `EXT_mesh_gpu_instancing` extension **must not** have an associated skin, as skinning does not depend on the mesh transformation.
+Nodes with `EXT_mesh_gpu_instancing` extension **should not** have an associated skin, as skinning does not depend on the mesh transformation.
 
 Valid accessor type and component type for each attribute semantic property are defined below.
 
