@@ -22,7 +22,7 @@ This extension is specfically designed to enable GPU instancing, rendering many 
 
 ## Extending Nodes With Instance Attributes
 
-Instancing is defined by adding the `EXT_mesh_gpu_instancing` extension to any glTF node that has a mesh. Instancing only applies to mesh nodes, there is no defined behavior for a node with this extension that doesn't also have a mesh. Applying to nodes rather than meshes allows the same mesh to be used by several nodes, instanced or otherwise. The attributes section contains accessor ids for the `TRANSLATION`, `ROTATION`, and `SCALE` attribute buffers, all of which are optional. The attributes specify an object space transform that should be multipled by the node's world transform in the shader to produce the final world transform for the instance. For example, the following defines some instancing attributes to a node with mesh.
+Instancing is defined by adding the `EXT_mesh_gpu_instancing` extension to any glTF node that has a mesh. Applying to nodes rather than meshes allows the same mesh to be used by several nodes, instanced or otherwise. The attributes section contains accessor ids for the `TRANSLATION`, `ROTATION`, and `SCALE` attribute buffers, all of which are optional. The attributes specify an object space transform that should be multipled by the node's world transform in the shader to produce the final world transform for the instance. For example, the following defines some instancing attributes to a node with mesh.
 
 ```json
 {
@@ -44,6 +44,10 @@ Instancing is defined by adding the `EXT_mesh_gpu_instancing` extension to any g
     ]
 }
 ```
+
+Nodes with `EXT_mesh_gpu_instancing` extension **must** have a mesh.
+
+Nodes with `EXT_mesh_gpu_instancing` extension **must not** have an associated skin, as skinning does not depend on the mesh transformation.
 
 Valid accessor type and component type for each attribute semantic property are defined below.
 
