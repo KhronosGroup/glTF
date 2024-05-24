@@ -67,12 +67,23 @@ A scene with an average illumination of 10 000 lumen/m2 and a maxLight value of 
   
 <table>
   <tr>
-    <td> <img src="https://github.com/KhronosGroup/glTF/assets/3063192/2593ba3e-92de-4036-9095-01b386af9e48"  alt="Higher maxLight value giving darker image" width = 360px></td>
-    <td> <img src="https://github.com/KhronosGroup/glTF/assets/3063192/d928cec9-c27f-4f3a-87a8-1773f1bcad88"  alt="Mid maxLight value" width = 360px></td>
-    <td> <img src="https://github.com/KhronosGroup/glTF/assets/3063192/54528477-c032-4c34-922a-bc2ab9378835"  alt="Lower maxLight value giving brighter image " width = 360px></td>
+    <td> <img src="./images/playset_dark.jpg"  alt="Higher maxLight value giving darker image" width = 360px></td>
+    <td> <img src="./images/playset_mid.jpg"  alt="Mid maxLight value" width = 360px></td>
+    <td> <img src="./images/playset_bright.jpg"  alt="Lower maxLight value giving brighter image " width = 360px></td>
   </tr>
 </table>
-
+  
+  
+An example of how Macbeth colored spheres may look like under different light intensity scales.   
+  
+<table>
+  <tr>
+    <td> <img src="./images/macbeth_dark.jpg"  alt="Higher maxLight value giving darker image" width = 360px></td>
+    <td> <img src="./images/macbeth_mid.jpg"  alt="Mid maxLight value" width = 360px></td>
+    <td> <img src="./images/macbeth_bright.jpg"  alt="Lower maxLight value giving brighter image " width = 360px></td>
+  </tr>
+</table>
+  
 
 
 ## Defining an asset to use KHR_framebuffer_value_mapping
