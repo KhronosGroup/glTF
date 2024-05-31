@@ -2,7 +2,7 @@
 
 ## Contributors
 
-* Aaron Franke, The Mirror Megaverse Inc.
+* Aaron Franke, Godot Engine.
 
 ## Status
 
