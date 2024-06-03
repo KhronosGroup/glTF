@@ -2439,3 +2439,134 @@ On each asset animation update, for each entry in the _pointer interpolation sta
 If the Object Model property is a quaternion, spherical linear interpolation expression **SHOULD** be used.
 
 Intermediate output progress values **MAY** be less than zero or greater than one.
+
+==== Animation Control Nodes
+
+===== Animation Play
+
+[cols="1h,1,2"]
+|===
+| Type | `animation/start` | Start playing an animation
+| Input flow sockets
+| `in` | The entry flow into this node
+.4+| Input value sockets
+| `int animation` | Animation index
+| `float startTime` | Start time
+| `float endTime` | End time
+| `float speed` | Speed multiplier
+.3+| Output flow sockets
+| `out` | The flow to be activated if the input values are valid
+| `err` | The flow to be activated if any of the input values is invalid
+| `completed` | The flow to be activated after the animation ends
+|===
+
+This node starts playing an animation using the specified input values.
+
+For the purposes of the Animation Control Nodes the concept of glTF animations is extended to unambiguously map any _requested input timestamp_ stem:[r] to the _effective input timestamp_ stem:[t] present in the glTF animation data as follows.
+
+1. Let stem:[T] be the maximum value of all animation sampler input accessors of the animation. Then, the stored animation data defines the animated property values for all _effective input timestamps_ in the stem:[[0, T]] range.
+2. Let stem:[r] be a scalar value on a timeline infinite in both directions, from negative infinity to positive infinity.
+3. If stem:[T] is not equal to zero, let stem:[s] be the current iteration number computed as follows:
+latexmath:[s=\begin{cases}
+            \left\lceil \dfrac{r-T}{T} \right\rceil & \text{if } r \gt 0 \\
+            \left\lfloor \dfrac{r}{T} \right\rfloor & \text{if } r \le 0 \\
+           \end{cases}]
+4. Now for each _requested input timestamp_ stem:[r], the corresponding _effective input timestamp_ is
+latexmath:[t=\begin{cases}
+            r - s * T & \text{if } T \ne 0 \\
+            0 & \text{if } T=0 \\
+           \end{cases}]
+
+This node has no internal state.
+
+When a node of this type is used in the behavior graph, the global graph state includes an implementation-defined _animation state dynamic array_ each element of which contains the following data:
+
+- Animation index
+- Start time value
+- End time value
+- Stop time value (see `animation/stopAt`)
+- Speed value
+- Implementation-specific creation timestamp value associated with the system time when this entry was added
+- Implementation-specific _end completion_ pointer to the `completed` output flow of the node that has added this entry
+- Implementation-specific _stop completion_ pointer to the `completed` output flow of the node that has scheduled its stopping (see `animation/stopAt`)
+
+This array is initially empty; its maximum size is implementation-specific.
+
+When the `in` input flow is activated:
+
+1. Evaluate all input values.
+2. If the `animation` input value is negative or greater than or equal to the number of glTF animations in the asset,
+.. activate the `err` output flow and skip the next steps.
+3. If the `startTime` or `endTime` input values are NaN or if the `startTime` input value is infinite,
+.. activate the `err` output flow and skip the next steps.
+4. If the `speed` input value is NaN, infinite, or less than or equal to zero,
+.. activate the `err` output flow and skip the next steps.
+5. If starting a new animation exceeds any implementation-specific limit,
+.. activate the `err` output flow and skip the next steps.
+6. If the _animation state dynamic array_ contains an entry with the same animation index,
+.. remove it from the array; the previously set `completed` flows **MUST NOT** be activated.
+7. Add a new entry to the _animation state dynamic array_ filling it with the required information based on the evaluated input values. The stop time value **MUST** be set to the end time value and the stop completion pointer **MUST** be set to null.
+8. Activate the `out` output flow.
+
+On each asset animation update, for each entry in the _animation state dynamic array_:
+
+1. TBD
+
+===== Animation Stop
+
+[cols="1h,1,2"]
+|===
+| Type | `animation/stop` | Immediately stop a playing animation
+| Input flow sockets
+| `in` | The entry flow into this node
+| Input value sockets
+| `int animation` | Animation index
+.2+| Output flow sockets
+| `out` | The flow to be activated if the animation index is valid
+| `err` | The flow to be activated if the animation index is invalid
+|===
+
+This node stops a playing animation.
+
+This node has no internal state.
+
+When the `in` input flow is activated:
+
+1. Evaluate all input values.
+2. If the `animation` input value is negative or greater than or equal to the number of glTF animations in the asset,
+.. activate the `err` output flow and skip the next steps.
+3. If the _animation state dynamic array_ exists and contains an entry with the same animation index,
+.. remove it from the array and stop the playing animation. The animated properties **MUST** keep their current values and the previously associated `completed` flows **MUST NOT** be activated.
+4. Activate the `out` output flow.
+
+===== Animation Stop At
+
+[cols="1h,1,2"]
+|===
+| Type | `animation/stopAt` | Schedule stopping a playing animation
+| Input flow sockets
+| `in` | The entry flow into this node
+.2+| Input value sockets
+| `int animation` | Animation index
+| `float stopTime` | Stop time
+.3+| Output flow sockets
+| `out` | The flow to be activated if the input values are valid
+| `err` | The flow to be activated if any of the input values is invalid
+| `completed` | The flow to be activated after the animation stops
+|===
+
+This node stops a playing animation.
+
+This node has no internal state.
+
+When the `in` input flow is activated:
+
+1. Evaluate all input values.
+2. If the `animation` input value is negative or greater than or equal to the number of glTF animations in the asset,
+.. activate the `err` output flow and skip the next steps.
+3. If the `stopTime` input value is NaN,
+.. activate the `err` output flow and skip the next steps.
+4. If the _animation state dynamic array_ exists and does contain an entry with the same animation index,
+.. update the entry's stop completion pointer to the `completed` output flow of this node;
+.. update the entry's stop time to the `stopTime` input value.
+5. Activate the `out` output flow.
