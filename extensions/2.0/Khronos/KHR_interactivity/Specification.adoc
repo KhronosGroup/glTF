@@ -2603,3 +2603,50 @@ This node has no internal state.
 This node is activated when a tick occurs. There will be at most one tick per rendered frame, which **SHOULD** align with frame time, but there are no guarantees of time elapsed between ticks.
 
 The internal state of this node consists of two floating-point time values initialized to NaN. They **MUST** be set to their effective values before the `out` output flow is activated.
+
+==== Custom Event Nodes
+
+===== Receive
+
+[cols="1h,1,2"]
+|===
+| Type | `event/receive` | Receive a custom event
+| Configuration
+| `int event` | The custom event index
+| Output value sockets
+| `<custom>` | Output values defined by the custom event
+|===
+
+This node is activated when a custom event specified by the `event` configuration value occurs. The types, names, and semantics of the output value sockets are defined by the custom event index.
+
+The `event` configuration value **MUST** be non-negative and less than the total number of custom event definitions, otherwise the node is invalid.
+
+This node has no internal state.
+
+===== Send
+
+[cols="1h,1,2"]
+|===
+| Type | `event/send` | Send a custom event
+| Configuration
+| `int event` | The custom event index
+| Input flow sockets
+| `in` | The entry flow into this node
+| Input value sockets
+| `<custom>` | Input values defined by the custom event
+.2+| Output flow sockets
+| `out` | The flow to be activated after sending the event
+| `err` | The flow to be activated if any of the input values is invalid
+|===
+
+This node sends a custom event specified by the `event` configuration value. The types, names, and validation rules of the input value sockets are defined by the custom event index.
+
+The `event` configuration value **MUST** be non-negative and less than the total number of custom event definitions, otherwise the node is invalid.
+
+This node has no internal state.
+
+When the `in` input flow is activated:
+
+1. Evaluate all input values.
+2. If any of them is invalid, activate the `err` output flow and skip the next step.
+3. Activate the `out` output flow.
