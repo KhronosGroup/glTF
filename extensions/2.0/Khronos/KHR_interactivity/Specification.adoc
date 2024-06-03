@@ -2570,3 +2570,36 @@ When the `in` input flow is activated:
 .. update the entry's stop completion pointer to the `completed` output flow of this node;
 .. update the entry's stop time to the `stopTime` input value.
 5. Activate the `out` output flow.
+
+=== Event Nodes
+
+==== Lifecycle Event Nodes
+
+===== On Start
+
+[cols="1h,1,2"]
+|===
+| Type | `event/onStart` | Start event
+| Output flow sockets
+| `out`  | The flow to be activated when the start event happens
+|===
+
+This node is activated when all glTF asset resources are loaded and ready for rendering and interactions.
+
+This node has no internal state.
+
+===== On Tick
+
+[cols="1h,1,2"]
+|===
+| Type | `event/onTick` | Tick event
+.2+| Output value sockets
+| `float timeSinceStart` | Relative time in seconds since the graph execution start
+| `float timeSinceLastTick` | Relative time in seconds since the last tick occurred
+| Output flow sockets
+| `out` | The flow to be activated when the tick event happens
+|===
+
+This node is activated when a tick occurs. There will be at most one tick per rendered frame, which **SHOULD** align with frame time, but there are no guarantees of time elapsed between ticks.
+
+The internal state of this node consists of two floating-point time values initialized to NaN. They **MUST** be set to their effective values before the `out` output flow is activated.
