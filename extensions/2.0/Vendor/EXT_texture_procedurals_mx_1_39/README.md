@@ -23,7 +23,7 @@ Written against the glTF 2.0 spec and KHR_texture_procedurals
 
 ## Overview
 
-This extension provides a mechanism to author procedural pattern graphs using node elements define in MaterialX Specification 1.39
+This extension provides a mechanism to author procedural pattern graphs using node elements defined in MaterialX Specification 1.39.
 
 ### Table of Contents
 
@@ -39,7 +39,7 @@ While `KHR_texture_procedurals` defines the schema to represent a procedural gra
 
 For seamless interoperability this extension defines the schema for nodes or elements of the procedural graph. 
 
-    More specifically __only__ nodes defined in the MaterialX 1.39 specification are supported. This ensures that the procedural graphs can be easily converted to MaterialX and USDShade graphs.
+More specifically this extension defines support for nodes in the MaterialX 1.39 specification. This ensures that the procedural graphs can be easily converted to MaterialX and USDShade graphs.
 
 
 ## Extension Declaration
@@ -73,7 +73,7 @@ The `procedurals` array specifies the procedural graphs for a given set of nodes
 
 The JSON schema for this extension is defined in the schema folder. 
 
-[material.EXT_texture_procedurals_mx_1_39.schema.json](schema/material.material.EXT_texture_procedurals_mx_1_39_schema.json)
+[material.EXT_texture_procedurals_mx_1_39.schema.json](schema/material.EXT_texture_procedurals_mx_1_39_schema.json)
 
 ## Example
 
