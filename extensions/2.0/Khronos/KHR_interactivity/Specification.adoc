@@ -240,19 +240,60 @@ Node's sockets and configurations are defined by its _type_. Node types follow `
 A node is executed when its input flow socket is reached by or when one of its output value sockets is requested by another node. Usually, the node executes its dependencies (if any), its own logic, and any number (including zero) of outgoing flow sockets.
 
 [[types]]
-== Value Types
+== Types
 
-TBD
+All value sockets and configurations are strictly typed.
+
+Implementations of this extension **MUST** support the following type signatures.
+
+[[value-types]]
+=== Value Types
+
+The following types are supported for value sockets.
+
+bool::
+a boolean value
+
+float::
+a double precision <<ieee-754,IEEE-754>> floating-point scalar value
+
+float2::
+a two-component vector of *float* values
+
+float3::
+a three-component vector of *float* values
+
+float4::
+a four-component vector of *float* values
+
+float4x4::
+a 4x4 matrix of *float* values
+
+int::
+a two's complement 32-bit signed integer scalar value
+
+[[configuration-types]]
+=== Configuration Types
+
+Node configurations **MAY** use all of the value types and these two additional types.
+
+int[]::
+an array of *int* values
+
+string::
+a UTF-8 string value
 
 [[events]]
 == Custom Events
 
-TBD
+A behavior graph **MAY** define custom events for interacting with external execution environments and/or creating asynchronous loops. Although semantics of custom events is application-specific, their declarations **MUST** include value socket type information to ensure graph's type safety.
 
 [[variables]]
-== Variables
+== Custom Variables
 
-TBD
+A behavior graph **MAY** define custom variables. A variable **MAY** be declared simultaneously with its initial value, otherwise the variable **MUST** be initialized to the type-specific default.
+
+Custom variables **MUST** retain their values until the graph execution is terminated.
 
 == Node Types
 
