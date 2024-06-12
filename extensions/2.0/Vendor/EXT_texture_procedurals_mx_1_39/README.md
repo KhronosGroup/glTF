@@ -44,30 +44,52 @@ More specifically this extension defines support for nodes in the MaterialX 1.39
 
 ## Extension Declaration
 
-Usage of the procedural structure is indicated by adding the `EXT_texture_procedurals_mx_1_39` extension identifier to the `extensionsUsed` array. It must be used with `KHR_texture_procedurals` that defines the JSON structure and `EXT_texture_procedurals_mx_1_39` that defines the definition used to represent the procedural graphs.
+Usage of the procedural structure is indicated by adding the `EXT_texture_procedurals_mx_<version>` extension identifier to the `extensionsUsed` array. Where `<version>` corresponds to the MaterialX version separated by an underscores. For example version 1.39 is represented as `EXT_texture_procedurals_mx_1_39`.
 
-```json
-{
-    "extensionsUsed": [
-        "KHR_texture_procedurals",
-        "EXT_texture_procedurals_mx_1_39"
-    ]
-}
-``` 
+It is required that `KHR_texture_procedurals` also be defined as this specifies the JSON schema for the procedural graphs.
+
+Note that: 
+
+1. This is the only location that the `EXT_texture_procedurals_mx_1_39` extension identifier is allowed
+to be specified. The explicit meaning is that definitions from this version of MaterialX are used for the entire glTF asset. 
+
+  Below is an example specifiy usage of MaterialX version 1.39.
+  ```json
+  {
+      "extensionsUsed": [
+          "KHR_texture_procedurals",
+          "EXT_texture_procedurals_mx_1_39"
+      ]
+  }
+  ``` 
+
+2. It is invalid to specify more than one version of MaterialX in the same glTF asset.
 
 Usage of a given extension is defined in the `extensions` object as follows:
 ```json
 {
     "extensions": {
-        "EXT_texture_procedurals_mx_1_39":{},
         "KHR_texture_procedurals": {
             "procedurals": []
         }
     }
 }
 ```
-The `procedurals` array specifies the procedural graphs for a given set of nodes that are used in the glTF asset. 
+The `procedurals` array specifies the procedural graphs for a given set of nodes that matching the MaterialX version specified.
 
+## Handling MaterialX glTF PBR Nodes
+
+The glTF PBR node specified within MaterialX exposes a number of input ports which may not map 1:1 with the glTF PBR material
+for texture mapping. That is `texture_info` mappings in glTF PBR may not map directly to the input ports of the MaterialX PBR node.
+
+One example is the mismatch of `metalicRoughnessTexture` which is a single packed 3 or 4  channel image which is minimally split into two input ports `metallic` and `roughness` on a glTF PBR shader in MaterialX. ( It is to be determined what it means to have different upstream connections for each port when mapping to a single `texture_info`).
+
+Below is the Boombox glTF example as expressed in MaterialX. The top image shows the mapping to the shader port connects and the bottom a subgraph which shows how an ORM image is split to the `metallic` and `roughness` and `occlusion` ports.
+
+<img src="figures/boombox_mapping.png" width=60%>
+<img src="figures/boombox_mapping2.png" width=60%>
+
+Any channels mapped on the MaterialX glTF PBR node which do not correspond to a `texture_info` mapping should be ignored or pre-processed to an appropriate scalar value. 
 
 ## JSON Schema
 
@@ -114,7 +136,6 @@ graph LR;
         "baseColorTexture": {
           "index": 0,
           "extensions": {
-            "EXT_texture_procedurals_mx_1_39":{},
             "KHR_texture_procedurals": {
               "index": 0
             }
@@ -139,7 +160,6 @@ graph LR;
     "KHR_texture_procedurals"
   ],
   "extensions": {
-    "EXT_texture_procedurals_mx_1_39":{},
     "KHR_texture_procedurals": {
       "procedurals": [
         {
@@ -593,8 +613,8 @@ The inputs on each node instance are specified to to create a “red” and “g
 ```
 
 </details>
-
-These procedural graphs can be bound to downstream materials as desired by chosing the appropriate output node.
+<br>
+These procedural graphs can be bound to downstream materials as desired by choosing the appropriate output node.
 
 <details>
 <summary>Variant Binding</summary>
@@ -609,7 +629,6 @@ These procedural graphs can be bound to downstream materials as desired by chosi
        "baseColorTexture": {
          "index": 0,
          "extensions": {
-           "EXT_texture_procedurals_mx_1_39":{},
            "KHR_texture_procedurals": {
              "index": 0, // graph with variants
              "output": 0 // "green checker" variant
@@ -622,7 +641,6 @@ These procedural graphs can be bound to downstream materials as desired by chosi
        "baseColorTexture": {
          "index": 0,
          "extensions": {
-           "EXT_texture_procedurals_mx_1_39":{},
            "KHR_texture_procedurals": {
              "index": 0, // graph with variants
              "output": 1 // "red checker" variant
