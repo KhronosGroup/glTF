@@ -3058,25 +3058,25 @@ G = \frac{2 \, \left| N \cdot L \right| \, \chi^{+}(H \cdot L)}{\left| N \cdot L
 
 where χ^+^(*x*) denotes the Heaviside function: 1 if *x* > 0 and 0 if *x* <= 0. See <<Heitz2014,Heitz (2014)>> for a derivation of the formulas.
 
-Introducing the visibility function
+Introducing the visibility function latexmath:[\nu]
 
 [latexmath]
 ++++
-V = \frac{G}{4 \, \left| N \cdot L \right| \, \left| N \cdot V \right|}
+\nu = \frac{G}{4 \, \left| N \cdot L \right| \, \left| N \cdot V \right|}
 ++++
 
 simplifies the original microfacet BRDF to
 
 [latexmath]
 ++++
-\text{MicrofacetBRDF} = V D
+\text{MicrofacetBRDF} = \nu D
 ++++
 
 with
 
 [latexmath]
 ++++
-V = \frac{\, \chi^{+}(H \cdot L)}{\left| N \cdot L\right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^{+}(H \cdot V)}{\left| N \cdot V \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
+\nu = \frac{\, \chi^{+}(H \cdot L)}{\left| N \cdot L\right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^{+}(H \cdot V)}{\left| N \cdot V \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
 ++++
 
 Thus, we have the function
@@ -3084,7 +3084,7 @@ Thus, we have the function
 [source,c]
 ----
 function specular_brdf(α) {
-  return V * D
+  return Vis * D
 }
 ----
 
@@ -3178,22 +3178,23 @@ Metal and dielectric are mixed according to the metalness:
 material = mix(dielectric_brdf, metal_brdf, metallic)
 ----
 
-Taking advantage of the fact that `roughness` is shared between metal and dielectric and that the Schlick Fresnel is used, we can simplify the mix and arrive at the final BRDF for the material:
+The full code is given below:
 
 [source,c]
 ----
-const black = 0
+fresnel_w = (1 - abs(VdotH))^5
 
-c_diff = lerp(baseColor.rgb, black, metallic)
-f0 = lerp(0.04, baseColor.rgb, metallic)
-α = roughness^2
+diffuse_brdf = (1 / π) * baseColor.rgb
+specular_brdf = D(roughness^2) * G(roughness^2) / (4 * abs(VdotN) * abs(LdotN))
 
-F = f0 + (1 - f0) * (1 - abs(VdotH))^5
+dielectric_f0 = 0.04
+dielectric_fresnel = dielectric_f0 + (1 - dielectric_f0) * fresnel_w
+dielectric_brdf = mix(diffuse_brdf, specular_brdf, dielectric_fresnel)
 
-f_diffuse = (1 - F) * (1 / π) * c_diff
-f_specular = F * D(α) * G(α) / (4 * abs(VdotN) * abs(LdotN))
+metal_fresnel = baseColor.rgb + (1 - baseColor.rgb) * fresnel_w
+metal_brdf = metal_fresnel * specular_brdf
 
-material = f_diffuse + f_specular
+material = mix(dielectric_brdf, metal_brdf, metallic)
 ----
 
 

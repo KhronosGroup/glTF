@@ -91,82 +91,82 @@ Not all incoming light is reflected at a micro-fiber. Some of the light may hit 
 
 All implementations should use the same calculations for the BRDF inputs. See [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
-The sheen formula `f_sheen` follows the common microfacet form:
+The sheen formula follows the common microfacet form with visibility term $\nu_s$:
 
-*f*<sub>*sheen*</sub> = *sheenColor* * *sheenFresnel* * *sheenDistribution* * *sheenVisibility* = *sheenColor* * *F*<sub>*S*</sub> * *G*<sub>*S*</sub> * *D*<sub>*S*</sub> / (4 * abs(dot(*N*, *L*)) * abs(dot(*N*, *V*)))
+$$
+\text{SheenBRDF} = \frac{G_S D_S}{4 \, \left|N \cdot L \right| \, \left| N \cdot V \right|} = \nu_S D_S
+$$
+
 
 ### Sheen distribution
 
-The sheen distribution follows the "Charlie" sheen definition from ImageWorks [Conty and Kulla (2017)](#ContyKulla2017):
+The sheen distribution $D_s$ follows the "Charlie" sheen definition from ImageWorks [Conty and Kulla (2017)](#ContyKulla2017):
 
 ```glsl
-alphaG = sheenRoughness * sheenRoughness
-invR = 1 / alphaG
+alpha_g = sheenRoughness * sheenRoughness
+inv_r = 1 / alpha_g
 cos2h = NdotH * NdotH
 sin2h = 1 - cos2h
-sheenDistribution = (2 + invR) * pow(sin2h, invR * 0.5) / (2 * PI);
+sheen_distribution = (2 + inv_r) * pow(sin2h, inv_r * 0.5) / (2 * PI);
 ```
 
 ### Sheen visibility
 
-The "Charlie" sheen visibility is also defined in the same document:
+The "Charlie" sheen visibility $\nu_s = \frac{G_s}{4 \, \left|N \cdot L \right| \, \left| N \cdot V \right|}$ is also defined in the same document:
 
 ```glsl
-float l(float x, float alphaG)
+float l(float x, float alpha_g)
 {
-    float oneMinusAlphaSq = (1.0 - alphaG) * (1.0 - alphaG);
-    float a = mix(21.5473, 25.3245, oneMinusAlphaSq);
-    float b = mix(3.82987, 3.32435, oneMinusAlphaSq);
-    float c = mix(0.19823, 0.16801, oneMinusAlphaSq);
-    float d = mix(-1.97760, -1.27393, oneMinusAlphaSq);
-    float e = mix(-4.32054, -4.85967, oneMinusAlphaSq);
+    float one_minus_alpha_sq = (1.0 - alpha_g) * (1.0 - alpha_g);
+    float a = mix(21.5473, 25.3245, one_minus_alpha_sq);
+    float b = mix(3.82987, 3.32435, one_minus_alpha_sq);
+    float c = mix(0.19823, 0.16801, one_minus_alpha_sq);
+    float d = mix(-1.97760, -1.27393, one_minus_alpha_sq);
+    float e = mix(-4.32054, -4.85967, one_minus_alpha_sq);
     return a / (1.0 + b * pow(x, c)) + d * x + e;
 }
 
-float lambdaSheen(float cosTheta, float alphaG)
+float lambda_sheen(float cos_theta, float alpha_g)
 {
-    return abs(cosTheta) < 0.5 ? exp(l(cosTheta, alphaG)) : exp(2.0 * l(0.5, alphaG) - l(1.0 - cosTheta, alphaG));
+    return abs(cos_theta) < 0.5 ? exp(l(cos_theta, alpha_g)) : exp(2.0 * l(0.5, alpha_g) - l(1.0 - cos_theta, alpha_g));
 }
 
-sheenVisibility = 1.0 / ((1.0 + lambdaSheen(NdotV, alphaG) + lambdaSheen(NdotL, alphaG)) * (4.0 * NdotV * NdotL));
+sheen_visibility = 1.0 / ((1.0 + lambda_sheen(NdotV, alpha_g) + lambda_sheen(NdotL, alpha_g)) * (4.0 * NdotV * NdotL));
 ```
 
 However, depending on device performance and resource constraints, one can use a simpler visibility term, like the one defined by [Ashikhmin and Premoze (2007)](#AshikhminPremoze2007) (but that will make the BRDF not energy conserving when using the albedo-scaling technique described below):
+
 ```glsl
-sheenVisibility = 1 / (4 * (NdotL + NdotV - NdotL * NdotV))
+sheen_visibility = 1 / (4 * (NdotL + NdotV - NdotL * NdotV))
 ```
-
-### Sheen Fresnel
-
-The Fresnel term may be omitted, i.e., *F* = 1.
 
 ### Sheen layering
 
 #### Albedo-scaling technique
 
-The sheen layer can be combined with the base layer with an albedo-scaling technique described in [Conty and Kulla (2017)](#ContyKulla2017). The base layer *f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub> from [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) is scaled with *sheenAlbedoScaling* to avoid energy gain.
-
-*f* = *f*<sub>*sheen*</sub> + (*f*<sub>*diffuse*</sub> + *f*<sub>*specular*</sub>) * *sheenAlbedoScaling*
+The sheen layer can be combined with the base layer with an albedo-scaling technique described in [Conty and Kulla (2017)](#ContyKulla2017). The base layer `material = mix(dielectric_brdf, metal_brdf, metallic)` from [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) is scaled with `sheen_albedo_scaling` to avoid energy gain.
 
 ```glsl
 float max3(vec3 v) { return max(max(v.x, v.y), v.z); }
+sheen_albedo_scaling = min(1.0 - max3(sheenColor) * E(VdotN), 1.0 - max3(sheenColor) * E(LdotN))
 
-sheenAlbedoScaling = min(1.0 - max3(sheenColor) * E(VdotN), 1.0 - max3(sheenColor) * E(LdotN))
+sheen_material = sheenColor * sheen_brdf + material * sheen_albedo_scaling
 ```
 
 The values `E(x)` can be looked up in a table which can be found in section 6.2.3 of [Enterprise PBR Shading Model](#theory-documentation-and-implementations) if you use the "Charlie" visibility term. If you use Ashikhmin instead, you can get the lookup table by using the [cmgen tool from Filament](#theory-documentation-and-implementations), with the `--ibl-dfg` and `--ibl-dfg-cloth` flags: the table is in the blue channel of the generated picture. The lookup must be done with `x = VdotN` and `y = sheenRoughness`.
 
 If you want to trade a bit of accuracy for more performance, you can use the `VdotN` term only and thus avoid doing multiple lookups for `LdotN`. The albedo scaling term is simplified to:
 ```glsl
-sheenAlbedoScaling = 1.0 - max3(sheenColor) * E(VdotN)
+sheen_albedo_scaling = 1.0 - max3(sheenColor) * E(VdotN)
 ```
 
 In this simplified form, it can be used to scale the base layer for both direct and indirect lights:
+
 ```glsl
-specular_direct *= sheenAlbedoScaling;
-diffuse_direct *= sheenAlbedoScaling;
-environmentIrradiance_indirect *= sheenAlbedoScaling
-specularEnvironmentReflectance_indirect *= sheenAlbedoScaling
+specular_direct *= sheen_albedo_scaling;
+diffuse_direct *= sheen_albedo_scaling;
+environment_irradiance_indirect *= sheen_albedo_scaling
+specular_environment_reflectance_indirect *= sheen_albedo_scaling
 ```
 
 ## Schema

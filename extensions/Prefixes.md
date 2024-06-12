@@ -12,8 +12,6 @@ The following extension prefixes are reserved by the spec maintainers:
 
 To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glTF/issues/new) with the name of the requested prefix and the vendor that will be using it. Maintainers, please assign the `extension` label to the issue.
 
-Once a prefix is approved, it should be added to the [glTF Validator's list of known prefixes](https://github.com/KhronosGroup/glTF-Validator/blob/master/lib/src/ext/extensions.dart).
-
 ## Registered Vendor Prefixes
 
 | Prefix | Company or Project Name | Contacts | Request |
@@ -55,6 +53,7 @@ Once a prefix is approved, it should be added to the [glTF Validator's list of k
 | `KITTYCAD` | KittyCAD, Inc. | https://kittycad.io/<br>`david at kittycad.io` | [#2344](https://github.com/KhronosGroup/glTF/issues/2344) |
 | `LLQ` | Lifeliqe, Inc. | https://www.lifeliqe.com/ | [#1414](https://github.com/KhronosGroup/glTF/issues/1414) |
 | `MAGNUM` | Magnum Engine | https://magnum.graphics/<br>`info at magnum.graphics` | [#2222](https://github.com/KhronosGroup/glTF/issues/2222) |
+| `MANYFOLD` | Manyfold | https://manyfold.app/<br>`james at floppy.org.uk` | [#2398](https://github.com/KhronosGroup/glTF/issues/2398) |
 | `MAXAR` | Maxar Technologies | https://www.maxar.com/ | [#1869](https://github.com/KhronosGroup/glTF/issues/1869) |
 | `MESHOPT` | meshoptimizer | https://meshoptimizer.org/ | [#1634](https://github.com/KhronosGroup/glTF/issues/1634) |
 | `MIRROR` | The Mirror Megaverse Inc. | https://www.themirror.space/<br>`khronos at themirror.space` | [#2230](https://github.com/KhronosGroup/glTF/issues/2230) |

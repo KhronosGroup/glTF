@@ -207,26 +207,26 @@ With the step function $\chi^+$ we ensure that the microsurface is only visible 
 Introducing the visibility function
 
 $$
-V_T = \frac{G_T}{4 \left| N \cdot L \right| \left| N \cdot V \right|}
+\nu_T = \frac{G_T}{4 \left| N \cdot L \right| \left| N \cdot V \right|}
 $$
 
 simplifies the original microfacet BTDF to
 
 $$
-\text{MicrofacetBTDF} = V_T D_T
+\text{MicrofacetBTDF} = \nu_T D_T
 $$
 
 with
 
 $$
-V_T = \frac{\chi^+\left(\frac{H_T \cdot L}{N \cdot L}\right)}{\left| N \cdot L\right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2}} \frac{\chi^+\left(\frac{H_T \cdot V}{N \cdot V}\right)}{\left| N \cdot V \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
+\nu_T = \frac{\chi^+\left(\frac{H_T \cdot L}{N \cdot L}\right)}{\left| N \cdot L\right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2}} \frac{\chi^+\left(\frac{H_T \cdot V}{N \cdot V}\right)}{\left| N \cdot V \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
 $$
 
 Thus we have the function
 
 ```
 function specular_btdf(α) {
-  return V_T * D_T
+  return Vis_T * D_T
 }
 ```
 
