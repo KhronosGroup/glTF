@@ -2691,3 +2691,224 @@ When the `in` input flow is activated:
 1. Evaluate all input values.
 2. If any of them is invalid, activate the `err` output flow and skip the next step.
 3. Activate the `out` output flow.
+
+= JSON Syntax
+
+==  General
+
+A `KHR_interactivity` extension object is added to the root-level `extensions` property. It contains four arrays corresponding to four interactivity concepts: `types`, `events`, `variables`, and `nodes`. As with the core glTF spec, if a JSON array is empty, it **MUST** be omitted from the asset.
+
+```json
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "extensionsUsed": ["KHR_interactivity"],
+  "extensions": {
+    "KHR_interactivity": {
+      "types": [
+        //
+      ],
+      "events": [
+        //
+      ],
+      "variables": [
+        //
+      ],
+      "nodes": [
+        //
+      ]
+    }
+  }
+}
+```
+
+== Types
+
+The `types` array defines mappings between graph-local type indices and the recognized type signatures.
+
+The following example defines type `0` as *float2*, type `1` as *int*, and type `2` as *float*:
+
+```json
+"types": [
+  {
+    "signature": "float2"
+  },
+  {
+    "signature": "int"
+  },
+  {
+    "signature": "float"
+  }
+]
+```
+
+The signature value **MUST** be one of the value types defined in this extension specification or `"custom"`. In the latter case, the type semantic **MUST** be provided by an additional extension.
+
+Non-custom signature **MUST NOT** appear more than once.
+
+== Events
+
+The `events` array defines external identifiers and value socket types for custom events.
+
+The following example defines a custom "`checkout`" event with an external identifier and one value socket:
+
+```json
+"events": [
+  {
+    "id": "checkout",
+    "values": [
+      {
+        "id": "variant",
+        "type": 1
+      }
+    ]
+  }
+]
+```
+
+The event ID value is an application-specific event identifier recognized by the execution environment. If the `id` property is undefined, the event is considered internal to the graph.
+
+The `values` array defines IDs and type indices of the sockets associated with the event. If the array is undefined, the event has no associated value sockets.
+
+== Variables
+
+The `variables` array defines custom variables with their types and optional initialization values.
+
+The following example defines a custom variable with its initial value:
+
+```json
+"variables": [
+  {
+    "type": 0,
+    "value": [0.5,  0.5]
+  }
+]
+```
+
+The `type` value defines the index of the variable type.
+
+The `value` array, if present, defines the initial variable value. The following table defines array size and default values for all value types defined in this extension.
+
+[cols="1,1,2", options="header"]
+|===
+|  Type      | Array size | Default value
+| `bool`     |          1 | Boolean false
+| `float`    |          1 | Floating-point zero
+| `float2`   |          2 | Two floating-point zeros
+| `float3`   |          3 | Three floating-point zeros
+| `float4`   |          4 | Four floating-point zeros
+| `float4x4` |         16 | Sixteen floating-point zeros
+| `int`      |          1 | Integer zero
+|===
+
+If the variable type is custom, the `value` property is defined by the extension defining the custom type.
+
+== Nodes
+
+The `nodes` array defines the behavior graph.
+
+Each element of the `nodes` array represents a node instance, i.e., it specifies node's type, configuration, sources of input value sockets, and pointers of the output flow sockets.
+
+Input value sockets **MAY** have inline constant values; in this case, the value socket type **MUST** be defined.
+
+Inline values and configurations use JSON arrays similarly to the initial variable values.
+
+The following example instantiates a `math/add` node that has both its input value sockets filled with inline integer values.
+
+```json
+"nodes": [
+  {
+    "type": "math/add",
+    "values": [
+      {
+        "id": "a",
+        "value": [1],
+        "type": 1
+      },
+      {
+        "id": "b",
+        "value": [2],
+        "type": 1
+      }
+    ]
+  }
+]
+```
+
+The following example instantiates three nodes. The `math/sub` node has both its input value sockets connected to output value sockets of two other nodes: `math/pi` and `math/e`.
+
+```json
+"nodes": [
+  {
+    "type": "math/pi"
+  },
+  {
+    "type": "math/e"
+  },
+  {
+    "type": "math/sub",
+    "values": [
+      {
+        "id": "a",
+        "node": 0,
+        "socket": "value"
+      },
+      {
+        "id": "b",
+        "node": 1,
+        "socket": "value"
+      }
+    ]
+  }
+]
+```
+
+The following example instantiates two nodes. The `variable/set` node sets a custom variable with index `0` when the start event happens.
+
+```json
+"variables": [
+  {
+    "type": 1
+  }
+],
+"nodes": [
+  {
+    "type": "variable/set",
+    "configuration": [
+      {
+        "id": "variable",
+        "value": [0]
+      }
+    ],
+    "values": [
+      {
+        "id": "value",
+        "value": [1],
+        "type": 1
+      }
+    ]
+  },
+  {
+    "type": "event/onStart",
+    "flows": [
+      {
+        "id": "out",
+        "node": 0,
+        "socket": "in"
+      }
+    ]
+  }
+]
+```
+
+The `type` property is required; it defines semantics and validation of the `configuration`, `values`, and `flows` arrays.
+
+The same `id` value **MUST NOT** be used more than once within each of the `configuration`, `values`, and `flows` arrays.
+
+If the node type has configuration, the `configuration` array **MUST** provide all configuration parameters as inline values.
+
+If the node type has input value sockets, the `values` array **MUST** connect all input value sockets to other nodes or fill them with inline values. Additionally, for each element of the `values` array:
+
+- `value` and `node` properties **MUST NOT** be defined at the same time;
+- if `value` is defined, `type` **MUST** also be defined.
