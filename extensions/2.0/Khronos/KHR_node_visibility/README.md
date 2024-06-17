@@ -1,4 +1,4 @@
-# KHR_node_visibility
+# KHR\_node\_visibility
 
 ## Contributors
 
@@ -21,13 +21,13 @@ This extension allows glTF animations and interactivity to control visibility of
 
 ## Extending Nodes
 
-The `KHR_node_visibility` extension object is added to the objects within the `nodes` array. The extension object contains a single boolean `hidden` property. This value is mutable through JSON pointers as defined in the glTF 2.0 Asset Object Model and controls visibility of the node that contains it and all its children nodes recursively. A value of `true` causes all nodes below in the hierarchy to be omitted from display, even any nodes below that have a value of `false`.
+The `KHR_node_visibility` extension object is added to the objects within the `nodes` array. The extension object contains a single boolean `visible` property. This value is mutable through JSON pointers as defined in the glTF 2.0 Asset Object Model and controls visibility of the node that contains it and all its children nodes recursively. A value of `false` causes all nodes below in the hierarchy to be omitted from display, even any nodes below that have a value of `true`.
 
-|            |   Type    |              Description              |       Required      |
-|------------|-----------|---------------------------------------|---------------------|
-| **hidden** | `boolean` | Specifies whether the node is hidden. | No, default: `false`|
+|             |   Type    |               Description              |      Required      |
+|-------------|-----------|----------------------------------------|--------------------|
+| **visible** | `boolean` | Specifies whether the node is visible. | No, default: `true`|
 
-In other words, a node is visible if and only if its own `hidden` property is `false` and all its parents are visible. This allows a single change of a `hidden` property at a high level of the hierarchy to hide or show complex (multi-node) objects.
+In other words, a node is visible if and only if its own `visible` property is `true` and all its parents are visible. This allows a single change of a `visible` property at a high level of the hierarchy to hide or show complex (multi-node) objects.
 
 In the following example, both nodes (and therefore their meshes) are initially hidden.
 
@@ -39,7 +39,7 @@ In the following example, both nodes (and therefore their meshes) are initially 
             "mesh": 0,
             "extensions": {
                 "KHR_node_visibility": {
-                    "hidden": true
+                    "visible": false
                 }
             },
         },
@@ -54,9 +54,9 @@ In the following example, both nodes (and therefore their meshes) are initially 
 
 The following pointer template represents the mutable property defined by this extension.
 
-| Pointer                                           |  Type  |
-|---------------------------------------------------|--------|
-| `/nodes/{}/extensions/KHR_node_visibility/hidden` | `bool` |
+| Pointer                                            |  Type  |
+|----------------------------------------------------|--------|
+| `/nodes/{}/extensions/KHR_node_visibility/visible` | `bool` |
 
 ## JSON Schema
 
