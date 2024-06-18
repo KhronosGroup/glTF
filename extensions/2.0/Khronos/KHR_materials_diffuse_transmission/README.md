@@ -21,14 +21,14 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds a Lambertian diffuse transmission BSDF to the metallic-roughness material. Thin, dielectric objects like leaves or paper diffusely transmit incoming light to the opposite side of the surface. For optically thick media (volumes) with short scattering distances and therefore dense scattering behavior, a diffuse transmission lobe is a phenomenological plausible and cheap approximation.
+This extension models the physical phenomenon of light being diffusely transmitted through an infinitely thin material. Thin dielectric objects like leaves or paper diffusely transmit light due to dense volumetric scattering within the object. In 3D graphics, it is common to approximate thin volumetric objects as non-volumetric surfaces. The KHR_materials_diffuse_transmission extension models the diffuse transmission of light through such infinitely thin surfaces. For optically thick media (volumes) with short scattering distances and dense scattering behavior, i.e. candles, KHR_materials_diffuse_transmission provides a phenomenologically plausible and cost-effective approximation.
 
 <figure style="text-align:center">
 <p float="left">
 <img src="figures/leaves.jpg" height="350" />
-<img src="figures/thin_translucent.jpg" height="350" />
+<img src="figures/candle_0.5.jpg" height="350" />
 </p>
-<sub><figcaption><em>(Thin) translucent leaves/foliage</em></figcaption></sub>
+<figcaption><em>Left: (Thin) translucent leaves/foliage, Right: (Thick) translucent candle with colored volume attenuation and translucent surface.</em></figcaption>
 </figure>
 
 ## Extending Materials
@@ -57,44 +57,99 @@ The effect is activated by adding the `KHR_materials_diffuse_transmission` exten
 }
 ```
 
-|                                     | Type                                                                | Description                                                                                                                                                                                         | Required                 |
-| ----------------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
-| **diffuseTransmissionFactor**       | `number`                                                            | The percentage of reflected, non-specularly reflected light that is transmitted through the surface via the Lambertian diffuse transmission, i.e., the strength of the diffuse transmission effect. | No, default: `0`         |
-| **diffuseTransmissionTexture**      | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the strength of the diffuse transmission effect, stored in the alpha (A) channel. Will be multiplied by the diffuseTransmissionFactor.                                       | No                       |
-| **diffuseTransmissionColorFactor**  | `number[3]`                                                         | The color of the transmitted light.                                                                                                                                                                 | No, default: `[1, 1, 1]` |
-| **diffuseTransmissionColorTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the color of the transmitted light, stored in the RGB channels and encoded in sRGB. This texture will be multiplied by diffuseTransmissionColorFactor.                       | No                       |
+## Properties
 
+|                                     | Type                                                                | Description                                                                                                                                                                     | Required                 |
+|-------------------------------------|---------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|
+| **diffuseTransmissionFactor**       | `number`                                                            | The percentage of non-specularly reflected light that is diffusely transmitted through the surface.                      | No, default: `0`         |
+| **diffuseTransmissionTexture**      | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the percentage of non-specularly reflected light that is diffusely transmitted through the surface. Stored in the alpha (`A`) channel. Will be multiplied by the diffuseTransmissionFactor.                 | No                       |
+| **diffuseTransmissionColorFactor**  | `number[3]`                                                         | The color that modulates the transmitted light.                                                                                                                                 | No, default: `[1, 1, 1]` |
+| **diffuseTransmissionColorTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the color that modulates the diffusely transmitted light, stored in the `RGB` channels and encoded in sRGB. This texture will be multiplied by diffuseTransmissionColorFactor. | No                       |
 
-The strength of the effect is controlled by `diffuseTransmissionFactor` and `diffuseTransmissionTexture`, combined via multiplication to describe a single value.
+### diffuseTransmissionFactor
+
+The proportion of light that is diffusely transmitted through a surface, rather than being diffusely re-emitted. This is expressed as a percentage of the light that penetrates the surface (i.e., not specularly reflected), rather than a percentage of the total light incident on the surface. A value of 1.0 indicates that 100% of the light that penetrates the surface is transmitted through it.
+
+<table>
+ <tr>
+    <th style="text-align:center">0.0</th>
+    <th style="text-align:center">0.25</th>
+    <th style="text-align:center">0.5</th>
+    <th style="text-align:center">0.75</th>
+    <th style="text-align:center">1.0</th>
+  </tr>
+  <tr>
+    <td><img src="figures/factor_0.0.jpg"/></td>
+    <td><img src="figures/factor_0.25.jpg"/></td>
+    <td><img src="figures/factor_0.5.jpg"/></td>
+    <td><img src="figures/factor_0.75.jpg"/></td>
+    <td><img src="figures/factor_1.0.jpg"/></td>
+  </tr>
+<caption style="caption-side:bottom"><em>Backlit, occluded plane with blue <code>baseColorFactor</code> for varying <code>diffuseTransmissionFactor</code>.</em></caption>
+</table>
+
+### diffuseTransmissionColorFactor
+
+The proportion of light at each color channel that is not attenuated by the surface transmission. Attenuation is usually defined as an amount of light at each frequency that is reduced over a given distance through a medium by absorption and scattering interactions. However, since this extension deals exclusively with infinitely thin surfaces, attenuation is constant and equal to 1.0 - `diffuseTransmissionColorFactor`.
+
+<table>
+ <tr>
+    <th style="text-align:center">0.0</th>
+    <th style="text-align:center">0.25</th>
+    <th style="text-align:center">0.5</th>
+    <th style="text-align:center">0.75</th>
+    <th style="text-align:center">1.0</th>
+  </tr>
+  <tr>
+    <td><img src="figures/color_0.0.jpg"/></td>
+    <td><img src="figures/color_0.25.jpg"/></td>
+    <td><img src="figures/color_0.5.jpg"/></td>
+    <td><img src="figures/color_0.75.jpg"/></td>
+    <td><img src="figures/color_1.0.jpg"/></td>
+  </tr>
+<caption style="caption-side:bottom"><em>Backlit, occluded plane with blue <code>baseColorFactor</code> and red <code>diffuseTransmissionColorFactor</code> for varying <code>diffuseTransmissionFactor</code>.</em></caption>
+</table>
+
+### diffuseTransmissionTexture
+
+The `A` channel of this texture defines proportion of light that is diffusely transmitted through a surface, rather than being diffusely re-emitted. This is expressed as a percentage of the light that penetrates the surface (i.e., not specularly reflected), rather than a percentage of the total light incident on the surface. A value of 1.0 indicates that 100% of the light that penetrates the surface is transmitted through it.
+
+The value is linear and is multiplied by the `diffuseTransmissionFactor` to determine the total diffuse transmission value.
+
 ```
 diffuseTransmission = diffuseTransmissionFactor * diffuseTransmissionTexture.a
 ```
-The color of the effect is controlled by `diffuseTransmissionColorFactor` and `diffuseTransmissionColorTexture`, combined via multiplication to describe a single color.
+<figure style="text-align:center">
+<img src="./figures/factor_tex_inlay.jpg"/>
+<figcaption><em>Backlit, occluded plane with blue <code>baseColorFactor</code> and a striped <code>diffuseTransmissionTexture</code>.<br>(Input texture shown in the top-left).</em></figcaption>
+</figure>
+
+
+### diffuseTransmissionColorTexture
+
+The `RGB` channels of this texture define the proportion of light at each color channel that is not attenuated by the surface transmission.
+The values are multiplied by the `diffuseTransmissionColorFactor` to determine the total diffuse transmission color.
 ```
 diffuseTransmissionColor = diffuseTransmissionColorFactor * diffuseTransmissionColorTexture.rgb
 ```
-## Examples
 
-The examples use `diffuseTransmissionColorTexture` from `baseColorTexture`.
-|                                                               Backlit                                                               |                  Side                  |
-| :---------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------: |
-|                                              ![](figures/teatime_backlit_no_trans.jpg)                                              | ![](figures/teatime_side_no_trans.jpg) |
-|                         ![](figures/teatime_backlit.jpg)<br><sub>`diffuseTransmissionFactor: : 0.25`</sub>                         |     ![](figures/teatime_side.jpg)<br><sub>`diffuseTransmissionFactor: : 0.25`</sub>      |
-| ![](figures/teatime_backlit_colored.jpg)<br><sub>`diffuseTransmissionFactor: 0.25`<br>`diffuseTransmissionColorFactor: [1.0,0.9,0.85]` | ![](figures/teatime_side_colored.jpg)<br><sub>`diffuseTransmissionFactor: 0.25`<br>`diffuseTransmissionColorFactor: [1.0,0.9,0.85]`|
-
-<sub>[Tea Set](https://polyhaven.com/a/tea_set_01) by [James Ray Cock](https://www.artstation.com/jamesray), Jurita Burger and [Rico Cilliers](https://www.artstation.com/ricocilliers) on [PolyHaven](https://polyhaven.com)</sub>
-
-The tea cup renderings demonstrate the effect of `diffuseTransmissionFactor` and `diffuseTransmissionColorFactor`. A strong directional light is direct towards the viewer, casting a strong shadow on the visible side of the tea cup (left). Increasing the `diffuseTransmissionFactor` brightens the shadowed areas by allowing light to diffusely transmit through the surface of the cup (mid). Please note, that this extension only specifies how light will be diffusely transmitted at the surface (volume boundaries). In reality, when light penetrates such a dense volumetric medium, photons become subject to wavelength dependent absorption and scattering events. Since wavelength dependence implies a potential color shift, this extension also introduces a `diffuseTransmissionColorFactor` parameter to provide a simple but effective way to approximate color shifts due to absorption and scattering. The images in the bottom row demonstrate a subtle use of `diffuseTransmissionColorFactor` by pushing the color of the transmitted light into a warm yellow. The side view of the cup predominantly shows the light facing part of the cup. In the lit part we can hardly notice any difference between the configurations. There's a slight darkening if the highlight area, as with an increasing `diffuseTransmissionFactor` energy is taken away from the diffuse reflection. This effect is much more prominent in the next example.
-
-||
-| :-----------------------------: |
-|![](figures/plant_no_trans.jpg)|
-|![](figures/plant_0.5.jpg)<br><sub>`diffuseTransmissionFactor: : 0.5`<br>`diffuseTransmissionColorFactor: [1,0,0]`</sub> |
-|![](figures/plant_1.0.jpg)<br><sub>`diffuseTransmissionFactor: : 1.0`<br>`diffuseTransmissionColorFactor: [1,0,0]`</sub> |
-
-<sub>[Potted Plant](https://polyhaven.com/a/potted_plant_02) by [Rico Cilliers](https://www.artstation.com/ricocilliers) on [PolyHaven](https://polyhaven.com)</sub>
-
-Increasing the `diffuseTransmissionFactor` takes energy from the diffuse reflection and transfers it to the diffuse transmission. In the images above this effect is clearly visible. The green appearance of the leaves is the product of front-lighting and diffuse reflections based on the `baseColorTexture`. With `diffuseTransmissionFactor` approaching `1.0`, the appearance changes to red, as a product of back-lighting and the `diffuseTransmissionColorFactor`. Specular reflections are untouched by this effect.
+<table>
+ <tr>
+    <th style="text-align:center">0.0</th>
+    <th style="text-align:center">0.25</th>
+    <th style="text-align:center">0.5</th>
+    <th style="text-align:center">0.75</th>
+    <th style="text-align:center">1.0</th>
+  </tr>
+  <tr>
+    <td><img src="figures/color_tex_0.0.jpg"/></td>
+    <td><img src="figures/color_tex_0.25.jpg"/></td>
+    <td><img src="figures/color_tex_0.5.jpg"/></td>
+    <td><img src="figures/color_tex_0.75.jpg"/></td>
+    <td><img src="figures/color_tex_1.0.jpg"/></td>
+  </tr>
+<caption style="caption-side:bottom"><em>Single sided plane in a symmetric light setup. <code>baseColorTexture</code> and <code>diffuseTransmissionColorTexture</code> use textures that represent the different sides of the one-dollar bill. Series shows the setup at varying values of <code>diffuseTransmissionFactor</code>.</em></caption>
+</table>
 
 ## Implementation
 
@@ -150,7 +205,7 @@ function mix(bsdf0, bsdf1, factor) {
 
 <figure style="text-align:center">
 <img src="./figures/bsdf.svg"/>
-<sub><figcaption><em>Left: Diffuse BRDF. Right: Diffuse BTDF.</em></figcaption></sub>
+<figcaption><em>Left: Diffuse BRDF. Right: Diffuse BTDF.</em></figcaption>
 </figure>
 
 ## Combining Diffuse Transmission with other Extensions
@@ -183,15 +238,26 @@ dielectric_brdf =
   )
 ```
 
-Since the diffuse BTDF does not have controls for roughness, the roughness parameter acts only on the reflective part of the surface. By decoupling the reflection and transmission parts it is possible to configure materials which have a smooth reflection and a diffuse transmission, as shown in image below (right).
+Since the diffuse BTDF does not have controls for roughness, the roughness parameter acts only on the reflective part of the surface. By decoupling the reflection and transmission parts it is possible to configure materials which have a smooth reflection and a diffuse transmission, as shown in images below.
+
+<table>
+  <tr>
+    <td><img src="./figures/transmission-translucency_thin.jpg"/></td>
+    <td><img src="./figures/transmission-translucency_thin_angle.jpg"/></td>
+  </tr>
+<caption style="caption-side:bottom"><em>Emissive sphere behind material sample. Left: Opaque diffuse. Middle: Rough transmission. Right: Diffuse transmission.</em></caption>
+</table>
 
 <figure style="text-align:center">
-<p float="left">
- <img src="./figures/transmission-translucency_thin.jpg" width="40%" />
- <img src="./figures/transmission-translucency_thin_angle.jpg" width="39.5%" />
-</p>
-<sub><figcaption><em>Emissive sphere behind material sample. Left: Opaque diffuse. Middle: Rough transmission. Right: Diffuse transmission.</em></figcaption></sub>
-</figure><br>
+<img src="./figures/translucent-roughness.png"/>
+<figcaption><em>Translucent sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption>
+</figure>
+
+<figure style="text-align:center">
+<img src="./figures/transmissive-roughness.png"/>
+<figcaption><em>Transmissive sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption>
+</figure>
+
 
 If `KHR_materials_transmission` is used in combination with `KHR_materials_diffuse_transmission`, the transmission effect overrides the diffuse transmission effect.
 
@@ -212,28 +278,55 @@ diffuse_bsdf = mix(
     diffuse_btdf(color = diffuseTransmissionColor),
     diffuseTransmission)
 ```
+<table>
+ <tr>
+    <th style="text-align:center">transmissionFactor<br> 1.0</th>
+    <th style="text-align:center">transmissionFactor<br> 0.75</th>
+    <th style="text-align:center">transmissionFactor<br> 0.5</th>
+    <th style="text-align:center">transmissionFactor<br> 0.25</th>
+    <th style="text-align:center">transmissionFactor<br> 0.0</th>
+  </tr>
+  <tr>
+    <td><img src="figures/dt_transmission_1.0.jpg"/></td>
+    <td><img src="figures/dt_transmission_0.75.jpg"/></td>
+    <td><img src="figures/dt_transmission_0.5.jpg"/></td>
+    <td><img src="figures/dt_transmission_0.25.jpg"/></td>
+    <td><img src="figures/dt_transmission_0.0.jpg"/></td>
+  </tr>
+<caption style="caption-side:bottom"><em>Dragon with fixed <code>diffuseTransmissionFactor</code> of 1.0 and varying <code>transmissionFactor</code>.</em></caption>
+</table>
 
 ### KHR_materials_volume
-If `KHR_materials_diffuse_transmission` is combined with `KHR_materials_volume`, a diffuse transmission BTDF describes the transmission of light through the volume boundary. The object becomes translucent. The roughness parameter only affects the reflection. The light transport inside the volume is not affected by the surface BSDF.
+When `KHR_materials_diffuse_transmission` is combined with `KHR_materials_volume`, a diffuse transmission BTDF describes the transmission of light through the volume boundary. The object becomes translucent. The light transport inside the volume is solely handled by `KHR_materials_volume` and is not affected by the surface BSDF.
 
-<figure style="text-align:center">
-<img src="./figures/translucent-roughness.png"/>
-<sub><figcaption><em>Translucent sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption></sub>
-</figure>
+<table style="width:100%">
+  <tr>
+    <th style="text-align:center">diffuseTransmissionFactor<br> 0.0</th>
+    <th style="text-align:center">diffuseTransmissionFactor<br> 0.5</th>
+    <th style="text-align:center">diffuseTransmissionFactor<br> 1.0</th>
+  </tr>
+  <tr>
+    <td><img src="figures/attenuation_dt_0.0.jpg"/></td>
+    <td><img src="figures/attenuation_dt_0.5.jpg"/></td>
+    <td><img src="figures/attenuation_dt_1.0.jpg"/></td>
+  </tr>
+<caption style="caption-side:bottom"><em>Dragon with white base color, colored volume attenuation and varying <code>diffuseTransmissionFactor</code>. </em></caption>
+</table>
 
-For comparison, below is the result for the same scene with `KHR_materials_transmission` instead of `KHR_materials_diffuse_transmission`. Here, a refractive microfacet BTDF describes the transmission of light through the volume boundary. The refraction occurs on microfacets, and thus the roughness parameter affects both reflection and transmission.
+<table style="width:100%">
+  <tr>
+    <th style="text-align:center">diffuseTransmissionFactor<br> 0.0</th>
+    <th style="text-align:center">diffuseTransmissionFactor<br> 0.25</th>
+    <th style="text-align:center">diffuseTransmissionFactor<br> 0.5</th>
+  </tr>
+  <tr>
+    <td><img src="figures/candle_0.0.jpg"/></td>
+    <td><img src="figures/candle_0.25.jpg"/></td>
+    <td><img src="figures/candle_0.5.jpg"/></td>
+  </tr>
+<caption style="caption-side:bottom"><em>Candle with off-white base color, colored volume attenuation and varying <code>diffuseTransmissionFactor</code>. </em></caption>
+</table>
 
-<figure style="text-align:center">
-<img src="./figures/transmissive-roughness.png"/>
-<sub><figcaption><em>Transmissive sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption></sub>
-</figure>
-
-<!--
-### Overview - Extension Combinations & Use-Cases
-|                                  |                                                                                                                                                                                    KHR_materials_transmission                                                                                                                                                                                    |                                                                                                                                                                            KHR_materials_diffuse_transmission                                                                                                                                                                            |
-| :------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| KHR_materials_volume <br>(thin)  | <img src="./figures/nayyara-shabbir-RUZSejG7xig-unsplash.jpg" height="250"/><br/><sub><em><span>Photo by <a href="https://unsplash.com/@nayyaranoor?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Nayyara Shabbir</a> on <a href="https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></em></sub> |       <img src="./figures/jotaka-ospuTF_nBho-unsplash.jpg" height="250"/><br/><sub><em><span>Photo by <a href="https://unsplash.com/@pragmart?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">jötâkå</a> on <a href="https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></em></sub>        |
-| KHR_materials_volume <br>(thick) |       <img src="./figures/nate-reagan-ZXlAB98N5aQ-unsplash.jpg" height="250"/><br/><sub><em><span>Photo by <a href="https://unsplash.com/@nreagan?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Nate Reagan</a> on <a href="https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></em></sub>       | <img src="./figures/carolyn-v-bdVmIkx_gIs-unsplash.jpg" height="250"/><br/><sub><em><span>Photo by <a href="https://unsplash.com/@sixteenmilesout?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Carolyn V</a> on <a href="https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></em></sub> | -->
 
 ## Schema
 
