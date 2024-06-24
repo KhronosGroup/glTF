@@ -82,6 +82,7 @@ To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glT
 | `SNAP` | Snap, Inc. | https://snap.com/ | [#2125](https://github.com/KhronosGroup/glTF/issues/2125) |
 | `SPECTRUM` | Spectrum | https://spectrumcustomizer.com/ | [#1804](https://github.com/KhronosGroup/glTF/issues/1804) |
 | `TENCENT` | Tencent, Inc. | https://www.tencent.com/ | [#2118](https://github.com/KhronosGroup/glTF/issues/2118) |
+| `TRACE` | Trace | https://www.trace3d.app/<br>`martin at trace3d.app` | [#2416](https://github.com/KhronosGroup/glTF/issues/2416) |
 | `TRYON` | TRYON Technology Ltd. | https://tryon.technology/ | [#1785](https://github.com/KhronosGroup/glTF/issues/1785) |
 | `UNITY` | Unity Software Inc. | https://unity.com/ | [#2185](https://github.com/KhronosGroup/glTF/issues/2185) |
 | `USSF` | US Space Force | https://www.spaceforce.mil/ | [#2177](https://github.com/KhronosGroup/glTF/issues/2177) |
