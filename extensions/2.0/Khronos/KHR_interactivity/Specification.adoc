@@ -2128,6 +2128,8 @@ When the `in` input flow is activated:
 .. set the `lastIndex` value to `i`;
 .. activate the output flow with index `i`.
 
+When the `isRandom` and `isLoop` configuration values are true, the output flow activation order **SHOULD** be randomized on each loop iteration.
+
 ===== Wait All
 
 [cols="1h,1,2"]
