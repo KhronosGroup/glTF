@@ -2218,13 +2218,13 @@ When the `in` input flow is activated:
 |   `in`   | The entry flow into this node
 | `cancel` | When this flow is activated, all delayed activations scheduled by this node are cancelled
 | Input value sockets
-| `float duration` | The duration, in seconds, to delay the `completed` output flow activation
+| `float duration` | The duration, in seconds, to delay the `done` output flow activation
 | Output value sockets
 | `int lastDelayIndex` | The delay index assigned during the last successful node execution
 .3+| Output flow sockets
 | `out` | The flow to be activated if the `duration` value is valid
 | `err` | The flow to be activated if the `duration` value is invalid
-| `completed` | The flow to be activated after the delay
+| `done` | The flow to be activated after the delay
 |===
 
 The internal state of this node consists of an integer `lastDelayIndex` value initialized to -1 and a dynamic array of activation indices scheduled by the node. This array is initially empty and its maximum size is implementation-specific.
@@ -2247,7 +2247,7 @@ When the `in` input flow is activated:
 7. Push the value of `lastDelayIndex` to the graph and node arrays of activation indices.
 8. Schedule the following actions at the _activationTime_ time:
 .. Removal of the activation index value from both arrays of activation indices.
-.. Activation of the `completed` output flow.
+.. Activation of the `done` output flow.
 9. Activate the `out` output flow.
 
 When the `cancel` input flow is activated:
@@ -2498,7 +2498,7 @@ Intermediate output progress values **MAY** be less than zero or greater than on
 .3+| Output flow sockets
 | `out` | The flow to be activated if the input values are valid
 | `err` | The flow to be activated if any of the input values is invalid
-| `completed` | The flow to be activated after the animation ends
+| `done` | The flow to be activated after the animation ends
 |===
 
 This node starts playing an animation using the specified input values.
@@ -2528,8 +2528,8 @@ When a node of this type is used in the behavior graph, the global graph state i
 - Stop time value (see `animation/stopAt`)
 - Speed value
 - Implementation-specific creation timestamp value associated with the system time when this entry was added
-- Implementation-specific _end completion_ pointer to the `completed` output flow of the node that has added this entry
-- Implementation-specific _stop completion_ pointer to the `completed` output flow of the node that has scheduled its stopping (see `animation/stopAt`)
+- Implementation-specific _end completion_ pointer to the `done` output flow of the node that has added this entry
+- Implementation-specific _stop completion_ pointer to the `done` output flow of the node that has scheduled its stopping (see `animation/stopAt`)
 
 This array is initially empty; its maximum size is implementation-specific.
 
@@ -2545,7 +2545,7 @@ When the `in` input flow is activated:
 5. If starting a new animation exceeds any implementation-specific limit,
 .. activate the `err` output flow and skip the next steps.
 6. If the _animation state dynamic array_ contains an entry with the same animation index,
-.. remove it from the array; the previously set `completed` flows **MUST NOT** be activated.
+.. remove it from the array; the previously set `done` flows **MUST NOT** be activated.
 7. Add a new entry to the _animation state dynamic array_ filling it with the required information based on the evaluated input values. The stop time value **MUST** be set to the end time value and the stop completion pointer **MUST** be set to null.
 8. Activate the `out` output flow.
 
@@ -2577,7 +2577,7 @@ When the `in` input flow is activated:
 2. If the `animation` input value is negative or greater than or equal to the number of glTF animations in the asset,
 .. activate the `err` output flow and skip the next steps.
 3. If the _animation state dynamic array_ exists and contains an entry with the same animation index,
-.. remove it from the array and stop the playing animation. The animated properties **MUST** keep their current values and the previously associated `completed` flows **MUST NOT** be activated.
+.. remove it from the array and stop the playing animation. The animated properties **MUST** keep their current values and the previously associated `done` flows **MUST NOT** be activated.
 4. Activate the `out` output flow.
 
 ===== Animation Stop At
@@ -2593,7 +2593,7 @@ When the `in` input flow is activated:
 .3+| Output flow sockets
 | `out` | The flow to be activated if the input values are valid
 | `err` | The flow to be activated if any of the input values is invalid
-| `completed` | The flow to be activated after the animation stops
+| `done` | The flow to be activated after the animation stops
 |===
 
 This node stops a playing animation.
@@ -2608,7 +2608,7 @@ When the `in` input flow is activated:
 3. If the `stopTime` input value is NaN,
 .. activate the `err` output flow and skip the next steps.
 4. If the _animation state dynamic array_ exists and does contain an entry with the same animation index,
-.. update the entry's stop completion pointer to the `completed` output flow of this node;
+.. update the entry's stop completion pointer to the `done` output flow of this node;
 .. update the entry's stop time to the `stopTime` input value.
 5. Activate the `out` output flow.
 
