@@ -2794,11 +2794,11 @@ The `value` array, if present, defines the initial variable value. The following
 |===
 |  Type      | Array size | Default value
 | `bool`     |          1 | Boolean false
-| `float`    |          1 | Floating-point zero
-| `float2`   |          2 | Two floating-point zeros
-| `float3`   |          3 | Three floating-point zeros
-| `float4`   |          4 | Four floating-point zeros
-| `float4x4` |         16 | Sixteen floating-point zeros
+| `float`    |          1 | Floating-point NaN
+| `float2`   |          2 | Two floating-point NaNs
+| `float3`   |          3 | Three floating-point NaNs
+| `float4`   |          4 | Four floating-point NaN
+| `float4x4` |         16 | Sixteen floating-point NaNs
 | `int`      |          1 | Integer zero
 |===
 
