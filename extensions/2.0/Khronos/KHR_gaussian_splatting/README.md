@@ -62,7 +62,7 @@ Extending glTF node:
                         "_SCALE": 3
                     },
                     "extensions": {
-                        "CESIUM_gaussian_splats": {
+                        "KHR_gaussian_splats": {
                             // May need to consider spherical harmonics in the future. Separate extension?
                             // Quantization scale for additional attributes goes here if needed
                         }
