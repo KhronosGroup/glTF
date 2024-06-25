@@ -3,7 +3,7 @@ Copyright 2015-2021 The Khronos Group Inc.
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-# CESIUM_gaussian_splatting
+# KHR_gaussian_splatting
 
 ## Contributors
 
@@ -62,7 +62,7 @@ Extending glTF node:
                         "_SCALE": 3
                     },
                     "extensions": {
-                        "KHR_gaussian_splats": {
+                        "KHR_gaussian_splatting": {
                             // May need to consider spherical harmonics in the future. Separate extension?
                             // Quantization scale for additional attributes goes here if needed
                         }
