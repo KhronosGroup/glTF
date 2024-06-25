@@ -7,8 +7,10 @@ SPDX-License-Identifier: CC-BY-4.0
 
 ## Contributors
 
+Sean Lilley, Cesium
+Adam Morris, Cesium
 Jason Sobotka, Cesium
-Aras P.
+
 
 ## Status
 
@@ -20,15 +22,8 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-Gaussian splats are currently stored in mostly unstructured files. This extension is an attempt to bring them to glTF and offer a structured, efficient method for streaming and rendering them.
+Gaussian splats are currently stored in mostly unstructured files such as PLY. This aims to bring that format into glTF in a simple and straightfoward way.
 
-This method uses textures to store data for efficient GPU loading.
-
-Data formats within textures:
- * Positions (R10G10B10A2 good default),
- * Rotations (always R10G10B10A2),
- * Scales (R5G6B5 good default),
- * Color+opacity (R8G8B8A8 is easy),
 
 ## Sample
 
@@ -85,7 +80,7 @@ TODO: Links to the JSON schema for the new extension properties.
 
 ## Implementation Notes
 
-This doesn't specify any specific rendering techniques. This is purely for organizing the data in a structured manner.
+This doesn't specify any specific rendering techniques.
 
 ## Resources
 
