@@ -77,6 +77,12 @@ clearcoatRoughness = clearcoatRoughnessFactor * clearcoatRoughnessTexture.g
 
 If `clearcoatNormalTexture` is not given, no normal mapping is applied to the clear coat layer, even if normal mapping is applied to the base material.  Otherwise, `clearcoatNormalTexture` may be a reference to the same normal map used by the base material, or any other compatible normal map.
 
+A mesh primitive using a clearcoat material with a clearcoat normal texture **MUST** have a defined tangent space, i.e., it **MUST** have `NORMAL` and `TANGENT` attributes or its base material **MUST** have a normal texture. When the mesh primitive does not have `NORMAL` or `TANGENT` vectors, they are computed as defined in the glTF 2.0 specification.
+
+Since the glTF 2.0 specification does not mandate any particular tangent space derivation algorithm, mesh primitives using clearcoat materials with clearcoat normal textures **SHOULD** always provide their `NORMAL` and `TANGENT` vectors.
+
+When the material has both `normalTexture` and `clearcoatNormalTexture` properties defined, these textures **SHOULD** use the same texture coordinates because they operate in the same tangent space and their texel values are usually correlated to each other.
+
 The clearcoat effect is modeled via a microfacet BRDF. The BRDF is layered on top of the glTF 2.0 Metallic-Roughness material, including emission and all extensions, using a new `fresnel_coat` function:
 
 ```
