@@ -1,0 +1,25 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "MSFT_rigid_bodies glTF extension",
+    "type" : "object",
+    "description" : "Parameters describing how the relative motion of a pair of nodes is constrained.",
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties" : {
+        "connectedNode" : {
+            "allOf": [{"$ref": "glTFid.schema.json"}],
+            "description": "The ID of the node to which this is connected. If not set then the node will be connected to a fixed point in space."
+        },
+        "jointLimits" : {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the joint limits in the top level physicsJointLimits array."
+        },
+        "enableCollision" : {
+            "type": "boolean",
+            "description": "Allow the connected objects to collide. Connected objects do not collide by default.",
+            "default": false
+        },
+        "extensions" : {},
+        "extras" : {}
+    },
+    "required" : ["constraints"]
+}
