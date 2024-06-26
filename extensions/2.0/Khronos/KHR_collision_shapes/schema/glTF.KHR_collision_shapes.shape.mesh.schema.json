@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_collision_shapes Mesh Shape",
+    "type": "object",
+    "description": "Parameters describing a mesh shape.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "convexHull": {
+            "type": "boolean",
+            "description": "Specifies whether the collision geometry is a surface or a convex hull.",
+            "gltf_detailedDescription": "Specifies how the collision shape is generated from the referenced mesh. When this value is false, the collision volume of this shape is the surface of the referenced mesh. The primitives in the mesh **MUST** contain triangles. When this value is true, this shape represents the convex hull of the set of primitives in the referenced mesh.",
+            "default": false
+        },
+        "mesh": {
+            "description": "The index of the mesh from which to build the collision representation.",
+            "allOf": [{"$ref": "glTFid.schema.json"}]
+        },
+        "skin": {
+            "description": "The index of a skin with which to deform the mesh.",
+            "allOf": [ { "$ref": "glTFid.schema.json" } ]
+        },
+        "weights": {
+            "type": "array",
+            "description": "The weights of the instantiated morph target.",
+            "minItems": 1,
+            "items": {
+                "type": "number"
+            }
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "mesh"
+    ]
+}
