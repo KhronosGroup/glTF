@@ -1,0 +1,13 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "OMI_physics_shape Box Shape",
+    "type": "object",
+    "properties": {
+        "size": {
+            "type": "array",
+            "description": "Three number array representing the width, height, and depth of the box (x, y, z)."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
