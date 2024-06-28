@@ -1,0 +1,32 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "mesh.primitive.EXT_structural_metadata.schema.json",
+    "title": "EXT_structural_metadata glTF Mesh Primitive extension",
+    "type": "object",
+    "description": "Structural metadata about a glTF primitive.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "propertyTextures": {
+            "type": "array",
+            "description": "An array of indexes of property textures in the root `EXT_structural_metadata` object.",
+            "minItems": 1,
+            "items": {
+                "allOf": [ { "$ref": "glTFid.schema.json" } ]
+            }
+        },
+        "propertyAttributes": {
+            "type": "array",
+            "description": "An array of indexes of property attributes in the root `EXT_structural_metadata` object.",
+            "minItems": 1,
+            "items": {
+                "allOf": [ { "$ref": "glTFid.schema.json" } ]
+            }
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}

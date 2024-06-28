@@ -1,0 +1,55 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "propertyAttribute.property.schema.json",
+    "title": "Property Attribute Property in EXT_structural_metadata",
+    "type": "object",
+    "description": "An attribute containing property values.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "attribute": {
+            "type": "string",
+            "description": "The name of the attribute containing property values."
+        },
+        "offset": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/numericValue"
+                }
+            ],
+            "description": "An offset to apply to property values. Only applicable when the component type is `FLOAT32` or `FLOAT64`, or when the property is `normalized`. Overrides the class property's `offset` if both are defined."
+        },
+        "scale": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/numericValue"
+                }
+            ],
+            "description": "A scale to apply to property values. Only applicable when the component type is `FLOAT32` or `FLOAT64`, or when the property is `normalized`. Overrides the class property's `scale` if both are defined."
+        },
+        "max": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/numericValue"
+                }
+            ],
+            "description": "Maximum value present in the property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the maximum of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
+        },
+        "min": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/numericValue"
+                }
+            ],
+            "description": "Minimum value present in the property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the minimum of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "attribute"
+    ]
+}
