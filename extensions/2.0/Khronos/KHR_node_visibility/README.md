@@ -23,9 +23,9 @@ This extension allows glTF animations and interactivity to control visibility of
 
 The `KHR_node_visibility` extension object is added to the objects within the `nodes` array. The extension object contains a single boolean `visible` property. This value is mutable through JSON pointers as defined in the glTF 2.0 Asset Object Model and controls visibility of the node that contains it and all its children nodes recursively. A value of `false` causes all nodes below in the hierarchy to be omitted from display, even any nodes below that have a value of `true`.
 
-|             |   Type    |               Description              |      Required      |
-|-------------|-----------|----------------------------------------|--------------------|
-| **visible** | `boolean` | Specifies whether the node is visible. | No, default: `true`|
+| Property    | Type      | Description                            | Required            |
+|-------------|-----------|----------------------------------------|---------------------|
+| **visible** | `boolean` | Specifies whether the node is visible. | No, default: `true` |
 
 In other words, a node is visible if and only if its own `visible` property is `true` and all its parents are visible. This allows a single change of a `visible` property at a high level of the hierarchy to hide or show complex (multi-node) objects.
 
