@@ -87,11 +87,11 @@ When used in conjunction with `KHR_interactivity`, a new interactivity event is 
 |                         |                  | |
 |-------------------------|------------------|-|
 | **Type**                | `event/onSelect` | Select event |
-| **Configuration**       | `int nodeIndex`        | Index of a node |
+| **Configuration**       | `int nodeIndex`        | Index of a node that has this event handler |
 |                         | `bool stopPropagation` | Whether to allow parents of this node to also receive the event |
-| **Output values**       | `int selectedNodeIndex`  | Index of the actual node that was selected |
-|                         | `float3 selectionPoint`   | Position of intersection of the select ray with the geometry of the selected node in global space |
-|                         | `float3 selectionRayOrigin` | Position of the origin of the select ray in global space |
+| **Output values**       | `int selectedNodeIndex`  | Index of the actual node that was selected by the user |
+|                         | `float3 selectionPoint`   | Position of intersection of the selection ray with the geometry of the selected node in global space |
+|                         | `float3 selectionRayOrigin` | Position of the origin of the selection ray in global space |
 | **Output flow sockets** | `out` | The flow to be activated when a select event happens on the given node |
 
 This interactivity event node is activated when a “select” event occurs on a glTF node `nodeIndex` or on any node in its subtree subject to the following propagation rule: the lowest node in the tree receives the select event first, and the event bubbles up the tree until a glTF node with an associated `event/onSelect` behavior graph node with its `stopPropagation` configuration value set to `true` is found.
