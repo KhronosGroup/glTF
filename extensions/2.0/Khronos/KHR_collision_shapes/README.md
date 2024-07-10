@@ -6,6 +6,7 @@
 * Rory Mullane, Microsoft, <mailto:romul@microsoft.com>
 * George Tian, Microsoft, <mailto:geotian@microsoft.com>
 * Aaron Franke, Godot Engine, <mailto:arnfranke@yahoo.com>
+* Eric Griffith, Meta, <mailto:ericgriffith@meta.com>
 
 ## Status
 
@@ -54,11 +55,11 @@ To describe the geometry which represents the object, shapes must define at most
 |**capsule**|`object`|A capsule (cylinder with hemispherical ends) centered at the origin and defined by two "capping" spheres with potentially different radii, aligned along the Y axis in local space.|
 |**mesh**|`object`|A shape generated from a `mesh` object.|
 
-The sphere, box, capsule, and cylinder all represent convex objects with a volume. However, the mesh type presents two options; when the `convexHull` property is `false`, the shape represents the surface of a referenced mesh. When `convexHull` is `true`, the shape represents the convex hull of a referenced mesh. The input mesh to a convex hull is not required to be convex itself, nor is there any requirement for the geometry to be closed. An implementation must generate a convex hull from the input mesh.
+The sphere, box, capsule, and cylinder all represent convex objects with a volume, while the mesh represents the surface of a referenced mesh object.
 
-As the mesh shape references a `mesh`, it additionally allows for optional `skin` and `weights` properties, which have the same semantics and requirements enforced by the properties of the same name associated with a `node`. When specified on a mesh whose `convexHull` property is `true`, the resulting collision shape should be the convex hull of the deformed mesh. As collision detection is typically performed on CPU, the performance impact of deforming a mesh in such a use-case is typically higher than inside a vertex shader. As such, use of this functionality should be given careful consideration with respect to performance.
+As the mesh shape references a `mesh`, it additionally allows for optional `skin` and `weights` properties, which have the same semantics and requirements enforced by the properties of the same name associated with a `node`. Within the core glTF specification, there are two methods to specify morph target weights - the mesh object itself may have a `weights` parameter, while a node may specify per-instance weights, which take priority over the weights specified by the mesh. Analogously, a collision shape may reference a mesh which has a set of weights, while the collision shape itself may specify weights which take priority over those specified in the mesh; finally, when a mesh shape specifies `useNodeWeights` as `true`, the weights used by that node referencing that shape take priority. This construct allows for a node's instance weights to animate a collision shape without having to additionally propagate the weights to the shape. When `useNodeWeights` is `true`, the mesh referenced by the shape must have the same number of morph targets as the mesh referenced by the node.
 
-Degenerate shapes are prohibited. A sphere must have a positive, non-zero radius. A box shape must have positive non-zero values for each component of `size`. The cylinder and capsule shapes must have a positive, non-zero `height` and both `radiusTop` and `radiusBottom` should be positive; at least one of the radii should be non-zero. For mesh shapes whose `convexHull` property is `false`, the referenced mesh must contain at least one non-degenerate triangle primitive. For mesh shapes whose `convexHull` property is `true`, the referenced mesh must contain contain primitives with at least four non-coplanar vertices.
+Degenerate shapes are prohibited. A sphere must have a positive, non-zero radius. A box shape must have positive non-zero values for each component of `size`. The cylinder and capsule shapes must have a positive, non-zero `height` and both `radiusTop` and `radiusBottom` should be positive; at least one of the radii should be non-zero. For mesh shapes, the referenced mesh should contain at least one non-degenerate triangle primitive.
 
 A nodes scale presents some special cases that must be handled. In accordance with the glTF specification on [https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#transformations](transformations), a shape referenced by a node whose scale is zero on all three axes should be considered disabled. When an analytical shape is referenced by a node whose whose scale is negative on one or more axes, the resulting shape size should be the absolute value of the nodes scale applied to the input shape parameters. i.e. a box with `size` of `[1.0, 1.0, 1.0]` associated with a node whose scale is `[1.0, -2.0, 3.0]` should result in a box of size `[1.0, 2.0, 3.0]` in world space.
 
@@ -89,7 +90,6 @@ Additional read-only properties
 |-|-|
 | `/extensions/KHR_collision_shapes/shapes.length` | `int`|
 | `/extensions/KHR_collision_shapes/shapes/{}/mesh/weights.length` | `int`|
-| `/extensions/KHR_collision_shapes/shapes/{}/mesh/convexHull` | `boolean`|
 
 ## Known Implementations
 

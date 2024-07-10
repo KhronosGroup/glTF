@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_collision_shapes.schema.json",
     "title": "KHR_collision_shapes glTF Document Extension",
     "type": "object",
     "description": "Top level collision primitives.",

@@ -1,16 +1,11 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_collision_shapes.shape.mesh.schema.json",
     "title": "KHR_collision_shapes Mesh Shape",
     "type": "object",
     "description": "Parameters describing a mesh shape.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "convexHull": {
-            "type": "boolean",
-            "description": "Specifies whether the collision geometry is a surface or a convex hull.",
-            "gltf_detailedDescription": "Specifies how the collision shape is generated from the referenced mesh. When this value is false, the collision volume of this shape is the surface of the referenced mesh. The primitives in the mesh **MUST** contain triangles. When this value is true, this shape represents the convex hull of the set of primitives in the referenced mesh.",
-            "default": false
-        },
         "mesh": {
             "description": "The index of the mesh from which to build the collision representation.",
             "allOf": [{"$ref": "glTFid.schema.json"}]
@@ -27,10 +22,20 @@
                 "type": "number"
             }
         },
+        "useNodeWeights": {
+            "type": "boolean",
+            "description": "Use weights supplied by a node which references this shape. When true, a node referencing this shape **MUST** have a weights property, the length of which which **MUST** match the number of morph targets of the weights of the mesh referenced by this shape.",
+            "default": false
+        },
         "extensions": { },
         "extras": { }
     },
     "required": [
         "mesh"
-    ]
+    ],
+    "not": {
+        "allOf": [
+            { "required": [ "weights", "useNodeWeights" ] }
+        ]
+    }
 }

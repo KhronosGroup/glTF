@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_collision_shapes.shape.schema.json",
     "title": "KHR_collision_shapes Shape Resource",
     "type": "object",
     "description": "Parameters describing a node's physics collision geometry.",
@@ -9,23 +10,23 @@
             "description": "Specifies the shape type.",
             "anyOf": [
                 {
-                    "enum": [ "sphere" ],
+                    "const": "sphere",
                     "description": "A sphere with a specified radius, centered at the origin in local space."
                 },
                 {
-                    "enum": [ "box" ],
+                    "const": "box",
                     "description": "An axis-aligned box with a size per-axis, centered at the origin in local space"
                 },
                 {
-                    "enum": [ "capsule" ],
+                    "const": "capsule",
                     "description": "A capsule shape, centered at the origin in local space, equivalent to the convex hull of two spheres located along the Y axis (in local space) at a specified distance."
                 },
                 {
-                    "enum": [ "cylinder" ],
+                    "const": "cylinder",
                     "description": "A cylinder shape, centered at the origin in local space, equivalent to the convex hull of two circles in the X/Z plane positioned along the Y axis at a specified distance."
                 },
                 {
-                    "enum": [ "mesh" ],
+                    "const": "mesh",
                     "description": "A shape generated from a referenced `mesh` object"
                 },
                 {
