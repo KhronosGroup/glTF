@@ -2,7 +2,7 @@
 
 ## Contributors
 
-* Aaron Franke, Godot Engine.
+- Aaron Franke, Godot Engine.
 
 ## Status
 
@@ -20,11 +20,11 @@ Many games engines import glTF files as objects with a single root node. Unity h
 
 The `GODOT_single_root` glTF extension solves this problem by imposing additional constraints to ensure the entire glTF file can be parsed into one of these objects with a single root node. Implementations can detect `GODOT_single_root` and import the single root node as the object's "real" root node in the scene/prefab/etc. The extension contains no data, it only restricts behavior. The restrictions are as follows:
 
-* The document `"scenes"` array MUST have exactly one scene.
-* The document `"scene"` index MUST be set to 0, the index of the only scene in the `"scenes"` array.
-* The scene MUST have exactly one node, the single root node.
-* The scene's node index MUST be set to 0, the index of the first node in the `"nodes"` array.
-* The `"translation"`, `"rotation"`, `"scale"`, and `"matrix"` properties of the single root node MUST either be not defined or have default values.
+- The document `"scenes"` array MUST have exactly one scene.
+- The document `"scene"` index MUST be set to 0, the index of the only scene in the `"scenes"` array.
+- The scene MUST have exactly one node, the single root node.
+- The scene's node index MUST be set to 0, the index of the first node in the `"nodes"` array.
+- The `"translation"`, `"rotation"`, `"scale"`, and `"matrix"` properties of the single root node MUST either be not defined or have default values.
 
 These restrictions make the glTF `"scenes"` and `"scene"` properties fully redundant, so that implementations using `GODOT_single_root` do not need to parse the `"scenes"` or `"scene"` properties. Since there is only one root node, node index 0 is reserved as the single root node. However, the `"scenes"` and `"scene"` properties must be kept in the glTF file for compatibility with implementations that do not support this extension. This means that the glTF file must contain properties equivalent to this:
 
@@ -38,10 +38,10 @@ Note: Other properties set on the scene JSON, such as the name etc, are allowed,
 The single root node acts as the root object that represents the entire glTF file, since all other nodes in the tree are descendants, and all resources such as meshes are either used by this node or by descendants. This requires the glTF file to only contain one scene, with one root node. Multiple scenes per file is not allowed, since it goes against this goal, and [is usually not a meaningful concept](https://github.com/KhronosGroup/glTF/issues/1542).
 
 Forbidding the root node to have a transform is required because:
-* A glTF file does not have a transform, only its nodes do. With this extension, the single root node represents the glTF file.
-* This keeps local directions such as forward consistent when orienting the scene vs orienting the single root node.
-* A glTF scene's transform should be determined only by the instances of the scene, such as instances inside of a game engine or [a glXF file](https://github.com/KhronosGroup/glXF).
-* Without this restriction, a root node with a transform would be transformed differently in implementations with and without `GODOT_single_root` when using functions such as look at, which must not happen.
+- A glTF file does not have a transform, only its nodes do. With this extension, the single root node represents the glTF file.
+- This keeps local directions such as forward consistent when orienting the scene vs orienting the single root node.
+- A glTF scene's transform should be determined only by the instances of the scene, such as instances inside of a game engine or [a glXF file](https://github.com/KhronosGroup/glXF).
+- Without this restriction, a root node with a transform would be transformed differently in implementations with and without `GODOT_single_root` when using functions such as look at, which must not happen.
 
 ### Example:
 
@@ -77,9 +77,9 @@ This glTF extension has no schema.
 
 ## Known Implementations
 
-* Godot Engine 4.2 or later: https://github.com/godotengine/godot/pull/81851
+- Godot Engine 4.2 or later: https://github.com/godotengine/godot/pull/81851
 
 ## Resources:
 
-* Godot PackedScene: https://docs.godotengine.org/en/stable/classes/class_packedscene.html#class-packedscene-method-instantiate
-* Unity Prefabs: https://docs.unity3d.com/Manual/Prefabs.html
+- Godot PackedScene: https://docs.godotengine.org/en/stable/classes/class_packedscene.html#class-packedscene-method-instantiate
+- Unity Prefabs: https://docs.unity3d.com/Manual/Prefabs.html
