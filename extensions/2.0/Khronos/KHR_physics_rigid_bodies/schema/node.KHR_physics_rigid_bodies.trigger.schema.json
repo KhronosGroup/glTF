@@ -1,0 +1,44 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "node.KHR_physics_rigid_bodies.trigger.schema.json",
+    "title": "KHR_physics_rigid_bodies Node Trigger Property",
+    "type": "object",
+    "description": "Parameters describing a volume used for collison detection, but does not cause a collision response.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "shape": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "The index of the shape in the top level shapes array."
+        },
+        "nodes": {
+            "type": "array",
+            "description": "For compound triggers, the set of descendant glTF nodes with a trigger property that make up this compound trigger.",
+            "items": {
+                "$ref": "glTFid.schema.json"
+            },
+            "uniqueItems": true,
+            "minItems": 1
+        },
+        "collisionFilter": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "The index of the filter information in the top level collisionFilters array."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "anyOf": [
+        {
+            "allOf": [
+                { "required": ["shape"] },
+                { "not": { "required": ["nodes"] } }
+            ]
+        },
+        {
+            "allOf": [
+                { "required": ["nodes"] },
+                { "not": { "required": ["shape"] } },
+                { "not": { "required": ["collisionFilter"] } }
+            ]
+        }
+    ]
+}

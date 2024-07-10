@@ -1,0 +1,18 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_collision_shapes.shape.KHR_physics_rigid_bodies.schema.json",
+    "title": "KHR_physics_rigid_bodies Mesh Shape Info",
+    "type": "object",
+    "description": "Additional arguments for generating a collision shape from a mesh",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "convexHull": {
+            "type": "boolean",
+            "description": "Specifies whether the collision geometry is a surface or a convex hull.",
+            "gltf_detailedDescription": "Specifies how the collision shape is generated from the referenced mesh. When this value is false, the collision volume of this shape is the surface of the referenced mesh. When this value is true, this shape represents the convex hull of the set of primitives in the referenced mesh.",
+            "default": false
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
