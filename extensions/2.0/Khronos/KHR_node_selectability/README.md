@@ -31,6 +31,8 @@ In all cases, we assume that a “selection” indicates that the user wishes to
 
 This ray will be called the “selection ray”.
 
+Implementations that do not use a ray-based approach but have a concept similar to selection **MAY** issue this event as deemed appropriate.
+
 ### Selectability
 
 In this section of this specification we will use the term “object” to refer to the geometry of a specific node (not including its subtree), whether defined by a mesh on that node or by any future extensions.
@@ -89,8 +91,9 @@ When used in conjunction with `KHR_interactivity`, a new interactivity event is 
 | **Type**                | `event/onSelect` | Select event |
 | **Configuration**       | `int nodeIndex`        | Index of a node that has this event handler |
 |                         | `bool stopPropagation` | Whether to allow parents of this node to also receive the event |
-| **Output values**       | `int selectedNodeIndex`  | Index of the actual node that was selected by the user |
-|                         | `float3 selectionPoint`   | Position of intersection of the selection ray with the geometry of the selected node in global space |
+| **Output values**       | `int selectedNodeIndex` | Index of the actual node that was selected by the user |
+|                         | `int controllerIndex`   | Index of the controller that generated the event |
+|                         | `float3 selectionPoint`     | Position of intersection of the selection ray with the geometry of the selected node in global space |
 |                         | `float3 selectionRayOrigin` | Position of the origin of the selection ray in global space |
 | **Output flow sockets** | `out` | The flow to be activated when a select event happens on the given node |
 
@@ -98,7 +101,11 @@ This interactivity event node is activated when a “select” event occurs on a
 
 If the `nodeIndex` configuration value is negative or greater than or equal to the number of glTF nodes in the asset, the `event/onSelect` node is invalid. A behavior graph **MUST NOT** contain two or more `event/onSelect` nodes with the same `nodeIndex` configuration value.
 
-The internal state of this node consists of the `selectionPoint` and `selectionRayOrigin` output values initialized to NaN vectors and the `selectedNodeIndex` output value initialized to -1.
+The internal state of this node consists of the `selectionPoint` and `selectionRayOrigin` output values initialized to NaN vectors and the `selectedNodeIndex` and `controllerIndex` output values initialized to -1.
+
+In the case of multiple-controller systems, the `controllerIndex` output value **MUST** be set to the index of the controller that generated the event; in single-controller systems, this output value **MUST** be set to zero.
+
+If the implementation provides selection ray information, the `selectionPoint` and `selectionRayOrigin` output values **MUST** be updated with it; otherwise, they **MUST** be set to NaN vectors.
 
 The output value sockets **MUST** be updated before activating the `out` output flow.
 
