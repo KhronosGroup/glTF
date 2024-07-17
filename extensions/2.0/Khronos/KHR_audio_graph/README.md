@@ -1,26 +1,3 @@
-<!-----
-
-
-
-Conversion time: 1.967 seconds.
-
-
-Using this Markdown file:
-
-1. Paste this output into your source file.
-2. See the notes and action items below regarding this conversion run.
-3. Check the rendered output (headings, lists, code blocks, tables) for proper
-   formatting and use a linkchecker before you publish this page.
-
-Conversion notes:
-
-* Docs to Markdown version 1.0β36
-* Fri Jun 14 2024 17:25:52 GMT-0700 (PDT)
-* Source doc: KHR Audio Graph Design
-* Tables are currently converted to HTML tables.
------>
-
-
 
 ## KHR Audio Graph Design
 
@@ -335,7 +312,19 @@ This represents an audio source generating a periodic waveform. It can be set to
    </td>
    <td>number
    </td>
-   <td>The Oscillator frequency, from 0-20kHz. The default value is 440 Hz.
+   <td>The frequency (in Hertz) of the periodic waveform. Its default value is 440.
+   </td>
+   <td>
+   </td>
+   <td>
+   </td>
+  </tr>
+  <tr>
+   <td>detune
+   </td>
+   <td>number
+   </td>
+   <td>A detuning value which will offset the frequency by the given amount. Its default value is 0. Detune value is combined with frequency to compute the oscillator frequency as follows: frequency * pow(2, detune / 1200)
    </td>
    <td>
    </td>
@@ -445,7 +434,7 @@ This represents an audio source generating a periodic waveform. It can be set to
 
 Audio emitter of type “Global” is non-spatialized, whereas a “Spatial” emitter is used for spatial audio. A scene can contain one or more global emitters. Spatial emitter is connected to a scene node. A scene node can have one or more spatial emitters. A spatial emitter by default inherits the pose (position and orientation) properties of the scene node, hence we do not support updating these properties within the spatial emitter node.
 
-Using a spatial emitter, an audio stream can be spatialized or positioned in space relative to a listener node. A scene has a single listener node. Both spatial emitters and listeners have a position in 3D space. Spatial emitters have an orientation representing in which direction the sound is projecting. Additionally, they have a sound cone representing how directional the sound is. For example, the sound could be omnidirectional, in which case it would be heard anywhere regardless of its orientation, or it can be more directional and heard only if it is facing the listener.
+Using a spatial emitter, an audio stream can be spatialized or positioned in space relative to a listener node. Both spatial emitters and listeners have a position in 3D space. Spatial emitters have an orientation representing in which direction the sound is projecting. Additionally, they have a sound cone representing how directional the sound is. For example, the sound could be omnidirectional, in which case it would be heard anywhere regardless of its orientation, or it can be more directional and heard only if it is facing the listener.
 
 
 <table>
@@ -996,7 +985,7 @@ Use the Audio mixer node to combine the output from multiple audio sources. Numb
 
 ### 6.8 Filter node (1 input / 1 output)
 
-Use the Audio Mixer node to combine the output from multiple audio sources. A filter node always has exactly one input and one output.
+Use the Audio filter node to attenuate a range of frequencies. A filter node always has exactly one input and one output.
 
 
 <table>
@@ -1092,6 +1081,42 @@ Reverberation is the persistence of sound in an enclosure after a sound source h
    <td><strong>Required</strong>
    </td>
    <td><strong>Notes</strong>
+   </td>
+  </tr>
+  <tr>
+   <td>type
+   </td>
+   <td>string
+   </td>
+   <td>0 = algorithmic, 1 = convolution
+   </td>
+   <td>
+   </td>
+   <td>
+   </td>
+  </tr>
+  <tr>
+   <td>buffer view
+   </td>
+   <td>integer
+   </td>
+   <td>The index of the buffer view that contains the impulse response used for convolution to create the reverb effect.
+   </td>
+   <td>
+   </td>
+   <td>
+   </td>
+  </tr>
+  <tr>
+   <td>normalize
+   </td>
+   <td>boolean
+   </td>
+   <td>When set to true, the impulse response from the buffer will be scaled by an equal-power normalization.
+   </td>
+   <td>
+   </td>
+   <td>
    </td>
   </tr>
   <tr>
@@ -1276,4 +1301,3 @@ Reverberation is the persistence of sound in an enclosure after a sound source h
 * One audio emitter node can have only one input.
 * A scene can have multiple emitters.
 * A node can have multiple spatial emitters.
-* A scene can have only one audio listener.
