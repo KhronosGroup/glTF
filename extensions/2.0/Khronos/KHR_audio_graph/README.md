@@ -300,7 +300,7 @@ This represents an audio source generating a periodic waveform. It can be set to
    </td>
    <td>string
    </td>
-   <td>Specifies the waveform type (saw, square, triangle, sine, custom).
+   <td>Specifies the waveform type (saw, square, triangle, sine).
    </td>
    <td>
    </td>
@@ -511,13 +511,11 @@ Using a spatial emitter, an audio stream can be spatialized or positioned in spa
    </td>
    <td>string
    </td>
-   <td>Determines which spatialization model will be used to position the audio in 3D space (equal power, HRTF, Custom).
+   <td>Determines which spatialization model will be used to position the audio in 3D space (equal power, HRTF).
 <p>
 equalpower: Represents the equal-power panning algorithm, generally regarded as simple and efficient. equalpower is the default value.
 <p>
 HRTF: Renders a stereo output of higher quality than equalpower — it uses a convolution with measured impulse responses from human subjects.
-<p>
-Custom: User-defined panning algorithm.
    </td>
    <td>
    </td>
@@ -573,7 +571,7 @@ Custom: User-defined panning algorithm.
    </td>
    <td>string
    </td>
-   <td>Specifies the distance model for the audio emitter  linear, inverse, exponential, custom).
+   <td>Specifies the distance model for the audio emitter  linear, inverse, exponential).
    </td>
    <td>
    </td>
@@ -641,7 +639,7 @@ Custom: User-defined panning algorithm.
    </td>
    <td>string
    </td>
-   <td>Shape in which emitter emits audio (cone, omnidirectional, custom).
+   <td>Shape in which emitter emits audio (cone, omnidirectional).
    </td>
    <td>
    </td>
@@ -729,7 +727,7 @@ Describes the position and other physical characteristics of a listener from whi
    </td>
    <td>string
    </td>
-   <td>The curve to apply when changing gains (linear, custom).
+   <td>The curve to apply when changing gains (linear).
    </td>
    <td>
    </td>
@@ -1006,7 +1004,7 @@ Use the Audio filter node to attenuate a range of frequencies. A filter node alw
    </td>
    <td>string
    </td>
-   <td>Defining the kind of filtering algorithm the node is implementing (lowpass, highpass, bandpass, lowshelf, highshelf, peaking, notch, allpass, custom)
+   <td>Defining the kind of filtering algorithm the node is implementing (lowpass, highpass, bandpass, lowshelf, highshelf, peaking, notch, allpass)
    </td>
    <td>
    </td>
