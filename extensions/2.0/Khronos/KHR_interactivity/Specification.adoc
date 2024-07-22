@@ -2703,6 +2703,29 @@ When the `in` input flow is activated:
 2. Send the custom event.
 3. Activate the `out` output flow.
 
+== Extending glTF Object Model
+
+This Specification defines additional glTF Object Model pointers for use with `pointer/*` nodes.
+
+=== Active Camera Information
+
+In some viewers, such as, but not limited to, augmented reality viewers and virtual reality viewers, the viewer implementation gives the user direct control over a virtual camera. This virtual camera **MAY** be controlled by user head movements, by movements of the user's phone with their hands, or by mouse, keyboard or touch input on a laptop, or by other means. It is useful for interactivity to be able to react to the position of this virtual camera.
+
+This Specification defines the “active camera” as the camera transformation that ought to be reacted to by interactivity. When there is only one camera being displayed to the user the implementation **SHOULD** use this camera as the “active camera”. When there are multiple cameras being controlled by the user, the implementation **MAY** select one such camera or construct a synthetic camera to use as the “active camera” (for example the midpoint of two stereoscopic camera positions). When zero cameras are being controlled by the user but views from one or more cameras are being displayed to the user, the implementation **SHOULD** select one of the cameras that is being displayed as the “active camera”.
+
+The `position` read-only property represents the “active camera” position in the global space. The `rotation` read-only property represents the “active camera” rotation quaternion; the identity quaternion corresponds to the camera orientation defined in the glTF 2.0 Specification.
+
+An implementation **MAY** provide no “active camera” data, for example for privacy reasons or if no cameras are being displayed to the user. If the “active camera” position is unavailable, the `position` property **MUST** be set to all NaNs; if the “active camera” rotation is unavailable, the `rotation` property **MUST** be set to all NaNs.
+
+The following pointers represent the read-only properties defined in this section.
+
+[options="header",cols="50%,15%"]
+|===
+| Pointer                  | Type
+| `/activeCamera/rotation` | `float4`
+| `/activeCamera/position` | `float3`
+|===
+
 = JSON Syntax
 
 ==  General
