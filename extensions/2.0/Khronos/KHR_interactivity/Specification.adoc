@@ -2337,7 +2337,7 @@ When the `in` input flow is activated:
 | Configuration
 | `string pointer` | The JSON pointer or JSON pointer template
 | Input value sockets
-| `int <segment>` | The JSON pointer template path segment to be substituted at runtime
+| `int <segment>` | Zero or more JSON pointer template path substitutions to be evaluated at runtime; input value socket names correspond to the pointer's path segments wrapped with curly braces (`{}`)
 .2+| Output value sockets
 | `T value`  | The resolved property value
 | `bool isValid`  | True if the property value can be resolved, false otherwise
@@ -2383,7 +2383,7 @@ Unresolvable pointers include those with negative or out-of-bounds array indices
 | Input flow sockets
 | `in` | The entry flow into this node
 .2+| Input value sockets
-| `int <segment>` | The JSON pointer template path segment to be substituted at runtime
+| `int <segment>` | Zero or more JSON pointer template path substitutions to be evaluated at runtime; input value socket names correspond to the pointer's path segments wrapped with curly braces (`{}`)
 | `T value` | The new property value
 .2+| Output flow sockets
 | `out` | The flow to be activated if the JSON pointer can be resolved
@@ -2418,7 +2418,7 @@ When the `in` input flow is activated:
 | Input flow sockets
 | `in` | The entry flow into this node
 .5+| Input value sockets
-| `int <segment>` | The JSON pointer template path segment to be substituted at runtime
+| `int <segment>` |  Zero or more JSON pointer template path substitutions to be evaluated at runtime; input value socket names correspond to the pointer's path segments wrapped with curly braces (`{}`)
 | `T value` | The target property value
 | `float duration` | The time, in seconds, in which the property **SHOULD** reach the target value
 | `float2 p1` | Control point P1
