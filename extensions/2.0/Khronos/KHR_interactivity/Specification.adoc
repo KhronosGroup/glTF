@@ -2821,7 +2821,15 @@ The `nodes` array defines the behavior graph.
 
 Each element of the `nodes` array represents a node instance, i.e., it specifies node's type, configuration, sources of input value sockets, and pointers of the output flow sockets.
 
-Input value sockets **MAY** have inline constant values; in this case, the value socket type **MUST** be defined.
+Input value sockets **MAY** have inline constant values; in this case, the value socket type **MUST** be explicitly defined.
+
+Configuration values are always implicitly typed based on the node's type.
+
+[NOTE]
+.Rationale
+====
+Some nodes have configuration values of array and/or string types that cannot be expressed with the explicit types defined in this Specification.
+====
 
 Inline values and configurations use JSON arrays similarly to the initial variable values.
 
