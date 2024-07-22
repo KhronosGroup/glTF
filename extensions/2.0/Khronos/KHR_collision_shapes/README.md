@@ -91,14 +91,6 @@ Additional read-only properties
 | `/extensions/KHR_collision_shapes/shapes.length` | `int`|
 | `/extensions/KHR_collision_shapes/shapes/{}/mesh/weights.length` | `int`|
 
-## Known Implementations
-
-[Blender importer/exporter](https://github.com/eoineoineoin/glTF_Physics_Blender_Exporter)
-
-[Babylon.js importer](https://github.com/eoineoineoin/glTF_Physics_Babylon)
-
-[Godot importer](https://github.com/eoineoineoin/glTF_Physics_Godot_Importer)
-
 ## Appendix: Full Khronos Copyright Statement
 
 Copyright 2021-2023 The Khronos Group Inc.
