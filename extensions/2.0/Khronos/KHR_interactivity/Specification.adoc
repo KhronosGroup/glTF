@@ -2390,7 +2390,7 @@ Unresolvable pointers include those with negative or out-of-bounds array indices
 | `err` | The flow to be activated if the JSON pointer cannot be resolved
 |===
 
-This node sets a glTF Asset Object Model value using the provided JSON pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the type of the pointer cannot be statically determined, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
+This node sets a glTF Asset Object Model value using the provided JSON pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the type of the pointer cannot be statically determined or if the referenced property is not mutable, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
 
 The pointer string **MAY** be a template pointer string, i.e., it **MAY** contain path segments substituted at runtime using the input values. All input values used for path segment substitutions **MUST** be of `int` type. Path segments, if used, **MUST** substitute only array indices in the pointer templates as listed in the glTF Asset Object Model Specification.
 
@@ -2429,7 +2429,7 @@ When the `in` input flow is activated:
 | `done` | The flow to be activated when the property reaches the target value
 |===
 
-This node interpolates and updates the specified glTF Asset Object Model property multiple times over the specified duration using the provided JSON pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the type of the pointer cannot be statically determined or if it is integer or boolean, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
+This node interpolates and updates the specified glTF Asset Object Model property multiple times over the specified duration using the provided JSON pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the type of the pointer cannot be statically determined, if it is integer or boolean, or if the referenced property is not mutable, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
 
 The pointer string **MAY** be a template pointer string, i.e., it **MAY** contain path segments substituted at runtime using the input values. All input values used for path segment substitutions **MUST** be of `int` type. Path segments, if used, **MUST** substitute only array indices in the pointer templates as listed in the glTF Asset Object Model Specification.
 
