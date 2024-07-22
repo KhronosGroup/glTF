@@ -66,7 +66,7 @@
         },
         "gravityFactor": {
             "type": "number",
-            "description": "A multiplier applied to the global acceleration due to gravity.",
+            "description": "A multiplier applied to the acceleration due to gravity.",
             "default": 1.0
         },
         "extensions": { },

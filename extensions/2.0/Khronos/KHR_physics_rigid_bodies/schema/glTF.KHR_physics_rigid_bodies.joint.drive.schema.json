@@ -3,7 +3,7 @@
     "$id": "glTF.KHR_physics_rigid_bodies.joint.drive.schema.json",
     "title": "KHR_physics_rigid_bodies Physics Joint Drive",
     "type": "object",
-    "description": "Parameters describing a drive which applies forces within a joint.",
+    "description": "Parameters describing a drive or motor which applies forces within a joint.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "type": {
@@ -41,7 +41,7 @@
         "axis": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 3,
+            "maximum": 2,
             "description": "The index of the axis which this drive applies forces on."
         },
         "maxForce": {
@@ -51,11 +51,11 @@
         },
         "positionTarget": {
             "type": "number",
-            "description": "The target translation/angle along the axis that this drive attempts to achieve."
+            "description": "The target translation or angle along/about the axis that this drive attempts to achieve."
         },
         "velocityTarget": {
             "type": "number",
-            "description": "The target velocity along/about the axis that this drive attempts to achieve."
+            "description": "The target linear velocity or angular velocity along/about the axis that this drive attempts to achieve."
         },
         "stiffness": {
             "type": "number",
@@ -74,5 +74,11 @@
         "type",
         "mode",
         "axis"
-    ]
+    ],
+    "dependencies": {
+        "positionTarget": [ "stiffness" ],
+        "stiffness": [ "positionTarget" ],
+        "velocityTarget": [ "damping" ],
+        "damping": [ "velocityTarget" ]
+    }
 }

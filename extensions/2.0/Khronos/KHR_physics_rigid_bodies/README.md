@@ -278,9 +278,9 @@ The attachment frames are specified using the transforms of `node` objects; the 
 
 A node's `joint` must specify a `joint` property, which indexes into the top-level array of `physicsJoints` inside the `KHR_physics_rigid_bodies` extension object. This object describes the limits and drives utilized by the joint in a shareable manner.
 
-A joint description must contain one of more `joint.limit` objects and zero or more `joint.drive` objects. Each of the limit objects remove some of the relative movement permitted between the two attachment frames, while the drive objects apply forces to achieve a relative transform or velocity between the attachment frames.
+A joint description contains zero or more `joint.limit` objects and zero or more `joint.drive` objects. Each of the limit objects remove some of the relative movement permitted between the two attachment frames, while the drive objects apply forces to achieve a relative transform or velocity between the attachment frames.
 
-If a joint were to eliminate all degrees of freedom, the physics simulation should attempt to move the `motion` nodes such that the transforms of the constrained child nodes (i.e. the `joint` node and the node at index `connectedNode`) become aligned with each other in world space. <!--TODO: remove?-->
+If a joint were to eliminate all degrees of freedom, the physics simulation should attempt to move the `motion` nodes such that the transforms of the constrained child nodes (i.e. the `joint` node and the node at index `connectedNode`) become aligned with each other in global space.
 
 Each `joint.limit` contains the following properties:
 
@@ -295,13 +295,13 @@ Each `joint.limit` contains the following properties:
 
 Each limit must provide either `linearAxes` or `angularAxes`, declaring which are restricted. The indices in these arrays refer to the columns of the basis defined by the attachment frame of the joint and as such, must be in the range 0 to 2. The number of axes determines whether the limit should be a 1, 2, or 3 dimensional constraint as follows:
 
-* A 1D linear limit should keep the world-space translation of the attachment frames within the signed distance from the infinite plane spanned by the other two axes.
+* A 1D linear limit should keep the global space translation of the attachment frames within the signed distance from the infinite plane spanned by the other two axes.
 * A 2D linear limit should keep the attachment frame translations within a distance from the infinite line along the remaining axis.
 * A 3D linear limit should keep the attachment frame translations within a distance from each other.
 * A 1D angular limit should restrict the attachment frame rotation about that axis, as in a universal joint.
 * A 2D angular limit should restrict the attachment frame rotations to a cone oriented along the remaining axis.
 
-Each limit contains a `min` and `max` parameter, describing the range of allowed difference between the two node transforms - within this range, the limit is considered non-violating and no corrective forces are applied. These values represent a _distance_ in meters for linear limit, or an _angle_ in radians for angular limit.
+Each limit contains an optional `min` and `max` parameter, describing the range of allowed difference between the two node transforms - within this range, the limit is considered non-violating and no corrective forces are applied. These values represent a _distance_ in meters for a linear limit, or an _angle_ in radians for an angular limit. If the `min` parameter is not provided, there is no lower bound on the range. Similarly, if the `max` parameter is not provided, there is no upper bound.
 
 Additionally, each `joint.limit` has an optional `stiffness` and `damping` which specify the proportion of the recovery applied to the limit. By default, an infinite spring constant is assumed, implying hard limits. Specifying a finite stiffness will cause the limit to become soft at the limits.
 
@@ -375,15 +375,15 @@ When used in conjunction with `KHR_interactivity`, this extension describes addi
 |-|-|-|
 | Input flow sockets | `in` | The entry point into this node |
 | Input value sockets | `int nodeIndex` | The node to which the impulse should be applied |
-| | `float3 linearImpulse` | Linear impulse to apply (world space, default 0,0,0) |
-| | `float3 angularImpulse` | Angular impulse to apply (world space, default 0,0,0) |
+| | `float3 linearImpulse` | Linear impulse to apply (global space, default 0,0,0) |
+| | `float3 angularImpulse` | Angular impulse to apply (global space, default 0,0,0) |
 
 |Type|`rigid_body/applyPointImpulse`| Apply a point impulse to a body |
 |-|-|-|
 | Input flow sockets | `in` | The entry point into this node |
 | Input value sockets | `int nodeIndex` | The node to which the impulse should be applied |
-| |`float3 impulse` | Impulse to apply (world space) |
-| | `float3 position` | Position at which to apply impulse (world space) |
+| |`float3 impulse` | Impulse to apply (global space) |
+| | `float3 position` | Position at which to apply impulse (global space) |
 
 These nodes are used to apply impulses to a dynamic rigid body, useful when the mass or inertia of a motion is not known in advance. In order to have an effect, the input node index must refer to a node which has `motion` properties or is a descendent of a node with `motion` properties.
 
@@ -394,12 +394,12 @@ These nodes are used to apply impulses to a dynamic rigid body, useful when the 
 | Input flow sockets | `in` | The entry point into this node |
 | Output flow sockets | `hit` | The flow triggered when this query detects an intersection |
 | | `miss` | The flow triggered when this query does not detect an intersection |
-| Input value sockets | `float3 rayStart` | Start position of ray segment (world space) |
-| | `float3 rayEnd` | End position of ray segment (world space) |
+| Input value sockets | `float3 rayStart` | Start position of ray segment (global space) |
+| | `float3 rayEnd` | End position of ray segment (global space) |
 | | `int collisionFilterIndex` | Optional collision filter to apply (default -1) |
 | Output value sockets | `int hitNodeIndex` | Index of the node which detected an intersection |
 | | `float hitFraction` | Fraction along ray segment where intersection occurred |
-| |`float3 hitNormal` | The normal of the shape at the point of intersection (world space) |
+| |`float3 hitNormal` | The normal of the shape at the point of intersection (global space) |
 
 This node can be activated to determine the intersection of a ray segment with any colliders in the scene. When a ray segment intersects multiple colliders, the output `hitNodeIndex` should be set to the node closest to the start position of the ray, i.e. the collider with the minimal `hitFraction`. The output value sockets are only valid when the `hit` flow is triggered.
 
@@ -448,10 +448,10 @@ To determine if a particular joint limit is violated, it is useful to determine 
 
 Where:
 - $e_i$ is the $i$-th basis vector.
-- $t_a$ is the translation of the joint node in world space.
-- $t_b$ is the translation of the attached node in world space.
-- $q_a$ is the orientation of the joint node in world space.
-- $q_b$ is the orientation of the attached node in world space.
+- $t_a$ is the translation of the joint node in global space.
+- $t_b$ is the translation of the attached node in global space.
+- $q_a$ is the orientation of the joint node in global space.
+- $q_b$ is the orientation of the attached node in global space.
 - $\mathrm{Tw_i}$ is the function which returns the twist component of the twist-swing decomposition of a quaternion.
 - $\mathrm{Re}$ is the function which extracts the real component of a quaternion.
 

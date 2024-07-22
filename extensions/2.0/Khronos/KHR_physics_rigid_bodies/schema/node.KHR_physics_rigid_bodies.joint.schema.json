@@ -12,11 +12,11 @@
         },
         "joint": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the joint limits in the top level physicsJoints array."
+            "description": "The index of the joint in the top level physicsJoints array."
         },
         "enableCollision": {
             "type": "boolean",
-            "description": "Allow the connected objects to collide. Connected objects do not collide by default.",
+            "description": "If true, allow the connected objects to collide. Connected objects do not collide by default.",
             "default": false
         },
         "extensions": { },

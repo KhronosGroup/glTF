@@ -3,7 +3,7 @@
     "$id": "glTF.KHR_physics_rigid_bodies.schema.json",
     "title": "KHR_physics_rigid_bodies glTF Document Extension",
     "type": "object",
-    "description": "Top level physics properties.",
+    "description": "Top level physics properties and resources.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "physicsMaterials": {
@@ -17,7 +17,7 @@
         },
         "collisionFilters": {
             "type": "array",
-            "description": "An array providing collision filter descriptions.",
+            "description": "An array of collision filter descriptions.",
             "items": {
                 "type": "object",
                 "$ref": "glTF.KHR_physics_rigid_bodies.collision_filter.schema.json"
