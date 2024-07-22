@@ -31,7 +31,6 @@ This specification depends on [KHR\_collision\_shapes](../KHR_collision_shapes/R
   - [Joints](#joints)
 - [glTF Schema Updates](#gltf-schema-updates)
 - [Object Model](#object-model)
-- [Known Implementations](#known-implementations)
 - [Appendix: Joint Limit Metrics](#appendix-joint-limit-metrics)
 - [Appendix: Full Khronos Copyright Statement](#appendix-full-khronos-copyright-statement)
 
@@ -422,14 +421,6 @@ This node can be activated to determine the intersection of a ray segment with a
 Trigger event nodes are activated when an collider enters or exits a trigger attached to `nodeIndex`. Entering a trigger is defined to occur when **any** intersection begins to occur between the trigger and the collider - the collider need not be completely enclosed within the trigger. Exiting is defined to occur when such an intersection no longer exists. When the collider which entered the trigger has a `motion` property, or is a child of a node with a `motion` property, the `motionNodeIndex` must be set to the index of the node containing the `motion`, otherwise, `motionNodeIndex` must be initialized to -1. These events may be raised multiple times between a pair of `event/onTick` events in scenarios where multiple objects entered a trigger.
 
 If the `nodeIndex` configuration value is negative or greater than or equal to the number of glTF nodes in the asset, or does not refer to a node with a `trigger` property, the event node is invalid. A behavior graph **MUST NOT** contain two or more nodes of the same event nodes with identical `nodeIndex` configuration values.
-
-## Known Implementations
-
-[Blender importer/exporter](https://github.com/eoineoineoin/glTF_Physics_Blender_Exporter)
-
-[Babylon.js importer](https://github.com/eoineoineoin/glTF_Physics_Babylon)
-
-[Godot importer](https://github.com/eoineoineoin/glTF_Physics_Godot_Importer)
 
 ## Appendix: Joint Limit Metrics
 
