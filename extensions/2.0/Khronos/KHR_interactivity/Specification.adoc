@@ -191,7 +191,7 @@ On the other hand, behavior graphs are a superset of trigger-action lists, meani
 === Turing Completeness
 The execution model and node choices for this extension mean that it is Turing-complete. This means that an implementation of this can execute any computation and it is also hard to predict if it will run forever (e.g. halt or not.)
 
-While this may present security implications, it is not a major hindrance and can be safely mitigated so that any implementation does not become susceptible to denial of services by badly behaving behavior graphs, whether intention or not.
+While this may present security implications, it is not a major hindrance and can be safely mitigated so that any implementation does not become susceptible to denial of services by badly behaving behavior graphs, whether intentional or not.
 
 The main way to mitigate the risk of non-halting behavior graphs is to limit the amount of time given to them for execution, both in terms of individual time slice as well as overall execution time.
 
