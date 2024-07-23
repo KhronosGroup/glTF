@@ -11,7 +11,6 @@ Sean Lilley, Cesium
 Adam Morris, Cesium
 Jason Sobotka, Cesium
 
-
 ## Status
 
 Draft
@@ -22,8 +21,21 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-Gaussian splats are currently stored in mostly unstructured files such as PLY. This aims to bring that format into glTF in a simple and straightfoward way.
+Gaussian splats are currently stored in mostly unstructured files such as PLY. This aims to bring that format into glTF in a simple and straightfoward way. The position, rotation, scale, and diffuse color are stored as standard attributes on a point primitive. If the point primitive contains the extension the renderer can know the render the point primitive as a Gaussian Splat instead of a point.
 
+This approach allows for an easy fallback in the event the glTF is loaded within a renderer that doesn't support Gaussian Splats. In this scenario, the glTF file will render as a sparse point cloud to the user.
+
+### Splat Data Mapping
+
+| Splat Data | glTF Attribute |
+| --- | --- |
+| Position | POSITION |
+| Color (Diffuse, Spherical Harmonic 0) | COLOR_0 RGB channels |
+| Opacity (Spherical Harmonic 0 Alpha) | COLOR_0 A channel |
+| Rotation | _ROTATION |
+| Scale | _SCALE |
+
+Spherical Harmonic channels 1 through 15, which map the splat specular, are currently unused by the extension.
 
 ## Sample
 
@@ -74,13 +86,9 @@ Extending glTF node:
 }
 ```
 
-### JSON Schema
+## Known Implementations
 
-TODO: Links to the JSON schema for the new extension properties.
-
-## Implementation Notes
-
-This doesn't specify any specific rendering techniques.
+This is currently implemented within CesiumJS as an experimental feature.
 
 ## Resources
 
