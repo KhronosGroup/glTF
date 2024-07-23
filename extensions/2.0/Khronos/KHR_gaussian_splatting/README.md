@@ -88,7 +88,7 @@ Extending glTF node:
 
 ## Known Implementations
 
-This is currently implemented within 3D Tiles and CesiumJS as an experimental feature.
+This is currently implemented within [3D Tiles and CesiumJS as an experimental feature](https://github.com/CesiumGS/cesium/tree/splat-shader).
 
 ## Resources
 
