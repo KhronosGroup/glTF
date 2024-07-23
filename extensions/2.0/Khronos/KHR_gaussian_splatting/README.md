@@ -7,9 +7,9 @@ SPDX-License-Identifier: CC-BY-4.0
 
 ## Contributors
 
-Sean Lilley, Cesium
-Adam Morris, Cesium
-Jason Sobotka, Cesium
+- Sean Lilley, Cesium
+- Adam Morris, Cesium
+- Jason Sobotka, Cesium
 
 ## Status
 
