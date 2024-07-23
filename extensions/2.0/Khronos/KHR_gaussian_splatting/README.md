@@ -1,5 +1,5 @@
 <!--
-Copyright 2015-2021 The Khronos Group Inc.
+Copyright 2015-2024 The Khronos Group Inc.
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
@@ -88,7 +88,7 @@ Extending glTF node:
 
 ## Known Implementations
 
-This is currently implemented within CesiumJS as an experimental feature.
+This is currently implemented within 3D Tiles and CesiumJS as an experimental feature.
 
 ## Resources
 
