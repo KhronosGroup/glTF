@@ -7,9 +7,9 @@ SPDX-License-Identifier: CC-BY-4.0
 
 ## Contributors
 
-- Sean Lilley, Cesium
-- Adam Morris, Cesium
 - Jason Sobotka, Cesium
+- Adam Morris, Cesium
+- Sean Lilley, Cesium
 
 ## Status
 
@@ -21,7 +21,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-Gaussian splats are currently stored in mostly unstructured files such as PLY. This aims to bring that format into glTF in a simple and straightfoward way. The position, rotation, scale, and diffuse color are stored as standard attributes on a point primitive. If the point primitive contains the extension the renderer can know the render the point primitive as a Gaussian Splat instead of a point.
+Gaussian splats are currently stored in mostly unstructured files such as PLY. This aims to bring that format into glTF in a simple and straightfoward way. The position, rotation, scale, and diffuse color are stored as standard attributes on a point primitive. If the point primitive contains the extension the renderer can know to render the point primitive as Gaussian Splats instead of a points.
 
 This approach allows for an easy fallback in the event the glTF is loaded within a renderer that doesn't support Gaussian Splats. In this scenario, the glTF file will render as a sparse point cloud to the user.
 
@@ -46,27 +46,27 @@ Extending glTF node:
     "accessors": [
         {
             "type": "VEC3",
-            "componentType": "FLOAT" // Enum
+            "componentType": 5126 // FLOAT
         },
         {
             "type": "VEC4",
-            "componentType": "UNSIGNED_BYTE", // Enum
+            "componentType": 5121, // UNSIGNED_BYTE
             "normalized": true
         },
         {
             "type": "VEC4", // quaternion
-            "componentType": "FLOAT" // could be quantized with KHR_mesh_quantization + EXT_meshopt_compression
+            "componentType": 5126 // FLOAT, could be quantized with KHR_mesh_quantization + EXT_meshopt_compression
         },
         {
             "type": "VEC3",
-            "componentType": "FLOAT" // could be quantized with KHR_mesh_quantization + EXT_meshopt_compression
+            "componentType": 5126 // FLOAT, could be quantized with KHR_mesh_quantization + EXT_meshopt_compression
         }
     ],
     "meshes": [
         {
             "primitives": [
                 {
-                    "mode": 0, // POINT CLOUD
+                    "mode": 0, // POINTS
                     "attributes": {
                         "POSITION": 0,
                         "COLOR_0": 1,
