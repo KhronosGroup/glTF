@@ -434,9 +434,18 @@ There are two variants for these types of nodes:
 
 Only the first is supported. Others must be remapped to a numbered streams.
 
-The stream number is a zero-based index used to lookup the corresponding stream type in a bound mesh's `primitives` array. 
+The stream number is a zero-based index used to lookup the corresponding stream type in a bound mesh's `primitives` array. There is no required sequential ordering for the streams.
 
 For the texture coordinate example if the stream number is 1, the binding is to stream: `TEXCOORD_1` The mesh to check would be the one assigned to the material using the procedural graph.
+
+Semantics for texture coordinate lookups are as follows:
+
+1. The current [specification language for meshes]((https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#meshes-overview)) notes that texture coordinates are 
+2 channel. In order to support 3D texture coordinates it is proposed that the semantics of this binding be extended to allow 3 channel texture coordinates.
+
+2. Texture coordinates may be routed in a graph through one or more downstream nodes which may perform a mathematical operation on the coordinates. To avoid ambiguity any transform specified on a texture should be ignored / removed. 
+
+3. Any filtering or wrapping modes specified on the texture should be ignored / removed when specified by nodes in the graph.
 
 For colors, a procedural node would be used to specify a color stream. A value of 1 would imply a binding to color stream `COLOR_1`.
 
