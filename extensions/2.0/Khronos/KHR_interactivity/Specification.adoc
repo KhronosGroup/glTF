@@ -2335,33 +2335,37 @@ When the `in` input flow is activated:
 |===
 | Type | `pointer/get` | Get an object model property value
 | Configuration
-| `string pointer` | The JSON pointer or JSON pointer template
+| `string pointer` | The JSON Pointer or JSON Pointer template
 | Input value sockets
-| `int <segment>` | Zero or more JSON pointer template path substitutions to be evaluated at runtime; input value socket names correspond to the pointer's path segments wrapped with curly braces (`{}`)
+| `int <segment>` | Zero or more JSON Pointer template path substitutions to be evaluated at runtime; input value socket names correspond to the pointer's path segments wrapped with curly braces (`{}`)
 .2+| Output value sockets
 | `T value`  | The resolved property value
 | `bool isValid`  | True if the property value can be resolved, false otherwise
 |===
 
-This node gets a glTF Asset Object Model value using the provided JSON pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the type of the pointer cannot be statically determined, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
+This node gets a glTF Asset Object Model value using the provided JSON Pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the pointer string has invalid syntax or if the type of the referenced property cannot be statically determined, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
 
 [NOTE]
 .Examples
 ====
-The `pointer` configuration value `"/nodes/0/scale"` is valid; its output value socket is of `float3` type.
+The `pointer` configuration value `"/nodes/1024/scale"` is valid even if the `nodes` array does not have enough elements; the type `T` is `float3`; the output values are set as described below.
 
-The `pointer` configuration value `"/myProperty"` is invalid because this path is not defined.
+The `pointer` configuration value `"/nodes/-1/scale"` is invalid because `-1` is not a valid array element reference according to the JSON Pointer standard.
+
+The `pointer` configuration value `"/myProperty"` is invalid because this path is not defined in the glTF Asset Object Model.
 ====
 
-The pointer string **MAY** be a template pointer string, i.e., it **MAY** contain path segments substituted at runtime using the input values. All input values **MUST** be of `int` type. Path segments, if used, **MUST** substitute only array indices in the pointer templates as listed in the glTF Asset Object Model Specification.
+The pointer string **MAY** be a template pointer string, i.e., it **MAY** contain path segments substituted at runtime by converting each `<segment>` input value to a base-10 string representation. All input values **MUST** be of `int` type. Path segments, if used, **MUST** substitute only array indices in the pointer templates as listed in the glTF Asset Object Model Specification.
 
 [NOTE]
 .Example
 ====
-If the `pointer` configuration value is `"/nodes/{myId}/scale"`, the node has the `myId` input value socket, which value denotes the node index.
+If the `pointer` configuration value is `"/nodes/{myId}/scale"`, the behavior graph node has the `myId` input value socket, which value denotes the glTF node index.
 ====
 
 This node has no internal state.
+
+If any of the input values is negative, the `value` output value is the default value for its type and the `isValid` output value is false.
 
 If the pointer or the pointer template with all its substitutions applied can be resolved, the `value` output value is the resolved property value and the `isValid` output value is true.
 
@@ -2370,7 +2374,7 @@ If the pointer or the pointer template with all its substitutions applied cannot
 [NOTE]
 .Note
 ====
-Unresolvable pointers include those with negative or out-of-bounds array indices and/or non-existent JSON objects.
+When the `isValid` output value is false, it means that the pointer string could be resolved in principle, i.e., it represents a known glTF property and its type can be determined, but the property does not exist in the current asset. For example, an array index is out of bounds or an optional JSON object, e.g., an extension, does not exist at that location. Refer to the glTF Asset Object Model Specification for the JSON Pointer resolution rules.
 ====
 
 ===== Pointer Set
@@ -2379,20 +2383,20 @@ Unresolvable pointers include those with negative or out-of-bounds array indices
 |===
 | Type | `pointer/set` | Set an object model property value
 | Configuration
-| `string pointer` | The JSON pointer or JSON pointer template
+| `string pointer` | The JSON Pointer or JSON Pointer template
 | Input flow sockets
 | `in` | The entry flow into this node
 .2+| Input value sockets
-| `int <segment>` | Zero or more JSON pointer template path substitutions to be evaluated at runtime; input value socket names correspond to the pointer's path segments wrapped with curly braces (`{}`)
+| `int <segment>` | Zero or more JSON Pointer template path substitutions to be evaluated at runtime; input value socket names correspond to the pointer's path segments wrapped with curly braces (`{}`)
 | `T value` | The new property value
 .2+| Output flow sockets
-| `out` | The flow to be activated if the JSON pointer can be resolved
-| `err` | The flow to be activated if the JSON pointer cannot be resolved
+| `out` | The flow to be activated if the JSON Pointer can be resolved
+| `err` | The flow to be activated if the JSON Pointer cannot be resolved
 |===
 
-This node sets a glTF Asset Object Model value using the provided JSON pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the type of the pointer cannot be statically determined or if the referenced property is not mutable, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
+This node sets a glTF Asset Object Model value using the provided JSON Pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the pointer string has invalid syntax, if the type of the referenced property cannot be statically determined, or if the referenced property is not mutable, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
 
-The pointer string **MAY** be a template pointer string, i.e., it **MAY** contain path segments substituted at runtime using the input values. All input values used for path segment substitutions **MUST** be of `int` type. Path segments, if used, **MUST** substitute only array indices in the pointer templates as listed in the glTF Asset Object Model Specification.
+The pointer string **MAY** be a template pointer string, i.e., it **MAY** contain path segments substituted at runtime by converting each `<segment>` input value to a base-10 string representation. All input values used for path segment substitutions **MUST** be of `int` type. Path segments, if used, **MUST** substitute only array indices in the pointer templates as listed in the glTF Asset Object Model Specification.
 
 If the `value` input value is not valid for the resolved property, the effective property value becomes implementation-defined and subsequent `pointer/get` evaluations of the property **MAY** return any value of the corresponding type until the property is updated with a valid value.
 
@@ -2401,11 +2405,13 @@ This node has no internal state.
 When the `in` input flow is activated:
 
 1. Evaluate all input values.
-2. If the pointer or the pointer template with all its substitutions applied can be resolved,
+2. If any of the pointer segment input values is negative,
+.. activate the `err` output flow and skip the next steps.
+3. If the pointer or the pointer template with all its substitutions applied can be resolved,
 .. if the _pointer interpolation state dynamic array_ (defined below) contains an entry with the same resolved JSON Pointer value, remove it from the array;
 .. set the resolved property to the `value` input value;
 .. activate the `out` output flow.
-3. If the pointer or the pointer template with all its substitutions applied cannot be resolved,
+4. If the pointer or the pointer template with all its substitutions applied cannot be resolved,
 .. activate the `err` output flow.
 
 ===== Pointer Interpolate
@@ -2414,24 +2420,24 @@ When the `in` input flow is activated:
 |===
 | Type | `pointer/interpolate` | Interpolate an object model property value
 | Configuration
-| `string pointer` | The JSON pointer or JSON pointer template
+| `string pointer` | The JSON Pointer or JSON Pointer template
 | Input flow sockets
 | `in` | The entry flow into this node
 .5+| Input value sockets
-| `int <segment>` |  Zero or more JSON pointer template path substitutions to be evaluated at runtime; input value socket names correspond to the pointer's path segments wrapped with curly braces (`{}`)
+| `int <segment>` |  Zero or more JSON Pointer template path substitutions to be evaluated at runtime; input value socket names correspond to the pointer's path segments wrapped with curly braces (`{}`)
 | `T value` | The target property value
 | `float duration` | The time, in seconds, in which the property **SHOULD** reach the target value
 | `float2 p1` | Control point P1
 | `float2 p2` | Control point P2
 .3+| Output flow sockets
-| `out` | The flow to be activated if the JSON pointer can be resolved and the input values are valid
-| `err` | The flow to be activated if the JSON pointer cannot be resolved or the input values are invalid
+| `out` | The flow to be activated if the JSON Pointer can be resolved and the input values are valid
+| `err` | The flow to be activated if the JSON Pointer cannot be resolved or the input values are invalid
 | `done` | The flow to be activated when the property reaches the target value
 |===
 
-This node interpolates and updates the specified glTF Asset Object Model property multiple times over the specified duration using the provided JSON pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the type of the pointer cannot be statically determined, if it is integer or boolean, or if the referenced property is not mutable, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
+This node interpolates and updates the specified glTF Asset Object Model property multiple times over the specified duration using the provided JSON Pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the pointer string has invalid syntax, if the type of the referenced property cannot be statically determined, if it is integer or boolean, or if the referenced property is not mutable, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
 
-The pointer string **MAY** be a template pointer string, i.e., it **MAY** contain path segments substituted at runtime using the input values. All input values used for path segment substitutions **MUST** be of `int` type. Path segments, if used, **MUST** substitute only array indices in the pointer templates as listed in the glTF Asset Object Model Specification.
+The pointer string **MAY** be a template pointer string, i.e., it **MAY** contain path segments substituted at runtime by converting each `<segment>` input value to a base-10 string representation. All input values used for path segment substitutions **MUST** be of `int` type. Path segments, if used, **MUST** substitute only array indices in the pointer templates as listed in the glTF Asset Object Model Specification.
 
 If the `value` input value or any intermediate interpolated value are not valid for the resolved property, the effective property value becomes implementation-defined and subsequent `pointer/get` evaluations of the property **MAY** return any value of the corresponding type until the property is updated with a valid value.
 
@@ -2452,19 +2458,21 @@ This array is initially empty and its maximum size is implementation-specific.
 When the `in` input flow is activated:
 
 1. Evaluate all input values.
-2. If the pointer or the pointer template with all its substitutions applied cannot be resolved,
+2. If any of the pointer segment input values is negative,
 .. activate the `err` output flow and skip the next steps.
-3. If the `duration` input value is NaN, infinite, negative, or not convertible into an implementation-specific time type used for the internal interpolation start time value,
+3. If the pointer or the pointer template with all its substitutions applied cannot be resolved,
 .. activate the `err` output flow and skip the next steps.
-4. If any component of the `p1` or `p2` input values is NaN or infinite or if any of the first components of these input values is negative or greater than 1,
+4. If the `duration` input value is NaN, infinite, negative, or not convertible into an implementation-specific time type used for the internal interpolation start time value,
 .. activate the `err` output flow and skip the next steps.
-5. If starting a new pointer interpolation exceeds any implementation-specific limit,
+5. If any component of the `p1` or `p2` input values is NaN or infinite or if any of the first components of these input values is negative or greater than 1,
 .. activate the `err` output flow and skip the next steps.
-6. If the _pointer interpolation state dynamic array_ contains an entry with the same resolved JSON Pointer value,
+6. If starting a new pointer interpolation exceeds any implementation-specific limit,
+.. activate the `err` output flow and skip the next steps.
+7. If the _pointer interpolation state dynamic array_ contains an entry with the same resolved JSON Pointer value,
 .. remove it from the array.
-7. Using the implicitly-defined end points stem:[P_0 (0, 0)] and stem:[P_3 (1, 1)] together with the control points stem:[P_1] and stem:[P_2] provided via the input values construct a cubic Bézier easing function for the stem:[[0, 1]] input range.
-8. Add a new entry to the _pointer interpolation state dynamic array_ filling it with the required information based on the evaluated input values.
-9. Activate the `out` output flow.
+8. Using the implicitly-defined end points stem:[P_0 (0, 0)] and stem:[P_3 (1, 1)] together with the control points stem:[P_1] and stem:[P_2] provided via the input values construct a cubic Bézier easing function for the stem:[[0, 1]] input range.
+9. Add a new entry to the _pointer interpolation state dynamic array_ filling it with the required information based on the evaluated input values.
+10. Activate the `out` output flow.
 
 On each asset animation update, for each entry in the _pointer interpolation state dynamic array_:
 
