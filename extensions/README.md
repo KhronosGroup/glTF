@@ -45,14 +45,15 @@ This section tracks the status of extensions and projects that are in developmen
 | KHR_audio_graph | Proposal | [PR #2421](https://github.com/KhronosGroup/glTF/pull/2421) |
 | KHR_collision_shapes | Review Draft | [PR #2370](https://github.com/KhronosGroup/glTF/pull/2370) |
 | KHR_interactivity | Review Draft | [PR #2293](https://github.com/KhronosGroup/glTF/pull/2293) |
-| KHR_node_visibility | Review Draft | [PR #2410](https://github.com/KhronosGroup/glTF/pull/2410) |
-| KHR_node_selectability | Review Draft | [PR #2422](https://github.com/KhronosGroup/glTF/pull/2422) |
 | KHR_materials_diffuse_transmission | Review Draft | [PR #1825](https://github.com/KhronosGroup/glTF/pull/1825) |
 | KHR_materials_subsurface | Initial Draft | [PR #1928](https://github.com/KhronosGroup/glTF/pull/1928) |
+| KHR_node_hoverability | Review Draft | [PR #2426](https://github.com/KhronosGroup/glTF/pull/2426) |
+| KHR_node_selectability | Review Draft | [PR #2422](https://github.com/KhronosGroup/glTF/pull/2422) |
+| KHR_node_visibility | Review Draft | [PR #2410](https://github.com/KhronosGroup/glTF/pull/2410) |
 | KHR_physics_rigid_bodies | Review Draft | [PR #2424](https://github.com/KhronosGroup/glTF/pull/2424) |
-| KHR_texture_video | Initial Draft | [PR #2285](https://github.com/KhronosGroup/glTF/pull/2285) |
 | KHR_texture_procedurals | Initial Draft | [PR #2381](https://github.com/KhronosGroup/glTF/pull/2381) |
 | EXT_texture_procedurals_mx_1_39 | Review Draft | [PR #2381](https://github.com/KhronosGroup/glTF/pull/2381) |
+| KHR_texture_video | Initial Draft | [PR #2285](https://github.com/KhronosGroup/glTF/pull/2285) |
 
 | Projects | Status | Pull Request |
 |----------|--------|--------------|
