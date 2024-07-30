@@ -1,0 +1,25 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_texture_ktx glTF extension",
+    "type": "object",
+    "description": "glTF extension to specify textures using the KTX v2 images.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "source": {
+          "allOf": [ { "$ref": "glTFid.schema.json" } ],
+          "description": "The index of the image which points to a KTX v2 resource."
+        },
+        "layer": {
+           "type": "integer",
+            "description": "The KTX v 2 layer that the image source is fetched from.",
+            "default": 0,
+            "minimum": 0
+            
+        }
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "source"
+    ]    
+}
