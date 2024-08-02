@@ -23,6 +23,7 @@ Written against the glTF 2.0 spec.
 
 This extension models the physical phenomenon of light being diffusely transmitted through an infinitely thin material. Thin dielectric objects like leaves or paper diffusely transmit light due to dense volumetric scattering within the object. In 3D graphics, it is common to approximate thin volumetric objects as non-volumetric surfaces. The KHR_materials_diffuse_transmission extension models the diffuse transmission of light through such infinitely thin surfaces. For optically thick media (volumes) with short scattering distances and dense scattering behavior, i.e. candles, KHR_materials_diffuse_transmission provides a phenomenologically plausible and cost-effective approximation.
 
+<div align="center">
 <figure style="text-align:center">
 <p float="left">
 <img src="figures/leaves.jpg" height="350" />
@@ -30,6 +31,8 @@ This extension models the physical phenomenon of light being diffusely transmitt
 </p>
 <figcaption><em>Left: (Thin) translucent leaves/foliage, Right: (Thick) translucent candle with colored volume attenuation and translucent surface.</em></figcaption>
 </figure>
+</div>
+
 
 ## Extending Materials
 
@@ -71,13 +74,6 @@ The effect is activated by adding the `KHR_materials_diffuse_transmission` exten
 The proportion of light that is diffusely transmitted through a surface, rather than being diffusely re-emitted. This is expressed as a percentage of the light that penetrates the surface (i.e., not specularly reflected), rather than a percentage of the total light incident on the surface. A value of 1.0 indicates that 100% of the light that penetrates the surface is transmitted through it.
 
 <table>
- <tr>
-    <th style="text-align:center">0.0</th>
-    <th style="text-align:center">0.25</th>
-    <th style="text-align:center">0.5</th>
-    <th style="text-align:center">0.75</th>
-    <th style="text-align:center">1.0</th>
-  </tr>
   <tr>
     <td><img src="figures/factor_0.0.jpg"/></td>
     <td><img src="figures/factor_0.25.jpg"/></td>
@@ -85,7 +81,18 @@ The proportion of light that is diffusely transmitted through a surface, rather 
     <td><img src="figures/factor_0.75.jpg"/></td>
     <td><img src="figures/factor_1.0.jpg"/></td>
   </tr>
-<caption style="caption-side:bottom"><em>Backlit, occluded plane with blue <code>baseColorFactor</code> for varying <code>diffuseTransmissionFactor</code>.</em></caption>
+  <tr>
+    <td align="center">0.0</td>
+    <td align="center">0.25</td>
+    <td align="center">0.5</td>
+    <td align="center">0.75</td>
+    <td align="center">1.0</td>
+  </tr>
+  <tr>
+    <td colspan="5" align="center">
+      <em>Backlit, occluded plane with blue <code>baseColorFactor</code> for varying <code>diffuseTransmissionFactor</code>.</em>
+    </td>
+  </tr>
 </table>
 
 ### diffuseTransmissionColorFactor
@@ -93,13 +100,6 @@ The proportion of light that is diffusely transmitted through a surface, rather 
 The proportion of light at each color channel that is not attenuated by the surface transmission. Attenuation is usually defined as an amount of light at each frequency that is reduced over a given distance through a medium by absorption and scattering interactions. However, since this extension deals exclusively with infinitely thin surfaces, attenuation is constant and equal to 1.0 - `diffuseTransmissionColorFactor`.
 
 <table>
- <tr>
-    <th style="text-align:center">0.0</th>
-    <th style="text-align:center">0.25</th>
-    <th style="text-align:center">0.5</th>
-    <th style="text-align:center">0.75</th>
-    <th style="text-align:center">1.0</th>
-  </tr>
   <tr>
     <td><img src="figures/color_0.0.jpg"/></td>
     <td><img src="figures/color_0.25.jpg"/></td>
@@ -107,7 +107,18 @@ The proportion of light at each color channel that is not attenuated by the surf
     <td><img src="figures/color_0.75.jpg"/></td>
     <td><img src="figures/color_1.0.jpg"/></td>
   </tr>
-<caption style="caption-side:bottom"><em>Backlit, occluded plane with blue <code>baseColorFactor</code> and red <code>diffuseTransmissionColorFactor</code> for varying <code>diffuseTransmissionFactor</code>.</em></caption>
+ <tr>
+    <td align="center">0.0</td>
+    <td align="center">0.25</td>
+    <td align="center">0.5</td>
+    <td align="center">0.75</td>
+    <td align="center">1.0</td>
+  </tr>
+  <tr>
+    <td colspan="5" align="center">
+      <em>Backlit, occluded plane with blue <code>baseColorFactor</code> and red <code>diffuseTransmissionColorFactor</code> for varying <code>diffuseTransmissionFactor</code>.</em>
+    </td>
+  </tr>
 </table>
 
 ### diffuseTransmissionTexture
@@ -119,10 +130,17 @@ The value is linear and is multiplied by the `diffuseTransmissionFactor` to dete
 ```
 diffuseTransmission = diffuseTransmissionFactor * diffuseTransmissionTexture.a
 ```
-<figure style="text-align:center">
-<img src="./figures/factor_tex_inlay.jpg"/>
-<figcaption><em>Backlit, occluded plane with blue <code>baseColorFactor</code> and a striped <code>diffuseTransmissionTexture</code>.<br>(Input texture shown in the top-left).</em></figcaption>
-</figure>
+
+<table>
+ <tr>
+    <td><img src="./figures/factor_tex_inlay.jpg"/></td>
+  </tr>
+  <tr>
+    <td align="center">
+      <em>Backlit, occluded plane with blue <code>baseColorFactor</code> and a striped <code>diffuseTransmissionTexture</code>.<br>(Input texture shown in the top-left).</em>
+    </td>
+  </tr>
+</table>
 
 
 ### diffuseTransmissionColorTexture
@@ -134,13 +152,6 @@ diffuseTransmissionColor = diffuseTransmissionColorFactor * diffuseTransmissionC
 ```
 
 <table>
- <tr>
-    <th style="text-align:center">0.0</th>
-    <th style="text-align:center">0.25</th>
-    <th style="text-align:center">0.5</th>
-    <th style="text-align:center">0.75</th>
-    <th style="text-align:center">1.0</th>
-  </tr>
   <tr>
     <td><img src="figures/color_tex_0.0.jpg"/></td>
     <td><img src="figures/color_tex_0.25.jpg"/></td>
@@ -148,7 +159,18 @@ diffuseTransmissionColor = diffuseTransmissionColorFactor * diffuseTransmissionC
     <td><img src="figures/color_tex_0.75.jpg"/></td>
     <td><img src="figures/color_tex_1.0.jpg"/></td>
   </tr>
-<caption style="caption-side:bottom"><em>Single sided plane in a symmetric light setup. <code>baseColorTexture</code> and <code>diffuseTransmissionColorTexture</code> use textures that represent the different sides of the one-dollar bill. Series shows the setup at varying values of <code>diffuseTransmissionFactor</code>.</em></caption>
+  <tr>
+    <td align="center">0.0</td>
+    <td align="center">0.25</td>
+    <td align="center">0.5</td>
+    <td align="center">0.75</td>
+    <td align="center">1.0</td>
+  </tr>
+  <tr>
+    <td colspan="5" align="center">
+      <em>Single-sided plane in a symmetric light setup. <code>baseColorTexture</code> and <code>diffuseTransmissionColorTexture</code> use textures that represent the different sides of the one-dollar bill. Series shows the setup at varying values of <code>diffuseTransmissionFactor</code>.</em>
+    </td>
+  </tr>
 </table>
 
 ## Implementation
@@ -203,10 +225,21 @@ function mix(bsdf0, bsdf1, factor) {
 }
 ```
 
-<figure style="text-align:center">
-<img src="./figures/bsdf.svg"/>
-<figcaption><em>Left: Diffuse BRDF. Right: Diffuse BTDF.</em></figcaption>
-</figure>
+<div align="center">
+<table>
+  <tr>
+    <td colspan="2"><img src="./figures/bsdf.jpg"/></td>
+  </tr>
+  <tr>
+    <td colspan="1" align="center">
+      <em>Diffuse BRDF</em>
+    </td>
+    <td colspan="1" align="center">
+      <em>Diffuse BTDF</em>
+    </td>
+  </tr>
+</table>
+</div>
 
 ## Combining Diffuse Transmission with other Extensions
 ### KHR_materials_transmission
@@ -245,19 +278,44 @@ Since the diffuse BTDF does not have controls for roughness, the roughness param
     <td><img src="./figures/transmission-translucency_thin.jpg"/></td>
     <td><img src="./figures/transmission-translucency_thin_angle.jpg"/></td>
   </tr>
-<caption style="caption-side:bottom"><em>Emissive sphere behind material sample. Left: Opaque diffuse. Middle: Rough transmission. Right: Diffuse transmission.</em></caption>
+  <tr>
+    <td colspan="2" align="center">
+      <em>Emissive sphere behind material sample.<br>Left: Opaque diffuse. Middle: Rough transmission. Right: Diffuse transmission.</em>
+    </td>
+  </tr>
 </table>
 
-<figure style="text-align:center">
-<img src="./figures/translucent-roughness.png"/>
-<figcaption><em>Translucent sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption>
-</figure>
+<table>
+  <tr>
+    <td colspan="3"><img src="./figures/translucent-roughness.png"/></td>
+  </tr>
+  <tr>
+    <td align="center">0.0</td>
+    <td align="center">0.2</td>
+    <td align="center">0.4</td>
+  </tr>
+  <tr>
+    <td colspan="3" align="center">
+      <em>Translucent sphere with varying roughness.</em>
+    </td>
+  </tr>
+</table>
 
-<figure style="text-align:center">
-<img src="./figures/transmissive-roughness.png"/>
-<figcaption><em>Transmissive sphere with varying roughness. From left to right: 0.0, 0.2, 0.4.</em></figcaption>
-</figure>
-
+<table>
+ <tr>
+    <td colspan="3"><img src="./figures/transmissive-roughness.png"/></td>
+  </tr>
+  <tr>
+    <td align="center">0.0</td>
+    <td align="center">0.2</td>
+    <td align="center">0.4</td>
+  </tr>
+  <tr>
+    <td colspan="3" align="center">
+      <em>Transmissive sphere with varying roughness.</em>
+    </td>
+  </tr>
+</table>
 
 If `KHR_materials_transmission` is used in combination with `KHR_materials_diffuse_transmission`, the transmission effect overrides the diffuse transmission effect.
 
@@ -279,13 +337,6 @@ diffuse_bsdf = mix(
     diffuseTransmission)
 ```
 <table>
- <tr>
-    <th style="text-align:center">transmissionFactor<br> 1.0</th>
-    <th style="text-align:center">transmissionFactor<br> 0.75</th>
-    <th style="text-align:center">transmissionFactor<br> 0.5</th>
-    <th style="text-align:center">transmissionFactor<br> 0.25</th>
-    <th style="text-align:center">transmissionFactor<br> 0.0</th>
-  </tr>
   <tr>
     <td><img src="figures/dt_transmission_1.0.jpg"/></td>
     <td><img src="figures/dt_transmission_0.75.jpg"/></td>
@@ -293,38 +344,57 @@ diffuse_bsdf = mix(
     <td><img src="figures/dt_transmission_0.25.jpg"/></td>
     <td><img src="figures/dt_transmission_0.0.jpg"/></td>
   </tr>
-<caption style="caption-side:bottom"><em>Dragon with fixed <code>diffuseTransmissionFactor</code> of 1.0 and varying <code>transmissionFactor</code>.</em></caption>
+  <tr>
+    <td align="center">1.0</td>
+    <td align="center">0.75</td>
+    <td align="center">0.5</td>
+    <td align="center">0.25</td>
+    <td align="center">0.0</td>
+  </tr>
+  <tr>
+    <td colspan="5" align="center">
+      <em>Dragon with fixed <code>diffuseTransmissionFactor</code> of 1.0 and varying <code>transmissionFactor</code>.</em>
+    </td>
+  </tr>
 </table>
 
 ### KHR_materials_volume
 When `KHR_materials_diffuse_transmission` is combined with `KHR_materials_volume`, a diffuse transmission BTDF describes the transmission of light through the volume boundary. The object becomes translucent. The light transport inside the volume is solely handled by `KHR_materials_volume` and is not affected by the surface BSDF.
 
-<table style="width:100%">
-  <tr>
-    <th style="text-align:center">diffuseTransmissionFactor<br> 0.0</th>
-    <th style="text-align:center">diffuseTransmissionFactor<br> 0.5</th>
-    <th style="text-align:center">diffuseTransmissionFactor<br> 1.0</th>
-  </tr>
+<table>
   <tr>
     <td><img src="figures/attenuation_dt_0.0.jpg"/></td>
     <td><img src="figures/attenuation_dt_0.5.jpg"/></td>
     <td><img src="figures/attenuation_dt_1.0.jpg"/></td>
   </tr>
-<caption style="caption-side:bottom"><em>Dragon with white base color, colored volume attenuation and varying <code>diffuseTransmissionFactor</code>. </em></caption>
+  <tr>
+    <td align="center">0.0</td>
+    <td align="center">0.5</td>
+    <td align="center">1.0</td>
+  </tr>
+  <tr>
+    <td colspan="3" align="center">
+      <em>Dragon with white base color, colored volume attenuation and varying <code>diffuseTransmissionFactor</code>. </em>
+    </td>
+  </tr>
 </table>
 
-<table style="width:100%">
-  <tr>
-    <th style="text-align:center">diffuseTransmissionFactor<br> 0.0</th>
-    <th style="text-align:center">diffuseTransmissionFactor<br> 0.25</th>
-    <th style="text-align:center">diffuseTransmissionFactor<br> 0.5</th>
-  </tr>
+<table>
   <tr>
     <td><img src="figures/candle_0.0.jpg"/></td>
     <td><img src="figures/candle_0.25.jpg"/></td>
     <td><img src="figures/candle_0.5.jpg"/></td>
   </tr>
-<caption style="caption-side:bottom"><em>Candle with off-white base color, colored volume attenuation and varying <code>diffuseTransmissionFactor</code>. </em></caption>
+  <tr>
+    <td align="center">0.0</td>
+    <td align="center">0.25</td>
+    <td align="center">0.5</td>
+  </tr>
+  <tr>
+    <td colspan="3" align="center">
+      <em>Candle with off-white base color, colored volume attenuation and varying <code>diffuseTransmissionFactor</code>. </em>
+    </td>
+  </tr>
 </table>
 
 
