@@ -1,20 +1,21 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_audio_emitter.emitter.schema.json",
     "title": "KHR_audio_emitter Audio Emitter",
     "type": "object",
     "description": "Audio emitters define how audio sources are played back. Emitter properties are defined at the document level and are references by nodes. Audio may be played globally or positionally. Positional audio has further properties that define how audio volume scales with distance and angle.",
-    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "allOf": [{ "$ref": "glTFChildOfRootProperty.schema.json" }],
     "properties": {
         "type": {
             "type": "string",
             "description": "Specifies the audio emitter type.",
             "anyOf": [
                 {
-                    "enum": ["global"],
+                    "const": "global",
                     "description": "Global audio emitters are not affected by the position of audio listeners. All `positional` properties may not be defined on global audio emitters."
                 },
                 {
-                    "enum": ["positional"],
+                    "const": "positional",
                     "description": "Positional audio emitters play audio at a position in the scene. The properties are defined in the `positional` object."
                 },
                 {
@@ -23,23 +24,21 @@
             ]
         },
         "gain": {
-            "description": "Unitless linear multiplier against original source volume for determining emitter loudness.",
             "type": "number",
+            "description": "Unitless linear multiplier against original source volume for determining emitter loudness.",
             "minimum": 0.0,
             "default": 1.0
         },
         "sources": {
-            "description": "An array of audio source indices used by the audio emitter. This array may be empty.",
             "type": "array",
-            "allOf": [
-                {
-                    "$ref": "glTFid.schema.json"
-                }
-            ]
+            "description": "An array of audio source indices used by the audio emitter. This array may be empty.",
+            "items": {
+                "allOf": [ { "$ref": "glTFid.schema.json" } ]
+            }
         },
         "positional": {
             "type": "object",
-            "$ref": "emitter.positional.schema.json"
+            "$ref": "glTF.KHR_audio_emitter.emitter.positional.schema.json"
         },
         "name": {},
         "extensions": {},

@@ -1,33 +1,30 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_audio_emitter.source.schema.json",
     "title": "KHR_audio_emitter Audio Source",
     "type": "object",
     "description": "Audio sources reference audio data and define playback properties for it. Audio sources may be used by zero to many audio emitters.",
-    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "allOf": [{ "$ref": "glTFChildOfRootProperty.schema.json" }],
     "properties": {
         "autoPlay": {
-            "description": "Whether or not to play the specified audio when the glTF is loaded.",
             "type": "boolean",
+            "description": "Whether or not to play the specified audio when the glTF is loaded.",
             "default": false
         },
         "gain": {
-            "description": "Unitless multiplier against original audio file volume for determining audio source loudness.",
             "type": "number",
+            "description": "Unitless multiplier against original audio file volume for determining audio source loudness.",
             "minimum": 0.0,
             "default": 1.0
         },
         "loop": {
-            "description": "Whether or not to loop the specified audio when finished.",
             "type": "boolean",
+            "description": "Whether or not to loop the specified audio when finished.",
             "default": false
         },
         "audio": {
-            "description": "The index of the audio data assigned to this clip.",
-            "allOf": [
-                {
-                    "$ref": "glTFid.schema.json"
-                }
-            ]
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the audio data assigned to this clip."
         },
         "name": {},
         "extensions": {},
