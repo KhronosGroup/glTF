@@ -1,0 +1,355 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "KHR_texture_procedurals glTF Procedural Texture Extension",
+  "type": "object",
+  "description": "Extension to support procedural texture graphs and definitions",
+  "definitions" : {
+    
+    "port" :
+    {
+      "doc" : "A stand-alone, node or nodegraph port object",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "nodetype": { "type": "string" },
+        "type": { "type": "string" }
+      },
+      "required": ["nodetype", "type"]
+    },
+
+    "typedef":
+    {
+      "_doc:" : "Supported type definition strings",
+      "type" : "string",       
+      "enum": ["float", "integer", "boolean", "string", "filename", "color3", "color4", "vector2", "vector3", "vector4", "matrix33", "matrix44", "multioutout" ]
+    },
+    
+    "value":
+    {
+      "doc": "An input value. Can be a single number, boolean, string, or array of numbers",
+      "oneOf": [
+        { 
+          "type": "array", 
+          "minItems": 2,
+          "maxItems": 4,
+          "items": { "type": "number" } 
+        },
+        { "type": "string" },
+        { "type": "boolean" },
+        { "type": "number" }
+      ]
+    },
+
+    "graph_input" : 
+    {
+      "doc" : "A input port on a node graph. Either a value or a connection to a texture is required",
+      "allOf": [
+        { "$ref": "#/definitions/port" },
+        { "type" : "object",
+          "properties": {
+            "name": { "type": "string" },
+            "nodetype": { "type": "string", "const" : "input" },
+            "type": { "$ref": "#/definitions/typedef" },
+            "value": { "$ref": "#/definitions/value" } 
+          },
+          "required": ["nodetype", "type"],
+          "oneOf" : [
+              { 
+                "properties": { "value": { "$ref": "#/definitions/value" } },
+                "required": ["value"]
+              },
+              { 
+                "properties": { "texture": { "type": "integer" }},
+                "required": ["texture"]
+              }
+            ]
+        }
+      ]
+    },
+
+    "node_input" : 
+    {
+      "doc" : "A input port on a node. Either a value or a connection must be specified",
+      "allOf": [
+        { "$ref": "#/definitions/port" },
+        { "type" : "object",
+          "properties": {
+            "name": { "type": "string" },
+            "nodetype": { "type": "string", "const": "input" },
+            "type": {  "$ref": "#/definitions/typedef" }
+          },
+          "required": ["nodetype", "type"],
+          "oneOf" : [
+              { 
+                "properties": { "value": { "$ref": "#/definitions/value" } },
+                "required": ["value"]
+              },
+              { 
+                "properties": { 
+                  "node": { 
+                    "type": "integer",
+                    "_doc": "A connection to a node in the nodes array"
+                  },
+                  "output": { 
+                    "type": "integer",
+                    "_doc": "A connection to an output on the node. Required if > 1 output on the node"
+                  }  
+                },
+                "required": ["node"]                              
+              },
+              { 
+                "_doc": "A connection to a graph input",
+                "properties": { "input": { "type": "integer" }},
+                "required": ["input"]
+              },
+              { 
+                "_doc:" : "A connection to a texture in the textures array",
+                "properties": { "texture": { "type": "integer" }},
+                "required": ["texture"]
+              }
+          ]
+        }
+      ]
+    },
+
+    "output_port" : {
+      "_doc": "A stand-alone, node or nodegraph output port",
+      "type": "object",      
+      "properties": {
+        "name": { "type": "string" },
+        "nodetype": { "type": "string" },
+        "type": { "$ref": "#/definitions/typedef" }
+      },
+      "required": ["nodetype", "type"]
+    },
+
+    "node" : {
+      "_doc": "A node in a node graph",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "nodetype": {
+          "_doc": "A standard library node category or one defined in procedural_definitions",
+          "type": "string" 
+        },
+        "type": { "type": "string" },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/node_input"
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/output_port"
+          }
+        }
+      },
+      "required" : ["nodetype", "type", "outputs"] 
+    },
+
+    "nodegraph" : {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "nodetype": { 
+          "type": "string", 
+          "const": "nodegraph" 
+        },
+        "type": {  "$ref": "#/definitions/typedef" },
+
+        "inputs": {
+          "type": "array",
+          "items" : {"$ref": "#/definitions/graph_input"}
+        },
+
+        "outputs": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/output_port" }
+        },
+
+        "nodes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/node" }
+          }
+      },
+      "required" : ["nodetype", "type", "outputs", "nodes"]      
+    },
+
+    "definition_item" : {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "nodetype": { "type": "string" },
+        "type": { "$ref": "#/definitions/typedef" }
+      },
+      "required" : ["nodetype", "type"]
+    },
+
+    "nodedef" : {
+      "_doc": "A node definition",
+      "allOf": [
+        { "$ref": "#/definitions/definition_item" },
+        { "type" : "object",
+          "properties": {
+            "node" : {
+              "_doc": "Node classification used by nodetype references",
+              "type": "string" 
+            },
+            "nodetype" : {
+              "type" : "string",
+              "const" : "nodedef"
+            },
+            "version": {
+              "_doc" : "Version of the classification",
+              "type": "string" 
+            },
+            "nodegroup": {
+              "_doc" : "Grouping. Should be provided",
+              "type": "string",
+              "default": "texture2d"
+            },
+            "isdefaultversion": { "type": "boolean" },
+
+            "inputs": {
+              "type": "array",
+              "items" : {"$ref": "#/definitions/graph_input"}
+            },
+
+            "outputs": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/output_port" }
+            }
+          },
+          "required" : ["node", "outputs", "inputs"]      
+        }
+      ]
+    },
+
+    "nodegraph_implementatnion" : {
+      "_doc": "A node graph that is a definition's implementation.",
+      "allOf": [
+        { "$ref": "#/definitions/definition_item" },
+        { "type" : "object",
+          "properties": {
+            "nodetype" : {
+              "type" : "string",
+              "const" : "nodegraph"
+            },
+            "nodedef": { 
+              "_doc": "The node definition for this function",
+              "type": "number" 
+            },
+
+            "outputs": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/output_port" }
+            },
+
+            "nodes": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/node" }
+            }
+          },
+          "required" : ["nodedef", "outputs", "nodes"]    
+        }              
+      ]
+    }
+  },
+
+  "properties": {
+    "materials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "extensions": {
+            "type": "object",
+            "properties": {
+              "KHR_materials_unlit": { "type": "object" }
+            }
+          },
+          "name": { "type": "string" },
+          "pbrMetallicRoughness": {
+            "type": "object",
+            "properties": {
+              "baseColorTexture": {
+                "type": "object",
+                "properties": {
+                  "index": { "type": "integer" },
+                  "extensions": {
+                    "type": "object",
+                    "properties": {
+                      "KHR_texture_procedurals": {
+                        "type": "object",
+                        "properties": {
+                          "index": { "type": "integer" },
+                          "output": { "type": "integer" }
+                        },
+                        "required": ["index"]
+                      }
+                    },
+                    "required": ["KHR_texture_procedurals"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "required": ["pbrMetallicRoughness"]
+      }
+    },
+    "textures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": { "type": "integer" }
+        },
+        "required": ["source"]
+      }
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "uri": { "type": "string" },
+          "name": { "type": "string" }
+        },
+        "required": ["uri"]
+      }
+    },
+    "extensionsUsed": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "extensions": {
+      "type": "object",
+      "properties": {
+        "KHR_texture_procedurals": {
+          "type": "object",
+          "properties": {
+            "mimetype": { "type": "string" },
+
+            "procedurals": {
+              "_doc": "A list of procedural texture graphs",
+              "type": "array",
+              "items": { "$ref": "#/definitions/nodegraph" }
+            },
+
+            "procedural_definitions": {
+              "_doc": "A list of procedural node definitions and corresponding implementations",
+              "type": "array",
+              "items": { "$ref": "#/definitions/definition_item" }
+            }
+          },
+          "required": ["mimetype", "procedurals"]
+        }
+      },
+      "required": ["KHR_texture_procedurals"]
+    }
+  },
+  "required": ["materials", "extensionsUsed", "extensions"]
+}
