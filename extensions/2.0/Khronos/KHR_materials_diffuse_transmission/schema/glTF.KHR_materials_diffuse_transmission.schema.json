@@ -1,0 +1,41 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_diffuse_transmission glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the diffuse transmission of the material.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "diffuseTransmissionFactor": {
+            "type": "number",
+            "description": "The percentage of light that is diffusely transmitted through the surface.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The percentage of non-specularly reflected light that is transmitted through the surface via a Lambertian diffuse transmission."
+        },
+        "diffuseTransmissionTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "A texture that defines the percentage of light transmitted through the surface.",
+            "gltf_detailedDescription": "A texture that defines the strength of the diffuse transmission effect, stored in the alpha (A) channel. Will be multiplied by the diffuseTransmissionFactor."
+        },
+        "diffuseTransmissionColorFactor": {
+          "type": "array",
+          "items": {
+              "type": "number",
+              "minimum": 0.0
+          },
+          "description": "The color of the transmitted light.",
+          "default": [ 1.0, 1.0, 1.0 ],
+          "minItems": 3,
+          "maxItems": 3,
+          "gltf_detailedDescription": "The color of the transmitted light."
+      },
+      "diffuseTransmissionColorTexture": {
+          "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+          "description": "A texture that defines the color of the transmitted light",
+          "gltf_detailedDescription": "A texture that defines the color of the transmitted light, stored in the RGB channels and encoded in sRGB. This texture will be multiplied by diffuseTransmissionColorFactor."
+      },
+        "extensions": { },
+        "extras": { }
+    }
+}
