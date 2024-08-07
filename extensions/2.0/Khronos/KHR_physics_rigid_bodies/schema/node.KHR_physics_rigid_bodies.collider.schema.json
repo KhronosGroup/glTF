@@ -1,0 +1,27 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "node.KHR_physics_rigid_bodies.collider.schema.json",
+    "title": "KHR_physics_rigid_bodies Node Collider Property",
+    "type": "object",
+    "description": "Parameters describing a shape used for collison detection and response.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "shape": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "The index of the shape in the top level shapes array."
+        },
+        "physicsMaterial": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the physics material in the top level physicsMaterials array."
+        },
+        "collisionFilter": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the filter information in the top level collisionFilters array."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "shape"
+    ]
+}
