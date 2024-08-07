@@ -1,0 +1,30 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_collision_shapes.shape.capsule.schema.json",
+    "title": "KHR_collision_shapes Capsule Shape",
+    "type": "object",
+    "description": "Parameters describing a capsule shape.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "height": {
+            "type": "number",
+            "description": "The distance between the centers of the two capping spheres of capsule.",
+            "exclusiveMinimum": 0.0,
+            "default": 0.5
+        },
+        "radiusBottom": {
+            "type": "number",
+            "description": "The radius of the sphere located at the bottom of the capsule (i.e. the sphere at the half-height along -Y)",
+            "minimum": 0.0,
+            "default": 0.25
+        },
+        "radiusTop": {
+            "type": "number",
+            "description": "The radius of the sphere located at the top of the capsule (i.e. the sphere at the half-height along +Y)",
+            "minimum": 0.0,
+            "default": 0.25
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

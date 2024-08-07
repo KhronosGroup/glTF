@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_collision_shapes.shape.box.schema.json",
+    "title": "KHR_collision_shapes Box Shape",
+    "type": "object",
+    "description": "Parameters describing a box shape.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "size": {
+            "type": "array",
+            "description": "The extents of the box in each axis in local space.",
+            "items": {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [ 1, 1, 1 ]
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

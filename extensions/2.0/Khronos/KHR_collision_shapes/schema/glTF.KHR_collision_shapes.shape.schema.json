@@ -1,0 +1,76 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_collision_shapes.shape.schema.json",
+    "title": "KHR_collision_shapes Shape Resource",
+    "type": "object",
+    "description": "Parameters describing a node's physics collision geometry.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "type": {
+            "description": "Specifies the shape type.",
+            "anyOf": [
+                {
+                    "const": "sphere",
+                    "description": "A sphere with a specified radius, centered at the origin in local space."
+                },
+                {
+                    "const": "box",
+                    "description": "An axis-aligned box with a size per-axis, centered at the origin in local space"
+                },
+                {
+                    "const": "capsule",
+                    "description": "A capsule shape, centered at the origin in local space, equivalent to the convex hull of two spheres located along the Y axis (in local space) at a specified distance."
+                },
+                {
+                    "const": "cylinder",
+                    "description": "A cylinder shape, centered at the origin in local space, equivalent to the convex hull of two circles in the X/Z plane positioned along the Y axis at a specified distance."
+                },
+                {
+                    "const": "mesh",
+                    "description": "A shape generated from a referenced `mesh` object"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "sphere": {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a sphere shape.",
+            "$ref": "glTF.KHR_collision_shapes.shape.sphere.schema.json"
+        },
+        "box": {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a box shape.",
+            "$ref": "glTF.KHR_collision_shapes.shape.box.schema.json"
+        },
+        "capsule": {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a capsule shape.",
+            "$ref": "glTF.KHR_collision_shapes.shape.capsule.schema.json"
+        },
+        "cylinder": {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a cylinder shape.",
+            "$ref": "glTF.KHR_collision_shapes.shape.cylinder.schema.json"
+        },
+        "mesh": {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a shape derived from a mesh.",
+            "$ref": "glTF.KHR_collision_shapes.shape.mesh.schema.json"
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "oneOf": [
+        { "required": ["sphere"] },
+        { "required": ["box"] },
+        { "required": ["capsule"] },
+        { "required": ["cylinder"] },
+        { "required": ["mesh"] }
+    ],
+    "required": [
+        "type"
+    ]
+}

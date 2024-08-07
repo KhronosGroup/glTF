@@ -1,0 +1,41 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_collision_shapes.shape.mesh.schema.json",
+    "title": "KHR_collision_shapes Mesh Shape",
+    "type": "object",
+    "description": "Parameters describing a mesh shape.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "mesh": {
+            "description": "The index of the mesh from which to build the collision representation.",
+            "allOf": [{"$ref": "glTFid.schema.json"}]
+        },
+        "skin": {
+            "description": "The index of a skin with which to deform the mesh.",
+            "allOf": [ { "$ref": "glTFid.schema.json" } ]
+        },
+        "weights": {
+            "type": "array",
+            "description": "The weights of the instantiated morph target.",
+            "minItems": 1,
+            "items": {
+                "type": "number"
+            }
+        },
+        "useNodeWeights": {
+            "type": "boolean",
+            "description": "Use weights supplied by a node which references this shape. When true, a node referencing this shape **MUST** have a weights property, the length of which which **MUST** match the number of morph targets of the weights of the mesh referenced by this shape.",
+            "default": false
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "mesh"
+    ],
+    "not": {
+        "allOf": [
+            { "required": [ "weights", "useNodeWeights" ] }
+        ]
+    }
+}

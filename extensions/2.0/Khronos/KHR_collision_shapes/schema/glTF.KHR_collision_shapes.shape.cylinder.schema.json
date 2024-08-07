@@ -1,0 +1,30 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_collision_shapes.shape.cylinder.schema.json",
+    "title": "KHR_collision_shapes Cylinder Shape",
+    "type": "object",
+    "description": "Parameters describing a cylinder shape.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "height": {
+            "type": "number",
+            "description": "The height of the cylinder, centered along the Y axis.",
+            "exclusiveMinimum": 0.0,
+            "default": 0.5
+        },
+        "radiusBottom": {
+            "type": "number",
+            "description": "The radius of the bottom of the cylinder (the disk located along -Y.)",
+            "minimum": 0.0,
+            "default": 0.25
+        },
+        "radiusTop": {
+            "type": "number",
+            "description": "The radius of the top of the cylinder (the disk located along +Y.)",
+            "minimum": 0.0,
+            "default": 0.25
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
