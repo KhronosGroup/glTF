@@ -1,0 +1,36 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensions": {
+        "OMI_physics_shape": {
+            "shapes": [
+                {
+                    "type": "capsule",
+                    "capsule": {
+                        "height": 2.0,
+                        "radius": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    "extensionsUsed": [
+        "OMI_physics_body",
+        "OMI_physics_shape"
+    ],
+    "nodes": [
+        {
+            "extensions": {
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
+                }
+            },
+            "name": "CapsuleShape"
+        }
+    ],
+	"scene": 0,
+	"scenes": [{ "nodes": [0] }]
+}

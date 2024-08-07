@@ -1,0 +1,46 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "OMI_physics_body Motion Property",
+    "type": "object",
+    "required": [
+        "type"
+    ],
+    "properties": {
+        "type": {
+            "type": "string",
+            "description": "The motion type of this physics body as a string.",
+            "enum": [
+                "static",
+                "kinematic",
+                "dynamic"
+            ]
+        },
+        "mass": {
+            "type": "number",
+            "description": "The mass of this physics body in kilograms.",
+            "default": 1.0
+        },
+        "linearVelocity": {
+            "type": "array",
+            "description": "The initial linear velocity of the body in meters per second.",
+            "default": [0.0, 0.0, 0.0]
+        },
+        "angularVelocity": {
+            "type": "array",
+            "description": "The initial angular velocity of the body in radians per second.",
+            "default": [0.0, 0.0, 0.0]
+        },
+        "inertiaDiagonal": {
+            "type": "array",
+            "description": "The inertia around principle axes in kilogram meter squared. If zero or not specified, the inertia should be calculated automatically.",
+            "default": [0.0, 0.0, 0.0]
+        },
+        "inertiaOrientation": {
+            "type": "array",
+            "description": "The inertia orientation as a Quaternion. If not specified, the inertia is not rotated.",
+            "default": [0.0, 0.0, 0.0, 1.0]
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

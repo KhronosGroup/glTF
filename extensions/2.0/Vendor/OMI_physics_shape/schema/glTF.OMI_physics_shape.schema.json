@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "OMI_physics_shape glTF Document Extension",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "shapes": {
+            "description": "An array of shapes that can be referenced by nodes.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "shape.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "shapes"
+    ]
+}
