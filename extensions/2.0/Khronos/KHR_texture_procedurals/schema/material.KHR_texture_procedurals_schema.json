@@ -21,7 +21,7 @@
     {
       "_doc:" : "Supported type definition strings",
       "type" : "string",       
-      "enum": ["float", "integer", "boolean", "string", "filename", "color3", "color4", "vector2", "vector3", "vector4", "matrix33", "matrix44", "multioutout" ]
+      "enum": ["float", "integer", "boolean", "string", "filename", "color3", "color4", "vector2", "vector3", "vector4", "matrix33", "matrix44", "multioutput" ]
     },
     
     "value":
