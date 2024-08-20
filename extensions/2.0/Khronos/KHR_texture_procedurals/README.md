@@ -442,6 +442,8 @@ Semantics for texture coordinate lookups are as follows:
 
 1. The current [specification language for meshes]((https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#meshes-overview)) notes that texture coordinates are 
 2 channel. In order to support 3D texture coordinates it is proposed that the semantics of this binding be extended to allow 3 channel texture coordinates.
+This is currently beyond the scope of this extension, thus validation for
+for this version will consider these nodes as being invalid.
 
 2. Texture coordinates may be routed in a graph through one or more downstream nodes which may perform a mathematical operation on the coordinates. To avoid ambiguity any transform specified on a texture should be ignored / removed. 
 

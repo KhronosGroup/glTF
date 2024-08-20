@@ -79,17 +79,19 @@ The `procedurals` array specifies the procedural graphs for a given set of nodes
 
 ## Handling MaterialX glTF PBR Nodes
 
-The glTF PBR node specified within MaterialX exposes a number of input ports which may not map 1:1 with the glTF PBR material
-for texture mapping. That is `texture_info` mappings in glTF PBR may not map directly to the input ports of the MaterialX PBR node.
+The glTF PBR node specified within MaterialX exposes a number of input ports which may not map 1:1 with the glTF PBR material for texture mapping. That is, `texture_info` mappings in glTF PBR may not map directly to the input ports of the MaterialX PBR node.
 
-One example is the mismatch of `metalicRoughnessTexture` which is a single packed 3 or 4  channel image which is minimally split into two input ports `metallic` and `roughness` on a glTF PBR shader in MaterialX. ( It is to be determined what it means to have different upstream connections for each port when mapping to a single `texture_info`).
+One example is the mismatch of `metalicRoughnessTexture` which is a single packed 3 or 4  channel image which is minimally split into two input ports `metallic` and `roughness` on a glTF PBR shader in MaterialX.
 
 Below is the Boombox glTF example as expressed in MaterialX. The top image shows the mapping to the shader port connects and the bottom a subgraph which shows how an ORM image is split to the `metallic` and `roughness` and `occlusion` ports.
 
 <img src="figures/boombox_mapping.png" width=60%>
 <img src="figures/boombox_mapping2.png" width=60%>
 
-Any channels mapped on the MaterialX glTF PBR node which do not correspond to a `texture_info` mapping should be ignored or pre-processed to an appropriate scalar value. 
+Any channels mapped on the MaterialX glTF PBR node which do not correspond to a `texture_info` mapping should be ignored as being invalid or pre-processed to insert the appropriate node within the procedural graph to combine the outputs so that they are mappable. For the example, a `combine` node has been added. The 
+split outputs can be reconstituted when converted back (e.g. to MaterialX) for an integration which uses separated inputs.
+
+<img src="figures/combine_channels.png" width=60%>
 
 ## JSON Schema
 
