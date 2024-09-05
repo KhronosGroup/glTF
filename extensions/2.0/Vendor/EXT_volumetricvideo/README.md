@@ -22,7 +22,7 @@ Typically, glTF renderer only shows the node elements with meshID specified in t
 
 Same as other 3D mesh in the glTF file, all meshes of a Volumetric Video sequence are stored in the glTF buffer, but only one mesh should be displayed per video frame in the Volumetric Video node and apply the corresponding video texture to it, controlled by the video playback.
 
-A Volumetric Video controller should be developed with the glTF 3D render engine, and control the Volumetric Video playback as shown as below structure. It creates a 3D object for the node contains EXT_volumetricvideo extension and switches the mesh following the video playback, get the video texture from video player and apply it to the Volumetric Video mesh material,
+A Volumetric Video controller should be developed with the glTF 3D render engine, and control the Volumetric Video playback as shown as below structure. It creates a 3D object for the node contains EXT_volumetricvideo extension and switches the mesh following the video playback, get the video texture from video player and apply it to the Volumetric Video mesh material.
 <p align="center">
 <img src="vvext.png" width="716" height="357" />
 </p>
