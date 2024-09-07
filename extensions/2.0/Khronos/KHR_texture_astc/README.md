@@ -25,15 +25,15 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds the ability to specify textures using KTX v2 images with (ASTC compression)[https://github.com/ARM-software/astc-encoder/blob/main/Docs/FormatOverview.md]. An implementation of this extension can use such images as an alternative to the PNG or JPEG images available in glTF 2.0 for more efficient asset transmission, reducing GPU memory footprint, higher texture throughput and faster execution.
+This extension adds the ability to specify textures using (ASTC compressed images)[https://github.com/ARM-software/astc-encoder/blob/main/Docs/FormatOverview.md] in KTX v2 containers. An implementation of this extension can use such images as an alternative to the PNG or JPEG images available in glTF 2.0 for more efficient asset transmission, reducing GPU memory footprint, higher texture throughput and faster execution.
 
 When this extension is used, it's allowed to use value `image/ktx2` for the `mimeType` property of images that are referenced by the `source` property of `KHR_texture_astc` texture extension object.
 
-At runtime, engines can directly use the ktx images unlike EXT_texture_basisu which requires doing transcoding to other compressed formats. This also means you get support for all ASTC block formats and quality presets.
+At runtime, engines can directly use the ktx images unlike EXT_texture_basisu which requires transcoding to other compressed formats. This also means you get support for all ASTC block formats and quality presets.
 
 ## glTF Schema Updates
 
-The `KHR_texture_astc` extension is added to the `textures` object and specifies a `source` property that points to the index of the `image` which defines a reference to the KTX v2 image with ASTC compression.
+The `KHR_texture_astc` extension is added to the `textures` object and specifies a `source` property that points to the index of the `image` which defines a reference to the KTX v2 file with the ASTC compressed image.
 
 The following glTF will load `astc_image.ktx2` in clients that support this extension, and fall back to `image.png` otherwise.
 
@@ -137,7 +137,7 @@ To use KTX v2 image with ASTC compression without a fallback, define `KHR_textur
 
 ## KTX v2 Images with Astc compression 
 
-To cover a broad range of use cases, this extension allows different ASTC block sizes as well as LDR, HDR and 3D images. These can be determined from the VkFormat of the KTX image.
+To cover a broad range of use cases, this extension allows different ASTC block sizes as well as LDR, HDR and 3D images. These can be determined from the vkFormat of the KTX image.
 
 For the purposes of this extension, the following texture types are defined:
 
@@ -156,12 +156,20 @@ For the purposes of this extension, the following texture types are defined:
   > **Note:** Red textures from the core glTF 2.0 specification include:
   > - `occlusionTexture` (standalone)
 
-- **Luminance-Alpha:** A texture that uses only Luminance and Alpha channels. To sample these textures use `.ga` swizzle in your shaders. Such textures MUST NOT be encoded with sRGB transfer function.
+- **Luminance-Alpha:** A texture that uses only Luminance and Alpha channels. To sample these textures use `.ga` swizzle in your shaders. Such textures MAY be encoded with sRGB transfer function.
   > **Note:** The core glTF 2.0 specification has no examples of luminance-alpha textures.
+
+If the texture type is `normalTexture` the output will be a two component X+Y normal map stored as (RGB=X, A=Y). The Z component can be recovered programmatically in shader code by using the equation:
+
+```GLSL
+    nml.xy = texture(...).ga;              // Load in [0,1]
+    nml.xy = nml.xy * 2.0 - 1.0;           // Unpack to [-1,1]
+    nml.z = sqrt(1 - dot(nml.xy, nml.xy)); // Compute Z
+```
 
 ### KTX header fields for ASTC payloads
   - `supercompressionScheme` MUST be `0` (None).
-  - ASTC HDR vs LDR as well as block sizes can be determined from the vkFormat of the image
+  - ASTC HDR vs LDR as well as block sizes can be determined from the vkFormat of the KTX image
   - DFD `colorModel` MUST be `KHR_DF_MODEL_ASTC`.
   - DFD `channelId` MUST be `KHR_DF_CHANNEL_ASTC_DATA`.
 
@@ -169,7 +177,6 @@ For the purposes of this extension, the following texture types are defined:
 
 Regardless of the format used, these additional restrictions apply for compatibility reasons:
 
-- Swizzling metadata (`KTXswizzle`) MUST be `rgba` or omitted.
 - Orientation metadata (`KTXorientation`) MUST be `rd` or omitted.
 - Color space information in the DFD MUST match the expected usage, namely:
   - For textures with **color data** (e.g., base color maps),
@@ -180,7 +187,7 @@ Regardless of the format used, these additional restrictions apply for compatibi
     - `transferFunction` MUST be `KHR_DF_TRANSFER_LINEAR`.
 - `pixelWidth` and `pixelHeight` MUST be multiples of 4.
 - When a texture refers to a sampler with mipmap minification, the KTX image MUST contain a full mip pyramid.
-- When a texture referencing a KTX v2 image with ASTC compression is used for glTF 2.0 material maps (both color and non-color), the KTX v2 image MUST be of **2D** type as defined in the KTX v2 Specification, Section 4.1.
+- When a texture referencing a KTX v2 file with ASTC compressed image is used for glTF 2.0 material maps (both color and non-color), the KTX v2 image MUST be of **2D** type as defined in the KTX v2 Specification, Section 4.1.
 - `KHR_DF_FLAG_ALPHA_PREMULTIPLIED` flag MUST NOT be set unless the material's specification requires premultiplied alpha.
 
 ## Known Implementations
