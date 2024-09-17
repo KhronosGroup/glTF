@@ -64,18 +64,24 @@ Sample values:
 
 |                         | Type     | Description               | Required           |
 | ----------------------- | -------- | ------------------------- | ------------------ |
-| **anisotropyStrength**  | `number` | The anisotropy strength. When anisotropyTexture is present, this value is multiplied by the blue channel. | No, default: `0.0` |
-| **anisotropyRotation**  | `number` | The rotation of the anisotropy in tangent, bitangent space, measured in radians counter-clockwise from the tangent. When anisotropyTexture is present, anisotropyRotation provides additional rotation to the vectors in the texture. | No, default: `0.0` |
-| **anisotropyTexture**   | [`textureInfo`](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | The anisotropy texture. Red and green channels represent the anisotropy direction in [-1, 1] tangent, bitangent space, to be rotated by anisotropyRotation. The blue channel contains strength as [0, 1] to be multiplied by anisotropyStrength. | No |
+| **anisotropyStrength**  | `number` | The anisotropy strength. When the anisotropy texture is present, this value is multiplied by the texture's blue channel. | No, default: `0.0` |
+| **anisotropyRotation**  | `number` | The rotation of the anisotropy in tangent, bitangent space, measured in radians counter-clockwise from the tangent. When the anisotropy texture is present, this value provides additional rotation to the vectors in the texture. | No, default: `0.0` |
+| **anisotropyTexture**   | [`textureInfo`](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | The anisotropy texture. Red and green channels represent the anisotropy direction in $[-1, 1]$ tangent, bitangent space to be rotated by the anisotropy rotation. The blue channel contains strength as $[0, 1]$ to be multiplied by the anisotropy strength. | No |
 
 ## Anisotropy
 
 Two new material properties are introduced: a strength parameter and the direction in which the specular reflection elongates relative to the surface tangents.
-The strength parameter is a dimensionless number in the range `[0, 1]` and increases the roughness along a chosen direction. The default direction aligns with the tangent to the mesh as described in the glTF 2.0 specification, [Meshes section](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#meshes).
+The strength parameter is a dimensionless number in the range $[0, 1]$ and increases the roughness along a chosen direction. The default direction aligns with the tangent to the mesh as described in the glTF 2.0 specification, [Meshes section](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#meshes).
 
-All meshes with materials that use anisotropy **SHOULD** supply `TANGENT` vectors as a mesh attribute.  If `TANGENT` vectors are not supplied for such a mesh, the mesh **MUST** supply a `normalTexture`, and tangents are computed according to rules in the [Meshes section](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#meshes) of the glTF specification. Likewise when `TANGENT` vectors are not supplied for a mesh, the mesh **MUST NOT** supply different texture coordinates on the `normalTexture` and `anisotropyTexture`.
+A mesh primitive using an anisotropy material **MUST** have a defined tangent space, i.e., it **MUST** have `NORMAL` and `TANGENT` attributes or its base material **MUST** have a normal texture. When the mesh primitive does not have `NORMAL` or `TANGENT` vectors, they are computed as defined in the glTF 2.0 specification.
 
-The `anisotropyTexture`, when supplied, encodes XY components of the direction vector in tangent space as red and green values, and strength as blue values, all stored with linear transfer function. After dequantization, red and green texel values **MUST** be mapped as follows: red [0.0 .. 1.0] to X [-1 .. 1], green [0.0 .. 1.0] to Y [-1 .. 1].  Blue does not require remapping.  When `anisotropyTexture` is not supplied, the default value is red 1.0 (X 1.0), green 0.5 (Y 0.0), and blue 1.0 (strength 1.0).  The direction of this XY vector specifies the per-texel direction of increased anisotropy roughness in tangent, bitangent space, prior to being rotated by `anisotropyRotation`.  The blue channel contains strength as [0.0 .. 1.0] to be multiplied by `anisotropyStrength` to determine the per-texel anisotropy strength.
+Since the glTF 2.0 specification does not mandate any particular tangent space derivation algorithm, mesh primitives using anisotropy materials **SHOULD** always provide their `NORMAL` and `TANGENT` vectors.
+
+When the material has both `normalTexture` and `anisotropyTexture` properties defined, these textures **SHOULD** use the same texture coordinates because they operate in the same tangent space and their texel values are usually correlated to each other.
+
+The anisotropy texture, when supplied, encodes XY components of the anisotropy direction vector in tangent space as red and green values, and the anisotropy strength as blue values, all stored with linear transfer function. After dequantization, red and green texel values **MUST** be mapped as follows: red $[0, 1]$ to X $[-1, 1]$, green $[0, 1]$ to Y $[-1, 1]$.  Blue does not require remapping.  When the anisotropy texture is not supplied, the default dequantized texel value is $(1.0; 0.5; 1.0)$, which corresponds to the $(1; 0)$ direction vector (+X axis) and full strength.
+
+The direction of this XY vector specifies the per-texel direction of increased anisotropy roughness in tangent, bitangent space, prior to being rotated by the `anisotropyRotation` property value.  After dequantization, the blue channel contains strength as $[0, 1]$ to be multiplied by the `anisotropyStrength` property value to determine the per-texel anisotropy strength.
 
 > **Note:** The direction vector of the anisotropy is the direction in which highlights will be stretched. The direction of the micro-grooves in the material causing the anisotropy will run perpendicular.
 

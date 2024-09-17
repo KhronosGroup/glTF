@@ -7,8 +7,9 @@ SPDX-License-Identifier: CC-BY-4.0
 <img src="specification/figures/glTF_RGB_June16.svg" width="340" height="170" />
 </p>
 
-[![Join the Slack group](https://img.shields.io/badge/chat-on%20slack-blue.svg)](https://www.khr.io/slack)
+[![Join glTF Discord](https://img.shields.io/badge/discuss-on%20discord-blue.svg)](https://khr.io/khrdiscord)
 [![Join the forums](https://img.shields.io/badge/discuss-in%20forums-blue.svg)](https://community.khronos.org/c/gltf-general)
+[![Join the Slack group](https://img.shields.io/badge/chat-on%20slack-blue.svg)](https://www.khr.io/slack)
 
 glTF™ (GL Transmission Format) is a royalty-free specification for the efficient transmission and loading of 3D scenes and models by applications. glTF minimizes both the size of 3D assets, and the runtime processing needed to unpack and use those assets. glTF defines an extensible, common publishing format for 3D content tools and services that streamlines authoring workflows and enables interoperable use of content across the industry.
 

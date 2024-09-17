@@ -3,13 +3,9 @@ Copyright 2015-2021 The Khronos Group Inc.
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-# glTF Extension Registry
+# glTF 2.0 Extension Registry
 
-## Extensions for glTF 2.0
-
-### Ratified Khronos Extensions for glTF 2.0
-
-Khronos extensions use the reserved `KHR` prefix. Once ratified by the Khronos Group, they are covered by the Khronos IP framework.  Extensions that are intended to be ratified can also use the `KHR` prefix to avoid name/code/version thrashing. Khronos members can submit an extension for ratification, which is then voted on by the Khronos Board of Promoters.
+## Ratified Khronos Extensions
 
 The following extensions have been ratified by the Khronos Group:
 
@@ -36,7 +32,52 @@ The following extensions have been ratified by the Khronos Group:
 * [EXT_meshopt_compression](2.0/Vendor/EXT_meshopt_compression/README.md)
 * [EXT_texture_webp](2.0/Vendor/EXT_texture_webp/README.md)
 
-### Multi-Vendor Extensions for glTF 2.0
+Khronos extensions use the reserved `KHR` prefix. Once ratified by the Khronos Group, they are covered by the Khronos IP framework.  Extensions that are intended to be ratified can also use the `KHR` prefix to avoid name/code/version thrashing. Khronos members can submit an extension for ratification, which is then voted on by the Khronos Board of Promoters.
+
+## In-progress Khronos and Multi-Vendor Extensions and Projects
+
+This section tracks the status of extensions and projects that are in development and is intended to provide the glTF community with a general sense of the priorities and direction of the glTF roadmap. The items listed are felt to show enough consensus to be considered for future ratification.  We welcome community feedback and encourage everyone to add comments to the Github Pull Requests.  All items are listed in alphabetical order. There is no order of priority of items with the same status.
+
+
+| Extensions | Status | Pull Request |
+|------------|--------|--------------|
+| KHR_accessor_float64 | Review Draft | [PR #2397](https://github.com/KhronosGroup/glTF/pull/2397) |
+| KHR_audio_graph | Proposal | [PR #2421](https://github.com/KhronosGroup/glTF/pull/2421) |
+| KHR_collision_shapes | Review Draft | [PR #2370](https://github.com/KhronosGroup/glTF/pull/2370) |
+| KHR_interactivity | Review Draft | [PR #2293](https://github.com/KhronosGroup/glTF/pull/2293) |
+| KHR_materials_diffuse_transmission | Review Draft | [PR #1825](https://github.com/KhronosGroup/glTF/pull/1825) |
+| KHR_materials_subsurface | Initial Draft | [PR #1928](https://github.com/KhronosGroup/glTF/pull/1928) |
+| KHR_node_hoverability | Review Draft | [PR #2426](https://github.com/KhronosGroup/glTF/pull/2426) |
+| KHR_node_selectability | Review Draft | [PR #2422](https://github.com/KhronosGroup/glTF/pull/2422) |
+| KHR_node_visibility | Review Draft | [PR #2410](https://github.com/KhronosGroup/glTF/pull/2410) |
+| KHR_physics_rigid_bodies | Review Draft | [PR #2424](https://github.com/KhronosGroup/glTF/pull/2424) |
+| KHR_texture_procedurals | Initial Draft | [PR #2381](https://github.com/KhronosGroup/glTF/pull/2381) |
+| EXT_texture_procedurals_mx_1_39 | Review Draft | [PR #2381](https://github.com/KhronosGroup/glTF/pull/2381) |
+| KHR_texture_video | Initial Draft | [PR #2285](https://github.com/KhronosGroup/glTF/pull/2285) |
+
+| Projects | Status | Pull Request |
+|----------|--------|--------------|
+| glTF External References | Proposal | [Repository](https://github.com/KhronosGroup/glTF-External-Reference/tree/main) |
+
+
+**How to view the latest draft specifications from a GitHub pull request** - Visit the files section of the Pull Request and find the file: README.md. In the top-right of that file's title bar select the three dots (...) and select ‘View file’.  This will render the latest version of the draft specification.
+
+### Specification Status Explained
+The status provides a guide to the current position of a specification through the main stages of extension development, and the community feedback that is requested at each stage.  This is a general guide and the stages and deliverables for an individual extension or project may differ.  Additional information can be found in the read.me file for each extension or project.
+
+| Status | Typical Start and End Deliverables | Community Engagement |
+|--------|------------------------------------|----------------------|
+| Proposal | This stage starts with the posting of a proposal document for discussion with an emphasis on the motivation and requirements of the desired feature/s rather than a detailed specification. These discussions may lead to an Initial Draft. |
+| Initial Draft | During this stage an early draft specification will undergo ongoing development but it will typically not be ready for detailed review | Request for directional feedback rather than a detailed review of the specification. |
+| Review Draft | This stage starts with the publication of a well-formed Review Draft of the specification based on the Initial Draft and earlier feedback.  The specification will continue to be developed, including adding any missing JSON schema, initial test assets, etc. At least one third party glTF implementation will be released to enable initial testing. | On-going discussion and detailed review of the Review Draft. |
+| Release Candidate | This stage will start with the release of a stable Release Candidate specification based on the Review Draft.  If not already done, the feature will be incorporated into the Khronos Sample Viewer and supported by the Khronos Asset Validator.  A public notice will be published that the specification is ready for final public review, along with a given review period. After this review period the specification will be put forward for ratification. | Final opportunity to provide feedback |
+| Ratified | Once ratified by the Khronos board the extension or project will move to the Ratified section of the glTF 2.0 specification. | Report bugs |
+
+### Adding Additional Features to glTF
+
+If you have a requirement for a feature that is not listed as part of a Ratified or In-Progress extensions, please check to see if others have already identified similar requirements by reviewing the existing [Vendor Extensions](https://github.com/KhronosGroup/glTF/tree/main/extensions#vendor-extensions-for-gltf-20), [Multi-Vendor extensions](https://github.com/KhronosGroup/glTF/tree/main/extensions#multi-vendor-extensions-for-gltf-20), [glTF GitHub Issues](https://github.com/KhronosGroup/glTF/issues) and [glTF Pull Requests](https://github.com/KhronosGroup/glTF/pulls). If you do find something on a similar topic we recommend you reach out and collaborate. If nothing matches your requirement we encourage you to reach out to the community for feedback and collaborators.  As a consensus develops please reach out to Khronos to discuss how an extension can be brought into the broader ecosystem, and potentially added to the official Khronos glTF Roadmap.
+
+## Multi-Vendor Extensions
 
 When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix. Multi-vendor extensions are typically not covered by the Khronos IP framework, with a few notable exceptions (listed above) that have been through the Khronos ratification process after becoming widely used under the `EXT` prefix.
 
@@ -44,13 +85,7 @@ When an extension is implemented by more than one vendor, its name can use the r
 * [EXT_lights_image_based](2.0/Vendor/EXT_lights_image_based/README.md)
 * [EXT_mesh_manifold](2.0/Vendor/EXT_mesh_manifold/README.md)
 
-### Vendor Extensions for glTF 2.0
-
-The list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any vendor, not just Khronos members, can request an extension prefix by submitting an [issue on GitHub](https://github.com/KhronosGroup/glTF/issues/new) requesting one.  Requests should include:
-
-* The name of the prefix.
-* The name of the vendor requesting the prefix.
-* The vendor's URL and/or contact information.
+## Vendor Extensions
 
 Vendor extensions are not covered by the Khronos IP framework.
 
@@ -77,33 +112,19 @@ Vendor extensions are not covered by the Khronos IP framework.
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 * [NV_materials_mdl](2.0/Vendor/NV_materials_mdl/README.md)
 
-### Archived Extensions for glTF 2.0
+The list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any vendor, not just Khronos members, can request an extension prefix by submitting an [issue on GitHub](https://github.com/KhronosGroup/glTF/issues/new) requesting one.  Requests should include:
+
+* The name of the prefix.
+* The name of the vendor requesting the prefix.
+* The vendor's URL and/or contact information.
+
+## Archived Extensions
 
 _Archived extensions may be useful for reading older glTF files, but they are no longer recommended for creating new files._
 
 * [KHR_materials_pbrSpecularGlossiness](2.0/Archived/KHR_materials_pbrSpecularGlossiness/README.md)
 * [KHR_techniques_webgl](2.0/Archived/KHR_techniques_webgl/README.md)
 * [KHR_xmp](2.0/Archived/KHR_xmp/README.md)
-
-### In-progress Khronos and multi-vendor extensions for glTF 2.0
-
-_Draft Khronos (KHR) extensions are not ratified yet. Multi-vendor (EXT) extensions do not require ratification,
-but may still change before they are complete._
-
-This section tracks the status of Khronos and multi-vendor extensions that are either already in development,
-or that we feel show enough consensus to be highly likely for future development. We welcome feedback for these
-and all other extensions (see [GitHub issues](https://github.com/KhronosGroup/glTF/issues?q=is%3Aopen+is%3Aissue+label%3Aextension)). This list is intended to give a general sense of current priorities and direction.
-
-For features that are not listed here but may be important for different uses, we encourage the community to
-begin with vendor extensions (which do not require review), reach out for feedback and collaborators, and as
-consensus forms we may consider the best way to bring a vendor extension into the broader ecosystem: via multi-vendor
-extensions, Khronos extensions, or inclusion in a future version of the glTF specification.
-
-| Extension | Status |
-|-----------|--------|
-| [KHR_audio](https://github.com/KhronosGroup/glTF/pull/2137) | Ready for testing. |
-| [KHR_materials_diffuse_transmission](https://github.com/KhronosGroup/glTF/pull/1825) | Ready for testing. |
-| [KHR_materials_subsurface](https://github.com/KhronosGroup/glTF/pull/1928) | In development. |
 
 # About glTF Extensions
 
@@ -158,7 +179,7 @@ If the extension adds a new top-level array (by extending the root glTF object),
 
 If lack of extension support prevents proper geometry loading, extension specification _must_ state that (and such extension must be mentioned in `extensionsRequired` top-level glTF property).
 
-### Naming
+## Naming
 
 > **NOTE:** For historical reasons, older extensions may not follow these guidelines. Future extensions should do so.
 

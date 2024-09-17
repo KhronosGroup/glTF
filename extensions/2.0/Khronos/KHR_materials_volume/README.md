@@ -157,11 +157,15 @@ T(*x*) = e<sup>-σ<sub>t</sub>*x*</sup>
 
 where T is commonly referred to as *transmittance*.
 
-Substituting σ<sub>t</sub> in the previous equation by its definition via *attenuation color* and *attenuation distance*, as defined above, and setting *x* = *d* we get
+Substituting σ<sub>t</sub> in the previous equation by its definition via *attenuation color* and *attenuation distance*, as defined above, we get
 
-T(d<sub>a</sub>) = e<sup>(log(*c*) / *d*) * *d*</sup> = *c*
+T(x) = e<sup>(log(*c*) / *d*) * *x*</sup>
 
-So, after traveling distance *d* through the medium we get attenuation color *c*.
+The above formula can be simplified as:
+
+T(x) = *c*<sup> *x* / *d*</sup>
+
+So, after traveling distance *x* through a medium with attenuation color *c* and attenuation distance *d*, we get we get transmittance T(x).
 
 ## Base Color and Absorption
 
