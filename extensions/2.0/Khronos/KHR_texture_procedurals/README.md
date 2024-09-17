@@ -330,6 +330,8 @@ Note that the output ports are specified even if the upstream node only has one 
 
 ### Material Binding
 
+It is allowable to connect any output of a procedural graph to any input on a supported downstream material. That is arbitrary N:M output to input connections are allowed. 
+
 To connect a graph `output` to a surface or displacement shader input the procedural extension can be declared within the a texture reference for a given material in the `materials` array.
 
 Material inputs that already support texture binding can support procedural graphs. This includes bindings such as:
@@ -394,9 +396,15 @@ A procedural graph's `input` nodes can be bound to either :
 
 Either constant or animated values may be bound. 
 
-It is assumed that the existing animation declarations can be used to reference the procedural input. (To validate: if a sampler `target` can be used to reference a procedural graph input)
+### Animation Binding
 
-#### Texture Binding
+Animation bindings in glTF can be considered to equivalent to connection bindings in the context of MaterialX and OpenUSD. As all nodes must be contained within a procedural graph, only immediate child input nodes can be connected to and thus animated. That is, it is disallowed to "poke" inside of a graph and connect to interior  node inputs.
+
+Any existing nodes in MaterialX or OpenUSD dealing with animation are ignored.
+
+| Further discussion is required to determine how the [animation pointer extension](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_animation_pointer/README.md) will behave with procedural node inputs.
+
+#### Texture / Image Binding
 
 An `input` reference to an image is represented by an index to a `texture` element within the `textures` array object. If mapping from a MaterialX `filename`, then the resolved `filename` string can be used for the corresponding `image` source uri.
 
@@ -419,10 +427,87 @@ An `input` reference to an image is represented by an index to a `texture` eleme
 ```
 <super>Figure: This example shows a texture reference to an image with a `filename` of `"myfilename.wepb"`</super>
 
-It is useful to include a `mimeType` for the image to indicate the desired codec support. This can include any codecs not supported by default -- such as `exr` format.
-The alternative is to pre-convert the image to a default supported format.
+It is useful to include a `mimeType` for the image to indicate the desired codec support. This can include any codecs not supported by default -- such as `exr` format. The alternative is to pre-convert the image to a default supported format.
 </super>
 
+### Texture Placement / Sampling Binding
+
+The following glTF texture information is ignored:
+- The texture coordinate index from the texture info block (See the stream binding section)
+- Placement information from the texture transform extension
+- Any sampler objects specified on a texture (filtering, wrapping)
+
+Information on the appropriate procedural nodes
+will be used instead. For example the `<image>`,
+`<place2d>` respectively for sampling and placement.
+
+Below is a snapshot of a graph where the placement parameters and sampling are shown on right for the corresponding node:
+<img src="./figures/texture_override.png" width="100%">
+<img src="./figures/texture_sampling.png" width="100%">
+
+The following is an eaxmple `image` node with sampling information:
+```json
+{
+  "name": "image_color3",
+  "nodetype": "image",
+  "type": "color3",
+  "inputs": [
+    {
+      "name": "uaddressmode",
+      "nodetype": "input",
+      "type": "string",
+      "value": "clamp"
+    },
+    {
+      "name": "vaddressmode",
+      "nodetype": "input",
+      "type": "string",
+      "value": "clamp"
+    }
+  ]
+}
+```
+The following is an example `place2d` node with placement information:
+```json
+{
+  "name": "place2d_vector2",
+  "nodetype": "place2d",
+  "type": "vector2",
+  "inputs": [
+    {
+      "name": "pivot",
+      "nodetype": "input",
+      "type": "vector2",
+      "value": [0.1,0.5]
+    },
+    {
+      "name": "scale",
+      "nodetype": "input",
+      "type": "vector2",
+      "value": [0.3,0.4]
+    },
+    {
+      "name": "rotate",
+      "nodetype": "input",
+      "type": "float",
+      "value": 45.0
+    },
+    {
+      "name": "offset",
+      "nodetype": "input",
+      "type": "vector2",
+      "value": [0.01,0.01
+      ]
+    },
+    {
+      "name": "operationorder",
+      "nodetype": "input",
+      "type": "integer",
+      "value": 1
+    }
+  ]
+}
+```
 
 #### Input Stream Binding
 
@@ -440,14 +525,12 @@ For the texture coordinate example if the stream number is 1, the binding is to 
 
 Semantics for texture coordinate lookups are as follows:
 
-1. The current [specification language for meshes]((https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#meshes-overview)) notes that texture coordinates are 
-2 channel. In order to support 3D texture coordinates it is proposed that the semantics of this binding be extended to allow 3 channel texture coordinates.
-This is currently beyond the scope of this extension, thus validation for
+1. The current [specification language for meshes]((https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#meshes-overview)) notes that texture coordinates are **2 channel**. In order to support 3D texture coordinates it is proposed that the semantics of this binding be extended to allow 3 channel texture coordinates.
+
+    This is currently beyond the scope of this extension, thus validation for
 for this version will consider these nodes as being invalid.
 
 2. Texture coordinates may be routed in a graph through one or more downstream nodes which may perform a mathematical operation on the coordinates. To avoid ambiguity any transform specified on a texture should be ignored / removed. 
-
-3. Any filtering or wrapping modes specified on the texture should be ignored / removed when specified by nodes in the graph.
 
 For colors, a procedural node would be used to specify a color stream. A value of 1 would imply a binding to color stream `COLOR_1`.
 
