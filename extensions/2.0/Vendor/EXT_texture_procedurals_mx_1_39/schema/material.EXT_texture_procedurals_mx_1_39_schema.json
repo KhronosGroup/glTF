@@ -8,7 +8,11 @@
     "materials": {},
     "textures": {},
     "images": {},
-    "extensionsUsed": {},
+    "extensionsUsed": {
+      "type": "array",
+      "items": { "type": "string" },
+      "contains": { "enum": ["KHR_texture_procedurals", "EXT_texture_procedurals_mx_1_39"] }
+    },
     "extensions": {
       "type": "object",
       "properties": {

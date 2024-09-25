@@ -323,7 +323,8 @@
     },
     "extensionsUsed": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": { "type": "string" },
+      "contains": { "enum": ["KHR_texture_procedurals"] }
     },
     "extensions": {
       "type": "object",
@@ -331,7 +332,6 @@
         "KHR_texture_procedurals": {
           "type": "object",
           "properties": {
-            "mimetype": { "type": "string" },
 
             "procedurals": {
               "_doc": "A list of procedural texture graphs",
@@ -345,7 +345,7 @@
               "items": { "$ref": "#/definitions/definition_item" }
             }
           },
-          "required": ["mimetype", "procedurals"]
+          "required": ["procedurals"]
         }
       },
       "required": ["KHR_texture_procedurals"]
