@@ -1,0 +1,1508 @@
+{
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                0.075,
+                0.55,
+                0.075
+            ],
+            "min": [
+                -0.075,
+                -0.55,
+                -0.075
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                1,
+                0,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -0.000015,
+                -1,
+                1
+            ],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                1,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                1,
+                1
+            ],
+            "min": [
+                0,
+                0
+            ],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 36,
+            "max": [
+                23
+            ],
+            "min": [
+                0
+            ],
+            "normalized": false,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                0.05,
+                0.25,
+                0.05
+            ],
+            "min": [
+                -0.05,
+                -0.25,
+                -0.05
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 6,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                1,
+                0,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -0.000022,
+                -1,
+                1
+            ],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 7,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                1,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 8,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                1,
+                1
+            ],
+            "min": [
+                0,
+                0
+            ],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 9,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 10368,
+            "max": [
+                1949
+            ],
+            "min": [
+                0
+            ],
+            "normalized": false,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 10,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                0.05,
+                0.25,
+                0.05
+            ],
+            "min": [
+                -0.05,
+                -0.25,
+                -0.05
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 11,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                1,
+                0,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -0.000022,
+                -1,
+                1
+            ],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 12,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                1,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 13,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                1,
+                1
+            ],
+            "min": [
+                0,
+                0
+            ],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 14,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 10368,
+            "max": [
+                1949
+            ],
+            "min": [
+                0
+            ],
+            "normalized": false,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 15,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                0.05,
+                0.25,
+                0.05
+            ],
+            "min": [
+                -0.05,
+                -0.25,
+                -0.05
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 16,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                1,
+                0,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -0.000022,
+                -1,
+                1
+            ],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 17,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                1,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 18,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                1,
+                1
+            ],
+            "min": [
+                0,
+                0
+            ],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 19,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 10368,
+            "max": [
+                1949
+            ],
+            "min": [
+                0
+            ],
+            "normalized": false,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 20,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                0.05,
+                0.25,
+                0.05
+            ],
+            "min": [
+                -0.05,
+                -0.25,
+                -0.05
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 21,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                1,
+                0,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -0.000022,
+                -1,
+                1
+            ],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 22,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                1,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 23,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                1,
+                1
+            ],
+            "min": [
+                0,
+                0
+            ],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 24,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 10368,
+            "max": [
+                1949
+            ],
+            "min": [
+                0
+            ],
+            "normalized": false,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 25,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                0.05,
+                0.25,
+                0.05
+            ],
+            "min": [
+                -0.05,
+                -0.25,
+                -0.05
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 26,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                1,
+                0,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -0.000022,
+                -1,
+                1
+            ],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 27,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                1,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 28,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [
+                1,
+                1
+            ],
+            "min": [
+                0,
+                0
+            ],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 29,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 10368,
+            "max": [
+                1949
+            ],
+            "min": [
+                0
+            ],
+            "normalized": false,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 30,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                0.075,
+                0.55,
+                0.075
+            ],
+            "min": [
+                -0.075,
+                -0.55,
+                -0.075
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 31,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                1,
+                0,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -0.000015,
+                -1,
+                1
+            ],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 32,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                1,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 33,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                1,
+                1
+            ],
+            "min": [
+                0,
+                0
+            ],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 34,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 36,
+            "max": [
+                23
+            ],
+            "min": [
+                0
+            ],
+            "normalized": false,
+            "type": "SCALAR"
+        }
+    ],
+    "asset": {
+        "generator": "Godot Engine v4.1.dev.custom_build@9f12e7b52d944281a39b7d3a33de6700c76cc23a",
+        "version": "2.0"
+    },
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 288,
+            "byteOffset": 0
+        },
+        {
+            "buffer": 0,
+            "byteLength": 384,
+            "byteOffset": 288
+        },
+        {
+            "buffer": 0,
+            "byteLength": 288,
+            "byteOffset": 672
+        },
+        {
+            "buffer": 0,
+            "byteLength": 192,
+            "byteOffset": 960
+        },
+        {
+            "buffer": 0,
+            "byteLength": 144,
+            "byteOffset": 1152
+        },
+        {
+            "buffer": 0,
+            "byteLength": 23400,
+            "byteOffset": 1296
+        },
+        {
+            "buffer": 0,
+            "byteLength": 31200,
+            "byteOffset": 24696
+        },
+        {
+            "buffer": 0,
+            "byteLength": 23400,
+            "byteOffset": 55896
+        },
+        {
+            "buffer": 0,
+            "byteLength": 15600,
+            "byteOffset": 79296
+        },
+        {
+            "buffer": 0,
+            "byteLength": 41472,
+            "byteOffset": 94896
+        },
+        {
+            "buffer": 0,
+            "byteLength": 23400,
+            "byteOffset": 136368
+        },
+        {
+            "buffer": 0,
+            "byteLength": 31200,
+            "byteOffset": 159768
+        },
+        {
+            "buffer": 0,
+            "byteLength": 23400,
+            "byteOffset": 190968
+        },
+        {
+            "buffer": 0,
+            "byteLength": 15600,
+            "byteOffset": 214368
+        },
+        {
+            "buffer": 0,
+            "byteLength": 41472,
+            "byteOffset": 229968
+        },
+        {
+            "buffer": 0,
+            "byteLength": 23400,
+            "byteOffset": 271440
+        },
+        {
+            "buffer": 0,
+            "byteLength": 31200,
+            "byteOffset": 294840
+        },
+        {
+            "buffer": 0,
+            "byteLength": 23400,
+            "byteOffset": 326040
+        },
+        {
+            "buffer": 0,
+            "byteLength": 15600,
+            "byteOffset": 349440
+        },
+        {
+            "buffer": 0,
+            "byteLength": 41472,
+            "byteOffset": 365040
+        },
+        {
+            "buffer": 0,
+            "byteLength": 23400,
+            "byteOffset": 406512
+        },
+        {
+            "buffer": 0,
+            "byteLength": 31200,
+            "byteOffset": 429912
+        },
+        {
+            "buffer": 0,
+            "byteLength": 23400,
+            "byteOffset": 461112
+        },
+        {
+            "buffer": 0,
+            "byteLength": 15600,
+            "byteOffset": 484512
+        },
+        {
+            "buffer": 0,
+            "byteLength": 41472,
+            "byteOffset": 500112
+        },
+        {
+            "buffer": 0,
+            "byteLength": 23400,
+            "byteOffset": 541584
+        },
+        {
+            "buffer": 0,
+            "byteLength": 31200,
+            "byteOffset": 564984
+        },
+        {
+            "buffer": 0,
+            "byteLength": 23400,
+            "byteOffset": 596184
+        },
+        {
+            "buffer": 0,
+            "byteLength": 15600,
+            "byteOffset": 619584
+        },
+        {
+            "buffer": 0,
+            "byteLength": 41472,
+            "byteOffset": 635184
+        },
+        {
+            "buffer": 0,
+            "byteLength": 288,
+            "byteOffset": 676656
+        },
+        {
+            "buffer": 0,
+            "byteLength": 384,
+            "byteOffset": 676944
+        },
+        {
+            "buffer": 0,
+            "byteLength": 288,
+            "byteOffset": 677328
+        },
+        {
+            "buffer": 0,
+            "byteLength": 192,
+            "byteOffset": 677616
+        },
+        {
+            "buffer": 0,
+            "byteLength": 144,
+            "byteOffset": 677808
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 677952,
+            "uri": "rope_railing0.bin"
+        }
+    ],
+    "cameras": [
+        {
+            "perspective": {
+                "yfov": 1.30899691581726,
+                "zfar": 4000,
+                "znear": 0.0500000007450581
+            },
+            "type": "perspective"
+        }
+    ],
+    "extensions": {
+        "OMI_physics_shape": {
+            "shapes": [
+                {
+                    "type": "box",
+                    "box": {
+                        "size": [0.15, 1.1, 0.15]
+                    }
+                },
+                {
+                    "type": "capsule",
+                    "capsule": {
+                        "height": 0.5,
+                        "radius": 0.05
+                    }
+                }
+            ]
+        },
+        "OMI_physics_joint": {
+            "constraints": [
+                {
+                    "linearAxes": [
+                        0,
+                        1,
+                        2
+                    ],
+                    "stiffness": 0.300000011920929
+                }
+            ]
+        }
+    },
+    "extensionsUsed": [
+        "OMI_physics_body",
+        "OMI_physics_joint",
+        "OMI_physics_shape"
+    ],
+    "materials": [
+        {
+            "extensions": {},
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.99999988079071,
+                    0.99999988079071,
+                    0.99999988079071,
+                    1
+                ],
+                "metallicFactor": 0,
+                "roughnessFactor": 1
+            }
+        },
+        {
+            "extensions": {},
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.99999988079071,
+                    0.99999988079071,
+                    0.99999988079071,
+                    1
+                ],
+                "metallicFactor": 0,
+                "roughnessFactor": 1
+            }
+        },
+        {
+            "extensions": {},
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.99999988079071,
+                    0.99999988079071,
+                    0.99999988079071,
+                    1
+                ],
+                "metallicFactor": 0,
+                "roughnessFactor": 1
+            }
+        },
+        {
+            "extensions": {},
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.99999988079071,
+                    0.99999988079071,
+                    0.99999988079071,
+                    1
+                ],
+                "metallicFactor": 0,
+                "roughnessFactor": 1
+            }
+        },
+        {
+            "extensions": {},
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.99999988079071,
+                    0.99999988079071,
+                    0.99999988079071,
+                    1
+                ],
+                "metallicFactor": 0,
+                "roughnessFactor": 1
+            }
+        },
+        {
+            "extensions": {},
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.99999988079071,
+                    0.99999988079071,
+                    0.99999988079071,
+                    1
+                ],
+                "metallicFactor": 0,
+                "roughnessFactor": 1
+            }
+        },
+        {
+            "extensions": {},
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.99999988079071,
+                    0.99999988079071,
+                    0.99999988079071,
+                    1
+                ],
+                "metallicFactor": 0,
+                "roughnessFactor": 1
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "extras": {
+                "targetNames": []
+            },
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 2,
+                        "POSITION": 0,
+                        "TANGENT": 1,
+                        "TEXCOORD_0": 3
+                    },
+                    "indices": 4,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": {
+                "targetNames": []
+            },
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 7,
+                        "POSITION": 5,
+                        "TANGENT": 6,
+                        "TEXCOORD_0": 8
+                    },
+                    "indices": 9,
+                    "material": 1,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": {
+                "targetNames": []
+            },
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 12,
+                        "POSITION": 10,
+                        "TANGENT": 11,
+                        "TEXCOORD_0": 13
+                    },
+                    "indices": 14,
+                    "material": 2,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": {
+                "targetNames": []
+            },
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 17,
+                        "POSITION": 15,
+                        "TANGENT": 16,
+                        "TEXCOORD_0": 18
+                    },
+                    "indices": 19,
+                    "material": 3,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": {
+                "targetNames": []
+            },
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 22,
+                        "POSITION": 20,
+                        "TANGENT": 21,
+                        "TEXCOORD_0": 23
+                    },
+                    "indices": 24,
+                    "material": 4,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": {
+                "targetNames": []
+            },
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 27,
+                        "POSITION": 25,
+                        "TANGENT": 26,
+                        "TEXCOORD_0": 28
+                    },
+                    "indices": 29,
+                    "material": 5,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": {
+                "targetNames": []
+            },
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 32,
+                        "POSITION": 30,
+                        "TANGENT": 31,
+                        "TEXCOORD_0": 33
+                    },
+                    "indices": 34,
+                    "material": 6,
+                    "mode": 4
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "children": [
+                1,
+                4,
+                5,
+                8,
+                9,
+                12,
+                13,
+                16,
+                17,
+                20,
+                21,
+                24,
+                25,
+                28
+            ],
+            "extensions": {},
+            "name": "RopeRailing"
+        },
+        {
+            "children": [
+                2
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "motion": {
+                        "type": "static"
+                    }
+                }
+            },
+            "name": "PoleLeft",
+            "translation": [
+                -1.10000002384186,
+                0.550000011920929,
+                0.00000000000208164735449046
+            ]
+        },
+        {
+            "children": [
+                3
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
+                }
+            },
+            "name": "PoleShapeLeft"
+        },
+        {
+            "extensions": {},
+            "mesh": 0,
+            "name": "PoleMeshLeft"
+        },
+        {
+            "extensions": {
+                "OMI_physics_joint": {
+                    "constraints": [
+                        0
+                    ],
+                    "nodeA": 1,
+                    "nodeB": 5
+                }
+            },
+            "name": "PinJoint1",
+            "translation": [
+                -1.02999997138977,
+                0.980000019073486,
+                0.00000000000208164735449046
+            ]
+        },
+        {
+            "children": [
+                6
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "motion": {
+                        "type": "dynamic"
+                    }
+                }
+            },
+            "name": "RopeSegmentLeft",
+            "rotation": [
+                0.000000000000000123314947518882,
+                0.000000000000000213587655926077,
+                -0.25881916284561,
+                0.965925812721252
+            ],
+            "translation": [
+                -0.86000001430511,
+                0.879999995231628,
+                0.00000000000208164995657567
+            ]
+        },
+        {
+            "children": [
+                7
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 1
+                    }
+                }
+            },
+            "name": "RopeShapeLeft",
+            "rotation": [
+                0.000000000000000246629630339969,
+                0.00000000000000000000000935848017,
+                0.70710676908493,
+                0.70710676908493
+            ]
+        },
+        {
+            "extensions": {},
+            "mesh": 1,
+            "name": "RopeMeshLeft"
+        },
+        {
+            "extensions": {
+                "OMI_physics_joint": {
+                    "constraints": [
+                        0
+                    ],
+                    "nodeA": 5,
+                    "nodeB": 9
+                }
+            },
+            "name": "PinJoint2",
+            "translation": [
+                -0.66000002622604,
+                0.759999990463257,
+                0.00000000000208164995657567
+            ]
+        },
+        {
+            "children": [
+                10
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "motion": {
+                        "type": "dynamic"
+                    }
+                }
+            },
+            "name": "RopeSegmentLeftMiddle",
+            "rotation": [
+                0.000000000000000141460722589675,
+                0.000000000000000202027284087501,
+                -0.17364804446697,
+                0.984807789325714
+            ],
+            "translation": [
+                -0.44999998807907,
+                0.680000007152557,
+                0.00000000000208164995657567
+            ]
+        },
+        {
+            "children": [
+                11
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 1
+                    }
+                }
+            },
+            "name": "RopeShapeLeftMiddle",
+            "rotation": [
+                0.000000000000000246629630339969,
+                0.00000000000000000000000935848017,
+                0.70710676908493,
+                0.70710676908493
+            ]
+        },
+        {
+            "extensions": {},
+            "mesh": 2,
+            "name": "RopeMeshLeftMiddle"
+        },
+        {
+            "extensions": {
+                "OMI_physics_joint": {
+                    "constraints": [
+                        0
+                    ],
+                    "nodeA": 9,
+                    "nodeB": 13
+                }
+            },
+            "name": "PinJoint3",
+            "translation": [
+                -0.23000000417233,
+                0.600000023841858,
+                0.00000000000208164995657567
+            ]
+        },
+        {
+            "children": [
+                14
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "motion": {
+                        "type": "dynamic"
+                    }
+                }
+            },
+            "name": "RopeSegmentMiddle",
+            "translation": [
+                0.00000000000208164995657567,
+                0.600000023841858,
+                0.00000000000208164995657567
+            ]
+        },
+        {
+            "children": [
+                15
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 1
+                    }
+                }
+            },
+            "name": "RopeShapeMiddle",
+            "rotation": [
+                0.000000000000000246629630339969,
+                0.00000000000000000000000935848017,
+                0.70710676908493,
+                0.70710676908493
+            ]
+        },
+        {
+            "extensions": {},
+            "mesh": 3,
+            "name": "RopeMeshMiddle"
+        },
+        {
+            "extensions": {
+                "OMI_physics_joint": {
+                    "constraints": [
+                        0
+                    ],
+                    "nodeA": 13,
+                    "nodeB": 17
+                }
+            },
+            "name": "PinJoint4",
+            "translation": [
+                0.230000004172325,
+                0.600000023841858,
+                0.00000000000208164995657567
+            ]
+        },
+        {
+            "children": [
+                18
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "motion": {
+                        "type": "dynamic"
+                    }
+                }
+            },
+            "name": "RopeSegmentRightMiddle",
+            "rotation": [
+                0.000000000000000202027284087501,
+                0.000000000000000141460709354785,
+                0.173648044466972,
+                0.984807789325714
+            ],
+            "translation": [
+                0.449999988079071,
+                0.680000007152557,
+                0.00000000000208164995657567
+            ]
+        },
+        {
+            "children": [
+                19
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 1
+                    }
+                }
+            },
+            "name": "RopeShapeRightMiddle",
+            "rotation": [
+                0.000000000000000246629630339969,
+                0.00000000000000000000000935848017,
+                0.70710676908493,
+                0.70710676908493
+            ]
+        },
+        {
+            "extensions": {},
+            "mesh": 4,
+            "name": "RopeMeshRightMiddle"
+        },
+        {
+            "extensions": {
+                "OMI_physics_joint": {
+                    "constraints": [
+                        0
+                    ],
+                    "nodeA": 17,
+                    "nodeB": 21
+                }
+            },
+            "name": "PinJoint5",
+            "translation": [
+                0.660000026226044,
+                0.759999990463257,
+                0.00000000000208164995657567
+            ]
+        },
+        {
+            "children": [
+                22
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "motion": {
+                        "type": "dynamic"
+                    }
+                }
+            },
+            "name": "RopeSegmentRight",
+            "rotation": [
+                0.000000000000000213587655926077,
+                0.000000000000000123314960753772,
+                0.258819162845612,
+                0.965925812721252
+            ],
+            "translation": [
+                0.860000014305115,
+                0.879999995231628,
+                0.00000000000208164995657567
+            ]
+        },
+        {
+            "children": [
+                23
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 1
+                    }
+                }
+            },
+            "name": "RopeShapeRight",
+            "rotation": [
+                0.000000000000000246629630339969,
+                0.00000000000000000000000935848017,
+                0.70710676908493,
+                0.70710676908493
+            ]
+        },
+        {
+            "extensions": {},
+            "mesh": 5,
+            "name": "RopeMeshRight"
+        },
+        {
+            "extensions": {
+                "OMI_physics_joint": {
+                    "constraints": [
+                        0
+                    ],
+                    "nodeA": 21,
+                    "nodeB": 25
+                }
+            },
+            "name": "PinJoint6",
+            "translation": [
+                1.02999997138977,
+                0.980000019073486,
+                0.00000000000208164735449046
+            ]
+        },
+        {
+            "children": [
+                26
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "motion": {
+                        "type": "static"
+                    }
+                }
+            },
+            "name": "PoleRight",
+            "translation": [
+                1.10000002384186,
+                0.550000011920929,
+                0.00000000000208164735449046
+            ]
+        },
+        {
+            "children": [
+                27
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
+                }
+            },
+            "name": "PoleShapeRight"
+        },
+        {
+            "extensions": {},
+            "mesh": 6,
+            "name": "PoleMeshRight"
+        },
+        {
+            "camera": 0,
+            "extensions": {},
+            "name": "Camera",
+            "translation": [
+                0.00000000000208164995657567,
+                0.600000023841858,
+                1.5
+            ]
+        }
+    ],
+    "scene": 0,
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ]
+}
