@@ -1,0 +1,11 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_gaussian_splatting glTF primitive extension",
+    "type": "object",
+    "description": "glTF extension for rendering Gaussian splats.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "extensions": { },
+        "extras": { }
+    }
+}
