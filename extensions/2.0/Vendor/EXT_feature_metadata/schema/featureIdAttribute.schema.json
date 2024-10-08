@@ -1,0 +1,32 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "featureIdAttribute.schema.json",
+    "title": "Feature ID Attribute in EXT_feature_metadata",
+    "type": "object",
+    "description": "An object mapping feature IDs to a feature table.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "featureTable": {
+            "type": "string",
+            "description": "The ID of the feature table in the model's root `EXT_feature_metadata.featureTables` dictionary."
+        },
+        "featureIds": {
+            "allOf": [
+                {
+                    "$ref": "featureIdAttribute.featureIds.schema.json"
+                }
+            ],
+            "description": "An object describing feature IDs to be used as indices to property arrays in the feature table. Feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "featureTable",
+        "featureIds"
+    ]
+}

@@ -1,0 +1,54 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "mesh.primitive.CESIUM_tile_edges.schema.json",
+    "title": "CESIUM_tile_edges glTF Mesh Primitive extension",
+    "type": "object",
+    "description": "`CESIUM_tile_edges` extension for a primitive in a glTF model.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "left": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of the accessor containing indices that make up the left edge."
+        },
+        "bottom": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of the accessor containing indices that make up the bottom edge."
+        },
+        "right": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of the accessor containing indices that make up the right edge."
+        },
+        "top": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of the accessor containing indices that make up the top edge."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "left",
+        "bottom",
+        "right",
+        "top"
+    ]
+}

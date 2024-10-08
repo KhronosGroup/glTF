@@ -1,0 +1,187 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "class.property.schema.json",
+    "title": "Class Property in EXT_feature_metadata",
+    "type": "object",
+    "description": "A class property.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The name of the property, e.g. for display purposes."
+        },
+        "description": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The description of the property."
+        },
+        "type": {
+            "description": "The property type. If `ENUM` is used, then `enumType` must also be specified. If `ARRAY` is used, then `componentType` must also be specified. `ARRAY` is a fixed-length array when `componentCount` is defined, and variable-length otherwise.",
+            "anyOf": [
+                {
+                    "const": "INT8"
+                },
+                {
+                    "const": "UINT8"
+                },
+                {
+                    "const": "INT16"
+                },
+                {
+                    "const": "UINT16"
+                },
+                {
+                    "const": "INT32"
+                },
+                {
+                    "const": "UINT32"
+                },
+                {
+                    "const": "INT64"
+                },
+                {
+                    "const": "UINT64"
+                },
+                {
+                    "const": "FLOAT32"
+                },
+                {
+                    "const": "FLOAT64"
+                },
+                {
+                    "const": "BOOLEAN"
+                },
+                {
+                    "const": "STRING"
+                },
+                {
+                    "const": "ENUM"
+                },
+                {
+                    "const": "ARRAY"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "enumType": {
+            "type": "string",
+            "description": "An enum ID as declared in the `enums` dictionary. This value must be specified when `type` or `componentType` is `ENUM`."
+        },
+        "componentType": {
+            "description": "When `type` is `ARRAY` this indicates the type of each component of the array. If `ENUM` is used, then `enumType` must also be specified.",
+            "anyOf": [
+                {
+                    "const": "INT8"
+                },
+                {
+                    "const": "UINT8"
+                },
+                {
+                    "const": "INT16"
+                },
+                {
+                    "const": "UINT16"
+                },
+                {
+                    "const": "INT32"
+                },
+                {
+                    "const": "UINT32"
+                },
+                {
+                    "const": "INT64"
+                },
+                {
+                    "const": "UINT64"
+                },
+                {
+                    "const": "FLOAT32"
+                },
+                {
+                    "const": "FLOAT64"
+                },
+                {
+                    "const": "BOOLEAN"
+                },
+                {
+                    "const": "STRING"
+                },
+                {
+                    "const": "ENUM"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "componentCount": {
+            "type": "integer",
+            "minimum": 2,
+            "description": "The number of components per element for `ARRAY` elements."
+        },
+        "normalized": {
+            "type": "boolean",
+            "description": "Specifies whether integer values are normalized. This applies both when `type` is an integer type, or when `type` is `ARRAY` with a `componentType` that is an integer type. For unsigned integer types, values are normalized between `[0.0, 1.0]`. For signed integer types, values are normalized between `[-1.0, 1.0]`. For all other types, this property is ignored.",
+            "default": false
+        },
+        "max": {
+            "type": [
+                "number",
+                "array"
+            ],
+            "items": {
+                "type": "number"
+            },
+            "description": "Maximum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values: they always correspond to the integer values."
+        },
+        "min": {
+            "type": [
+                "number",
+                "array"
+            ],
+            "items": {
+                "type": "number"
+            },
+            "description": "Minimum allowed values for property values. Only applicable for numeric types and fixed-length arrays of numeric types. For numeric types this is a single number. For fixed-length arrays this is an array with `componentCount` number of elements. The `normalized` property has no effect on these values: they always correspond to the integer values."
+        },
+        "default": {
+            "type": [
+                "boolean",
+                "number",
+                "string",
+                "array"
+            ],
+            "description": "A default value to use when the property value is not defined. If used, `optional` must be set to true. The type of the default value must match the property definition: For `BOOLEAN` use `true` or `false`. For `STRING` use a JSON string. For a numeric type use a JSON number. For `ENUM` use the enum `name`, not the integer value. For `ARRAY` use a JSON array containing values matching the `componentType`."
+        },
+        "optional": {
+            "type": "boolean",
+            "description": "If true, this property is optional.",
+            "default": false
+        },
+        "semantic": {
+            "type": "string",
+            "minLength": 1,
+            "description": "An identifier that describes how this property should be interpreted. The semantic cannot be used by other properties in the class."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "dependencies": {
+        "componentCount": [
+            "componentType"
+        ],
+        "default": [
+            "optional"
+        ]
+    },
+    "required": [
+        "type"
+    ]
+}

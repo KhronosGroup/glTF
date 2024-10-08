@@ -1,0 +1,57 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "mesh.primitive.EXT_feature_metadata.schema.json",
+    "title": "EXT_feature_metadata glTF Mesh Primitive extension",
+    "type": "object",
+    "description": "`EXT_feature_metadata extension` for a primitive in a glTF model, to associate it with the root `EXT_feature_metadata` object.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "featureIdAttributes": {
+            "type": "array",
+            "description": "An array of objects mapping per-vertex feature IDs to a feature table.",
+            "items": {
+                "$ref": "featureIdAttribute.schema.json"
+            },
+            "minItems": 1
+        },
+        "featureIdTextures": {
+            "type": "array",
+            "description": "An array of objects mapping per-texel feature IDs to a feature table.",
+            "items": {
+                "$ref": "featureIdTexture.schema.json"
+            },
+            "minItems": 1
+        },
+        "featureTextures": {
+            "type": "array",
+            "description": "An array of IDs of feature textures from the root `EXT_feature_metadata` object.",
+            "items": {
+                "type": "string"
+            },
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "anyOf": [
+        {
+            "required": [
+                "featureIdAttributes"
+            ]
+        },
+        {
+            "required": [
+                "featureIdTextures"
+            ]
+        },
+        {
+            "required": [
+                "featureTextures"
+            ]
+        }
+    ]
+}

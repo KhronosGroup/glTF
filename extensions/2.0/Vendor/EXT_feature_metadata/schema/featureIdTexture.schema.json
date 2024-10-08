@@ -1,0 +1,32 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "featureIdTexture.schema.json",
+    "title": "Feature ID Texture in EXT_feature_metadata",
+    "type": "object",
+    "description": "An object describing a texture used for storing per-texel feature IDs.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "featureTable": {
+            "type": "string",
+            "description": "The ID of the feature table in the model's root `EXT_feature_metadata.featureTables` dictionary."
+        },
+        "featureIds": {
+            "allOf": [
+                {
+                    "$ref": "textureAccessor.schema.json"
+                }
+            ],
+            "description": "A description of the texture and channel to use for feature IDs. The `channels` property must have a single channel. Furthermore, feature IDs must be whole numbers in the range `[0, count - 1]` (inclusive), where `count` is the total number of features in the feature table. Texel values must be read as integers. Texture filtering should be disabled when fetching feature IDs."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "featureTable",
+        "featureIds"
+    ]
+}
