@@ -6,9 +6,9 @@
     "description": "Parameters describing a volume used for collison detection, but does not cause a collision response.",
     "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
-        "shape": {
-            "allOf": [{ "$ref": "glTFid.schema.json" }],
-            "description": "The index of the shape in the top level shapes array."
+        "geometry": {
+            "allOf": [{ "$ref": "geometry.schema.json" }],
+            "description": "An object describing the geometric representation of this trigger"
         },
         "nodes": {
             "type": "array",
@@ -29,14 +29,14 @@
     "anyOf": [
         {
             "allOf": [
-                { "required": ["shape"] },
+                { "required": ["geometry"] },
                 { "not": { "required": ["nodes"] } }
             ]
         },
         {
             "allOf": [
                 { "required": ["nodes"] },
-                { "not": { "required": ["shape"] } },
+                { "not": { "required": ["geometry"] } },
                 { "not": { "required": ["collisionFilter"] } }
             ]
         }
