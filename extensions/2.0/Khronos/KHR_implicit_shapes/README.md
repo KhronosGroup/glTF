@@ -1,4 +1,4 @@
-# KHR_collision_shapes
+# KHR_implicit_shapes
 
 ## Contributors
 
@@ -7,6 +7,8 @@
 * George Tian, Microsoft, <mailto:geotian@microsoft.com>
 * Aaron Franke, Godot Engine, <mailto:arnfranke@yahoo.com>
 * Eric Griffith, Meta, <mailto:ericgriffith@meta.com>
+* Janine Liu, Cesium, <mailto:janine@cesium.com>
+* Sean Lilley, Cesium, <mailto:sean@cesium.com>
 
 ## Status
 
@@ -18,21 +20,21 @@ Written against glTF 2.0 spec.
 
 ## Overview
 
-This extension adds the ability to specify collision primitives inside a glTF asset. This extension does not mandate any particular behaviour for those objects aside from their collision geometry. These types are to be used in combination with other extensions that reference these collision primitives.
+This extension adds data definitions for implicit shapes. This extension does not mandate any particular behaviour for these objects aside from a description of their geometry. These types are to be used in combination with other extensions which should specify the behavior of these types.
 
 ## glTF Schema Updates
 
 ### Shapes
 
-This extension provides a set of document-level objects, which can be referenced by objects in the scene. The precise usage of these primitives should be specified by the extensions which utilize the shapes. The intended purpose of these these objects are to specify geometry which can be used for collision detection, which has informed the set of shapes which we have defined. Typically, the geometry specified by the shape will be simpler than any render meshes used by the node or its children, enabling real-time applications to perform queries such as intersection tests.
+This extension provides a set of document-level objects, which can be referenced by objects in a glTF document.
 
-Shapes are defined within a dictionary property in the glTF scene description file, by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_collision_shapes` property with a `shapes` array inside it.
+Shapes are defined within a dictionary property in the glTF scene description file, by adding an `extensions` property to the top-level glTF 2.0 object and defining a `KHR_implicit_shapes` property with a `shapes` array inside it.
 
 Each shape defines a mandatory `type` property which designates the type of shape, as well as an additional structure which provides parameterizations specific to that type. The following example defines a sphere.
 
 ```javascript
 "extensions": {
-    "KHR_collision_shapes" : {
+    "KHR_implicit_shapes" : {
         "shapes": [
             {
                 "sphere": { "radius": 0.1 },
@@ -43,8 +45,6 @@ Each shape defines a mandatory `type` property which designates the type of shap
 }
 ```
 
-Shapes are parameterized in local space of the node they are associated with. If a shape is required to have an offset from the local space of the node the shape is associated with (for example a sphere _not_ centered at local origin or a rotated box,) a child node should be added with the desired offset applied, and the shape properties added to that child.
-
 To describe the geometry which represents the object, shapes must define at most one of the following properties:
 
 | |Type|Description|
@@ -53,19 +53,14 @@ To describe the geometry which represents the object, shapes must define at most
 |**box**|`object`|An axis-aligned box centered at the origin in local space.|
 |**cylinder**|`object`|A cylinder centered at the origin and aligned along the Y axis in local space, with potentially different radii at each end.|
 |**capsule**|`object`|A capsule (cylinder with hemispherical ends) centered at the origin and defined by two "capping" spheres with potentially different radii, aligned along the Y axis in local space.|
-|**mesh**|`object`|A shape generated from a `mesh` object.|
 
 The sphere, box, capsule, and cylinder all represent convex objects with a volume, while the mesh represents the surface of a referenced mesh object.
 
-As the mesh shape references a `mesh`, it additionally allows for optional `skin` and `weights` properties, which have the same semantics and requirements enforced by the properties of the same name associated with a `node`. Within the core glTF specification, there are two methods to specify morph target weights - the mesh object itself may have a `weights` parameter, while a node may specify per-instance weights, which take priority over the weights specified by the mesh. Analogously, a collision shape may reference a mesh which has a set of weights, while the collision shape itself may specify weights which take priority over those specified in the mesh; finally, when a mesh shape specifies `useNodeWeights` as `true`, the weights used by that node referencing that shape take priority. This construct allows for a node's instance weights to animate a collision shape without having to additionally propagate the weights to the shape. When `useNodeWeights` is `true`, the mesh referenced by the shape must have the same number of morph targets as the mesh referenced by the node.
-
-Degenerate shapes are prohibited. A sphere must have a positive, non-zero radius. A box shape must have positive non-zero values for each component of `size`. The cylinder and capsule shapes must have a positive, non-zero `height` and both `radiusTop` and `radiusBottom` should be positive; at least one of the radii should be non-zero. For mesh shapes, the referenced mesh should contain at least one non-degenerate triangle primitive.
-
-A nodes scale presents some special cases that must be handled. In accordance with the glTF specification on [https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#transformations](transformations), a shape referenced by a node whose scale is zero on all three axes should be considered disabled. When an analytical shape is referenced by a node whose whose scale is negative on one or more axes, the resulting shape size should be the absolute value of the nodes scale applied to the input shape parameters. i.e. a box with `size` of `[1.0, 1.0, 1.0]` associated with a node whose scale is `[1.0, -2.0, 3.0]` should result in a box of size `[1.0, 2.0, 3.0]` in world space.
+Degenerate shapes are prohibited. A sphere must have a positive, non-zero radius. A box shape must have positive non-zero values for each component of `size`. The cylinder and capsule shapes must have a positive, non-zero `height` and both `radiusTop` and `radiusBottom` should be positive; at least one of the radii should be non-zero.
 
 ### JSON Schema
 
-* **JSON schema**: [glTF.KHR_collision_shapes.schema.json](schema/glTF.KHR_collision_shapes.schema.json)
+* **JSON schema**: [glTF.KHR_implicit.schema.json](schema/glTF.KHR_implicit_shapes.schema.json)
 
 ### Object Model
 
@@ -73,23 +68,20 @@ With consideration to the glTF 2.0 Asset Object Model Specification document, th
 
 | Pointer | Type|
 |-|-|
-| `/extensions/KHR_collision_shapes/shapes/{}/box/size` | `float3`|
-| `/extensions/KHR_collision_shapes/shapes/{}/capsule/height` | `float`|
-| `/extensions/KHR_collision_shapes/shapes/{}/capsule/radiusBottom` | `float`|
-| `/extensions/KHR_collision_shapes/shapes/{}/capsule/radiusTop` | `float`|
-| `/extensions/KHR_collision_shapes/shapes/{}/cylinder/height` | `float`|
-| `/extensions/KHR_collision_shapes/shapes/{}/cylinder/radiusBottom` | `float`|
-| `/extensions/KHR_collision_shapes/shapes/{}/cylinder/radiusTop` | `float`|
-| `/extensions/KHR_collision_shapes/shapes/{}/sphere/radius` | `float`|
-| `/extensions/KHR_collision_shapes/shapes/{}/mesh/weights/{}` | `float`|
-| `/extensions/KHR_collision_shapes/shapes/{}/mesh/weights` | `float[]`|
+| `/extensions/KHR_implicit_shapes/shapes/{}/box/size` | `float3`|
+| `/extensions/KHR_implicit_shapes/shapes/{}/capsule/height` | `float`|
+| `/extensions/KHR_implicit_shapes/shapes/{}/capsule/radiusBottom` | `float`|
+| `/extensions/KHR_implicit_shapes/shapes/{}/capsule/radiusTop` | `float`|
+| `/extensions/KHR_implicit_shapes/shapes/{}/cylinder/height` | `float`|
+| `/extensions/KHR_implicit_shapes/shapes/{}/cylinder/radiusBottom` | `float`|
+| `/extensions/KHR_implicit_shapes/shapes/{}/cylinder/radiusTop` | `float`|
+| `/extensions/KHR_implicit_shapes/shapes/{}/sphere/radius` | `float`|
 
 Additional read-only properties
 
 | Pointer | Type|
 |-|-|
-| `/extensions/KHR_collision_shapes/shapes.length` | `int`|
-| `/extensions/KHR_collision_shapes/shapes/{}/mesh/weights.length` | `int`|
+| `/extensions/KHR_implicit_shapes/shapes.length` | `int`|
 
 ## Appendix: Full Khronos Copyright Statement
 

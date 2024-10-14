@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "glTF.KHR_collision_shapes.shape.sphere.schema.json",
-    "title": "KHR_collision_shapes Sphere Shape",
+    "$id": "glTF.KHR_implicit_shapes.shape.sphere.schema.json",
+    "title": "KHR_implicit_shapes Sphere Shape",
     "type": "object",
     "description": "Parameters describing a sphere shape.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
