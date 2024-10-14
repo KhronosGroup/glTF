@@ -1,0 +1,69 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_physics_rigid_bodies.joint.limit.schema.json",
+    "title": "KHR_physics_rigid_bodies Physics Joint Limit",
+    "type": "object",
+    "description": "Parameters describing how a joint constrains the relative motion of a pair of nodes.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "min": {
+            "type": "number",
+            "description": "The minimum of the allowed range of relative distance in meters, or angle in radians."
+        },
+        "max": {
+            "type": "number",
+            "description": "The maximum of the allowed range of relative distance in meters, or angle in radians."
+        },
+        "stiffness": {
+            "type": "number",
+            "description": "The spring constant used to calculate a restorative force when the joint is extended beyond the limit. If not present, the limit should be infinitely stiff.",
+            "minimum": 0.0
+        },
+        "damping": {
+            "type": "number",
+            "description": "Damping applied to the velocity when the joint is extended beyond the limit.",
+            "minimum": 0.0,
+            "default": 0.0
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "oneOf": [
+        {
+            "type": "object",
+            "properties": {
+                "linearAxes": {
+                    "description": "The indices of the linear axes which are limited, constraining the linear motion in 1, 2 or 3 dimensions. 1D keeps an object some distance from an infinite plane. 2D keeps an object some distance from an infinite line. 3D keeps an object some distance from a point. Can only contain 0 (X), 1 (Y), or 2 (Z), so [0, 1, 2] constrains all three axes.",
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 2
+                    },
+                    "minItems": 1,
+                    "maxItems": 3,
+                    "uniqueItems": true
+                }
+            },
+            "required": ["linearAxes"]
+        },
+        {
+            "type": "object",
+            "properties": {
+                "angularAxes": {
+                    "description": "The indices of the angular axes which are limited, constraining the angular motion in 1, 2 or 3 dimensions. 1D limits rotation about one axis (e.g. a universal joint). 2D limits rotation about two axes (e.g. a cone). 3D limits rotation about all three axes. Can only contain 0 (X), 1 (Y), or 2 (Z), so [0, 1, 2] constrains all three axes.",
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 2
+                    },
+                    "minItems": 1,
+                    "maxItems": 3,
+                    "uniqueItems": true
+                }
+            },
+            "required": ["angularAxes"]
+        }
+    ]
+}
