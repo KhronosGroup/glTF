@@ -31,7 +31,7 @@
         { 
           "type": "array", 
           "minItems": 2,
-          "maxItems": 4,
+          "maxItems": 16,
           "items": { "type": "number" } 
         },
         { "type": "string" },
