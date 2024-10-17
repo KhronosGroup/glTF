@@ -51,12 +51,12 @@ To describe the geometry which represents the object, shapes must define at most
 |-|-|-|
 |**sphere**|`object`|A sphere centered at the origin in local space.|
 |**box**|`object`|An axis-aligned box centered at the origin in local space.|
-|**cylinder**|`object`|A cylinder centered at the origin and aligned along the Y axis in local space, with potentially different radii at each end.|
+|**cylinder**|`object`|A cylinder centered at the origin and aligned along the Y axis in local space, with potentially different radii at each end. A cone is a special case of cylinder when one of the radii is zero.|
 |**capsule**|`object`|A capsule (cylinder with hemispherical ends) centered at the origin and defined by two "capping" spheres with potentially different radii, aligned along the Y axis in local space.|
 
 The sphere, box, capsule, and cylinder all represent convex objects with a volume, while the mesh represents the surface of a referenced mesh object.
 
-Degenerate shapes are prohibited. A sphere must have a positive, non-zero radius. A box shape must have positive non-zero values for each component of `size`. The cylinder and capsule shapes must have a positive, non-zero `height` and both `radiusTop` and `radiusBottom` should be positive; at least one of the radii should be non-zero.
+Degenerate shapes are prohibited. A sphere must have a positive, non-zero radius. A box shape must have positive non-zero values for each component of `size`. The capsule shape must have a positive, non-zero `height` and both `radiusTop` and `radiusBottom` must be positive. A cylinder shape must have a positive, non-zero `height`, both `radiusTop` and `radiusBottom` must be non-negative, and at least one of `radiusTop` and `radiusBottom` must be non-zero.
 
 ### JSON Schema
 
