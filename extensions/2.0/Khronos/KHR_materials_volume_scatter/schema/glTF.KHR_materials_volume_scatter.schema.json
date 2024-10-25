@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_volume_scatter glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the scattering parameters for the volume of a material.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "scatterAlbedo": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "description": "The multi-scatter albedo.",
+            "default": [ 0.0, 0.0, 0.0 ],
+            "minItems": 3,
+            "maxItems": 3
+        },
+        "scatterAnisotropy": {
+            "type": "number",
+            "minimum": -1.0,
+            "maximum": 1.0,
+            "default": 0.0,
+            "description": "The anisotropy of scatter events."
+        }
+    }
+}
