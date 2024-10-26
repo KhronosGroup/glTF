@@ -35,7 +35,8 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
     <a href="https://www.khronos.org/developers/reference-cards/">Khronos reference cards</a>
   </sup><br>
   <sup>
-    <a href=https://github.com/randall2835/gltfOverviewJapanese/releases/download/v0.1/gltfOverview2.0-Japanese.png>Japanese translation</a> by <a href=https://github.com/randall2835/gltfOverviewJapanese>Takuto Takahashi</a>
+    <a href=https://github.com/randall2835/gltfOverviewJapanese/releases/download/v0.1/gltfOverview2.0-Japanese.png>Japanese translation</a> by <a href=https://github.com/randall2835/gltfOverviewJapanese>Takuto Takahashi</a><br>
+    <a href=https://github.com/leeyeel/gltfOverview-Chinese/releases/download/v2.0.0d/gltfOverview2.0-cn.png>Chinese translation</a> by <a href=https://github.com/leeyeel/gltfOverview-Chinese>@leeyeel</a><br>
   </sup>
 </p>
 
