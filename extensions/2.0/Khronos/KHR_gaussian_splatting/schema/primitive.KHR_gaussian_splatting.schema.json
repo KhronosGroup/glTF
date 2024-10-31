@@ -10,7 +10,7 @@
             "description": "Scale used when dequantizing position attribute values",
             "default": 1.0,
             "required": "false"
-        }
+        },
         "extensions": { },
         "extras": { }
     }
