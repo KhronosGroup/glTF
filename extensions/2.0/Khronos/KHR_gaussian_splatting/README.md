@@ -21,9 +21,11 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-Gaussian splats are currently stored in mostly unstructured files such as PLY. This aims to bring that format into glTF in a simple and straightfoward way. The position, rotation, scale, and diffuse color are stored as standard attributes on a point primitive. If the point primitive contains the extension the renderer can know to render the point primitive as Gaussian Splats instead of a points.
+### Motivation
 
-This approach allows for an easy fallback in the event the glTF is loaded within a renderer that doesn't support Gaussian Splats. In this scenario, the glTF file will render as a sparse point cloud to the user.
+This extension aims to bring structure and conformity to the Gaussian Splat space while utilizing glTF to its fullest extent. PLY files have become the ubiqitous format for Gaussian Splats due to their sheer simplicity. However, this simplicity leads to loose conformity with a ephemeral standard emerging through habits and tradition. Gaussian Splats are essentially a superset of a tradition point cloud, so we approached the extension with this mindset. The position, rotation, scale, and diffuse color are stored as standard attributes on a point primitive. If the point primitive contains the extension the renderer can know to render the point primitive as Gaussian Splats instead of a points.
+
+This approach allows for an easy fallback in the event the glTF is loaded within a renderer that doesn't support Gaussian Splats. In this scenario, the glTF file will render as a sparse point cloud to the user. It also allows for easy integration with existing compression like meshopt.
 
 ### Splat Data Mapping
 
@@ -36,6 +38,13 @@ This approach allows for an easy fallback in the event the glTF is loaded within
 | Scale | _SCALE |
 
 Spherical Harmonic channels 1 through 15, which map the splat specular, are currently unused by the extension.
+
+### Extension attributes
+
+| Attributes | Type | Description | Required
+| ---------- | ---- |
+| quantizedPositionScale | number | Scale value for dequantizing POSITION attribute values | No |
+
 
 ## Sample
 
@@ -55,11 +64,11 @@ Extending glTF node:
         },
         {
             "type": "VEC4", // quaternion
-            "componentType": 5126 // FLOAT, could be quantized with KHR_mesh_quantization + EXT_meshopt_compression
+            "componentType": 5126 // FLOAT
         },
         {
-            "type": "VEC3",
-            "componentType": 5126 // FLOAT, could be quantized with KHR_mesh_quantization + EXT_meshopt_compression
+            "type": "VEC3", //scale
+            "componentType": 5126 // FLOAT
         }
     ],
     "meshes": [
@@ -75,8 +84,7 @@ Extending glTF node:
                     },
                     "extensions": {
                         "KHR_gaussian_splatting": {
-                            // May need to consider spherical harmonics in the future. Separate extension?
-                            // Quantization scale for additional attributes goes here if needed
+                            "quantizedPositionScale": 1.0
                         }
                     }
                 }
@@ -85,6 +93,10 @@ Extending glTF node:
     ]
 }
 ```
+
+## Schema
+
+
 
 ## Known Implementations
 
