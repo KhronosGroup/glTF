@@ -41,10 +41,12 @@ Spherical Harmonic channels 1 through 15, which map the splat specular, are curr
 
 | Attributes | Type | Description | Required
 | --- | --- | --- | --- |
-| quantizedPositionScale | number | Scale value for dequantizing POSITION attribute values | No |
+| quantizedPositionScale | number | Scale value for dequantizing POSITION attribute values | No, default: `1.0` |
 
 
 ## Extending glTF node
+
+Sample:
 
 ```json
 {
@@ -96,7 +98,7 @@ _This section is non-normative_
 
 In this example, we follow a reference implementation for rendering Gaussian Splats.
 
-In the vertex shader, we first must compute covariance in 3D and then 2D space. In optimizing implementations, 3D covariance can be computed ahead of time.
+In the vertex shader, we first must compute covariance in 3D and then 2D space. In optimizing implementations, 3D covariance can be computed ahead of time. 
 
 ```glsl
 //https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L118
