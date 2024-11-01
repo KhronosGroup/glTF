@@ -44,9 +44,7 @@ Spherical Harmonic channels 1 through 15, which map the splat specular, are curr
 | quantizedPositionScale | number | Scale value for dequantizing POSITION attribute values | No |
 
 
-## Sample
-
-Extending glTF node:
+## Extending glTF node
 
 ```json
 {
@@ -212,3 +210,4 @@ This is currently implemented within [3D Tiles and CesiumJS as an experimental f
 ## Resources
 
 https://github.com/mkkellogg/GaussianSplats3D/issues/47#issuecomment-1801360116
+https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/
