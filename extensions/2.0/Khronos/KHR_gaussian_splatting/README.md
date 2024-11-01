@@ -94,7 +94,115 @@ Extending glTF node:
 }
 ```
 
+## Implementation
+
+_This section is non-normative_
+
+In this example, we follow a reference implementation for rendering Gaussian Splats.
+
+In the vertex shader, we first must compute covariance in 3D and then 2D space. In optimizing implementations, 3D covariance can be computed ahead of time.
+
+```
+//https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L118
+void calculateCovariance3D(vec3 rotation, vec3 scale, out float[6] covariance3D)
+{
+    mat3 S = mat3(
+        scale[0], 0, 0,
+        0, scale[1], 0,
+        0, 0, scale[2]
+    );
+
+    float r = rot.w;
+    float x = rot.x;
+    float y = rot.y;
+    float z = rot.z;
+
+    mat3 R = mat3(
+        1. - 2. * (y * y + z * z), 2. * (x * y - r * z), 2. * (x * z + r * y),
+        2. * (x * y + r * z), 1. - 2. * (x * x + z * z), 2. * (y * z - r * x),
+        2. * (x * z - r * y), 2. * (y * z + r * x), 1. - 2. * (x * x + y * y)
+    );
+
+    mat3 M = S * R;
+    mat3 Sigma = transpose(M) * M;
+
+    covariance3D = float[6](
+        Sigma[0][0], Sigma[0][1], Sigma[0][2],
+        Sigma[1][1], Sigma[1][2], Sigma[2][2]
+    );
+}
+
+//https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L74
+vec3 calculateCovariance2D(vec3 worldPosition, float cameraFocal_X, float cameraFocal_Y, float tan_fovX, float tan_fovY, float[6] covariance3D, mat4 viewMatrix)
+{
+    vec4 t = viewmatrix * vec4(worldPos, 1.0);
+
+    float limx = 1.3 * tan_fovx;
+    float limy = 1.3 * tan_fovy;
+    float txtz = t.x / t.z;
+    float tytz = t.y / t.z;
+    t.x = min(limx, max(-limx, txtz)) * t.z;
+    t.y = min(limy, max(-limy, tytz)) * t.z;
+
+    mat3 J = mat3(
+        focal_x / t.z, 0, -(focal_x * t.x) / (t.z * t.z),
+        0, focal_y / t.z, -(focal_y * t.y) / (t.z * t.z),
+        0, 0, 0
+    );
+
+    mat3 W =  mat3(
+        viewmatrix[0][0], viewmatrix[1][0], viewmatrix[2][0],
+        viewmatrix[0][1], viewmatrix[1][1], viewmatrix[2][1],
+        viewmatrix[0][2], viewmatrix[1][2], viewmatrix[2][2]
+    );
+    mat3 T = W * J;
+    mat3 Vrk = mat3(
+        covariance3D[0], covariance3D[1], covariance3D[2],
+        covariance3D[1], covariance3D[3], covariance3D[4],
+        covariance3D[2], covariance3D[4], covariance3D[5]
+    );
+
+    mat3 cov = transpose(T) * transpose(Vrk) * T;
+
+    cov[0][0] += .3;
+    cov[1][1] += .3;
+    return vec3(cov[0][0], cov[0][1], cov[1][1]);
+}
+
+vec3 calculateConic(vec3 covariance2D)
+{
+    float det = covariance2D.x * covariance2D.z - covariance2D.y * covariance2D.y;
+    return vec3(covariance2D.z, -covariance2D.y, covariance2D.x) * (1. / det); 
+}
+
+```
+//https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L330
+```
+in vec2 vertexPosition;
+in vec2 screenPosition;
+in vec3 conic;
+in vec4 color;
+
+out vec4 splatColor;
+
+vec2 d = screenPosition - vertexPosition;
+float power = -0.5 * (conic.x * d.x * d.x + conic.z * d.y * d.y) - conic.y * d.x * d.y);
+
+if(power > 0.) 
+    discard;
+
+float alpha = min(.99f, color.a * exp(power));
+
+if(alpha < 1./255.)
+    discard;
+
+splatColor = vec4(color * alpha, alpha);
+```
+
+
 ## Schema
+
+[Gaussian Splatting JSON Schema](./schema/primitive.KHR_gaussian_splatting.schema.json)
 
 
 
