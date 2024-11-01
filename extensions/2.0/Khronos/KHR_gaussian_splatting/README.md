@@ -53,27 +53,26 @@ Extending glTF node:
     "accessors": [
         {
             "type": "VEC3",
-            "componentType": 5126 // FLOAT
-        },
+            "componentType": 5126
         {
             "type": "VEC4",
-            "componentType": 5121, // UNSIGNED_BYTE
+            "componentType": 5121,
             "normalized": true
         },
         {
-            "type": "VEC4", // quaternion
-            "componentType": 5126 // FLOAT
+            "type": "VEC4", 
+            "componentType": 5126
         },
         {
-            "type": "VEC3", //scale
-            "componentType": 5126 // FLOAT
+            "type": "VEC3",
+            "componentType": 5126
         }
     ],
     "meshes": [
         {
             "primitives": [
                 {
-                    "mode": 0, // POINTS
+                    "mode": 0,
                     "attributes": {
                         "POSITION": 0,
                         "COLOR_0": 1,
@@ -172,6 +171,7 @@ vec3 calculateConic(vec3 covariance2D)
     float det = covariance2D.x * covariance2D.z - covariance2D.y * covariance2D.y;
     return vec3(covariance2D.z, -covariance2D.y, covariance2D.x) * (1. / det); 
 }
+```
 
 ```glsl
 //https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L330
