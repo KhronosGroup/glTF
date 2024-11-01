@@ -104,7 +104,7 @@ In the vertex shader, we first must compute covariance in 3D and then 2D space. 
 
 ```
 //https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L118
-void calculateCovariance3D(vec3 rotation, vec3 scale, out float[6] covariance3D)
+void calculateCovariance3D(vec4 rotation, vec3 scale, out float[6] covariance3D)
 {
     mat3 S = mat3(
         scale[0], 0, 0,
