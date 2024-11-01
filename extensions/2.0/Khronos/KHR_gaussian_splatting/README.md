@@ -54,6 +54,7 @@ Extending glTF node:
         {
             "type": "VEC3",
             "componentType": 5126
+        },
         {
             "type": "VEC4",
             "componentType": 5121,
