@@ -92,6 +92,18 @@ Sample:
 }
 ```
 
+## Gaussian Splats
+
+Before storing values into attributes, the data will have been preprocessed from the Gaussian Splat training process.
+
+| Attribute | Process |
+| --- | --- |
+| Alpha | Activated through logistic function `sigmoid(a) = 1 / (1 + e^(-a))` |
+| Scale | Natural exponentiation `exp(scale)` |
+| Rotation | Normalized Quaternion |
+| Diffuse Color | Multiplied by zero-order spherical harmonic constant `0.28209479177387814` |
+
+
 ## Implementation
 
 _This section is non-normative_
