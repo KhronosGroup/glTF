@@ -42,7 +42,7 @@ Spherical Harmonic channels 1 through 15, which map the splat specular, are curr
 ### Extension attributes
 
 | Attributes | Type | Description | Required
-| ---------- | ---- |
+| --- | --- | --- | --- |
 | quantizedPositionScale | number | Scale value for dequantizing POSITION attribute values | No |
 
 
