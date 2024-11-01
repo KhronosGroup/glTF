@@ -48,7 +48,7 @@ Spherical Harmonic channels 1 through 15, which map the splat specular, are curr
 
 Extending glTF node:
 
-```
+```json
 {
     "accessors": [
         {
@@ -100,7 +100,7 @@ In this example, we follow a reference implementation for rendering Gaussian Spl
 
 In the vertex shader, we first must compute covariance in 3D and then 2D space. In optimizing implementations, 3D covariance can be computed ahead of time.
 
-```
+```glsl
 //https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L118
 void calculateCovariance3D(vec4 rotation, vec3 scale, out float[6] covariance3D)
 {
@@ -173,9 +173,9 @@ vec3 calculateConic(vec3 covariance2D)
     return vec3(covariance2D.z, -covariance2D.y, covariance2D.x) * (1. / det); 
 }
 
-```
+```glsl
 //https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L330
-```
+
 in vec2 vertexPosition;
 in vec2 screenPosition;
 in vec3 conic;
