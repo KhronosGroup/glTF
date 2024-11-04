@@ -21,16 +21,16 @@ Written against the glTF 2.0 spec.
 
 ## Table of Contents
 
--[Overview](#overview)
--[Adding Gaussian Splats](#adding-gaussian-splats-to-primitives)
-  -[Splat Data Mapping](#splat-data-mapping)
-  -[Extension Attributes](#extension-attributes)
-  -[Transforming Data](#transforming-gaussian-splat-data-for-gltf)
--[Extending glTF Primitive](#extending-gltf-primitive)
--[Implementation](#implementation)
--[Schema](#schema)
--[Known Implementations](#known-implementations)
--[Resources](#resources)
+- [Overview](#overview)
+- [Adding Gaussian Splats](#adding-gaussian-splats-to-primitives)
+  - [Splat Data Mapping](#splat-data-mapping)
+  - [Extension Attributes](#extension-attributes)
+  - [Transforming Data](#transforming-gaussian-splat-data-for-gltf)
+- [Extending glTF Primitive](#extending-gltf-primitive)
+- [Implementation](#implementation)
+- [Schema](#schema)
+- [Known Implementations](#known-implementations)
+- [Resources](#resources)
 
 ## Overview
 
