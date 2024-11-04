@@ -57,6 +57,8 @@ Standard PLY splat formats have opacity and color separate, however they are com
 
 This implementation only contains the zeroth spherical harmonic for diffuse color. Spherical Harmonic channels 1 through 15, which map the splat specular, are currently unused by the extension.
 
+Utilizing the standard position and color attributes allows us to easily fall back in situations where `extensions.KHR_gaussian_splatting` isn't available. Or simply for alternative rendering.
+
 ### Extension attributes
 
 `extensions.KHR_gaussian_splatting` may contain the following values:
@@ -77,7 +79,7 @@ This implementation only contains the zeroth spherical harmonic for diffuse colo
 
 ### Transforming Gaussian Splat Data for glTF
 
-The data output from the Gaussian splat training process that is stored in the typical PLY must be transformed before storing in glTF.
+The data output from the Gaussian splat training process that is stored in the typical PLY must be transformed before storing in glTF. These transformations make the data suitable for direct usage in glTF.
 
 #### Diffuse Color
 
@@ -151,9 +153,25 @@ Sample:
 
 _This section is non-normative_
 
-In this example, we follow a reference implementation for rendering Gaussian Splats.
+Rendering is broadly two phases: Pre-rasterization sorting and rasterization.
+
+### Splat Sorting
+
+Given that splatting uses many layered Gaussians blended to create complex effects, their ordering is view dependent and must be sorted based on their distance from the current camera position. The details are largely dependent on the platform targeted.
+
+Two example approaches:
+
+- Sorting the vertex buffers directly before submitting to the GPU
+- Generating textures from splat data and updating the indexes into the texture each frame
+
+### Rasterizing
 
 In the vertex shader, we first must compute covariance in 3D and then 2D space. In optimizing implementations, 3D covariance can be computed ahead of time.
+
+Our covariance matrix can be represented as:
+$$\Sigma = RSS^TR^T$$
+
+Where `S` is our scaling matrix and `R` is our rotation matrix
 
 ```glsl
 //https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L118
@@ -184,7 +202,17 @@ void calculateCovariance3D(vec4 rotation, vec3 scale, out float[6] covariance3D)
         Sigma[1][1], Sigma[1][2], Sigma[2][2]
     );
 }
+```
 
+3D Gaussians are then projected into 2D space for rendering. Algorithm Zwicker et al. [2001a]
+
+$$\Sigma' = JW\Sigma W^TJ^T$$
+
+`W` is the view transformation
+`J` is the Jacobian of the affine approximation of the projective transformation
+$\Sigma$ is the 3D covariance matrix derived above
+
+```glsl
 //https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L74
 vec3 calculateCovariance2D(vec3 worldPosition, float cameraFocal_X, float cameraFocal_Y, float tan_fovX, float tan_fovY, float[6] covariance3D, mat4 viewMatrix)
 {
