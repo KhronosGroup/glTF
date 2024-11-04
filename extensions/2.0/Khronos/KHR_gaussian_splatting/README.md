@@ -168,7 +168,7 @@ Two example approaches:
 
 In the vertex shader, we first must compute covariance in 3D and then 2D space. In optimizing implementations, 3D covariance can be computed ahead of time.
 
-Our covariance matrix can be represented as:
+Our 3D covariance matrix can be represented as:
 $$\Sigma = RSS^TR^T$$
 
 Where `S` is our scaling matrix and `R` is our rotation matrix
@@ -249,13 +249,19 @@ vec3 calculateCovariance2D(vec3 worldPosition, float cameraFocal_X, float camera
     cov[1][1] += .3;
     return vec3(cov[0][0], cov[0][1], cov[1][1]);
 }
+```
 
+The conic is the inverse of the covariance matrix:
+
+```glsl
 vec3 calculateConic(vec3 covariance2D)
 {
     float det = covariance2D.x * covariance2D.z - covariance2D.y * covariance2D.y;
     return vec3(covariance2D.z, -covariance2D.y, covariance2D.x) * (1. / det); 
 }
 ```
+
+The Guassian is finally rendered using the conic matrix applying its alpha derived from the Gaussian opacity multiplied by its exponential falloff.
 
 ```glsl
 //https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L330
