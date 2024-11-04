@@ -3,7 +3,7 @@
     "$id": "glTF.KHR_implicit_shapes.schema.json",
     "title": "KHR_implicit_shapes glTF Document Extension",
     "type": "object",
-    "description": "Top level collision primitives.",
+    "description": "Top level implicit shapes.",
     "allOf": [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties": {
         "shapes": {

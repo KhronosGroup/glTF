@@ -54,7 +54,7 @@ To describe the geometry which represents the object, shapes must define at most
 |**cylinder**|`object`|A cylinder centered at the origin and aligned along the Y axis in local space, with potentially different radii at each end. A cone is a special case of cylinder when one of the radii is zero.|
 |**capsule**|`object`|A capsule (cylinder with hemispherical ends) centered at the origin and defined by two "capping" spheres with potentially different radii, aligned along the Y axis in local space.|
 
-The sphere, box, capsule, and cylinder all represent convex objects with a volume, while the mesh represents the surface of a referenced mesh object.
+When the `type` of a shape refers to a shape type defined by this extension, the shape must not supply a value for a different shape type e.g. a shape whose `type` is "box" must not have a defined `sphere` property. Similarly, if `type` does not reference a shape type declared by `KHR_implicit_shapes`, an extension or other mechanism should supply an alternate shape definition.
 
 Degenerate shapes are prohibited. A sphere must have a positive, non-zero radius. A box shape must have positive non-zero values for each component of `size`. The capsule shape must have a positive, non-zero `height` and both `radiusTop` and `radiusBottom` must be positive. A cylinder shape must have a positive, non-zero `height`, both `radiusTop` and `radiusBottom` must be non-negative, and at least one of `radiusTop` and `radiusBottom` must be non-zero.
 

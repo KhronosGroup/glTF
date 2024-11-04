@@ -3,7 +3,7 @@
     "$id": "glTF.KHR_implicit_shapes.shape.schema.json",
     "title": "KHR_implicit_shapes Shape Resource",
     "type": "object",
-    "description": "Parameters describing a node's physics collision geometry.",
+    "description": "Parameters describing an implicit shape.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
         "type": {
@@ -54,12 +54,6 @@
         "extensions": { },
         "extras": { }
     },
-    "oneOf": [
-        { "required": ["sphere"] },
-        { "required": ["box"] },
-        { "required": ["capsule"] },
-        { "required": ["cylinder"] }
-    ],
     "required": [
         "type"
     ]
