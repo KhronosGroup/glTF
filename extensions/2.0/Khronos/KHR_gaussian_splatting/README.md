@@ -19,32 +19,87 @@ Draft
 
 Written against the glTF 2.0 spec.
 
+## Table of Contents
+
+-[Overview](#overview)
+-[Adding Gaussian Splats](#adding-gaussian-splats-to-primitives)
+  -[Splat Data Mapping](#splat-data-mapping)
+  -[Extension Attributes](#extension-attributes)
+  -[Transforming Data](#transforming-gaussian-splat-data-for-gltf)
+-[Extending glTF Primitive](#extending-gltf-primitive)
+-[Implementation](#implementation)
+-[Schema](#schema)
+-[Known Implementations](#known-implementations)
+-[Resources](#resources)
+
 ## Overview
 
-Currently, PLY files serve as the de facto standard through their sheer simplicity and ubiquity. This extension aims to bring structure and conformity to the Gaussian Splat space while utilizing glTF to its fullest extent. Gaussian Splats are essentially a superset of a traditional point cloud, so we approached the extension with this mindset. The **position**, **rotation**, **scale**, and **diffuse color** properties are stored as standard attributes on a point primitive. If the point primitive contains the extension the renderer can know to render the point primitive as Gaussian Splats instead of a points.
+Currently, PLY files serve as the de facto standard through their sheer simplicity and ubiquity. This extension aims to bring structure and conformity to the Gaussian Splat space while utilizing glTF to its fullest extent. Gaussian splats are essentially a superset of a traditional point cloud, so we approached the extension with this mindset. If the point primitive contains the extension the renderer can know to render the point primitive as Gaussian splats instead of a points. Gaussian splats are defined by a position, color, rotation, and scale. We store these values as attributes on primitives.
 
-This approach allows for an easy fallback in the event the glTF is loaded within a renderer that doesn't support Gaussian Splats. In this scenario, the glTF file will render as a sparse point cloud to the user. It also allows for easy integration with existing compression like meshopt.
+This approach allows for an easy fallback in the event the glTF is loaded within a renderer that doesn't support Gaussian splats. In this scenario, the glTF file will render as a sparse point cloud to the user. It also allows for easy integration with existing compression like meshopt.
+
+## Adding Gaussian Splats to Primitives
+
+As Gaussian splats are defined by a position color, rotation and scale, we both map to existing attributes and define new ones. These are attached to a primitive  by defining the `extensions.KHR_gaussian_splatting` property on that mesh.
 
 ### Splat Data Mapping
 
-| Splat Data | glTF Attribute |
-| --- | --- |
-| Position | POSITION |
-| Color (Diffuse, Spherical Harmonic 0) | COLOR_0 RGB channels |
-| Opacity (Spherical Harmonic 0 Alpha) | COLOR_0 A channel |
-| Rotation | _ROTATION |
-| Scale | _SCALE |
+To define a Gaussian splat, it must contain the following attributes:
 
-Spherical Harmonic channels 1 through 15, which map the splat specular, are currently unused by the extension.
+| Splat Data | glTF Attribute | Accessor Type | Component Type |
+| --- | --- | --- | --- |
+| Position | POSITION | VEC3 | float |
+| Color (SH0 (Diffuse) and alpha) | COLOR_0 | VEC4 | unsigned byte normalized |
+| Rotation | _ROTATION | VEC4 | float |
+| Scale | _SCALE | VEC3 | float |
+
+Standard PLY splat formats have opacity and color separate, however they are combined into the COLOR_0 attribute here.
+
+This implementation only contains the zeroth spherical harmonic for diffuse color. Spherical Harmonic channels 1 through 15, which map the splat specular, are currently unused by the extension.
 
 ### Extension attributes
 
-| Attributes | Type | Description | Required
+`extensions.KHR_gaussian_splatting` may contain the following values:
+
+| Attributes | Type | Description | Required |
 | --- | --- | --- | --- |
 | quantizedPositionScale | number | Scale value for dequantizing POSITION attribute values | No, default: `1.0` |
 
+```json
+{
+    "extensions": {
+        "KHR_gaussian_splatting": {
+            "quantizedPositionScale": 13.228187255859375
+        }
+    }
+}
+```
 
-## Extending glTF node
+### Transforming Gaussian Splat Data for glTF
+
+The data output from the Gaussian splat training process that is stored in the typical PLY must be transformed before storing in glTF.
+
+#### Diffuse Color
+
+Each color channel `red`, `green`, and `blue` must each be multiplied by the zeroth-order spherical harmonic constant `0.28209479177387814`
+
+#### Alpha
+
+Alpha must be activated through the logistic function $\sigma(a) = \frac{1}{1 + e^{-a}}$ which constrains it to the range `[0 - 1)`
+
+It can then be converted to an `unsigned byte` color channel.
+
+#### Scale
+
+'Activated' via exponentiation similar to `alpha`. $\exp(x)$
+
+#### Rotation
+
+Normalized to a unit quaternion
+
+$\hat{q} = \frac{q}{\|q\|} = \frac{q}{\sqrt{q_w^2 + q_x^2 + q_y^2 + q_z^2}}$
+
+## Extending glTF Primitive
 
 Sample:
 
@@ -92,25 +147,13 @@ Sample:
 }
 ```
 
-## Gaussian Splats
-
-Before storing values into attributes, the data will have been preprocessed from the Gaussian Splat training process.
-
-| Attribute | Process |
-| --- | --- |
-| Alpha | Activated through logistic function `sigmoid(a) = 1 / (1 + e^(-a))` |
-| Scale | Natural exponentiation `exp(scale)` |
-| Rotation | Normalized Quaternion |
-| Diffuse Color | Multiplied by zero-order spherical harmonic constant `0.28209479177387814` |
-
-
 ## Implementation
 
 _This section is non-normative_
 
 In this example, we follow a reference implementation for rendering Gaussian Splats.
 
-In the vertex shader, we first must compute covariance in 3D and then 2D space. In optimizing implementations, 3D covariance can be computed ahead of time. 
+In the vertex shader, we first must compute covariance in 3D and then 2D space. In optimizing implementations, 3D covariance can be computed ahead of time.
 
 ```glsl
 //https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L118
@@ -210,12 +253,9 @@ if(alpha < 1./255.)
 splatColor = vec4(color * alpha, alpha);
 ```
 
-
 ## Schema
 
 [Gaussian Splatting JSON Schema](./schema/primitive.KHR_gaussian_splatting.schema.json)
-
-
 
 ## Known Implementations
 
