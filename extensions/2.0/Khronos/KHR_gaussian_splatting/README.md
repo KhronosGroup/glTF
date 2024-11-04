@@ -99,7 +99,7 @@ It can then be converted to an `unsigned byte` color channel.
 
 Normalized to a unit quaternion
 
-$\hat{q} = \frac{q}{\|q\|} = \frac{q}{\sqrt{q_w^2 + q_x^2 + q_y^2 + q_z^2}}$
+$$\hat{q} = \frac{q}{\|q\|} = \frac{q}{\sqrt{q_w^2 + q_x^2 + q_y^2 + q_z^2}}$$
 
 ## Extending glTF Primitive
 
@@ -208,9 +208,9 @@ void calculateCovariance3D(vec4 rotation, vec3 scale, out float[6] covariance3D)
 
 $$\Sigma' = JW\Sigma W^TJ^T$$
 
-`W` is the view transformation
-`J` is the Jacobian of the affine approximation of the projective transformation
-$\Sigma$ is the 3D covariance matrix derived above
+- `W` is the view transformation
+- `J` is the Jacobian of the affine approximation of the projective transformation
+- $\Sigma$ is the 3D covariance matrix derived above
 
 ```glsl
 //https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L74
