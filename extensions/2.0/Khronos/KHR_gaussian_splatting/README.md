@@ -210,7 +210,7 @@ $$\Sigma' = JW\Sigma W^TJ^T$$
 
 - `W` is the view transformation
 - `J` is the Jacobian of the affine approximation of the projective transformation
-- $\Sigma$ is the 3D covariance matrix derived above
+- $\Sigma$ is the 3D covariance matrix derived above (as `Vrk` below)
 
 ```glsl
 //https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L74
