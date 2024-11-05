@@ -35,7 +35,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-Currently, PLY files serve as the de facto standard through their sheer simplicity and ubiquity. This extension aims to bring structure and conformity to the Gaussian Splat space while utilizing glTF to its fullest extent. Gaussian splats are essentially a superset of a traditional point cloud, so we approached the extension with this mindset. If the point primitive contains the extension the renderer can know to render the point primitive as Gaussian splats instead of a points. Gaussian splats are defined by a position, rotation, scale, and spherical harmonics (both diffuse and specular) . We store these values as attributes on primitives.
+Currently, PLY files serve as the de facto standard through their sheer simplicity and ubiquity. This extension aims to bring structure and conformity to the Gaussian Splat space while utilizing glTF to its fullest extent. Gaussian splats are essentially a superset of a traditional point cloud, so we approached the extension with this mindset. If the point primitive contains the extension the renderer can know to render the point primitive as Gaussian splats instead of a points. Gaussian splats are defined by a position, opacity, rotation, scale, and spherical harmonics (both diffuse and specular) . We store these values as attributes on primitives.
 
 This approach allows for an easy fallback in the event the glTF is loaded within a renderer that doesn't support Gaussian splats. In this scenario, the glTF file will render as a sparse point cloud to the user. It also allows for easy integration with existing compression like meshopt.
 
@@ -50,7 +50,7 @@ To define a Gaussian splat, it must contain the following attributes:
 | Splat Data | glTF Attribute | Accessor Type | Component Type |
 | --- | --- | --- | --- |
 | Position | POSITION | VEC3 | float |
-| Color (Spherical Harmonic 0 (Diffuse) and alpha) | COLOR_0 | VEC4 | unsigned byte normalized |
+| Color (Spherical Harmonic 0 (Diffuse) and opacity) | COLOR_0 | VEC4 | unsigned byte normalized |
 | Rotation | _ROTATION | VEC4 | float |
 | Scale | _SCALE | VEC3 | float |
 
