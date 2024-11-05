@@ -26,15 +26,16 @@ Written against the glTF 2.0 spec.
   - [Splat Data Mapping](#splat-data-mapping)
   - [Extension Attributes](#extension-attributes)
   - [Transforming Data](#transforming-gaussian-splat-data-for-gltf)
-- [Extending glTF Primitive](#extending-gltf-primitive)
+- [Limitations](#limitations)
 - [Implementation](#implementation)
+- [Meshopt Compression](#meshopt-compression)
 - [Schema](#schema)
 - [Known Implementations](#known-implementations)
 - [Resources](#resources)
 
 ## Overview
 
-Currently, PLY files serve as the de facto standard through their sheer simplicity and ubiquity. This extension aims to bring structure and conformity to the Gaussian Splat space while utilizing glTF to its fullest extent. Gaussian splats are essentially a superset of a traditional point cloud, so we approached the extension with this mindset. If the point primitive contains the extension the renderer can know to render the point primitive as Gaussian splats instead of a points. Gaussian splats are defined by a position, color, rotation, and scale. We store these values as attributes on primitives.
+Currently, PLY files serve as the de facto standard through their sheer simplicity and ubiquity. This extension aims to bring structure and conformity to the Gaussian Splat space while utilizing glTF to its fullest extent. Gaussian splats are essentially a superset of a traditional point cloud, so we approached the extension with this mindset. If the point primitive contains the extension the renderer can know to render the point primitive as Gaussian splats instead of a points. Gaussian splats are defined by a position, rotation, scale, and spherical harmonics (both diffuse and specular) . We store these values as attributes on primitives.
 
 This approach allows for an easy fallback in the event the glTF is loaded within a renderer that doesn't support Gaussian splats. In this scenario, the glTF file will render as a sparse point cloud to the user. It also allows for easy integration with existing compression like meshopt.
 
@@ -49,13 +50,13 @@ To define a Gaussian splat, it must contain the following attributes:
 | Splat Data | glTF Attribute | Accessor Type | Component Type |
 | --- | --- | --- | --- |
 | Position | POSITION | VEC3 | float |
-| Color (SH0 (Diffuse) and alpha) | COLOR_0 | VEC4 | unsigned byte normalized |
+| Color (Spherical Harmonic 0 (Diffuse) and alpha) | COLOR_0 | VEC4 | unsigned byte normalized |
 | Rotation | _ROTATION | VEC4 | float |
 | Scale | _SCALE | VEC3 | float |
 
 Standard PLY splat formats have opacity and color separate, however they are combined into the COLOR_0 attribute here.
 
-This implementation only contains the zeroth spherical harmonic for diffuse color. Spherical Harmonic channels 1 through 15, which map the splat specular, are currently unused by the extension.
+This implementation only contains the channel 0 spherical harmonic for diffuse color. Spherical Harmonic channels 1 through 15, which map the splat specular, are currently unused by the extension.
 
 Utilizing the standard position and color attributes allows us to easily fall back in situations where `extensions.KHR_gaussian_splatting` isn't available. Or simply for alternative rendering.
 
@@ -85,6 +86,8 @@ The data output from the Gaussian splat training process that is stored in the t
 
 Each color channel `red`, `green`, and `blue` must each be multiplied by the zeroth-order spherical harmonic constant `0.28209479177387814`
 
+Those can then be converted to an `unsigned byte` color channel.
+
 #### Alpha
 
 Alpha must be activated through the logistic function $\sigma(a) = \frac{1}{1 + e^{-a}}$ which constrains it to the range `[0 - 1)`
@@ -101,10 +104,10 @@ Normalized to a unit quaternion
 
 $$\hat{q} = \frac{q}{\|q\|} = \frac{q}{\sqrt{q_w^2 + q_x^2 + q_y^2 + q_z^2}}$$
 
-## Extending glTF Primitive
 
-Sample:
+#### Sample
 
+Basic example shown below. This sample shows adding Guassian splats to the first primitive of a mesh. No
 ```json
 {
     "accessors": [
@@ -149,6 +152,10 @@ Sample:
 }
 ```
 
+## Limitations
+
+The biggest current limitation is the lack of specular spherical harmonics. Admittedly, these are a strong feature of Gaussian splats as they allow the scene to render dynamically based on viewing position. However, they are prohibitively large in storage size and impose a larger computational cost as you increase in spherical harmonic degrees. As well as, answering the question of how to manage this data on the GPU. We decided to focus on a core implementation before tackling the question of how to store a compressed version of the specular degrees. With compression comes accuracy loss, and while that may be suitable for general cases, we did not want to impose any lossy format on potential users. Lossy data should be opt-in where possible. These could be added in a future extension by expanding the values in `extensions.KHR_gaussian_splatting`.
+
 ## Implementation
 
 _This section is non-normative_
@@ -159,10 +166,32 @@ Rendering is broadly two phases: Pre-rasterization sorting and rasterization.
 
 Given that splatting uses many layered Gaussians blended to create complex effects, their ordering is view dependent and must be sorted based on their distance from the current camera position. The details are largely dependent on the platform targeted.
 
-Two example approaches:
+In the seminal paper, they took a hardware accelerated approach using CUDA. The scene is broken down into tiles with each tile processed in parallel. The splats within each tile are sorted via a GPU accelerated Radix sort. The details are beyond the scope of this document, but it can be seen here: 
+https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/rasterizer_impl.cu
 
-- Sorting the vertex buffers directly before submitting to the GPU
-- Generating textures from splat data and updating the indexes into the texture each frame
+Our approach differs in that we are currently operating in the browser with WebGL, so we don't have that level of hardware access.
+
+Regardless of how your data is stored and structured, sorting visible Gaussians is a similar process.
+
+First, we obtain our model view matrix by multiplying the model matrix of the asset we are viewing with the camera view matrix
+
+```javascript
+    const modelViewMatrix = new Matrix4();
+    const modelMatrix = renderResources.model.modelMatrix;
+    Matrix4.multiply(cam.viewMatrix, modelMatrix, modelViewMatrix);
+```
+
+Second, we need a method to calculate Z-depth of each splat (median point, this does not factor in volume) for our depth sort.
+We accomplish this by taking the dot product of the splat position (x, y, z) with the view z-direction.
+
+```javascript
+    const zDepthCalc = (index) => 
+        splatPositions[index * 3] * modelViewMatrix[2] +
+        splatPositions[index * 3 + 1] * modelViewMatrix[6] + 
+        splatPositions[index * 3 + 2] * modelViewMatrix[10]
+```
+
+No particular sorting method is required, but count and Radix sorts are generally performant. Between the two, we have found Radix to be consistently faster (10-15%) while using less memory.
 
 ### Rasterizing
 
@@ -286,6 +315,63 @@ if(alpha < 1./255.)
 
 splatColor = vec4(color * alpha, alpha);
 ```
+
+## Meshopt Compression
+
+_This section is non-normative_
+
+This extension is fully compatible with [meshopt compression](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Vendor/EXT_meshopt_compression). All attributes can be quantized and compressed. We are able to use the standard compression methods and filters.
+
+It is recommended to do some sort of spatial sorting prior to compression like Morton order. If using [meshoptimizer](https://github.com/zeux/meshoptimizer), calling `meshopt_spatialSortRemap()` provides this for you.
+
+### Position Attribute
+
+It is recommended to quantize to `half float` utilizing `KHR_mesh_quantization` with an `unsigned int` accessor type. If using scaled quantization values, you may set the `quantizedPositionScale` value in `extensions.KHR_gaussian_splatting`.
+
+| meshopt configuration | value |
+| --- | --- |
+| Mode | Attributes |
+| Filter | None |
+
+### Color Attribute
+
+RGBA data is compressed as is.
+
+| meshopt configuration | value |
+| --- | --- |
+| Mode | Attributes |
+| Filter | None |
+
+### Scale Attribute
+
+Here we use the `exponential` filter to encode the data prior to compression. Any `exponential mode` can be used in conjunction with the filter.
+
+| meshopt configuration | value |
+| --- | --- |
+| Mode | Attributes |
+| Filter | Exponential |
+
+### Rotation Attribute
+
+Here we take advantage of the `quaternion` filter. 
+
+| meshopt configuration | value |
+| --- | --- |
+| Mode | Attributes |
+| Filter | Quaternion |
+
+### Compression Results
+
+- Full bitrate: 16 bits per component for position, scale, and rotation
+- Minimum bitrate: 10 bits per position component, 8 bits per scale and rotation components
+
+| Source | Splats | PLY size | glTF | meshopt glTF(full bitrate) | meshopt glTF(min bitrate) |
+| --- | --- | --- | --- | --- | --- | --- |
+| Los Reyes | 1214130 | 301.1MB | 77.7MB | 35.0MB | 24.8MB |
+
+[Cathedral in Ghent sample file](https://gist.github.com/keyboardspecialist/c0d17f1f3e06f6c581a24ffe099e4a0d)
+
+Compressed with meshopt with minimum bitrate defined above.
 
 ## Schema
 
