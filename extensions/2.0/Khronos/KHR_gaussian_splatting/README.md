@@ -366,7 +366,7 @@ Here we take advantage of the `quaternion` filter.
 - Minimum bitrate: 10 bits per position component, 8 bits per scale and rotation components
 
 | Source | Splats | PLY size | glTF | meshopt glTF(full bitrate) | meshopt glTF(min bitrate) |
-| --- | --- | --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- |
 | Los Reyes | 1214130 | 301.1MB | 77.7MB | 35.0MB | 24.8MB |
 
 [Cathedral in Ghent sample file](https://gist.github.com/keyboardspecialist/c0d17f1f3e06f6c581a24ffe099e4a0d)
