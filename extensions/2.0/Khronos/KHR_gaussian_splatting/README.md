@@ -154,7 +154,7 @@ Basic example shown below. This sample shows adding Guassian splats to the first
 
 ## Limitations
 
-This extension currently lacks encoding of all of the spherical harmonics used for specular. While these are a string feature of gaussian splats as they allow the scene to render dynamically based on viewing position, they are prohibitively large in storage size and impose a larger computational cost. This extension is instead focused on core implementation details before tackling the question of how best to store a compressed version of the spherical harmonics used by the splat. With compression comes accuracy loss, and while suitable for general cases, we did not want to impose a lossy format on potential users. Lossy data should be opt-in where possible.
+This extension currently lacks encoding of all of the spherical harmonics used for specular. While these are a strong feature of gaussian splats as they allow the scene to render dynamically based on viewing position, they are prohibitively large in storage size and impose a larger computational cost. This extension is instead focused on core implementation details before tackling the question of how best to store a compressed version of the spherical harmonics used by the splat. With compression comes accuracy loss, and while suitable for general cases, we did not want to impose a lossy format on potential users. Lossy data should be opt-in where possible.
 
 The authors of this extension intend to have companion extensions for handling lossy or lossless handling of the spherical harmonics to meet the needs of all users.
 
