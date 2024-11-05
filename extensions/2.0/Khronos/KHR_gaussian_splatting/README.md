@@ -154,7 +154,9 @@ Basic example shown below. This sample shows adding Guassian splats to the first
 
 ## Limitations
 
-The biggest current limitation is the lack of specular spherical harmonics. Admittedly, these are a strong feature of Gaussian splats as they allow the scene to render dynamically based on viewing position. However, they are prohibitively large in storage size and impose a larger computational cost as you increase in spherical harmonic degrees. As well as, answering the question of how to manage this data on the GPU. We decided to focus on a core implementation before tackling the question of how to store a compressed version of the specular degrees. With compression comes accuracy loss, and while that may be suitable for general cases, we did not want to impose any lossy format on potential users. Lossy data should be opt-in where possible. These could be added in a future extension by expanding the values in `extensions.KHR_gaussian_splatting`.
+This extension currently lacks encoding of all of the spherical harmonics used for specular. While these are a string feature of gaussian splats as they allow the scene to render dynamically based on viewing position, they are prohibitively large in storage size and impose a larger computational cost. This extension is instead focused on core implementation details before tackling the question of how best to store a compressed version of the spherical harmonics used by the splat. With compression comes accuracy loss, and while suitable for general cases, we did not want to impose a lossy format on potential users. Lossy data should be opt-in where possible.
+
+The authors of this extension intend to either have companion extensions for handling lossy or lossless handling of the spherical harmonics to meet the needs of all users.
 
 ## Implementation
 
