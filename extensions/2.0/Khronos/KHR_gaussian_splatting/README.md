@@ -88,15 +88,15 @@ Each color channel `red`, `green`, and `blue` must each be multiplied by the zer
 
 Those can then be converted to an `unsigned byte` color channel.
 
-#### Alpha
+#### Opacity
 
-Alpha must be activated through the logistic function $\sigma(a) = \frac{1}{1 + e^{-a}}$ which constrains it to the range `[0 - 1)`
+Opacity must be activated through the logistic function $\sigma(a) = \frac{1}{1 + e^{-a}}$ which constrains it to the range `[0 - 1)`
 
 It can then be converted to an `unsigned byte` color channel.
 
 #### Scale
 
-'Activated' via exponentiation similar to `alpha`. $\exp(x)$
+'Activated' via exponentiation similar to `opacity`. $\exp(x)$
 
 #### Rotation
 
