@@ -173,7 +173,7 @@ diffuseTransmissionColor = diffuseTransmissionColorFactor * diffuseTransmissionC
   </tr>
 </table>
 
-## Implementation
+## Material Structure Updates
 
 *This section is normative.*
 
@@ -200,6 +200,7 @@ dielectric_brdf =
 ```
 Increasing the strength of the diffuse transmission effect using the `diffuseTransmissionFactor` parameter takes away energy from the diffuse reflection BSDF and passes it to the diffuse transmission BSDF. The specular reflection BSDF and Fresnel weighting are not affected.
 
+## Implementation
 *This section is non-normative.*
 
 With a simple Lambert BRDF model, `diffuse_brdf` and `diffuse_btdf` may be implemented as follows
