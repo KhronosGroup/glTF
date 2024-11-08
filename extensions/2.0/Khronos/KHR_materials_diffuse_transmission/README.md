@@ -177,7 +177,7 @@ diffuseTransmissionColor = diffuseTransmissionColorFactor * diffuseTransmissionC
 
 *This section is normative.*
 
-This extension changes the `dielectric_brdf` defined in [Appendix B](../../../../specification/2.0/README.md#appendix-b-brdf-implementation)
+This extension changes the `dielectric_brdf` defined in [Appendix B](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#material-structure)
 ```
 dielectric_brdf =
   fresnel_mix(
