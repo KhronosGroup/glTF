@@ -38,6 +38,7 @@ This extension provides a standardized way to represent procedural graphs which 
   - [Material Binding](#material-binding)
   - [Resource Binding](#resource-binding)
     - [Uniform Binding](#uniform-binding)
+    - [Animation Binding](#animation-binding)
     - [Texture Binding](#texture-binding)
     - [Input Stream Binding](#input-stream-binding)
   - [Procedural Definitions](#procedural-definitions)
@@ -402,7 +403,23 @@ Animation bindings in glTF can be considered to equivalent to connection binding
 
 Any existing nodes in MaterialX or OpenUSD dealing with animation are ignored.
 
-| Further discussion is required to determine how the [animation pointer extension](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_animation_pointer/README.md) will behave with procedural node inputs.
+The [animation pointer extension](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_animation_pointer/README.md) extension allows
+for a JSON path to be specified. For this extension an animation `pointer` would be a string path to an graph input of the form: 
+
+```
+"/extensions/procedurals/<node graph index>/inputs/<input index>"
+```
+where
+`<node graph index>` is the index into the array of procedurals and
+`input index>` is the index into the array in the "inputs" array for a given
+procedural.
+
+For the provided example the input color (vec3) pointer path would be:
+```
+"/extensions/procedurals/0/inputs/0"
+```
+
+The required data type support is a subset of those specified for the animation pointer extension. Specifically: `bool`, `float`, `float3`, `float4x4`, `float3x3`, `float4x4` and `int` types.
 
 #### Texture / Image Binding
 
