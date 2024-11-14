@@ -366,7 +366,7 @@ diffuse_bsdf = mix(
     <td colspan="5" align="center">
       <em>Dragon with fixed <code>diffuseTransmissionFactor</code> of 1.0 and varying <code>transmissionFactor</code>.<br>
         <p style="font-size:0.7em;">
-        (dragon model from <a href="http://graphics.stanford.edu/data/3Dscanrep/">Stanford 3D Scanning Repository</a>)
+        (dragon model from <a href="https://graphics.stanford.edu/data/3Dscanrep/">Stanford 3D Scanning Repository</a>)
       </em>
     </td>
   </tr>
