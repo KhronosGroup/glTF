@@ -7,9 +7,6 @@
 * Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
 
 TODO
-## Acknowledgments
-
-TODO
 
 ## Status
 
@@ -18,6 +15,11 @@ Experimental
 ## Dependencies
 
 Written against the glTF 2.0 spec.
+
+## Exclusions
+
+* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+* This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Overview
 
@@ -29,7 +31,11 @@ This extension models the physical phenomenon of light being diffusely transmitt
 <img src="figures/leaves.jpg" height="350" />
 <img src="figures/candle_0.5.jpg" height="350" />
 </p>
-<figcaption><em>Left: (Thin) translucent leaves/foliage, Right: (Thick) translucent candle with colored volume attenuation and translucent surface.</em></figcaption>
+<figcaption>
+<em>Left: (Thin) translucent leaves/foliage, Right: (Thick) translucent candle with colored volume attenuation and translucent surface.
+</em><br>
+<p style="font-size:0.7em;">(candle model by <a href="https://sketchfab.com/lucatorcigliani">lucatorcigliani</a> with modifications by @emackey. Original <a href="https://sketchfab.com/3d-models/candle-in-a-glass-ec6cf358c4dd4cbda7be67f7846cbc9e">source</a> CC-BY 4.0)<p>
+</figcaption>
 </figure>
 </div>
 
@@ -168,7 +174,11 @@ diffuseTransmissionColor = diffuseTransmissionColorFactor * diffuseTransmissionC
   </tr>
   <tr>
     <td colspan="5" align="center">
-      <em>Single-sided plane in a symmetric light setup. <code>baseColorTexture</code> and <code>diffuseTransmissionColorTexture</code> use textures that represent the different sides of the one-dollar bill. Series shows the setup at varying values of <code>diffuseTransmissionFactor</code>.</em>
+      <em>
+        Single-sided plane in a symmetric light setup. <code>baseColorTexture</code> and <code>diffuseTransmissionColorTexture</code> use textures that represent the different sides of the one-dollar bill. Series shows the setup at varying values of <code>diffuseTransmissionFactor</code>.<br>
+        <p style="font-size:0.7em;">(dollar bill texture from <a href="https://resourceboy.com/textures/dollar-textures/">ResourceBoy.com</a> )
+        <p>
+      </em>
     </td>
   </tr>
 </table>
@@ -354,7 +364,10 @@ diffuse_bsdf = mix(
   </tr>
   <tr>
     <td colspan="5" align="center">
-      <em>Dragon with fixed <code>diffuseTransmissionFactor</code> of 1.0 and varying <code>transmissionFactor</code>.</em>
+      <em>Dragon with fixed <code>diffuseTransmissionFactor</code> of 1.0 and varying <code>transmissionFactor</code>.<br>
+        <p style="font-size:0.7em;">
+        (dragon model from <a href="http://graphics.stanford.edu/data/3Dscanrep/">Stanford 3D Scanning Repository</a>)
+      </em>
     </td>
   </tr>
 </table>
@@ -375,7 +388,9 @@ When `KHR_materials_diffuse_transmission` is combined with `KHR_materials_volume
   </tr>
   <tr>
     <td colspan="3" align="center">
-      <em>Dragon with white base color, colored volume attenuation and varying <code>diffuseTransmissionFactor</code>. </em>
+      <em>
+      Dragon with white base color, colored volume attenuation and varying <code>diffuseTransmissionFactor</code>.<br>
+      </em>
     </td>
   </tr>
 </table>
@@ -393,7 +408,10 @@ When `KHR_materials_diffuse_transmission` is combined with `KHR_materials_volume
   </tr>
   <tr>
     <td colspan="3" align="center">
-      <em>Candle with off-white base color, colored volume attenuation and varying <code>diffuseTransmissionFactor</code>. </em>
+      <em>
+      Candle with off-white base color, colored volume attenuation and varying <code>diffuseTransmissionFactor</code>.<br>
+      <p style="font-size:0.7em;">(candle model by <a href="https://sketchfab.com/lucatorcigliani">lucatorcigliani</a> with modifications by @emackey. Original <a href="https://sketchfab.com/3d-models/candle-in-a-glass-ec6cf358c4dd4cbda7be67f7846cbc9e">source</a> CC-BY 4.0)<p>
+      </em>
     </td>
   </tr>
 </table>
