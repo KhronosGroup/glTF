@@ -54,6 +54,9 @@ The scattering properties are defined by adding the `KHR_materials_volume_scatte
             "KHR_materials_volume": {
                 "attenuationColor": [0.9, 0.9, 0.9],
                 "attenuationDistance": 0.01
+            },
+            "KHR_materials_transmission": {
+                "transmissionFactor": 1.0,
             }
         }
     }
