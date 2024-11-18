@@ -34,11 +34,12 @@ This extension models the physical phenomenon of light being diffusely transmitt
 <div align="center">
 <figure style="text-align:center">
 <p float="left">
-<img src="figures/candle_0.5.jpg" height="450" />
+<img src="figures/leaves.jpg" height="350" />
+<img src="figures/candle_0.5.jpg" height="350" />
 </p>
 <figcaption>
-</em><br>
-<p style="font-size:0.7em;">(candle model by <a href="https://sketchfab.com/lucatorcigliani">lucatorcigliani</a> with modifications by @emackey. Original <a href="https://sketchfab.com/3d-models/candle-in-a-glass-ec6cf358c4dd4cbda7be67f7846cbc9e">source</a> CC-BY 4.0)<p>
+<p style="font-size:0.7em;">(Left: <a href="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/DiffuseTransmissionPlant">Diffuse Transmission Plant</a> by Eric Chadwick CC-BY 4.0 and Rico Cilliers CC0 1.0, showing a small firefly emitting light that transmits diffusely through the back of a leaf.)<p>
+<p style="font-size:0.7em;">(Right: Candle model by <a href="https://sketchfab.com/lucatorcigliani">lucatorcigliani</a> with modifications by @emackey, showing diffuse transmission through the surface of wax paired with volumetric attenuation of light within the wax. Original <a href="https://sketchfab.com/3d-models/candle-in-a-glass-ec6cf358c4dd4cbda7be67f7846cbc9e">source</a> CC-BY 4.0)<p>
 </figcaption>
 </figure>
 </div>
