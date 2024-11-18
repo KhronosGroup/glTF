@@ -4,7 +4,7 @@
 
 - Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
 - Ed Mackey, AGI [@emackey](https://github.com/emackey)
-- Alex Wood, AGI [@abwood](https://twitter.com/abwood)
+- Alex Wood, AGI [@abwood](https://github.com/abwood)
 - Nicolas Savva, Autodesk, [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
 - Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
 - Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)

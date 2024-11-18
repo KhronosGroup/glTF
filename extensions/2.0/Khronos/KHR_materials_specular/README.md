@@ -26,8 +26,8 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 - Sandra Voelker, Target
 - Alex Jamerson, Amazon
 - Thomas Dideriksen, Amazon
-- Alex Wood, AGI [@abwood](https://twitter.com/abwood)
-- Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
+- Alex Wood, AGI [@abwood](https://github.com/abwood)
+- Ed Mackey, AGI [@emackey](https://github.com/emackey)
 - Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)
 
 Copyright 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.

@@ -12,8 +12,8 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 - Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
 - Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
 - Emmett Lalish, Google [@elalish](https://github.com/elalish)
-- Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
-- Alex Wood, AGI [@abwood](https://twitter.com/abwood)
+- Ed Mackey, AGI [@emackey](https://github.com/emackey)
+- Alex Wood, AGI [@abwood](https://github.com/abwood)
 - Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
 - Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
 

@@ -2,15 +2,21 @@
 
 ## Contributors
 
-* Tobias Haeussler, Dassault Systèmes [@proog128](https://github.com/proog128)
-* Bastian Sdorra, Dassault Systèmes [@bsdorra](https://github.com/bsdorra)
-* Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
+- Tobias Haeussler, Dassault Systèmes [@proog128](https://github.com/proog128)
+- Bastian Sdorra, Dassault Systèmes [@bsdorra](https://github.com/bsdorra)
+- Mike Bond, Adobe [@miibond](https://github.com/MiiBond)
+- Eric Chadwick, DGG, [@echadwick-artist](https://github.com/echadwick-artist)
+- Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
+- Emmett Lalish, Google [@elalish](https://github.com/elalish)
+- Alex Wood, AGI [@abwood](https://github.com/abwood)
+- Ed Mackey, AGI [@emackey](https://github.com/emackey)
 
-TODO
+Copyright 2024 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
 
-Experimental
+Release Candidate
 
 ## Dependencies
 
