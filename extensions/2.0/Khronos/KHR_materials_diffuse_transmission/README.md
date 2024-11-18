@@ -28,11 +28,9 @@ This extension models the physical phenomenon of light being diffusely transmitt
 <div align="center">
 <figure style="text-align:center">
 <p float="left">
-<img src="figures/leaves.jpg" height="350" />
-<img src="figures/candle_0.5.jpg" height="350" />
+<img src="figures/candle_0.5.jpg" height="450" />
 </p>
 <figcaption>
-<em>Left: (Thin) translucent leaves/foliage, Right: (Thick) translucent candle with colored volume attenuation and translucent surface.
 </em><br>
 <p style="font-size:0.7em;">(candle model by <a href="https://sketchfab.com/lucatorcigliani">lucatorcigliani</a> with modifications by @emackey. Original <a href="https://sketchfab.com/3d-models/candle-in-a-glass-ec6cf358c4dd4cbda7be67f7846cbc9e">source</a> CC-BY 4.0)<p>
 </figcaption>
