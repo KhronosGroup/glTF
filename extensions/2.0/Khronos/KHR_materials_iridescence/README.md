@@ -10,8 +10,8 @@
 - Jim Eckerlein, UX3D
 - Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
 - Eric Chadwick, Wayfair, [echadwick-wayfair](https://github.com/echadwick-wayfair)
-- Alex Wood, AGI [@abwood](https://twitter.com/abwood)
-- Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
+- Alex Wood, AGI [@abwood](https://github.com/abwood)
+- Ed Mackey, AGI [@emackey](https://github.com/emackey)
 
 Copyright (C) 2018-2022 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.

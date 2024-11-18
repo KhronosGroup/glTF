@@ -45,7 +45,7 @@ This section tracks the status of extensions and projects that are in developmen
 | KHR_audio_graph | Proposal | [PR #2421](https://github.com/KhronosGroup/glTF/pull/2421) |
 | KHR_collision_shapes | Review Draft | [PR #2370](https://github.com/KhronosGroup/glTF/pull/2370) |
 | KHR_interactivity | Review Draft | [PR #2293](https://github.com/KhronosGroup/glTF/pull/2293) |
-| KHR_materials_diffuse_transmission | Review Draft | [PR #1825](https://github.com/KhronosGroup/glTF/pull/1825) |
+| KHR_materials_diffuse_transmission | Release Candidate | [Specification](2.0/Khronos/KHR_materials_diffuse_transmission/README.md) |
 | KHR_materials_subsurface | Initial Draft | [PR #1928](https://github.com/KhronosGroup/glTF/pull/1928) |
 | KHR_node_hoverability | Review Draft | [PR #2426](https://github.com/KhronosGroup/glTF/pull/2426) |
 | KHR_node_selectability | Review Draft | [PR #2422](https://github.com/KhronosGroup/glTF/pull/2422) |
