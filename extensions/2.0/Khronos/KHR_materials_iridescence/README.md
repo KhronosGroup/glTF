@@ -76,12 +76,16 @@ iridescence = iridescenceFactor * iridescenceTexture.r
 
 If `iridescenceFactor` is zero (default), the iridescence extension has no effect on the material.
 All textures in this extension use a single channel in linear space.
-The thickness of the thin-film is set to `iridescenceThicknessMaximum` if `iridescenceThicknessTexture` is not given.
-If `iridescenceThicknessTexture` is set, the thickness of the thin-film varies between  `iridescenceThicknessMinimum` and `iridescenceThicknessMaximum` as follows:
+
+The thickness of the thin-film is defined by the `iridescenceThicknessMinimum`, `iridescenceThicknessMaximum`, and `iridescenceThicknessTexture` properties. The `iridescenceThicknessMinimum` and `iridescenceThicknessMaximum` values correspond to the sampled thickness texture values of 0.0 and 1.0 respectively, thus defining the effective range of the thin-film thickness as follows:
 
 ```glsl
 thickness = mix(iridescenceThicknessMinimum, iridescenceThicknessMaximum, iridescenceThicknessTexture.g)
 ```
+
+The `iridescenceThicknessMinimum` value **MAY** be greater than `iridescenceThicknessMaximum` value.
+
+If the thickness texture is not present, it is implicitly sampled as 1.0 so the thin-film thickness is uniformly set to the `iridescenceThicknessMaximum` value.
 
 Aside from light direction and IOR, the thickness of the thin-film defines the variation in hue.
 This effect is the result of constructive and destructive interferences of certain wavelengths.

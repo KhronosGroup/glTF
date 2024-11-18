@@ -28,14 +28,14 @@
             "description": "The minimum thickness of the thin-film layer given in nanometers.",
             "default": 100.0,
             "minimum": 0.0,
-            "gltf_detailedDescription": "The minimum thickness of the thin-film layer given in nanometers. The value **MUST** be less than or equal to the value of `iridescenceThicknessMaximum`."
+            "gltf_detailedDescription": "The minimum thickness of the thin-film layer given in nanometers."
         },
         "iridescenceThicknessMaximum": {
             "type": "number",
             "description": "The maximum thickness of the thin-film layer given in nanometers.",
             "default": 400.0,
             "minimum": 0.0,
-            "gltf_detailedDescription": "The maximum thickness of the thin-film layer given in nanometers. The value **MUST** be greater than or equal to the value of `iridescenceThicknessMinimum`."
+            "gltf_detailedDescription": "The maximum thickness of the thin-film layer given in nanometers."
         },
         "iridescenceThicknessTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
