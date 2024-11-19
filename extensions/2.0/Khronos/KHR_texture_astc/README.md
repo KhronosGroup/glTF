@@ -138,27 +138,7 @@ To use KTX v2 image with ASTC compression without a fallback, define `KHR_textur
 
 ## KTX v2 files with ASTC compression 
 
-To cover a broad range of use cases, this extension allows different ASTC block sizes as well as LDR, HDR and 3D images. These can be determined from the vkFormat of the KTX image.
-
-For the purposes of this extension, the following texture types are defined:
-
-- **RGB:** A texture that uses red, green, and blue channels. Alpha channel is either assumed to be always equal to `1.0` (`255`) or unused and not sampled at runtime. Such textures MAY be encoded with the sRGB transfer function.
-  > **Note:** RGB textures from the core glTF 2.0 specification include:
-  > - `baseColorTexture` (opaque case)
-  > - `normalTexture`
-  > - `emissiveTexture`
-  > - `metallicRoughnessTexture` (when combined with `occlusionTexture`, otherwise red channel is ignored)
-
-- **RGBA:** A texture that uses all four channels. Such textures MAY be encoded with the sRGB transfer function (not applied to Alpha).
-  > **Note:** RGBA textures from the core glTF 2.0 specification include:
-  > - `baseColorTexture` (non-opaque case)
-
-- **Red:** A texture that uses only red channel. All other channels are unused and their values are not sampled at runtime. Such textures MUST NOT be encoded with the sRGB transfer function.
-  > **Note:** Red textures from the core glTF 2.0 specification include:
-  > - `occlusionTexture` (standalone)
-
-- **Red-Green:** A texture that uses only red and green channels. Blue and Alpha channels are unused and their values are not sampled at runtime. Such textures MUST NOT be encoded with sRGB transfer function.
-  > **Note:** The core glTF 2.0 specification has no examples of red-green textures.
+To cover a broad range of use cases, this extension allows different ASTC block sizes for LDR image types while HDR and 3D ASTC images are not supported. These can be determined from the vkFormat of the KTX image.
 
 If the texture type is `normalTexture` the output will be a two component X+Y normal map stored as (RGB=X, A=Y). The Z component can be recovered programmatically in shader code by using the equation:
 
@@ -169,7 +149,7 @@ If the texture type is `normalTexture` the output will be a two component X+Y no
 ```
 
 ### KTX header fields for ASTC payloads
-  - ASTC HDR vs LDR as well as block sizes can be determined from the vkFormat of the KTX image
+  - ASTC block sizes can be determined from the vkFormat of the KTX image. It will always be an LDR ASTC image.
   - DFD `colorModel` MUST be `KHR_DF_MODEL_ASTC`.
   - DFD `channelId` MUST be `KHR_DF_CHANNEL_ASTC_DATA`.
 
