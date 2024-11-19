@@ -11,6 +11,7 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 - Jan-Harald Fredriksen [@janharaldfredriksen-arm](https://github.com/janharaldfredriksen-arm)
 - Peter Harris [@solidpixel](https://github.com/solidpixel)
 - Mark Callow [@MarkCallow](https://github.com/MarkCallow)
+- Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)
 
 Copyright 2023 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -29,7 +30,7 @@ This extension adds the ability to specify textures using (ASTC compressed image
 
 When this extension is used, it's allowed to use value `image/ktx2` for the `mimeType` property of images that are referenced by the `source` property of `KHR_texture_astc` texture extension object.
 
-At runtime, engines can directly use the ktx images unlike EXT_texture_basisu which requires transcoding to other compressed formats. This also means you get support for all ASTC block formats and quality presets.
+At runtime, engines can directly use the ktx images unlike KHR_texture_basisu which requires transcoding to other compressed formats. This also means you get support for all ASTC block formats and quality presets.
 
 ## glTF Schema Updates
 
@@ -135,7 +136,7 @@ To use KTX v2 image with ASTC compression without a fallback, define `KHR_textur
 
 [texture.KHR_texture_astc.schema.json](schema/texture.KHR_texture_astc.schema.json)
 
-## KTX v2 Images with Astc compression 
+## KTX v2 files with ASTC compression 
 
 To cover a broad range of use cases, this extension allows different ASTC block sizes as well as LDR, HDR and 3D images. These can be determined from the vkFormat of the KTX image.
 
@@ -156,8 +157,8 @@ For the purposes of this extension, the following texture types are defined:
   > **Note:** Red textures from the core glTF 2.0 specification include:
   > - `occlusionTexture` (standalone)
 
-- **Luminance-Alpha:** A texture that uses only Luminance and Alpha channels. To sample these textures use `.ga` swizzle in your shaders. Such textures MAY be encoded with sRGB transfer function.
-  > **Note:** The core glTF 2.0 specification has no examples of luminance-alpha textures.
+- **Red-Green:** A texture that uses only red and green channels. Blue and Alpha channels are unused and their values are not sampled at runtime. Such textures MUST NOT be encoded with sRGB transfer function.
+  > **Note:** The core glTF 2.0 specification has no examples of red-green textures.
 
 If the texture type is `normalTexture` the output will be a two component X+Y normal map stored as (RGB=X, A=Y). The Z component can be recovered programmatically in shader code by using the equation:
 
@@ -168,7 +169,6 @@ If the texture type is `normalTexture` the output will be a two component X+Y no
 ```
 
 ### KTX header fields for ASTC payloads
-  - `supercompressionScheme` MUST be `0` (None).
   - ASTC HDR vs LDR as well as block sizes can be determined from the vkFormat of the KTX image
   - DFD `colorModel` MUST be `KHR_DF_MODEL_ASTC`.
   - DFD `channelId` MUST be `KHR_DF_CHANNEL_ASTC_DATA`.
@@ -185,7 +185,6 @@ Regardless of the format used, these additional restrictions apply for compatibi
   - For textures with **non-color data** (e.g., normal maps),
     - `colorPrimaries` MUST be `KHR_DF_PRIMARIES_UNSPECIFIED`;
     - `transferFunction` MUST be `KHR_DF_TRANSFER_LINEAR`.
-- `pixelWidth` and `pixelHeight` MUST be multiples of 4.
 - When a texture refers to a sampler with mipmap minification, the KTX image MUST contain a full mip pyramid.
 - When a texture referencing a KTX v2 file with ASTC compressed image is used for glTF 2.0 material maps (both color and non-color), the KTX v2 image MUST be of **2D** type as defined in the KTX v2 Specification, Section 4.1.
 - `KHR_DF_FLAG_ALPHA_PREMULTIPLIED` flag MUST NOT be set unless the material's specification requires premultiplied alpha.
