@@ -30,7 +30,9 @@ This extension adds the ability to specify textures using (ASTC compressed image
 
 When this extension is used, it's allowed to use value `image/ktx2` for the `mimeType` property of images that are referenced by the `source` property of `KHR_texture_astc` texture extension object.
 
-At runtime, engines can directly use the ktx images unlike KHR_texture_basisu which requires transcoding to other compressed formats. This also means you get support for all ASTC block formats and quality presets.
+When running on supported platforms, engines can directly upload ASTC data without transcoding it to other compressed formats. This means that all ASTC block sizes and quality presets are supported unlike other texture extensions that focus on portability of compressed texture payloads.
+
+Platforms that do not have hardware ASTC support would have to either use other texture sources or decompress ASTC data manually.
 
 ## glTF Schema Updates
 
@@ -165,10 +167,12 @@ Regardless of the format used, these additional restrictions apply for compatibi
 
 Authoring:
 
-- [KTX Reference Software](https://github.com/KhronosGroup/KTX-Software/)
+TBA
+
 
 Viewing:
 
+TBA
 
 
 ## Resources
