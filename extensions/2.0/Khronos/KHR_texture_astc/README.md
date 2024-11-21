@@ -140,14 +140,6 @@ To use KTX v2 image with ASTC compression without a fallback, define `KHR_textur
 
 To cover a broad range of use cases, this extension allows different ASTC block sizes for LDR image types while HDR and 3D ASTC images are not supported. These can be determined from the vkFormat of the KTX image.
 
-If the texture type is `normalTexture` the output will be a two component X+Y normal map stored as (RGB=X, A=Y). The Z component can be recovered programmatically in shader code by using the equation:
-
-```GLSL
-    nml.xy = texture(...).ga;              // Load in [0,1]
-    nml.xy = nml.xy * 2.0 - 1.0;           // Unpack to [-1,1]
-    nml.z = sqrt(1 - dot(nml.xy, nml.xy)); // Compute Z
-```
-
 ### KTX header fields for ASTC payloads
   - ASTC block sizes can be determined from the vkFormat of the KTX image. It will always be an LDR ASTC image.
   - DFD `colorModel` MUST be `KHR_DF_MODEL_ASTC`.
