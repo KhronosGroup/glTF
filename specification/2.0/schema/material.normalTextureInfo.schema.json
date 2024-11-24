@@ -5,8 +5,6 @@
     "type": "object",
     "allOf": [ { "$ref": "textureInfo.schema.json" } ],
     "properties": {
-        "index": { },
-        "texCoord": { },
         "scale": {
             "type": "number",
             "description": "The scalar parameter applied to each normal vector of the normal texture.",
