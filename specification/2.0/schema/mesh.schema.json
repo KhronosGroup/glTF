@@ -21,10 +21,7 @@
                 "type": "number"
             },
             "minItems": 1
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "primitives" ]
 }

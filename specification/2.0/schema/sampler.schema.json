@@ -114,9 +114,6 @@
                     "type": "integer"
                 }
             ]
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        }
     }
 }

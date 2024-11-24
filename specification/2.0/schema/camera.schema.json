@@ -28,10 +28,7 @@
                     "type": "string"
                 }
             ]
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "type" ],
     "not": {
