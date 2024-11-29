@@ -30,6 +30,6 @@
             "name": "SphereShape"
         }
     ],
-	"scene": 0,
-	"scenes": [{ "nodes": [0] }]
+    "scene": 0,
+    "scenes": [{ "nodes": [0] }]
 }

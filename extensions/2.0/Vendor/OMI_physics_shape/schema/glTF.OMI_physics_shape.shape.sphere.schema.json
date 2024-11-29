@@ -1,11 +1,16 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.OMI_physics_shape.shape.sphere.schema.json",
     "title": "OMI_physics_shape Sphere Shape",
     "type": "object",
+    "description": "Parameters describing a sphere physics shape.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "radius": {
             "type": "number",
-            "description": "The radius to use for the sphere shape."
+            "description": "The radius to use for the sphere shape in meters.",
+            "minimum": 0.0,
+            "default": 0.5
         },
         "extensions": { },
         "extras": { }

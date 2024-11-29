@@ -2,9 +2,9 @@
 
 ## Contributors
 
-* Aaron Franke, The Mirror Megaverse Inc.
-* Robert Long, The Matrix.org Foundation
-* Mauve Signweaver, Mauve Software Inc.
+- Aaron Franke, Godot Engine.
+- Robert Long, The Matrix.org Foundation
+- Mauve Signweaver, Mauve Software Inc.
 
 ## Status
 
@@ -63,18 +63,20 @@ The extension must also be added to the glTF's `extensionsUsed` array and becaus
 
 The main data structure `glTF.OMI_physics_shape.shape.schema.json` defines a type property.
 
-|               | Type        | Description                                                                | Default value        |
-| --------------| ----------- | -------------------------------------------------------------------------- | -------------------- |
-| **type**      | `string`    | The type of the physics shape as a string.                                 | Required, no default |
+|          | Type     | Description                                | Default value        |
+| -------- | -------- | ------------------------------------------ | -------------------- |
+| **type** | `string` | The type of the physics shape as a string. | Required, no default |
 
 In addition to the type, a key with the same name as the type can be used to define a sub-JSON with the details of the shape. Which sub-properties are allowed depend on which shape type is being used. The possible properties are described in the following table.
 
-|               | Type        | Description                                                                | Default value        | Valid on                  |
-| --------------| ----------- | -------------------------------------------------------------------------- | -------------------- | ------------------------- |
-| **size**      | `number[3]` | The size of the box shape in meters.                                       | [1.0, 1.0, 1.0]      | Box                       |
-| **radius**    | `number`    | The radius of the shape in meters.                                         | 0.5                  | Sphere, capsule, cylinder |
-| **height**    | `number`    | The height of the shape in meters.                                         | 2.0                  | Capsule, cylinder         |
-| **mesh**      | `number`    | The index of the glTF mesh in the document to use as a mesh shape.         | -1                   | Trimesh, convex           |
+|                  | Type        | Description                                                        | Default value   | Valid on          |
+| ---------------- | ----------- | ------------------------------------------------------------------ | --------------- | ----------------- |
+| **size**         | `number[3]` | The size of the box shape in meters.                               | [1.0, 1.0, 1.0] | Box               |
+| **radius**       | `number`    | The radius of the sphere shape in meters.                          | 0.5             | Sphere            |
+| **radiusBottom** | `number`    | The radius of the bottom disc or hemisphere in meters.             | 0.5             | Capsule, cylinder |
+| **radiusTop**    | `number`    | The radius of the top disc or hemisphere in meters.                | 0.5             | Capsule, cylinder |
+| **height**       | `number`    | The mid-height of the cylindrical part of the shape in meters.     | 1.0 or 2.0      | Capsule, cylinder |
+| **mesh**         | `number`    | The index of the glTF mesh in the document to use as a mesh shape. | -1              | Trimesh, convex   |
 
 If a key for the type is missing, or a sub-JSON key is missing, implementations should use the default value. A mesh index of -1 means invalid.
 
@@ -105,13 +107,21 @@ Sphere shapes describe a uniform "ball" shape. They have a `radius` property whi
 
 #### Capsule
 
-Capsule shapes describe a "pill" shape. They have a `radius` and `height` property. The height is aligned with the node's local vertical axis. If it's desired to align it along a different axis, rotate the glTF node. If the `radius` property is omitted, the default radius is `0.5`, and if the `height` property is omitted, the default height is `2.0`. The height describes the total height from bottom to top. The height of the capsule must be at least twice as much as the radius. The "mid-height" between the centers of each spherical cap end can be found with `height - radius * 2.0`.
+Capsule shapes describe a "pill" shape. They have `height`, `radiusBottom`, and `radiusTop` properties. If either of the radius properties are omitted, the default radius is `0.5`, and if the `height` property is omitted, the default height is `1.0`.
+
+The `height` property describes the "mid height", the distance between the centers of the two capping hemispheres. The full height from the bottom-most point to the top-most point can be found with `height + radiusBottom + radiusTop`, meaning that a capsule with default values has a full height of 2.0 meters. The height is aligned with the node's local vertical axis. If it's desired to align it along a different axis, rotate the glTF node.
+
+The `radiusBottom` and `radiusTop` properties are recommended to be set to the same value. Having these be different values results in a shape that is not a regular capsule, but a "tapered capsule". Tapered capsules are not supported by all game engines, so using them may result in importers approximating the tapered capsule shape with a convex hull shape.
 
 #### Cylinder
 
-Cylinder shapes describe a "tall circle" shape. They are similar in structure to capsules, they have a `radius` and `height` property. The height is aligned with the node's local vertical axis. If it's desired to align it along a different axis, rotate the glTF node. If the `radius` property is omitted, the default radius is `0.5`, and if the `height` property is omitted, the default height is `2.0`.
+Cylinder shapes describe a "tall circle" shape. They are similar in structure to capsules, they have `height`, `radiusBottom`, and `radiusTop` properties. If the `radius` property is omitted, the default radius is `0.5`, and if the `height` property is omitted, the default height is `2.0`.
 
-The use of cylinder is discouraged if another shape would work well in its place. Cylinders are harder to calculate than boxes, spheres, and capsules. Not all game engines support cylinder shapes. Engines that do not support cylinder shapes should use an approximation, such as a convex hull roughly shaped like a cylinder. Cylinders over twice as tall as they are wide can use another approximation: a convex hull combined with an embedded capsule (to allow for smooth rolling), by copying the cylinder's values into a new capsule shape.
+The `height` property of a cylinder describes the total height, the distance between the center of the bottom disc and the center of the top disc. The height is aligned with the node's local vertical axis. If it's desired to align it along a different axis, rotate the glTF node.
+
+The `radiusBottom` and `radiusTop` properties are recommended to be set to the same value. Having these be different values results in a shape that is not a regular cylinder, but a "tapered cylinder". Tapered cylinders are not supported by all game engines, so using them may result in importers approximating the tapered cylinder shape with a convex hull shape.
+
+The use of cylinder is discouraged if another shape would work well in its place. Cylinders are harder to calculate than boxes, spheres, and capsules. Not all game engines support cylinder shapes. Engines that do not support cylinder shapes should use an approximation, such as a convex hull roughly shaped like a cylinder. Cylinders over twice as tall as they are wide can use another approximation: a convex hull combined with an embedded capsule to allow for smooth rolling, by copying the cylinder's radius values, and setting the capsule's full height to the cylinder's height, meaning setting the capsule's mid height property to `height - radiusBottom - radiusTop`.
 
 #### Convex
 
@@ -127,19 +137,40 @@ Trimesh shapes represent a concave triangle mesh. They are defined with a `mesh`
 
 Avoid using a trimesh shape for most objects, they are the slowest shapes to calculate and have several limitations. Most physics engines do not support moving trimesh shapes or calculating collisions between multiple trimesh shapes. Trimesh shapes will not work reliably with trigger bodies or with pushing objects out due to not having an "interior" space, they only have a surface. Trimesh shapes are typically used for complex level geometry (for example, things that objects can go inside of). If a shape can be represented with a combination of simpler primitives, or a convex hull, or multiple convex hulls, prefer that instead.
 
+### glTF Object Model
+
+The following JSON pointers are defined representing mutable properties defined by this extension, for use with the glTF Object Model including extensions such as `KHR_animation_pointer` and `KHR_interactivity`.
+
+| JSON Pointer                                                    | Object Model Type |
+| --------------------------------------------------------------- | ----------------- |
+| `/extensions/OMI_physics_shape/shapes/{}/box/size`              | `float3`          |
+| `/extensions/OMI_physics_shape/shapes/{}/sphere/radius`         | `float`           |
+| `/extensions/OMI_physics_shape/shapes/{}/capsule/height`        | `float`           |
+| `/extensions/OMI_physics_shape/shapes/{}/capsule/radiusBottom`  | `float`           |
+| `/extensions/OMI_physics_shape/shapes/{}/capsule/radiusTop`     | `float`           |
+| `/extensions/OMI_physics_shape/shapes/{}/cylinder/height`       | `float`           |
+| `/extensions/OMI_physics_shape/shapes/{}/cylinder/radiusBottom` | `float`           |
+| `/extensions/OMI_physics_shape/shapes/{}/cylinder/radiusTop`    | `float`           |
+
+Additionally, the following JSON pointers are defined for read-only properties:
+
+| JSON Pointer                                  | Object Model Type |
+| --------------------------------------------- | ----------------- |
+| `/extensions/OMI_physics_shape/shapes.length` | `int`             |
+
 ### JSON Schema
 
-See [schema/glTF.OMI_physics_shape.shape.schema.json](schema/glTF.OMI_physics_shape.shape.schema.json) for the main shape schema, [schema/glTF.OMI_physics_shape.schema.json](schema/glTF.OMI_physics_shape.schema.json) for the document-level list of shapes, and [schema/node.OMI_physics_shape.schema.json](schema/node.OMI_physics_shape.schema.json) for the node-level shape.
+See [glTF.OMI_physics_shape.schema.json](schema/glTF.OMI_physics_shape.schema.json) for the document-level list of shapes, [glTF.OMI_physics_shape.shape.schema.json](schema/glTF.OMI_physics_shape.shape.schema.json) for the shape resource schema, and the `glTF.OMI_physics_shape.shape.*.schema.json` files for the individual shape types.
 
 ## Known Implementations
 
-* Godot Engine: https://github.com/godotengine/godot/pull/78967
+- Godot Engine: https://github.com/godotengine/godot/pull/78967
 
 ## Resources:
 
-* Godot Shapes: https://docs.godotengine.org/en/latest/classes/class_shape3d.html
-* Unity Colliders: https://docs.unity3d.com/Manual/CollidersOverview.html
-* Unreal Engine Collision Shapes: https://docs.unrealengine.com/4.27/en-US/API/Runtime/PhysicsCore/FCollisionShape/
-* Unreal Engine Mesh Collisions: https://docs.unrealengine.com/4.27/en-US/WorkingWithContent/Types/StaticMeshes/HowTo/SettingCollision/
-* Blender Collisions: https://docs.blender.org/manual/en/latest/physics/rigid_body/properties/collisions.html
-* Mozilla Hubs ammo-shape: https://github.com/MozillaReality/hubs-blender-exporter/blob/bb28096159e1049b6b80da00b1ae1534a6ca0855/default-config.json#L608
+- Godot Shapes: https://docs.godotengine.org/en/latest/classes/class_shape3d.html
+- Unity Colliders: https://docs.unity3d.com/Manual/CollidersOverview.html
+- Unreal Engine Collision Shapes: https://docs.unrealengine.com/4.27/en-US/API/Runtime/PhysicsCore/FCollisionShape/
+- Unreal Engine Mesh Collisions: https://docs.unrealengine.com/4.27/en-US/WorkingWithContent/Types/StaticMeshes/HowTo/SettingCollision/
+- Blender Collisions: https://docs.blender.org/manual/en/latest/physics/rigid_body/properties/collisions.html
+- Mozilla Hubs ammo-shape: https://github.com/MozillaReality/hubs-blender-exporter/blob/bb28096159e1049b6b80da00b1ae1534a6ca0855/default-config.json#L608

@@ -1,22 +1,22 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "node.OMI_physics_body.schema.json",
     "title": "OMI_physics_body glTF Node Extension",
     "type": "object",
+    "description": "Physics properties for a node.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "motion": {
-            "type": "object",
-            "description": "If present, this node has its motion controlled by physics, specified by these motion parameters.",
-            "$ref": "glTF.OMI_physics_body.motion.schema.json"
+            "allOf": [ { "$ref": "node.OMI_physics_body.motion.schema.json" } ],
+            "description": "If present, this node has its motion controlled by physics, specified by these motion parameters."
         },
         "collider": {
-            "type": "object",
-            "description": "If present, this node is solid and can be collided with, specified by these collider parameters.",
-            "$ref": "glTF.OMI_physics_body.collider.schema.json"
+            "allOf": [ { "$ref": "node.OMI_physics_body.collider.schema.json" } ],
+            "description": "If present, this node is solid and can be collided with, specified by these collider parameters."
         },
         "trigger": {
-            "type": "object",
-            "description": "If present, this node is non-solid and can act as a trigger, specified by these trigger parameters.",
-            "$ref": "glTF.OMI_physics_body.trigger.schema.json"
+            "allOf": [ { "$ref": "node.OMI_physics_body.trigger.schema.json" } ],
+            "description": "If present, this node is non-solid and can act as a trigger, specified by these trigger parameters."
         },
         "extensions": { },
         "extras": { }

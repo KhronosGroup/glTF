@@ -1,14 +1,14 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "OMI_physics_shape Shape",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.OMI_physics_shape.shape.schema.json",
+    "title": "OMI_physics_shape Shape Resource",
     "type": "object",
-    "required": [
-        "type"
-    ],
+    "description": "Defines a physics shape resource that can be referenced by nodes.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
         "type": {
             "type": "string",
-            "description": "The type of shape this node represents.",
+            "description": "Specifies the shape type of this physics shape.",
             "enum": [
                 "box",
                 "sphere",
@@ -21,6 +21,9 @@
         "extensions": { },
         "extras": { }
     },
+    "required": [
+        "type"
+    ],
     "oneOf": [
         {
             "required": [

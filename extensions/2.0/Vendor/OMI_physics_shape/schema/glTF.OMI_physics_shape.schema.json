@@ -1,19 +1,17 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.OMI_physics_shape.schema.json",
     "title": "OMI_physics_shape glTF Document Extension",
     "type": "object",
-    "allOf": [
-        {
-            "$ref": "glTFProperty.schema.json"
-        }
-    ],
+    "description": "Top level shape resources.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "shapes": {
-            "description": "An array of shapes that can be referenced by nodes.",
             "type": "array",
+            "description": "An array of physics shape resources that can be referenced by nodes.",
             "items": {
                 "type": "object",
-                "$ref": "shape.schema.json"
+                "$ref": "glTF.OMI_physics_shape.shape.schema.json"
             },
             "minItems": 1
         },
