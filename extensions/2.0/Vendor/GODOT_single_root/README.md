@@ -71,6 +71,10 @@ This extension consists of a new `"GODOT_single_root"` string which can be added
 
 The `GODOT_single_root` extension defines no data, and should not be added to `"extensions"` anywhere. It only needs to exist in `"extensionsUsed"`.
 
+### glTF Object Model
+
+This extension defines no properties that can be read or manipulated by the glTF Object Model.
+
 ### JSON Schema
 
 This glTF extension has no schema.
