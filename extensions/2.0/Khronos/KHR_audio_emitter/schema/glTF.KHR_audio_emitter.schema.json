@@ -1,33 +1,35 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_audio_emitter.schema.json",
     "title": "KHR_audio_emitter glTF Document Extension",
     "type": "object",
+    "description": "Top level audio properties and resources.",
     "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
         "sources": {
-            "description": "An array of audio sources to be used in audio emitters.",
             "type": "array",
+            "description": "An array of audio sources to be used in audio emitters.",
             "items": {
                 "type": "object",
-                "$ref": "source.schema.json"
+                "$ref": "glTF.KHR_audio_emitter.source.schema.json"
             },
             "minItems": 1
         },
         "emitters": {
-            "description": "An array of positional or global audio emitters that can be referenced by nodes or scenes.",
             "type": "array",
+            "description": "An array of positional or global audio emitters that can be referenced by nodes or scenes.",
             "items": {
                 "type": "object",
-                "$ref": "emitter.schema.json"
+                "$ref": "glTF.KHR_audio_emitter.emitter.schema.json"
             },
             "minItems": 1
         },
         "audio": {
-            "description": "An array of audio that can be referenced by nodes.",
             "type": "array",
+            "description": "An array of audio that can be referenced by nodes.",
             "items": {
                 "type": "object",
-                "$ref": "audio.schema.json"
+                "$ref": "glTF.KHR_audio_emitter.audio.schema.json"
             },
             "minItems": 1
         },
