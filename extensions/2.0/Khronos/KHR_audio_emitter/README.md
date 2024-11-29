@@ -8,7 +8,7 @@
 - Michael Nisbet, Individual Contributor
 - humbletim, Individual Contributor
 - Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
-- Aaron Franke, The Mirror Megaverse Inc.
+- Aaron Franke, Godot Engine.
 
 ## Status
 
@@ -356,6 +356,31 @@ The gain relative to cone properties is determined in a similar way as described
 ### Unit for Angles
 
 Radians are used for angles matching glTF2.
+
+### glTF Object Model
+
+The following JSON pointers are defined representing mutable properties defined by this extension, for use with the glTF Object Model including extensions such as `KHR_animation_pointer` and `KHR_interactivity`.
+
+| JSON Pointer                                                          | Object Model Type |
+| --------------------------------------------------------------------- | ----------------- |
+| `/extensions/KHR_audio_emitter/emitters/{}/gain`                      | `float`           |
+| `/extensions/KHR_audio_emitter/emitters/{}/positional/coneInnerAngle` | `float`           |
+| `/extensions/KHR_audio_emitter/emitters/{}/positional/coneOuterAngle` | `float`           |
+| `/extensions/KHR_audio_emitter/emitters/{}/positional/coneOuterGain`  | `float`           |
+| `/extensions/KHR_audio_emitter/emitters/{}/positional/maxDistance`    | `float`           |
+| `/extensions/KHR_audio_emitter/emitters/{}/positional/refDistance`    | `float`           |
+| `/extensions/KHR_audio_emitter/emitters/{}/positional/rolloffFactor`  | `float`           |
+| `/extensions/KHR_audio_emitter/sources/{}/autoPlay`                   | `bool`            |
+| `/extensions/KHR_audio_emitter/sources/{}/gain`                       | `float`           |
+| `/extensions/KHR_audio_emitter/sources/{}/loop`                       | `bool`            |
+
+Additionally, the following JSON pointers are defined for read-only properties:
+
+| JSON Pointer                                    | Object Model Type |
+| ----------------------------------------------- | ----------------- |
+| `/extensions/KHR_audio_emitter/emitters.length` | `int`             |
+| `/extensions/KHR_audio_emitter/sources.length`  | `int`             |
+| `/extensions/KHR_audio_emitter/audio.length`    | `int`             |
 
 ### JSON Schema
 
