@@ -48,15 +48,15 @@ The scattering properties are defined by adding the `KHR_materials_volume_scatte
     {
         "extensions": {
             "KHR_materials_volume_scatter": {
-                "scatterAlbedo": [ 0.572, 0.227, 0.075 ],
+                "multiscatterColor": [ 0.572, 0.227, 0.075 ],
                 "scatterAnisotropy": 0.3
             },
             "KHR_materials_volume": {
                 "attenuationColor": [0.9, 0.9, 0.9],
                 "attenuationDistance": 0.01
             },
-            "KHR_materials_transmission": {
-                "transmissionFactor": 1.0,
+            "KHR_materials_diffuse_transmission": {
+                "diffuseTransmissionFactor": 1.0,
             }
         }
     }
@@ -69,7 +69,7 @@ The extension defines the following parameters to describe the scattering behavi
 
 |                       | Type        | Description                                         | Required                 |
 |-----------------------|-------------|-----------------------------------------------------|--------------------------|
-| **scatterAlbedo**      | `number[3]` | The multi-scatter albedo.                           | No, default: `[0, 0, 0]` |
+| **multiscatterColor** | `number[3]` | The multi-scatter albedo.                           | No, default: `[0, 0, 0]` |
 | **scatterAnisotropy** | `number`    | The anisotropy of scatter events. Range is (-1, 1). | No, default: `0`         |
 
 ## Scattering
