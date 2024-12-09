@@ -526,31 +526,36 @@ Property values are stored in a compact binary tabular format described in the [
 
 As a result, byte length of the `BIN` chunk may be up to 7 bytes larger than JSON-defined `buffer.byteLength` to satisfy alignment requirements.
 
-## Assigning Metadata
+## Assigning Metadata to glTF objects
 
 *Defined in [EXT_structural_metadata.schema.json](./schema/EXT_structural_metadata.schema.json).*
 
-When property values are stored in a [Property Table](#property-tables), then the entries of this table may be referenced from within the glTF asset: Each `node` of the glTF asset can contain an `EXT_structural_metadata` object that defines the source of the metadata values for this node. It contains the `propertyTable`, which is the index of the property table in the array of property tables of the root-level `EXT_structural_metadata` extension object, and the `index`, which is the index of the row in this table that contains the metadata values for the respective node.
+Each glTF object can contain an `EXT_structural_metadata` object that defines the metadata values for that object. It contains the name of the class that it is an instance of, as well as a dictionary of property values that correspond to the properties of that class. Each property value assigned shall be defined by a class property with the same property ID, with values matching the data type of the class property. The extension object may provide values for only a subset of the properties of its class, but class properties marked `required: true` shall not be omitted.
 
 > **Example:** 
 >
-> An example of metadata that is assigned to a node. It associates the given node with the metadata values that are stored in row 4 of the property table with index 1, referring to the array of property tables that are defined in the top-level `EXT_structural_metadata` extension object. 
+> An example of metadata that is assigned to a node.
 > 
 > ```jsonc
 > {
 >   "extensions": {
 >     "EXT_structural_metadata": {
 >       "schema": { ... },
->       "propertyTables": [ ... ]
 >     }
 >   },
 >   "nodes": [
 >     ...
 >     {
 >       "name": "A node with metadata",
->       "EXT_structural_metadata": {
->         "propertyTable": 1,
->         "index": 4
+>       "extensions": {
+>         "EXT_structural_metadata": {
+>           "class": "building",
+>           "properties": {
+>             "height": 16.8,
+>             "owners": [ "John Doe", "Jane Doe" ],
+>             "buildingType": "Residential"
+>           }
+>         }
 >       }
 >     }
 >   ]

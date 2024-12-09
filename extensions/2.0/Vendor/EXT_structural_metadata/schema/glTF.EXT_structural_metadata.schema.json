@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "glTF.EXT_structural_metadata.schema.json",
-    "title": "EXT_structural_metadata glTF extension",
+    "title": "EXT_structural_metadata glTF Document extension",
     "type": "object",
     "description": "glTF extension that provides structural metadata about vertices, texels, and features in a glTF asset.",
     "allOf": [
