@@ -18,7 +18,7 @@ This extension imposes constraints on glTF files to ensure they have a single ro
 
 Many games engines import glTF files as objects with a single root node. Unity has prefabs with a single root GameObject, and Godot has scenes with a single root node. Since glTF allows defining multiple root nodes, engines will insert the glTF root nodes as children of the "real" root node, which makes it difficult for a glTF file to define the properties of the "real" root node. This is important for things like physics bodies and character controllers, which are defined on the root node, so that all child nodes are moved with the body. Aside from physics, a single root node would avoid an extra node in the tree when round-tripping between glTF and these engines.
 
-The `GODOT_single_root` glTF extension solves this problem by imposing additional constraints to ensure the entire glTF file can be parsed into one of these objects with a single root node. Implementations can detect `GODOT_single_root` and import the single root node as the object's "real" root node in the scene/prefab/etc. The extension contains no data, it only restricts behavior. The restrictions are as follows:
+The `GODOT_single_root` glTF extension solves this problem by imposing additional constraints to ensure the entire glTF file can be parsed into one of these objects with a single root node. Therefore, all other nodes are either descendants of this node, or are not in the glTF scene node tree. Implementations can detect `GODOT_single_root` and import the single root node as the object's "real" root node in the scene/prefab/etc. The extension contains no data, it only restricts behavior. The restrictions are as follows:
 
 - The document `"scenes"` array MUST have exactly one scene.
 - The document `"scene"` index MUST be set to 0, the index of the only scene in the `"scenes"` array.
@@ -29,18 +29,18 @@ The `GODOT_single_root` glTF extension solves this problem by imposing additiona
 These restrictions make the glTF `"scenes"` and `"scene"` properties fully redundant, so that implementations using `GODOT_single_root` do not need to parse the `"scenes"` or `"scene"` properties. Since there is only one root node, node index 0 is reserved as the single root node. However, the `"scenes"` and `"scene"` properties must be kept in the glTF file for compatibility with implementations that do not support this extension. This means that the glTF file must contain properties equivalent to this:
 
 ```json
-	"scene": 0,
-	"scenes": [{ "nodes": [0] }],
+    "scene": 0,
+    "scenes": [{ "nodes": [0] }],
 ```
 
 Note: Other properties set on the scene JSON, such as the name etc, are allowed, but not required or expected. If the scene does not have a name, use the single root node's name as the scene name.
 
-The single root node acts as the root object that represents the entire glTF file, since all other nodes in the tree are descendants, and all resources such as meshes are either used by this node or by descendants. This requires the glTF file to only contain one scene, with one root node. Multiple scenes per file is not allowed, since it goes against this goal, and [is usually not a meaningful concept](https://github.com/KhronosGroup/glTF/issues/1542).
+The single root node acts as the root object that represents the entire glTF file, since all other nodes in the tree are descendants, and all resources such as meshes are either used by this node or by descendants. This requires the glTF file to only contain one scene, with one root node. Multiple scenes per file is not allowed, since it goes against this goal, and is usually not a meaningful concept.
 
 Forbidding the root node to have a transform is required because:
 - A glTF file does not have a transform, only its nodes do. With this extension, the single root node represents the glTF file.
 - This keeps local directions such as forward consistent when orienting the scene vs orienting the single root node.
-- A glTF scene's transform should be determined only by the instances of the scene, such as instances inside of a game engine or [a glXF file](https://github.com/KhronosGroup/glXF).
+- A glTF scene's transform should be determined only by the instances of the scene, such as instances inside of a game engine.
 - Without this restriction, a root node with a transform would be transformed differently in implementations with and without `GODOT_single_root` when using functions such as look at, which must not happen.
 
 ### Example:
@@ -49,19 +49,19 @@ This minimal example defines a node named SingleRootNode as the scene's single r
 
 ```json
 {
-	"asset": {
-		"version": "2.0"
-	},
-	"extensionsUsed": [
-		"GODOT_single_root"
-	],
-	"nodes": [
-		{
-			"name": "SingleRootNode"
-		}
-	],
-	"scene": 0,
-	"scenes": [{ "nodes": [0] }]
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": [
+        "GODOT_single_root"
+    ],
+    "nodes": [
+        {
+            "name": "SingleRootNode"
+        }
+    ],
+    "scene": 0,
+    "scenes": [{ "nodes": [0] }]
 }
 ```
 
