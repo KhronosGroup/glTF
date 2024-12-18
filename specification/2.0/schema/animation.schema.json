@@ -21,10 +21,7 @@
                 "$ref": "animation.sampler.schema.json"
             },
             "minItems": 1
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "channels", "samplers" ]
 }
