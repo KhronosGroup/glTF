@@ -46,43 +46,54 @@ To apply a vertex split:
 
 ## glTF Schema Updates
 
-The definitions of a progressive mesh in glTF consists of a small extension to mesh nodes, which reference a bufferViews and accessors with a specific structure.
+The definitions of a progressive mesh in glTF consists of a small extension to mesh nodes, which reference bufferViews and accessors with a specific structure.
 
 ### Accessors and Buffer Views
 
-The progressive mesh data buffer is an interleaved buffer containing at least two data types; a trio of vertex indices, stored as a `VEC3` of the same data type as the base mesh indices, and a displacement vector which should be the same type as the base mesh vertex position data.
+The progressive mesh data buffer is a series of vertex split records. This data is represented as two interleaved `bufferViews`, one with triples of vertex indices, stored as a `VEC3` of the same data type as the base mesh indices, and the other with a displacement vector which should be the same type as the base mesh vertex position data.
+
+Note that in a binary encoding, there will be only one `buffer`, which should contain the base mesh data, followed by the vertex split data.
 
 For instance, if index data is `UNSIGNED_SHORT` and position is `FLOAT`:
 
 ![Buffer structure](figures/buffer.png)
 
-In this case, a bufferView would be defined with a `byteStride` of 28, as there are 28 bytes of data per vertex (including padding).
+In this case, the bufferViews would be defined with a `byteStride` of 28, as there are 28 bytes of data per vertex (including padding). If we assume the base mesh vertex and face data take up the first 1000 bytes of the buffer, the progressive vertex bufferView would have an offset of 1000, and the displacement vector bufferView would have a byteOffset of 4 more; 3 bytes for the vertex indices, plus padding.
+
 ```
 bufferViews: [
-	{ ... },
 	{
-		buffer: 1,
-		byteOffset: 0,
+		... base mesh vertex data ...
+	},
+	{
+		... base mesh face data ...
+	},
+	{
+		buffer: 0,
+		byteOffset: 1000,
+		byteStride: 28
+	},
+	{
+		buffer: 0,
+		byteOffset: 1004,
 		byteStride: 28
 	}
+
 ]
 ```
-Two accessors would then be defined that use this bufferView. one with a zero offset which reads the `VEC3<UNSIGNED_SHORT>`, and one with a 4-byte offset for the `VEC3<FLOAT>`. `count` should be the same in both cases, and be the number of vertex splits in the complete stream.
-
+Two accessors are then defined that use these bufferViews. `count` should be the same in both cases, and be the number of vertex splits in the complete stream.
 ```
 accessors: [
 	{...},
 	{...},
 	{
-		"bufferView": 1,
-		"byteOffset": 0,
+		"bufferView": 2,
 		"componentType": 5123,
 		"count": 16,
 		"type": "VEC3"
 	},
 	{
-		"bufferView": 1,
-		"byteOffset": 4,
+		"bufferView": 3,
 		"componentType": 5126,
 		"count": 16,
 		"type": "VEC3"
