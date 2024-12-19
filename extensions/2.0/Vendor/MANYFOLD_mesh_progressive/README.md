@@ -119,7 +119,7 @@ In this case, the bufferView would have a `byteStride` of 44, and another access
 
 ## Buffer
 
-The progressive mesh data buffer MUST be the last buffer in the file; any data that comes after it will not be available until the entire progressive mesh has loaded, thus defeating the purpose of the format.
+The progressive mesh data buffer MUST be the last buffer in the file; any data that comes after it will not be available until the entire progressive mesh has loaded, thus defeating the purpose of the format. For the same reason, this extension is only useful in binary (GLB) files, where the structure can be read before all the data is received.
 
 ### Mesh Primitive
 
@@ -162,7 +162,7 @@ TODO: Links to the JSON schema for the new extension properties.
 
 ## Known Implementations
 
-* TODO: [Mittsu exporter](https://github.com/manyfold3d/manyfold/issues/1687)
+* [Mittsu exporter](https://github.com/manyfold3d/mittsu-gltf/blob/main/lib/mittsu/gltf/progressive_exporter.rb)
 * TODO: [THREE.js loader](https://github.com/manyfold3d/manyfold/issues/1688)
 
 ## Resources
