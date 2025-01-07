@@ -1,0 +1,26 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "node.KHR_physics_rigid_bodies.joint.schema.json",
+    "title": "KHR_physics_rigid_bodies Node Joint Property",
+    "type": "object",
+    "description": "Parameters describing how the relative motion of a pair of nodes is constrained.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "connectedNode": {
+            "allOf": [{"$ref": "glTFid.schema.json"}],
+            "description": "The index of the node to which this is connected."
+        },
+        "joint": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the joint in the top level physicsJoints array."
+        },
+        "enableCollision": {
+            "type": "boolean",
+            "description": "If true, allow the connected objects to collide. Connected objects do not collide by default.",
+            "default": false
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "connectedNode", "joint" ]
+}
