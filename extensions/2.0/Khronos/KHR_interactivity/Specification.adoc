@@ -1,4 +1,4 @@
-// Copyright 2013-2023 The Khronos Group Inc.
+// Copyright 2024 The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -48,7 +48,7 @@ toc::[]
 [[foreword]]
 = Foreword
 
-Copyright 2013-2023 The Khronos Group Inc.
+Copyright 2024 The Khronos Group Inc.
 
 This specification is protected by copyright laws and contains material proprietary
 to Khronos. Except as described by these terms, it or any components
@@ -107,11 +107,7 @@ This document, referred to as the "`glTF Interactivity Extension Specification`"
 
 This extension aims to enhance glTF 2.0 by adding the ability to encode behavior and interactivity in 3D assets.
 
-[NOTE]
-.Note
-====
-This specification is for single user experiences only and does not deal with any of the complexity involved in multi-user networked experiences.
-====
+This extension is for single user experiences only and does not deal with any of the complexity involved in multi-user networked experiences.
 
 [[introduction-conventions]]
 == Document Conventions
@@ -154,13 +150,22 @@ The following documents are referenced by normative sections of the specificatio
 
 [none]
 * [[bcp14]]
-Bradner, S., _Key words for use in RFCs to Indicate Requirement Levels_, BCP 14, RFC 2119, March 1997. Leiba, B., _Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words_, BCP 14, RFC 8174, May 2017.
+Bradner, S., _Key words for use in RFCs to Indicate Requirement Levels_, BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997. Leiba, B., _Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words_, BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017.
 <https://www.rfc-editor.org/info/bcp14>
+
+* [[rfc6901]]
+Bryan, P., Ed., Zyp, K., and M. Nottingham, Ed., _JavaScript Object Notation (JSON) Pointer_, RFC 6901, DOI 10.17487/RFC6901, April 2013,
+<https://www.rfc-editor.org/info/rfc6901>
 
 * [[ieee-754]]
 ISO/IEC 60559
 _Floating-point arithmetic_
 <https://www.iso.org/standard/80985.html>
++
+[TIP]
+====
+Also known as IEEE 754-2019, https://standards.ieee.org/ieee/754/6210/
+====
 
 * [[ecma-262]]
 ECMA-262
@@ -189,23 +194,11 @@ Behavior graphs and trigger-action lists share common features, such as being sa
 On the other hand, behavior graphs are a superset of trigger-action lists, meaning that the former can support everything that trigger-action lists can, and more. Behavior graphs support “Queries”, “Logic” and “Control Flow” nodes, making them more expressive and capable of creating more sophisticated behaviors. This makes behavior graphs the preferred method of choice for high-end game engines, as it offers an identical safety model as trigger-action lists while being more expressive.
 
 === Turing Completeness
-The execution model and node choices for this extension mean that it is Turing-complete. This means that an implementation of this can execute any computation and it is also hard to predict if it will run forever (e.g. halt or not.)
+The execution model and node choices for this extension mean that it is Turing-complete. This means that an implementation of this can execute any computation and it is also hard to predict if it will run forever, e.g., halt or not.
 
 While this may present security implications, it is not a major hindrance and can be safely mitigated so that any implementation does not become susceptible to denial of services by badly behaving behavior graphs, whether intentional or not.
 
 The main way to mitigate the risk of non-halting behavior graphs is to limit the amount of time given to them for execution, both in terms of individual time slice as well as overall execution time.
-
-=== Implementation Limitations
-There will be limitations in engines and devices to such as:
-
-* Number of nodes in the graph
-* Number of variables
-* Number of custom events
-* Number of concurrent pending events/async nodes
-* Number of nodes executed per time slice
-* Speed of graph execution
-
-These limitations are not defined in this specification.
 
 
 [[concepts]]
@@ -218,38 +211,91 @@ A behavior graph is a JSON object containing _nodes_. It **MAY** also contain cu
 
 Behavior graphs are directed graphs with no directed cycles.
 
+When a glTF asset contains a behavior graph, all glTF animations are assumed to be controlled by the graph so they **MUST NOT** play automatically.
+
 [[nodes]]
-== Nodes and Sockets
+== Nodes
 
-A _node_ is a JSON object, which represents an executable item. Each node is defined by its _type_ and a set of _sockets_. There are four kinds of sockets.
+A _node_ is a JSON object, which represents an executable item. Each node is defined by its _declaration_, which includes an _operation_ and a (possibly empty) set of _value sockets_. Node operations follow `domain/operation` naming pattern. Depending on the operation, a node **MAY** have input and/or output _flow sockets_; they **MAY** be affected by the node's _configuration_.
 
-_Output value sockets_ represent data initialized by the node or produced during its execution. For example, it could be results of math operations or parts of the node's internal state. Accessing these sockets either triggers computing the return value on the fly by executing the node or returns a value based on the node's internal state. Exact behavior depends on the node's type.
+[[nodes-operation]]
+=== Operation
 
-_Input value sockets_ represent data accessed during the node's execution. For example, it could be arguments of math operations or execution parameters such as iteration count for loop nodes or duration for time-related nodes. These sockets **MUST** either be given a static value in the node object or connected to an output value socket of a different node. The node **MAY** access its input value sockets multiple times during the execution. The runtime **MUST** guarantee that all input value sockets have defined values when the node execution starts.
+A node's _operation_ defines a specific set of steps performed by the execution environment when the node is executed.
+
+A node is executed when one of its input flow sockets is activated, when one of its output value sockets is accessed by another node, when an operation-specific event occurs. A node **MAY** repeatedly activate its own input flow sockets during the execution.
+
+Usually, the node execution includes evaluating its input value sockets (if any), processing its own logic, and activating any number (including zero) of output flow sockets.
+
+[[nodes-sockets]]
+=== Sockets
+
+There are four kinds of sockets.
+
+_Output value sockets_ represent data initialized by the node or produced during its execution. For example, it could be results of math operations or parts of the node's internal state. Accessing these sockets either triggers computing the return value on the fly by executing the node or returns a value based on the node's internal state. Exact behavior depends on the node's operation. As a general rule, output value sockets **MUST** retain their values until a node having any number of flow sockets is executed.
+
+[NOTE]
+.Implementation Note
+====
+At the current state of the Specification, the retention of output value socket values is observable only with the `math/random` node.
+====
+
+_Input value sockets_ represent data accessed during the node's execution. For example, it could be arguments of math operations or execution parameters such as iteration count for loop nodes or duration for time-related nodes. Each of these sockets **MUST** either be given an inline constant value in the node object or connected to an output value socket of a different node. The node **MAY** access its input value sockets multiple times during the execution. The runtime **MUST** guarantee that all input value sockets have defined values when the node execution starts.
 
 _Output flow sockets_ represent "`function pointers`" that the node will call to advance the graph execution. For example, bodies and branches of flow control nodes are output flow sockets that drive further execution when certain condition are fulfilled. Output flow sockets **MAY** be unconnected; in such a case graph execution proceeds as if such sockets are no-ops.
 
-_Input flow sockets_ represent "`methods`" that could be called on the node. For example, flow control nodes (such as loops and conditions) usually have an `in` input flow socket that starts node's execution. Additional operations **MAY** also be defined such as `reset` for nodes having an internal state.
-
-Nodes **MAY** be configurable through static properties collectively called "`node's configuration`" that **MAY** affect the node's behavior and the number of its sockets, such as the number of cases for a switch-case control flow node.
+_Input flow sockets_ represent "`methods`" that could be called on the node. For example, flow control nodes (such as loops and branches) usually have an `in` input flow socket that starts node's execution. Additional input flow sockets **MAY** exist such as `reset` for nodes having an internal state.
 
 Input and output value sockets have associated data types, e.g., floats, integers, booleans, etc.
 
-Node's sockets and configurations are defined by its _type_. Node types follow `domain/operation` naming pattern.
+Socket ids exist in four separate scopes corresponding to the four socket kinds.
 
-A node is executed when its input flow socket is reached by or when one of its output value sockets is requested by another node. Usually, the node executes its dependencies (if any), its own logic, and any number (including zero) of outgoing flow sockets.
+[NOTE]
+.Example
+====
+For example, a `flow/sequence` node can have an output flow socket with id `"in"` despite having an input flow socket with the same id.
+====
 
-[[types]]
-== Types
+[[socket-order]]
+==== Socket Order
 
-All value sockets and configurations are strictly typed.
+Although sockets are inherently unordered withing a node (because JSON properties are unordered), some operations such as `flow/sequence` or `flow/multiGate` need a specific socket order to guarantee predictable behavior. In such cases, the sockets are implicitly sorted by their ids in ascending order.
+
+For any given ids `a` and `b`, the following procedure **MUST** be used to determine if `a` is less than `b`.
+
+1. Let _unitsA_ and _unitsB_ be the sequences of UTF-16 code units corresponding to the socket ids `a` and `b` respectively and _lengthA_ and _lengthB_ be the lengths of these sequences.
+2. Let _minLength_ be the minimum of _lengthA_ and _lengthB_.
+3. For each integer _i_ such that 0 ≤ _i_ < _minLength_, in ascending order, do
+.. if _unitsA[i]_ < _unitsB[i]_ return true;
+.. if _unitsA[i]_ > _unitsB[i]_ return false.
+4. If _lengthA_ < _lengthB_ return true.
+5. Return false.
+
+[TIP]
+.Implementation Tip
+====
+This is implementable in ECMAScript as follows, assuming that `flows` is a JSON object representing output flow sockets:
+[source,js]
+----
+const sortedSocketIds = Object.keys(flows).sort();
+----
+====
+
+[CAUTION]
+====
+This process enforces lexicographic order solely based on UTF-16 code units. In particular, the following two caveats apply:
+
+- A socket id `10` is _less_ than a socket id `9`. This could be avoided by padding socket ids to the same number of characters, i.e., using `09` instead of `9` in this case.
+
+- The sorting algorithm does not account for characters that use more than one code unit in UTF-16 encoding. For example, the "`North East Sans-Serif Arrow`" character has a code point of `0x1F855` encoded as two surrogate code units `[0xD83E, 0xDC55]` so it is _less_ than the "`Replacement Character`" character that has a code point of `0xFFFD` encoded directly as a single code unit.
+====
+
+[[socket-types]]
+==== Value Socket Types
+
+All value sockets are strictly typed.
 
 Implementations of this extension **MUST** support the following type signatures.
-
-[[value-types]]
-=== Value Types
-
-The following types are supported for value sockets.
 
 bool::
 a boolean value
@@ -266,27 +312,69 @@ a three-component vector of *float* values
 float4::
 a four-component vector of *float* values
 
+float2x2::
+a 2x2 matrix of *float* values
+
+float3x3::
+a 3x3 matrix of *float* values
+
 float4x4::
 a 4x4 matrix of *float* values
 
 int::
 a two's complement 32-bit signed integer scalar value
 
-[[configuration-types]]
-=== Configuration Types
+[[nodes-configuration]]
+=== Configuration
 
-Node configurations **MAY** use all of the value types and these two additional types.
+Nodes **MAY** be configurable through inline properties collectively called _configuration_ that **MAY** affect the node's behavior and the number of its sockets, such as the set of cases for the `flow/switch` node.
+
+If a node specification does not include any configuration, the node is not configurable and any configuration properties defined for it in the behavior graph **MUST** be ignored.
+
+Unless specified otherwise, all nodes that include configuration have a _default_ configuration. The default configuration **MUST** be used when the behavior graph does not provide any configuration or when the provided configuration is invalid. If a node does not have a default configuration (like `variable/*` nodes) and the behavior graph does not provide a valid configuration, the whole graph is invalid and **MUST** be rejected.
+
+For a configuration to be valid, all configuration properties defined by the node specification **MUST** be provided in the behavior graph with valid types and values. If any of the configuration properties defined by the node specification is omitted or has invalid type or invalid value, the whole configuration is invalid and the node behavior **MUST** fall back to the default configuration if the latter is supported. Configuration properties present in the behavior graph but not defined by the node specification **MUST** be ignored.
+
+Implementations **SHOULD** generate appropriate warnings as deemed possible when:
+
+* a non-configurable node has a configuration in the behavior graph;
+* a provided configuration contains unknown properties;
+* a provided configuration is invalid.
+
+[[nodes-configuration-types]]
+==== Configuration Types
+
+Configuration properties use a separate type system unrelated to the value socket types.
+
+bool::
+a boolean value
+
+int::
+a two's complement 32-bit signed integer scalar value
 
 int[]::
 an array of *int* values
 
 string::
-a UTF-8 string value
+a string value
+
+[[nodes-noop]]
+=== Unsupported Operations
+
+If the execution environment does not support the operation, e.g., when the operation is defined by an unsupported or disabled extension for the Interactivity Specification, the operation is implicitly replaced with a "`no-op`" operation defined as follows:
+
+- activating the node's input flow sockets is ignored;
+- the node's output flow sockets are never activated;
+- the node's output value sockets have constant <<variables-types,type-default>> values.
 
 [[events]]
 == Custom Events
 
-A behavior graph **MAY** define custom events for interacting with external execution environments and/or creating asynchronous loops. Although semantics of custom events is application-specific, their declarations **MUST** include value socket type information to ensure graph's type safety.
+A behavior graph **MAY** define custom events for interacting with external execution environments and/or creating asynchronous loops.
+
+A custom event definition includes its value sockets with types and optional initial values as well as an optional unique string identifier for linking the event with the external environment.
+
+Semantics of custom events are application-specific.
 
 [[variables]]
 == Custom Variables
@@ -295,11 +383,59 @@ A behavior graph **MAY** define custom variables. A variable **MAY** be declared
 
 Custom variables **MUST** retain their values until the graph execution is terminated.
 
-== Node Types
+[[variables-types]]
+=== Custom Variable Types
+
+Custom variables use the same type system as the value sockets. The following table defines type-default values.
+
+[cols="1,2", options="header"]
+|===
+|  Type      | Default value
+| `bool`     | Boolean false
+| `float`    | Floating-point NaN
+| `float2`   | Two floating-point NaNs
+| `float3`   | Three floating-point NaNs
+| `float4`   | Four floating-point NaNs
+| `float2x2` | Four floating-point NaNs
+| `float3x3` | Nine floating-point NaNs
+| `float4x4` | Sixteen floating-point NaNs
+| `int`      | Integer zero
+|===
+
+[[limits]]
+== Implementation-Specific Limits
+
+=== Static Limits
+
+Implementations **MAY** restrict the size and complexity of behavior graphs by imposing certain limits on the following statically-known properties:
+
+* The number of types
+* The number of variables
+* The number of custom events and the number of value sockets within a custom event
+* The number of operation declarations
+* The number of input and output value sockets in operation declarations
+* The number of nodes
+* The number of graph-defined output flow sockets in operations like `flow/sequence`, `flow/switch`, or `flow/multiGate`
+
+The graph **MUST** be rejected if it exceeds implementation-defined max values for these properties.
+
+=== Dynamic Limits
+
+Implementations **MAY** restrict the runtime capabilities of behavior graphs by imposing certain limits on the following features that require dynamic allocation of memory and/or processing power:
+
+* Numbers of simultaneous delays, animations, and interpolations; exceeding these limits results in runtime errors that can be gracefully handled by the graph itself, see `err` output flows of the corresponding nodes.
+
+* Number of events processed within a single rendered frame; exceeding this limit **MAY** result in an implementation-specific behavior such as reducing the frame rate or rescheduling the extra events.
+
+These limits are exposed to behavior graphs via additional glTF Object Model pointers.
+
+= Functional Specification
+
+== Nodes
 
 === Math Nodes
 
-In this section, `floatN` is a placeholder for any of `float`, `float2`, `float3`, `float4`, or `float4x4` types. All value sockets of `floatN` types have the same type within a node.
+In this section, `floatN` is a placeholder for any of `float`, `float2`, `float3`, `float4`, `float2x2`, `float3x3`, or `float4x4` types. All value sockets of `floatN` types have the same type within a node.
 
 ==== Constants
 
@@ -307,7 +443,7 @@ In this section, `floatN` is a placeholder for any of `float`, `float2`, `float3
 
 [cols="1h,1,2"]
 |===
-| Type | `math/e` | Euler's number
+| Operation | `math/e` | Euler's number
 | Output value sockets | `float value` | 2.718281828459045
 |===
 
@@ -315,7 +451,7 @@ In this section, `floatN` is a placeholder for any of `float`, `float2`, `float3
 
 [cols="1h,1,2"]
 |===
-| Type | `math/pi` | Ratio of a circle's circumference to its diameter
+| Operation | `math/pi` | Ratio of a circle's circumference to its diameter
 | Output value sockets | `float value` | 3.141592653589793
 |===
 
@@ -323,7 +459,7 @@ In this section, `floatN` is a placeholder for any of `float`, `float2`, `float3
 
 [cols="1h,1,2"]
 |===
-| Type | `math/inf` | Positive infinity
+| Operation | `math/inf` | Positive infinity
 | Output value sockets | `float value` | _Infinity_
 |===
 
@@ -331,7 +467,7 @@ In this section, `floatN` is a placeholder for any of `float`, `float2`, `float3
 
 [cols="1h,1,2"]
 |===
-| Type | `math/nan` | Not a Number
+| Operation | `math/nan` | Not a Number
 | Output value sockets | `float value` | _NaN_
 |===
 
@@ -339,19 +475,19 @@ In this section, `floatN` is a placeholder for any of `float`, `float2`, `float3
 
 These all operate component-wise. The description is per component.
 
-If any input value is _NaN_, the output value is also _NaN_.
+If any input value component is _NaN_, the corresponding output value component is also _NaN_.
 
 ===== Absolute Value
 
 [cols="1h,1,2"]
 |===
-| Type | `math/abs` | Absolute value operation
+| Operation | `math/abs` | Absolute value operation
 | Input value sockets
 | `floatN a` | Argument
 | Output value sockets
 | `floatN value` | latexmath:[\begin{cases}
                                 -a & \text{if } a \lt 0 \\
-                                 0 & \text{if } a = 0 \\
+                                +0 & \text{if } a = \pm0 \\
                                  a & \text{if } a \gt 0
                               \end{cases}]
 |===
@@ -360,7 +496,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/sign` | Sign operation
+| Operation | `math/sign` | Sign operation
 | Input value sockets
 | `floatN a` | Argument
 | Output value sockets
@@ -375,7 +511,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/trunc` | Truncate operation
+| Operation | `math/trunc` | Truncate operation
 | Input value sockets
 | `floatN a` | Argument
 | Output value sockets
@@ -388,7 +524,7 @@ If the argument is infinity, it is returned unchanged.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/floor` | Floor operation
+| Operation | `math/floor` | Floor operation
 | Input value sockets
 | `floatN a` | Argument
 | Output value sockets
@@ -401,7 +537,7 @@ If the argument is infinity, it is returned unchanged.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/ceil` | Ceil operation
+| Operation | `math/ceil` | Ceil operation
 | Input value sockets
 | `floatN a` | Argument
 | Output value sockets
@@ -410,11 +546,36 @@ If the argument is infinity, it is returned unchanged.
 
 If the argument is infinity, it is returned unchanged.
 
+===== Round
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/round` | Round operation
+| Input value sockets
+| `floatN a` | Argument
+| Output value sockets
+| `floatN value` | Value equal to the integer nearest to stem:[a]
+|===
+
+Half-way cases **MUST** be rounded away from zero. Negative values greater than `-0.5` **MUST** be rounded to negative zero.
+
+If the argument is infinity, it is returned unchanged.
+
+[TIP]
+.Implementation Tip
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+a < 0 ? -Math.round(-a) : Math.round(a)
+----
+====
+
 ===== Fraction
 
 [cols="1h,1,2"]
 |===
-| Type | `math/fract` | Fractional operation
+| Operation | `math/fract` | Fractional operation
 | Input value sockets
 | `floatN a` | Argument
 | Output value sockets
@@ -425,7 +586,7 @@ If the argument is infinity, it is returned unchanged.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/neg` | Negation operation
+| Operation | `math/neg` | Negation operation
 | Input value sockets
 | `floatN a` | Argument
 | Output value sockets
@@ -436,7 +597,7 @@ If the argument is infinity, it is returned unchanged.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/add` | Addition operation
+| Operation | `math/add` | Addition operation
 .2+| Input value sockets
 | `floatN a` | First addend
 | `floatN b` | Second addend
@@ -448,7 +609,7 @@ If the argument is infinity, it is returned unchanged.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/sub` | Subtraction operation
+| Operation | `math/sub` | Subtraction operation
 .2+| Input value sockets
 | `floatN a` | Minuend
 | `floatN b` | Subtrahend
@@ -460,7 +621,7 @@ If the argument is infinity, it is returned unchanged.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/mul` | Multiplication operation
+| Operation | `math/mul` | Multiplication operation
 .2+| Input value sockets
 | `floatN a` | First factor
 | `floatN b` | Second factor
@@ -468,17 +629,19 @@ If the argument is infinity, it is returned unchanged.
 | `floatN value` | Product, stem:[a * b]
 |===
 
+For matrix arguments, this operation performs per-component multiplication.
+
 [NOTE]
-.Note
+.Authoring Note
 ====
-For `float4x4` arguments, this operation performs per-component multiplication.
+See `math/matmul` for matrix multiplication.
 ====
 
 ===== Division
 
 [cols="1h,1,2"]
 |===
-| Type | `math/div` | Division operation
+| Operation | `math/div` | Division operation
 .2+| Input value sockets
 | `floatN a` | Dividend
 | `floatN b` | Divisor
@@ -490,7 +653,7 @@ For `float4x4` arguments, this operation performs per-component multiplication.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/rem` | Remainder operation
+| Operation | `math/rem` | Remainder operation
 .2+| Input value sockets
 | `floatN a` | Dividend
 | `floatN b` | Divisor
@@ -502,11 +665,21 @@ For `float4x4` arguments, this operation performs per-component multiplication.
                               \end{cases}]
 |===
 
+[TIP]
+.Implementation Tip
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+a % b
+----
+====
+
 ===== Minimum
 
 [cols="1h,1,2"]
 |===
-| Type | `math/min` | Minimum operation
+| Operation | `math/min` | Minimum operation
 .2+| Input value sockets
 | `floatN a` | First argument
 | `floatN b` | Second argument
@@ -516,8 +689,8 @@ For `float4x4` arguments, this operation performs per-component multiplication.
 
 For the purposes of this node, negative zero is less than positive zero.
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
@@ -530,7 +703,7 @@ Math.min(a, b)
 
 [cols="1h,1,2"]
 |===
-| Type | `math/max` | Maximum operation
+| Operation | `math/max` | Maximum operation
 .2+| Input value sockets
 | `floatN a` | First argument
 | `floatN b` | Second argument
@@ -540,8 +713,8 @@ Math.min(a, b)
 
 For the purposes of this node, negative zero is less than positive zero.
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
@@ -554,7 +727,7 @@ Math.max(a, b)
 
 [cols="1h,1,2"]
 |===
-| Type | `math/clamp` | Clamp operation
+| Operation | `math/clamp` | Clamp operation
 .3+| Input value sockets
 | `floatN a` | Value to clamp
 | `floatN b` | First boundary
@@ -566,7 +739,7 @@ Math.max(a, b)
 This node relies on `math/min` and `math/max` nodes defined above.
 
 [NOTE]
-.Note
+.Authoring Note
 ====
 This operation correctly handles a case when stem:[b] is greater than stem:[c].
 ====
@@ -575,7 +748,7 @@ This operation correctly handles a case when stem:[b] is greater than stem:[c].
 
 [cols="1h,1,2"]
 |===
-| Type | `math/saturate` | Saturate operation
+| Operation | `math/saturate` | Saturate operation
 | Input value sockets
 | `floatN a` | Value to saturate
 | Output value sockets
@@ -586,7 +759,7 @@ This operation correctly handles a case when stem:[b] is greater than stem:[c].
 
 [cols="1h,1,2"]
 |===
-| Type | `math/mix` | Linear interpolation operation
+| Operation | `math/mix` | Linear interpolation operation
 .3+| Input value sockets
 | `floatN a` | Interpolated value at stem:[0]
 | `floatN b` | Interpolated value at stem:[1]
@@ -603,7 +776,7 @@ If any input value is _NaN_, the output value is false.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/eq` | Equality operation
+| Operation | `math/eq` | Equality operation
 .2+| Input value sockets
 | `floatN a` | First argument
 | `floatN b` | Second argument
@@ -615,7 +788,7 @@ If any input value is _NaN_, the output value is false.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/lt` | Less than operation
+| Operation | `math/lt` | Less than operation
 .2+| Input value sockets
 | `float a` | First argument
 | `float b` | Second argument
@@ -627,7 +800,7 @@ If any input value is _NaN_, the output value is false.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/le` | Less than or equal to operation
+| Operation | `math/le` | Less than or equal to operation
 .2+| Input value sockets
 | `float a` | First argument
 | `float b` | Second argument
@@ -639,7 +812,7 @@ If any input value is _NaN_, the output value is false.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/gt` | Greater than operation
+| Operation | `math/gt` | Greater than operation
 .2+| Input value sockets
 | `float a` | First argument
 | `float b` | Second argument
@@ -651,7 +824,7 @@ If any input value is _NaN_, the output value is false.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/ge` | Greater than or equal operation
+| Operation | `math/ge` | Greater than or equal operation
 .2+| Input value sockets
 | `float a` | First argument
 | `float b` | Second argument
@@ -665,7 +838,7 @@ If any input value is _NaN_, the output value is false.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/isnan` | Not a Number check operation
+| Operation | `math/isnan` | Not a Number check operation
 | Input value sockets
 | `float a` | Argument
 | Output value sockets
@@ -676,7 +849,7 @@ If any input value is _NaN_, the output value is false.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/isinf` | Infinity check operation
+| Operation | `math/isinf` | Infinity check operation
 | Input value sockets
 | `float a` | Argument
 | Output value sockets
@@ -687,16 +860,45 @@ If any input value is _NaN_, the output value is false.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/select` | Conditional selection operation
+| Operation | `math/select` | Conditional selection operation
 .3+| Input value sockets
 | `bool condition` | Value selecting the value returned
 | `T a` | Positive selection option
 | `T b` | Negative selection option
 | Output value sockets
-| `T value` | stem:[a] if the the `condition` input value is true; stem:[b] otherwise
+| `T value` | stem:[a] if the `condition` input value is true; stem:[b] otherwise
 |===
 
-The type `T` represents any type. It **MUST** be the same for the output value socket and the input value sockets stem:[a] and stem:[b], otherwise the node is invalid.
+The type `T` represents any supported type including custom types. It **MUST** be the same for the output value socket and the input value sockets stem:[a] and stem:[b].
+
+===== Random
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/random` | Random value generation operation
+| Output value sockets | `float value` | A pseudo-random number greater than or equal to zero and less than one
+|===
+
+[WARNING]
+====
+This node is not intended for any workflows that require cryptographically secure random numbers.
+====
+
+The value of the output value socket `value` **MUST** be initialized to a random number on the first access. Any two accesses of the output value socket `value` **MUST** return the same value if there were no flow socket activations (of other nodes) between them.
+
+[NOTE]
+.Example
+====
+This means that, e.g., a `math/eq` node with both its input value sockets connected to the same `math/random` node always returns true.
+====
+
+The value of the output value socket `value` **SHOULD** be updated when accessed as a result of a new flow socket activation, including self-activations.
+
+[NOTE]
+.Implementation Note
+====
+At the current state of the Specification, only `flow/while` and `flow/for` nodes use self-activation of their input flow sockets.
+====
 
 ==== Angle and Trigonometry Nodes
 
@@ -704,13 +906,13 @@ Node parameters specified as angle are assumed to be in units of radians.
 
 These all operate component-wise. The description is per component.
 
-If any input value is _NaN_, the output value is also _NaN_.
+If any input value component is _NaN_, the corresponding output value component is also _NaN_.
 
 ===== Degrees-To-Radians
 
 [cols="1h,1,2"]
 |===
-| Type | `math/rad` | Converts degrees to radians
+| Operation | `math/rad` | Converts degrees to radians
 | Input value sockets
 | `floatN a` | Value in degrees
 | Output value sockets
@@ -721,7 +923,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/deg` | Converts radians to degrees
+| Operation | `math/deg` | Converts radians to degrees
 | Input value sockets
 | `floatN a` | Value in radians
 | Output value sockets
@@ -732,7 +934,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/sin` | Sine function
+| Operation | `math/sin` | Sine function
 | Input value sockets
 | `floatN a` | Angle
 | Output value sockets
@@ -746,7 +948,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/cos` | Cosine function
+| Operation | `math/cos` | Cosine function
 | Input value sockets
 | `floatN a` | Angle
 | Output value sockets
@@ -760,7 +962,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/tan` | Tangent function
+| Operation | `math/tan` | Tangent function
 | Input value sockets
 | `floatN a` | Angle
 | Output value sockets
@@ -771,7 +973,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 |===
 
 [NOTE]
-.Note
+.Authoring Note
 ====
 Since stem:[a] cannot exactly represent latexmath:[\pm\frac{\pi}{2}], this function does not return infinity.
 The closest representable argument values would likely produce latexmath:[\pm16331239353195370].
@@ -781,7 +983,7 @@ The closest representable argument values would likely produce latexmath:[\pm163
 
 [cols="1h,1,2"]
 |===
-| Type | `math/asin` | Arcsine function
+| Operation | `math/asin` | Arcsine function
 | Input value sockets
 | `floatN a` | Sine value
 | Output value sockets
@@ -795,7 +997,7 @@ The closest representable argument values would likely produce latexmath:[\pm163
 
 [cols="1h,1,2"]
 |===
-| Type | `math/acos` | Arccosine function
+| Operation | `math/acos` | Arccosine function
 | Input value sockets
 | `floatN a` | Cosine value
 | Output value sockets
@@ -809,7 +1011,7 @@ The closest representable argument values would likely produce latexmath:[\pm163
 
 [cols="1h,1,2"]
 |===
-| Type | `math/atan` | Arctangent function
+| Operation | `math/atan` | Arctangent function
 | Input value sockets
 | `floatN a` | Tangent value
 | Output value sockets
@@ -820,7 +1022,7 @@ The closest representable argument values would likely produce latexmath:[\pm163
 
 [cols="1h,1,2"]
 |===
-| Type | `math/atan2` | Arctangent 2 function
+| Operation | `math/atan2` | Arctangent 2 function
 .2+| Input value sockets
 | `floatN a` | Y coordinate
 | `floatN b` | X coordinate
@@ -828,19 +1030,19 @@ The closest representable argument values would likely produce latexmath:[\pm163
 | `floatN value` | Angle between the positive X-axis and the vector from the stem:[(0, 0)] origin to the stem:[(X, Y)] point on a 2D plane
 |===
 
-Zero and infinity argument values are handled according to <<ecma-262,ECMA-262>> or <<ieee-754,IEEE 754>> standards.
+Zero and infinity argument values **MUST** be handled according to the <<ecma-262,ECMA-262>> standard.
 
 ==== Hyperbolic Nodes
 
 These all operate component-wise. The description is per component.
 
-If any input value is _NaN_, the output value is also _NaN_.
+If any input value component is _NaN_, the corresponding output value component is also _NaN_.
 
 ===== Hyperbolic Sine
 
 [cols="1h,1,2"]
 |===
-| Type |`math/sinh`| Hyperbolic sine function
+| Operation |`math/sinh`| Hyperbolic sine function
 | Input value sockets
 | `floatN a` | Hyperbolic angle value
 | Output value sockets
@@ -851,7 +1053,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type |`math/cosh`| Hyperbolic cosine function
+| Operation |`math/cosh`| Hyperbolic cosine function
 | Input value sockets
 | `floatN a` | Hyperbolic angle value
 | Output value sockets
@@ -862,7 +1064,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type |`math/tanh`| Hyperbolic tangent function
+| Operation |`math/tanh`| Hyperbolic tangent function
 | Input value sockets
 | `floatN a` | Hyperbolic angle value
 | Output value sockets
@@ -873,7 +1075,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type |`math/asinh`| Inverse hyperbolic sine function
+| Operation |`math/asinh`| Inverse hyperbolic sine function
 | Input value sockets
 | `floatN a` | Hyperbolic sine value
 | Output value sockets
@@ -884,7 +1086,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type |`math/acosh`| Inverse hyperbolic cosine function
+| Operation |`math/acosh`| Inverse hyperbolic cosine function
 | Input value sockets
 | `floatN a` | Hyperbolic cosine value
 | Output value sockets
@@ -898,7 +1100,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type |`math/atanh`| Inverse hyperbolic tangent function
+| Operation |`math/atanh`| Inverse hyperbolic tangent function
 | Input value sockets
 | `floatN a` | Hyperbolic tangent value
 | Output value sockets
@@ -913,13 +1115,13 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 These all operate component-wise. The description is per component.
 
-If any input value is _NaN_, the output value is also _NaN_.
+If any input value component is _NaN_, the corresponding output value component is also _NaN_.
 
 ===== Exponent
 
 [cols="1h,1,2"]
 |===
-| Type | `math/exp` | Exponent function
+| Operation | `math/exp` | Exponent function
 | Input value sockets
 | `floatN a` | Power value
 | Output value sockets
@@ -930,7 +1132,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/log` | Natural logarithm function
+| Operation | `math/log` | Natural logarithm function
 | Input value sockets
 | `floatN a` | Argument value
 | Output value sockets
@@ -945,7 +1147,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/log2` | Base-2 logarithm function
+| Operation | `math/log2` | Base-2 logarithm function
 | Input value sockets
 | `floatN a` | Argument
 | Output value sockets
@@ -960,7 +1162,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/log10` | Base-10 logarithm function
+| Operation | `math/log10` | Base-10 logarithm function
 | Input value sockets
 | `floatN a` | Argument
 | Output value sockets
@@ -975,7 +1177,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/sqrt` | Square root function
+| Operation | `math/sqrt` | Square root function
 | Input value sockets
 | `floatN a` | Radicand
 | Output value sockets
@@ -989,7 +1191,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/cbrt` | Cube root function
+| Operation | `math/cbrt` | Cube root function
 | Input value sockets
 | `floatN a` | Radicand
 | Output value sockets
@@ -1000,7 +1202,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/pow` | Power function
+| Operation | `math/pow` | Power function
 .2+| Input value sockets
 | `floatN a` | Base
 | `floatN b` | Exponent
@@ -1008,39 +1210,51 @@ If any input value is _NaN_, the output value is also _NaN_.
 | `floatN value` | stem:[a^b]
 |===
 
-Zero and infinity argument values are handled according to the <<ecma-262,ECMA-262>> standard.
+Zero and infinity argument values **MUST** be handled according to the <<ecma-262,ECMA-262>> standard.
 
 ==== Vector Nodes
 
-If any input value is _NaN_, the output value is also _NaN_.
+If any input value component is _NaN_, the output value is _NaN_ or a vector of NaNs.
 
 ===== Length
 
 [cols="1h,1,2"]
 |===
-| Type | `math/length` | Vector length
+| Operation | `math/length` | Vector length
 | Input value sockets
 | `float{2\|3\|4} a` | Vector
 | Output value sockets
 | `float value` | Length of stem:[a], e.g., stem:[sqrt(a_x^2 + a_y^2)] for `float2`
 |===
 
+[TIP]
+.Implementation Tip
+====
+This is implementable in ECMAScript via the following expression:
+[source,js]
+----
+Math.hypot(...a)
+----
+====
+
 ===== Normalize
 
 [cols="1h,1,2"]
 |===
-| Type | `math/normalize` | Vector normalization
+| Operation | `math/normalize` | Vector normalization
 | Input value sockets
 | `float{2\|3\|4} a` | Vector
 | Output value sockets
-| `floatN value` | Vector in the same direction as stem:[a] but with a unit length, e.g., stem:[a/sqrt(a_x^2 + a_y^2)] for `float2`
+| `floatN value` | Vector in the same direction as stem:[a] but with a unit length, e.g., latexmath:[\dfrac{\vec{a}}{\sqrt{a_x^2 + a_y^2}}] for `float2`
 |===
+
+Normalizing a zero-length vector **MUST** return a NaN vector.
 
 ===== Dot Product
 
 [cols="1h,1,2"]
 |===
-| Type | `math/dot` | Dot product
+| Operation | `math/dot` | Dot product
 .2+| Input value sockets
 | `float{2\|3\|4} a` | First vector
 | `float{2\|3\|4} b` | Second vector of the same type as stem:[a]
@@ -1048,11 +1262,13 @@ If any input value is _NaN_, the output value is also _NaN_.
 | `float value` | Sum of per-component products of stem:[a] and stem:[b], e.g., stem:[a_x * b_x + a_y * b_y] for `float2`
 |===
 
+Both input value sockets **MUST** have the same type.
+
 ===== Cross Product
 
 [cols="1h,1,2"]
 |===
-| Type | `math/cross` | Cross product
+| Operation | `math/cross` | Cross product
 .2+| Input value sockets
 | `float3 a` | Vector
 | `float3 b` | Vector
@@ -1064,7 +1280,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/rotate2d` | 2D rotation
+| Operation | `math/rotate2d` | 2D rotation
 .2+| Input value sockets
 | `float2 a` | Vector to rotate
 | `float b`  | Angle in radians
@@ -1076,7 +1292,7 @@ If any input value is _NaN_, the output value is also _NaN_.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/rotate3d` | 3D rotation
+| Operation | `math/rotate3d` | 3D rotation
 .3+| Input value sockets
 | `float3 a` | Vector to rotate
 | `float3 b` | Vector representing an axis to rotate around
@@ -1085,13 +1301,33 @@ If any input value is _NaN_, the output value is also _NaN_.
 | `float3 value` | Vector stem:[a] rotated around vector stem:[b] counter-clockwise by stem:[c]
 |===
 
-If the vector stem:[b] is not unit, rotation results may be undefined.
+If the vector stem:[b] is not unit, rotation results **MAY** be undefined.
 
 ===== Transform
 
 [cols="1h,1,2"]
 |===
-| Type | `math/transform` | Vector transformation
+| Operation | `math/transform` | Vector transformation
+.2+| Input value sockets
+| `float2 a`   | Vector to transform
+| `float2x2 b` | Transformation matrix
+| Output value sockets
+| `float2 value` | Transformed vector
+|===
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/transform` | Vector transformation
+.2+| Input value sockets
+| `float3 a`   | Vector to transform
+| `float3x3 b` | Transformation matrix
+| Output value sockets
+| `float3 value` | Transformed vector
+|===
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/transform` | Vector transformation
 .2+| Input value sockets
 | `float4 a`   | Vector to transform
 | `float4x4 b` | Transformation matrix
@@ -1099,11 +1335,74 @@ If the vector stem:[b] is not unit, rotation results may be undefined.
 | `float4 value` | Transformed vector
 |===
 
+==== Matrix Nodes
+
+===== Transpose
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/transpose` | Transpose operation
+| Input value sockets
+| `float{2x2\|3x3\|4x4} a` | Matrix to transpose
+| Output value sockets
+| `float{2x2\|3x3\|4x4} value` | Matrix that is the transpose of stem:[a]
+|===
+
+The input and output value sockets have the same type.
+
+===== Determinant
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/determinant` | Dot product
+| Input value sockets
+| `float{2x2\|3x3\|4x4} a` | Matrix
+| Output value sockets
+| `float value` | Determinant of stem:[a]
+|===
+
+===== Inverse
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/inverse` | Inverse operation
+| Input value sockets
+| `float{2x2\|3x3\|4x4} a` | Matrix to inverse
+| Output value sockets
+| `float{2x2\|3x3\|4x4} value` | Matrix that is the inverse of stem:[a]
+|===
+
+The input and output value sockets have the same type.
+
+===== Multiplication
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/matmul` | Matrix multiplication operation
+.2+| Input value sockets
+| `float{2x2\|3x3\|4x4} a` | First matrix
+| `float{2x2\|3x3\|4x4} b` | Second matrix
+| Output value sockets
+| `float{2x2\|3x3\|4x4} value` | Matrix product
+|===
+
+Both input value sockets **MUST** have the same type.
+
+The output value socket has the same type as the input value sockets.
+
+[NOTE]
+.Authoring Note
+====
+See `math/mul` for per-component multiplication.
+====
+
+==== Swizzle Nodes
+
 ===== Combine
 
 [cols="1h,1,2"]
 |===
-| Type | `math/combine2` | Combine two floats into a two-component vector
+| Operation | `math/combine2` | Combine two floats into a two-component vector
 .2+| Input value sockets
 | `float a` | First component
 | `float b` | Second component
@@ -1113,7 +1412,7 @@ If the vector stem:[b] is not unit, rotation results may be undefined.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/combine3` | Combine three floats into a three-component vector
+| Operation | `math/combine3` | Combine three floats into a three-component vector
 .3+| Input value sockets
 | `float a` | First component
 | `float b` | Second component
@@ -1124,7 +1423,7 @@ If the vector stem:[b] is not unit, rotation results may be undefined.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/combine4` | Combine four floats into a four-component vector
+| Operation | `math/combine4` | Combine four floats into a four-component vector
 .4+| Input value sockets
 | `float a` | First component
 | `float b` | Second component
@@ -1134,93 +1433,38 @@ If the vector stem:[b] is not unit, rotation results may be undefined.
 | `float4 value` | Vector
 |===
 
-===== Extract
-
 [cols="1h,1,2"]
 |===
-| Type | `math/extract2` | Extract two floats from a two-component vector
-| Input value sockets
-| `float2 a` | Vector
-.2+| Output value sockets
-| `float 0` | First component
-| `float 1` | Second component
-|===
-
-[cols="1h,1,2"]
-|===
-| Type | `math/extract3` | Extract three floats from a three-component vector
-| Input value sockets
-| `float3 a` | Vector
-.3+| Output value sockets
-| `float 0` | First component
-| `float 1` | Second component
-| `float 2` | Third component
-|===
-
-[cols="1h,1,2"]
-|===
-| Type | `math/extract4` | Extract four floats from a four-component vector
-| Input value sockets
-| `float4 a` | Vector
-.4+| Output value sockets
-| `float 0` | First component
-| `float 1` | Second component
-| `float 2` | Third component
-| `float 3` | Fourth component
-|===
-
-==== Matrix Nodes
-
-===== Transpose
-
-[cols="1h,1,2"]
-|===
-| Type | `math/transpose` | Transpose operation
-| Input value sockets
-| `float4x4 a` | Matrix to transpose
+| Operation | `math/combine2x2` | Combine 4 floats into a 2x2 matrix
+.4+| Input value sockets
+| `float a` | First row, first column element
+| `float b` | Second row, first column element
+| `float c` | First row, second column element
+| `float d` | Second row, second column element
 | Output value sockets
-| `float4x4 value` | Matrix that is the transpose of stem:[a]
+| `float2x2 value` | Matrix
 |===
-
-===== Determinant
 
 [cols="1h,1,2"]
 |===
-| Type | `math/determinant` | Dot product
-| Input value sockets
-| `float4x4 a` | Matrix
+| Operation | `math/combine3x3` | Combine 9 floats into a 3x3 matrix
+.9+| Input value sockets
+| `float a` | First row, first column element
+| `float b` | Second row, first column element
+| `float c` | Third row, first column element
+| `float d` | First row, second column element
+| `float e` | Second row, second column element
+| `float f` | Third row, second column element
+| `float g` | First row, third column element
+| `float h` | Second row, third column element
+| `float i` | Third row, third column element
 | Output value sockets
-| `float value` | Determinant of stem:[a]
+| `float3x3 value` | Matrix
 |===
-
-===== Inverse
 
 [cols="1h,1,2"]
 |===
-| Type | `math/inverse` | Inverse operation
-| Input value sockets
-| `float4x4 a` | Matrix to inverse
-| Output value sockets
-| `float4x4 value` | Matrix that is the inverse of stem:[a]
-|===
-
-===== Multiplication
-
-[cols="1h,1,2"]
-|===
-| Type | `math/matmul` | Matrix multiplication operation
-.2+| Input value sockets
-| `float4x4 a` | First matrix
-| `float4x4 b` | Second matrix
-| Output value sockets
-| `float4x4 value` | Matrix product
-|===
-
-===== Combine
-
-[cols="1h,1,2"]
-|===
-| Type | `math/combine4x4` | Combine 16 floats into a 4x4 matrix
+| Operation | `math/combine4x4` | Combine 16 floats into a 4x4 matrix
 .16+| Input value sockets
 | `float a` | First row, first column element
 | `float b` | Second row, first column element
@@ -1246,7 +1490,69 @@ If the vector stem:[b] is not unit, rotation results may be undefined.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/extract4x4` | Extract 16 floats from a 4x4 matrix
+| Operation | `math/extract2` | Extract two floats from a two-component vector
+| Input value sockets
+| `float2 a` | Vector
+.2+| Output value sockets
+| `float 0` | First component
+| `float 1` | Second component
+|===
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/extract3` | Extract three floats from a three-component vector
+| Input value sockets
+| `float3 a` | Vector
+.3+| Output value sockets
+| `float 0` | First component
+| `float 1` | Second component
+| `float 2` | Third component
+|===
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/extract4` | Extract four floats from a four-component vector
+| Input value sockets
+| `float4 a` | Vector
+.4+| Output value sockets
+| `float 0` | First component
+| `float 1` | Second component
+| `float 2` | Third component
+| `float 3` | Fourth component
+|===
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/extract2x2` | Extract 4 floats from a 2x2 matrix
+| Input value sockets
+| `float2x2 a` | Matrix
+.4+| Output value sockets
+| `float 0` | First row, first column element
+| `float 1` | Second row, first column element
+| `float 2` | First row, second column element
+| `float 3` | Second row, second column element
+|===
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/extract3x3` | Extract 9 floats from a 3x3 matrix
+| Input value sockets
+| `float3x3 a` | Matrix
+.9+| Output value sockets
+| `float 0` | First row, first column element
+| `float 1` | Second row, first column element
+| `float 2` | Third row, first column element
+| `float 3` | First row, second column element
+| `float 4` | Second row, second column element
+| `float 5` | Third row, second column element
+| `float 6` | First row, third column element
+| `float 7` | Second row, third column element
+| `float 8` | Third row, third column element
+|===
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/extract4x4` | Extract 16 floats from a 4x4 matrix
 | Input value sockets
 | `float4x4 a` | Matrix
 .16+| Output value sockets
@@ -1276,7 +1582,7 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/abs` | Absolute value operation
+| Operation | `math/abs` | Absolute value operation
 | Input value sockets
 | `int a` | Argument
 | Output value sockets
@@ -1288,13 +1594,13 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 
 As this node is defined in terms of the negation node (see below), the absolute value of `-2147483648` is `-2147483648`.
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
 ----
-Math.abs(a)|0
+Math.abs(a) | 0
 ----
 ====
 
@@ -1302,7 +1608,7 @@ Math.abs(a)|0
 
 [cols="1h,1,2"]
 |===
-| Type | `math/sign` | Sign operation
+| Operation | `math/sign` | Sign operation
 | Input value sockets
 | `int a` | Argument
 | Output value sockets
@@ -1317,7 +1623,7 @@ Math.abs(a)|0
 
 [cols="1h,1,2"]
 |===
-| Type | `math/neg` | Negation operation
+| Operation | `math/neg` | Negation operation
 | Input value sockets
 | `int a` | Argument
 | Output value sockets
@@ -1326,13 +1632,13 @@ Math.abs(a)|0
 
 Negating `-2147483648` **MUST** return `-2147483648`.
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
 ----
-(-a)|0
+(-a) | 0
 ----
 ====
 
@@ -1340,7 +1646,7 @@ This is implementable in ECMAScript via the following expression:
 
 [cols="1h,1,2"]
 |===
-| Type | `math/add` | Addition operation
+| Operation | `math/add` | Addition operation
 .2+| Input value sockets
 | `int a` | First addend
 | `int b` | Second addend
@@ -1355,13 +1661,13 @@ Arithmetic overflow **MUST** wrap around, for example:
 2147483647 + 1 == -2147483648
 ----
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
 ----
-(a + b)|0
+(a + b) | 0
 ----
 ====
 
@@ -1369,7 +1675,7 @@ This is implementable in ECMAScript via the following expression:
 
 [cols="1h,1,2"]
 |===
-| Type | `math/sub` | Subtraction operation
+| Operation | `math/sub` | Subtraction operation
 .2+| Input value sockets
 | `int a` | Minuend
 | `int b` | Subtrahend
@@ -1384,13 +1690,13 @@ Arithmetic overflow **MUST** wrap around, for example:
 -2147483648 - 1 == 2147483647
 ----
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
 ----
-(a - b)|0
+(a - b) | 0
 ----
 ====
 
@@ -1398,7 +1704,7 @@ This is implementable in ECMAScript via the following expression:
 
 [cols="1h,1,2"]
 |===
-| Type | `math/mul` | Multiplication operation
+| Operation | `math/mul` | Multiplication operation
 .2+| Input value sockets
 | `int a` | First factor
 | `int b` | Second factor
@@ -1415,8 +1721,8 @@ Arithmetic overflow **MUST** wrap around, for example:
 -2147483648 * (-1)       == -2147483648
 ----
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
@@ -1429,7 +1735,7 @@ Math.imul(a, b)
 
 [cols="1h,1,2"]
 |===
-| Type | `math/div` | Division operation
+| Operation | `math/div` | Division operation
 .2+| Input value sockets
 | `int a` | Dividend
 | `int b` | Divisor
@@ -1448,13 +1754,13 @@ Arithmetic overflow is defined as follows:
 -2147483648 / (-1) == -2147483648
 ----
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
 ----
-(a / b)|0
+(a / b) | 0
 ----
 ====
 
@@ -1462,7 +1768,7 @@ This is implementable in ECMAScript via the following expression:
 
 [cols="1h,1,2"]
 |===
-| Type | `math/rem` | Remainder operation
+| Operation | `math/rem` | Remainder operation
 .2+| Input value sockets
 | `int a` | Dividend
 | `int b` | Divisor
@@ -1473,13 +1779,13 @@ This is implementable in ECMAScript via the following expression:
                            \end{cases}]
 |===
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
 ----
-(a % b)|0
+(a % b) | 0
 ----
 ====
 
@@ -1487,7 +1793,7 @@ This is implementable in ECMAScript via the following expression:
 
 [cols="1h,1,2"]
 |===
-| Type | `math/min` | Minimum operation
+| Operation | `math/min` | Minimum operation
 .2+| Input value sockets
 | `int a` | First argument
 | `int b` | Second argument
@@ -1499,7 +1805,7 @@ This is implementable in ECMAScript via the following expression:
 
 [cols="1h,1,2"]
 |===
-| Type | `math/max` | Maximum operation
+| Operation | `math/max` | Maximum operation
 .2+| Input value sockets
 | `int a` | First argument
 | `int b` | Second argument
@@ -1511,7 +1817,7 @@ This is implementable in ECMAScript via the following expression:
 
 [cols="1h,1,2"]
 |===
-| Type | `math/clamp` | Clamp operation
+| Operation | `math/clamp` | Clamp operation
 .3+| Input value sockets
 | `int a` | Value to clamp
 | `int b` | First boundary
@@ -1521,7 +1827,7 @@ This is implementable in ECMAScript via the following expression:
 |===
 
 [NOTE]
-.Note
+.Authoring Note
 ====
 This operation correctly handles a case when stem:[b] is greater than stem:[c].
 ====
@@ -1534,7 +1840,7 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/eq` | Equality operation
+| Operation | `math/eq` | Equality operation
 .2+| Input value sockets
 | `int a` | First argument
 | `int b` | Second argument
@@ -1546,7 +1852,7 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/lt` | Less than operation
+| Operation | `math/lt` | Less than operation
 .2+| Input value sockets
 | `int a` | First argument
 | `int b` | Second argument
@@ -1558,7 +1864,7 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/le` | Less than or equal to operation
+| Operation | `math/le` | Less than or equal to operation
 .2+| Input value sockets
 | `int a` | First argument
 | `int b` | Second argument
@@ -1570,7 +1876,7 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/gt` | Greater than operation
+| Operation | `math/gt` | Greater than operation
 .2+| Input value sockets
 | `int a` | First argument
 | `int b` | Second argument
@@ -1582,7 +1888,7 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/ge` | Greater than or equal operation
+| Operation | `math/ge` | Greater than or equal operation
 .2+| Input value sockets
 | `int a` | First argument
 | `int b` | Second argument
@@ -1598,7 +1904,7 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/not` | Bitwise NOT operation
+| Operation | `math/not` | Bitwise NOT operation
 | Input value sockets
 | `int a` | Argument
 | Output value sockets
@@ -1609,7 +1915,7 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/and` | Bitwise AND operation
+| Operation | `math/and` | Bitwise AND operation
 .2+| Input value sockets
 | `int a` | First argument
 | `int b` | Second argument
@@ -1621,7 +1927,7 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/or` | Bitwise OR operation
+| Operation | `math/or` | Bitwise OR operation
 .2+| Input value sockets
 | `int a` | First argument
 | `int b` | Second argument
@@ -1633,7 +1939,7 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/xor` | Bitwise XOR operation
+| Operation | `math/xor` | Bitwise XOR operation
 .2+| Input value sockets
 | `int a` | First argument
 | `int b` | Second argument
@@ -1645,7 +1951,7 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 
 [cols="1h,1,2"]
 |===
-| Type | `math/asr` | Right Shift
+| Operation | `math/asr` | Right Shift
 .2+| Input value sockets
 | `int a` | Value to be shifted
 | `int b` | Number of bits to shift by
@@ -1659,7 +1965,7 @@ Only the lowest 5 bits of stem:[b] are considered, i.e., its effective range is 
 
 [cols="1h,1,2"]
 |===
-| Type | `math/lsl` | Left Shift
+| Operation | `math/lsl` | Left Shift
 .2+| Input value sockets
 | `int a` | Value to be shifted
 | `int b` | Number of bits to shift by
@@ -1673,7 +1979,7 @@ Only the lowest 5 bits of stem:[b] are considered, i.e., its effective range is 
 
 [cols="1h,1,2"]
 |===
-| Type | `math/clz` | Count leading zeros operation
+| Operation | `math/clz` | Count leading zeros operation
 | Input value sockets
 | `int a` | Argument
 | Output value sockets
@@ -1682,8 +1988,8 @@ Only the lowest 5 bits of stem:[b] are considered, i.e., its effective range is 
 
 If stem:[a] is 0, the operation returns 32; if stem:[a] is negative, the operation returns 0.
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
@@ -1696,7 +2002,7 @@ Math.clz32(a)
 
 [cols="1h,1,2"]
 |===
-| Type | `math/ctz` | Count trailing zeros operation
+| Operation | `math/ctz` | Count trailing zeros operation
 | Input value sockets
 | `int a` | Argument
 | Output value sockets
@@ -1705,13 +2011,13 @@ Math.clz32(a)
 
 If stem:[a] is 0, the operation returns 32.
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
 ----
-a ? (31 - Math.clz32(a & -a)) : 32;
+a ? (31 - Math.clz32(a & -a)) : 32
 ----
 ====
 
@@ -1719,7 +2025,7 @@ a ? (31 - Math.clz32(a & -a)) : 32;
 
 [cols="1h,1,2"]
 |===
-| Type | `math/popcnt` | Count set bits operation
+| Operation | `math/popcnt` | Count set bits operation
 | Input value sockets
 | `int a` | Argument
 | Output value sockets
@@ -1734,7 +2040,7 @@ If stem:[a] is 0, the operation returns 0; if stem:[a] is -1, the operation retu
 
 [cols="1h,1,2"]
 |===
-| Type | `math/eq` | Equality operation
+| Operation | `math/eq` | Equality operation
 .2+| Input value sockets
 | `bool a` | First argument
 | `bool b` | Second argument
@@ -1746,7 +2052,7 @@ If stem:[a] is 0, the operation returns 0; if stem:[a] is -1, the operation retu
 
 [cols="1h,1,2"]
 |===
-| Type | `math/not` | Boolean NOT operation
+| Operation | `math/not` | Boolean NOT operation
 | Input value sockets
 | `bool a` | Argument
 | Output value sockets
@@ -1757,7 +2063,7 @@ If stem:[a] is 0, the operation returns 0; if stem:[a] is -1, the operation retu
 
 [cols="1h,1,2"]
 |===
-| Type | `math/and` | Boolean AND operation
+| Operation | `math/and` | Boolean AND operation
 .2+| Input value sockets
 | `bool a` | First argument
 | `bool b` | Second argument
@@ -1769,7 +2075,7 @@ If stem:[a] is 0, the operation returns 0; if stem:[a] is -1, the operation retu
 
 [cols="1h,1,2"]
 |===
-| Type | `math/or` | Boolean OR operation
+| Operation | `math/or` | Boolean OR operation
 .2+| Input value sockets
 | `bool a` | First argument
 | `bool b` | Second argument
@@ -1781,7 +2087,7 @@ If stem:[a] is 0, the operation returns 0; if stem:[a] is -1, the operation retu
 
 [cols="1h,1,2"]
 |===
-| Type | `math/xor` | Boolean XOR operation
+| Operation | `math/xor` | Boolean XOR operation
 .2+| Input value sockets
 | `bool a` | First argument
 | `bool b` | Second argument
@@ -1797,20 +2103,20 @@ If stem:[a] is 0, the operation returns 0; if stem:[a] is -1, the operation retu
 
 [cols="1h,1,2"]
 |===
-| Type | `type/boolToInt` | Boolean to integer conversion
+| Operation | `type/boolToInt` | Boolean to integer conversion
 | Input value sockets
 | `bool a` | Argument
 | Output value sockets
 | `int value` | stem:[1] if stem:[a] is true; stem:[0] otherwise
 |===
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
 ----
-a|0
+a | 0
 ----
 ====
 
@@ -1818,15 +2124,15 @@ a|0
 
 [cols="1h,1,2"]
 |===
-| Type | `type/boolToFloat` | Boolean to float conversion
+| Operation | `type/boolToFloat` | Boolean to float conversion
 | Input value sockets
 | `bool a` | Argument
 | Output value sockets
 | `float value` | stem:[1] if stem:[a] is true; stem:[0] otherwise
 |===
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
@@ -1841,15 +2147,15 @@ This is implementable in ECMAScript via the following expression:
 
 [cols="1h,1,2"]
 |===
-| Type | `type/intToBool` | Integer to boolean conversion
+| Operation | `type/intToBool` | Integer to boolean conversion
 | Input value sockets
 | `int a` | Argument
 | Output value sockets
 | `bool value` | True if stem:[a] is not equal to zero; false otherwise
 |===
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
@@ -1862,7 +2168,7 @@ This is implementable in ECMAScript via the following expression:
 
 [cols="1h,1,2"]
 |===
-| Type | `type/intToFloat` | Integer to float conversion
+| Operation | `type/intToFloat` | Integer to float conversion
 | Input value sockets
 | `int a` | Argument
 | Output value sockets
@@ -1873,8 +2179,8 @@ Since floating-point values have double precision, this conversion **MUST** be l
 
 This operation **MUST NOT** produce negative zero.
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This operation is no-op in ECMAScript.
 ====
@@ -1885,15 +2191,15 @@ This operation is no-op in ECMAScript.
 
 [cols="1h,1,2"]
 |===
-| Type | `type/floatToBool` | Float to boolean conversion
+| Operation | `type/floatToBool` | Float to boolean conversion
 | Input value sockets
 | `float a` | Argument
 | Output value sockets
 | `bool value` | False if stem:[a] is NaN or equal to zero; true otherwise
 |===
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
@@ -1906,7 +2212,7 @@ This is implementable in ECMAScript via the following expression:
 
 [cols="1h,1,2"]
 |===
-| Type | `type/floatToInt` | Float to integer conversion
+| Operation | `type/floatToInt` | Float to integer conversion
 | Input value sockets
 | `float a` | Argument
 | Output value sockets
@@ -1914,17 +2220,17 @@ This is implementable in ECMAScript via the following expression:
 |===
 
 1. If the stem:[a] input value is zero, infinite, or NaN, return zero and skip the next steps.
-2. Let stem:[t] be stem:[a] with its fractional part removed by rounding towards zero.
+2. Let stem:[t] be stem:[a] with its fractional part removed by truncating towards zero.
 3. Let stem:[k] be a value of the same sign as stem:[t] such that its absolute value is less than stem:[2^32] and stem:[k] is equal to stem:[t - q * 2^32] for some integer stem:[q].
 4. If stem:[k] is greater than or equal to stem:[2^31], return stem:[k - 2^32]; otherwise return stem:[k].
 
-[NOTE]
-.Note
+[TIP]
+.Implementation Tip
 ====
 This is implementable in ECMAScript via the following expression:
 [source,js]
 ----
-a|0
+a | 0
 ----
 ====
 
@@ -1936,22 +2242,24 @@ a|0
 
 [cols="1h,1,2"]
 |===
-| Type | `flow/sequence` | Sequentially activate all connected output flows
+| Operation | `flow/sequence` | Sequentially activate all connected output flows
 | Input flow sockets
 |  `in`  | The entry flow into this node
 | Output flow sockets
-| `<name>` | One or more output flows; their names are purely informative
+| `<id>` | Zero or more output flows; their ids define the order of activation
 |===
 
 This node has no internal state.
 
-When the `in` input flow is activated, all output flows are activated one by one in the order they are defined in JSON.
+When the `in` input flow is activated, all output flows are activated sequentially (each output flow is activated after the previous output flow completes) in the order as described in the <<socket-order,Socket Order>> section.
+
+If the number of output flow sockets (as present in JSON) exceeds an implementation-defined limit, the graph **MUST** be rejected.
 
 ===== Branch
 
 [cols="1h,1,2"]
 |===
-| Type | `flow/branch` | Branch the execution flow based on a condition
+| Operation | `flow/branch` | Branch the execution flow based on a condition
 | Input flow sockets
 | `in` | The entry flow into this node
 | Input value sockets
@@ -1969,23 +2277,41 @@ The `condition` input value is evaluated each time the node is executed.
 
 [cols="1h,1,2"]
 |===
-| Type | `flow/switch` | Conditionally route the execution flow to one of the outputs
+| Operation | `flow/switch` | Conditionally route the execution flow to one of the outputs
 | Configuration
-| `int[] cases` | The cases on which to perform the switch on; values **MUST** be unique 32-bit signed integers; at least one value **MUST** be present
+| `int[] cases` | The cases on which to perform the switch; empty in the default configuration
 | Input flow sockets
 |   `in`  | The entry flow into this node
 | Input value sockets
 | `int selection` | The value on which the switch operates
 .2+| Output flow sockets
-| `<case>`  | The output flow, `case` is an integer decimal number present in the `cases` configuration array
-| `default` | The output flow used when the `selection` input value is not present in the `cases` configuration array
+| `<case>`  | Zero or more output flows; `<case>` is an integer decimal number
+| `default` | The output flow activated when the `selection` input value is not present in the `cases` configuration array
 |===
 
-The node has one or more `<case>` output flow sockets named as decimal integers equal to the elements of the `cases` configuration array. Encoded as JSON strings, these output flow socket names **MUST** contain only decimal integers (ASCII characters `0x30 ... 0x39`) and optionally a leading minus sign (ASCII character `0x2D`); other characters and leading zeros are not allowed.
+The node has zero or more `<case>` output flow sockets corresponding to the elements of the `cases` configuration array.
 
-For example, if the `cases` configuration array is `[-1, 0, 1]`, the output socket names are exactly `"-1"`, `"0"`, and `"1"`.
+In the default configuration, the `cases` configuration array is empty and the node has only the `default` output flow socket.
+
+The following procedure defines output flow sockets generation from the provided configuration:
+
+1. If the `cases` configuration property is not present or if it is not an array, ignore it and use the default configuration.
+2. If the `cases` configuration property is present and it is an array, then for each array element `C`:
+.. if `C` is not a literal number or if it is not exactly representable as a 32-bit signed integer, ignore the `cases` property and use the default configuration;
+.. convert `C` to a base-10 string representation `S` containing only decimal integers (ASCII characters `0x30 ... 0x39`) and a leading minus sign (ASCII character `0x2D`) if `C` is negative; extra leading zeros **MUST NOT** be present;
+.. add a flow socket `S` to the set of the output flow sockets of this node or ignore it if an output flow socket with the same id has been already added.
+3. Proceed with the generated output flow sockets.
+
+For example:
+
+* if the `cases` configuration array is `[0.5, 1]`, the default configuration is used because `0.5` is not representable as a 32-bit signed integer;
+* if the `cases` configuration array is `[-2147483649, 0]`, the default configuration is used because `-2147483649` is not representable as a 32-bit signed integer;
+* if the `cases` configuration array is `[-1.0, 0, 1]`, the output socket ids are exactly `"-1"`, `"0"`, and `"1"` because `-1.0` is equal to an integer `-1`;
+* if the `cases` configuration array is `[0.1e1, 2, 2]`, the output socket ids are exactly `"1"` and `"2"` because `0.1e1` is equal to an integer `1` and the duplicate entry is ignored.
 
 This node has no internal state.
+
+If the number of output flow sockets (as present in JSON) exceeds an implementation-defined limit, the graph **MUST** be rejected.
 
 When the `in` input flow is activated:
 
@@ -1993,13 +2319,13 @@ When the `in` input flow is activated:
 2. If the `cases` configuration array does not contain the `selection` input value:
 .. activate the `default` output flow if it is connected.
 3. If the `cases` configuration array contains the `selection` input value:
-.. activate the output flow named `<selection>` if it is connected.
+.. activate the output flow with the matching id if it is connected.
 
 ===== While Loop
 
 [cols="1h,1,2"]
 |===
-| Type | `flow/while` | Repeatedly activate the output flow based on a condition
+| Operation | `flow/while` | Repeatedly activate the output flow based on a condition
 | Input flow sockets
 | `in` | The entry flow into this node
 | Input value sockets
@@ -2013,10 +2339,10 @@ This node has no internal state.
 
 When the `in` input flow is activated:
 
-1. Evaluate the `condition`. The `condition` **MUST NOT** statically evaluate to true, otherwise the node is invalid.
+1. Evaluate the `condition` input value.
 2. If the `condition` is true,
 .. activate the `loopBody` output flow;
-.. after completion of the `loopBody` output flow, goto step 1.
+.. after completion of the `loopBody` output flow, self-activate the `in` input flow.
 3. If the `condition` is false,
 .. activate the `completed` output flow.
 
@@ -2024,9 +2350,9 @@ When the `in` input flow is activated:
 
 [cols="1h,1,2"]
 |===
-| Type | `flow/for` | Repeatedly activate the output flow based on an incrementing index value
+| Operation | `flow/for` | Repeatedly activate the output flow based on an incrementing index value
 | Configuration
-| `int initialIndex` | The index value before the loop starts
+| `int initialIndex` | The index value before the loop starts; zero in the default configuration
 | Input flow sockets
 | `in` | The entry flow into this node
 .2+| Input value sockets
@@ -2039,6 +2365,10 @@ When the `in` input flow is activated:
 | `int index` | The current index value if the node has ever been activated, `initialIndex` otherwise
 |===
 
+In the default configuration, the `initialIndex` configuration value is zero.
+
+If the `initialIndex` configuration property is not provided by the behavior graph, if it is not a literal number, or if its value is not exactly representable as a 32-bit signed integer, the default configuration **MUST** be used.
+
 The internal state of this node consists of one 32-bit signed integer value `index` initialized to `initialIndex`.
 
 When the `in` input flow is activated:
@@ -2049,7 +2379,7 @@ When the `in` input flow is activated:
 4. If `index` is less than the `endIndex` input value,
 .. activate the `loopBody` output flow;
 .. after completion of the `loopBody` output flow, increment the `index` value by 1;
-.. goto step 3.
+.. self-activate the `in` input flow and goto step 3, i.e., skip steps 1 and 2;
 5. If the `index` value is greater than or equal to the `endIndex` input value,
 .. activate the `completed` output flow.
 
@@ -2057,7 +2387,7 @@ When the `in` input flow is activated:
 
 [cols="1h,1,2"]
 |===
-| Type | `flow/doN` | Activate the output flow no more than N times
+| Operation | `flow/doN` | Activate the output flow no more than N times
 .2+| Input flow sockets
 |   `in`  | The entry flow into this node
 | `reset` | When this flow is activated, the `currentCount` value is reset to 0
@@ -2086,22 +2416,28 @@ When the `in` input flow is activated:
 
 [cols="1h,1,2"]
 |===
-| Type | `flow/multiGate` | Route the execution flow to one of the outputs sequentially or randomly
+| Operation | `flow/multiGate` | Route the execution flow to one of the outputs sequentially or randomly
 .2+| Configuration
-| `bool isRandom` | If set to true, output flows are executed in random order, picking a random not used output flow each time until all are done
-| `bool isLoop` | If set to true, the outputs will repeat in a loop continuously after all are done
+| `bool isRandom` | If set to true, output flows are activated in random order, picking a random not used output flow each time until all are done; false in the default configuration
+| `bool isLoop`   | If set to true, output flow activations will repeat in a loop continuously after all are done; false in the default configuration
 .2+| Input flow sockets
 |   `in`  | The entry flow into this node
 | `reset` | When this flow is activated, the `lastIndex` value is reset to -1 and all outputs are marked as not used
 | Output flow sockets
-| `<name>`  | One or more output flows; their names are purely informative
+| `<id>`  | Zero or more output flows; their ids define the order of activation
 | Output value sockets
 | `int lastIndex` | The index of the last used output; `-1` if the node has not been activated
 |===
 
+If the number of output flow sockets (as present in JSON) exceeds an implementation-defined limit, the graph **MUST** be rejected.
+
+In the default configuration, both `isRandom` and `isLoop` configuration values are false.
+
+If any of the two configuration properties is not provided by the behavior graph or if it is not a literal boolean, the default configuration for both properties **MUST** be used.
+
 The internal state of this node consists of one 32-bit signed integer value `lastIndex` initialized to -1 and an array of booleans with all values initialized to false representing used output flows. The size of the boolean array is equal to the number of output flows.
 
-The output flows are ordered as they are defined in JSON.
+For the purposes of the `in` input flow operation, the output flows are assigned internal indices starting with zero in the order as described in the <<socket-order,Socket Order>> section.
 
 When the `reset` input flow is activated:
 
@@ -2134,9 +2470,9 @@ When the `isRandom` and `isLoop` configuration values are true, the output flow 
 
 [cols="1h,1,2"]
 |===
-| Type | `flow/waitAll` | Activate the output flow when all input flows have been activated at least once.
+| Operation | `flow/waitAll` | Activate the output flow when all input flows have been activated at least once.
 | Configuration
-| `int inputFlows` | The number of input flows, **MUST** be greater than 0 and less than or equal to 2147483647
+| `int inputFlows` | The number of input flows; zero in the default configuration
 .2+| Input flow sockets
 |   `<i>`  | The `i`-th input flow, `i` is a non-negative integer decimal number less than the `inputFlows` configuration value
 | `reset` | When this flow is activated, all input flows are marked as unused
@@ -2147,32 +2483,42 @@ When the `isRandom` and `isLoop` configuration values are true, the output flow 
 | `int remainingInputs` | The number of not yet activated input flows
 |===
 
-The node has one or more input flow sockets named as sequential non-negative decimal integers depending on the `inputFlows` configuration value. Encoded as JSON strings, these input flow socket names contain only decimal integers (ASCII characters `0x30 ... 0x39`); other characters and leading zeros are not allowed.
+The node has from zero to 64 input flow sockets with ids assigned sequential non-negative integer decimal numbers depending on the `inputFlows` configuration value. Encoded as base-10 strings, these input flow socket ids contain only decimal integers (ASCII characters `0x30 ... 0x39`); other characters and leading zeros are not used.
 
-For example, if `inputFlows` is 3, the input socket names are `"0"`, `"1"`, and `"2"` exactly.
+For example, if `inputFlows` is 3, the input flow socket ids are `"0"`, `"1"`, and `"2"` exactly.
 
-The internal state of this node consists of one 32-bit signed integer value `remainingInputs` initialized to the number of connected input flows not including the `reset` input flow and a map of booleans with all values initialized to false representing used input flow sockets. The size of the boolean map is equal to the initial `remainingInputs` value.
+In the default configuration, the `inputFlows` configuration value is zero.
+
+If the `inputFlows` configuration property is not provided by the behavior graph, if it is not a literal number, if its value is not exactly representable as an integer, if it is negative, or if it is greater than 64, the default configuration **MUST** be used.
+
+The internal state of this node consists of one 32-bit signed integer value `remainingInputs` initialized to the value of the `inputFlows` configuration property and an array of booleans with all values initialized to false representing activated input flow sockets. The size of the boolean array is equal to the value of the `inputFlows` configuration property.
 
 When the `reset` input flow is activated:
 
-1. Reset `remainingInputs` to the number of connected input flows not including the `reset` input flow.
-2. Mark all connected input flows as not used in the boolean map.
+1. Reset `remainingInputs` to the value of the `inputFlows` configuration property.
+2. Mark all input flows as not activated in the boolean array.
 
 When any of the `<i>` input flows is activated:
 
-1. If the `<i>`-th input flow is not marked as used in the boolean map:
-.. mark the `<i>`-th input flow as used in the boolean map.
-.. decrement the `remainingInputs` value by 1;
+1. If the `<i>`-th input flow is not marked as activated in the boolean array:
+.. mark the `<i>`-th input flow as activated in the boolean array;
+.. decrement the `remainingInputs` value by 1.
 2. If the `remainingInputs` value is zero:
 .. activate the `completed` output flow.
 3. If the `remainingInputs` value is not zero:
 .. activate the `out` output flow.
 
+[NOTE]
+.Authoring Note
+====
+In the default configuration, this node has only the `reset` input flow, the `remainingInputs` output value is always zero, and the output flows are never activated.
+====
+
 ===== Throttle
 
 [cols="1h,1,2"]
 |===
-| Type | `flow/throttle` | Activate the output flow unless it has been activated less than a certain time ago
+| Operation | `flow/throttle` | Activate the output flow unless it has been activated less than a certain time ago
 .2+| Input flow sockets
 |   `in`  | The entry flow into this node
 | `reset` | When this flow is activated, the output flow throttling state is reset
@@ -2215,7 +2561,7 @@ When the `in` input flow is activated:
 
 [cols="1h,1,2"]
 |===
-| Type | `flow/setDelay` | Schedule the output flow activation after a certain delay
+| Operation | `flow/setDelay` | Schedule the output flow activation after a certain delay
 .2+| Input flow sockets
 |   `in`   | The entry flow into this node
 | `cancel` | When this flow is activated, all delayed activations scheduled by this node are cancelled
@@ -2240,12 +2586,12 @@ When the `in` input flow is activated:
 1. Evaluate the `duration` input value.
 2. If the `duration` input value is NaN, infinite, negative, or not convertible into an implementation-specific time type,
 .. activate the `err` output flow and skip the next steps.
-3. If scheduling a new activation exceeds any implementation-specific limit,
+3. If scheduling a new activation exceeds an implementation-specific limit on the maximum number of simultaneous delays,
 .. activate the `err` output flow and skip the next steps.
 4. Let _activationTime_ be an implementation-defined high-precision time value equal to the sum of the current time value and the `duration` input value converted to the same time type.
 5. If _activationTime_ is not valid according to implementation-specific validation rules, e.g., it exceeds an internal threshold value,
 .. activate the `err` output flow and skip the next steps.
-6. Set `lastDelayIndex` to a positive value representing the delayed flow activation being scheduled. This value **MUST** be unique across all previous activations of all `flow/setDelay` nodes of the graph.
+6. Set `lastDelayIndex` to a non-negative value representing the delayed flow activation being scheduled. This value **MUST** be unique across all previous activations of all `flow/setDelay` nodes of the graph.
 7. Push the value of `lastDelayIndex` to the graph and node arrays of activation indices.
 8. Schedule the following actions at the _activationTime_ time:
 .. Removal of the activation index value from both arrays of activation indices.
@@ -2263,7 +2609,7 @@ When the `cancel` input flow is activated:
 
 [cols="1h,1,2"]
 |===
-| Type | `flow/cancelDelay` | Cancel a previously scheduled output flow activation
+| Operation | `flow/cancelDelay` | Cancel a previously scheduled output flow activation
 | Input flow sockets
 | `in` | The entry flow into this node
 | Input value sockets
@@ -2291,14 +2637,21 @@ Non-positive or not existing delay index values **MUST NOT** cause any runtime e
 
 [cols="1h,1,2"]
 |===
-| Type | `variable/get` | Get a custom variable value
+| Operation | `variable/get` | Get a custom variable value
 | Configuration
 | `int variable` | The custom variable index
 | Output value sockets
-| `T value`  | The custom variable value
+| `T value` | The custom variable value
 |===
 
-This node gets a custom variable value using the variable index provided by the `variable` configuration value. The type `T` is determined by the referenced variable. The variable index **MUST** be non-negative and less than the total number of custom variables, otherwise the node is invalid.
+[CAUTION]
+====
+This node does not have a default configuration.
+====
+
+This node gets a custom variable value using the variable index provided by the `variable` configuration value.
+
+The type `T` is determined by the referenced variable. The variable index **MUST** be a non-negative integer less than the total number of custom variables, otherwise the node is invalid and the graph **MUST** be rejected.
 
 This node has no internal state.
 
@@ -2306,7 +2659,7 @@ This node has no internal state.
 
 [cols="1h,1,2"]
 |===
-| Type | `variable/set` | Set a custom variable value
+| Operation | `variable/set` | Set a custom variable value
 | Configuration
 | `int variable` | The custom variable index
 | Input flow sockets
@@ -2317,133 +2670,381 @@ This node has no internal state.
 | `out` | The flow to be activated after the value is set
 |===
 
-This node sets a custom variable value using the variable index provided by the `variable` configuration value and the `value` input value. The type `T` is determined by the referenced variable. The variable index **MUST** be non-negative and less than the total number of custom variables, otherwise the node is invalid.
+[CAUTION]
+====
+This node does not have a default configuration.
+====
+
+This node sets a custom variable value using the variable index provided by the `variable` configuration value and the `value` input value.
+
+The type `T` is determined by the referenced variable. The variable index **MUST** be a non-negative integer less than the total number of custom variables, otherwise the node is invalid and the graph **MUST** be rejected.
 
 This node has no internal state.
 
 When the `in` input flow is activated:
 
 1. Evaluate the `value` input value.
-2. Set the custom variable with the `variable` configuration value index to the `value` input value.
-3. Activate the `out` output flow.
+2. If the _variable interpolation state dynamic array_ (defined below) contains an entry with the same variable reference, remove it from the array.
+3. Set the custom variable with the `variable` configuration value index to the `value` input value.
+4. Activate the `out` output flow.
+
+===== Variable Interpolate
+
+[cols="1h,1,2"]
+|===
+| Operation | `variable/interpolate` | Interpolate a variable value
+.2+| Configuration
+| `int variable` | The custom variable index
+| `bool useSlerp` | Whether to use spherical interpolation for quaternions
+| Input flow sockets
+| `in` | The entry flow into this node
+.4+| Input value sockets
+| `T value` | The target variable value
+| `float duration` | The time, in seconds, in which the variable **SHOULD** reach the target value
+| `float2 p1` | Control point P1
+| `float2 p2` | Control point P2
+.3+| Output flow sockets
+| `out` | The flow to be activated if the input values are valid
+| `err` | The flow to be activated if the input values are invalid
+| `done` | The flow to be activated when the variable reaches the target value
+|===
+
+[CAUTION]
+====
+This node does not have a default configuration.
+====
+
+This node interpolates and updates the specified custom variable multiple times over the specified duration.
+
+The type `T` is determined by the referenced variable. The variable index **MUST** be a non-negative integer less than the total number of custom variables, otherwise the node is invalid and the graph **MUST** be rejected.
+
+If the referenced variable is integer or boolean, the node is invalid and the graph **MUST** be rejected.
+
+The `useSlerp` configuration value **MUST** be a boolean literal and it **MUST NOT** be true if the type `T` is not `float4`, otherwise the node is invalid and the graph **MUST** be rejected.
+
+This node has no internal state.
+
+When a node of this type is used in the behavior graph, the global graph state includes an implementation-defined _variable interpolation state dynamic array_ each element of which contains the following data:
+
+- The reference to the variable being interpolated
+- Implementation-defined high precision timestamp value representing the interpolation start time
+- Interpolation duration value converted to the implementation-defined high precision time type
+- Variable value at the time of the successful node activation
+- Information needed for cubic Bézier spline evaluation derived from the node's input values
+- Target variable value
+- Implementation-specific pointer to the `done` output flow of the node that has added this entry
+
+This array is initially empty and its maximum size is implementation-specific.
+
+When the `in` input flow is activated:
+
+1. Evaluate all input values.
+2. If the `duration` input value is NaN, infinite, negative, or not convertible into an implementation-specific time type used for the internal interpolation start time value,
+.. activate the `err` output flow and skip the next steps.
+3. If any component of the `p1` or `p2` input values is NaN or infinite or if any of the first components of these input values is negative or greater than 1,
+.. activate the `err` output flow and skip the next steps.
+4. If starting a new variable interpolation exceeds an implementation-specific limit of the maximum number of simultaneous variable interpolations,
+.. activate the `err` output flow and skip the next steps.
+5. If the _variable interpolation state dynamic array_ contains an entry with the same variable reference,
+.. remove it from the array.
+6. Using the implicitly-defined end points stem:[P_0 (0, 0)] and stem:[P_3 (1, 1)] together with the control points stem:[P_1] and stem:[P_2] provided via the input values construct a cubic Bézier easing function for the stem:[[0, 1]] input range.
+7. Add a new entry to the _variable interpolation state dynamic array_ filling it with the required information based on the evaluated input values.
+8. Activate the `out` output flow.
+
+On each tick, for each entry of the _variable interpolation state dynamic array_:
+
+1. Compute the current input progress position _t_ as the time passed since the interpolation start divided by the interpolation's duration.
+2. If _t_ is less than or equal to zero,
+.. skip the next steps.
+3. If _t_ is NaN or greater than or equal to 1,
+.. set the variable to the target value;
+.. remove the current entry from the _variable interpolation state dynamic array_;
+.. activate the `done` output flow linked to the current entry;
+.. skip the next steps.
+4. Using the cubic Bézier spline information, compute the output progress position _q_ based on the _t_ value. This step implies that latexmath:[t \in (0; 1)].
+5. Set the variable to the new value computed as a linear or spherical linear interpolation depending on the `useSlerp` configuration value between the original and the target variable values using the output progress position _q_ as the interpolation coefficient.
+
+[NOTE]
+.Authoring Note
+====
+Certain control point values can cause the intermediate output progress value to be negative or greater than one. This is not an error.
+====
 
 ==== Object Model Access
+
+Operations defined in this section use JSON Pointers (<<rfc6901,RFC 6901>>) to refer to glTF Asset Object Model properties. These pointers are generated from JSON Pointer Templates specified in the `pointer` configuration values of the nodes.
+
+JSON Pointers always refer to the properties of the glTF asset that contains the behavior graph. Existence and validity of properties accessed via JSON Pointers do not depend on the current glTF scene index.
+
+[NOTE]
+.Implementation Note
+====
+For example:
+
+* The `/nodes/0/translation` pointer denotes the translation of the glTF node with index 0 in glTF coordinate system.
+
+* The `/nodes/1/rotation` pointer denotes the rotation quaternion of the glTF node with index 1 in glTF coordinate system using the glTF order of quaternion components, i.e., XYZW, where W is the scalar.
+
+Both pointers are functional even if the nodes do not belong to the current glTF scene.
+
+Implementations that import glTF assets into pre-existing scenes may need to maintain mappings between their internal objects and glTF objects defined in the asset. If the implementation's coordinate system is different from the one used in glTF, extra runtime conversions may be necessary for properties that depend on the XYZ axes.
+====
+
+When a behavior graph is loaded, all JSON Pointer Templates **MUST** be processed as described in the following sections. If a pointer template contains path segments wrapped in curly brackets, called _template parameters_, they define input value socket ids (with the curly brackets stripped) for the node. These template parameters **MUST NOT** be empty or contain `/`, `{`, `}`, or `~` characters; the same parameter **MUST NOT** be used more than once within a template string. If a JSON property used in the Pointer Template string contains curly brackets, they **MUST** be escaped with a back slash character (`\`, `0x5C`).
+
+[NOTE]
+.Implementation Note
+====
+None of the glTF properties currently defined in Khronos specifications contain curly brackets in their names but such properties can exist in arbitrary glTF assets within vendor-specific extensions or `extras` objects.
+====
+
+When an Object Model Access node is activated, its JSON Pointer Template and input values (if present) are used to generate the effective JSON Pointer string value.
+
+If the property being accessed is also affected by a currently active animation, the animation state **MUST** be applied before getting and/or setting the property value via pointers.
+
+===== JSON Pointer Template Parsing
+
+The input to these steps is the `pointer` string configuration value; the output includes a boolean validity flag and a template parameter array. Implementations **MAY** optimize these steps as long as such optimizations do not change the output.
+
+1. Let the validity flag be true and the template parameter array be empty.
+2. If the pointer template string is not a syntactically valid JSON Pointer as defined in <<rfc6901,RFC 6901>> regardless of the pointer applicability to the glTF asset, reject the pointer template string with a syntax error.
+3. Split the pointer template string at all matches of the forward slash character (`/`, `0x2F`). This step produces a path segment array consisting of a substring before the first match, substrings between the matches, and a substring after the last match.
+4. For each path segment substring produced during step 3:
+.. If the substring starts with a left curly bracket (`{`, `0x7B`):
+... Assume the substring to be a template parameter.
+... If the substring contains more than one left curly bracket, more than one right curly bracket (`}`, `0x7D`), if it does not end with a right curly bracket (`}`, `0x7D`), if there are no characters between the curly brackets (i.e., if the entire substring is `{}`), or if the substring contains a tilde (`~`, `0x7E`), set the validity flag to false, ignore all other segments, and goto step 5.
+... Add the substring to the template parameter array.
+... If the template parameter array contains duplicate elements, set the validity flag to false and goto step 5.
+.. If the substring does not start with a left curly bracket (`{`, `0x7B`):
+... Assume the substring to be a literal path segment, i.e., not a template parameter.
+... If the substring contains a left or right curly bracket not escaped by a back slash character (`\`, `0x5C`), set the validity flag to false and goto step 5.
+5. If the validity flag is true, output the parameter array; if the validity flag is false, reject the pointer template string with a syntax error.
+
+[NOTE]
+.Valid Syntax Examples
+====
+- The template string `"/myProperty"` is syntactically valid and has no template parameters. As it does not represent a recognized glTF Asset Object Model property, using this pointer will result in runtime errors defined by the corresponding nodes.
+
+- The template string `"/nodes/0/scale"` is syntactically valid and has no template parameters.
+
+- The template string `"/nodes/{index}/scale"` is syntactically valid and has one template parameter called `{index}`, which would result in an input value socket with id `index`.
+
+- The template string `"/nodes/{index\\}/scale"` is syntactically valid and has one template parameter called `{index&bsol;}`, which corresponds to the input value socket with id `index\`. Note that backslash characters are escaped when used in JSON strings.
+
+- The template string `"/nodes/{index}/extras/\\{index\\}"` is syntactically valid and has one template parameter called `{index}`. Since the pointer targets the `{index}` JSON property, the curly brackets of the property are escaped. Note that backslash characters are escaped when used in JSON strings.
+
+- The template string `"/nodes/0/extras/e\\}\\{traProperty"` is syntactically valid and has no template parameters. Since the pointer targets the `e}{traProperty` JSON property, the curly brackets of the property are escaped. Note that backslash characters are escaped when used in JSON strings.
+====
+
+[NOTE]
+.Invalid Syntax Examples
+====
+- The template string `"/nodes/{index}/extras/~2"` is syntactically invalid because the `~2` character sequence is invalid in JSON Pointers, see <<rfc6901,RFC 6901>>.
+
+- The template string `"/nodes/{index}/weights/{index}"` is syntactically invalid because the `{index}` template parameter is used twice.
+
+- The template string `"/nodes/{~index}/scale"` is syntactically invalid because the path segment substring that starts with `{` contains the `~` character.
+
+- The template string `"/nodes/{}/scale"` is syntactically invalid because the path segment substring that starts with `{` has no characters between `{` and `}`.
+
+- The template string `"/nodes/{index/scale"` is syntactically invalid because the path segment substring that starts with `{` does not end with `}`.
+
+- The template string `"/nodes/{i}ndex/scale"` is syntactically invalid because the path segment substring that starts with `{` does not end with `}`.
+
+- The template string `"/nodes/{{index}/scale"` is syntactically invalid because the path segment substring that starts with `{` has more than one `{` character.
+
+- The template string `"/nodes/{&bsol;&bsol;{index}/scale"` is syntactically invalid because the path segment substring that starts with `{` has more than one `{` character.
+
+- The template string `"/nodes/&bsol;&bsol;{index}/scale"` is syntactically invalid because the path segment substring that does not start with `{` has the unescaped `}` character.
+
+- The template string `"/nodes/{index}}/scale"` is syntactically invalid because the path segment substring that starts with `{` has more than one `}` character.
+
+- The template string `"/nodes/0/extras/myData{Index}"` is syntactically invalid because it has a path segment substring that does not start with `{` and contains an unescaped `{` character.
+====
+
+===== Effective JSON Pointer Generation
+
+The inputs to these steps are the `pointer` configuration value, the template parameter array, and the corresponding input values provided at runtime by the behavior graph; the output is the effective JSON Pointer string that will be handled by the Object Model Access nodes. Implementations **MAY** optimize these steps as long as such optimizations do not change the output.
+
+1. Let _P_ be a copy of the `pointer` configuration value.
+2. For each element of the template parameter array:
+.. assert that the corresponding input socket value is not negative;
+.. convert the corresponding input socket value to its decimal string representation containing only ASCII characters `0x30 ... 0x39` with no extra leading zeros.
+.. update _P_ by replacing the template parameter substring in it with the converted input socket value.
+3. Update _P_ by replacing all occurrences of the `\{` substring in it with `{`.
+4. Update _P_ by replacing all occurrences of the `\}` substring in it with `}`.
+5. Output _P_ as the effective JSON Pointer string.
+
+[NOTE]
+.Examples
+====
+- Let the `pointer` configuration value be `"/nodes/{N}/weights/{W}"`. Then the nodes using this template pointer string have the `N` and `W` input value sockets. Let the runtime `N` value be 1 and the runtime `W` value be 2. Then the effective JSON Pointer is `"/nodes/1/weights/2"`.
+
+- Let the `pointer` configuration value be `"/nodes/{index}/extras/\\{index\\}"`. Then the nodes using this template pointer string have the `index` input value socket. Let the runtime `index` value be 2. Then the effective JSON Pointer is `"/nodes/2/extras/{index}"`.
+====
 
 ===== Pointer Get
 
 [cols="1h,1,2"]
 |===
-| Type | `pointer/get` | Get an object model property value
-| Configuration
-| `string pointer` | The JSON Pointer or JSON Pointer template
+| Operation | `pointer/get` | Get an object model property value
+.2+| Configuration
+| `string pointer` | JSON Pointer Template
+| `int type`       | Property type index
 | Input value sockets
-| `int <segment>` | Zero or more JSON Pointer template path substitutions to be evaluated at runtime; input value socket names correspond to the pointer's path segments wrapped with curly braces (`{}`)
+| `int <parameter>` | Zero or more JSON Pointer template parameters to be evaluated at runtime; input value socket ids correspond to the pointer's path segments wrapped with curly brackets (`{}`)
 .2+| Output value sockets
 | `T value`  | The resolved property value
 | `bool isValid`  | True if the property value can be resolved, false otherwise
 |===
 
-This node gets a glTF Asset Object Model value using the provided JSON Pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the pointer string has invalid syntax or if the type of the referenced property cannot be statically determined, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
+[CAUTION]
+====
+This node does not have a default configuration.
+====
+
+This node gets a glTF Asset Object Model property value using the effective JSON Pointer string derived from the JSON Pointer Template configuration value and the runtime values of the input value sockets.
+
+The type `T` is determined by the `type` configuration value which points to the element of the <<json-types,`types`>> array. Input value socket ids are defined by parsing the JSON Pointer Template string as described above.
 
 [NOTE]
 .Examples
 ====
-The `pointer` configuration value `"/nodes/1024/scale"` is valid even if the `nodes` array does not have enough elements; the type `T` is `float3`; the output values are set as described below.
+- If the `pointer` configuration value is `"/nodes/0/translation"`, the behavior graph node has no input value sockets and the pointer always refers to the `translation` property of the glTF node 0.
 
-The `pointer` configuration value `"/nodes/-1/scale"` is invalid because `-1` is not a valid array element reference according to the JSON Pointer standard.
-
-The `pointer` configuration value `"/myProperty"` is invalid because this path is not defined in the glTF Asset Object Model.
+- If the `pointer` configuration value is `"/nodes/{myId}/scale"`, the behavior graph node has the `myId` input value socket, which value denotes the glTF node index.
 ====
 
-The pointer string **MAY** be a template pointer string, i.e., it **MAY** contain path segments substituted at runtime by converting each `<segment>` input value to a base-10 string representation. All input values **MUST** be of `int` type. Path segments, if used, **MUST** substitute only array indices in the pointer templates as listed in the glTF Asset Object Model Specification.
+If the `pointer` configuration value is not provided, if it is not a string, or if it is invalid (as defined in the previous sections), the node is invalid and the graph **MUST** be rejected.
+
+If the `type` configuration value is not provided, if it is not a literal number, if it is not exactly representable as a 32-bit signed integer, if it is negative, or if it is greater than or equal to the length of the `types` array, the node is invalid and the graph **MUST** be rejected.
+
+When this node is activated, i.e., when one of its output value sockets is being accessed:
+
+1. Evaluate all input values.
+2. If any of the input values is negative:
+.. set the `isValid` output value to false;
+.. set the `value` output value to the default value for the type `T`;
+.. skip the next steps.
+3. Generate the effective JSON Pointer as described in the previous sections.
+4. If the effective JSON Pointer cannot be resolved against the glTF asset or if the Object Model type of the resolved property does not match the type `T`,
+.. set the `isValid` output value to false;
+.. set the `value` output value to the default value for the type `T`;
+.. skip the next steps.
+5. Set the `isValid` output value to true and the `value` output value to the value of the resolved glTF Asset Object Model property.
+
+Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
 
 [NOTE]
-.Example
+.Examples
 ====
-If the `pointer` configuration value is `"/nodes/{myId}/scale"`, the behavior graph node has the `myId` input value socket, which value denotes the glTF node index.
-====
+- If the `pointer` configuration value is `"/nodes/{myId}/scale"`, the type `T` is `float3`, and the `myId` input value is negative or greater than or equal to the total number of glTF nodes, then the `isValid` output value is false and the `value` output value is `[NaN, NaN, NaN]`.
 
-This node has no internal state.
-
-If any of the input values is negative, the `value` output value is the default value for its type and the `isValid` output value is false.
-
-If the pointer or the pointer template with all its substitutions applied can be resolved, the `value` output value is the resolved property value and the `isValid` output value is true.
-
-If the pointer or the pointer template with all its substitutions applied cannot be resolved, the `value` output value is the default value for its type and the `isValid` output value is false.
-
-[NOTE]
-.Note
-====
-When the `isValid` output value is false, it means that the pointer string could be resolved in principle, i.e., it represents a known glTF property and its type can be determined, but the property does not exist in the current asset. For example, an array index is out of bounds or an optional JSON object, e.g., an extension, does not exist at that location. Refer to the glTF Asset Object Model Specification for the JSON Pointer resolution rules.
+- If the `pointer` configuration value is `"/nodes/{myId}/scale"` and the type `T` is `float4`, then the `isValid` output value is false and the `value` output value is `[NaN, NaN, NaN, NaN]`. Note that `myId` input value becomes irrelevant in this case because even if it is valid the Object Model property type does not match the declared type `T`.
 ====
 
 ===== Pointer Set
 
 [cols="1h,1,2"]
 |===
-| Type | `pointer/set` | Set an object model property value
-| Configuration
-| `string pointer` | The JSON Pointer or JSON Pointer template
+| Operation | `pointer/set` | Set an object model property value
+.2+| Configuration
+| `string pointer` | JSON Pointer Template
+| `int type`       | Property type index
 | Input flow sockets
 | `in` | The entry flow into this node
 .2+| Input value sockets
-| `int <segment>` | Zero or more JSON Pointer template path substitutions to be evaluated at runtime; input value socket names correspond to the pointer's path segments wrapped with curly braces (`{}`)
+| `int <parameter>` | Zero or more JSON Pointer template parameters to be evaluated at runtime; input value socket ids correspond to the pointer's path segments wrapped with curly brackets (`{}`)
 | `T value` | The new property value
 .2+| Output flow sockets
-| `out` | The flow to be activated if the JSON Pointer can be resolved
-| `err` | The flow to be activated if the JSON Pointer cannot be resolved
+| `out` | The flow to be activated if the property was set
+| `err` | The flow to be activated if the property was not set
 |===
 
-This node sets a glTF Asset Object Model value using the provided JSON Pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the pointer string has invalid syntax, if the type of the referenced property cannot be statically determined, or if the referenced property is not mutable, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
+[CAUTION]
+====
+This node does not have a default configuration.
+====
 
-The pointer string **MAY** be a template pointer string, i.e., it **MAY** contain path segments substituted at runtime by converting each `<segment>` input value to a base-10 string representation. All input values used for path segment substitutions **MUST** be of `int` type. Path segments, if used, **MUST** substitute only array indices in the pointer templates as listed in the glTF Asset Object Model Specification.
+This node sets a glTF Asset Object Model property value using the effective JSON Pointer string derived from the JSON Pointer Template configuration value and the runtime values of the `<parameter>` input value sockets.
 
-If the `value` input value is not valid for the resolved property, the effective property value becomes implementation-defined and subsequent `pointer/get` evaluations of the property **MAY** return any value of the corresponding type until the property is updated with a valid value.
+The type `T` is determined by the `type` configuration value which points to the element of the <<json-types,`types`>> array. Input value socket ids are defined by parsing the JSON Pointer Template string as described above.
+
+If the `pointer` configuration value is not provided, if it is not a string, if it is invalid (as defined in the previous sections), or if it contains a template parameter `{value}`, the node is invalid and the graph **MUST** be rejected.
+
+If the `type` configuration value is not provided, if it is not a literal number, if it is not exactly representable as a 32-bit signed integer, if it is negative, or if it is greater than or equal to the length of the `types` array, the node is invalid and the graph **MUST** be rejected.
+
+If the `value` input value is not valid for the resolved property, the effective property value becomes implementation-defined and subsequent `pointer/get` evaluations of the property **MAY** return any value of the corresponding type until the property is updated with a valid value. This is not an error. Implementations **MAY** generate runtime warnings in this case as deemed possible.
+
+[NOTE]
+.Example
+====
+If the resolved glTF property is `"/materials/0/emissiveFactor"` and it is being set to `[1, 2, 3]`, the effective emissive factor becomes undefined. Querying it afterwards with `pointer/get` could return any `float3` value including but not limited to `[0, 0, 0]`, `[1, 1, 1]`, `[1, 2, 3]`, or `[NaN, NaN, NaN]`.
+====
 
 This node has no internal state.
 
 When the `in` input flow is activated:
 
 1. Evaluate all input values.
-2. If any of the pointer segment input values is negative,
+2. If any of the `<parameter>` input values is negative,
 .. activate the `err` output flow and skip the next steps.
-3. If the pointer or the pointer template with all its substitutions applied can be resolved,
-.. if the _pointer interpolation state dynamic array_ (defined below) contains an entry with the same resolved JSON Pointer value, remove it from the array;
-.. set the resolved property to the `value` input value;
-.. activate the `out` output flow.
-4. If the pointer or the pointer template with all its substitutions applied cannot be resolved,
-.. activate the `err` output flow.
+3. Generate the effective JSON Pointer as described in the previous sections.
+4. If the effective JSON Pointer cannot be resolved against the glTF asset, if the Object Model type of the resolved property does not match the type `T`, or if the property is not mutable,
+.. activate the `err` output flow and skip the next steps.
+5. If the _pointer interpolation state dynamic array_ (defined in the next section) contains an entry with the effective JSON Pointer,
+.. remove the entry from the array.
+6. Set the resolved glTF Asset Object Model property to the `value` input value.
+7. Activate the `out` output flow.
 
 ===== Pointer Interpolate
 
 [cols="1h,1,2"]
 |===
-| Type | `pointer/interpolate` | Interpolate an object model property value
-| Configuration
-| `string pointer` | The JSON Pointer or JSON Pointer template
+| Operation | `pointer/interpolate` | Interpolate an object model property value
+.2+| Configuration
+| `string pointer` | JSON Pointer Template
+| `int type`       | Property type index
 | Input flow sockets
 | `in` | The entry flow into this node
 .5+| Input value sockets
-| `int <segment>` |  Zero or more JSON Pointer template path substitutions to be evaluated at runtime; input value socket names correspond to the pointer's path segments wrapped with curly braces (`{}`)
+| `int <parameter>` | Zero or more JSON Pointer template parameters to be evaluated at runtime; input value socket ids correspond to the pointer's path segments wrapped with curly brackets (`{}`)
 | `T value` | The target property value
 | `float duration` | The time, in seconds, in which the property **SHOULD** reach the target value
 | `float2 p1` | Control point P1
 | `float2 p2` | Control point P2
 .3+| Output flow sockets
-| `out` | The flow to be activated if the JSON Pointer can be resolved and the input values are valid
-| `err` | The flow to be activated if the JSON Pointer cannot be resolved or the input values are invalid
-| `done` | The flow to be activated when the property reaches the target value
+| `out` | The flow to be activated if the property interpolation has been started
+| `err` | The flow to be activated if the property interpolation has not been started
+| `done` | The flow to be activated after the property reaches the target value
 |===
 
-This node interpolates and updates the specified glTF Asset Object Model property multiple times over the specified duration using the provided JSON Pointer. The type `T` is determined by the pointer string according to the glTF Asset Object Model Specification. If the pointer string has invalid syntax, if the type of the referenced property cannot be statically determined, if it is integer or boolean, or if the referenced property is not mutable, the node is invalid. Pointers containing `extras` properties are out of scope of this specification but **MAY** be supported by implementations.
+[CAUTION]
+====
+This node does not have a default configuration.
+====
 
-The pointer string **MAY** be a template pointer string, i.e., it **MAY** contain path segments substituted at runtime by converting each `<segment>` input value to a base-10 string representation. All input values used for path segment substitutions **MUST** be of `int` type. Path segments, if used, **MUST** substitute only array indices in the pointer templates as listed in the glTF Asset Object Model Specification.
+This node interpolates and updates the glTF Asset Object Model property multiple times over the specified duration using the effective JSON Pointer string derived from the JSON Pointer Template configuration value, the runtime values of the `<parameter>` input value sockets, and several interpolation inputs.
 
-If the `value` input value or any intermediate interpolated value are not valid for the resolved property, the effective property value becomes implementation-defined and subsequent `pointer/get` evaluations of the property **MAY** return any value of the corresponding type until the property is updated with a valid value.
+The type `T` is determined by the `type` configuration value which points to the element of the <<json-types,`types`>> array. Input value socket ids are defined by parsing the JSON Pointer Template string as described above.
+
+If the `pointer` configuration value is not provided, if it is not a string, if it is invalid (as defined in the previous sections), or if it contains template parameters `{value}`, `{duration}`, `{p1}`, or `{p2}` the node is invalid and the graph **MUST** be rejected.
+
+If the `type` configuration value is not provided, if it is not a literal number, if it is not exactly representable as a 32-bit signed integer, if it is negative, if it is greater than or equal to the length of the `types` array, or if it point to the type entry with `bool` or `int` type signatures, the node is invalid and the graph **MUST** be rejected.
+
+If the `value` input value or any intermediate interpolated value are not valid for the resolved property, the effective property value becomes implementation-defined and subsequent `pointer/get` evaluations of the property **MAY** return any value of the corresponding type until the property is updated with a valid value. This is not an error. Implementations **MAY** generate runtime warnings in this case as deemed possible.
+
+[NOTE]
+.Example
+====
+If the resolved glTF property is `"/materials/0/pbrMetallicRoughness/metallicFactor"`, its current value is zero, and the interpolation target value is two, the effective emissive factor becomes undefined when the interpolated value is greater than one.
+====
+
+If the current glTF Asset Object Model property value is already undefined due to previous invocations of `pointer/set` or `pointer/interpolate` nodes with invalid values (as defined above), the interpolated property remains undefined during and after the interpolation. This is not an error. Implementations **MAY** generate runtime warnings in this case as deemed possible.
 
 This node has no internal state.
 
-When a node of this type is used in the behavior graph, the global graph state includes an implementation-defined _pointer interpolation state dynamic array_ each element of which contains the following data:
+When a `pointer/interpolate` node is used in the behavior graph, the global graph state includes an implementation-defined _pointer interpolation state dynamic array_ each element of which contains the following data:
 
 - The resolved JSON Pointer to the Object Model property being interpolated
 - Implementation-defined high precision timestamp value representing the interpolation start time
@@ -2458,38 +3059,41 @@ This array is initially empty and its maximum size is implementation-specific.
 When the `in` input flow is activated:
 
 1. Evaluate all input values.
-2. If any of the pointer segment input values is negative,
+2. If any of the `<parameter>` input values is negative,
 .. activate the `err` output flow and skip the next steps.
-3. If the pointer or the pointer template with all its substitutions applied cannot be resolved,
+3. Generate the effective JSON Pointer as described in the previous sections.
+4. If the effective JSON Pointer cannot be resolved against the glTF asset, if the Object Model type of the resolved property does not match the type `T`, or if the property is not mutable,
 .. activate the `err` output flow and skip the next steps.
-4. If the `duration` input value is NaN, infinite, negative, or not convertible into an implementation-specific time type used for the internal interpolation start time value,
+5. If the `duration` input value is NaN, infinite, negative, or greater than the maximum property interpolation duration supported by the implementation,
 .. activate the `err` output flow and skip the next steps.
-5. If any component of the `p1` or `p2` input values is NaN or infinite or if any of the first components of these input values is negative or greater than 1,
+6. If any component of the `p1` or `p2` input values is NaN or infinite or if any of the first components of these input values is negative or greater than 1,
 .. activate the `err` output flow and skip the next steps.
-6. If starting a new pointer interpolation exceeds any implementation-specific limit,
+7. If starting a new pointer interpolation exceeds an implementation-specific limit of the maximum number of simultaneous property interpolations,
 .. activate the `err` output flow and skip the next steps.
-7. If the _pointer interpolation state dynamic array_ contains an entry with the same resolved JSON Pointer value,
+8. If the _pointer interpolation state dynamic array_ contains an entry with the same effective JSON Pointer value,
 .. remove it from the array.
-8. Using the implicitly-defined end points stem:[P_0 (0, 0)] and stem:[P_3 (1, 1)] together with the control points stem:[P_1] and stem:[P_2] provided via the input values construct a cubic Bézier easing function for the stem:[[0, 1]] input range.
-9. Add a new entry to the _pointer interpolation state dynamic array_ filling it with the required information based on the evaluated input values.
-10. Activate the `out` output flow.
+9. Using the implicitly-defined end points stem:[P_0 (0, 0)] and stem:[P_3 (1, 1)] together with the control points stem:[P_1] and stem:[P_2] provided via the input values construct a cubic Bézier easing function for the stem:[[0, 1]] input range.
+10. Add a new entry to the _pointer interpolation state dynamic array_ filling it with the required information based on the evaluated input values.
+11. Activate the `out` output flow.
 
-On each asset animation update, for each entry in the _pointer interpolation state dynamic array_:
+On each tick, for each entry in the _pointer interpolation state dynamic array_:
 
 1. Compute the current input progress position _t_ as the time passed since the interpolation start divided by the interpolation's duration.
-2. If _t_ is less than or equal to zero
+2. If _t_ is less than or equal to zero,
 .. skip the next steps.
 3. If _t_ is NaN or greater than or equal to 1,
-.. set the Object Model property to the target value;
+.. set the target property to the target value;
 .. remove the current entry from the _pointer interpolation state dynamic array_;
-.. activate the `done` output flow linked to the current entry
+.. activate the `done` output flow linked to the current entry;
 .. skip the next steps.
-4. Using the cubic Bézier spline information, compute the output progress position _q_ based on the _t_ value. This step implies that latexmath:[t \in [0; 1\]].
-5. Set the linked Object Model property to the new value computed as a linear interpolation between the original and the target property values using the output progress position _q_ as the interpolation coefficient.
+4. Using the cubic Bézier spline information, compute the output progress position _q_ based on the _t_ value. This step implies that latexmath:[t \in (0; 1)].
+5. Set the glTF Asset Object Model property to the new value computed as a linear interpolation between the original and the target property values using the output progress position _q_ as the interpolation coefficient. If the glTF Asset Object Model property is a quaternion, e.g., `/nodes/0/rotation`, spherical linear interpolation **MUST** be used.
 
-If the Object Model property is a quaternion, spherical linear interpolation expression **SHOULD** be used.
-
-Intermediate output progress values **MAY** be less than zero or greater than one.
+[NOTE]
+.Authoring Note
+====
+Certain control point values can cause the intermediate output progress value to be negative or greater than one. This is not an error.
+====
 
 ==== Animation Control Nodes
 
@@ -2497,7 +3101,7 @@ Intermediate output progress values **MAY** be less than zero or greater than on
 
 [cols="1h,1,2"]
 |===
-| Type | `animation/start` | Start playing an animation
+| Operation | `animation/start` | Start playing an animation
 | Input flow sockets
 | `in` | The entry flow into this node
 .4+| Input value sockets
@@ -2530,14 +3134,14 @@ latexmath:[t=\begin{cases}
 
 This node has no internal state.
 
-When a node of this type is used in the behavior graph, the global graph state includes an implementation-defined _animation state dynamic array_ each element of which contains the following data:
+When an `animation/start` node is used in the behavior graph, the global graph state includes an implementation-defined _animation state dynamic array_ each element of which contains the following data:
 
 - Animation index
 - Start time value
 - End time value
 - Stop time value (see `animation/stopAt`)
 - Speed value
-- Implementation-specific creation timestamp value associated with the system time when this entry was added
+- Implementation-specific _entry creation_ timestamp value associated with the system time when this entry was added
 - Implementation-specific _end completion_ pointer to the `done` output flow of the node that has added this entry
 - Implementation-specific _stop completion_ pointer to the `done` output flow of the node that has scheduled its stopping (see `animation/stopAt`)
 
@@ -2552,7 +3156,7 @@ When the `in` input flow is activated:
 .. activate the `err` output flow and skip the next steps.
 4. If the `speed` input value is NaN, infinite, or less than or equal to zero,
 .. activate the `err` output flow and skip the next steps.
-5. If starting a new animation exceeds any implementation-specific limit,
+5. If starting a new animation exceeds an implementation-specific limit of the maximum number of active animations,
 .. activate the `err` output flow and skip the next steps.
 6. If the _animation state dynamic array_ contains an entry with the same animation index,
 .. remove it from the array; the previously set `done` flows **MUST NOT** be activated.
@@ -2561,13 +3165,38 @@ When the `in` input flow is activated:
 
 On each asset animation update, for each entry in the _animation state dynamic array_:
 
-1. TBD
+1. If the _start time_ is equal to the _end time_,
+.. let the requested timestamp stem:[r] be equal to the _start time_;
+.. compute the effective timestamp stem:[t] from stem:[r] as defined above and apply the glTF animation state at the timestamp stem:[t] to the asset;
+.. let `endDone` be the _end completion_ pointer stored in the current animation state entry;
+.. remove the current animation state entry from the array;
+.. activate the `done` output flow referenced by the `endDone` pointer;
+.. skip the next steps.
+2. Let the _elapsed time_ be the non-negative difference between _entry creation_ timestamp and the current system time; this step assumes that the current system time is not behind the _entry creation_ timestamp.
+3. Let the _scaled elapsed time_ be the product of the _elapsed time_ and the _animation speed_ value; if the _start time_ is greater than the _end time_, negate the _scaled elapsed time_ value.
+4. Let the _current timestamp_ be the sum of the _start time_ and the _scaled elapsed time_.
+5. If the _start time_ is less than the _end time_, the _current timestamp_ is greater than or equal to the _stop time_, the _stop time_ is greater than or equal to the _start time_, and the _stop time_ is less than the _end time_; or if the _start time_ is greater than the _end time_, the _current timestamp_ is less than or equal to the _stop time_, the _stop time_ is less than or equal to the _start time_, and the _stop time_ is greater than the _end time_:
+... let the requested timestamp stem:[r] be equal to the _stop time_;
+... compute the effective timestamp stem:[t] from stem:[r] as defined above and apply the glTF animation state at the timestamp stem:[t] to the asset;
+... let `stopDone` be the _stop completion_ pointer stored in the current animation state entry;
+... remove the current animation state entry from the array;
+... activate the `done` output flow referenced by the `stopDone` pointer;
+... skip the next steps.
+6. If the _start time_ is less than the _end time_ and the _current timestamp_ is greater than or equal to the _end time_; or if the _start time_ is greater than the _end time_ and the _current timestamp_ is less than or equal to the _end time_:
+... let the requested timestamp stem:[r] be equal to the _end time_;
+... compute the effective timestamp stem:[t] from stem:[r] as defined above and apply the glTF animation state at the timestamp stem:[t] to the asset;
+... let `endDone` be the end completion pointer stored in the current animation state entry;
+... remove the current animation state entry from the array;
+... activate the `done` output flow referenced by the `endDone` pointer;
+... skip the next steps.
+7. Let the requested timestamp stem:[r] be equal to the _current timestamp_.
+8. Compute the effective timestamp stem:[t] from stem:[r] as defined above and apply the glTF animation state at the timestamp stem:[t] to the asset.
 
 ===== Animation Stop
 
 [cols="1h,1,2"]
 |===
-| Type | `animation/stop` | Immediately stop a playing animation
+| Operation | `animation/stop` | Immediately stop a playing animation
 | Input flow sockets
 | `in` | The entry flow into this node
 | Input value sockets
@@ -2594,7 +3223,7 @@ When the `in` input flow is activated:
 
 [cols="1h,1,2"]
 |===
-| Type | `animation/stopAt` | Schedule stopping a playing animation
+| Operation | `animation/stopAt` | Schedule stopping a playing animation
 | Input flow sockets
 | `in` | The entry flow into this node
 .2+| Input value sockets
@@ -2618,8 +3247,8 @@ When the `in` input flow is activated:
 3. If the `stopTime` input value is NaN,
 .. activate the `err` output flow and skip the next steps.
 4. If the _animation state dynamic array_ exists and does contain an entry with the same animation index,
-.. update the entry's stop completion pointer to the `done` output flow of this node;
-.. update the entry's stop time to the `stopTime` input value.
+.. update the entry's _stop completion_ pointer to the `done` output flow of this node;
+.. update the entry's _stop time_ to the `stopTime` input value.
 5. Activate the `out` output flow.
 
 === Event Nodes
@@ -2630,7 +3259,7 @@ When the `in` input flow is activated:
 
 [cols="1h,1,2"]
 |===
-| Type | `event/onStart` | Start event
+| Operation | `event/onStart` | Start event
 | Output flow sockets
 | `out`  | The flow to be activated when the start event happens
 |===
@@ -2639,11 +3268,13 @@ This node is activated when all glTF asset resources are loaded and ready for re
 
 This node has no internal state.
 
+If multiple instances of this node exist in the graph, they **MUST** be activated sequentially in the order they appear in JSON.
+
 ===== On Tick
 
 [cols="1h,1,2"]
 |===
-| Type | `event/onTick` | Tick event
+| Operation | `event/onTick` | Tick event
 .2+| Output value sockets
 | `float timeSinceStart` | Relative time in seconds since the graph execution start
 | `float timeSinceLastTick` | Relative time in seconds since the last tick occurred
@@ -2655,13 +3286,19 @@ This node is activated when a tick occurs. There will be at most one tick per re
 
 The internal state of this node consists of two floating-point time values initialized to NaN. They **MUST** be set to their effective values before the `out` output flow is activated.
 
+The first activation of this node **MUST** happen after activating all instances of `event/onStart` if the latter is present in the graph.
+
+On the first activation of this node, the `timeSinceStart` output value **MUST** be set to zero and the `timeSinceLastTick` output value **MUST** remain NaN.
+
+If multiple instances of this node exist in the graph, they **MUST** be activated sequentially in the order they appear in JSON and they **MUST** have the same output values within the same tick.
+
 ==== Custom Event Nodes
 
 ===== Receive
 
 [cols="1h,1,2"]
 |===
-| Type | `event/receive` | Receive a custom event
+| Operation | `event/receive` | Receive a custom event
 | Configuration
 | `int event` | The custom event index
 | Output value sockets
@@ -2670,19 +3307,30 @@ The internal state of this node consists of two floating-point time values initi
 | `out` | The flow to be activated when the custom event happens
 |===
 
-This node is activated when a custom event specified by the `event` configuration value occurs. The types, names, and semantics of the output value sockets are defined by the custom event index.
+[CAUTION]
+====
+This node does not have a default configuration.
+====
 
-The `event` configuration value **MUST** be non-negative and less than the total number of custom event definitions, otherwise the node is invalid.
+This node is activated when a custom event specified by the `event` configuration value occurs. The types, ids, and semantics of the output value sockets are defined by the custom event index.
 
-The internal state of this node consists of all output value sockets initialized to type-default values, i.e., NaN for floating-point types, zero for integers, and false for bools.
+The `event` configuration value **MUST** be non-negative and less than the total number of custom event definitions, otherwise the node is invalid and the graph **MUST** be rejected.
 
-The output value sockets **MUST** be updated before activating the `out` output flow.
+The internal state of this node consists of all output value sockets initialized to <<variables-types,type-default>> values or to the initial values defined by the custom event index. If the event is originated by an external environment, output values not set by the external environment **MUST** be reset to type-default or initial values on each node activation.
+
+[NOTE]
+.Example
+====
+Let's say an event has two value sockets: `a` and `b`; before the first activation, they have initial or type-default values. Let's say the external environment generates this event and sets only the output value `a`. The output value `b` then retains its initial or type-default value. Now if the external environment generates this event again but sets only the output value `b`, the output value `a` is reset to its initial or type-default value.
+====
+
+If multiple instances of this node with the same event index exist in the graph, they **MUST** be activated sequentially in the order they appear in JSON and they **MUST** have the same output values within the same event occurrence.
 
 ===== Send
 
 [cols="1h,1,2"]
 |===
-| Type | `event/send` | Send a custom event
+| Operation | `event/send` | Send a custom event
 | Configuration
 | `int event` | The custom event index
 | Input flow sockets
@@ -2693,15 +3341,20 @@ The output value sockets **MUST** be updated before activating the `out` output 
 | `out` | The flow to be activated after sending the event
 |===
 
-This node sends a custom event specified by the `event` configuration value. The types and names of the input value sockets are defined by the custom event index.
+[CAUTION]
+====
+This node does not have a default configuration.
+====
 
-[NOTE]
-.Note
+This node sends a custom event specified by the `event` configuration value. The types and ids of the input value sockets are defined by the custom event index.
+
+[TIP]
+.Authoring Tip
 ====
 If the graph needs to know whether the event has been received and/or processed by an external environment, the latter could send another event in response.
 ====
 
-The `event` configuration value **MUST** be non-negative and less than the total number of custom event definitions, otherwise the node is invalid.
+The `event` configuration value **MUST** be non-negative and less than the total number of custom event definitions, otherwise the node is invalid and the graph **MUST** be rejected.
 
 This node has no internal state.
 
@@ -2715,250 +3368,829 @@ When the `in` input flow is activated:
 
 This Specification defines additional glTF Object Model pointers for use with `pointer/*` nodes.
 
-=== Active Camera Information
+=== Implementation-Specific Runtime Limits
+
+TBD
+
+=== Active Camera State
 
 In some viewers, such as, but not limited to, augmented reality viewers and virtual reality viewers, the viewer implementation gives the user direct control over a virtual camera. This virtual camera **MAY** be controlled by user head movements, by movements of the user's phone with their hands, or by mouse, keyboard or touch input on a laptop, or by other means. It is useful for interactivity to be able to react to the position of this virtual camera.
 
 This Specification defines the “active camera” as the camera transformation that ought to be reacted to by interactivity. When there is only one camera being displayed to the user the implementation **SHOULD** use this camera as the “active camera”. When there are multiple cameras being controlled by the user, the implementation **MAY** select one such camera or construct a synthetic camera to use as the “active camera” (for example the midpoint of two stereoscopic camera positions). When zero cameras are being controlled by the user but views from one or more cameras are being displayed to the user, the implementation **SHOULD** select one of the cameras that is being displayed as the “active camera”.
 
-The `position` read-only property represents the “active camera” position in the global space. The `rotation` read-only property represents the “active camera” rotation quaternion; the identity quaternion corresponds to the camera orientation defined in the glTF 2.0 Specification.
+The `position` read-only property represents the “active camera” position in the global space using the glTF coordinate system. The `rotation` read-only property represents the “active camera” rotation quaternion (using XYZW notation); the identity quaternion corresponds to the camera orientation defined in the glTF 2.0 Specification.
 
 An implementation **MAY** provide no “active camera” data, for example for privacy reasons or if no cameras are being displayed to the user. If the “active camera” position is unavailable, the `position` property **MUST** be set to all NaNs; if the “active camera” rotation is unavailable, the `rotation` property **MUST** be set to all NaNs.
 
-The following pointers represent the read-only properties defined in this section.
+The following pointers represent the properties defined in this section.
 
 [options="header",cols="50%,15%"]
 |===
-| Pointer                  | Type
-| `/activeCamera/rotation` | `float4`
-| `/activeCamera/position` | `float3`
+| Pointer                                               | Type
+| `/extensions/KHR_interactivity/activeCamera/rotation` | `float4`
+| `/extensions/KHR_interactivity/activeCamera/position` | `float3`
+|===
+
+=== Animation State
+
+To efficiently control animations, graphs usually need to access various states specific to glTF animation objects. The interactivity extension adds the following five runtime properties to the glTF animation objects.
+
+The `isPlaying` read-only property is true when the animation is playing, false otherwise.
+
+The `minTime` and `maxTime` read-only properties represent the timestamps of the first and the last keyframes as stored in the glTF animation object. The values **MUST** be derived from the `min` and `max` properties of the used sampler input accessors. Unused animation samplers, i.e., samplers not referenced by the animation channels, **MUST** be ignored. If the animation object is invalid as defined in the core glTF 2.0 specification, these properties **MUST** return NaNs.
+
+The `playhead` read-only property represents the current animation position within the glTF animation data. For valid glTF animations, the property value is equal to the last effective timestamp, so it is always greater than or equal to zero and less than or equal to `maxTime`. Before the animation start, this property value is zero; when the animation stops, the property retains its last value until the animation is restarted. For invalid glTF animations, the property value is always NaN.
+
+The `virtualPlayhead` read-only property represents the current animation position on the infinite timeline that is used for the input value sockets of the `animation/start` and `animation/stop` operations. For valid glTF animations, the property value is equal to the last requested timestamp. Before the animation start, this property is zero; when the animation stops, the property value retains the its last value until the animation is restarted. For invalid glTF animations, the property value is always NaN.
+
+The following pointers represent the properties defined in this section.
+
+[options="header",cols="50%,15%"]
+|===
+| Pointer                                                       | Type
+| `/animations/{}/extensions/KHR_interactivity/isPlaying`       | `bool`
+| `/animations/{}/extensions/KHR_interactivity/minTime`         | `float`
+| `/animations/{}/extensions/KHR_interactivity/maxTime`         | `float`
+| `/animations/{}/extensions/KHR_interactivity/playhead`        | `float`
+| `/animations/{}/extensions/KHR_interactivity/virtualPlayhead` | `float`
 |===
 
 = JSON Syntax
 
+[[json-general]]
 ==  General
 
-A `KHR_interactivity` extension object is added to the root-level `extensions` property. It contains four arrays corresponding to four interactivity concepts: `types`, `events`, `variables`, and `nodes`. As with the core glTF spec, if a JSON array is empty, it **MUST** be omitted from the asset.
+A `KHR_interactivity` extension object is added to the root-level `extensions` property. It contains an array of interactivity graphs each element of which contains five arrays corresponding to five interactivity concepts: `types`, `variables`, `events`, `declarations`, and `nodes`, and an optional `graph` property that selects the default graph to use.
 
-```json
+Different elements of the `graphs` array are completely isolated from each other and exist in separate scopes. One invalid graph does not invalidate other elements of the `graphs` array.
+
+As with the core glTF spec, if a JSON array is empty, it **MUST** be omitted from JSON.
+
+```javascript
 {
   "asset": {
     "version": "2.0"
   },
-  "extensionsUsed": ["KHR_interactivity"],
+  "extensionsUsed": [ "KHR_interactivity" ],
   "extensions": {
     "KHR_interactivity": {
-      "types": [
-        //
+      "graphs": [
+        {
+          "types": [
+            //
+          ],
+          "variables": [
+            //
+          ],
+          "events": [
+            //
+          ],
+          "declarations": [
+            //
+          ],
+          "nodes": [
+            //
+          ]
+        }
       ],
-      "events": [
-        //
-      ],
-      "variables": [
-        //
-      ],
-      "nodes": [
-        //
-      ]
+      "graph": 0
     }
   }
 }
 ```
 
+The `graph` property refers to the `graphs` array element that **SHOULD** be selected by default by the execution environment. If the `graph` property is undefined, its value is implicitly set to zero. If the `graph` property is negative or greater than the number of elements in the `graphs` array, the interactivity extension object is invalid.
+
+If the currently selected graph is invalid or if the interactivity extension object is invalid, implementations **MAY** treat the asset as not having interactivity at all.
+
+[[json-types]]
 == Types
 
-The `types` array defines mappings between graph-local type indices and the recognized type signatures.
+The `types` array defines mappings between type indices used by the graph and the recognized type signatures. Each entry in this array denotes a distinct type.
 
-The following example defines type `0` as *float2*, type `1` as *int*, and type `2` as *float*:
+[NOTE]
+.Example
+====
+This example defines type `0` as *float2*, type `1` as *int*, and type `2` as *float*:
 
 ```json
 "types": [
-  {
-    "signature": "float2"
-  },
-  {
-    "signature": "int"
-  },
-  {
-    "signature": "float"
-  }
+  { "signature": "float2" },
+  { "signature": "int" },
+  { "signature": "float" }
 ]
 ```
+====
 
-The signature value **MUST** be one of the value types defined in this extension specification or `"custom"`. In the latter case, the type semantic **MUST** be provided by an additional extension.
+The value of the `signature` property **MUST** be one of the value types defined in this extension specification or `"custom"`. In the latter case, the custom type semantics **MUST** be provided by an additional extension.
 
-Non-custom signature **MUST NOT** appear more than once.
+Non-custom signatures **MUST NOT** appear more than once in this array; if two or more entries of the `types` array have the same non-custom signature, the graph is invalid and **MUST** be rejected. Extensions or extras present on the types defined by this Specification do not change type semantics.
 
-== Events
+[NOTE]
+.Example
+====
+This means that, for example, two entries with the signature `"int"` are still disallowed even if they have extensions and/or extras.
+====
 
-The `events` array defines external identifiers and value socket types for custom events.
-
-The following example defines a custom "`checkout`" event with an external identifier and one value socket:
-
-```json
-"events": [
-  {
-    "id": "checkout",
-    "values": [
-      {
-        "id": "variant",
-        "type": 1
-      }
-    ]
-  }
-]
-```
-
-The event ID value is an application-specific event identifier recognized by the execution environment. If the `id` property is undefined, the event is considered internal to the graph.
-
-The `values` array defines IDs and type indices of the sockets associated with the event. If the array is undefined, the event has no associated value sockets.
-
+[[json-variables]]
 == Variables
 
-The `variables` array defines custom variables with their types and optional initialization values.
+The `variables` array defines variables with their types and optional initial values.
 
-The following example defines a custom variable with its initial value:
+[NOTE]
+.Example
+====
+This example defines two variables of `float2` type; the first is explicitly initialized to `[0.5, 0.5]` and the second is implicitly initialized to `[NaN, NaN]`.
 
 ```json
+"types": [
+  { "signature": "float2" },
+],
 "variables": [
   {
     "type": 0,
-    "value": [0.5,  0.5]
+    "value": [ 0.5, 0.5 ]
+  },
+  {
+    "type": 0
   }
 ]
 ```
+====
 
-The `type` value defines the index of the variable type.
+The type of the variable is determined by the **REQUIRED** `type` property that points to the element of the `types` array. If the `type` property is undefined or its value is negative or greater than or equal to the length of the `types` array`, the variable is invalid and the graph **MUST** be rejected.
 
-The `value` array, if present, defines the initial variable value. The following table defines array size and default values for all value types defined in this extension.
+The `value` property is an array that defines the initial variable value. If the `value` property is undefined, the variable is initialized to the default value of its type. The following table defines array lengths and default values for all value types defined in this Specification.
 
 [cols="1,1,2", options="header"]
 |===
-|  Type      | Array size | Default value
-| `bool`     |          1 | Boolean false
-| `float`    |          1 | Floating-point NaN
-| `float2`   |          2 | Two floating-point NaNs
-| `float3`   |          3 | Three floating-point NaNs
-| `float4`   |          4 | Four floating-point NaN
-| `float4x4` |         16 | Sixteen floating-point NaNs
-| `int`      |          1 | Integer zero
+|  Type      | Array length | Default value
+| `bool`     |            1 | Boolean false
+| `float`    |            1 | Floating-point NaN
+| `float2`   |            2 | Two floating-point NaNs
+| `float3`   |            3 | Three floating-point NaNs
+| `float4`   |            4 | Four floating-point NaN
+| `float2x2` |            4 | Four floating-point NaNs
+| `float3x3` |            9 | Nine floating-point NaNs
+| `float4x4` |           16 | Sixteen floating-point NaNs
+| `int`      |            1 | Integer zero
 |===
+
+If the `value` property array length does not match the array length for the specified type, the variable is invalid and the graph **MUST** be rejected.
+
+If the variable type is **bool** and the only array element is not a JSON boolean literal, i.e., neither `true` nor `false`, the variable is invalid and the graph **MUST** be rejected.
+
+If the variable type is any of the **floatN** types and any of the array elements is not a JSON number, the variable is invalid and the graph **MUST** be rejected.
+
+If the variable type is **int** and the only array element is not a JSON number exactly representable as a 32-bit signed integer, the variable is invalid and the graph **MUST** be rejected.
 
 If the variable type is custom, the `value` property is defined by the extension defining the custom type.
 
+[[json-events]]
+== Events
+
+The `events` array defines external ids and value sockets for custom events.
+
+[NOTE]
+.Example
+====
+This example defines two custom events. The first event is internal to the graph and has no value sockets; the second event has an external id `"checkout"` and one integer value socket with id `"variant"` and an initial value of -1.
+
+```json
+"types": [
+  { "signature": "int" },
+],
+"events": [
+  { },
+  {
+    "id": "checkout",
+    "values": {
+      "variant": {
+        "type": 0,
+        "value": [ -1 ]
+      }
+    }
+  }
+]
+```
+====
+
+The event id is an application-specific event identifier recognized by the execution environment. If the `id` property is undefined, the event is considered internal to the graph. If the same id is defined for two or more events, the graph is invalid and **MUST** be rejected.
+
+The properties of the `values` object define ids and the values of those properties define types and optional initial values of the value sockets associated with the event. If the `values` object is undefined, the event has no associated value sockets.
+
+The type of the event value socket is determined by the **REQUIRED** `type` property that points to the element of the `types` array. If the `type` property is undefined or its value is negative or greater than or equal to the length of the `types` array, the event is invalid and the graph **MUST** be rejected.
+
+The `value` property of the event value socket has the same syntax and semantics as the `value` property of variable definitions (see the previous section).
+
+[[json-declarations]]
+== Declarations
+
+The `declarations` array defines mappings between node declaration indices used by the graph and the operations.
+
+[NOTE]
+.Example
+====
+This example defines declaration `0` as `math/min` and declaration `1` as `variable/set`.
+
+```json
+"declarations": [
+  { "op": "math/min" },
+  { "op": "variable/set" }
+]
+```
+====
+
+The `op` property is **REQUIRED**; it contains the operation identifier; if this property is undefined, the declaration is invalid and the graph **MUST** be rejected.
+
+If the operation is not defined by this Specification, the `extension` property **MUST** be defined and it contains the additional interactivity extension name that defines the operation. If the `extension` property is not defined and the operation is not defined by this Specification, the declaration is invalid and the graph **MUST** be rejected.
+
+If the operation is defined in an additional interactivity extension and it uses input value sockets, the `inputValueSockets` object **MUST** be present. Its properties define ids and the values of its properties define types of the input value sockets. If the `inputValueSockets` object is undefined, the operation has no input value sockets.
+
+If the operation is defined in an additional interactivity extension and it uses output value sockets, the `outputValueSockets` object **MUST** be present. Its properties define ids and the values of its properties define types of the output value sockets. If the `outputValueSockets` object is undefined, the operation has no output value sockets.
+
+If the `extension` property is undefined, the operation with all its value sockets is assumed to be provided by this Specification and therefore `inputValueSockets` and `outputValueSockets` objects **MUST NOT** be defined.
+
+[NOTE]
+.Example
+====
+This example defines a declaration that maps to the `event/onSelect` operation defined in the `KHR_node_selectability` extension. The operations has three output value sockets and zero input value sockets.
+
+```json
+"types": [
+  { "signature": "int" },
+  { "signature": "float3" }
+],
+"declarations": [
+  {
+    "op": "event/onSelect",
+    "extension": "KHR_node_selectability",
+    "outputValueSockets": {
+      "selectedNodeIndex": { "type": 0 },
+      "controllerIndex":   { "type": 0 },
+      "selectionPoint":    { "type": 1 }
+    }
+  }
+]
+```
+====
+
+The type of the value socket is determined by the **REQUIRED** `type` property that points to the element of the `types` array. If the `type` property is undefined or its value is negative or greater than or equal to the length of the `types` array, the declaration is invalid and the graph **MUST** be rejected.
+
+Two declarations are considered equal if their `op` properties have the same value, their `extension` properties (if present) have the same value, and their `inputValueSockets` objects (if present) define the same socket ids with the same type indices. The `declarations` array **MUST NOT** have equal declarations; if two or more declarations are equal, all of them are invalid and the graph **MUST** be rejected.
+
+[NOTE]
+.Example
+====
+All three declarations in this example are equal thus they all are invalid.
+
+```json
+"types": [
+  { "signature": "int" },
+  { "signature": "float" }
+],
+"declarations": [
+  {
+    "op": "math/min3",
+    "extension": "VND_interactivity_min3",
+    "inputValueSockets": {
+      "a": { "type": 0 },
+      "b": { "type": 0 },
+      "c": { "type": 0 }
+    },
+    "outputValueSockets": {
+      "value": { "type": 0 }
+    }
+  },
+  {
+    "op": "math/min3",
+    "extension": "VND_interactivity_min3",
+    "inputValueSockets": {
+      "b": { "type": 0 },
+      "a": { "type": 0 },
+      "c": { "type": 0 }
+    },
+    "outputValueSockets": {
+      "value": { "type": 0 }
+    }
+  },
+  {
+    "op": "math/min3",
+    "extension": "VND_interactivity_min3",
+    "inputValueSockets": {
+      "a": { "type": 0 },
+      "b": { "type": 0 },
+      "c": { "type": 0 }
+    },
+    "outputValueSockets": {
+      "value": { "type": 1 }
+    }
+  }
+]
+```
+====
+
+=== Unsupported Declarations
+
+A declaration is considered unsupported if any of the following conditions is true:
+
+- The declaration refers to an unsupported or disabled extension.
+- The referred extension does not define the operation.
+- Neither of the definitions of the operation in the referred extension has exactly the same input and output value sockets with regards to their ids and types.
+
+If the declaration is unsupported, the nodes referring to it are demoted to <<nodes-noop,"`no-op`" nodes>>.
+
+[[json-nodes]]
 == Nodes
 
-The `nodes` array defines the behavior graph.
+The `nodes` array defines the nodes and their connections.
 
-Each element of the `nodes` array represents a node instance, i.e., it specifies node's type, configuration, sources of input value sockets, and pointers of the output flow sockets.
+Each element of the `nodes` array specifies the node's operation via a declaration index, sources for the input value sockets, pointers for the output flow sockets, and its configuration.
 
-Input value sockets **MAY** have inline constant values; in this case, the value socket type **MUST** be explicitly defined.
+=== Operation
 
-Configuration values are always implicitly typed based on the node's type.
+The operation is specified by the **REQUIRED** `declaration` property that points to an element of the `declarations` array. If that property is undefined or its value is negative or greater than or equal to the number of declarations, the node is invalid and the graph **MUST** be rejected.
+
+[NOTE]
+.Example
+====
+A `math/e` node with its declaration.
+
+```json
+"declarations": [
+  { "op": "math/e" }
+],
+"nodes": [
+  { "declaration": 0 }
+]
+```
+====
+
+=== Input Value Sockets
+
+If the operation has input value sockets, the `values` object **MUST** be defined and its properties **MUST** match the input value socket ids of the declaration; if the properties of the `values` object do not match the declaration, the node is invalid and the graph **MUST** be rejected. If the operation does not have input value sockets, the `values` object **MUST NOT** be defined.
+
+Some nodes, e.g., `pointer/get` or `variable/get`, define their input value socket ids and/or types based on the node's configuration. Therefore, the configuration **MAY** need to be processed prior to the input value sockets.
+
+The values of the `values` object properties are JSON objects that define effective input value socket types and value sources. Each value source is either an inline constant value, a <<variables-types,type-default>> value, or a reference to another node's output value socket. If no source is defined or if the socket type does not match the declaration, the node is invalid and the graph **MUST** be rejected.
+
+Some nodes have multiple variants to support the same operation on different input value socket types, e.g., math operations like `math/add` support all numeric types including integers, vectors, and matrices. Therefore, effective input value socket types **MAY** be needed to fully resolve the operation.
+
+[NOTE]
+.Example
+====
+For example, the `math/add` operation defined in this Specification exists only for matching input value socket types so any node that refers to it and uses different types for `a` and `b` input value sockets is invalid.
+====
+
+==== Inline Values
+
+If the `value` property is defined in the object representing the input value socket, the input value socket source is an inline constant.
+
+The `value` property has the same syntax as the `value` property of variable definitions. The type of the input value socket is determined by the `type` property that points to the element of the `types` array and **MUST** be defined. If the `type` property value is negative or greater than or equal to the number of types, the node is invalid and the graph **MUST** be rejected.
+
+[NOTE]
+.Example
+====
+A `math/add` node with two integer inline values: 1 and 2.
+
+```json
+"types": [
+  { "signature": "int" }
+]
+"declarations": [
+  { "op": "math/add" }
+],
+"nodes": [
+  {
+    "declaration": 0,
+    "values": {
+      "a": { "value": [ 1 ], "type": 0 },
+      "b": { "value": [ 2 ], "type": 0 }
+    }
+  }
+]
+```
+====
+
+==== Output Socket References
+
+If the `node` property is defined in the object representing the input value socket, the input value socket source is the output value socket of another node of the graph. If both `node` and `value` properties are defined for the same input value socket, the node is invalid and the graph **MUST** be rejected.
+
+The `node` property contains the index of the other node and the `socket` property contains the id of the output socket of that node.
+
+If the `node` property value is negative or greater than or equal to the index of the current node, the node is invalid and the graph **MUST** be rejected.
 
 [NOTE]
 .Rationale
 ====
-Some nodes have configuration values of array and/or string types that cannot be expressed with the explicit types defined in this Specification.
+This ensures that value sockets do not form loops and simplifies input value socket type derivation.
 ====
 
-Inline values and configurations use JSON arrays similarly to the initial variable values.
+If the `socket` property is defined, it **MUST** correspond to an output value socket existing in the referenced node, otherwise the current node is invalid and the graph **MUST** be rejected. If the `socket` property is undefined, the default socket id `"value"` is used implicitly. Therefore, if the referenced node does not have an output value socket with id `"value"`, the `socket` property **MUST** be defined.
 
-The following example instantiates a `math/add` node that has both its input value sockets filled with inline integer values.
+If both `node` and `type` properties are defined, the type referred by the `type` property **MUST** match the type of the referenced output value socket; if the types do not match, the current node is invalid and the graph **MUST** be rejected.
+
+[NOTE]
+.Rationale
+====
+Although explicitly defining input value socket types is generally redundant for input value sockets referring to other nodes, providing this information could improve debugging experience during graph development.
+====
+
+[NOTE]
+.Example
+====
+A `math/sub` node with two input value sockets referring to output value sockets of two other nodes. The input socket `a` refers to the output socket id explicitly and the input socket `b` relies on the implicit output socket id.
 
 ```json
+"types": [
+  { "signature": "float" }
+]
+"declarations": [
+  { "op": "math/pi" }
+  { "op": "math/e" }
+  { "op": "math/sub" }
+],
 "nodes": [
+  { "declaration": 0 },
+  { "declaration": 1 },
   {
-    "type": "math/add",
-    "values": [
-      {
-        "id": "a",
-        "value": [1],
-        "type": 1
-      },
-      {
-        "id": "b",
-        "value": [2],
-        "type": 1
-      }
-    ]
+    "declaration": 2,
+    "values": {
+      "a": { "node": 0, "socket": "value" },
+      "b": { "node": 1 }
+    }
   }
 ]
 ```
+====
 
-The following example instantiates three nodes. The `math/sub` node has both its input value sockets connected to output value sockets of two other nodes: `math/pi` and `math/e`.
+==== Type-Default Values
+
+If neither `value` nor `node` properties are defined in the object representing the input value socket, the input value socket has a <<variables-types,type-default>> value determined by the `type` property that points to the element of the `types` array and **MUST** be defined. If the `type` property value is negative or greater than or equal to the number of types, the node is invalid and the graph **MUST** be rejected.
+
+[NOTE]
+.Example
+====
+A `math/isnan` node with a type-default input value socket. The output value of this node is true because the input value socket `a` has a constant value of NaN (type-default for `float`).
 
 ```json
+"types": [
+  { "signature": "float" }
+]
+"declarations": [
+  { "op": "math/isnan" }
+],
 "nodes": [
   {
-    "type": "math/pi"
-  },
-  {
-    "type": "math/e"
-  },
-  {
-    "type": "math/sub",
-    "values": [
-      {
-        "id": "a",
-        "node": 0,
-        "socket": "value"
-      },
-      {
-        "id": "b",
-        "node": 1,
-        "socket": "value"
-      }
-    ]
+    "declaration": 0,
+    "values": {
+      "a": { "type": 0 }
+    }
   }
 ]
 ```
+====
+
+=== Output Flow Socket Pointers
+
+Pointers for the output flow sockets are defined in the `flows` object of the node.
+
+Properties of the `flows` object link output flow sockets of the current node with input flow sockets of other nodes. If an output flow socket id of the current node is not present in the `flows` object, that output flow socket is unconnected and activating it has have no effect.
+
+The `flows` object **MAY** contain properties not corresponding to output flows of the current node; such properties do not affect functionality of the node but their values **MUST** still be validated as described below.
+
+Each property of the `flows` object is a JSON object containing a **REQUIRED** `node` property and an **OPTIONAL** `socket` property. The `node` property contains the index of the other node and the `socket` property contains the id of the input flow socket of that node.
+
+The `node` property value **MUST** be greater than the index of the current node and less then the total number of nodes, otherwise the node is invalid and the graph **MUST** be rejected.
+
+[NOTE]
+.Rationale
+====
+This ensures that flow sockets do not form loops.
+====
+
+If the `socket` property is undefined, it has a default value of `"in"`.
+
+If the `socket` property value corresponds to an input flow socket existing in the referenced node, the output flow socket of the current node is connected to the referenced input flow socket. If the specified input flow socket does not exist in the referenced node, the output flow socket of the current node is unconnected and activating it **MUST** have no effect.
+
+[NOTE]
+.Example
+====
+A `flow/setDelay` node that starts an animation after a certain amount of time since the start of the graph execution.
+
+The `out` output flow of the `event/onStart` node is connected to the `in` input flow of the `flow/setDelay` node explicitly. Then, the `out` output flow of the latter node is connected to the `in` input flow of the `animation/start` node implicitly.
+
+```json
+"types": [
+  { "signature": "float" },
+  { "signature": "int" }
+]
+"declarations": [
+  { "op": "event/onStart" },
+  { "op": "flow/setDelay" },
+  { "op": "math/inf" },
+  { "op": "animation/start" }
+],
+"nodes": [
+  {
+    "declaration": 0,
+    "flows": {
+      "out": { "node": 1, "socket": "in" }
+    }
+  },
+  {
+    "declaration": 1,
+    "values": {
+      "duration": { "type": 0, "value": [5] }
+    },
+    "flows": {
+      "out": { "node": 3 }
+    },
+  },
+  {
+    "declaration": 2
+  },
+  {
+    "declaration": 3,
+    "values": {
+      "animation": { "type": 1 },
+      "startTime": { "type": 0, "value": [0] },
+      "endTime": { "node": 2 },
+      "speed": { "type": 0, "value": [1] },
+    }
+  }
+]
+```
+====
+
+=== Configuration
+
+Configuration properties are defined in the `configuration` object of the node.
+
+Each property of the `configuration` object is a JSON object with a single `value` property. The type of the `value` property is determined by the node's specification, i.e., configuration values are implicitly typed.
+
+[NOTE]
+.Rationale
+====
+Some nodes have configuration values of types that cannot be expressed with the explicit types defined in this Specification.
+====
+
+Refer to the <<nodes-configuration,Configuration>> section and to individual node specifications for details regarding configuration validity.
+
+Configuration values use JSON arrays similarly to other uses of inline values.
+
+[cols="1,2", options="header"]
+|===
+|  Configuration Type | JSON Type
+| `bool`              | Array of one boolean
+| `int`               | Array of one number exactly representable as a 32-bit signed integer
+| `int[]`             | Array of one or more numbers exactly representable as 32-bit signed integers
+| `string`            | Array of one JSON string
+|===
 
 The following example instantiates two nodes. The `variable/set` node sets a custom variable with index `0` when the start event happens.
 
 ```json
+"types": [
+  { "signature": "float" }
+]
 "variables": [
-  {
-    "type": 1
-  }
+  { "type": 0 }
+],
+"declarations": [
+  { "op": "event/onStart" },
+  { "op": "variable/set" },
 ],
 "nodes": [
   {
-    "type": "variable/set",
-    "configuration": [
-      {
-        "id": "variable",
-        "value": [0]
-      }
-    ],
-    "values": [
-      {
-        "id": "value",
-        "value": [1],
-        "type": 1
-      }
-    ]
+    "declaration": 0,
+    "flows": {
+      "out": { "node": 1 }
+    }
   },
   {
-    "type": "event/onStart",
-    "flows": [
-      {
-        "id": "out",
-        "node": 0,
-        "socket": "in"
-      }
-    ]
+    "declaration": 1,
+    "configuration": {
+      "variable": { "value": [0] }
+    },
+    "values": {
+      "value": { "type": 0, "value": [1.5] }
+    }
   }
 ]
 ```
 
-The `type` property is required; it defines semantics and validation of the `configuration`, `values`, and `flows` arrays.
+[[validation]]
+= Validation (Informative)
 
-The same `id` value **MUST NOT** be used more than once within each of the `configuration`, `values`, and `flows` arrays.
+This section describes steps needed to check validity of the interactivity extension object according to the normative language of the previous sections and the corresponding JSON schemas.
 
-If the node type has configuration, the `configuration` array **MUST** provide all configuration parameters as inline values.
+[[validation-glossary]]
+== Validation Glossary
 
-If the node type has input value sockets, the `values` array **MUST** connect all input value sockets to other nodes or fill them with inline values. Additionally, for each element of the `values` array:
+This section uses the following terms:
 
-- `value` and `node` properties **MUST NOT** be defined at the same time;
-- if `value` is defined, `type` **MUST** also be defined.
+assert::
+continue iff the associated condition is true; otherwise _reject the extension_
+
+JSON index::
+a non-negative JSON number that is exactly representable as an integer, e.g., JSON numbers `2`, `2.0`, and `0.2e1` are exactly representable as integer two
+
+reject the extension::
+the whole interactivity extension object is invalid and thus cannot be used
+
+reject the graph::
+the interactivity graph is invalid and thus cannot be used; this has no effect on other graphs defined in the extension
+
+[[validation-extension-object]]
+== Extension Object Validation
+
+1. _Assert_ that the interactivity extension object has the `graphs` property that is a non-empty JSON array.
+2. Validate each element of the `graphs` array as described in <<validation-graph-object,Graph Object Validation>>.
+3. If the interactivity extension object has the `graph` property:
+.. _assert_ that the `graph` property value is a _JSON index_;
+.. if the `graph` property value is less the `graphs` array length,
+... _reject the extension_;
+.. if the graph referenced by the `graph` property value is invalid,
+... _reject the extension_.
+
+[[validation-graph-object]]
+== Graph Object Validation
+
+1. _Assert_ that the element of the `graphs` array is a JSON object ("`the graph`").
+2. If "`the graph`" object has the `types` property:
+.. _assert_ that the `types` property is a non-empty JSON array;
+.. if the `types` array length is greater than the implementation-specific limit on the number of used types, _reject the graph_;
+.. for each element of the `types` array:
+... _assert_ that the element of the `types` array is a JSON object ("`the type`");
+... _assert_ that "`the type`" object has the `signature` property that is a JSON string;
+... if the `signature` property value is not `"bool"`, `"custom"`, `"float"`, `"float2"`, `"float3"`, `"float4"`, `"float2x2"`, `"float3x3"`, `"float4x4"`, or `"int"`,
+.... _reject the graph_;
+.. if two or more elements of the `types` array have the same `signature` value that is not `"custom"`,
+... _reject the graph_.
+3. If "`the graph`" object has the `variables` property:
+.. _assert_ that the graph has the `types` property;
+.. _assert_ that the `variables` property is a non-empty JSON array;
+.. if the `variables` array length is greater than the implementation-specific limit on the number of variables,
+... _reject the graph_;
+.. validate each element of the `variables` array as described in the <<validation-variable-object,Variable Object Validation>> section.
+4. If "`the graph`" object has the `events` property:
+.. _assert_ that the `events` property is a non-empty JSON array;
+.. if the `events` array length is greater than the implementation-specific limit on the number of event definitions,
+... _reject the graph_;
+.. validate each element of the `events` array as described in the <<validation-event-object,Event Object Validation>> section;
+.. if two or more elements of the `events` array have the same `id` value that is not undefined,
+... _reject the graph_.
+5. If "`the graph`" object has the `declarations` property:
+.. _assert_ that the `declarations` property is a non-empty JSON array;
+.. if the `declarations` array length is greater than the implementation-specific limit on the number of declarations,
+... _reject the graph_;
+.. validate each element of the `declarations` array as described in the <<validation-declaration-object,Declaration Object Validation>> section.
+6. If "`the graph`" object has the `nodes` property:
+.. _assert_ that the `nodes` property is a non-empty JSON array;
+.. if the `nodes` array length is greater than the implementation-specific limit on the number of nodes,
+... _reject the graph_;
+.. validate each element of the `nodes` array as described in the <<validation-node-object,Node Object Validation>> section.
+
+[[validation-variable-object]]
+== Variable Object Validation
+
+1. _Assert_ that the element of the `variables` array is a JSON object ("`the variable`").
+2. _Assert_ that "`the variable`" object has the `type` property that is a _JSON index_.
+3. If the `type` property value is not less than the `types` graph array length,
+.. _reject the graph_.
+4. If the "`the variable`" object has the `value` property:
+.. _assert_ that the `value` property is a non-empty JSON array;
+.. validate the `value` property value according to the <<inline-value-validation,Inline Value Validation>> section using the `type` property value.
+
+[[validation-event-object]]
+== Event Object Validation
+
+1. _Assert_ that the element of the `events` array is a JSON object ("`the event`").
+2. If "`the event`" object has the `id` property,
+.. _assert_ that the `id` property value is a JSON string.
+3. If "`the event`" object has the `values` property,
+.. _assert_ that the `values` property is a non-empty JSON object;
+.. if the `values` object has more properties than the implementation-specific limit on the number of event value sockets,
+... _reject the graph_;
+.. for each property of the `values` JSON object:
+... _assert_ that the property is a JSON object ("`the event value`");
+... _assert_ that "`the event value`" object has the `type` property that is a _JSON index_;
+... if the `type` property value is not less than the `types` graph array length,
+.... _reject the graph_;
+... if the "`the event value`" object has the `value` property:
+.... _assert_ that the `value` property is a non-empty JSON array;
+.... validate the `value` property value according to the <<inline-value-validation,Inline Value Validation>> using the `type` property.
+
+[[validation-declaration-object]]
+== Declaration Object Validation
+
+1. _Assert_ that the element of the `declarations` array is a JSON object ("`the declaration`").
+2. _Assert_ that "`the declaration`" object has the `op` property that is a JSON string.
+3. If "`the declaration`" object does not have the `extension` property:
+.. if the `op` property value does not match any operation defined in this Specification,
+... _reject the graph_;
+.. if "`the declaration`" object has the `inputValueSockets` and/or `outputValueSockets` properties,
+... _reject the graph_;
+4. If "`the declaration`" object has the `extension` property:
+.. _assert_ that the `extension` property is a JSON string;
+.. if the "`the declaration`" object has the `inputValueSockets` property:
+... _assert_ that the `inputValueSockets` property is a non-empty JSON object;
+... if the `inputValueSockets` object has more properties than the implementation-specific limit on the number of input value sockets for declarations,
+.... _reject the graph_;
+... _assert_ that the graph has the `types` property;
+... for each property of the `inputValueSockets` JSON object:
+.... _assert_ that the property is a JSON object ("`the input value socket declaration`");
+.... _assert_ that "`the input value socket declaration`" object has the `type` property that is a _JSON index_;
+.... if the `type` property value is not less than the `types` graph array length,
+..... _reject the graph_;
+.. if "`the declaration`" object has the `outputValueSockets` property:
+... _assert_ that the `outputValueSockets` property is a non-empty JSON object;
+... if the `outputValueSockets` object has more properties than the implementation-specific limit on the number of output value sockets for declarations,
+.... _reject the graph_;
+... _assert_ that the graph has the `types` property;
+... for each property of the `outputValueSockets` JSON object:
+.... _assert_ that the property is a JSON object ("`the output value socket declaration`");
+.... _assert_ that "`the output value socket declaration`" object has the `type` property that is a _JSON index_;
+.... if the `type` property value is not less than the `types` graph array length,
+..... _reject the graph_.
+
+[[validation-node-object]]
+== Node Object Validation
+
+1. _Assert_ that the element of the `nodes` array is a JSON object ("`the node`").
+2. _Assert_ that "`the node`" object has the `declaration` property that is a JSON index.
+3. If the `declaration` property value is not less than the `declarations` graph array length,
+.. _reject the graph_.
+4. If "`the node`" object has the `configuration` property:
+.. _assert_ that the `configuration` property is a non-empty JSON object;
+.. _assert_ that each property of the `configuration` JSON object is a JSON array.
+5. If the node is configurable as indicated by the operation referenced by the `declaration` property and the node does not support a default configuration:
+.. if "`the node`" does not have the `configuration` property,
+... _reject the graph_;
+.. if `configuration` object is not valid as defined by the node,
+... _reject the graph_.
+6. If "`the node`" object has the `values` property:
+.. _assert_ that the `values` property is a non-empty JSON object;
+.. for each property of the `values` JSON object:
+... _assert_ that the property is a JSON object ("`the input value socket`");
+... if "`the input value socket`" object has the `node` property:
+.... _assert_ that "`the input value socket`" object does not have the `value` property;
+.... _assert_ that the `node` property is a JSON index;
+.... if the `node` property value is not less than the index of the current element of the `nodes` array,
+..... _reject the graph_;
+.... let "`the effective socket id`" be `"value"`;
+.... if "`the input value socket`" object has the `socket` property:
+..... _assert_ that the `socket` property is a JSON string;
+..... set "`the effective socket id`" to the value of the `socket` property;
+.... if the graph node referenced by the `node` property does not have the output value socket with id equal to "`the effective socket id`",
+..... _reject the graph_;
+.... if "`the input value socket`" object has the `type` property:
+..... _assert_ that the `type` property is a _JSON index_;
+..... if the `type` property value is not less than the `types` graph array length,
+...... _reject the graph_;
+..... if the type of the referenced output value socket does not match the type referenced by the `type` property value,
+...... _reject the graph_;
+... if "`the input value socket`" object does not have the `node` property:
+.... _assert_ that "`the input value socket`" object has the `type` property that is a _JSON index_;
+.... if the `type` property value is not less than the `types` graph array length,
+..... _reject the graph_;
+.... if "`the input value socket`" object has the `value` property:
+..... _assert_ that the `value` property is a non-empty JSON array;
+..... validate the `value` property value according to the <<inline-value-validation,Inline Value Validation>> using the `type` property.
+7. If the set of input value sockets defined by the declaration referenced by the `declaration` property does not match the set of input value sockets defined by the `values` property with regard to socket ids and types,
+.. _reject the graph_.
+8. If "`the node`" object has the `flows` property:
+.. _assert_ that the `flows` property is a non-empty JSON object;
+.. if the `flows` object has more properties than the implementation-specific limit on the number of output flow sockets per node,
+... _reject the graph_;
+.. for each property of the `flows` JSON object:
+... _assert_ that the property is a JSON object ("`the output flow socket`");
+... _assert_ that "`the output flow socket`" object has the `node` property that is a JSON index;
+... if the `node` property value is not greater than the index of the current element of the `nodes` array,
+.... _reject the graph_;
+... if "`the output flow socket`" object has the `socket` property,
+.... _assert_ that the `socket` property is a JSON string.
+
+[[inline-value-validation]]
+== Inline Value Object Validation
+
+1. Let "`the array`" be the JSON array representing the inline value and "`the type signature`" be the type signature associated with it.
+2. If "`the type signature`" is `"bool"`, `"float"`, or `"int"` and "`the array`" length is not one,
+.. _reject the graph_.
+3. If "`the type signature`" is `"float2"` and "`the array`" length is not two,
+.. _reject the graph_.
+4. If "`the type signature`" is `"float3"` and "`the array`" length is not three,
+.. _reject the graph_.
+5. If "`the type signature`" is `"float4"` or `"float2x2"` and "`the array`" length is not four,
+.. _reject the graph_.
+6. If "`the type signature`" is `"float3x3"` and "`the array`" length is not nine,
+.. _reject the graph_.
+7. If "`the type signature`" is `"float4x4"` and "`the array`" length is not 16,
+.. _reject the graph_.
+8. If "`the type signature`" is `"bool"` and the only element of "`the array`" is not a JSON boolean,
+.. _reject the graph_.
+9. If "`the type signature`" is `"int"` and the only element of "`the array`" is not exactly representable as a 32-bit signed integer,
+.. _reject the graph_.
+10. If "`the type signature`" is any of the seven float types defined in this Specification and any element of "`the array`" is not a JSON number,
+.. _reject the graph_.
