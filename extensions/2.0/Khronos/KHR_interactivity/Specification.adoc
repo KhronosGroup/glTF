@@ -892,7 +892,7 @@ The value of the output value socket `value` **MUST** be initialized to a random
 This means that, e.g., a `math/eq` node with both its input value sockets connected to the same `math/random` node always returns true.
 ====
 
-The value of the output value socket `value` **SHOULD** be updated when accessed as a result of a new flow socket activation, including self-activations.
+The value of the output value socket `value` **MUST** be updated when accessed as a result of a new flow socket activation, including self-activations.
 
 [NOTE]
 .Implementation Note
@@ -3037,7 +3037,7 @@ If the `value` input value or any intermediate interpolated value are not valid 
 [NOTE]
 .Example
 ====
-If the resolved glTF property is `"/materials/0/pbrMetallicRoughness/metallicFactor"`, its current value is zero, and the interpolation target value is two, the effective emissive factor becomes undefined when the interpolated value is greater than one.
+If the resolved glTF property is `"/materials/0/pbrMetallicRoughness/metallicFactor"`, its current value is zero, and the interpolation target value is two, the effective metalness factor becomes undefined when the interpolated value is greater than one.
 ====
 
 If the current glTF Asset Object Model property value is already undefined due to previous invocations of `pointer/set` or `pointer/interpolate` nodes with invalid values (as defined above), the interpolated property remains undefined during and after the interpolation. This is not an error. Implementations **MAY** generate runtime warnings in this case as deemed possible.
