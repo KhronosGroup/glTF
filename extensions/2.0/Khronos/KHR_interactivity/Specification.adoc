@@ -232,7 +232,7 @@ Usually, the node execution includes evaluating its input value sockets (if any)
 
 There are four kinds of sockets.
 
-_Output value sockets_ represent data initialized by the node or produced during its execution. For example, it could be results of math operations or parts of the node's internal state. Accessing these sockets either triggers computing the return value on the fly by executing the node or returns a value based on the node's internal state. Exact behavior depends on the node's operation. As a general rule, output value sockets **MUST** retain their values until a node having any number of flow sockets is executed.
+_Output value sockets_ represent data initialized by the node or produced during its execution. For example, it could be results of math operations or parts of the node's internal state. Accessing these sockets either triggers computing the return value on the fly by executing the node or returns a value based on the node's internal state. Exact behavior depends on the node's operation. As a general rule, output value sockets **MUST** retain their values until a node with one or more flow sockets is executed.
 
 [NOTE]
 .Implementation Note
@@ -2743,7 +2743,7 @@ When the `in` input flow is activated:
 .. activate the `err` output flow and skip the next steps.
 3. If any component of the `p1` or `p2` input values is NaN or infinite or if any of the first components of these input values is negative or greater than 1,
 .. activate the `err` output flow and skip the next steps.
-4. If starting a new variable interpolation exceeds an implementation-specific limit of the maximum number of simultaneous variable interpolations,
+4. If starting a new variable interpolation exceeds an implementation-specific limit on the maximum number of simultaneous variable interpolations,
 .. activate the `err` output flow and skip the next steps.
 5. If the _variable interpolation state dynamic array_ contains an entry with the same variable reference,
 .. remove it from the array.
@@ -3068,7 +3068,7 @@ When the `in` input flow is activated:
 .. activate the `err` output flow and skip the next steps.
 6. If any component of the `p1` or `p2` input values is NaN or infinite or if any of the first components of these input values is negative or greater than 1,
 .. activate the `err` output flow and skip the next steps.
-7. If starting a new pointer interpolation exceeds an implementation-specific limit of the maximum number of simultaneous property interpolations,
+7. If starting a new pointer interpolation exceeds an implementation-specific limit on the maximum number of simultaneous property interpolations,
 .. activate the `err` output flow and skip the next steps.
 8. If the _pointer interpolation state dynamic array_ contains an entry with the same effective JSON Pointer value,
 .. remove it from the array.
@@ -3156,7 +3156,7 @@ When the `in` input flow is activated:
 .. activate the `err` output flow and skip the next steps.
 4. If the `speed` input value is NaN, infinite, or less than or equal to zero,
 .. activate the `err` output flow and skip the next steps.
-5. If starting a new animation exceeds an implementation-specific limit of the maximum number of active animations,
+5. If starting a new animation exceeds an implementation-specific limit on the maximum number of active animations or if the referenced glTF animation is invalid as determined by the implementation,
 .. activate the `err` output flow and skip the next steps.
 6. If the _animation state dynamic array_ contains an entry with the same animation index,
 .. remove it from the array; the previously set `done` flows **MUST NOT** be activated.
@@ -4009,7 +4009,7 @@ the interactivity graph is invalid and thus cannot be used; this has no effect o
 2. Validate each element of the `graphs` array as described in <<validation-graph-object,Graph Object Validation>>.
 3. If the interactivity extension object has the `graph` property:
 .. _assert_ that the `graph` property value is a _JSON index_;
-.. if the `graph` property value is less the `graphs` array length,
+.. if the `graph` property value is not less than the `graphs` array length,
 ... _reject the extension_;
 .. if the graph referenced by the `graph` property value is invalid,
 ... _reject the extension_.
@@ -4124,7 +4124,9 @@ the interactivity graph is invalid and thus cannot be used; this has no effect o
 .. _reject the graph_.
 4. If "`the node`" object has the `configuration` property:
 .. _assert_ that the `configuration` property is a non-empty JSON object;
-.. _assert_ that each property of the `configuration` JSON object is a JSON array.
+.. for each property of the `configuration` JSON object:
+... _assert_ that the property is a JSON object ("`the configuration property`");
+... _assert_ that "`the configuration property`" object has the `value` property that is a non-empty JSON array.
 5. If the node is configurable as indicated by the operation referenced by the `declaration` property and the node does not support a default configuration:
 .. if "`the node`" does not have the `configuration` property,
 ... _reject the graph_;
