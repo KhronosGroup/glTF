@@ -26,7 +26,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds the ability to specify textures using (ASTC compressed images)[https://github.com/ARM-software/astc-encoder/blob/main/Docs/FormatOverview.md] in KTX v2 containers. An implementation of this extension can use such images as an alternative to the PNG or JPEG images available in glTF 2.0 for more efficient asset transmission, reducing GPU memory footprint, higher texture throughput and faster execution.
+This extension adds the ability to specify textures using [ASTC compressed images](https://github.com/ARM-software/astc-encoder/blob/main/Docs/FormatOverview.md) in KTX v2 containers. An implementation of this extension can use such images as an alternative to the PNG or JPEG images available in glTF 2.0 for more efficient asset transmission, reducing GPU memory footprint, higher texture throughput and faster execution.
 
 When this extension is used, it's allowed to use value `image/ktx2` for the `mimeType` property of images that are referenced by the `source` property of `KHR_texture_astc` texture extension object.
 
