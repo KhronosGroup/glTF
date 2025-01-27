@@ -463,6 +463,12 @@ In this section, `floatN` is a placeholder for any of `float`, `float2`, `float3
 | Output value sockets | `float value` | _Infinity_
 |===
 
+[TIP]
+.Authoring Tip
+====
+To get negative infinity, combine this node with `math/neg`.
+====
+
 ===== Not a Number
 
 [cols="1h,1,2"]
@@ -856,6 +862,14 @@ If any input value is _NaN_, the output value is false.
 | `bool value` | True if stem:[a] is positive or negative infinity; false otherwise
 |===
 
+[TIP]
+.Authoring Tip
+====
+To check whether a value is only a positive infinity, combine `math/eq` and `math/inf` nodes.
+
+To check whether a value is only a negative infinity, combine `math/eq`, `math/neg`, and `math/inf` nodes.
+====
+
 ===== Select
 
 [cols="1h,1,2"]
@@ -1237,6 +1251,12 @@ Math.hypot(...a)
 ----
 ====
 
+[TIP]
+.Authoring Tip
+====
+To get the squared length of stem:[a], use `math/dot` with stem:[a] provided to its both input value sockets.
+====
+
 ===== Normalize
 
 [cols="1h,1,2"]
@@ -1263,6 +1283,12 @@ Normalizing a zero-length vector **MUST** return a NaN vector.
 |===
 
 Both input value sockets **MUST** have the same type.
+
+[NOTE]
+.Implementation Note
+====
+This operation is frequently used with both input value sockets connected to the same output value socket to compute the squared length of a vector.
+====
 
 ===== Cross Product
 
@@ -2895,7 +2921,7 @@ The inputs to these steps are the `pointer` configuration value, the template pa
 | `int <parameter>` | Zero or more JSON Pointer template parameters to be evaluated at runtime; input value socket ids correspond to the pointer's path segments wrapped with curly brackets (`{}`)
 .2+| Output value sockets
 | `T value`  | The resolved property value
-| `bool isValid`  | True if the property value can be resolved, false otherwise
+| `bool isValid`  | True if the property value can be resolved; false otherwise
 |===
 
 [CAUTION]
