@@ -667,7 +667,7 @@ See `math/matmul` for matrix multiplication.
 | `floatN value` | latexmath:[\begin{cases}
                                 \mathit{NaN} & \text{if } a = \pm \infty \text{ or } b = \pm 0 \\
                                 a & \text{if } a \ne \pm \infty \text{ and } b = \pm \infty \\
-                                a - (b \cdot trunc(\frac{a}{b})) & \text{otherwise}
+                                a - (b \cdot \operatorname{trunc}(\frac{a}{b})) & \text{otherwise}
                               \end{cases}]
 |===
 
@@ -739,7 +739,7 @@ Math.max(a, b)
 | `floatN b` | First boundary
 | `floatN c` | Second boundary
 | Output value sockets
-| `floatN value` | latexmath:[min(max(a, min(b, c)), max(b, c))]
+| `floatN value` | latexmath:[\min(\max(a, \min(b, c)), \max(b, c))]
 |===
 
 This node relies on `math/min` and `math/max` nodes defined above.
@@ -758,7 +758,7 @@ This operation correctly handles a case when stem:[b] is greater than stem:[c].
 | Input value sockets
 | `floatN a` | Value to saturate
 | Output value sockets
-| `floatN value` | latexmath:[min(max(a, 0), 1)]
+| `floatN value` | latexmath:[\min(\max(a, 0), 1)]
 |===
 
 ===== Interpolate
@@ -777,6 +777,8 @@ This operation correctly handles a case when stem:[b] is greater than stem:[c].
 ==== Comparison Nodes
 
 If any input value is _NaN_, the output value is false.
+
+For the purposes of these nodes, negative zero is equal to positive zero.
 
 ===== Equality
 
@@ -953,8 +955,9 @@ If any input value component is _NaN_, the corresponding output value component 
 | `floatN a` | Angle
 | Output value sockets
 | `floatN value` | latexmath:[\begin{cases}
-                                sin(a) & \text{if } a \ne \pm\infty \\
-                                \mathit{NaN} & \text{if } a = \pm\infty
+                                \pm0 & \text{if } a = \pm0 \\
+                                \mathit{NaN} & \text{if } a = \pm\infty \\
+                                \sin(a) & \text{otherwise}
                               \end{cases}]
 |===
 
@@ -967,8 +970,9 @@ If any input value component is _NaN_, the corresponding output value component 
 | `floatN a` | Angle
 | Output value sockets
 | `floatN value` | latexmath:[\begin{cases}
-                                cos(a) & \text{if } a \ne \pm\infty \\
-                                \mathit{NaN} & \text{if } a = \pm\infty
+                                +1 & \text{if } a = \pm0 \\
+                                \mathit{NaN} & \text{if } a = \pm\infty \\
+                                \cos(a) & \text{otherwise}
                               \end{cases}]
 |===
 
@@ -981,8 +985,9 @@ If any input value component is _NaN_, the corresponding output value component 
 | `floatN a` | Angle
 | Output value sockets
 | `floatN value` | latexmath:[\begin{cases}
-                                tan(a) & \text{if } a \ne \pm\infty \\
-                                \mathit{NaN} & \text{if } a = \pm\infty
+                                \pm0 & \text{if } a = \pm0 \\
+                                \mathit{NaN} & \text{if } a = \pm\infty \\
+                                \tan(a) & \text{otherwise}
                               \end{cases}]
 |===
 
@@ -1002,8 +1007,9 @@ The closest representable argument values would likely produce latexmath:[\pm163
 | `floatN a` | Sine value
 | Output value sockets
 | `floatN value` | latexmath:[\begin{cases}
-                                arcsin(a) \in [-\frac{\pi}{2}; \frac{\pi}{2}\] & \text{if } \|a\| \le 1 \\
-                                \mathit{NaN} & \text{if } \|a\| \gt 1
+                                \pm0 & \text{if } a = \pm0 \\
+                                \mathit{NaN} & \text{if } \|a\| \gt 1 \\
+                                \arcsin(a) \in [-\frac{\pi}{2}; \frac{\pi}{2}\] & \text{otherwise}
                               \end{cases}]
 |===
 
@@ -1016,8 +1022,9 @@ The closest representable argument values would likely produce latexmath:[\pm163
 | `floatN a` | Cosine value
 | Output value sockets
 | `floatN value` | latexmath:[\begin{cases}
-                                arccos(a) \in [0; \pi\] & \text{if } \|a\| \le 1 \\
-                                \mathit{NaN} & \text{if } \|a\| \gt 1
+                                +0 & \text{if } a = 1 \\
+                                \mathit{NaN} & \text{if } \|a\| \gt 1 \\
+                                \arccos(a) \in [0; \pi\] & \text{otherwise}
                               \end{cases}]
 |===
 
@@ -1029,8 +1036,18 @@ The closest representable argument values would likely produce latexmath:[\pm163
 | Input value sockets
 | `floatN a` | Tangent value
 | Output value sockets
-| `floatN value` | latexmath:[arctan(a) \in [-\frac{\pi}{2}; \frac{\pi}{2}\]]
+| `floatN value` | latexmath:[\begin{cases}
+                                \pm0 & \text{if } a = \pm0 \\
+                                \pm\frac{\pi}{2} & \text{if } a = \pm\infty \\
+                                \arctan(a) \in [-\frac{\pi}{2}; \frac{\pi}{2}\] & \text{otherwise}
+                              \end{cases}]
 |===
+
+[NOTE]
+.Authoring Note
+====
+When stem:[a] is infinite, the returned value is an implementation-specific approximation of latexmath:[\pm\frac{\pi}{2}].
+====
 
 ===== Arctangent 2
 
@@ -1041,10 +1058,20 @@ The closest representable argument values would likely produce latexmath:[\pm163
 | `floatN a` | Y coordinate
 | `floatN b` | X coordinate
 | Output value sockets
-| `floatN value` | Angle between the positive X-axis and the vector from the stem:[(0, 0)] origin to the stem:[(X, Y)] point on a 2D plane
+| `floatN value` | Angle between the positive X-axis and the vector from the stem:[(0, 0)] origin to the stem:[(X, Y)] point on a 2D plane; see the description for details
 |===
 
-Zero and infinity argument values **MUST** be handled according to the <<ecma-262,ECMA-262>> standard.
+This function is defined as the **atan2** operation from the <<ieee-754,IEEE-754>> standard including return values for all special cases.
+
+[NOTE]
+.Implementation Note
+====
+This definition also matches the <<ecma-262,ECMA-262>> standard so the node is implementable in ECMAScript via the following expression:
+[source,js]
+----
+Math.atan2(a, b)
+----
+====
 
 ==== Hyperbolic Nodes
 
@@ -1060,7 +1087,11 @@ If any input value component is _NaN_, the corresponding output value component 
 | Input value sockets
 | `floatN a` | Hyperbolic angle value
 | Output value sockets
-| `floatN value` | latexmath:[\dfrac{e^a-e^{-a}}{2}]
+| `floatN value` | latexmath:[\begin{cases}
+                                \pm0 & \text{if } a = \pm0 \\
+                                \pm\infty & \text{if } a = \pm\infty \\
+                                \sinh(a) & \text{otherwise}
+                              \end{cases}]
 |===
 
 ===== Hyperbolic Cosine
@@ -1071,7 +1102,11 @@ If any input value component is _NaN_, the corresponding output value component 
 | Input value sockets
 | `floatN a` | Hyperbolic angle value
 | Output value sockets
-| `floatN value` | latexmath:[\dfrac{e^a+e^{-a}}{2}]
+| `floatN value` | latexmath:[\begin{cases}
+                                +1 & \text{if } a = \pm0 \\
+                                +\infty & \text{if } a = \pm\infty \\
+                                \cosh(a) & \text{otherwise}
+                              \end{cases}]
 |===
 
 ===== Hyperbolic Tangent
@@ -1082,7 +1117,11 @@ If any input value component is _NaN_, the corresponding output value component 
 | Input value sockets
 | `floatN a` | Hyperbolic angle value
 | Output value sockets
-| `floatN value` | latexmath:[\dfrac{e^a-e^{-a}}{e^a+e^{-a}}]
+| `floatN value` | latexmath:[\begin{cases}
+                                \pm0 & \text{if } a = \pm0 \\
+                                \pm1 & \text{if } a = \pm\infty \\
+                                \tanh(a) & \text{otherwise}
+                              \end{cases}]
 |===
 
 ===== Inverse Hyperbolic Sine
@@ -1093,7 +1132,12 @@ If any input value component is _NaN_, the corresponding output value component 
 | Input value sockets
 | `floatN a` | Hyperbolic sine value
 | Output value sockets
-| `floatN value` | latexmath:[ln(a+\sqrt{a^2+1})]
+| `floatN value` | latexmath:[\begin{cases}
+                                \pm0 & \text{if } a = \pm0 \\
+                                \pm\infty & \text{if } a = \pm\infty \\
+                                \operatorname{arsinh}(a) & \text{otherwise}
+                              \end{cases}]
+| `floatN value` | latexmath:[]
 |===
 
 ===== Inverse Hyperbolic Cosine
@@ -1105,8 +1149,10 @@ If any input value component is _NaN_, the corresponding output value component 
 | `floatN a` | Hyperbolic cosine value
 | Output value sockets
 | `floatN value` | latexmath:[\begin{cases}
-                                ln(a+\sqrt{a^2-1}) & \text{if } a \ge 1 \\
-                                \mathit{NaN} & \text{if } a \lt 1
+                                \mathit{NaN} & \text{if } a \lt 1 \\
+                                +0 & \text{if } a = 1 \\
+                                +\infty & \text{if } a = +\infty \\
+                                \operatorname{arcosh}(a) & \text{otherwise}
                               \end{cases}]
 |===
 
@@ -1119,9 +1165,10 @@ If any input value component is _NaN_, the corresponding output value component 
 | `floatN a` | Hyperbolic tangent value
 | Output value sockets
 | `floatN value` | latexmath:[\begin{cases}
-                                \dfrac{1}{2}ln\dfrac{1+a}{1-a} & \text{if } \|a\| \lt 1 \\
+                                \mathit{NaN} & \text{if } \|a\| \gt 1 \\
                                 \pm\infty & \text{if } a = \pm1 \\
-                                \mathit{NaN} & \text{if } \|a\| \gt 1
+                                \pm0 & \text{if } a = \pm0 \\
+                                \operatorname{artanh}(a) & \text{otherwise}
                               \end{cases}]
 |===
 
@@ -1129,7 +1176,7 @@ If any input value component is _NaN_, the corresponding output value component 
 
 These all operate component-wise. The description is per component.
 
-If any input value component is _NaN_, the corresponding output value component is also _NaN_.
+If any input value component is _NaN_, the corresponding output value component is also _NaN_ for all nodes except `math/pow`.
 
 ===== Exponent
 
@@ -1139,7 +1186,12 @@ If any input value component is _NaN_, the corresponding output value component 
 | Input value sockets
 | `floatN a` | Power value
 | Output value sockets
-| `floatN value` | stem:[e^a]
+| `floatN value` | latexmath:[\begin{cases}
+                                +0 & \text{if } a = -\infty \\
+                                +1 & \text{if } a = \pm0 \\
+                                +\infty & \text{if } a = +\infty \\
+                                e^a & \text{otherwise}
+                              \end{cases}]
 |===
 
 ===== Natural Logarithm
@@ -1151,9 +1203,11 @@ If any input value component is _NaN_, the corresponding output value component 
 | `floatN a` | Argument value
 | Output value sockets
 | `floatN value` | latexmath:[\begin{cases}
-                                ln(a) & \text{if } a \gt 0 \\
-                                -\infty & \text{if } a = 0 \\
-                                \mathit{NaN} & \text{if } a \lt 0
+                                \mathit{NaN} & \text{if } a \lt 0 \\
+                                -\infty & \text{if } a = \pm0 \\
+                                +0 & \text{if } a = +1 \\
+                                +\infty & \text{if } a = +\infty \\
+                                \log_e(a) & \text{otherwise}
                               \end{cases}]
 |===
 
@@ -1166,9 +1220,11 @@ If any input value component is _NaN_, the corresponding output value component 
 | `floatN a` | Argument
 | Output value sockets
 | `floatN value` | latexmath:[\begin{cases}
-                                log_2(a) & \text{if } a \gt 0 \\
-                                -\infty & \text{if } a = 0 \\
-                                \mathit{NaN} & \text{if } a \lt 0
+                                \mathit{NaN} & \text{if } a \lt 0 \\
+                                -\infty & \text{if } a = \pm0 \\
+                                +0 & \text{if } a = +1 \\
+                                +\infty & \text{if } a = +\infty \\
+                                \log_2(a) & \text{otherwise}
                               \end{cases}]
 |===
 
@@ -1181,9 +1237,11 @@ If any input value component is _NaN_, the corresponding output value component 
 | `floatN a` | Argument
 | Output value sockets
 | `floatN value` | latexmath:[\begin{cases}
-                                log_{10}(a) & \text{if } a \gt 0 \\
-                                -\infty & \text{if } a = 0 \\
-                                \mathit{NaN} & \text{if } a \lt 0
+                                \mathit{NaN} & \text{if } a \lt 0 \\
+                                -\infty & \text{if } a = \pm0 \\
+                                +0 & \text{if } a = +1 \\
+                                +\infty & \text{if } a = +\infty \\
+                                \log_{10}(a) & \text{otherwise}
                               \end{cases}]
 |===
 
@@ -1196,8 +1254,10 @@ If any input value component is _NaN_, the corresponding output value component 
 | `floatN a` | Radicand
 | Output value sockets
 | `floatN value` | latexmath:[\begin{cases}
-                                \sqrt{a} & \text{if } a \ge 0 \\
-                                \mathit{NaN} & \text{if } a \lt 0
+                                \mathit{NaN} & \text{if } a \lt 0 \\
+                                \pm0 & \text{if } a = \pm0 \\
+                                +\infty & \text{if } a = +\infty \\
+                                \sqrt[2\]{a} & \text{otherwise}
                               \end{cases}]
 |===
 
@@ -1209,7 +1269,11 @@ If any input value component is _NaN_, the corresponding output value component 
 | Input value sockets
 | `floatN a` | Radicand
 | Output value sockets
-| `floatN value` | latexmath:[\sqrt[3\]{a}]
+| `floatN value` | latexmath:[\begin{cases}
+                                \pm0 & \text{if } a = \pm0 \\
+                                \pm\infty & \text{if } a = \pm\infty \\
+                                \sqrt[3\]{a} & \text{otherwise}
+                              \end{cases}]
 |===
 
 ===== Power
@@ -1221,10 +1285,23 @@ If any input value component is _NaN_, the corresponding output value component 
 | `floatN a` | Base
 | `floatN b` | Exponent
 | Output value sockets
-| `floatN value` | stem:[a^b]
+| `floatN value` | stem:[a^b]; see the description for details
 |===
 
-Zero and infinity argument values **MUST** be handled according to the <<ecma-262,ECMA-262>> standard.
+This function is defined as the **pow** operation from the <<ieee-754,IEEE-754>> standard with the following changes applied:
+
+- latexmath:[\mathit{NaN} ^ {\pm0} = 1]
+- latexmath:[+1 ^ {\pm\infty}], latexmath:[-1 ^ {\pm\infty}], and latexmath:[\pm1 ^ \mathit{NaN}] are latexmath:[\mathit{NaN}]
+
+[NOTE]
+.Implementation Note
+====
+This definition matches the <<ecma-262,ECMA-262>> standard so the node is implementable in ECMAScript via the following expression:
+[source,js]
+----
+a ** b
+----
+====
 
 ==== Vector Nodes
 
@@ -1800,7 +1877,7 @@ This is implementable in ECMAScript via the following expression:
 | `int b` | Divisor
 | Output value sockets
 | `int value` | latexmath:[\begin{cases}
-                             a - (b \cdot trunc(\frac{a}{b})) & \text{if } b \ne 0 \\
+                             a - (b \cdot \operatorname{trunc}(\frac{a}{b})) & \text{if } b \ne 0 \\
                              0 & \text{if } b = 0
                            \end{cases}]
 |===
@@ -1849,7 +1926,7 @@ This is implementable in ECMAScript via the following expression:
 | `int b` | First boundary
 | `int c` | Second boundary
 | Output value sockets
-| `int value` | latexmath:[min(max(a, min(b, c)), max(b, c))]
+| `int value` | latexmath:[\min(\max(a, \min(b, c)), \max(b, c))]
 |===
 
 [NOTE]
