@@ -635,7 +635,7 @@ a < 0 ? -Math.round(-a) : Math.round(a)
 | `floatN value` | Product, stem:[a * b]
 |===
 
-For matrix arguments, this operation performs per-component multiplication.
+For matrix arguments, this operation performs per-element multiplication.
 
 [NOTE]
 .Authoring Note
@@ -1305,7 +1305,7 @@ a ** b
 
 ==== Vector Nodes
 
-If any input value component is _NaN_, the output value is _NaN_ or a vector of NaNs.
+See individual node definitions for handling special floating-point values.
 
 ===== Length
 
@@ -1315,8 +1315,22 @@ If any input value component is _NaN_, the output value is _NaN_ or a vector of 
 | Input value sockets
 | `float{2\|3\|4} a` | Vector
 | Output value sockets
-| `float value` | Length of stem:[a], e.g., stem:[sqrt(a_x^2 + a_y^2)] for `float2`
+| `float value` | Length of stem:[a], e.g., stem:[sqrt(a_x^2 + a_y^2)] for `float2`; see the description for details
 |===
+
+If any input value component is positive or negative infinity, the output value is positive infinity.
+
+If none of the input value components are positive or negative infinity and any input value component is NaN, the output value is NaN.
+
+If all input value components are positive or negative zeros, the output value is a positive zero.
+
+If all input value components are finite, the output value is an approximation of the square root of the sum of the input value component squares.
+
+[NOTE]
+.Implementation Note
+====
+This definition matches the **hypot** operation from the <<ieee-754,IEEE-754>> standard including return values for all special cases.
+====
 
 [TIP]
 .Implementation Tip
@@ -1331,7 +1345,7 @@ Math.hypot(...a)
 [TIP]
 .Authoring Tip
 ====
-To get the squared length of stem:[a], use `math/dot` with stem:[a] provided to its both input value sockets.
+To get the squared length of stem:[a], use `math/dot` with stem:[a] provided to its both input value sockets. Note that this approach will produce NaN if any vector component is NaN regardless of other components.
 ====
 
 ===== Normalize
@@ -1341,11 +1355,18 @@ To get the squared length of stem:[a], use `math/dot` with stem:[a] provided to 
 | Operation | `math/normalize` | Vector normalization
 | Input value sockets
 | `float{2\|3\|4} a` | Vector
-| Output value sockets
-| `floatN value` | Vector in the same direction as stem:[a] but with a unit length, e.g., latexmath:[\dfrac{\vec{a}}{\sqrt{a_x^2 + a_y^2}}] for `float2`
+.2+| Output value sockets
+| `float{2\|3\|4} value` | Vector in the same direction as stem:[a] but with a unit length, e.g., latexmath:[\dfrac{\vec{a}}{\sqrt{a_x^2 + a_y^2}}] for `float2`; see the description for details
+| `bool isValid` | True if the output vector value has a unit length after normalization; false otherwise
 |===
 
-Normalizing a zero-length vector **MUST** return a NaN vector.
+The output values are computed as follows:
+
+1. Let _length_ be the output value of the `math/length` operation on stem:[a] as defined above.
+
+2. If _length_ is zero, NaN, or positive infinity, the `isValid` output value is false and the `value` output value is a vector of the same type as stem:[a] with all components set to positive zeros.
+
+3. If _length_ is a positive finite number, the `isValid` output value is true and the `value` output value is a vector of the same type as stem:[a] constructed by dividing each component of stem:[a] by _length_.
 
 ===== Dot Product
 
@@ -1360,6 +1381,8 @@ Normalizing a zero-length vector **MUST** return a NaN vector.
 |===
 
 Both input value sockets **MUST** have the same type.
+
+Since this operation is a shortcut for the combination of multiplications and additions, NaN and infinity values are propagated accordingly.
 
 [NOTE]
 .Implementation Note
@@ -1378,6 +1401,8 @@ This operation is frequently used with both input value sockets connected to the
 | Output value sockets
 | `float3 value` | Cross product of stem:[a] and stem:[b], i.e., stem:[(a_y * b_z - a_z * b_y, a_z * b_x - a_x * b_z, a_x * b_y - a_y * b_x)]
 |===
+
+Since this operation is a shortcut for the combination of multiplications and subtractions, NaN and infinity values are propagated accordingly.
 
 ===== Rotate 2D
 
@@ -1453,6 +1478,8 @@ If the vector stem:[b] is not unit, rotation results **MAY** be undefined.
 
 The input and output value sockets have the same type.
 
+This operation only reorders the matrix elements without inspecting or altering their values.
+
 ===== Determinant
 
 [cols="1h,1,2"]
@@ -1464,6 +1491,8 @@ The input and output value sockets have the same type.
 | `float value` | Determinant of stem:[a]
 |===
 
+Since this operation is a shortcut for the combination of multiplications, subtractions, and additions, NaN and infinity values are propagated accordingly.
+
 ===== Inverse
 
 [cols="1h,1,2"]
@@ -1471,11 +1500,20 @@ The input and output value sockets have the same type.
 | Operation | `math/inverse` | Inverse operation
 | Input value sockets
 | `float{2x2\|3x3\|4x4} a` | Matrix to inverse
-| Output value sockets
-| `float{2x2\|3x3\|4x4} value` | Matrix that is the inverse of stem:[a]
+.2+| Output value sockets
+| `float{2x2\|3x3\|4x4} value` | Matrix that is the inverse of stem:[a]; see the description for details
+| `bool isValid` | True if the input matrix is invertible; false otherwise
 |===
 
-The input and output value sockets have the same type.
+The `value` input value socket and `value` output value socket have the same type.
+
+The output values are computed as follows:
+
+1. Let _determinant_ be the output value of the `math/determinant` operation on stem:[a] as defined above.
+
+2. If _determinant_ is zero, NaN, or infinity, the `isValid` output value is false and the `value` output value is a matrix of the same type as stem:[a] with all elements set to positive zeros.
+
+3. If _determinant_ is a finite number not equal to zero, the `isValid` output value is true and the `value` output value is a matrix that the inverse of stem:[a].
 
 ===== Multiplication
 
@@ -1493,10 +1531,12 @@ Both input value sockets **MUST** have the same type.
 
 The output value socket has the same type as the input value sockets.
 
+Since this operation is a shortcut for the combination of multiplications and additions, NaN and infinity values are propagated accordingly.
+
 [NOTE]
 .Authoring Note
 ====
-See `math/mul` for per-component multiplication.
+See `math/mul` for per-element multiplication.
 ====
 
 ==== Swizzle Nodes
