@@ -3679,6 +3679,10 @@ The `value` property is an array that defines the initial variable value. If the
 | `int`      |            1 | Integer zero
 |===
 
+Values for vector types use the XYZW order of components, that is X component is stored in the array element with index 0, Y component is stored in the array element with index 1, and so forth.
+
+Values for matrix types use the column-major order of elements. For example, elements of a 2x2 matrix are stored as `[c0r0, c0r1, c1r0, c1r1]`, where `c0r0` is the element in the first column and first row, `c0r1` is the element in the first column and second row, and so forth.
+
 If the `value` property array length does not match the array length for the specified type, the variable is invalid and the graph **MUST** be rejected.
 
 If the variable type is **bool** and the only array element is not a JSON boolean literal, i.e., neither `true` nor `false`, the variable is invalid and the graph **MUST** be rejected.
