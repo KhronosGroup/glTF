@@ -742,7 +742,7 @@ Math.max(a, b)
 | `floatN value` | latexmath:[\min(\max(a, \min(b, c)), \max(b, c))]
 |===
 
-This node relies on `math/min` and `math/max` nodes defined above.
+This node is defined in terms of `math/min` and `math/max` nodes defined above.
 
 [NOTE]
 .Authoring Note
@@ -760,6 +760,8 @@ This operation correctly handles a case when stem:[b] is greater than stem:[c].
 | Output value sockets
 | `floatN value` | latexmath:[\min(\max(a, 0), 1)]
 |===
+
+This node is defined in terms of `math/min` and `math/max` nodes defined above.
 
 ===== Interpolate
 
@@ -1968,6 +1970,8 @@ This is implementable in ECMAScript via the following expression:
 | Output value sockets
 | `int value` | latexmath:[\min(\max(a, \min(b, c)), \max(b, c))]
 |===
+
+This node is defined in terms of `math/min` and `math/max` nodes defined above.
 
 [NOTE]
 .Authoring Note
