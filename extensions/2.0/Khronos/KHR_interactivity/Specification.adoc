@@ -3627,6 +3627,8 @@ This example defines type `0` as *float2*, type `1` as *int*, and type `2` as *f
 
 The value of the `signature` property **MUST** be one of the value types defined in this extension specification or `"custom"`. In the latter case, the custom type semantics **MUST** be provided by an additional extension.
 
+Values of the `signature` property are case-sensitive.
+
 Non-custom signatures **MUST NOT** appear more than once in this array; if two or more entries of the `types` array have the same non-custom signature, the graph is invalid and **MUST** be rejected. Extensions or extras present on the types defined by this Specification do not change type semantics.
 
 [NOTE]
@@ -3726,6 +3728,8 @@ The event id is an application-specific event identifier recognized by the execu
 
 The properties of the `values` object define ids and the values of those properties define types and optional initial values of the value sockets associated with the event. If the `values` object is undefined, the event has no associated value sockets.
 
+Socket ids defined by the properties of the `values` object are case-sensitive.
+
 The type of the event value socket is determined by the **REQUIRED** `type` property that points to the element of the `types` array. If the `type` property is undefined or its value is negative or greater than or equal to the length of the `types` array, the event is invalid and the graph **MUST** be rejected.
 
 The `value` property of the event value socket has the same syntax and semantics as the `value` property of variable definitions (see the previous section).
@@ -3750,11 +3754,17 @@ This example defines declaration `0` as `math/min` and declaration `1` as `varia
 
 The `op` property is **REQUIRED**; it contains the operation identifier; if this property is undefined, the declaration is invalid and the graph **MUST** be rejected.
 
+Values of the `op` property are case-sensitive.
+
 If the operation is not defined by this Specification, the `extension` property **MUST** be defined and it contains the additional interactivity extension name that defines the operation. If the `extension` property is not defined and the operation is not defined by this Specification, the declaration is invalid and the graph **MUST** be rejected.
+
+Values of the `extension` property are case-sensitive.
 
 If the operation is defined in an additional interactivity extension and it uses input value sockets, the `inputValueSockets` object **MUST** be present. Its properties define ids and the values of its properties define types of the input value sockets. If the `inputValueSockets` object is undefined, the operation has no input value sockets.
 
 If the operation is defined in an additional interactivity extension and it uses output value sockets, the `outputValueSockets` object **MUST** be present. Its properties define ids and the values of its properties define types of the output value sockets. If the `outputValueSockets` object is undefined, the operation has no output value sockets.
+
+Socket ids defined by the properties of the `inputValueSockets` and `outputValueSockets` objects are case-sensitive.
 
 If the `extension` property is undefined, the operation with all its value sockets is assumed to be provided by this Specification and therefore `inputValueSockets` and `outputValueSockets` objects **MUST NOT** be defined.
 
@@ -3881,6 +3891,8 @@ Some nodes, e.g., `pointer/get` or `variable/get`, define their input value sock
 
 The values of the `values` object properties are JSON objects that define effective input value socket types and value sources. Each value source is either an inline constant value, a <<variables-types,type-default>> value, or a reference to another node's output value socket. If no source is defined or if the socket type does not match the declaration, the node is invalid and the graph **MUST** be rejected.
 
+Socket ids defined by the properties of the `values` object are case-sensitive.
+
 Some nodes have multiple variants to support the same operation on different input value socket types, e.g., math operations like `math/add` support all numeric types including integers, vectors, and matrices. Therefore, effective input value socket types **MAY** be needed to fully resolve the operation.
 
 [NOTE]
@@ -3934,6 +3946,8 @@ This ensures that value sockets do not form loops and simplifies input value soc
 ====
 
 If the `socket` property is defined, it **MUST** correspond to an output value socket existing in the referenced node, otherwise the current node is invalid and the graph **MUST** be rejected. If the `socket` property is undefined, the default socket id `"value"` is used implicitly. Therefore, if the referenced node does not have an output value socket with id `"value"`, the `socket` property **MUST** be defined.
+
+Socket ids referenced by the `socket` property are case-sensitive.
 
 If both `node` and `type` properties are defined, the type referred by the `type` property **MUST** match the type of the referenced output value socket; if the types do not match, the current node is invalid and the graph **MUST** be rejected.
 
@@ -4004,9 +4018,13 @@ Pointers for the output flow sockets are defined in the `flows` object of the no
 
 Properties of the `flows` object link output flow sockets of the current node with input flow sockets of other nodes. If an output flow socket id of the current node is not present in the `flows` object, that output flow socket is unconnected and activating it has have no effect.
 
+Socket ids defined by the properties of the `flows` object are case-sensitive.
+
 The `flows` object **MAY** contain properties not corresponding to output flows of the current node; such properties do not affect functionality of the node but their values **MUST** still be validated as described below.
 
 Each property of the `flows` object is a JSON object containing a **REQUIRED** `node` property and an **OPTIONAL** `socket` property. The `node` property contains the index of the other node and the `socket` property contains the id of the input flow socket of that node.
+
+Socket ids referenced by the `socket` property are case-sensitive.
 
 The `node` property value **MUST** be greater than the index of the current node and less then the total number of nodes, otherwise the node is invalid and the graph **MUST** be rejected.
 
@@ -4084,6 +4102,8 @@ Some nodes have configuration values of types that cannot be expressed with the 
 
 Refer to the <<nodes-configuration,Configuration>> section and to individual node specifications for details regarding configuration validity.
 
+Configuration properties defined by the properties of the `configuration` object are case-sensitive.
+
 Configuration values use JSON arrays similarly to other uses of inline values.
 
 [cols="1,2", options="header"]
@@ -4095,7 +4115,10 @@ Configuration values use JSON arrays similarly to other uses of inline values.
 | `string`            | Array of one JSON string
 |===
 
-The following example instantiates two nodes. The `variable/set` node sets a custom variable with index `0` when the start event happens.
+[NOTE]
+.Example
+====
+The `variable/set` node sets a custom variable with index `0` when the start event happens.
 
 ```json
 "types": [
@@ -4126,6 +4149,7 @@ The following example instantiates two nodes. The `variable/set` node sets a cus
   }
 ]
 ```
+====
 
 [[validation]]
 = Validation (Informative)
