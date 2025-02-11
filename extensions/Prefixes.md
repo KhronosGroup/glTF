@@ -78,6 +78,7 @@ To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glT
 | `SEIN` | Hiloteam | https://seinjs.com/ | [#1840](https://github.com/KhronosGroup/glTF/issues/1840) |
 | `SHAPEDIVER` | ShapeDiver GmbH | https://www.shapediver.com/ | [#2103](https://github.com/KhronosGroup/glTF/issues/2103) |
 | `SI` | Smithsonian Institution | https://www.si.edu/ | [#1410](https://github.com/KhronosGroup/glTF/issues/1410) |
+| `SIRADEL` | Siradel | https://www.siradel.com/ | [#2469](https://github.com/KhronosGroup/glTF/issues/2469) |
 | `SKFB` | Sketchfab, Inc. | https://sketchfab.com/ | [#1239](https://github.com/KhronosGroup/glTF/issues/1239) |
 | `SKYLINE` | Skyline Software Systems, Inc. | https://www.skylinesoft.com/ | [#1704](https://github.com/KhronosGroup/glTF/issues/1704) |
 | `SNAP` | Snap, Inc. | https://snap.com/ | [#2125](https://github.com/KhronosGroup/glTF/issues/2125) |
