@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_materials_diffuse_roughness glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines roughness of the base diffuse surface.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "diffuseRoughnessFactor": {
+            "type": "number",
+            "description": "The base, diffuse layer's roughness.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The base, diffuse layer's roughness."
+        },
+        "diffuseRoughnessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "A greyscale texture, representing the diffuse layer's roughness.",
+            "gltf_detailedDescription": "A greyscale texture, representing the diffuse layer's roughness. The value will modulate the diffuseRoughnessFactor."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
