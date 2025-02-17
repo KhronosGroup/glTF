@@ -1540,6 +1540,48 @@ Since this operation is a shortcut for the combination of multiplications and ad
 See `math/mul` for per-element multiplication.
 ====
 
+===== Transform Compose
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/matCompose` | Compose a 4x4 transform matrix
+.3+| Input value sockets
+| `float3 translation` | Translation vector
+| `float4 rotation` | Rotation quaternion
+| `float3 scale` | Scale vector
+| Output value sockets
+| `float4x4 value` | Matrix composed from the TRS properties
+|===
+
+Let
+
+- stem:[t_x], stem:[t_y], and stem:[t_z] be the translation vector components;
+- stem:[r_x], stem:[r_y], stem:[r_z], and stem:[r_w] be the rotation quaternion components;
+- stem:[s_x], stem:[s_y], and stem:[s_z] be the scale vector components.
+
+Then the `value` output socket value is computed as follows:
+
+[stem]
++++++
+((1, 0, 0, t_x),
+ (0, 1, 0, t_y),
+ (0, 0, 1, t_z),
+ (0, 0, 0, 1)) cdot
+((1 - 2(r_y^2 + r_z^2), 2(r_xr_y - r_zr_w),   2(r_xr_z + r_yr_w),   0),
+ (2(r_xr_y + r_zr_w),   1 - 2(r_x^2 + r_z^2), 2(r_yr_z - r_xr_w),   0),
+ (2(r_xr_z - r_yr_w),   2(r_yr_z + r_xr_w),   1 - 2(r_x^2 + r_y^2), 0),
+ (0, 0, 0, 1)) cdot
+((s_x, 0,   0,   0),
+ (0,   s_y, 0,   0),
+ (0,   0,   s_z, 0),
+ (0,   0,   0,   1)) =
+
+= ((s_x * (1 - 2(r_y^2 + r_z^2)), s_y * 2(r_xr_y - r_zr_w),     s_z * 2(r_xr_z + r_yr_w),     t_x),
+   (s_x * 2(r_xr_y + r_zr_w),     s_y * (1 - 2(r_x^2 + r_z^2)), s_z * 2(r_yr_z - r_xr_w),     t_y),
+   (s_x * 2(r_xr_z - r_yr_w),     s_y * 2(r_yr_z + r_xr_w),     s_z * (1 - 2(r_x^2 + r_y^2)), t_z),
+   (0, 0, 0, 1))
++++++
+
 ==== Swizzle Nodes
 
 ===== Combine
