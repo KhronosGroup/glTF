@@ -242,9 +242,9 @@ At the current state of the Specification, the retention of output value socket 
 
 _Input value sockets_ represent data accessed during the node's execution. For example, it could be arguments of math operations or execution parameters such as iteration count for loop nodes or duration for time-related nodes. Each of these sockets **MUST** either be given an inline constant value in the node object or connected to an output value socket of a different node. The node **MAY** access its input value sockets multiple times during the execution. The runtime **MUST** guarantee that all input value sockets have defined values when the node execution starts.
 
-_Output flow sockets_ represent "`function pointers`" that the node will call to advance the graph execution. For example, bodies and branches of flow control nodes are output flow sockets that drive further execution when certain condition are fulfilled. Output flow sockets **MAY** be unconnected; in such a case graph execution proceeds as if such sockets are no-ops.
+_Output flow sockets_ represent "`function pointers`" that the node will call to advance the graph execution. For example, bodies and branches of flow control nodes are output flow sockets that drive further execution when certain condition are fulfilled. An output flow socket is either connected to exactly one input flow socket of another node or unconnected; in the latter case activating the output flow socket is a no-op.
 
-_Input flow sockets_ represent "`methods`" that could be called on the node. For example, flow control nodes (such as loops and branches) usually have an `in` input flow socket that starts node's execution. Additional input flow sockets **MAY** exist such as `reset` for nodes having an internal state.
+_Input flow sockets_ represent "`methods`" that could be called on the node. For example, flow control nodes (such as loops and branches) usually have an `in` input flow socket that starts node's execution. Additional input flow sockets **MAY** exist such as `reset` for nodes having an internal state. An input flow socket is either connected to one or more output flow sockets of other nodes or unconnected; in the latter case the node's "`method`" represented by the socket is never called.
 
 Input and output value sockets have associated data types, e.g., floats, integers, booleans, etc.
 
