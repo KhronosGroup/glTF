@@ -1139,7 +1139,6 @@ If any input value component is _NaN_, the corresponding output value component 
                                 \pm\infty & \text{if } a = \pm\infty \\
                                 \operatorname{arsinh}(a) & \text{otherwise}
                               \end{cases}]
-| `floatN value` | latexmath:[]
 |===
 
 ===== Inverse Hyperbolic Cosine
