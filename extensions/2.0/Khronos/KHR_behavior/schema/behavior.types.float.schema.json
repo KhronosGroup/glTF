@@ -1,0 +1,11 @@
+{
+    "title": "Float Value",
+    "oneOf": [
+        {
+            "type": "number"
+        },
+        {
+            "$ref": "behavior.types.reference.schema.json"
+        }
+    ]
+}
