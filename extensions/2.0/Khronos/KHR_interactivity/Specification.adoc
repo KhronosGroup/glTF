@@ -1369,6 +1369,12 @@ The output values are computed as follows:
 
 3. If _length_ is a positive finite number, the `isValid` output value is true and the `value` output value is a vector of the same type as stem:[a] constructed by dividing each component of stem:[a] by _length_.
 
+[TIP]
+.Authoring Tip
+====
+If the input vector represents a quaternion and the graph expects it to be identity in a case when normalization fails, a `math/select` node could be added to return stem:[(0, 0, 0, 1)] when `isValid` is false.
+====
+
 ===== Dot Product
 
 [cols="1h,1,2"]
@@ -1540,7 +1546,7 @@ Since this operation is a shortcut for the combination of multiplications and ad
 See `math/mul` for per-element multiplication.
 ====
 
-===== Transform Compose
+===== Compose
 
 [cols="1h,1,2"]
 |===
@@ -1581,6 +1587,74 @@ Then the `value` output socket value is computed as follows:
    (s_x * 2(r_xr_z - r_yr_w),     s_y * 2(r_yr_z + r_xr_w),     s_z * (1 - 2(r_x^2 + r_y^2)), t_z),
    (0, 0, 0, 1))
 +++++
+
+Since this operation is a shortcut for the combination of multiplications, subtractions, and additions, NaN and infinity values are propagated accordingly.
+
+[TIP]
+.Authoring Tip
+====
+This operation does not implicitly normalize the rotation quaternion. If needed, that step could be done explicitly by adding a `math/normalize` node.
+====
+
+===== Decompose
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/matDecompose` | Decompose a 4x4 transform matrix to TRS properties
+| Input value sockets
+| `float4x4 a` | Matrix stem:[A] to decompose
+.4+| Output value sockets
+| `float3 translation` | Translation vector
+| `float4 rotation` | Rotation quaternion
+| `float3 scale` | Scale vector
+| `bool isValid` | True if the input matrix is decomposable; false otherwise
+|===
+
+The output values are computed as follows:
+
+1. If the fourth row of stem:[A] is not stem:[(0, 0, 0, 1)] exactly, set the `isValid` output value to false and goto to the step 11.
+
+2. Let stem:[s_x], stem:[s_y], and stem:[s_z] be lengths of the first three columns of stem:[A]. For example, stem:[s_x=sqrt(a_{11}^2+a_{21}^2+a_{31}^2)].
+
+3. If stem:[s_x], stem:[s_y], or stem:[s_z] are infinite, NaN, or equal to zero, set the `isValid` output value to false and goto to the step 11.
+
+4. Let stem:[B] be a 3x3 matrix formed by taking the upper-left 3x3 sub-matrix of stem:[A] and dividing each column by stem:[s_x], stem:[s_y], and stem:[s_z] respectively.
++
+[stem]
++++++
+B = ((a_{11}/s_x, a_{12}/s_y, a_{13}/s_z),
+     (a_{21}/s_x, a_{22}/s_y, a_{23}/s_z),
+     (a_{31}/s_x, a_{32}/s_y, a_{33}/s_z))
++++++
+
+5. If the absolute value of the determinant of stem:[B] is not close to one within an implementation-defined threshold, set the `isValid` output value to false and goto to the step 11.
+
+6. Set the `translation` output value to the first three elements of the fourth column of stem:[A], i.e., to stem:[(a_{14}, a_{24}, a_{34})].
+
+7. If the determinant of stem:[B] is positive, set the `scale` output value to stem:[(s_x, s_y, s_z)].
+
+8. If the determinant of stem:[B] is negative, do one of the following four options.
+.. First option:
+... set the `scale` output value to latexmath:[(-s_x, s_y, s_z)];
+... negate elements of the first column of stem:[B] in-place.
+.. Second option:
+... set the `scale` output value to latexmath:[(s_x, -s_y, s_z)];
+... negate elements of the second column of stem:[B] in-place.
+.. Third option:
+... set the `scale` output value to latexmath:[(s_x, s_y, -s_z)];
+... negate elements of the third column of stem:[B] in-place.
+.. Fourth option:
+... set the `scale` output value to latexmath:[(-s_x, -s_y, -s_z)];
+... negate all elements of stem:[B] in-place.
+
+9. Set the `rotation` output value to the unit quaternion corresponding to the rotation matrix stem:[B].
+
+10. Set `isValid` output value to true.
+
+11. If the `isValid` output value is false,
+.. set the `translation` output value to stem:[(0, 0, 0)];
+.. set the `rotation` output value to stem:[(0, 0, 0, 1)];
+.. set the `scale` output value to stem:[(1, 1, 1)].
 
 ==== Swizzle Nodes
 
