@@ -4004,7 +4004,7 @@ A `math/e` node with its declaration.
 
 === Input Value Sockets
 
-If the operation has input value sockets, the `values` object **MUST** be defined and its properties **MUST** match the input value socket ids of the declaration; if the properties of the `values` object do not match the declaration, the node is invalid and the graph **MUST** be rejected. If the operation does not have input value sockets, the `values` object **MUST NOT** be defined.
+If the operation has input value sockets, the `values` object **MUST** be defined and it *MUST** have properties matching the input value socket ids of the declaration; if the `values` object does not have a corresponding property for each input value socket id, the node is invalid and the graph **MUST** be rejected. The `values` object **MAY** have additional properties not matching the input value socket ids of the operation; such properties have no effect on the operation but their values **MUST** still conform to the JSON schema and other rules defined in this section. If the operation does not have input value sockets, the `values` object **SHOULD NOT** be defined.
 
 Some nodes, e.g., `pointer/get` or `variable/get`, define their input value socket ids and/or types based on the node's configuration. Therefore, the configuration **MAY** need to be processed prior to the input value sockets.
 
@@ -4012,12 +4012,14 @@ The values of the `values` object properties are JSON objects that define effect
 
 Socket ids defined by the properties of the `values` object are case-sensitive.
 
-Some nodes have multiple variants to support the same operation on different input value socket types, e.g., math operations like `math/add` support all numeric types including integers, vectors, and matrices. Therefore, effective input value socket types **MAY** be needed to fully resolve the operation.
+Some nodes have multiple variants to support the same operation on different input value socket types. In all such cases, the variants share the same set of input value socket ids and only their types differ. Therefore, effective input value socket types **MAY** be needed to fully resolve the operation.
+
+If the operation does not support the input value socket types used by the node, the node is invalid and the graph **MUST** be rejected.
 
 [NOTE]
 .Example
 ====
-For example, the `math/add` operation defined in this Specification exists only for matching input value socket types so any node that refers to it and uses different types for `a` and `b` input value sockets is invalid.
+For example, the `math/add` operation defined in this Specification supports all numeric types, i.e., integers, vectors, and matrices, but only for matching input value socket types. So any node that refers to `math/add` and uses different types for its `a` and `b` input value sockets would be invalid.
 ====
 
 ==== Inline Values
@@ -4450,9 +4452,11 @@ the interactivity graph is invalid and thus cannot be used; this has no effect o
 .... if "`the input value socket`" object has the `value` property:
 ..... _assert_ that the `value` property is a non-empty JSON array;
 ..... validate the `value` property value according to the <<inline-value-validation,Inline Value Validation>> using the `type` property.
-7. If the set of input value sockets defined by the declaration referenced by the `declaration` property does not match the set of input value sockets defined by the `values` property with regard to socket ids and types,
+7. If any input value socket id defined by the declaration referenced by the `declaration` property is not present in the set of input value sockets defined by the `values` property,
 .. _reject the graph_.
-8. If "`the node`" object has the `flows` property:
+8. If the types of the input value sockets defined by the `values` property excluding sockets with ids not defined by the declaration do not match any combination of the input value socket types defined by the declaration,
+.. _reject the graph_.
+9. If "`the node`" object has the `flows` property:
 .. _assert_ that the `flows` property is a non-empty JSON object;
 .. if the `flows` object has more properties than the implementation-specific limit on the number of output flow sockets per node,
 ... _reject the graph_;
