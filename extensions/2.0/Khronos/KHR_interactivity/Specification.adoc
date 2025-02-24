@@ -415,7 +415,9 @@ Implementations **MAY** restrict the size and complexity of behavior graphs by i
 * The number of operation declarations
 * The number of input and output value sockets in operation declarations
 * The number of nodes
-* The number of graph-defined output flow sockets in operations like `flow/sequence`, `flow/switch`, or `flow/multiGate`
+* The number of graph-defined output flow sockets in operations like `flow/multiGate` or `flow/sequence`
+* The number of configuration-defined output flow sockets in operations like `flow/switch`
+* The number of configuration-defined input value sockets in operations like `pointer/get`
 
 The graph **MUST** be rejected if it exceeds implementation-defined max values for these properties.
 
@@ -2551,6 +2553,11 @@ The `condition` input value is evaluated each time the node is executed.
 | `default` | The output flow activated when the `selection` input value is not present in the `cases` configuration array
 |===
 
+[CAUTION]
+====
+The configuration of this node affects its flow sockets.
+====
+
 The node has zero or more `<case>` output flow sockets corresponding to the elements of the `cases` configuration array.
 
 In the default configuration, the `cases` configuration array is empty and the node has only the `default` output flow socket.
@@ -2562,18 +2569,19 @@ The following procedure defines output flow sockets generation from the provided
 .. if `C` is not a literal number or if it is not exactly representable as a 32-bit signed integer, ignore the `cases` property and use the default configuration;
 .. convert `C` to a base-10 string representation `S` containing only decimal integers (ASCII characters `0x30 ... 0x39`) and a leading minus sign (ASCII character `0x2D`) if `C` is negative; extra leading zeros **MUST NOT** be present;
 .. add a flow socket `S` to the set of the output flow sockets of this node or ignore it if an output flow socket with the same id has been already added.
-3. Proceed with the generated output flow sockets.
+3. If the number of generated flow sockets plus one exceeds an implementation-defined limit on the maximum number of output flow sockets, the graph **MUST** be rejected.
+4. Proceed with the generated output flow sockets.
 
-For example:
-
-* if the `cases` configuration array is `[0.5, 1]`, the default configuration is used because `0.5` is not representable as a 32-bit signed integer;
-* if the `cases` configuration array is `[-2147483649, 0]`, the default configuration is used because `-2147483649` is not representable as a 32-bit signed integer;
-* if the `cases` configuration array is `[-1.0, 0, 1]`, the output socket ids are exactly `"-1"`, `"0"`, and `"1"` because `-1.0` is equal to an integer `-1`;
-* if the `cases` configuration array is `[0.1e1, 2, 2]`, the output socket ids are exactly `"1"` and `"2"` because `0.1e1` is equal to an integer `1` and the duplicate entry is ignored.
+[NOTE]
+.Examples
+====
+* If the `cases` configuration array is `[0.5, 1]`, the default configuration is used because `0.5` is not representable as a 32-bit signed integer.
+* If the `cases` configuration array is `[-2147483649, 0]`, the default configuration is used because `-2147483649` is not representable as a 32-bit signed integer.
+* If the `cases` configuration array is `[-1.0, 0, 1]`, the output socket ids are exactly `"-1"`, `"0"`, and `"1"` because `-1.0` is equal to an integer `-1`.
+* If the `cases` configuration array is `[0.1e1, 2, 2]`, the output socket ids are exactly `"1"` and `"2"` because `0.1e1` is equal to an integer `1` and the duplicate entry is ignored.
+====
 
 This node has no internal state.
-
-If the number of output flow sockets (as present in JSON) exceeds an implementation-defined limit, the graph **MUST** be rejected.
 
 When the `in` input flow is activated:
 
@@ -2744,6 +2752,11 @@ When the `isRandom` and `isLoop` configuration values are true, the output flow 
 | Output value sockets
 | `int remainingInputs` | The number of not yet activated input flows
 |===
+
+[CAUTION]
+====
+The configuration of this node affects its flow sockets.
+====
 
 The node has from zero to 64 input flow sockets with ids assigned sequential non-negative integer decimal numbers depending on the `inputFlows` configuration value. Encoded as base-10 strings, these input flow socket ids contain only decimal integers (ASCII characters `0x30 ... 0x39`); other characters and leading zeros are not used.
 
@@ -3201,6 +3214,8 @@ If the `pointer` configuration value is not provided, if it is not a string, or 
 
 If the `type` configuration value is not provided, if it is not a literal number, if it is not exactly representable as a 32-bit signed integer, if it is negative, or if it is greater than or equal to the length of the `types` array, the node is invalid and the graph **MUST** be rejected.
 
+If the number of input value sockets derived from the pointer template string exceeds an implementation-specific limit on the maximum number of input value sockets, the graph **MUST** be rejected.
+
 When this node is activated, i.e., when one of its output value sockets is being accessed:
 
 1. Evaluate all input values.
@@ -3260,6 +3275,8 @@ The type `T` is determined by the `type` configuration value which points to the
 If the `pointer` configuration value is not provided, if it is not a string, if it is invalid (as defined in the previous sections), or if it contains a template parameter `{value}`, the node is invalid and the graph **MUST** be rejected.
 
 If the `type` configuration value is not provided, if it is not a literal number, if it is not exactly representable as a 32-bit signed integer, if it is negative, or if it is greater than or equal to the length of the `types` array, the node is invalid and the graph **MUST** be rejected.
+
+If the number of input value sockets derived from the pointer template string plus one exceeds an implementation-specific limit on the maximum number of input value sockets, the graph **MUST** be rejected.
 
 If the `value` input value is not valid for the resolved property, the effective property value becomes implementation-defined and subsequent `pointer/get` evaluations of the property **MAY** return any value of the corresponding type until the property is updated with a valid value. This is not an error. Implementations **MAY** generate runtime warnings in this case as deemed possible.
 
@@ -3323,6 +3340,8 @@ The type `T` is determined by the `type` configuration value which points to the
 If the `pointer` configuration value is not provided, if it is not a string, if it is invalid (as defined in the previous sections), or if it contains template parameters `{value}`, `{duration}`, `{p1}`, or `{p2}` the node is invalid and the graph **MUST** be rejected.
 
 If the `type` configuration value is not provided, if it is not a literal number, if it is not exactly representable as a 32-bit signed integer, if it is negative, if it is greater than or equal to the length of the `types` array, or if it point to the type entry with `bool` or `int` type signatures, the node is invalid and the graph **MUST** be rejected.
+
+If the number of input value sockets derived from the pointer template string plus four exceeds an implementation-specific limit on the maximum number of input value sockets, the graph **MUST** be rejected.
 
 If the `value` input value or any intermediate interpolated value are not valid for the resolved property, the effective property value becomes implementation-defined and subsequent `pointer/get` evaluations of the property **MAY** return any value of the corresponding type until the property is updated with a valid value. This is not an error. Implementations **MAY** generate runtime warnings in this case as deemed possible.
 
@@ -4464,7 +4483,9 @@ the interactivity graph is invalid and thus cannot be used; this has no effect o
 ... _reject the graph_;
 .. if `configuration` object is not valid as defined by the node,
 ... _reject the graph_.
-6. If "`the node`" object has the `values` property:
+6. If the node is configurable, the configuration affects the node's sockets, and applying the specified configuration would lead to exceeding any implementation-specific limit,
+.. _reject the graph_;
+7. If "`the node`" object has the `values` property:
 .. _assert_ that the `values` property is a non-empty JSON object;
 .. for each property of the `values` JSON object:
 ... _assert_ that the property is a JSON object ("`the input value socket`");
@@ -4492,12 +4513,12 @@ the interactivity graph is invalid and thus cannot be used; this has no effect o
 .... if "`the input value socket`" object has the `value` property:
 ..... _assert_ that the `value` property is a non-empty JSON array;
 ..... validate the `value` property value according to the <<inline-value-validation,Inline Value Validation>> using the `type` property.
-7. Let "`the operation inputs`" be the set (or the sets in case of overloaded operations) of input value sockets defined by the declaration and/or derived from the configuration.
-8. If any input value socket id present in "`the operation inputs`" is not present in the set of input value sockets defined by the `values` property,
+8. Let "`the operation inputs`" be the set (or the sets in case of overloaded operations) of input value sockets defined by the declaration and/or derived from the configuration.
+9. If any input value socket id present in "`the operation inputs`" is not present in the set of input value sockets defined by the `values` property,
 .. _reject the graph_.
-9. If the types of input value sockets defined by the `values` property excluding sockets with ids not present in "`the operation inputs`" do not match any set of the input value socket types present in "`the operation inputs`",
+10. If the types of input value sockets defined by the `values` property excluding sockets with ids not present in "`the operation inputs`" do not match any set of the input value socket types present in "`the operation inputs`",
 .. _reject the graph_.
-10. If "`the node`" object has the `flows` property:
+11. If "`the node`" object has the `flows` property:
 .. _assert_ that the `flows` property is a non-empty JSON object;
 .. if the `flows` object has more properties than the implementation-specific limit on the number of output flow sockets per node,
 ... _reject the graph_;
