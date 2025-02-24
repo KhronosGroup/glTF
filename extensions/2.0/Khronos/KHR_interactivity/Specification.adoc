@@ -2911,6 +2911,11 @@ Non-positive or not existing delay index values **MUST NOT** cause any runtime e
 This node does not have a default configuration.
 ====
 
+[CAUTION]
+====
+The configuration of this node affects its value socket.
+====
+
 This node gets a custom variable value using the variable index provided by the `variable` configuration value.
 
 The type `T` is determined by the referenced variable. The variable index **MUST** be a non-negative integer less than the total number of custom variables, otherwise the node is invalid and the graph **MUST** be rejected.
@@ -2935,6 +2940,11 @@ This node has no internal state.
 [CAUTION]
 ====
 This node does not have a default configuration.
+====
+
+[CAUTION]
+====
+The configuration of this node affects its value socket.
 ====
 
 This node sets a custom variable value using the variable index provided by the `variable` configuration value and the `value` input value.
@@ -2974,6 +2984,11 @@ When the `in` input flow is activated:
 [CAUTION]
 ====
 This node does not have a default configuration.
+====
+
+[CAUTION]
+====
+The configuration of this node affects its value socket.
 ====
 
 This node interpolates and updates the specified custom variable multiple times over the specified duration.
@@ -3165,6 +3180,11 @@ The inputs to these steps are the `pointer` configuration value, the template pa
 This node does not have a default configuration.
 ====
 
+[CAUTION]
+====
+The configuration of this node affects its value sockets.
+====
+
 This node gets a glTF Asset Object Model property value using the effective JSON Pointer string derived from the JSON Pointer Template configuration value and the runtime values of the input value sockets.
 
 The type `T` is determined by the `type` configuration value which points to the element of the <<json-types,`types`>> array. Input value socket ids are defined by parsing the JSON Pointer Template string as described above.
@@ -3228,6 +3248,11 @@ Pointers containing `extras` properties are out of scope of this specification b
 This node does not have a default configuration.
 ====
 
+[CAUTION]
+====
+The configuration of this node affects its value sockets.
+====
+
 This node sets a glTF Asset Object Model property value using the effective JSON Pointer string derived from the JSON Pointer Template configuration value and the runtime values of the `<parameter>` input value sockets.
 
 The type `T` is determined by the `type` configuration value which points to the element of the <<json-types,`types`>> array. Input value socket ids are defined by parsing the JSON Pointer Template string as described above.
@@ -3284,6 +3309,11 @@ When the `in` input flow is activated:
 [CAUTION]
 ====
 This node does not have a default configuration.
+====
+
+[CAUTION]
+====
+The configuration of this node affects its value sockets.
 ====
 
 This node interpolates and updates the glTF Asset Object Model property multiple times over the specified duration using the effective JSON Pointer string derived from the JSON Pointer Template configuration value, the runtime values of the `<parameter>` input value sockets, and several interpolation inputs.
@@ -3574,6 +3604,11 @@ If multiple instances of this node exist in the graph, they **MUST** be activate
 This node does not have a default configuration.
 ====
 
+[CAUTION]
+====
+The configuration of this node affects its value sockets.
+====
+
 This node is activated when a custom event specified by the `event` configuration value occurs. The types, ids, and semantics of the output value sockets are defined by the custom event index.
 
 The `event` configuration value **MUST** be non-negative and less than the total number of custom event definitions, otherwise the node is invalid and the graph **MUST** be rejected.
@@ -3606,6 +3641,11 @@ If multiple instances of this node with the same event index exist in the graph,
 [CAUTION]
 ====
 This node does not have a default configuration.
+====
+
+[CAUTION]
+====
+The configuration of this node affects its value sockets.
 ====
 
 This node sends a custom event specified by the `event` configuration value. The types and ids of the input value sockets are defined by the custom event index.
@@ -4004,9 +4044,9 @@ A `math/e` node with its declaration.
 
 === Input Value Sockets
 
-If the operation has input value sockets, the `values` object **MUST** be defined and it *MUST** have properties matching the input value socket ids of the declaration; if the `values` object does not have a corresponding property for each input value socket id, the node is invalid and the graph **MUST** be rejected. The `values` object **MAY** have additional properties not matching the input value socket ids of the operation; such properties have no effect on the operation but their values **MUST** still conform to the JSON schema and other rules defined in this section. If the operation does not have input value sockets, the `values` object **SHOULD NOT** be defined.
+If the operation has input value sockets, the `values` object **MUST** be defined and it *MUST** have properties matching the input value socket ids defined by the declaration and/or configuration; if the `values` object does not have a corresponding property for each input value socket id, the node is invalid and the graph **MUST** be rejected. The `values` object **MAY** have additional properties not matching the input value socket ids of the operation; such properties have no effect on the operation but their values **MUST** still conform to the JSON schema and other rules defined in this section. If the operation does not have input value sockets, the `values` object **SHOULD NOT** be defined.
 
-Some nodes, e.g., `pointer/get` or `variable/get`, define their input value socket ids and/or types based on the node's configuration. Therefore, the configuration **MAY** need to be processed prior to the input value sockets.
+Some operations, e.g., `pointer/get` or `variable/get`, define their input value socket ids and/or types based on the node's configuration. Therefore, the configuration **MAY** need to be processed prior to the input value sockets.
 
 The values of the `values` object properties are JSON objects that define effective input value socket types and value sources. Each value source is either an inline constant value, a <<variables-types,type-default>> value, or a reference to another node's output value socket. If no source is defined or if the socket type does not match the declaration, the node is invalid and the graph **MUST** be rejected.
 
@@ -4452,11 +4492,12 @@ the interactivity graph is invalid and thus cannot be used; this has no effect o
 .... if "`the input value socket`" object has the `value` property:
 ..... _assert_ that the `value` property is a non-empty JSON array;
 ..... validate the `value` property value according to the <<inline-value-validation,Inline Value Validation>> using the `type` property.
-7. If any input value socket id defined by the declaration referenced by the `declaration` property is not present in the set of input value sockets defined by the `values` property,
+7. Let "`the operation inputs`" be the set (or the sets in case of overloaded operations) of input value sockets defined by the declaration and/or derived from the configuration.
+8. If any input value socket id present in "`the operation inputs`" is not present in the set of input value sockets defined by the `values` property,
 .. _reject the graph_.
-8. If the types of the input value sockets defined by the `values` property excluding sockets with ids not defined by the declaration do not match any combination of the input value socket types defined by the declaration,
+9. If the types of input value sockets defined by the `values` property excluding sockets with ids not present in "`the operation inputs`" do not match any set of the input value socket types present in "`the operation inputs`",
 .. _reject the graph_.
-9. If "`the node`" object has the `flows` property:
+10. If "`the node`" object has the `flows` property:
 .. _assert_ that the `flows` property is a non-empty JSON object;
 .. if the `flows` object has more properties than the implementation-specific limit on the number of output flow sockets per node,
 ... _reject the graph_;
