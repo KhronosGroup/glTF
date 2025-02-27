@@ -59,7 +59,7 @@ To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glT
 | `MIRROR` | The Mirror Megaverse Inc. | https://www.themirror.space/<br>`khronos at themirror.space` | [#2230](https://github.com/KhronosGroup/glTF/issues/2230) |
 | `MODUPLAY` | Moduplay Group Pty Ltd. | https://moduplaygroup.com.au/<br>`matthew.h at moduplay.com.au` | [#2445](https://github.com/KhronosGroup/glTF/issues/2445) |
 | `MOZ` | Mozilla Corporation | https://www.mozilla.org/ | [#1349](https://github.com/KhronosGroup/glTF/issues/1349) |
-| `MPEG` | The Moving Picture Experts Group | https://www.mpeg.org | [#1754](https://github.com/KhronosGroup/glTF/issues/1754) |
+| `MPEG` | The Moving Picture Experts Group | https://www.mpeg.org/<br>`tsto at qti.qualcomm.com`<br>`young.l at samsung.com` | [#1754](https://github.com/KhronosGroup/glTF/issues/1754) |
 | `MSFT` | Microsoft Corporation | https://www.microsoft.com/ | [#1164](https://github.com/KhronosGroup/glTF/pull/1164) |
 | `MTTR` | Matterport, Inc. | https://matterport.com/ | [#2150](https://github.com/KhronosGroup/glTF/issues/2150) |
 | `MX` | The Matrix.org Foundation | https://matrix.org/ | [#2126](https://github.com/KhronosGroup/glTF/issues/2126) |
