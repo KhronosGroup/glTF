@@ -1,0 +1,34 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "enum.value.schema.json",
+    "title": "Enum Value in EXT_structural_metadata",
+    "type": "object",
+    "description": "An enum value.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The name of the enum value."
+        },
+        "description": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The description of the enum value."
+        },
+        "value": {
+            "type": "integer",
+            "description": "The integer enum value."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "name",
+        "value"
+    ]
+}
