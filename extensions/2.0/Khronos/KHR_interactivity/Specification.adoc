@@ -3344,6 +3344,12 @@ Pointers containing `extras` properties are out of scope of this specification b
 - If the `pointer` configuration value is `"/nodes/{myId}/scale"` and the type `T` is `float4`, then the `isValid` output value is false and the `value` output value is `[NaN, NaN, NaN, NaN]`. Note that `myId` input value becomes irrelevant in this case because even if it is valid the Object Model property type does not match the declared type `T`.
 ====
 
+[NOTE]
+.Authoring Note
+====
+The `/meshes/{}/weights` and `/nodes/{}/weights` pointers defined in the glTF Asset Object Model have the `float[]` type that is not supported by this extension. Any `pointer/get` node using those pointers would always have its `isValid` output value as false.
+====
+
 ===== Pointer Set
 
 [cols="1h,1,2"]
@@ -3404,6 +3410,12 @@ When the `in` input flow is activated:
 .. remove the entry from the array.
 6. Set the resolved glTF Asset Object Model property to the `value` input value.
 7. Activate the `out` output flow.
+
+[NOTE]
+.Authoring Note
+====
+The `/meshes/{}/weights` and `/nodes/{}/weights` pointers defined in the glTF Asset Object Model have the `float[]` type that is not supported by this extension. Any `pointer/set` node using those pointers would always activate only its `err` output flow.
+====
 
 ===== Pointer Interpolate
 
@@ -3508,6 +3520,12 @@ On each tick, for each entry in the _pointer interpolation state dynamic array_:
 .Authoring Note
 ====
 Certain control point values can cause the intermediate output progress value to be negative or greater than one. This is not an error.
+====
+
+[NOTE]
+.Authoring Note
+====
+The `/meshes/{}/weights` and `/nodes/{}/weights` pointers defined in the glTF Asset Object Model have the `float[]` type that is not supported by this extension. Any `pointer/interpolate` node using those pointers would always activate only its `err` output flow.
 ====
 
 ==== Animation Control Nodes
