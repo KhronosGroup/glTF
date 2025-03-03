@@ -3512,7 +3512,7 @@ Certain control point values can cause the intermediate output progress value to
 
 ==== Animation Control Nodes
 
-===== Animation Play
+===== Animation Start
 
 [cols="1h,1,2"]
 |===
@@ -3521,8 +3521,8 @@ Certain control point values can cause the intermediate output progress value to
 | `in` | The entry flow into this node
 .4+| Input value sockets
 | `int animation` | Animation index
-| `float startTime` | Start time
-| `float endTime` | End time
+| `float startTime` | Start time in seconds
+| `float endTime` | End time in seconds
 | `float speed` | Speed multiplier
 .3+| Output flow sockets
 | `out` | The flow to be activated if the input values are valid
@@ -3546,6 +3546,12 @@ latexmath:[t=\begin{cases}
             r - s * T & \text{if } T \ne 0 \\
             0 & \text{if } T=0 \\
            \end{cases}]
+
+[TIP]
+.Authoring Tip
+====
+The `/animations/{}/extensions/KHR_interactivity/maxTime` virtual property can be used to query the value of stem:[T] for a given animation. By setting the `endTime` input value socket to that value, the graph can play the animation to completion without statically knowing its duration.
+====
 
 This node has no internal state.
 
@@ -3643,7 +3649,7 @@ When the `in` input flow is activated:
 | `in` | The entry flow into this node
 .2+| Input value sockets
 | `int animation` | Animation index
-| `float stopTime` | Stop time
+| `float stopTime` | Stop time in seconds
 .3+| Output flow sockets
 | `out` | The flow to be activated if the input values are valid
 | `err` | The flow to be activated if any of the input values is invalid
@@ -3824,9 +3830,15 @@ The `isPlaying` read-only property is true when the animation is playing, false 
 
 The `minTime` and `maxTime` read-only properties represent the timestamps of the first and the last keyframes as stored in the glTF animation object. The values **MUST** be derived from the `min` and `max` properties of the used sampler input accessors. Unused animation samplers, i.e., samplers not referenced by the animation channels, **MUST** be ignored. If the animation object is invalid as defined in the core glTF 2.0 specification, these properties **MUST** return NaNs.
 
+[TIP]
+.Authoring Tip
+====
+As defined in the base glTF 2.0 specification, animated properties are snapped to the closest keyframes if the requested timestamp is between zero and the timestamp of the first available keyframe. The `minTime` property could be used to query the timestamp of the animation's earliest keyframe data and start the animation from that point if the initial delay potentially present in the animation data needs to be skipped.
+====
+
 The `playhead` read-only property represents the current animation position within the glTF animation data. For valid glTF animations, the property value is equal to the last effective timestamp, so it is always greater than or equal to zero and less than or equal to `maxTime`. Before the animation start, this property value is zero; when the animation stops, the property retains its last value until the animation is restarted. For invalid glTF animations, the property value is always NaN.
 
-The `virtualPlayhead` read-only property represents the current animation position on the infinite timeline that is used for the input value sockets of the `animation/start` and `animation/stop` operations. For valid glTF animations, the property value is equal to the last requested timestamp. Before the animation start, this property is zero; when the animation stops, the property value retains the its last value until the animation is restarted. For invalid glTF animations, the property value is always NaN.
+The `virtualPlayhead` read-only property represents the current animation position on the infinite timeline that is used for the input value sockets of the `animation/start` and `animation/stop` operations. For valid glTF animations, the property value is equal to the last requested timestamp. Before the animation start, this property is zero; when the animation stops, the property value retains its last value until the animation is restarted. For invalid glTF animations, the property value is always NaN.
 
 The following pointers represent the properties defined in this section.
 
