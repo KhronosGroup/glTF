@@ -19,16 +19,124 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-TODO
+"Primitive restart" is a feature of the input assembly stage that restarts the current primitive when the vertex index value is the maximum possible value for a given index buffer type. For example, the line strip primitive usually produces one continuous connected series of line segments, but with primitive restart enabled, a maximal vertex index value (e.g., 65535 for unsigned 16-bit integer indices) indicates the beginning of a new line string disconnected from those preceding it. Primitive restart can be useful for batching multiple line strips, line loops, triangle strips, and triangle fans into a single draw call. Alternatively, batching can be achieved by decomposing the primitives into lines or triangles, but this may introduce many redundant vertices, increasing the amount of data required to describe the geometry.
+
+glTF 2.0 explicitly prohibits index buffers from containing maximal index values because support for primitive restart [varies](https://github.com/KhronosGroup/glTF/issues/1142#issuecomment-433717774) amongst graphics APIs. Per [section 3.7.2.1](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#meshes-overview) of the spec,
+
+> `indices` accessor **MUST NOT** contain the maximum possible value for the component type used (i.e., 255 for unsigned bytes, 65535 for unsigned shorts, 4294967295 for unsigned ints).
+
+This extension permits the above prohibition to be selectively relaxed, while providing a trivial fallback for implementations that don't support primitive restart.
+
+## Example
+
+Consider the simple example of a pair of line strings with a total of 5 vertices where vertices 0 and 1 make up the first line string and vertices 2, 3, and 4 make up the second. An unsigned byte index buffer representing these line strings using primitive restart would look like the following, where index 255 marks the disconnect between the two line strings:
+
+```
+[0, 1, 255, 2, 3, 4]
+```
+
+Over this same buffer, we can alternatively produce 2 separate accessors - one per line string - splitting at (and omitting) the prohibited primitive restart value:
+
+```
+[0, 1, 255, 2, 3, 4]
+[0, 1]     [2, 3, 4]
+```
+
+This permits two equivalent representations of the geometry without duplicating any binary data. In glTF, the accessors look like this:
+
+```json
+    "accessors": [
+        {
+            "bufferView": 0,
+            "count": 2,
+            "componentType": 5121,
+            "type": "SCALAR",
+            "name": "Line string 1 indices"
+        },
+        {
+            "bufferView": 0,
+            "byteOffset": 3,
+            "count": 3,
+            "componentType": 5121,
+            "type": "SCALAR",
+            "name": "Line string 2 indices"
+        },
+        {
+            "bufferView": 0,
+            "componentType": 5121,
+            "count": 6,
+            "type": "SCALAR",
+            "name": "All indices"
+        },
+        {
+            "bufferView": 1,
+            "componentType": 5126,
+            "count": 5,
+            "type": "VEC3",
+            "max": [
+                0.5,
+                0.5,
+                0.0
+            ],
+            "min": [
+                -0.5,
+                -0.5,
+                0.0
+            ],
+            "name": "Positions accessor"
+        }
+    ],
+
+```
+
+The mesh looks like this:
+
+```json
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0
+                    },
+                    "indices": 0,
+                    "material": 0,
+                    "mode": 3
+                },
+                {
+                    "attributes": {
+                        "POSITION": 0
+                    },
+                    "indices": 1,
+                    "material": 0,
+                    "mode": 3
+                }
+            ],
+            "extensions": {
+                "BENTLEY_primitive_restart": {
+                    "primitiveGroups": [
+                        {
+                            "primitives": [
+                                0,
+                                1
+                            ],
+                            "indices": 2
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+```
+
+By default, this mesh draws two separate line strip primitives, each using its own `indices` accessor. The `BENTLEY_primitive_restart` extension specifies that both primitives can be replaced with a single one using a combined `indices` accessor containing primitive restart values.
 
 ## glTF Schema Updates
 
-* **JSON Schema**: [mesh.BENTLEY_primitive_restart.schema.json](schema/mesh.BENTLEY_primitive_restart.schema.json)
+The `BENTLEY_primitive_restart` extension is applied to a mesh. Its `primitiveGroups` property is a list of groups of primitives that can be replaced with a single primitive using primitive restart. Each group is described by a list of indices into `mesh.primitives`, along with the ID of the accessor that supplies the vertex indices for the replacement primitive.
 
-## Known Implementations
+Every primitive in a group must have identical property values (e.g., attributes, material, mode, etc), with the exception of `indices`.
 
-* TODO: List of known implementations, with links to each if available.
+## JSON Schema
 
-## Resources
-
-* TODO: Resources, if any.
+[mesh.BENTLEY_primitive_restart.schema.json](schema/mesh.BENTLEY_primitive_restart.schema.json)
