@@ -19,7 +19,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-"Primitive restart" is a feature of the input assembly stage that restarts the current primitive when the vertex index value is the maximum possible value for a given index buffer type. For example, the line strip primitive usually produces one continuous connected series of line segments, but with primitive restart enabled, a maximal vertex index value (e.g., 65535 for unsigned 16-bit integer indices) indicates the beginning of a new line string disconnected from those preceding it. Primitive restart can be useful for batching multiple line strips, line loops, triangle strips, and triangle fans into a single draw call. Alternatively, batching can be achieved by decomposing the primitives into lines or triangles, but this may introduce many redundant vertices, increasing the amount of data required to describe the geometry.
+"Primitive restart" is a feature of the input assembly stage that restarts the current primitive when the vertex index value is the maximum possible value for a given index buffer type. For example, the line strip primitive usually produces one continuous connected series of line segments, but with primitive restart enabled, a maximal vertex index value (e.g., 65535 for unsigned 16-bit integer indices) indicates the beginning of a new line string disconnected from those preceding it. Primitive restart can be useful for batching multiple line strips, line loops, triangle strips, or triangle fans into a single draw call. Alternatively, batching can be achieved by decomposing the primitives into lines or triangles, but this may introduce many redundant vertices, increasing the amount of data required to describe the geometry.
 
 glTF 2.0 explicitly prohibits index buffers from containing maximal index values because support for primitive restart [varies](https://github.com/KhronosGroup/glTF/issues/1142#issuecomment-433717774) amongst graphics APIs. Per [section 3.7.2.1](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#meshes-overview) of the spec,
 
@@ -135,7 +135,7 @@ By default, this mesh draws two separate line strip primitives, each using its o
 
 The `BENTLEY_primitive_restart` extension is applied to a mesh. Its `primitiveGroups` property is a list of groups of primitives that can be replaced with a single primitive using primitive restart. Each group is described by a list of indices into `mesh.primitives`, along with the ID of the accessor that supplies the vertex indices for the replacement primitive.
 
-Every primitive in a group must have identical property values (e.g., attributes, material, mode, etc), with the exception of `indices`.
+Every primitive in a group **MUST** have identical property values (e.g., attributes, material, mode, etc), with the exception of `indices`.
 
 ## JSON Schema
 
