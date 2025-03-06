@@ -21,7 +21,7 @@ Written against the glTF 2.0 spec.
 
 "Primitive restart" is a feature of the input assembly stage that restarts the current primitive when the vertex index value is the maximum possible value for a given index buffer type. For example, the line strip primitive usually produces one continuous connected series of line segments, but with primitive restart enabled, a maximal vertex index value (e.g., 65535 for unsigned 16-bit integer indices) indicates the beginning of a new line string disconnected from those preceding it. Primitive restart can be useful for batching multiple line strips, line loops, triangle strips, or triangle fans into a single draw call. Alternatively, batching can be achieved by decomposing the primitives into lines or triangles, but this may introduce many redundant vertices, increasing the amount of data required to describe the geometry.
 
-glTF 2.0 explicitly prohibits index buffers from containing maximal index values because support for primitive restart [varies](https://github.com/KhronosGroup/glTF/issues/1142#issuecomment-433717774) amongst graphics APIs. Per [section 3.7.2.1](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#meshes-overview) of the spec,
+glTF 2.0 explicitly prohibits index buffers from containing maximal index values because support for primitive restart varies amongst graphics APIs. Per [section 3.7.2.1](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#meshes-overview) of the spec,
 
 > `indices` accessor **MUST NOT** contain the maximum possible value for the component type used (i.e., 255 for unsigned bytes, 65535 for unsigned shorts, 4294967295 for unsigned ints).
 
@@ -135,7 +135,17 @@ By default, this mesh draws two separate line strip primitives, each using its o
 
 The `BENTLEY_primitive_restart` extension is applied to a mesh. Its `primitiveGroups` property is a list of groups of primitives that can be replaced with a single primitive using primitive restart. Each group is described by a list of indices into `mesh.primitives`, along with the ID of the accessor that supplies the vertex indices for the replacement primitive.
 
-Every primitive in a group **MUST** have identical property values (e.g., attributes, material, mode, etc), with the exception of `indices`.
+## Constraints
+
+A given primitive index **MUST NOT** appear in more than one primitive group.
+
+Each primitive in each group **MUST** use one of the following topology types, as specified by the `mode` property: 2 (line loop), 3 (line strip), 5 (triangle strip), or 6 (triangle fan). No other topology types are permitted.
+
+All primitives in a given group **MUST** have identical property values (e.g., attributes, material, mode, etc), with the exception of `indices`.
+
+Each primitive in each group **MUST** define an `indices` property, i.e., they **MUST** use indexed geometry.
+
+The `indices` accessor specified by each primitive group **MUST** be a valid index accessor as per the base glTF 2.0 specification, i.e., their types **MUST** be scalar, their component types **MUST** be any of the unsigned integer types, and their buffer views (if defined) **MUST NOT** be used for any purpose other than vertex indices.
 
 ## JSON Schema
 
