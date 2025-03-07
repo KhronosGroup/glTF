@@ -155,4 +155,5 @@ The extension is subject to the following constraints. Violation of any constrai
 
 ## JSON Schema
 
-[mesh.BENTLEY_primitive_restart.schema.json](schema/mesh.BENTLEY_primitive_restart.schema.json)
+- [mesh.BENTLEY_primitive_restart.schema.json](schema/mesh.BENTLEY_primitive_restart.schema.json)
+- [primitiveGroup.schema.json](schema/primitiveGroup.schema.json)
