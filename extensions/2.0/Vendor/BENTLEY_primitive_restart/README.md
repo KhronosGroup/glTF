@@ -137,17 +137,19 @@ The `BENTLEY_primitive_restart` extension is applied to a mesh. Its `primitiveGr
 
 ## Constraints
 
-A given primitive index **MUST NOT** appear in more than one primitive group.
+The extension is subject to the following constraints. Violation of any constraint renders the entire extension invalid, in which case the engine should ignore the extension and render `mesh.primitives` instead.
 
-Each primitive index in a primitive group **MUST NOT** appear more than once in that group.
+- A given primitive index **MUST NOT** appear in more than one primitive group.
 
-Each primitive in each group **MUST** use one of the following topology types, as specified by the `mode` property: 2 (line loop), 3 (line strip), 5 (triangle strip), or 6 (triangle fan). No other topology types are permitted.
+- Each primitive index in a primitive group **MUST NOT** appear more than once in that group.
 
-All primitives in a given group **MUST** have identical property values (e.g., attributes, material, mode, etc), with the exception of `indices`. This includes the `extensions` property - e.g., if any primitive in a group has a `KHR_materials_variants` extension object, then all other primitives in the same group **MUST** have that extension with identical content.
+- Each primitive in each group **MUST** use one of the following topology types, as specified by the `mode` property: 2 (line loop), 3 (line strip), 5 (triangle strip), or 6 (triangle fan). No other topology types are permitted.
 
-Each primitive in each group **MUST** define an `indices` property, i.e., they **MUST** use indexed geometry.
+- All primitives in a given group **MUST** have identical property values (e.g., attributes, material, mode, etc), with the exception of `indices`. This includes the `extensions` property - e.g., if any primitive in a group has a `KHR_materials_variants` extension object, then all other primitives in the same group **MUST** have that extension with identical content.
 
-The `indices` accessor specified by each primitive group **MUST** be a valid index accessor as per the base glTF 2.0 specification, i.e., their types **MUST** be scalar, their component types **MUST** be any of the unsigned integer types, and their buffer views (if defined) **MUST NOT** be used for any purpose other than vertex indices.
+- Each primitive in each group **MUST** define an `indices` property, i.e., they **MUST** use indexed geometry.
+
+- The `indices` accessor specified by each primitive group **MUST** be a valid index accessor as per the base glTF 2.0 specification, i.e., their types **MUST** be scalar, their component types **MUST** be any of the unsigned integer types, and their buffer views (if defined) **MUST NOT** be used for any purpose other than vertex indices.
 
 ## JSON Schema
 
