@@ -6,7 +6,7 @@
     "description": "A group of primitives that can be drawn together using a single index buffer containing restart values",
     "allOf": [
         {
-            "$ref": "glTFChildOfRootProperty.schema.json"
+            "$ref": "glTFProperty.schema.json"
         }
     ],
     "properties": {
@@ -18,7 +18,7 @@
             "uniqueItems": true,
             "minItems": 1,
             "description": "The indices of the primitives that will be combined and drawn using a single set of indices",
-            "gltf_detailedDescription": "The indices of the primitives that will be combined and drawn using a single set of indices. All properties except for `indices` (e.g., `material`, `mode`, and `attributes` will be obtained from the first primitive in the list, and all other primitives in the list **MUST** have identical values for those properties. The `mode` must be TRIANGLE_FAN, TRIANGLE_STRIP, LINE_LOOP, or LINE_STRIP."
+            "gltf_detailedDescription": "The indices of the primitives that will be combined and drawn using a single set of indices. All properties except for `indices` (e.g., `material`, `mode`, and `attributes`) will be obtained from the first primitive in the list, and all other primitives in the list **MUST** have identical values for those properties. The `mode` must be TRIANGLE_FAN, TRIANGLE_STRIP, LINE_LOOP, or LINE_STRIP."
         },
         "indices": {
             "allOf": [

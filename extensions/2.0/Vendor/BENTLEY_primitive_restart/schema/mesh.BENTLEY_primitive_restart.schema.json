@@ -15,6 +15,7 @@
             "items": {
                 "$ref": "primitiveGroup.schema.json"
             },
+            "minItems": 1,
             "description": "The list of groups of primitives that can be drawn using a single index buffer with primitive restart"
         },
         "extensions": {},

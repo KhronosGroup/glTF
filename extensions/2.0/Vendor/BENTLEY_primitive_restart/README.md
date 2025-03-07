@@ -133,15 +133,17 @@ By default, this mesh draws two separate line strip primitives, each using its o
 
 ## glTF Schema Updates
 
-The `BENTLEY_primitive_restart` extension is applied to a mesh. Its `primitiveGroups` property is a list of groups of primitives that can be replaced with a single primitive using primitive restart. Each group is described by a list of indices into `mesh.primitives`, along with the ID of the accessor that supplies the vertex indices for the replacement primitive.
+The `BENTLEY_primitive_restart` extension is applied to a mesh. Its `primitiveGroups` property is a list of groups of primitives that can be replaced with a single primitive using primitive restart. Each group is described by a list of indices into `mesh.primitives`, along with the index of the accessor that supplies the vertex indices for the replacement primitive.
 
 ## Constraints
 
 A given primitive index **MUST NOT** appear in more than one primitive group.
 
+Each primitive index in a primitive group **MUST NOT** appear more than once in that group.
+
 Each primitive in each group **MUST** use one of the following topology types, as specified by the `mode` property: 2 (line loop), 3 (line strip), 5 (triangle strip), or 6 (triangle fan). No other topology types are permitted.
 
-All primitives in a given group **MUST** have identical property values (e.g., attributes, material, mode, etc), with the exception of `indices`.
+All primitives in a given group **MUST** have identical property values (e.g., attributes, material, mode, etc), with the exception of `indices`. This includes the `extensions` property - e.g., if any primitive in a group has a `KHR_materials_variants` extension object, then all other primitives in the same group **MUST** have that extension with identical content.
 
 Each primitive in each group **MUST** define an `indices` property, i.e., they **MUST** use indexed geometry.
 
