@@ -137,7 +137,7 @@ The `BENTLEY_primitive_restart` extension is applied to a mesh. Its `primitiveGr
 
 ## Constraints
 
-The extension is subject to the following constraints. Violation of any constraint renders the entire extension invalid, in which case the engine should ignore the extension and render `mesh.primitives` instead.
+The extension is subject to the following constraints. Violation of any constraint renders the entire extension invalid, in which case the extension **MUST** be ignored and the `mesh.primitives` objects are rendered as defined in the glTF 2.0 specification.
 
 - A given primitive index **MUST NOT** appear in more than one primitive group.
 
@@ -150,6 +150,8 @@ The extension is subject to the following constraints. Violation of any constrai
 - Each primitive in each group **MUST** define an `indices` property, i.e., they **MUST** use indexed geometry.
 
 - The `indices` accessor specified by each primitive group **MUST** be a valid index accessor as per the base glTF 2.0 specification, i.e., their types **MUST** be scalar, their component types **MUST** be any of the unsigned integer types, and their buffer views (if defined) **MUST NOT** be used for any purpose other than vertex indices.
+
+- Primitives referred to by this extension **MUST NOT** have morph targets.
 
 ## JSON Schema
 
