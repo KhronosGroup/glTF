@@ -3631,6 +3631,20 @@ On each asset animation update, for each entry in the _animation state dynamic a
 7. Let the requested timestamp stem:[r] be equal to the _current timestamp_.
 8. Compute the effective timestamp stem:[t] from stem:[r] as defined above and apply the glTF animation state at the timestamp stem:[t] to the asset.
 
+If two or more active animations target the same glTF property, it becomes undefined and remains undefined as long as the number of active animations affecting it is greater than one.
+
+[NOTE]
+.Example
+====
+Let's say an asset has two animations that target position of the node zero. The first animation lasts 15 seconds and the second animation lasts 5 seconds. The graph starts the first animation, waits 5 seconds, then starts the second animation. Both animations are played to completion once.
+
+During the first 5 seconds, the position of the node zero is well-defined. It is repeatedly updated by the first animation and could be reliably queried with a `pointer/get` operation.
+
+During the next 5 seconds (i.e., when both animations are active) the position of the node zero is undefined. Since both animations try to update it at the same time, querying the property with a `pointer/get` operation could return arbitrary values. However, using a `pointer/set` operation on that property would make it well-defined until the next animation update.
+
+During the last 5 seconds, the position of the node zero is well-defined again.
+====
+
 ===== Animation Stop
 
 [cols="1h,1,2"]
