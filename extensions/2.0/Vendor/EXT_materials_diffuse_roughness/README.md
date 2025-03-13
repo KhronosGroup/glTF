@@ -19,11 +19,14 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension defines a way to control the roughness of the base diffuse surface, separate from the specular roughness. This is equivalent to the [OpenPBR specification for base_diffuse_roughness](https://academysoftwarefoundation.github.io/OpenPBR/#model/basesubstrate/glossy-diffuse). Specifically, this extension changes the diffuse BRDF [defined in the glTF spec](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#dielectrics) to depend on an additional roughness parameter.
+This extension defines a way to control the roughness of the base diffuse surface, separate from the specular roughness. This is equivalent to the [OpenPBR specification for base_diffuse_roughness](https://academysoftwarefoundation.github.io/OpenPBR/#model/basesubstrate/glossy-diffuse). Specifically, this extension changes the diffuse BRDF [defined in the glTF spec](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#dielectrics) to depend on an additional roughness parameter. This models the "flattening" effect which is often observed in real rough diffuse surfaces such as sand stone.
+
+![EON Diffuse Roughness](meetmat.png)
+The material on the right appears more rough than a simple Lambertian surface.
 
 ## Extending Materials
 
-Adding diffuse roughness can be done by adding the `ADOBE_materials_clearcoat_specular` extension to any glTF material.  For example, the following defines a material with a diffuse roughness of 1.0 while maintaining a specular roughness of 0.5.
+Adding diffuse roughness can be done by adding the `EXT_materials_diffuse_roughness` extension to any glTF material.  For example, the following defines a material with a diffuse roughness of 1.0 while maintaining a specular roughness of 0.5.
 
 ```json
 {
@@ -46,8 +49,9 @@ Adding diffuse roughness can be done by adding the `ADOBE_materials_clearcoat_sp
 
 ### Diffuse Roughness BRDF
 
+The default diffuse BRDF of glTF defines a purely Lamertian surface. This extension essentially accounts for a rough surface's tendency to respond to light retroreflectively. That is, based on viewing angle additional This extension adds a scalar to 
 Roughness blends between a simple, Lambertian diffuse and a more complex...
-OpenPBR uses an energy-conserving version of Oren Nayer
+OpenPBR uses an energy-conserving version of Oren Nayer (link).
 Using Burley diffuse (Disney 2012) is also possible and cheaper.
 `diffuseRoughnessFactor` of 0.0 essentially provides Lambertian diffuse which matches default glTF 2.0 spec.
 
