@@ -1,0 +1,45 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_mesh_primitive_edge_visibility glTF extension",
+    "type": "object",
+    "description": "glTF extension encoding the visibility of the edges of a triangles primitive",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "visibility": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of the accessor encoding the visibility of each triangle edge as a bitfield with two bits per edge.",
+            "gltf_detailedDescription": "An edge visibility of 0 indicates the edge is never drawn; 1 indicates the edge is only drawn in silhouette; 2 indicates the edge is always drawn; and 3 indicates the edge is always drawn and can be drawn by a primitive defined in `primitives`."
+        },
+        "silhouetteNormals": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of the accessor encoding the pair of outward-facing normals for the two faces sharing each silhouette edge (visibility 1) encoded in `visibility`.",
+            "gltf_detailedDescription": "###TODO. This property **MUST** be defined if `visibility` encodes any edge with visibility value `1`."
+        },
+        "primitives": {
+            "type": "array",
+            "description": "An array of primitives defining geometry that renders all of the edges encoded as `3` in `visibility`.",
+            "gltf_detailedDescription": "###TODO. This property **MUST** be defined if `visibility` encodes any edge with visibility value `3`",
+            "items": {
+                "$ref": "mesh.primitive.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "visibility"
+    ]
+}
