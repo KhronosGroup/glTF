@@ -25,12 +25,12 @@
                 }
             ],
             "description": "The index of the accessor encoding the pair of outward-facing normals for the two faces sharing each silhouette edge (visibility 1) encoded in `visibility`.",
-            "gltf_detailedDescription": "###TODO. This property **MUST** be defined if `visibility` encodes any edge with visibility value `1`."
+            "gltf_detailedDescription": "This property **MUST** be defined if and only if `visibility` encodes at least one edge with visibility value `1`."
         },
         "primitives": {
             "type": "array",
             "description": "An array of primitives defining geometry that renders all of the edges encoded as `3` in `visibility`.",
-            "gltf_detailedDescription": "###TODO. This property **MUST** be defined if `visibility` encodes any edge with visibility value `3`",
+            "gltf_detailedDescription": "This property **MUST** be defined if and only if `visibility` encodes at least one edge with visibility value `3`",
             "items": {
                 "$ref": "mesh.primitive.schema.json"
             },
