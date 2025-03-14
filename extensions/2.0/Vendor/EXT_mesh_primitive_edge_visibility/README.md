@@ -1,5 +1,5 @@
 <!--
-Copyright 2015-2021 The Khronos Group Inc.
+Copyright 2025 The Khronos Group Inc.
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
