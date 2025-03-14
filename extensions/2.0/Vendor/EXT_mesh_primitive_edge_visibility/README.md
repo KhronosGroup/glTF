@@ -29,7 +29,7 @@ Figure 1 illustrates a typical rendering of a cylinder with its edges. The width
 </figure>
 
 This image shows both of the two types of edges described by `EXT_mesh_primitive_edge_visibility`.
-- A [silhouette edge](https://en.wikipedia.org/wiki/Silhouette_edge) is any edge separating a front-facing triangle from a back-facing triangle. In Figure 1, one silhouette is visible along each of the curved left and right sides of the cylinder. Silhouette edges are *conditionally visible* - their visibility is determined at display time based on the camera direction. In Figure 2, each of the vertical edges encircling the cylinder represents a potential silhouette edge.
+- A [silhouette edge](https://en.wikipedia.org/wiki/Silhouette_edge) is any edge separating a front-facing triangle from a back-facing triangle. In Figure 1, one silhouette is visible along each of the curved left and right sides of the cylinder. Silhouette edges are *conditionally visible* - their visibility is determined at display time based on the orientations of the adjacent triangles relative to the camera. In Figure 2, each of the vertical edges encircling the cylinder represents a potential silhouette edge.
 - A hard edge is any edge attached to only a single triangle, or any edge between two logical faces of the 3D object. In Figure 1, hard edges are visible around the perimeters of the cylinder's circular end caps. Hard edges are *always visible* regardless of the camera direction.
 
 ## Shortcomings of Existing Techniques
@@ -41,7 +41,7 @@ Various techniques can be applied to a glTF asset to approximate the rendering i
 <figcaption><em><b>Figure 2</b> Triangle edges drawn using a wiremesh technique</em></figcaption>
 </figure>
 
-Screen-space techniques (e.g., a "toon" or "outline" shader) can be applied to add edges during image post-processing. Such techniques can only approximate the actual edges. The technique used in Figure 3, for example, fails to reconstruct the edges along the top end cap of the cylinder where they fall inside the cylinder's volume projected onto the image plane.
+Screen-space techniques (e.g., "toon" or "outline" shaders) can be applied to add edges during image post-processing. Because they operate on pixels rather than geometry, such techniques can only approximate the actual edges. The technique used in Figure 3, for example, fails to reconstruct the edges along the upper end cap of the cylinder where they fall inside the cylinder's volume projected onto the image plane.
 
 <figure>
 <img src="./figures/outline.png"/>
@@ -55,10 +55,10 @@ The hard edges could be encoded explicitly into the glTF asset as additional pri
 <figcaption><em><b>Figure 4</b> Edges drawn as separate primitives</em></figcaption>
 </figure>
 
-The [CESIUM_primitive_outline](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Vendor/CESIUM_primitive_outline) provides an additional index buffer describing each visible edge as a line segment (a pair of indices into the triangle mesh's list of vertices). The extension leaves the details of how to render the edges up to the engine, requiring only that they render without depth-fighting. This approach satisfies the use case for which it was intended - displaying the edges of boxy, low-resolution buildings - but suffers some limitations:
+The [CESIUM_primitive_outline](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Vendor/CESIUM_primitive_outline) extension provides an additional index buffer describing each hard edge as a line segment (a pair of indices into the triangle mesh's list of vertices). The extension leaves the details of how to render the edges up to the engine, requiring only that they render without depth-fighting. This approach satisfies the use case for which it was intended - displaying the edges of boxy, low-resolution buildings - but suffers some limitations:
 - The surface geometry must be represented as indexed triangles.
 - It only supports hard edges, not silhouettes.
-- The representation of the edges are pairs of vertex indices can significantly increase the size of the glTF asset.
+- The representation of the edges as pairs of vertex indices can significantly increase the size of the glTF asset.
 - The edges cannot specify their own materials.
 
 <figure>
@@ -74,11 +74,11 @@ The `EXT_mesh_primitive_edge_visibility` extension is applied to a mesh primitiv
 
 The visibility of a single edge is specified using 2 bits as one of the following visibility values:
 - 0: Hidden edge - the edge should never be drawn.
-- 1: Silhouette edge - the edge should be drawn only in silhouette - i.e., when separating a front-facing triangle from a back-facing triangle.
+- 1: Silhouette edge - the edge should be drawn only in silhouette (i.e., when separating a front-facing triangle from a back-facing triangle).
 - 2: Hard edge - the edge should always be drawn.
-- 3: Hard edge encoded in `primitives` - a representation of the edge is included in the extension's `primitives` property. The edge should always be drawn, either by drawing the `primitives` array or by drawing it like an edge with visibility value `2`.
+- 3: Hard edge encoded in `primitives` - a representation of the edge is included in the extension's `primitives` property. The edge should always be drawn, either by drawing the `primitives` array or by drawing it like an edge with visibility value `2` (never both).
 
-The extension's `visibility` property specifies the index of an accessor of `SCALAR` type and `UNSIGNED BYTE` component type that encodes as a bitfield the visibility of every edge of every triangle in the mesh. The ordering of triangles and vertices is as described by [Section 3.7.2.1](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#meshes-overview) of the glTF 2.0 specification. For each triangle `(v0, v1, v2)`, the bitfield encodes three visibility values for the edges `(v0:v1, v1:v2, v2:v0)` in that order. Therefore, the number of bytes in the bitfield **MUST** be `6 * N / 8` rounded up to the nearest whole number, where `N` is the number of triangles in the primitive.
+The extension's `visibility` property specifies the index of an accessor of `SCALAR` type and component type 5121 (unsigned byte) that encodes as a bitfield the visibility of every edge of every triangle in the mesh. The ordering of triangles and vertices is as described by [Section 3.7.2.1](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#meshes-overview) of the glTF 2.0 specification. For each triangle `(v0, v1, v2)`, the bitfield encodes three visibility values for the edges `(v0:v1, v1:v2, v2:v0)` in that order. Therefore, the accessor's `count` **MUST** be `6 * N / 8` rounded up to the nearest whole number, where `N` is the number of triangles in the primitive.
 
 The visibility of a given edge shared by a given pair of triangles **MUST** be encoded as a non-zero value no more than once. All other occurrences of the same edge in the bitfield **MUST** be encoded as zero, to prevent engines from either producing redundant geometry for shared edges or having to manually detect and account for such redundancies.
 
@@ -105,7 +105,7 @@ Byte    0                 1
 Bit        6   4   2   0     14  12  10  8
 ```
 
-Assume that the vertical edges `0:1` and `2:3` are hard edges, the horizontal edges `0:3` and `1:2` are hidden edges, and the shared diagonal edge `0:2` is a silhouette edge. Then the corresponding visibility values would be `[2,0,1, 1,2,0]`. However, we must ensure that the visibility of the shared edge is encoded only once, so after replacing one of the redundant `1`s the visibility values are `[2,0,1, 0,2,0]`. Encoding the edge visibility produces the sequence of bytes `[18, 2]`, as illustrated below.
+Assume that the vertical edges `0:1` and `2:3` are hard edges, the horizontal edges `3:0` and `1:2` are hidden edges, and the shared diagonal edge `0:2` is a silhouette edge. Then the corresponding visibility values would be `[2,0,1, 1,2,0]`. However, we must ensure that the visibility of the shared edge is encoded only once, so after replacing one of the redundant `1`s the visibility values are `[2,0,1, 0,2,0]`. Encoding the edge visibility produces the sequence of bytes `[18, 2]`, as illustrated below.
 
 ```
 Byte    0                 1
@@ -119,17 +119,19 @@ Decimal              18                 2
 
 The extension's `primitives` property optionally provides an array of primitives representing all of the hard edges encoded with visibility value `3` in the `visibility` property. Engines should render these primitives directly, in which case they **MUST** do so without depth-fighting and **MUST NOT** also produce their own rendering of these edges. The primary use case is for edges that should be drawn using a different material than the corresponding surface - for example, a red outline drawn around a filled green shape.
 
-The `BENTLEY_primitive_restart` extension *may* be applied to the `primitives` property.
-
 The `primitives` property **MUST** be defined *if and only if* at least one edge is encoded with visibility value `3` in `visibility`.
 
 ### Silhouette Normals
 
-The extension's `silhouetteNormals` property specifies the index of an accessor providing normal vectors used to determine the visibility of silhouette edges at display time. For each edge encoded as a silhouette (visibility value `1`) in `visibility`, the silhouette normals buffer provides the two outward-facing normal vectors of the pair of triangles sharing the edge. Each normal vector is compressed into 16 bits using the "oct16" encoding described [here](https://jcgt.org/published/0003/02/01/). The ordering of the normal vector pairs corresponds to the ordering of the edges in `visibility`; that is, the first pair of normals corresponds to the first edge encoded with visibility `1`, the second pair to the second occurrence of visibility `1`; and so on.
+The extension's `silhouetteNormals` property specifies the index of an accessor of `SCALAR` type and component type 5123 (unsigned short) providing normal vectors used to determine the visibility of silhouette edges at display time. For each edge encoded as a silhouette (visibility value `1`) in `visibility`, the silhouette normals buffer provides the two outward-facing normal vectors of the pair of triangles sharing the edge. Each normal vector is compressed into 16 bits using the "oct16" encoding described [here](https://jcgt.org/published/0003/02/01/). The ordering of the normal vector pairs corresponds to the ordering of the edges in `visibility`; that is, the first pair of normals corresponds to the first edge encoded with visibility `1`, the second pair to the second occurrence of visibility `1`; and so on. The accessor's `count` **MUST** be twice the number of edges encoded with visibility value `1`.
 
 Engines should render a silhouette edge unless both adjacent triangles are front-facing or both are back-facing, as determined by their normal vectors.
 
-The `silhouetteNormals` property **MUST** be defined *if and only if* at least one edge is encoded with visibility value `1` in `visibility`. The buffer's byte length must be equal to `4 * N` where `N` is the number of edges encoded with visibility value `1`.
+The `silhouetteNormals` property **MUST** be defined *if and only if* at least one edge is encoded with visibility value `1` in `visibility`.
+
+### Extensions
+
+The `BENTLEY_primitive_restart` extension *may* be applied to the `EXT_mesh_primitive_edge_visibility` extension object, in which case it applies to the `primitives` property in the same way that it would apply to `mesh.primitives`.
 
 ## JSON Schema
 
