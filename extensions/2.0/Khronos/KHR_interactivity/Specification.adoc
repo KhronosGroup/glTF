@@ -1514,19 +1514,19 @@ Since this operation is a shortcut for the combination of multiplications and su
 | Operation | `math/rotate2D` | 2D rotation
 .2+| Input value sockets
 | `float2 a` | Vector to rotate
-| `float b`  | Angle in radians
+| `float angle`  | Angle in radians
 | Output value sockets
 | `float2 value` | Rotated vector
 |===
 
-Let latexmath:[a_x] and latexmath:[a_y] be the components of the `a` input socket value.
+Let latexmath:[a_x] and latexmath:[a_y] be the components of the `a` input socket value and latexmath:[\alpha] be the `angle` input socket value.
 
 Then the components of the `value` output socket value are computed as follows:
 
 [latexmath]
 +++++
-x = a_x \cdot \cos(b) - a_y \cdot \sin(b) \\
-y = a_x \cdot \sin(b) + a_y \cdot \cos(b)
+x = a_x \cdot \cos(\alpha) - a_y \cdot \sin(\alpha) \\
+y = a_x \cdot \sin(\alpha) + a_y \cdot \cos(\alpha)
 +++++
 
 Since this operation is a shortcut for the combination of trigonometry and arithmetic operations, NaN and infinity values are propagated accordingly.
@@ -1538,7 +1538,7 @@ Since this operation is a shortcut for the combination of trigonometry and arith
 | Operation | `math/rotate3D` | 3D rotation
 .2+| Input value sockets
 | `float3 a` | Vector to rotate
-| `float4 b` | Rotation quaternion
+| `float4 rotation` | Rotation quaternion
 | Output value sockets
 | `float3 value` | Rotated vector
 |===
@@ -1551,14 +1551,14 @@ This node assumes that the rotation quaternion is unit.
 Let
 
 - latexmath:[\vec{a}] be a three-component vector formed from the `a` input socket value;
-- latexmath:[b_x], latexmath:[b_y], latexmath:[b_z], and latexmath:[b_w] be the components of the `b` input socket value;
-- latexmath:[\vec{b}] be a three-component vector formed from latexmath:[b_x], latexmath:[b_y], and latexmath:[b_z].
+- latexmath:[r_x], latexmath:[r_y], latexmath:[r_z], and latexmath:[r_w] be the components of the `rotation` input socket value;
+- latexmath:[\vec{r}] be a three-component vector formed from latexmath:[r_x], latexmath:[r_y], and latexmath:[r_z].
 
 Then the components of the `value` output socket value are computed as the components of the following vector:
 
 [latexmath]
 +++++
-\vec{a} + 2 \cdot (\vec{b} \times (\vec{b} \times \vec{a}) + b_w \cdot (\vec{b} \times \vec{a}))
+\vec{a} + 2 \cdot (\vec{r} \times (\vec{r} \times \vec{a}) + r_w \cdot (\vec{r} \times \vec{a}))
 +++++
 
 Since this operation is a shortcut for the combination of arithmetic operations, NaN and infinity values are propagated accordingly.
