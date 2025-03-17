@@ -1511,28 +1511,69 @@ Since this operation is a shortcut for the combination of multiplications and su
 
 [cols="1h,1,2"]
 |===
-| Operation | `math/rotate2d` | 2D rotation
+| Operation | `math/rotate2D` | 2D rotation
 .2+| Input value sockets
 | `float2 a` | Vector to rotate
 | `float b`  | Angle in radians
 | Output value sockets
-| `float2 value` | Vector stem:[a] rotated counter-clockwise by stem:[b]
+| `float2 value` | Rotated vector
 |===
+
+Let latexmath:[a_x] and latexmath:[a_y] be the components of the `a` input socket value.
+
+Then the components of the `value` output socket value are computed as follows:
+
+[latexmath]
++++++
+x = a_x \cdot \cos(b) - a_y \cdot \sin(b) \\
+y = a_x \cdot \sin(b) + a_y \cdot \cos(b)
++++++
+
+Since this operation is a shortcut for the combination of trigonometry and arithmetic operations, NaN and infinity values are propagated accordingly.
 
 ===== Rotate 3D
 
 [cols="1h,1,2"]
 |===
-| Operation | `math/rotate3d` | 3D rotation
-.3+| Input value sockets
+| Operation | `math/rotate3D` | 3D rotation
+.2+| Input value sockets
 | `float3 a` | Vector to rotate
-| `float3 b` | Vector representing an axis to rotate around
-| `float c`  | Angle in radians
+| `float4 b` | Rotation quaternion
 | Output value sockets
-| `float3 value` | Vector stem:[a] rotated around vector stem:[b] counter-clockwise by stem:[c]
+| `float3 value` | Rotated vector
 |===
 
-If the vector stem:[b] is not unit, rotation results **MAY** be undefined.
+[CAUTION]
+====
+This node assumes that the rotation quaternion is unit.
+====
+
+Let
+
+- latexmath:[\vec{a}] be a three-component vector formed from the `a` input socket value;
+- latexmath:[b_x], latexmath:[b_y], latexmath:[b_z], and latexmath:[b_w] be the components of the `b` input socket value;
+- latexmath:[\vec{b}] be a three-component vector formed from latexmath:[b_x], latexmath:[b_y], and latexmath:[b_z].
+
+Then the components of the `value` output socket value are computed as the components of the following vector:
+
+[latexmath]
++++++
+\vec{a} + 2 \cdot (\vec{b} \times (\vec{b} \times \vec{a}) + b_w \cdot (\vec{b} \times \vec{a}))
++++++
+
+Since this operation is a shortcut for the combination of arithmetic operations, NaN and infinity values are propagated accordingly.
+
+[NOTE]
+.Implementation Note
+====
+This operation is supposed to be more efficient than converting the rotation quaternion to a matrix and transforming the vector with it.
+====
+
+[TIP]
+.Authoring Tip
+====
+This operation does not implicitly normalize the rotation quaternion. If needed, that step could be done explicitly by adding a `math/normalize` node.
+====
 
 ===== Transform
 
@@ -1654,6 +1695,11 @@ See `math/mul` for per-element multiplication.
 | Output value sockets
 | `float4x4 value` | Matrix composed from the TRS properties
 |===
+
+[CAUTION]
+====
+This node assumes that the rotation quaternion is unit.
+====
 
 Let
 
