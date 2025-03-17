@@ -61,7 +61,7 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 
 ## Implementation (Informative)
 
-There are several models out there for simulating diffuse roughness via micro-facets, including the widely-used Disney diffuse (Burley) model from the [2012 Disney PBR paper](https://blog.selfshadow.com/publications/s2012-shading-course/burley/s2012_pbs_disney_brdf_notes_v3.pdf).  This extension does not restrict an implementation to a specific algorithm. OpenPBR recommends using Energy-conserving Oren-Nayar (EON) which was developed specifically for OpenPBR to be energy-conserving. Both Burley diffuse and regular Oren-Nayar tend to lose energy, making the surface appear darker or brighter than it should.
+There are several models out there for simulating diffuse roughness via micro-facets, including the widely-used Disney diffuse (Burley) model from the [2012 Disney PBR paper](https://media.disneyanimation.com/uploads/production/publication_asset/48/asset/s2012_pbs_disney_brdf_notes_v3.pdf).  This extension does not restrict an implementation to a specific algorithm. OpenPBR recommends using Energy-conserving Oren-Nayar (EON) which was developed specifically for OpenPBR to be energy-conserving. Both Burley diffuse and regular Oren-Nayar tend to lose energy, making the surface appear darker or brighter than it should.
 
 ### EON
 Shader code. (just link?)
