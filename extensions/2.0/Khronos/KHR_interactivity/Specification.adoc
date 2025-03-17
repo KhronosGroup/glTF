@@ -3317,7 +3317,7 @@ The inputs to these steps are the `pointer` configuration value, the template pa
 
 1. Assume that the `pointer` configuration value is syntactically valid.
 2. Let _P_ be a copy of the `pointer` configuration value.
-3. For each element of the template parameter array:
+3. For each element of the template parameter array taken in the descending order of parameter substring locations:
 .. Assert that the corresponding input socket value is not negative.
 .. Convert the corresponding input socket value to its decimal string representation containing only ASCII characters `0x30 ... 0x39` with no extra leading zeros.
 .. Update _P_ by replacing the template parameter substring, as identified by the template parameter location, with the decimal string value of the corresponding input value socket.
