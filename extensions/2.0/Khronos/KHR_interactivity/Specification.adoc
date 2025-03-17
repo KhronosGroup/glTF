@@ -1798,6 +1798,226 @@ B = ((a_{11}/s_x, a_{12}/s_y, a_{13}/s_z),
 .. set the `rotation` output value to stem:[(0, 0, 0, 1)];
 .. set the `scale` output value to stem:[(1, 1, 1)].
 
+==== Quaternion Nodes
+
+===== Conjugation
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/quatConjugate` | Quaternion conjugation operation
+| Input value sockets
+| `float4 a` | Input quaternion
+| Output value sockets
+| `float4 value` | Conjugated quaternion
+|===
+
+Let stem:[a_x], stem:[a_y], stem:[a_z], and stem:[a_w] be the components of stem:[a].
+
+Then the components of the `value` output socket value are set as follows:
+
+[latexmath]
++++++
+x = -a_x \\
+y = -a_y \\
+z = -a_z \\
+w = a_w
++++++
+
+Since this operation is a shortcut for the combination of negations, NaN and infinity values are propagated accordingly.
+
+[TIP]
+.Authoring Tip
+====
+If the quaternion is unit, this operation also produces the quaternion's inverse.
+====
+
+===== Multiplication
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/quatMul` | Quaternion multiplication operation
+.2+| Input value sockets
+| `float4 a` | First quaternion
+| `float4 b` | Second quaternion
+| Output value sockets
+| `float4 value` | Quaternion product
+|===
+
+Let
+
+- stem:[a_x], stem:[a_y], stem:[a_z], and stem:[a_w] be the components of stem:[a];
+- stem:[b_x], stem:[b_y], stem:[b_z], and stem:[b_w] be the components of stem:[b].
+
+Then the components of the `value` output socket value are computed as follows:
+
+[stem]
++++++
+x = a_w * b_x + a_x * b_w + a_y * b_z - a_z * b_y \
+y = a_w * b_y + a_y * b_w + a_z * b_x - a_x * b_z \
+z = a_w * b_z + a_z * b_w + a_x * b_y - a_y * b_x \
+w = a_w * b_w - a_x * b_x - a_y * b_y - a_z * b_z
++++++
+
+Since this operation is a shortcut for the combination of multiplications, subtractions, and additions, NaN and infinity values are propagated accordingly.
+
+===== Angle Between Quaternions
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/quatAngleBetween` | Angle between two quaternions
+.2+| Input value sockets
+| `float4 a` | First quaternion
+| `float4 b` | Second quaternion
+| Output value sockets
+| `float value` | Angle in radians
+|===
+
+[CAUTION]
+====
+This node assumes that both input quaternions are unit.
+====
+
+Let
+
+- stem:[a_x], stem:[a_y], stem:[a_z], and stem:[a_w] be the components of stem:[a];
+- stem:[b_x], stem:[b_y], stem:[b_z], and stem:[b_w] be the components of stem:[b].
+
+Then the `value` output socket value is computed as follows:
+
+[latexmath]
++++++
+2 \cdot \arccos(a_x \cdot b_x + a_y \cdot b_y + a_z \cdot b_z + a_w \cdot b_w)
++++++
+
+Since this operation is a shortcut for the combination of arithmetic and trigonometry operations, NaN and infinity values are propagated accordingly.
+
+[TIP]
+.Authoring Tip
+====
+This operation does not implicitly normalize the input quaternions. If needed, that step could be done explicitly by adding `math/normalize` nodes.
+====
+
+===== Quaternion From Axis & Angle
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/quatFromAxisAngle` | Create a quaternion from a rotation axis and an angle
+.2+| Input value sockets
+| `float3 axis` | Rotation axis
+| `float angle` | Angle in radians
+| Output value sockets
+| `float4 value` | Rotation quaternion
+|===
+
+[CAUTION]
+====
+This node assumes that the rotation axis vector is unit.
+====
+
+The components of the `value` output socket value are computed as follows:
+
+[latexmath]
++++++
+x = \textit{axis}_x \cdot \sin(0.5 \cdot \textit{angle}) \\
+y = \textit{axis}_y \cdot \sin(0.5 \cdot \textit{angle}) \\
+z = \textit{axis}_z \cdot \sin(0.5 \cdot \textit{angle}) \\
+w = \cos(0.5 \cdot \textit{angle})
++++++
+
+Since this operation is a shortcut for the combination of multiplications and trigonometry functions, NaN and infinity values are propagated accordingly.
+
+[TIP]
+.Authoring Tip
+====
+This operation does not implicitly normalize the rotation axis vector. If needed, that step could be done explicitly by adding a `math/normalize` node.
+====
+
+===== Quaternion To Axis & Angle
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/quatToAxisAngle` | Decompose a quaternion to a rotation axis and an angle
+| Input value sockets
+| `float4 a` | Rotation quaternion
+.2+| Output value sockets
+| `float3 axis` | Rotation axis
+| `float angle` | Angle in radians
+|===
+
+[CAUTION]
+====
+This node assumes that the rotation quaternion is unit.
+====
+
+Let stem:[a_x], stem:[a_y], stem:[a_z], and stem:[a_w] be the components of stem:[a].
+
+Then the `angle` and `axis` output socket values are computed as follows:
+
+1. If the absolute value of stem:[a_w] is close to one within an implementation-defined threshold, set the `angle` socket value to zero and the `axis` socket value to any axis-aligned unit vector, i.e., to one of latexmath:[(\pm1, 0, 0)], latexmath:[(0, \pm1, 0)], or latexmath:[(0, 0, \pm1)].
+2. Else set `angle` and `axis` socket values using the following expressions:
++
+[latexmath]
++++++
+\textit{axis}_x = \frac{a_x}{\sqrt{1 - a^2_w}} \\
+\textit{axis}_y = \frac{a_y}{\sqrt{1 - a^2_w}} \\
+\textit{axis}_z = \frac{a_z}{\sqrt{1 - a^2_w}} \\
+\textit{angle} = 2 \cdot \arccos(a_w)
++++++
+
+Since this operation is a shortcut for the combination of arithmetic and trigonometry functions, NaN and infinity values are propagated accordingly.
+
+[TIP]
+.Authoring Tip
+====
+This operation does not implicitly normalize the rotation quaternion. If needed, that step could be done explicitly by adding a `math/normalize` node.
+====
+
+===== Quaternion From Two Directional Vectors
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/quatFromDirections` | Create a quaternion from two directional vectors
+.2+| Input value sockets
+| `float3 a` | First direction
+| `float3 b` | Second direction
+| Output value sockets
+| `float4 value` | Rotation quaternion
+|===
+
+[CAUTION]
+====
+This node assumes that both directions are unit.
+====
+
+The components of the `value` output socket value are computed as follows:
+
+1. Let latexmath:[c] be the dot product of latexmath:[\vec{a}] and latexmath:[\vec{b}].
+2. If latexmath:[c] is close to positive one within an implementation-defined threshold,
+.. set the `value` output value to an identity quaternion, i.e., set the stem:[w] component of the `value` output value to stem:[\pm1] and set the other three components to zeros;
+.. skip the next steps.
+3. If latexmath:[c] is close to negative one within an implementation-defined threshold,
+.. set the stem:[x], stem:[y], and stem:[z] components of the `value` output socket value to the corresponding components of a unit vector representing a direction perpendicular to latexmath:[\vec{a}];
+.. set the stem:[w] component of the `value` output socket value to zero;
+.. skip the next steps.
+4. Let latexmath:[\vec{r}] be the normalized cross product of latexmath:[\vec{a}] and latexmath:[\vec{b}].
+5. Set the components of the `value` output socket value using the following expressions:
++
+[latexmath]
++++++
+x = r_x \cdot \sqrt{0.5 - 0.5 \cdot c} \\
+y = r_y \cdot \sqrt{0.5 - 0.5 \cdot c} \\
+z = r_z \cdot \sqrt{0.5 - 0.5 \cdot c} \\
+w = \sqrt{0.5 + 0.5 \cdot c}
++++++
+
+Since this operation is a shortcut for the combination of arithmetic and exponential functions, NaN and infinity values are propagated accordingly.
+
+[TIP]
+.Authoring Tip
+====
+This operation implies that both input vectors are normalized. A `math/normalize` node could be added to handle non-normalized inputs.
+====
+
 ==== Swizzle Nodes
 
 ===== Combine
