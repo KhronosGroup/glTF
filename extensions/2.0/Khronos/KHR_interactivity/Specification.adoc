@@ -3883,6 +3883,100 @@ When the `in` input flow is activated:
 2. Send the custom event.
 3. Activate the `out` output flow.
 
+=== Debug Nodes
+
+==== Debug Output Nodes
+
+===== Log
+
+[cols="1h,1,2"]
+|===
+| Operation | `debug/log` | Output a debug message
+.2+| Configuration
+| `int severity` | Message severity
+| `string message` | Message template
+| Input flow sockets
+| `in` | The entry flow into this node
+| Input value sockets
+| `<any> <parameter>` | Zero or more message template parameters to be evaluated at runtime; input value socket ids correspond to the message substrings wrapped with curly brackets (`{}`)
+| Output flow sockets
+| `out` | The flow to be activated after the message was logged
+|===
+
+[CAUTION]
+====
+The configuration of this node affects its value sockets.
+====
+
+This node builds a debug message from the specified template string and input socket values as described below and outputs the message to the user in an implementation-defined manner.
+
+The `severity` configuration value is intended for filtering messages based on the implementation configuration. The `message` configuration value contains the debug message template string that defines the user-facing text message and input value socket ids (if any).
+
+The value socket ids are substrings of the `message` value wrapped with curly brackets (`{}`); they are extracted as described below. Literal curly brackets present in the message template string **MUST** be doubled.
+
+The type `any` represents any value socket type including custom types. This nodes implies that all value types have implementation-defined string representations.
+
+In the default configuration, the `severity` configuration value is zero, the `message` configuration string is empty, and the node has no input value sockets.
+
+If the `severity` configuration property is not provided by the behavior graph, if it is not a literal number, or if its value is not exactly representable as a 32-bit signed integer, the default configuration **MUST** be used.
+
+[TIP]
+.Implementation Tip
+====
+The integer representation check is implementable in ECMAScript via the following expression:
+[source,js]
+----
+s === (s | 0)
+----
+====
+
+If the `message` configuration property is not provided by the behavior graph, if it is not a literal string, or if its value is not syntactically valid as described below, the default configuration **MUST** be used.
+
+The following procedure outputs input value socket id locations within the `message` configuration string and returns whether the string is syntactically valid:
+
+1. Let _state_ be a temporary integer variable initialized to zero. During the procedure execution, its value will always be one of 0, 1, 2, or 3.
+2. Let _paramStart_ be a temporary integer variable initialized to unspecified value.
+3. Let `M[i]` be the character (Unicode code point) of the `message` configuration string at the position `i` (zero-based).
+4. For `i` from zero (inclusive) to the `message` length (exclusive), do:
+.. If `M[i]` is `"{"` (without quotes):
+... If _state_ is 0, set _state_ to 1;
+... else if _state_ is 1, set _state_ to 0;
+... else (if _state_ is 2 or 3) return false.
+.. Else if `M[i]` is `"}"` (without quotes):
+... If _state_ is 0, set _state_ to 3;
+... else if _state_ is 3, set _state_ to 0;
+... else if _state_ is 2,
+.... output the (_paramStart_, `i`) tuple as the inclusive range defining the template parameter location in the `message` string;
+.... set _state_ to 0;
+... else (if _state_ is 1) return false.
+.. Else if `M[i]` is neither `"{"` nor `"}"` (without quotes):
+... If _state_ is 1,
+.... set _paramStart_ to `i - 1`;
+.... set _state_ to 2;
+... else if _state_ is 3, return false.
+5. If _state_ is not 0, return false.
+6. Return true.
+
+If the procedure above returns false, the `message` configuration string is invalid and the default configuration is used. If the procedure above returns true, node's input value socket ids match the substrings identified by the template parameter locations with curly brackets removed.
+
+Extra input value sockets with ids not present in the output of the procedure above do not affect the node's operation and validation but they still **MUST** have valid types and value sources.
+
+This node has no internal state.
+
+When the `in` input flow is activated:
+
+1. Evaluate all input values.
+2. Generate the effective message string as follows.
+.. Let _M_ be a copy of the `message` configuration value.
+.. For each element of the template parameter array taken in the descending order of parameter substring locations:
+... Convert the corresponding input socket value to its string representation.
+... If the string representation of the input socket value contains curly brackets, they **MUST** be doubled.
+... Update _M_ by replacing the template parameter substring, as identified by the template parameter location, with the string representation of the corresponding input value socket. Note that the same template parameter **MAY** appear at multiple locations.
+.. Update _M_ by replacing all occurrences of the `"{{"` substring in it with `"{"` (without quotes).
+.. Update _M_ by replacing all occurrences of the `"}}"` substring in it with `"}"` (without quotes).
+3. Output _M_ as the effective message string.
+4. Activate the `out` output flow.
+
 == Extending glTF Object Model
 
 This Specification defines additional glTF Object Model pointers for use with `pointer/*` nodes.
