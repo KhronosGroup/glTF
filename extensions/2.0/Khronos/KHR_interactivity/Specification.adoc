@@ -3235,12 +3235,12 @@ Both pointers are functional even if the nodes do not belong to the current glTF
 Implementations that import glTF assets into pre-existing scenes may need to maintain mappings between their internal objects and glTF objects defined in the asset. If the implementation's coordinate system is different from the one used in glTF, extra runtime conversions may be necessary for properties that depend on the XYZ axes.
 ====
 
-When a behavior graph is loaded, all JSON Pointer Templates **MUST** be processed as described in the following sections. If a pointer template contains path segments wrapped in curly brackets, called _template parameters_, they define input value socket ids (with the curly brackets stripped) for the node. These template parameters **MUST NOT** be empty or contain `/`, `{`, `}`, or `~` characters; the same parameter **MUST NOT** be used more than once within a template string. If a JSON property used in the Pointer Template string contains curly brackets, they **MUST** be escaped with a back slash character (`\`, `0x5C`).
+When a behavior graph is loaded, all JSON Pointer Templates **MUST** be processed as described in the following sections. If a pointer template contains path segments wrapped in curly brackets, called _template parameters_, they define input value socket ids (with the curly brackets stripped) for the node. These template parameters **MUST NOT** be empty; the same parameter **MUST NOT** be used more than once within a template string. If used literally, curly brackets **MUST** be doubled, i.e, `{` **MUST** be written as `{{`, and `}` **MUST** be written as `}}` when used within path segments; curly brackets **MUST NOT** be used within parameters. Tilde (`~`) and forward slash (`/`) characters used in path segments or parameters **MUST** be encoded as `~0` and `~1` respectively as defined in <<rfc6901,RFC 6901>>.
 
 [NOTE]
 .Implementation Note
 ====
-None of the glTF properties currently defined in Khronos specifications contain curly brackets in their names but such properties can exist in arbitrary glTF assets within vendor-specific extensions or `extras` objects.
+None of the glTF properties currently defined in Khronos specifications contain curly brackets, forward slash, or tilde in their names but such properties can exist in arbitrary glTF assets within vendor-specific extensions or `extras` objects.
 ====
 
 When an Object Model Access node is activated, its JSON Pointer Template and input values (if present) are used to generate the effective JSON Pointer string value.
@@ -3249,20 +3249,28 @@ If the property being accessed is also affected by a currently active animation,
 
 ===== JSON Pointer Template Parsing
 
-The input to these steps is the `pointer` string configuration value; the output includes a boolean validity flag and a template parameter array. Implementations **MAY** optimize these steps as long as such optimizations do not change the output.
+The input to these steps is the `pointer` string configuration value; the output includes a boolean validity flag and a template parameter array. Each template parameter array entry consists of a string representing the corresponding input value socket id and the parameter substring location (e.g., start and end offsets) in the JSON Pointer Template.
+
+Implementations **MAY** optimize these steps as long as such optimizations do not change the output.
 
 1. Let the validity flag be true and the template parameter array be empty.
-2. If the pointer template string is not a syntactically valid JSON Pointer as defined in <<rfc6901,RFC 6901>> regardless of the pointer applicability to the glTF asset, reject the pointer template string with a syntax error.
+2. If the pointer template string is not a syntactically valid JSON Pointer as defined in <<rfc6901,RFC 6901>> regardless of the pointer applicability to the glTF asset and/or template parameters, reject the pointer template string with a syntax error.
 3. Split the pointer template string at all matches of the forward slash character (`/`, `0x2F`). This step produces a path segment array consisting of a substring before the first match, substrings between the matches, and a substring after the last match.
 4. For each path segment substring produced during step 3:
-.. If the substring starts with a left curly bracket (`{`, `0x7B`):
-... Assume the substring to be a template parameter.
-... If the substring contains more than one left curly bracket, more than one right curly bracket (`}`, `0x7D`), if it does not end with a right curly bracket (`}`, `0x7D`), if there are no characters between the curly brackets (i.e., if the entire substring is `{}`), or if the substring contains a tilde (`~`, `0x7E`), set the validity flag to false, ignore all other segments, and goto step 5.
-... Add the substring to the template parameter array.
-... If the template parameter array contains duplicate elements, set the validity flag to false and goto step 5.
-.. If the substring does not start with a left curly bracket (`{`, `0x7B`):
-... Assume the substring to be a literal path segment, i.e., not a template parameter.
-... If the substring contains a left or right curly bracket not escaped by a back slash character (`\`, `0x5C`), set the validity flag to false and goto step 5.
+.. If the path segment consists of a single left curly bracket (`{`, `0x7B`) character,
+... set the validity flag to false, ignore all other segments, and goto step 5.
+.. If the first character of the path segment substring is a left curly bracket and the second character is not a left curly bracket:
+... Assume the path segment substring to be a template parameter.
+... If the path segment substring contains left curly brackets not including the first character, right curly brackets (`}`, `0x7D`) not including the last character, if it does not end with a right curly bracket, or if there are no characters between the first and the last curly brackets (i.e., if the entire path segment substring is `{}`), set the validity flag to false, ignore all other segments, and goto step 5.
+... Derive the input value socket id as follows:
+.... Strip the first and the last characters, i.e., the leading left and trailing right curly brackets.
+.... Replace all instances of `~1` with `/`.
+.... Replace all instances of `~0` with `~`.
+... If the template parameter array contains an element with the same value socket id, set the validity flag to false and goto step 5.
+... Add a new entry to the template parameter array consisting of the derived input value socket id and the path segment substring location in the pointer template string.
+.. If the first character of the path segment substring is not a left curly bracket or if the first two characters are left curly brackets:
+... Assume the path segment substring to be a literal path segment, i.e., not a template parameter.
+... If the path segment substring contains an odd number of consecutive left curly brackets or an odd number of consecutive right curly brackets, set the validity flag to false and goto step 5.
 5. If the validity flag is true, output the parameter array; if the validity flag is false, reject the pointer template string with a syntax error.
 
 [NOTE]
@@ -3270,15 +3278,15 @@ The input to these steps is the `pointer` string configuration value; the output
 ====
 - The template string `"/myProperty"` is syntactically valid and has no template parameters. As it does not represent a recognized glTF Asset Object Model property, using this pointer will result in runtime errors defined by the corresponding nodes.
 
-- The template string `"/nodes/0/scale"` is syntactically valid and has no template parameters.
+- The template string `"/nodes/0/scale"` is syntactically valid and has no template parameters thus it does not yield any input value socket ids.
 
-- The template string `"/nodes/{index}/scale"` is syntactically valid and has one template parameter called `{index}`, which would result in an input value socket with id `index`.
+- The template string `"/nodes/{index}/scale"` is syntactically valid and has one template parameter that yields an input value socket with id `index`.
 
-- The template string `"/nodes/{index\\}/scale"` is syntactically valid and has one template parameter called `{index&bsol;}`, which corresponds to the input value socket with id `index\`. Note that backslash characters are escaped when used in JSON strings.
+- The template string `"/nodes/{index}/extras/{{index}}"` is syntactically valid and has one template parameter that yields an input value socket with id `index`. The curly brackets that are part of the `{index}` property name are doubled.
 
-- The template string `"/nodes/{index}/extras/\\{index\\}"` is syntactically valid and has one template parameter called `{index}`. Since the pointer targets the `{index}` JSON property, the curly brackets of the property are escaped. Note that backslash characters are escaped when used in JSON strings.
+- The template string `"/nodes/{\~0~0index\~0~0}/rotation"` is syntactically valid and has one template parameter that yields an input value socket with id `\~~index~~`. The tilde characters used in the template parameter are encoded as `~0`.
 
-- The template string `"/nodes/0/extras/e\\}\\{traProperty"` is syntactically valid and has no template parameters. Since the pointer targets the `e}{traProperty` JSON property, the curly brackets of the property are escaped. Note that backslash characters are escaped when used in JSON strings.
+- The template string `"/nodes/{my~1index}/scale"` is syntactically valid and has one template parameter that yields an input value socket with id `my/index`. The forward slash character used in the template parameter is encoded as `~1`.
 ====
 
 [NOTE]
@@ -3286,46 +3294,43 @@ The input to these steps is the `pointer` string configuration value; the output
 ====
 - The template string `"/nodes/{index}/extras/~2"` is syntactically invalid because the `~2` character sequence is invalid in JSON Pointers, see <<rfc6901,RFC 6901>>.
 
-- The template string `"/nodes/{index}/weights/{index}"` is syntactically invalid because the `{index}` template parameter is used twice.
+- The template string `"/nodes/{index}/weights/{index}"` is syntactically invalid because it yields two input value sockets with the same id.
 
-- The template string `"/nodes/{~index}/scale"` is syntactically invalid because the path segment substring that starts with `{` contains the `~` character.
+- The template string `"/nodes/{/scale"` is syntactically invalid because it contains a `{` path segment.
 
-- The template string `"/nodes/{}/scale"` is syntactically invalid because the path segment substring that starts with `{` has no characters between `{` and `}`.
+- The template string `"/nodes/{}/scale"` is syntactically invalid because the template parameter path segment has no characters between `{` and `}`.
 
-- The template string `"/nodes/{index/scale"` is syntactically invalid because the path segment substring that starts with `{` does not end with `}`.
+- The template string `"/nodes/{index/scale"` is syntactically invalid because the template parameter path segment does not end with `}`.
 
-- The template string `"/nodes/{i}ndex/scale"` is syntactically invalid because the path segment substring that starts with `{` does not end with `}`.
+- The template string `"/nodes/{i{ndex}/scale"` is syntactically invalid because the template parameter path segment contains a left curly bracket inside the parameter.
 
-- The template string `"/nodes/{{index}/scale"` is syntactically invalid because the path segment substring that starts with `{` has more than one `{` character.
+- The template string `"/nodes/{i}ndex}/scale"` is syntactically invalid because the template parameter path segment contains a right curly bracket inside the parameter.
 
-- The template string `"/nodes/{&bsol;&bsol;{index}/scale"` is syntactically invalid because the path segment substring that starts with `{` has more than one `{` character.
+- The template string `"/nodes/0/extras/{{i{ndex}}"` is syntactically invalid because a literal path segment has an odd number of consecutive left curly brackets.
 
-- The template string `"/nodes/&bsol;&bsol;{index}/scale"` is syntactically invalid because the path segment substring that does not start with `{` has the unescaped `}` character.
-
-- The template string `"/nodes/{index}}/scale"` is syntactically invalid because the path segment substring that starts with `{` has more than one `}` character.
-
-- The template string `"/nodes/0/extras/myData{Index}"` is syntactically invalid because it has a path segment substring that does not start with `{` and contains an unescaped `{` character.
+- The template string `"/nodes/0/extras/{{index}"` is syntactically invalid because a literal path segment has an odd number of consecutive right curly brackets.
 ====
 
 ===== Effective JSON Pointer Generation
 
 The inputs to these steps are the `pointer` configuration value, the template parameter array, and the corresponding input values provided at runtime by the behavior graph; the output is the effective JSON Pointer string that will be handled by the Object Model Access nodes. Implementations **MAY** optimize these steps as long as such optimizations do not change the output.
 
-1. Let _P_ be a copy of the `pointer` configuration value.
-2. For each element of the template parameter array:
-.. assert that the corresponding input socket value is not negative;
-.. convert the corresponding input socket value to its decimal string representation containing only ASCII characters `0x30 ... 0x39` with no extra leading zeros.
-.. update _P_ by replacing the template parameter substring in it with the converted input socket value.
-3. Update _P_ by replacing all occurrences of the `\{` substring in it with `{`.
-4. Update _P_ by replacing all occurrences of the `\}` substring in it with `}`.
-5. Output _P_ as the effective JSON Pointer string.
+1. Assume that the `pointer` configuration value is syntactically valid.
+2. Let _P_ be a copy of the `pointer` configuration value.
+3. For each element of the template parameter array:
+.. Assert that the corresponding input socket value is not negative.
+.. Convert the corresponding input socket value to its decimal string representation containing only ASCII characters `0x30 ... 0x39` with no extra leading zeros.
+.. Update _P_ by replacing the template parameter substring, as identified by the template parameter location, with the decimal string value of the corresponding input value socket.
+4. Update _P_ by replacing all occurrences of the `{{` substring in it with `{`.
+5. Update _P_ by replacing all occurrences of the `}}` substring in it with `}`.
+6. Output _P_ as the effective JSON Pointer string.
 
 [NOTE]
 .Examples
 ====
 - Let the `pointer` configuration value be `"/nodes/{N}/weights/{W}"`. Then the nodes using this template pointer string have the `N` and `W` input value sockets. Let the runtime `N` value be 1 and the runtime `W` value be 2. Then the effective JSON Pointer is `"/nodes/1/weights/2"`.
 
-- Let the `pointer` configuration value be `"/nodes/{index}/extras/\\{index\\}"`. Then the nodes using this template pointer string have the `index` input value socket. Let the runtime `index` value be 2. Then the effective JSON Pointer is `"/nodes/2/extras/{index}"`.
+- Let the `pointer` configuration value be `"/nodes/{index}/extras/{{index}}"`. Then the nodes using this template pointer string have the `index` input value socket. Let the runtime `index` value be 2. Then the effective JSON Pointer is `"/nodes/2/extras/{index}"`.
 ====
 
 ===== Pointer Get
