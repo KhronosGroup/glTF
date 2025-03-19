@@ -78,6 +78,11 @@ Naturally, using a model of diffuse reflectance that varies based on view and li
 1. Store an average light direction with an IBL to be used in the diffuse lighting BRDF. This direction can be generated during prefiltering.
 1. Bend the surface normal toward the view direction based on the roughness of the surface. This has the effect of flattening out the diffuse lighting, appearing to increase the back-scattering of the diffuse lighting where NdotV approaches 0. This is the least correct of these solutions but is also the most performant.
 
+<figure>
+<img src="./figures/meetmat.png">
+<figcaption><em>An example of diffuse roughness with IBL in Babylon.js. The right model has diffuseRoughnessFactor set to 1.0 while the left is set to 0.0.</em></figcaption>
+</figure>
+
 ## glTF Schema Updates
 
 - [glTF.EXT_materials_diffuse_roughness.schema.json](schema/glTF.EXT_materials_diffuse_roughness.schema.json)
