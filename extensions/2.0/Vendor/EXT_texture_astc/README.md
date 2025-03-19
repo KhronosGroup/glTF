@@ -3,7 +3,7 @@ Copyright 2024 The Khronos Group Inc.
 SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 -->
 
-# KHR_texture_astc
+# EXT_texture_astc
 
 ## Contributors
 
@@ -28,7 +28,7 @@ Written against the glTF 2.0 spec.
 
 This extension adds the ability to specify textures using [ASTC compressed images](https://github.com/ARM-software/astc-encoder/blob/main/Docs/FormatOverview.md) in KTX v2 containers. An implementation of this extension can use such images as an alternative to the PNG or JPEG images available in glTF 2.0 for more efficient asset transmission, reducing GPU memory footprint, higher texture throughput and faster execution.
 
-When this extension is used, it's allowed to use value `image/ktx2` for the `mimeType` property of images that are referenced by the `source` property of `KHR_texture_astc` texture extension object.
+When this extension is used, it's allowed to use value `image/ktx2` for the `mimeType` property of images that are referenced by the `source` property of `EXT_texture_astc` texture extension object.
 
 When running on supported platforms, engines can directly upload ASTC data without transcoding it to other compressed formats. This means that all ASTC block sizes and quality presets are supported unlike other texture extensions that focus on portability of compressed texture payloads.
 
@@ -36,7 +36,7 @@ Platforms that do not have hardware ASTC support would have to either use other 
 
 ## glTF Schema Updates
 
-The `KHR_texture_astc` extension is added to the `textures` object and specifies a `source` property that points to the index of the `image` which defines a reference to the KTX v2 file with the ASTC compressed image.
+The `EXT_texture_astc` extension is added to the `textures` object and specifies a `source` property that points to the index of the `image` which defines a reference to the KTX v2 file with the ASTC compressed image.
 
 The following glTF will load `astc_image.ktx2` in clients that support this extension, and fall back to `image.png` otherwise.
 
@@ -46,13 +46,13 @@ The following glTF will load `astc_image.ktx2` in clients that support this exte
         "version": "2.0"
     },
     "extensionsUsed": [
-        "KHR_texture_astc"
+        "EXT_texture_astc"
     ],
     "textures": [
         {
             "source": 0,
             "extensions": {
-                "KHR_texture_astc": {
+                "EXT_texture_astc": {
                     "source": 1
                 }
             }
@@ -77,13 +77,13 @@ When used in the glTF Binary (GLB) format the `image` that points to the KTX v2 
         "version": "2.0"
     },
     "extensionsUsed": [
-        "KHR_texture_astc"
+        "EXT_texture_astc"
     ],
     "textures": [
         {
             "source": 0,
             "extensions": {
-                "KHR_texture_astc": {
+                "EXT_texture_astc": {
                     "source": 1
                 }
             }
@@ -104,7 +104,7 @@ When used in the glTF Binary (GLB) format the `image` that points to the KTX v2 
 
 ### Using Without a Fallback
 
-To use KTX v2 image with ASTC compression without a fallback, define `KHR_texture_astc` in both `extensionsUsed` and `extensionsRequired`. The `texture` object will then have its `source` property omitted as shown below.
+To use KTX v2 image with ASTC compression without a fallback, define `EXT_texture_astc` in both `extensionsUsed` and `extensionsRequired`. The `texture` object will then have its `source` property omitted as shown below.
 
 ```json
 {
@@ -112,15 +112,15 @@ To use KTX v2 image with ASTC compression without a fallback, define `KHR_textur
         "version": "2.0"
     },
     "extensionsUsed": [
-        "KHR_texture_astc"
+        "EXT_texture_astc"
     ],
     "extensionsRequired": [
-        "KHR_texture_astc"
+        "EXT_texture_astc"
     ],
     "textures": [
         {
             "extensions": {
-                "KHR_texture_astc": {
+                "EXT_texture_astc": {
                     "source": 0
                 }
             }
@@ -136,7 +136,7 @@ To use KTX v2 image with ASTC compression without a fallback, define `KHR_textur
 
 ### JSON Schema
 
-[texture.KHR_texture_astc.schema.json](schema/texture.KHR_texture_astc.schema.json)
+[texture.EXT_texture_astc.schema.json](schema/texture.EXT_texture_astc.schema.json)
 
 ## KTX v2 files with ASTC compression 
 
