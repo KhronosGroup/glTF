@@ -15,8 +15,8 @@
         },
         "diffuseRoughnessTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "A greyscale texture, representing the diffuse layer's roughness.",
-            "gltf_detailedDescription": "A greyscale texture, representing the diffuse layer's roughness. The value will modulate the diffuseRoughnessFactor."
+            "description": "A texture representing the diffuse layer's roughness, stored in the R channel.",
+            "gltf_detailedDescription": "A texture with the diffuse layer's roughness stored in the R channel. The value will modulate the diffuseRoughnessFactor."
         },
         "extensions": { },
         "extras": { }

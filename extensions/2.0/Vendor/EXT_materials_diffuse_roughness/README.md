@@ -62,7 +62,7 @@ The default diffuse BRDF of glTF defines a purely Lambertian surface where light
 |                                  | Type                                                                            | Description                            | Required             |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|----------------------|
 |**diffuseRoughnessFactor** | `number` | The diffuse roughness factor. | No, default: `0.0` |
-|**diffuseRoughnessTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The diffuse roughness texture to be multiplied by the factor. | No |
+|**diffuseRoughnessTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The diffuse roughness texture to be multiplied by the factor. Stored in the R channel. | No |
 
 There is no single micro-facet model that we can use as a ground truth reference for this physical phenomenon.
 
