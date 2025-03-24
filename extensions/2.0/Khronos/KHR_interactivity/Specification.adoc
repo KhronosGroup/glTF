@@ -445,7 +445,7 @@ In this section, `floatN` is a placeholder for any of `float`, `float2`, `float3
 
 [cols="1h,1,2"]
 |===
-| Operation | `math/e` | Euler's number
+| Operation | `math/E` | Euler's number
 | Output value sockets | `float value` | 2.718281828459045
 |===
 
@@ -453,7 +453,7 @@ In this section, `floatN` is a placeholder for any of `float`, `float2`, `float3
 
 [cols="1h,1,2"]
 |===
-| Operation | `math/pi` | Ratio of a circle's circumference to its diameter
+| Operation | `math/Pi` | Ratio of a circle's circumference to its diameter
 | Output value sockets | `float value` | 3.141592653589793
 |===
 
@@ -461,7 +461,7 @@ In this section, `floatN` is a placeholder for any of `float`, `float2`, `float3
 
 [cols="1h,1,2"]
 |===
-| Operation | `math/inf` | Positive infinity
+| Operation | `math/Inf` | Positive infinity
 | Output value sockets | `float value` | _Infinity_
 |===
 
@@ -475,7 +475,7 @@ To get negative infinity, combine this node with `math/neg`.
 
 [cols="1h,1,2"]
 |===
-| Operation | `math/nan` | Not a Number
+| Operation | `math/NaN` | Not a Number
 | Output value sockets | `float value` | _NaN_
 |===
 
@@ -642,7 +642,7 @@ For matrix arguments, this operation performs per-element multiplication.
 [NOTE]
 .Authoring Note
 ====
-See `math/matmul` for matrix multiplication.
+See `math/matMul` for matrix multiplication.
 ====
 
 ===== Division
@@ -850,7 +850,7 @@ For the purposes of these nodes, negative zero is equal to positive zero.
 
 [cols="1h,1,2"]
 |===
-| Operation | `math/isnan` | Not a Number check operation
+| Operation | `math/isNaN` | Not a Number check operation
 | Input value sockets
 | `float a` | Argument
 | Output value sockets
@@ -861,7 +861,7 @@ For the purposes of these nodes, negative zero is equal to positive zero.
 
 [cols="1h,1,2"]
 |===
-| Operation | `math/isinf` | Infinity check operation
+| Operation | `math/isInf` | Infinity check operation
 | Input value sockets
 | `float a` | Argument
 | Output value sockets
@@ -871,9 +871,9 @@ For the purposes of these nodes, negative zero is equal to positive zero.
 [TIP]
 .Authoring Tip
 ====
-To check whether a value is only a positive infinity, combine `math/eq` and `math/inf` nodes.
+To check whether a value is only a positive infinity, combine `math/eq` and `math/Inf` nodes.
 
-To check whether a value is only a negative infinity, combine `math/eq`, `math/neg`, and `math/inf` nodes.
+To check whether a value is only a negative infinity, combine `math/eq`, `math/neg`, and `math/Inf` nodes.
 ====
 
 ===== Select
@@ -1663,7 +1663,7 @@ The output values are computed as follows:
 
 [cols="1h,1,2"]
 |===
-| Operation | `math/matmul` | Matrix multiplication operation
+| Operation | `math/matMul` | Matrix multiplication operation
 .2+| Input value sockets
 | `float{2x2\|3x3\|4x4} a` | First matrix
 | `float{2x2\|3x3\|4x4} b` | Second matrix
@@ -4613,11 +4613,11 @@ The operation is specified by the **REQUIRED** `declaration` property that point
 [NOTE]
 .Example
 ====
-A `math/e` node with its declaration.
+A `math/E` node with its declaration.
 
 ```json
 "declarations": [
-  { "op": "math/e" }
+  { "op": "math/E" }
 ],
 "nodes": [
   { "declaration": 0 }
@@ -4711,8 +4711,8 @@ A `math/sub` node with two input value sockets referring to output value sockets
   { "signature": "float" }
 ]
 "declarations": [
-  { "op": "math/pi" }
-  { "op": "math/e" }
+  { "op": "math/Pi" }
+  { "op": "math/E" }
   { "op": "math/sub" }
 ],
 "nodes": [
@@ -4736,14 +4736,14 @@ If neither `value` nor `node` properties are defined in the object representing 
 [NOTE]
 .Example
 ====
-A `math/isnan` node with a type-default input value socket. The output value of this node is true because the input value socket `a` has a constant value of NaN (type-default for `float`).
+A `math/isNaN` node with a type-default input value socket. The output value of this node is true because the input value socket `a` has a constant value of NaN (type-default for `float`).
 
 ```json
 "types": [
   { "signature": "float" }
 ]
 "declarations": [
-  { "op": "math/isnan" }
+  { "op": "math/isNaN" }
 ],
 "nodes": [
   {
@@ -4797,7 +4797,7 @@ The `out` output flow of the `event/onStart` node is connected to the `in` input
 "declarations": [
   { "op": "event/onStart" },
   { "op": "flow/setDelay" },
-  { "op": "math/inf" },
+  { "op": "math/Inf" },
   { "op": "animation/start" }
 ],
 "nodes": [
