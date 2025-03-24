@@ -259,7 +259,7 @@ For example, a `flow/sequence` node can have an output flow socket with id `"in"
 [[socket-order]]
 ==== Socket Order
 
-Although sockets are inherently unordered withing a node (because JSON properties are unordered), some operations such as `flow/sequence` or `flow/multiGate` need a specific socket order to guarantee predictable behavior. In such cases, the sockets are implicitly sorted by their ids in ascending order.
+Although sockets are inherently unordered within a node (because JSON properties are unordered), some operations such as `flow/sequence` or `flow/multiGate` need a specific socket order to guarantee predictable behavior. In such cases, the sockets are implicitly sorted by their ids in ascending order.
 
 For any given ids `a` and `b`, the following procedure **MUST** be used to determine if `a` is less than `b`.
 
@@ -4391,7 +4391,7 @@ This example defines two variables of `float2` type; the first is explicitly ini
 
 ```json
 "types": [
-  { "signature": "float2" },
+  { "signature": "float2" }
 ],
 "variables": [
   {
@@ -4449,7 +4449,7 @@ This example defines two custom events. The first event is internal to the graph
 
 ```json
 "types": [
-  { "signature": "int" },
+  { "signature": "int" }
 ],
 "events": [
   { },
@@ -4659,7 +4659,7 @@ A `math/add` node with two integer inline values: 1 and 2.
 ```json
 "types": [
   { "signature": "int" }
-]
+],
 "declarations": [
   { "op": "math/add" }
 ],
@@ -4709,10 +4709,10 @@ A `math/sub` node with two input value sockets referring to output value sockets
 ```json
 "types": [
   { "signature": "float" }
-]
+],
 "declarations": [
-  { "op": "math/Pi" }
-  { "op": "math/E" }
+  { "op": "math/Pi" },
+  { "op": "math/E" },
   { "op": "math/sub" }
 ],
 "nodes": [
@@ -4741,7 +4741,7 @@ A `math/isNaN` node with a type-default input value socket. The output value of 
 ```json
 "types": [
   { "signature": "float" }
-]
+],
 "declarations": [
   { "op": "math/isNaN" }
 ],
@@ -4793,7 +4793,7 @@ The `out` output flow of the `event/onStart` node is connected to the `in` input
 "types": [
   { "signature": "float" },
   { "signature": "int" }
-]
+],
 "declarations": [
   { "op": "event/onStart" },
   { "op": "flow/setDelay" },
@@ -4810,11 +4810,11 @@ The `out` output flow of the `event/onStart` node is connected to the `in` input
   {
     "declaration": 1,
     "values": {
-      "duration": { "type": 0, "value": [5] }
+      "duration": { "type": 0, "value": [ 5 ] }
     },
     "flows": {
       "out": { "node": 3 }
-    },
+    }
   },
   {
     "declaration": 2
@@ -4823,9 +4823,9 @@ The `out` output flow of the `event/onStart` node is connected to the `in` input
     "declaration": 3,
     "values": {
       "animation": { "type": 1 },
-      "startTime": { "type": 0, "value": [0] },
+      "startTime": { "type": 0, "value": [ 0 ] },
       "endTime": { "node": 2 },
-      "speed": { "type": 0, "value": [1] },
+      "speed": { "type": 0, "value": [ 1 ] }
     }
   }
 ]
@@ -4867,13 +4867,13 @@ The `variable/set` node sets a custom variable with index `0` when the start eve
 ```json
 "types": [
   { "signature": "float" }
-]
+],
 "variables": [
   { "type": 0 }
 ],
 "declarations": [
   { "op": "event/onStart" },
-  { "op": "variable/set" },
+  { "op": "variable/set" }
 ],
 "nodes": [
   {
@@ -4885,10 +4885,10 @@ The `variable/set` node sets a custom variable with index `0` when the start eve
   {
     "declaration": 1,
     "configuration": {
-      "variable": { "value": [0] }
+      "variable": { "value": [ 0 ] }
     },
     "values": {
-      "value": { "type": 0, "value": [1.5] }
+      "value": { "type": 0, "value": [ 1.5 ] }
     }
   }
 ]
