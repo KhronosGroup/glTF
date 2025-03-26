@@ -18,6 +18,10 @@ Written against the glTF 2.0 spec.
 * This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
 * This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
+## Side Effects
+
+* The `EXT_materials_diffuse_roughness` extension also affects the [KHR_materials_diffuse_transmission](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_diffuse_transmission/README.md) extension as it relies on the diffuse lobe which is modified by this extension.
+
 ## Overview
 
 This extension defines a way to control the roughness of the diffuse surface, separate from the specular roughness. Specifically, this extension models the diffuse substrate using microfacets, similar to the specular lobe. The diffuse BRDF [defined in the glTF spec](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#dielectrics) will now depend on an additional roughness parameter which controls the spread of angles of the microfacets. Higher roughnesses result in the "flattening" effect of the lighting which is often observed in real rough diffuse surfaces such as sandstone.
@@ -49,22 +53,20 @@ Adding diffuse roughness can be done by adding the `EXT_materials_diffuse_roughn
 }
 ```
 
-### Physical Interpretation
-
-The `EXT_materials_diffuse_roughness` extension treats the surface as having V-shaped cavities which add geometric masking, shadowing and interreflections and causes the surface brightness to change based on view direction. The microscopic facets are themselves assumed to be Lambertian and the spread of facet angles are assumed to follow a normal distribution. The roughness value is a measure of the standard deviation of the facet angles. At low roughness, most facets are perpendicular to the surface normal. At high roughness, the spread of facet angles increases, resulting in more shadowing and interreflections. The maximum roughness of 1.0 corresponds to a standard deviation of PI/2 (i.e. 90 degree facet angle). Angles are assumed to be clamped in the (-PI/2, PI/2) range.
-
-The overall effect of a rough diffuse surface is to brighten the surface when the view and light directions align and darken the surface when they're perpendicular (relative to the Lambertian model). This can be thought of as essentially a rough surface's greater tendency towards back-scattering at grazing angles.
-
-### BRDF
-
-The default diffuse BRDF of glTF defines a purely Lambertian surface where lighting does not change based on viewing direction. This specification extends the diffuse model to depend on the new roughness parameter as well as view direction. All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints.
+## Properties
 
 |                                  | Type                                                                            | Description                            | Required             |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|----------------------|
 |**diffuseRoughnessFactor** | `number` | The diffuse roughness factor. | No, default: `0.0` |
 |**diffuseRoughnessTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | The diffuse roughness texture to be multiplied by the factor. Stored in the R channel. | No |
 
-There is no single micro-facet model that we can use as a ground truth reference for this physical phenomenon.
+## Physical Interpretation and BRDF
+
+The `EXT_materials_diffuse_roughness` extension treats the surface as having V-shaped cavities which add geometric masking, shadowing and interreflections and causes the surface brightness to change based on view direction. The microscopic facets are themselves assumed to be Lambertian and the spread of facet angles are assumed to follow a normal distribution. The roughness value is a measure of the standard deviation of the facet angles. At low roughness, most facets are perpendicular to the surface normal. At high roughness, the spread of facet angles increases, resulting in more shadowing and interreflections. The maximum roughness of 1.0 corresponds to a standard deviation of PI/2 (i.e. 90 degree facet angle). Angles are assumed to be clamped in the (-PI/2, PI/2) range.
+
+The overall effect of a rough diffuse surface is to brighten the surface when the view and light directions align and darken the surface when they're perpendicular (relative to the Lambertian model). This can be thought of as essentially a rough surface's greater tendency towards back-scattering at grazing angles.
+
+The default diffuse BRDF of glTF defines a purely Lambertian surface where lighting does not change based on viewing direction. This specification extends the diffuse model to depend on the new roughness parameter as well as view direction. All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. There is no single micro-facet model that we can use as a ground truth reference for this physical phenomenon.
 
 ## Implementation (Informative)
 
@@ -85,7 +87,7 @@ Naturally, using a model of diffuse reflectance that varies based on view and li
 
 ## glTF Schema Updates
 
-- [glTF.EXT_materials_diffuse_roughness.schema.json](schema/glTF.EXT_materials_diffuse_roughness.schema.json)
+- [material.EXT_materials_diffuse_roughness.schema.json](schema/material.EXT_materials_diffuse_roughness.schema.json)
 
 ## Known Implmentations
 - [Babylon.js](https://www.babylonjs.com/)
