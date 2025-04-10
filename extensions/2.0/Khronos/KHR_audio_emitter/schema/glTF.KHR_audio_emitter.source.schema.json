@@ -6,7 +6,7 @@
     "description": "Audio sources reference audio data and define playback properties for it. Audio sources may be used by zero to many audio emitters.",
     "allOf": [{ "$ref": "glTFChildOfRootProperty.schema.json" }],
     "properties": {
-        "autoPlay": {
+        "autoplay": {
             "type": "boolean",
             "description": "Whether or not to play the specified audio when the glTF is loaded.",
             "default": false
@@ -15,6 +15,11 @@
             "type": "number",
             "description": "Unitless multiplier against original audio file volume for determining audio source loudness.",
             "minimum": 0.0,
+            "default": 1.0
+        },
+        "playbackRate": {
+            "type": "number",
+            "description": "Multiplier for combined pitch and playback speed without resampling.",
             "default": 1.0
         },
         "loop": {

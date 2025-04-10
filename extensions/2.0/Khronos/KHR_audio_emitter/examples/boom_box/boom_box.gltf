@@ -130,7 +130,7 @@
             "sources": [
                 {
                     "audio": 0,
-                    "autoPlay": true,
+                    "autoplay": true,
                     "loop": true,
                     "name": "kevin_macleod_bassa_island_loop"
                 }

@@ -55,14 +55,14 @@ Audio emitter objects may be added to 3D nodes for positional audio or to the sc
                 {
                     "name": "Clip 1",
                     "gain": 0.6,
-                    "autoPlay": true,
+                    "autoplay": true,
                     "loop": true,
                     "audio": 0
                 },
                 {
                     "name": "Clip 2",
                     "gain": 0.6,
-                    "autoPlay": true,
+                    "autoplay": true,
                     "loop": true,
                     "audio": 1
                 }
@@ -134,7 +134,7 @@ The extension must be added to the file's `extensionsUsed` array and because it 
 
 Audio data objects define where audio data is located and what format the data is in. The data is either accessed via a bufferView or uri.
 
-When storing audio data in a buffer view, the `mimeType` field must be specified. The base specification supports `audio/mpeg` and `audio/wav` MIME types. These were chosen with consideration for the wide support for these types acrosss 3D engines and common use cases. Other supported audio formats may be added via extensions.
+When storing audio data in a buffer view, the `mimeType` field must be specified. The base specification supports `audio/mpeg` and `audio/wav` MIME types. These were chosen with consideration for the wide support for these types across 3D engines and common use cases. Other supported audio formats may be added via extensions.
 
 Note that in tools that process glTF files, but do not implement the `KHR_audio_emitter` extension, external files referenced via the `uri` field may not be properly copied to their final destination or baked into the final binary glTF file. In these cases, using the `bufferView` property may be a better choice assuming the referenced `bufferView` index is not changed by the tool. The `uri` field might be a better choice when you want to be able to quickly change the referenced audio asset.
 
@@ -156,12 +156,13 @@ Audio sources reference audio data and define playback properties for it. Audio 
 
 #### Property Summary
 
-|              | Type      | Description                                                                                               | Default value        |
-| ------------ | --------- | --------------------------------------------------------------------------------------------------------- | -------------------- |
-| **gain**     | `number`  | Unitless linear multiplier against original audio file volume used for determining audio source loudness. | 1.0                  |
-| **loop**     | `boolean` | Whether or not to loop the specified audio when finished.                                                 | false                |
-| **autoPlay** | `boolean` | Whether or not to play the specified audio when the glTF is loaded.                                       | false                |
-| **audio**    | `number`  | The index of the audio data assigned to this clip.                                                        | Required, no default |
+|                  | Type      | Description                                                                                               | Default value |
+| ---------------- | --------- | --------------------------------------------------------------------------------------------------------- | ------------- |
+| **gain**         | `number`  | Unitless linear multiplier against original audio file volume used for determining audio source loudness. | 1.0           |
+| **playbackRate** | `number`  | Multiplier for combined pitch and playback speed without resampling.                                      | 1.0           |
+| **loop**         | `boolean` | Whether or not to loop the specified audio when finished.                                                 | false         |
+| **autoplay**     | `boolean` | Whether or not to play the specified audio when the glTF is loaded.                                       | false         |
+| **audio**        | `number`  | The index of the audio data assigned to this clip.                                                        | No audio      |
 
 #### Gain
 
@@ -169,17 +170,25 @@ The `"gain"` property is a number that is a unitless linear multiplier against o
 
 This value is linear, a value of `0.0` is no volume, `0.5` is half volume, `1.0` is the original volume, `2.0` is double the volume, etc. The final volume of the audio is a combination of this value, the audio emitter's gain, and if the audio emitter is positional, the relative positions of the emitter and listener.
 
+#### Playback Rate
+
+The `"playbackRate"` property is a number that is a multiplier for combined pitch and playback speed without resampling. If not specified, the playback rate is `1.0`.
+
+For example, a value of `2.0` would double the playback speed of the audio, which doubles all frequencies in the audio, doubling the pitch. This property does not resample the audio, so the playback speed is locked together with the pitch.
+
 #### Loop
 
 The `"loop"` property is a boolean that specifies whether or not to loop the specified audio when finished. If `false` or not specified, the audio source does not loop.
 
-#### Auto Play
+#### Autoplay
 
-The `"autoPlay"` property is a boolean that specifies whether or not to play the specified audio when the glTF is loaded. If `false` or not specified, the audio source does not play automatically.
+The `"autoplay"` property is a boolean that specifies whether or not to play the specified audio when the glTF is loaded. If `false` or not specified, the audio source does not play automatically.
 
 #### Audio
 
-The `"audio"` property is an integer index of the audio data in the "audio" array assigned to this audio source. This property is required.
+The `"audio"` property is an integer index of the audio data in the "audio" array assigned to this audio source. If not specified, the audio source does not have an audio clip.
+
+This value is recommended to be set to a valid index in the "audio" array, or else no audio can be played from this source. However, omitting this field allows the audio source to be used as a placeholder for future audio assignment. Additionally, other extensions may define their own audio data properties.
 
 ### Audio Emitter
 
@@ -221,16 +230,16 @@ When the audio emitter type is set to `positional`, additional properties may be
 
 #### Property Summary
 
-|                    | Type     | Description                                                                                                         | Default value                       |
-| ------------------ | -------- | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| **shapeType**      | `string` | The shape of the audio emitter. May be `omnidirectional`, `cone`, or a value specified by another extension.        | `"omnidirectional"`                 |
-| **coneInnerAngle** | `number` | The anglular diameter of a cone inside of which there will be no angular volume reduction.                          | 6.2831853... (τ or 2π rad, 360 deg) |
-| **coneOuterAngle** | `number` | The anglular diameter of a cone outside of which the volume will be reduced to a constant value of `coneOuterGain`. | 6.2831853... (τ or 2π rad, 360 deg) |
-| **coneOuterGain**  | `number` | The linear volume gain of the audio emitter set when outside the cone defined by the `coneOuterAngle` property.     | 0.0                                 |
-| **distanceModel**  | `string` | Specifies the distance model for the audio emitter.                                                                 | `"inverse"`                         |
-| **maxDistance**    | `number` | The maximum distance between the emitter and listener, beyond which the audio cannot be heard.                      | 0.0                                 |
-| **refDistance**    | `number` | A reference distance for reducing volume as the emitter moves further from the listener.                            | 1.0                                 |
-| **rolloffFactor**  | `number` | Describes how quickly the volume is reduced as the emitter moves away from listener.                                | 1.0                                 |
+|                    | Type     | Description                                                                                                        | Default value                       |
+| ------------------ | -------- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------- |
+| **shapeType**      | `string` | The shape of the audio emitter. May be `omnidirectional`, `cone`, or a value specified by another extension.       | `"omnidirectional"`                 |
+| **coneInnerAngle** | `number` | The angular diameter of a cone inside of which there will be no angular volume reduction.                          | 6.2831853... (τ or 2π rad, 360 deg) |
+| **coneOuterAngle** | `number` | The angular diameter of a cone outside of which the volume will be reduced to a constant value of `coneOuterGain`. | 6.2831853... (τ or 2π rad, 360 deg) |
+| **coneOuterGain**  | `number` | The linear volume gain of the audio emitter set when outside the cone defined by the `coneOuterAngle` property.    | 0.0                                 |
+| **distanceModel**  | `string` | Specifies the distance model for the audio emitter.                                                                | `"inverse"`                         |
+| **maxDistance**    | `number` | The maximum distance between the emitter and listener, beyond which the audio cannot be heard.                     | 0.0                                 |
+| **refDistance**    | `number` | A reference distance for reducing volume as the emitter moves further from the listener.                           | 1.0                                 |
+| **rolloffFactor**  | `number` | Describes how quickly the volume is reduced as the emitter moves away from listener.                               | 1.0                                 |
 
 #### Shape Type
 
@@ -331,7 +340,7 @@ Note that multiple global audio emitters are allowed on the scene, but only a si
 
 The Audio Rolloff range is `(0.0, +∞)`. The default is `1.0`.
 
-The rolloff formula is dependant on the distance model defined. The available distance models are `linear`, `inverse`, and `exponential`.
+The rolloff formula is dependent on the distance model defined. The available distance models are `linear`, `inverse`, and `exponential`.
 
 - linear formula: `1.0 - rolloffFactor * (distance - refDistance) / (maxDistance - refDistance)`
 - inverse formula: `refDistance / (refDistance + rolloffFactor * (Math.max(distance, refDistance) - refDistance))`
@@ -343,7 +352,7 @@ The gain unit range is `(0.0, +∞)`. The default is `1.0`.
 
 - gain formula: `originalVolume * gain`
 
-### Audio Cone Vizualized
+### Audio Cone Visualized
 
 <img alt="Audio cone showing how cone parameters impact volume based on relative distance to the source." src="./figures/cone-diagram.svg" width="500px" />
 
@@ -370,9 +379,10 @@ The following JSON pointers are defined representing mutable properties defined 
 | `/extensions/KHR_audio_emitter/emitters/{}/positional/maxDistance`    | `float`           |
 | `/extensions/KHR_audio_emitter/emitters/{}/positional/refDistance`    | `float`           |
 | `/extensions/KHR_audio_emitter/emitters/{}/positional/rolloffFactor`  | `float`           |
-| `/extensions/KHR_audio_emitter/sources/{}/autoPlay`                   | `bool`            |
+| `/extensions/KHR_audio_emitter/sources/{}/autoplay`                   | `bool`            |
 | `/extensions/KHR_audio_emitter/sources/{}/gain`                       | `float`           |
 | `/extensions/KHR_audio_emitter/sources/{}/loop`                       | `bool`            |
+| `/extensions/KHR_audio_emitter/sources/{}/playbackRate`               | `float`           |
 
 Additionally, the following JSON pointers are defined for read-only properties:
 

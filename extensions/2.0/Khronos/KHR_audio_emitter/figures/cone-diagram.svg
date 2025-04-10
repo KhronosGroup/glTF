@@ -17,7 +17,7 @@
             <text x="0px" y="0px" style="font-family:'HelveticaNeue', 'Helvetica Neue';font-size:24px;">Listener</text>
         </g>
         <g transform="matrix(0.977366,0,0,0.977366,951.298,929.827)">
-            <text x="0px" y="0px" style="font-family:'HelveticaNeue', 'Helvetica Neue';font-size:24px;">Example V<tspan x="112.92px 125.808px " y="0px 0px ">al</tspan>ues</text>
+            <text x="0px" y="0px" style="font-family:'HelveticaNeue', 'Helvetica Neue';font-size:24px;">Example Values</text>
             <text x="0px" y="38.443px" style="font-family:'HelveticaNeue-Bold', 'Helvetica Neue';font-weight:700;font-size:24px;">coneInnerAngle</text>
             <text x="180.408px" y="38.443px" style="font-family:'HelveticaNeue', 'Helvetica Neue';font-size:24px;">: 0.872665 ( 50° )</text>
             <text x="0px" y="76.887px" style="font-family:'HelveticaNeue-Bold', 'Helvetica Neue';font-weight:700;font-size:24px;">coneOuterAngle</text>
