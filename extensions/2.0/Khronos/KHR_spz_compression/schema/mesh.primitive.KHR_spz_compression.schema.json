@@ -5,10 +5,9 @@
     "description": "Compressed data for SPZ primitive.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "spzBuffer": {
-            "type": "integer",
-            "description": "The index of the buffer containing the compressed data.",
-            "minimum": 0
+        "bufferView": {
+            "allOf": [ { "$ref" : "glTFid.schema.json" } ],
+            "description": "The index of the bufferView."
         },
         "numPoints": {
             "type": "integer",
@@ -38,6 +37,14 @@
             "type": "integer",
             "description": "The version of the SPZ algorithm.",
             "default": 2
+        },
+        "attributes": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+                "$ref": "glTFid.schema.json"
+            },
+            "description": "A dictionary object, where each key corresponds to an attribute and its unique attribute id stored in the compressed geometry."
         },
         "extensions": { },
         "extras": { }
