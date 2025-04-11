@@ -18,25 +18,21 @@
             "type": "integer",
             "description": "The degree of the spherical harmonics.",
             "minimum": 0,
-            "maximum": 3,
-            "default": 0
+            "maximum": 3
         },
         "fractionalBits": {
             "type": "integer",
             "description": "The number of fractional bits.",
             "minimum": 0,
-            "maximum": 16,
-            "default": 12
+            "maximum": 16
         },
         "flags": {
             "type": "integer",
-            "description": "The flags for the compressed data.",
-            "default": 0
+            "description": "The flags for the compressed data."
         },
         "version": {
             "type": "integer",
-            "description": "The version of the SPZ algorithm.",
-            "default": 2
+            "description": "The version of the SPZ algorithm"
         },
         "attributes": {
             "type": "object",
