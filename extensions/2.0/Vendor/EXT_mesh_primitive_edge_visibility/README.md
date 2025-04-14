@@ -202,9 +202,12 @@ The `silhouetteMates` property **MUST** be defined *if and only if* at least one
 
 Engines **MUST** render a silhouette edge unless both adjacent triangles are front-facing or both are back-facing, as determined by their normal vectors.
 
-## TODO
+## Rendering requirements
 
-Engines **MUST** render all edges according to their specified visibility values. The edges **MUST** draw in front of their corresponding triangles with no depth-fighting. Engines may choose a material with which to draw the edges - e.g., they could apply the primitive's material to the edges, or apply some uniform material to the edges of all primitives in the scene, or some other consistent option. If engines choose to render the edges specified by the `primitives` property, then they **MUST** render those primitives according to the glTF 2.0 specification (e.g., using the specified material) and they **MUST NOT** also produce their own rendering of the edges with visibility value `3`.
+- Engines **MUST** render all edges according to their specified visibility values, though some engines may permit the user to toggle the display of edges on and off.
+- The edges **MUST** draw in front of their corresponding triangles with no depth-fighting.
+- The edges **MUST** draw using the materials specified by the extension by default, though some engines may provide options for the user to override those materials.
+- Each silhouette edge **MUST** be rendered unless both adjacent triangles are front-facing or both are back-facing, as determined by their normal vectors.
 
 ## JSON Schema
 
@@ -213,6 +216,6 @@ Engines **MUST** render all edges according to their specified visibility values
 
 ## Implementation Notes
 
-The [pull request](https://github.com/iTwin/itwinjs-core/pull/5581) that informed the design of this extension provides [an iterator](https://github.com/iTwin/itwinjs-core/blob/03b760e1e91bde5221aa7370ea45c52f966e3368/core/frontend/src/common/imdl/CompactEdges.ts#L42) over the `visibility` and `silhouetteNormals` buffers.
+The [pull request](https://github.com/iTwin/itwinjs-core/pull/5581) that informed the design of this extension provides [an iterator](https://github.com/iTwin/itwinjs-core/blob/03b760e1e91bde5221aa7370ea45c52f966e3368/core/frontend/src/common/imdl/CompactEdges.ts#L42) over the `visibility` buffer.
 
-iTwin.js [implements](https://github.com/iTwin/itwinjs-core/blob/03b760e1e91bde5221aa7370ea45c52f966e3368/core/frontend/src/internal/render/webgl/glsl/Edge.ts#L107) conditional display of silhouette edges. It draws edges in a separate pass from surfaces to [ensure](https://github.com/iTwin/itwinjs-core/blob/03b760e1e91bde5221aa7370ea45c52f966e3368/core/frontend/src/internal/render/webgl/glsl/FeatureSymbology.ts#L426) the mitigate z-fighting.
+iTwin.js [implements](https://github.com/iTwin/itwinjs-core/blob/03b760e1e91bde5221aa7370ea45c52f966e3368/core/frontend/src/internal/render/webgl/glsl/Edge.ts#L107) conditional display of silhouette edges. It also draws edges in a separate pass from surfaces to [ensure](https://github.com/iTwin/itwinjs-core/blob/03b760e1e91bde5221aa7370ea45c52f966e3368/core/frontend/src/internal/render/webgl/glsl/FeatureSymbology.ts#L426) the mitigate z-fighting.
