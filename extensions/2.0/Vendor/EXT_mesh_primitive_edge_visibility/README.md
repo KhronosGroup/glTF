@@ -145,14 +145,17 @@ TODO
 
 ### Silhouette Mates
 
-A silhouette represents the edge between two vertices shared by a pair of adjacent triangles.
+A silhouette edge represents the edge between two vertices shared by a pair of adjacent triangles. A client can directly obtain the indices of one of those triangles based on the `visibility` encoding, but to conditionally render the silhouette it also needs to know the third (unshared) vertex of the other triangle so that it can determine each triangle's facing relative to the camera.
 
+The extension's `silhouetteMates` property specifices the index of an accessor of `SCALAR` type and component type `UNSIGNED_BYTE` (5121), `UNSIGNED_SHORT` (5123), or `UNSIGNED_INT` (5125) encoding indices into the triangle mesh's vertex attribute array. Each index refers to the unshared vertex of the other triangle adjacent to the `nth` silhouette edge encoded in `visibility`. The accessor's `count` **MUST** be equal to the number of edges encoded with visibility value `1`.
 
-The extension's `silhouetteNormals` property specifies the index of an accessor of `SCALAR` type and component type 5123 (unsigned short) providing normal vectors used to determine the visibility of silhouette edges at display time. For each edge encoded as a silhouette (visibility value `1`) in `visibility`, the silhouette normals buffer provides the two outward-facing normal vectors of the pair of triangles sharing the edge. Each normal vector is compressed into 16 bits using the "oct16" encoding described [here](https://jcgt.org/published/0003/02/01/). The ordering of the normal vector pairs corresponds to the ordering of the edges in `visibility`; that is, the first pair of normals corresponds to the first edge encoded with visibility `1`, the second pair to the second occurrence of visibility `1`; and so on. The accessor's `count` **MUST** be twice the number of edges encoded with visibility value `1`.
+Engines **MUST** render a silhouette edge unless both adjacent triangles are front-facing or both are back-facing, as determined by their normal vectors.
 
-Engines should render a silhouette edge unless both adjacent triangles are front-facing or both are back-facing, as determined by their normal vectors.
+The `silhouetteMates` property **MUST** be defined *if and only if* at least one edge is encoded with visibility value `1` in `visibility`.
 
-The `silhouetteNormals` property **MUST** be defined *if and only if* at least one edge is encoded with visibility value `1` in `visibility`.
+#### Example
+
+TODO
 
 ## TODO
 
