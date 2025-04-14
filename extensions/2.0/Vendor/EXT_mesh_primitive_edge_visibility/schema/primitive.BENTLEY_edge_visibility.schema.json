@@ -18,6 +18,15 @@
             "description": "The index of the accessor encoding the visibility of each triangle edge as a bitfield with two bits per edge.",
             "gltf_detailedDescription": "An edge visibility of 0 indicates the edge is never drawn; 1 indicates the edge is only drawn in silhouette; 2 indicates a 'hard' (always-drawn) edge; and 3 indicates a repeated occurrence of a 'hard' edge."
         },
+        "material": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of a glTF material with which the edges are to be drawn.",
+            "gltf_detailedDescription": "The index of a glTF material with which the edges are to be drawn. If omitted, the edges are drawn using the same material as the triangle mesh primitive."
+        },
         "silhouetteMates": {
             "allOf": [
                 {
@@ -29,17 +38,14 @@
         },
         "lineStrings": {
             "type": "array",
-            "description": "An array of primitives defining geometry that renders all of the edges encoded as `3` in `visibility`.",
-            "gltf_detailedDescription": "This property **MUST** be defined if and only if `visibility` encodes at least one edge with visibility value `3`",
+            "description": "An array of edges encoded as line strings.",
+            "gltf_detailedDescription": "Edges encoded as line strings **MUST NOT** also be encoded by the `visibility` property.",
             "items": {
-                "$ref": "mesh.primitive.schema.json"
+                "$ref": "lineString.schema.json"
             },
             "minItems": 1
         },
         "extensions": {},
         "extras": {}
-    },
-    "required": [
-        "visibility"
-    ]
+    }
 }
