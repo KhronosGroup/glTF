@@ -15,7 +15,7 @@ Draft
 
 ## Dependencies
 
-Written against the glTF 2.0 spec. Depends on `BENTLEY_primitive_restart` if primitive restart is used.
+Written against the glTF 2.0 spec.
 
 ## Overview
 
@@ -68,7 +68,7 @@ The [CESIUM_primitive_outline](https://github.com/KhronosGroup/glTF/tree/main/ex
 
 ## glTF Schema Updates
 
-The `EXT_mesh_primitive_edge_visibility` extension is applied to a mesh primitive of topology type 4 (triangles), 5 (triangle strip), or 6 (triangle fan) that uses indexed or non-indexed geometry. It provides the information required for engines to produce a rendering of the primitive's edges. Engines are not required to *always* render the edges - they may, for example, permit the user to toggle edge display on and off. When rendering the edges, engines may use any technique that meets the requirements specified below.
+The `EXT_mesh_primitive_edge_visibility` extension is applied to a mesh primitive of topology type 4 (triangles), 5 (triangle strip), or 6 (triangle fan) that uses indexed or non-indexed geometry. It provides the information required for engines to produce a rendering of the primitive's edges. Engines are not required to *always* render the edges - they may, for example, permit the user to toggle edge display on and off. When rendering the edges, engines may use any techniques that meet the requirements specified below.
 
 ### Edge Visibility
 
@@ -76,13 +76,17 @@ The visibility of a single edge is specified using 2 bits as one of the followin
 - 0: Hidden edge - the edge should never be drawn.
 - 1: Silhouette edge - the edge should be drawn only in silhouette (i.e., when separating a front-facing triangle from a back-facing triangle).
 - 2: Hard edge - the edge should always be drawn.
-- 3: Hard edge encoded in `primitives` - a representation of the edge is included in the extension's `primitives` property. The edge should always be drawn, either by drawing the `primitives` array or by drawing it like an edge with visibility value `2` (never both).
+- 3: Repeated hard edge - the edge should always be drawn, and its visibility is already encoded as `2` for an adjoining triangle.
 
 The extension's `visibility` property specifies the index of an accessor of `SCALAR` type and component type 5121 (unsigned byte) that encodes as a bitfield the visibility of every edge of every triangle in the mesh. The ordering of triangles and vertices is as described by [Section 3.7.2.1](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#meshes-overview) of the glTF 2.0 specification. For each triangle `(v0, v1, v2)`, the bitfield encodes three visibility values for the edges `(v0:v1, v1:v2, v2:v0)` in that order. Therefore, the accessor's `count` **MUST** be `6 * N / 8` rounded up to the nearest whole number, where `N` is the number of triangles in the primitive. Any unused bits in the last byte **MUST** be set to zero.
 
-The visibility of a given edge shared by a given pair of triangles **MUST** be encoded as a non-zero value no more than once. All other occurrences of the same edge in the bitfield **MUST** be encoded as zero, to prevent engines from either producing redundant geometry for shared edges or having to manually detect and account for such redundancies.
+Edges are often shared between multiple adjacent triangles, which could lead to redunant encoding of their visibilities. For example, if the shared edge between two triangles was encoded as `2` twice, a client might produce two graphical representations of the edge when one would suffice, or be forced to manually detect and rectify the redundancy. The following rules enable clients to handle shared edges more efficiently:
+- A hard edge **MUST** be encoded as `2` exactly once in `visibility`. All other occurrences of the same edge **MUST** be encoded as `3`.
+- A silhouette edge **MUST** be encoded as `1` exactly once in `visibility`. All other occurrences of the same edge **MUST** be encoded as `0`. Silhouette edges are shared by definition, and clients can directly access the opposite triangle via the [silhouetteMates](#silhouette-mates) property.
 
-Engines **MUST** render all edges according to their specified visibility values. The edges **MUST** draw in front of their corresponding triangles with no depth-fighting. Engines may choose a material with which to draw the edges - e.g., they could apply the primitive's material to the edges, or apply some uniform material to the edges of all primitives in the scene, or some other consistent option. If engines choose to render the edges specified by the `primitives` property, then they **MUST** render those primitives according to the glTF 2.0 specification (e.g., using the specified material) and they **MUST NOT** also produce their own rendering of the edges with visibility value `3`.
+The bitfield **MUST** contain at least one non-zero visibility value.
+
+The `visibility` property **MUST** be defined if `lineStrings` is not defined - otherwise, the extension would encode no edges.
 
 #### Example
 
@@ -95,13 +99,15 @@ Consider the simple example of a pair of adjacent triangles described by the ind
   1      2
 ```
 
+TODO fix these examples
+
 With 2 bits per edge, encoding the visibility of two triangles requires 12 bits. So the visibility buffer must be 2 bytes long, with 4 bits of the second byte going unused. The diagram below shows which edge's visibility will be encoded into each pair of bits.
 
 ```
 Byte    0                 1
-       ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐   
-       │0:2│2:0│1:2│0:1│ │   │   │3:0│2:3│   
-       └───┴───┴───┴───┘ └───┴───┴───┴───┘   
+       ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐
+       │0:2│2:0│1:2│0:1│ │   │   │3:0│2:3│
+       └───┴───┴───┴───┘ └───┴───┴───┴───┘
 Bit        6   4   2   0     14  12  10  8
 ```
 
@@ -115,13 +121,32 @@ Binary │ 00│ 01│ 00│ 10│ │ 00│ 00│ 00│ 10│
 Decimal              18                 2
 ```
 
-### Edge Primitives
+TODO add example for hard diagonal edge
 
-The extension's `primitives` property optionally provides an array of primitives representing all of the hard edges encoded with visibility value `3` in the `visibility` property. Engines should render these primitives directly, in which case they **MUST** do so without depth-fighting and **MUST NOT** also produce their own rendering of these edges. The primary use case is for edges that should be drawn using a different material than the corresponding surface - for example, a red outline drawn around a filled green shape.
+### Material
 
-The `primitives` property **MUST** be defined *if and only if* at least one edge is encoded with visibility value `3` in `visibility`.
+The extension's `material` property optionally specifies the index of a glTF material with which the edges are to be drawn. If unspecified, the edges should be drawn using the same material as the triangle mesh primitive.
 
-### Silhouette Normals
+### Line Strings
+
+The representation of hard edges in the `visibility` property - while compact - presents some drawbacks for certain use cases: It requires that all of the encoded edges draw using the same material, and it does not capture the connectivity between individual line segments. For example, the perimeters of the top and bottom faces of the cylinder in Figure 1 could each be represented as a single circular line string. Perhaps the outline of the top face should be drawn in a different color than that of the bottom face. Or perhaps the outlines are to be drawn with a dash pattern along the length of the line string, or as wide lines into which a client might insert additional triangles to smooth out the joints between line segments.
+
+The extension's `lineStrings` property provides an alternate representation for some or all of the hard edges that would otherwise be encoded in `visibility`. It is an array in which each entry is an object with the following properties:
+- `indices` (required): the index of an accessor of type `SCALAR` and component type `UNSIGNED_BYTE` (5121), `UNSIGNED_SHORT` (5123), or `UNSIGNED_INT` (5125) encoding one or more line strings as indices into the triangle mesh's vertex attribute array. Each line string is encoded as a series of two or more indices. Multiple line strings can be encoded by inserting a "primitive restart" value (that is, the maximal possible value for the accessor's component type, like 255 for `UNSIGNED_BYTE`) between each line string. The `indices` buffer **MUST NOT** begin or end with a primitive restart value, and **MUST NOT** contain consecutive primitive restart values.
+- `material` (optional): the index of the material with which the edges encoded by `indices` are to be drawn. If omitted, the extension's own `material` property is used, if defined; otherwise, the material of the triangle mesh primitive is used.
+
+A hard edge encoded in `lineStrings` **MUST NOT** also be encoded in `visibility`.
+
+The `lineStrings` property **MUST** be defined if `visibility` is not defined - otherwise, the extension would encode no edges.
+
+#### Example
+
+TODO
+
+### Silhouette Mates
+
+A silhouette represents the edge between two vertices shared by a pair of adjacent triangles.
+
 
 The extension's `silhouetteNormals` property specifies the index of an accessor of `SCALAR` type and component type 5123 (unsigned short) providing normal vectors used to determine the visibility of silhouette edges at display time. For each edge encoded as a silhouette (visibility value `1`) in `visibility`, the silhouette normals buffer provides the two outward-facing normal vectors of the pair of triangles sharing the edge. Each normal vector is compressed into 16 bits using the "oct16" encoding described [here](https://jcgt.org/published/0003/02/01/). The ordering of the normal vector pairs corresponds to the ordering of the edges in `visibility`; that is, the first pair of normals corresponds to the first edge encoded with visibility `1`, the second pair to the second occurrence of visibility `1`; and so on. The accessor's `count` **MUST** be twice the number of edges encoded with visibility value `1`.
 
@@ -129,21 +154,15 @@ Engines should render a silhouette edge unless both adjacent triangles are front
 
 The `silhouetteNormals` property **MUST** be defined *if and only if* at least one edge is encoded with visibility value `1` in `visibility`.
 
-### Extensions
+## TODO
 
-The `BENTLEY_primitive_restart` extension *may* be applied to the `EXT_mesh_primitive_edge_visibility` extension object, in which case it applies to the `primitives` property in the same way that it would apply to `mesh.primitives`.
+Engines **MUST** render all edges according to their specified visibility values. The edges **MUST** draw in front of their corresponding triangles with no depth-fighting. Engines may choose a material with which to draw the edges - e.g., they could apply the primitive's material to the edges, or apply some uniform material to the edges of all primitives in the scene, or some other consistent option. If engines choose to render the edges specified by the `primitives` property, then they **MUST** render those primitives according to the glTF 2.0 specification (e.g., using the specified material) and they **MUST NOT** also produce their own rendering of the edges with visibility value `3`.
 
 ## JSON Schema
 
 [./schema/primitive.EXT_mesh_primitive_edge_visibility.schema.json](primitive.EXT_mesh_primitive_edge_visibility.schema.json)
 
 ## Implementation Notes
-
-Example routines for encoding and decoding of oct16 normal vectors:
-
-- [GLSL](https://jcgt.org/published/0003/02/01/) (Section 3.1)
-- [JavaScript](https://github.com/CesiumGS/cesium/blob/dd9c25b652460e8cd77ecd29fbbf7cc44d8b62a2/packages/engine/Source/Core/AttributeCompression.js#L77)
-- [C++](https://github.com/iTwin/imodel-native/blob/4f0a5008dba61124b490a7506a6cd82ce1b8f148/iModelCore/iModelPlatform/PublicAPI/DgnPlatform/Render.h#L2012)
 
 The [pull request](https://github.com/iTwin/itwinjs-core/pull/5581) that informed the design of this extension provides [an iterator](https://github.com/iTwin/itwinjs-core/blob/03b760e1e91bde5221aa7370ea45c52f966e3368/core/frontend/src/common/imdl/CompactEdges.ts#L42) over the `visibility` and `silhouetteNormals` buffers.
 
