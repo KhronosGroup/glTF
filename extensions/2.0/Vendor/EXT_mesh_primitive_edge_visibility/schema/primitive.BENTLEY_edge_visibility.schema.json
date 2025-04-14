@@ -16,18 +16,18 @@
                 }
             ],
             "description": "The index of the accessor encoding the visibility of each triangle edge as a bitfield with two bits per edge.",
-            "gltf_detailedDescription": "An edge visibility of 0 indicates the edge is never drawn; 1 indicates the edge is only drawn in silhouette; 2 indicates the edge is always drawn; and 3 indicates the edge is always drawn and can be drawn by a primitive defined in `primitives`."
+            "gltf_detailedDescription": "An edge visibility of 0 indicates the edge is never drawn; 1 indicates the edge is only drawn in silhouette; 2 indicates a 'hard' (always-drawn) edge; and 3 indicates a repeated occurrence of a 'hard' edge."
         },
-        "silhouetteNormals": {
+        "silhouetteMates": {
             "allOf": [
                 {
                     "$ref": "glTFid.schema.json"
                 }
             ],
-            "description": "The index of the accessor encoding the pair of outward-facing normals for the two faces sharing each silhouette edge (visibility 1) encoded in `visibility`.",
+            "description": "The index of the accessor encoding the index of the fourth vertex for the pair of triangles sharing each silhouette edge (visibility 1) encoded in `visibility`.",
             "gltf_detailedDescription": "This property **MUST** be defined if and only if `visibility` encodes at least one edge with visibility value `1`."
         },
-        "primitives": {
+        "lineStrings": {
             "type": "array",
             "description": "An array of primitives defining geometry that renders all of the edges encoded as `3` in `visibility`.",
             "gltf_detailedDescription": "This property **MUST** be defined if and only if `visibility` encodes at least one edge with visibility value `3`",

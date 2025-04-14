@@ -198,13 +198,9 @@ A silhouette edge represents the edge between two vertices shared by a pair of a
 
 The extension's `silhouetteMates` property specifices the index of an accessor of `SCALAR` type and component type `UNSIGNED_BYTE` (5121), `UNSIGNED_SHORT` (5123), or `UNSIGNED_INT` (5125) encoding indices into the triangle mesh's vertex attribute array. Each index refers to the unshared vertex of the other triangle adjacent to the `nth` silhouette edge encoded in `visibility`. The accessor's `count` **MUST** be equal to the number of edges encoded with visibility value `1`.
 
-Engines **MUST** render a silhouette edge unless both adjacent triangles are front-facing or both are back-facing, as determined by their normal vectors.
-
 The `silhouetteMates` property **MUST** be defined *if and only if* at least one edge is encoded with visibility value `1` in `visibility`.
 
-#### Example
-
-TODO
+Engines **MUST** render a silhouette edge unless both adjacent triangles are front-facing or both are back-facing, as determined by their normal vectors.
 
 ## TODO
 
@@ -212,7 +208,8 @@ Engines **MUST** render all edges according to their specified visibility values
 
 ## JSON Schema
 
-[./schema/primitive.EXT_mesh_primitive_edge_visibility.schema.json](primitive.EXT_mesh_primitive_edge_visibility.schema.json)
+- [primitive.EXT_mesh_primitive_edge_visibility.schema.json](./schema/primitive.EXT_mesh_primitive_edge_visibility.schema.json)
+- [lineString.schema.json](./schema/lineString.schema.json)
 
 ## Implementation Notes
 
