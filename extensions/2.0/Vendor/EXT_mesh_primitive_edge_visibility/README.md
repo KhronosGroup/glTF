@@ -159,22 +159,37 @@ Consider the following simple triangle fan with triangles described by the index
   1      0      5
 ```
 
-Assume that the top and bottom edges are hard edges, to be encoded as a pair of line strings with indices `[2,3,4]` and `[1,0,5]`, respectively; and the vertical edges are hard edges, to be encoded as simple line segments. Then the `visibility` bitfield should encode only the vertical edges, with visibility values `[0,2,0, 0,0,2, 3,0,0, 0,2,0]`. With 2 bits per edge, encoding the visibility of four triangles requires 24 bits (4 bytes, with no bits to spare). The diagram below shows which edge's visibility will be encoded into each pair of bits.
+Assume that the top and bottom edges are hard edges, to be encoded as a pair of line strings with indices `[2,3,4]` and `[1,0,5]`, respectively; and the vertical edges are hard edges, to be encoded as simple line segments. Then the `visibility` bitfield should encode only the vertical edges, with visibility values `[0,2,0, 0,0,2, 3,0,0, 0,2,0]`.
+
+##### Single material
+
+Assume that the top and bottom edges are to be drawn using the same material, different from the material used to draw the vertical edges, and the indices are encoded as unsigned bytes. Then the index buffer would look like `[2,3,4, 255, 1,0,5]`, where `255` is the primitive restart value separating the two line strings. The `lineStrings` property would look something like this:
 ```
-Byte    0                 1                 2               
-       ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐
-       │0:2│2:0│1:2│0:1│ │3:4│0:3│3:0│2:3│ │5:0│4:5│0:4│4:0│
-       └───┴───┴───┴───┘ └───┴───┴───┴───┘ └───┴───┴───┴───┘
-Bit        6   4   2   0     14  12  10  8    22  20  18  16
+{
+    "lineStrings": [
+        {
+            "indices": 5,
+            "material": 1
+        }
+    ]
+}
 ```
 
-With 2 bits per edge, encoding the visibility of four triangles requires 24 bits (4 bytes, with no bits to spare). 
+##### Two materials
+
+Assume that the top edge is to be drawn using the same material as the vertical edges, and the bottom edge is to be drawn using a different material. Then there would be two index buffers - `[2,3,4]` and `[1,0,5]` - and the `lineStrings` property would look something like this:
 ```
-Byte    0                 1
-       ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐   
-Binary │ 00│ 01│ 00│ 10│ │ 00│ 00│ 00│ 10│
-       └───┴───┴───┴───┘ └───┴───┴───┴───┘   
-Decimal              18                 2
+{
+    "lineStrings": [
+        {
+            "indices": 5
+        },
+        {
+            "indices": 6,
+            "material": 1
+        }
+    ]
+}
 ```
 
 ### Silhouette Mates
