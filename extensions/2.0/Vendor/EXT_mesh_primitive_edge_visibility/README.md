@@ -88,18 +88,16 @@ The bitfield **MUST** contain at least one non-zero visibility value.
 
 The `visibility` property **MUST** be defined if `lineStrings` is not defined - otherwise, the extension would encode no edges.
 
-#### Example
+#### Examples
 
 Consider the simple example of a pair of adjacent triangles described by the index list `[0,1,2, 0,2,3]`:
 ```
   0______3
-  | ⟍    |
-  |   ⟍  |
-  |_____⟍|
+  |＼    |
+  |  ＼  |
+  |____＼|
   1      2
 ```
-
-TODO fix these examples
 
 With 2 bits per edge, encoding the visibility of two triangles requires 12 bits. So the visibility buffer must be 2 bytes long, with 4 bits of the second byte going unused. The diagram below shows which edge's visibility will be encoded into each pair of bits.
 
@@ -111,7 +109,9 @@ Byte    0                 1
 Bit        6   4   2   0     14  12  10  8
 ```
 
-Assume that the vertical edges `0:1` and `2:3` are hard edges, the horizontal edges `3:0` and `1:2` are hidden edges, and the shared diagonal edge `0:2` is a silhouette edge. Then the corresponding visibility values would be `[2,0,1, 1,2,0]`. However, we must ensure that the visibility of the shared edge is encoded only once, so after replacing one of the redundant `1`s the visibility values are `[2,0,1, 0,2,0]`. Encoding the edge visibility produces the sequence of bytes `[18, 2]`, as illustrated below.
+##### Shared silhouette edge
+
+Assume that the vertical edges `0:1` and `2:3` are hard edges, the horizontal edges `3:0` and `1:2` are hidden edges, and the shared diagonal edge `0:2` is a silhouette edge. Then the corresponding visibility values would be `[2,0,1, 1,2,0]`. However, we must ensure that the visibility of the silhouette edge is encoded only once, so after replacing one of the redundant `1`s the visibility values are `[2,0,1, 0,2,0]`. Encoding the edge visibility produces the sequence of bytes `[18, 2]`, as illustrated below.
 
 ```
 Byte    0                 1
@@ -121,7 +121,16 @@ Binary │ 00│ 01│ 00│ 10│ │ 00│ 00│ 00│ 10│
 Decimal              18                 2
 ```
 
-TODO add example for hard diagonal edge
+##### Shared hard edge
+
+Assume that the vertical edges `0:1` and `2:3` and the shared diagonal edge `0:2` are all hard edges, and the horizontal edges `3:0` and `1:2` are hidden edges. Then the corresponding visibility values would be `[2,0,2, 2,2,0]`. However, we must ensure that the visibility of the shared hard edge is encoded only once as `2`, with the other occurrence encoded as `3`, resulting in visibility values `[2,0,2, 3,2,0]`. Encoding the edge visibility produces the sequence of bytes `[226, 2]`, as illustrated below.
+```
+Byte    0                 1
+       ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐   
+Binary │ 11│ 10│ 00│ 10│ │ 00│ 00│ 00│ 10│
+       └───┴───┴───┴───┘ └───┴───┴───┴───┘   
+Decimal             226                 2
+```
 
 ### Material
 
@@ -139,9 +148,34 @@ A hard edge encoded in `lineStrings` **MUST NOT** also be encoded in `visibility
 
 The `lineStrings` property **MUST** be defined if `visibility` is not defined - otherwise, the extension would encode no edges.
 
-#### Example
+#### Examples
 
-TODO
+Consider the following simple triangle fan with triangles described by the index list `[0,1,2, 0,2,3, 0,3,4, 0,4,5]`:
+```
+  2______3______4
+  |＼    |    ／|
+  |  ＼  |  ／  |
+  |____＼|／____|
+  1      0      5
+```
+
+Assume that the top and bottom edges are hard edges, to be encoded as a pair of line strings with indices `[2,3,4]` and `[1,0,5]`, respectively; and the vertical edges are hard edges, to be encoded as simple line segments. Then the `visibility` bitfield should encode only the vertical edges, with visibility values `[0,2,0, 0,0,2, 3,0,0, 0,2,0]`. With 2 bits per edge, encoding the visibility of four triangles requires 24 bits (4 bytes, with no bits to spare). The diagram below shows which edge's visibility will be encoded into each pair of bits.
+```
+Byte    0                 1                 2               
+       ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐
+       │0:2│2:0│1:2│0:1│ │3:4│0:3│3:0│2:3│ │5:0│4:5│0:4│4:0│
+       └───┴───┴───┴───┘ └───┴───┴───┴───┘ └───┴───┴───┴───┘
+Bit        6   4   2   0     14  12  10  8    22  20  18  16
+```
+
+With 2 bits per edge, encoding the visibility of four triangles requires 24 bits (4 bytes, with no bits to spare). 
+```
+Byte    0                 1
+       ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐   
+Binary │ 00│ 01│ 00│ 10│ │ 00│ 00│ 00│ 10│
+       └───┴───┴───┴───┘ └───┴───┴───┴───┘   
+Decimal              18                 2
+```
 
 ### Silhouette Mates
 
