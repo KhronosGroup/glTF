@@ -128,6 +128,7 @@ The `procedurals` array specifies the procedural graphs for a given set of nodes
 
 The supported data types are:
 
+* `boolean`
 * single `float`
 * single `integer`
 * tuples:
@@ -136,6 +137,8 @@ The supported data types are:
     * `integer2`, `integer3`, `integer4` : 2, 3, 4 channel integer vector
 * matrix:
     * `matrix3x3`, and `matrix4x4` : Row-major matrices of floats of size 3 or 4.
+* string
+* image asset URI reference: `filename`
 
 Single numeric values, tuples and matrices are represented as arrays of values. For example, a `color3` is represented as an array of 3 floats: `[r, g, b]`.
 
@@ -195,11 +198,15 @@ Note that input and output node types are `input` and `output` respectively.
         * Either:
           * A `value` which is a constant value for the node. or
           * A connection specifier. See [Node Graph Connections](#node-graph-connections) for allowed connections.
+        * May specify a UI position: `xpos`, `ypos` 
+        * May specify a unit type: `unittype` if is a supported non-color numeric input.
+        * May specify a UI string name: `uiname`.
     
     * All `output` objects specified by the node's definition must be specified for each node instance. Each output object:
         * Must have a unique key string identifier within the `outputs` set
         * Must have a node type: `output`
         * Must have a `type` which is a supported data type.
+        * May specify a UI string name: `uiname`.
 
 #### Node Structure
 
@@ -645,32 +652,51 @@ The structure and semantics for declaring definitions matches that used in Mater
 
 It is possible to create collections of definitions for reuse as desired. As there is no concept of a "library" in glTF, these definitions need to be declared in the `procedural_definitions` array for each glTF asset. (*Note*: If referencing of definitions is allowed then custom "library" reuse could be possible)
 
-#### Structure
+#### Definition and Implementations Object
 
-All declarations and functional graphs are specified in a separate `procedural_definitions` array within the KHR_texture_procedurals extension parent.
+All declarations and functional graphs are specified in a separate `procedural_definitions` array within the `KHR_texture_procedurals` extension parent.
 
-These elements are considered to be **immutable**
-and **unconnectable**.
+These elements are considered to be **immutable** and **unconnectable**.
+
+#### Definition Properties
 
 The properties for a definition include:
 
 * `nodetype`: This must be be `nodedef`
 * `node`: The name of the node type. Can be used wherever `nodetype` is specified for a node instance.
+* `name` : A user friendly name for the definition. It is strongly recommended to provide a name which starts with `ND_` to indicate that this is a node definition.
 * `version`: An optional version string. If not specified then it is assumed to be the default version.
-* `default`: A boolean flag to indicate if this is the default version of the definition. If not specified then it is assumed to be false.
+* `defaultVersion`: A boolean flag to indicate if this is the default version of the definition. If not specified then it is assumed to be false.
 * `nodegroup` The semantic grouping for this node. The final name for this will correspond with the matching release of MaterialX. The assumption is this will be `procedural` for the first version. 
 
-* Child sets of `inputs` and `outputs`. This is specified in the same manner as for a procedural graph. 
+* A set of 0 or more `inputs` and set of 1 or more `outputs`. This is specified in the same manner as for a procedural graph.
 
-Each input __must__ have a `value` specified. This is the default value for the input when not specified on an instance of the node (*)
+There is no concept of a deployment `target` for an implementation -- assuming that graph implementations are usable by for any deployment target. (To discuss)
+
+#### Input Properties
+
+Each input __must__ be specified with a unique string identifier for the definition and have a `value` specified. This is the default value for the input when not specified on an instance of the node.
 
 For each input it is useful to provide the following the following additional information as applicable:
 
-  * `name` : A user friendly name for the input. It is strongly recommended to provide a name which starts with `ND_` to indicate that this is a node definition.
-  * `unit` : The real-world unit of the input. This is used for interop with MaterialX and OpenUSD.
-  * `colorspace` : The color space of the input. This is used for interop with MaterialX and OpenUSD.
   * `doc` : An optional string for documentation purposes.
-  * `uimin`, `uimax`, `uistep`, `uifolder`: UI hints for the input. This is used to support editability for node editors.
+  * `unittype` : A optional unit type can be specified.
+  * `uimin`, `uimax`, `uisoftmin`, `uisoftmax`, `uistep`, `uifolder`: UI hints for the input. This is used to support editability for node editors.
+  
+Note that:
+
+* Both`unit` and `colorspace` attributes are unsupported as `glTF` only supports a fixed
+default unit (`metres` for distance) and unmapped numeric inputs are assumed to be in `linrec709` colorspace.
+* In MaterialX, default geometric streams can be implicitly specified using the `defaultgeomprop` meta-data attribute.  This is not supported in a procedural definition (*)
+* Enumerations are discouraged or disallowed. (To discuss)
+
+<super>(*) When creating an instance of this node based on the MaterialX standard library, this binding can be made explicit by adding the appropriate upstream geometry node. At time of writing OpenUSD __does not__ guarantee the handling of these implicit bindings.
+</super>
+
+#### Output Properties
+
+Each `output` must be specified with a unique string identifier for the definition and __cannot__ specify any default values or inputs (`defaultvalue`, `defaultinput`). These values are used to allow a "pass-through" value when a node is "disabled". Node disabling is not supported -- thus
+defaults are not supported.
 
 Example:
 ```JSON
@@ -686,9 +712,6 @@ Example:
 ]
 ```
 
-<super>(*) Note that default geometric streams can be specified for some input types using the `defaultgeomprop` meta-data specifier. This would need to be converted to a numbered stream (_TBD how to map this_ )
-</super>
-
 A functional nodegraph has the following properties: 
 
 * `name`: A unique name for the graph. It is strongly recommended to start the name with `NG_` to indicate that this is a node graph.
@@ -696,7 +719,7 @@ A functional nodegraph has the following properties:
 * `nodedef` : Index into the `procedural_definitions` array to indicate the corresponding definition entry.
 * A child set of `outputs`. The outputs must match those of the definition.
 
-  It is considered invalid to specify a list of `inputs`.
+It is considered invalid to specify a set of `inputs`.
 
 ```JSON
 {
