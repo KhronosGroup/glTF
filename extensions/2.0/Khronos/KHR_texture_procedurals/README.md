@@ -137,7 +137,7 @@ The supported data types are:
 * matrix:
     * `matrix3x3`, and `matrix4x4` : Row-major matrices of floats of size 3 or 4.
 
-Tuples and matrices are represented as arrays of values. For example, a `color3` is represented as an array of 3 floats: `[r, g, b]`.
+Single numeric values, tuples and matrices are represented as arrays of values. For example, a `color3` is represented as an array of 3 floats: `[r, g, b]`.
 
 ### Procedural Graphs
 
@@ -150,9 +150,10 @@ Each procedural graph object is composed of:
   * An optional string `name` identifier
   * A `nodetype` category which must be `nodegraph`
   * A `type` which is the output type of the graph. This is a supported data type, or `multioutput` if there is more than one output node for the graph.
-  * Three array children:
+  * Input and output object sets:
     * `inputs` : lists input "interface" nodes for passing data into the graph.
     * `outputs` : lists output "interface" nodes for passing data out of the graph. See [Node Graph Connections](#node-graph-connections) for connection information.
+  * Node array:
     * `nodes` : processing nodes.
     
 The structure of atomic nodes is described in  [Procedural Nodes](#procedural-nodes) section. 
@@ -163,11 +164,11 @@ Note that input and output node types are `input` and `output` respectively.
 
 ```JSON
 { 
-  "name": "<optional name>", 
+  "name": "<optional identifier>", 
   "nodetype": "nodegraph",
   "type": "<data-type>",
-  "inputs": [],
-  "outputs": [],
+  "inputs": {},
+  "outputs": {},
   "nodes": []
 }
 ```
@@ -182,20 +183,21 @@ Note that input and output node types are `input` and `output` respectively.
 
     * `type` : the output type of the node. This is a supported data type or `multioutput` if there is more than one output for the node.
 
-    * A list of input ports under an `inputs` array.
+    * A list of input port objects under an `inputs` set.
     If an `input` is specified it's input value overrides that of the node definition default.
     
-    * A list of output ports under an `outputs` array. Every `output` defined by the node's definition __must__ be specified. 
+    * A list of output port objects under an `outputs` set. Every `output` defined by the node's definition __must__ be specified.
 
-    * Each input port:
+    * Each input object:
+        * Must have a unique key string identifier within the `inputs` set
         * Must have a node type: `input`
-        * May have an optional string `name` identifier
         * Must have a `type` which is a supported data type.
         * Either:
           * A `value` which is a constant value for the node. or
           * A connection specifier. See [Node Graph Connections](#node-graph-connections) for allowed connections.
     
-    * All `output` ports specified by the node's definition must be specified for each node instance. Each output port:
+    * All `output` objects specified by the node's definition must be specified for each node instance. Each output object:
+        * Must have a unique key string identifier within the `outputs` set
         * Must have a node type: `output`
         * Must have a `type` which is a supported data type.
 
@@ -203,32 +205,32 @@ Note that input and output node types are `input` and `output` respectively.
 
 ```JSON
 {
-  "name": "<node name>",
+  "name": "<node identifier>",
   "nodetype": "<node type>",
   "type": "<data type>",
-  "inputs": [],
-  "outputs": []
+  "inputs": {},
+  "outputs": {}
 }
 ```
 
-where an each input port in the `inputs` array  has the following structure:
+where an each input object in the `inputs` set  has the following structure:
 
 ```JSON
+"name": "<input identifier>",
 {
-  "name": "<input name>",
   "nodetype": "input",
   "type": "<data type>",
   "value": <value> or
   "node": <processing node index> or
-  "input": <input node index> or
-  "output": <output node index>
+  "input": <input node identifier> or
+  "output": <output node identifier>
 }
 ```
-and each output port in the `outputs` array has the following structure:
+and each output object  in the `outputs` set has the following structure:
 
 ```JSON
+"name": "<output identifier>",
 {
-  "name": "<input name>",
   "nodetype": "output",
   "type": "<data type>",
 }
@@ -238,11 +240,11 @@ and each output port in the `outputs` array has the following structure:
 
 Connections inside a graph can be made:
 
-* To a `node input` from a an `nodegraph input` by specifying a `input` value which is an index into the graph's `inputs` array.
+* To a `node input` from a an `nodegraph input` by specifying a `input` value which is an indentifier into the graph's `inputs` set.
 * To a `node input` from a node `output` by specifying a `node` value which is an index into the graph's `nodes` array.
 * To a nodegraph `output` from a node `output` by specifying a `node` value which is an index into the graph's `nodes` array.
 
-If the upstream node has multiple outputs, then an `output` value which is an index into the the upstream nodes `outputs` array  __must__ additionally be specified. 
+If the upstream node has multiple outputs, then an `output` value which is an index into the the upstream nodes `outputs` set  __must__ additionally be specified. 
 
 
 The following example shows all the combinations of connections are shown. The sample logic adds two colors together and outputs the result. 
@@ -263,50 +265,55 @@ Note that the output ports are specified even if the upstream node only has one 
       "name": "nodegraph1",
       "nodetype": "nodegraph",
       "type": "color3",
-      "inputs": [
+      "inputs": {
+        "graph_in"
         {
-          "name": "graph_in",
           "nodetype": "input",
           "type": "color3",
           "value": [ 1, 0, 0 ]
         }
-      ],
+      },
       "nodes" [
           {
             "name": "constant1",
             "nodetype": "constant",
             "type": "color3",
-            "value": [ 1, 1, 0 ],
-            "outputs": [
-              {
-                "name": "out",
+            "inputs": {
+              "value": {
+                "nodetype": "input",
+                "type": "color3",
+                "value": [1.0, 1.0, 1.0]
+              }
+            }            
+            "outputs": {
+              "out" {
                 "nodetype": "output",
                 "type": "color3"
               }
-            ]
+            }
           },
           {
             "name": "add1",
             "nodetype": "add",
             "type": "color3",
-            "inputs": [
+            "inputs": {
+              "in1"
               {
-                "name": "in1",
                 "nodetype": "input",
                 "type": "color3",
                 "value": [ 1, 0, 0 ]
               },
+              "in2"
               {
-                "name": "in2",
                 "nodetype": "input",
                 "type": "color3",
                 "node": 0,
-                "output": 0
+                "output": "out"
               }
-            ],
+            },
             "outputs": [
+              "out"
               {
-                "name": "out",
                 "nodetype": "output",
                 "type": "color3"                
               }
@@ -314,13 +321,13 @@ Note that the output ports are specified even if the upstream node only has one 
           }
         ],
 
-        "outputs" [
+        "outputs" {
+          "graph_out",
           {
-            "name": "graph_out",
             "nodetype": "output",
             "type": "color3",
             "node": 1,
-            "output": 0
+            "output": "out"
           },
         ]
     }
@@ -343,7 +350,7 @@ Material inputs that already support texture binding can support procedural grap
 - `emissiveTexture`
 - `diffuseTexture`
 
-In this example the extension is specified on the `baseColorTexture` entry. The `index` value is a reference into the `procedurals` array.  If the procedural graph has multiple outputs than an `output` index must be specified to indicate which output in the graphs `outputs` array to use.
+In this example the extension is specified on the `baseColorTexture` entry. The `index` value is a reference into the `procedurals` array.  If the procedural graph has multiple outputs than an `output` identifier must be specified to indicate which output in the graphs `outputs` set to use.
 
 ```JSON
 "materials": [
@@ -354,7 +361,7 @@ In this example the extension is specified on the `baseColorTexture` entry. The 
          "extensions": {
            "KHR_texture_procedurals": {
              "index": <"procedurals" array index>,
-             "output": <"outputs" array index>
+             "output": <"outputs" identifier>
            }
          }
        }
@@ -407,21 +414,20 @@ The [animation pointer extension](https://github.com/KhronosGroup/glTF/blob/main
 for a JSON path to be specified. For this extension an animation `pointer` would be a string path to an graph input of the form: 
 
 ```
-"/extensions/procedurals/<node graph index>/inputs/<input index>"
+"/extensions/procedurals/<node graph index>/inputs/<input identifier>"
 ```
 where
 `<node graph index>` is the index into the array of procedurals and
-`input index>` is the index into the array in the "inputs" array for a given
-procedural.
+`input identifier>` is the identifier for an input object in the `inputs` set for a given procedural.
 
 For the provided example the input color (vec3) pointer path would be:
 ```
-"/extensions/procedurals/0/inputs/0"
+"/extensions/procedurals/0/inputs/in1"
 ```
 
 The required data type support is a subset of those specified for the animation pointer extension. Specifically: `bool`, `float`, `float3`, `float4x4`, `float3x3`, `float4x4` and `int` types.
 
-#### Texture / Image Binding
+#### Texture Binding
 
 An `input` reference to an image is represented by an index to a `texture` element within the `textures` array object. If mapping from a MaterialX `filename`, then the resolved `filename` string can be used for the corresponding `image` source uri.
 
@@ -444,7 +450,9 @@ An `input` reference to an image is represented by an index to a `texture` eleme
 ```
 <super>Figure: This example shows a texture reference to an image with a `filename` of `"myfilename.wepb"`</super>
 
-It is useful to include a `mimeType` for the image to indicate the desired codec support. This can include any codecs not supported by default -- such as `exr` format. The alternative is to pre-convert the image to a default supported format.
+<super>
+It is useful to include a `mimeType` for the image to indicate the desired codec support. This can include any codecs supported by default or via an extension.
+All other formats are expected to be pre-converted to a supported format.
 </super>
 
 ### Texture Placement / Sampling Binding
@@ -462,26 +470,26 @@ Below is a snapshot of a graph where the placement parameters and sampling are s
 <img src="./figures/texture_override.png" width="100%">
 <img src="./figures/texture_sampling.png" width="100%">
 
-The following is an eaxmple `image` node with sampling information:
+The following is an example `image` node with sampling information:
 ```json
 {
   "name": "image_color3",
   "nodetype": "image",
   "type": "color3",
-  "inputs": [
+  "inputs": {
+    "name": "uaddressmode"
     {
-      "name": "uaddressmode",
       "nodetype": "input",
       "type": "string",
       "value": "clamp"
     },
+    "name": "vaddressmode"
     {
-      "name": "vaddressmode",
       "nodetype": "input",
       "type": "string",
       "value": "clamp"
     }
-  ]
+  }
 }
 ```
 The following is an example `place2d` node with placement information:
@@ -490,39 +498,38 @@ The following is an example `place2d` node with placement information:
   "name": "place2d_vector2",
   "nodetype": "place2d",
   "type": "vector2",
-  "inputs": [
+  "inputs": {
+    "pivot"
     {
-      "name": "pivot",
       "nodetype": "input",
       "type": "vector2",
       "value": [0.1,0.5]
     },
+    "scale"
     {
-      "name": "scale",
       "nodetype": "input",
       "type": "vector2",
       "value": [0.3,0.4]
     },
+    "rotate"
     {
-      "name": "rotate",
       "nodetype": "input",
       "type": "float",
-      "value": 45.0
+      "value": [45.0]
     },
+    "offset"
     {
-      "name": "offset",
       "nodetype": "input",
       "type": "vector2",
-      "value": [0.01,0.01
-      ]
+      "value": [0.01,0.01]
     },
+    "operationorder"
     {
-      "name": "operationorder",
       "nodetype": "input",
       "type": "integer",
-      "value": 1
+      "value": [1]
     }
-  ]
+  }
 }
 ```
 
@@ -544,10 +551,9 @@ Semantics for texture coordinate lookups are as follows:
 
 1. The current [specification language for meshes]((https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#meshes-overview)) notes that texture coordinates are **2 channel**. In order to support 3D texture coordinates it is proposed that the semantics of this binding be extended to allow 3 channel texture coordinates.
 
-    This is currently beyond the scope of this extension, thus validation for
-for this version will consider these nodes as being invalid.
+    This is currently beyond the scope of this extension, thus validation for this version will consider these nodes as being invalid.
 
-2. Texture coordinates may be routed in a graph through one or more downstream nodes which may perform a mathematical operation on the coordinates. To avoid ambiguity any transform specified on a texture should be ignored / removed. 
+2. Texture coordinates may be routed in a graph through one or more downstream nodes which may perform a mathematical operation on the coordinates. To avoid ambiguity any transform specified on a texture should be ignored / removed.
 
 For colors, a procedural node would be used to specify a color stream. A value of 1 would imply a binding to color stream `COLOR_1`.
 
@@ -568,18 +574,18 @@ For colors, a procedural node would be used to specify a color stream. A value o
               "name": "geomcolor_color3",
               "nodetype": "geomcolor",
               "type": "color3",
-              "inputs": [
+              "inputs": {
+                "index"
                 {
-                  "name": "index",
                   "nodetype": "input",
                   "type": "integer",
-                  "value": 1
+                  "value": [1]
                 }
-              ],
-              "outputs": [
+              },
+              "outputs": {
+                "out"
                 {
                   "nodetype": "output",
-                  "name": "out",
                   "type": "color3"
                 }
               ]
@@ -588,21 +594,21 @@ For colors, a procedural node would be used to specify a color stream. A value o
               "name": "texcoord_vector2",
               "nodetype": "texcoord",
               "type": "vector2",
-              "inputs": [
+              "inputs": {
+                "index"
                 {
-                  "name": "index",
                   "nodetype": "input",
                   "type": "integer",
-                  "value": 1
+                  "value": [1]
                 }
-              ],
-              "outputs": [
+              },
+              "outputs": {
+                "out"
                 {
                   "nodetype": "output",
-                  "name": "out",
                   "type": "vector2"
                 }
-              ]
+              }
             }
           ]
         }
@@ -654,13 +660,13 @@ The properties for a definition include:
 * `default`: A boolean flag to indicate if this is the default version of the definition. If not specified then it is assumed to be false.
 * `nodegroup` The semantic grouping for this node. The final name for this will correspond with the matching release of MaterialX. The assumption is this will be `procedural` for the first version. 
 
-* Child arrays of `inputs` and `outputs`. This is specified in the same manner as for a procedural graph. 
+* Child sets of `inputs` and `outputs`. This is specified in the same manner as for a procedural graph. 
 
 Each input __must__ have a `value` specified. This is the default value for the input when not specified on an instance of the node (*)
 
 For each input it is useful to provide the following the following additional information as applicable:
 
-  * `name` : A user friendly name for the input. It is strongy recommended to provide a name which starts with `ND_` to indicate that this is a node definition.
+  * `name` : A user friendly name for the input. It is strongly recommended to provide a name which starts with `ND_` to indicate that this is a node definition.
   * `unit` : The real-world unit of the input. This is used for interop with MaterialX and OpenUSD.
   * `colorspace` : The color space of the input. This is used for interop with MaterialX and OpenUSD.
   * `doc` : An optional string for documentation purposes.
@@ -674,8 +680,8 @@ Example:
      "nodetype": "nodedef", 
      "node": "<node type name>", 
      "nodegroup": "procedural", 
-     "inputs": [],
-     "outputs":[]
+     "inputs": {},
+     "outputs": {}
    }
 ]
 ```
@@ -688,7 +694,7 @@ A functional nodegraph has the following properties:
 * `name`: A unique name for the graph. It is strongly recommended to start the name with `NG_` to indicate that this is a node graph.
 * `nodetype`: Must be `nodegraph`
 * `nodedef` : Index into the `procedural_definitions` array to indicate the corresponding definition entry.
-* A child array of `outputs`. The outputs must match those of the definition.
+* A child set of `outputs`. The outputs must match those of the definition.
 
   It is considered invalid to specify a list of `inputs`.
 
@@ -698,8 +704,8 @@ A functional nodegraph has the following properties:
   "nodetype": "nodegraph", 
   "type": "<output data type>", 
   "nodedef": <definition index>, 
-  "outputs": [],
-  "nodes": []
+  "outputs": {},
+  "nodes": {}
 }
 ```
 
@@ -717,74 +723,60 @@ Below is the actual interface for the “checkerboard” definition as specified
      "nodetype": "nodedef", 
      "node": "checkerboard", 
      "nodegroup": "procedural", 
-     "inputs": [
-       {
-         "name": "color1",
-         "doc": "The first color used in the checkerboard pattern.",
-         "type": "color3",
-         "value": [
-           1.0,
-           1.0,
-           1.0
-         ]
-       },
-       {
-         "name": "color2",
-         "doc": "The second color used in the checkerboard pattern.",
-         "type": "color3",
-         "value": [
-           0.0,
-           0.0,
-           0.0
-         ]
-       },
-       {
-         "name": "uvtiling",
-         "doc": "The tiling of the checkerboard pattern along each axis, with higher values producing smaller squares. Default is (8, 8).",
-         "type": "vector2",
-         "value": [
-           8,
-           8
-         ]
-       },
-       {
-         "name": "uvoffset",
-         "doc": "The offset of the checkerboard pattern along each axis. Default is (0, 0).",
-         "type": "vector2",
-         "value": [
-           0,
-           0
-         ]
-       },
-       {
-         "name": "texcoord",
-         "doc": "The input 2d space. Default is the first texture coordinates.",
-         "type": "vector2",
-         "defaultgeomprop": "UV0"
-       }
+     "inputs": {
+        "color1"
+        {
+          "doc": "The first color used in the checkerboard pattern.",
+          "type": "color3",
+          "value": [1.0,1.0,1.0]
+        },
+        "color2"
+        {
+          "doc": "The second color used in the checkerboard pattern.",
+          "type": "color3",
+          "value": [0.0,0.0,0.0]
+        },
+         "uvtiling"
+        {
+          "doc": "The tiling of the checkerboard pattern along each axis, with higher values producing smaller squares. Default is (8, 8).",
+          "type": "vector2",
+          "value": [8,8]
+        },
+         "uvoffset"
+        {
+          "doc": "The offset of the checkerboard pattern along each axis. Default is (0, 0).",
+          "type": "vector2",
+          "value": [0,0]
+        },
+         "texcoord"
+        {
+          "doc": "The input 2d space. Default is the first texture coordinates.",
+          "type": "vector2",
+          "defaultgeomprop": "UV0"
+        }
      ],
-     "outputs": [
+     "outputs": {
+        "out"
        {
-         "name": "out",
          "type": "color3"
        }
-     ]
+     }
    },
 
-// Functional node graph
+   // Functional node graph
    {
      "name": "NG_checkerboard_color3",
      "nodetype": "nodegraph", 
      "type": "color3", 
      "nodedef": 0, 
-     "outputs": [
+     "outputs": {
+        "out"
        {
-         "name": "out",
          "type": "color3"
        }
-     ],
+     },
      "nodes": [
-       // Nodes omitted...
+       // Nodes go here...
      ]
    }
  }
@@ -871,19 +863,10 @@ graph LR;
 
 ```JSON
 {
-  "materials": [
+  "images": [
     {
-      "name": "gltf_pbr_surfaceshader",
-      "pbrMetallicRoughness": {
-        "baseColorTexture": {
-          "index": 0,
-          "extensions": {
-            "KHR_texture_procedurals": {
-              "index": 0
-            }
-          }
-        }
-      }
+      "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4z/AfAAQAAf/zKSWvAAAAAElFTkSuQmCC",
+      "name": "KHR_texture_procedural_fallback"
     }
   ],
   "textures": [
@@ -891,46 +874,15 @@ graph LR;
       "source": 0
     }
   ],
-  "images": [
-    {
-      "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4z/AfAAQAAf/zKSWvAAAAAElFTkSuQmCC",
-      "name": "KHR_texture_procedural_fallback"
-    }
-  ],
-  "extensionsUsed": [
-    "KHR_texture_procedurals"
-  ],
   "extensions": {
     "KHR_texture_procedurals": {
-      "mimetype": "application/mtlx+json;version=1.38",
       "procedurals": [
         {
-          "name": "My_Checker",
+          "name": "NG_main",
           "nodetype": "nodegraph",
           "type": "color3",
-          "inputs": [
-            {
-              "name": "color1",
-              "nodetype": "input",
-              "type": "color3",
-              "value": [
-                1.0,
-                0.0,
-                0.0
-              ]
-            },
-            {
-              "name": "color2",
-              "nodetype": "input",
-              "type": "color3",
-              "value": [
-                0.0,
-                1.0,
-                0.0
-              ]
-            },
-            {
-              "name": "uvtiling",
+          "inputs": {
+            "uvtiling": {
               "nodetype": "input",
               "type": "vector2",
               "value": [
@@ -938,110 +890,72 @@ graph LR;
                 8.0
               ]
             },
-            {
-              "name": "uvoffset",
+            "color1": {
               "nodetype": "input",
-              "type": "vector2",
+              "type": "color3",
               "value": [
-                0.0,
-                0.0
+                1.0,
+                0.094118,
+                0.031373
+              ]
+            },
+            "color2": {
+              "nodetype": "input",
+              "type": "color3",
+              "value": [
+                0.035294,
+                0.090196,
+                0.878431
               ]
             }
-          ],
-          "outputs": [
-            {
-              "name": "out",
+          },
+          "outputs": {
+            "output_N_mtlxmix_out": {
               "nodetype": "output",
               "type": "color3",
-              "node": 5
+              "node": 0
             }
-          ],
+          },
           "nodes": [
             {
-              "name": "N_mtlxmult",
-              "nodetype": "multiply",
-              "type": "vector2",
-              "inputs": [
-                {
-                  "name": "in1",
+              "name": "N_mtlxmix",
+              "nodetype": "mix",
+              "type": "color3",
+              "inputs": {
+                "fg": {
                   "nodetype": "input",
-                  "type": "vector2",
-                  "node": 6
+                  "type": "color3",
+                  "input": "color1"
                 },
-                {
-                  "name": "in2",
+                "bg": {
                   "nodetype": "input",
-                  "type": "vector2",
-                  "input": 2
-                }
-              ],
-              "outputs": [
-                {
-                  "nodetype": "output",
-                  "name": "out",
-                  "type": "vector2"
-                }
-              ]
-            },
-            {
-              "name": "N_mtlxsubtract",
-              "nodetype": "subtract",
-              "type": "vector2",
-              "inputs": [
-                {
-                  "name": "in1",
-                  "nodetype": "input",
-                  "type": "vector2",
-                  "node": 0
+                  "type": "color3",
+                  "input": "color2"
                 },
-                {
-                  "name": "in2",
+                "mix": {
                   "nodetype": "input",
-                  "type": "vector2",
-                  "input": 3
+                  "type": "float",
+                  "node": 5
                 }
-              ],
-              "outputs": [
-                {
+              },
+              "outputs": {
+                "out": {
                   "nodetype": "output",
-                  "name": "out",
-                  "type": "vector2"
+                  "type": "color3"
                 }
-              ]
-            },
-            {
-              "name": "N_mtlxfloor",
-              "nodetype": "floor",
-              "type": "vector2",
-              "inputs": [
-                {
-                  "name": "in",
-                  "nodetype": "input",
-                  "type": "vector2",
-                  "node": 1
-                }
-              ],
-              "outputs": [
-                {
-                  "nodetype": "output",
-                  "name": "out",
-                  "type": "vector2"
-                }
-              ]
+              }
             },
             {
               "name": "N_mtlxdotproduct",
               "nodetype": "dotproduct",
               "type": "float",
-              "inputs": [
-                {
-                  "name": "in1",
+              "inputs": {
+                "in1": {
                   "nodetype": "input",
                   "type": "vector2",
-                  "node": 2
+                  "node": 4
                 },
-                {
-                  "name": "in2",
+                "in2": {
                   "nodetype": "input",
                   "type": "vector2",
                   "value": [
@@ -1049,98 +963,153 @@ graph LR;
                     1.0
                   ]
                 }
-              ],
-              "outputs": [
-                {
+              },
+              "outputs": {
+                "out": {
                   "nodetype": "output",
-                  "name": "out",
                   "type": "float"
                 }
-              ]
+              }
+            },
+            {
+              "name": "N_mtlxmult",
+              "nodetype": "multiply",
+              "type": "vector2",
+              "inputs": {
+                "in1": {
+                  "nodetype": "input",
+                  "type": "vector2",
+                  "node": 6
+                },
+                "in2": {
+                  "nodetype": "input",
+                  "type": "vector2",
+                  "input": "uvtiling"
+                }
+              },
+              "outputs": {
+                "out": {
+                  "nodetype": "output",
+                  "type": "vector2"
+                }
+              }
+            },
+            {
+              "name": "N_mtlxsubtract",
+              "nodetype": "subtract",
+              "type": "vector2",
+              "inputs": {
+                "in1": {
+                  "nodetype": "input",
+                  "type": "vector2",
+                  "node": 2
+                },
+                "in2": {
+                  "nodetype": "input",
+                  "type": "vector2",
+                  "value": [
+                    0.0,
+                    0.0
+                  ]
+                }
+              },
+              "outputs": {
+                "out": {
+                  "nodetype": "output",
+                  "type": "vector2"
+                }
+              }
+            },
+            {
+              "name": "N_mtlxfloor",
+              "nodetype": "floor",
+              "type": "vector2",
+              "inputs": {
+                "in": {
+                  "nodetype": "input",
+                  "type": "vector2",
+                  "node": 3
+                }
+              },
+              "outputs": {
+                "out": {
+                  "nodetype": "output",
+                  "type": "vector2"
+                }
+              }
             },
             {
               "name": "N_modulo",
               "nodetype": "modulo",
               "type": "float",
-              "inputs": [
-                {
-                  "name": "in1",
+              "inputs": {
+                "in1": {
                   "nodetype": "input",
                   "type": "float",
-                  "node": 3
+                  "node": 1
                 },
-                {
-                  "name": "in2",
+                "in2": {
                   "nodetype": "input",
                   "type": "float",
-                  "value": 2.0
+                  "value": [
+                    2.0
+                  ]
                 }
-              ],
-              "outputs": [
-                {
+              },
+              "outputs": {
+                "out": {
                   "nodetype": "output",
-                  "name": "out",
                   "type": "float"
                 }
-              ]
+              }
             },
             {
-              "name": "N_mtlxmix",
-              "nodetype": "mix",
-              "type": "color3",
-              "inputs": [
-                {
-                  "name": "bg",
-                  "nodetype": "input",
-                  "type": "color3",
-                  "input": 1
-                },
-                {
-                  "name": "fg",
-                  "nodetype": "input",
-                  "type": "color3",
-                  "input": 0
-                },
-                {
-                  "name": "mix",
-                  "nodetype": "input",
-                  "type": "float",
-                  "node": 4
-                }
-              ],
-              "outputs": [
-                {
-                  "nodetype": "output",
-                  "name": "out",
-                  "type": "color3"
-                }
-              ]
-            },
-            {
-              "name": "texcoord",
+              "name": "Texcoord",
               "nodetype": "texcoord",
               "type": "vector2",
-              "inputs": [
-                {
-                  "name": "index",
+              "inputs": {
+                "index": {
                   "nodetype": "input",
                   "type": "integer",
-                  "value": 1
+                  "value": [
+                    0
+                  ]
                 }
-              ],
-              "outputs": [
-                {
+              },
+              "outputs": {
+                "out": {
                   "nodetype": "output",
-                  "name": "out",
                   "type": "vector2"
                 }
-              ]
+              }
             }
-          ]
+          ],
+          "xpos": "-1.2309688043141684",
+          "ypos": "3.189328265723073"
         }
       ]
     }
-  }
+  },
+  "materials": [
+    {
+      "name": "Gltf_pbr",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0,
+          "extensions": {
+            "KHR_texture_procedurals": {
+              "index": 0,
+              "output": "output_N_mtlxmix_out"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_texture_procedurals",
+    "EXT_texture_procedurals_mx_1_39"
+  ]
 }
 ```
 
@@ -1299,11 +1268,7 @@ The inputs on each node instance are specified to to create a “red” and “g
             {
               "name": "color1",
               "type": "color3",
-              "value": [
-                0,
-                1,
-                0
-              ]
+              "value": [0,1,0]
             }
           ],
           "outputs": [
@@ -1321,11 +1286,7 @@ The inputs on each node instance are specified to to create a “red” and “g
             {
               "name": "color1",
               "type": "color3",
-              "value": [
-                1,
-                0,
-                0
-              ]
+              "value": [1,0,0]
             }
           ],
           "outputs": [
@@ -1430,18 +1391,18 @@ The aim is (as  much as possible) to preserve the"simplest" most consistent conv
 
 | Feature | <img src="./figures/materialx.svg" width=48px> | <img src="./figures/OpenUSD.png" width=120px> | <img src="./figures/glTF.svg" width=64px> |
 | --- | --- | --- | --- |
-| **Object String Identifiers** | Yes | Yes | Optional |
-| **Numeric Tuples** | string | list () | array [] |
-| **Connection Syntax**" | string (name in context) | Absolute Path | numeric index |
+| **Object String Identifiers** | Yes | Yes | Optional for nodes and node graphs |
+| **Numeric Tuples** | string | list () | array [], including single values |
+| **Connection Syntax**" | string (name in context) | Absolute Path | numeric index for nodes, identifier for inputs and outputs |
 | **Explicit Node Outputs** | No | Yes | Yes |
 | **Node Type Grouping** | No | No | Yes |
-| **Reference to nodedef on node instance** | Yes | Yes | No |
+| **Reference to nodedef on node instance** | Optional | Required | No |
 | **NodeGraph Nesting** | "Yes" (not implemented) | Yes | No |
 | **Optional Input Overrides on Nodes** | Yes | Yes | Yes |
-| **Referencing** | Yes | Yes | No |
+| **Document Referencing** | Yes | Yes | No |
 | **Definition Versioning** | Yes | Yes | Yes |
-| **Meta-Data** | Yes | Yes | Yes |
-| **Node Definition** | Yes | Yes | Yes |
+| **Meta-Data** | Yes | Yes | Subset of MaterialX |
+| **Node Definitions** | Yes | Yes | Yes |
 
 ## Appendix: Full Khronos Copyright Statement
 
