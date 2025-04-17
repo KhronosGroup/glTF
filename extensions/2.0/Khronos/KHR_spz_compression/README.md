@@ -28,15 +28,15 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-SPZ is a compression format from Niantic Labs designed for Gaussian splats. Currently, it is open sourced under the MIT license. The SPZ format is primarily used in the Niantic Labs Scaniverse app.
+SPZ is a compression format from Niantic Labs designed for Gaussian splats. Currently, it is open sourced under the MIT license. The SPZ format is primarily used in the Niantic Labs Scaniverse app. It was purpose built for Guassian splats and offers a balance of high compression with minimal visual fidelity loss.
 
-This extension allows glTF to support streaming SPZ compressed data instead of uncompressed Gaussian splat data.
+This extension allows glTF to support streaming SPZ compressed data instead of uncompressed or meshopt compressed Gaussian splat data.
 
 This extension is to be used with `KHR_gaussian_splatting`.
 
 ## Adding SPZ compressed data to Primitives
 
-If a primitive contains an `extension` property which defines `KHR_spz_compression` then SPZ compression is required. At this time, no requirement for a backup uncompressed buffer is required.
+If a primitive contains an `extension` property which defines `KHR_spz_compression` then SPZ compression is required. At this time, there is no requirement for a backup uncompressed buffer.
 
 The extension must be listed in `extensionsUsed` along with `KHR_gaussian_splatting`
 
@@ -53,6 +53,14 @@ It must also be listed in `extensionsRequired`
     "KHR_spz_compression"
   ]
 ```
+
+Note that while `KHR_spz_compression` is required, `KHR_gaussian_splatting` is not and may fallback to rendering points.
+
+### Geometry Type
+
+The `mode` of the `primitive` must be `POINTS`.
+
+### Schema Example
 
 Example SPZ extension shown below. This extension only affects any `primitive` nodes containting Gaussian splat data.
 
@@ -117,7 +125,7 @@ This contains the attributes that will map into the compressed SPZ data indicate
 
 If `_OPACITY` is omitted, see [Implementation](#implementation) below.
 
-### The following properties are part of the SPZ header
+### SPZ header properties embedded in the compressed data stream
 
 #### numPoints
 
@@ -133,7 +141,7 @@ The degree of spherical harmonics contained in the compressed data. This can ran
 
 #### flags
 
-This property is mostly unused, but it currently defines an anti-aliasing flag that can be set.
+A set of bit flags reserved for future use. Currently it is only used for an anti-aliasing flag.
 
 ## Accessors
 
