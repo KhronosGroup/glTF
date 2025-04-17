@@ -115,7 +115,7 @@ This contains the attributes that will map into the compressed SPZ data indicate
 | Splat Data | glTF Attribute | Accessor Type | Component Type | Required |
 | --- | --- | --- | --- | --- |
 | Position | POSITION | VEC3 | float | yes |
-| Color (Spherical Harmonic 0 (Diffuse) and opacity) | COLOR_0 | VEC4 | unsigned byte or float normalized | yes |
+| Color (Spherical Harmonic 0 (Diffuse)) | COLOR_0 | VEC3 or VEC4 | unsigned byte or float normalized | yes |
 | Alpha | _OPACITY | SCALAR | float or unsigned byte | no |
 | Rotation | _ROTATION | VEC4 | float | yes |
 | Scale | _SCALE | VEC3 | float | yes |
@@ -190,6 +190,8 @@ The recommended process for handling SPZ compression is as follows:
 *This section is non-normative.*
 
 After the SPZ data stream has been decompressed, when populating the `accessors` you may insert the alpha values into `COLOR_0` instead of a separate `_OPACITY` attribute.
+
+The `COLOR_0` property type will be `VEC3` if it doesn't contain the alpha channel and `VEC4` otherwise. These values can be converted to `unsigned byte` at this time if desired otherwise they can be left `float`.
 
 ## Schema
 
