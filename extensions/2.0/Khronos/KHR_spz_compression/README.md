@@ -32,8 +32,6 @@ SPZ is a compression format from Niantic Labs designed for Gaussian splats. Curr
 
 This extension allows glTF to support streaming SPZ compressed data instead of uncompressed or meshopt compressed Gaussian splat data.
 
-This extension is to be used with `KHR_gaussian_splatting`.
-
 ## Adding SPZ compressed data to Primitives
 
 If a primitive contains an `extension` property which defines `KHR_spz_compression` then SPZ compression is required. At this time, there is no requirement for a backup uncompressed buffer.
@@ -126,6 +124,8 @@ This contains the attributes that will map into the compressed SPZ data indicate
 If `_OPACITY` is omitted, see [Implementation](#implementation) below.
 
 ### SPZ header properties embedded in the compressed data stream
+
+The following properties are within the SPZ stream header. They are exposed here to be informative and facilitate decoder setup prior to any decompression occurring.
 
 #### numPoints
 
