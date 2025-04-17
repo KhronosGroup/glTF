@@ -17,10 +17,11 @@ Written against the glTF 2.0 spec.
 ## Table of Contents
 
 - [Overview](#overview)
-- [Adding Gaussian Splats](#adding-gaussian-splats-to-primitives)
-  - [Splat Data Mapping](#splat-data-mapping)
-  - [Extension Attributes](#extension-attributes)
-  - [Transforming Data](#transforming-gaussian-splat-data-for-gltf)
+- [Adding Gaussian Splats](#adding-spz-compressed-data-to-primitives)
+- [Extension Properties](#extension-properties)
+- [Accessors](#accessors)
+- [Conformance](#conformance)
+- [Implementation](#implementation)
 
 ## Overview
 
@@ -49,6 +50,8 @@ It must also be listed in `extensionsRequired`
     "KHR_spz_compression"
   ]
 ```
+
+Example SPZ extension shown below. This extension only affects any `primitive` nodes containting Gaussian splat data.
 
 ```json
   "meshes": [{
@@ -90,31 +93,42 @@ It must also be listed in `extensionsRequired`
     }],
 ```
 
-### Extension Properties
+## Extension Properties
 
-##### bufferView
+### bufferView
 
 This property points to the bufferView containing the compressed SPZ data.
 
-##### attributes
+### attributes
 
-This lists the attributes that will map into the compressed SPZ data. At minimum it will contain `POSITION`, `COLOR_0`, `_OPACITY`, `_ROTATION`, and `_SCALE`. `COLOR_1` to `COLOR_15` are used to hold the spherical harmonic data and will vary depending on how many are present.
+This contains the attributes that will map into the compressed SPZ data indicated by `bufferView`. At minimum it will contain `POSITION`, `COLOR_0`, `_ROTATION`, and `_SCALE`. `COLOR_1` to `COLOR_15` are used to hold the spherical harmonic data and will vary depending on how many are present.
 
-#### The following properties are part of the SPZ header
+| Splat Data | glTF Attribute | Accessor Type | Component Type | Required |
+| --- | --- | --- | --- | --- |
+| Position | POSITION | VEC3 | float | yes |
+| Color (Spherical Harmonic 0 (Diffuse) and opacity) | COLOR_0 | VEC4 | unsigned byte or float normalized | yes |
+| Alpha | _OPACITY | SCALAR | float or unsigned byte | no |
+| Rotation | _ROTATION | VEC4 | float | yes |
+| Scale | _SCALE | VEC3 | float | yes |
+| Spherical Harmonics | COLOR_1 - COLOR_15 | VEC4 | float | no |
 
-##### numPoints
+If `_OPACITY` is omitted, see [Implementation](#implementation) below.
+
+
+### The following properties are part of the SPZ header
+
+#### numPoints
 
 The number of Gaussian splats in the compressed data.
 
-##### fractionalBits
+#### fractionalBits
 
 The number of fraction bits to use for `POSITION` quantization.
 
-##### shDegree
-
+####
 The degree of spherical harmonics contained in the compressed data. This can range from 0 to 3.
 
-##### flags
+#### flags
 
 This property is mostly unused, but it currently defines an anti-aliasing flag that can be set.
 
@@ -144,16 +158,24 @@ This property is mostly unused, but it currently defines an anti-aliasing flag t
     }],
 ```
 
-At minimum accessors will be defined for `POSITION`, `COLOR_0`, `_OPACITY`, `_ROTATION`, and `_SCALE`. Each should have `componentType`, `count`, and `type` defined.
+At minimum accessors will be defined for `POSITION`, `COLOR_0`, `_ROTATION`, and `_SCALE`. Each should have `componentType`, `count`, and `type` defined.
 
-| Splat Data | glTF Attribute | Accessor Type | Component Type |
-| --- | --- | --- | --- |
-| Position | POSITION | VEC3 | float |
-| Color (Spherical Harmonic 0 (Diffuse) and opacity) | COLOR_0 | VEC4 | unsigned byte or float normalized |
-| Alpha | _OPACITY | SCALAR | float or unsigned byte |
-| Rotation | _ROTATION | VEC4 | float |
-| Scale | _SCALE | VEC3 | float |
-| Spherical Harmonics | COLOR_1 - COLOR_15 | VEC4 | float |
+Accessor `type` is defined for the resulting type after decompression and dequantization has occurred.
 
-Accessor type is defined for the resulting type after decompression and dequantization has occurred.
+The accessor `count` should match `numPoints` in `KHR_spz_compression`.
 
+## Conformance
+
+The recommended process for handling SPZ compression is as follows:
+
+- If the loader does not support `KHR_spz_compression`, it must fail.
+- If the load does support `KHR_spz_compression` then:
+  - The loader must process `KHR_spz_compression` data first. The loader must get the data from `KHR_spz_compression`'s `bufferView` property.
+  - The loader then must process `attributes` of the `primitive`. When processing the loader must ignore any `bufferView` and `byteOffset` in the `accessor` and instead use values derived from the decompressed data streams. This data can be used to populate the `accessors` or render directly.
+  - Any attributes not listed in `KHR_spz_compression`'s `attributes` but are listed in the `primitive` must then be processed by the loader.
+
+## Implementation
+
+*This section is non-normative*
+
+After the SPZ data stream has been decompressed, when populating the `accessors` you may insert the alpha values into `COLOR_0` instead of a separate `_OPACITY` attribute.
