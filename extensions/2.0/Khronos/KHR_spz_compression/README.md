@@ -22,6 +22,9 @@ Written against the glTF 2.0 spec.
 - [Accessors](#accessors)
 - [Conformance](#conformance)
 - [Implementation](#implementation)
+- [Schema](#schema)
+- [Known Implementations](#known-implementations)
+- [Resources](#resources)
 
 ## Overview
 
@@ -179,3 +182,16 @@ The recommended process for handling SPZ compression is as follows:
 *This section is non-normative*
 
 After the SPZ data stream has been decompressed, when populating the `accessors` you may insert the alpha values into `COLOR_0` instead of a separate `_OPACITY` attribute.
+
+## Schema
+
+[SPZ Compression Schema](./schema/mesh.primitive.KHR_spz_compression.schema.json)
+
+## Known Implementations
+
+This is currently implemented within  [3D Tiles and CesiumJS as an experimental feature](https://github.com/CesiumGS/cesium/tree/splat-spz-concept).
+
+## Resources
+
+https://github.com/nianticlabs/spz
+https://github.com/drumath2237/spz-loader/tree/main
