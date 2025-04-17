@@ -201,5 +201,5 @@ This is currently implemented within  [3D Tiles and CesiumJS as an experimental 
 
 ## Resources
 
-https://github.com/nianticlabs/spz
-https://github.com/drumath2237/spz-loader/tree/main
+[](https://github.com/nianticlabs/spz)
+[](https://github.com/drumath2237/spz-loader/tree/main)
