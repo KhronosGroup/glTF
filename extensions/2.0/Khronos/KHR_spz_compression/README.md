@@ -187,7 +187,7 @@ The recommended process for handling SPZ compression is as follows:
 
 ## Implementation
 
-*This section is non-normative*
+### *This section is non-normative*
 
 After the SPZ data stream has been decompressed, when populating the `accessors` you may insert the alpha values into `COLOR_0` instead of a separate `_OPACITY` attribute.
 
@@ -201,5 +201,5 @@ This is currently implemented within  [3D Tiles and CesiumJS as an experimental 
 
 ## Resources
 
-[](https://github.com/nianticlabs/spz)
-[](https://github.com/drumath2237/spz-loader/tree/main)
+[https://github.com/nianticlabs/spz](https://github.com/nianticlabs/spz)
+[https://github.com/drumath2237/spz-loader/tree/main](https://github.com/drumath2237/spz-loader/tree/main)
