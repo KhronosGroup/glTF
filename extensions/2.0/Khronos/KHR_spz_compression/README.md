@@ -169,11 +169,11 @@ A set of bit flags reserved for future use. Currently it is only used for an ant
     }],
 ```
 
-At minimum accessors will be defined for `POSITION`, `COLOR_0`, `_ROTATION`, and `_SCALE`. Each should have `componentType`, `count`, and `type` defined.
+At minimum accessors will be defined for `POSITION`, `COLOR_0`, `_ROTATION`, and `_SCALE`. Each must have `componentType`, `count`, and `type` defined.
 
 Accessor `type` is defined for the resulting type after decompression and dequantization has occurred.
 
-The accessor `count` should match `numPoints` in `KHR_spz_compression`.
+The accessor `count` must match `numPoints` in `KHR_spz_compression`.
 
 ## Conformance
 
