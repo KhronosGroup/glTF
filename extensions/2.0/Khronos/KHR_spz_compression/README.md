@@ -187,7 +187,7 @@ The recommended process for handling SPZ compression is as follows:
 
 ## Implementation
 
-**Note:** This section is non-normative
+*This section is non-normative.*
 
 After the SPZ data stream has been decompressed, when populating the `accessors` you may insert the alpha values into `COLOR_0` instead of a separate `_OPACITY` attribute.
 
