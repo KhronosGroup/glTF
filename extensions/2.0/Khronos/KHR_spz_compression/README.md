@@ -18,8 +18,8 @@ Written against the glTF 2.0 spec.
 
 - [Overview](#overview)
 - [Adding Gaussian Splats](#adding-spz-compressed-data-to-primitives)
-- [Extension Properties](#extension-properties)
-- [Accessors](#accessors)
+  - [Extension Properties](#extension-properties)
+  - [Accessors](#accessors)
 - [Conformance](#conformance)
 - [Implementation](#implementation)
 - [Schema](#schema)
@@ -102,13 +102,13 @@ Example SPZ extension shown below. This extension only affects any `primitive` n
     }],
 ```
 
-## Extension Properties
+### Extension Properties
 
-### bufferView
+#### bufferView
 
 This property points to the bufferView containing the compressed SPZ data.
 
-### attributes
+#### attributes
 
 This contains the attributes that will map into the compressed SPZ data indicated by `bufferView`. At minimum it will contain `POSITION`, `COLOR_0`, `_ROTATION`, and `_SCALE`. `COLOR_1` to `COLOR_15` are used to hold the spherical harmonic data and will vary depending on how many are present.
 
@@ -123,27 +123,27 @@ This contains the attributes that will map into the compressed SPZ data indicate
 
 If `_OPACITY` is omitted, see [Implementation](#implementation) below.
 
-### SPZ header properties embedded in the compressed data stream
+#### SPZ header properties embedded in the compressed data stream
 
 The following properties are within the SPZ stream header. They are exposed here to be informative and facilitate decoder setup prior to any decompression occurring.
 
-#### numPoints
+##### numPoints
 
 The number of Gaussian splats in the compressed data.
 
-#### fractionalBits
+##### fractionalBits
 
 The number of fraction bits to use for `POSITION` quantization.
 
-#### shDegree
+##### shDegree
 
 The degree of spherical harmonics contained in the compressed data. This can range from 0 to 3.
 
-#### flags
+##### flags
 
 A set of bit flags reserved for future use. Currently it is only used for an anti-aliasing flag.
 
-## Accessors
+### Accessors
 
 ```json
   "accessors": [{
