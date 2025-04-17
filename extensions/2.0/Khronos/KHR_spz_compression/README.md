@@ -114,7 +114,6 @@ This contains the attributes that will map into the compressed SPZ data indicate
 
 If `_OPACITY` is omitted, see [Implementation](#implementation) below.
 
-
 ### The following properties are part of the SPZ header
 
 #### numPoints
@@ -125,7 +124,8 @@ The number of Gaussian splats in the compressed data.
 
 The number of fraction bits to use for `POSITION` quantization.
 
-####
+#### shDegree
+
 The degree of spherical harmonics contained in the compressed data. This can range from 0 to 3.
 
 #### flags
