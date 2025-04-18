@@ -28,7 +28,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-SPZ is a compression format from Niantic Labs designed for Gaussian splats. Currently, it is open sourced under the MIT license. The SPZ format is primarily used in the Niantic Labs Scaniverse app. It was purpose built for Guassian splats and offers a balance of high compression with minimal visual fidelity loss.
+SPZ is a compression format from Niantic Labs designed for Gaussian Splatting and available as open source under the MIT licensed. SPZ was purpose built for Gaussian Splatting and offers a balance of high compression with minimal visual fidelity loss.
 
 This extension allows glTF to support streaming SPZ compressed data instead of uncompressed or meshopt compressed Gaussian splat data.
 
