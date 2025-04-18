@@ -71,7 +71,10 @@ Example SPZ extension shown below. This extension only affects any `primitive` n
             "_ROTATION": 3,
             "COLOR_0": 1,
             "_SCALE": 2,
-            "POSITION": 0
+            "POSITION": 0,
+            "_SH_DEGREE_1_COEF_0": 4,
+            "_SH_DEGREE_1_COEF_1": 5,
+            "_SH_DEGREE_1_COEF_2": 6,
           },
           "material": 0,
           "mode": 0,
@@ -86,7 +89,10 @@ Example SPZ extension shown below. This extension only affects any `primitive` n
                 "_ROTATION": 3,
                 "COLOR_0": 1,
                 "_SCALE": 2,
-                "POSITION": 0
+                "POSITION": 0,
+                "_SH_DEGREE_1_COEF_0": 4,
+                "_SH_DEGREE_1_COEF_1": 5,
+                "_SH_DEGREE_1_COEF_2": 6,
               }
             }
           }
@@ -118,9 +124,9 @@ This contains the attributes that will map into the compressed SPZ data indicate
 | Color (Spherical Harmonic degree 0 (Diffuse)) | COLOR_0 | VEC4 | unsigned byte or float normalized | yes |
 | Rotation | _ROTATION | VEC4 | float | yes |
 | Scale | _SCALE | VEC3 | float | yes |
-| Spherical Harmonics degrees 1 | _SH_DEGREE_1_COEF_n (n = 0 to 2) | VEC3 | float | no (yes if degree 2 or 3 are used) |
-| Spherical Harmonics degrees 2 | _SH_DEGREE_2_COEF_n (n = 0 to 4) | VEC3 | float | no (yes if degree 3 is used) |
-| Spherical Harmonics degrees 3 | _SH_DEGREE_3_COEF_n (n = 0 to 6) | VEC3 | float | no |
+| Spherical Harmonics degree 1 | _SH_DEGREE_1_COEF_n (n = 0 to 2) | VEC3 | float | no (yes if degree 2 or 3 are used) |
+| Spherical Harmonics degree 2 | _SH_DEGREE_2_COEF_n (n = 0 to 4) | VEC3 | float | no (yes if degree 3 is used) |
+| Spherical Harmonics degree 3 | _SH_DEGREE_3_COEF_n (n = 0 to 6) | VEC3 | float | no |
 
 Each increasing degree of spherical harmonics requires more coeffecients. At the 1st degree, 3 sets of coeffcients are required, increasing to 5 sets for the 2nd degree, and increasing to 7 sets at the 3rd degree. With all 3 degrees, this results in 45 spherical harmonic coefficients stored in the `_SH_DEGREE_ℓ_COEF_n` attributes.
 
@@ -148,6 +154,8 @@ A set of bit flags reserved for future use. Currently it is only used for an ant
 
 ### Accessors
 
+Required `accessors` for `POSITION`, `COLOR_0`, `_ROTATION`, and `_SCALE`:
+
 ```json
   "accessors": [{
       "componentType": 5126,
@@ -166,6 +174,16 @@ A set of bit flags reserved for future use. Currently it is only used for an ant
       "count": 590392,
       "type": "VEC4"
     }],
+```
+
+Spherical harmonics `accessors` all follow the pattern:
+
+```json
+  "accessors": [{
+    "componentType": 5126,
+    "count": 590392,
+    "type": "SCALAR"
+  }]
 ```
 
 At minimum accessors will be defined for `POSITION`, `COLOR_0`, `_ROTATION`, and `_SCALE`. Each must have `componentType`, `count`, and `type` defined.
@@ -318,7 +336,7 @@ vec3 calculateConic(vec3 covariance2D)
 }
 ```
 
-The Guassian is finally rendered using the conic matrix applying its alpha derived from the Gaussian opacity multiplied by its exponential falloff.
+The Gaussian is finally rendered using the conic matrix applying its alpha derived from the Gaussian opacity multiplied by its exponential falloff.
 
 ```glsl
 //https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L330
@@ -342,6 +360,65 @@ if(alpha < 1./255.)
     discard;
 
 splatColor = vec4(color * alpha, alpha);
+```
+
+### Rendering from a Texture
+
+Instead of rendering directly from attributes, Gaussian splats can be packed into a texture. This approach offers a few benefits: single source of data on the gpu, smaller size, pre-computed 3D covariance, and most importantly instead of sorting all vertex buffers we only have to update a single index buffer.
+
+The texture format is `RGBA32UI`.
+
+Gaussian splats are packed into 32 bytes with the following format:
+
+| Data | Type | Size (bytes) | Byte Offset |
+| --- | --- | --- | --- |
+| POSITION | float | 12 | 0 |
+| (UNUSED) | none | 4 | 12 |
+| 3D Covariance | half float | 12 | 16 |
+| COLOR_0 (RGBA) | unsigned byte | 4 | 28 |
+
+`_SCALE` and `_ROTATION` are used to compute the 3D covariance ahead of time. This part of computation is not view-dependent. It's computed as it is above in the vertex shader code. Once computed, we take the 6 unique values of our 3D covariance matrix and convert them to half-float for compactness. Each Gaussian splat occupies 2 pixels of the texture.
+
+[See packing implementation here](https://github.com/CesiumGS/cesium-wasm-utils/blob/main/wasm-splats/src/texture_gen.rs)
+
+Accessed via `usampler2D`:
+
+```glsl
+  highp usampler2D u_gsplatAttributeTexture;
+```
+
+#### Sorting and Indexes
+
+With our Gaussian splat attributes packed into a texture our sorting only has to act upon a separate `_INDEX` attribute we create at runtime. Gaussian splats are sorted as above, but instead of sorting each vertex buffer we only sort the index values. When the glTF is loaded, Gaussian splats can be indexed in the order read.
+
+#### Extracting Data in the Vertex Shader
+
+Given a texture with a width of 2048 pixels, we can access it thusly:
+
+```glsl
+  uint texIdx = uint(a_splatIndex); //_INDEX
+  ivec2 posCoord = ivec2((texIdx & 0x3ffu) << 1, texIdx >> 10); //wrap every 2048 pixels
+```
+
+Extracting position data:
+
+```glsl
+  vec4 splatPosition = vec4( uintBitsToFloat(uvec4(texelFetch(u_splatAttributeTexture, posCoord, 0))) );
+```
+
+Covariance and color data are extracted together:
+
+```glsl
+  uvec4 covariance = uvec4(texelFetch(u_splatAttributeTexture, covCoord, 0));
+
+  //reconstruct matrix
+  vec2 u1 = unpackHalf2x16(covariance.x) ;
+  vec2 u2 = unpackHalf2x16(covariance.y);
+  vec2 u3 = unpackHalf2x16(covariance.z);
+  mat3 Vrk = mat3(u1.x, u1.y, u2.x, u1.y, u2.y, u3.x, u2.x, u3.x, u3.y);
+
+  //reconstruct color
+  v_splatColor = vec4(covariance.w & 0xffu, (covariance.w >> 8) & 0xffu, (covariance.w >> 16) & 0xffu, (covariance.w >> 24) & 0xffu) / 255.0;
 ```
 
 ## Schema
