@@ -364,7 +364,7 @@ splatColor = vec4(color * alpha, alpha);
 
 ### Rendering from a Texture
 
-Instead of rendering directly from attributes, Gaussian splats can be packed into a texture. This approach offers a few benefits: single source of data on the gpu, smaller size, pre-computed 3D covariance, and most importantly instead of sorting all vertex buffers we only have to update a single index buffer.
+Instead of rendering directly from attribute vertex buffers, Gaussian splats can be packed into a texture. This approach offers a few benefits: single source of data on the gpu, smaller size, pre-computed 3D covariance, and most importantly instead of sorting all vertex buffers we only have to update a single index buffer.
 
 The texture format is `RGBA32UI`.
 
