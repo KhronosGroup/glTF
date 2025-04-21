@@ -68,13 +68,13 @@ Example SPZ extension shown below. This extension only affects any `primitive` n
   "meshes": [{
       "primitives": [{
           "attributes": {
-            "_ROTATION": 3,
+            "POSITION": 0,
             "COLOR_0": 1,
             "_SCALE": 2,
-            "POSITION": 0,
+            "_ROTATION": 3,
             "_SH_DEGREE_1_COEF_0": 4,
             "_SH_DEGREE_1_COEF_1": 5,
-            "_SH_DEGREE_1_COEF_2": 6,
+            "_SH_DEGREE_1_COEF_2": 6
           },
           "material": 0,
           "mode": 0,
