@@ -119,15 +119,15 @@ This property points to the bufferView containing the Gaussian splat data compre
 
 This contains the attributes that will map into the compressed SPZ data indicated by `bufferView`. At minimum it will contain `POSITION`, `COLOR_0`, `_ROTATION`, and `_SCALE`. `_SH_DEGREE_ℓ_COEF_n` attributes hold the spherical harmonics data and are not required. If higher degrees are used then lower degrees are required implicitly.
 
-| Splat Data | glTF Attribute | Accessor Type | Component Type | Required |
-| --- | --- | --- | --- | --- |
-| Position | POSITION | VEC3 | float | yes |
-| Color (Spherical Harmonic degree 0 (Diffuse)) | COLOR_0 | VEC4 | unsigned byte or float normalized | yes |
-| Rotation | _ROTATION | VEC4 | float | yes |
-| Scale | _SCALE | VEC3 | float | yes |
-| Spherical Harmonics degree 1 | _SH_DEGREE_1_COEF_n (n = 0 to 2) | VEC3 | float | no (yes if degree 2 or 3 are used) |
-| Spherical Harmonics degree 2 | _SH_DEGREE_2_COEF_n (n = 0 to 4) | VEC3 | float | no (yes if degree 3 is used) |
-| Spherical Harmonics degree 3 | _SH_DEGREE_3_COEF_n (n = 0 to 6) | VEC3 | float | no |
+| Splat Data | glTF Attribute | Accessor Type | Component Type | Required | Notes |
+| --- | --- | --- | --- | --- | --- |
+| Position | POSITION | VEC3 | float | yes | |
+| Color (Spherical Harmonic degree 0 (Diffuse)) | COLOR_0 | VEC4 | unsigned byte or float normalized | yes | |
+| Rotation | _ROTATION | VEC4 | float | yes | Rotation is a quaternion. |
+| Scale | _SCALE | VEC3 | float | yes | |
+| Spherical Harmonics degree 1 | _SH_DEGREE_1_COEF_n (n = 0 to 2) | VEC3 | float | no (yes if degree 2 or 3 are used) | |
+| Spherical Harmonics degree 2 | _SH_DEGREE_2_COEF_n (n = 0 to 4) | VEC3 | float | no (yes if degree 3 is used) | |
+| Spherical Harmonics degree 3 | _SH_DEGREE_3_COEF_n (n = 0 to 6) | VEC3 | float | no | |
 
 Each increasing degree of spherical harmonics requires more coeffecients. At the 1st degree, 3 sets of coeffcients are required, increasing to 5 sets for the 2nd degree, and increasing to 7 sets at the 3rd degree. With all 3 degrees, this results in 45 spherical harmonic coefficients stored in the `_SH_DEGREE_ℓ_COEF_n` attributes.
 
