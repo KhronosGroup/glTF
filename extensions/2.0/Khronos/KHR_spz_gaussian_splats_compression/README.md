@@ -99,7 +99,8 @@ Example SPZ extension shown below. This extension only affects any `primitive` n
         }]
     }],
   "buffers": [{
-      "uri": "0.spz",
+      "uri": "0.bin",
+
       "byteLength": 9753142
     }],
   "bufferViews": [{
