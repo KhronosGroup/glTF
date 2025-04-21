@@ -197,7 +197,8 @@ The accessor `count` must match `numPoints` in `KHR_spz_gaussian_splats_compress
 The recommended process for handling SPZ compression is as follows:
 
 - If the loader does not support `KHR_spz_gaussian_splats_compression`, it must fail.
-- If the load does support `KHR_spz_gaussian_splats_compression` then:
+- If the loader does support `KHR_spz_gaussian_splats_compression` then:
+
   - The loader must process `KHR_spz_gaussian_splats_compression` data first. The loader must get the data from `KHR_spz_gaussian_splats_compression`'s `bufferView` property.
   - The loader then must process `attributes` of the `primitive`. When processing the loader must ignore any `bufferView` and `byteOffset` in the `accessor` and instead use values derived from the decompressed data streams. This data can be used to populate the `accessors` or render directly.
   - Any attributes not listed in `KHR_spz_gaussian_splats_compression`'s `attributes` but are listed in the `primitive` must then be processed by the loader.
