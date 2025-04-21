@@ -54,7 +54,7 @@ It must also be listed in `extensionsRequired`
   ]
 ```
 
-Note that while `KHR_spz_gaussian_splats_compression` is required.
+Note that `KHR_spz_gaussian_splats_compression` is required.
 
 ### Geometry Type
 
