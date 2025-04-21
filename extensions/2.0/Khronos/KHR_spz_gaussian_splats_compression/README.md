@@ -122,7 +122,7 @@ This contains the attributes that will map into the compressed SPZ data indicate
 | Splat Data | glTF Attribute | Accessor Type | Component Type | Required | Notes |
 | --- | --- | --- | --- | --- | --- |
 | Position | POSITION | VEC3 | float | yes | |
-| Color (Spherical Harmonic degree 0 (Diffuse)) | COLOR_0 | VEC4 | unsigned byte or float normalized | yes | |
+| Color (Spherical Harmonic degree 0 (Diffuse) and alpha) | COLOR_0 | VEC4 | unsigned byte normalized or float | yes | |
 | Rotation | _ROTATION | VEC4 | float | yes | Rotation is a quaternion. |
 | Scale | _SCALE | VEC3 | float | yes | |
 | Spherical Harmonics degree 1 | _SH_DEGREE_1_COEF_n (n = 0 to 2) | VEC3 | float | no (yes if degree 2 or 3 are used) | |
