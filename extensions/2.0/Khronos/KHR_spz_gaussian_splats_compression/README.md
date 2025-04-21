@@ -212,16 +212,15 @@ Rendering is broadly two phases: Pre-rasterization sorting and rasterization.
 
 ### Splat Sorting
 
-Given that splatting uses many layered Gaussians blended to create complex effects, their ordering is view dependent and must be sorted based on their distance from the current camera position. The details are largely dependent on the platform targeted.
+Given that splatting uses many layered Gaussians blended to create complex effects, splat ordering is view dependent and must be sorted based on the splat's distance from the current camera position. The details are largely dependent on the platform targeted.
 
-In the seminal paper, they took a hardware accelerated approach using CUDA. The scene is broken down into tiles with each tile processed in parallel. The splats within each tile are sorted via a GPU accelerated Radix sort. The details are beyond the scope of this document, but it can be seen here: 
-[https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/rasterizer_impl.cu](https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/rasterizer_impl.cu)
+In the seminal paper, the authors took a hardware accelerated approach using CUDA. The scene is broken down into tiles with each tile processed in parallel. The splats within each tile are sorted via a GPU accelerated Radix sort. The details are beyond the scope of this document, but it can be found on [their GitHub repository](https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/rasterizer_impl.cu). 
 
-Our approach differs in that we are currently operating in the browser with WebGL, so we don't have that level of hardware access.
+The approach outlined here differs in that it operates within the browser with WebGL, so direct GPU access is unavailable.
 
-Regardless of how your data is stored and structured, sorting visible Gaussians is a similar process.
+Regardless of how the data is stored and structured, sorting visible Gaussians is a similar process whether using the CPU or GPU.
 
-First, we obtain our model view matrix by multiplying the model matrix of the asset we are viewing with the camera view matrix
+First, obtain the model view matrix by multiplying the model matrix of the asset being viewed with the camera view matrix:
 
 ```javascript
     const modelViewMatrix = new Matrix4();
@@ -229,8 +228,8 @@ First, we obtain our model view matrix by multiplying the model matrix of the as
     Matrix4.multiply(cam.viewMatrix, modelMatrix, modelViewMatrix);
 ```
 
-Second, we need a method to calculate Z-depth of each splat (median point, this does not factor in volume) for our depth sort.
-We accomplish this by taking the dot product of the splat position (x, y, z) with the view z-direction.
+Second, calculate Z-depth of each splat (median point, this does not factor in volume) for our depth sort.
+This can be accomplished by taking the dot product of the splat position (x, y, z) with the view z-direction.
 
 ```javascript
     const zDepthCalc = (index) => 
@@ -239,16 +238,16 @@ We accomplish this by taking the dot product of the splat position (x, y, z) wit
         splatPositions[index * 3 + 2] * modelViewMatrix[10]
 ```
 
-No particular sorting method is required, but count and Radix sorts are generally performant. Between the two, we have found Radix to be consistently faster (10-15%) while using less memory.
+No particular sorting method is required, but count and Radix sorts are generally performant. Between the two, the authors have found Radix to be consistently faster (10-15%) while using less memory.
 
 ### Rasterizing
 
-In the vertex shader, we first must compute covariance in 3D and then 2D space. In optimizing implementations, 3D covariance can be computed ahead of time.
+In the vertex shader, first compute the covariance in 3D and then 2D space. In optimizing implementations, 3D covariance can be computed ahead of time.
 
-Our 3D covariance matrix can be represented as:
+The 3D covariance matrix can be represented as:
 $$\Sigma = RSS^TR^T$$
 
-Where `S` is our scaling matrix and `R` is our rotation matrix
+Where `S` is the scaling matrix and `R` is the rotation matrix.
 
 ```glsl
 //https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d/cuda_rasterizer/forward.cu#L118
@@ -379,7 +378,7 @@ Gaussian splats are packed into 32 bytes with the following format:
 | 3D Covariance | half float | 12 | 16 |
 | COLOR_0 (RGBA) | unsigned byte | 4 | 28 |
 
-`_SCALE` and `_ROTATION` are used to compute the 3D covariance ahead of time. This part of computation is not view-dependent. It's computed as it is above in the vertex shader code. Once computed, we take the 6 unique values of our 3D covariance matrix and convert them to half-float for compactness. Each Gaussian splat occupies 2 pixels of the texture.
+`_SCALE` and `_ROTATION` are used to compute the 3D covariance ahead of time. This part of computation is not view-dependent. It's computed as it is above in the vertex shader code. Once computed, take the 6 unique values of the 3D covariance matrix and convert them to half-float for compactness. Each Gaussian splat occupies 2 pixels of the texture.
 
 [See packing implementation here](https://github.com/CesiumGS/cesium-wasm-utils/blob/main/wasm-splats/src/texture_gen.rs)
 
@@ -391,24 +390,24 @@ Accessed via `usampler2D`:
 
 #### Sorting and Indexes
 
-With our Gaussian splat attributes packed into a texture our sorting only has to act upon a separate `_INDEX` attribute we create at runtime. Gaussian splats are sorted as above, but instead of sorting each vertex buffer we only sort the index values. When the glTF is loaded, Gaussian splats can be indexed in the order read.
+With the Gaussian splat attributes packed into a texture the sorting only has to act upon a separate `_INDEX` attribute created at runtime. Gaussian splats are sorted as above, but instead of sorting each vertex buffer only sort the index values. When the glTF is loaded, Gaussian splats can be indexed in the order read.
 
 #### Extracting Data in the Vertex Shader
 
-Given a texture with a width of 2048 pixels, we can access it thusly:
+Given a texture with a width of 2048 pixels, access it:
 
 ```glsl
   uint texIdx = uint(a_splatIndex); //_INDEX
   ivec2 posCoord = ivec2((texIdx & 0x3ffu) << 1, texIdx >> 10); //wrap every 2048 pixels
 ```
 
-Extracting position data:
+Extract the position data:
 
 ```glsl
   vec4 splatPosition = vec4( uintBitsToFloat(uvec4(texelFetch(u_splatAttributeTexture, posCoord, 0))) );
 ```
 
-Covariance and color data are extracted together:
+Then covariance and color data are extracted together:
 
 ```glsl
   uvec4 covariance = uvec4(texelFetch(u_splatAttributeTexture, covCoord, 0));
@@ -429,7 +428,7 @@ Covariance and color data are extracted together:
 
 ## Known Implementations
 
-This is currently implemented within  [3D Tiles and CesiumJS as an experimental feature](https://github.com/CesiumGS/cesium/tree/splat-spz-concept).
+This is currently implemented within [3D Tiles and CesiumJS as an experimental feature](https://github.com/CesiumGS/cesium/tree/splat-spz-concept).
 
 ## Resources
 
