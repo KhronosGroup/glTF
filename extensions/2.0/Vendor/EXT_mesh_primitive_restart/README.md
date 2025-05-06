@@ -1,9 +1,9 @@
 <!--
-Copyright 2015-2021 The Khronos Group Inc.
+Copyright 2015-2025 The Khronos Group Inc.
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-# BENTLEY_primitive_restart
+# EXT_mesh_primitive_restart
 
 ## Contributors
 
@@ -113,7 +113,7 @@ The mesh looks like this:
                 }
             ],
             "extensions": {
-                "BENTLEY_primitive_restart": {
+                "EXT_mesh_primitive_restart": {
                     "primitiveGroups": [
                         {
                             "primitives": [
@@ -129,11 +129,11 @@ The mesh looks like this:
     ],
 ```
 
-By default, this mesh draws two separate line strip primitives, each using its own `indices` accessor. The `BENTLEY_primitive_restart` extension specifies that both primitives can be replaced with a single one using a combined `indices` accessor containing primitive restart values.
+By default, this mesh draws two separate line strip primitives, each using its own `indices` accessor. The `EXT_mesh_primitive_restart` extension specifies that both primitives can be replaced with a single one using a combined `indices` accessor containing primitive restart values.
 
 ## glTF Schema Updates
 
-The `BENTLEY_primitive_restart` extension is applied to a mesh. Its `primitiveGroups` property is a list of groups of primitives that can be replaced with a single primitive using primitive restart. Each group is described by a list of indices into `mesh.primitives`, along with the index of the accessor that supplies the vertex indices for the replacement primitive.
+The `EXT_mesh_primitive_restart` extension is applied to a mesh. Its `primitiveGroups` property is a list of groups of primitives that can be replaced with a single primitive using primitive restart. Each group is described by a list of indices into `mesh.primitives`, along with the index of the accessor that supplies the vertex indices for the replacement primitive.
 
 ## Constraints
 
@@ -155,5 +155,5 @@ The extension is subject to the following constraints. Violation of any constrai
 
 ## JSON Schema
 
-- [mesh.BENTLEY_primitive_restart.schema.json](schema/mesh.BENTLEY_primitive_restart.schema.json)
+- [EXT_mesh_primitive_restart.schema.json](schema/EXT_mesh_primitive_restart.schema.json)
 - [primitiveGroup.schema.json](schema/primitiveGroup.schema.json)
