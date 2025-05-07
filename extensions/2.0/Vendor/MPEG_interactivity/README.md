@@ -1,4 +1,4 @@
-# Interactivity
+# MPEG Interactivity
 
 ## Contributors
 
@@ -8,7 +8,7 @@
 
 ## Status
 
-Based on [ISO/IEC DIS 23090-14 2nd Edition](https://www.iso.org/standard/80900.html)
+Based on [ISO/IEC DIS 23090-14 2nd Edition](https://www.iso.org/standard/90191.html)
 
 ## Dependencies
 
@@ -76,7 +76,6 @@ Table 3: type of trigger
 | TRIGGER_USER_INPUT | User_Input Trigger |
 | TRIGGER_VISIBILITY | Visibility Trigger |
 
-The semantics of a trigger primitive are defined in Table 9.
 
 Table 4: Semantics of MPEG_scene_interactive.trigger.primitive properties
 | Name | Type | Required | Default | Description |
@@ -206,7 +205,7 @@ Table 11: semantic of behavior
 |--|--|--|--|--|
 | triggers | array | &#10003; Yes|  | Indices of the triggers in the triggers array considered for this behavior |
 | actions | array | &#10003; Yes|  | Indices of the actions in the actions array considered for this behavior. |
-| triggersCombinationControl | string | &#10003; Yes|  | Set of logical operations to apply to the triggers</br>A ‘#’ indicates the trigger index, ‘&’ indicates a logical AND operation, ‘\|’ a logical OR operation and ‘~’ a NOT operation. Parenthesis are used to group some operations. Such a syntax may give the following string: “#1&~#2\|(#3&#4)”.</br>An empty string is understood as a logical OR between all the triggers.</br>A regex expression (https://json-schema.org/understanding-json-schema/reference/regular_expressions.html) is specified in the JSON schema to validate this string. |
+| triggersCombinationControl | string | &#10003; Yes|  | Set of logical operations to apply to the triggers</br>A ‘#’ indicates the trigger index, ‘&’ indicates a logical AND operation, ‘\|’ a logical OR operation and ‘\~’ a NOT operation. Parenthesis are used to group some operations. Such a syntax may give the following string: “#1&\~#2\|(#3&#4)”.</br>An empty string is understood as a logical OR between all the triggers.</br>A regex expression (https://json-schema.org/understanding-json-schema/reference/regular_expressions.html) is specified in the JSON schema to validate this string. |
 | triggersActivationControl | enumeration | &#10003; Yes|  | Indicates when the combination of the triggers shall be activated for launching the actions. One element of Table 12 that defines when the combination of the triggers shall be activated for launching the actions. |
 | actionsControl | enumeration | &#10003; Yes|  | Defines the way to execute the defined actions.</br>SEQUENTIAL=0: each defined action is executed sequentially in the order of the actions array.</br>PARALLEL=1: the defined actions are executed concurrently. |
 | interruptAction | number | No | N/A | Index of the action in the actions array to be executed if the behavior is still on-going and is no more defined in a newly received scene update. |
@@ -240,7 +239,7 @@ Table 14: Semantic of the HapticActionMedia object
 | mediaIndex | integer | &#10003; Yes|  | Index in the accessors array of the associated haptic data. |
 | perceptionIndices | array(integer) | &#10003; Yes|  | Indices of the perceptions of the media that shall be rendered. If the list if empty all perceptions shall be rendered |
 | hapticModality | array(enumeration) | No | N/A | List of haptic modalities that can be rendered. Possible values are described in Table 15. |
-| hapticControl | enumeration | No | HAPTIC_PLAY | One element of Table 49 that defines the control of the haptic rendering. |
+| hapticControl | enumeration | No | HAPTIC_PLAY | One element of Table 19 that defines the control of the haptic rendering. |
 | loop | boolean | No | False | Specifies if the haptic rendering of the data should be continuously looping. |
 
 Table 15: List of haptic modalities 
@@ -325,7 +324,7 @@ Table 19: List of Haptic controls
 ### Semantics at node level
 
 In complement to the interactivity objects defined in the glTF scene-level extension, some additional data could be provided at the level of the affected glTF nodes to specialize the trigger activation.
-The semantic of the MPEG_node_interactivity extension is shown in Table 50.
+The semantic of the MPEG_node_interactivity extension is shown in Table 20.
 
 Table 20: Semantic of the MPEG_node_interactivity extension
 | Name | Type | Required | Default | Description |
@@ -351,13 +350,13 @@ Table 21: Semantic of the MPEG_node_interactivity.trigger extension
 | staticFriction | number | &#10003; Yes|  | Unitless friction coefficient as defined in the Coulomb friction model. Friction is the quantity which prevents surfaces from sliding off each other. StaticFriction is used when the object is lying still. It will prevent the object from starting to move. |
 | dynamicFriction | number | &#10003; Yes|  | Unitless friction coefficient as defined in the Coulomb friction model. When a large enough force is applied to the object, the dynamicFriction is used, and will attempt to slow down the object while in contact with another. |
 | } |  |  |  |  |
-| primitives | array(Primitive) | No | N/A | List of primitives used to activate the proximity or collision trigger. Semantics of Primitive are presented in Table 9. |
+| primitives | array(Primitive) | No | N/A | List of primitives used to activate the proximity or collision trigger. Semantics of Primitive are presented in Table 4. |
 | } |  |  |  |  |
 | if (type == TRIGGER_PROXIMITY){ |  |  |  |  |
 | allowOcclusion | boolean | &#10003; Yes|  | Indicates if occlusion by other nodes should be considered |
 | upperDistanceWeight | number | No | 1 | The weight applied</br>to the distanceUpperLimit parameter defined at scene level |
 | lowerDistanceWeight | number | No | 1 | The weight applied</br>to the distanceLowerLimit parameter defined at scene level |
-| primitives | array(Primitive) | No | N/A | List of primitives used to activate the proximity or collision trigger. Semantics of Primitive are presented in Table 9. |
+| primitives | array(Primitive) | No | N/A | List of primitives used to activate the proximity or collision trigger. Semantics of Primitive are presented in Table 4. |
 | } |  |  |  |  |
 | if (type ==TRIGGER_USER_INPUT){ |  |  |  |  |
 | userInputParameters | array | &#10003; Yes|  | Provides additional information related to the user inputs (eg “max speed = 0.5”) |
@@ -416,12 +415,12 @@ Otherwise, the application shall handle a physics simulation if the usePhysics B
 
 ## Resources
 
-* [ISO/IEC FDIS 23090-14](https://www.iso.org/standard/80900.html), Information technology — Coded representation of immersive media — Part 14: Scene Description 
+* [ISO/IEC DIS 23090-14 2nd Edition](https://www.iso.org/standard/90191.html), Information technology — Coded representation of immersive media — Part 14: Scene Description 
 * [ISO/IEC WD 23090-24](https://www.iso.org/standard/83696.html), Information technology — Coded representation of immersive media — Part 24: Conformance and Reference Software for Scene Description for MPEG Media
 
 ## License
 
-Copyright ISO/IEC 2022
+Copyright ISO/IEC 2025
 
 The use of the "MPEG scene description extensions" is subject to the license as accessible here: https://standards.iso.org/ and is subject to the IPR policy as accessible here: https://www.iso.org/iso-standards-and-patents.html.
 
