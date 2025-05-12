@@ -1,4 +1,4 @@
-# MPEG_material_haptics
+# MPEG_haptics_material
 
 ## Contributors
 
@@ -8,7 +8,7 @@
 
 ## Status
 
-Based on [ISO/IEC FDIS 23090-14/CD Amd.2](https://www.iso.org/standard/86439.html), available as [WG03_N01025](https://mpeg.expert/live/nextcloud/index.php/s/rdzb5GDTRxqdE6d)
+Based on [ISO/IEC DIS 23090-14 2nd Edition](https://www.iso.org/standard/90191.html)
 
 ## Dependencies
 
@@ -18,9 +18,17 @@ Written against the glTF 2.0 spec.
 
 The MPEG_haptic and MPEG_haptic material extensions provide the ability to define the integration of haptics in a glTF scene .
 
-At the [glTF file level](#mpeg_haptic_material-gltf-extension): The MPEG_haptic material extension contains an array defining all texture-based haptic data.
+At the [glTF file level](#mpeg_haptic_material-gltf-extension): The MPEG_haptic_material extension contains an array defining all texture-based haptic data.
 
-At the [mesh level](#mpeg_haptic_material-mesh-extension): The MPEG_haptic material extension contains a single reference to the array of the same extension at the glTF file level
+At the [mesh level](#mpeg_haptic_material-mesh-extension): The MPEG_haptic_material extension contains a single reference to the array of the same extension at the glTF file level.
+
+The haptic texture associated with a 3D object does not contain RGB values but haptic values. These values are exploited directly by the haptic renderer. The extension also uses the concept of taxels. Each pixel of the texture can be mapped to a distinct spatial (or temporal) signal as illustrated in the following figure. 
+<figure>
+<img src="./figures/taxels.png" width=300px/>
+<figcaption><em>Grid of taxels, mapping pixels to different haptic textures.</em></figcaption>
+</figure>
+An array of textures for each haptic property is used. An haptic texture can be provided both as a traditional 2D texture and as a taxel map in the same file, giving the possibility to the rendering engine to choose the most appropriate. 
+Additional information is added to each element of the haptic texture arrays for the rendering engine to adequately interpret a texture. 
 
 ---------------------------------------
 <a name="reference-mpeg_haptic_material"></a>
@@ -72,6 +80,8 @@ mesh extension to specify an haptic material
 |**extras**|`any`||No|
 
 Additional properties are allowed.
+
+* **JSON schema**: [MPEG_haptic_material.schema.json](./schema/MPEG_haptic_material.schema.json)
 
 ### MPEG_haptic_material mesh extension.hapticMaterialIndex
 
@@ -236,11 +246,11 @@ Application-specific data.
 
 ## Resources
 
-* [ISO/IEC 23090-14/CD Amd 2](https://www.iso.org/standard/86439.html), Information technology — Coded representation of immersive media — Part 14: Scene description — Amendment 2: Support for haptics, augmented reality, avatars, Interactivity, MPEG-I audio, and lighting 
+* [ISO/IEC DIS 23090-14 2nd Edition](https://www.iso.org/standard/90191.html), Information technology — Coded representation of immersive media — Part 14: Scene Description
 * [ISO/IEC WD 23090-24](https://www.iso.org/standard/83696.html), Information technology — Coded representation of immersive media — Part 24: Conformance and Reference Software for Scene Description for MPEG Media
 
 ## License
 
-Copyright ISO/IEC 2023
+Copyright ISO/IEC 2025
 
 The use of the "MPEG scene description extensions" is subject to the license as accessible here: https://standards.iso.org/ and is subject to the IPR policy as accessible here: https://www.iso.org/iso-standards-and-patents.html.

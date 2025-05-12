@@ -8,7 +8,7 @@
 
 ## Status
 
-Based on [ISO/IEC DIS 23090-14 2nd Edition](https://www.iso.org/standard/80900.html)
+Based on [ISO/IEC DIS 23090-14 2nd Edition](https://www.iso.org/standard/90191.html)
 
 ## Dependencies
 
@@ -18,7 +18,12 @@ Written against the glTF 2.0 spec.
 
 The MPEG_haptic and MPEG_haptic material extensions provide the ability to define the integration of haptics in a glTF scene .
 
-At the glTF file level: The MPEG_haptic extension contains an array defining every haptic object.
+The MPEG_haptic extension allows the support of haptic data as defined in ISO/IEC 23090-31. It is an independent haptic media like an audio content or an image. This extension is attached at the the glTF file level and stores the haptic data contained in the scene.
+
+The MPEG_haptic extension contains an array of haptic objects. The data for each element of the array contains a list of accessors to medias in the MPEG_media extension. 
+
+The data referenced by the accessors is stored in dedicated Haptic buffers. The Haptic buffer formats corresponds to the HMPG binary format detailed in ISO/IEC 23090-31.
+
 
 ---------------------------------------
 <a name="reference-mpeg_haptic"></a>
@@ -83,11 +88,11 @@ Application-specific data.
 
 ## Resources
 
-* [ISO/IEC 23090-14/CD Amd 2](https://www.iso.org/standard/86439.html), Information technology — Coded representation of immersive media — Part 14: Scene description — Amendment 2: Support for haptics, augmented reality, avatars, Interactivity, MPEG-I audio, and lighting 
+* [ISO/IEC DIS 23090-14 2nd Edition](https://www.iso.org/standard/90191.html), Information technology — Coded representation of immersive media — Part 14: Scene Description
 * [ISO/IEC WD 23090-24](https://www.iso.org/standard/83696.html), Information technology — Coded representation of immersive media — Part 24: Conformance and Reference Software for Scene Description for MPEG Media
 
 ## License
 
-Copyright ISO/IEC 2023
+Copyright ISO/IEC 2025
 
 The use of the "MPEG scene description extensions" is subject to the license as accessible here: https://standards.iso.org/ and is subject to the IPR policy as accessible here: https://www.iso.org/iso-standards-and-patents.html.
