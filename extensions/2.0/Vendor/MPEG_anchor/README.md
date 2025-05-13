@@ -8,7 +8,7 @@
 
 ## Status
 
-Based on [ISO/IEC DIS 23090-14 2nd Edition](https://www.iso.org/standard/80900.html)
+Based on [ISO/IEC DIS 23090-14 2nd Edition](https://www.iso.org/standard/90191.html)
 
 ## Dependencies
 
@@ -56,7 +56,7 @@ Table 3: Definition of the Trackable object
 | if (type == TRACKABLE_CONTROLLER) { |  |  |  |  |
 | path | string |  &#10003; Yes|  | A path that describes the action space as specified by the OpenXR specification in clause 6.2. An example is “/user/hand/left/input”. |
 | } |  |  |  |  |
-| if (type== TRACKABLE_GEOMETRIC) { |  |  |  |  |
+| if (type== TRACKABLE_PLANE) { |  |  |  |  |
 | geometricConstraint | enumeration |  &#10003; Yes|  | The geometricConstraint flag may take one of the following values:</br>HORIZONTAL_PLANE=0, VERTICAL_PLANE=1 |
 | } |  |  |  |  |
 | if (type== TRACKABLE_MARKER_2D OR MARKER_3D) { |  |  |  |  |
@@ -98,10 +98,12 @@ NOTE	This corresponds to the XR_REFERENCE_SPACE_TYPE_STAGE defined in OpenXR in 
 #### TRACKABLE_VIEWER
 A trackable of type TRACKABLE_VIEWER is a trackable that corresponds to the viewer’s pose. 
 It tracks the primary viewer with the center at the viewer’s position, with +Y up, +X to the right, and -Z forward. This trackable is viewer head locked.
+
 NOTE	This corresponds to the XR_REFERENCE_SPACE_TYPE_VIEW defined in OpenXR in 7.1. Reference Spaces.
 
 #### TRACKABLE_CONTROLLER
 A trackable of type TRACKABLE_CONTROLLER is a trackable that corresponds to one of the active controllers. Three controller types are defined: grip, aim, and palm.
+
 A grip pose allows applications to reliably render a virtual object held in the user’s hand, whether it is tracked directly or by a motion controller. The grip pose is defined as follows:
 * The grip position:
   * For tracked hands: The user’s palm centroid when closing the fist, at the surface of the palm.
@@ -110,15 +112,18 @@ A grip pose allows applications to reliably render a virtual object held in the 
   * +X axis: When you completely open your hand to form a flat 5-finger pose, the ray that is normal to the user’s palm (away from the palm in the left hand, into the palm in the right hand).
   * -Z axis: When you close your hand partially (as if holding the controller), the ray that goes through the center of the tube formed by your non-thumb fingers, in the direction of little finger to thumb.
   * +Y axis: orthogonal to +Z and +X using the right-hand rule.
+
 An aim pose allows applications to point in the world using the input source, according to the platform’s conventions for aiming with that kind of source. The aim pose is defined as follows:
 * For tracked hands: The ray that follows platform conventions for how the user aims at objects in the world with their entire hand, with +Y up, +X to the right, and -Z forward. The ray chosen will be runtime-dependent, for example, a ray emerging from the palm parallel to the forearm.
 * For handheld motion controllers: The ray that follows platform conventions for how the user targets objects in the world with the motion controller, with +Y up, +X to the right, and -Z forward. This is usually for applications that are rendering a model matching the physical controller, as an application rendering a virtual object in the user’s hand likely prefers to point based on the geometry of that virtual object. The ray chosen will be runtime-dependent, although this will often emerge from the frontmost tip of a motion controller.
+
 A palm pose allows applications to reliably anchor visual content relative to the user’s physical hand, whether the user’s hand is tracked directly or its position and orientation is inferred by a physical controller. The palm pose is defined as follows:
 * The palm position: The user’s physical palm centroid, at the surface of the palm.
 * The palm orientation:
   * +X axis: When a user is holding the controller and straightens their index finger, the ray that is normal to the user’s palm (away from the palm in the left hand, into the palm in the right hand)
   * -Z axis: When a user is holding the controller and straightens their index finger, the ray that is parallel to their finger’s pointing direction.
   * +Y axis: orthogonal to +Z and +X using the right-hand rule.
+
 NOTE	This corresponds to the Standard pose identifiers defined in OpenXR in 6.3.2. Input subpaths.
 
 #### TRACKABLE_PLANE
@@ -142,22 +147,30 @@ The application-defined trackable object must have a right-handed coordinate spa
 ## 	Processing model
 Each trackable provides a local reference space in which an anchor pose can be expressed. This local reference space is right-handed and depends on the type of trackable as described below.
 The MPEG_anchor extension shall not be present at scene and node level at the same time in a glTF file conforming to this document. Upon activation of the XR mode, the Presentation Engine identifies the anchor points associated with the scene or with the root nodes and the related trackables. In the case of a trackable of type TRACKABLE_MARKER_GEO, it is up to the application to decide when to render the virtual object.
+
 If the requiresAnchoring Boolean parameter of an anchor is set to TRUE, the application shall skip the virtual assets attached to this anchor until the pose of this anchor in the real world is known. Otherwise, the application shall process the virtual assets attached to this anchor.
+
 Upon the detection of a trackable within the user’s physical environment, the application creates an XR space and possibly determines the bounding box of the real world available space in which the virtual assets can be added.
+
 If the optional minimumRequiredSpace parameter of the anchor referencing the trackable is present and if the estimated real world available space is smaller in volume than the minimumRequiredSpace, the application shall skip the virtual assets attached to that anchor.
+
 Otherwise, the application shall start the tracking, shall launch the actions provided in the actions parameter of the anchor and shall apply the necessary spatial transformations to the virtual assets with respect to the local space of the anchor prior to rendering.
+
 The application could update at runtime a tracking status of each trackable defined in the trackables array at the scene level, for instance as follows:
 * A tracking status set to TRUE when the trackable is detected and when its pose is well identified.
 * A tracking status set to FALSE when the trackable position is lost (e.g., no more detected).
+
 To provide the flexibility to define an anchor space different than the trackable’s space,
 * The TRS of the node having the MPEG_anchor extension defines the relative transformation between the trackable’s space and the anchor space in which the child nodes containing the virtual assets are placed.
 * A setTransform action may be defined to affect the scene root nodes in the case of a MPEG_anchor extension. This transformation defines the TRS between the trackable’s space and the anchor space in which all the scene root nodes are placed.
+
 Actions are defined in MPEG_scene_interactivity extension.
+
 If the array of action is not empty, the actions are executed once the pose of anchor is determined. If the tracking status is set to FALSE after being TRUE, actions are not canceled.
 
-## Schema
+## Schemas
 
-**JSON schema**: [MPEG_anchor.schema.json](./schema/MPEG_anchor.schema.json)
+**JSON schemas**: [glTF level extension](./schema/glTF.MPEG_anchor.schema.json) and [scene or node level extension](./schema/MPEG_anchor.schema.json)
 
 ## Known Implementations
 
@@ -165,12 +178,12 @@ If the array of action is not empty, the actions are executed once the pose of a
 
 ## Resources
 
-* [ISO/IEC FDIS 23090-14](https://www.iso.org/standard/80900.html), Information technology — Coded representation of immersive media — Part 14: Scene Description 
+* [ISO/IEC DIS 23090-14 2nd Edition](https://www.iso.org/standard/90191.html), Information technology — Coded representation of immersive media — Part 14: Scene Description 
 * [ISO/IEC WD 23090-24](https://www.iso.org/standard/83696.html), Information technology — Coded representation of immersive media — Part 24: Conformance and Reference Software for Scene Description for MPEG Media
 
 ## License
 
-Copyright ISO/IEC 2022
+Copyright ISO/IEC 2025
 
 The use of the "MPEG scene description extensions" is subject to the license as accessible here: https://standards.iso.org/ and is subject to the IPR policy as accessible here: https://www.iso.org/iso-standards-and-patents.html.
 
