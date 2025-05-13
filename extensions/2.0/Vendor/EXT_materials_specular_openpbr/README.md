@@ -47,7 +47,7 @@ The `EXT_materials_specular_openpbr` extension must be added to any existing ins
 }
 ```
 
-The specular factor (i.e. stregnth) and specular color are defined and combined with the texture properties the same way they are in `KHR_materials_specular`. The difference will be in how the specular colour is applied to the material.
+The specular factor (i.e. strength) and specular color are defined and combined with the texture properties the same way they are in `KHR_materials_specular`. The difference will be in how the specular color is applied to the material.
 
 ## OpenPBR's Specular Model
 
