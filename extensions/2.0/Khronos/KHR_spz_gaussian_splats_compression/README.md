@@ -30,7 +30,7 @@ Written against the glTF 2.0 spec.
 
 This extension defines support for storing 3D Gaussian splats in glTF, bringing structure and conformity to the Gaussian Splatting space while utilizing glTF with SPZ compression for efficient streaming and storage.
 
-SPZ is a compression format from Niantic Labs designed for Gaussian splats. Currently, it is open sourced under the MIT license. The SPZ format is primarily used in the Niantic Labs Scaniverse app. It was purpose built for Gaussian splats and offers a balance of high compression with minimal visual fidelity loss, and allows for storing some or all of the 3D Gaussian's spherical harmonics.
+SPZ is a compression format from Niantic Spatial designed for Gaussian splats. Currently, it is open sourced under the MIT license. The SPZ format is primarily used in the Niantic Spatial Scaniverse app. It was purpose built for Gaussian splats and offers a balance of high compression with minimal visual fidelity loss, and allows for storing some or all of the 3D Gaussian's spherical harmonics.
 
 At rest, the Gaussian splats are stored within the SPZ compression format. Upon being decompressed, values are mapped to glTF attributes for rendering. The [conformance](#conformance) section defines what an implementation must do when encountering this extension, and how the extension interacts with the base specification.
 
@@ -80,27 +80,14 @@ Example SPZ extension shown below. This extension only affects any `primitive` n
           "mode": 0,
           "extensions": {
             "KHR_spz_gaussian_splats_compression": {
+              "version": "1.0",
               "bufferView": 0,
-              "numPoints": 590392,
-              "shDegree": 0,
-              "fractionalBits": 12,
-              "flags": 0,
-              "attributes": {
-                "_ROTATION": 3,
-                "COLOR_0": 1,
-                "_SCALE": 2,
-                "POSITION": 0,
-                "_SH_DEGREE_1_COEF_0": 4,
-                "_SH_DEGREE_1_COEF_1": 5,
-                "_SH_DEGREE_1_COEF_2": 6,
-              }
             }
           }
         }]
     }],
   "buffers": [{
       "uri": "0.bin",
-
       "byteLength": 9753142
     }],
   "bufferViews": [{
@@ -110,6 +97,10 @@ Example SPZ extension shown below. This extension only affects any `primitive` n
 ```
 
 ### Extension Properties
+
+#### version
+
+This property indicates the version of SPZ compression used. The version is a string.
 
 #### bufferView
 
@@ -133,26 +124,6 @@ Each increasing degree of spherical harmonics requires more coeffecients. At the
 
 **TODO:** SPZ to attributes diagram
 
-#### SPZ header properties embedded in the compressed data stream
-
-The following properties are within the SPZ stream header. They are exposed here to be informative and facilitate decoder setup prior to any decompression occurring.
-
-##### numPoints
-
-The number of Gaussian splats in the compressed data.
-
-##### fractionalBits
-
-The number of fraction bits to use for `POSITION` quantization.
-
-##### shDegree
-
-The degree of spherical harmonics contained in the compressed data. This can range from 0 to 3.
-
-##### flags
-
-A set of bit flags reserved for future use. Currently it is only used for an anti-aliasing flag.
-
 ### Accessors
 
 Required `accessors` for `POSITION`, `COLOR_0`, `_ROTATION`, and `_SCALE`:
@@ -163,17 +134,17 @@ Required `accessors` for `POSITION`, `COLOR_0`, `_ROTATION`, and `_SCALE`:
       "count": 590392,
       "type": "VEC3"
     }, {
-      "componentType": 5121,
-      "count": 590392,
-      "type": "VEC3"
-    }, {
-      "componentType": 5126,
-      "count": 590392,
-      "type": "VEC3"
-    }, {
       "componentType": 5126,
       "count": 590392,
       "type": "VEC4"
+    }, {
+      "componentType": 5126,
+      "count": 590392,
+      "type": "VEC3"
+    }, {
+      "componentType": 5121,
+      "count": 590392,
+      "type": "VEC3"
     }],
 ```
 
