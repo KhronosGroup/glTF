@@ -127,11 +127,22 @@ Required `accessors` for `POSITION`, `COLOR_0`, `_ROTATION`, and `_SCALE`:
   "accessors": [{
       "componentType": 5126,
       "count": 590392,
-      "type": "VEC3"
+      "type": "VEC3",
+      "max": [
+        1,
+        1,
+        1,
+      ],
+      "min": [
+        -1,
+        -1,
+        -1,
+      ]
     }, {
       "componentType": 5121,
       "count": 590392,
-      "type": "VEC4"
+      "type": "VEC4",
+      "normalized": true
     }, {
       "componentType": 5126,
       "count": 590392,
