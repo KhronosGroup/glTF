@@ -98,10 +98,6 @@ Example SPZ extension shown below. This extension only affects any `primitive` n
 
 ### Extension Properties
 
-#### version
-
-This property indicates the version of SPZ compression used. The version is a string.
-
 #### bufferView
 
 This property points to the bufferView containing the Gaussian splat data compressed with SPZ.

@@ -5,10 +5,6 @@
     "description": "Compressed data for SPZ primitive.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "version": {
-            "type": "string",
-            "description": "The version of the SPZ algorithm"
-        },
         "bufferView": {
             "allOf": [ { "$ref" : "glTFid.schema.json" } ],
             "description": "The index of the bufferView."
@@ -16,5 +12,5 @@
         "extensions": { },
         "extras": { }
     },
-    "required": [ "version", "bufferView" ]
+    "required": [ "bufferView" ]
 }
