@@ -80,7 +80,6 @@ Example SPZ extension shown below. This extension only affects any `primitive` n
           "mode": 0,
           "extensions": {
             "KHR_spz_gaussian_splats_compression": {
-              "version": "1.0",
               "bufferView": 0,
             }
           }
@@ -130,7 +129,7 @@ Required `accessors` for `POSITION`, `COLOR_0`, `_ROTATION`, and `_SCALE`:
       "count": 590392,
       "type": "VEC3"
     }, {
-      "componentType": 5126,
+      "componentType": 5121,
       "count": 590392,
       "type": "VEC4"
     }, {
@@ -138,9 +137,9 @@ Required `accessors` for `POSITION`, `COLOR_0`, `_ROTATION`, and `_SCALE`:
       "count": 590392,
       "type": "VEC3"
     }, {
-      "componentType": 5121,
+      "componentType": 5126,
       "count": 590392,
-      "type": "VEC3"
+      "type": "VEC4"
     }],
 ```
 
