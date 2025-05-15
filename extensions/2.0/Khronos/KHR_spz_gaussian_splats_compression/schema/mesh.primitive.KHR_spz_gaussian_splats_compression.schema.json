@@ -15,5 +15,6 @@
         },
         "extensions": { },
         "extras": { }
-    }
+    },
+    "required": [ "version", "bufferView" ]
 }
