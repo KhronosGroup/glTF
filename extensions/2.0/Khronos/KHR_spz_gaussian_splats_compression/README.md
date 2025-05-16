@@ -169,7 +169,7 @@ At minimum accessors will be defined for `POSITION`, `COLOR_0`, `_ROTATION`, and
 
 Accessor `type` is defined for the resulting type after decompression and dequantization has occurred.
 
-The accessor `count` must match `numPoints` in `KHR_spz_gaussian_splats_compression`.
+The accessor `count` must match the number of points in the compressed SPZ data.
 
 ## Conformance
 
