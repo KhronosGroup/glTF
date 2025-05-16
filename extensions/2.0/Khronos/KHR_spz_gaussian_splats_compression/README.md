@@ -160,7 +160,8 @@ Spherical harmonics `accessors` all follow the pattern:
   "accessors": [{
     "componentType": 5126,
     "count": 590392,
-    "type": "SCALAR"
+    "type": "VEC3"
+
   }]
 ```
 
