@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "EXT_materials_specular_openpbr glTF Material Extension",
+    "title": "EXT_materials_specular_edge_color glTF Material Extension",
     "type": "object",
     "description": "glTF extension that indicates that KHR_materials_specular should be interpreted as OpenPBR-compatible.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

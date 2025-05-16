@@ -1,7 +1,8 @@
-# EXT\_materials\_specular\_openpbr
+# EXT\_materials\_specular\_edge\_color
 
 ## Contributors
 
+- Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
 - Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
 
 ## Status
@@ -20,13 +21,13 @@ Must be defined as a sub-extension under the `KHR_materials_specular`
 
 ## Overview
 
-Specular reflectance in glTF as defined by `KHR_materials_specular`  behaves a bit different than in OpenPBR. This extension defines an interpretation of the specular parameters that is compatible with OpenPBR's specular reflectance for both dielectrics and metals.
+`KHR_materials_specular` defines how light is specularly reflected from a surface. However, this behaviour is different from that of some other material models. This sub extension defines an interpretation of the specular parameters that is compatible with OpenPBR, the open material standard developed under the [Academy Software Foundation](https://academysoftwarefoundation.github.io/OpenPBR/index.html).
 
-This extension adds no additional parameters. Its presence merely changes how the parameters of `KHR_materials_specular` are used.
+This extension adds a single additional parameter that turns on the functionality of this extension, changing how the parameters of `KHR_materials_specular` are used.
 
 ## Extending Materials
 
-The `EXT_materials_specular_openpbr` extension must be added to any existing instance of `KHR_materials_specular` to convert the material from glTF's specular model to that of OpenPBR's.
+The `EXT_materials_specular_edge_color` extension must be added to any existing instance of `KHR_materials_specular` to convert the material's specular model to the new one.
 
 ```json
 {
@@ -37,7 +38,8 @@ The `EXT_materials_specular_openpbr` extension must be added to any existing ins
                     "specularFactor": 1.0,
                     "specularColorFactor": [1.0, 1.0, 1.0],
                     "extensions": {
-                        "EXT_materials_specular_openpbr": {
+                        "EXT_materials_specular_edge_color": {
+                            "specularEdgeColorEnabled": true
                         }
                     }
                 }
@@ -47,22 +49,26 @@ The `EXT_materials_specular_openpbr` extension must be added to any existing ins
 }
 ```
 
-The specular factor (i.e. strength) and specular color are defined and combined with the texture properties the same way they are in `KHR_materials_specular`. The difference will be in how the specular color is applied to the material.
+| |Type|Description|Required|
+|-|----|-----------|--------|
+| **specularEdgeColorEnabled** | `boolean` | Whether to enable this extension or not. | No, default: `false`|
+
+The factors and textures from `KHR_materials_specular` are combined in the same way as defined by that extension. The difference will be in how these properties are applied to the material.
 
 ## OpenPBR's Specular Model
 
-Whereas `KHR_materials_specular` only applies to dielectric materials (i.e. non-metals), this extension will also affect conductors (i.e. metals).
+There are two key differences between the glTF specular model and that of OpenPBR. The first is that, `KHR_materials_specular` only applies to dielectric materials (i.e. non-metals) whereas this sub extension will also affect conductors (i.e. metals). The second difference is that the specular model defined here potentially changes the color of specular lighting at glancing angles whereas, in `KHR_materials_specular`, glancing angles are always colored white.
 
 ### Dielectrics
 
-In `KHR_materials_specular`, the specular color is applied only to reflectance at normal incidence (i.e. F0). In OpenPBR, this will be applied at all angles of incidence.
+In `KHR_materials_specular`, the specular color is applied only to reflectance at normal incidence (i.e. F0). In OpenPBR, this will be applied at all angles of incidence out to F90.
 
 ```
 dielectric_brdf =
   fresnel_mix(
     spec_color = specularColor.rgb,
     ior = 1.5,
-    weight = specular,
+    weight = specularFactor,
     base = diffuse_brdf(color = baseColor),
     layer = specular_brdf(α = roughness^2))
 ```
@@ -71,31 +77,33 @@ The `fresnel_mix` function mixes two BSDFs according to a Fresnel term. The `lay
 
 The following images show specular color increasing from [0,0,0] to [1,1,1] for `KHR_materials_specular` and for this new extension.
 
-#### Previous glTF
+#### KHR_materials_specular
 ![](figures/defaultDielectricWhite.png)
-#### OpenPBR
-![](figures/openpbrDielectricWhite.png)
+#### EXT_materials_specular_edge_color
+![](figures/edgeColorDielectricWhite.png)
 
 Here is the same comparison for colored specular, increasing from [0,0,0] to [1,0,0] (bottom).
 
-#### Previous glTF
+#### KHR_materials_specular
 ![](figures/defaultDielectricColor.png)
-#### OpenPBR
-![](figures/openpbrDielectricColor.png)
+#### EXT_materials_specular_edge_color
+![](figures/edgeColorDielectricColor.png)
 
 The specular color factor is allowed to be set to values greater than [1, 1, 1]. Thus, the reflection amount can go beyond what is determined by the index of refraction (IOR). To still ensure energy conservation, the product of specular color factor, specular color texture, and f0 reflectance from IOR is clamped to 1. Please refer to [Implementation](#Implementation) for an example on where to place the clamping operation.
 
 ### Conductors
 
-In OpenPBR, metals use the [F82 reflectance model](https://academysoftwarefoundation.github.io/OpenPBR/index.html#model/basesubstrate/metal) (see also the Adobe Standard Material [technical specifications](https://helpx.adobe.com/content/dam/substance-3d/general-knowledge/asm/Adobe%20Standard%20Material%20-%20Technical%20Documentation%20-%20May2023.pdf)).  This allows the specular color to be applied at grazing angles to simulate metals with complex IOR's. Many real-world metals exhibit dips in brightness or subtle hue changes at grazing angles.
+In OpenPBR, metals use the [F82 reflectance model](https://academysoftwarefoundation.github.io/OpenPBR/index.html#model/basesubstrate/metal) (see also the Adobe Standard Material [technical specifications](https://helpx.adobe.com/content/dam/substance-3d/general-knowledge/asm/Adobe%20Standard%20Material%20-%20Technical%20Documentation%20-%20May2023.pdf) for information on F82).  This allows the specular color to be applied at grazing angles to simulate metals with complex IOR's. Many real-world metals exhibit dips in brightness or subtle hue changes at grazing angles.
 
 Here are three real-world metals and one made up, "Unobtainium", to demonstrate the edge-coloring.
-![](figures/openpbrMetals.png)
+![](figures/edgeColorMetals.png)
 
 For real-world metals, the effect can be hard to see. To make it more visible, here are the results of rendering in a white furnace.
-![](figures/openpbrMetalsFurnace.png)
+![](figures/edgeColorMetalsFurnace.png)
 
-This model adds an extra term to the Schlick approximation to accomplish this. If `μ` is the cosine of the incident angle and `μ¯` is `cos(82) ~= 1/7`. `F(μ¯)` is the specular color at F82:
+This model adds an extra term to the Schlick approximation to accomplish this. 
+
+Let $\mu$ be the cosine of the incident angle and $\overline{\mu}$ is $\cos(82) \approx \frac{1}{7}$. $F(\overline{\mu})$ is the specular color at $F_{{82}}$:
 
 From the OpenPBR specs:
 ![](figures/F82-formula.jpg)
@@ -135,11 +143,12 @@ function fresnel_f82(specular_color, weight, F0, roughness) {
     return clamp(F0 + offset_from_F0, 0.0, 1.0);
 }
 ```
+All that remains is a simple lerp between the dielectric and metallic lobes based on the metallic value.
 
 ## Interaction with other extensions
 
-`EXT_materials_specular_openpbr` has the same interactions as `KHR_materials_specular`.
+`EXT_materials_specular_edge_color` has the same interactions as `KHR_materials_specular`.
 
 ## Schema
 
-- [material.EXT_materials_specular_openpbr.schema.json](schema/material.EXT_materials_specular_openpbr.schema.json)
+- [material.EXT_materials_specular_edge_color.schema.json](schema/material.EXT_materials_specular_edge_color.schema.json)
