@@ -3,8 +3,11 @@
 ## Contributors
 
 - Jason Sobotka, Cesium
+- Renaud Keriven, Cesium
 - Adam Morris, Cesium
 - Sean Lilley, Cesium
+- Projit Bandyopadhyay, Niantic Spatial
+- Daniel Knoblauch, Niantic Spatial
 
 ## Status
 
