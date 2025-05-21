@@ -89,7 +89,7 @@ Here is the same comparison for colored specular, increasing from [0,0,0] to [1,
 #### EXT_materials_specular_edge_color
 ![](figures/edgeColorDielectricColor.png)
 
-The specular color factor is allowed to be set to values greater than [1, 1, 1]. Thus, the reflection amount can go beyond what is determined by the index of refraction (IOR). To still ensure energy conservation, the product of specular color factor, specular color texture, and f0 reflectance from IOR is clamped to 1. Please refer to [Implementation](#Implementation) for an example on where to place the clamping operation.
+In OpenPBR, specular_weight can exceed 1.0 but not specular_color. In KHR_materials_specular, the opposite is true. In this extension, we inherit the same properties so proper clamping needs to be used to ensure energy conservation and compatibility with OpenPBR. For specular color factor values greater than 1.0, we increase the specular factor by that amount and then normalize the specular color factor. This new weight is then clamped so that the fresnel mix does not result in diffuse dropping below 0.0 or specular going above 1.0. Please refer to [Implementation](#Implementation) for an example on where to place the clamping operations.
 
 ### Conductors
 
@@ -117,9 +117,13 @@ From the OpenPBR specs:
 ```
 function fresnel_mix(specular_color, ior, weight, base, layer) {
   f0 = ((1-ior)/(1+ior))^2
-  f0 = min(f0, float3(1.0))
   fr = f0 + (1 - f0)*(1 - abs(VdotH))^5
-  return (1 - weight * fr) * base + weight * fr * specular_color * layer
+  max_specular = max_value(specular_color)
+  if (max_specular > 1.0) {
+    weight *= max_specular
+    specular_color /= max_specular
+  }
+  return max(1 - weight * fr, 0.0) * base + min(weight * fr * specular_color, 1.0) * layer
 }
 ```
 
@@ -144,6 +148,11 @@ function fresnel_f82(specular_color, weight, F0, roughness) {
 }
 ```
 All that remains is a simple lerp between the dielectric and metallic lobes based on the metallic value.
+```
+dielectric_specular = fresnel_mix(specular_color, ior, specular_weight, base, layer);
+metallic_specular = fresnel_f82(specular_color, specular_weight, F0, roughness);
+final_spec = mix(dielectric_specular, metallic_specular, metallic);
+```
 
 ## Interaction with other extensions
 
