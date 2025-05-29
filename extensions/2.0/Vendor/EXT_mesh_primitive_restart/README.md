@@ -105,7 +105,7 @@ The mesh looks like this:
                 },
                 {
                     "attributes": {
-                        "POSITION": 0
+                        "POSITION": 3
                     },
                     "indices": 1,
                     "material": 0,
