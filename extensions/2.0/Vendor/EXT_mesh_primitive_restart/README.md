@@ -86,7 +86,6 @@ This permits two equivalent representations of the geometry without duplicating 
             "name": "Positions accessor"
         }
     ],
-
 ```
 
 The mesh looks like this:
