@@ -97,7 +97,7 @@ The mesh looks like this:
             "primitives": [
                 {
                     "attributes": {
-                        "POSITION": 0
+                        "POSITION": 3
                     },
                     "indices": 0,
                     "material": 0,
