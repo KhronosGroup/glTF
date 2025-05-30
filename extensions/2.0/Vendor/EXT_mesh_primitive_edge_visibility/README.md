@@ -150,7 +150,7 @@ The `lineStrings` property **MUST** be defined if `visibility` is not defined - 
 
 #### Examples
 
-Consider the following simple triangle fan with triangles described by the index list `[0,1,2, 0,2,3, 0,3,4, 0,4,5]`:
+Consider the following simple triangle fan with triangles described by the index list `[0,2,1, 0,3,2, 0,4,3, 0,5,4]`:
 ```
   2______3______4
   |＼    |    ／|
@@ -159,7 +159,7 @@ Consider the following simple triangle fan with triangles described by the index
   1      0      5
 ```
 
-Assume that the top and bottom edges are hard edges, to be encoded as a pair of line strings with indices `[2,3,4]` and `[1,0,5]`, respectively; and the vertical edges are hard edges, to be encoded as simple line segments. Then the `visibility` bitfield should encode only the vertical edges, with visibility values `[0,2,0, 0,0,2, 3,0,0, 0,2,0]`.
+Assume that the top and bottom edges are hard edges, to be encoded as a pair of line strings with indices `[2,3,4]` and `[1,0,5]`, respectively; and the vertical edges are hard edges, to be encoded as simple line segments. Then the `visibility` bitfield should encode only the vertical edges, with visibility values `[0,2,0, 2,0,0, 0,0,3, 0,2,0]`.
 
 ##### Single material
 
