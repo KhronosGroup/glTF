@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "EXT_mesh_primitive_edge_visibility glTF Mesh Primitive Extension",
     "type": "object",
     "description": "glTF extension encoding the visibility of the edges of a triangles primitive",
