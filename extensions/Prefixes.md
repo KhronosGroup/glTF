@@ -27,6 +27,7 @@ To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glT
 | `AUDACES` | Audaces Automacao Industrial | https://audaces.com/<br>`edward.boszczowski at audaces.com` | [#2231](https://github.com/KhronosGroup/glTF/issues/2231) |
 | `AVR` | AltspaceVR, Inc. | https://altvr.com/ | [#1009](https://github.com/KhronosGroup/glTF/issues/1009) |
 | `BENTLEY` | Bentley Systems, Inc. | https://www.bentley.com/<br>`paul.connelly at bentley.com` | [#2259](https://github.com/KhronosGroup/glTF/issues/2259) |
+| `BEVY` | Bevy Foundation | https://bevy.org/ | [#2497](https://github.com/KhronosGroup/glTF/issues/2497) |
 | `BLENDER` | Blender Foundation | https://www.blender.org/ | [#865](https://github.com/KhronosGroup/glTF/issues/865) |
 | `C3D` | Core3D, Inc. | https://core3d.io/ | [#2264](https://github.com/KhronosGroup/glTF/issues/2264) |
 | `CAPTURE` | Capture Visualisation AB | https://www.capture.se/ | [#1732](https://github.com/KhronosGroup/glTF/issues/1732) |
