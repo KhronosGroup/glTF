@@ -2559,7 +2559,7 @@ Samplers within a given animation **MAY** have different inputs.
                                     _unsigned short_ normalized | Weights of morph targets
 |====
 
-Implementations **MUST** use following equations to decode real floating-point value `f` from a normalized integer `c` and vise-versa:
+Implementations **MUST** use the following equations to decode real floating-point value `f` from a normalized integer `c` and vice versa:
 
 [options="header"]
 |====
