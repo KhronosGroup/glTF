@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_lights_punctual.schema.json",
     "title": "KHR_lights_punctual glTF Document Extension",
     "type": "object",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
