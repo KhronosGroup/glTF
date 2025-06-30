@@ -182,8 +182,8 @@ The recommended process for handling SPZ compression is as follows:
 - If the loader does support `KHR_spz_gaussian_splats_compression` then:
 
   - The loader must process `KHR_spz_gaussian_splats_compression` data first. The loader must get the data from `KHR_spz_gaussian_splats_compression`'s `bufferView` property.
-  - The loader then must process `attributes` of the `primitive`. When processing the loader must ignore any `bufferView` and `byteOffset` in the `accessor` and instead use values derived from the decompressed data streams. This data can be used to populate the `accessors` using the decompressed data or send directly to the renderer.
-
+  - SPZ compressed attributes must not include `bufferView` nor `byteOffset` in their accessor declarations. Any attributes falling outside the SPZ format, however, must  be stored as regular glTF attributes and must therefore include `bufferView` (and optionally `byteOffset`) in their accessor definitions. 
+  
 When compressing or decompressing the SPZ data to be stored within the glTF, you must specify a Left-Up-Front (`LUF`) coordinate system in the SPZ `PackOptions` or `UnpackOptions` within the SPZ library. This ensures that the data is compressed and decompressed appropriately for glTF.
 
 ## Implementation
