@@ -8,6 +8,8 @@
 - Sean Lilley, Cesium
 - Projit Bandyopadhyay, Niantic Spatial
 - Daniel Knoblauch, Niantic Spatial
+- Ronald Poirrier, Esri
+- Jean-Philippe Pons, Esri
 
 ## Status
 
