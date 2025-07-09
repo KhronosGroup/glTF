@@ -64,9 +64,9 @@ It must also be listed in `extensionsRequired`. When `KHR_spz_gaussian_splats_co
   ]
 ```
 
-### Geometry Type
+### Inheritance from base extension
 
-Geometry type requirements are defined by the `KHR_gaussian_splatting` extension.
+As this extension extends the base extension, all components of the base extension are inherited. Any modifications to the base definition are explicitly defined in the sections below.
 
 ### Schema Example
 
@@ -109,13 +109,9 @@ Example SPZ extension shown below. This extension only affects any `primitive` n
 
 This property points to the bufferView containing the Gaussian splat data compressed with SPZ.
 
-#### attributes
-
-Attribute requirements are defined in the base `KHR_gaussian_splatting` extension.
-
 ### Accessors
 
-Accessor requirements are defined in the base `KHR_gaussian_splatting` extension with the following adjustments:
+Accessor requirements are modified from the base `KHR_gaussian_splatting` extension with the following adjustments to definition:
 
  - SPZ compressed attributes must not include `bufferView` nor `byteOffset`. (See: [Conformance](#conformance))
  - Accessor `type` is defined for the resulting type after decompression and dequantization has occurred.
