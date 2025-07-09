@@ -136,7 +136,7 @@ The `EXT_mesh_primitive_restart` extension is applied to a mesh. Its `primitiveG
 
 ## Constraints
 
-The extension is subject to the following constraints. Violation of any constraint renders the entire extension invalid, in which case the extension **MUST** be ignored and the `mesh.primitives` objects are rendered as defined in the glTF 2.0 specification.
+The extension is subject to the following constraints. Violation of any constraint renders the entire extension invalid, in which case the extension **SHOULD** be ignored and the `mesh.primitives` objects **SHOULD** be rendered as defined in the glTF 2.0 specification.
 
 - A given primitive index **MUST NOT** appear in more than one primitive group.
 
