@@ -156,3 +156,7 @@ The extension is subject to the following constraints. Violation of any constrai
 
 - [EXT_mesh_primitive_restart.schema.json](schema/EXT_mesh_primitive_restart.schema.json)
 - [primitiveGroup.schema.json](schema/primitiveGroup.schema.json)
+
+## Known Implementations
+
+- [iTwin.js](https://github.com/iTwin/itwinjs-core/pull/8312)
