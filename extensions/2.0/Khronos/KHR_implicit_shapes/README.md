@@ -56,7 +56,7 @@ To describe the geometry which represents the object, shapes must define at most
 
 When the `type` of a shape refers to a shape type defined by this extension, the shape must not supply a value for a different shape type e.g. a shape whose `type` is "box" must not have a defined `sphere` property. Similarly, if `type` does not reference a shape type declared by `KHR_implicit_shapes`, an extension or other mechanism should supply an alternate shape definition.
 
-Degenerate shapes are prohibited. A sphere must have a positive, non-zero radius. A box shape must have positive non-zero values for each component of `size`. The capsule shape must have a positive, non-zero `height` and both `radiusTop` and `radiusBottom` must be positive. A cylinder shape must have a positive, non-zero `height`, both `radiusTop` and `radiusBottom` must be non-negative, and at least one of `radiusTop` and `radiusBottom` must be non-zero.
+Degenerate shapes are prohibited. A sphere must have a positive, non-zero radius. A box shape must have positive non-zero values for each component of `size`. The cylinder and capsule shapes must have a positive, non-zero `height`, both `radiusTop` and `radiusBottom` must be non-negative, and at least one of `radiusTop` and `radiusBottom` must be non-zero.
 
 ### JSON Schema
 
