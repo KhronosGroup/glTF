@@ -1,0 +1,11 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_gaussian_splatting glTF Mesh Primitive Extension",
+    "type": "object",
+    "description": "Data for a 3D Gaussian Splat primitive.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "extensions": { },
+        "extras": { }
+    }
+}
