@@ -43,17 +43,17 @@ This extension defines a set of properties which may be added to glTF nodes, mak
 
 Properties added by this extension include:
 
-- Collision shapes, used to determine when nodes are physically overlapping.
+- Collision geometry, used to determine when nodes are physically overlapping.
   - Collision filters, which allow for control over which pairs of nodes should collide.
   - Physics materials, which describe how pairs of objects react to collisions.
 - Joints, which describe physical connections between nodes.
-- Mass and velocity, describing the movement of nodes.
+- Motions, providing mass and velocity which describe the movement of nodes.
 
-The following diagram augments the overview diagram in the [main glTF repository](https://github.com/KhronosGroup/glTF) and shows the relationships between new properties added by this extension and existing objects in the glTF specification.
+The following diagram augments the [glTF overview diagram](https://github.com/KhronosGroup/glTF/blob/main/specification/2.0/figures/gltfOverview-2.0.0d.png) and shows the relationships between new properties added by this extension and existing objects in the glTF specification. Here, the geometry, filter, material, joint, and motion objects are provided by this extension; the shape object is provided by [KHR\_implicit\_shapes](../KHR_implicit_shapes/README.md); the remaining objects are defined in the core glTF 2.0 specification.
 
 ![Object relationship diagram](figures/Overview.png)
 
-Note, amongst rigid body engines which exist today, there are a wide variety of approximations and solving strategies in use which result in differing behavior. As such, the same asset is very likely to behave differently in different simulation engines or with different settings applied to one simulation engine. An implementation should make a best effort to implement this specification within those limitations; this requires some discretion on the part of the implementer - for example, a video game is very likely willing to accept inaccuracies which would be unacceptable in a robotic training application.
+Note, amongst rigid body engines which exist today, there are a wide variety of approximations and solving strategies in use which result in differing behavior. As such, the same asset is very likely to behave differently in different simulation engines or with different settings applied to one simulation engine. An implementation should make a best effort to implement this specification within those limitations - for example, should an implementation not support some particular geometry type, an implementer may choose to approximate that geometry with another configuration which is supported. This requires some discretion on the part of the implementer - a video game is very likely willing to accept inaccuracies which would be unacceptable in a robotic training application.
 
 ### Units
 
@@ -70,7 +70,7 @@ Units used in this specification are the same as those in the [glTF specificatio
 
 ## Adding Rigid Body Properties to Nodes
 
-Rigid body properties are attached to a node by defining the `extensions.KHR_physics_rigid_bodies` property with values appropriate for the desired behaviour of that node. The `KHR_physics_rigid_bodies` extension object may contain one or more of the following properties:
+Rigid body properties are attached to a node by defining the `extensions.KHR_physics_rigid_bodies` property with values appropriate for the desired behavior of that node. The `KHR_physics_rigid_bodies` extension object may contain one or more of the following properties:
 
 | |Type|Description|
 |-|-|-|
@@ -115,15 +115,18 @@ Rigid body motions have the following properties:
 |-|-|-|
 |**isKinematic**|`boolean`|When true, treat the rigid body as having infinite mass. Its velocity will be constant during simulation.|
 |**mass**|`number`|The mass of the rigid body. Larger values imply the rigid body is harder to move.|
-|**inertiaOrientation**|`number[4]`|The quaternion rotating from inertia major axis space to node space.|
-|**inertiaDiagonal**|`number[3]`|The principal moments of inertia. Larger values imply the rigid body is harder to rotate.|
 |**centerOfMass**|`number[3]`|Center of mass of the rigid body in node space.|
+|**inertiaDiagonal**|`number[3]`|The principal moments of inertia. Larger values imply the rigid body is harder to rotate.|
+|**inertiaOrientation**|`number[4]`|The quaternion rotating from inertia major axis space to node space.|
 |**linearVelocity**|`number[3]`|Initial linear velocity of the rigid body in node space.|
 |**angularVelocity**|`number[3]`|Initial angular velocity of the rigid body in node space.|
+|**gravityFactor**|`number`|Scalar value used to modify the effect of gravity on this motion|
 
 If not provided, the mass and inertia properties should be calculated by the simulation engine. These values are typically derived from the volume of the collision geometry used by the rigid body. The 3x3 inertia tensor can be calculated as the product of the `inertiaOrientation` (in matrix form) and the matrix whose diagonal is `inertiaDiagonal`.
 
 JSON is unable to represent infinite values; however, a value of infinity is useful for both `mass` and the components of `inertiaDiagonal`. As zero is an *invalid* value for these properties, a value of zero in `mass` or any of the components of `inertiaDiagnal` should be understood to represent a value of infinity.
+
+The `gravityFactor` property scales the effect of gravity on a motion. While non-physical, this enables several useful use-cases. Buoyant objects - e.g. balloons - may be approximated using a negative gravity factor, while product displays may wish to utilize a factor of zero to demonstrate functionality.
 
 ### Colliders
 
@@ -141,12 +144,15 @@ If the node is part of a dynamic rigid body (i.e. itself or an ascendant has `mo
 
 Implementations of this extension should ensure that collider transforms are always kept in sync with node transforms - for example animated node transforms should be applied to the physics engine (even for static colliders).
 
+> [!NOTE]
+> Modification of node transforms is permitted in order to match artist intent. Rigid body simulations, however, are concerned with objects which do not change shape. As such, modifying colliders may have implementation-specific effects. There is no expectation that an implementation respond in a physical manner to changes in the scene tree.
 
 #### Geometry
 
 The `geometry` object is used to specify the shape used for collision detection and contains the following properties:
 
 | |Type|Description|
+|-|-|-|
 |**shape**|`integer`| The index of a top-level `KHR_implicit_shapes.shape`, providing an implicit representation of the geometry. |
 |**node**|`integer`| The index of a glTF `node` which provides a mesh representation of the geometry. |
 |**convexHull**|`boolean`|Flag to indicate that the geometry should be a convex hull.|
@@ -159,7 +165,10 @@ Alternatively, a geometry can be specified by supplying the `node` parameter. In
 
 Collision shapes are parameterized in local space of the `node` they are associated with. If a shape is required to have an offset from the local space of the node the shape is associated with (for example a sphere _not_ centered at local origin or a rotated box,) a child node should be added with the desired offset applied, and the shape properties added to that child.
 
-As [KHR\_implicit\_shapes](../KHR_implicit_shapes/README.md) prohibits degenerate shapes, a nodes scale presents some special cases that must be handled. In accordance with the glTF specification on [https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#transformations](transformations), a shape referenced by a node whose scale is zero on all three axes should be considered disabled. When an implicit `shape` is referenced by a node whose whose scale is negative on one or more axes, the resulting shape size should be the absolute value of the nodes scale applied to the input shape parameters. i.e. a box with `size` of `[1.0, 1.0, 1.0]` associated with a node whose scale is `[1.0, -2.0, 3.0]` should result in a box of size `[1.0, 2.0, 3.0]` in world space.
+As [KHR\_implicit\_shapes](../KHR_implicit_shapes/README.md) prohibits degenerate shapes, a nodes scale presents some special cases that must be handled. In accordance with the [glTF specification on transformations](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#transformations), a shape referenced by a node whose scale is zero on all three axes should be considered disabled. When an implicit `shape` is referenced by a node whose scale is negative on one or more axes, the resulting shape size should be the absolute value of the nodes scale applied to the input shape parameters. i.e. a box with `size` of `[1.0, 1.0, 1.0]` associated with a node whose scale is `[1.0, -2.0, 3.0]` should result in a box of size `[1.0, 2.0, 3.0]` in world space.
+
+> [!NOTE]
+> Existing simulation packages exhibit different behaviors as the size of a collision shape approaches zero; for example, an implementation may consider a shape degenerate despite having small, but non-zero scale. Interpolating scale by means of an animation or similar may generate transient scale values which trigger implementation-specific behavior.
 
 Physics simulations typically recommend against allowing collisions between pairs of triangulated mesh objects, preferring to collide pairs of convex shapes instead. To support this, the `geometry` may specify the `convexHull` property. When this flag is true, the geometry of the resulting object should be the convex hull of the referenced `node` or `shape`. Note that the shapes defined in [KHR\_implicit\_shapes](../KHR_implicit_shapes/README.md) are all convex, so this flag has no effect; however, future extensions may add additional concave shape types.
 
@@ -278,13 +287,23 @@ Describing the precise mechanism by which overlap events are generated and what 
 
 A `node` may have a `joint` property, which describes a physical connection to another object, constraining the relative motion of those two objects in some manner. Rather than defining explicit types of connections, joints are composed of simple primitive limits, which can be composed to build complex joints.
 
-A `joint` is composed of:
+A joint can be described by:
 
 - Two attachment frames, defining the position and orientation of the joint pivots in each object.
 - A set of limits, which restrict the relative motion of the attachment frames.
 - An optional set of drives, which can apply forces to the attachment frames.
 
-The attachment frames are specified using the transforms of `node` objects; the first of which is the `node` of the `joint` object itself. A `joint` must have a `connectedNode` property, which is the index of the `node` which supplies the second attachment frame. For each of these frames, the relative transform between the `node` and the first parent `motion` (or the simulation's fixed reference frame, if no such `motion` exists) define the constraint space in that rigid body. In order for the joint to have any effect on the simulation, at least one of the pair of nodes or its ancestors should have `motion` properties.
+The `joint` object exposes these with the following properties:
+
+| |Type|Description|
+|-|-|-|
+|**connectedNode**|`integer`|Index of a node to use for one attachment frame|
+|**joint**|`integer`|Index of a top-level `KHR_physics_rigid_bodies.joint` describing limits and drives|
+|**enableCollision**|`boolean`|Flag which controls collision detection between the constrained objects|
+
+The attachment frames are specified using the transforms of `node` objects; the first of which is the `node` of the `joint` object itself. A `joint` must have a `connectedNode` property, which is the index of the `node` which supplies the second attachment frame. For each of these frames, the relative transform between the `node` and the first parent `motion` (or the simulation's fixed reference frame, if no such `motion` exists) define the constraint space in that constrained object. In order for the joint to have any effect on the simulation, at least one of the pair of nodes or its ancestors should have `motion` properties.
+
+Typically, when constraining two objects together using a joint, their collision geometries will overlap leading to a conflict in which the joint attempts to move the objects together, while collision detection simultaneously attempts to move them apart. While it is possible to disable collision detection between the two objects using a collision filter, this scenario is so common as to warrant additional configuration. By default, two constrained objects should not collide with each other. The `enableCollision` property can be used to override this in use-cases where this is not desirable.
 
 A node's `joint` must specify a `joint` property, which indexes into the top-level array of `physicsJoints` inside the `KHR_physics_rigid_bodies` extension object. This object describes the limits and drives utilized by the joint in a shareable manner.
 
@@ -330,7 +349,7 @@ Addition of drive objects to a joint allows the joint to apply additional forces
 |**stiffness**|`number`|The drive's stiffness, used to achieve the position target|
 |**damping**|`number`|The damping factor applied to reach the velocity target|
 
-Each `joint.drive` describes a force applied to one degree of freedom in joint space, specified with a combination of the `type` and `axis` parameters and drives to either a target position, velocity, or both. The drive force is proportional to `stiffness * (positionTarget - positionCurrent) + damping * (velocityTarget - velocityCurrent)` where `positionCurrent` and `velocityCurrent` are the signed values of the position and velocity of the connected node in joint space. To assist with tuning the drive parameters, a drive can be configured to be in an `acceleration` `mode` which scales the force by the effective mass of the driven degree of freedom. This mode is typically easier to tune to achieve the desired behaviour, particularly in scenarios where the masses of the connected nodes are not known in advance.
+Each `joint.drive` describes a force applied to one degree of freedom in joint space, specified with a combination of the `type` and `axis` parameters and drives to either a target position, velocity, or both. The drive force is proportional to `stiffness * (positionTarget - positionCurrent) + damping * (velocityTarget - velocityCurrent)` where `positionCurrent` and `velocityCurrent` are the signed values of the position and velocity of the connected node in joint space. To assist with tuning the drive parameters, a drive can be configured to be in an `acceleration` `mode` which scales the force by the effective mass of the driven degree of freedom. This mode is typically easier to tune to achieve the desired behavior, particularly in scenarios where the masses of the connected nodes are not known in advance.
 
 
 ### glTF Schema Updates

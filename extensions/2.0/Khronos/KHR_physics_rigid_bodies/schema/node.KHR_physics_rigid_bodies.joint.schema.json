@@ -8,7 +8,7 @@
     "properties": {
         "connectedNode": {
             "allOf": [{"$ref": "glTFid.schema.json"}],
-            "description": "The index of the node to which this is connected."
+            "description": "The index of the node to which this joint is connected."
         },
         "joint": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],

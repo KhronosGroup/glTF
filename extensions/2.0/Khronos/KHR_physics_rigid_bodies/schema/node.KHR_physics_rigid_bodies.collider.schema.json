@@ -3,7 +3,7 @@
     "$id": "node.KHR_physics_rigid_bodies.collider.schema.json",
     "title": "KHR_physics_rigid_bodies Node Collider Property",
     "type": "object",
-    "description": "Parameters describing a shape used for collison detection and response.",
+    "description": "Parameters describing an object used for collison detection and response.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "geometry": {

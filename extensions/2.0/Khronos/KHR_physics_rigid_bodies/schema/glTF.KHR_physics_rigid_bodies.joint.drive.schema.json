@@ -47,7 +47,7 @@
         "maxForce": {
             "type": "number",
             "description": "The maximum force (or torque, for angular drives) the drive can apply. If not provided, this drive is not force-limited.",
-            "minimum": 0
+            "minimum": 0.0
         },
         "positionTarget": {
             "type": "number",
@@ -60,14 +60,14 @@
         "stiffness": {
             "type": "number",
             "description": "The stiffness of the drive, scaling the force based on the position target.",
-            "default": 0,
-            "minimum": 0
+            "default": 0.0,
+            "minimum": 0.0
         },
         "damping": {
             "type": "number",
             "description": "The damping of the drive, scaling the force based on the velocity target.",
-            "default": 0,
-            "minimum": 0
+            "default": 0.0,
+            "minimum": 0.0
         }
     },
     "required": [
