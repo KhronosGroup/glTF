@@ -1,5 +1,5 @@
 <!--
-Copyright 2024 The Khronos Group Inc.
+Copyright 2025 The Khronos Group Inc.
 SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 -->
 
@@ -13,7 +13,7 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 - Mark Callow [@MarkCallow](https://github.com/MarkCallow)
 - Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)
 
-Copyright 2024 The Khronos Group Inc.
+Copyright 2025 The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
@@ -163,17 +163,6 @@ Regardless of the format used, these additional restrictions apply for compatibi
 - When a texture referencing a KTX v2 file with ASTC compressed image is used for glTF 2.0 material maps (both color and non-color), the KTX v2 image MUST be of **2D** type as defined in the KTX v2 Specification, Section 4.1.
 - `KHR_DF_FLAG_ALPHA_PREMULTIPLIED` flag MUST NOT be set unless the material's specification requires premultiplied alpha.
 
-## Known Implementations
-
-Authoring:
-
-TBA
-
-
-Viewing:
-
-TBA
-
 
 ## Resources
 
@@ -185,7 +174,7 @@ TBA
 
 ## Appendix: Full Khronos Copyright Statement
 
-Copyright 2023 The Khronos Group Inc.
+Copyright 2025 The Khronos Group Inc.
 
 Some parts of this Specification are purely informative and do not define requirements
 necessary for compliance and so are outside the Scope of this Specification. These
