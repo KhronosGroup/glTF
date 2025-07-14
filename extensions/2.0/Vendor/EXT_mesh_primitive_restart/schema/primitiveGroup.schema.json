@@ -29,7 +29,6 @@
             "description": "The index of the accessor that contains the vertex indices",
             "gltf_detailedDescription": "The index of the accessor that contains the vertex indices. The accessor **MUST** have `SCALAR` type and an unsigned integer component type. The indices are permitted to include the maximal index value for the component type, indicating the start of a new primitive."
         },
-        "name": {},
         "extensions": {},
         "extras": {}
     },
