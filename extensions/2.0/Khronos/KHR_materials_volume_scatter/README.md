@@ -173,7 +173,7 @@ This cue allows renderers to use diffusion approximation rather than random walk
 
 ## Schema
 
-- [glTF.KHR_materials_subsurface.schema.json](schema/glTF.KHR_materials_subsurface.schema.json)
+- [material.KHR_materials_subsurface.schema.json](schema/material.KHR_materials_subsurface.schema.json)
 
 ## References
 
@@ -185,7 +185,7 @@ This cue allows renderers to use diffusion approximation rather than random walk
 
 ## Appendix: Full Khronos Copyright Statement
 
-Copyright 2018-2020 The Khronos Group Inc.
+Copyright 2018-2025 The Khronos Group Inc.
 
 Some parts of this Specification are purely informative and do not define requirements
 necessary for compliance and so are outside the Scope of this Specification. These

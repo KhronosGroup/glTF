@@ -12,17 +12,20 @@
                 "minimum": 0.0,
                 "maximum": 1.0
             },
-            "description": "The multi-scatter albedo.",
             "default": [ 0.0, 0.0, 0.0 ],
             "minItems": 3,
-            "maxItems": 3
+            "maxItems": 3,
+            "description": "The multi-scatter albedo.",
+            "gltf_detailedDescription": "The perceived color of the volume medium due to scattering (not absorption) after many scattering events."
         },
         "scatterAnisotropy": {
             "type": "number",
             "minimum": -1.0,
             "maximum": 1.0,
             "default": 0.0,
-            "description": "The anisotropy of scatter events."
+            "description": "The anisotropy of scatter events.",
+            "gltf_detailedDescription": "The anisotropy of scatter events. Range is (-1, 1). 1 indicates forward scattering, -1 indicates backscattering. The default is zero and indicates isotropic scattering."
+
         }
     }
 }
