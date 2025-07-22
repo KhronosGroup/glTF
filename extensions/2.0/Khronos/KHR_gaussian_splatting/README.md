@@ -91,7 +91,7 @@ Each 3D Gaussian splat has the following attributes. At minimum the attributes m
 | --- | --- | --- | --- | --- | --- |
 | Position | POSITION | VEC3 | float | yes | |
 | Color (Spherical Harmonic degree 0 (Diffuse) and alpha) | COLOR_0 | VEC4 | unsigned byte normalized or float | yes | |
-| Rotation | _ROTATION | VEC4 | float | yes | Rotation is a quaternion. |
+| Rotation | _ROTATION | VEC4 | float | yes | Rotation is a quaternion. (xyzw) |
 | Scale | _SCALE | VEC3 | float | yes | |
 | Spherical Harmonics degree 1 | _SH_DEGREE_1_COEF_n (n = 0 to 2) | VEC3 | float | no (yes if degree 2 or 3 are used) | |
 | Spherical Harmonics degree 2 | _SH_DEGREE_2_COEF_n (n = 0 to 4) | VEC3 | float | no (yes if degree 3 is used) | |
