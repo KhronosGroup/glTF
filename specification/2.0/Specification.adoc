@@ -1305,9 +1305,11 @@ Valid accessor type and component type for each attribute semantic property are 
 
 The W component of each `TANGENT` accessor element **MUST** be set to `1.0` or `-1.0`.
 
+`COLOR_n` attributes with the `"VEC3"` type cannot be used with _unsigned byte_ or _unsigned short_ component types. As explained in section "3.6.2.4. Data Alignment", vertex attributes elements **MUST** be aligned to 4-byte boundaries inside a `bufferView`, but such configurations would result in elements 3 or 6 bytes in size. Padding would be required to satisfy alignment requirements, but that would result in the same amount of data as changing the accessor type to `"VEC4"`, therefore _unsigned byte_ or _unsigned short_ `COLOR_n` attributes **MUST** use `"VEC4"`, or alternatively, `"VEC3"` `COLOR_n` attributes **MUST** use _float_ component type.
+
 When a `COLOR_n` attribute uses an accessor of `"VEC3"` type, its alpha component **MUST** be assumed to have a value of `1.0`.
 
-All components of each `COLOR_0` accessor element **MUST** be clamped to `[0.0, 1.0]` range.
+When a `COLOR_n` attribute accessor has a component type of _float_, all components of each `COLOR_0` accessor element **MUST** be clamped to `[0.0, 1.0]` range.
 
 `TEXCOORD_n`, `COLOR_n`, `JOINTS_n`, and `WEIGHTS_n` attribute semantic property names **MUST** be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. All indices for indexed attribute semantics **MUST** start with 0 and be consecutive positive integers: `TEXCOORD_0`, `TEXCOORD_1`, etc. Indices **MUST NOT** use leading zeroes to pad the number of digits (e.g., `TEXCOORD_01` is not allowed).
 
