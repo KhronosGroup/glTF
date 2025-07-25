@@ -44,23 +44,14 @@ At rest, the 3D Gaussian splats are stored within the SPZ compression format. Up
 
 ## Compressing 3D Gaussian splats using SPZ
 
-If a primitive contains an `extension` property which defines both `KHR_gaussian_splatting` and `KHR_spz_gaussian_splats_compression` then support for SPZ compression is required. There is no requirement for a backup uncompressed buffer.
+To use this extension, it must be defined in the `extensions` property in a `KHR_gaussian_splatting` extension definition. Any mesh primitive using `KHR_gaussian_splatting` that is using this extension will use the SPZ payload to retreive the values for `POSITION`, `COLOR_0`, `KHR_gaussian_splatting:SCALE`, `KHR_gaussian_splatting:ROTATION`, and all `KHR_gaussian_splatting:SH_DEGREE_ℓ_COEF_n` attributes. The [attribute mapping](#attribute-mapping) section defines how the SPZ data is mapped to these attributes.
 
-The extension must be listed in `extensionsUsed` alongside `KHR_gaussian_splatting`.
+The extension must then be listed in `extensionsUsed` alongside `KHR_gaussian_splatting`.
 
 ```json
   "extensionsUsed" : [
     "KHR_gaussian_splatting",
-    "KHR_spz_gaussian_splats_compression"
-  ]
-```
-
-It must also be listed in `extensionsRequired`. When `KHR_spz_gaussian_splats_compression` is in use, the `KHR_gaussian_splatting` extension must also be listed as required.
-
-```json
-  "extensionsRequired" : [
-    "KHR_gaussian_splatting",
-    "KHR_spz_gaussian_splats_compression"
+    "KHR_gaussian_splatting_compression_spz"
   ]
 ```
 
@@ -70,7 +61,7 @@ As this extension extends the base extension, all components of the base extensi
 
 ### Schema Example
 
-Example SPZ extension shown below. This extension only affects any `primitive` nodes containting Gaussian splat data. Note that unlike the base `KHR_gaussian_splatting` extension, the `indices` property is excluded, and a `bufferView` is provided by the extension. This bufferview points to where the SPZ blob is stored.
+Example SPZ extension shown below. This extension only affects any `primitive` nodes containting Gaussian splat data. A `bufferView` is provided by the extension which points to where the SPZ blob is stored.
 
 ```json
   "meshes": [{
@@ -78,17 +69,21 @@ Example SPZ extension shown below. This extension only affects any `primitive` n
           "attributes": {
             "POSITION": 0,
             "COLOR_0": 1,
-            "_SCALE": 2,
-            "_ROTATION": 3,
-            "_SH_DEGREE_1_COEF_0": 4,
-            "_SH_DEGREE_1_COEF_1": 5,
-            "_SH_DEGREE_1_COEF_2": 6
+            "KHR_gaussian_splatting:SCALE": 2,
+            "KHR_gaussian_splatting:ROTATION": 3,
+            "KHR_gaussian_splatting:SH_DEGREE_1_COEF_0": 4,
+            "KHR_gaussian_splatting:SH_DEGREE_1_COEF_1": 5,
+            "KHR_gaussian_splatting:SH_DEGREE_1_COEF_2": 6
           },
           "material": 0,
           "mode": 0,
           "extensions": {
-            "KHR_spz_gaussian_splats_compression": {
-              "bufferView": 0,
+            "KHR_gaussian_splatting": {
+              "extensions": {
+                "KHR_gaussian_splatting_compression_spz": {
+                  "bufferView": 0,
+                }
+              }
             }
           }
         }]
@@ -109,11 +104,37 @@ Example SPZ extension shown below. This extension only affects any `primitive` n
 
 This property points to the bufferView containing the Gaussian splat data compressed with SPZ.
 
+### Attribute Mapping
+
+Data may be used directly from SPZ or may be mapped to the placeholder attributes this extension provides. When mapping to attributes, the data from SPZ is mapped from the `GaussianCloudData` struct in SPZ to the following attributes in glTF. Several fields require additional conversion to make them glTF and renderer ready.
+
+| SPZ `GaussianCloudData` field | glTF Attribute | Required Conversion |
+| --- | --- |
+| `positions` | `POSITION` | |
+| `colors` | `COLOR_0` RGB components | Compute _0.5 + 0.282095 * x_ to get the color between 0 and 1. |
+| `alphas` | `COLOR_0` A component | Compute the sigmoid to get the alpha between 0 and 1. (Sigmoid formula: _1 / (1 + e^-x)_) |
+| `scales` | `KHR_gaussian_splatting:SCALE` | Compute the base-e exponential of each scale value. (e.g. _e^x_ or `std::exp(x)`) |
+| `rotations` | `KHR_gaussian_splatting:ROTATION` | |
+| `sh` index 0 to 2 | `KHR_gaussian_splatting:SH_DEGREE_1_COEF_0` | |
+| `sh` index 3 to 5 | `KHR_gaussian_splatting:SH_DEGREE_1_COEF_2` | |
+| `sh` index 6 to 8 | `KHR_gaussian_splatting:SH_DEGREE_1_COEF_3` | |
+| `sh` index 9 to 11 | `KHR_gaussian_splatting:SH_DEGREE_2_COEF_0` | |
+| `sh` index 12 to 14 | `KHR_gaussian_splatting:SH_DEGREE_2_COEF_1` | |
+| `sh` index 15 to 17 | `KHR_gaussian_splatting:SH_DEGREE_2_COEF_2` | |
+| `sh` index 18 to 20 | `KHR_gaussian_splatting:SH_DEGREE_2_COEF_3` | |
+| `sh` index 21 to 23 | `KHR_gaussian_splatting:SH_DEGREE_2_COEF_4` | |
+| `sh` index 24 to 26 | `KHR_gaussian_splatting:SH_DEGREE_3_COEF_0` | |
+| `sh` index 27 to 29 | `KHR_gaussian_splatting:SH_DEGREE_3_COEF_1` | |
+| `sh` index 30 to 32 | `KHR_gaussian_splatting:SH_DEGREE_3_COEF_2` | |
+| `sh` index 33 to 35 | `KHR_gaussian_splatting:SH_DEGREE_3_COEF_3` | |
+| `sh` index 36 to 38 | `KHR_gaussian_splatting:SH_DEGREE_3_COEF_4` | |
+| `sh` index 39 to 41 | `KHR_gaussian_splatting:SH_DEGREE_3_COEF_5` | |
+| `sh` index 42 to 44 | `KHR_gaussian_splatting:SH_DEGREE_3_COEF_6` | |
+
 ### Accessors
 
 Accessor requirements are modified from the base `KHR_gaussian_splatting` extension with the following adjustments to definition:
 
- - SPZ compressed attributes must not include `bufferView` nor `byteOffset`. (See: [Conformance](#conformance))
  - Accessor `type` is defined for the resulting type after decompression and dequantization has occurred.
  - The accessor `count` must match the number of points in the compressed SPZ data.
 
@@ -121,17 +142,17 @@ Accessor requirements are modified from the base `KHR_gaussian_splatting` extens
 
 The recommended process for handling SPZ compression is as follows:
 
-- If the loader does not support `KHR_gaussian_splatting` and `KHR_spz_gaussian_splats_compression`, it must fail.
-- If the loader does support `KHR_gaussian_splatting` and `KHR_spz_gaussian_splats_compression` then:
+- If the loader does not support `KHR_gaussian_splatting_compression_spz` and `accessor.bufferView` is undefined, other extensions may be providing the data.
+- If the loader does not support `KHR_gaussian_splatting_compression_spz` and `accessor.bufferView` is defined, accessor data should be sourced as usual.
+- If the loader does support `KHR_gaussian_splatting_compression_spz` then the loader must process `KHR_gaussian_splatting_compression_spz` data first. The loader must get the data from `KHR_gaussian_splatting_compression_spz`'s `bufferView` extension property.
 
-  - The loader must process `KHR_spz_gaussian_splats_compression` data first. The loader must get the data from `KHR_spz_gaussian_splats_compression`'s `bufferView` property.
-  - SPZ compressed attributes must not include `bufferView` nor `byteOffset` in their accessor declarations. Any attributes falling outside the SPZ format, however, must be stored as regular glTF attributes and must therefore include `bufferView` (and optionally `byteOffset`) in their accessor definitions.
+This allows for a graceful fallback when an implementation does not support this extension.
   
 When compressing or decompressing the SPZ data to be stored within the glTF, you must specify a Left-Up-Front (`LUF`) coordinate system in the SPZ `PackOptions` or `UnpackOptions` within the SPZ library. This ensures that the data is compressed and decompressed appropriately for glTF.
 
 ## Schema
 
-[SPZ Compression Schema](./schema/mesh.primitive.KHR_spz_gaussian_splats_compression.schema.json)
+[SPZ Compression Schema](./schema/mesh.primitive.KHR_gaussian_splatting_compression_spz.schema.json)
 
 ## Known Implementations
 
