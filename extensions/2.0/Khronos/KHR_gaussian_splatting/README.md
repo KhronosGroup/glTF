@@ -50,40 +50,88 @@ The extension must be listed in `extensionsUsed`:
 
 Other extensions that depend on this extension such as 3D Gaussian splatting compression extensions may require that this extension be included in `extensionsRequired`.
 
-### Geometry Type
+## Geometry Type
 
 The `mode` of the `primitive` must be `POINTS`.
 
-### Schema Example
+## Schema Example
 
-Example shown below. This extension only affects any `primitive` nodes containting 3D Gaussian splat data.
+Example shown below including optional properties. This extension only affects any `primitive` nodes containting 3D Gaussian splat data.
 
 ```json
-  "meshes": [{
-      "primitives": [{
-          "attributes": {
+"meshes": [{
+    "primitives": [{
+        "attributes": {
             "POSITION": 0,
             "COLOR_0": 1,
-            "KHR_gaussian_splatting:SCALE": 2,
-            "KHR_gaussian_splatting:ROTATION": 3,
-            "KHR_gaussian_splatting:SH_DEGREE_1_COEF_0": 4,
-            "KHR_gaussian_splatting:SH_DEGREE_1_COEF_1": 5,
-            "KHR_gaussian_splatting:SH_DEGREE_1_COEF_2": 6
-          },
-          "mode": 0,
-          "indices": 7,
-          "extensions": {
-            "KHR_gaussian_splatting": {}
-          }
-        }]
-    }],
+            "_SCALE": 2,
+            "_ROTATION": 3,
+            "_SH_DEGREE_1_COEF_0": 4,
+            "_SH_DEGREE_1_COEF_1": 5,
+            "_SH_DEGREE_1_COEF_2": 6
+        },
+        "mode": 0,
+        "indices": 7,
+        "extensions": {
+            "KHR_gaussian_splatting": {
+                "shape": "ellipsoid",
+                "hints": {
+                    "sortingMethod": "cameraDistance",
+                    "projection": "perspective"
+                }
+            }
+        }
+    }]
+}],
 ```
 
-### Extension Properties
+## Extension Properties
 
-The extension specifies no additional properties but must be included on a point primitive with an empty body to indicate that the primitive should be treated as a 3D Gaussian splatting field.
+### Shape
 
-#### attributes
+Gaussian splats can have a variety of shapes and this has the potential to change over time. The `shape` property is an optional property that provides an indication to the renderer what these shapes may be. Typically `ellipsoid` refers to the shape generally considered to be a "splat" and this is considered the default value.
+
+Renderers are free to ignore any values they do not recognize, but are encouraged to follow the non-normative list below.
+
+#### Known Shapes
+
+*This section is non-normative and not comprehensive. It may change over time.*
+
+ - `ellipsoid` _(Default Value)_
+ - `triangle`
+ - `quad`
+
+### Rendering Hints
+
+This extension provides a `hints` property that contains sub-properties that may help renderers understand how best to render the Gaussians to the screen. This property and all of it's sub-properties are optional, and renderers can choose to ignore them.
+
+#### Projection
+
+The `projection` property is an optional hint that specifies how the Gaussians should be projected into the image. This is typically provided by the training process for the splats. This is a freeform string field to allow new projections to be specified as they become available. The default value is `perspective`.
+
+Renderers are free to ignore any values they do not recognize, but are encouraged to follow the non-normative list below.
+
+##### Known Projection Methods
+
+*This section is non-normative and not comprehensive. It may change over time.*
+
+ - `perspective` _(Default Value)_: The typical 3D perspective projection based on scene depth.
+ - `orthographic`: A orthogonal projection of splats into a scene to preserve shape and scale and reduce distortion.
+
+#### Sorting Method
+
+The `sortingMethod` property is an optional hint that specifies how the Gaussians should be sorted during the rendering process. This typically is provided by the training process for the splats. This is a freeform string field to allow new sorting methods to be specified as they become available. The default value is `cameraDistance`.
+
+Renderers are free to ignore any values they do not recognize, but are encouraged to follow the non-normative list below.
+
+##### Known Sorting Methods
+
+*This section is non-normative and not comprehensive. It may change over time.*
+
+ - `cameraDistance` _(Default Value)_: The distance between the center of the splat and the position of the camera.
+ - `zDepth`: The projected z-depth in the camera projection.
+
+## Attributes
 
 Each 3D Gaussian splat has the following attributes. At minimum the attributes must contain `POSITION`, `COLOR_0`, `KHR_gaussian_splatting:ROTATION`, and `KHR_gaussian_splatting:SCALE`. `KHR_gaussian_splatting:SH_DEGREE_ℓ_COEF_n` attributes hold the spherical harmonics data and are not required. `POSITION` and `COLOR_0` are defined by the base glTF specification. If higher degrees of Spherical Harmonics are used then lower degrees are required implicitly.
 
