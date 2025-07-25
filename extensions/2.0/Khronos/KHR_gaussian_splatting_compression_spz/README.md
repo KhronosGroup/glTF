@@ -1,4 +1,4 @@
-# KHR\_spz\_gaussian\_splats\_compression
+# KHR\_gaussian\_splatting\_spz\_compression
 
 ## Contributors
 
