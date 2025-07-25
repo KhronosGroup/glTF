@@ -34,7 +34,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension defines support for storing 3D Gaussian splats in glTF, bringing structure and conformity to the 3D Gaussian splatting space. 3D Gaussian splats are effectively fields of 3D Gaussian splats that can be treated as a point cloud for the purposes of storage. 3D Gaussian splats are defined by their position, rotation, scale, and spherical harmonics which provide both diffuse and specular color. These values are stored as values on a point primitive. Since we treat the 3D Gaussian splats as points primitives, a graceful fallback to treating the data as a sparse point cloud is possible.
+This extension defines support for storing 3D Gaussian splats in glTF, bringing structure and conformity to the 3D Gaussian splatting space. 3D Gaussian splatting uses fields of Gaussians that can be treated as a point cloud for the purposes of storage. 3D Gaussian splats are defined by their position, rotation, scale, and spherical harmonics which provide both diffuse and specular color. These values are stored as values on a point primitive. Since we treat the 3D Gaussian splats as points primitives, a graceful fallback to treating the data as a sparse point cloud is possible.
 
 ## Adding 3D Gaussian Splats to Primitives
 
@@ -64,11 +64,11 @@ Example shown below. This extension only affects any `primitive` nodes containti
           "attributes": {
             "POSITION": 0,
             "COLOR_0": 1,
-            "_SCALE": 2,
-            "_ROTATION": 3,
-            "_SH_DEGREE_1_COEF_0": 4,
-            "_SH_DEGREE_1_COEF_1": 5,
-            "_SH_DEGREE_1_COEF_2": 6
+            "KHR_gaussian_splatting:SCALE": 2,
+            "KHR_gaussian_splatting:ROTATION": 3,
+            "KHR_gaussian_splatting:SH_DEGREE_1_COEF_0": 4,
+            "KHR_gaussian_splatting:SH_DEGREE_1_COEF_1": 5,
+            "KHR_gaussian_splatting:SH_DEGREE_1_COEF_2": 6
           },
           "mode": 0,
           "indices": 7,
@@ -85,73 +85,19 @@ The extension specifies no additional properties but must be included on a point
 
 #### attributes
 
-Each 3D Gaussian splat has the following attributes. At minimum the attributes must contain `POSITION`, `COLOR_0`, `_ROTATION`, and `_SCALE`. `_SH_DEGREE_ℓ_COEF_n` attributes hold the spherical harmonics data and are not required. If higher degrees of Spherical Harmonics are used then lower degrees are required implicitly.
+Each 3D Gaussian splat has the following attributes. At minimum the attributes must contain `POSITION`, `COLOR_0`, `KHR_gaussian_splatting:ROTATION`, and `KHR_gaussian_splatting:SCALE`. `KHR_gaussian_splatting:SH_DEGREE_ℓ_COEF_n` attributes hold the spherical harmonics data and are not required. `POSITION` and `COLOR_0` are defined by the base glTF specification. If higher degrees of Spherical Harmonics are used then lower degrees are required implicitly.
 
 | Splat Data | glTF Attribute | Accessor Type | Component Type | Required | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Position | POSITION | VEC3 | float | yes | |
-| Color (Spherical Harmonic degree 0 (Diffuse) and alpha) | COLOR_0 | VEC4 | unsigned byte normalized or float | yes | |
-| Rotation | _ROTATION | VEC4 | float | yes | Rotation is a quaternion. (xyzw) |
-| Scale | _SCALE | VEC3 | float | yes | |
-| Spherical Harmonics degree 1 | _SH_DEGREE_1_COEF_n (n = 0 to 2) | VEC3 | float | no (yes if degree 2 or 3 are used) | |
-| Spherical Harmonics degree 2 | _SH_DEGREE_2_COEF_n (n = 0 to 4) | VEC3 | float | no (yes if degree 3 is used) | |
-| Spherical Harmonics degree 3 | _SH_DEGREE_3_COEF_n (n = 0 to 6) | VEC3 | float | no | |
+| Rotation | KHR_gaussian_splatting:ROTATION | VEC4 | float | yes | Rotation is a quaternion. (xyzw) |
+| Scale | KHR_gaussian_splatting:SCALE | VEC3 | float | yes | |
+| Spherical Harmonics degree 1 | KHR_gaussian_splatting:SH_DEGREE_1_COEF_n (n = 0 to 2) | VEC3 | float | no (yes if degree 2 or 3 are used) | |
+| Spherical Harmonics degree 2 | KHR_gaussian_splatting:SH_DEGREE_2_COEF_n (n = 0 to 4) | VEC3 | float | no (yes if degree 3 is used) | |
+| Spherical Harmonics degree 3 | KHR_gaussian_splatting:SH_DEGREE_3_COEF_n (n = 0 to 6) | VEC3 | float | no | |
 
-The value of `COLOR_0` is derived by multiplying the 3 diffuse color components of the 3D Gaussian splat with the constant zeroth-order Spherical Harmonic (ℓ = 0).
+The value of `COLOR_0` is derived by multiplying the 3 diffuse color components of the 3D Gaussian splat with the constant zeroth-order Spherical Harmonic (ℓ = 0) for the RGB channels. The alpha channel should contain the opacity of the splat.
 
 Each increasing degree of spherical harmonics requires more coeffecients. At the 1st degree, 3 sets of coeffcients are required, increasing to 5 sets for the 2nd degree, and increasing to 7 sets at the 3rd degree. With all 3 degrees, this results in 45 spherical harmonic coefficients stored in the `_SH_DEGREE_ℓ_COEF_n` attributes.
-
-### Accessors
-
-Required `accessors` for `POSITION`, `COLOR_0`, `_SCALE`, and `_ROTATION`:
-
-```json
-  "accessors": [{
-      "bufferView": 0,
-      "componentType": 5126,
-      "count": 590392,
-      "type": "VEC3",
-      "max": [
-        1,
-        1,
-        1,
-      ],
-      "min": [
-        -1,
-        -1,
-        -1,
-      ]
-    }, {
-      "bufferView": 1,
-      "componentType": 5121,
-      "count": 590392,
-      "type": "VEC4",
-      "normalized": true
-    }, {
-      "bufferView": 2,
-      "componentType": 5126,
-      "count": 590392,
-      "type": "VEC3"
-    }, {
-      "bufferView": 3,
-      "componentType": 5126,
-      "count": 590392,
-      "type": "VEC4"
-    }],
-```
-
-Spherical harmonics `accessors` all follow the pattern:
-
-```json
-  "accessors": [{
-    "bufferView": 4,
-    "componentType": 5126,
-    "count": 590392,
-    "type": "VEC3"
-  }]
-```
-
-Accessors must be defined for all in-use `attributes`.
 
 ## Implementation
 
@@ -339,7 +285,7 @@ Accessed via `usampler2D`:
 
 #### Sorting and Indexes
 
-With the Gaussian splat attributes packed into a texture the sorting only has to act upon a separate `_INDEX` attribute created at runtime. Gaussian splats are sorted as above, but instead of sorting each vertex buffer only sort the index values. When the glTF is loaded, Gaussian splats can be indexed in the order read.
+With the Gaussian splat attributes packed into a texture the sorting only has to act upon the index of the splat at runtime. Gaussian splats are sorted as above, but instead of sorting each vertex buffer you can only sort the index values. When the glTF is loaded, Gaussian splats can be indexed in the order read.
 
 #### Extracting Data in the Vertex Shader
 
