@@ -4,7 +4,7 @@
 
 - Ken Jakubzak, Meta
 - Hideaki Eguchi / VirtualCast, Inc.
-- Ernest Lee, Individual Contributor
+- K. S. Ernest (iFire) Lee, Individual Contributor / https://github.com/fire
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
 - Leonard Daly, Individual Contributor
@@ -68,7 +68,7 @@ Optionally, these may be aligned with industry standards, such as [Facial Action
 | `expression` | string  | Expression name this joint contributes to.                                  |
 | `channels`   | array   | array representing channels that must correspond to either `"rotation"`, `"translation"`, or `"scale"`; indicates transform types. |
 
-## Animation Integration (Expressions Tab Recommendation)
+## Animation Integration
 
 - Expression timing, blending, and control must use glTF `animations` channels.
 - Animations targeting expression-driven `rotation`, `translation`, or `scale` must conform to glTF 2.0's animation model.
@@ -87,67 +87,6 @@ This approach simplifies avatar implementation by centralizing expression playba
 For expressions that represent binary or toggle states (such as `blinkLeft`, `blinkRight`, or `jawOpen`), the use of glTF animation channels with `"interpolation": "STEP"` is strongly recommended.
 
 STEP interpolation ensures that an expression toggles cleanly between fully off (`0.0`) and fully on (`1.0`) states, providing crisp visual transitions and avoiding interpolation artifacts that could occur with `LINEAR` interpolation in binary scenarios.
-
-
-## Example: Expression with glTF Animation
-
-Here is how an expression-driven joint defined in this extension could interact with glTF's native animation system:
-
-### Step 1: Define a Semantic Mapping in this Extension
-
-```json
-{
- "extensions": {
-    "KHR_avatar_expression_mapping": {
-      "expressions": [
-        {
-          "expression": "smile",
-          "animation": 0,
-          "channels": [0,1,2]
-        },
-        {
-          "expression": "frown",
-          "animation": 1,
-          "channels": [0,1,3]
-        }
-      ]
-    }
-  }
-}
-```
-
-This maps the joint at node index `5` to the expression `"smile"`, using rotation as its mode of influence.
-
-### Step 2: Animate the Joint Using Standard glTF Channels
-
-In the main glTF `animations[]`, use standard animation targeting to animate the `rotation` of node 5:
-
-```json
-{
-  "animations": [
-    {
-      "channels": [
-        {
-          "sampler": 0,
-          "target": {
-            "node": 5,
-            "path": "rotation"
-          }
-        }
-      ],
-      "samplers": [
-        {
-          "input": 0,
-          "output": 1,
-          "interpolation": "LINEAR"
-        }
-      ]
-    }
-  ]
-}
-```
-
-This animation channel should rotate the joint in a way that corresponds to a `smile` expression. The weights of the keyframes must reflect the normalized [0.0 – 1.0] expression activation.
 
 
 ## Implementation Notes

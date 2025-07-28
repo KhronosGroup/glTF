@@ -4,7 +4,7 @@
 
 - Ken Jakubzak, Meta
 - Hideaki Eguchi / VirtualCast, Inc.
-- Ernest Lee, Individual Contributor
+- K. S. Ernest (iFire) Lee, Individual Contributor / https://github.com/fire
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
 - Leonard Daly, Individual Contributor
@@ -17,7 +17,7 @@
 
 Written against the glTF 2.0 specification.    
 Dependent on: `KHR_avatar`
-
+ 
 ## Overview
 
 The `KHR_avatar_virtual_joints` extension introduces *virtual joints*—custom transform nodes that exist relative to the avatar’s skeletal hierarchy but are **not part of the skinned joint structure**. These virtual transforms serve as semantic attachment or control points for systems like look-at targeting, item equipping, IK hints, and seating positions.

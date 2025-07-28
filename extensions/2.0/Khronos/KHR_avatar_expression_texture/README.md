@@ -4,7 +4,7 @@
 
 - Ken Jakubzak, Meta
 - Hideaki Eguchi / VirtualCast, Inc.
-- Ernest Lee, Individual Contributor
+- K. S. Ernest (iFire) Lee, Individual Contributor / https://github.com/fire
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
 - Leonard Daly, Individual Contributor
@@ -255,7 +255,6 @@ Animation of either the texture index or texture transform must be implemented u
 
 - Expression weights should animate between `0.0` (off) and `1.0` (fully active).
 - The avatar system uses these animations to blend or toggle texture visuals in accordance with semantic expressions.
-
 
 ## License
 
