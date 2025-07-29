@@ -138,7 +138,7 @@ The `KHR_xmp_json_ld` block is placed at the root level of the glTF asset as par
 
 ## Implementation Notes
 
-- `sceneIndex` is required and represennts the index of the glTF `scene` representing the avatar. Used to distinguish the avatar root when multiple scenes exist.
+- `sceneIndex` is required is the index of the glTF `scene` corresponding to the avatar. Used to distinguish the avatar root when multiple scenes exist.
 - Consumers should use this marker as a signal to search for additional avatar-related extensions, including skeletal, expression, and other khronos avatar extensions.
 - Support for `KHR_xmp_json_ld` is encouraged to ensure interoperable metadata across tools and runtimes.
 
