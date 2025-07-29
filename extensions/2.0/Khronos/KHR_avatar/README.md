@@ -48,7 +48,7 @@ The extension supports referencing the source `scene` that represents the avatar
 |--------------|---------|-----------------------------------------------------------------------------|
 | `sceneIndex` | integer | Index of the glTF `scene` representing the avatar. Used to distinguish the avatar root when multiple scenes exist. |
 
-## Metadata Attachment: JSON_XMP_LD
+## Metadata Attachment: KHR_xmp_json_ld
 
 Avatar metadata should be expressed using the `KHR_xmp_json_ld` format, a structured mechanism for attaching JSON-LD metadata blocks to glTF files. In the context of `KHR_avatar`, this allows consistent expression of avatar provenance, licensing, creator, versioning, and intended use, among others.
 
