@@ -8,6 +8,7 @@
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
 - Leonard Daly, Individual Contributor
+- Nick Burkard, Meta
 
 ## Status
 
@@ -32,7 +33,7 @@ Unlike expression bindings or skeletons, this extension focuses on **attaching s
 
 ## Motivation
 
-Avatar models often contain complex geometry with overlapping purposes—hair, clothing, limbs, devices, accessories, etc. Many applications need to reason about specific mesh subsets for:
+Avatar models often contain complex geometry with overlapping purposes (e.g. hair, clothing, limbs, devices, accessories). Many applications need to reason about specific mesh subsets for:
 
 - Avatar customization layers
 - Haptic or interaction targeting
@@ -67,10 +68,10 @@ Annotations are attached at the **primitive level** (i.e., a `mesh.primitives[i]
 
 ### Properties
 
-| Property         | Type          | Description                                                                 |
-|------------------|---------------|-----------------------------------------------------------------------------|
-| `tags`           | string[]      | List of free-form labels applicable to this primitive                      |
-| `customData`     | object        | Optional freeform object for runtime-specific annotations (optional)       |
+| Property     | Type     | Description                                                          |
+| ------------ | -------- | -------------------------------------------------------------------- |
+| `tags`       | string[] | List of free-form labels applicable to this primitive                |
+| `customData` | object   | Optional freeform object for runtime-specific annotations (optional) |
 
 ## Use Cases & Examples
 

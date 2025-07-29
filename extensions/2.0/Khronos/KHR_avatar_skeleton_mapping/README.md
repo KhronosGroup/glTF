@@ -8,6 +8,7 @@
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
 - Leonard Daly, Individual Contributor
+- Nick Burkard, Meta
 
 ## Status
 
@@ -15,13 +16,13 @@
 
 ## Dependencies
 
-Written against the glTF 2.0 specification.    
+Written against the glTF 2.0 specification.  
 Dependent on: `KHR_avatar`
 Typically used in conjunction with: `KHR_avatar_skeleton_biped`
 
 ## Overview
 
-The `KHR_avatar_skeleton_mapping` extension provides a mechanism to map a skeleton rig to a reference rig, enabling retargeting and compatibility across different skeleton topologies. This extension is particularly useful for normalizing diverse rig structures across platforms and authoring tools. It provides one-to-one and one-to-many mapping; with the expectation that distributed weights add up to 1.0. 
+The `KHR_avatar_skeleton_mapping` extension provides a mechanism to map a skeleton rig to a reference rig, enabling retargeting and compatibility across different skeleton topologies. This extension is particularly useful for normalizing diverse rig structures across platforms and authoring tools. It provides one-to-one and one-to-many mapping; with the expectation that distributed weights add up to 1.0.
 
 ## Extension Schema
 
@@ -34,9 +35,7 @@ The `KHR_avatar_skeleton_mapping` extension provides a mechanism to map a skelet
           { "target": "spine", "weight": 0.5 },
           { "target": "chest", "weight": 0.5 }
         ],
-        "JawJoint": [
-          { "target": "jaw", "weight": 1.0 }
-        ]
+        "JawJoint": [{ "target": "jaw", "weight": 1.0 }]
       }
     }
   }
@@ -45,12 +44,11 @@ The `KHR_avatar_skeleton_mapping` extension provides a mechanism to map a skelet
 
 ### Properties
 
-| Property     | Type    | Description                                                                 |
-|--------------|---------|-----------------------------------------------------------------------------|
-| `mappings`   | object  | Dictionary mapping source joint names to reference rig joint names.         |
-| `target`     | string  | Name of the reference joint.                                                |
-| `weight`     | number  | Influence of this target in the mapping. Must sum to 1.0 per source joint.  |
-
+| Property   | Type   | Description                                                                |
+| ---------- | ------ | -------------------------------------------------------------------------- |
+| `mappings` | object | Dictionary mapping source joint names to reference rig joint names.        |
+| `target`   | string | Name of the reference joint.                                               |
+| `weight`   | number | Influence of this target in the mapping. Must sum to 1.0 per source joint. |
 
 ### Mapping Types
 
@@ -61,7 +59,6 @@ This extension supports both one-to-one and one-to-many mappings:
 
 This provides flexibility for approximating intermediate or compound joints across rig topologies.
 
-
 ## Mapping to Known Standard Rigs
 
 In many real-world scenarios, developers must remap an avatar's native joint structure to a **known, standardized rig**—such as a runtime's internal avatar model or a predefined specification like VRM's Humanoid rig.
@@ -69,6 +66,7 @@ In many real-world scenarios, developers must remap an avatar's native joint str
 This extension supports such cases by allowing one-to-one or one-to-many weighted mappings between a model’s joints and those of a **target standard rig**.
 
 These standard rigs are typically defined by the consuming platform, runtime, or service provider. Each standard rig:
+
 - Defines a fixed joint name vocabulary and hierarchy.
 - Is assumed to be known at runtime and used for animation playback, retargeting, IK, or expression control.
 
@@ -87,15 +85,11 @@ Here’s an example mapping from a custom rig into VRM Humanoid:
       "mappings": [
         {
           "source": "myRig_hips",
-          "targets": [
-            { "joint": "hips", "weight": 1.0 }
-          ]
+          "targets": [{ "joint": "hips", "weight": 1.0 }]
         },
         {
           "source": "myRig_head",
-          "targets": [
-            { "joint": "head", "weight": 1.0 }
-          ]
+          "targets": [{ "joint": "head", "weight": 1.0 }]
         },
         {
           "source": "myRig_leftFoot",
@@ -111,6 +105,7 @@ Here’s an example mapping from a custom rig into VRM Humanoid:
 ```
 
 In this example:
+
 - `"source"` is the custom rig's joint name.
 - `"joint"` in the `"targets"` is a joint name defined by the target standard rig (here, VRM Humanoid).
 - The system using this extension must understand what `"vrmHumanoid"` means (i.e., the joint vocabulary and structure must be pre-declared by the consuming runtime).
@@ -118,10 +113,10 @@ In this example:
 ## Mapping Registry and Target Namespaces
 
 While this extension does not mandate a central registry, developers are encouraged to:
+
 - Document the name and structure of their standard rigs
 - Reuse identifiers like `"vrmHumanoid"`, `"unityHumanoid"`, or `"metaRig"` consistently
 - Provide a public schema or joint list for validation and interoperability
-
 
 ## Implementation Notes
 
@@ -133,9 +128,7 @@ While this extension does not mandate a central registry, developers are encoura
 
 ```json
 {
-  "extensionsUsed": [
-    "KHR_avatar_skeleton_mapping"
-  ],
+  "extensionsUsed": ["KHR_avatar_skeleton_mapping"],
   "extensions": {
     "KHR_avatar_skeleton_mapping": {
       "mappings": {

@@ -8,6 +8,7 @@
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
 - Leonard Daly, Individual Contributor
+- Nick Burkard, Meta
 
 ## Status
 
@@ -15,7 +16,7 @@
 
 ## Dependencies
 
-Written against the glTF 2.0 specification.    
+Written against the glTF 2.0 specification.  
 Dependent on: `KHR_avatar`
 Works alongside: `KHR_avatar_expression_mapping`, `KHR_avatar_expression_joint`, `KHR_avatar_expression_morphtargets`.
 
@@ -31,7 +32,7 @@ The `KHR_avatar_expression_procedural` extension introduces a metadata layer tha
 
 By labeling expressions as procedural, this extension enables runtime systems (e.g., animation controllers, live-tracking systems, or AI avatars) to drive those expressions without conflict with animation data or user inputs.
 
-This metadata is **descriptive only**: it does not contain animation or behavior logic itself. Instead, it signals to tools and engines that the following expressions are *expected to be dynamically generated*.
+This metadata is **descriptive only**: it does not contain animation or behavior logic itself. Instead, it signals to tools and engines that the following expressions are _expected to be dynamically generated_.
 
 ## Use Cases
 
@@ -63,22 +64,21 @@ This metadata is **descriptive only**: it does not contain animation or behavior
 
 ### Properties
 
-| Property                | Type     | Description                                                                          |
-|-------------------------|----------|--------------------------------------------------------------------------------------|
-| `proceduralExpressions` | array    | List of expression metadata entries that are intended to be procedurally controlled |
-| `expression`            | string   | Expression name as defined in the expression mapping vocabulary                     |
-| `mode`                  | string   | Enum: `"timed"`, `"random"`, `"live"`, `"scripted"` — describes the procedural strategy |
+| Property                | Type   | Description                                                                             |
+| ----------------------- | ------ | --------------------------------------------------------------------------------------- |
+| `proceduralExpressions` | array  | List of expression metadata entries that are intended to be procedurally controlled     |
+| `expression`            | string | Expression name as defined in the expression mapping vocabulary                         |
+| `mode`                  | string | Enum: `"timed"`, `"random"`, `"live"`, `"scripted"` — describes the procedural strategy |
 
 ## Procedural Modes
 
-| Mode       | Meaning                                                                 |
-|------------|-------------------------------------------------------------------------|
-| `timed`    | The expression occurs in regular intervals (e.g., blinking every 5s)     |
-| `random`   | The expression fires with stochastic timing or weights                  |
-| `live`     | Driven by live-captured inputs (e.g., webcam, eye tracking)             |
-| `scripted` | Driven by external dialogue, AI logic, or gameplay sequences            |
+| Mode       | Meaning                                                                        |
+| ---------- | ------------------------------------------------------------------------------ |
+| `timed`    | The expression occurs in regular intervals (e.g., blinking every 5s)           |
+| `random`   | The expression fires with stochastic timing or weights                         |
+| `live`     | Driven by live-captured inputs (e.g., webcam, eye tracking)                    |
+| `scripted` | Driven by external dialogue, AI logic, or gameplay sequences                   |
 | `mixed`    | Combines two or more procedural sources, such as live tracking + scripted cues |
-
 
 ## Expression Control Behavior
 
@@ -88,11 +88,11 @@ Each procedural expression may declare a resolution strategy for combining proce
 
 ### `conflictResolution` Enum
 
-| Value    | Meaning                                                                 |
-|----------|-------------------------------------------------------------------------|
-| `none`   | No procedural influence. The expression is controlled exclusively by animation or input. |
-| `block`  | Procedural output *overrides* animation data while active.              |
-| `blend`  | Procedural and animation data may be blended or accumulated together.   |
+| Value   | Meaning                                                                                  |
+| ------- | ---------------------------------------------------------------------------------------- |
+| `none`  | No procedural influence. The expression is controlled exclusively by animation or input. |
+| `block` | Procedural output _overrides_ animation data while active.                               |
+| `blend` | Procedural and animation data may be blended or accumulated together.                    |
 
 ### Example with Resolution Mode
 
@@ -105,7 +105,6 @@ Each procedural expression may declare a resolution strategy for combining proce
 ```
 
 This allows developers to distinguish expressions meant to supplement animation (e.g., micro-blinks over emotive acting) versus those that must fully override input (e.g., forced gaze).
-
 
 ## Implementation Notes
 

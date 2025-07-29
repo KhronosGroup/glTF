@@ -8,6 +8,7 @@
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
 - Leonard Daly, Individual Contributor
+- Nick Burkard, Meta
 
 ## Status
 
@@ -15,12 +16,12 @@
 
 ## Dependencies
 
-Written against the glTF 2.0 specification.    
+Written against the glTF 2.0 specification.  
 Dependent on: `KHR_avatar`
- 
+
 ## Overview
 
-The `KHR_avatar_virtual_joints` extension introduces *virtual joints*—custom transform nodes that exist relative to the avatar’s skeletal hierarchy but are **not part of the skinned joint structure**. These virtual transforms serve as semantic attachment or control points for systems like look-at targeting, item equipping, IK hints, and seating positions.
+The `KHR_avatar_virtual_joints` extension introduces _virtual joints_—custom transform nodes that exist relative to the avatar’s skeletal hierarchy but are **not part of the skinned joint structure**. These virtual transforms serve as semantic attachment or control points for systems like look-at targeting, item equipping, IK hints, and seating positions.
 
 Virtual joints are defined via an offset transform relative to a single parent joint, and do **not** participate in skinning. They are evaluated at runtime for behavior logic and procedural animation.
 
@@ -67,34 +68,34 @@ This extension is inspired in part by constructs like `lookAt` in VRM and aims t
 
 ### Properties
 
-| Property       | Type      | Description                                                                 |
-|----------------|-----------|-----------------------------------------------------------------------------|
-| `name`         | string    | Semantic identifier of the virtual joint                                    |
-| `parentJoint`  | integer   | Index into the glTF `nodes[]` array representing the base joint             |
-| `translation`  | float[3]  | Local offset (X, Y, Z) relative to the parent joint                         |
-| `rotation`     | float[4]  | Local orientation as quaternion (X, Y, Z, W) relative to the parent joint   |
+| Property      | Type     | Description                                                               |
+| ------------- | -------- | ------------------------------------------------------------------------- |
+| `name`        | string   | Semantic identifier of the virtual joint                                  |
+| `parentJoint` | integer  | Index into the glTF `nodes[]` array representing the base joint           |
+| `translation` | float[3] | Local offset (X, Y, Z) relative to the parent joint                       |
+| `rotation`    | float[4] | Local orientation as quaternion (X, Y, Z, W) relative to the parent joint |
 
 ## Examples
 
 ### Arm Attachment Virtual Joint
 
-- **Name**: `"arm_socket"`  
-- **Parent**: Between elbow and wrist (e.g., joint index 18)  
-- **Offset**: `(0.0, 0.1, 0.0)`  
-- **Usage**: Anchor for attaching  objects
+- **Name**: `"arm_socket"`
+- **Parent**: Between elbow and wrist (e.g., joint index 18)
+- **Offset**: `(0.0, 0.1, 0.0)`
+- **Usage**: Anchor for attaching objects
 
 ### Look At Virtual Joint
 
-- **Name**: `"lookAt_target"`  
-- **Parent**: `"head"` joint (e.g., joint index 8)  
-- **Offset**: `(0.0, 0.0, 0.35)`  
+- **Name**: `"lookAt_target"`
+- **Parent**: `"head"` joint (e.g., joint index 8)
+- **Offset**: `(0.0, 0.0, 0.35)`
 - **Usage**: Target for runtime look-at behavior (eyes/head alignment).
 
 ### Sitting Point Virtual Joint
 
-- **Name**: `"sitting_point"`  
-- **Parent**: `"pelvis"` joint (e.g., joint index 0)  
-- **Offset**: `(0.0, 0.0, -0.2)`  
+- **Name**: `"sitting_point"`
+- **Parent**: `"pelvis"` joint (e.g., joint index 0)
+- **Offset**: `(0.0, 0.0, -0.2)`
 - **Usage**: Anchor point for aligning seated positions.
 
 ## Implementation Notes

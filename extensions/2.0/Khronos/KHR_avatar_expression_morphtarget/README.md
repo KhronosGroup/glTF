@@ -8,6 +8,7 @@
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
 - Leonard Daly, Individual Contributor
+- Nick Burkard, Meta
 
 ## Status
 
@@ -25,6 +26,7 @@ The `KHR_avatar_expression_morphtarget` extension provides semantic bindings bet
 This extension does **not** define animation data itself. Instead, it enables consistent reference of morph target indices across tools, runtimes, and expressions.
 
 ## Reference Expression Vocabulary
+
 Potential expression categories include:
 
 - **Emotions** (e.g., `happy`, `angry`, `surprised`)
@@ -32,14 +34,14 @@ Potential expression categories include:
 - **Modifiers** (e.g., `left`, `right`, `upper`, `lower`)
 - **Gestures and Actions** (e.g., `blink`, `smile`, `jawOpen`)
 
-Optionally, these may be aligned with industry standards, such as the [Facial Action Coding System (FACS)](https://en.wikipedia.org/wiki/Facial_Action_Coding_System). 
+Optionally, these may be aligned with industry standards, such as the [Facial Action Coding System (FACS)](https://en.wikipedia.org/wiki/Facial_Action_Coding_System).
 
 ## Extension Schema
 
 ```json
 {
- "extensions": {
-    "KHR_avatar_expression_mapping": {
+  "extensions": {
+    "KHR_avatar_expression_morphtarget": {
       "expressions": [
         {
           "expression": "smile",
@@ -59,12 +61,12 @@ Optionally, these may be aligned with industry standards, such as the [Facial Ac
 
 ### Properties
 
-| Property     | Type    | Description                                                                 |
-|--------------|---------|-----------------------------------------------------------------------------|
-| `expressions`| array   | Array of mappings between animation/channels and expression labels.               |
-| `animation`  | integer | Index into the glTF `animations[]` array representing an expression animation.     |
-| `expression` | string  | Expression name this joint contributes to.                                  |
-| `channel`   | integet   | Index representing the `"weights"` channel |
+| Property      | Type    | Description                                                                    |
+| ------------- | ------- | ------------------------------------------------------------------------------ |
+| `expressions` | array   | Array of mappings between animation/channels and expression labels.            |
+| `animation`   | integer | Index into the glTF `animations[]` array representing an expression animation. |
+| `expression`  | string  | Expression name this joint contributes to.                                     |
+| `channel`     | integet | Index representing the `"weights"` channel                                     |
 
 ## Animation Integration (Expressions Tab Recommendation)
 
@@ -101,7 +103,6 @@ All morph target expressions should be driven using standard glTF animation chan
 - Each element of the `weights` array corresponds to one morph target on the associated mesh primitive.
 - Expression systems should coordinate with these indices using the bindings declared by this extension.
 
-
 ## Example: Expression with glTF Animation
 
 ### Step 1: Bind Expression to Morph Target
@@ -110,7 +111,7 @@ All morph target expressions should be driven using standard glTF animation chan
 {
   "extensions": {
     "KHR_avatar_expression_morphtarget": {
-       "expressions": [
+      "expressions": [
         {
           "expression": "smile",
           "animation": 0,
@@ -121,7 +122,7 @@ All morph target expressions should be driven using standard glTF animation chan
           "animation": 1,
           "channel": 0
         }
-       ]
+      ]
     }
   }
 }
@@ -164,7 +165,6 @@ This binds morph target index 2 on mesh 0, primitive 0, to the expression `"blin
 
 The animation should update the relevant morph target weight (in this case index 2) between `0.0` and `1.0` to control the `"blinkLeft"` expression. The usage of `STEP` interpolation ensures clean toggles between on/off states.
 
-
 ## Implementation Notes
 
 - This extension provides a consistent mapping between expression names and mesh targets, allowing glTF animation data to be expressive-aware.
@@ -177,7 +177,6 @@ For expressions that represent binary or toggle states (such as eye blinks, mout
 
 Using STEP interpolation ensures that the expression toggles cleanly between fully off (0) and fully on (1) states, providing crisp transitions and avoiding unintended interpolation artifacts.
 
-
 All expression-driven changes defined by this extension should rely on standard glTF animation mechanisms as described in the Khronos [Expressions Tab](https://docs.google.com/document/d/1ALRCPbXqQuWZvA9Sm2TsBFuW75h-of_lfD6sN7QwFU0/edit?pli=1&tab=t.x433oui5434f).
 
 - Expression timing, blending, and control must use glTF `animations` channels.
@@ -185,7 +184,6 @@ All expression-driven changes defined by this extension should rely on standard 
 - This ensures consistency, ease of implementation, and interoperability across runtimes.
 
 This approach simplifies avatar implementation by centralizing expression playback in the glTF animation system, reducing custom handling and improving cross-platform compatibility.
-
 
 ## License
 

@@ -8,6 +8,7 @@
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
 - Leonard Daly, Individual Contributor
+- Nick Burkard, Meta
 
 ## Status
 
@@ -15,7 +16,7 @@
 
 ## Dependencies
 
-Written against the glTF 2.0 specification.    
+Written against the glTF 2.0 specification.  
 Dependent on: `KHR_avatar`
 
 ## Overview
@@ -25,7 +26,6 @@ Dependent on: `KHR_avatar`
 The `KHR_avatar_skeleton_bindpose` extension defines a canonical bind pose for the avatar's skeleton. This pose serves as a neutral reference that supports animation retargeting, mesh deformation validation, and consistency across toolchains. It is particularly useful when the glTF `skins[].inverseBindMatrices` are insufficient or absent for expressing the true skeletal rest position.
 
 ## Extension Schema
-
 
 ```json
 {
@@ -49,7 +49,6 @@ The `KHR_avatar_skeleton_bindpose` extension defines a canonical bind pose for t
 }
 ```
 
-
 ### Properties
 
 | Property          | Type      | Description                                                                 |
@@ -70,15 +69,13 @@ This extension supplements or overrides that mechanism by defining joint rest po
 
 > Note: This extension does not require that these bind pose matrices be used for skinning directly—they are semantic references to a "T-pose" or other neutral position.
 
-
 ### poseType Enum
 
-| Value     | Description                                                                 |
-|-----------|-----------------------------------------------------------------------------|
-| `TPose`   | Arms extended horizontally. Common neutral rest pose for retargeting.       |
-| `APose`   | Arms angled downward. Used by some avatar authoring tools.                 |
-| `Custom`  | Any pose that does not fit T-Pose or A-Pose definitions.                   |
-
+| Value    | Description                                                           |
+| -------- | --------------------------------------------------------------------- |
+| `TPose`  | Arms extended horizontally. Common neutral rest pose for retargeting. |
+| `APose`  | Arms angled downward. Used by some avatar authoring tools.            |
+| `Custom` | Any pose that does not fit T-Pose or A-Pose definitions.              |
 
 ## Implementation Notes
 

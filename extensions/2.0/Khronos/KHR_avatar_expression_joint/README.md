@@ -8,6 +8,7 @@
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
 - Leonard Daly, Individual Contributor
+- Nick Burkard, Meta
 
 ## Status
 
@@ -15,7 +16,7 @@
 
 ## Dependencies
 
-Written against the glTF 2.0 specification.    
+Written against the glTF 2.0 specification.  
 Dependent on: `KHR_avatar`
 Typically used in conjunction with: `KHR_avatar_expression_mapping`
 
@@ -25,33 +26,33 @@ The `KHR_avatar_expression_joint` extension provides a semantic mapping between 
 
 This extension is purely descriptive: it does not define or store animation data itself.
 
-## Expression Vocabulary
+## Reference Expression Categories/Vocabularies
 
 Expression types include:
 
-- **Emotions**: `happy`, `angry`, `surprised`, etc.  
-- **Visemes**: `aa`, `ee`, `th`, `oo`, etc.  
-- **Modifiers**: `left`, `right`, `upper`, `lower`, etc.  
-- **Gestures and Actions**: `blink`, `smile`, `jawOpen`, etc.
+- **Emotions** (e.g. `happy`, `angry`, `surprised`)
+- **Visemes** (e.g. `aa`, `oo`, `th`)
+- **Modifiers** (e.g. `left`, `right`, `upper`, `lower`)
+- **Gestures and Actions** (e.g. `blink`, `smile`, `jawOpen`)
 
-Optionally, these may be aligned with industry standards, such as [Facial Action Coding System (FACS)](https://en.wikipedia.org/wiki/Facial_Action_Coding_System). 
+Optionally, these may be aligned with industry standards, such as [Facial Action Coding System (FACS)](https://en.wikipedia.org/wiki/Facial_Action_Coding_System).
 
 ## Extension Schema
 
 ```json
 {
- "extensions": {
-    "KHR_avatar_expression_mapping": {
+  "extensions": {
+    "KHR_avatar_expression_joint": {
       "expressions": [
         {
           "expression": "smile",
           "animation": 0,
-          "channels": [0,1,2]
+          "channels": [0, 1, 2]
         },
         {
           "expression": "frown",
           "animation": 1,
-          "channels": [0,1]
+          "channels": [0, 1]
         }
       ]
     }
@@ -61,12 +62,12 @@ Optionally, these may be aligned with industry standards, such as [Facial Action
 
 ### Properties
 
-| Property     | Type    | Description                                                                 |
-|--------------|---------|-----------------------------------------------------------------------------|
-| `expressions`| array   | Array of mappings between animation/channels and expression labels.               |
-| `animation`  | integer | Index into the glTF `animations[]` array representing an expression animation.     |
-| `expression` | string  | Expression name this joint contributes to.                                  |
-| `channels`   | array   | array representing channels that must correspond to either `"rotation"`, `"translation"`, or `"scale"`; indicates transform types. |
+| Property      | Type    | Description                                                                                                                        |
+| ------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `expressions` | array   | Array of mappings between animation/channels and expression labels.                                                                |
+| `animation`   | integer | Index into the glTF `animations[]` array representing an expression animation.                                                     |
+| `expression`  | string  | Expression name this joint contributes to.                                                                                         |
+| `channels`    | array   | array representing channels that must correspond to either `"rotation"`, `"translation"`, or `"scale"`; indicates transform types. |
 
 ## Animation Integration
 
@@ -75,6 +76,7 @@ Optionally, these may be aligned with industry standards, such as [Facial Action
 - This ensures consistency, ease of implementation, and interoperability across runtimes.
 
 Each animation channel used to drive an expression should operate within a **normalized 0-to-1 range**, where:
+
 - `0.0` indicates the expression is fully inactive.
 - `1.0` indicates the expression is fully active.
 
@@ -87,7 +89,6 @@ This approach simplifies avatar implementation by centralizing expression playba
 For expressions that represent binary or toggle states (such as `blinkLeft`, `blinkRight`, or `jawOpen`), the use of glTF animation channels with `"interpolation": "STEP"` is strongly recommended.
 
 STEP interpolation ensures that an expression toggles cleanly between fully off (`0.0`) and fully on (`1.0`) states, providing crisp visual transitions and avoiding interpolation artifacts that could occur with `LINEAR` interpolation in binary scenarios.
-
 
 ## Implementation Notes
 

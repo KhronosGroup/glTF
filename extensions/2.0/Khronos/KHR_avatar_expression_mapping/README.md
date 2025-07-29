@@ -8,6 +8,7 @@
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
 - Leonard Daly, Individual Contributor
+- Nick Burkard, Meta
 
 ## Status
 
@@ -15,24 +16,22 @@
 
 ## Dependencies
 
-Written against the glTF 2.0 specification.    
+Written against the glTF 2.0 specification.  
 Dependent on: `KHR_avatar`
 Can be used alongside: `KHR_avatar_expression_morphtargets` or other expression sources
 
 ## Overview
 
+## Reference Expression Categories/Vocabularies
 
-## Reference Expression Vocabulary
 Expression names may be grouped into categories including:
 
-- **Emotions** (e.g., `happy`, `angry`, `surprised`)
-- **Visemes** (e.g., `aa`, `oo`, `th`)
-- **Modifiers** (e.g., `left`, `right`, `upper`, `lower`)
-- **Gestures and Actions** (e.g., `blink`, `smile`, `jawOpen`)
+- **Emotions** (e.g. `happy`, `angry`, `surprised`)
+- **Visemes** (e.g. `aa`, `oo`, `th`)
+- **Modifiers** (e.g. `left`, `right`, `upper`, `lower`)
+- **Gestures and Actions** (e.g. `blink`, `smile`, `jawOpen`)
 
-Implementers are encouraged to use this vocabulary directly or map custom expressions to it using `KHR_avatar_expression_mapping`.
-
-The `KHR_avatar_expression_mapping` extension provides a general-purpose mechanism for mapping expression names used in an avatar’s mesh to a known expression vocabulary or rig specification. This allows different authoring pipelines or runtimes to translate between heterogeneous expression sets.
+The `KHR_avatar_expression_mapping` extension provides a general-purpose mechanism for mapping expression names used in an avatar to a known expression vocabulary. This allows different authoring pipelines or runtimes to translate between heterogeneous expression sets.
 
 ## Extension Schema
 
@@ -45,9 +44,7 @@ The `KHR_avatar_expression_mapping` extension provides a general-purpose mechani
           { "target": "Smile", "weight": 0.8 },
           { "target": "LeftCheekRaise", "weight": 0.2 }
         ],
-        "jawOpen": [
-          { "target": "MouthOpen", "weight": 1.0 }
-        ]
+        "jawOpen": [{ "target": "MouthOpen", "weight": 1.0 }]
       }
     }
   }
@@ -56,12 +53,11 @@ The `KHR_avatar_expression_mapping` extension provides a general-purpose mechani
 
 ### Properties
 
-| Property     | Type    | Description                                                                 |
-|--------------|---------|-----------------------------------------------------------------------------|
-| `mappings`   | object  | Dictionary mapping expression names to reference vocabulary terms.          |
-| `target`     | string  | Name of the expression in the target vocabulary.                            |
-| `weight`     | number  | Influence of this target. Must sum to 1.0 per expression key.               |
-
+| Property   | Type   | Description                                                        |
+| ---------- | ------ | ------------------------------------------------------------------ |
+| `mappings` | object | Dictionary mapping expression names to reference vocabulary terms. |
+| `target`   | string | Name of the expression in the target vocabulary.                   |
+| `weight`   | number | Influence of this target. Must sum to 1.0 per expression key.      |
 
 ### Mapping Types
 
@@ -82,9 +78,7 @@ This allows developers to bridge between custom expression sets and shared vocab
 
 ```json
 {
-  "extensionsUsed": [
-    "KHR_avatar_expression_mapping"
-  ],
+  "extensionsUsed": ["KHR_avatar_expression_mapping"],
   "extensions": {
     "KHR_avatar_expression_mapping": {
       "mappings": {

@@ -8,6 +8,7 @@
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
 - Leonard Daly, Individual Contributor
+- Nick Burkard, Meta
 
 ## Status
 
@@ -16,7 +17,7 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Dependent on: `KHR_avatar`,`KHR_animation_pointer` 
+Dependent on: `KHR_avatar`,`KHR_animation_pointer`
 Can be used alongside: `KHR_avatar_expression_mapping`
 
 ## Overview
@@ -30,12 +31,12 @@ The `KHR_avatar_expression_texture` extension enables expression-level control u
 
 Expressions may be categorized as:
 
-- **Emotions** (e.g., `happy`, `angry`, `surprised`)
-- **Visemes** (e.g., `aa`, `oo`, `th`)
-- **Modifiers** (e.g., `left`, `right`, `upper`, `lower`)
-- **Gestures and Actions** (e.g., `blink`, `smile`, `jawOpen`)
+- **Emotions** (e.g. `happy`, `angry`, `surprised`)
+- **Visemes** (e.g. `aa`, `oo`, `th`)
+- **Modifiers** (e.g. `left`, `right`, `upper`, `lower`)
+- **Gestures and Actions** (e.g. `blink`, `smile`, `jawOpen`)
 
-Optionally, these may be aligned with industry standards, such as [Facial Action Coding System (FACS)](https://en.wikipedia.org/wiki/Facial_Action_Coding_System). 
+Optionally, these may be aligned with industry standards, such as [Facial Action Coding System (FACS)](https://en.wikipedia.org/wiki/Facial_Action_Coding_System).
 
 ## Extension Schema
 
@@ -56,7 +57,7 @@ Optionally, these may be aligned with industry standards, such as [Facial Action
           "texture": 5,
           "expression": "angry",
           "animation": 1,
-          "channels": [0,1]
+          "channels": [0, 1]
         }
       ]
     }
@@ -66,28 +67,26 @@ Optionally, these may be aligned with industry standards, such as [Facial Action
 
 ### Properties
 
-| Property            | Type           | Description                                                                   |
-|---------------------|----------------|-------------------------------------------------------------------------------|
-| `expressions`          | array          | List of texture-expression bindings.                                          |
-| `material`          | integer        | Index into the glTF `materials` array.                                        |
-| `texture`           | integer        | (Optional) Index into the glTF `textures` array, defining a replacement texture. |
-| `textureTransform`  | object         | (Optional) UV transformations for texture-based expressions.                  |
-| `expression`        | string         | Expression name associated with this texture or UV change.                    |
+| Property           | Type    | Description                                                                      |
+| ------------------ | ------- | -------------------------------------------------------------------------------- |
+| `expressions`      | array   | List of texture-expression bindings.                                             |
+| `material`         | integer | Index into the glTF `materials` array.                                           |
+| `texture`          | integer | (Optional) Index into the glTF `textures` array, defining a replacement texture. |
+| `textureTransform` | object  | (Optional) UV transformations for texture-based expressions.                     |
+| `expression`       | string  | Expression name associated with this texture or UV change.                       |
 
 ### textureTransform properties
 
-| Property | Type      | Description                          |
-|----------|-----------|--------------------------------------|
-| `offset` | float[2]  | UV offset for texture placement.     |
-| `scale`  | float[2]  | UV scale for texture transformation. |
-
+| Property | Type     | Description                          |
+| -------- | -------- | ------------------------------------ |
+| `offset` | float[2] | UV offset for texture placement.     |
+| `scale`  | float[2] | UV scale for texture transformation. |
 
 ### Recommended Interpolation for Binary Expressions
 
 For expressions that represent binary or toggle states (such as eye blinks, mouth open/close states, or other on/off expressions), the use of glTF animation channels with `"interpolation": "STEP"` is strongly recommended.
 
 Using STEP interpolation ensures that the expression toggles cleanly between fully off (0) and fully on (1) states, providing crisp transitions and avoiding unintended interpolation artifacts.
-
 
 ### Integration with KHR_animation_pointer
 
@@ -106,7 +105,7 @@ Dynamic texture swaps are not explicitly defined within the core glTF 2.0 specif
 
 ### UV Transformations
 
-UV manipulations (offset, scale, rotation) require the widely adopted [`KHR_texture_transform`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_texture_transform) extension.  
+UV manipulations (offset, scale, rotation) require the widely adopted [`KHR_texture_transform`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_texture_transform) extension.
 
 - Animate properties within `KHR_texture_transform` using `KHR_animation_pointer`.
 - Ensure these transforms are included explicitly in the glTF material definitions to enable animations.
@@ -164,7 +163,6 @@ For expressions that represent binary or toggle states (such as eye blinks, mout
 
 Using STEP interpolation ensures that the expression toggles cleanly between fully off (0) and fully on (1) states, providing crisp transitions and avoiding unintended interpolation artifacts.
 
-
 ## Example: Expression with glTF Animation
 
 ### Step 1: Bind Expressions to Materials
@@ -186,7 +184,7 @@ Using STEP interpolation ensures that the expression toggles cleanly between ful
           "texture": 5,
           "expression": "angry",
           "animation": 1,
-          "channels": [0,1]
+          "channels": [0, 1]
         }
       ]
     }

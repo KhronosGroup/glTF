@@ -8,6 +8,7 @@
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
 - Leonard Daly, Individual Contributor
+- Nick Burkard, Meta
 
 ## Status
 
@@ -53,26 +54,31 @@ Avatar metadata should be expressed using the `KHR_xmp_json_ld` format, a struct
 
 The `KHR_xmp_json_ld` block is placed at the root level of the glTF asset as part of the defined extension usage. Metadata keys and structures are defined in the shared Khronos Avatar Metadata schema (TBD).
 
-| DC/XMP_JSON_LD Property | Why                                                                          | Required |
-|-------------------------|------------------------------------------------------------------------------|----------|
-| dc:title                |                                                                              | Yes      |
-| dc:creator              |                                                                              | Yes      |
-| dc:license              |                                                                              | No       |
-| dc:rights               |                                                                              | No       |
-| dc:created              | Date on which the asset was created                                          | No       |
+| DC/XMP_JSON_LD Property | Why                                                                                                                                       | Required |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| dc:title                |                                                                                                                                           | Yes      |
+| dc:creator              |                                                                                                                                           | Yes      |
+| dc:license              |                                                                                                                                           | No       |
+| dc:rights               |                                                                                                                                           | No       |
+| dc:created              | Date on which the asset was created                                                                                                       | No       |
 | dc:publisher            | Identifies the entity responsible for making the resource available; important for understanding the source and authority of the content. | No       |
-| dc:description          | Context and a summary of the content                                         | No       |
-| dc:subject              | Can potentially be used for content tagging/association                      | No       |
-| dc:source               | Important for tracing the provenance and ensuring proper attribution.        | Yes      |
-| khr:version             |                                                                              | No       |
-| khr:thumbnailImage      |                                                                              | No       |
+| dc:description          | Context and a summary of the content                                                                                                      | No       |
+| dc:subject              | Can potentially be used for content tagging/association                                                                                   | No       |
+| dc:source               | Important for tracing the provenance and ensuring proper attribution.                                                                     | Yes      |
+| khr:version             |                                                                                                                                           | No       |
+| khr:thumbnailImage      |                                                                                                                                           | No       |
 
 ## Example
 
 ```json
 {
   "asset": {
-    "version": "2.0"
+    "version": "2.0",
+    "extensions": {
+      "KHR_xmp_json_ld": {
+        "packet": 0
+      }
+    }
   },
   "scene": 0,
   "scenes": [
@@ -85,52 +91,46 @@ The `KHR_xmp_json_ld` block is placed at the root level of the glTF asset as par
       "name": "AvatarRoot"
     }
   ],
-  "extensionsUsed": [
-    "KHR_avatar",
-    "KHR_xmp_json_ld"
-  ],
+  "extensionsUsed": ["KHR_avatar", "KHR_xmp_json_ld"],
   "extensions": {
     "KHR_avatar": {
       "sceneIndex": 0
     },
-    
+
     "KHR_xmp_json_ld": {
-    "packets": [
-      {
-  "@context": {
-    "dc": "http://purl.org/dc/elements/1.1/",
-    "vrm": "https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/meta.md"
-  },
-  "dc:title": "Example Model",
-  "dc:creator": {
-    "@list": [
-      "Author1",
-      "AuthorEmail1@email.com",
-      "Author2",
-      "AuthorEmail2@email.com"
-    ]
-  },
-  "dc:license": {
-    "@list": [
-      "https://vrm.dev/licenses/1.0/",
-      "https://example.com/third-party-license"
-    ]
-  },
-  "dc:created": "2023-05-05",
-  "dc:rights": "Copyright information about the model",
-  "dc:publisher": "Imaginary Corporation A, LLC",
-  "dc:description": "A sentence, or paragraph describing the avatar at hand",
-  "dc:subject": {
-    "@list": [
-      "Example trait",
-      "Another example trait"
-    ]
-  },
-  "dc:source": "imaginaryCompany.com/avatarl",
-  "khr:version": "1.0",
-  "khr:thumbnailImage": 0
-}
-    ]
+      "packets": [
+        {
+          "@context": {
+            "dc": "http://purl.org/dc/elements/1.1/",
+            "vrm": "https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/meta.md"
+          },
+          "dc:title": "Example Model",
+          "dc:creator": {
+            "@list": [
+              "Author1",
+              "AuthorEmail1@email.com",
+              "Author2",
+              "AuthorEmail2@email.com"
+            ]
+          },
+          "dc:license": {
+            "@list": [
+              "https://vrm.dev/licenses/1.0/",
+              "https://example.com/third-party-license"
+            ]
+          },
+          "dc:created": "2023-05-05",
+          "dc:rights": "Copyright information about the model",
+          "dc:publisher": "Imaginary Corporation A, LLC",
+          "dc:description": "A sentence, or paragraph describing the avatar at hand",
+          "dc:subject": {
+            "@list": ["Example trait", "Another example trait"]
+          },
+          "dc:source": "imaginaryCompany.com/avatarl",
+          "khr:version": "1.0",
+          "khr:thumbnailImage": 0
+        }
+      ]
     }
   }
 }
@@ -138,12 +138,11 @@ The `KHR_xmp_json_ld` block is placed at the root level of the glTF asset as par
 
 ## Implementation Notes
 
-- `sceneIndex` is required and indicates what scene a particular avatar belongs to
+- `sceneIndex` is required and represennts the index of the glTF `scene` representing the avatar. Used to distinguish the avatar root when multiple scenes exist.
 - Consumers should use this marker as a signal to search for additional avatar-related extensions, including skeletal, expression, and other khronos avatar extensions.
-- Support for `JSON_XMP_LD` is encouraged to ensure interoperable metadata across tools and runtimes.
+- Support for `KHR_xmp_json_ld` is encouraged to ensure interoperable metadata across tools and runtimes.
 
 ## Known Implementations
-
 
 ## License
 

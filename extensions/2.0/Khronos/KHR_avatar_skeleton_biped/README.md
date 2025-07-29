@@ -8,6 +8,7 @@
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
 - Leonard Daly, Individual Contributor
+- Nick Burkard, Meta
 
 ## Status
 
@@ -58,9 +59,9 @@ This extension does not modify the glTF skinning or animation system, but instea
 
 ### Properties
 
-| Property        | Type              | Description                                                                 |
-|----------------|-------------------|-----------------------------------------------------------------------------|
-| `joints`        | object            | Mapping from canonical biped joint names to node indices in the glTF file. |
+| Property | Type   | Description                                                                |
+| -------- | ------ | -------------------------------------------------------------------------- |
+| `joints` | object | Mapping from biped joint names to node indices in the glTF file.           |
 
 Each joint name corresponds to a node present in the glTF node hierarchy. The hierarchy as it exists then informs the skeletal hierarchy for parsing purposes.
 
@@ -132,6 +133,7 @@ As the ecosystem matures, guidance or profiles may emerge for common structuresâ
 - The specified joint indices must form a valid hierarchy rooted at a common ancestor (usually `hips`).
 
 ## Known Implementations
+
 None, TBD
 
 ## License
