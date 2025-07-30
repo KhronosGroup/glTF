@@ -111,7 +111,7 @@ This enables runtime engines to extract semantic meaning from joint hierarchies 
 
 ## Skeletal Mapping Support
 
-Rather than define mapping logic directly in this extension, developers should use the standalone [`KHR_avatar_skeleton_mapping`](./KHR_avatar_skeleton_mapping_README.md) extension for any one-to-one or one-to-many joint remapping between different rig topologies.
+Rather than define mapping logic directly in this extension, developers should use the [`KHR_avatar_skeleton_mapping`](./KHR_avatar_skeleton_mapping_README.md) extension in conjunction with this one for any one-to-one or one-to-many joint remapping between different rig topologies.
 
 That extension supports weighted joint translation and enables cleaner separation between semantic labeling (this extension) and rig interoperability (mapping).
 
