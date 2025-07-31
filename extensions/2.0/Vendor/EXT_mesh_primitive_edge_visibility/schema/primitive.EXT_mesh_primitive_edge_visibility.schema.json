@@ -27,13 +27,13 @@
             "description": "The index of a glTF material with which the edges are to be drawn.",
             "gltf_detailedDescription": "The index of a glTF material with which the edges are to be drawn. If omitted, the edges are drawn using the same material as the triangle mesh primitive."
         },
-        "silhouetteMates": {
+        "silhouetteNormals": {
             "allOf": [
                 {
                     "$ref": "glTFid.schema.json"
                 }
             ],
-            "description": "The index of the accessor encoding the index of the fourth vertex for the pair of triangles sharing each silhouette edge (visibility 1) encoded in `visibility`.",
+            "description": "The index of the accessor encoding the pair of outward-facing normals for the two faces sharing each silhouette edge (visibility 1) encoded in `visibility`.",
             "gltf_detailedDescription": "This property **MUST** be defined if and only if `visibility` encodes at least one edge with visibility value `1`."
         },
         "lineStrings": {
