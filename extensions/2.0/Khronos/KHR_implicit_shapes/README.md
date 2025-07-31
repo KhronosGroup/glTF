@@ -60,7 +60,12 @@ Degenerate shapes are prohibited. A sphere must have a positive, non-zero radius
 
 ### JSON Schema
 
-* **JSON schema**: [glTF.KHR_implicit.schema.json](schema/glTF.KHR_implicit_shapes.schema.json)
+* glTF Document Extension: [glTF.KHR_implicit_shapes.schema.json](schema/glTF.KHR_implicit_shapes.schema.json)
+* Shape: [glTF.KHR_implicit_shapes.shape.schema.json](schema/glTF.KHR_implicit_shapes.shape.schema.json)
+* Sphere: [glTF.KHR_implicit_shapes.shape.sphere.schema.json](schema/glTF.KHR_implicit_shapes.shape.sphere.schema.json)
+* Box: [glTF.KHR_implicit_shapes.shape.box.schema.json](schema/glTF.KHR_implicit_shapes.shape.box.schema.json)
+* Cylinder: [glTF.KHR_implicit_shapes.shape.cylinder.schema.json](schema/glTF.KHR_implicit_shapes.shape.cylinder.schema.json)
+* Capsule: [glTF.KHR_implicit_shapes.shape.capsule.schema.json](schema/glTF.KHR_implicit_shapes.shape.capsule.schema.json)
 
 ### Object Model
 
