@@ -64,11 +64,11 @@ Example shown below including optional properties. This extension only affects a
         "attributes": {
             "POSITION": 0,
             "COLOR_0": 1,
-            "_SCALE": 2,
-            "_ROTATION": 3,
-            "_SH_DEGREE_1_COEF_0": 4,
-            "_SH_DEGREE_1_COEF_1": 5,
-            "_SH_DEGREE_1_COEF_2": 6
+            "KHR_gaussian_splatting:SCALE": 2,
+            "KHR_gaussian_splatting:ROTATION": 3,
+            "KHR_gaussian_splatting:SH_DEGREE_1_COEF_0": 4,
+            "KHR_gaussian_splatting:SH_DEGREE_1_COEF_1": 5,
+            "KHR_gaussian_splatting:SH_DEGREE_1_COEF_2": 6
         },
         "mode": 0,
         "indices": 7,
