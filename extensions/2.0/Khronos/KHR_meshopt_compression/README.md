@@ -106,7 +106,7 @@ Filter specifies the algorithm used to transform the data after decompression, a
 - Filter 1: octahedral. Suitable for storing unit length vectors (normals/tangents) as 4-byte or 8-byte values with variable precision octahedral encoding.
 - Filter 2: quaternion. Suitable for storing rotation data for animations or instancing as 8-byte values with variable precision max-component encoding.
 - Filter 3: exponential. Suitable for storing floating point data as 4-byte values with variable mantissa precision.
-- Filter 4: color. Suitable for storing color data as 4-byte or 8-byte values using variable precision YCoCg-R color space encoding.
+- Filter 4: color. Suitable for storing color data as 4-byte or 8-byte values using variable precision YCoCg color space encoding.
 
 The filters are detailed further in [Appendix B (Filters)](#appendix-b-filters).
 
@@ -539,7 +539,7 @@ Quaternion filter allows to encode unit length quaternions using normalized 16-b
 
 This filter is only valid if `byteStride` is 8.
 
-The input to the filter is three quaternion components, excluding the component with the largest magnitude, encoded as signed normalized K-bit integers (4 <= K <= 16, integers are stored in two's complement format), and an index of the largest component that is omitted in the encoding. The largest component is assumed to always be positive (which is possible due to quaternion double-cover). To allow per-element control over K, the last input element must explicitly encode 1.0 as a signed normalized K-bit integer, except for the least significant 2 bits that store the index of the maximum component.
+The input to the filter is three quaternion components, excluding the component with the largest magnitude, encoded as signed normalized K-bit integers (2 <= K <= 16, integers are stored in two's complement format), and an index of the largest component that is omitted in the encoding. The largest component is assumed to always be positive (which is possible due to quaternion double-cover). To allow per-element control over K, the last input element must explicitly encode 1.0 as a signed normalized K-bit integer, except for the least significant 2 bits that store the index of the maximum component.
 
 When storing a K-bit integer in a 16-bit component when K is not 16, the remaining bits (e.g. top 6 bits in case of K=10) must be equal to the sign bit; the valid range of the resulting integer is from `-max` to `max` where `max = (1 << (K - 1)) - 1`. The behavior of decoding values outside of that range is unspecified.
 
@@ -592,19 +592,15 @@ The valid range of `e` is [-100, +100], which facilitates performant implementat
 
 ## Filter 4: color
 
-Color filter allows to encode color data using YCoCg-R color space transformation, which results in better compression for typical color data by exploiting correlation between color channels.
+Color filter allows to encode color data using YCoCg color space transformation, which results in better compression for typical color data by exploiting correlation between color channels.
 
 This filter is only valid if `byteStride` is 4 or 8. When `byteStride` is 4, then the input and output of this filter are four 8-bit components, and when `byteStride` is 8, the input and output of this filter are four 16-bit components.
 
-The input to the filter is four 8-bit or 16-bit components, where the first component stores the Y (luma) value, the second component stores the Co (orange chrominance) value, the third component stores the Cg (green chrominance) value, and the fourth component stores the alpha value with the bit K used for scaling information.
+The input to the filter is four 8-bit or 16-bit components, where the first component stores the Y (luma) value as a K-bit unsigned integer, the second and third components store Co/Cg (chrominance) values as K-bit signed integers, and the fourth component stores the alpha value as a K-1-bit unsigned integer with the bit K set to 1. 1 <= K <= 16, signed integers are stored in two's complement format.
 
-The transformation uses YCoCg-R encoding where:
+The transformation uses YCoCg encoding; reconstruction of RGB values can be performed in integer space or in floating point space, depending on the implementation. The encoder must guarantee that RGB can be reconstructed using K-bit integer math without overflow or underflow.
 
-- Y = R/2 + G/2
-- Co = (R - B) / 2
-- Cg = (G - (R + B) / 2) / 2
-
-The alpha component uses K-1 bits for the alpha value with the high bit set to 1, where K is the bit depth (8 or 16).
+The alpha component uses K-1 bits for the alpha value with the high bit set to 1; note that K can be smaller than the bit depth. This allows decoder to recover K and decode the color and alpha values correctly.
 
 The output of the filter is four decoded color components (R, G, B, A), stored as 8-bit or 16-bit normalized integers.
 
@@ -642,6 +638,6 @@ void decode(intN_t input[4], intN_t output[4]) {
 This extension is derived from `EXT_meshopt_compression` with the following changes:
 
 - Vertex data uses upgraded v1 format which provides more types of bit packing and delta encoding to compress data better
-- Added `COLOR` filter to support lossy color compression at smaller compression ratios
+- Added `COLOR` filter to support lossy color compression at smaller compression ratios using YCoCg encoding
 
 These improvements achieve better compression ratios for typical glTF content while maintaining the same fast decompression performance.
