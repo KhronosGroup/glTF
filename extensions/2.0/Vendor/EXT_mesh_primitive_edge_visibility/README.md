@@ -194,7 +194,72 @@ Assume that the top edge is to be drawn using the same material as the vertical 
 
 ### Silhouette Normals
 
-The extension's `silhouetteNormals` property specifies the index of an accessor of `SCALAR` type and component type 5123 (unsigned short) providing normal vectors used to determine the visibility of silhouette edges at display time. For each edge encoded as a silhouette (visibility value `1`) in `visibility`, the silhouette normals buffer provides the two outward-facing normal vectors of the pair of triangles sharing the edge. Each normal vector is compressed into 16 bits using the "oct16" encoding described [here](https://jcgt.org/published/0003/02/01/). The ordering of the normal vector pairs corresponds to the ordering of the edges in `visibility`; that is, the first pair of normals corresponds to the first edge encoded with visibility `1`, the second pair to the second occurrence of visibility `1`; and so on. The accessor's `count` **MUST** be twice the number of edges encoded with visibility value `1`.
+The extension's `silhouetteNormals` property specifies the index of an accessor of `SCALAR` type and component type 5123 (unsigned short) providing normal vectors used to determine the visibility of silhouette edges at display time. For each edge encoded as a silhouette (visibility value `1`) in `visibility`, the silhouette normals buffer provides the two outward-facing normal vectors of the pair of triangles sharing the edge. Each normal vector is compressed into 16 bits using an "oct16" encoding. The ordering of the normal vector pairs corresponds to the ordering of the edges in `visibility`; that is, the first pair of normals corresponds to the first edge encoded with visibility `1`, the second pair to the second occurrence of visibility `1`; and so on. The accessor's `count` **MUST** be twice the number of edges encoded with visibility value `1`.
+
+### oct16 encoding
+
+Octahedral normal encoding projects a normal vector onto an octahedron and folds it in half, mapping to two signed normalized components in [-1, 1]. The "oct16" form of this encoding maps each component to the integer range [0, 255], permitting a normal vector to be encoded into two bytes.
+
+TypeScript implementation of oct16 encoding and decoding:
+
+```ts
+// A three-dimensional vector.
+interface Vec3d { x: number; y: number; z: number; }
+
+// Normalize a 3d vector to a length of 1.
+function normalize(vec: Vec3d): void {
+  const magnitude = Math.sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+  const scale = magnitude === 0 ? 0 : 1 / magnitude;
+  vec.x *= scale;
+  vec.y *= scale;
+  vec.z *= scale;
+}
+
+// Map a signed normalized value in [-1, 1] to the integer range [0, 255].
+function toSNorm(val: number): number {
+  const clamped = Math.min(Math.max(val, -1), 1);
+  return Math.round((clamped * 0.5 + 0.5) * 255);
+}
+
+// Return -1 for a negative input, otherwise 1.
+function signNotZero(val: number): number {
+  return val < 0.0 ? -1.0 : 1.0;
+}
+
+// Encode a normalized 3d vector into a 16-bit unsigned integer.
+function oct16EncodeNormal(n: Vec3d): number {
+  const denom = Math.abs(n.x) + Math.abs(n.y) + Math.abs(n.z);
+  let rx = n.x / denom;
+  let ry = n.y / denom;
+  if (n.z < 0) {
+    const x = rx;
+    const y = ry;
+    rx = (1 - Math.abs(y)) * signNotZero(x);
+    ry = (1 - Math.abs(x)) * signNotZero(y);
+  }
+
+  return toSNorm(ry) << 8 | toSNorm(rx);
+}
+
+// Decode a 16-bit unsigned integer into a normalized 3d vector.
+function oct16DecodeNormal(oct16: number): Vec3d {
+  let x = oct16 & 0xff;
+  let y = oct16 >> 8;
+  x = x / 255.0 * 2.0 - 1.0;
+  y = y / 255.0 * 2.0 - 1.0;
+  const z = 1 - (Math.abs(x) + Math.abs(y));
+
+  const n: Vec3d = { x, y, z };
+  if (z < 0) {
+    n.x = (1 - Math.abs(y)) * signNotZero(x);
+    n.y = (1 - Math.abs(x)) * signNotZero(y);
+  }
+  
+  normalize(n);
+  return n;
+}
+
+```
 
 The `silhouetteNormals` property **MUST** be defined *if and only if* at least one edge is encoded with visibility value `1` in `visibility`.
 
@@ -212,8 +277,16 @@ Engines **MUST** render a silhouette edge unless both adjacent triangles are fro
 - [primitive.EXT_mesh_primitive_edge_visibility.schema.json](./schema/primitive.EXT_mesh_primitive_edge_visibility.schema.json)
 - [lineString.schema.json](./schema/lineString.schema.json)
 
+## Known implementations
+
+- [iTwin.js](https://github.com/iTwin/itwinjs-core/pull/8366)
+
 ## Implementation Notes
 
 The [pull request](https://github.com/iTwin/itwinjs-core/pull/5581) that informed the design of this extension provides [an iterator](https://github.com/iTwin/itwinjs-core/blob/03b760e1e91bde5221aa7370ea45c52f966e3368/core/frontend/src/common/imdl/CompactEdges.ts#L42) over the `visibility` buffer.
 
 iTwin.js [implements](https://github.com/iTwin/itwinjs-core/blob/03b760e1e91bde5221aa7370ea45c52f966e3368/core/frontend/src/internal/render/webgl/glsl/Edge.ts#L107) conditional display of silhouette edges. It also draws edges in a separate pass from surfaces to [mitigate z-fighting](https://github.com/iTwin/itwinjs-core/blob/03b760e1e91bde5221aa7370ea45c52f966e3368/core/frontend/src/internal/render/webgl/glsl/FeatureSymbology.ts#L426).
+
+## References
+
+- The oct16 normal vector encoding is described in detail in [A Survey of Efficient Representations for Independent Unit Vectors](https://jcgt.org/published/0003/02/01/).
