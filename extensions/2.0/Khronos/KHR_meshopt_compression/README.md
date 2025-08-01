@@ -607,7 +607,7 @@ The output of the filter is four decoded color components (R, G, B, A), stored a
 ```
 void decode(intN_t input[4], intN_t output[4]) {
 	// recover scale from alpha high bit
-	int as = (1 << (firstbitset(input[3]) + 1)) - 1;
+	int as = (1 << (findMSB(input[3]) + 1)) - 1;
 
 	// convert to RGB in fixed point
 	int y = input[0], co = input[1], cg = input[2];
