@@ -199,7 +199,7 @@ The encoded stream structure is as follows:
 
 - Header byte, which must be equal to `0xa1`
 - One or more attribute blocks, detailed below
-- Tail block, which consists of a baseline element stored verbatim, followed by channel modes, padded to 24 bytes
+- Tail block, which consists of a baseline element stored verbatim (`byteStride` bytes), followed by channel modes (`byteStride / 4` bytes), padded to 24 bytes
 
 Note that there is no way to calculate the length of a stream; instead, it is expected that the input stream is correctly sized (using `byteLength`) so that the tail block element can be found.
 
