@@ -7,7 +7,7 @@
 
 ## Status
 
-Complete, Ratified by the Khronos Group
+Draft
 
 ## Dependencies
 
@@ -233,7 +233,7 @@ controlByte = (controlForByte0 << 0) | (controlForByte1 << 2) | (controlForByte2
 The control bits specify the control mode for each byte:
 
 - bits 0: Use bit lengths `{0, 1, 2, 4}` for encoding
-- bits 1: Use bit lengths `{1, 2, 4, 8}` for encoding  
+- bits 1: Use bit lengths `{1, 2, 4, 8}` for encoding
 - bits 2: All byte deltas are 0; no data is stored for this byte
 - bits 3: Literal encoding; byte deltas are stored uncompressed
 
