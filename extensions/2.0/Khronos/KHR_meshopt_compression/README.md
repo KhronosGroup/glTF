@@ -199,7 +199,8 @@ The encoded stream structure is as follows:
 
 - Header byte, which must be equal to `0xa1`
 - One or more attribute blocks, detailed below
-- Tail block, which consists of a baseline element stored verbatim (`byteStride` bytes), followed by channel modes (`byteStride / 4` bytes), padded to 24 bytes
+- Tail padding, which pads the size of the subsequent tail block to a minimum of 24 bytes (required for efficient decoding)
+- Tail block, which consists of a baseline element stored verbatim (`byteStride` bytes), followed by channel modes (`byteStride / 4` bytes)
 
 Note that there is no way to calculate the length of a stream; instead, it is expected that the input stream is correctly sized (using `byteLength`) so that the tail block element can be found.
 
@@ -234,8 +235,8 @@ The control bits specify the control mode for each byte:
 
 - bits 0: Use bit lengths `{0, 1, 2, 4}` for encoding
 - bits 1: Use bit lengths `{1, 2, 4, 8}` for encoding
-- bits 2: All byte deltas are 0; no data is stored for this byte
-- bits 3: Literal encoding; byte deltas are stored uncompressed
+- bits 2: All delta bytes are 0; no data is stored for this byte
+- bits 3: Literal encoding; delta bytes are stored uncompressed with no header bits
 
 The structure of each "data block" (when not using control mode 2 or 3) breaks down as follows:
 - Header bits, with 2 bits for each group, aligned to the byte boundary if groupCount is not divisible by 4
