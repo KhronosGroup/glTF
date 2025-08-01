@@ -137,8 +137,11 @@ All glTF object properties (see [glTFProperty.schema.json](../specification/2.0/
 
 Extensions can't remove existing glTF properties or redefine existing glTF properties to mean something else.
 
-Examples include:
-* **New properties**: `KHR_texture_transform` introduces a set of texture transformation properties, e.g.,
+Extensions may add new properties and values, such as attribute semantics or texture mime types. In all Khronos (KHR) extensions, and as best practice for vendor extensions, these feature additions are designed to allow safe fallback consumption in tools that do not recognize an extension in the `extensionsUsed` array.
+
+### New properties
+
+Extensions can add new properties to existing glTF objects. For example, `KHR_texture_transform` introduces a set of texture transformation properties:
 ```json
 {
   "materials": [{
@@ -155,7 +158,31 @@ Examples include:
   }]
 }
 ```
-Extensions may add new properties and values, such as attribute semantics or texture mime types. In all Khronos (KHR) extensions, and as best practice for vendor extensions, these feature additions are designed to allow safe fallback consumption in tools that do not recognize an extension in the `extensionsUsed` array.
+
+### New attributes
+
+Extensions can introduce new vertex attributes for mesh primitives. In order to disambiguate the names of vertex attributes that are defined by different extensions, the attribute names must be prefixed by the full, case-sensitive name of the extension, followed by a `:` colon. For example, an extension that is called `EXT_example_extension` and that defines vertex attributes for a 'temperature' and a 'velocity' may call them `EXT_example_extension:TEMPERATURE` and `EXT_example_extension:VELOCITY`: 
+```json
+{
+  "meshes" : [
+    {
+      "primitives" : [
+        {
+          "attributes" : {
+            "POSITION" : 0,
+            "COLOR_0" : 1,
+            "EXT_example_extension:TEMPERATURE" : 2,
+            "EXT_example_extension:VELOCITY" : 3
+          },
+          "mode" : 0
+        }
+      ]
+    }
+  ],
+}
+```
+
+## Extension declarations
 
 All extensions used in a model are listed as strings in the top-level `extensionsUsed` array; all _required_ extensions are listed as strings in the top-level `extensionsRequired` array, e.g.,
 ```json
