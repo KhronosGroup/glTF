@@ -311,13 +311,15 @@ encode(uint16_t v) = ((v & 0x8000) != 0) ? ~(v << 1) : (v << 1)
 decode(uint16_t v) = ((v & 1) != 0) ? ~(v >> 1) : (v >> 1)
 ```
 
-The deltas are computed in 16-bit integer space with wrap-around two-complement arithmetic.
+The deltas are computed in 16-bit integer space with wrap-around two-complement arithmetic. Values are assumed to be little-endian, so the least significant byte is encoded before the most significant byte.
 
 **Channel 2 (4-byte XOR deltas)**: 4-byte deltas are computed as XOR between consecutive 4-byte values, with an additional rotation applied based on the high 4 bits of the channel mode byte:
 
 ```
 rotate(uint32_t v, int r) = (v << r) | (v >> (32 - r))
 ```
+
+The deltas are computed in 32-bit integer space. Values are assumed to be little-endian, so the least significant byte is encoded before the most significant byte.
 
 Because the channel mode defines encoding for 4 bytes at once, it's impossible to mix modes 0 and 1 within the same channel: if the first 2-byte group of an aligned 4-byte group uses 2-byte deltas, the second 2-byte group must use 2-byte deltas as well.
 
