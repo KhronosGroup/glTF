@@ -197,13 +197,13 @@ To facilitate efficient decompression, deinterleaving and delta encoding are per
 
 The encoded stream structure is as follows:
 
-- Header byte, which must be equal to `0xa0`
+- Header byte, which must be equal to `0xa1`
 - One or more attribute blocks, detailed below
-- Tail block, which consists of a baseline element stored verbatim, padded to 32 bytes
+- Tail block, which consists of a baseline element stored verbatim, followed by channel information, padded to 24 bytes
 
 Note that there is no way to calculate the length of a stream; instead, it is expected that the input stream is correctly sized (using `byteLength`) so that the tail block element can be found.
 
-Each attribute block stores a sequence of deltas, with the first element in the first block using the deltas from the baseline element stored in the tail block, and each subsequent element using the deltas from the previous element. The attribute block always stores an integer number of elements, with that number computed as follows:
+Each attribute block encodes a sequence of deltas, with the first element in the first block using the deltas from the baseline element stored in the tail block, and each subsequent element using the deltas from the previous element. The attribute block always stores an integer number of elements, with that number computed as follows:
 
 ```
 maxBlockElements = min((8192 / byteStride) & ~15, 256)
@@ -212,7 +212,11 @@ blockElements = min(remainingElements, maxBlockElements)
 
 Where `remainingElements` is the number of elements that have yet to be decoded.
 
-Each attribute block consists of `byteStride` "data blocks" (one for each byte of the element), and each "data block" contains deltas stored for groups of elements. Each group always contains 16 elements; when the number of elements that needs to be encoded isn't divisible by 16, it gets rounded up and the remaining elements are ignored after decoding. In other terms:
+Each attribute block consists of:
+- Control header: `byteStride / 4` bytes specifying 4 control modes for each 4-byte channel
+- `byteStride` "data blocks" (one for each byte of the element), each containing deltas stored for groups of elements
+
+Each group always contains 16 elements; when the number of elements that needs to be encoded isn't divisible by 16, it gets rounded up and the remaining elements are ignored after decoding. In other terms:
 
 ```
 groupCount = ceil(blockElements / 16)
@@ -220,7 +224,20 @@ groupCount = ceil(blockElements / 16)
 
 For example, a stream with a `byteStride` of 64 containing 200 elements would be broken up into two attribute blocks: one containing 128 elements, and the other containing 72 elements. And these blocks would have 8 and 5 groups, respectively.
 
-The structure of each "data block" breaks down as follows:
+The control header contains 2 bits for each byte position, packed into bytes as follows:
+
+```
+controlByte = (controlForByte0 << 0) | (controlForByte1 << 2) | (controlForByte2 << 4) | (controlForByte3 << 6)
+```
+
+The control bits specify the control mode for each byte:
+
+- bits 0: Use bit lengths `{0, 1, 2, 4}` for encoding
+- bits 1: Use bit lengths `{1, 2, 4, 8}` for encoding  
+- bits 2: All byte deltas are 0; no data is stored for this byte
+- bits 3: Literal encoding; byte deltas are stored uncompressed
+
+The structure of each "data block" (when not using control mode 2 or 3) breaks down as follows:
 - Header bits, with 2 bits for each group, aligned to the byte boundary if groupCount is not divisible by 4
 - Delta blocks, with variable number of bytes stored for each group
 
@@ -230,14 +247,27 @@ Header bits are stored from least significant to most significant bit - header b
 (headerBitsForGroup0 << 0) | (headerBitsForGroup1 << 2) | (headerBitsForGroup2 << 4) | (headerBitsForGroup3 << 6)
 ```
 
-The header bits establish the delta encoding mode (0-3) for each group of 16 elements that follows:
+The header bits establish the delta encoding mode for each group of 16 elements:
 
+For control mode 0:
 - bits 0: All 16 byte deltas are 0; the size of the encoded block is 0 bytes
+- bits 1: Deltas are stored in 1-bit sentinel encoding; the size of the encoded block is [2..18] bytes
+- bits 2: Deltas are stored in 2-bit sentinel encoding; the size of the encoded block is [4..20] bytes
+- bits 3: Deltas are stored in 4-bit sentinel encoding; the size of the encoded block is [8..24] bytes
+
+For control mode 1:
+- bits 0: Deltas are stored in 1-bit sentinel encoding; the size of the encoded block is [2..18] bytes
 - bits 1: Deltas are stored in 2-bit sentinel encoding; the size of the encoded block is [4..20] bytes
 - bits 2: Deltas are stored in 4-bit sentinel encoding; the size of the encoded block is [8..24] bytes
 - bits 3: All 16 byte deltas are stored as bytes; the size of the encoded block is 16 bytes
 
-When using the sentinel encoding, each delta is stored as a 2-bit or 4-bit value in a single 4-byte or 8-byte block, with deltas stored from most significant to least significant bit inside the byte. That is, the 2-bit encoding is packed as follows with 4 deltas per byte:
+When using the sentinel encoding, each delta is stored as a 1-bit, 2-bit, or 4-bit value in packed bytes. For 2-bit and 4-bit encodings, deltas are stored from most significant to least significant bit inside the byte. For 1-bit encoding, deltas are stored from least significant to most significant bit to facilitate better reuse of lookup tables in efficient implementations. The 1-bit encoding is packed as follows with 8 deltas per byte:
+
+```
+(delta0 << 0) | (delta1 << 1) | (delta2 << 2) | (delta3 << 3) | (delta4 << 4) | (delta5 << 5) | (delta6 << 6) | (delta7 << 7)
+```
+
+The 2-bit encoding is packed as follows with 4 deltas per byte:
 
 ```
 (delta3 << 0) | (delta2 << 2) | (delta1 << 4) | (delta0 << 6)
@@ -246,14 +276,14 @@ When using the sentinel encoding, each delta is stored as a 2-bit or 4-bit value
 And the 4-bit encoding is packed as follows with 2 deltas per byte:
 
 ```
-(delta1 << 0) | (delta1 << 4)
+(delta1 << 0) | (delta0 << 4)
 ```
 
-Note that this is not the same order as the packing of the header bits found above.
+A delta that has all bits set to 1 (corresponds to `1` for 1-bit encoding, `3` for 2-bit encoding, and `15` for 4-bit encoding, otherwise known as "sentinel") indicates that the real delta value is outside of the bit range, and is stored as a full byte after the bit deltas for this group.
 
-A delta that has all bits set to 1 (corresponds to `3` for 2-bit encoding and `15` for 4-bit encoding, otherwise known as "sentinel") indicates that the real delta value is outside of the 2-bit or 4-bit range, and is stored as a full byte after the bit deltas for this group.
+Delta encoding varies by channel type (specified in the tail block):
 
-Byte deltas are stored as zigzag-encoded differences between the byte values of the element and the byte values of the previous element in the same position; the zigzag encoding scheme works as follows:
+**Channel 0 (byte deltas)**: Byte deltas are stored as zigzag-encoded differences between the byte values of the element and the byte values of the previous element in the same position; the zigzag encoding scheme works as follows:
 
 ```
 encode(uint8_t v) = ((v & 0x80) != 0) ? ~(v << 1) : (v << 1)
@@ -273,6 +303,21 @@ Encodes 16 deltas, where the first 8 bytes of the sequence specifies 16 4-bit de
 ```
 
 Finally, note that the deltas are computed in 8-bit integer space with wrap-around two-complement arithmetic; for example, if the values of the first byte of two consecutive elements are `0x00` and `0xff`, the byte delta that is stored is `-1` (`1` after zigzag encoding).
+
+**Channel 1 (2-byte deltas)**: 2-byte deltas are computed as zigzag-encoded differences between consecutive 2-byte values:
+
+```
+encode(uint16_t v) = ((v & 0x8000) != 0) ? ~(v << 1) : (v << 1)
+decode(uint16_t v) = ((v & 1) != 0) ? ~(v >> 1) : (v >> 1)
+```
+
+The deltas are computed in 16-bit integer space with wrap-around two-complement arithmetic.
+
+**Channel 2 (4-byte XOR deltas)**: 4-byte deltas are computed as XOR between consecutive 4-byte values, with an additional rotation applied based on the high 4 bits of the channel specification:
+
+```
+rotate(uint32_t v, int r) = (v << r) | (v >> (32 - r))
+```
 
 ## Mode 1: triangles
 
