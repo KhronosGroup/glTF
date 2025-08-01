@@ -67,7 +67,7 @@ Each `bufferView` can contain an extension object with the following properties:
 
 `mode` represents the compression mode using an enumerated value that must be one of `"ATTRIBUTES"`, `"TRIANGLES"`, `"INDICES"`.
 
-`filter` represents the post-decompression filter using an enumerated value that must be one of `"NONE"`, `"OCTAHEDRAL"`, `"QUATERNION"`, `"EXPONENTIAL"`.
+`filter` represents the post-decompression filter using an enumerated value that must be one of `"NONE"`, `"OCTAHEDRAL"`, `"QUATERNION"`, `"EXPONENTIAL"`, `"COLOR"`.
 
 For the extension object to be valid, the following must hold:
 
@@ -80,6 +80,7 @@ For the extension object to be valid, the following must hold:
 - When `filter` is `"OCTAHEDRAL"`, `byteStride` must be equal to 4 or 8
 - When `filter` is `"QUATERNION"`, `byteStride` must be equal to 8
 - When `filter` is `"EXPONENTIAL"`, `byteStride` must be divisible by 4
+- When `filter` is `"COLOR"`, `byteStride` must be equal to 4 or 8
 
 The type of compressed data must match the bitstream specification (note that each `mode` specifies a different bitstream format).
 
@@ -105,6 +106,7 @@ Filter specifies the algorithm used to transform the data after decompression, a
 - Filter 1: octahedral. Suitable for storing unit length vectors (normals/tangents) as 4-byte or 8-byte values with variable precision octahedral encoding.
 - Filter 2: quaternion. Suitable for storing rotation data for animations or instancing as 8-byte values with variable precision max-component encoding.
 - Filter 3: exponential. Suitable for storing floating point data as 4-byte values with variable mantissa precision.
+- Filter 4: color. Suitable for storing color data as 4-byte or 8-byte values using variable precision YCoCg-R color space encoding.
 
 The filters are detailed further in [Appendix B (Filters)](#appendix-b-filters).
 
@@ -538,3 +540,50 @@ float32_t decode(int32_t input) {
 ```
 
 The valid range of `e` is [-100, +100], which facilitates performant implementations. Decoding out of range values results in unspecified behavior, and encoders are expected to clamp `e` to the valid range.
+
+## Filter 4: color
+
+Color filter allows to encode color data using YCoCg-R color space transformation, which results in better compression for typical color data by exploiting correlation between color channels.
+
+This filter is only valid if `byteStride` is 4 or 8. When `byteStride` is 4, then the input and output of this filter are four 8-bit components, and when `byteStride` is 8, the input and output of this filter are four 16-bit components.
+
+The input to the filter is four 8-bit or 16-bit components, where the first component stores the Y (luma) value, the second component stores the Co (orange chrominance) value, the third component stores the Cg (green chrominance) value, and the fourth component stores the alpha value with the bit K used for scaling information.
+
+The transformation uses YCoCg-R encoding where:
+
+- Y = R/2 + G/2
+- Co = (R - B) / 2
+- Cg = (G - (R + B) / 2) / 2
+
+The alpha component uses K-1 bits for the alpha value with the high bit set to 1, where K is the bit depth (8 or 16).
+
+The output of the filter is four decoded color components (R, G, B, A), stored as 8-bit or 16-bit normalized integers.
+
+```
+void decode(intN_t input[4], intN_t output[4]) {
+	// recover scale from alpha high bit
+	int as = (1 << (firstbitset(input[3]) + 1)) - 1;
+
+	// convert to RGB in fixed point
+	int y = input[0], co = input[1], cg = input[2];
+
+	int r = y + co - cg;
+	int g = y + cg;
+	int b = y - co - cg;
+
+	// expand alpha by one bit to match other components, replicating last bit
+	int a = input[3] & (as >> 1);
+	a = (a << 1) | (a & 1);
+
+	// compute scaling factor
+	float ss = INTN_MAX / float(as);
+
+	// rounded float->int
+	output[0] = int(float(r) * ss + 0.5f);
+	output[1] = int(float(g) * ss + 0.5f);
+	output[2] = int(float(b) * ss + 0.5f);
+	output[3] = int(float(a) * ss + 0.5f);
+}
+```
+
+`INTN_MAX` is equal to 255 when using 8-bit components (N is 8) and equal to 65535 when using 16-bit components (N is 16).

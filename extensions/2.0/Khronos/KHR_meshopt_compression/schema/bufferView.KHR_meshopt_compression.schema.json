@@ -39,7 +39,7 @@
         "filter": {
             "type": "string",
             "description": "The compression filter.",
-            "enum": [ "NONE", "OCTAHEDRAL", "QUATERNION", "EXPONENTIAL" ],
+            "enum": [ "NONE", "OCTAHEDRAL", "QUATERNION", "EXPONENTIAL", "COLOR" ],
             "default": "NONE"
         },
         "extensions": { },
