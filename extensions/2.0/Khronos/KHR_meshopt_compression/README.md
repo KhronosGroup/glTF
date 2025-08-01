@@ -587,3 +587,12 @@ void decode(intN_t input[4], intN_t output[4]) {
 ```
 
 `INTN_MAX` is equal to 255 when using 8-bit components (N is 8) and equal to 65535 when using 16-bit components (N is 16).
+
+# Appendix C: Differences from EXT_meshopt_compression
+
+This extension is derived from `EXT_meshopt_compression` with the following changes:
+
+- Vertex data uses upgraded v1 format which provides more types of bit packing and delta encoding to compress data better
+- Added `COLOR` filter to support lossy color compression at smaller compression ratios
+
+These improvements achieve better compression ratios for typical glTF content while maintaining the same fast decompression performance.
