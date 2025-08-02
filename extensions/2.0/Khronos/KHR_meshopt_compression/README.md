@@ -305,7 +305,7 @@ Encodes 16 deltas, where the first 8 bytes of the sequence specifies 16 4-bit de
 
 Finally, note that the deltas are computed in 8-bit integer space with wrap-around two-complement arithmetic; for example, if the values of the first byte of two consecutive elements are `0x00` and `0xff`, the byte delta that is stored is `-1` (`1` after zigzag encoding).
 
-**Channel 1 (2-byte deltas)**: 2-byte deltas are computed as zigzag-encoded differences between consecutive 2-byte values:
+**Channel 1 (2-byte deltas)**: 2-byte deltas are computed as zigzag-encoded differences between 16-bit values of the element and the previous element in the same position; the zigzag encoding scheme works as follows:
 
 ```
 encode(uint16_t v) = ((v & 0x8000) != 0) ? ~(v << 1) : (v << 1)
@@ -314,7 +314,7 @@ decode(uint16_t v) = ((v & 1) != 0) ? ~(v >> 1) : (v >> 1)
 
 The deltas are computed in 16-bit integer space with wrap-around two-complement arithmetic. Values are assumed to be little-endian, so the least significant byte is encoded before the most significant byte.
 
-**Channel 2 (4-byte XOR deltas)**: 4-byte deltas are computed as XOR between consecutive 4-byte values, with an additional rotation applied based on the high 4 bits of the channel mode byte:
+**Channel 2 (4-byte XOR deltas)**: 4-byte deltas are computed as XOR between 32-bit values of the element and the previous element in the same position, with an additional rotation applied based on the high 4 bits of the channel mode byte:
 
 ```
 rotate(uint32_t v, int r) = (v << r) | (v >> (32 - r))
@@ -638,7 +638,7 @@ void decode(intN_t input[4], intN_t output[4]) {
 
 This extension is derived from `EXT_meshopt_compression` with the following changes:
 
-- Vertex data uses upgraded v1 format which provides more types of bit packing and delta encoding to compress data better
-- Added `COLOR` filter to support lossy color compression at smaller compression ratios using YCoCg encoding
+- Vertex data uses upgraded v1 format which provides more granular bit packing (via control modes) and enhanced delta encoding (via channel modes) to compress data better
+- New `COLOR` filter supports lossy color compression at smaller compression ratios using YCoCg encoding
 
 These improvements achieve better compression ratios for typical glTF content while maintaining the same fast decompression performance.
