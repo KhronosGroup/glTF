@@ -1,0 +1,47 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_scene_interactivity.hapticActionNode object",
+    "type": "object",
+    "properties": {
+        "node": {
+            "type": "integer",
+            "description": "Index of the node in the nodes array to launch their haptic feedbacks"
+        },
+        "material_haptic_modality": {
+            "type": "array",
+            "items": {
+                "type": "integer",
+                "enum": [0,1,2,3,4,5],
+                "description": "List of haptic material modalities that shall be rendered.",
+                "gltf_detailedDescription": "Value is oneOf Stiffness = 0, Friction = 1,Vibrotactile Texture = 2,Temperature = 3, Vibration = 4,Custom = 5"
+            }
+        },
+        "actionLocation": {
+            "type": "integer",
+            "description": "Body part mask specifying where on the body the signal can be rendered.",
+            "minimum": 0
+        },
+        "washout": {
+            "type": "boolean",
+            "default": false,
+            "description": "Specifies whether the action should trigger a washout (reset to the origin or neutral position) of the associated devices."
+        },
+        "useCollider": {
+            "type": "boolean",
+            "default": false,
+            "description": "Used with a Collision trigger. If True, the rendering engine shall use collision information to estimate the desired location of the haptic feedback on the body. If false, the signal shall be rendered based on the information specified in the Haptic file.."
+        },
+        "haptic_action_medias": {
+            "description": "List of haptic medias that shall be rendered with their associated properties.",
+            "type": "array",
+            "items": {
+                "$ref" : "MPEG_scene_interactivity.hapticActionMedia.schema.json"
+            },
+            "minItems": 1
+        }
+    },
+    "required": [
+        "node",
+        "haptic_action_medias"
+    ]
+}
