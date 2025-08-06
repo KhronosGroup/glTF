@@ -169,7 +169,9 @@ Morph targets can be treated identically to other vertex attributes, as long as 
 
 When storing vertex data, mode 0 (attributes) should be used; for index data, mode 1 (triangles) or mode 2 (indices) should be used instead. Mode 1 only supports triangle list storage; indices of other topology types can be stored using mode 2. The use of triangle strip topology is not recommended since it's more efficient to store triangle lists using mode 1.
 
-Using filter 1 (octahedral) for normal/tangent data may improve compression ratio further.
+Using filter 1 (octahedral) for normal/tangent data, and filter 4 (color) for color data, may improve compression ratio further.
+
+While using quantized attributes is recommended for optimal compression, it's also possible to use non-quantized floating point attributes. To increase compression ratio in that case, filter 3 (exponential) is recommended - advanced encoders can additionally constraint the exponent to be the same for all components of a vector, or for all values of the same component across the entire mesh, which can further improve compression ratio.
 
 ## Compressing animation data
 
@@ -181,11 +183,13 @@ To reduce the number of keyframes, encoders can either selectively remove keyfra
 
 Additionally it's important to identify tracks with the same output value and use a single keyframe for these.
 
-To reduce the size of each keyframe, rotation data should be quantized using 16-bit normalized components; for additional compression, the use of filter 2 (quaternion) is recommended. Translation/scale data can be compressed using filter 3 (exponential) with the same exponent used for all three vector components.
+To reduce the size of each keyframe, rotation data should be quantized using 16-bit normalized components; for additional compression, the use of filter 2 (quaternion) is recommended. Translation/scale data can be compressed using filter 3 (exponential); for scale data, using the same exponent for all three vector components can enhance compression ratio further.
 
 Note that animation inputs that specify time values require enough precision to avoid animation distortion. It's recommended to either not use any filters for animation inputs to avoid any precision loss (attribute encoder can still be efficient at reducing the size of animation input track even without filters when the inputs are uniformly spaced), or use filter 3 (exponential) with maximum mantissa bit count (23).
 
 After pre-processing, both input and output data should be stored using mode 0 (attributes).
+
+When `EXT_mesh_gpu_instancing` extension is used, the instance transform data can also be compressed with the same techniques as animation data, using mode 0 (attributes) with filter 3 (exponential) for position and scale, and filter 2 (quaternion) for rotation.
 
 # Appendix A: Bitstream
 
