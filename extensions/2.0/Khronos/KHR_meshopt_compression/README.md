@@ -2,8 +2,10 @@
 
 ## Contributors
 
-* Arseny Kapoulkine, [@zeuxcg](https://twitter.com/zeuxcg)
-* Jasper St. Pierre, [@JasperRLZ](https://twitter.com/JasperRLZ)
+* Arseny Kapoulkine, [@zeux](https://github.com/zeux)
+* Jasper St. Pierre, [@magcius](https://github.com/magcius)
+* Alexey Knyazev, [@lexaknyazev](https://github.com/lexaknyazev)
+* Don McCurdy, [@donmccurdy](https://github.com/donmccurdy)
 
 ## Status
 
