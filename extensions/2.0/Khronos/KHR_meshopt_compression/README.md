@@ -15,6 +15,10 @@ Draft
 
 Written against the glTF 2.0 spec.
 
+## Exclusions
+
+- This extension must not be used on a buffer view that also uses `EXT_meshopt_compression`.
+
 ## Overview
 
 glTF files come with a variety of binary data - vertex attribute data, index data, morph target deltas, animation inputs/outputs - that can be a substantial fraction of the overall transmission size. To optimize for delivery size, general-purpose compression such as gzip can be used - however, it often doesn't capture some common types of redundancy in glTF binary data.
