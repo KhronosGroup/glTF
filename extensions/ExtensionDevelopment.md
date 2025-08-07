@@ -61,7 +61,7 @@ The names of extensions have to follow a certain pattern.
 
 Khronos extensions use the reserved `KHR` prefix. These are proposed by Khronos Group members, and intended to become ratified extensions, meaning that they are covered by the Khronos IP framework.
 
-The `EXT` prefix can be used for extensions that are expected to be supported by multiple vendors, but are not expected to be ratified by the Khronos group.
+The `EXT` prefix can be used for extensions that are expected to be supported by multiple vendors, but are not expected to be ratified by the Khronos Group.
 
 Vendor-specific extensions use one of the vendor prefixes that are maintained in [Prefixes.md](Prefixes.md). Any vendor, not just Khronos members, can request an extension prefix by submitting an [issue on GitHub](https://github.com/KhronosGroup/glTF/issues/new) requesting one. Requests should include:
 
