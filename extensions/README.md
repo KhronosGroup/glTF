@@ -5,6 +5,8 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # glTF 2.0 Extension Registry
 
+The technical process for defining and developing extensions is described in the [Extension Development](./ExtensionDevelopment.md) section.
+
 ## Ratified Khronos Extensions
 
 The following extensions have been ratified by the Khronos Group:
@@ -32,11 +34,10 @@ The following extensions have been ratified by the Khronos Group:
 * [EXT_meshopt_compression](2.0/Vendor/EXT_meshopt_compression/README.md)
 * [EXT_texture_webp](2.0/Vendor/EXT_texture_webp/README.md)
 
-Khronos extensions use the reserved `KHR` prefix. Once ratified by the Khronos Group, they are covered by the Khronos IP framework.  Extensions that are intended to be ratified can also use the `KHR` prefix to avoid name/code/version thrashing. Khronos members can submit an extension for ratification, which is then voted on by the Khronos Board of Promoters.
 
 ## In-progress Khronos and Multi-Vendor Extensions and Projects
 
-This section tracks the status of extensions and projects that are in development and is intended to provide the glTF community with a general sense of the priorities and direction of the glTF roadmap. The items listed are felt to show enough consensus to be considered for future ratification.  We welcome community feedback and encourage everyone to add comments to the Github Pull Requests.  All items are listed in alphabetical order. There is no order of priority of items with the same status.
+This section tracks the status of extensions and projects that are in development and is intended to provide the glTF community with a general sense of the priorities and direction of the glTF roadmap. The items listed are felt to show enough consensus to be considered for future ratification. We welcome community feedback and encourage everyone to add comments to the Github Pull Requests. All items are listed in alphabetical order. There is no order of priority of items with the same status.
 
 
 | Extensions | Status | Pull Request |
@@ -60,26 +61,9 @@ This section tracks the status of extensions and projects that are in developmen
 | glTF External References | Proposal | [Repository](https://github.com/KhronosGroup/glTF-External-Reference/tree/main) |
 
 
-**How to view the latest draft specifications from a GitHub pull request** - Visit the files section of the Pull Request and find the file: README.md. In the top-right of that file's title bar select the three dots (...) and select ‘View file’.  This will render the latest version of the draft specification.
-
-### Specification Status Explained
-The status provides a guide to the current position of a specification through the main stages of extension development, and the community feedback that is requested at each stage.  This is a general guide and the stages and deliverables for an individual extension or project may differ.  Additional information can be found in the read.me file for each extension or project.
-
-| Status | Typical Start and End Deliverables | Community Engagement |
-|--------|------------------------------------|----------------------|
-| Proposal | This stage starts with the posting of a proposal document for discussion with an emphasis on the motivation and requirements of the desired feature/s rather than a detailed specification. These discussions may lead to an Initial Draft. |
-| Initial Draft | During this stage an early draft specification will undergo ongoing development but it will typically not be ready for detailed review | Request for directional feedback rather than a detailed review of the specification. |
-| Review Draft | This stage starts with the publication of a well-formed Review Draft of the specification based on the Initial Draft and earlier feedback.  The specification will continue to be developed, including adding any missing JSON schema, initial test assets, etc. At least one third party glTF implementation will be released to enable initial testing. | On-going discussion and detailed review of the Review Draft. |
-| Release Candidate | This stage will start with the release of a stable Release Candidate specification based on the Review Draft.  If not already done, the feature will be incorporated into the Khronos Sample Viewer and supported by the Khronos Asset Validator.  A public notice will be published that the specification is ready for final public review, along with a given review period. After this review period the specification will be put forward for ratification. | Final opportunity to provide feedback |
-| Ratified | Once ratified by the Khronos board the extension or project will move to the Ratified section of the glTF 2.0 specification. | Report bugs |
-
-### Adding Additional Features to glTF
-
-If you have a requirement for a feature that is not listed as part of a Ratified or In-Progress extensions, please check to see if others have already identified similar requirements by reviewing the existing [Vendor Extensions](https://github.com/KhronosGroup/glTF/tree/main/extensions#vendor-extensions-for-gltf-20), [Multi-Vendor extensions](https://github.com/KhronosGroup/glTF/tree/main/extensions#multi-vendor-extensions-for-gltf-20), [glTF GitHub Issues](https://github.com/KhronosGroup/glTF/issues) and [glTF Pull Requests](https://github.com/KhronosGroup/glTF/pulls). If you do find something on a similar topic we recommend you reach out and collaborate. If nothing matches your requirement we encourage you to reach out to the community for feedback and collaborators.  As a consensus develops please reach out to Khronos to discuss how an extension can be brought into the broader ecosystem, and potentially added to the official Khronos glTF Roadmap.
-
 ## Multi-Vendor Extensions
 
-When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix. Multi-vendor extensions are typically not covered by the Khronos IP framework, with a few notable exceptions (listed above) that have been through the Khronos ratification process after becoming widely used under the `EXT` prefix.
+Multi-vendor extensions are typically not covered by the Khronos IP framework, with a few notable exceptions (listed above) that have been through the Khronos ratification process after becoming widely used under the `EXT` prefix.
 
 * [EXT_lights_ies](2.0/Vendor/EXT_lights_ies/README.md)
 * [EXT_lights_image_based](2.0/Vendor/EXT_lights_image_based/README.md)
@@ -113,12 +97,6 @@ Vendor extensions are not covered by the Khronos IP framework.
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 * [NV_materials_mdl](2.0/Vendor/NV_materials_mdl/README.md)
 
-The list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any vendor, not just Khronos members, can request an extension prefix by submitting an [issue on GitHub](https://github.com/KhronosGroup/glTF/issues/new) requesting one.  Requests should include:
-
-* The name of the prefix.
-* The name of the vendor requesting the prefix.
-* The vendor's URL and/or contact information.
-
 ## Archived Extensions
 
 _Archived extensions may be useful for reading older glTF files, but they are no longer recommended for creating new files._
@@ -127,108 +105,3 @@ _Archived extensions may be useful for reading older glTF files, but they are no
 * [KHR_techniques_webgl](2.0/Archived/KHR_techniques_webgl/README.md)
 * [KHR_xmp](2.0/Archived/KHR_xmp/README.md)
 
-# About glTF Extensions
-
-glTF extensions extend the base glTF model format.  Extensions can introduce new properties (including properties that reference external data, and the extension can define the format of those data), new parameter semantics, reserved IDs, and new container formats.  Extensions are written against a specific version of glTF and may be promoted to core glTF in a later glTF version.
-
-## Extension Mechanics
-
-All glTF object properties (see [glTFProperty.schema.json](../specification/2.0/schema/glTFProperty.schema.json)) have an optional `extensions` object property that can contain new extension-specific properties.  This allows extensions to extend any part of glTF, including geometry, materials, animations, etc.  Extensions can also introduce new parameter semantics, reserved IDs, and new formats containing glTF.
-
-Extensions can't remove existing glTF properties or redefine existing glTF properties to mean something else.
-
-Extensions may add new properties and values, such as attribute semantics or texture mime types. In all Khronos (KHR) extensions, and as best practice for vendor extensions, these feature additions are designed to allow safe fallback consumption in tools that do not recognize an extension in the `extensionsUsed` array.
-
-### New properties
-
-Extensions can add new properties to existing glTF objects. For example, `KHR_texture_transform` introduces a set of texture transformation properties:
-```json
-{
-  "materials": [{
-    "emissiveTexture": {
-      "index": 0,
-      "extensions": {
-        "KHR_texture_transform": {
-          "offset": [0, 1],
-          "rotation": 1.57079632679,
-          "scale": [0.5, 0.5]
-        }
-      }
-    }
-  }]
-}
-```
-
-### New attributes
-
-Extensions can introduce new vertex attributes for mesh primitives. In order to disambiguate the names of vertex attributes that are defined by different extensions, the attribute names must be prefixed by the full, case-sensitive name of the extension, followed by a `:` colon. For example, an extension that is called `EXT_example_extension` and that defines vertex attributes for a 'temperature' and a 'velocity' may call them `EXT_example_extension:TEMPERATURE` and `EXT_example_extension:VELOCITY`: 
-```json
-{
-  "meshes" : [
-    {
-      "primitives" : [
-        {
-          "attributes" : {
-            "POSITION" : 0,
-            "COLOR_0" : 1,
-            "EXT_example_extension:TEMPERATURE" : 2,
-            "EXT_example_extension:VELOCITY" : 3
-          },
-          "mode" : 0
-        }
-      ]
-    }
-  ],
-}
-```
-
-## Extension declarations
-
-All extensions used in a model are listed as strings in the top-level `extensionsUsed` array; all _required_ extensions are listed as strings in the top-level `extensionsRequired` array, e.g.,
-```json
-{
-  "extensionsUsed": [
-    "KHR_draco_mesh_compression", "VENDOR_physics"
-  ],
-  "extensionsRequired": [
-    "KHR_draco_mesh_compression"
-  ]
-}
-```
-This allows an engine to quickly determine if it supports the extensions needed to render the model without inspecting the `extensions` property of all objects.
-
-An extension is considered _required_ if a typical glTF loader would fail to load the asset in the absence of support for that extension.  For example, any mesh compression extension must be listed as _required_ unless an uncompressed fallback mesh is provided with the asset.  Likewise, a texture image format extension must be listed as _required_ unless fallback textures in core formats (JPG, PNG) are also supplied. Typically, PBR or other kinds of material extensions should not be listed in _required_, because the core glTF material can be considered a valid fallback for these kinds of extensions, and such extensions will not cause a conformant glTF loader to fail.
-
-## Creating Extensions
-
-To create a new extension, use the [extension template](Template.md) and open a pull request into this repo.  Make sure to add the extension to the glTF Extension Registry (top of this file).
-
-If the extension adds a new top-level array (by extending the root glTF object), its elements should inherit all properties of `glTFChildOfRootProperty.schema.json`. Other objects introduced by the extension should inherit all properties of `glTFProperty.schema.json`. By glTF 2.0 conventions, schemas should allow additional properties. See [`KHR_lights_punctual`](2.0/Khronos/KHR_lights_punctual) as an example.
-
-If lack of extension support prevents proper geometry loading, extension specification _must_ state that (and such extension must be mentioned in `extensionsRequired` top-level glTF property).
-
-## Naming
-
-> **NOTE:** For historical reasons, older extensions may not follow these guidelines. Future extensions should do so.
-
-1. Names MUST begin with an UPPERCASE prefix, followed by an underscore. Prefixes are `KHR` for [Khronos extensions](#ratified-khronos-extensions-for-gltf-20), `EXT` for [Multi-vendor extensions](#multi-vendor-extensions-for-gltf-20), and others may be reserved for [Vendor extensions](#vendor-extensions-for-gltf-20).
-2. Names MUST use lowercase snake-case following the prefix, e.g. `KHR_materials_unlit`.
-3. Names SHOULD be structured as `<PREFIX>_<scope>_<feature>`, where *scope* is an existing glTF concept (e.g. mesh, texture, image) and *feature* describes the functionality being added within that scope. This structure is recommended, but not required.
-4. Scope SHOULD be singular (e.g. mesh, texture), except where this would be inconsistent with an existing Khronos extension (e.g. materials, lights).
-
-## Extensions vs. Extras
-
-In addition to extensions, the `extras` object can also be used to extend glTF.  This is completely separate from extensions.
-
-All glTF object properties allow adding new properties to an `extras` object sub-property, e.g.,
-```json
-{
-  "asset": {
-    "version": 2.0,
-    "extras": {
-      "guid": "9abb92a3-39cf-4986-a758-c43d4bb4ab58",
-    }
-  }
-}
-```
-This enables glTF models to contain application-specific properties without creating a full glTF extension.  This may be preferred for niche use cases where an extension would not be widely adopted.
