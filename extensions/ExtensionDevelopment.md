@@ -5,7 +5,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # glTF 2.0 Extension Development
 
-Extensions are an important element of the glTF ecosystem. They can extend the core glTF model format with new properties and functionalities. If you have a requirement for a feature that is not supported by the core glTF specification or an existing extension, you can consider proposing a new extension to support this feature. Before you propose a new extension, please check to see if others have already identified similar requirements by reviewing the existing extensions in the [Extensions Registry](https://github.com/KhronosGroup/glTF/tree/main/extensions/README.md) and extension proposals in the [issues](https://github.com/KhronosGroup/glTF/issues) and [pull Requests](https://github.com/KhronosGroup/glTF/pulls). 
+Extensions are an important element of the glTF ecosystem. They can extend the core glTF model format with new properties and functionalities. If you have a requirement for a feature that is not supported by the core glTF specification or an existing extension, you can consider proposing a new extension to support this feature. Before you propose a new extension, please check to see if others have already identified similar requirements by reviewing the existing extensions in the [Extensions Registry](https://github.com/KhronosGroup/glTF/tree/main/extensions/README.md) and extension proposals in the [issues](https://github.com/KhronosGroup/glTF/issues) and [pull requests](https://github.com/KhronosGroup/glTF/pulls). 
 
 > [!NOTE]
 > Extensions vs. Extras
