@@ -146,13 +146,13 @@ In the course of the development, the following elements are expected to be adde
 - A complete JSON schema for the elements that are added to the glTF JSON. 
   - The schema files are located in the `/schema` subdirectory of the extension specification. 
   - The schema files use JSON schema version 'draft-04'.
-  - The naming of the schema files follows the conventions of the JSON schema 
+  - The naming of the schema files follows the conventions of the JSON schema.
   - If the extension adds a new top-level array (by extending the root glTF object), its elements inherit all properties of `glTFChildOfRootProperty.schema.json`. 
   - Other objects introduced by the extension inherit all properties of `glTFProperty.schema.json`. 
   - By glTF 2.0 conventions, schemas should allow additional properties. 
   
   For an example on how to structure the JSON schema, see [`KHR_lights_punctual`](2.0/Khronos/KHR_lights_punctual)
 
-As shown in the extension template: The specification should list and link to known implementations of the extensions.
+As shown in the extension template: The specification should list and link to known implementations of the extension.
 
-If possible an applicable, example assets that include the extension should be provided. These will _not_ be part of the specification itself, but they can be added by appending them to comments in the pull request discussion. These assets can be used by implementors for testing and validating their implementation. When the extension is complete, these example assets may be added via pull requests to the [glTF-Sample-Assets](https://github.com/KhronosGroup/glTF-Sample-Assets) repository.
+If possible and applicable, example assets that include the extension should be provided. These will _not_ be part of the specification itself, but they can be added by appending them to comments in the pull request discussion. These assets can be used by implementors for testing and validating their implementation. When the extension is complete, these example assets may be added via pull requests to the [glTF-Sample-Assets](https://github.com/KhronosGroup/glTF-Sample-Assets) repository.
