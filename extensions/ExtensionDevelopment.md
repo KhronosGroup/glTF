@@ -47,7 +47,7 @@ The names of extensions have to follow a certain pattern.
 
 1. Names MUST begin with an UPPERCASE prefix (details below), followed by an underscore. 
 2. Names MUST use lowercase snake-case following the prefix, e.g. `KHR_materials_unlit`.
-3. Names SHOULD be structured as `<PREFIX>_<scope>_<feature>`, where *scope* is an existing glTF concept (e.g. mesh, texture, image) and *feature* describes the functionality being added within that scope. This structure is required for cases where it is applicable, but not required for cases where an extension can not be assigned to a specific scope.
+3. Names SHOULD be structured as `<PREFIX>_<scope>_<feature>`, where *scope* is an existing glTF concept (e.g. mesh, texture, image) or a new (top-level) concept that is introduced by the extension, and *feature* describes the functionality being added within that scope. This structure is required for cases where it is applicable, but not required for cases where an extension can not be assigned to a specific scope.
 4. Scope SHOULD be singular (e.g. mesh, texture), except where this would be inconsistent with an existing Khronos extension (e.g. materials, lights).
 5. Names SHOULD not include special characters, except for the `_` underscore separation character. For portability and consistency, the characters should only be alphanumeric (ASCII) characters.
 6. Names MUST NOT include a `:` colon, because this is used for attribute name disambiguation.
