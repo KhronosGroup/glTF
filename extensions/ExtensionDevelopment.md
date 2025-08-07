@@ -94,7 +94,7 @@ Extensions can add new properties to existing glTF objects. For example, `KHR_te
 }
 ```
 
-### New attributes
+#### New attributes
 
 Extensions can introduce new vertex attributes for mesh primitives. In order to disambiguate the names of vertex attributes that are defined by different extensions, the attribute names must be prefixed by the full, case-sensitive name of the extension, followed by a `:` colon. For example, an extension that is called `EXT_example_extension` and that defines vertex attributes for a 'temperature' and a 'velocity' may call them `EXT_example_extension:TEMPERATURE` and `EXT_example_extension:VELOCITY`: 
 ```json
@@ -117,7 +117,7 @@ Extensions can introduce new vertex attributes for mesh primitives. In order to 
 }
 ```
 
-### Extension declarations
+#### Extension declarations
 
 All extensions used in a model are listed as strings in the top-level `extensionsUsed` array; all _required_ extensions are listed as strings in the top-level `extensionsRequired` array, e.g.,
 ```json
