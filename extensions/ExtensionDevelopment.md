@@ -7,7 +7,8 @@ SPDX-License-Identifier: CC-BY-4.0
 
 Extensions are an important element of the glTF ecosystem. They can extend the core glTF model format with new properties and functionalities. If you have a requirement for a feature that is not supported by the core glTF specification or an existing extension, you can consider proposing a new extension to support this feature. Before you propose a new extension, please check to see if others have already identified similar requirements by reviewing the existing extensions in the [Extensions Registry](https://github.com/KhronosGroup/glTF/tree/main/extensions/README.md) and extension proposals in the [issues](https://github.com/KhronosGroup/glTF/issues) and [pull Requests](https://github.com/KhronosGroup/glTF/pulls). 
 
-> [!NOTE] Extensions vs. Extras
+> [!NOTE]
+> Extensions vs. Extras
 >
 > Extensions aim at providing a standardized, agreed-upon way to extend the existing glTF model format. But they are not the only way to extend glTF. All glTF object properties allow adding new properties to an `extras` object sub-property, e.g.,
 > ```json
@@ -52,7 +53,8 @@ The names of extensions have to follow a certain pattern.
 5. Names SHOULD NOT include special characters, except for the `_` underscore separation character. For portability and consistency, the characters SHOULD only be alphanumeric (ASCII) characters.
 6. Names MUST NOT include a `:` colon, because this is used for attribute name disambiguation.
 
-> [!NOTE] For historical reasons, older extensions may not follow these guidelines. Future extensions should do so.
+> [!NOTE]
+> For historical reasons, older extensions may not follow these guidelines. Future extensions should do so.
 
 
 #### Extension Name Prefixes
