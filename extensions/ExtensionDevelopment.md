@@ -49,7 +49,7 @@ The names of extensions have to follow a certain pattern.
 2. Names MUST use lowercase snake-case following the prefix, e.g. `KHR_materials_unlit`.
 3. Names SHOULD be structured as `<PREFIX>_<scope>_<feature>`, where *scope* is an existing glTF concept (e.g. mesh, texture, image) or a new (top-level) concept that is introduced by the extension, and *feature* describes the functionality being added within that scope. This structure is required for cases where it is applicable, but not required for cases where an extension can not be assigned to a specific scope.
 4. Scope SHOULD be singular (e.g. mesh, texture), except where this would be inconsistent with an existing Khronos extension (e.g. materials, lights).
-5. Names SHOULD not include special characters, except for the `_` underscore separation character. For portability and consistency, the characters should only be alphanumeric (ASCII) characters.
+5. Names SHOULD NOT include special characters, except for the `_` underscore separation character. For portability and consistency, the characters SHOULD only be alphanumeric (ASCII) characters.
 6. Names MUST NOT include a `:` colon, because this is used for attribute name disambiguation.
 
 > [!NOTE] For historical reasons, older extensions may not follow these guidelines. Future extensions should do so.
@@ -59,7 +59,7 @@ The names of extensions have to follow a certain pattern.
 
 Khronos extensions use the reserved `KHR` prefix. These are proposed by Khronos Group members, and intended to become ratified extensions, meaning that they are covered by the Khronos IP framework.
 
-When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix.
+The `EXT` prefix can be used for extensions that are expected to be supported by multiple vendors, but are not expected to be ratified by the Khronos group.
 
 Vendor-specific extensions use one of the vendor prefixes that are maintained in [Prefixes.md](Prefixes.md). Any vendor, not just Khronos members, can request an extension prefix by submitting an [issue on GitHub](https://github.com/KhronosGroup/glTF/issues/new) requesting one. Requests should include:
 
@@ -96,7 +96,7 @@ Extensions can add new properties to existing glTF objects. For example, `KHR_te
 
 #### New attributes
 
-Extensions can introduce new vertex attributes for mesh primitives. In order to disambiguate the names of vertex attributes that are defined by different extensions, the attribute names must be prefixed by the full, case-sensitive name of the extension, followed by a `:` colon. For example, an extension that is called `EXT_example_extension` and that defines vertex attributes for a 'temperature' and a 'velocity' may call them `EXT_example_extension:TEMPERATURE` and `EXT_example_extension:VELOCITY`: 
+Extensions can introduce new vertex attributes for mesh primitives. In order to disambiguate the names of vertex attributes that are defined by different extensions, the attribute names MUST be prefixed by the full, case-sensitive name of the extension, followed by a `:` colon. For example, an extension that is called `EXT_example_extension` and that defines vertex attributes for a 'temperature' and a 'velocity' may call them `EXT_example_extension:TEMPERATURE` and `EXT_example_extension:VELOCITY`: 
 ```json
 {
   "meshes" : [
@@ -119,7 +119,7 @@ Extensions can introduce new vertex attributes for mesh primitives. In order to 
 
 #### Extension declarations
 
-All extensions used in a model are listed as strings in the top-level `extensionsUsed` array; all _required_ extensions are listed as strings in the top-level `extensionsRequired` array, e.g.,
+All extensions used in a glTF asset are listed as strings in the top-level `extensionsUsed` array; all _required_ extensions are listed as strings in the top-level `extensionsRequired` array, e.g.,
 ```json
 {
   "extensionsUsed": [
@@ -130,7 +130,7 @@ All extensions used in a model are listed as strings in the top-level `extension
   ]
 }
 ```
-This allows an engine to quickly determine if it supports the extensions needed to render the model without inspecting the `extensions` property of all objects.
+This allows an engine to quickly determine if it supports the extensions needed to render the glTF asset without inspecting the `extensions` property of all objects.
 
 An extension is considered _required_ if a typical glTF loader would fail to load the asset in the absence of support for that extension.  For example, any mesh compression extension must be listed as _required_ unless an uncompressed fallback mesh is provided with the asset.  Likewise, a texture image format extension must be listed as _required_ unless fallback textures in core formats (JPG, PNG) are also supplied. Typically, PBR or other kinds of material extensions should not be listed in _required_, because the core glTF material can be considered a valid fallback for these kinds of extensions, and such extensions will not cause a conformant glTF loader to fail.
 
