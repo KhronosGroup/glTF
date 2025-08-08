@@ -45,11 +45,7 @@ Adding this functionality to clearcoat materials can be done by adding the `EXT_
                     "clearcoatFactor": 1.0,
                     "extensions": {
                         "EXT_materials_clearcoat_darkening": {
-                            "clearcoatDarkeningFactor": [
-                                0.4,
-                                0.1,
-                                0.1
-                            ]
+                            "clearcoatDarkeningFactor": 0.5
                         }
                     }
                 }
