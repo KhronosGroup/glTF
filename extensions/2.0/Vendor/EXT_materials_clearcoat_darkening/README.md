@@ -90,12 +90,11 @@ Other renderers (such as rasterizers) will most likely need to add logic to appr
 
 We want to calculate a multiplier that represents the amount of transmitted light that makes its way through the coat and impacts the underlying layer. To approximate this, we want to find the average reflectance, $R$, of the coat and then model an infinite number of reflections using a geometric series to get the total transmission, $T$.
 
-\(T = (1-R) / (1 + R + R² + R³ + ...)\)
-\(T = (1-R) / (1/(1-R))\)
-\(T = (1-R)²\)
+$T = (1-R) / (1 + R + R² + R³ + ...)$
+$T = (1-R) / (1/(1-R))$
+$T = (1-R)²$
 
 The $(1-R)$ in the numerator represents the initial transmission of light through the coat and the denominator accounts for the infinite reflections within the coating. This converges to $1/(1-R)$.
-Note that $(1-R)/(1+R)$ is mathematically equivalent to $(1-R)²$ but is more numerically stable as $R$ approaches 1.0.
 
 By "average reflectance", we mean the average reflectance for the round trip (light in, view out) so it can be computed as the sum of the Schlick Fresnel approximation for $dot(N, V)$ and $dot(N, L)$ and then dividing by 2.
 $$R_{directlight} = (fresnel(N, V) + fresnel(N, L)) * 0.5$$
@@ -107,5 +106,5 @@ When coat roughness increases, light is diffused and darkening decreases. We can
 
 ## Schema
 
-- [material.ADOBE_materials_clearcoat_tint.schema.json](schema/material.ADOBE_materials_clearcoat_tint.schema.json)
+- [material.EXT_materials_clearcoat_darkening.schema.json](schema/material.EXT_materials_clearcoat_darkening.schema.json)
  

@@ -21,7 +21,7 @@
         "clearcoatDarkeningTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The clearcoat layer darkening texture.",
-            "gltf_detailedDescription": "The clearcoat layer darkening texture.  The values are stored in sRGB.  Assume white colour if no texture is supplied."
+            "gltf_detailedDescription": "The clearcoat layer darkening texture."
         },
         "extensions": { },
         "extras": { }
