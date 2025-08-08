@@ -44,7 +44,7 @@ Adding this functionality to clearcoat materials can be done by adding the `EXT_
                 "KHR_materials_clearcoat": {
                     "clearcoatFactor": 1.0,
                     "extensions": {
-                        "EXT_materials_clearcoat_color": {
+                        "EXT_materials_clearcoat_darkening": {
                             "clearcoatColorFactor": [
                                 0.4,
                                 0.1,
