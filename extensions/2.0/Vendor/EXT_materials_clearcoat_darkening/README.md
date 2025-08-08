@@ -80,7 +80,9 @@ Things that affect the amount of darkening observed:
 
 1. Roughness Modulation: Rougher coats scatter light internally, reducing the coherent reflection effect. Increased diffuse internal reflections results in less darkening.
 
-## Implementation (non-normative)
+## Implementation
+
+*This section is non-normative.*
 
 Some renderers (such as path-tracers) may already model this darkening behaviour by the nature of their light transport algorithms. In these cases, implementing support for this extension will involve adding a term to compensate for the energy loss when the darknening value is < 1.0. The [specification of OpenPBR](https://academysoftwarefoundation.github.io/OpenPBR/index.html#model/coat/darkening) contains a detailed description of what this entails.
 

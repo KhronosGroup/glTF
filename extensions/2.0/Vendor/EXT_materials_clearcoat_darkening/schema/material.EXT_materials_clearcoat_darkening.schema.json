@@ -6,16 +6,11 @@
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "clearcoatDarkeningFactor": {
-            "type": "array",
-            "items": {
-                "type": "number",
-                "minimum": 0.0,
-                "maximum": 1.0
-            },
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
             "description": "The amount of physically-correct darkening of the clearcoat layer.",
             "default": 1.0,
-            "minItems": 1,
-            "maxItems": 1,
             "gltf_detailedDescription": "The amount of physically-correct darkening of the clearcoat layer. If zero, no darkening due to internal reflections occurs."
         },
         "clearcoatDarkeningTexture": {
