@@ -24,14 +24,16 @@ Can be used alongside: `KHR_avatar_expression_morphtargets` or other expression 
 
 ## Reference Expression Categories/Vocabularies
 
-Expression names may be grouped into categories including:
+Expressions in this context describe face-localized animations used to drive small and/or larger movements across the face and/or down-chain meshes needed for reasonable conveyance of emotion/intent. 
 
-- **Emotions** (e.g. `happy`, `angry`, `surprised`)
-- **Visemes** (e.g. `aa`, `oo`, `th`)
-- **Modifiers** (e.g. `left`, `right`, `upper`, `lower`)
-- **Gestures and Actions** (e.g. `blink`, `smile`, `jawOpen`)
+For examples of relevant types of expressions, you can reference concepts such as:
 
-The `KHR_avatar_expression_mapping` extension provides a general-purpose mechanism for mapping expression names used in an avatar to a known expression vocabulary. This allows different authoring pipelines or runtimes to translate between heterogeneous expression sets.
+- **Emotions** (Emotion-derived facial movements such as what [VRM defines as presets](https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/expressions.md),  e.g. `happy`, `angry`, `surprised`)
+- **Visemes** (A visual representations of mouth movements for parts of speech, e.g. `aa`, `oo`, `th`)
+- **FACS** ([Facial Action Coding System (FACS)](https://en.wikipedia.org/wiki/Facial_Action_Coding_System) which is a system intended to describe visually distinguishable facial movements (and is often split further based on left/right), e.g.  `brow lowerer`, `chin raiser`, `lid droop`)
+- **Gestures and Actions** (Larger descriptors that describe general facial actionse (but not emotion), e.g. `blink`, `smile`, `jawOpen`)
+
+Optionally, these expressions may be aligned with industry standards (or an endpoint/experiences expected expressions set).
 
 ## Extension Schema
 

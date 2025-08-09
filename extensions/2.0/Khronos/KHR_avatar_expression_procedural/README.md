@@ -30,6 +30,8 @@ The `KHR_avatar_expression_procedural` extension introduces a metadata layer tha
 - **Microexpressions**
 - **Randomized twitches or gestures**
 
+Expressions in this context describe face-localized animations used to drive small and/or larger movements across the face and/or down-chain meshes needed for reasonable conveyance of emotion/intent. 
+
 By labeling expressions as procedural, this extension enables runtime systems (e.g., animation controllers, live-tracking systems, or AI avatars) to drive those expressions without conflict with animation data or user inputs.
 
 This metadata is **descriptive only**: it does not contain animation or behavior logic itself. Instead, it signals to tools and engines that the following expressions are _expected to be dynamically generated_.
@@ -39,7 +41,6 @@ This metadata is **descriptive only**: it does not contain animation or behavior
 - Define which expressions are not statically animated but generated procedurally
 - Avoid conflict between procedural and baked expression systems
 - Inform rig exporters or runtime systems which expressions are reserved for real-time generation
-- Enable consistent behavior across platforms
 
 ## Schema
 
@@ -67,10 +68,12 @@ This metadata is **descriptive only**: it does not contain animation or behavior
 | Property                | Type   | Description                                                                             |
 | ----------------------- | ------ | --------------------------------------------------------------------------------------- |
 | `proceduralExpressions` | array  | List of expression metadata entries that are intended to be procedurally controlled     |
-| `expression`            | string | Expression name as defined in the expression mapping vocabulary                         |
+| `expression`            | string | Corresponding expression name                        |
 | `mode`                  | string | Enum: `"timed"`, `"random"`, `"live"`, `"scripted"` — describes the procedural strategy |
 
 ## Procedural Modes
+
+TODO: Need to discuss the items below; there is concern around these particular fields and assertions that end applications should decide how to control these 
 
 | Mode       | Meaning                                                                        |
 | ---------- | ------------------------------------------------------------------------------ |
