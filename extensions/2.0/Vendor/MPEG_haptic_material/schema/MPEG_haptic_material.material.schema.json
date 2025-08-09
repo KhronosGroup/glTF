@@ -1,0 +1,57 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "MPEG_haptic_material.material",
+    "type": "object",
+    "description": "A haptic material.",
+    "properties": {
+		"haptic":{
+			"type":"integer",
+			"description":"Index to an element of the hapticObjects array of the MPEG_haptic extension. This is used for “Reference” textures to access the haptic information."
+		},
+        "stiffness": {
+            "type": "array",
+            "description": "An array of items describing the textures that store the stifness coefficients. Each texture determines the perceived stiffness of a surface. Which means the force perceived by the user opposed to the normal penetration of a material by a body part.",
+            "items": {
+                "$ref" : "MPEG_haptic_material.material.texture.schema.json"
+            }           
+        },
+        "friction": {
+            "type": "array",
+            "description": "An array of items describing the textures that store the coefficients of friction. Each texture indicates the perceived friction, which is a force opposing the movement of a body part sliding on a surface.",
+            "items": {
+                "$ref" : "MPEG_haptic_material.material.texture.schema.json"
+            }   
+        },
+        "vibrotactileTexture": {
+            "type": "array",
+            "description": "An array of items describing the textures that indicates the perceived texture by a body part while sliding on a surface. ",
+            "items": {
+                "$ref" : "MPEG_haptic_material.material.texture.schema.json"
+            }   
+        },
+        "temperature": {
+            "type": "array",
+            "description": "An array of items describing the textures that stores the temperature distribution. It indicates the perceived temperature of an object.",
+            "items": {
+                "$ref" : "MPEG_haptic_material.material.texture.schema.json"
+            }  
+        },
+        "vibration": {
+            "type": "array",
+            "description": "An array of items describing the textures that stores the amplitude and / or frequency of the vibration signal.",
+            "items": {
+                "$ref" : "MPEG_haptic_material.material.texture.schema.json"
+            }  
+        },
+        "custom": {
+            "type": "array",
+            "description": "An array of items describing the textures that stores custom haptic data.",
+            "items": {
+                "$ref" : "MPEG_haptic_material.material.texture.schema.json"
+            }  
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    }
+}
