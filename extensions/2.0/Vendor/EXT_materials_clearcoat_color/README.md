@@ -1,4 +1,4 @@
-# ADOBE\_materials\_clearcoat\_tint
+# EXT\_materials\_clearcoat\_color
 
 ## Contributors
 
