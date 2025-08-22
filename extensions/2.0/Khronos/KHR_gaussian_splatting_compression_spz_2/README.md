@@ -1,4 +1,4 @@
-# KHR\_gaussian\_splatting\_spz\_compression
+# KHR\_gaussian\_splatting\_compression\_spz\_2
 
 ## Contributors
 
@@ -36,7 +36,7 @@ Depends on the `KHR_gaussian_splatting` extension specification for attribute de
 
 ## Overview
 
-This extension defines support for compressing 3D Gaussian splats stored within in glTF using the SPZ compression format for efficient streaming and storage.
+This extension defines support for compressing 3D Gaussian splats stored within in glTF using [v2 of the SPZ compression format](https://github.com/nianticlabs/spz/tree/v2.0.0) for efficient streaming and storage.
 
 SPZ is a compression format from Niantic Spatial designed for Gaussian splats. Currently, it is open sourced under the MIT license. The SPZ format is primarily used in the Niantic Spatial Scaniverse app. It was purpose built for Gaussian splats and offers a balance of high compression with minimal visual fidelity loss, and allows for storing some or all of the 3D Gaussian's spherical harmonics.
 

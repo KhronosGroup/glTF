@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_gaussian_splatting_compression_spz glTF Mesh Primitive Extension",
+    "title": "KHR_gaussian_splatting_compression_spz_2 glTF Mesh Primitive Extension",
     "type": "object",
-    "description": "Compressed data for SPZ primitive.",
+    "description": "Compressed data for SPZ v2 primitive.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "bufferView": {
