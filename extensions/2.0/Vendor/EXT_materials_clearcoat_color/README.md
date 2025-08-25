@@ -75,7 +75,7 @@ The clearcoat is a thin, dielectric layer that specularly-transmits light throug
 
 Light rays travel different distances through the clearcoat layer depending on the angle of incidence. At grazing angles (when viewing the surface nearly edge-on), light travels a longer distance through the clearcoat medium, resulting in stronger absorption and more pronounced color saturation. Conversely, at normal incidence (when viewing the surface straight-on), light travels the shortest path through the clearcoat, producing less absorption. The `clearcoat_transmission_color` represents the color observed at normal incidence.
 
-Note that this view-dependent absorption is more pronouced when the ratio of IOR between the coating and surounding medium (usually air) is low. This is because, at higher IOR's, light impacting the coating at grazing angles gets refracted into the coating more strongly, shortening the path length through the coat and decreasing the absorption.
+Note that this view-dependent absorption is more pronounced when the ratio of IOR between the coating and surrounding medium (usually air) is low. This is because, at higher IOR's, light impacting the coating at grazing angles gets refracted into the coating more strongly, shortening the path length through the coat and decreasing the absorption.
 
 <figure>
 <img src="./figures/ClearcoatIOR.png"/>
