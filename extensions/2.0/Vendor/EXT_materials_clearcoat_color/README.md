@@ -55,7 +55,7 @@ Adding absorption to clearcoat materials can be done by adding the `EXT_material
 
 All implementations should use the same calculations for the input parameters. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix B](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) for more details on the BRDF calculations.
 
-As with the core glTF 2.0 spec, all coloured textures are assumed to be sRGB and all coloured factors are assumed to be linear.
+As with the core glTF 2.0 spec, all colored textures are assumed to be sRGB and all colored factors are assumed to be linear.
 
 |                                  | Type                                                                            | Description                            | Required             |
 |----------------------------------|---------------------------------------------------------------------------------|----------------------------------------|----------------------|
