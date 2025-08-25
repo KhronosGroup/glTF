@@ -21,7 +21,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension defines a way to add colored absorption to the clear coating provided by the `KHR_materials_clearcoat` extension. This allows materials to simulate the appearance of colored varnishes or lacquers.
+This extension defines a way to add colored absorption to the clearcoating provided by the `KHR_materials_clearcoat` extension. This allows materials to simulate the appearance of colored varnishes or lacquers.
 
 ## Extending Materials
 
