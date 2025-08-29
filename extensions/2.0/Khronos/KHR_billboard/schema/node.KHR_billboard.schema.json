@@ -1,0 +1,46 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_billboard glTF Node Extension",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "overlay": {
+            "type": "boolean",
+            "description": "If true, the billboard is rendered on top of other objects. (Default: false)",
+            "default": false
+        },
+        "rotationAxis": {
+            "type": "string",
+            "enum": [ "None", "X", "Y", "Z" ],
+            "description": "The axis around which the billboard rotates. 'None' means it rotates around all axes. (Default: None)",
+            "default": "None"
+        },
+        "scaleWithDistance": {
+            "type": "boolean",
+            "description": "If true, the billboard scales with distance from the camera. (Default: false)",
+            "default": false
+        },
+        "up": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "description": "The up direction of the billboard. Must be defined if `viewDirection` is parallel to the default up vector. (Default: +Y)",
+            "default": [0, 1, 0]
+        },
+        "viewDirection": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "description": "The view direction of the billboard. (Default: +Z)",
+            "default": [0, 0, 1]
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
