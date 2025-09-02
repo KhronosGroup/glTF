@@ -40,7 +40,7 @@ The content of a billboard is defined by the meshes and children of the Node. Th
 | `scaleWithDistance` | `false` | Defines if the billboard should scale on distance change or not. The initial distance between camera and node is used as reference. |
 | `viewDirection` | `[0,0,1]` | Can be used to change the facing direction of a node (default defined by glTF spec: +Z)
 | `up` | `[0,1,0]` | Needs to be defined if `viewDirection` is parallel to the default `up` vector. `up` and `viewDirection` do not need to be perpendicular (this can be computed by the implementation)
-| `rotationAxis` | `"None"` | Can be used to limit the billboard rotation to an axis. By default it is rotated around all axes. Possible values: `"None"`, `"X"`, `"Y"`, `"Z"` 
+| `rotationAxis` | `"All"` | Can be used to limit the billboard rotation to an axis. By default it is rotated around all axes. Possible values: `"All"`, `"X"`, `"Y"`, `"Z"` 
 | `overlay` | `false` | Defines if the billboard should be renderer in front of all other meshes and therefore never occluded. If two billboards with this property set to `true` overlap, their original node translation should be considered for ordering.
 
 ### Example
@@ -53,7 +53,7 @@ The content of a billboard is defined by the meshes and children of the Node. Th
                 "scaleWithDistance" : false,
                 "viewDirection": [0, 0, 1],
                 "up": [0, 1, 0],
-                "rotationAxis": "None",
+                "rotationAxis": "All",
                 "overlay": false
             }
         }

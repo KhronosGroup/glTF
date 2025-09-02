@@ -11,9 +11,9 @@
         },
         "rotationAxis": {
             "type": "string",
-            "enum": [ "None", "X", "Y", "Z" ],
-            "description": "The axis around which the billboard rotates. 'None' means it rotates around all axes. (Default: None)",
-            "default": "None"
+            "enum": [ "All", "X", "Y", "Z" ],
+            "description": "The axis around which the billboard rotates. 'All' rotates around all axes. (Default: All)",
+            "default": "All"
         },
         "scaleWithDistance": {
             "type": "boolean",
