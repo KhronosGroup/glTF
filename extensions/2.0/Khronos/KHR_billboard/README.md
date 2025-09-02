@@ -63,13 +63,13 @@ The content of a billboard is defined by the meshes and children of the Node. Th
 
 ## Handling defined Billboards
 
-When the `KHR_billboard` extension is defined on a node, the node's rotation and scale are replaced by the extension. Implementations should make a best effort to follow the parameters of the billboard's properties. The updated transform of the node is applied to associated meshes and children as defined by the core glTF specification.
+When the `KHR_billboard` extension is defined on a node, the node's global rotation and scale are replaced by the extension and node's parent global rotation and scale are not used. The updated global transform of the node is applied to associated meshes and children as defined by the core glTF specification. Implementations should make a best effort to follow the parameters of the billboard's properties.
 
 ### Child Nodes
 
-Children of a node that defines `KHR_billboard` should be treated normally within the context of the glTF node transform. (See: [glTF 2.0 Specification, §3.5.3 Transformations]) This allows content creators to apply an additional adjustment to the billboard that will be applied.
+Children of a node that defines `KHR_billboard` are treated normally within the context of the glTF node transform. (See: [glTF 2.0 Specification, §3.5.3 Transformations](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#transformations)) This allows content creators to apply an additional adjustment to the billboard that will be applied.
 
-If a child node defines `KHR_billboard` itself, the properties of the child's billboard definition override the parents, and the rotation and scale are replaced to follow the parameters of the billboard's properties.
+_Note: If a child node also defines `KHR_billboard`, the child must be treated independently of the parent declaration higher in the node hierarchy. In this case, the child node's global rotation and scale are replaced by the extension as defined in [Handling defined Billboards](#handling-defined-billboards)._
 
 ## Known Implementations
 
