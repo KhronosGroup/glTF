@@ -17,7 +17,7 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Dependent on: `KHR_character`, `KHR_animation_pointer`
+Requires the extension(s):  `KHR_character`, `KHR_animation_pointer`
 Can be used alongside: `KHR_character_expression_mapping`
 
 ## Overview
