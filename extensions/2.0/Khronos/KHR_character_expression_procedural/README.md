@@ -12,14 +12,14 @@
 
 ## Status
 
-### TODO -  REFACTOR and address some of the concerns around this current implementation, as well as incorporate it into the refactored extension hierarchy with KHR_character_expression
+### TODO - Iterate on this to address some of the concerns around this current implementation, as well as incorporate it into the refactored extension hierarchy with KHR_character_expression
 
 **Draft** – This extension is not yet ratified by the Khronos Group and is subject to change.
 
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Requires the extension(s):  `KHR_character`,`KHR_character_expression`
+Requires the extension(s): `KHR_character`,`KHR_character_expression`
 Works alongside: `KHR_character_expression_mapping`, `KHR_character_expression_joint`, `KHR_character_expression_texture`, `KHR_character_expression_morphtargets`.
 
 ## Overview
@@ -49,15 +49,25 @@ This metadata is **descriptive only**: it does not contain animation or behavior
 ```json
 {
   "extensions": {
-    "KHR_character_expression_procedural": {
-      "proceduralExpressions": [
+    "KHR_character_expression": {
+      "expressions": [
         {
-          "expression": "blinkLeft",
-          "mode": "timed"
+          "expression": "blink_left",
+          "animation": 0,
+          "extensions": {
+            "KHR_character_expression_procedural": {
+              "conflictResolution": "none"
+            }
+          }
         },
         {
-          "expression": "mouthTwitch",
-          "mode": "random"
+          "expression": "mouth_purse",
+          "animation": 1,
+          "extensions": {
+            "KHR_character_expression_procedural": {
+              "conflictResolution": "blend"
+            }
+          }
         }
       ]
     }
@@ -67,23 +77,9 @@ This metadata is **descriptive only**: it does not contain animation or behavior
 
 ### Properties
 
-| Property                | Type   | Description                                                                             |
-| ----------------------- | ------ | --------------------------------------------------------------------------------------- |
-| `proceduralExpressions` | array  | List of expression metadata entries that are intended to be procedurally controlled     |
-| `expression`            | string | Corresponding expression name                                                           |
-| `mode`                  | string | Enum: `"timed"`, `"random"`, `"live"`, `"scripted"` — describes the procedural strategy |
-
-## Procedural Modes
-
-TODO: Need to discuss the items below; there is concern around these particular fields and assertions that end applications should decide how to control these
-
-| Mode       | Meaning                                                                        |
-| ---------- | ------------------------------------------------------------------------------ |
-| `timed`    | The expression occurs in regular intervals (e.g., blinking every 5s)           |
-| `random`   | The expression fires with stochastic timing or weights                         |
-| `live`     | Driven by live-captured inputs (e.g., webcam, eye tracking)                    |
-| `scripted` | Driven by external dialogue, AI logic, or gameplay sequences                   |
-| `mixed`    | Combines two or more procedural sources, such as live tracking + scripted cues |
+| Property             | Type   | Description                                                                                                                                                  |
+| -------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `conflictResolution` | string | Conflict Resolution route used to determine the resolution strategy when multiple sources (procedural and non-procedural) want to control a given expression |
 
 ## Expression Control Behavior
 
@@ -99,15 +95,6 @@ Each procedural expression may declare a resolution strategy for combining proce
 | `block` | Procedural output _overrides_ animation data while active.                               |
 | `blend` | Procedural and animation data may be blended or accumulated together.                    |
 
-### Example with Resolution Mode
-
-```json
-{
-  "expression": "blinkLeft",
-  "mode": "timed",
-  "conflictResolution": "blend"
-}
-```
 
 This allows developers to distinguish expressions meant to supplement animation (e.g., micro-blinks over emotive acting) versus those that must fully override input (e.g., forced gaze).
 
@@ -115,7 +102,6 @@ This allows developers to distinguish expressions meant to supplement animation 
 
 - This extension is schema-only and does not contain behavior logic or animation data.
 - Runtimes may use this to suppress baked animation for procedural targets.
-- The expression names should align with the shared vocabulary defined in the `KHR_character_expression_mapping`.
 
 ## License
 
