@@ -17,7 +17,7 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Requires the extension(s):  `KHR_character`, `KHR_animation_pointer`
+Requires the extension(s): `KHR_character`, `KHR_character_expression`, `KHR_animation_pointer`
 Can be used alongside: `KHR_character_expression_mapping`
 
 ## Overview
@@ -45,21 +45,25 @@ Optionally, these expressions may be aligned with industry standards (or an endp
 ```json
 {
   "extensions": {
-    "KHR_character_expression_texture": {
+    "KHR_character_expression": {
       "expressions": [
         {
-          "material": 2,
-          "texture": 5,
           "expression": "happy",
           "animation": 0,
-          "channels": [0]
+          "extensions": {
+            "KHR_avatar_expression_texture": {
+              "channels": [0]
+            }
+          }
         },
         {
-          "material": 2,
-          "texture": 5,
           "expression": "angry",
           "animation": 1,
-          "channels": [0, 1]
+          "extensions": {
+            "KHR_avatar_expression_texture": {
+              "channels": [0, 1]
+            }
+          }
         }
       ]
     }
@@ -69,13 +73,10 @@ Optionally, these expressions may be aligned with industry standards (or an endp
 
 ### Properties
 
-| Property           | Type    | Description                                                                      |
-| ------------------ | ------- | -------------------------------------------------------------------------------- |
-| `expressions`      | array   | List of texture-expression bindings.                                             |
-| `material`         | integer | Index into the glTF `materials` array.                                           |
-| `texture`          | integer | (Optional) Index into the glTF `textures` array, defining a replacement texture. |
-| `textureTransform` | object  | (Optional) UV transformations for texture-based expressions.                     |
-| `expression`       | string  | Expression name associated with this texture or UV change.                       |
+| Property | Type | Description |
+| -------- | ---- | ----------- |
+
+| `channel` | array | Array representing the target channels that are texture transform-based |
 
 ### textureTransform properties
 
@@ -83,12 +84,6 @@ Optionally, these expressions may be aligned with industry standards (or an endp
 | -------- | -------- | ------------------------------------ |
 | `offset` | float[2] | UV offset for texture placement.     |
 | `scale`  | float[2] | UV scale for texture transformation. |
-
-### Recommended Interpolation for Binary Expressions
-
-For expressions that represent binary or toggle states (such as eye blinks, mouth open/close states, or other on/off expressions), the use of glTF animation channels with `"interpolation": "STEP"` is strongly recommended.
-
-Using STEP interpolation ensures that the expression toggles cleanly between fully off (0) and fully on (1) states, providing crisp transitions and avoiding unintended interpolation artifacts.
 
 ### Integration with KHR_animation_pointer
 
@@ -172,21 +167,25 @@ Using STEP interpolation ensures that the expression toggles cleanly between ful
 ```json
 {
   "extensions": {
-    "KHR_character_expression_texture": {
+    "KHR_character_expression": {
       "expressions": [
         {
-          "material": 2,
-          "texture": 5,
           "expression": "happy",
           "animation": 0,
-          "channels": [0, 1]
+          "extensions": {
+            "KHR_avatar_expression_texture": {
+              "channels": [0, 1]
+            }
+          }
         },
         {
-          "material": 2,
-          "texture": 5,
           "expression": "angry",
           "animation": 1,
-          "channels": [0, 1]
+          "extensions": {
+            "KHR_avatar_expression_texture": {
+              "channels": [0, 1]
+            }
+          }
         }
       ]
     }

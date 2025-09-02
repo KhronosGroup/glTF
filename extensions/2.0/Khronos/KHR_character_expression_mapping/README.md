@@ -17,7 +17,7 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Requires the extension(s):  `KHR_character`
+Requires the extension(s): `KHR_character`,`KHR_character_expression`
 Can be used alongside: `KHR_character_expression_morphtarget`, `KHR_character_expression_joints`, `KHR_character_expression_texture` or other expression sources
 
 ## Overview

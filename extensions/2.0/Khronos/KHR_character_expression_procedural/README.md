@@ -12,12 +12,14 @@
 
 ## Status
 
+### TODO -  REFACTOR and address some of the concerns around this current implementation, as well as incorporate it into the refactored extension hierarchy with KHR_character_expression
+
 **Draft** – This extension is not yet ratified by the Khronos Group and is subject to change.
 
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Requires the extension(s):  `KHR_character`
+Requires the extension(s):  `KHR_character`,`KHR_character_expression`
 Works alongside: `KHR_character_expression_mapping`, `KHR_character_expression_joint`, `KHR_character_expression_texture`, `KHR_character_expression_morphtargets`.
 
 ## Overview

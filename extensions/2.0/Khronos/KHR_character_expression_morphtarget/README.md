@@ -17,7 +17,7 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Requires the extension(s):  `KHR_character`
+Requires the extension(s): `KHR_character`,`KHR_character_expression`
 Used in conjunction with: `KHR_character_expression_mapping`
 
 ## Overview
@@ -44,17 +44,25 @@ Optionally, these expressions may be aligned with industry standards (or an endp
 ```json
 {
   "extensions": {
-    "KHR_character_expression_morphtarget": {
+    "KHR_character_expression": {
       "expressions": [
         {
           "expression": "smile",
           "animation": 0,
-          "channel": 0
+          "extensions": {
+            "KHR_avatar_expressions_morphtarget": {
+              "channels": [0]
+            }
+          }
         },
         {
           "expression": "frown",
           "animation": 1,
-          "channel": 0
+          "extensions": {
+            "KHR_avatar_expressions_morphtarget": {
+              "channels": [0]
+            }
+          }
         }
       ]
     }
@@ -64,12 +72,9 @@ Optionally, these expressions may be aligned with industry standards (or an endp
 
 ### Properties
 
-| Property      | Type    | Description                                                                    |
-| ------------- | ------- | ------------------------------------------------------------------------------ |
-| `expressions` | array   | Array of mappings between animation/channels and expression labels.            |
-| `animation`   | integer | Index into the glTF `animations[]` array representing an expression animation. |
-| `expression`  | string  | Expression name this joint contributes to.                                     |
-| `channel`     | integet | Index representing the `"weights"` channel                                     |
+| Property  | Type    | Description                                |
+| --------- | ------- | ------------------------------------------ |
+| `channel` | integet | Index representing the `"weights"` channel |
 
 ## Animation Integration (Expressions Tab Recommendation)
 
@@ -113,17 +118,25 @@ All morph target expressions should be driven using standard glTF animation chan
 ```json
 {
   "extensions": {
-    "KHR_character_expression_morphtarget": {
+    "KHR_character_expression": {
       "expressions": [
         {
           "expression": "smile",
           "animation": 0,
-          "channel": 0
+          "extensions": {
+            "KHR_avatar_expressions_morphtarget": {
+              "channels": [0]
+            }
+          }
         },
         {
           "expression": "frown",
           "animation": 1,
-          "channel": 0
+          "extensions": {
+            "KHR_avatar_expressions_morphtarget": {
+              "channels": [0]
+            }
+          }
         }
       ]
     }
