@@ -17,7 +17,12 @@ Written against the glTF 2.0 spec.
 
 ## Table of Contents
 
-// TODO
+- [Overview](#overview)
+- [Defining a Billboard](#defining-a-billboard)
+- [Handling defined Billboards](#handling-defined-billboards)
+- [Known Implementations](#known-implementations)
+- [Sample Implementation](#sample-implementation)
+- [Resources](#resources)
 
 ## Overview
 
