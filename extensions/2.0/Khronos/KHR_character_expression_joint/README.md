@@ -50,7 +50,7 @@ Optionally, these expressions may be aligned with industry standards (or an endp
           "expression": "smile",
           "animation": 0,
           "extensions": {
-            "KHR_avatar_expression_joint": {
+            "KHR_character_expression_joint": {
               "channels": [0, 1, 2]
             }
           }
@@ -59,7 +59,7 @@ Optionally, these expressions may be aligned with industry standards (or an endp
           "expression": "frown",
           "animation": 1,
           "extensions": {
-            "KHR_avatar_expression_joint": {
+            "KHR_character_expression_joint": {
               "channels": [0, 1]
             }
           }

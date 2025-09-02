@@ -51,7 +51,7 @@ Optionally, these expressions may be aligned with industry standards (or an endp
           "expression": "happy",
           "animation": 0,
           "extensions": {
-            "KHR_avatar_expression_texture": {
+            "KHR_character_expression_texture": {
               "channels": [0]
             }
           }
@@ -60,7 +60,7 @@ Optionally, these expressions may be aligned with industry standards (or an endp
           "expression": "angry",
           "animation": 1,
           "extensions": {
-            "KHR_avatar_expression_texture": {
+            "KHR_character_expression_texture": {
               "channels": [0, 1]
             }
           }
@@ -173,7 +173,7 @@ Using STEP interpolation ensures that the expression toggles cleanly between ful
           "expression": "happy",
           "animation": 0,
           "extensions": {
-            "KHR_avatar_expression_texture": {
+            "KHR_character_expression_texture": {
               "channels": [0, 1]
             }
           }
@@ -182,7 +182,7 @@ Using STEP interpolation ensures that the expression toggles cleanly between ful
           "expression": "angry",
           "animation": 1,
           "extensions": {
-            "KHR_avatar_expression_texture": {
+            "KHR_character_expression_texture": {
               "channels": [0, 1]
             }
           }
