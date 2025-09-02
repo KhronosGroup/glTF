@@ -1,4 +1,4 @@
-# KHR_avatar_virtual_joints
+# KHR_character_virtual_joints
 
 ## Contributors
 
@@ -17,11 +17,11 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Dependent on: `KHR_avatar`
+Dependent on: `KHR_character`
 
 ## Overview
 
-The `KHR_avatar_virtual_joints` extension introduces _virtual joints_—custom transform nodes that exist relative to the avatar’s skeletal hierarchy but are **not part of the skinned joint structure**. These virtual transforms serve as semantic attachment or control points for systems like look-at targeting, item equipping, IK hints, and seating positions.
+The `KHR_character_virtual_joints` extension introduces _virtual joints_—custom transform nodes that exist relative to the character’s skeletal hierarchy but are **not part of the skinned joint structure**. These virtual transforms serve as semantic attachment or control points for systems like look-at targeting, item equipping, IK hints, and seating positions.
 
 Virtual joints are defined via an offset transform relative to a single parent joint, and do **not** participate in skinning. They are evaluated at runtime for behavior logic and procedural animation.
 
@@ -40,7 +40,7 @@ This extension is inspired in part by constructs like `lookAt` in VRM and aims t
 ```json
 {
   "extensions": {
-    "KHR_avatar_virtual_joints": {
+    "KHR_character_virtual_joints": {
       "virtualJoints": [
         {
           "name": "arm_socket",

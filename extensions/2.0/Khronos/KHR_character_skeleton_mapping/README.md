@@ -1,4 +1,4 @@
-# KHR_avatar_skeleton_mapping
+# KHR_character_skeleton_mapping
 
 ## Contributors
 
@@ -17,16 +17,16 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Dependent on: `KHR_avatar`
-Typically used in conjunction with: `KHR_avatar_skeleton_biped`
+Dependent on: `KHR_character`
+Typically used in conjunction with: `KHR_character_skeleton_biped`
 
 ## Overview
 
-The `KHR_avatar_skeleton_mapping` extension provides a mechanism to map a skeleton rig to a reference rig, enabling retargeting and compatibility across different skeleton topologies. This extension is particularly useful for normalizing diverse rig structures across platforms and authoring tools. It provides one-to-one and one-to-many mapping; with the expectation that distributed weights add up to 1.0.
+The `KHR_character_skeleton_mapping` extension provides a mechanism to map a skeleton rig to a reference rig, enabling retargeting and compatibility across different skeleton topologies. This extension is particularly useful for normalizing diverse rig structures across platforms and authoring tools. It provides one-to-one and one-to-many mapping; with the expectation that distributed weights add up to 1.0.
 
 ## Mapping to Known Standard Rigs
 
-In many real-world scenarios, developers must remap an avatar's native joint structure to a **known, standardized rig**—such as a runtime's internal avatar model or a predefined specification like VRM's Humanoid rig.
+In many real-world scenarios, developers must remap an character's native joint structure to a **known, standardized rig**—such as a runtime's internal character model or a predefined specification like VRM's Humanoid rig.
 
 This extension supports such cases by allowing one-to-one or one-to-many weighted mappings between a model’s joints and those of a **target standard rig**.
 
@@ -43,9 +43,9 @@ Here’s an example mapping from a custom rig into VRM Humanoid:
 
 ```json
 {
-  "extensionsUsed": ["KHR_avatar_skeleton_mapping"],
+  "extensionsUsed": ["KHR_character_skeleton_mapping"],
   "extensions": {
-    "KHR_avatar_skeleton_mapping": {
+    "KHR_character_skeleton_mapping": {
       "skeletalRigMappings": {
         "vrmHumanoid": {
           "myRig_hips": [{ "target": "hips", "weight": 1.0 }],

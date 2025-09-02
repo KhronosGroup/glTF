@@ -1,4 +1,4 @@
-# KHR_avatar_expression_mapping
+# KHR_character_expression_mapping
 
 ## Contributors
 
@@ -17,8 +17,8 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Dependent on: `KHR_avatar`
-Can be used alongside: `KHR_avatar_expression_morphtargets` or other expression sources
+Dependent on: `KHR_character`,`KHR_character_expression`
+Can be used alongside: `KHR_character_expression_morphtarget`, `KHR_character_expression_joints`, `KHR_character_expression_texture` or other expression sources
 
 ## Overview
 
@@ -37,21 +37,22 @@ For examples of relevant types of expressions, you can reference concepts such a
 
 Optionally, these expressions may be aligned with industry standards (or an endpoint/experiences expected expressions set).
 
-## Extension Schema
+## Extension Schema/Example
 
 ```json
 {
+  "extensionsUsed": ["KHR_character_expression_mapping"],
   "extensions": {
-    "KHR_avatar_expression_mapping": {
+    "KHR_character_expression_mapping": {
       "expressionSetMappings": {
-        "example_1": {
+        "example_set_1": {
           "smileLeft": [
             { "target": "Smile", "weight": 0.8 },
             { "target": "LeftCheekRaise", "weight": 0.2 }
           ],
           "jawOpen": [{ "target": "MouthOpen", "weight": 1.0 }]
         },
-        "example_2": {
+        "example_set_2": {
           "smileLeft": [
             { "target": "smile_small", "weight": 0.2 },
             { "target": "left_dimple", "weight": 0.8 }
@@ -64,17 +65,19 @@ Optionally, these expressions may be aligned with industry standards (or an endp
 }
 ```
 
-### Properties
+### Breakdown and Lower-Level Properties
 
-| Property   | Type   | Description                                                        |
-| ---------- | ------ | ------------------------------------------------------------------ |
-| `mappings` | object | Dictionary mapping expression names to reference vocabulary terms. |
-| `target`   | string | Name of the expression in the target vocabulary.                   |
-| `weight`   | number | Influence of this target. Must sum to 1.0 per expression key.      |
+The structure of the data contained in the extension can be described as a dictionary of dictionaries:
+Target Expression Set Name : Expression Mapping Dictionary (Expression Name : List/Array of objects containing the below properties)
+
+| Property | Type   | Description                                                   |
+| -------- | ------ | ------------------------------------------------------------- |
+| `target` | string | Name of the expression in the target vocabulary.              |
+| `weight` | number | Influence of this target. Must sum to 1.0 per expression key. |
 
 ### Mapping Types
 
-This extension supports both one-to-one and one-to-many mappings:
+This extension supports both one-to-one and one-to-many mappings (as well as multiple instances of those mapping sets):
 
 - **One-to-one**: An expression maps directly to a single reference vocabulary term with weight 1.0.
 - **One-to-many**: An expression is composed from multiple reference terms, blended using assigned weights.
@@ -84,26 +87,8 @@ This allows developers to bridge between custom expression sets and shared vocab
 ## Implementation Notes
 
 - This extension is typically used at the top level of the glTF file.
-- Expression names should match those used in `KHR_avatar_expression_morphtargets`, animation tracks, or tracking pipelines.
+- Expression names should match those used in `KHR_character_expression_morphtarget`, `KHR_character_expression_texture`, or `KHR_character_expression_joint`;
 - Tools can interpret this mapping to apply automatic translation between expression sets.
-
-## Example
-
-```json
-{
-  "extensionsUsed": ["KHR_avatar_expression_mapping"],
-  "extensions": {
-    "KHR_avatar_expression_mapping": {
-      "mappings": {
-        "smileLeft": [
-          { "target": "Smile", "weight": 0.8 },
-          { "target": "LeftCheekRaise", "weight": 0.2 }
-        ]
-      }
-    }
-  }
-}
-```
 
 ## License
 

@@ -1,4 +1,4 @@
-# KHR_avatar_expression_joint
+# KHR_character_expression_joint
 
 ## Contributors
 
@@ -17,32 +17,34 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Dependent on: `KHR_avatar`
-Typically used in conjunction with: `KHR_avatar_expression_mapping`
+Dependent on: `KHR_character`
+Typically used in conjunction with: `KHR_character_expression_mapping`
 
 ## Overview
 
-The `KHR_avatar_expression_joint` extension provides a semantic mapping between facial expressions and joint transformations in the glTF node hierarchy. It enables tools and runtimes to associate expressions like `blink`, `smile`, or `jawOpen` with specific nodes whose transforms are animated using standard glTF animation channels.
+The `KHR_character_expression_joint` extension provides a semantic mapping between facial expression names and joint-based animations. It enables tools and runtimes to associate expressions like `blink`, `smile`, or `jawOpen` with specific nodes whose transforms are animated using standard glTF animation channels.
 
 This extension is purely descriptive: it does not define or store animation data itself.
 
 ## Reference Expression Categories/Vocabularies
 
-Expression types include:
+Expressions in this context describe face-localized animations used to drive small and/or larger movements across the face and/or down-chain meshes needed for reasonable conveyance of emotion/intent. 
 
-- **Emotions** (e.g. `happy`, `angry`, `surprised`)
-- **Visemes** (e.g. `aa`, `oo`, `th`)
-- **Modifiers** (e.g. `left`, `right`, `upper`, `lower`)
-- **Gestures and Actions** (e.g. `blink`, `smile`, `jawOpen`)
+For examples of relevant types of expressions, you can reference concepts such as:
 
-Optionally, these may be aligned with industry standards, such as [Facial Action Coding System (FACS)](https://en.wikipedia.org/wiki/Facial_Action_Coding_System).
+- **Emotions** (Emotion-derived facial movements such as what [VRM defines as presets](https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/expressions.md),  e.g. `happy`, `angry`, `surprised`)
+- **Visemes** (A visual representations of mouth movements for parts of speech, e.g. `aa`, `oo`, `th`)
+- **FACS** ([Facial Action Coding System (FACS)](https://en.wikipedia.org/wiki/Facial_Action_Coding_System) which is a system intended to describe visually distinguishable facial movements (and is often split further based on left/right), e.g.  `brow lowerer`, `chin raiser`, `lid droop`)
+- **Gestures and Actions** (Larger descriptors that describe general facial actionse (but not emotion), e.g. `blink`, `smile`, `jawOpen`)
+
+Optionally, these expressions may be aligned with industry standards (or an endpoint/experiences expected expressions set).
 
 ## Extension Schema
 
 ```json
 {
   "extensions": {
-    "KHR_avatar_expression_joint": {
+    "KHR_character_expression_joint": {
       "expressions": [
         {
           "expression": "smile",
@@ -82,7 +84,7 @@ Each animation channel used to drive an expression should operate within a **nor
 
 The transformation values themselves (e.g., degree of rotation or distance of translation) should scale proportionally with the normalized input range.
 
-This approach simplifies avatar implementation by centralizing expression playback in the glTF animation system and unifying runtime logic for blending and prioritization.
+This approach simplifies character implementation by centralizing expression playback in the glTF animation system and unifying runtime logic for blending and prioritization.
 
 ### Recommended Interpolation for Binary Expressions
 

@@ -1,4 +1,4 @@
-# KHR_avatar
+# KHR_character_avatar
 
 ## Contributors
 
@@ -18,15 +18,17 @@
 
 Written against the glTF 2.0 specification.
 
-Dependencies: `KHR_xmp_json_ld`
+Dependencies: `KHR_xmp_json_ld`, `KHR_character`
 This extension also leverages the `KHR_xmp_json_ld` pattern for attaching extensible metadata as JSON-LD blocks within glTF assets. For background on this approach, see:  
 [KHR_xmp_json_ld](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_xmp_json_ld)
 
 ## Overview
 
-The `KHR_avatar` extension designates a glTF asset as representing an avatar. This top-level marker enables tools and runtimes to interpret the asset as containing avatar-specific content such as rigging, blendshapes, animation retargeting, or metadata.
+The `KHR_character_avatar` extension designates a glTF asset as representing an avatar. This top-level marker enables tools and runtimes to interpret the asset as containing avatar-specific content such as rigging, blendshapes, animation retargeting, or metadata.
 
 This extension does not define avatar features directly but acts as a root declaration that avatar-related extensions may be present, and that consumers should treat the asset using avatar-specific logic and pipelines. It's part of the wider set of KHR avatar extensions that are meant to be building blocks to represent a contract stating functionality and data requirements between a given model and an endpoint.
+
+This extension is dependent on the KHR_character extension; which defines related functionality pertaining to more generalized characters.
 
 The extension supports referencing the source `scene` that represents the avatar and optionally includes structured metadata through the `KHR_xmp_json_ld` mechanism.
 
@@ -35,7 +37,7 @@ The extension supports referencing the source `scene` that represents the avatar
 ```json
 {
   "extensions": {
-    "KHR_avatar": {
+    "KHR_character_avatar": {
       "sceneIndex": 0
     }
   }
@@ -44,13 +46,13 @@ The extension supports referencing the source `scene` that represents the avatar
 
 ### Properties
 
-| Property     | Type    | Description                                                                 |
-|--------------|---------|-----------------------------------------------------------------------------|
+| Property     | Type    | Description                                                                                                        |
+| ------------ | ------- | ------------------------------------------------------------------------------------------------------------------ |
 | `sceneIndex` | integer | Index of the glTF `scene` representing the avatar. Used to distinguish the avatar root when multiple scenes exist. |
 
 ## Metadata Attachment: KHR_xmp_json_ld
 
-Avatar metadata should be expressed using the `KHR_xmp_json_ld` format, a structured mechanism for attaching JSON-LD metadata blocks to glTF files. In the context of `KHR_avatar`, this allows consistent expression of avatar provenance, licensing, creator, versioning, and intended use, among others.
+Avatar metadata should be expressed using the `KHR_xmp_json_ld` format, a structured mechanism for attaching JSON-LD metadata blocks to glTF files. In the context of `KHR_character_avatar`, this allows consistent expression of avatar provenance, licensing, creator, versioning, and intended use, among others.
 
 The `KHR_xmp_json_ld` block is placed at the root level of the glTF asset as part of the defined extension usage. Metadata keys and structures are defined in the shared Khronos Avatar Metadata schema (TBD).
 
@@ -91,9 +93,9 @@ The `KHR_xmp_json_ld` block is placed at the root level of the glTF asset as par
       "name": "AvatarRoot"
     }
   ],
-  "extensionsUsed": ["KHR_avatar", "KHR_xmp_json_ld"],
+  "extensionsUsed": ["KHR_character_avatar", "KHR_xmp_json_ld"],
   "extensions": {
-    "KHR_avatar": {
+    "KHR_character_avatar": {
       "sceneIndex": 0
     },
 

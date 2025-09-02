@@ -1,4 +1,4 @@
-# KHR_avatar_skeleton_biped
+# KHR_character_skeleton_biped
 
 ## Contributors
 
@@ -17,22 +17,22 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Depends on: `KHR_avatar`
+Depends on: `KHR_character`
 
 ## Overview
 
 **THIS EXTENSION IS VERY MUCH WORK IN PROGRESS**
 
-The `KHR_avatar_skeleton_biped` extension enables bipedal avatars. Like with other avatar extensions, its presence represents the data contract that the model itself is a bipedal character model. This extension enables clarifying what joints are for retargeting and compatibility across tools and platforms by specifying a canonical set of joints and their hierarchical structure.
+The `KHR_character_skeleton_biped` extension enables bipedal characters. Like with other character extensions, its presence represents the data contract that the model itself is a bipedal character model. This extension enables clarifying what joints are for retargeting and compatibility across tools and platforms by specifying a canonical set of joints and their hierarchical structure.
 
-This extension does not modify the glTF skinning or animation system, but instead annotates the avatar’s node hierarchy to indicate which nodes represent canonical joints in a bipedal skeleton.
+This extension does not modify the glTF skinning or animation system, but instead annotates the character’s node hierarchy to indicate which nodes represent canonical joints in a bipedal skeleton.
 
 ## Extension Schema Example
 
 ```json
 {
   "extensions": {
-    "KHR_avatar_skeleton_biped": {
+    "KHR_character_skeleton_biped": {
       "joints": {
         "hips": 0,
         "spine": 1,
@@ -59,9 +59,9 @@ This extension does not modify the glTF skinning or animation system, but instea
 
 ### Properties
 
-| Property | Type   | Description                                                                |
-| -------- | ------ | -------------------------------------------------------------------------- |
-| `joints` | object | Mapping from biped joint names to node indices in the glTF file.           |
+| Property | Type   | Description                                                      |
+| -------- | ------ | ---------------------------------------------------------------- |
+| `joints` | object | Mapping from biped joint names to node indices in the glTF file. |
 
 Each joint name corresponds to a node present in the glTF node hierarchy. The hierarchy as it exists then informs the skeletal hierarchy for parsing purposes.
 
@@ -81,11 +81,11 @@ Each joint name corresponds to a node present in the glTF node hierarchy. The hi
     ...
   ],
   "extensionsUsed": [
-    "KHR_avatar",
-    "KHR_avatar_skeleton_biped"
+    "KHR_character",
+    "KHR_character_skeleton_biped"
   ],
   "extensions": {
-    "KHR_avatar_skeleton_biped": {
+    "KHR_character_skeleton_biped": {
       "joints": {
         "hips": 0,
         "spine": 1,
@@ -100,18 +100,18 @@ Each joint name corresponds to a node present in the glTF node hierarchy. The hi
 
 ## Relationship to glTF 2.0 Skinning
 
-The `KHR_avatar_skeleton_biped` extension builds on top of the core glTF 2.0 skinning system. It does **not** introduce new skinning mechanics, but instead annotates which nodes in the existing `skins[].joints[]` structure correspond to meaningful joints in a developer-defined skeletal rig.
+The `KHR_character_skeleton_biped` extension builds on top of the core glTF 2.0 skinning system. It does **not** introduce new skinning mechanics, but instead annotates which nodes in the existing `skins[j].joints[]` structure correspond to meaningful joints in a developer-defined skeletal rig.
 
 The joint indices specified in the `joints` dictionary refer directly to elements within the glTF `nodes` array, and should match those used in a valid `skin` structure:
 
-- The avatar mesh should be associated with a `skin`, per [glTF 2.0 Skinning](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#skins).
+- The character mesh should be associated with a `skin`, per [glTF 2.0 Skinning](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#skins).
 - The joints listed in this extension must be a subset of the joints defined in `skins[j].joints`.
 
-This enables runtime engines to extract semantic meaning from joint hierarchies already used for mesh deformation, supporting animation retargeting and avatar interoperability.
+This enables runtime engines to extract semantic meaning from joint hierarchies already used for mesh deformation, supporting animation retargeting and character interoperability.
 
 ## Skeletal Mapping Support
 
-Rather than define mapping logic directly in this extension, developers should use the [`KHR_avatar_skeleton_mapping`](./KHR_avatar_skeleton_mapping_README.md) extension in conjunction with this one for any one-to-one or one-to-many joint remapping between different rig topologies.
+Rather than define mapping logic directly in this extension, developers should use the [`KHR_character_skeleton_mapping`](./KHR_character_skeleton_mapping_README.md) extension in conjunction with this one for any one-to-one or one-to-many joint remapping between different rig topologies.
 
 That extension supports weighted joint translation and enables cleaner separation between semantic labeling (this extension) and rig interoperability (mapping).
 
@@ -122,14 +122,14 @@ This extension currently avoids defining any required or default biped joint hie
 > **Why?**  
 > Standardizing on a single joint hierarchy would inadvertently lock the majority of developers into a single rig structure, limiting flexibility for studios and tools that use different conventions.
 
-Instead, this extension enables **declarative labeling** of a bipedal skeleton using your rig's native hierarchy, and encourages semantic interoperability through mapping via the `KHR_avatar_skeleton_mapping` extension.
+Instead, this extension enables **declarative labeling** of a bipedal skeleton using your rig's native hierarchy, and encourages semantic interoperability through mapping via the `KHR_character_skeleton_mapping` extension.
 
 As the ecosystem matures, guidance or profiles may emerge for common structures—but this extension deliberately avoids enforcing that at this time.
 
 ## Implementation Notes
 
 - This extension is non-destructive and overlays semantic information atop the existing glTF node hierarchy.
-- Tools can use this extension to retarget animation between avatars, align expressions, or validate rigging consistency.
+- Tools can use this extension to retarget animation between characters, align expressions, or validate rigging consistency.
 - The specified joint indices must form a valid hierarchy rooted at a common ancestor (usually `hips`).
 
 ## Known Implementations

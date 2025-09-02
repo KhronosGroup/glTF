@@ -1,4 +1,4 @@
-# KHR_avatar_expression_morphtarget
+# KHR_character_expression_morphtarget
 
 ## Contributors
 
@@ -17,23 +17,24 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Used in conjunction with: `KHR_avatar`, `KHR_avatar_expression_mapping`
+Dependent on: `KHR_character`,`KHR_character_expression`
+Used in conjunction with: `KHR_character_expression_mapping`
 
 ## Overview
 
-The `KHR_avatar_expression_morphtarget` extension provides semantic bindings between avatar expressions and specific morph target indices in a glTF mesh. These mappings enable higher-level expression control systems to reference the correct blendshapes when driving facial animation using glTF animation channels.
+The `KHR_character_expression_morphtarget` extension provides semantic bindings between character expressions and specific morph target indices in a glTF mesh. These mappings enable higher-level expression control systems to reference the correct blendshapes when driving facial animation using glTF animation channels.
 
 This extension does **not** define animation data itself. Instead, it enables consistent reference of morph target indices across tools, runtimes, and expressions.
 
 ## Reference Expression Categories/Vocabularies
 
-Expressions in this context describe face-localized animations used to drive small and/or larger movements across the face and/or down-chain meshes needed for reasonable conveyance of emotion/intent. 
+Expressions in this context describe face-localized animations used to drive small and/or larger movements across the face and/or down-chain meshes needed for reasonable conveyance of emotion/intent.
 
 For examples of relevant types of expressions, you can reference concepts such as:
 
-- **Emotions** (Emotion-derived facial movements such as what [VRM defines as presets](https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/expressions.md),  e.g. `happy`, `angry`, `surprised`)
+- **Emotions** (Emotion-derived facial movements such as what [VRM defines as presets](https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/expressions.md), e.g. `happy`, `angry`, `surprised`)
 - **Visemes** (A visual representations of mouth movements for parts of speech, e.g. `aa`, `oo`, `th`)
-- **FACS** ([Facial Action Coding System (FACS)](https://en.wikipedia.org/wiki/Facial_Action_Coding_System) which is a system intended to describe visually distinguishable facial movements (and is often split further based on left/right), e.g.  `brow lowerer`, `chin raiser`, `lid droop`)
+- **FACS** ([Facial Action Coding System (FACS)](https://en.wikipedia.org/wiki/Facial_Action_Coding_System) which is a system intended to describe visually distinguishable facial movements (and is often split further based on left/right), e.g. `brow lowerer`, `chin raiser`, `lid droop`)
 - **Gestures and Actions** (Larger descriptors that describe general facial actionse (but not emotion), e.g. `blink`, `smile`, `jawOpen`)
 
 Optionally, these expressions may be aligned with industry standards (or an endpoint/experiences expected expressions set).
@@ -43,7 +44,7 @@ Optionally, these expressions may be aligned with industry standards (or an endp
 ```json
 {
   "extensions": {
-    "KHR_avatar_expression_morphtarget": {
+    "KHR_character_expression_morphtarget": {
       "expressions": [
         {
           "expression": "smile",
@@ -112,7 +113,7 @@ All morph target expressions should be driven using standard glTF animation chan
 ```json
 {
   "extensions": {
-    "KHR_avatar_expression_morphtarget": {
+    "KHR_character_expression_morphtarget": {
       "expressions": [
         {
           "expression": "smile",
@@ -171,7 +172,7 @@ The animation should update the relevant morph target weight (in this case index
 
 - This extension provides a consistent mapping between expression names and mesh targets, allowing glTF animation data to be expressive-aware.
 - Multiple morph targets can be bound to the same expression.
-- Tools may use this metadata to validate expression sets, retarget avatar blendshape names, or drive runtime animation.
+- Tools may use this metadata to validate expression sets, retarget character blendshape names, or drive runtime animation.
 
 ### Recommended Interpolation for Binary Expressions
 
@@ -185,7 +186,7 @@ All expression-driven changes defined by this extension should rely on standard 
 - Animations targeting expression-driven `weights` (for morphtargets)
 - This ensures consistency, ease of implementation, and interoperability across runtimes.
 
-This approach simplifies avatar implementation by centralizing expression playback in the glTF animation system, reducing custom handling and improving cross-platform compatibility.
+This approach simplifies character implementation by centralizing expression playback in the glTF animation system, reducing custom handling and improving cross-platform compatibility.
 
 ## License
 

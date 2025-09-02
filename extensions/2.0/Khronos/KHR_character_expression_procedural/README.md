@@ -1,4 +1,4 @@
-# KHR_avatar_expression_procedural
+# KHR_character_expression_procedural
 
 ## Contributors
 
@@ -17,12 +17,12 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Dependent on: `KHR_avatar`
-Works alongside: `KHR_avatar_expression_mapping`, `KHR_avatar_expression_joint`, `KHR_avatar_expression_morphtargets`.
+Dependent on: `KHR_character`,`KHR_character_expression`
+Works alongside: `KHR_character_expression_mapping`, `KHR_character_expression_joint`, `KHR_character_expression_texture`, `KHR_character_expression_morphtargets`.
 
 ## Overview
 
-The `KHR_avatar_expression_procedural` extension introduces a metadata layer that defines which expressions are expected to be procedurally generated or controlled at runtime. This includes expressions such as:
+The `KHR_character_expression_procedural` extension introduces a metadata layer that defines which expressions are expected to be procedurally generated or controlled at runtime. This includes expressions such as:
 
 - **Timed blinking**
 - **Eye darting**
@@ -30,9 +30,9 @@ The `KHR_avatar_expression_procedural` extension introduces a metadata layer tha
 - **Microexpressions**
 - **Randomized twitches or gestures**
 
-Expressions in this context describe face-localized animations used to drive small and/or larger movements across the face and/or down-chain meshes needed for reasonable conveyance of emotion/intent. 
+Expressions in this context describe face-localized animations used to drive small and/or larger movements across the face and/or down-chain meshes needed for reasonable conveyance of emotion/intent.
 
-By labeling expressions as procedural, this extension enables runtime systems (e.g., animation controllers, live-tracking systems, or AI avatars) to drive those expressions without conflict with animation data or user inputs.
+By labeling expressions as procedural, this extension enables runtime systems (e.g., animation controllers, live-tracking systems, or AI characters) to drive those expressions without conflict with animation data or user inputs.
 
 This metadata is **descriptive only**: it does not contain animation or behavior logic itself. Instead, it signals to tools and engines that the following expressions are _expected to be dynamically generated_.
 
@@ -47,7 +47,7 @@ This metadata is **descriptive only**: it does not contain animation or behavior
 ```json
 {
   "extensions": {
-    "KHR_avatar_expression_procedural": {
+    "KHR_character_expression_procedural": {
       "proceduralExpressions": [
         {
           "expression": "blinkLeft",
@@ -68,12 +68,12 @@ This metadata is **descriptive only**: it does not contain animation or behavior
 | Property                | Type   | Description                                                                             |
 | ----------------------- | ------ | --------------------------------------------------------------------------------------- |
 | `proceduralExpressions` | array  | List of expression metadata entries that are intended to be procedurally controlled     |
-| `expression`            | string | Corresponding expression name                        |
+| `expression`            | string | Corresponding expression name                                                           |
 | `mode`                  | string | Enum: `"timed"`, `"random"`, `"live"`, `"scripted"` — describes the procedural strategy |
 
 ## Procedural Modes
 
-TODO: Need to discuss the items below; there is concern around these particular fields and assertions that end applications should decide how to control these 
+TODO: Need to discuss the items below; there is concern around these particular fields and assertions that end applications should decide how to control these
 
 | Mode       | Meaning                                                                        |
 | ---------- | ------------------------------------------------------------------------------ |
@@ -113,7 +113,7 @@ This allows developers to distinguish expressions meant to supplement animation 
 
 - This extension is schema-only and does not contain behavior logic or animation data.
 - Runtimes may use this to suppress baked animation for procedural targets.
-- The expression names should align with the shared vocabulary defined in the `KHR_avatar_expression_mapping`.
+- The expression names should align with the shared vocabulary defined in the `KHR_character_expression_mapping`.
 
 ## License
 

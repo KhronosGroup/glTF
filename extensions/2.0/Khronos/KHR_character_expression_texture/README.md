@@ -1,4 +1,4 @@
-# KHR_avatar_expression_texture
+# KHR_character_expression_texture
 
 ## Contributors
 
@@ -17,25 +17,25 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Dependent on: `KHR_avatar`,`KHR_animation_pointer`
-Can be used alongside: `KHR_avatar_expression_mapping`
+Dependent on: `KHR_character`, `KHR_animation_pointer`, `KHR_character_expression`
+Can be used alongside: `KHR_character_expression_mapping`
 
 ## Overview
 
-The `KHR_avatar_expression_texture` extension enables expression-level control using texture swaps or UV transformations. This approach is beneficial for avatars that represent expressions visually via changes in texture, such as cartoon or anime-style characters.
+The `KHR_character_expression_texture` extension enables expression-level control using texture swaps or UV transformations. This approach is beneficial for characters that represent expressions visually via changes in texture, such as cartoon or anime-style characters.
 
 - Expression timing, blending, and control must use glTF `animations` channels.
 - Animations targeting expression-driven texture transforms must adhere strictly to glTF animation standards and khr_animation_pointer semantics.
 
 ## Reference Expression Vocabulary
 
-Expressions in this context describe face-localized animations used to drive small and/or larger movements across the face and/or down-chain meshes needed for reasonable conveyance of emotion/intent. 
+Expressions in this context describe face-localized animations used to drive small and/or larger movements across the face and/or down-chain meshes needed for reasonable conveyance of emotion/intent.
 
 For examples of relevant types of expressions, you can reference concepts such as:
 
-- **Emotions** (Emotion-derived facial movements such as what [VRM defines as presets](https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/expressions.md),  e.g. `happy`, `angry`, `surprised`)
+- **Emotions** (Emotion-derived facial movements such as what [VRM defines as presets](https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/expressions.md), e.g. `happy`, `angry`, `surprised`)
 - **Visemes** (A visual representations of mouth movements for parts of speech, e.g. `aa`, `oo`, `th`)
-- **FACS** ([Facial Action Coding System (FACS)](https://en.wikipedia.org/wiki/Facial_Action_Coding_System) which is a system intended to describe visually distinguishable facial movements (and is often split further based on left/right), e.g.  `brow lowerer`, `chin raiser`, `lid droop`)
+- **FACS** ([Facial Action Coding System (FACS)](https://en.wikipedia.org/wiki/Facial_Action_Coding_System) which is a system intended to describe visually distinguishable facial movements (and is often split further based on left/right), e.g. `brow lowerer`, `chin raiser`, `lid droop`)
 - **Gestures and Actions** (Larger descriptors that describe general facial actionse (but not emotion), e.g. `blink`, `smile`, `jawOpen`)
 
 Optionally, these expressions may be aligned with industry standards (or an endpoint/experiences expected expressions set).
@@ -45,7 +45,7 @@ Optionally, these expressions may be aligned with industry standards (or an endp
 ```json
 {
   "extensions": {
-    "KHR_avatar_expression_texture": {
+    "KHR_character_expression_texture": {
       "expressions": [
         {
           "material": 2,
@@ -172,7 +172,7 @@ Using STEP interpolation ensures that the expression toggles cleanly between ful
 ```json
 {
   "extensions": {
-    "KHR_avatar_expression_texture": {
+    "KHR_character_expression_texture": {
       "expressions": [
         {
           "material": 2,
@@ -254,7 +254,7 @@ Animation of either the texture index or texture transform must be implemented u
 ### Runtime Behavior
 
 - Expression weights should animate between `0.0` (off) and `1.0` (fully active).
-- The avatar system uses these animations to blend or toggle texture visuals in accordance with semantic expressions.
+- The character system uses these animations to blend or toggle texture visuals in accordance with semantic expressions.
 
 ## License
 
