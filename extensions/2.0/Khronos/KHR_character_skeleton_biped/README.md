@@ -17,7 +17,7 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Depends on: `KHR_character`
+Requires the extension(s):  `KHR_character`
 
 ## Overview
 

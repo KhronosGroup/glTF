@@ -1,4 +1,6 @@
-# KHR_avatar_mesh_annotation
+# KHR_character_mesh_annotation
+
+### TODO - REFACTOR and potentially consolidate with KHR_character_mesh_annotation_rendering
 
 ## Contributors
 
@@ -17,12 +19,12 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.
-Dependent on: `KHR_avatar`  
+Dependent on: `KHR_character`  
 Can be used alongside rendering-related extensions.
 
 ## Overview
 
-The `KHR_avatar_mesh_annotation` extension enables arbitrary per-mesh metadata annotations for avatar models. This provides a generalized way for creators and tools to semantically tag portions of geometry for gameplay, rendering, accessibility, customization, or runtime logic.
+The `KHR_character_mesh_annotation` extension enables arbitrary per-mesh metadata annotations for character models. This provides a generalized way for creators and tools to semantically tag portions of geometry for gameplay, rendering, accessibility, customization, or runtime logic.
 
 Unlike expression bindings or skeletons, this extension focuses on **attaching structured metadata to glTF mesh primitives or submeshes**. Examples include:
 
@@ -33,9 +35,9 @@ Unlike expression bindings or skeletons, this extension focuses on **attaching s
 
 ## Motivation
 
-Avatar models often contain complex geometry with overlapping purposes (e.g. hair, clothing, limbs, devices, accessories). Many applications need to reason about specific mesh subsets for:
+character models often contain complex geometry with overlapping purposes (e.g. hair, clothing, limbs, devices, accessories). Many applications need to reason about specific mesh subsets for:
 
-- Avatar customization layers
+- character customization layers
 - Haptic or interaction targeting
 - Runtime layering and decal application
 - Streaming/LOD switching
@@ -44,7 +46,7 @@ This extension provides a consistent, schema-driven approach to labeling such me
 
 ## Schema
 
-Annotations are attached at the **primitive level** (i.e., a `mesh.primitives[i]`), and stored in the `KHR_avatar_mesh_annotation` extension:
+Annotations are attached at the **primitive level** (i.e., a `mesh.primitives[i]`), and stored in the `KHR_character_mesh_annotation` extension:
 
 ```json
 {
@@ -54,7 +56,7 @@ Annotations are attached at the **primitive level** (i.e., a `mesh.primitives[i]
         {
           "attributes": { ... },
           "extensions": {
-            "KHR_avatar_mesh_annotation": {
+            "KHR_character_mesh_annotation": {
               "tags": ["eyewear", "selectable"],
                             "region": "face"
             }

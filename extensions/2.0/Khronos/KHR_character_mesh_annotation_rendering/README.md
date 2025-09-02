@@ -1,4 +1,6 @@
-# KHR_avatar_mesh_annotation_rendering
+# KHR_character_mesh_annotation_rendering
+
+### TODO -  REFACTOR and potentially consolidate with KHR_character_mesh_annotation
 
 ## Contributors
 
@@ -17,18 +19,18 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.  
-Dependent on: `KHR_avatar`
+Requires the extension(s):  `KHR_character`
 
 ## Overview
 
-The `KHR_avatar_mesh_annotation_rendering` extension provides structured metadata for avatar mesh primitives related to **visibility and render-time behavior**. It complements the core glTF material and LOD systems by exposing semantic visibility rules such as “first-person only”, “always visible”, etc.
+The `KHR_character_mesh_annotation_rendering` extension provides structured metadata for character mesh primitives related to **visibility and render-time behavior**. It complements the core glTF material and LOD systems by exposing semantic visibility rules such as “first-person only” and “always visible”.
 
 This extension is intended to support use cases such as:
 
-- Hiding certain parts of an avatar (like head or hair) in first-person mode
+- Hiding certain parts of an character (like head or hair) in first-person mode
 - Marking components that must always be rendered (e.g., eyes)
 - Toggling cosmetic parts based on camera mode or gameplay state
-- Managing specialized render passes (shadows, reflections, etc.)
+- Managing specialized render passes (e.g. shadows, reflections)
 
 ## Use Cases
 
@@ -48,7 +50,7 @@ This extension is defined per `mesh.primitive`, allowing fine-grained render beh
       "primitives": [
         {
           "extensions": {
-            "KHR_avatar_mesh_annotation_rendering": {
+            "KHR_character_mesh_annotation_rendering": {
               "renderVisibility": "firstPersonOnly",
               "renderTags": ["eyewear", "forceRender"]
             }

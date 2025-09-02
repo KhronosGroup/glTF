@@ -18,7 +18,8 @@
 
 Written against the glTF 2.0 specification.
 
-Dependencies: `KHR_xmp_json_ld`
+Requires the extensions: `KHR_xmp_json_ld`
+
 This extension also leverages the `KHR_xmp_json_ld` pattern for attaching extensible metadata as JSON-LD blocks within glTF assets. For background on this approach, see:  
 [KHR_xmp_json_ld](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_xmp_json_ld)
 
