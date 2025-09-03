@@ -72,7 +72,7 @@ When the `KHR_billboard` extension is defined on a node, the node's global rotat
 
 ### Child Nodes
 
-Children of a node that defines `KHR_billboard` are treated normally within the context of the glTF node transform. (See: [glTF 2.0 Specification, §3.5.3 Transformations](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#transformations)) This allows content creators to apply an additional adjustment to the billboard that will be applied.
+Children of a node that defines `KHR_billboard` are treated normally within the context of the glTF node transform. (See: [glTF 2.0 Specification, §3.5.3 Transformations](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#transformations)) This allows content creators to apply an additional adjustment to the billboard content.
 
 _Note: If a child node also defines `KHR_billboard`, the child must be treated independently of the parent declaration higher in the node hierarchy. In this case, the child node's global rotation and scale are replaced by the extension as defined in [Handling defined Billboards](#handling-defined-billboards)._
 
