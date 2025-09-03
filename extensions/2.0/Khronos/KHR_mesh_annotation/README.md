@@ -1,6 +1,6 @@
-# KHR_character_mesh_annotation
+# KHR_mesh_annotation
 
-### TODO - REFACTOR and potentially consolidate with KHR_character_mesh_annotation_rendering
+### TODO - REFACTOR and potentially consolidate with KHR_mesh_annotation_rendering
 
 ## Contributors
 
@@ -19,15 +19,13 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.
-Dependent on: `KHR_character`  
 Can be used alongside rendering-related extensions.
 
 ## Overview
 
-The `KHR_character_mesh_annotation` extension enables arbitrary per-mesh metadata annotations for character models. This provides a generalized way for creators and tools to semantically tag portions of geometry for gameplay, rendering, accessibility, customization, or runtime logic.
+The `KHR_mesh_annotation` extension enables arbitrary per-mesh metadata annotations for character models. This provides a generalized way for creators and tools to semantically tag portions of geometry for gameplay, rendering, accessibility, customization, or runtime logic.
 
-Unlike expression bindings or skeletons, this extension focuses on **attaching structured metadata to glTF mesh primitives or submeshes**. Examples include:
-
+Examples include:
 - Indicating occlusion, hit zones, body regions, or cosmetics
 - Tagging subregions with gameplay affordances (e.g., "touchable", "selectable")
 - Supporting accessibility metadata (e.g., limb representation for low-vision aid)
@@ -35,9 +33,9 @@ Unlike expression bindings or skeletons, this extension focuses on **attaching s
 
 ## Motivation
 
-character models often contain complex geometry with overlapping purposes (e.g. hair, clothing, limbs, devices, accessories). Many applications need to reason about specific mesh subsets for:
+This was thought of as part of the avatar/character extension proposals; as character models often contain complex geometry with overlapping purposes (e.g. hair, clothing, limbs, devices, accessories). Many applications need to reason about specific mesh subsets for:
 
-- character customization layers
+- Character customization layers
 - Haptic or interaction targeting
 - Runtime layering and decal application
 - Streaming/LOD switching
@@ -46,7 +44,7 @@ This extension provides a consistent, schema-driven approach to labeling such me
 
 ## Schema
 
-Annotations are attached at the **primitive level** (i.e., a `mesh.primitives[i]`), and stored in the `KHR_character_mesh_annotation` extension:
+Annotations are attached at the **primitive level** (i.e., a `mesh.primitives[i]`), and stored in the `KHR_mesh_annotation` extension:
 
 ```json
 {
@@ -56,9 +54,9 @@ Annotations are attached at the **primitive level** (i.e., a `mesh.primitives[i]
         {
           "attributes": { ... },
           "extensions": {
-            "KHR_character_mesh_annotation": {
+            "KHR_mesh_annotation": {
               "tags": ["eyewear", "selectable"],
-                            "region": "face"
+              "customData": { }
             }
           }
         }
@@ -107,10 +105,6 @@ Allows filtering of optional accessories or togglable cosmetic parts.
 - Tags are non-authoritative but enable semantic interoperability across runtimes.
 - `customData` allows developers to store app-specific structured metadata (e.g., color categories, tracking weights, heatmaps).
 - If this extension is not understood by a client, it should be safely ignored with no visual or functional change.
-
-## Relation to Other Extensions
-
-- **Complements `KHR_materials_variants`** by labeling which primitives may be toggled/swapped.
 
 ## License
 
