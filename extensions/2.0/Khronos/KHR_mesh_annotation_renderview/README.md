@@ -1,4 +1,4 @@
-# KHR_mesh_annotation_rendview
+# KHR_mesh_annotation_renderiew
 
 ## Contributors
 
@@ -20,16 +20,17 @@ Written against the glTF 2.0 specification.
 
 ## Overview
 
-The `KHR_mesh_annotation_rendview` extension provides structured metadata for character mesh primitives related to **visibility and render-time behavior**. It complements the core glTF material and LOD systems by exposing semantic visibility rules such as “first-person only” and “always visible”.
+The `KHR_mesh_annotation_renderview` extension provides structured metadata for character mesh primitives related to **visibility and render-time behavior**. It complements the core glTF material and LOD systems by exposing semantic visibility rules such as “first-person only” and “always visible”.
 
 This extension is intended to support use cases such as hiding certain parts of an character (like head or hair) in first-person mode, or marking components that must always be rendered (e.g., eyes)
 
+This was thought of as part of the avatar/character extension proposals; as character models often contain complex geometry with overlapping purposes (e.g. hair, clothing, limbs, devices, accessories). Many applications need to reason about specific mesh subsets, or attribute specific information about them (with it beiong on a per-primitive basis; as each primitive can be a different entity entirely). Enabling visibility on a per-node basis would result in downchain nodes being disabled when it's not intended/desired; having a granular setting for this allows for more flexibility. 
+
 ## Use Cases
 
-- First-person camera hiding for head/hair geometry
-- Consistent behavior for accessories across render modes
-- Semantic control of pass inclusion (e.g., do not render in reflection pass)
-- Optimization by excluding off-screen or nested mesh content
+- First-person camera hiding for head/hair geometry or other geometry
+- Denoting when there's a completely different alternate mesh for one perspective versus the other
+
 
 ## Extension Schema
 
@@ -47,7 +48,7 @@ This extension is defined per `mesh.primitive`, allowing fine-grained render beh
               "tags": ["eyewear", "selectable"],
               "customData": { },
               "extensions": {
-              "KHR_mesh_annotation_rendview": {
+              "KHR_mesh_annotation_renderview": {
                 "renderVisibility": "firstPersonOnly"
               }
               }

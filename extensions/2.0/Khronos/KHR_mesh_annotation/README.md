@@ -23,7 +23,7 @@ Can be used alongside rendering-related extensions.
 
 ## Overview
 
-The `KHR_mesh_annotation` extension enables arbitrary per-mesh metadata annotations for character models. This provides a generalized way for creators and tools to semantically tag portions of geometry for gameplay, rendering, accessibility, customization, or runtime logic.
+The `KHR_mesh_annotation` extension enables arbitrary per-mesh metadata annotations. This provides a generalized way for creators and tools to semantically tag portions of geometry for gameplay, rendering, accessibility, customization, or runtime logic.
 
 Examples include:
 - Indicating occlusion, hit zones, body regions, or cosmetics
@@ -33,14 +33,7 @@ Examples include:
 
 ## Motivation
 
-This was thought of as part of the avatar/character extension proposals; as character models often contain complex geometry with overlapping purposes (e.g. hair, clothing, limbs, devices, accessories). Many applications need to reason about specific mesh subsets for:
-
-- Character customization layers
-- Haptic or interaction targeting
-- Runtime layering and decal application
-- Streaming/LOD switching
-
-This extension provides a consistent, schema-driven approach to labeling such mesh regions without requiring custom parsing or glTF structural abuse.
+This was thought of as part of the avatar/character extension proposals; as character models often contain complex geometry with overlapping purposes (e.g. hair, clothing, limbs, devices, accessories). Many applications need to reason about specific mesh subsets, or attribute specific information about them (with it beiong on a per-primitive basis; as each primitive can be a different entity entirely).
 
 ## Schema
 
