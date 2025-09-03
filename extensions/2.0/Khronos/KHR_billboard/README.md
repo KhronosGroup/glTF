@@ -58,7 +58,7 @@ The content of a billboard is defined by the meshes and children of the Node. Th
                 "scaleWithDistance" : false,
                 "viewDirection": [0, 0, 1],
                 "up": [0, 1, 0],
-                "rotationAxis": "All",
+                "rotationAxis": ["X", "Y", "Z"],
                 "overlay": false
             }
         }
