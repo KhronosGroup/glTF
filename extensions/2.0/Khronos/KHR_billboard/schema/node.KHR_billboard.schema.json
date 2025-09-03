@@ -10,10 +10,15 @@
             "default": false
         },
         "rotationAxis": {
-            "type": "string",
-            "enum": [ "All", "X", "Y", "Z" ],
-            "description": "The axis around which the billboard rotates. 'All' rotates around all axes. (Default: All)",
-            "default": "All"
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": [ "X", "Y", "Z" ]
+            },
+            "minItems": 1,
+            "maxItems": 3,
+            "description": "The axes around which the billboard rotates. 'X', 'Y', and/or 'Z'. (Default: ['X', 'Y', 'Z'])",
+            "default": ["X", "Y", "Z"]
         },
         "scaleWithDistance": {
             "type": "boolean",
