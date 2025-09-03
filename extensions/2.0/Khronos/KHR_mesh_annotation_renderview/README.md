@@ -87,8 +87,10 @@ Used for elements like top meshes that should always remain active regardless of
 
 ## Implementation Notes
 
-- These properties have no effect unless supported by the runtime.
-- Runtimes may map `renderVisibility` values to camera tag groups or dynamic material toggles.
+These properties have no effect unless supported by the runtime.
+
+Runtimes may choose to ignore renderVisibility settings if it directly causes downchain issues with their experiences (or a generalized incompatibility). In this case, our recommendation for 
+those runtimes or tools is to take these settings into account in some capacity if implementing their own mesh-culling logic for a given model. Of course given different uses of a model, your mileage may vary with this. For example, if used with a character in an experience that has a different camera perspective than what the original content creator thought of when baking the asset; it's up to the developer to determine what's more important (respecting the render visibility setting or the continuity of said experience).
 
 ## License
 
