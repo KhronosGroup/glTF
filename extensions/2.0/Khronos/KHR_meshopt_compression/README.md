@@ -207,10 +207,12 @@ To facilitate efficient decompression, deinterleaving and delta encoding are per
 
 The encoded stream structure is as follows:
 
-- Header byte, which must be equal to `0xa1`
+- Header byte, which must be equal to `0xa1` (version 1) or `0xa0` (version 0)
 - One or more attribute blocks, detailed below
-- Tail padding, which pads the size of the subsequent tail block to a minimum of 24 bytes (required for efficient decoding)
+- Tail padding, which pads the size of the subsequent tail block to a minimum of 24 bytes for version 1 or 32 bytes for version 0 (required for efficient decoding)
 - Tail block, which consists of a baseline element stored verbatim (`byteStride` bytes), followed by channel modes (`byteStride / 4` bytes)
+
+**Non-normative** While using version 1 is preferred for better compression, version 0 is provided for binary compatibility with `EXT_meshopt_compression`. When using version 0, the bitstream is identical to that defined in `EXT_meshopt_compression`.
 
 Note that there is no way to calculate the length of a stream; instead, it is expected that the input stream is correctly sized (using `byteLength`) so that the tail block element can be found.
 
@@ -224,7 +226,7 @@ blockElements = min(remainingElements, maxBlockElements)
 Where `remainingElements` is the number of elements that have yet to be decoded.
 
 Each attribute block consists of:
-- Control header: `byteStride / 4` bytes specifying 4 packed control modes for each byte of a 4-byte channel
+- Control header (only in version 1): `byteStride / 4` bytes specifying 4 packed control modes for each byte of a 4-byte channel
 - `byteStride` "data blocks" (one for each byte of the element), each containing deltas stored for groups of elements
 
 Each group always contains 16 elements; when the number of elements that needs to be encoded isn't divisible by 16, it gets rounded up and the remaining elements are ignored after decoding. In other terms:
@@ -248,7 +250,7 @@ The control bits specify the control mode for each byte:
 - bits 2: All delta bytes are 0; no data is stored for this byte
 - bits 3: Literal encoding; delta bytes are stored uncompressed with no header bits
 
-The structure of each "data block" (when not using control mode 2 or 3) breaks down as follows:
+The structure of each "data block" (when using control mode 0 or 1, or when using version 0) breaks down as follows:
 - Header bits, with 2 bits for each group, aligned to the byte boundary if groupCount is not divisible by 4
 - Delta blocks, with variable number of bytes stored for each group
 
@@ -260,14 +262,20 @@ Header bits are stored from least significant to most significant bit - header b
 
 The header bits establish the delta encoding mode for each group of 16 elements:
 
-For control mode 0:
+For control mode 0 (version 1):
 - bits 0: All 16 byte deltas are 0; the size of the encoded block is 0 bytes
 - bits 1: Deltas are stored in 1-bit sentinel encoding; the size of the encoded block is [2..18] bytes
 - bits 2: Deltas are stored in 2-bit sentinel encoding; the size of the encoded block is [4..20] bytes
 - bits 3: Deltas are stored in 4-bit sentinel encoding; the size of the encoded block is [8..24] bytes
 
-For control mode 1:
+For control mode 1 (version 1):
 - bits 0: Deltas are stored in 1-bit sentinel encoding; the size of the encoded block is [2..18] bytes
+- bits 1: Deltas are stored in 2-bit sentinel encoding; the size of the encoded block is [4..20] bytes
+- bits 2: Deltas are stored in 4-bit sentinel encoding; the size of the encoded block is [8..24] bytes
+- bits 3: All 16 byte deltas are stored as bytes; the size of the encoded block is 16 bytes
+
+For version 0:
+- bits 0: All 16 byte deltas are 0; the size of the encoded block is 0 bytes
 - bits 1: Deltas are stored in 2-bit sentinel encoding; the size of the encoded block is [4..20] bytes
 - bits 2: Deltas are stored in 4-bit sentinel encoding; the size of the encoded block is [8..24] bytes
 - bits 3: All 16 byte deltas are stored as bytes; the size of the encoded block is 16 bytes
@@ -292,7 +300,7 @@ And the 4-bit encoding is packed as follows with 2 deltas per byte:
 
 A delta that has all bits set to 1 (corresponds to `1` for 1-bit encoding, `3` for 2-bit encoding, and `15` for 4-bit encoding, otherwise known as "sentinel") indicates that the real delta value is outside of the bit range, and is stored as a full byte after the bit deltas for this group.
 
-To decode deltas into original values, the channel modes (specified in the tail block) are used. The encoded stride is split into `byteStride / 4` channels, and each channel specifies the mode in a single byte in the tail block, with the low 4 bits of the byte specifying the mode:
+To decode deltas into original values, the channel modes (specified in the tail block for version 1) are used. When using version 0, the channel mode is assumed to be 0 (byte deltas); other modes can only be present in version 1. The encoded stride is split into `byteStride / 4` channels, and each channel specifies the mode in a single byte in the tail block, with the low 4 bits of the byte specifying the mode:
 
 **Channel 0 (byte deltas)**: Byte deltas are stored as zigzag-encoded differences between the byte values of the element and the byte values of the previous element in the same position; the zigzag encoding scheme works as follows:
 
@@ -648,7 +656,8 @@ void decode(intN_t input[4], intN_t output[4]) {
 
 This extension is derived from `EXT_meshopt_compression` with the following changes:
 
-- Vertex data uses upgraded v1 format which provides more granular bit packing (via control modes) and enhanced delta encoding (via channel modes) to compress data better
+- Vertex data supports an upgraded v1 format which provides more granular bit packing (via control modes) and enhanced delta encoding (via channel modes) to compress data better
+- For compatibility, the v0 format (identical to `EXT_meshopt_compression` format) is still supported; however, use of v1 format is preferred
 - New `COLOR` filter supports lossy color compression at smaller compression ratios using YCoCg encoding
 
 These improvements achieve better compression ratios for typical glTF content while maintaining the same fast decompression performance.
