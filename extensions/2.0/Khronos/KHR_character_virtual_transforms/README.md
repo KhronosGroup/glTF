@@ -23,7 +23,7 @@ Requires the extension(s):  `KHR_character`
 
 The `KHR_character_virtual_transforms` extension introduces _virtual transforms_—custom transform nodes that exist relative to the character’s skeletal/node hierarchy but are **not part of the skinned joint structure**. These virtual transforms serve as semantic attachment or control points for systems like look-at targeting, item equipping, IK hints, and seating positions.
 
-Virtual joints are defined via an offset transform relative to the parent nodes, and do **not** participate in skinning. If there are multiple parent nodes, the expected behavior is to have it be based on a translation directly between those nodes position-wise. They are evaluated at runtime for behavior logic and procedural animation.
+Virtual transforms are defined via an offset transform relative to the parent nodes, and do **not** participate in skinning. If there are multiple parent nodes, the expected behavior is to have it be based on a translation directly between those nodes position-wise. They are evaluated at runtime for behavior logic and procedural animation.
 
 This extension is inspired in part by constructs like `lookAt` in VRM and aims to unify such functionality into a generic system usable across multiple glTF-based runtimes.
 
