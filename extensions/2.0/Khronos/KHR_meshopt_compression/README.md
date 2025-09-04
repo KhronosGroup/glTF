@@ -210,7 +210,7 @@ The encoded stream structure is as follows:
 - Header byte, which must be equal to `0xa1` (version 1) or `0xa0` (version 0)
 - One or more attribute blocks, detailed below
 - Tail padding, which pads the size of the subsequent tail block to a minimum of 24 bytes for version 1 or 32 bytes for version 0 (required for efficient decoding)
-- Tail block, which consists of a baseline element stored verbatim (`byteStride` bytes), followed by channel modes (`byteStride / 4` bytes)
+- Tail block, which consists of a baseline element stored verbatim (`byteStride` bytes), followed by channel modes (`byteStride / 4` bytes, only in version 1)
 
 **Non-normative** While using version 1 is preferred for better compression, version 0 is provided for binary compatibility with `EXT_meshopt_compression`. When using version 0, the bitstream is identical to that defined in `EXT_meshopt_compression`.
 
@@ -237,7 +237,7 @@ groupCount = ceil(blockElements / 16)
 
 For example, a stream with a `byteStride` of 64 containing 200 elements would be broken up into two attribute blocks: one containing 128 elements, and the other containing 72 elements. And these blocks would have 8 and 5 groups, respectively.
 
-The control header contains 2 bits for each byte position, packed into bytes as follows:
+The control header (only present in version 1) contains 2 bits for each byte position, packed into bytes as follows:
 
 ```
 controlByte = (controlForByte0 << 0) | (controlForByte1 << 2) | (controlForByte2 << 4) | (controlForByte3 << 6)
