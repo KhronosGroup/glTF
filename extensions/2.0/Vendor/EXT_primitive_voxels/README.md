@@ -23,7 +23,7 @@ Written against the glTF 2.0 specification. Depends on the [`KHR_implicit_shapes
 
 ## Overview
 
-This extension allows mesh primitives to represent volumetric (voxel) data via custom attributes. Primitives that use this extension must set their `mode` to the constant `0x7FFFFFFF` (`2147483647`) used to indicate voxels.
+This extension allows mesh primitives to represent volumetric (voxel) data via application-specific attribute semantics. Primitives that use this extension must set their `mode` to the constant `0x7FFFFFFF` (`2147483647`) used to indicate voxels.
 
 Typical mesh primitives make use of the `POSITION` attribute to store positional mesh data. However, `POSITION` is neither required nor used by `EXT_primitive_voxels`. Instead, this extension relies on the `KHR_implicit_shapes` extension to describe the shape of the voxel grid.
 
