@@ -550,7 +550,9 @@ void decode(intN_t input[4], intN_t output[4]) {
 
 `INTN_MAX` is equal to 127 when using 8-bit components (N is 8) and equal to 32767 when using 16-bit components (N is 16).
 
-`copysign` behaves as specified in C99 and returns the value with the magnitude of the first argument and the sign of the second argument.
+`copysign` returns the value with the magnitude of the first argument and the sign of the second argument.
+
+`round` returns the nearest integer value, rounding halfway cases away from zero.
 
 ## Filter 2: quaternion
 
@@ -642,11 +644,10 @@ void decode(intN_t input[4], intN_t output[4]) {
 	// compute scaling factor
 	float ss = INTN_MAX / float(as);
 
-	// rounded float->int
-	output[0] = int(float(r) * ss + 0.5f);
-	output[1] = int(float(g) * ss + 0.5f);
-	output[2] = int(float(b) * ss + 0.5f);
-	output[3] = int(float(a) * ss + 0.5f);
+	output[0] = round(float(r) * ss);
+	output[1] = round(float(g) * ss);
+	output[2] = round(float(b) * ss);
+	output[3] = round(float(a) * ss);
 }
 ```
 
