@@ -441,7 +441,7 @@ Octahedral filter allows to encode unit length 3D vectors (normals/tangents) usi
 
 This filter is only valid if `byteStride` is 4 or 8. When `byteStride` is 4, then the input and output of this filter are four 8-bit components, and when `byteStride` is 8, the input and output of this filter are four 16-bit signed components.
 
-The input to the filter is four 8-bit or 16-bit components, where the first two specify the X and Y components in octahedral encoding encoded as signed normalized K-bit integers (1 <= K <= 16, integers are stored in two's complement format), the third component explicitly encodes 1.0 as a signed normalized K-bit integer. The last component may contain arbitrary data which is passed through unfiltered (this can be useful for tangents).
+The input to the filter is four 8-bit or 16-bit components, where the first two specify the X and Y components in octahedral encoding encoded as signed normalized K-bit integers (2 <= K <= 16, integers are stored in two's complement format), the third component explicitly encodes 1.0 as a signed normalized K-bit integer. The last component may contain arbitrary data which is passed through unfiltered (this can be useful for tangents).
 
 The encoding of the third component allows to compute K for each vector independently from the bit representation, and must encode 1.0 precisely which is equivalent to `(1 << (K - 1)) - 1` as an integer; values of the third component that aren't equal to `(1 << (K - 1)) - 1` for a valid `K` are invalid and the result of decoding such vectors is unspecified.
 
