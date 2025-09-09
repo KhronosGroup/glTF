@@ -26,6 +26,7 @@ Can be used alongside rendering-related extensions.
 The `KHR_mesh_annotation` extension enables arbitrary per-mesh metadata annotations. This provides a generalized way for creators and tools to semantically tag portions of geometry for gameplay, rendering, accessibility, customization, or runtime logic.
 
 Examples include:
+
 - Indicating occlusion, hit zones, body regions, or cosmetics
 - Tagging subregions with gameplay affordances (e.g., "touchable", "selectable")
 - Supporting accessibility metadata (e.g., limb representation for low-vision aid)

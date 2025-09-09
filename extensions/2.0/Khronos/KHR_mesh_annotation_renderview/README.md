@@ -1,4 +1,4 @@
-# KHR_mesh_annotation_renderiew
+# KHR_mesh_annotation_renderview
 
 ## Contributors
 
@@ -75,7 +75,15 @@ This extension is defined per `mesh.primitive`, allowing fine-grained render beh
 "renderVisibility": "thirdPersonOnly"
 ```
 
-Used to hide geometry (e.g., head, hair, hats) in first-person mode to prevent obstruction.
+Used to hide geometry (e.g., head, hair, hats) in first-person modes to prevent obstruction.
+
+### First-Person Hiding
+
+```json
+"renderVisibility": "firstPersonOnly"
+```
+
+Used to hide geometry (e.g. alternate first-person meshes or meshes containing more detail more relevant to first-person modes) in third-person mode.
 
 ### Always-Visible Elements
 
@@ -91,6 +99,8 @@ These properties have no effect unless supported by the runtime.
 
 Runtimes may choose to ignore renderVisibility settings if it directly causes downchain issues with their experiences (or a generalized incompatibility). In this case, our recommendation for 
 those runtimes or tools is to take these settings into account in some capacity if implementing their own mesh-culling logic for a given model. Of course given different uses of a model, your mileage may vary with this. For example, if used with a character in an experience that has a different camera perspective than what the original content creator thought of when baking the asset; it's up to the developer to determine what's more important (respecting the render visibility setting or the continuity of said experience).
+
+**Considerations for Cameras** There is a world where there's an extension that provides suggested virtual camera transforms in conjunction with this set of visibility settings; but that would likely be a follow-up extension on top of this, which would then (as noted above) still be something that would need be be handled as recommendation rather than absolute. 
 
 ## License
 

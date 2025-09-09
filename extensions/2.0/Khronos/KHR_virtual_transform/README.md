@@ -1,4 +1,8 @@
+<<<<<<<< Updated upstream:extensions/2.0/Khronos/KHR_character_virtual_joints/README.md
 # KHR_character_virtual_joints
+========
+# KHR_virtual_transforms
+>>>>>>>> Stashed changes:extensions/2.0/Khronos/KHR_virtual_transforms/README.md
 
 ## Contributors
 
@@ -21,12 +25,23 @@ Requires the extension(s):  `KHR_character`
 
 ## Overview
 
+<<<<<<<< Updated upstream:extensions/2.0/Khronos/KHR_character_virtual_joints/README.md
 The `KHR_character_virtual_joints` extension introduces _virtual joints_—custom transform nodes that exist relative to the character’s skeletal hierarchy but are **not part of the skinned joint structure**. These virtual transforms serve as semantic attachment or control points for systems like look-at targeting, item equipping, IK hints, and seating positions.
+========
+The `KHR_virtual_transforms` extension introduces _virtual transforms_; metadata-informed virtual 'nodes' that exist relative to the a model's skeletal/node hierarchy, but are not nodes themselves and have settings whether to respect the parent nodes position/rotation at runtime. These virtual transforms serve as semantic attachment or control points for applications/systems to utilize; without it needing to be tied to a literal node hierarchy.
+
+In the context of characters, these virtual transforms serve as semantic attachment or control points for systems like look-at targeting, item equipping, IK hints, and seating positions. For other types of models, they can be leveraged for UI attach points, etc. 
+>>>>>>>> Stashed changes:extensions/2.0/Khronos/KHR_virtual_transforms/README.md
 
 Virtual joints are defined via an offset transform relative to a single parent joint, and do **not** participate in skinning. They are evaluated at runtime for behavior logic and procedural animation.
 
 This extension is inspired in part by constructs like `lookAt` in VRM and aims to unify such functionality into a generic system usable across multiple glTF-based runtimes.
 
+<<<<<<<< Updated upstream:extensions/2.0/Khronos/KHR_character_virtual_joints/README.md
+========
+**TODO**: Need to work on proposed logic for interpolation when multiple parent nodes; this likely needs to be some sort of field with established lerp logic types. We could make the stance that it's a pure 50/50 split; but I imagine that might cause some eyebrows to be raised. In general this likely needs a few revs, even past moving it out of the character set of extensions.
+
+>>>>>>>> Stashed changes:extensions/2.0/Khronos/KHR_virtual_transforms/README.md
 ## Use Cases
 
 - **Look-at targets** (for head/eye tracking)
@@ -41,8 +56,13 @@ This extension is inspired in part by constructs like `lookAt` in VRM and aims t
 ```json
 {
   "extensions": {
+<<<<<<<< Updated upstream:extensions/2.0/Khronos/KHR_character_virtual_joints/README.md
     "KHR_character_virtual_joints": {
       "virtualJoints": [
+========
+    "KHR_virtual_transforms": {
+      "virtualTransforms": [
+>>>>>>>> Stashed changes:extensions/2.0/Khronos/KHR_virtual_transforms/README.md
         {
           "name": "arm_socket",
           "parentJoint": 18,
@@ -122,7 +142,11 @@ This extension is inspired in part by constructs like `lookAt` in VRM and aims t
 - **Rotation**: `(0.0, 0.0, 0.0, 1.0)`
 - **respectParentPosition**: `true`
 - **respectParentRotation**: `true`
+<<<<<<<< Updated upstream:extensions/2.0/Khronos/KHR_character_virtual_joints/README.md
 - **Usage**: Anchor point for aligning seated positions.
+========
+- **tags**: Array of strings used to denote semantic tags.
+>>>>>>>> Stashed changes:extensions/2.0/Khronos/KHR_virtual_transforms/README.md
 
 
 ### Wrist UI Virtual Joint
