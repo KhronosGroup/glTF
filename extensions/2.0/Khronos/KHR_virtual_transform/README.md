@@ -24,7 +24,7 @@ The `KHR_virtual_transform` extension introduces _virtual transforms_; metadata-
 
 In the context of characters, these virtual transforms serve as semantic attachment or control points for systems like look-at targeting, item equipping, IK hints, and seating positions. For other types of models, they can be leveraged for UI attach points, etc.
 
-Virtual joints are defined via an offset transform relative to the parent nodes, and do **not** participate in skinning. If there are multiple parent nodes, the expected behavior is to have it be based on a translation directly between those nodes position-wise. They are evaluated at runtime for behavior logic and procedural animation.
+Virtual transforms are defined via an offset transform relative to the parent nodes, and do **not** participate in skinning. If there are multiple parent nodes, the expected behavior is to have it be based on a translation directly between those nodes position-wise. They are evaluated at runtime for behavior logic and procedural animation.
 
 This extension is inspired in part by constructs like `lookAt` in VRM and aims to unify such functionality into a generic system usable across multiple glTF-based runtimes.
 
@@ -91,7 +91,7 @@ This extension is inspired in part by constructs like `lookAt` in VRM and aims t
 
 | Property                | Type     | Description                                                                                 |
 | ----------------------- | -------- | ------------------------------------------------------------------------------------------- |
-| `name`                  | string   | Semantic identifier of the virtual joint                                                    |
+| `name`                  | string   | Semantic identifier of the virtual transform                                                    |
 | `parentNodes`           | Array    | Array of indices for nodes in the glTF `nodes[]` array                                      |
 | `translation`           | float[3] | Initialized local offset (X, Y, Z) relative to the parent joint                             |
 | `rotation`              | float[4] | Local orientation as quaternion (X, Y, Z, W) relative to the parent joint                   |
@@ -101,7 +101,7 @@ This extension is inspired in part by constructs like `lookAt` in VRM and aims t
 
 ## Examples
 
-### Arm Attachment Virtual Joint
+### Arm Attachment Virtual Transform
 
 Example - Anchor for attaching objects, which want to respect the positions/rotation of the parent joints
 
@@ -113,7 +113,7 @@ Example - Anchor for attaching objects, which want to respect the positions/rota
 - **respectParentRotation**: `true`
 - **tags**: Array of strings used to denote semantic tags.
 
-### Look At Virtual Joint
+### Look At Virtual Transform
 
 Example - Target for runtime look-at behavior (eyes/head alignment)
 
@@ -125,7 +125,7 @@ Example - Target for runtime look-at behavior (eyes/head alignment)
 - **respectParentRotation**: `true`
 - **tags**: Array of strings used to denote semantic tags.
 
-### Sitting Point Virtual Joint
+### Sitting Point Virtual Transform
 
 Example - Anchor point for aligning seated positions.
 
@@ -137,7 +137,7 @@ Example - Anchor point for aligning seated positions.
 - **respectParentRotation**: `true`
 - **tags**: Array of strings used to denote semantic tags.
 
-### Wrist UI Virtual Joint
+### Wrist UI Virtual Transform
 
 Example - Anchor point for wrist UI, which may wish to respect the parent joint's position, but not the rotation.
 
@@ -151,7 +151,7 @@ Example - Anchor point for wrist UI, which may wish to respect the parent joint'
 
 ## Implementation Notes
 
-- Virtual joints should exist only within this extension and **must not overlap with joints used in skinning**.
+- Virtual transforms should exist only within this extension and **must not overlap with joints used in skinning**.
 - Their transformation is computed at runtime by applying the offset to the parent joint’s world transform.
 - Tools and runtimes may expose these as attachable sockets or semantic retargeting anchors.
 
