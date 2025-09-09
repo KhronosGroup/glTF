@@ -1,0 +1,22 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "scene.KHR_audio_emitter.schema.json",
+    "title": "KHR_audio_emitter glTF Scene Extension",
+    "type": "object",
+    "description": "Scene extension that references global audio emitters.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "emitters": {
+            "type": "array",
+            "description": "The indices of each global audio emitter. Positional audio emitters may not be added to the scene node.",
+            "items": {
+                "allOf": [ { "$ref": "glTFid.schema.json" } ]
+            },
+            "uniqueItems": true,
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["emitters"]
+}
