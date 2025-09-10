@@ -10,6 +10,11 @@
 - Daniel Knoblauch, Niantic Spatial
 - Ronald Poirrier, Esri
 - Jean-Philippe Pons, Esri
+- Alexey Knyazev, Khronos
+- Marco Hutter, Independent
+- Arseny Kapoulkine, Independent
+- Nathan Morrical, Nvidia
+- Norbert Nopper, Huawei
 
 ## Status
 
