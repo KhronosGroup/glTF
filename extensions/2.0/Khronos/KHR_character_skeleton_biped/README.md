@@ -105,7 +105,7 @@ The `KHR_character_skeleton_biped` extension builds on top of the core glTF 2.0 
 The joint indices specified in the `joints` dictionary refer directly to elements within the glTF `nodes` array, and should match those used in a valid `skin` structure:
 
 - The character mesh should be associated with a `skin`, per [glTF 2.0 Skinning](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#skins).
-- The joints listed in this extension must be a subset of the joints defined in `skins[j].joints`.
+- The joints listed in this extension must be a subset of the joints defined in `skins[].joints`.
 
 This enables runtime engines to extract semantic meaning from joint hierarchies already used for mesh deformation, supporting animation retargeting and character interoperability.
 
