@@ -100,7 +100,7 @@ Each joint name corresponds to a node present in the glTF node hierarchy. The hi
 
 ## Relationship to glTF 2.0 Skinning
 
-The `KHR_character_skeleton_biped` extension builds on top of the core glTF 2.0 skinning system. It does **not** introduce new skinning mechanics, but instead annotates which nodes in the existing `skins[j].joints[]` structure correspond to meaningful joints in a developer-defined skeletal rig.
+The `KHR_character_skeleton_biped` extension builds on top of the core glTF 2.0 skinning system. It does **not** introduce new skinning mechanics, but instead annotates which nodes in the existing `skins[].joints[]` structure correspond to meaningful joints in a developer-defined skeletal rig.
 
 The joint indices specified in the `joints` dictionary refer directly to elements within the glTF `nodes` array, and should match those used in a valid `skin` structure:
 
