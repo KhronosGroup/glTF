@@ -178,13 +178,13 @@ Each 3D Gaussian splat has the following attributes. At minimum the attributes m
 
 | Splat Data | glTF Attribute | Accessor Type | Component Type | Required | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Rotation | KHR_gaussian_splatting:ROTATION | VEC4 | _float_ <br/>_signed byte_ normalized <br/>_unsigned byte_ normalized <br/>_signed short_ normalized <br/>_unsigned short_ normalized | yes | Rotation is a quaternion with `w` as the scalar. (xyzw) |
-| Scale | KHR_gaussian_splatting:SCALE | VEC3 | _float_ <br/>_signed byte_ normalized <br/>_unsigned byte_ normalized <br/>_signed short_ normalized <br/>_unsigned short_ normalized | yes | |
-| Spherical Harmonics degree 1 | KHR_gaussian_splatting:SH_DEGREE_1_COEF_n (n = 0 to 2) | VEC3 | _float_ <br/>_signed byte_ normalized <br/>_unsigned byte_ normalized <br/>_signed short_ normalized <br/>_unsigned short_ normalized | no (yes if degree 2 or 3 are used) | |
-| Spherical Harmonics degree 2 | KHR_gaussian_splatting:SH_DEGREE_2_COEF_n (n = 0 to 4) | VEC3 | _float_ <br/>_signed byte_ normalized <br/>_unsigned byte_ normalized <br/>_signed short_ normalized <br/>_unsigned short_ normalized | no (yes if degree 3 is used) | |
-| Spherical Harmonics degree 3 | KHR_gaussian_splatting:SH_DEGREE_3_COEF_n (n = 0 to 6) | VEC3 | _float_ <br/>_signed byte_ normalized <br/>_unsigned byte_ normalized <br/>_signed short_ normalized <br/>_unsigned short_ normalized | no | |
+| Rotation | KHR_gaussian_splatting:ROTATION | VEC4 | _float_ <br/>_signed byte_ normalized <br/>_signed short_ normalized | yes | Rotation is a quaternion with `w` as the scalar. (xyzw) |
+| Scale | KHR_gaussian_splatting:SCALE | VEC3 | _float_ <br/>_signed byte_ normalized <br/>_signed short_ normalized | yes | |
+| Spherical Harmonics degree 1 | KHR_gaussian_splatting:SH_DEGREE_1_COEF_n (n = 0 to 2) | VEC3 | _float_ <br/>_signed byte_ normalized <br/>_signed short_ normalized | no (yes if degree 2 or 3 are used) | |
+| Spherical Harmonics degree 2 | KHR_gaussian_splatting:SH_DEGREE_2_COEF_n (n = 0 to 4) | VEC3 | _float_ <br/>_signed byte_ normalized <br/>_signed short_ normalized | no (yes if degree 3 is used) | |
+| Spherical Harmonics degree 3 | KHR_gaussian_splatting:SH_DEGREE_3_COEF_n (n = 0 to 6) | VEC3 | _float_ <br/>_signed byte_ normalized <br/>_signed short_ normalized | no | |
 
-The `KHR_gaussian_splatting:ROTATION` and `KHR_gaussian_splatting:SCALE` attributes support quantized storage using normalized `byte` or `short` component types to reduce file size. If quantization is not needed, content creators should use the `float` component type for maximum precision.
+The `KHR_gaussian_splatting:ROTATION` and `KHR_gaussian_splatting:SCALE` attributes support quantized storage using normalized signed `byte` or `short` component types to reduce file size. If quantization is not needed, content creators should use the `float` component type for maximum precision.
 
 The value of `COLOR_0` is derived by multiplying the 3 diffuse color components of the 3D Gaussian splat with the constant zeroth-order Spherical Harmonic (ℓ = 0) for the RGB channels. The alpha channel should contain the opacity of the splat.
 
