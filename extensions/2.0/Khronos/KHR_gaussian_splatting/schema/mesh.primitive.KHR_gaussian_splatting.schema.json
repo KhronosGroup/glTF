@@ -2,33 +2,34 @@
   "$schema": "http://json-schema.org/draft-04/schema",
   "title": "KHR_gaussian_splatting glTF Mesh Primitive Extension",
   "type": "object",
-  "description": "Data for a 3D Gaussian Splat primitive.",
+  "description": "Data defining a 3D Gaussian Splat primitive.",
   "allOf": [
     {
       "$ref": "glTFProperty.schema.json"
     }
   ],
   "properties": {
-    "shape": {
-      "type": "string",
-      "description": "The shape of the Gaussian to render. Gaussians may be available in different shapes, so this is a freeform field that defaults to ellipsoid. See the extension specification for futher known types.",
-      "default": "ellipsoid"
-    },
-    "hints": {
+    "kernel": {
       "type": "object",
-      "description": "Optional rendering hints for rendering the 3D Gaussian splats. Renderers are free to ignore any of these.",
+      "description": "Optional property specifying parameters regarding the kernel used to generate the Gaussians.",
       "properties": {
-        "projection": {
+        "type": {
           "type": "string",
-          "description": "Provides a hint specifying how to project the Gaussians to achieve a perspective correct value. This is a freeform field that defaults to perspective. See the extension specification for further known types.",
-          "default": "perspective"
-        },
-        "sortingMethod": {
-          "type": "string",
-          "description": "Provides a hint specifying how to sort the Gaussians during rendering. This is a freeform field defaulting to cameraDistance. See the extension specification for further known types.",
-          "default": "cameraDistance"
+          "description": "Provides a hint specifying the type of kernel used to generate the Gaussians. This is a freeform field that defaults to ellipse.",
+          "default": "ellipse"
         }
-      }
+      },
+      "required": ["type"]
+    },
+    "projection": {
+      "type": "string",
+      "description": "Optional property providing a hint specifying how to project the Gaussians to achieve a perspective correct value. This is a freeform field that defaults to perspective. See the extension specification for further known types.",
+      "default": "perspective"
+    },
+    "sortingMethod": {
+      "type": "string",
+      "description": "Optional property providing a hint specifying how to sort the Gaussians during rendering. This is a freeform field defaulting to cameraDistance. See the extension specification for further known types.",
+      "default": "cameraDistance"
     },
     "extensions": {},
     "extras": {}

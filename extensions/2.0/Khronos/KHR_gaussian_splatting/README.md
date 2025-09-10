@@ -74,62 +74,98 @@ Example shown below including optional properties. This extension only affects a
         "indices": 7,
         "extensions": {
             "KHR_gaussian_splatting": {
-                "shape": "ellipsoid",
-                "hints": {
-                    "sortingMethod": "cameraDistance",
-                    "projection": "perspective"
-                }
+                "kernel": "ellipse",
+                "sortingMethod": "cameraDistance",
+                "projection": "perspective"
             }
         }
     }]
-}],
+}]
 ```
 
 ## Extension Properties
 
-### Shape
+### Kernel
 
-Gaussian splats can have a variety of shapes and this has the potential to change over time. The `shape` property is an optional property that provides an indication to the renderer what these shapes may be. Typically `ellipsoid` refers to the shape generally considered to be a "splat" and this is considered the default value.
+Gaussian splats can have a variety of shapes and this has the potential to change over time. The `kernel` property is an optional property that provides an indication to the renderer the properties of the kernel used. Renderers are free to ignore any values they do not recognize. In the event that `kernel` is either not provided or not recognized, the default value of `ellipse` should be assumed. Additional kernel types can be added over time by supplying an extension that defines an alternative shape definition.
 
-Renderers are free to ignore any values they do not recognize, but are encouraged to follow the non-normative list below.
+| Kernel Type | Description |
+| --- | --- |
+| ellipse | A 2D ellipse kernel used to project an ellipsoid shape in 3D space. |
 
-#### Known Shapes
+```json
+"meshes": [{
+    "primitives": [{
+        // snip...
+        "extensions": {
+            "KHR_gaussian_splatting": {
+                "kernel": "ellipse"
+            }
+        }
+    }]
+}]
+```
+
+#### Ellipse Kernel
+
+A 2D `ellipse` kernel type is often used to represent 3D Gaussian splats in an ellipsoid shape. This simple type contains no parameters. This is the shape used by the reference renderer implementations for 3D Gaussian splatting.
+
+#### Adding additional Kernel Types
+
+*This section is non-normative.*
+
+In order to add additional kernel types, a new extension should be defined that extends `KHR_gaussian_splatting`. This new extension should define the new kernel type and any parameters it may require. A renderer that recognizes the new kernel type can then use the parameters defined in the new extension to render the splats appropriately. Renderers that do not recognize the new kernel type should fall back to the default `ellipse` type.
+
+For example, a new extension `EXT_gaussian_splatting_kernel_customShape` could be defined that adds a new kernel type `customShape` with additional parameters.
+
+```json
+"meshes": [{
+    "primitives": [{
+        // snip... 
+        "extensions": {
+            "KHR_gaussian_splatting": {
+                "kernel": "customShape",
+                "extensions": {
+                    "EXT_gaussian_splatting_kernel_customShape": {
+                        "customParameter1": 1.0,
+                        "customParameter2": [0.0, 1.0, 0.0]
+                    }
+                }
+            },
+        }
+    }]
+}]
+```
+
+### Projection
+
+The `projection` property is an optional hint that specifies how the Gaussians should be projected onto the kernel shape. This is typically provided by the training process for the splats. This is a freeform string field to allow additional projection methods to be specified as they become available. The default value is `perspective`.
+
+Renderers are free to ignore any values they do not recognize and fallback to the default, but are encouraged to follow the non-normative list below.
+
+#### Known Projection Methods
 
 *This section is non-normative and not comprehensive. It may change over time.*
 
- - `ellipsoid` _(Default Value)_
- - `triangle`
- - `quad`
+| Projection Method | Description |
+| --- | --- |
+| perspective | (Default) The typical 3D perspective projection based on scene depth. |
+| orthographic | A orthogonal projection of splats into a scene to preserve shape and scale and reduce distortion. |
 
-### Rendering Hints
+### Sorting Method
 
-This extension provides a `hints` property that contains sub-properties that may help renderers understand how best to render the Gaussians to the screen. This property and all of it's sub-properties are optional, and renderers can choose to ignore them.
-
-#### Projection
-
-The `projection` property is an optional hint that specifies how the Gaussians should be projected into the image. This is typically provided by the training process for the splats. This is a freeform string field to allow new projections to be specified as they become available. The default value is `perspective`.
+The `sortingMethod` property is an optional hint that specifies how the Gaussian particles should be sorted during the rendering process. This typically is provided by the training process for the splats. This is a freeform string field to allow new sorting methods to be specified as they become available. The default value is `cameraDistance`.
 
 Renderers are free to ignore any values they do not recognize, but are encouraged to follow the non-normative list below.
 
-##### Known Projection Methods
+#### Known Sorting Methods
 
 *This section is non-normative and not comprehensive. It may change over time.*
 
- - `perspective` _(Default Value)_: The typical 3D perspective projection based on scene depth.
- - `orthographic`: A orthogonal projection of splats into a scene to preserve shape and scale and reduce distortion.
-
-#### Sorting Method
-
-The `sortingMethod` property is an optional hint that specifies how the Gaussians should be sorted during the rendering process. This typically is provided by the training process for the splats. This is a freeform string field to allow new sorting methods to be specified as they become available. The default value is `cameraDistance`.
-
-Renderers are free to ignore any values they do not recognize, but are encouraged to follow the non-normative list below.
-
-##### Known Sorting Methods
-
-*This section is non-normative and not comprehensive. It may change over time.*
-
- - `cameraDistance` _(Default Value)_: The distance between the center of the splat and the position of the camera.
- - `zDepth`: The projected z-depth in the camera projection.
+| Sorting Method | Description |
+| --- | --- |
+| cameraDistance | (Default) Sort splats based on the distance from the camera to the splat position. |
+| zDepth | Sort splats based on their projected z-depth in the camera projection. |
 
 ## Attributes
 
