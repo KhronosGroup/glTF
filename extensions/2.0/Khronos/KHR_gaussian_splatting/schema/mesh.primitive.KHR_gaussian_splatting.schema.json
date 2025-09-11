@@ -10,16 +10,9 @@
   ],
   "properties": {
     "kernel": {
-      "type": "object",
-      "description": "Optional property specifying parameters regarding the kernel used to generate the Gaussians.",
-      "properties": {
-        "type": {
-          "type": "string",
-          "description": "Provides a hint specifying the type of kernel used to generate the Gaussians. This is a freeform field that defaults to ellipse.",
-          "default": "ellipse"
-        }
-      },
-      "required": ["type"]
+      "type": "string",
+      "description": "Optional property specifying parameters regarding the kernel used to generate the Gaussians. This property defaults to ellipse.",
+      "default": "ellipse"
     },
     "projection": {
       "type": "string",
