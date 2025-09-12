@@ -113,7 +113,7 @@ Gaussian splats can have a variety of shapes and this has the potential to chang
 
 #### Ellipse Kernel
 
-A 2D `ellipse` kernel type is often used to represent 3D Gaussian splats in an ellipsoid shape. This simple type contains no parameters. This is the shape used by the reference renderer implementations for 3D Gaussian splatting.
+A 2D `ellipse` kernel type is often used to represent 3D Gaussian splats in an ellipsoid shape. This simple type contains no parameters. This is the shape used by the reference renderer implementations for 3D Gaussian splatting. Following the original reference implementation this kernel assumes a 3σ cut-off (Mahalanobis distance of 3 units) for correct rendering.
 
 #### Adding additional Kernel Types
 
