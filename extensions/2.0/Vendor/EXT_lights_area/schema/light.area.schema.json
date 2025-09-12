@@ -1,0 +1,60 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_lights_area Area Light Properties",
+    "type": "object",
+    "description": "An area light (rectangular or disk) that emits light uniformly from one side following Lambert's cosine law.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "color": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "description": "RGB color of the light in linear space. Each component should be in the range [0, 1].",
+            "default": [1.0, 1.0, 1.0]
+        },
+        "luminance": {
+            "type": "number",
+            "description": "The luminance of the light surface in nits (cd/m²). Must be a positive value.",
+            "default": 1000.0,
+            "minimum": 0.0,
+            "exclusiveMinimum": true
+        },
+        "shape": {
+            "type": "string",
+            "description": "The shape of the area light.",
+            "enum": ["rect", "disk"]
+        },
+        "width": {
+            "type": "number",
+            "description": "Width of the rectangular light in meters. Must be a positive value. Required for rect lights, ignored for disk lights.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "exclusiveMinimum": true
+        },
+        "height": {
+            "type": "number",
+            "description": "Height of the rectangular light in meters. Must be a positive value. Required for rect lights, ignored for disk lights.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "exclusiveMinimum": true
+        },
+        "radius": {
+            "type": "number",
+            "description": "Radius of the disk light in meters. Must be a positive value. Required for disk lights, ignored for rect lights.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "exclusiveMinimum": true
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "shape"
+    ]
+}
