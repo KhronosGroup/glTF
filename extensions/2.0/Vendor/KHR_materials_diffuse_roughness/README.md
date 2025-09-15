@@ -1,4 +1,4 @@
-# EXT\_materials\_diffuse\_roughness
+# KHR\_materials\_diffuse\_roughness
 
 ## Contributors
 
@@ -20,7 +20,7 @@ Written against the glTF 2.0 spec.
 
 ## Side Effects
 
-* The `EXT_materials_diffuse_roughness` extension also affects the [KHR_materials_diffuse_transmission](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_diffuse_transmission/README.md) extension as it relies on the diffuse lobe which is modified by this extension.
+* The `KHR_materials_diffuse_roughness` extension also affects the [KHR_materials_diffuse_transmission](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_diffuse_transmission/README.md) extension as it relies on the diffuse lobe which is modified by this extension.
 
 ## Overview
 
@@ -32,7 +32,7 @@ This extension defines a way to control the roughness of the diffuse surface, se
 
 ## Extending Materials
 
-Adding diffuse roughness can be done by adding the `EXT_materials_diffuse_roughness` extension to any glTF material.  For example, the following defines a material with a diffuse roughness of 1.0 while maintaining a specular roughness of 0.5.
+Adding diffuse roughness can be done by adding the `KHR_materials_diffuse_roughness` extension to any glTF material.  For example, the following defines a material with a diffuse roughness of 1.0 while maintaining a specular roughness of 0.5.
 
 ```json
 {
@@ -43,7 +43,7 @@ Adding diffuse roughness can be done by adding the `EXT_materials_diffuse_roughn
                 "roughnessFactor": 0.5
             }
             "extensions": {
-                "EXT_materials_diffuse_roughness": {
+                "KHR_materials_diffuse_roughness": {
                     "diffuseRoughnessFactor": 1.0
                 },
                 
@@ -62,7 +62,7 @@ Adding diffuse roughness can be done by adding the `EXT_materials_diffuse_roughn
 
 ## Physical Interpretation and BRDF
 
-The `EXT_materials_diffuse_roughness` extension treats the surface as having V-shaped cavities which add geometric masking, shadowing and interreflections and causes the surface brightness to change based on view direction. The microscopic facets are themselves assumed to be Lambertian and the spread of facet angles are assumed to follow a normal distribution. The roughness value is a measure of the standard deviation of the facet angles. At low roughness, most facets are perpendicular to the surface normal. At high roughness, the spread of facet angles increases, resulting in more shadowing and interreflections. The maximum roughness of 1.0 corresponds to a standard deviation of PI/2 (i.e. 90 degree facet angle). Angles are assumed to be clamped in the (-PI/2, PI/2) range.
+The `KHR_materials_diffuse_roughness` extension treats the surface as having V-shaped cavities which add geometric masking, shadowing and interreflections and causes the surface brightness to change based on view direction. The microscopic facets are themselves assumed to be Lambertian and the spread of facet angles are assumed to follow a normal distribution. The roughness value is a measure of the standard deviation of the facet angles. At low roughness, most facets are perpendicular to the surface normal. At high roughness, the spread of facet angles increases, resulting in more shadowing and interreflections. The maximum roughness of 1.0 corresponds to a standard deviation of PI/2 (i.e. 90 degree facet angle). Angles are assumed to be clamped in the (-PI/2, PI/2) range.
 
 The overall effect of a rough diffuse surface is to brighten the surface when the view and light directions align and darken the surface when they're perpendicular (relative to the Lambertian model). This can be thought of as essentially a rough surface's greater tendency towards back-scattering at grazing angles.
 
@@ -87,7 +87,7 @@ Naturally, using a model of diffuse reflectance that varies based on view and li
 
 ## glTF Schema Updates
 
-- [material.EXT_materials_diffuse_roughness.schema.json](schema/material.EXT_materials_diffuse_roughness.schema.json)
+- [material.KHR_materials_diffuse_roughness.schema.json](schema/material.KHR_materials_diffuse_roughness.schema.json)
 
 ## Known Implmentations
 - [Babylon.js](https://www.babylonjs.com/)

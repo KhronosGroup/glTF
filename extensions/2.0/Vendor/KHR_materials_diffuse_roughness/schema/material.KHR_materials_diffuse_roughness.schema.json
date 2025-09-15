@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "EXT_materials_diffuse_roughness glTF material extension",
+    "title": "KHR_materials_diffuse_roughness glTF material extension",
     "type": "object",
     "description": "glTF extension that defines roughness of the base diffuse surface.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
