@@ -1,4 +1,4 @@
-# EXT\_materials\_clearcoat\_darkening
+# KHR\_materials\_clearcoat\_darkening
 
 ## Contributors
 
@@ -33,7 +33,7 @@ No darkening on the left and physically-correct darkening on the right.
 
 ## Extending Materials
 
-Adding this functionality to clearcoat materials can be done by adding the `EXT_materials_clearcoat_darkening` extension to any glTF material that already has the `KHR_materials_clearcoat` extension defined on it.  For example, the following defines a material with a dark red varnish.
+Adding this functionality to clearcoat materials can be done by adding the `KHR_materials_clearcoat_darkening` extension to any glTF material that already has the `KHR_materials_clearcoat` extension defined on it.  For example, the following defines a material with a dark red varnish.
 
 ```json
 {
@@ -44,7 +44,7 @@ Adding this functionality to clearcoat materials can be done by adding the `EXT_
                 "KHR_materials_clearcoat": {
                     "clearcoatFactor": 1.0,
                     "extensions": {
-                        "EXT_materials_clearcoat_darkening": {
+                        "KHR_materials_clearcoat_darkening": {
                             "clearcoatDarkeningFactor": 0.5
                         }
                     }
@@ -108,5 +108,5 @@ When coat roughness increases, light is diffused and darkening decreases. We can
 
 ## Schema
 
-- [material.EXT_materials_clearcoat_darkening.schema.json](schema/material.EXT_materials_clearcoat_darkening.schema.json)
+- [material.KHR_materials_clearcoat_darkening.schema.json](schema/material.KHR_materials_clearcoat_darkening.schema.json)
  
