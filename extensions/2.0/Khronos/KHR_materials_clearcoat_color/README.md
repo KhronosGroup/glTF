@@ -1,4 +1,4 @@
-# EXT\_materials\_clearcoat\_color
+# KHR\_materials\_clearcoat\_color
 
 ## Contributors
 
@@ -25,7 +25,7 @@ This extension defines a way to add colored absorption to the clearcoating provi
 
 ## Extending Materials
 
-Adding absorption to clearcoat materials can be done by adding the `EXT_materials_clearcoat_color` extension as a sub-extension of `KHR_materials_clearcoat` on a glTF material.  For example, the following defines a material with a dark red varnish.
+Adding absorption to clearcoat materials can be done by adding the `KHR_materials_clearcoat_color` extension as a sub-extension of `KHR_materials_clearcoat` on a glTF material.  For example, the following defines a material with a dark red varnish.
 
 ```json
 {
@@ -36,7 +36,7 @@ Adding absorption to clearcoat materials can be done by adding the `EXT_material
                 "KHR_materials_clearcoat": {
                     "clearcoatFactor": 1.0,
                     "extensions": {
-                        "EXT_materials_clearcoat_color": {
+                        "KHR_materials_clearcoat_color": {
                             "clearcoatColorFactor": [
                                 0.4,
                                 0.1,
@@ -127,5 +127,5 @@ f_coat_transmission = pow(clearcoat_transmission_color, path_length)
 
 ## Schema
 
-- [material.EXT_materials_clearcoat_color.schema.json](schema/material.EXT_materials_clearcoat_color.schema.json)
+- [material.KHR_materials_clearcoat_color.schema.json](schema/material.KHR_materials_clearcoat_color.schema.json)
  

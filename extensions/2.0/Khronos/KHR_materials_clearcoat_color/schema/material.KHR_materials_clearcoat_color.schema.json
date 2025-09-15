@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "EXT_materials_clearcoat_color glTF Material Extension",
+    "title": "KHR_materials_clearcoat_color glTF Material Extension",
     "type": "object",
     "description": "glTF extension that defines the colored transmittance of the clearcoat.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
