@@ -68,7 +68,7 @@ Lights must be attached to a node by defining the `extensions.EXT_lights_area` p
 The light will inherit the transform of the node in the following manner:
 1. The light's centre is defined as the node's world location.
 2. The light's direction is defined as the 3-vector `(0.0, 0.0, -1.0)` and the rotation of the node orients the light accordingly. That is, an untransformed light points down the -Z axis.
-3. The light's size is defined as its "size" property multiplied by the absolute value of the largest component of the node's world scale. i.e. the scaling is always uniform and positive.
+3. The light's size is defined as its "size" property multiplied by the absolute value of the largest component of the node's world scale, i.e., the scaling is always uniform and positive.
 
 ## Light Types
 
