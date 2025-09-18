@@ -32,15 +32,19 @@ The following example defines both a rectangular and a disk area light:
             {
                 "color": [1.0, 1.0, 1.0],
                 "intensity": 1000.0,
-                "shape": "rect",
-                "width": 2.0,
-                "height": 1.0
+                "type": "rect",
+                "rect": {
+                    "width": 2.0,
+                    "height": 1.0
+                }
             },
             {
                 "color": [1.0, 0.9, 0.8],
                 "intensity": 1500.0,
-                "shape": "disk",
-                "radius": 1.2
+                "type": "disk",
+                "disk": {
+                    "radius": 1.2
+                }
             }
         ]
     }
@@ -63,38 +67,60 @@ Lights must be attached to a node by defining the `extensions.EXT_lights_area` p
 ]
 ```
 
-## Behaviour
+The light will inherit the transform of the node in the following manner:
+1. The light's centre is defined as the node's world location.
+2. The light's direction is defined as the 3-vector `(0.0, 0.0, -1.0)` and the rotation of the node orients the light accordingly. That is, an untransformed light points down the -Z axis.
+3. The light's size is defined as its "size" property multiplied by the absolute value of the largest component of the node's world scale. i.e. the scaling is always uniform and positive.
 
-The light will inherit the transform of the node that it is attached to. Area lights are centered at the origin in local space:
+## Light Types
 
-* **Rectangular lights**: extend from -width/2 to +width/2 along the local X-axis, and from -height/2 to +height/2 along the Y-axis
-* **Disk lights**: extend in a circle of the specified radius 
-around the origin in the local XY-plane
+### Light Shared Properties
 
-Area lights emit light uniformly from one side of the surface (the side facing in the -Z direction in local space). The light emission follows Lambert's cosine law.
-
-**Lambert's Cosine Law**: This law states that the radiant intensity (or luminous intensity) observed from a perfectly diffusing surface is directly proportional to the cosine of the angle between the direction of the incident light and the surface normal. In practical terms, this means that an area light appears brightest when viewed straight-on (perpendicular to the surface) and dimmer as the viewing angle increases, creating realistic soft lighting that mimics real-world diffuse light sources like LED panels or softboxes.
-
-## Properties
-
-### Light Properties
+All light types share the common set of properties listed below.
 
 | Property | Type | Description | Required | Default |
 |:---------|:-----|:------------|:---------|:--------|
-| `color` | `number[3]` | RGB color of the light in linear space. Each component should be in the range [0, 1]. | No | `[1.0, 1.0, 1.0]` |
+| `name` | `string` | Name of the light. | No | Default: `""` |
+| `color` | `number[3]` | RGB value for the light's color in linear space. | No | `[1.0, 1.0, 1.0]` |
 | `intensity` | `number` | The luminance of the light surface in nits (cd/m²). Must be a positive value. | No | `1000.0` |
-| `shape` | `string` | The shape of the area light. Must be either `"rect"` or `"disk"`. | Yes | - |
-| `width` | `number` | Width of the rectangular light in meters. Must be a positive value. Required for `rect` lights, ignored for `disk` lights. | Conditional | `1.0` |
-| `height` | `number` | Height of the rectangular light in meters. Must be a positive value. Required for `rect` lights, ignored for `disk` lights. | Conditional | `1.0` |
-| `radius` | `number` | Radius of the disk light in meters. Must be a positive value. Required for `disk` lights, ignored for `rect` lights. | Conditional | `1.0` |
+| `type` | `string` | Declares the type of the light. | :white_check_mark: Yes | `rect` |
+| `size` | `number` | Defines the size of the light in local space. For `rect` lights, this is the dimension along the local y-axis. For `disk` lights, this is the diameter of the light. | No | `1.0` |
 
-### Node Extension Properties
+### Rectangle Lights
 
-| Property | Type | Description | Required |
-|:---------|:-----|:------------|:---------|
-| `light` | `integer` | Index of the light in the lights array. | Yes |
+When a light's `type` is `rect`, the `rect` property on the light is required. Its properties (below) are optional.
 
-## Implementation Notes
+| Property | Type | Description | Required | Default |
+|:---------|:-----|:------------|:---------|:--------|
+| `aspect` | `number` | Defines the relative size of the width of the rectangle compared to the height. | No | `1.0` |
+
+The rectangle area light's shape extends from -width/2 to +width/2 along the local X-axis, and from -height/2 to +height/2 along the Y-axis where width and height are defined as follows:
+
+`width = world scale * size * aspect`
+`height = world scale * size`
+
+`world scale` is the largest component of the absolute value of the node's scale.
+
+### Disk Lights
+
+When a light's `type` is `disk`, the light is circular and no additional properties are defined.
+
+The disk light's shape extends in a circle around the origin in the local XY-plane. The diameter is given by `world scale * size` where `world scale` is the largest component of the absolute value of the node's scale.
+
+## Light Emission
+
+Area lights emit light uniformly from one side of the surface (the side facing in the -Z direction in local space). The light emission follows Lambert's cosine law. The total luminous flux (in lumens) emitted by the light is:
+
+`Flux = intensity × area × π`
+
+Where:
+
+* `intensity` is in nits (cd/m²)
+* `area` is the surface area of the light in square meters:
+  * For rectangular lights: `area = width × height`
+  * For disk lights: `area = π × radius²`
+
+The resulting flux is measured in lumens. Notice that when the intensity value remains constant, the total emitted flux will change proportionally to the change in area.
 
 ### Luminance Units
 
@@ -104,36 +130,6 @@ The `intensity` property is specified in nits (cd/m²), which is the standard un
 * Bright office lighting: 1,000 nits  
 * Sunlit white paper: 30,000 nits
 * Direct sunlight: 1,000,000,000+ nits
-
-### Light Emission
-
-Area lights emit light uniformly across their surface following Lambert's cosine law. The total luminous flux (in lumens) emitted by the light is:
-
-```
-Flux = luminance × area × π
-```
-
-Where:
-
-* `luminance` is in nits (cd/m²)
-* `area` is the surface area of the light in square meters:
-  * For rectangular lights: `area = width × height`
-  * For disk lights: `area = π × radius²`
-* The result is in lumens
-
-### Transform Inheritance
-
-The light inherits the full transform of its parent node, including:
-
-* Position (translation)
-* Orientation (rotation) 
-* Scale
-
-If the node is scaled:
-
-* For rectangular lights: the width and height are scaled accordingly
-* For disk lights: the radius is scaled by the average of the X and Y scale factors
-* The intensity value remains constant, but the total emitted flux will change proportionally to the change in area
 
 ## JSON Schema
 
