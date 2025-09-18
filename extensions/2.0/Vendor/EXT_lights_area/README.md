@@ -94,7 +94,7 @@ When a light's `type` is `rect`, the `rect` property on the light is required. I
 
 The rectangle area light's shape extends from -width/2 to +width/2 along the local X-axis, and from -height/2 to +height/2 along the Y-axis where width and height are defined as follows:
 
-`width = world scale * size * aspect`
+`width = world scale * size * aspect` \
 `height = world scale * size`
 
 `world scale` is the largest component of the absolute value of the node's scale.
