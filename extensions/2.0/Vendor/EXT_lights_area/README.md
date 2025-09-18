@@ -33,18 +33,16 @@ The following example defines both a rectangular and a disk area light:
                 "color": [1.0, 1.0, 1.0],
                 "intensity": 1000.0,
                 "type": "rect",
+                "size": 1.0,
                 "rect": {
-                    "width": 2.0,
-                    "height": 1.0
+                    "aspect": 2.0
                 }
             },
             {
                 "color": [1.0, 0.9, 0.8],
                 "intensity": 1500.0,
                 "type": "disk",
-                "disk": {
-                    "radius": 1.2
-                }
+                "size": 1.2
             }
         ]
     }
