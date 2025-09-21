@@ -16,31 +16,35 @@
 
 ## Dependencies
 
-Written against the glTF 2.0 specification.  
+Written against the glTF 2.0 specification.
 Requires the extension(s):  `KHR_character`
 
 ## Overview
 
-**THIS EXTENSION IS VERY MUCH WORK IN PROGRESS**
-
-The `KHR_character_skeleton_bindpose` extension defines a canonical bind pose for the character's skeleton. This pose serves as a neutral reference that supports animation retargeting, mesh deformation validation, and consistency across toolchains. It is particularly useful when the glTF `skins[].inverseBindMatrices` are insufficient or absent for expressing the true skeletal rest position.
+The `KHR_character_skeleton_bindpose` extension defines a canonical bind pose for the character's skeleton. This pose serves as a neutral reference that supports animation retargeting, mesh deformation validation, and consistency across toolchains. The bind pose is defined per-skin and uses the same joint ordering as the skin's joints array for direct mapping and maximum simplicity.
 
 ## Extension Schema
 
+This extension is applied to individual skins in the glTF file, providing bind pose data that corresponds directly to the skin's joint array.
+
 ```json
 {
-  "extensions": {
-    "KHR_character_skeleton_bindpose": {
-      "poseType": "TPose",
-      "skeleton": 0,
-      "jointBindPoses": [
-        {
-          "joint": 0,
-          "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+  "skins": [
+    {
+      "joints": [2, 5, 8, 12],
+      "extensions": {
+        "KHR_character_skeleton_bindpose": {
+          "poseType": "TPose",
+          "bindPoses": [
+            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] },
+            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.5, 0, 1] },
+            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.0, 0, 1] },
+            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.5, 0, 1] }
+          ]
         }
-      ]
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -48,13 +52,33 @@ The `KHR_character_skeleton_bindpose` extension defines a canonical bind pose fo
 
 | Property | Type | Description |
 | -------- | ---- | ----------- |
+| `poseType` | string | Enum: `TPose`, `APose`, `Custom`. Declares the character's general pose classification. |
+| `bindPoses` | array | List of bind pose matrices corresponding directly to the skin's joints array. Each entry at index i corresponds to the joint at joints[i]. |
 
-| `poseType` | string | Enum: `TPose`, `APose`, `Custom`. Declares the character’s general pose classification. |
-| `skeleton` | integer | Index into glTF `skins[]`; defines the joint set this bind pose applies to. |
+#### bindPoses Array
 
-| `jointBindPoses` | array | List of bind pose matrices, each associated with a joint node index. |
-| `joint` | integer | Index of the joint node in the glTF `nodes` array. |
-| `matrix` | float[16] | Column-major 4x4 matrix defining the joint’s bind pose in model space. |
+Each entry in the `bindPoses` array contains:
+
+| Property | Type | Description |
+| -------- | ---- | ----------- |
+| `matrix` | float[16] | Column-major 4x4 matrix defining the joint's bind pose in model space. |
+
+## Per-Skin Joint Indexing
+
+The `bindPoses` array uses per-skin joint indexing for maximum simplicity and glTF alignment:
+
+- **Direct Mapping**: Each entry in the bind pose array corresponds directly to the joint at the same index in the skin's joints array.
+- **Simplicity**: No need for extra mapping or referencing—just match the order.
+- **Consistency**: This matches how glTF handles skinning weights and inverse bind matrices, making it intuitive for tool and engine implementers.
+- **Efficiency**: No redundant data; everything is scoped to the skin and its joints.
+
+### Example Mapping
+
+Given a skin with `"joints": [2, 5, 8, 12]`:
+- `bindPoses[0]` corresponds to joint node 2
+- `bindPoses[1]` corresponds to joint node 5
+- `bindPoses[2]` corresponds to joint node 8
+- `bindPoses[3]` corresponds to joint node 12
 
 ## Relationship to glTF 2.0 Skinning
 
@@ -74,9 +98,10 @@ This extension supplements or overrides that mechanism by defining joint rest po
 
 ## Implementation Notes
 
-- A joint listed in `jointBindPoses` must exist in the `nodes` array.
+- The number of bind poses must match the number of joints in the skin's joints array.
 - The bind pose matrix must be specified in model space (i.e., world-relative).
 - This extension can be used in tandem with `skins[].inverseBindMatrices`, but is intended to expose clearer semantic meaning.
+- Validation should ensure that bindPoses array length equals joints array length.
 
 ## Example
 
@@ -90,20 +115,26 @@ This extension supplements or overrides that mechanism by defining joint rest po
     "KHR_character_skeleton_biped",
     "KHR_character_skeleton_bindpose"
   ],
-  "extensions": {
-    "KHR_character_skeleton_bindpose": {
-      "jointBindPoses": [
-        {
-          "joint": 0,
-          "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+  "skins": [
+    {
+      "joints": [0, 1, 2, 3],
+      "extensions": {
+        "KHR_character_skeleton_bindpose": {
+          "poseType": "TPose",
+          "bindPoses": [
+            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] },
+            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.5, 0, 1] },
+            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.0, 0, 1] },
+            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.5, 0, 1] }
+          ]
         }
-      ]
+      }
     }
-  }
+  ]
 }
 ```
 
 ## License
 
-This extension specification is licensed under the Khronos Group Extension License.  
+This extension specification is licensed under the Khronos Group Extension License.
 See: https://www.khronos.org/registry/gltf/license.html
