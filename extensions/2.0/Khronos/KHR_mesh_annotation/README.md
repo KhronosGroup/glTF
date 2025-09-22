@@ -80,7 +80,7 @@ Used by interaction or accessibility systems to identify meaningful geometry.
 ### 3. Region Metadata for Accessibility
 
 ```json
-"tags": ["left_hand"]
+"tags": ["accept button", "UI"]
 ```
 
 This can drive voiceover descriptions, haptics, or visual aids for users with assistive needs.
@@ -97,10 +97,11 @@ Allows filtering of optional accessories or togglable cosmetic parts.
 
 - Annotations apply at the granularity of `mesh.primitive`, enabling fine control.
 - Tags are non-authoritative but enable semantic interoperability across runtimes.
-- `customData` allows developers to store app-specific structured metadata (e.g., color categories, tracking weights, heatmaps).
+- `tags` allows developers to store free-form labels that can be used to identify, enhance, or provide additional context to the primitive (that may or may not be app-specific). If this metadata is not understood by a client, it should be safely ignored with no visual or functional change.
+- `customData` allows developers to store app-specific structured metadata (e.g., color categories, tracking weights, heatmaps). If this metadata is not understood by a client, it should be safely ignored with no visual or functional change.
 - If this extension is not understood by a client, it should be safely ignored with no visual or functional change.
 
 ## License
 
-This extension is licensed under the Khronos Group Extension License.  
+This extension is licensed under the Khronos Group Extension License.
 See: https://www.khronos.org/registry/gltf/license.html
