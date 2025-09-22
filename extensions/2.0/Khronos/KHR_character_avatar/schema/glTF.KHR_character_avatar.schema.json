@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_character_avatar glTF Document Extension",
+    "type": "object",
+    "description": "glTF extension that designates a glTF asset as representing an avatar.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "sceneIndex": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "Index of the glTF scene representing the avatar. Used to distinguish the avatar root when multiple scenes exist."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "sceneIndex"
+    ]
+}

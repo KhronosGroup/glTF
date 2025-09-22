@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_character_skeleton_mapping glTF Document Extension",
+    "type": "object",
+    "description": "glTF extension that provides a mechanism to map a skeleton rig to a reference rig for retargeting and compatibility.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "skeletalRigMappings": {
+            "type": "object",
+            "description": "Dictionary of target rig mappings. Each key is a target rig name, each value is a mapping dictionary.",
+            "additionalProperties": {
+                "type": "object",
+                "description": "Joint mapping dictionary. Each key is a source joint name, each value is the target joint name.",
+                "additionalProperties": {
+                    "type": "string",
+                    "description": "Target joint name in the target rig vocabulary."
+                }
+            }
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "skeletalRigMappings"
+    ]
+}
