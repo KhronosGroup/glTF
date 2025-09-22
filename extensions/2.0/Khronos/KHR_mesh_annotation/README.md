@@ -65,7 +65,7 @@ Annotations are attached at the **primitive level** (i.e., a `mesh.primitives[i]
 | Property     | Type     | Description                                                          |
 | ------------ | -------- | -------------------------------------------------------------------- |
 | `tags`       | string[] | List of free-form labels applicable to this primitive                |
-| `customData` | object   | Optional freeform object for runtime-specific annotations (optional) |
+| `customData` | object   | Optional free-form object for runtime-specific annotations (optional) |
 
 ## Use Cases & Examples
 
