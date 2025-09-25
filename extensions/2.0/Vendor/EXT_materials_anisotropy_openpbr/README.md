@@ -60,12 +60,12 @@ When `openPbrAnisotropyEnabled` is `true`, implementations should interpret the 
 
 In both glTF and OpenPBR, the strength of the anisotropic effect in the tangent and bitangent direction is calculated using the material's specular roughness as well as the anisotropic strength parameter from the `KHR_materials_anisotropy` extension. It is these calculations that differ between glTF and OpenPBR. The rotation and texture packing remains the same.
 
-In glTF:
-$alphaTangent = mix( alphaRoughness, 1.0, anisotropyStrength^2 )$<br>
+In glTF: \
+$alphaTangent = mix( alphaRoughness, 1.0, anisotropyStrength^2 )$ \
 $alphaBiTangent = alphaRoughness$
 
-In OpenPBR:
-$alphaTangent = alphaRoughness \sqrt{2 / (1+ (1-anisotropyStrength)^2)}$<br>
+In OpenPBR: \
+$alphaTangent = alphaRoughness \sqrt{2 / (1+ (1-anisotropyStrength)^2)}$ \
 $alphaBiTangent = alphaTangent(1 - anisotropyStrength)$
 
 
