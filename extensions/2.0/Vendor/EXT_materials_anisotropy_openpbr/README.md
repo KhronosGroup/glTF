@@ -38,7 +38,7 @@ OpenPBR anisotropy interpretation can be enabled by adding the `EXT_materials_an
                     "anisotropyRotation": 0.0,
                     "extensions": {
                         "EXT_materials_anisotropy_openpbr": {
-                            "openPbrAnisotropyEnabled": true
+                            "anisotropyUseOpenPbr": true
                         }
                     }
                 }
