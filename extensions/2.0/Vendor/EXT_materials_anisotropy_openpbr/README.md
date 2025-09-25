@@ -56,7 +56,7 @@ When `openPbrAnisotropyEnabled` is `false` or not present, the standard glTF ani
 
 When `openPbrAnisotropyEnabled` is `true`, implementations should interpret the anisotropic strength using the OpenPBR conventions described below.
 
-## Anisotropic Strength Behaviour
+## Anisotropic Strength Behavior
 
 In both glTF and OpenPBR, the strength of the anisotropic effect in the tangent and bitangent direction is calculated using the material's specular roughness as well as the anisotropic strength parameter from the `KHR_materials_anisotropy` extension. It is these calculations that differ between glTF and OpenPBR. The rotation and texture packing remains the same.
 
