@@ -195,4 +195,5 @@ This is currently implemented within [3D Tiles and CesiumJS as an experimental f
 
 ## Resources
 
-// TODO
+- [3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/)
+
