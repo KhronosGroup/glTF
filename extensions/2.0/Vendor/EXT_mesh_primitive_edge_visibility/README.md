@@ -1,8 +1,3 @@
-<!--
-Copyright 2025 The Khronos Group Inc.
-SPDX-License-Identifier: CC-BY-4.0
--->
-
 # EXT_mesh_primitive_edge_visibility
 
 ## Contributors
