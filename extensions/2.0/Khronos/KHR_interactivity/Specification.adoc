@@ -607,8 +607,8 @@ a < 0 ? -Math.round(-a) : Math.round(a)
 |===
 | Operation | `math/add` | Addition operation
 .2+| Input value sockets
-| `floatN a` | First addend
-| `floatN b` | Second addend
+d| `floatN a` | First addend
+d| `floatN b` | Second addend
 | Output value sockets
 | `floatN value` | Sum, stem:[a + b]
 |===
@@ -619,8 +619,8 @@ a < 0 ? -Math.round(-a) : Math.round(a)
 |===
 | Operation | `math/sub` | Subtraction operation
 .2+| Input value sockets
-| `floatN a` | Minuend
-| `floatN b` | Subtrahend
+d| `floatN a` | Minuend
+d| `floatN b` | Subtrahend
 | Output value sockets
 | `floatN value` | Difference, stem:[a - b]
 |===
@@ -631,8 +631,8 @@ a < 0 ? -Math.round(-a) : Math.round(a)
 |===
 | Operation | `math/mul` | Multiplication operation
 .2+| Input value sockets
-| `floatN a` | First factor
-| `floatN b` | Second factor
+d| `floatN a` | First factor
+d| `floatN b` | Second factor
 | Output value sockets
 | `floatN value` | Product, stem:[a * b]
 |===
@@ -651,8 +651,8 @@ See `math/matMul` for matrix multiplication.
 |===
 | Operation | `math/div` | Division operation
 .2+| Input value sockets
-| `floatN a` | Dividend
-| `floatN b` | Divisor
+d| `floatN a` | Dividend
+d| `floatN b` | Divisor
 | Output value sockets
 | `floatN value` | Quotient, stem:[a / b]
 |===
@@ -663,8 +663,8 @@ See `math/matMul` for matrix multiplication.
 |===
 | Operation | `math/rem` | Remainder operation
 .2+| Input value sockets
-| `floatN a` | Dividend
-| `floatN b` | Divisor
+d| `floatN a` | Dividend
+d| `floatN b` | Divisor
 | Output value sockets
 | `floatN value` | latexmath:[\begin{cases}
                                 \mathit{NaN} & \text{if } a = \pm \infty \text{ or } b = \pm 0 \\
@@ -689,8 +689,8 @@ a % b
 |===
 | Operation | `math/min` | Minimum operation
 .2+| Input value sockets
-| `floatN a` | First argument
-| `floatN b` | Second argument
+d| `floatN a` | First argument
+d| `floatN b` | Second argument
 | Output value sockets
 | `floatN value` | Smallest of the arguments
 |===
@@ -713,8 +713,8 @@ Math.min(a, b)
 |===
 | Operation | `math/max` | Maximum operation
 .2+| Input value sockets
-| `floatN a` | First argument
-| `floatN b` | Second argument
+d| `floatN a` | First argument
+d| `floatN b` | Second argument
 | Output value sockets
 | `floatN value` | Largest of the arguments
 |===
@@ -737,9 +737,9 @@ Math.max(a, b)
 |===
 | Operation | `math/clamp` | Clamp operation
 .3+| Input value sockets
-| `floatN a` | Value to clamp
-| `floatN b` | First boundary
-| `floatN c` | Second boundary
+d| `floatN a` | Value to clamp
+d| `floatN b` | First boundary
+d| `floatN c` | Second boundary
 | Output value sockets
 | `floatN value` | latexmath:[\min(\max(a, \min(b, c)), \max(b, c))]
 |===
@@ -771,9 +771,9 @@ This node is defined in terms of `math/min` and `math/max` nodes defined above.
 |===
 | Operation | `math/mix` | Linear interpolation operation
 .3+| Input value sockets
-| `floatN a` | Interpolated value at stem:[0]
-| `floatN b` | Interpolated value at stem:[1]
-| `floatN c` | Unclamped interpolation coefficient
+d| `floatN a` | Interpolated value at stem:[0]
+d| `floatN b` | Interpolated value at stem:[1]
+d| `floatN c` | Unclamped interpolation coefficient
 | Output value sockets
 | `floatN value` | stem:[(1 - c) * a + c * b]
 |===
@@ -790,8 +790,8 @@ For the purposes of these nodes, negative zero is equal to positive zero.
 |===
 | Operation | `math/eq` | Equality operation
 .2+| Input value sockets
-| `floatN a` | First argument
-| `floatN b` | Second argument
+d| `floatN a` | First argument
+d| `floatN b` | Second argument
 | Output value sockets
 | `bool value` | True if the input arguments are equal, per-component; false otherwise
 |===
@@ -802,8 +802,8 @@ For the purposes of these nodes, negative zero is equal to positive zero.
 |===
 | Operation | `math/lt` | Less than operation
 .2+| Input value sockets
-| `float a` | First argument
-| `float b` | Second argument
+d| `float a` | First argument
+d| `float b` | Second argument
 | Output value sockets
 | `bool value` | True if stem:[a < b]; false otherwise
 |===
@@ -814,8 +814,8 @@ For the purposes of these nodes, negative zero is equal to positive zero.
 |===
 | Operation | `math/le` | Less than or equal to operation
 .2+| Input value sockets
-| `float a` | First argument
-| `float b` | Second argument
+d| `float a` | First argument
+d| `float b` | Second argument
 | Output value sockets
 | `bool value` | True if stem:[a <= b]; false otherwise
 |===
@@ -826,8 +826,8 @@ For the purposes of these nodes, negative zero is equal to positive zero.
 |===
 | Operation | `math/gt` | Greater than operation
 .2+| Input value sockets
-| `float a` | First argument
-| `float b` | Second argument
+d| `float a` | First argument
+d| `float b` | Second argument
 | Output value sockets
 | `bool value` | True if stem:[a > b]; false otherwise
 |===
@@ -838,8 +838,8 @@ For the purposes of these nodes, negative zero is equal to positive zero.
 |===
 | Operation | `math/ge` | Greater than or equal operation
 .2+| Input value sockets
-| `float a` | First argument
-| `float b` | Second argument
+d| `float a` | First argument
+d| `float b` | Second argument
 | Output value sockets
 | `bool value` | True if stem:[a >= b]; false otherwise
 |===
@@ -882,9 +882,9 @@ To check whether a value is only a negative infinity, combine `math/eq`, `math/n
 |===
 | Operation | `math/select` | Conditional selection operation
 .3+| Input value sockets
-| `bool condition` | Value selecting the value returned
-| `T a` | Positive selection option
-| `T b` | Negative selection option
+d| `bool condition` | Value selecting the value returned
+d| `T a` | Positive selection option
+d| `T b` | Negative selection option
 | Output value sockets
 | `T value` | stem:[a] if the `condition` input value is true; stem:[b] otherwise
 |===
@@ -899,9 +899,9 @@ The type `T` represents any supported type including custom types. It **MUST** b
 | Configuration
 | `int[] cases` | The cases on which to perform the switch; empty in the default configuration
 .3+| Input value sockets
-| `int selection` | The value on which the switch operates
-| `T <case>`  | Zero or more input value sockets; `<case>` is an integer decimal number
-| `T default` | The value used when the `selection` input value is not present in the `cases` configuration array
+d| `int selection` | The value on which the switch operates
+d| `T <case>`  | Zero or more input value sockets; `<case>` is an integer decimal number
+d| `T default` | The value used when the `selection` input value is not present in the `cases` configuration array
 | Output value sockets
 | `T value` | The value taken from the selected input value socket
 |===
@@ -1153,8 +1153,8 @@ When stem:[a] is infinite, the returned value is an implementation-specific appr
 |===
 | Operation | `math/atan2` | Arctangent 2 function
 .2+| Input value sockets
-| `floatN a` | Y coordinate
-| `floatN b` | X coordinate
+d| `floatN a` | Y coordinate
+d| `floatN b` | X coordinate
 | Output value sockets
 | `floatN value` | Angle between the positive X-axis and the vector from the stem:[(0, 0)] origin to the stem:[(X, Y)] point on a 2D plane; see the description for details
 |===
@@ -1379,8 +1379,8 @@ If any input value component is _NaN_, the corresponding output value component 
 |===
 | Operation | `math/pow` | Power function
 .2+| Input value sockets
-| `floatN a` | Base
-| `floatN b` | Exponent
+d| `floatN a` | Base
+d| `floatN b` | Exponent
 | Output value sockets
 | `floatN value` | stem:[a^b]; see the description for details
 |===
@@ -1453,8 +1453,8 @@ To get the squared length of stem:[a], use `math/dot` with stem:[a] provided to 
 | Input value sockets
 | `float{2\|3\|4} a` | Vector
 .2+| Output value sockets
-| `float{2\|3\|4} value` | Vector in the same direction as stem:[a] but with a unit length, e.g., latexmath:[\dfrac{\vec{a}}{\sqrt{a_x^2 + a_y^2}}] for `float2`; see the description for details
-| `bool isValid` | True if the output vector value has a unit length after normalization; false otherwise
+d| `float{2\|3\|4} value` | Vector in the same direction as stem:[a] but with a unit length, e.g., latexmath:[\dfrac{\vec{a}}{\sqrt{a_x^2 + a_y^2}}] for `float2`; see the description for details
+d| `bool isValid` | True if the output vector value has a unit length after normalization; false otherwise
 |===
 
 The output values are computed as follows:
@@ -1477,8 +1477,8 @@ If the input vector represents a quaternion and the graph expects it to be ident
 |===
 | Operation | `math/dot` | Dot product
 .2+| Input value sockets
-| `float{2\|3\|4} a` | First vector
-| `float{2\|3\|4} b` | Second vector of the same type as stem:[a]
+d| `float{2\|3\|4} a` | First vector
+d| `float{2\|3\|4} b` | Second vector of the same type as stem:[a]
 | Output value sockets
 | `float value` | Sum of per-component products of stem:[a] and stem:[b], e.g., stem:[a_x * b_x + a_y * b_y] for `float2`
 |===
@@ -1499,8 +1499,8 @@ This operation is frequently used with both input value sockets connected to the
 |===
 | Operation | `math/cross` | Cross product
 .2+| Input value sockets
-| `float3 a` | Vector
-| `float3 b` | Vector
+d| `float3 a` | Vector
+d| `float3 b` | Vector
 | Output value sockets
 | `float3 value` | Cross product of stem:[a] and stem:[b], i.e., stem:[(a_y * b_z - a_z * b_y, a_z * b_x - a_x * b_z, a_x * b_y - a_y * b_x)]
 |===
@@ -1513,8 +1513,8 @@ Since this operation is a shortcut for the combination of multiplications and su
 |===
 | Operation | `math/rotate2D` | 2D rotation
 .2+| Input value sockets
-| `float2 a` | Vector to rotate
-| `float angle`  | Angle in radians
+d| `float2 a` | Vector to rotate
+d| `float angle`  | Angle in radians
 | Output value sockets
 | `float2 value` | Rotated vector
 |===
@@ -1537,8 +1537,8 @@ Since this operation is a shortcut for the combination of trigonometry and arith
 |===
 | Operation | `math/rotate3D` | 3D rotation
 .2+| Input value sockets
-| `float3 a` | Vector to rotate
-| `float4 rotation` | Rotation quaternion
+d| `float3 a` | Vector to rotate
+d| `float4 rotation` | Rotation quaternion
 | Output value sockets
 | `float3 value` | Rotated vector
 |===
@@ -1581,8 +1581,8 @@ This operation does not implicitly normalize the rotation quaternion. If needed,
 |===
 | Operation | `math/transform` | Vector transformation
 .2+| Input value sockets
-| `float2 a`   | Vector to transform
-| `float2x2 b` | Transformation matrix
+d| `float2 a`   | Vector to transform
+d| `float2x2 b` | Transformation matrix
 | Output value sockets
 | `float2 value` | Transformed vector
 |===
@@ -1591,8 +1591,8 @@ This operation does not implicitly normalize the rotation quaternion. If needed,
 |===
 | Operation | `math/transform` | Vector transformation
 .2+| Input value sockets
-| `float3 a`   | Vector to transform
-| `float3x3 b` | Transformation matrix
+d| `float3 a`   | Vector to transform
+d| `float3x3 b` | Transformation matrix
 | Output value sockets
 | `float3 value` | Transformed vector
 |===
@@ -1601,8 +1601,8 @@ This operation does not implicitly normalize the rotation quaternion. If needed,
 |===
 | Operation | `math/transform` | Vector transformation
 .2+| Input value sockets
-| `float4 a`   | Vector to transform
-| `float4x4 b` | Transformation matrix
+d| `float4 a`   | Vector to transform
+d| `float4x4 b` | Transformation matrix
 | Output value sockets
 | `float4 value` | Transformed vector
 |===
@@ -1645,8 +1645,8 @@ Since this operation is a shortcut for the combination of multiplications, subtr
 | Input value sockets
 | `float{2x2\|3x3\|4x4} a` | Matrix to inverse
 .2+| Output value sockets
-| `float{2x2\|3x3\|4x4} value` | Matrix that is the inverse of stem:[a]; see the description for details
-| `bool isValid` | True if the input matrix is invertible; false otherwise
+d| `float{2x2\|3x3\|4x4} value` | Matrix that is the inverse of stem:[a]; see the description for details
+d| `bool isValid` | True if the input matrix is invertible; false otherwise
 |===
 
 The `value` input value socket and `value` output value socket have the same type.
@@ -1665,8 +1665,8 @@ The output values are computed as follows:
 |===
 | Operation | `math/matMul` | Matrix multiplication operation
 .2+| Input value sockets
-| `float{2x2\|3x3\|4x4} a` | First matrix
-| `float{2x2\|3x3\|4x4} b` | Second matrix
+d| `float{2x2\|3x3\|4x4} a` | First matrix
+d| `float{2x2\|3x3\|4x4} b` | Second matrix
 | Output value sockets
 | `float{2x2\|3x3\|4x4} value` | Matrix product
 |===
@@ -1689,9 +1689,9 @@ See `math/mul` for per-element multiplication.
 |===
 | Operation | `math/matCompose` | Compose a 4x4 transform matrix
 .3+| Input value sockets
-| `float3 translation` | Translation vector
-| `float4 rotation` | Rotation quaternion
-| `float3 scale` | Scale vector
+d| `float3 translation` | Translation vector
+d| `float4 rotation` | Rotation quaternion
+d| `float3 scale` | Scale vector
 | Output value sockets
 | `float4x4 value` | Matrix composed from the TRS properties
 |===
@@ -1746,10 +1746,10 @@ This operation does not implicitly normalize the rotation quaternion. If needed,
 | Input value sockets
 | `float4x4 a` | Matrix stem:[A] to decompose
 .4+| Output value sockets
-| `float3 translation` | Translation vector
-| `float4 rotation` | Rotation quaternion
-| `float3 scale` | Scale vector
-| `bool isValid` | True if the input matrix is decomposable; false otherwise
+d| `float3 translation` | Translation vector
+d| `float4 rotation` | Rotation quaternion
+d| `float3 scale` | Scale vector
+d| `bool isValid` | True if the input matrix is decomposable; false otherwise
 |===
 
 The output values are computed as follows:
@@ -1837,8 +1837,8 @@ If the quaternion is unit, this operation also produces the quaternion's inverse
 |===
 | Operation | `math/quatMul` | Quaternion multiplication operation
 .2+| Input value sockets
-| `float4 a` | First quaternion
-| `float4 b` | Second quaternion
+d| `float4 a` | First quaternion
+d| `float4 b` | Second quaternion
 | Output value sockets
 | `float4 value` | Quaternion product
 |===
@@ -1866,8 +1866,8 @@ Since this operation is a shortcut for the combination of multiplications, subtr
 |===
 | Operation | `math/quatAngleBetween` | Angle between two quaternions
 .2+| Input value sockets
-| `float4 a` | First quaternion
-| `float4 b` | Second quaternion
+d| `float4 a` | First quaternion
+d| `float4 b` | Second quaternion
 | Output value sockets
 | `float value` | Angle in radians
 |===
@@ -1903,8 +1903,8 @@ This operation does not implicitly normalize the input quaternions. If needed, t
 |===
 | Operation | `math/quatFromAxisAngle` | Create a quaternion from a rotation axis and an angle
 .2+| Input value sockets
-| `float3 axis` | Rotation axis
-| `float angle` | Angle in radians
+d| `float3 axis` | Rotation axis
+d| `float angle` | Angle in radians
 | Output value sockets
 | `float4 value` | Rotation quaternion
 |===
@@ -1940,8 +1940,8 @@ This operation does not implicitly normalize the rotation axis vector. If needed
 | Input value sockets
 | `float4 a` | Rotation quaternion
 .2+| Output value sockets
-| `float3 axis` | Rotation axis
-| `float angle` | Angle in radians
+d| `float3 axis` | Rotation axis
+d| `float angle` | Angle in radians
 |===
 
 [CAUTION]
@@ -1978,8 +1978,8 @@ This operation does not implicitly normalize the rotation quaternion. If needed,
 |===
 | Operation | `math/quatFromDirections` | Create a quaternion from two directional vectors
 .2+| Input value sockets
-| `float3 a` | First direction
-| `float3 b` | Second direction
+d| `float3 a` | First direction
+d| `float3 b` | Second direction
 | Output value sockets
 | `float4 value` | Rotation quaternion
 |===
@@ -2026,8 +2026,8 @@ This operation implies that both input vectors are normalized. A `math/normalize
 |===
 | Operation | `math/combine2` | Combine two floats into a two-component vector
 .2+| Input value sockets
-| `float a` | First component
-| `float b` | Second component
+d| `float a` | First component
+d| `float b` | Second component
 | Output value sockets
 | `float2 value` | Vector
 |===
@@ -2036,9 +2036,9 @@ This operation implies that both input vectors are normalized. A `math/normalize
 |===
 | Operation | `math/combine3` | Combine three floats into a three-component vector
 .3+| Input value sockets
-| `float a` | First component
-| `float b` | Second component
-| `float c` | Third component
+d| `float a` | First component
+d| `float b` | Second component
+d| `float c` | Third component
 | Output value sockets
 | `float3 value` | Vector
 |===
@@ -2047,10 +2047,10 @@ This operation implies that both input vectors are normalized. A `math/normalize
 |===
 | Operation | `math/combine4` | Combine four floats into a four-component vector
 .4+| Input value sockets
-| `float a` | First component
-| `float b` | Second component
-| `float c` | Third component
-| `float d` | Fourth component
+d| `float a` | First component
+d| `float b` | Second component
+d| `float c` | Third component
+d| `float d` | Fourth component
 | Output value sockets
 | `float4 value` | Vector
 |===
@@ -2059,10 +2059,10 @@ This operation implies that both input vectors are normalized. A `math/normalize
 |===
 | Operation | `math/combine2x2` | Combine 4 floats into a 2x2 matrix
 .4+| Input value sockets
-| `float a` | First row, first column element
-| `float b` | Second row, first column element
-| `float c` | First row, second column element
-| `float d` | Second row, second column element
+d| `float a` | First row, first column element
+d| `float b` | Second row, first column element
+d| `float c` | First row, second column element
+d| `float d` | Second row, second column element
 | Output value sockets
 | `float2x2 value` | Matrix
 |===
@@ -2071,15 +2071,15 @@ This operation implies that both input vectors are normalized. A `math/normalize
 |===
 | Operation | `math/combine3x3` | Combine 9 floats into a 3x3 matrix
 .9+| Input value sockets
-| `float a` | First row, first column element
-| `float b` | Second row, first column element
-| `float c` | Third row, first column element
-| `float d` | First row, second column element
-| `float e` | Second row, second column element
-| `float f` | Third row, second column element
-| `float g` | First row, third column element
-| `float h` | Second row, third column element
-| `float i` | Third row, third column element
+d| `float a` | First row, first column element
+d| `float b` | Second row, first column element
+d| `float c` | Third row, first column element
+d| `float d` | First row, second column element
+d| `float e` | Second row, second column element
+d| `float f` | Third row, second column element
+d| `float g` | First row, third column element
+d| `float h` | Second row, third column element
+d| `float i` | Third row, third column element
 | Output value sockets
 | `float3x3 value` | Matrix
 |===
@@ -2088,22 +2088,22 @@ This operation implies that both input vectors are normalized. A `math/normalize
 |===
 | Operation | `math/combine4x4` | Combine 16 floats into a 4x4 matrix
 .16+| Input value sockets
-| `float a` | First row, first column element
-| `float b` | Second row, first column element
-| `float c` | Third row, first column element
-| `float d` | Fourth row, first column element
-| `float e` | First row, second column element
-| `float f` | Second row, second column element
-| `float g` | Third row, second column element
-| `float h` | Fourth row, second column element
-| `float i` | First row, third column element
-| `float j` | Second row, third column element
-| `float k` | Third row, third column element
-| `float l` | Fourth row, third column element
-| `float m` | First row, fourth column element
-| `float n` | Second row, fourth column element
-| `float o` | Third row, fourth column element
-| `float p` | Fourth row, fourth column element
+d| `float a` | First row, first column element
+d| `float b` | Second row, first column element
+d| `float c` | Third row, first column element
+d| `float d` | Fourth row, first column element
+d| `float e` | First row, second column element
+d| `float f` | Second row, second column element
+d| `float g` | Third row, second column element
+d| `float h` | Fourth row, second column element
+d| `float i` | First row, third column element
+d| `float j` | Second row, third column element
+d| `float k` | Third row, third column element
+d| `float l` | Fourth row, third column element
+d| `float m` | First row, fourth column element
+d| `float n` | Second row, fourth column element
+d| `float o` | Third row, fourth column element
+d| `float p` | Fourth row, fourth column element
 | Output value sockets
 | `float4x4 value` | Matrix
 |===
@@ -2116,8 +2116,8 @@ This operation implies that both input vectors are normalized. A `math/normalize
 | Input value sockets
 | `float2 a` | Vector
 .2+| Output value sockets
-| `float 0` | First component
-| `float 1` | Second component
+d| `float 0` | First component
+d| `float 1` | Second component
 |===
 
 [cols="1h,1,2"]
@@ -2126,9 +2126,9 @@ This operation implies that both input vectors are normalized. A `math/normalize
 | Input value sockets
 | `float3 a` | Vector
 .3+| Output value sockets
-| `float 0` | First component
-| `float 1` | Second component
-| `float 2` | Third component
+d| `float 0` | First component
+d| `float 1` | Second component
+d| `float 2` | Third component
 |===
 
 [cols="1h,1,2"]
@@ -2137,10 +2137,10 @@ This operation implies that both input vectors are normalized. A `math/normalize
 | Input value sockets
 | `float4 a` | Vector
 .4+| Output value sockets
-| `float 0` | First component
-| `float 1` | Second component
-| `float 2` | Third component
-| `float 3` | Fourth component
+d| `float 0` | First component
+d| `float 1` | Second component
+d| `float 2` | Third component
+d| `float 3` | Fourth component
 |===
 
 [cols="1h,1,2"]
@@ -2149,10 +2149,10 @@ This operation implies that both input vectors are normalized. A `math/normalize
 | Input value sockets
 | `float2x2 a` | Matrix
 .4+| Output value sockets
-| `float 0` | First row, first column element
-| `float 1` | Second row, first column element
-| `float 2` | First row, second column element
-| `float 3` | Second row, second column element
+d| `float 0` | First row, first column element
+d| `float 1` | Second row, first column element
+d| `float 2` | First row, second column element
+d| `float 3` | Second row, second column element
 |===
 
 [cols="1h,1,2"]
@@ -2161,15 +2161,15 @@ This operation implies that both input vectors are normalized. A `math/normalize
 | Input value sockets
 | `float3x3 a` | Matrix
 .9+| Output value sockets
-| `float 0` | First row, first column element
-| `float 1` | Second row, first column element
-| `float 2` | Third row, first column element
-| `float 3` | First row, second column element
-| `float 4` | Second row, second column element
-| `float 5` | Third row, second column element
-| `float 6` | First row, third column element
-| `float 7` | Second row, third column element
-| `float 8` | Third row, third column element
+d| `float 0` | First row, first column element
+d| `float 1` | Second row, first column element
+d| `float 2` | Third row, first column element
+d| `float 3` | First row, second column element
+d| `float 4` | Second row, second column element
+d| `float 5` | Third row, second column element
+d| `float 6` | First row, third column element
+d| `float 7` | Second row, third column element
+d| `float 8` | Third row, third column element
 |===
 
 [cols="1h,1,2"]
@@ -2178,22 +2178,22 @@ This operation implies that both input vectors are normalized. A `math/normalize
 | Input value sockets
 | `float4x4 a` | Matrix
 .16+| Output value sockets
-| `float 0`  | First row, first column element
-| `float 1`  | Second row, first column element
-| `float 2`  | Third row, first column element
-| `float 3`  | Fourth row, first column element
-| `float 4`  | First row, second column element
-| `float 5`  | Second row, second column element
-| `float 6`  | Third row, second column element
-| `float 7`  | Fourth row, second column element
-| `float 8`  | First row, third column element
-| `float 9`  | Second row, third column element
-| `float 10` | Third row, third column element
-| `float 11` | Fourth row, third column element
-| `float 12` | First row, fourth column element
-| `float 13` | Second row, fourth column element
-| `float 14` | Third row, fourth column element
-| `float 15` | Fourth row, fourth column element
+d| `float 0`  | First row, first column element
+d| `float 1`  | Second row, first column element
+d| `float 2`  | Third row, first column element
+d| `float 3`  | Fourth row, first column element
+d| `float 4`  | First row, second column element
+d| `float 5`  | Second row, second column element
+d| `float 6`  | Third row, second column element
+d| `float 7`  | Fourth row, second column element
+d| `float 8`  | First row, third column element
+d| `float 9`  | Second row, third column element
+d| `float 10` | Third row, third column element
+d| `float 11` | Fourth row, third column element
+d| `float 12` | First row, fourth column element
+d| `float 13` | Second row, fourth column element
+d| `float 14` | Third row, fourth column element
+d| `float 15` | Fourth row, fourth column element
 |===
 
 ==== Integer Arithmetic Nodes
@@ -2270,8 +2270,8 @@ This is implementable in ECMAScript via the following expression:
 |===
 | Operation | `math/add` | Addition operation
 .2+| Input value sockets
-| `int a` | First addend
-| `int b` | Second addend
+d| `int a` | First addend
+d| `int b` | Second addend
 | Output value sockets
 | `int value` | Sum, stem:[a + b]
 |===
@@ -2299,8 +2299,8 @@ This is implementable in ECMAScript via the following expression:
 |===
 | Operation | `math/sub` | Subtraction operation
 .2+| Input value sockets
-| `int a` | Minuend
-| `int b` | Subtrahend
+d| `int a` | Minuend
+d| `int b` | Subtrahend
 | Output value sockets
 | `int value` | Difference, stem:[a - b]
 |===
@@ -2328,8 +2328,8 @@ This is implementable in ECMAScript via the following expression:
 |===
 | Operation | `math/mul` | Multiplication operation
 .2+| Input value sockets
-| `int a` | First factor
-| `int b` | Second factor
+d| `int a` | First factor
+d| `int b` | Second factor
 | Output value sockets
 | `int value` | Product, stem:[a * b]
 |===
@@ -2359,8 +2359,8 @@ Math.imul(a, b)
 |===
 | Operation | `math/div` | Division operation
 .2+| Input value sockets
-| `int a` | Dividend
-| `int b` | Divisor
+d| `int a` | Dividend
+d| `int b` | Divisor
 | Output value sockets
 | `int value` | latexmath:[\begin{cases}
                              \frac{a}{b} & \text{if } b \ne 0 \\
@@ -2392,8 +2392,8 @@ This is implementable in ECMAScript via the following expression:
 |===
 | Operation | `math/rem` | Remainder operation
 .2+| Input value sockets
-| `int a` | Dividend
-| `int b` | Divisor
+d| `int a` | Dividend
+d| `int b` | Divisor
 | Output value sockets
 | `int value` | latexmath:[\begin{cases}
                              a - (b \cdot \operatorname{trunc}(\frac{a}{b})) & \text{if } b \ne 0 \\
@@ -2417,8 +2417,8 @@ This is implementable in ECMAScript via the following expression:
 |===
 | Operation | `math/min` | Minimum operation
 .2+| Input value sockets
-| `int a` | First argument
-| `int b` | Second argument
+d| `int a` | First argument
+d| `int b` | Second argument
 | Output value sockets
 | `int value` | Smallest of the arguments
 |===
@@ -2429,8 +2429,8 @@ This is implementable in ECMAScript via the following expression:
 |===
 | Operation | `math/max` | Maximum operation
 .2+| Input value sockets
-| `int a` | First argument
-| `int b` | Second argument
+d| `int a` | First argument
+d| `int b` | Second argument
 | Output value sockets
 | `int value` | Largest of the arguments
 |===
@@ -2441,9 +2441,9 @@ This is implementable in ECMAScript via the following expression:
 |===
 | Operation | `math/clamp` | Clamp operation
 .3+| Input value sockets
-| `int a` | Value to clamp
-| `int b` | First boundary
-| `int c` | Second boundary
+d| `int a` | Value to clamp
+d| `int b` | First boundary
+d| `int c` | Second boundary
 | Output value sockets
 | `int value` | latexmath:[\min(\max(a, \min(b, c)), \max(b, c))]
 |===
@@ -2466,8 +2466,8 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 |===
 | Operation | `math/eq` | Equality operation
 .2+| Input value sockets
-| `int a` | First argument
-| `int b` | Second argument
+d| `int a` | First argument
+d| `int b` | Second argument
 | Output value sockets
 | `bool value` | True if the input arguments are equal; false otherwise
 |===
@@ -2478,8 +2478,8 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 |===
 | Operation | `math/lt` | Less than operation
 .2+| Input value sockets
-| `int a` | First argument
-| `int b` | Second argument
+d| `int a` | First argument
+d| `int b` | Second argument
 | Output value sockets
 | `bool value` | True if stem:[a < b]; false otherwise
 |===
@@ -2490,8 +2490,8 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 |===
 | Operation | `math/le` | Less than or equal to operation
 .2+| Input value sockets
-| `int a` | First argument
-| `int b` | Second argument
+d| `int a` | First argument
+d| `int b` | Second argument
 | Output value sockets
 | `bool value` | True if stem:[a <= b]; false otherwise
 |===
@@ -2502,8 +2502,8 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 |===
 | Operation | `math/gt` | Greater than operation
 .2+| Input value sockets
-| `int a` | First argument
-| `int b` | Second argument
+d| `int a` | First argument
+d| `int b` | Second argument
 | Output value sockets
 | `bool value` | True if stem:[a > b]; false otherwise
 |===
@@ -2514,8 +2514,8 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 |===
 | Operation | `math/ge` | Greater than or equal operation
 .2+| Input value sockets
-| `int a` | First argument
-| `int b` | Second argument
+d| `int a` | First argument
+d| `int b` | Second argument
 | Output value sockets
 | `bool value` | True if stem:[a >= b]; false otherwise
 |===
@@ -2541,8 +2541,8 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 |===
 | Operation | `math/and` | Bitwise AND operation
 .2+| Input value sockets
-| `int a` | First argument
-| `int b` | Second argument
+d| `int a` | First argument
+d| `int b` | Second argument
 | Output value sockets
 | `int value` | `a & b`
 |===
@@ -2553,8 +2553,8 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 |===
 | Operation | `math/or` | Bitwise OR operation
 .2+| Input value sockets
-| `int a` | First argument
-| `int b` | Second argument
+d| `int a` | First argument
+d| `int b` | Second argument
 | Output value sockets
 | `int value` | `a \| b`
 |===
@@ -2565,8 +2565,8 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 |===
 | Operation | `math/xor` | Bitwise XOR operation
 .2+| Input value sockets
-| `int a` | First argument
-| `int b` | Second argument
+d| `int a` | First argument
+d| `int b` | Second argument
 | Output value sockets
 | `int value` | `a ^ b`
 |===
@@ -2577,8 +2577,8 @@ All inputs to these nodes are two's complement 32-bit signed integers.
 |===
 | Operation | `math/asr` | Right Shift
 .2+| Input value sockets
-| `int a` | Value to be shifted
-| `int b` | Number of bits to shift by
+d| `int a` | Value to be shifted
+d| `int b` | Number of bits to shift by
 | Output value sockets
 | `int value` | `a >> b`
 |===
@@ -2591,8 +2591,8 @@ Only the lowest 5 bits of stem:[b] are considered, i.e., its effective range is 
 |===
 | Operation | `math/lsl` | Left Shift
 .2+| Input value sockets
-| `int a` | Value to be shifted
-| `int b` | Number of bits to shift by
+d| `int a` | Value to be shifted
+d| `int b` | Number of bits to shift by
 | Output value sockets
 | `int value` | `a << b`
 |===
@@ -2666,8 +2666,8 @@ If stem:[a] is 0, the operation returns 0; if stem:[a] is -1, the operation retu
 |===
 | Operation | `math/eq` | Equality operation
 .2+| Input value sockets
-| `bool a` | First argument
-| `bool b` | Second argument
+d| `bool a` | First argument
+d| `bool b` | Second argument
 | Output value sockets
 | `bool value` | True if and only if both stem:[a] and stem:[b] have the same value; false otherwise
 |===
@@ -2689,8 +2689,8 @@ If stem:[a] is 0, the operation returns 0; if stem:[a] is -1, the operation retu
 |===
 | Operation | `math/and` | Boolean AND operation
 .2+| Input value sockets
-| `bool a` | First argument
-| `bool b` | Second argument
+d| `bool a` | First argument
+d| `bool b` | Second argument
 | Output value sockets
 | `bool value` | True if and only if both stem:[a] and stem:[b] are true; false otherwise
 |===
@@ -2701,8 +2701,8 @@ If stem:[a] is 0, the operation returns 0; if stem:[a] is -1, the operation retu
 |===
 | Operation | `math/or` | Boolean OR operation
 .2+| Input value sockets
-| `bool a` | First argument
-| `bool b` | Second argument
+d| `bool a` | First argument
+d| `bool b` | Second argument
 | Output value sockets
 | `bool value` | False if and only if both stem:[a] and stem:[b] are false; true otherwise
 |===
@@ -2713,8 +2713,8 @@ If stem:[a] is 0, the operation returns 0; if stem:[a] is -1, the operation retu
 |===
 | Operation | `math/xor` | Boolean XOR operation
 .2+| Input value sockets
-| `bool a` | First argument
-| `bool b` | Second argument
+d| `bool a` | First argument
+d| `bool b` | Second argument
 | Output value sockets
 | `bool value` | True if and only if stem:[a] is not equal to stem:[b]; false otherwise
 |===
@@ -2889,8 +2889,8 @@ If the number of output flow sockets (as present in JSON) exceeds an implementat
 | Input value sockets
 | `bool condition` | Value selecting the branch taken
 .2+| Output flow sockets
-| `true`  | The flow to be activated if the `condition` input value is true
-| `false` | The flow to be activated if the `condition` input value is false
+d| `true`  | The flow to be activated if the `condition` input value is true
+d| `false` | The flow to be activated if the `condition` input value is false
 |===
 
 This node has no internal state.
@@ -2909,8 +2909,8 @@ The `condition` input value is evaluated each time the node is executed.
 | Input value sockets
 | `int selection` | The value on which the switch operates
 .2+| Output flow sockets
-| `<case>`  | Zero or more output flows; `<case>` is an integer decimal number
-| `default` | The output flow activated when the `selection` input value is not present in the `cases` configuration array
+d| `<case>`  | Zero or more output flows; `<case>` is an integer decimal number
+d| `default` | The output flow activated when the `selection` input value is not present in the `cases` configuration array
 |===
 
 [CAUTION]
@@ -2971,8 +2971,8 @@ When the `in` input flow is activated:
 | Input value sockets
 | `bool condition` | Loop condition
 .2+| Output flow sockets
-| `loopBody`  | The flow to be activated while the `condition` input value is true
-| `completed` | The flow to be activated once the `condition` input value is false
+d| `loopBody`  | The flow to be activated while the `condition` input value is true
+d| `completed` | The flow to be activated once the `condition` input value is false
 |===
 
 This node has no internal state.
@@ -2996,11 +2996,11 @@ When the `in` input flow is activated:
 | Input flow sockets
 | `in` | The entry flow into this node
 .2+| Input value sockets
-| `int startIndex` | The start index of the loop
-| `int endIndex` | The end index of the loop
+d| `int startIndex` | The start index of the loop
+d| `int endIndex` | The end index of the loop
 .2+| Output flow sockets
-| `loopBody`  | The flow to be activated if the `index` value is less than the `endIndex` input value
-| `completed` | The flow to be activated if the `index` value is greater than or equal to the `endIndex` input value
+d| `loopBody`  | The flow to be activated if the `index` value is less than the `endIndex` input value
+d| `completed` | The flow to be activated if the `index` value is greater than or equal to the `endIndex` input value
 | Output value sockets
 | `int index` | The current index value if the node has ever been activated, `initialIndex` otherwise
 |===
@@ -3029,8 +3029,8 @@ When the `in` input flow is activated:
 |===
 | Operation | `flow/doN` | Activate the output flow no more than N times
 .2+| Input flow sockets
-|   `in`  | The entry flow into this node
-| `reset` | When this flow is activated, the `currentCount` value is reset to 0
+d|   `in`  | The entry flow into this node
+d| `reset` | When this flow is activated, the `currentCount` value is reset to 0
 | Input value sockets
 | `int n` | Maximum number of times the `out` output flow is activated
 | Output flow sockets
@@ -3058,11 +3058,11 @@ When the `in` input flow is activated:
 |===
 | Operation | `flow/multiGate` | Route the execution flow to one of the outputs sequentially or randomly
 .2+| Configuration
-| `bool isRandom` | If set to true, output flows are activated in random order, picking a random not used output flow each time until all are done; false in the default configuration
-| `bool isLoop`   | If set to true, output flow activations will repeat in a loop continuously after all are done; false in the default configuration
+d| `bool isRandom` | If set to true, output flows are activated in random order, picking a random not used output flow each time until all are done; false in the default configuration
+d| `bool isLoop`   | If set to true, output flow activations will repeat in a loop continuously after all are done; false in the default configuration
 .2+| Input flow sockets
-|   `in`  | The entry flow into this node
-| `reset` | When this flow is activated, the `lastIndex` value is reset to -1 and all outputs are marked as not used
+d|   `in`  | The entry flow into this node
+d| `reset` | When this flow is activated, the `lastIndex` value is reset to -1 and all outputs are marked as not used
 | Output flow sockets
 | `<id>`  | Zero or more output flows; their ids define the order of activation
 | Output value sockets
@@ -3114,11 +3114,11 @@ When the `isRandom` and `isLoop` configuration values are true, the output flow 
 | Configuration
 | `int inputFlows` | The number of input flows; zero in the default configuration
 .2+| Input flow sockets
-|   `<i>`  | The `i`-th input flow, `i` is a non-negative integer decimal number less than the `inputFlows` configuration value
-| `reset` | When this flow is activated, all input flows are marked as unused
+d|   `<i>`  | The `i`-th input flow, `i` is a non-negative integer decimal number less than the `inputFlows` configuration value
+d| `reset` | When this flow is activated, all input flows are marked as unused
 .2+| Output flow sockets
-|    `out`    | The flow to be activated after every input flow activation except the last missing input
-| `completed` | The flow to be activated when the last missing input flow is activated
+d|    `out`    | The flow to be activated after every input flow activation except the last missing input
+d| `completed` | The flow to be activated when the last missing input flow is activated
 | Output value sockets
 | `int remainingInputs` | The number of not yet activated input flows
 |===
@@ -3165,13 +3165,13 @@ In the default configuration, this node has only the `reset` input flow, the `re
 |===
 | Operation | `flow/throttle` | Activate the output flow unless it has been activated less than a certain time ago
 .2+| Input flow sockets
-|   `in`  | The entry flow into this node
-| `reset` | When this flow is activated, the output flow throttling state is reset
+d|   `in`  | The entry flow into this node
+d| `reset` | When this flow is activated, the output flow throttling state is reset
 | Input value sockets
 | `float duration` | The time, in seconds, to wait after an output flow activation before allowing subsequent output flow activations
 .2+| Output flow sockets
-| `out` | The flow to be activated if the output flow is not currently throttled
-| `err` | The flow to be activated if the `duration` input value is negative, infinite, or NaN
+d| `out` | The flow to be activated if the output flow is not currently throttled
+d| `err` | The flow to be activated if the `duration` input value is negative, infinite, or NaN
 | Output value sockets
 | `float lastRemainingTime` | The remaining throttling time, in seconds, at the moment of the last valid activation of the input flow or NaN if the input flow has never been activated with a valid `duration` input value
 |===
@@ -3208,16 +3208,16 @@ When the `in` input flow is activated:
 |===
 | Operation | `flow/setDelay` | Schedule the output flow activation after a certain delay
 .2+| Input flow sockets
-|   `in`   | The entry flow into this node
-| `cancel` | When this flow is activated, all delayed activations scheduled by this node are cancelled
+d|   `in`   | The entry flow into this node
+d| `cancel` | When this flow is activated, all delayed activations scheduled by this node are cancelled
 | Input value sockets
 | `float duration` | The duration, in seconds, to delay the `done` output flow activation
 | Output value sockets
 | `int lastDelayIndex` | The delay index assigned during the last successful node execution
 .3+| Output flow sockets
-| `out` | The flow to be activated if the `duration` value is valid
-| `err` | The flow to be activated if the `duration` value is invalid
-| `done` | The flow to be activated after the delay
+d| `out` | The flow to be activated if the `duration` value is valid
+d| `err` | The flow to be activated if the `duration` value is invalid
+d| `done` | The flow to be activated after the delay
 |===
 
 The internal state of this node consists of an integer `lastDelayIndex` value initialized to -1 and a dynamic array of activation indices scheduled by the node. This array is initially empty and its maximum size is implementation-specific.
@@ -3400,19 +3400,19 @@ When the `in` input flow is activated:
 |===
 | Operation | `variable/interpolate` | Interpolate a variable value
 .2+| Configuration
-| `int variable` | The custom variable index
-| `bool useSlerp` | Whether to use spherical interpolation for quaternions
+d| `int variable` | The custom variable index
+d| `bool useSlerp` | Whether to use spherical interpolation for quaternions
 | Input flow sockets
 | `in` | The entry flow into this node
 .4+| Input value sockets
-| `T value` | The target variable value
-| `float duration` | The time, in seconds, in which the variable **SHOULD** reach the target value
-| `float2 p1` | Control point P1
-| `float2 p2` | Control point P2
+d| `T value` | The target variable value
+d| `float duration` | The time, in seconds, in which the variable **SHOULD** reach the target value
+d| `float2 p1` | Control point P1
+d| `float2 p2` | Control point P2
 .3+| Output flow sockets
-| `out` | The flow to be activated if the input values are valid
-| `err` | The flow to be activated if the input values are invalid
-| `done` | The flow to be activated when the variable reaches the target value
+d| `out` | The flow to be activated if the input values are valid
+d| `err` | The flow to be activated if the input values are invalid
+d| `done` | The flow to be activated when the variable reaches the target value
 |===
 
 [CAUTION]
@@ -3605,13 +3605,13 @@ The inputs to these steps are the `pointer` configuration value, the template pa
 |===
 | Operation | `pointer/get` | Get an object model property value
 .2+| Configuration
-| `string pointer` | JSON Pointer Template
-| `int type`       | Property type index
+d| `string pointer` | JSON Pointer Template
+d| `int type`       | Property type index
 | Input value sockets
 | `int <parameter>` | Zero or more JSON Pointer template parameters to be evaluated at runtime; input value socket ids correspond to the pointer's path segments wrapped with curly brackets (`{}`)
 .2+| Output value sockets
-| `T value`  | The resolved property value
-| `bool isValid`  | True if the property value can be resolved; false otherwise
+d| `T value`  | The resolved property value
+d| `bool isValid`  | True if the property value can be resolved; false otherwise
 |===
 
 [CAUTION]
@@ -3678,16 +3678,16 @@ The `/meshes/{}/weights` and `/nodes/{}/weights` pointers defined in the glTF As
 |===
 | Operation | `pointer/set` | Set an object model property value
 .2+| Configuration
-| `string pointer` | JSON Pointer Template
-| `int type`       | Property type index
+d| `string pointer` | JSON Pointer Template
+d| `int type`       | Property type index
 | Input flow sockets
 | `in` | The entry flow into this node
 .2+| Input value sockets
-| `int <parameter>` | Zero or more JSON Pointer template parameters to be evaluated at runtime; input value socket ids correspond to the pointer's path segments wrapped with curly brackets (`{}`)
-| `T value` | The new property value
+d| `int <parameter>` | Zero or more JSON Pointer template parameters to be evaluated at runtime; input value socket ids correspond to the pointer's path segments wrapped with curly brackets (`{}`)
+d| `T value` | The new property value
 .2+| Output flow sockets
-| `out` | The flow to be activated if the property was set
-| `err` | The flow to be activated if the property was not set
+d| `out` | The flow to be activated if the property was set
+d| `err` | The flow to be activated if the property was not set
 |===
 
 [CAUTION]
@@ -3745,20 +3745,20 @@ The `/meshes/{}/weights` and `/nodes/{}/weights` pointers defined in the glTF As
 |===
 | Operation | `pointer/interpolate` | Interpolate an object model property value
 .2+| Configuration
-| `string pointer` | JSON Pointer Template
-| `int type`       | Property type index
+d| `string pointer` | JSON Pointer Template
+d| `int type`       | Property type index
 | Input flow sockets
 | `in` | The entry flow into this node
 .5+| Input value sockets
-| `int <parameter>` | Zero or more JSON Pointer template parameters to be evaluated at runtime; input value socket ids correspond to the pointer's path segments wrapped with curly brackets (`{}`)
-| `T value` | The target property value
-| `float duration` | The time, in seconds, in which the property **SHOULD** reach the target value
-| `float2 p1` | Control point P1
-| `float2 p2` | Control point P2
+d| `int <parameter>` | Zero or more JSON Pointer template parameters to be evaluated at runtime; input value socket ids correspond to the pointer's path segments wrapped with curly brackets (`{}`)
+d| `T value` | The target property value
+d| `float duration` | The time, in seconds, in which the property **SHOULD** reach the target value
+d| `float2 p1` | Control point P1
+d| `float2 p2` | Control point P2
 .3+| Output flow sockets
-| `out` | The flow to be activated if the property interpolation has been started
-| `err` | The flow to be activated if the property interpolation has not been started
-| `done` | The flow to be activated after the property reaches the target value
+d| `out` | The flow to be activated if the property interpolation has been started
+d| `err` | The flow to be activated if the property interpolation has not been started
+d| `done` | The flow to be activated after the property reaches the target value
 |===
 
 [CAUTION]
@@ -3860,14 +3860,14 @@ The `/meshes/{}/weights` and `/nodes/{}/weights` pointers defined in the glTF As
 | Input flow sockets
 | `in` | The entry flow into this node
 .4+| Input value sockets
-| `int animation` | Animation index
-| `float startTime` | Start time in seconds
-| `float endTime` | End time in seconds
-| `float speed` | Speed multiplier
+d| `int animation` | Animation index
+d| `float startTime` | Start time in seconds
+d| `float endTime` | End time in seconds
+d| `float speed` | Speed multiplier
 .3+| Output flow sockets
-| `out` | The flow to be activated if the input values are valid
-| `err` | The flow to be activated if any of the input values is invalid
-| `done` | The flow to be activated after the animation ends
+d| `out` | The flow to be activated if the input values are valid
+d| `err` | The flow to be activated if any of the input values is invalid
+d| `done` | The flow to be activated after the animation ends
 |===
 
 This node starts playing an animation using the specified input values.
@@ -3977,8 +3977,8 @@ During the last 5 seconds, the position of the node zero is well-defined again.
 | Input value sockets
 | `int animation` | Animation index
 .2+| Output flow sockets
-| `out` | The flow to be activated if the animation index is valid
-| `err` | The flow to be activated if the animation index is invalid
+d| `out` | The flow to be activated if the animation index is valid
+d| `err` | The flow to be activated if the animation index is invalid
 |===
 
 This node stops a playing animation.
@@ -4002,12 +4002,12 @@ When the `in` input flow is activated:
 | Input flow sockets
 | `in` | The entry flow into this node
 .2+| Input value sockets
-| `int animation` | Animation index
-| `float stopTime` | Stop time in seconds
+d| `int animation` | Animation index
+d| `float stopTime` | Stop time in seconds
 .3+| Output flow sockets
-| `out` | The flow to be activated if the input values are valid
-| `err` | The flow to be activated if any of the input values is invalid
-| `done` | The flow to be activated after the animation stops
+d| `out` | The flow to be activated if the input values are valid
+d| `err` | The flow to be activated if any of the input values is invalid
+d| `done` | The flow to be activated after the animation stops
 |===
 
 This node stops a playing animation.
@@ -4051,8 +4051,8 @@ If multiple instances of this node exist in the graph, they **MUST** be activate
 |===
 | Operation | `event/onTick` | Tick event
 .2+| Output value sockets
-| `float timeSinceStart` | Relative time in seconds since the graph execution start
-| `float timeSinceLastTick` | Relative time in seconds since the last tick occurred
+d| `float timeSinceStart` | Relative time in seconds since the graph execution start
+d| `float timeSinceLastTick` | Relative time in seconds since the last tick occurred
 | Output flow sockets
 | `out` | The flow to be activated when the tick event happens
 |===
@@ -4159,8 +4159,8 @@ When the `in` input flow is activated:
 |===
 | Operation | `debug/log` | Output a debug message
 .2+| Configuration
-| `int severity` | Message severity
-| `string message` | Message template
+d| `int severity` | Message severity
+d| `string message` | Message template
 | Input flow sockets
 | `in` | The entry flow into this node
 | Input value sockets
