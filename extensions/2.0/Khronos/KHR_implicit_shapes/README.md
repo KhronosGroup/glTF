@@ -47,12 +47,12 @@ Each shape defines a mandatory `type` property which designates the type of shap
 
 To describe the geometry which represents the object, shapes must define at most one of the following properties:
 
-| |Type|Description|
-|-|-|-|
-|**sphere**|`object`|A sphere centered at the origin in local space.|
-|**box**|`object`|An axis-aligned box centered at the origin in local space.|
-|**cylinder**|`object`|A cylinder centered at the origin and aligned along the Y axis in local space, with potentially different radii at each end. A cone is a special case of cylinder when one of the radii is zero.|
-|**capsule**|`object`|A capsule (cylinder with hemispherical ends) centered at the origin and defined by two "capping" spheres with potentially different radii, aligned along the Y axis in local space.|
+|              | Type     | Description                                                                                                                                                                                      |
+| ------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **sphere**   | `object` | A sphere centered at the origin in local space.                                                                                                                                                  |
+| **box**      | `object` | An axis-aligned box centered at the origin in local space.                                                                                                                                       |
+| **cylinder** | `object` | A cylinder centered at the origin and aligned along the Y axis in local space, with potentially different radii at each end. A cone is a special case of cylinder when one of the radii is zero. |
+| **capsule**  | `object` | A capsule (cylinder with hemispherical ends) centered at the origin and defined by two "capping" spheres with potentially different radii, aligned along the Y axis in local space.              |
 
 When the `type` of a shape refers to a shape type defined by this extension, the shape must not supply a value for a different shape type e.g. a shape whose `type` is "box" must not have a defined `sphere` property. Similarly, if `type` does not reference a shape type declared by `KHR_implicit_shapes`, an extension or other mechanism should supply an alternate shape definition.
 
@@ -60,33 +60,33 @@ Degenerate shapes are prohibited. A sphere must have a positive, non-zero radius
 
 ### JSON Schema
 
-* glTF Document Extension: [glTF.KHR_implicit_shapes.schema.json](schema/glTF.KHR_implicit_shapes.schema.json)
-* Shape: [glTF.KHR_implicit_shapes.shape.schema.json](schema/glTF.KHR_implicit_shapes.shape.schema.json)
-* Sphere: [glTF.KHR_implicit_shapes.shape.sphere.schema.json](schema/glTF.KHR_implicit_shapes.shape.sphere.schema.json)
-* Box: [glTF.KHR_implicit_shapes.shape.box.schema.json](schema/glTF.KHR_implicit_shapes.shape.box.schema.json)
-* Cylinder: [glTF.KHR_implicit_shapes.shape.cylinder.schema.json](schema/glTF.KHR_implicit_shapes.shape.cylinder.schema.json)
-* Capsule: [glTF.KHR_implicit_shapes.shape.capsule.schema.json](schema/glTF.KHR_implicit_shapes.shape.capsule.schema.json)
+- glTF Document Extension: [glTF.KHR_implicit_shapes.schema.json](schema/glTF.KHR_implicit_shapes.schema.json)
+- Shape: [glTF.KHR_implicit_shapes.shape.schema.json](schema/glTF.KHR_implicit_shapes.shape.schema.json)
+- Sphere: [glTF.KHR_implicit_shapes.shape.sphere.schema.json](schema/glTF.KHR_implicit_shapes.shape.sphere.schema.json)
+- Box: [glTF.KHR_implicit_shapes.shape.box.schema.json](schema/glTF.KHR_implicit_shapes.shape.box.schema.json)
+- Cylinder: [glTF.KHR_implicit_shapes.shape.cylinder.schema.json](schema/glTF.KHR_implicit_shapes.shape.cylinder.schema.json)
+- Capsule: [glTF.KHR_implicit_shapes.shape.capsule.schema.json](schema/glTF.KHR_implicit_shapes.shape.capsule.schema.json)
 
 ### Object Model
 
 With consideration to the glTF 2.0 Asset Object Model Specification document, the following pointer templates represent mutable properties defined in this extension.
 
-| Pointer | Type|
-|-|-|
-| `/extensions/KHR_implicit_shapes/shapes/{}/box/size` | `float3`|
-| `/extensions/KHR_implicit_shapes/shapes/{}/capsule/height` | `float`|
-| `/extensions/KHR_implicit_shapes/shapes/{}/capsule/radiusBottom` | `float`|
-| `/extensions/KHR_implicit_shapes/shapes/{}/capsule/radiusTop` | `float`|
-| `/extensions/KHR_implicit_shapes/shapes/{}/cylinder/height` | `float`|
-| `/extensions/KHR_implicit_shapes/shapes/{}/cylinder/radiusBottom` | `float`|
-| `/extensions/KHR_implicit_shapes/shapes/{}/cylinder/radiusTop` | `float`|
-| `/extensions/KHR_implicit_shapes/shapes/{}/sphere/radius` | `float`|
+| Pointer                                                           | Type     |
+| ----------------------------------------------------------------- | -------- |
+| `/extensions/KHR_implicit_shapes/shapes/{}/box/size`              | `float3` |
+| `/extensions/KHR_implicit_shapes/shapes/{}/capsule/height`        | `float`  |
+| `/extensions/KHR_implicit_shapes/shapes/{}/capsule/radiusBottom`  | `float`  |
+| `/extensions/KHR_implicit_shapes/shapes/{}/capsule/radiusTop`     | `float`  |
+| `/extensions/KHR_implicit_shapes/shapes/{}/cylinder/height`       | `float`  |
+| `/extensions/KHR_implicit_shapes/shapes/{}/cylinder/radiusBottom` | `float`  |
+| `/extensions/KHR_implicit_shapes/shapes/{}/cylinder/radiusTop`    | `float`  |
+| `/extensions/KHR_implicit_shapes/shapes/{}/sphere/radius`         | `float`  |
 
 Additional read-only properties
 
-| Pointer | Type|
-|-|-|
-| `/extensions/KHR_implicit_shapes/shapes.length` | `int`|
+| Pointer                                         | Type  |
+| ----------------------------------------------- | ----- |
+| `/extensions/KHR_implicit_shapes/shapes.length` | `int` |
 
 ## Appendix: Full Khronos Copyright Statement
 
