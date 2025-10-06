@@ -437,7 +437,9 @@ These limits are exposed to behavior graphs via additional glTF Object Model poi
 
 === Math Nodes
 
-In this section, `floatN` is a placeholder for any of `float`, `float2`, `float3`, `float4`, `float2x2`, `float3x3`, or `float4x4` types. All value sockets of `floatN` types have the same type within a node.
+Starting from this section, `floatN` is a placeholder for `float`, `float2`, `float3`, and `float4` types; `floatNxN` is a placeholder for `float2x2`, `float3x3`, and `float4x4` types.
+
+All value sockets of `floatN` or `floatNxN` types have the same type within a node.
 
 ==== Constants
 
@@ -491,13 +493,15 @@ If any input value component is _NaN_, the corresponding output value component 
 |===
 | Operation | `math/abs` | Absolute value operation
 | Input value sockets
-| `floatN a` | Argument
+| `floatN a` or +
+  `floatNxN a` | Argument
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}
-                                -a & \text{if } a \lt 0 \\
-                                +0 & \text{if } a = \pm0 \\
-                                 a & \text{if } a \gt 0
-                              \end{cases}]
+| `floatN value` or +
+  `floatNxN value` | latexmath:[\begin{cases}
+                                  -a & \text{if } a \lt 0 \\
+                                  +0 & \text{if } a = \pm0 \\
+                                   a & \text{if } a \gt 0
+                                \end{cases}]
 |===
 
 ===== Sign
@@ -506,13 +510,15 @@ If any input value component is _NaN_, the corresponding output value component 
 |===
 | Operation | `math/sign` | Sign operation
 | Input value sockets
-| `floatN a` | Argument
+| `floatN a` or +
+  `floatNxN a` | Argument
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}
-                                -1 & \text{if } a \lt 0 \\
-                                 a & \text{if } a = \pm0 \\
-                                +1 & \text{if } a \gt 0
-                              \end{cases}]
+| `floatN value` or +
+  `floatNxN value` | latexmath:[\begin{cases}
+                                  -1 & \text{if } a \lt 0 \\
+                                   a & \text{if } a = \pm0 \\
+                                  +1 & \text{if } a \gt 0
+                                \end{cases}]
 |===
 
 ===== Truncate
@@ -521,9 +527,11 @@ If any input value component is _NaN_, the corresponding output value component 
 |===
 | Operation | `math/trunc` | Truncate operation
 | Input value sockets
-| `floatN a` | Argument
+| `floatN a` or +
+  `floatNxN a` | Argument
 | Output value sockets
-| `floatN value` | Integer value equal to the nearest integer to stem:[a] whose absolute value is not larger than the absolute value of stem:[a]
+| `floatN value` or +
+  `floatNxN value` | Integer value equal to the nearest integer to stem:[a] whose absolute value is not larger than the absolute value of stem:[a]
 |===
 
 If the argument is infinity, it is returned unchanged.
@@ -534,9 +542,11 @@ If the argument is infinity, it is returned unchanged.
 |===
 | Operation | `math/floor` | Floor operation
 | Input value sockets
-| `floatN a` | Argument
+| `floatN a` or +
+  `floatNxN a` | Argument
 | Output value sockets
-| `floatN value` | stem:[floor(a)], value equal to the nearest integer that is less than or equal to stem:[a]
+| `floatN value` or +
+  `floatNxN value` | stem:[floor(a)], value equal to the nearest integer that is less than or equal to stem:[a]
 |===
 
 If the argument is infinity, it is returned unchanged.
@@ -547,9 +557,11 @@ If the argument is infinity, it is returned unchanged.
 |===
 | Operation | `math/ceil` | Ceil operation
 | Input value sockets
-| `floatN a` | Argument
+| `floatN a` or +
+  `floatNxN a` | Argument
 | Output value sockets
-| `floatN value` | stem:[ceil(a)], value equal to the nearest integer that is greater than or equal to stem:[a]
+| `floatN value` or +
+  `floatNxN value` | stem:[ceil(a)], value equal to the nearest integer that is greater than or equal to stem:[a]
 |===
 
 If the argument is infinity, it is returned unchanged.
@@ -560,9 +572,11 @@ If the argument is infinity, it is returned unchanged.
 |===
 | Operation | `math/round` | Round operation
 | Input value sockets
-| `floatN a` | Argument
+| `floatN a` or +
+  `floatNxN a` | Argument
 | Output value sockets
-| `floatN value` | Value equal to the integer nearest to stem:[a]
+| `floatN value` or +
+  `floatNxN value` | Value equal to the integer nearest to stem:[a]
 |===
 
 Half-way cases **MUST** be rounded away from zero. Negative values greater than `-0.5` **MUST** be rounded to negative zero.
@@ -585,9 +599,11 @@ a < 0 ? -Math.round(-a) : Math.round(a)
 |===
 | Operation | `math/fract` | Fractional operation
 | Input value sockets
-| `floatN a` | Argument
+| `floatN a` or +
+  `floatNxN a` | Argument
 | Output value sockets
-| `floatN value` | stem:[a - floor(a)]
+| `floatN value` or +
+  `floatNxN value` | stem:[a - floor(a)]
 |===
 
 ===== Negation
@@ -596,9 +612,11 @@ a < 0 ? -Math.round(-a) : Math.round(a)
 |===
 | Operation | `math/neg` | Negation operation
 | Input value sockets
-| `floatN a` | Argument
+| `floatN a` or +
+  `floatNxN a` | Argument
 | Output value sockets
-| `floatN value` | stem:[-a]
+| `floatN value` or +
+  `floatNxN value` | stem:[-a]
 |===
 
 ===== Addition
@@ -607,10 +625,13 @@ a < 0 ? -Math.round(-a) : Math.round(a)
 |===
 | Operation | `math/add` | Addition operation
 .2+| Input value sockets
-d| `floatN a` | First addend
-d| `floatN b` | Second addend
+d| `floatN a` or +
+   `floatNxN a` | First addend
+d| `floatN b` or +
+   `floatNxN b` | Second addend
 | Output value sockets
-| `floatN value` | Sum, stem:[a + b]
+| `floatN value` or +
+  `floatNxN value` | Sum, stem:[a + b]
 |===
 
 ===== Subtraction
@@ -619,10 +640,13 @@ d| `floatN b` | Second addend
 |===
 | Operation | `math/sub` | Subtraction operation
 .2+| Input value sockets
-d| `floatN a` | Minuend
-d| `floatN b` | Subtrahend
+d| `floatN a` or +
+   `floatNxN a` | Minuend
+d| `floatN b` or +
+   `floatNxN b` | Subtrahend
 | Output value sockets
-| `floatN value` | Difference, stem:[a - b]
+| `floatN value` or +
+  `floatNxN value` | Difference, stem:[a - b]
 |===
 
 ===== Multiplication
@@ -631,10 +655,13 @@ d| `floatN b` | Subtrahend
 |===
 | Operation | `math/mul` | Multiplication operation
 .2+| Input value sockets
-d| `floatN a` | First factor
-d| `floatN b` | Second factor
+d| `floatN a` or +
+   `floatNxN a` | First factor
+d| `floatN b` or +
+   `floatNxN b` | Second factor
 | Output value sockets
-| `floatN value` | Product, stem:[a * b]
+| `floatN value` or +
+  `floatNxN value` | Product, stem:[a * b]
 |===
 
 For matrix arguments, this operation performs per-element multiplication.
@@ -651,10 +678,13 @@ See `math/matMul` for matrix multiplication.
 |===
 | Operation | `math/div` | Division operation
 .2+| Input value sockets
-d| `floatN a` | Dividend
-d| `floatN b` | Divisor
+d| `floatN a` or +
+   `floatNxN a` | Dividend
+d| `floatN b` or +
+   `floatNxN b` | Divisor
 | Output value sockets
-| `floatN value` | Quotient, stem:[a / b]
+| `floatN value` or +
+  `floatNxN value` | Quotient, stem:[a / b]
 |===
 
 ===== Remainder
@@ -663,14 +693,17 @@ d| `floatN b` | Divisor
 |===
 | Operation | `math/rem` | Remainder operation
 .2+| Input value sockets
-d| `floatN a` | Dividend
-d| `floatN b` | Divisor
+d| `floatN a` or +
+   `floatNxN a` | Dividend
+d| `floatN b` or +
+   `floatNxN b` | Divisor
 | Output value sockets
-| `floatN value` | latexmath:[\begin{cases}
-                                \mathit{NaN} & \text{if } a = \pm \infty \text{ or } b = \pm 0 \\
-                                a & \text{if } a \ne \pm \infty \text{ and } b = \pm \infty \\
-                                a - (b \cdot \operatorname{trunc}(\frac{a}{b})) & \text{otherwise}
-                              \end{cases}]
+| `floatN value` or +
+  `floatNxN value` | latexmath:[\begin{cases}
+                                  \mathit{NaN} & \text{if } a = \pm \infty \text{ or } b = \pm 0 \\
+                                  a & \text{if } a \ne \pm \infty \text{ and } b = \pm \infty \\
+                                  a - (b \cdot \operatorname{trunc}(\frac{a}{b})) & \text{otherwise}
+                                \end{cases}]
 |===
 
 [TIP]
@@ -689,10 +722,13 @@ a % b
 |===
 | Operation | `math/min` | Minimum operation
 .2+| Input value sockets
-d| `floatN a` | First argument
-d| `floatN b` | Second argument
+d| `floatN a` or +
+   `floatNxN a` | First argument
+d| `floatN b` or +
+   `floatNxN b` | Second argument
 | Output value sockets
-| `floatN value` | Smallest of the arguments
+| `floatN value` or +
+  `floatNxN value` | Smallest of the arguments
 |===
 
 For the purposes of this node, negative zero is less than positive zero.
@@ -713,10 +749,13 @@ Math.min(a, b)
 |===
 | Operation | `math/max` | Maximum operation
 .2+| Input value sockets
-d| `floatN a` | First argument
-d| `floatN b` | Second argument
+d| `floatN a` or +
+   `floatNxN a` | First argument
+d| `floatN b` or +
+   `floatNxN b` | Second argument
 | Output value sockets
-| `floatN value` | Largest of the arguments
+| `floatN value` or +
+  `floatNxN value` | Largest of the arguments
 |===
 
 For the purposes of this node, negative zero is less than positive zero.
@@ -737,11 +776,15 @@ Math.max(a, b)
 |===
 | Operation | `math/clamp` | Clamp operation
 .3+| Input value sockets
-d| `floatN a` | Value to clamp
-d| `floatN b` | First boundary
-d| `floatN c` | Second boundary
+d| `floatN a` or +
+   `floatNxN a` | Value to clamp
+d| `floatN b` or +
+   `floatNxN b` | First boundary
+d| `floatN c` or +
+   `floatNxN c` | Second boundary
 | Output value sockets
-| `floatN value` | latexmath:[\min(\max(a, \min(b, c)), \max(b, c))]
+| `floatN value` or +
+  `floatNxN value` | latexmath:[\min(\max(a, \min(b, c)), \max(b, c))]
 |===
 
 This node is defined in terms of `math/min` and `math/max` nodes defined above.
@@ -758,9 +801,11 @@ This operation correctly handles a case when stem:[b] is greater than stem:[c].
 |===
 | Operation | `math/saturate` | Saturate operation
 | Input value sockets
-| `floatN a` | Value to saturate
+| `floatN a` or +
+  `floatNxN a` | Value to saturate
 | Output value sockets
-| `floatN value` | latexmath:[\min(\max(a, 0), 1)]
+| `floatN value` or +
+  `floatNxN value` | latexmath:[\min(\max(a, 0), 1)]
 |===
 
 This node is defined in terms of `math/min` and `math/max` nodes defined above.
@@ -771,11 +816,15 @@ This node is defined in terms of `math/min` and `math/max` nodes defined above.
 |===
 | Operation | `math/mix` | Linear interpolation operation
 .3+| Input value sockets
-d| `floatN a` | Interpolated value at stem:[0]
-d| `floatN b` | Interpolated value at stem:[1]
-d| `floatN c` | Unclamped interpolation coefficient
+d| `floatN a` or +
+   `floatNxN a` | Interpolated value at stem:[0]
+d| `floatN b` or +
+   `floatNxN b` | Interpolated value at stem:[1]
+d| `floatN c` or +
+   `floatNxN c` | Unclamped interpolation coefficient
 | Output value sockets
-| `floatN value` | stem:[(1 - c) * a + c * b]
+| `floatN value` or +
+  `floatNxN value` | stem:[(1 - c) * a + c * b]
 |===
 
 ==== Comparison Nodes
@@ -790,8 +839,10 @@ For the purposes of these nodes, negative zero is equal to positive zero.
 |===
 | Operation | `math/eq` | Equality operation
 .2+| Input value sockets
-d| `floatN a` | First argument
-d| `floatN b` | Second argument
+d| `floatN a` or +
+   `floatNxN a` | First argument
+d| `floatN b` or +
+   `floatNxN b` | Second argument
 | Output value sockets
 | `bool value` | True if the input arguments are equal, per-component; false otherwise
 |===
@@ -1410,7 +1461,7 @@ See individual node definitions for handling special floating-point values.
 |===
 | Operation | `math/length` | Vector length
 | Input value sockets
-| `float{2\|3\|4} a` | Vector
+| `floatN a` | Vector
 | Output value sockets
 | `float value` | Length of stem:[a], e.g., stem:[sqrt(a_x^2 + a_y^2)] for `float2`; see the description for details
 |===
@@ -1451,9 +1502,9 @@ To get the squared length of stem:[a], use `math/dot` with stem:[a] provided to 
 |===
 | Operation | `math/normalize` | Vector normalization
 | Input value sockets
-| `float{2\|3\|4} a` | Vector
+| `floatN a` | Vector
 .2+| Output value sockets
-d| `float{2\|3\|4} value` | Vector in the same direction as stem:[a] but with a unit length, e.g., latexmath:[\dfrac{\vec{a}}{\sqrt{a_x^2 + a_y^2}}] for `float2`; see the description for details
+d| `floatN value` | Vector in the same direction as stem:[a] but with a unit length, e.g., latexmath:[\dfrac{\vec{a}}{\sqrt{a_x^2 + a_y^2}}] for `float2`; see the description for details
 d| `bool isValid` | True if the output vector value has a unit length after normalization; false otherwise
 |===
 
@@ -1477,8 +1528,8 @@ If the input vector represents a quaternion and the graph expects it to be ident
 |===
 | Operation | `math/dot` | Dot product
 .2+| Input value sockets
-d| `float{2\|3\|4} a` | First vector
-d| `float{2\|3\|4} b` | Second vector of the same type as stem:[a]
+d| `floatN a` | First vector
+d| `floatN b` | Second vector of the same type as stem:[a]
 | Output value sockets
 | `float value` | Sum of per-component products of stem:[a] and stem:[b], e.g., stem:[a_x * b_x + a_y * b_y] for `float2`
 |===
@@ -1615,9 +1666,9 @@ d| `float4x4 b` | Transformation matrix
 |===
 | Operation | `math/transpose` | Transpose operation
 | Input value sockets
-| `float{2x2\|3x3\|4x4} a` | Matrix to transpose
+| `floatNxN a` | Matrix to transpose
 | Output value sockets
-| `float{2x2\|3x3\|4x4} value` | Matrix that is the transpose of stem:[a]
+| `floatNxN value` | Matrix that is the transpose of stem:[a]
 |===
 
 The input and output value sockets have the same type.
@@ -1630,7 +1681,7 @@ This operation only reorders the matrix elements without inspecting or altering 
 |===
 | Operation | `math/determinant` | Dot product
 | Input value sockets
-| `float{2x2\|3x3\|4x4} a` | Matrix
+| `floatNxN a` | Matrix
 | Output value sockets
 | `float value` | Determinant of stem:[a]
 |===
@@ -1643,9 +1694,9 @@ Since this operation is a shortcut for the combination of multiplications, subtr
 |===
 | Operation | `math/inverse` | Inverse operation
 | Input value sockets
-| `float{2x2\|3x3\|4x4} a` | Matrix to inverse
+| `floatNxN a` | Matrix to inverse
 .2+| Output value sockets
-d| `float{2x2\|3x3\|4x4} value` | Matrix that is the inverse of stem:[a]; see the description for details
+d| `floatNxN value` | Matrix that is the inverse of stem:[a]; see the description for details
 d| `bool isValid` | True if the input matrix is invertible; false otherwise
 |===
 
@@ -1665,10 +1716,10 @@ The output values are computed as follows:
 |===
 | Operation | `math/matMul` | Matrix multiplication operation
 .2+| Input value sockets
-d| `float{2x2\|3x3\|4x4} a` | First matrix
-d| `float{2x2\|3x3\|4x4} b` | Second matrix
+d| `floatNxN a` | First matrix
+d| `floatNxN b` | Second matrix
 | Output value sockets
-| `float{2x2\|3x3\|4x4} value` | Matrix product
+| `floatNxN value` | Matrix product
 |===
 
 Both input value sockets **MUST** have the same type.
@@ -4431,7 +4482,7 @@ If the `value` property array length does not match the array length for the spe
 
 If the variable type is **bool** and the only array element is not a JSON boolean literal, i.e., neither `true` nor `false`, the variable is invalid and the graph **MUST** be rejected.
 
-If the variable type is any of the **floatN** types and any of the array elements is not a JSON number, the variable is invalid and the graph **MUST** be rejected.
+If the variable type is any of the **floatN** or **floatNxN** types and any of the array elements is not a JSON number, the variable is invalid and the graph **MUST** be rejected.
 
 If the variable type is **int** and the only array element is not a JSON number exactly representable as a 32-bit signed integer, the variable is invalid and the graph **MUST** be rejected.
 
