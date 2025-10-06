@@ -417,7 +417,7 @@ Implementations **MAY** restrict the size and complexity of behavior graphs by i
 * The number of nodes
 * The number of graph-defined output flow sockets in operations like `flow/multiGate` or `flow/sequence`
 * The number of configuration-defined output flow sockets in operations like `flow/switch`
-* The number of configuration-defined input value sockets in operations like `pointer/get`, `math/switch`, or `variable/setMultiple`
+* The number of configuration-defined input value sockets in operations like `pointer/get`, `math/switch`, or `variable/set`
 
 The graph **MUST** be rejected if it exceeds implementation-defined max values for these properties.
 
@@ -3360,45 +3360,7 @@ This node has no internal state.
 
 [cols="1h,1,2"]
 |===
-| Operation | `variable/set` | Set a custom variable value
-| Configuration
-| `int variable` | The custom variable index
-| Input flow sockets
-| `in` | The entry flow into this node
-| Input value sockets
-| `T value` | The new variable value
-| Output flow sockets
-| `out` | The flow to be activated after the value is set
-|===
-
-[CAUTION]
-====
-This node does not have a default configuration.
-====
-
-[CAUTION]
-====
-The configuration of this node affects its value socket.
-====
-
-This node sets a custom variable value using the variable index provided by the `variable` configuration value and the `value` input value.
-
-The type `T` is determined by the referenced variable. The variable index **MUST** be a non-negative integer less than the total number of custom variables, otherwise the node is invalid and the graph **MUST** be rejected.
-
-This node has no internal state.
-
-When the `in` input flow is activated:
-
-1. Evaluate the `value` input value.
-2. If the _variable interpolation state dynamic array_ (defined below) contains an entry with the same variable reference, remove it from the array.
-3. Set the custom variable with the `variable` configuration value index to the `value` input value.
-4. Activate the `out` output flow.
-
-===== Variable Set Multiple
-
-[cols="1h,1,2"]
-|===
-| Operation | `variable/setMultiple` | Set multiple variables
+| Operation | `variable/set` | Set one or more custom variable values
 | Configuration
 | `int[] variables` | The array containing variable indices
 | Input flow sockets
@@ -4936,10 +4898,10 @@ The `variable/set` node sets a custom variable with index `0` when the start eve
   {
     "declaration": 1,
     "configuration": {
-      "variable": { "value": [ 0 ] }
+      "variables": { "value": [ 0 ] }
     },
     "values": {
-      "value": { "type": 0, "value": [ 1.5 ] }
+      "0": { "type": 0, "value": [ 1.5 ] }
     }
   }
 ]
