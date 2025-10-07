@@ -28,33 +28,14 @@ This extension does not define avatar features directly but acts as a root decla
 
 This extension is dependent on the KHR_character extension; which defines related functionality pertaining to more generalized characters.
 
-## Extension Schema
-
-```json
-{
-  "extensions": {
-    "KHR_character_avatar": {
-      "sceneIndex": 0
-    }
-  }
-}
-```
-
-### Properties
-
-| Property     | Type    | Description                                                                                                        |
-| ------------ | ------- | ------------------------------------------------------------------------------------------------------------------ |
-| `sceneIndex` | integer | Index of the glTF `scene` representing the avatar. Used to distinguish the avatar root when multiple scenes exist. |
-
 ## Implementation Notes
 
-- `sceneIndex` is required, representing the index of the glTF `scene` corresponding to the avatar. Used to distinguish the avatar root when multiple scenes exist.
 - Consumers should use this marker as a signal to search for additional avatar-related extensions, including skeletal, expression, and other khronos avatar extensions.
-- Support for `KHR_xmp_json_ld` is encouraged to ensure interoperable metadata across tools and runtimes.
+- `KHR_xmp_json_ld` is required to ensure interoperable metadata across tools and runtimes.
 
 ## Known Implementations
 
 ## License
 
-This extension specification is licensed under the Khronos Group Extension License.  
+This extension specification is licensed under the Khronos Group Extension License.
 See: https://www.khronos.org/registry/gltf/license.html
