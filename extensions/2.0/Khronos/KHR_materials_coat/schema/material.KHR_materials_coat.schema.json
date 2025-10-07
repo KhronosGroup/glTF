@@ -1,0 +1,102 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_coat glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines a comprehensive coating material layer with all coating properties.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "coatFactor": {
+            "type": "number",
+            "description": "The coat layer weight.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The coat layer weight (aka opacity) of the material. A value of 0.0 means the material has no coat layer enabled."
+        },
+        "coatTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The coat layer weight texture.",
+            "gltf_detailedDescription": "The coat layer weight texture. These values are sampled from the R channel. The values are linear. Use value 1.0 if no texture is supplied."
+        },
+        "coatRoughnessFactor": {
+            "type": "number",
+            "description": "The coat layer roughness.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The coat layer roughness of the material."
+        },
+        "coatRoughnessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The coat layer roughness texture.",
+            "gltf_detailedDescription": "The coat layer roughness texture. These values are sampled from the G channel. The values are linear. Use value 1.0 if no texture is supplied."
+        },
+        "coatNormalTexture": {
+            "allOf": [ { "$ref": "material.normalTextureInfo.schema.json" } ],
+            "description": "The coat normal map texture.",
+            "gltf_detailedDescription": "A tangent space normal map for the coat layer. If desired, this may be a reference to the same normal map used by the base material. If not supplied, no normal mapping is applied to the coat layer."
+        },
+        "coatIor": {
+            "type": "number",
+            "description": "The index of refraction of the coat layer.",
+            "default": 1.5,
+            "oneOf": [
+                {
+                    "minimum": 0.0,
+                    "maximum": 0.0
+                },
+                {
+                    "minimum": 1.0
+                }
+            ],
+            "gltf_detailedDescription": "The index of refraction (IOR) of the coat layer is a measured physical number usually in the range between 1 and 2 that determines how much the path of light is bent, or refracted, when entering the coat material. It also influences the ratio between reflected and transmitted light in the coat layer, calculated from the Fresnel equations."
+        },
+        "coatColorFactor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "description": "The colored transmittance of the coat layer.",
+            "default": [ 1.0, 1.0, 1.0 ],
+            "minItems": 3,
+            "maxItems": 3,
+            "gltf_detailedDescription": "The color of light allowed to be transmitted through the coat layer of the material. A value of black means no light passes through. A value of white means all light passes through. These values are linear."
+        },
+        "coatColorTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The coat layer color texture.",
+            "gltf_detailedDescription": "The coat layer color texture. The values are stored in sRGB. Assume white colour if no texture is supplied."
+        },
+        "coatDarkeningFactor": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "The amount of physically-correct darkening of the coat layer.",
+            "default": 1.0,
+            "gltf_detailedDescription": "The amount of physically-correct darkening of the coat layer. If zero, no darkening due to internal reflections occurs."
+        },
+        "coatAnisotropyStrength": {
+            "type": "number",
+            "description": "The coat anisotropy strength.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The coat anisotropy strength. When the coat anisotropy texture is present, this value is multiplied by the texture's blue channel."
+        },
+        "coatAnisotropyRotation": {
+            "type": "number",
+            "description": "The rotation of the coat anisotropy.",
+            "default": 0.0,
+            "gltf_detailedDescription": "The rotation of the coat anisotropy in tangent, bitangent space, measured in radians counter-clockwise from the tangent. When the coat anisotropy texture is present, this value provides additional rotation to the vectors in the texture."
+        },
+        "coatAnisotropyTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The coat anisotropy texture.",
+            "gltf_detailedDescription": "The coat anisotropy texture. Red and green channels represent the coat anisotropy direction in [-1, 1] tangent, bitangent space, to be rotated by the coat anisotropy rotation. The blue channel contains strength as [0, 1] to be multiplied by the coat anisotropy strength."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
