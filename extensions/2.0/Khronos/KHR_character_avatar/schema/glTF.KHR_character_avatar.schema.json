@@ -3,13 +3,9 @@
     "title": "KHR_character_avatar glTF Document Extension",
     "type": "object",
     "description": "glTF extension that designates a glTF asset as representing an avatar.",
-    "allOf": [
-        {
-            "$ref": "glTFProperty.schema.json"
-        }
-    ],
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "extensions": {},
-        "extras": {}
+        "extensions": { },
+        "extras": { }
     }
 }
