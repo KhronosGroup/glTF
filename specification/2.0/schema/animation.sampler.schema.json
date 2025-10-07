@@ -36,9 +36,7 @@
         "output": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The index of an accessor, containing keyframe output values."
-        },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "input", "output" ]
 }
