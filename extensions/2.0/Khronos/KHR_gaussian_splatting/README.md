@@ -145,7 +145,7 @@ For example, a new extension `EXT_gaussian_splatting_kernel_customShape` could b
 
 The `projection` property is an optional hint that specifies how the Gaussians should be projected onto the kernel shape. This is typically provided by the training process for the splats. This is a freeform string field to allow additional projection methods to be specified as they become available. The default value is `perspective`.
 
-Renderers are free to ignore any values they do not recognize and fallback to the default, but are encouraged to follow the non-normative list below.
+Renderers may ignore any values they do not recognize and fallback to the default, but are encouraged to follow the non-normative list below.
 
 #### Known Projection Methods
 
@@ -160,7 +160,7 @@ Renderers are free to ignore any values they do not recognize and fallback to th
 
 The `sortingMethod` property is an optional hint that specifies how the Gaussian particles should be sorted during the rendering process. This typically is provided by the training process for the splats. This is a freeform string field to allow new sorting methods to be specified as they become available. The default value is `cameraDistance`.
 
-Renderers are free to ignore any values they do not recognize, but are encouraged to follow the non-normative list below.
+Renderers may ignore any values they do not recognize, but are encouraged to follow the non-normative list below.
 
 #### Known Sorting Methods
 
@@ -170,6 +170,24 @@ Renderers are free to ignore any values they do not recognize, but are encourage
 | --- | --- |
 | cameraDistance | (Default) Sort splats based on the distance from the camera to the splat position. |
 | zDepth | Sort splats based on their projected z-depth in the camera projection. |
+
+### Color Space
+
+The `colorSpace` property is an optional hint that specifies the color space of the 3D Gaussian Splat color & lighting data. The color space is typically determined by the training process for the splats. The default value is `sRGB` to align with the base glTF specification. This color space value only applies to the 3D Gaussian Splatting data and does not affect any other color data in the glTF.
+
+Renderers may ignore this property and assume `sRGB` based on their implementation's capabilities. Doing so may result in incorrect rendering if the color space is not actually `sRGB`.
+
+#### Available Color Spaces
+
+| Color Space | Description |
+| --- | --- |
+| sRGB | (Default) Standard RGB color space. |
+| linear | Linear color space. |
+| ACEScg | ACEScg color space. |
+| DCI-P3 | DCI P3 color space. |
+| Rec. 2020 | Rec. 2020 color space. |
+
+Similar to Kernels, color spaces can be added through additional extensions as needed.
 
 ## Attributes
 

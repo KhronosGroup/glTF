@@ -24,6 +24,18 @@
       "description": "Optional property providing a hint specifying how to sort the Gaussians during rendering. This is a freeform field defaulting to cameraDistance. See the extension specification for further known types.",
       "default": "cameraDistance"
     },
+    "colorSpace": {
+      "type": "string",
+      "description": "Optional property specifying the color space of the color attribute. This property defaults to sRGB.",
+      "enum": [
+        "sRGB",
+        "ACEScg",
+        "P3",
+        "Rec. 2020",
+        "linear"
+      ],
+      "default": "sRGB"
+    },
     "extensions": {},
     "extras": {}
   }
