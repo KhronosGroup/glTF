@@ -143,24 +143,26 @@ For example, a new extension `EXT_gaussian_splatting_kernel_customShape` could b
 
 ### Projection
 
-The `projection` property is an optional hint that specifies how the Gaussians should be projected onto the kernel shape. This is typically provided by the training process for the splats. This is a freeform string field to allow additional projection methods to be specified as they become available. The default value is `perspective`.
+The `projection` property is an optional hint that specifies how the Gaussians should be projected onto the kernel shape. This is typically provided by the training process for the splats. The default value is `perspective`.
 
-Renderers may ignore any values they do not recognize and fallback to the default, but are encouraged to follow the non-normative list below.
+Renderers may ignore this property or values they do not support and assume `perspective` based on their implementation's capabilities.
+
+Additional values can be added over time by defining an extension that adds new projection methods.
 
 #### Known Projection Methods
-
-*This section is non-normative and not comprehensive. It may change over time.*
 
 | Projection Method | Description |
 | --- | --- |
 | perspective | (Default) The typical 3D perspective projection based on scene depth. |
-| orthographic | A orthogonal projection of splats into a scene to preserve shape and scale and reduce distortion. |
+| orthographic | An orthogonal projection of splats into a scene to preserve shape and scale and reduce distortion. |
 
 ### Sorting Method
 
-The `sortingMethod` property is an optional hint that specifies how the Gaussian particles should be sorted during the rendering process. This typically is provided by the training process for the splats. This is a freeform string field to allow new sorting methods to be specified as they become available. The default value is `cameraDistance`.
+The `sortingMethod` property is an optional hint that specifies how the Gaussian particles should be sorted during the rendering process. This typically is provided by the training process for the splats. The default value is `cameraDistance`.
 
-Renderers may ignore any values they do not recognize, but are encouraged to follow the non-normative list below.
+Renderers may ignore this property or values they do not support and assume `cameraDistance` based on their implementation's capabilities.
+
+Additional values can be added over time by defining an extension that adds new sorting methods.
 
 #### Known Sorting Methods
 
@@ -168,14 +170,16 @@ Renderers may ignore any values they do not recognize, but are encouraged to fol
 
 | Sorting Method | Description |
 | --- | --- |
-| cameraDistance | (Default) Sort splats based on the distance from the camera to the splat position. |
-| zDepth | Sort splats based on their projected z-depth in the camera projection. |
+| cameraDistance | (Default) Sort the splats based on the length of the vector from the splat to the camera origin. |
+| zDepth | Sort the splats based on the magnitude of the z-component of the splat's position. (e.g. Only along the viewing axis of the camera.) |
 
 ### Color Space
 
 The `colorSpace` property is an optional hint that specifies the color space of the 3D Gaussian Splat color & lighting data. The color space is typically determined by the training process for the splats. The default value is `sRGB` to align with the base glTF specification. This color space value only applies to the 3D Gaussian Splatting data and does not affect any other color data in the glTF.
 
-Renderers may ignore this property and assume `sRGB` based on their implementation's capabilities. Doing so may result in incorrect rendering if the color space is not actually `sRGB`.
+Renderers may ignore this property and assume `sRGB` based on their implementation's capabilities.
+
+Additional values can be added over time by defining an extension that adds new color spaces.
 
 #### Available Color Spaces
 
