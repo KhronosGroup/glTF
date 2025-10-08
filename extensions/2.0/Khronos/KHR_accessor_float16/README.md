@@ -3,7 +3,7 @@ Copyright 2025 The Khronos Group Inc.
 SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 -->
 
-# KHR\_accessor\_float64
+# KHR\_accessor\_float16
 
 ## Contributors
 
@@ -23,9 +23,9 @@ Written against the glTF 2.0 Specification.
 
 ## Overview
 
-The base glTF 2.0 Specification supports only one floating-point component type—IEEE-754 _binary32_ (also known as single-precision). Although this is sufficient for most applications, there are use cases that benefit from increased range and precision provided by the 64-bit floating-point data type (also known as double-precision).
+The base glTF 2.0 Specification supports only one floating-point component type—IEEE-754 _binary32_ (also known as single-precision).
 
-This extension expands the set of recognized accessor component types with a new enum value `5130` that represents IEEE-754 _binary64_.
+This extension expands the set of recognized accessor component types with a new enum value `5131` that represents IEEE-754 _binary16_.
 
 This extension allows usage of such accessors in all places where the single-precision floating-point component type is accepted by the base glTF 2.0 Specification or extensions.
 
@@ -37,47 +37,41 @@ When the extension is supported, the following data type is valid for accessors 
 
 | `componentType` | Data Type | Signed | Bits |
 |-----------------|-----------|--------|------|
-| `5130`          | _double_  | Signed |  64  |
+| `5131`          |  _half_   | Signed |  16  |
 
 The `normalized` property of such accessors **MUST NOT** be set to true.
 
-When a _double_ accessor refers to a buffer view that refers to a GLB-stored buffer, the start of the buffer **SHOULD** be aligned to an 8-byte boundary by adding necessary trailing padding bytes to the previous chunks as defined in the [GLB File Format Specification](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#chunks).
-
 ## Extending Accessor Usage
 
-When the extension is supported, it is valid to use _double_ component type accessors in **all** places where _float_ component type accessors are valid.
+When the extension is supported, it is valid to use _half_ component type accessors in **all** places where _float_ component type accessors are valid.
 
 The following sections are not exhaustive and cover only the base glTF 2.0 Specification and some ratified extensions.
 
 ### Mesh Attributes
 
-When the extension is supported, _double_ component type accessors are valid for all mesh and morph target attributes that support _float_ component type accessors as defined in the [Meshes](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#meshes-overview) and [Morph Targets](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#morph-targets) sections of the glTF 2.0 Specification respectively.
+When the extension is supported, _half_ component type accessors are valid for all mesh and morph target attributes that support _float_ component type accessors as defined in the [Meshes](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#meshes-overview) and [Morph Targets](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#morph-targets) sections of the glTF 2.0 Specification respectively.
 
 #### Interaction with `EXT_mesh_gpu_instancing`
 
-When the extension is supported, _double_ component type accessors are valid for all instanced attribute semantics defined in the `EXT_mesh_gpu_instancing` extension.
+When the extension is supported, _half_ component type accessors are valid for all instanced attribute semantics defined in the `EXT_mesh_gpu_instancing` extension.
 
 ### Skins
 
-When the extension is supported, _double_ component type accessors are valid for inverse-bind matrices defined in the [Skins](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#skins-overview) section of the glTF 2.0 Specification.
+When the extension is supported, _half_ component type accessors are valid for inverse-bind matrices defined in the [Skins](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#skins-overview) section of the glTF 2.0 Specification.
 
 ### Animation Samplers
 
-When the extension is supported, _double_ component type accessors are valid for animation sampler inputs and outputs defined in the [Animations](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#animations) section of the glTF 2.0 Specification.
+When the extension is supported, _half_ component type accessors are valid for animation sampler inputs and outputs defined in the [Animations](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#animations) section of the glTF 2.0 Specification.
 
-Interpolation of double-precision keyframe data **MUST** be performed with double-precision arithmetic.
+Use of _half_ component type accessors animation data storage **MUST NOT** affect the implementation precision used for animation interpolation.
 
 #### Interaction with `KHR_animation_pointer`
 
-When the extension is supported, _double_ component type accessors are valid for keyframe data of all Object Model properties of `float*` data types.
+When the extension is supported, _half_ component type accessors are valid for keyframe data of all Object Model properties of `float*` data types.
 
 ## Compatibility
 
-Since not all graphics environments support double-precision floating-point data, implementations **MAY** reject assets using double-precision data for mesh attributes or any other purpose that would require native hardware support.
-
-If an implementation converts double-precision data to single-precision due to platform limitations, it **SHOULD** warn users that the asset's rendering can be incorrect.
-
-Given transmission size and portability implications, _double_ component type accessors **SHOULD NOT** be used unless absolutely necessary.
+Since not all programming languages directly support working with half-precision floating-point data, implementations **MAY** need to convert such data to higher precision representations, i.e., single or double, when operating on individual values. This is usually not needed when uploading half-precision data to GPUs.
 
 ## Appendix: Full Khronos Copyright Statement
 
