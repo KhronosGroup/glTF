@@ -38,9 +38,8 @@
       "enum": [
         "sRGB",
         "ACEScg",
-        "P3",
-        "Rec. 2020",
-        "linear"
+        "DCI-P3",
+        "Rec. 2020"
       ],
       "default": "sRGB"
     },

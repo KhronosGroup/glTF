@@ -186,7 +186,6 @@ Additional values can be added over time by defining an extension that adds new 
 | Color Space | Description |
 | --- | --- |
 | sRGB | (Default) Standard RGB color space. |
-| linear | Linear color space. |
 | ACEScg | ACEScg color space. |
 | DCI-P3 | DCI P3 color space. |
 | Rec. 2020 | Rec. 2020 color space. |
