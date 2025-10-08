@@ -177,7 +177,7 @@ Additional values can be added over time by defining an extension that adds new 
 
 The `colorSpace` property is an optional hint that specifies the color space of the 3D Gaussian Splat color & lighting data. The color space is typically determined by the training process for the splats. The default value is `sRGB` to align with the base glTF specification. This color space value only applies to the 3D Gaussian Splatting data and does not affect any other color data in the glTF.
 
-Renderers may ignore this property and assume `sRGB` based on their implementation's capabilities.
+Renderers may ignore this property and assume `sRGB` based on their implementation's capabilities. When a renderer does not support the specified color space, it should clamp to the `sRGB` color space.
 
 Additional values can be added over time by defining an extension that adds new color spaces.
 
