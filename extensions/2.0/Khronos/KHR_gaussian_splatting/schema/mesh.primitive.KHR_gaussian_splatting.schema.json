@@ -19,8 +19,8 @@
       "description": "Optional property providing a hint specifying how to project the Gaussians to achieve a perspective correct value. This is a freeform field that defaults to perspective. See the extension specification for further known types.",
       "default": "perspective",
       "anyOf": [
-        { "constant": "perspective" },
-        { "constant": "orthographic" },
+        { "enum": ["perspective"] },
+        { "enum": ["orthographic"] },
         { "type": "string" }
       ]
     },
@@ -29,8 +29,8 @@
       "description": "Optional property providing a hint specifying how to sort the Gaussians during rendering. This is a freeform field defaulting to cameraDistance. See the extension specification for further known types.",
       "default": "cameraDistance",
       "anyOf": [
-        { "constant": "cameraDistance" },
-        { "constant": "zDepth" },
+        { "enum": ["cameraDistance"] },
+        { "enum": ["zDepth"] },
         { "type": "string" }
       ]
     },
