@@ -131,6 +131,8 @@ This document defines a set of <<json-pointer,JSON pointers>> that glTF implemen
 
 7. If a JSON pointer cannot be resolved to a glTF property, operations with it are undefined.
 
+8. Some pointers are defined as read-only, i.e., applications can access them to discover the asset structure and its runtime state but it is generally not possible to update their values directly. Read-only pointers that represent glTF object references can be made mutable by extensions on a case-by-case basis.
+
 [[types]]
 == Data Types
 
@@ -153,6 +155,9 @@ a four-component vector of *float* values read from or set to JSON array element
 
 float4x4::
 a 4x4 matrix of *float* values
+
+bool::
+a boolean type
 
 int::
 a signed integer type with width of at least 32 bits
@@ -199,18 +204,40 @@ Additionally, the following pointer templates represent read-only runtime proper
 
 [options="header",cols="50%,15%,35%"]
 |====
-| Pointer                     |  Type      | Comment
-| `/animations.length`        | `int`      | Number of animations
-| `/cameras.length`           | `int`      | Number of cameras
-| `/materials.length`         | `int`      | Number of materials
-| `/meshes.length`            | `int`      | Number of meshes
-| `/meshes/{}/weights.length` | `int`      | Number of morph targets
-| `/nodes.length`             | `int`      | Number of nodes
-| `/nodes/{}/matrix`          | `float4x4` | Local transformation matrix of a node
-| `/nodes/{}/globalMatrix`    | `float4x4` | Global transformation matrix of a node
-| `/nodes/{}/weights.length`  | `int`      | Number of the associated mesh's morph targets; undefined if the node has no mesh
-| `/scenes.length`            | `int`      | Number of scenes
+| Pointer                             |  Type      | Comment
+| `/animations.length`                | `int`      | Number of animations
+| `/cameras.length`                   | `int`      | Number of cameras
+| `/materials.length`                 | `int`      | Number of materials
+| `/materials/{}/doubleSided`         | `bool`     | Whether the material is double sided
+| `/meshes.length`                    | `int`      | Number of meshes
+| `/meshes/{}/primitives.length`      | `int`      | Number of primitives
+| `/meshes/{}/primitives/{}/material` | `int`      | Index of the material
+| `/meshes/{}/weights.length`         | `int`      | Number of morph targets
+| `/nodes.length`                     | `int`      | Number of nodes
+| `/nodes/{}/camera`                  | `int`      | Index of the camera
+| `/nodes/{}/children.length`         | `int`      | Number of children nodes
+| `/nodes/{}/children/{}`             | `int`      | Index of the child node
+| `/nodes/{}/globalMatrix`            | `float4x4` | Global transformation matrix of a node
+| `/nodes/{}/matrix`                  | `float4x4` | Local transformation matrix of a node
+| `/nodes/{}/mesh`                    | `int`      | Index of the mesh
+| `/nodes/{}/parent`                  | `int`      | Index of the parent node
+| `/nodes/{}/skin`                    | `int`      | Index of the skin
+| `/nodes/{}/weights.length`          | `int`      | Number of the associated mesh's morph targets
+| `/scene`                            | `int`      | Index of the scene
+| `/scenes.length`                    | `int`      | Number of scenes
+| `/scenes/{}/nodes.length`           | `int`      | Number of root nodes
+| `/scenes/{}/nodes/{}`               | `int`      | Index of the root node
+| `/skins.length`                     | `int`      | Number of skins
+| `/skins/{}/joints.length`           | `int`      | Number of joints
+| `/skins/{}/joints/{}`               | `int`      | Index of the joint node
+| `/skins/{}/skeleton`                | `int`      | Index of the skeleton
 |====
+
+All pointers named `*.length` return zero if the corresponding array is not defined.
+
+The `/nodes/{}/matrix` and `/nodes/{}/globalMatrix` pointers represent the node's effective transformation matrices, i.e., the runtime state, regardless of whether the static `matrix` property is used in JSON.
+
+The `/nodes/{}/parent` pointer represents the node's parent, i.e., the index of the node that has the current node listed in its `children` array. If the current node is a root node, this pointer is undefined.
 
 [[extension-pointers]]
 = Extension Pointers
@@ -257,8 +284,9 @@ Additional read-only properties
 
 [options="header",cols="50%,15%,35%"]
 |====
-| Pointer                                         |  Type | Comment
-| `/extensions/KHR_lights_punctual/lights.length` | `int` | Number of punctual lights
+| Pointer                                          |  Type | Comment
+| `/extensions/KHR_lights_punctual/lights.length`  | `int` | Number of punctual lights
+| `/nodes/{}/extensions/KHR_lights_punctual/light` | `int` | Index of the light
 |====
 
 == KHR_materials_anisotropy
