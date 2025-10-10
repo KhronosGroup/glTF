@@ -11,7 +11,7 @@
 - Alex Wood, AGI [@abwood](https://github.com/abwood)
 - Ed Mackey, AGI [@emackey](https://github.com/emackey)
 
-Copyright 2024 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2025 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
@@ -24,12 +24,12 @@ Written against the glTF 2.0 spec.
 
 ## Exclusions
 
-* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
-* This extension must not be used on a material that also uses `KHR_materials_unlit`.
+- This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+- This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Overview
 
-This extension models the physical phenomenon of light being diffusely transmitted through an infinitely thin material. Thin dielectric objects like leaves or paper diffusely transmit light due to dense volumetric scattering within the object. In 3D graphics, it is common to approximate thin volumetric objects as non-volumetric surfaces. The KHR_materials_diffuse_transmission extension models the diffuse transmission of light through such infinitely thin surfaces. For optically thick media (volumes) with short scattering distances and dense scattering behavior, i.e. candles, KHR_materials_diffuse_transmission provides a phenomenologically plausible and cost-effective approximation.
+This extension models the physical phenomenon of light being diffusely transmitted through an infinitely thin material. Thin dielectric objects like leaves or paper diffusely transmit light due to dense volumetric scattering within the object. In 3D graphics, it is common to approximate thin volumetric objects as non-volumetric surfaces. The `KHR_materials_diffuse_transmission` extension models the diffuse transmission of light through such infinitely thin surfaces. For optically thick media (volumes) with short scattering distances and dense scattering behavior, i.e. candles, `KHR_materials_diffuse_transmission` provides a phenomenologically plausible and cost-effective approximation.
 
 <div align="center">
 <figure style="text-align:center">
@@ -44,43 +44,42 @@ This extension models the physical phenomenon of light being diffusely transmitt
 </figure>
 </div>
 
-
 ## Extending Materials
 
 The effect is activated by adding the `KHR_materials_diffuse_transmission` extension to any glTF material.
 
 ```json
 {
-    "materials": [
-        {
-            "extensions": {
-                "KHR_materials_diffuse_transmission": {
-                    "diffuseTransmissionFactor": 0.25,
-                    "diffuseTransmissionTexture": {
-                      "index": 0
-                    },
-                    "diffuseTransmissionColorFactor": [
-                      1.0,
-                      0.9,
-                      0.85
-                    ]
-                }
-            }
+  "materials": [
+    {
+      "extensions": {
+        "KHR_materials_diffuse_transmission": {
+          "diffuseTransmissionFactor": 0.25,
+          "diffuseTransmissionTexture": {
+            "index": 0
+          },
+          "diffuseTransmissionColorFactor": [
+            1.0,
+            0.9,
+            0.85
+          ]
         }
-    ]
+      }
+    }
+  ]
 }
 ```
 
 ## Properties
 
-|                                     | Type                                                                | Description                                                                                                                                                                     | Required                 |
-|-------------------------------------|---------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|
-| **diffuseTransmissionFactor**       | `number`                                                            | The percentage of non-specularly reflected light that is diffusely transmitted through the surface.                      | No, default: `0`         |
-| **diffuseTransmissionTexture**      | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the percentage of non-specularly reflected light that is diffusely transmitted through the surface. Stored in the alpha (`A`) channel. Will be multiplied by the diffuseTransmissionFactor.                 | No                       |
-| **diffuseTransmissionColorFactor**  | `number[3]`                                                         | The color that modulates the transmitted light.                                                                                                                                 | No, default: `[1, 1, 1]` |
-| **diffuseTransmissionColorTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the color that modulates the diffusely transmitted light, stored in the `RGB` channels and encoded in sRGB. This texture will be multiplied by diffuseTransmissionColorFactor. | No                       |
+|                                     | Type                                                                | Description                                                                                                                                                                                                                | Required                 |
+|-------------------------------------|---------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|
+| **diffuseTransmissionFactor**       | `number`                                                            | The percentage of non-specularly reflected light that is diffusely transmitted through the surface.                                                                                                                        | No, default: `0`         |
+| **diffuseTransmissionTexture**      | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the percentage of non-specularly reflected light that is diffusely transmitted through the surface. Stored in the alpha (`A`) channel. Will be multiplied by the `diffuseTransmissionFactor` value. | No                       |
+| **diffuseTransmissionColorFactor**  | `number[3]`                                                         | The color that modulates the transmitted light.                                                                                                                                                                            | No, default: `[1, 1, 1]` |
+| **diffuseTransmissionColorTexture** | [`textureInfo`](/specification/2.0/README.md#reference-textureInfo) | A texture that defines the color that modulates the diffusely transmitted light, stored in the `RGB` channels and encoded in sRGB. This texture will be multiplied by the `diffuseTransmissionColorFactor` value.          | No                       |
 
-### diffuseTransmissionFactor
+### Diffuse Transmission
 
 The proportion of light that is diffusely transmitted through a surface, rather than being diffusely re-emitted. This is expressed as a percentage of the light that penetrates the surface (i.e., not specularly reflected), rather than a percentage of the total light incident on the surface. A value of 1.0 indicates that 100% of the light that penetrates the surface is transmitted through it.
 
@@ -106,9 +105,26 @@ The proportion of light that is diffusely transmitted through a surface, rather 
   </tr>
 </table>
 
-### diffuseTransmissionColorFactor
+When textured, this parameter is sampled from the `A` channel of the `diffuseTransmissionTexture`. The value is linear and is multiplied by the `diffuseTransmissionFactor` to determine the total diffuse transmission value.
 
-The proportion of light at each color channel that is not attenuated by the surface transmission. Attenuation is usually defined as an amount of light at each frequency that is reduced over a given distance through a medium by absorption and scattering interactions. However, since this extension deals exclusively with infinitely thin surfaces, attenuation is constant and equal to 1.0 - `diffuseTransmissionColorFactor`.
+```
+diffuseTransmission = diffuseTransmissionFactor * diffuseTransmissionTexture.a
+```
+
+<table>
+ <tr>
+    <td><img src="./figures/factor_tex_inlay.jpg"/></td>
+  </tr>
+  <tr>
+    <td align="center">
+      <em>Backlit, occluded plane with blue <code>baseColorFactor</code> and a striped <code>diffuseTransmissionTexture</code>.<br>(Input texture shown in the top-left).</em>
+    </td>
+  </tr>
+</table>
+
+### Diffuse Transmission Color
+
+The proportion of light at each color channel that is not attenuated by the surface transmission. Attenuation is usually defined as an amount of light at each frequency that is reduced over a given distance through a medium by absorption and scattering interactions. However, since this extension deals exclusively with infinitely thin surfaces, attenuation is constant and equal to 1.0 - `diffuseTransmissionColor`.
 
 <table>
   <tr>
@@ -132,32 +148,8 @@ The proportion of light at each color channel that is not attenuated by the surf
   </tr>
 </table>
 
-### diffuseTransmissionTexture
+When textured, the `RGB` channels of the `diffuseTransmissionColorTexture`, encoded in sRGB, define the proportion of light at each color channel that is not attenuated by the surface transmission. The values are multiplied by the `diffuseTransmissionFactor` to determine the final diffuse transmission color.
 
-The `A` channel of this texture defines proportion of light that is diffusely transmitted through a surface, rather than being diffusely re-emitted. This is expressed as a percentage of the light that penetrates the surface (i.e., not specularly reflected), rather than a percentage of the total light incident on the surface. A value of 1.0 indicates that 100% of the light that penetrates the surface is transmitted through it.
-
-The value is linear and is multiplied by the `diffuseTransmissionFactor` to determine the total diffuse transmission value.
-
-```
-diffuseTransmission = diffuseTransmissionFactor * diffuseTransmissionTexture.a
-```
-
-<table>
- <tr>
-    <td><img src="./figures/factor_tex_inlay.jpg"/></td>
-  </tr>
-  <tr>
-    <td align="center">
-      <em>Backlit, occluded plane with blue <code>baseColorFactor</code> and a striped <code>diffuseTransmissionTexture</code>.<br>(Input texture shown in the top-left).</em>
-    </td>
-  </tr>
-</table>
-
-
-### diffuseTransmissionColorTexture
-
-The `RGB` channels of this texture define the proportion of light at each color channel that is not attenuated by the surface transmission.
-The values are multiplied by the `diffuseTransmissionColorFactor` to determine the total diffuse transmission color.
 ```
 diffuseTransmissionColor = diffuseTransmissionColorFactor * diffuseTransmissionColorTexture.rgb
 ```
@@ -193,6 +185,7 @@ diffuseTransmissionColor = diffuseTransmissionColorFactor * diffuseTransmissionC
 *This section is normative.*
 
 This extension changes the `dielectric_brdf` defined in [Appendix B](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#material-structure)
+
 ```
 dielectric_brdf =
   fresnel_mix(
@@ -201,7 +194,9 @@ dielectric_brdf =
     layer = specular_brdf(α = roughness ^ 2)
   )
 ```
- to the following:
+
+to the following:
+
 ```
 dielectric_brdf =
   fresnel_mix(
@@ -213,12 +208,15 @@ dielectric_brdf =
     layer = specular_brdf(α = roughness ^ 2)
   )
 ```
-Increasing the strength of the diffuse transmission effect using the `diffuseTransmissionFactor` parameter takes away energy from the diffuse reflection BSDF and passes it to the diffuse transmission BSDF. The specular reflection BSDF and Fresnel weighting are not affected.
+
+Increasing the strength of the diffuse transmission effect using the `diffuseTransmission` parameter takes away energy from the diffuse reflection BSDF and passes it to the diffuse transmission BSDF. The specular reflection BSDF and Fresnel weighting are not affected.
 
 ## Implementation
+
 *This section is non-normative.*
 
 With a simple Lambert BRDF model, `diffuse_brdf` and `diffuse_btdf` may be implemented as follows
+
 ```
 function diffuse_brdf(color) {
   if (view and light on same hemisphere) {
@@ -258,10 +256,13 @@ function mix(bsdf0, bsdf1, factor) {
 </div>
 
 ## Combining Diffuse Transmission with other Extensions
+
 ### KHR_materials_transmission
+
 Both `KHR_materials_diffuse_transmission` and `KHR_materials_transmission` replace the diffuse BRDF with a mix of diffuse BRDF and a BTDF that transmits light onto the opposite side of the surface. In case of `KHR_materials_transmission`, this is a microfacet BTDF that shares its roughness with the microfacet BRDF. In case of `KHR_materials_diffuse_transmission`, on the other hand, this is a diffuse BTDF.
 
 Let's recall the `dielectric_brdf` for `KHR_materials_diffuse_transmission` as defined above
+
 ```
 dielectric_brdf =
   fresnel_mix(
@@ -269,12 +270,13 @@ dielectric_brdf =
     base = mix(
       diffuse_brdf(color = baseColor),
       diffuse_btdf(color = diffuseTransmissionColor),
-      diffuseTransmission,
+      diffuseTransmission),
     layer = specular_brdf(α = roughness ^ 2)
   )
 ```
 
 and compare it to the `dielectric_brdf` defined in `KHR_materials_transmission`
+
 ```
 dielectric_brdf =
   fresnel_mix(
@@ -336,6 +338,7 @@ Since the diffuse BTDF does not have controls for roughness, the roughness param
 If `KHR_materials_transmission` is used in combination with `KHR_materials_diffuse_transmission`, the transmission effect overrides the diffuse transmission effect.
 
 We can formalize this behavior by combining the two cases from above
+
 ```
 dielectric_brdf =
   fresnel_mix(
@@ -352,6 +355,7 @@ diffuse_bsdf = mix(
     diffuse_btdf(color = diffuseTransmissionColor),
     diffuseTransmission)
 ```
+
 <table>
   <tr>
     <td><img src="figures/dt_transmission_1.0.jpg"/></td>
@@ -378,6 +382,7 @@ diffuse_bsdf = mix(
 </table>
 
 ### KHR_materials_volume
+
 When `KHR_materials_diffuse_transmission` is combined with `KHR_materials_volume`, a diffuse transmission BTDF describes the transmission of light through the volume boundary. The object becomes translucent. The light transport inside the volume is solely handled by `KHR_materials_volume` and is not affected by the surface BSDF.
 
 <table>
@@ -421,14 +426,13 @@ When `KHR_materials_diffuse_transmission` is combined with `KHR_materials_volume
   </tr>
 </table>
 
-
 ## Schema
 
-- [glTF.KHR_materials_diffuse_transmission.schema.json](schema/glTF.KHR_materials_diffuse_transmission.schema.json)
+- [material.KHR_materials_diffuse_transmission.schema.json](schema/material.KHR_materials_diffuse_transmission.schema.json)
 
 ## Appendix: Full Khronos Copyright Statement
 
-Copyright 2024 The Khronos Group Inc.
+Copyright 2025 The Khronos Group Inc.
 
 Some parts of this Specification are purely informative and do not define requirements
 necessary for compliance and so are outside the Scope of this Specification. These
