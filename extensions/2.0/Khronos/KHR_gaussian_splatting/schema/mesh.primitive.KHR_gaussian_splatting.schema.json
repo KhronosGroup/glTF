@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/json-schema-core.html",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "KHR_gaussian_splatting glTF Mesh Primitive Extension",
   "type": "object",
   "description": "Data defining a 3D Gaussian Splat primitive.",
