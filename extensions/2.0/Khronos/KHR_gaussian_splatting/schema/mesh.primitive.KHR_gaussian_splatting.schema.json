@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/json-schema-core.html",
   "title": "KHR_gaussian_splatting glTF Mesh Primitive Extension",
   "type": "object",
   "description": "Data defining a 3D Gaussian Splat primitive.",
@@ -19,9 +19,15 @@
       "description": "Optional property providing a hint specifying how to project the Gaussians to achieve a perspective correct value. This is a freeform field that defaults to perspective. See the extension specification for further known types.",
       "default": "perspective",
       "anyOf": [
-        { "enum": ["perspective"] },
-        { "enum": ["orthographic"] },
-        { "type": "string" }
+        {
+          "const": "perspective"
+        },
+        {
+          "const": "orthographic"
+        },
+        {
+          "type": "string"
+        }
       ]
     },
     "sortingMethod": {
@@ -29,9 +35,15 @@
       "description": "Optional property providing a hint specifying how to sort the Gaussians during rendering. This is a freeform field defaulting to cameraDistance. See the extension specification for further known types.",
       "default": "cameraDistance",
       "anyOf": [
-        { "enum": ["cameraDistance"] },
-        { "enum": ["zDepth"] },
-        { "type": "string" }
+        {
+          "const": "cameraDistance"
+        },
+        {
+          "const": "zDepth"
+        },
+        {
+          "type": "string"
+        }
       ]
     },
     "colorSpace": {
