@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "MPEG_haptic",
+    "type": "object",
+    "description": "Haptic data referencing MPEG medias.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+		"hapticObjects":{
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"accessors": {
+						"type": "array",
+						"items": {
+							"type":"integer"
+						},
+						"description": "Indices of accessors, in the accessors array, to one or more media sources in MPEG_media.media array containing haptic media files."
+					}
+				}
+			}
+		},
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    }
+}
