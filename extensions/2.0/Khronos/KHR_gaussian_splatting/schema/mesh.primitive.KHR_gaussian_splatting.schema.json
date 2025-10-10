@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KHR_gaussian_splatting glTF Mesh Primitive Extension",
+  "type": "object",
+  "description": "Data defining a 3D Gaussian Splat primitive.",
+  "allOf": [
+    {
+      "$ref": "glTFProperty.schema.json"
+    }
+  ],
+  "properties": {
+    "kernel": {
+      "type": "string",
+      "description": "Optional property specifying parameters regarding the kernel used to generate the Gaussians. This property defaults to ellipse.",
+      "default": "ellipse"
+    },
+    "projection": {
+      "type": "string",
+      "description": "Optional property providing a hint specifying how to project the Gaussians to achieve a perspective correct value. This is a freeform field that defaults to perspective. See the extension specification for further known types.",
+      "default": "perspective",
+      "anyOf": [
+        {
+          "const": "perspective"
+        },
+        {
+          "const": "orthographic"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "sortingMethod": {
+      "type": "string",
+      "description": "Optional property providing a hint specifying how to sort the Gaussians during rendering. This is a freeform field defaulting to cameraDistance. See the extension specification for further known types.",
+      "default": "cameraDistance",
+      "anyOf": [
+        {
+          "const": "cameraDistance"
+        },
+        {
+          "const": "zDepth"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "colorSpace": {
+      "type": "string",
+      "description": "Optional property specifying the color space of the color attribute. This property defaults to sRGB.",
+      "enum": [
+        "sRGB",
+        "ACEScg",
+        "DCI-P3",
+        "Rec. 2020"
+      ],
+      "default": "sRGB"
+    },
+    "extensions": {},
+    "extras": {}
+  }
+}
