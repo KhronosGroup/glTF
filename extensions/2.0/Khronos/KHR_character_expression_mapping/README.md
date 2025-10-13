@@ -16,7 +16,7 @@
 
 ## Dependencies
 
-Written against the glTF 2.0 specification.  
+Written against the glTF 2.0 specification.
 Requires the extension(s): `KHR_character`,`KHR_character_expression`
 Can be used alongside: `KHR_character_expression_morphtarget`, `KHR_character_expression_joints`, `KHR_character_expression_texture` or other expression sources
 
@@ -46,18 +46,24 @@ Optionally, these expressions may be aligned with industry standards (or an endp
     "KHR_character_expression_mapping": {
       "expressionSetMappings": {
         "example_set_1": {
-          "smileLeft": [
-            { "target": "Smile", "weight": 0.8 },
-            { "target": "LeftCheekRaise", "weight": 0.2 }
+          "Smile": [
+            { "source": "smileLeft", "weight": 0.8 },
+            { "source": "smileRight", "weight": 0.8 },
           ],
-          "jawOpen": [{ "target": "MouthOpen", "weight": 1.0 }]
+          "LeftCheekRaise": [
+            { "source": "smileLeft", "weight": 0.2 }
+          ],
+          "MouthOpen": [{ "source": "jawOpen", "weight": 1.0 }]
         },
         "example_set_2": {
-          "smileLeft": [
-            { "target": "smile_small", "weight": 0.2 },
-            { "target": "left_dimple", "weight": 0.8 }
+          "smile_small": [
+            { "source": "smileLeft", "weight": 0.2 }
+            { "source": "smileRight", "weight": 0.2 }
           ],
-          "jawOpen": [{ "target": "mouth_open", "weight": 1.0 }]
+          "left_dimple": [
+            { "source": "smileLeft", "weight": 0.8 }
+          ],
+          "mouth_open": [{ "source": "jawOpen", "weight": 1.0 }]
         }
       }
     }
@@ -72,14 +78,14 @@ Target Expression Set Name : Expression Mapping Dictionary (Expression Name : Li
 
 | Property | Type   | Description                                                   |
 | -------- | ------ | ------------------------------------------------------------- |
-| `target` | string | Name of the expression in the target vocabulary.              |
-| `weight` | number | Influence of this target. Must sum to 1.0 per expression key. |
+| `source` | string | Name of the source expression in the model.                   |
+| `weight` | number | Relative influence of this source expression on the target. Weights represent the proportional contribution needed to achieve the desired target result and do not need to sum to any specific value. |
 
 ### Mapping Types
 
 This extension supports both one-to-one and one-to-many mappings (as well as multiple instances of those mapping sets):
 
-- **One-to-one**: An expression maps directly to a single reference vocabulary term with weight 1.0.
+- **One-to-one**: An expression maps directly to a single reference vocabulary term with a proportional weight.
 - **One-to-many**: An expression is composed from multiple reference terms, blended using assigned weights.
 
 This allows developers to bridge between custom expression sets and shared vocabularies.
@@ -92,5 +98,5 @@ This allows developers to bridge between custom expression sets and shared vocab
 
 ## License
 
-This extension specification is licensed under the Khronos Group Extension License.  
+This extension specification is licensed under the Khronos Group Extension License.
 See: https://www.khronos.org/registry/gltf/license.html
