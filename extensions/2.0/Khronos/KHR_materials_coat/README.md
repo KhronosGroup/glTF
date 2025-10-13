@@ -111,7 +111,7 @@ coatAnisotropyRotation += atan(coatAnisotropyTexture.g, coatAnisotropyTexture.r)
 
 ## Basic Coating
 
-The coat effect is modeled via a microfacet BRDF. The BRDF is layered on top of the glTF 2.0 Metallic-Roughness material, excluding emission, using a new `fresnel_coat` function:
+The coat effect is modeled via a microfacet BRDF. The BRDF is layered on top of the glTF 2.0 Metallic-Roughness material, including emission and all extensions, using a new `fresnel_coat` function:
 
 ```
 # base material (from glTF 2.0 Metallic-Roughness)
@@ -151,7 +151,11 @@ function fresnel_coat(normal, ior, weight, base, layer) {
 
 #### Emission
 
-Emission is assumed to be on top of the coat layer in the layering stack. Consequently, the emission is not affected by coat.
+The clearcoat layer is on top of emission in the layering stack. Consequently, the emission is darkened by the Fresnel term.
+
+```
+coated_emission = emission * (1 - clearcoat * clearcoat_fresnel)
+```
 
 ## Index of Refraction
 
@@ -193,31 +197,6 @@ Note that this view-dependent absorption is more pronounced when the ratio of IO
 </figcaption>
 </figure>
 
-## Implementation
-
-*This section is non-normative.*
-
-At normal incidence, `coatColor` can simply be multiplied by the light coming from the underlying base layer. However, we need to modify this based on the incident angle:
-
-```
-// cos_i is the non-negative cosine of the unrefracted view angle
-sin2_i = 1.0f - cos_i * cos_i 
-// eta is the ratio of IOR's of the coat and surrounding medium. i.e. coat_ior / 1.0 for air.
-sin2_t = sin2_i / (eta * eta)
-// Total internal reflection. i.e. no light makes it out of coating.
-if (sin2_t >= 1.0)
-{
-    final_coat_color = vec3(0.0f)
-}
-// Compute cosine of transmition angle.
-cos_t = sqrt(1.0f - sin2_t);
-// Calculate the path length through the coating, relative to normal incidence.
-path_length = 1.0 / cos_t;
-// Use the path length to calculate the final tinting.
-final_coat_color = pow(coatColor, path_length)
-```
-
-
 ## Darkening Control
 
 The coating will naturally darken the appearance of the underlying surface due to internal reflections. However, when this physically-correct behavior is not be desired, the the `coatDarkeningFactor` can be used to control the amount of darkening:
@@ -242,32 +221,6 @@ Things that affect the amount of darkening observed:
 1. Viewing Angle Dependency: Grazing angles have higher Fresnel reflectance, causing more darkening.
 
 1. Roughness Modulation: Rougher coats scatter light internally, reducing the coherent reflection effect. Increased diffuse internal reflections results in less darkening.
-
-### Implementation
-
-*This section is non-normative.*
-
-Some renderers (such as path-tracers) may already model this darkening behaviour by the nature of their light transport algorithms. In these cases, implementing support for this extension will involve adding a term to compensate for the energy loss when the darknening value is < 1.0. The [specification of OpenPBR](https://academysoftwarefoundation.github.io/OpenPBR/index.html#model/coat/darkening) contains a detailed description of what this entails.
-
-Other renderers (such as rasterizers) will most likely need to add logic to approximate the loss of energy due to these internal reflections when the darkening value is > 0.0. We provide some example logic to do this below:
-
-#### Real-time Implementation
-
-We want to calculate a multiplier that represents the amount of transmitted light that makes its way through the coat and impacts the underlying layer. To approximate this, we want to find the average reflectance, $R$, of the coat and then model an infinite number of reflections using a geometric series to get the total transmission, $T$.
-
-$T = (1-R) / (1 + R + R² + R³ + ...)$<br>
-$T = (1-R) / (1/(1-R))$</br>
-$T = (1-R)²$
-
-The $(1-R)$ in the numerator represents the initial transmission of light through the coat and the denominator accounts for the infinite reflections within the coating. This converges to $1/(1-R)$.
-
-By "average reflectance", we mean the average reflectance for the round trip (light in, view out) so it can be computed as the sum of the Schlick Fresnel approximation for $dot(N, V)$ and $dot(N, L)$ and then dividing by 2.
-$$R_{directlight} = (fresnel(N, V) + fresnel(N, L)) * 0.5$$
-For environment lighting (IBL), however, light is coming from all angles so we calculate the hemisphere-averaged reflectance as $F_0 + 0.5 * F_{90}$ which gives a value halfway between $F_0$ and $F_{90}$. We then add to this the Schlick Fresnel approximation for $dot(N, V)$ and divide by 2.
-$$R_{IBL} = (fresnel(N, V) + F_0 + 0.5 * F_{90}) * 0.5$$
-
-
-When coat roughness increases, light is diffused and darkening decreases. We can approximate this empirically by scaling the average reflectance, $R$, by $1.0 - M_c * 0.5$ where $M_c$ is the roughness of the clearcoat.
 
 ## Anisotropy
 
@@ -340,6 +293,66 @@ More sophisticated layering models may be implemented for improved accuracy.
 - `KHR_materials_transmission` and `KHR_materials_volume`: Affect the base layer; coat remains opaque
 - `KHR_materials_ior`: Sets base layer IOR; `coatIor` is independent
 - Other material extensions: Generally apply to the base layer, with the coat layered on top
+
+## Implementation
+
+*This section is non-normative.*
+
+### Colored Absorption
+
+At normal incidence, `coatColor` can simply be multiplied by the light coming from the underlying base layer. However, we need to modify this based on the incident angle:
+
+```
+// cos_i is the non-negative cosine of the unrefracted view angle
+sin2_i = 1.0f - cos_i * cos_i 
+// eta is the ratio of IOR's of the coat and surrounding medium. i.e. coat_ior / 1.0 for air.
+sin2_t = sin2_i / (eta * eta)
+// Total internal reflection. i.e. no light makes it out of coating.
+if (sin2_t >= 1.0)
+{
+    final_coat_color = vec3(0.0f)
+}
+// Compute cosine of transmition angle.
+cos_t = sqrt(1.0f - sin2_t);
+// Calculate the path length through the coating, relative to normal incidence.
+path_length = 1.0 / cos_t;
+// Use the path length to calculate the final tinting.
+final_coat_color = pow(coatColor, path_length)
+```
+
+### Darkening
+
+Some renderers (such as path-tracers) may already model this darkening behaviour by the nature of their light transport algorithms. In these cases, implementing support for this extension will involve adding a term to compensate for the energy loss when the darknening value is < 1.0. The [specification of OpenPBR](https://academysoftwarefoundation.github.io/OpenPBR/index.html#model/coat/darkening) contains a detailed description of what this entails.
+
+Other renderers (such as rasterizers) will most likely need to add logic to approximate the loss of energy due to these internal reflections when the darkening value is > 0.0. We provide some example logic to do this below:
+
+#### Real-time Implementation
+
+We want to calculate a multiplier that represents the amount of transmitted light that makes its way through the coat and impacts the underlying layer. To approximate this, we want to find the average reflectance, $R$, of the coat and then model an infinite number of reflections using a geometric series to get the total transmission, $T$.
+
+$T = (1-R) / (1 + R + R² + R³ + ...)$<br>
+$T = (1-R) / (1/(1-R))$</br>
+$T = (1-R)²$
+
+The $(1-R)$ in the numerator represents the initial transmission of light through the coat and the denominator accounts for the infinite reflections within the coating. This converges to $1/(1-R)$.
+
+By "average reflectance", we mean the average reflectance for the round trip (light in, view out) so it can be computed as the sum of the Schlick Fresnel approximation for $dot(N, V)$ and $dot(N, L)$ and then dividing by 2.
+$$R_{directlight} = (fresnel(N, V) + fresnel(N, L)) * 0.5$$
+For environment lighting (IBL), however, light is coming from all angles so we calculate the hemisphere-averaged reflectance as $F_0 + 0.5 * F_{90}$ which gives a value halfway between $F_0$ and $F_{90}$. We then add to this the Schlick Fresnel approximation for $dot(N, V)$ and divide by 2.
+$$R_{IBL} = (fresnel(N, V) + F_0 + 0.5 * F_{90}) * 0.5$$
+
+When coat roughness increases, light is diffused and darkening decreases. We can approximate this empirically by scaling the average reflectance, $R$, by $1.0 - M_c * 0.5$ where $M_c$ is the roughness of the clearcoat.
+
+## Conversion from KHR_materials_clearcoat
+
+The parameters from KHR_materials_clearcoat are fully transferable to this extension, with no changes. 
+`clearcoatFactor` -> `coatFactor`
+`clearcoatTexture` -> `coatTexture`
+`clearcoatRoughnessFactor` -> `coatRoughnessFactor`
+`clearcoatRoughnessTexture` -> `coatRoughnessTexture`
+`clearcoatNormalTexture` -> `coatNormalTexture`
+
+The default values of the new parameters should, for the most part, result in fully backwards-compatible behaviour. The one exception is `coatDarkeningFactor` where the default value is `1.0` which enables the physically-correct darkening. This may or may not match a renderer's handling of the `KHR_materials_clearcoat` extension as modeling these internal reflections was not required by that extension. Therefore it is left up to the implementor of conversion tools whether to set this property to `0.0` during conversion.
 
 ## Schema
 

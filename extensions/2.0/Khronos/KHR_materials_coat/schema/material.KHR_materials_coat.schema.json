@@ -40,15 +40,7 @@
             "type": "number",
             "description": "The index of refraction of the coat layer.",
             "default": 1.5,
-            "oneOf": [
-                {
-                    "minimum": 0.0,
-                    "maximum": 0.0
-                },
-                {
-                    "minimum": 1.0
-                }
-            ],
+            "minimum": 1.0,
             "gltf_detailedDescription": "The index of refraction (IOR) of the coat layer is a measured physical number usually in the range between 1 and 2 that determines how much the path of light is bent, or refracted, when entering the coat material. It also influences the ratio between reflected and transmitted light in the coat layer, calculated from the Fresnel equations."
         },
         "coatColorFactor": {
