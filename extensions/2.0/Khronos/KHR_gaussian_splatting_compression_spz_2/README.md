@@ -80,8 +80,8 @@ Example SPZ extension shown below. This extension only affects any `primitive` n
           "extensions": {
             "KHR_gaussian_splatting": {
               "extensions": {
-                "KHR_gaussian_splatting_compression_spz": {
-                  "bufferView": 0,
+                "KHR_gaussian_splatting_compression_spz_2": {
+                  "bufferView": 0
                 }
               }
             }
