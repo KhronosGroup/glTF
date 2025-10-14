@@ -5,6 +5,11 @@
     "description" : "glTF extension to specify interactivity formats at scene level",
     "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
+        "physics" : {
+            "type": "object",
+            "description": "Provides a set of parameters at scene level to be used for the physics simulation.",
+            "$ref" : "MPEG_scene_interactivity.physicsobject.schema.json"
+        },
         "triggers" : {
             "type": "array",
             "description": "An array of triggers descriptions.",
@@ -28,26 +33,6 @@
                 "$ref" : "MPEG_scene_interactivity.behavior.schema.json"
             },
             "minItems": 1
-        },
-        "recommendedPhysicsHighPrecision":{ 
-            "type":"boolean",
-            "default": false,
-            "description": "Determines whether the application should enable a more deterministic and precise physic simulation."
-        },
-        "gravity":{ 
-            "type":"number",
-            "default": -9.81,
-            "description": "Determine the gravity for the whole scene. In meter per second square (m.s-2). as defined in the international unit system."
-        },
-        "recommendedPhysicsFrameRate":{ 
-            "type":"number",
-            "default": 50,
-            "description": "Provides the recommended frame rate at which the Physics Engine should operate. In frame per second as defined in the international unit system."
-        },
-        "bounceThreshold":{ 
-            "type":"number",
-            "default": 1,
-            "description": "A contact with a relative velocity below this threshold will not result in a bounce. In meter per second (m.s-1) as defined in the international unit system."
         },
         "extensions": {},
         "extras": {}

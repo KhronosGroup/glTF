@@ -19,60 +19,16 @@
             "default": "true",
             "description": "If True, the collider is defined as a static collider"
         },
-        "usePhysics" :{
-            "type": "boolean",
-            "description": "Indicates if the object shall be considered by the physics simulation"
+        "physics" :{
+            "type": "object",
+            "description": "Provides a set of parameters at node level to be used for the physics simulation. ",
+            "$ref": "MPEG_node_interactivity.trigger.physicsobject.schema.json"
         },
         "primitives" :{
             "type": "array", 
             "items": { "$ref": "MPEG_interactivity.trigger.primitive.schema.json"},
             "minItems": 1,
             "description": "List of primitives used to activate the proximity or collision trigger. "
-        },
-        "needPreciseCollisionDetection":{ 
-            "type":"boolean",
-            "default": false,
-            "description": "If true, the physics engine should handle the collision detection more accurately by increasing the detection rate for this node."
-        },
-        "linearDamping":{ 
-            "type":"number",
-            "default": 0,
-            "description": "A non-negative value, in second-1 (s-1), as defined in the international unit system. It defines the linear drag coefficient which corresponds to the rate of decrease of the linear velocity over time.",
-            "gltf_detailedDescription":"It is used to compute a new velocity value V(t) at each simulation step (dt): V(t+dt) = V(t)*(1-linearDamping*dt), the velocity being clamped to 0."
-        },
-        "angularDamping":{ 
-            "type":"number",
-            "default": 0,
-            "description": "A non-negative value, in second-1 (s-1), as defined in the international unit system. that It defines the angular drag coefficient which corresponds to the rate of decrease of the angular velocity over time.",
-            "gltf_detailedDescription":"It is used to compute a new velocity value V(t) at each simulation step (dt): V(t+dt) = V(t)*(1-angularDamping*dt), the velocity being clamped to 0."
-        },
-        "useGravity":{ 
-            "type":"boolean",
-            "description": "Indicates if the gravity affects the object"
-        },
-        "mass":{
-            "type":"number",
-            "default": 1.0,
-            "description": "Mass of the object in kilogram"
-        },
-        "restitution":{
-            "type":"number",
-            "minimum": 0.0,
-            "maximun": 1.0,
-            "description": "Provides the ratio of the final to initial relative velocity between two objects after they collide."
-        },
-        "staticFriction":{
-            "type":"number",
-            "default": 0.5,
-            "minimum": 0.0,
-            "maximun": 1.0,
-            "description": "Unitless friction coefficient as defined in the Coulomb friction model. Used when the object is lying still."
-        },
-        "dynamicFriction":{
-            "type":"number",
-            "minimum": 0.0,
-            "maximun": 1.0,
-            "description": "Unitless friction coefficient as defined in the Coulomb friction model. When a large enough force is applied to the object, it is used, and will attempt to slow down the object while in contact with another."
         },
         "allowOcclusion":{
             "type": "boolean",
@@ -119,15 +75,7 @@
             "required": ["type"]
           },
           "then": {
-            "required": ["collider","isStatic","usePhysics"],
-            "allOf": [{
-                "if":{"properties": { "usePhysics": { "const": "true" } },
-                  "required":["usePhysics"]
-                },
-                "then": {
-                  "required":["useGravity","mass","restitution","staticFriction", "dynamicFriction"]
-                }
-            }]
+            "required": ["collider","isStatic"]
           }   
         },
         {
