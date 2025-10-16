@@ -16,18 +16,20 @@
 
 ## Dependencies
 
-Written against the glTF 2.0 specification.  
+Written against the glTF 2.0 specification.
 Requires the extension(s):  `KHR_character`
 
 ## Overview
 
 **THIS EXTENSION IS VERY MUCH WORK IN PROGRESS**
 
-The `KHR_character_skeleton_biped` extension enables bipedal characters. Like with other character extensions, its presence represents the data contract that the model itself is a bipedal character model. This extension enables clarifying what joints are for retargeting and compatibility across tools and platforms by specifying a canonical set of joints and their hierarchical structure.
+The `KHR_character_skeleton_biped` extension represents a data contract between the model and the environment using the model that the model is a bipedal character model.
 
-This extension does not modify the glTF skinning or animation system, but instead annotates the character’s node hierarchy to indicate which nodes represent canonical joints in a bipedal skeleton.
+This extension does not modify the glTF skinning or animation system, but instead creates a top-level mapping of the named joints of its skeletal structure to the nodes they correspond to in the node hierarchy.
 
 ## Extension Schema Example
+
+NOTE that the below is an example of what the extension might contain, and is not representative of a Khronos-backed skeletal vocabulary.
 
 ```json
 {
@@ -119,7 +121,7 @@ That extension supports weighted joint translation and enables cleaner separatio
 
 This extension currently avoids defining any required or default biped joint hierarchy.
 
-> **Why?**  
+> **Why?**
 > Standardizing on a single joint hierarchy would inadvertently lock the majority of developers into a single rig structure, limiting flexibility for studios and tools that use different conventions.
 
 Instead, this extension enables **declarative labeling** of a bipedal skeleton using your rig's native hierarchy, and encourages semantic interoperability through mapping via the `KHR_character_skeleton_mapping` extension.
@@ -138,5 +140,5 @@ None, TBD
 
 ## License
 
-This extension specification is licensed under the Khronos Group Extension License.  
+This extension specification is licensed under the Khronos Group Extension License.
 See: https://www.khronos.org/registry/gltf/license.html
