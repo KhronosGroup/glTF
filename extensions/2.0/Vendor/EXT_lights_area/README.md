@@ -17,7 +17,7 @@ Written against the glTF 2.0 spec.
 This extension defines area lights with physically accurate intensity values for use with glTF 2.0.
 
 Area lights are flat surfaces that uniformly emit light from one side (the side facing in the -Z direction in local space).
-This extension defines two area light shapes: `rect` (rectangle) and `disk` (circle). These lights are referenced by nodes and inherit the transform of that node, allowing them to be placed in a scene.
+This extension defines two area light types: `rect` (rectangle) and `disk` (circle). These lights are referenced by nodes and inherit the transform of that node, allowing them to be placed in a scene.
 
 ## Defining Area Lights
 
@@ -86,7 +86,7 @@ All light types share the common set of properties listed below.
 
 ### Rectangle Lights
 
-When a light's `type` is `rect`, the `rect` property on the light is required. Its properties (below) are optional.
+When a light's `type` is `rect`, the `rect` property contains the following optional properties.
 
 | Property | Type | Description | Required | Default |
 |:---------|:-----|:------------|:---------|:--------|
