@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="440" height="90" style="background-color:white" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .box { fill: none; stroke: black; stroke-width: 1; }
+      .text { monospace; font-size: 16px; text-anchor: middle; }
+      .label { monospace; font-size: 14px; text-anchor: middle; }
+      .byte-label { monospace; font-size: 14px; }
+    </style>
+  </defs>
+  
+  <!-- Byte labels -->
+  <text x="20" y="15" class="byte-label">Byte</text>
+  <text x="75" y="15" class="label">0</text>
+  <text x="245" y="15" class="label">1</text>
+
+  <!-- Binary label -->
+  <text x="35" y="45" class="label">Binary</text>
+  
+  <!-- Byte 0 boxes -->
+  <rect x="75" y="25" width="40" height="30" class="box"/>
+  <rect x="115" y="25" width="40" height="30" class="box"/>
+  <rect x="155" y="25" width="40" height="30" class="box"/>
+  <rect x="195" y="25" width="40" height="30" class="box"/>
+  
+  <!-- Byte 1 boxes -->
+  <rect x="245" y="25" width="40" height="30" class="box"/>
+  <rect x="285" y="25" width="40" height="30" class="box"/>
+  <rect x="325" y="25" width="40" height="30" class="box"/>
+  <rect x="365" y="25" width="40" height="30" class="box"/>
+  
+  <!-- Byte 0 binary values -->
+  <text x="95" y="45" class="text">11</text>
+  <text x="135" y="45" class="text">10</text>
+  <text x="175" y="45" class="text">00</text>
+  <text x="215" y="45" class="text">10</text>
+  
+  <!-- Byte 1 binary values-->
+  <text x="265" y="45" class="text">00</text>
+  <text x="305" y="45" class="text">00</text>
+  <text x="345" y="45" class="text">00</text>
+  <text x="385" y="45" class="text">10</text>
+  
+  <!-- Decimal labels -->
+  <text x="33" y="75" class="label">Decimal</text>
+  <text x="215" y="75" class="label">226</text>
+  <text x="385" y="75" class="label">2</text>
+</svg>
