@@ -91,46 +91,36 @@ The `visibility` property **MUST** be defined if `lineStrings` is not defined - 
 #### Examples
 
 Consider the simple example of a pair of adjacent triangles described by the index list `[0,1,2, 0,2,3]`:
-```
-  0______3
-  |＼    |
-  |  ＼  |
-  |____＼|
-  1      2
-```
+
+<figure>
+<img src="./figures/adjacent-triangles.svg"/>
+<figcaption><em><b>Figure 6</b> A pair of adjacent triangles</em></figcaption>
+</figure>
 
 With 2 bits per edge, encoding the visibility of two triangles requires 12 bits. So the visibility buffer must be 2 bytes long, with 4 bits of the second byte going unused. The diagram below shows which edge's visibility will be encoded into each pair of bits.
 
-```
-Byte    0                 1
-       ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐
-       │0:2│2:0│1:2│0:1│ │   │   │3:0│2:3│
-       └───┴───┴───┴───┘ └───┴───┴───┴───┘
-Bit        6   4   2   0     14  12  10  8
-```
+<figure>
+<img src="./figures/vis-buffer-bytes.svg"/>
+<figcaption><em><b>Figure 7</b> Visibility buffer bit arrangement</em></figcaption>
+</figure>
 
 ##### Shared silhouette edge
 
 Assume that the vertical edges `0:1` and `2:3` are hard edges, the horizontal edges `3:0` and `1:2` are hidden edges, and the shared diagonal edge `0:2` is a silhouette edge. Then the corresponding visibility values would be `[2,0,1, 1,2,0]`. However, we must ensure that the visibility of the silhouette edge is encoded only once, so after replacing one of the redundant `1`s the visibility values are `[2,0,1, 0,2,0]`. Encoding the edge visibility produces the sequence of bytes `[18, 2]`, as illustrated below.
 
-```
-Byte    0                 1
-       ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐   
-Binary │ 00│ 01│ 00│ 10│ │ 00│ 00│ 00│ 10│
-       └───┴───┴───┴───┘ └───┴───┴───┴───┘   
-Decimal              18                 2
-```
+<figure>
+<img src="./figures/shared-sil-edge-encoding.svg"/>
+<figcaption><em><b>Figure 8</b> Sequence of bytes with an encoded shared silhouette edge</em></figcaption>
+</figure>
 
 ##### Shared hard edge
 
 Assume that the vertical edges `0:1` and `2:3` and the shared diagonal edge `0:2` are all hard edges, and the horizontal edges `3:0` and `1:2` are hidden edges. Then the corresponding visibility values would be `[2,0,2, 2,2,0]`. However, we must ensure that the visibility of the shared hard edge is encoded only once as `2`, with the other occurrence encoded as `3`, resulting in visibility values `[2,0,2, 3,2,0]`. Encoding the edge visibility produces the sequence of bytes `[226, 2]`, as illustrated below.
-```
-Byte    0                 1
-       ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐   
-Binary │ 11│ 10│ 00│ 10│ │ 00│ 00│ 00│ 10│
-       └───┴───┴───┴───┘ └───┴───┴───┴───┘   
-Decimal             226                 2
-```
+
+<figure>
+<img src="./figures/shared-hard-edge-encoding.svg"/>
+<figcaption><em><b>Figure 9</b> Sequence of bytes with an encoded shared hard edge</em></figcaption>
+</figure>
 
 ### Material
 
@@ -151,13 +141,11 @@ The `lineStrings` property **MUST** be defined if `visibility` is not defined - 
 #### Examples
 
 Consider the following simple triangle fan with triangles described by the index list `[0,2,1, 0,3,2, 0,4,3, 0,5,4]`:
-```
-  2______3______4
-  |＼    |    ／|
-  |  ＼  |  ／  |
-  |____＼|／____|
-  1      0      5
-```
+
+<figure>
+<img src="./figures/triangle-fan.svg"/>
+<figcaption><em><b>Figure 10</b> A simple triangle fan containing four triangles</em></figcaption>
+</figure>
 
 Assume that the top and bottom edges are hard edges, to be encoded as a pair of line strings with indices `[2,3,4]` and `[1,0,5]`, respectively; and the vertical edges are hard edges, to be encoded as simple line segments. Then the `visibility` bitfield should encode only the vertical edges, with visibility values `[0,2,0, 2,0,0, 0,0,3, 0,2,0]`.
 
