@@ -1694,9 +1694,9 @@ Since this operation is a shortcut for the combination of multiplications, subtr
 |===
 | Operation | `math/inverse` | Inverse operation
 | Input value sockets
-| `floatNxN a` | Matrix to inverse
+| `floatNxN a` | Matrix stem:[A] to inverse
 .2+| Output value sockets
-d| `floatNxN value` | Matrix that is the inverse of stem:[a]; see the description for details
+d| `floatNxN value` | Matrix that is the inverse of stem:[A]; see the description for details
 d| `bool isValid` | True if the input matrix is invertible; false otherwise
 |===
 
@@ -1704,11 +1704,11 @@ The `value` input value socket and `value` output value socket have the same typ
 
 The output values are computed as follows:
 
-1. Let _determinant_ be the output value of the `math/determinant` operation on stem:[a] as defined above.
+1. Let _determinant_ be the output value of the `math/determinant` operation on stem:[A] as defined above.
 
-2. If _determinant_ is zero, NaN, or infinity, the `isValid` output value is false and the `value` output value is a matrix of the same type as stem:[a] with all elements set to positive zeros.
+2. If _determinant_ is zero, NaN, or infinity, the `isValid` output value is false and the `value` output value is a matrix of the same type as stem:[A] with all elements set to positive zeros.
 
-3. If _determinant_ is a finite number not equal to zero, the `isValid` output value is true and the `value` output value is a matrix that the inverse of stem:[a].
+3. If _determinant_ is a finite number not equal to zero, the `isValid` output value is true and the `value` output value is a matrix that is an implementation-defined approximation of the inverse of stem:[A].
 
 ===== Multiplication
 
@@ -1805,7 +1805,7 @@ d| `bool isValid` | True if the input matrix is decomposable; false otherwise
 
 The output values are computed as follows:
 
-1. If the fourth row of stem:[A] is not stem:[(0, 0, 0, 1)] exactly, set the `isValid` output value to false and goto to the step 11.
+1. If the first three elements of the fourth row of stem:[A] are not zeros or if the last element of the fourth row of stem:[A] is not close to positive one within an implementation-defined threshold, set the `isValid` output value to false and goto to the step 11.
 
 2. Let stem:[s_x], stem:[s_y], and stem:[s_z] be lengths of the first three columns of stem:[A]. For example, stem:[s_x=sqrt(a_{11}^2+a_{21}^2+a_{31}^2)].
 
@@ -2027,7 +2027,7 @@ This operation does not implicitly normalize the rotation quaternion. If needed,
 
 [cols="1h,1,2"]
 |===
-| Operation | `math/quatFromDirections` | Create a quaternion from two directional vectors
+| Operation | `math/quatFromDirections` | Create a quaternion transforming one directional vector to another
 .2+| Input value sockets
 d| `float3 a` | First direction
 d| `float3 b` | Second direction
