@@ -10,12 +10,16 @@
             "description": "Specifies the shape type.",
             "anyOf": [
                 {
+                    "const": "plane",
+                    "description": "A plane with an optional finite size, centered at the origin in local space, with normal along Y."
+                },
+                {
                     "const": "sphere",
                     "description": "A sphere with a specified radius, centered at the origin in local space."
                 },
                 {
                     "const": "box",
-                    "description": "An axis-aligned box with a size per-axis, centered at the origin in local space"
+                    "description": "An axis-aligned box with a size per-axis, centered at the origin in local space."
                 },
                 {
                     "const": "capsule",
@@ -29,6 +33,11 @@
                     "type": "string"
                 }
             ]
+        },
+        "plane": {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a plane shape.",
+            "$ref": "glTF.KHR_implicit_shapes.shape.plane.schema.json"
         },
         "sphere": {
             "type": "object",
