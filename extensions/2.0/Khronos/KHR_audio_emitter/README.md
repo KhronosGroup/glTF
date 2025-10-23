@@ -134,7 +134,7 @@ The extension must be added to the file's `extensionsUsed` array and because it 
 
 Audio data objects define where audio data is located and what format the data is in. The data is either accessed via a bufferView or uri.
 
-When storing audio data in a buffer view, the `mimeType` field must be specified. The base specification supports `audio/mpeg` and `audio/wav` MIME types. These were chosen with consideration for the wide support for these types across 3D engines and common use cases. Other supported audio formats may be added via extensions.
+When storing audio data in a buffer view, the `mimeType` field must be specified. The base specification supports the `audio/mpeg` MIME type. This was chosen with consideration for the wide support for these types across 3D engines and common use cases. Other supported audio formats may be added via extensions.
 
 Note that in tools that process glTF files, but do not implement the `KHR_audio_emitter` extension, external files referenced via the `uri` field may not be properly copied to their final destination or baked into the final binary glTF file. In these cases, using the `bufferView` property may be a better choice assuming the referenced `bufferView` index is not changed by the tool. The `uri` field might be a better choice when you want to be able to quickly change the referenced audio asset.
 
@@ -144,7 +144,7 @@ The `"bufferView"` property is the integer index of the bufferView that contains
 
 #### MIME Type
 
-The `"mimeType"` property is a string that specifies the audio's MIME type. Required if `bufferView` is defined. Unless specified by another extension, the only supported mimeTypes are `audio/mpeg` and `audio/wav`.
+The `"mimeType"` property is a string that specifies the audio's MIME type. Required if `bufferView` is defined. Unless specified by another extension, the only supported mimeType is `audio/mpeg`.
 
 #### URI
 
