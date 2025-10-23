@@ -16,7 +16,7 @@
     },
     "projection": {
       "type": "string",
-      "description": "Optional property providing a hint specifying how to project the Gaussians to achieve a perspective correct value. This is a freeform field that defaults to perspective. See the extension specification for further known types.",
+      "description": "Optional property specifying how to project the Gaussians to achieve a perspective correct value. This property defaults to perspective.",
       "default": "perspective",
       "anyOf": [
         {
@@ -32,7 +32,7 @@
     },
     "sortingMethod": {
       "type": "string",
-      "description": "Optional property providing a hint specifying how to sort the Gaussians during rendering. This is a freeform field defaulting to cameraDistance. See the extension specification for further known types.",
+      "description": "Optional property specifying how to sort the Gaussians during rendering. This property defaults to cameraDistance.",
       "default": "cameraDistance",
       "anyOf": [
         {
@@ -48,14 +48,16 @@
     },
     "colorSpace": {
       "type": "string",
-      "description": "Optional property specifying the color space of the color attribute. This property defaults to sRGB.",
+      "description": "Optional property specifying the color space of the spherical harmonics. This property defaults to BT.709.",
       "enum": [
-        "sRGB",
-        "ACEScg",
-        "DCI-P3",
-        "Rec. 2020"
+        "BT.709",
+        "BT.2020-ITU",
+        "BT.2020-HLG",
+        "BT.2020-PQ",
+        "Display-P3",
+        "linear"
       ],
-      "default": "sRGB"
+      "default": "BT.709"
     },
     "extensions": {},
     "extras": {}
