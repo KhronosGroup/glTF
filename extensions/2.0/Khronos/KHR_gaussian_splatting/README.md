@@ -163,7 +163,7 @@ Additional values can be added over time by defining an extension that adds new 
 
 | Color Space | Description |
 | --- | --- |
-| BT.709-srgb | BT.709 color space. (Default) |
+| BT.709-srgb | BT.709 sRGB color space. (Default) |
 | BT.709-linear | BT.709 linear color space. |
 | BT.2020-itu | BT.2020-ITU color space. |
 | BT.2020-hlg | BT.2020 HLG (Hybrid Log-Gamma) color space. |
