@@ -201,6 +201,7 @@ The `silhouetteNormals` property **MUST** be defined *if and only if* at least o
 ## Known implementations
 
 - [iTwin.js](https://github.com/iTwin/itwinjs-core/pull/8366)
+- [CesiumJS](https://github.com/CesiumGS/cesium/pull/12859)
 
 ## Implementation Notes
 
