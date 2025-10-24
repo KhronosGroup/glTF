@@ -7,27 +7,27 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Contributors
 
-* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
-* Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
-* Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
-* Emmett Lalish, Google [@elalish](https://github.com/elalish)
-* Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
-* Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
-* Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
-* Eric Chadwick, Wayfair [echadwick-wayfair](https://github.com/echadwick-wayfair)
-* Ben Houston, ThreeKit [@bhouston](https://github.com/bhouston)
-* Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
-* Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
-* Nicholas Barlow, Microsoft
-* Nicolas Savva, Autodesk [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
-* Henrik Edstrom, Autodesk
-* Bruce Cherniak, Intel
-* Adam Morris, Target [@weegeekps](https://github.com/weegeekps)
-* Sandra Voelker, Target
-* Alex Jamerson, Amazon
-* Thomas Dideriksen, Amazon
-* Alex Wood, AGI [@abwood](https://twitter.com/abwood)
-* Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
+- Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
+- Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
+- Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
+- Emmett Lalish, Google [@elalish](https://github.com/elalish)
+- Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
+- Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+- Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
+- Eric Chadwick, Wayfair [echadwick-wayfair](https://github.com/echadwick-wayfair)
+- Ben Houston, ThreeKit [@bhouston](https://github.com/bhouston)
+- Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
+- Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
+- Nicholas Barlow, Microsoft
+- Nicolas Savva, Autodesk [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
+- Henrik Edstrom, Autodesk
+- Bruce Cherniak, Intel
+- Adam Morris, Target [@weegeekps](https://github.com/weegeekps)
+- Sandra Voelker, Target
+- Alex Jamerson, Amazon
+- Thomas Dideriksen, Amazon
+- Alex Wood, AGI [@abwood](https://github.com/abwood)
+- Ed Mackey, AGI [@emackey](https://github.com/emackey)
 
 Copyright 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -42,8 +42,8 @@ Written against the glTF 2.0 spec. The volume extension needs to be combined wit
 
 ## Exclusions
 
-* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
-* This extension must not be used on a material that also uses `KHR_materials_unlit`.
+- This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+- This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Table of Contents
 
@@ -157,11 +157,15 @@ T(*x*) = e<sup>-σ<sub>t</sub>*x*</sup>
 
 where T is commonly referred to as *transmittance*.
 
-Substituting σ<sub>t</sub> in the previous equation by its definition via *attenuation color* and *attenuation distance*, as defined above, and setting *x* = *d* we get
+Substituting σ<sub>t</sub> in the previous equation by its definition via *attenuation color* and *attenuation distance*, as defined above, we get
 
-T(d<sub>a</sub>) = e<sup>(log(*c*) / *d*) * *d*</sup> = *c*
+T(x) = e<sup>(log(*c*) / *d*) * *x*</sup>
 
-So, after traveling distance *d* through the medium we get attenuation color *c*.
+The above formula can be simplified as:
+
+T(x) = *c*<sup> *x* / *d*</sup>
+
+So, after traveling distance *x* through a medium with attenuation color *c* and attenuation distance *d*, we get we get transmittance T(x).
 
 ## Base Color and Absorption
 
@@ -178,31 +182,41 @@ Base color and absorption both have an effect on the final color of a volumetric
 
 The specular transmission `specular_btdf(α)` defined in `KHR_materials_transmission` now takes refraction into account. That means that we use Snell's law to compute the modified half vector:
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle H_{TR} = -\text{normalize}(\eta_i V %2B \eta_o L)">.
+$$
+H_{TR} = -\text{normalize}(\eta_i V + \eta_o L)
+$$
 
-*η<sub>i</sub>* and *η<sub>o</sub>* denote the IOR of the incident and transmitted side of the surface, respectively. *V* is the vector pointing to the camera, *L* points to the light. In a path tracer, *V* corresponds to the incident side of the surface, which is the side of the medium with *η<sub>i</sub>*.
+$\eta_i$ and $\eta_o$ denote the IOR of the incident and transmitted side of the surface, respectively. $V$ is the vector pointing to the camera, $L$ points to the light. In a path tracer, $V$ corresponds to the incident side of the surface, which is the side of the medium with $\eta_i$.
 
 Incident and transmitted IOR have to be correctly set by the renderer, depending on whether light enters or leaves the object. An algorithm for tracking the IOR through overlapping objects was described by [Schmidt and Budge (2002)](#SchmidtBudge2002).
 
 The refractive microfacet BTDF is normalized in a different way.
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBTDF} = \frac{\left| H_{TR} \cdot L \right| \left| H_{TR} \cdot V \right|}{\left| N \cdot L \right| \left| N \cdot V \right|} \frac{\eta_o^2 G_{T} D_{TR}}{\left(\eta_i (H_{TR} \cdot V) %2B \eta_o (H_{TR} \cdot L)\right)^2}">
+$$
+\text{MicrofacetBTDF} = \frac{\left| H_{TR} \cdot L \right| \left| H_{TR} \cdot V \right|}{\left| N \cdot L \right| \left| N \cdot V \right|} \frac{\eta_o^2 G_{T} D_{TR}}{\left(\eta_i (H_{TR} \cdot V) + \eta_o (H_{TR} \cdot L)\right)^2}
+$$
 
-The *D<sub>T</sub>* and *G<sub>TR</sub>* terms are the same as in the specular transmission in `KHR_materials_transmission` except using the modified half vector *H<sub>TR</sub>* calculated from the refraction direction. See [Walter et al. (2007)](#Walter2007) for details.
+The $D_T$ and $G_{TR}$ terms are the same as in the specular transmission in `KHR_materials_transmission` except using the modified half vector $H_{TR}$ calculated from the refraction direction. See [Walter et al. (2007)](#Walter2007) for details.
 
 The Fresnel term also makes use of the modified half vector and, in addition, needs to take internal reflection into account. When using the Schlick approximation, care must be taken to use the angle that is on the dense side of the boundary, i.e., the side with the medium that has a higher IOR. In addition, total internal reflection has to be considered. Therefore, we have three cases:
 
-Light enters medium with higher IOR: *η<sub>o</sub>* ≥ *η<sub>i</sub>*.
+1. Light enters medium with higher IOR: $\eta_o \ge \eta_i$.
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle F_{TR}^%2B = f_0 %2B (1 - f_0) (1 - \left| V \cdot H_{TR} \right| )^5">
+$$
+F_{TR}^{+} = f_0 + (1 - f_0) (1 - \left| V \cdot H_{TR} \right| )^5
+$$
 
-Light enters medium with lower IOR and there is no total internal reflection: *η<sub>o</sub>* < *η<sub>i</sub>* and sin<sup>2</sup>(*θ<sub>o</sub>*) < 1. The angle at the transmitted side of the boundary (medium with lower IOR) *θ<sub>o</sub>* is computed from the angle of incidence via sin<sup>2</sup>(*θ<sub>o</sub>*) = (*η<sub>i</sub>* / *η<sub>o</sub>*)<sup>2</sup> (1 - dot(*V*, *H<sub>TR</sub>*)<sup>2</sup>) and thus cos(*θ<sub>o</sub>*) = sqrt(1 - sin<sup>2</sup>(*θ<sub>o</sub>*)).
+2. Light enters medium with lower IOR and there is no total internal reflection: $\eta_o < \eta_i$ and $\sin^2 \theta_o < 1$. The angle at the transmitted side of the boundary (medium with lower IOR) $\theta_o$ is computed from the angle of incidence via $\sin^2 \theta_o = \left(\frac{\eta_i}{\eta_o}\right)^2 (1 - (V \cdot H_{TR})^2)$ and thus $\cos \theta_o = \sqrt{1 - \sin^2 \theta_o}$.
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle F_{TR}^{-} = f_0 %2B (1 - f_0) (1 - \left| \cos\,\theta_o \right| )^5">
+$$
+F_{TR}^{-} = f_0 + (1 - f_0) (1 - \left| \cos\theta_o \right| )^5
+$$
 
-Light enters medium with lower IOR and there is total internal reflection: *η<sub>o</sub>* < *η<sub>i</sub>* and sin<sup>2</sup>(*θ<sub>o</sub>*) ≥ 1.
+3. Light enters medium with lower IOR and there is total internal reflection: $\eta_o < \eta_i$ and and $\sin^2 \theta_o \ge 1$.
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle F_{TR}^\text{TIR} = 1">
+$$
+F_{TR}^\text{TIR} = 1
+$$
 
 ## Interaction with other extensions
 
@@ -210,13 +224,13 @@ If `KHR_materials_specular` is used in combination with `KHR_materials_volume`, 
 
 ## Schema
 
-- [glTF.KHR_materials_volume.schema.json](schema/glTF.KHR_materials_volume.schema.json)
+- [material.KHR_materials_volume.schema.json](schema/material.KHR_materials_volume.schema.json)
 
 ## References
 
-* [Kulla C., Conty A. (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf)<a name="KullaConty2017"></a>
-* [Walter B., Marschner S., Li H., Torrance K. (2007): Microfacet Models for Refraction through Rough Surfaces](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf)<a name="Walter2007"></a>
-* [Schmidt C., Budge B. (2002): Simple Nested Dielectrics in Ray Traced Images](https://www.researchgate.net/profile/Brian_Budge/publication/247523037_Simple_Nested_Dielectrics_in_Ray_Traced_Images/links/00b7d52e001e1b88a3000000/Simple-Nested-Dielectrics-in-Ray-Traced-Images.pdf)<a name="SchmidtBudge2002"></a>
+- [Kulla C., Conty A. (2017): Revisiting Physically Based Shading at Imageworks](https://blog.selfshadow.com/publications/s2017-shading-course/imageworks/s2017_pbs_imageworks_slides_v2.pdf)<a name="KullaConty2017"></a>
+- [Walter B., Marschner S., Li H., Torrance K. (2007): Microfacet Models for Refraction through Rough Surfaces](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf)<a name="Walter2007"></a>
+- [Schmidt C., Budge B. (2002): Simple Nested Dielectrics in Ray Traced Images](https://www.researchgate.net/profile/Brian_Budge/publication/247523037_Simple_Nested_Dielectrics_in_Ray_Traced_Images/links/00b7d52e001e1b88a3000000/Simple-Nested-Dielectrics-in-Ray-Traced-Images.pdf)<a name="SchmidtBudge2002"></a>
 
 ## Appendix: Full Khronos Copyright Statement
 

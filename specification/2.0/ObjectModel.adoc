@@ -1,0 +1,536 @@
+// Copyright 2023 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+// :regtitle: is explained in
+// https://discuss.asciidoctor.org/How-to-add-markup-to-author-information-in-document-title-td6488.html
+= glTF{tmtitle} 2.0 Asset Object Model Specification
+:tmtitle: pass:q,r[^™^]
+:regtitle: pass:q,r[^®^]
+The Khronos{regtitle} 3D Formats Working Group
+:data-uri:
+:icons: font
+:toc2:
+:toclevels: 10
+:sectnumlevels: 10
+:max-width: 100%
+:numbered:
+:source-highlighter: coderay
+:title-logo-image: image:../figures/glTF_RGB_June16.svg[Logo,pdfwidth=4in,align=right]
+:docinfo: shared-head
+:stem:
+
+// This causes cross references to chapters, sections, and tables to be
+// rendered as "Section A.B" (for example) rather than rendering the reference
+// as the text of the section title.  It also enables cross references to
+// [source] blocks as "Listing N", but only if the [source] block has a title.
+:xrefstyle: short
+:listing-caption: Listing
+
+ifndef::revdate[]
+:toc-placement!:
+
+[NOTE]
+.Note
+====
+Khronos posts the AsciiDoc source of the glTF specification to enable community
+feedback and remixing under CC-BY 4.0. Published versions of the Specification
+are located in the https://www.khronos.org/registry/glTF[glTF Registry].
+====
+endif::[]
+
+// Table of contents is inserted here
+toc::[]
+
+:leveloffset: 1
+
+[[foreword]]
+= Foreword
+
+Copyright 2023 The Khronos Group Inc.
+
+This Document is protected by copyright laws and contains material proprietary
+to Khronos. Except as described by these terms, it or any components
+may not be reproduced, republished, distributed, transmitted, displayed, broadcast
+or otherwise exploited in any manner without the express prior written permission
+of Khronos.
+
+Khronos grants a conditional copyright license to use and reproduce the
+unmodified Document for any purpose, without fee or royalty, EXCEPT no licenses
+to any patent, trademark or other intellectual property rights are granted under these
+terms.
+
+Khronos makes no, and expressly disclaims any, representations or warranties,
+express or implied, regarding this Document, including, without limitation:
+merchantability, fitness for a particular purpose, non-infringement of any
+intellectual property, correctness, accuracy, completeness, timeliness, and
+reliability. Under no circumstances will Khronos, or any of its Promoters,
+Contributors or Members, or their respective partners, officers, directors,
+employees, agents or representatives be liable for any damages, whether direct,
+indirect, special or consequential damages for lost revenues, lost profits, or
+otherwise, arising from or in connection with these materials.
+
+Khronos® is a registered trademark and glTF™ is a trademark of The Khronos Group Inc.
+All other product names, trademarks, and/or company names are used solely
+for identification and belong to their respective owners.
+
+
+[[introduction]]
+= Introduction
+
+[[introduction-general]]
+== General
+
+This document, referred to as the "`glTF 2.0 Asset Object Model Specification`" or just the "`Object Model`" hereafter, describes a portable runtime object model of a glTF asset.
+
+
+[[introduction-normative-references]]
+=== Normative References
+
+The following documents are referenced by normative sections of the specification:
+
+==== External Specifications
+
+[none]
+* [[gltf]]
+glTF 2.0 Specification
+<https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html>
+
+* [[json-pointer]]
+Bryan, P., Ed., Zyp, K., and M. Nottingham, Ed., _JavaScript Object Notation (JSON) Pointer_, RFC 6901, DOI 10.17487/RFC6901, April 2013, <https://www.rfc-editor.org/info/rfc6901>
+
+* [[ieee-754]]
+ISO/IEC 60559
+_Floating-point arithmetic_
+<https://www.iso.org/standard/80985.html>
+
+
+[[motivation]]
+== Motivation and Design Goals (Informative)
+
+Although <<gltf,glTF 2.0 Specification>> does not define any runtime behavior, there is a growing demand for manipulating glTF assets at runtime and querying their state in a portable way.
+
+Upon loading, applications usually parse glTF JSON into implementation-specific internal structures and therefore do not have a common protocol to manipulate asset contents.
+
+This document defines a set of <<json-pointer,JSON pointers>> that glTF implementations are expected to support for identifying asset properties that could be manipulated at runtime.
+
+[[basics]]
+= Object Model Basics
+
+1. The Object Model is defined only for valid glTF assets. Querying or setting properties of invalid glTF assets are undefined.
+
+2. Upon loading an asset, an implementation registers specific glTF object properties for the Object Model by resolving JSON pointers identified by templates provided by this document to JSON properties of the asset being loaded. Undefined glTF properties that have schema-default values are considered defined with their default values.
+
+3. Each instance of empty curly braces (`{}`) in the pointer templates is replaced with the corresponding array element index for each glTF asset property matching the template.
+
+4. Since JSON does not natively support vectors and matrices, the Object Model defines explicit types for all supported properties. JSON pointers to properties of these types are resolved into implementation-specific vectors and matrices, not raw JSON arrays. Pointers to individual vector or matrix components are not resolved.
+
+5. Pointers to properties of explicit array types (as defined below) are resolved to implementation-defined arrays; pointers to array elements of properties of explicit array types are resolved to the corresponding array elements.
+
+6. In addition to properties directly linked to glTF JSON, the Object Model defines extra read-only properties that reflect commonly-used parts of the glTF runtime state. Specifically, array sizes and current node transforms.
+
+7. If a JSON pointer cannot be resolved to a glTF property, operations with it are undefined.
+
+8. Some pointers are defined as read-only, i.e., applications can access them to discover the asset structure and its runtime state but it is generally not possible to update their values directly. Read-only pointers that represent glTF object references can be made mutable by extensions on a case-by-case basis.
+
+[[types]]
+== Data Types
+
+The following data types are assumed by this document:
+
+float::
+single or double precision <<ieee-754,IEEE-754>> floating-point type
+
+float[]::
+an array of *float* values
+
+float2::
+a two-component vector of *float* values read from or set to JSON array elements with indices 0 and 1
+
+float3::
+a three-component vector of *float* values read from or set to JSON array elements with indices 0, 1, and 2
+
+float4::
+a four-component vector of *float* values read from or set to JSON array elements with indices 0, 1, 2, and 3
+
+float4x4::
+a 4x4 matrix of *float* values
+
+bool::
+a boolean type
+
+int::
+a signed integer type with width of at least 32 bits
+
+[[core-pointers]]
+= Core Pointers
+
+The following pointer templates represent mutable properties defined in the core glTF 2.0 Specification.
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                              |  Type
+| `/cameras/{}/orthographic/xmag`                      | `float`
+| `/cameras/{}/orthographic/ymag`                      | `float`
+| `/cameras/{}/orthographic/zfar`                      | `float`
+| `/cameras/{}/orthographic/znear`                     | `float`
+| `/cameras/{}/perspective/aspectRatio`                | `float`
+| `/cameras/{}/perspective/yfov`                       | `float`
+| `/cameras/{}/perspective/zfar`                       | `float`
+| `/cameras/{}/perspective/znear`                      | `float`
+| `/materials/{}/alphaCutoff`                          | `float`
+| `/materials/{}/emissiveFactor`                       | `float3`
+| `/materials/{}/normalTexture/scale`                  | `float`
+| `/materials/{}/occlusionTexture/strength`            | `float`
+| `/materials/{}/pbrMetallicRoughness/baseColorFactor` | `float4`
+| `/materials/{}/pbrMetallicRoughness/metallicFactor`  | `float`
+| `/materials/{}/pbrMetallicRoughness/roughnessFactor` | `float`
+| `/meshes/{}/weights`                                 | `float[]`
+| `/meshes/{}/weights/{}`                              | `float`
+| `/nodes/{}/translation`                              | `float3`
+| `/nodes/{}/rotation`                                 | `float4`
+| `/nodes/{}/scale`                                    | `float3`
+| `/nodes/{}/weights`                                  | `float[]`
+| `/nodes/{}/weights/{}`                               | `float`
+|====
+
+[NOTE]
+.Note
+====
+As in the core glTF 2.0 Specification, lengths of the `weights` arrays match the number of the associated morph targets.
+====
+
+Additionally, the following pointer templates represent read-only runtime properties.
+
+[options="header",cols="50%,15%,35%"]
+|====
+| Pointer                             |  Type      | Comment
+| `/animations.length`                | `int`      | Number of animations
+| `/cameras.length`                   | `int`      | Number of cameras
+| `/materials.length`                 | `int`      | Number of materials
+| `/materials/{}/doubleSided`         | `bool`     | Whether the material is double sided
+| `/meshes.length`                    | `int`      | Number of meshes
+| `/meshes/{}/primitives.length`      | `int`      | Number of primitives
+| `/meshes/{}/primitives/{}/material` | `int`      | Index of the material
+| `/meshes/{}/weights.length`         | `int`      | Number of morph targets
+| `/nodes.length`                     | `int`      | Number of nodes
+| `/nodes/{}/camera`                  | `int`      | Index of the camera
+| `/nodes/{}/children.length`         | `int`      | Number of children nodes
+| `/nodes/{}/children/{}`             | `int`      | Index of the child node
+| `/nodes/{}/globalMatrix`            | `float4x4` | Global transformation matrix of a node
+| `/nodes/{}/matrix`                  | `float4x4` | Local transformation matrix of a node
+| `/nodes/{}/mesh`                    | `int`      | Index of the mesh
+| `/nodes/{}/parent`                  | `int`      | Index of the parent node
+| `/nodes/{}/skin`                    | `int`      | Index of the skin
+| `/nodes/{}/weights.length`          | `int`      | Number of the associated mesh's morph targets
+| `/scene`                            | `int`      | Index of the scene
+| `/scenes.length`                    | `int`      | Number of scenes
+| `/scenes/{}/nodes.length`           | `int`      | Number of root nodes
+| `/scenes/{}/nodes/{}`               | `int`      | Index of the root node
+| `/skins.length`                     | `int`      | Number of skins
+| `/skins/{}/joints.length`           | `int`      | Number of joints
+| `/skins/{}/joints/{}`               | `int`      | Index of the joint node
+| `/skins/{}/skeleton`                | `int`      | Index of the skeleton
+|====
+
+All pointers named `*.length` return zero if the corresponding array is not defined.
+
+The `/nodes/{}/matrix` and `/nodes/{}/globalMatrix` pointers represent the node's effective transformation matrices, i.e., the runtime state, regardless of whether the static `matrix` property is used in JSON.
+
+The `/nodes/{}/parent` pointer represents the node's parent, i.e., the index of the node that has the current node listed in its `children` array. If the current node is a root node, this pointer is undefined.
+
+[[extension-pointers]]
+= Extension Pointers
+
+The following pointer templates represent mutable properties defined in glTF 2.0 extensions.
+
+== KHR_texture_transform
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                                                 |  Type
+| `/materials/{}/normalTexture/extensions/KHR_texture_transform/offset`                                   | `float2`
+| `/materials/{}/normalTexture/extensions/KHR_texture_transform/rotation`                                 | `float`
+| `/materials/{}/normalTexture/extensions/KHR_texture_transform/scale`                                    | `float2`
+| `/materials/{}/occlusionTexture/extensions/KHR_texture_transform/offset`                                | `float2`
+| `/materials/{}/occlusionTexture/extensions/KHR_texture_transform/rotation`                              | `float`
+| `/materials/{}/occlusionTexture/extensions/KHR_texture_transform/scale`                                 | `float2`
+| `/materials/{}/emissiveTexture/extensions/KHR_texture_transform/offset`                                 | `float2`
+| `/materials/{}/emissiveTexture/extensions/KHR_texture_transform/rotation`                               | `float`
+| `/materials/{}/emissiveTexture/extensions/KHR_texture_transform/scale`                                  | `float2`
+| `/materials/{}/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/offset`           | `float2`
+| `/materials/{}/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/rotation`         | `float`
+| `/materials/{}/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/scale`            | `float2`
+| `/materials/{}/pbrMetallicRoughness/metallicRoughnessTexture/extensions/KHR_texture_transform/offset`   | `float2`
+| `/materials/{}/pbrMetallicRoughness/metallicRoughnessTexture/extensions/KHR_texture_transform/rotation` | `float`
+| `/materials/{}/pbrMetallicRoughness/metallicRoughnessTexture/extensions/KHR_texture_transform/scale`    | `float2`
+|====
+
+By definition, this extension applies to all properties of `textureInfo` type, including texture properties defined in other glTF 2.0 extensions.
+
+== KHR_lights_punctual
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                         |  Type
+| `/extensions/KHR_lights_punctual/lights/{}/color`               | `float3`
+| `/extensions/KHR_lights_punctual/lights/{}/intensity`           | `float`
+| `/extensions/KHR_lights_punctual/lights/{}/range`               | `float`
+| `/extensions/KHR_lights_punctual/lights/{}/spot/innerConeAngle` | `float`
+| `/extensions/KHR_lights_punctual/lights/{}/spot/outerConeAngle` | `float`
+|====
+
+Additional read-only properties
+
+[options="header",cols="50%,15%,35%"]
+|====
+| Pointer                                          |  Type | Comment
+| `/extensions/KHR_lights_punctual/lights.length`  | `int` | Number of punctual lights
+| `/nodes/{}/extensions/KHR_lights_punctual/light` | `int` | Index of the light
+|====
+
+== KHR_materials_anisotropy
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                |  Type
+| `/materials/{}/extensions/KHR_materials_anisotropy/anisotropyStrength` | `float`
+| `/materials/{}/extensions/KHR_materials_anisotropy/anisotropyRotation` | `float`
+|====
+
+=== Interaction with KHR_texture_transform
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                                                         |  Type
+| `/materials/{}/extensions/KHR_materials_anisotropy/anisotropyTexture/extensions/KHR_texture_transform/offset`   | `float2`
+| `/materials/{}/extensions/KHR_materials_anisotropy/anisotropyTexture/extensions/KHR_texture_transform/rotation` | `float`
+| `/materials/{}/extensions/KHR_materials_anisotropy/anisotropyTexture/extensions/KHR_texture_transform/scale`    | `float2`
+|====
+
+== KHR_materials_clearcoat
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                         |  Type
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatFactor`              | `float`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatRoughnessFactor`     | `float`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatNormalTexture/scale` | `float`
+|====
+
+=== Interaction with KHR_texture_transform
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                                                                |  Type
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatTexture/extensions/KHR_texture_transform/offset`            | `float2`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatTexture/extensions/KHR_texture_transform/rotation`          | `float`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatTexture/extensions/KHR_texture_transform/scale`             | `float2`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatRoughnessTexture/extensions/KHR_texture_transform/offset`   | `float2`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatRoughnessTexture/extensions/KHR_texture_transform/rotation` | `float`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatRoughnessTexture/extensions/KHR_texture_transform/scale`    | `float2`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatNormalTexture/extensions/KHR_texture_transform/offset`      | `float2`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatNormalTexture/extensions/KHR_texture_transform/rotation`    | `float`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatNormalTexture/extensions/KHR_texture_transform/scale`       | `float2`
+|====
+
+== KHR_materials_dispersion
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                        |  Type
+| `/materials/{}/extensions/KHR_materials_dispersion/dispersion` | `float`
+|====
+
+== KHR_materials_emissive_strength
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                     |  Type
+| `/materials/{}/extensions/KHR_materials_emissive_strength/emissiveStrength` | `float`
+|====
+
+== KHR_materials_ior
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                          |  Type
+| `/materials/{}/extensions/KHR_materials_ior/ior` | `float`
+|====
+
+== KHR_materials_iridescence
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                          |  Type
+| `/materials/{}/extensions/KHR_materials_iridescence/iridescenceFactor`           | `float`
+| `/materials/{}/extensions/KHR_materials_iridescence/iridescenceIor`              | `float`
+| `/materials/{}/extensions/KHR_materials_iridescence/iridescenceThicknessMinimum` | `float`
+| `/materials/{}/extensions/KHR_materials_iridescence/iridescenceThicknessMaximum` | `float`
+|====
+
+=== Interaction with KHR_texture_transform
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                                                                    |  Type
+| `/materials/{}/extensions/KHR_materials_iridescence/iridescenceTexture/extensions/KHR_texture_transform/offset`            | `float2`
+| `/materials/{}/extensions/KHR_materials_iridescence/iridescenceTexture/extensions/KHR_texture_transform/rotation`          | `float`
+| `/materials/{}/extensions/KHR_materials_iridescence/iridescenceTexture/extensions/KHR_texture_transform/scale`             | `float2`
+| `/materials/{}/extensions/KHR_materials_iridescence/iridescenceThicknessTexture/extensions/KHR_texture_transform/offset`   | `float2`
+| `/materials/{}/extensions/KHR_materials_iridescence/iridescenceThicknessTexture/extensions/KHR_texture_transform/rotation` | `float`
+| `/materials/{}/extensions/KHR_materials_iridescence/iridescenceThicknessTexture/extensions/KHR_texture_transform/scale`    | `float2`
+|====
+
+== KHR_materials_sheen
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                             |  Type
+| `/materials/{}/extensions/KHR_materials_sheen/sheenColorFactor`     | `float3`
+| `/materials/{}/extensions/KHR_materials_sheen/sheenRoughnessFactor` | `float`
+|====
+
+=== Interaction with KHR_texture_transform
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                                                        |  Type
+| `/materials/{}/extensions/KHR_materials_sheen/sheenColorTexture/extensions/KHR_texture_transform/offset`       | `float2`
+| `/materials/{}/extensions/KHR_materials_sheen/sheenColorTexture/extensions/KHR_texture_transform/rotation`     | `float`
+| `/materials/{}/extensions/KHR_materials_sheen/sheenColorTexture/extensions/KHR_texture_transform/scale`        | `float2`
+| `/materials/{}/extensions/KHR_materials_sheen/sheenRoughnessTexture/extensions/KHR_texture_transform/offset`   | `float2`
+| `/materials/{}/extensions/KHR_materials_sheen/sheenRoughnessTexture/extensions/KHR_texture_transform/rotation` | `float`
+| `/materials/{}/extensions/KHR_materials_sheen/sheenRoughnessTexture/extensions/KHR_texture_transform/scale`    | `float2`
+|====
+
+== KHR_materials_specular
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                               |  Type
+| `/materials/{}/extensions/KHR_materials_specular/specularFactor`      | `float`
+| `/materials/{}/extensions/KHR_materials_specular/specularColorFactor` | `float3`
+|====
+
+=== Interaction with KHR_texture_transform
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                                                          |  Type
+| `/materials/{}/extensions/KHR_materials_specular/specularTexture/extensions/KHR_texture_transform/offset`        | `float2`
+| `/materials/{}/extensions/KHR_materials_specular/specularTexture/extensions/KHR_texture_transform/rotation`      | `float`
+| `/materials/{}/extensions/KHR_materials_specular/specularTexture/extensions/KHR_texture_transform/scale`         | `float2`
+| `/materials/{}/extensions/KHR_materials_specular/specularColorTexture/extensions/KHR_texture_transform/offset`   | `float2`
+| `/materials/{}/extensions/KHR_materials_specular/specularColorTexture/extensions/KHR_texture_transform/rotation` | `float`
+| `/materials/{}/extensions/KHR_materials_specular/specularColorTexture/extensions/KHR_texture_transform/scale`    | `float2`
+|====
+
+== KHR_materials_transmission
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                  |  Type
+| `/materials/{}/extensions/KHR_materials_transmission/transmissionFactor` | `float`
+|====
+
+=== Interaction with KHR_texture_transform
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                                                             |  Type
+| `/materials/{}/extensions/KHR_materials_transmission/transmissionTexture/extensions/KHR_texture_transform/offset`   | `float2`
+| `/materials/{}/extensions/KHR_materials_transmission/transmissionTexture/extensions/KHR_texture_transform/rotation` | `float`
+| `/materials/{}/extensions/KHR_materials_transmission/transmissionTexture/extensions/KHR_texture_transform/scale`    | `float2`
+|====
+
+== KHR_materials_volume
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                             |  Type
+| `/materials/{}/extensions/KHR_materials_volume/thicknessFactor`     | `float`
+| `/materials/{}/extensions/KHR_materials_volume/attenuationDistance` | `float`
+| `/materials/{}/extensions/KHR_materials_volume/attenuationColor`    | `float3`
+|====
+
+=== Interaction with KHR_texture_transform
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                                                    |  Type
+| `/materials/{}/extensions/KHR_materials_volume/thicknessTexture/extensions/KHR_texture_transform/offset`   | `float2`
+| `/materials/{}/extensions/KHR_materials_volume/thicknessTexture/extensions/KHR_texture_transform/rotation` | `float`
+| `/materials/{}/extensions/KHR_materials_volume/thicknessTexture/extensions/KHR_texture_transform/scale`    | `float2`
+|====
+
+== EXT_lights_ies
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                          |  Type
+| `/nodes/{}/extensions/EXT_lights_ies/multiplier` | `float`
+| `/nodes/{}/extensions/EXT_lights_ies/color`      | `float3`
+|====
+
+Additional read-only properties
+
+[options="header",cols="50%,15%,35%"]
+|====
+| Pointer                                    |  Type | Comment
+| `/extensions/EXT_lights_ies/lights.length` | `int` | Number of IES light profiles
+|====
+
+== EXT_lights_image_based
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                  |  Type
+| `/extensions/EXT_lights_image_based/lights/{}/rotation`  | `float4`
+| `/extensions/EXT_lights_image_based/lights/{}/intensity` | `float`
+|====
+
+Additional read-only properties
+
+[options="header",cols="50%,15%,35%"]
+|====
+| Pointer                                            |  Type | Comment
+| `/extensions/EXT_lights_image_based/lights.length` | `int` | Number of image-based lights
+|====
+
+== ADOBE_materials_clearcoat_specular
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                               |  Type
+| `/materials/{}/extensions/ADOBE_materials_clearcoat_specular/clearcoatIor`            | `float`
+| `/materials/{}/extensions/ADOBE_materials_clearcoat_specular/clearcoatSpecularFactor` | `float`
+|====
+
+=== Interaction with KHR_texture_transform
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                                                                          |  Type
+| `/materials/{}/extensions/ADOBE_materials_clearcoat_specular/clearcoatSpecularTexture/extensions/KHR_texture_transform/offset`   | `float2`
+| `/materials/{}/extensions/ADOBE_materials_clearcoat_specular/clearcoatSpecularTexture/extensions/KHR_texture_transform/rotation` | `float`
+| `/materials/{}/extensions/ADOBE_materials_clearcoat_specular/clearcoatSpecularTexture/extensions/KHR_texture_transform/scale`    | `float2`
+|====
+
+== ADOBE_materials_clearcoat_tint
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                       |  Type
+| `/materials/{}/extensions/ADOBE_materials_clearcoat_tint/clearcoatTintFactor` | `float3`
+|====
+
+=== Interaction with KHR_texture_transform
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                                                                                  |  Type
+| `/materials/{}/extensions/ADOBE_materials_clearcoat_tint/clearcoatTintTexture/extensions/KHR_texture_transform/offset`   | `float2`
+| `/materials/{}/extensions/ADOBE_materials_clearcoat_tint/clearcoatTintTexture/extensions/KHR_texture_transform/rotation` | `float`
+| `/materials/{}/extensions/ADOBE_materials_clearcoat_tint/clearcoatTintTexture/extensions/KHR_texture_transform/scale`    | `float2`
+|====

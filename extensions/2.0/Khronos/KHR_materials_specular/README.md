@@ -7,28 +7,28 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Contributors
 
-* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
-* Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
-* Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
-* Emmett Lalish, Google [@elalish](https://github.com/elalish)
-* Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
-* Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
-* Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
-* Eric Chadwick, Wayfair [echadwick-wayfair](https://github.com/echadwick-wayfair)
-* Ben Houston, ThreeKit [@bhouston](https://github.com/bhouston)
-* Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
-* Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
-* Nicholas Barlow, Microsoft
-* Nicolas Savva, Autodesk [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
-* Henrik Edstrom, Autodesk
-* Bruce Cherniak, Intel
-* Adam Morris, Target [@weegeekps](https://github.com/weegeekps)
-* Sandra Voelker, Target
-* Alex Jamerson, Amazon
-* Thomas Dideriksen, Amazon
-* Alex Wood, AGI [@abwood](https://twitter.com/abwood)
-* Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
-* Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)
+- Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
+- Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
+- Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
+- Emmett Lalish, Google [@elalish](https://github.com/elalish)
+- Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
+- Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+- Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
+- Eric Chadwick, Wayfair [echadwick-wayfair](https://github.com/echadwick-wayfair)
+- Ben Houston, ThreeKit [@bhouston](https://github.com/bhouston)
+- Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
+- Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
+- Nicholas Barlow, Microsoft
+- Nicolas Savva, Autodesk [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
+- Henrik Edstrom, Autodesk
+- Bruce Cherniak, Intel
+- Adam Morris, Target [@weegeekps](https://github.com/weegeekps)
+- Sandra Voelker, Target
+- Alex Jamerson, Amazon
+- Thomas Dideriksen, Amazon
+- Alex Wood, AGI [@abwood](https://github.com/abwood)
+- Ed Mackey, AGI [@emackey](https://github.com/emackey)
+- Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)
 
 Copyright 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -45,8 +45,8 @@ Written against the glTF 2.0 spec.
 
 ## Exclusions
 
-* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
-* This extension must not be used on a material that also uses `KHR_materials_unlit`.
+- This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+- This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Overview
 
@@ -84,6 +84,11 @@ Factor and texture are combined by multiplication to describe a single value.
 | **specularColorFactor** | `number[3]` | The F0 color of the specular reflection (linear RGB). | No, default: `[1.0, 1.0, 1.0]`|
 | **specularColorTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A texture that defines the F0 color of the specular reflection, stored in the `RGB` channels and encoded in sRGB. This texture will be multiplied by specularColorFactor. | No |
 
+If a texture is defined:
+
+- The specular color is computed with : `specularColor = specularColorFactor * sampleLinear(specularColorTexture).rgb`.
+- The specular strength is computed with : `specular = specularFactor * sample(specularTexture).a`.
+
 The `specular` and `specularColor` parameters affect the `dielectric_brdf` of the glTF 2.0 metallic-roughness material.
 
 ```
@@ -96,7 +101,7 @@ dielectric_brdf =
     layer = specular_brdf(α = roughness^2))
 ```
 
-The `fresnel_mix` function mixes two BSDFs according to a Fresnel term. The `layer` is weighted with `weight * fresnel(ior, f0_color)`. The `base` is weighted with `1 - weight * fresnel(ior, f0_color)`.
+The `fresnel_mix` function mixes two BSDFs according to a Fresnel term. The `layer` is weighted with `weight * fresnel(ior, f0_color)`. The `base` is weighted with `1 - weight * max_value(fresnel(ior, f0_color))`.
 
 The specular factor used as `weight` scales `layer` and `base`. The less energy is reflected by the `layer` (`specular_brdf`), the more can be shifted to the `base` (`diffuse_brdf`). The following image shows specular factor increasing from 0 to 1.
 
@@ -104,7 +109,15 @@ The specular factor used as `weight` scales `layer` and `base`. The less energy 
 
 The specular color is a directional-dependent weight included in the Fresnel term. At normal incidence (`f0`), `specularColor` scales the F0 reflectance `f0_color`. At grazing incidence (`f90`), the reflectance remains at 1. In between the scale factor is smoothly interpolated.
 
-As with specular factor, `base` will be weighted with the directional-dependent remaining energy according to the Fresnel term. `f0_color` is an RGB color, involving the complementary to specular color. To make it easy to use and ensure energy conservation, the RGB color is converted to scalar via `max(r, g, b)`. The following images show specular color increasing from [0,0,0] to [1,1,1] (top) and from [0,0,0] to [1,0,0] (bottom).
+As with specular factor, `base` will be weighted with the directional-dependent remaining energy according to the Fresnel term. `f0_color` is an RGB color, involving the complementary to specular color. To avoid inverse colors and ensure energy conservation, the RGB color is converted to scalar via `max(r, g, b)`:
+
+```
+function max_value(vec3 color) {
+    return max(color.r, color.g, color.b)
+}
+```
+
+The following images show specular color increasing from [0,0,0] to [1,1,1] (top) and from [0,0,0] to [1,0,0] (bottom).
 
 ![](figures/specular-color.png)
 ![](figures/specular-color-2.png)
@@ -122,31 +135,25 @@ function fresnel_mix(f0_color, ior, weight, base, layer) {
   f0 = ((1-ior)/(1+ior))^2 * f0_color
   f0 = min(f0, float3(1.0))
   fr = f0 + (1 - f0)*(1 - abs(VdotH))^5
-  return mix(base, layer, weight * fr)
+  return (1 - weight * max_value(fr)) * base + weight * fr * layer
 }
 ```
 
-Therefore, the Fresnel term `F` in the final BRDF of the material changes to
+Therefore, the Fresnel term `dielectric_fresnel` in the final BRDF of the material changes to
 
 ```
-dielectricSpecularF0  = min(0.04 * specularColorFactor * specularColorTexture.rgb, float3(1.0)) *
-                        specularFactor * specularTexture.a
-dielectricSpecularF90 = specularFactor * specularTexture.a
-
-F0  = lerp(dielectricSpecularF0, baseColor.rgb, metallic)
-F90 = lerp(dielectricSpecularF90, 1, metallic)
-
-F = F0 + (F90 - F0) * (1 - VdotH)^5
+dielectric_f0  = min(0.04 * specularColor, float3(1.0)) * specular
+dielectric_f90 = specular
+dielectric_fresnel = mix(dielectric_f0, dielectric_f90, fresnel_w)
 ```
 
-Note that in `dielectricSpecularF0` we clamp the product of specular color and f0 reflectance from IOR (`0.04`), before multiplying by specular.
+Note that in `dielectric_f0` we clamp the product of specular color and f0 reflectance from IOR (`0.04`), before multiplying by `specular`.
 
-In the diffuse component we have to account for the fact that `F` is now an RGB value.
+In the diffuse component we have to account for the fact that `dielectric_fresnel` is now an RGB value. Thus we redefine `dielectric_brdf` as follows:
 
 ```
-c_diff = lerp(baseColor.rgb, black, metallic)
-diffuse = c_diff / PI
-f_diffuse = (1 - max(F.r, F.g, F.b)) * diffuse
+dielectric_fresnel_max = max_value(dielectric_fresnel)
+dielectric_brdf = dielectric_fresnel * specular_brdf + (1 - dielectric_fresnel_max) * diffuse_brdf
 ```
 
 ## Interaction with other extensions
@@ -154,13 +161,13 @@ f_diffuse = (1 - max(F.r, F.g, F.b)) * diffuse
 If `KHR_materials_ior` is used in combination with `KHR_materials_specular`, the constant `0.04` is replaced by the value computed from the IOR.
 
 ```
-dielectricSpecularF0 = min(((ior - outside_ior) / (ior + outside_ior))^2 * specularColorFactor * specularColorTexture.rgb, float3(1.0)) * specularFactor * specularTexture.a
-dielectricSpecularF90 = specularFactor * specularTexture.a
+dielectric_f0 = min(((ior - outside_ior) / (ior + outside_ior))^2 * specularColor, float3(1.0)) * specular
+dielectric_f90 = specular
 ```
 
 `outside_ior` is typically set to 1.0, the index of refraction of air.
 
-If `KHR_materials_transmission` is used in combination with `KHR_materials_specular`, the ratio of transmission and reflection computed from the Fresnel term also depends on `dielectricSpecularF0` and `dielectricSpecularF90`. The following images show a thin, transmissive material.
+If `KHR_materials_transmission` is used in combination with `KHR_materials_specular`, the ratio of transmission and reflection computed from the Fresnel term also depends on `dielectric_f0` and `dielectric_f90`. The following images show a thin, transmissive material.
 
 Specular from 0 to 1:
 
@@ -171,7 +178,7 @@ Specular color from [0,0,0] to [1,1,1] (top) and [0,0,0] to [1,0,0]:
 ![](figures/specular-color-thin.png)
 ![](figures/specular-color-thin-2.png)
 
-If `KHR_materials_transmission` and `KHR_materials_volume` are used in combination with `KHR_materials_specular`, specular factor and specular color have no effect on the refraction angle. The direction of the refracted light ray is only based on the index of refraction defined in `KHR_materials_ior`. The ratio of transmission and reflection computed from the Fresnel term still depends on `dielectricSpecularF0` and `dielectricSpecularF90`. The following images show a refractive material.
+If `KHR_materials_transmission` and `KHR_materials_volume` are used in combination with `KHR_materials_specular`, specular factor and specular color have no effect on the refraction angle. The direction of the refracted light ray is only based on the index of refraction defined in `KHR_materials_ior`. The ratio of transmission and reflection computed from the Fresnel term still depends on `dielectric_f0` and `dielectric_f90`. The following images show a refractive material.
 
 Specular from 0 to 1:
 
@@ -189,7 +196,7 @@ Specular color from [0,0,0] to [1,1,1] (top) and [0,0,0] to [1,0,0]:
 Material models that define F0 in terms of reflectance at normal incidence can be converted by encoding the reflectance in the specular color parameters. Typically, the reflectance ranges from 0% to 8%, given as a value in range [0,1], with 0.5 (=4%) being the default. F0 is computed from `reflectance` in the following way:
 
 ```
-dielectricSpecularF0 = 0.08 * reflectance
+dielectric_f0 = 0.08 * reflectance
 ```
 
 In contrast, `KHR_materials_specular` defines a constant factor of 0.04 to compute F0, as this corresponds to glTF's default IOR of 1.5. Therefore, by encoding an additional constant factor of 2 in `specularColorFactor`, we can convert from reflectance to specular color without any loss.
@@ -247,7 +254,7 @@ This makes it possible to add advanced effects like clearcoat (`KHR_materials_cl
 
 ## Schema
 
-- [glTF.KHR_materials_specular.schema.json](schema/glTF.KHR_materials_specular.schema.json)
+- [material.KHR_materials_specular.schema.json](schema/material.KHR_materials_specular.schema.json)
 
 ## Appendix: Full Khronos Copyright Statement
 

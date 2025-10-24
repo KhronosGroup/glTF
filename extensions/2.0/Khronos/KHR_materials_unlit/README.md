@@ -7,13 +7,13 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Contributors
 
-* Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)
-* Norbert Nopper, UX3D, <mailto:nopper@ux3d.io>
-* Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
-* Scott Nagy, Microsoft, [@visageofscott](https://twitter.com/visageofscott)
-* Pär Winzell, Facebook, [@zellski](https://twitter.com/zellski)
-* Michael Feldstein, Facebook, [@msfeldstein](https://twitter.com/msfeldstein)
-* Robert Long, Mozilla, [@arobertlong](https://twitter.com/arobertlong)
+- Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)
+- Norbert Nopper, UX3D, <mailto:nopper@ux3d.io>
+- Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
+- Scott Nagy, Microsoft, [@visageofscott](https://twitter.com/visageofscott)
+- Pär Winzell, Facebook, [@zellski](https://twitter.com/zellski)
+- Michael Feldstein, Facebook, [@msfeldstein](https://twitter.com/msfeldstein)
+- Robert Long, Mozilla, [@arobertlong](https://twitter.com/arobertlong)
 
 Copyright 2017-2018 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -33,11 +33,11 @@ materials, as an alternative to the Physically Based Rendering (PBR) shading
 models provided by the core specification. Three motivating uses cases for
 unlit materials include:
 
-* Mobile devices with limited resources, where unlit materials offer a
+- Mobile devices with limited resources, where unlit materials offer a
 performant alternative to higher-quality shading models.
-* Photogrammetry, in which lighting information is already present and
+- Photogrammetry, in which lighting information is already present and
 additional lighting should not be applied.
-* Stylized materials (such as "anime" or "hand-drawn" looks) in which lighting is
+- Stylized materials (such as "anime" or "hand-drawn" looks) in which lighting is
 undesirable for aesthetic reasons.
 
 These use cases are not mutually exclusive: artists may pick an unlit material
@@ -150,6 +150,10 @@ appropriate parameters on the default material.
 > **Implementation Note:** When `KHR_materials_unlit` is included with another
 > extension specifying a shading model on the same material, the result is
 > undefined.
+
+## Schema
+
+- [material.KHR_materials_unlit.schema.json](schema/material.KHR_materials_unlit.schema.json)
 
 ## Appendix: Full Khronos Copyright Statement
 

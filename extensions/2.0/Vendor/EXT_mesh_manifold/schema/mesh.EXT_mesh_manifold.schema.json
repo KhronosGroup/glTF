@@ -1,0 +1,41 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_mesh_manifold extension",
+    "type": "object",
+    "description": "glTF extension defines manifoldness for a mesh.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "manifoldPrimitive": {
+            "allOf": [
+                {
+                    "$ref": "mesh.primitive.schema.json"
+                }
+            ]
+        },
+        "mergeIndices": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of the accessor that contains the vertex sparse indices for merging into a manifold."
+        },
+        "mergeValues": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of the accessor that contains the vertex sparse values for merging into a manifold."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "manifoldPrimitive"
+    ]
+}

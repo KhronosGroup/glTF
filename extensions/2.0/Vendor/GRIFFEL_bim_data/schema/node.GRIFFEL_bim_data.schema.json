@@ -1,0 +1,34 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "GRIFFEL_bim_data Node Extension",
+    "type": "object",
+    "description": "References type and instance properties of the node and/or buffer where those properties can be found by node ID.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "bufferView": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "Index of the buffer view which points to the buffer with the data for this node."
+        },
+        "properties": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+                "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                "description": "Index of a property in the root level collection."
+            },
+            "minItems": 1,
+            "description": "Collection of indices which point to corresponding instance properties of the node. (Instance properties are unique to the node. They override the same type properties.)"
+        },
+        "type": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "Index of a type in the root level collection. (Type is a set of properties which are common for many nodes.)"
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "anyOf": [
+        { "required": [ "bufferView" ] },
+        { "required": [ "properties" ] },
+        { "required": [ "type" ] }
+    ]
+}

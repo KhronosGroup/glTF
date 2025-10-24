@@ -1,0 +1,45 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "$id": "functionCall.type.schema.json",
+    "title": "Type",
+    "type": "object",
+    "description": "MDL type describing either a built-in or user-defined type, or an array of a built-in or user-defined type.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "module": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The ID of the containing module.  This field **MUST NOT** be defined if a built-in type is specified."
+        },
+        "typeName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The unqualified name of the type."
+        },
+        "arraySize": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The array size. If this field is defined the type is considered to be a array."
+        },
+        "modifier": {
+            "anyOf": [
+                {
+                    "type": "string",
+                    "const": "varying"
+                },
+                {
+                    "type": "string",
+                    "const": "uniform"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "description": "The name of the type modifier."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "typeName"
+    ]
+}

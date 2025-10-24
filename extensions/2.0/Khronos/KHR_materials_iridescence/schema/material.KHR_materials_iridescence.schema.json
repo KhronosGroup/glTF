@@ -1,0 +1,48 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_iridescence glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines an iridescence effect.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "iridescenceFactor": {
+            "type": "number",
+            "description": "The iridescence intensity factor.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0
+        },
+        "iridescenceTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The iridescence intensity texture.",
+            "gltf_detailedDescription": "The iridescence intensity texture. The values are sampled from the R channel. These values are linear. If a texture is not given, a value of `1.0` **MUST** be assumed. If other channels are present (GBA), they are ignored for iridescence intensity calculations."
+        },
+        "iridescenceIor": {
+            "type": "number",
+            "description": "The index of refraction of the dielectric thin-film layer.",
+            "default": 1.3,
+            "minimum": 1.0
+        },
+        "iridescenceThicknessMinimum": {
+            "type": "number",
+            "description": "The minimum thickness of the thin-film layer given in nanometers.",
+            "default": 100.0,
+            "minimum": 0.0,
+            "gltf_detailedDescription": "The minimum thickness of the thin-film layer given in nanometers."
+        },
+        "iridescenceThicknessMaximum": {
+            "type": "number",
+            "description": "The maximum thickness of the thin-film layer given in nanometers.",
+            "default": 400.0,
+            "minimum": 0.0,
+            "gltf_detailedDescription": "The maximum thickness of the thin-film layer given in nanometers."
+        },
+        "iridescenceThicknessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The thickness texture of the thin-film layer.",
+            "gltf_detailedDescription": "The thickness texture of the thin-film layer to linearly interpolate between the minimum and maximum thickness given by the corresponding properties, where a sampled value of `0.0` represents the minimum thickness and a sampled value of `1.0` represents the maximum thickness. The values are sampled from the G channel. These values are linear. If a texture is not given, the maximum thickness **MUST** be assumed. If other channels are present (RBA), they are ignored for thickness calculations."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

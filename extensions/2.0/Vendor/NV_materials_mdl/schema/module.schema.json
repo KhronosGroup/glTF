@@ -1,0 +1,46 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "$id": "module.schema.json",
+    "title": "Module",
+    "type": "object",
+    "description": "An MDL module.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "uri": {
+            "type": "string",
+            "description": "The URI (or IRI) of the MDL module.",
+            "format": "iri-reference",
+            "gltf_detailedDescription": "The URI (or IRI) of the MDL module.  Relative paths are relative to the current glTF asset.  Instead of referencing an external file, this field **MAY** contain a `data:`-URI. This field **MUST NOT** be defined when `bufferView` is defined."
+        },
+        "bufferView": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The ID of the bufferView containing the MDL module.  This field **MUST NOT** be defined if `uri` is defined."
+        },
+        "mimeType": {
+            "anyOf": [
+                {
+                    "type": "string",
+                    "const": "application/vnd.mdl"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "description": "The MDL module's media type.  This field **MUST** be defined when `bufferView` is defined."
+        },
+        "modulePath": {
+            "type": "string",
+            "description": "Relative path of the module.  This field **MUST** be defined if `bufferView` is defined or `uri` is defined and contains a data-URI, otherwise this field **MUST NOT** be defined."
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "dependencies": {
+        "bufferView": [ "mimeType", "modulePath" ]
+    },
+    "oneOf": [
+        { "required": [ "uri" ] },
+        { "required": [ "bufferView" ] }
+    ]
+}

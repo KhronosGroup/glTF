@@ -1,0 +1,33 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title" : "MPEG_buffer_circular",
+    "type" : "object",
+    "description": "In order to support timed data access, the buffer element is extended to provide functionality of a circular buffer. The `MPEG_buffer_circular` may be included as part of the `buffer`. `buffer` that provides access to timed data shall include the `MPEG_buffer_circular` extension.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json"} ],
+    "properties" : {
+        "count": {
+            "type": "integer",
+            "default": 2,
+            "minimum": 2,
+            "description": "This provides the recommended number of sequential buffer frames.",
+            "gltf_detailedDescription": "The count field provides the recommended number of sequential buffer frames to be offered by a circular buffer to the presentation engine. This information may be used by the application to setup the circular buffer towards the presentation engine."
+        },
+        "media": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the media entry in the `MPEG_media` extension",
+            "gltf_detailedDescription": "Index of the media entry in the `MPEG_media` extension, which is used as the source for the input data to the buffer."
+        },
+        "tracks": {
+            "type": "array",
+            "items": {
+                "allOf": [ { "$ref": "glTFid.schema.json" } ]
+            },
+            "minItems": 1,
+            "description": "The array of indices of tracks the `MPEG_media` entry.",
+            "gltf_detailedDescription": "The array of indices of a track of a media entry, indicated by media and listed by `MPEG_media` extension, used as the source for the input data to this buffer. When tracks element is not present, the media pipeline should perform the necessary processing of all tracks of the `MPEG_media` entry, referenced by the media property, to generate the requested data format of the buffer. When tracks array contains multiple tracks, the media pipeline should perform the necessary processing of all referenced tracks to generate the requested data format of the buffer. If the track attribute is present and there are multiple `alternatives` (i.e. indicating equivalent content) in the referenced media, then the selected track shall be present in all alternatives. When more than one track is listed by tracks element, the corresponding buffer is in active state and the application is informed that the corresponding tracks are needed as source for the input buffer, then the application can optimize the delivery of multiple tracks."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [ "media" ]
+}

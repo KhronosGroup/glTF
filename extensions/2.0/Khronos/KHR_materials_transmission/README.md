@@ -7,15 +7,15 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Contributors <!-- omit in toc -->
 
-* Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
-* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
-* Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
-* Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
-* Emmett Lalish, Google [@elalish](https://github.com/elalish)
-* Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
-* Alex Wood, AGI [@abwood](https://twitter.com/abwood)
-* Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
-* Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+- Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
+- Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
+- Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
+- Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
+- Emmett Lalish, Google [@elalish](https://github.com/elalish)
+- Ed Mackey, AGI [@emackey](https://github.com/emackey)
+- Alex Wood, AGI [@abwood](https://github.com/abwood)
+- Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
+- Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
 
 Copyright 2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -48,8 +48,8 @@ Written against the glTF 2.0 spec.
 
 ## Exclusions
 
-* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
-* This extension must not be used on a material that also uses `KHR_materials_unlit`. 
+- This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+- This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Overview
 
@@ -88,15 +88,15 @@ materials: [
 ]
 ```
 
-## Properties 
-Only two properties are introduced with this extension and combine to describe a single value; the percentage of light that is transmitted through the surface of the material. These properties work together with the existing properties of the material to define the way light is modified as it passes through the substance. 
+## Properties
+Only two properties are introduced with this extension and combine to describe a single value; the percentage of light that is transmitted through the surface of the material. These properties work together with the existing properties of the material to define the way light is modified as it passes through the substance.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**transmissionFactor** | `number` | The base percentage of light that is transmitted through the surface.| No, Default: `0.0 ` |
 |**transmissionTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A texture that defines the transmission percentage of the surface, stored in the `R` channel. This will be multiplied by `transmissionFactor`. | No |
 
-### transmissionFactor 
+### transmissionFactor
 The amount of light that is transmitted by the surface rather than diffusely re-emitted. This is a percentage of all the light that penetrates a surface (i.e. isn’t specularly reflected) rather than a percentage of the total light that hits a surface. A value of 1.0 means that 100% of the light that penetrates the surface is transmitted through.
 
 <figure>
@@ -104,7 +104,7 @@ The amount of light that is transmitted by the surface rather than diffusely re-
 <figcaption><em>Yellow baseColor with transmissionFactor = 1.0.</em></figcaption>
 </figure>
 
-### transmissionTexture 
+### transmissionTexture
 The `R` channel of this texture defines the amount of light that is transmitted by the surface rather than diffusely re-emitted. A value of 1.0 in the red channel means that 100% of the light that penetrates the surface (i.e. isn’t specularly reflected) is transmitted through. The value is linear and is multiplied by the transmissionFactor to determine the total transmission value.
 
 <figure>
@@ -127,7 +127,7 @@ Since the surface is considered to be infinitely thin, we will ignore macroscopi
 </figure>
 
 ## Blend Mode
-The glTF `blendMode` is used for alpha-as-coverage, NOT for physically-based transparency (i.e. this extension). If alpha-as-coverage is not being used, the blend mode of the material should be set to "OPAQUE" even though it is transparent. Again, it's helpful to think of alpha-as-coverage as whether the physical surface is there or not. `transmission` applies to the surface material that exists.
+The glTF `alphaMode` is used for alpha-as-coverage, NOT for physically-based transparency (i.e. this extension). If alpha-as-coverage is not being used, the blend mode of the material should be set to "OPAQUE" even though it is transparent. Again, it's helpful to think of alpha-as-coverage as whether the physical surface is there or not. `transmission` applies to the surface material that exists.
 Note that alpha-as-coverage can still be used along with transmission as shown in the example below.
 <figure>
   <img src="./figures/TransmissionWithMask.png"/>
@@ -180,43 +180,57 @@ Optical transparency does not require any changes whatsoever to the specular ter
 
 The specular transmission `specular_btdf(α)` is a microfacet BTDF
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBTDF} = \frac{G_T D_T}{4 \, \left|N \cdot L \right| \, \left| N \cdot V \right|}">
+$$
+\text{MicrofacetBTDF} = \frac{G_T D_T}{4 \left|N \cdot L \right| \left| N \cdot V \right|}
+$$
 
 with the Trowbridge-Reitz/GGX microfacet distribution
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle D_T = \frac{\alpha^2 \, \chi^%2B(N \cdot H_T)}{\pi ((N \cdot H_T)^2 (\alpha^2 - 1) %2B 1)^2}">
+$$
+D_T = \frac{\alpha^2 \chi^+(N \cdot H_T)}{\pi ((N \cdot H_T)^2 (\alpha^2 - 1) + 1)^2}
+$$
 
 and the separable form of the Smith joint masking-shadowing function
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle G_T = \frac{2 \, \left| N \cdot L \right| \, \chi^%2B\left(\frac{H_T \cdot L}{N \cdot L}\right)}{\left| N \cdot L \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{2 \, \left| N \cdot V \right| \, \chi^%2B\left(\frac{H_T \cdot V}{N \cdot V}\right)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}">,
+$$
+G_T = \frac{2 \left| N \cdot L \right| \chi^+\left(\frac{H_T \cdot L}{N \cdot L}\right)}{\left| N \cdot L \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2}} \frac{2 \left| N \cdot V \right| \chi^+\left(\frac{H_T \cdot V}{N \cdot V}\right)}{\left| N \cdot V \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
+$$
 
-using the transmission half vector *H*<sub>*T*</sub>
+using the transmission half vector $H_T$
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle H_T = \text{normalize}(V %2B \, 2 \, \left| N \cdot L \right| \, N %2B L)">.
+$$
+H_T = \text{normalize}(V - 2 \left( N \cdot L \right) N + L)
+$$
 
-With the step function χ<sup>+</sup> we ensure that the microsurface is only visible for directions that are on the same side of the macro and microsurfaces. Macro and microsurfaces are oriented according to *N* and *H*<sub>*T*</sub>, respectively.
+With the step function $\chi^+$ we ensure that the microsurface is only visible for directions that are on the same side of the macro and microsurfaces. Macro and microsurfaces are oriented according to $N$ and $H_T$, respectively.
 
 Introducing the visibility function
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle V_T = \frac{G_T}{4 \, \left| N \cdot L \right| \, \left| N \cdot V \right|}">
+$$
+\nu_T = \frac{G_T}{4 \left| N \cdot L \right| \left| N \cdot V \right|}
+$$
 
 simplifies the original microfacet BTDF to
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle \text{MicrofacetBTDF} = V_T D_T">
+$$
+\text{MicrofacetBTDF} = \nu_T D_T
+$$
 
 with
 
-<img src="https://render.githubusercontent.com/render/math?math=\displaystyle V_T = \frac{\, \chi^%2B\left(\frac{H_T \cdot L}{N \cdot L}\right)}{\left| N \cdot L\right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^%2B\left(\frac{H_T \cdot V}{N \cdot V}\right)}{\left| N \cdot V \right| %2B \sqrt{\alpha^2 %2B (1 - \alpha^2) (N \cdot V)^2}}">.
+$$
+\nu_T = \frac{\chi^+\left(\frac{H_T \cdot L}{N \cdot L}\right)}{\left| N \cdot L\right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2}} \frac{\chi^+\left(\frac{H_T \cdot V}{N \cdot V}\right)}{\left| N \cdot V \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
+$$
 
 Thus we have the function
 
 ```
 function specular_btdf(α) {
-  return V_T * D_T
+  return Vis_T * D_T
 }
 ```
 
-Rendering transparency in a real-time rasterizer in an efficient manner is a difficult problem, especially when an arbitrary number of transparent polygons may be overlapping in view. This is because rendering transparency is order-dependent (i.e. we see background objects through foreground objects) and also because the rendering of absorption and reflections involves two distinct blend operations. Consequently, it may not be possible on the target platform to render every transparent polygon in the correct order, in a reasonable time, and with the correct blending. Therefore, correct ordering is not an absolute requirement when implementing this extension in realtime renderers, nor is rendering all potentially overlapping layers. 
+Rendering transparency in a real-time rasterizer in an efficient manner is a difficult problem, especially when an arbitrary number of transparent polygons may be overlapping in view. This is because rendering transparency is order-dependent (i.e. we see background objects through foreground objects) and also because the rendering of absorption and reflections involves two distinct blend operations. Consequently, it may not be possible on the target platform to render every transparent polygon in the correct order, in a reasonable time, and with the correct blending. Therefore, correct ordering is not an absolute requirement when implementing this extension in realtime renderers, nor is rendering all potentially overlapping layers.
 
 Various techniques are available to trade off physical accuracy against realtime performance requirements in client implementations. This extension does not mandate any particular technique. However, be aware that the simplest such technique — transmitting only the IBL and no scene objects — will often fall short of what a model's author intended. We recommend that client implementations aim to display at least opaque objects through a transmissive material. When that is not feasible, it may be preferable to fall back to simple alpha blending with 0 < alpha < 1.
 
@@ -227,16 +241,16 @@ Various techniques are available to trade off physical accuracy against realtime
 
 ## Schema
 
-- [glTF.KHR_materials_transmission.schema.json](schema/glTF.KHR_materials_transmission.schema.json)
+- [material.KHR_materials_transmission.schema.json](schema/material.KHR_materials_transmission.schema.json)
 
 ## Reference
 
-[Autodesk Standard Surface - Specular Transmission](https://autodesk.github.io/standard-surface/#closures/speculartransmission)  
-[Blender Transparent BSDF](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/transparent.html#transparent-bsdf)  
-[Enterprise PBR Shading Model - Dielectric BSDF for Transparent Surfaces](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2022x.md.html#components/core/dielectricbsdffortransparentsurfaces)
-[Filament Material models - Transmission](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/transmission)  
-[Unreal Engine 4 Material - Refraction](https://docs.unrealengine.com/en-US/Engine/Rendering/Materials/MaterialInputs/index.html#refraction)  
-[Adobe Standard Material - Interior Properties](https://helpx.adobe.com/dimension/using/standard-materials.html#InteriorProperties)
+- [Autodesk Standard Surface - Specular Transmission](https://autodesk.github.io/standard-surface/#closures/speculartransmission)
+- [Blender Transparent BSDF](https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/transparent.html#transparent-bsdf)
+- [Enterprise PBR Shading Model - Dielectric BSDF for Transparent Surfaces](https://dassaultsystemes-technology.github.io/EnterprisePBRShadingModel/spec-2022x.md.html#components/core/dielectricbsdffortransparentsurfaces)
+- [Filament Material models - Transmission](https://google.github.io/filament/Materials.md.html#materialmodels/litmodel/transmission)
+- [Unreal Engine 4 Material - Refraction](https://docs.unrealengine.com/en-US/Engine/Rendering/Materials/MaterialInputs/index.html#refraction)
+- [Adobe Standard Material - Interior Properties](https://helpx.adobe.com/dimension/using/standard-materials.html#InteriorProperties)
 
 ## Appendix: Full Khronos Copyright Statement
 
