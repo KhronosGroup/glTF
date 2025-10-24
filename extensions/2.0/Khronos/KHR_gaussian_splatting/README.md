@@ -165,10 +165,9 @@ Additional values can be added over time by defining an extension that adds new 
 | --- | --- |
 | BT.709-srgb | BT.709 sRGB color space. (Default) |
 | BT.709-linear | BT.709 linear color space. |
-| BT.2020-itu | BT.2020-ITU color space. |
-| BT.2020-hlg | BT.2020 HLG (Hybrid Log-Gamma) color space. |
-| BT.2020-pq | BT.2020 PQ (Perceptual Quantizer) color space. |
+| BT.2020-ITU | BT.2020-ITU color space. |
 | BT.2020-linear | BT.2020 linear color space. |
+| BT.2100-HLG | BT.2100 HLG (Hybrid Log-Gamma) color space. |
 | Display-P3 | Display P3 color space. |
 
 ### Projection
