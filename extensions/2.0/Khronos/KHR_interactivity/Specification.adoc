@@ -2069,6 +2069,47 @@ Since this operation is a shortcut for the combination of arithmetic and exponen
 This operation implies that both input vectors are normalized. A `math/normalize` node could be added to handle non-normalized inputs.
 ====
 
+===== Quaternion From Up and Forward Directional Vectors
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/quatFromUpForward` | Create a quaternion from the specified up and forward directions
+.2+| Input value sockets
+d| `float3 up` | Up direction
+d| `float3 forward` | Forward direction
+| Output value sockets
+| `float4 value` | Rotation quaternion
+|===
+
+[CAUTION]
+====
+This node assumes that both input directions are unit.
+====
+
+The `value` output socket value is computed as follows:
+
+1. Let latexmath:[\vec{y}] be a three-component vector corresponding to the `up` input socket value and latexmath:[\vec{r}] be a three-component vector corresponding to the `forward` input socket value.
+2. If latexmath:[\vec{y}] and latexmath:[\vec{r}] are colinear within an implementation-defined threshold,
+.. let latexmath:[\vec{s}] be a three-component unit vector representing a direction perpendicular to latexmath:[\vec{r}].
+3. Else
+.. let latexmath:[\vec{s}] be the normalized cross product of latexmath:[\vec{y}] and latexmath:[\vec{r}].
+4. Let latexmath:[\vec{t}] be the cross product of latexmath:[\vec{r}] and latexmath:[\vec{s}].
+5. Let latexmath:[M] be a rotation matrix composed as follows:
++
+[stem]
++++++
+M = ((s_x, t_x, r_x),
+     (s_y, t_y, r_y),
+     (s_z, t_z, r_z))
++++++
+6. Set the `value` output value to the unit quaternion corresponding to the rotation matrix stem:[M].
+
+[TIP]
+.Authoring Tip
+====
+This operation implies that both input vectors are normalized. A `math/normalize` node could be added to handle non-normalized inputs.
+====
+
 ==== Swizzle Nodes
 
 ===== Combine
