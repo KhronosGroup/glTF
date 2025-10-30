@@ -17,7 +17,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension allows to control visibility of node hierarchies. It is intended for use in conjunction with `KHR_animation_pointer` and/or interactivity extensions.
+This extension allows to control visibility of node hierarchies. It is intended for use in conjunction with `KHR_animation_pointer` and/or interactivity extensions but can also be used on its own.
 
 ## Extending Nodes
 
