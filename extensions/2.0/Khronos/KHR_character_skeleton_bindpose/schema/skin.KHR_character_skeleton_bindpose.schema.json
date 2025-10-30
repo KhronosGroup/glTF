@@ -1,0 +1,41 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_character_skeleton_bindpose glTF Skin Extension",
+    "type": "object",
+    "description": "glTF extension that defines a canonical bind pose for the character's skeleton applied to individual skins.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "poseType": {
+            "type": "string",
+            "description": "The type of pose this bind pose represents.",
+            "enum": ["TPose", "APose", "Custom"],
+            "default": "TPose"
+        },
+        "bindPoses": {
+            "type": "array",
+            "description": "Array of bind pose matrices corresponding directly to the skin's joints array. Each entry at index i corresponds to the joint at joints[i].",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "matrix": {
+                        "type": "array",
+                        "description": "Column-major 4x4 matrix defining the joint's bind pose in model space.",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 16,
+                        "maxItems": 16
+                    }
+                },
+                "required": ["matrix"],
+                "additionalProperties": false
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "bindPoses"
+    ]
+}
