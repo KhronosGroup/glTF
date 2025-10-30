@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_node_visibility glTF Node Extension",
+    "type": "object",
+    "description": "glTF extension that defines node's visibility.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "visible": {
+            "type": "boolean",
+            "description": "Specifies whether the node is visible.",
+            "default": true,
+            "gltf_detailedDescription": "Specifies whether the node is visible. A value of false means that the node and all its children are hidden."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
