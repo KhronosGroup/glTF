@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KHR_gaussian_splatting glTF Mesh Primitive Extension",
+  "type": "object",
+  "description": "Data defining a 3D Gaussian Splat primitive.",
+  "allOf": [
+    {
+      "$ref": "glTFProperty.schema.json"
+    }
+  ],
+  "properties": {
+    "kernel": {
+      "type": "string",
+      "description": "Optional property specifying parameters regarding the kernel used to generate the Gaussians. This property defaults to ellipse.",
+      "default": "ellipse"
+    },
+    "projection": {
+      "type": "string",
+      "description": "Optional property specifying how to project the Gaussians to achieve a perspective correct value. This property defaults to perspective.",
+      "default": "perspective",
+      "anyOf": [
+        {
+          "const": "perspective"
+        },
+        {
+          "const": "orthographic"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "sortingMethod": {
+      "type": "string",
+      "description": "Optional property specifying how to sort the Gaussians during rendering. This property defaults to cameraDistance.",
+      "default": "cameraDistance",
+      "anyOf": [
+        {
+          "const": "cameraDistance"
+        },
+        {
+          "const": "zDepth"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "colorSpace": {
+      "type": "string",
+      "description": "Optional property specifying the color space of the spherical harmonics. This property defaults to BT.709.",
+      "enum": [
+        "BT.709",
+        "BT.2020-ITU",
+        "BT.2020-HLG",
+        "BT.2020-PQ",
+        "Display-P3",
+        "linear"
+      ],
+      "default": "BT.709"
+    },
+    "extensions": {},
+    "extras": {}
+  }
+}
