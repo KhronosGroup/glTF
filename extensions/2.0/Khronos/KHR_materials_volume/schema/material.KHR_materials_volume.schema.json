@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "material.KHR_materials_volume.schema.json",
     "title": "KHR_materials_volume glTF Material Extension",
     "type": "object",
     "description": "glTF extension that defines the parameters for the volume of a material.",
@@ -19,8 +20,7 @@
         },
         "attenuationDistance": {
             "type": "number",
-            "minimum": 0.0,
-            "exclusiveMinimum": true,
+            "exclusiveMinimum": 0.0,
             "description": "Average distance that light travels in the medium before interacting with a particle.",
             "gltf_detailedDescription": "Density of the medium given as the average distance that light travels in the medium before interacting with a particle. The value is given in world space. When undefined, the value is assumed to be infinite."
         },
