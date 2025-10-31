@@ -14,7 +14,7 @@
             },
             "description": "Indices of the perceptions of the media that shall be rendered. If the list is empty, all perceptions shall be rendered."
         },
-        "haptic_modality": {
+        "hapticModality": {
             "type": "array",
             "enum": [0,1,2,3,4,5],
             "items": {
@@ -24,7 +24,7 @@
             "gltf_detailedDescription": "Value is oneOf Stiffness = 0, Friction = 1,Vibrotactile Texture = 2, Temperature = 3,Vibration = 4, Custom = 5"
 
         },
-        "haptic_control": {
+        "hapticControl": {
             "type": "integer",
             "enum": [0,1,2,3],
             "default": 0,
@@ -38,7 +38,7 @@
         }
     },
     "required": [
-        "media_index",
-        "perception_indices"
+        "mediaIndex",
+        "perceptionIndices"
     ]
 }

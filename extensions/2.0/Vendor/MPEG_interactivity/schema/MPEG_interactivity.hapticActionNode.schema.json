@@ -7,7 +7,11 @@
             "type": "integer",
             "description": "Index of the node in the nodes array to launch their haptic feedbacks"
         },
-        "material_haptic_modality": {
+        "hapticObject": {
+            "type": "integer",
+            "description": "Index to a haptic object in the hapticObjects array of the MPEG_haptic extension."
+        },
+        "materialHapticModality": {
             "type": "array",
             "items": {
                 "type": "integer",
@@ -31,7 +35,7 @@
             "default": false,
             "description": "Used with a Collision trigger. If True, the rendering engine shall use collision information to estimate the desired location of the haptic feedback on the body. If false, the signal shall be rendered based on the information specified in the Haptic file.."
         },
-        "haptic_action_medias": {
+        "hapticActionMedias": {
             "description": "List of haptic medias that shall be rendered with their associated properties.",
             "type": "array",
             "items": {
@@ -42,6 +46,6 @@
     },
     "required": [
         "node",
-        "haptic_action_medias"
+        "hapticActionMedias"
     ]
 }
