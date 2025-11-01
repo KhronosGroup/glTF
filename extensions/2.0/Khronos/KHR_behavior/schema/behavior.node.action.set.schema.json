@@ -1,0 +1,24 @@
+{
+    "title": "Set Value Node",
+    "properties": {
+        "type": {
+            "const": "action/set"
+        },
+        "flow": {
+            "type": "object",
+            "properties": {
+                "next": { "$ref": "behavior.types.flow.schema.json" }
+            }
+        },
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "target": { "$ref": "behavior.types.pointer.schema.json" },
+                "value": { "$ref": "behavior.types.any.schema.json"}
+            },
+            "required": ["target", "value"]
+        }
+    },
+    "sockets": [],
+    "required": ["type", "parameters"]
+}
