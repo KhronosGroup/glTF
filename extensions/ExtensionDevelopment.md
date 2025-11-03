@@ -119,6 +119,9 @@ Extensions can introduce new vertex attributes for mesh primitives. In order to 
 }
 ```
 
+When an extension allows the definition of new attributes, then the names of attributes that are defined in the scope of the extension MUST also be prefixed by the full, case-sensitive name of the extension, followed by a `:` colon. When the suffix of the attribute name starts with an `_` underscore, then this attribute is considered to be application-specific and not in the scope of the extension itself. For example, when an extension that is called `EXT_example_extension` allows the creation of domain-specific attributes, then such an attribute could be called `EXT_example_extension:EXAMPLE_ATTRIBUTE_10`. A name like `EXT_example_extension:_APPLICATION_DATA` would indicate application-specific data that is not governed by the extension itself.
+
+
 #### Extension declarations
 
 All extensions used in a glTF asset are listed as strings in the top-level `extensionsUsed` array; all _required_ extensions are listed as strings in the top-level `extensionsRequired` array, e.g.,
