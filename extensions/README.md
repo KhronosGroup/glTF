@@ -112,6 +112,9 @@ Vendor extensions are not covered by the Khronos IP framework.
 * [MSFT_packing_occlusionRoughnessMetallic](2.0/Vendor/MSFT_packing_occlusionRoughnessMetallic/README.md)
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 * [NV_materials_mdl](2.0/Vendor/NV_materials_mdl/README.md)
+* [OMI_physics_body](2.0/Vendor/OMI_physics_body/README.md)
+* [OMI_physics_joint](2.0/Vendor/OMI_physics_joint/README.md)
+* [OMI_physics_shape](2.0/Vendor/OMI_physics_shape/README.md)
 
 The list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any vendor, not just Khronos members, can request an extension prefix by submitting an [issue on GitHub](https://github.com/KhronosGroup/glTF/issues/new) requesting one.  Requests should include:
 
