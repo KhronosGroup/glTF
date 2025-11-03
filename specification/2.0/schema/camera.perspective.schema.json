@@ -28,9 +28,7 @@
             "description": "The floating-point distance to the near clipping plane.",
             "exclusiveMinimum": 0.0,
             "gltf_detailedDescription": "The floating-point distance to the near clipping plane."
-        },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "yfov", "znear" ]
 }
