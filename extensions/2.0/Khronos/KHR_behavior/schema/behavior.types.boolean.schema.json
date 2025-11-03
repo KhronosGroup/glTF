@@ -1,0 +1,11 @@
+{
+    "title": "Boolean Value",
+    "oneOf": [
+        {
+            "type": "boolean"
+        },
+        {
+            "$ref": "behavior.types.reference.schema.json"
+        }
+    ]
+}

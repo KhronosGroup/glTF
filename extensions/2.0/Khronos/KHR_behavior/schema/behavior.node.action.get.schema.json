@@ -1,0 +1,23 @@
+{
+    "title": "Get Value Node",
+    "properties": {
+        "type": {
+            "const": "action/get"
+        },
+        "flow": {
+            "type": "object",
+            "properties": {
+                "next": { "$ref": "behavior.types.flow.schema.json" }
+            }
+        },
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "source": { "$ref": "behavior.types.pointer.schmea.json" }
+            },
+            "required": ["source"]
+        }
+    },
+    "sockets": ["result"],
+    "required": ["type", "parameters"]
+}
