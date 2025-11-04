@@ -49,15 +49,18 @@
     "colorSpace": {
       "type": "string",
       "description": "Optional property specifying the color space of the spherical harmonics. This property defaults to BT.709.",
-      "enum": [
-        "BT.709",
-        "BT.2020-ITU",
-        "BT.2020-HLG",
-        "BT.2020-PQ",
-        "Display-P3",
-        "linear"
-      ],
-      "default": "BT.709"
+      "default": "BT.709-sRGB",
+      "anyOf": [
+        {
+          "const": "BT.709-sRGB"
+        },
+        {
+          "const": "BT.709-linear"
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "extensions": {},
     "extras": {}

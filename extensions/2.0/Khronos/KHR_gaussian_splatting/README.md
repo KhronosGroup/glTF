@@ -1,3 +1,8 @@
+<!--
+Copyright 2015-2025 The Khronos Group Inc.
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # KHR\_gaussian\_splatting
 
 ## Contributors
@@ -88,7 +93,7 @@ Example shown below including optional attributes and properties. This extension
         "extensions": {
             "KHR_gaussian_splatting": {
                 "kernel": "ellipse",
-                "colorSpace": "BT.709",
+                "colorSpace": "BT.709-sRGB",
                 "sortingMethod": "cameraDistance",
                 "projection": "perspective"
             }
@@ -153,22 +158,18 @@ For example, a new extension `EXT_gaussian_splatting_kernel_customShape` could b
 
 ### Color Space
 
-The `colorSpace` property is an optional property that specifies the color space of the 3D Gaussian Splat when spherical harmonics are being used for the lighting. The color space is typically determined by the training process for the splats. The default value is `BT.709` to align with the base glTF specification. This color space value only applies to the 3D Gaussian splatting data and does not affect any other color data in the glTF.
+The `colorSpace` property is an optional property that specifies the color space of the 3D Gaussian Splat when spherical harmonics are being used for the lighting. The color space is typically determined by the training process for the splats. The default value is `BT.709-sRGB` to align with the base glTF specification. This color space value only applies to the 3D Gaussian splatting data and does not affect any other color data in the glTF.
 
-Renderers may ignore this property and assume `BT.709` based on their implementation's capabilities. When a renderer does not support the specified color space, it may clamp to the `BT.709` color space, but this may cause quality issues for the 3D Gaussian splatting data.
+Renderers may ignore this property and assume `BT.709-sRGB` based on their implementation's capabilities. When a renderer does not support the specified color space, it may clamp to the `BT.709-sRGB` color space, but this may cause quality issues for the 3D Gaussian splatting data. When possible, renderers are encouraged to tone map values to the sRGB color space for display alongside other elements of the glTF.
 
-Additional values can be added over time by defining an extension that adds new color spaces.
+Additional values can be added over time by defining extensions to add new color spaces.
 
 #### Available Color Spaces
 
 | Color Space | Description |
 | --- | --- |
-| BT.709-srgb | BT.709 sRGB color space. (Default) |
+| BT.709-sRGB | BT.709 sRGB color space. (Default) |
 | BT.709-linear | BT.709 linear color space. |
-| BT.2020-ITU | BT.2020-ITU color space. |
-| BT.2020-linear | BT.2020 linear color space. |
-| BT.2100-HLG | BT.2100 HLG (Hybrid Log-Gamma) color space. |
-| Display-P3 | Display P3 color space. |
 
 ### Projection
 
