@@ -89,7 +89,6 @@ Example shown below including optional attributes and properties. This extension
             "KHR_gaussian_splatting:SH_DEGREE_1_COEF_2": 8
         },
         "mode": 0,
-        "indices": 9,
         "extensions": {
             "KHR_gaussian_splatting": {
                 "kernel": "ellipse",
