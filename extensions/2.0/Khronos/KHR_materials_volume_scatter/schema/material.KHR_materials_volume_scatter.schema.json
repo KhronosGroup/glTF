@@ -18,6 +18,11 @@
             "description": "The multi-scatter albedo.",
             "gltf_detailedDescription": "The perceived color of the volume medium due to scattering (not absorption) after many scattering events."
         },
+        "multiscatterColorTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The multi-scatter albedo (RGB) texture.",
+            "gltf_detailedDescription": "The multi-scatter albedo (RGB) texture. Stored in channel RGB, the multi-scatter albedo is in sRGB transfer function."
+        },
         "scatterAnisotropy": {
             "type": "number",
             "minimum": -1.0,

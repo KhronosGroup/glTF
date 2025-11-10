@@ -67,10 +67,11 @@ The scattering properties are defined by adding the `KHR_materials_volume_scatte
 
 The extension defines the following parameters to describe the scattering behavior.
 
-|                       | Type        | Description                                         | Required                 |
-|-----------------------|-------------|-----------------------------------------------------|--------------------------|
-| **multiscatterColor** | `number[3]` | The multi-scatter albedo.                           | No, default: `[0, 0, 0]` |
-| **scatterAnisotropy** | `number`    | The anisotropy of scatter events. Range is (-1, 1). | No, default: `0`         |
+|                              | Type                                                                                                 | Description                                                                                                   | Required                 |
+|------------------------------|------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|--------------------------|
+| **multiscatterColor**        | `number[3]`                                                                                          | The multi-scatter albedo.                                                                                     | No, default: `[0, 0, 0]` |
+| **multiscatterColorTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A surface texture sets the multi-scatter albedo at the volume's entry point, replacing the multiscatterColor. | No                       |
+| **scatterAnisotropy**        | `number`                                                                                             | The anisotropy of scatter events. Range is (-1, 1).                                                           | No, default: `0`         |
 
 ## Scattering
 
@@ -129,6 +130,13 @@ $$
 <img src="./figures/diffuse-sss.png"/>
 <figcaption><em>A simple, diffuse-only material (left) and a material that uses dense volume scattering (right). The base color of the diffuse material is set to the same color as the scatter color of the scattering material. Due to the multi-scatter albedo mapping the final color of the object is very similar.</em></figcaption>
 </figure>
+
+#### Multi-Scatter Color Texture
+
+The multi-scatter color is a volume property, so using a 2D surface to specify its values is physically nonsensical. However, other material models allow this texturing for added artistic flexibility. To ensure compatibility with these models, we also permit texturing of this parameter.
+
+> [!NOTE]
+> Applying a 2D surface texture to a volume property introduces ambiguity, as each texture pixel competes to define the volume's multi-scatter albedo. In path tracing, paths can be traced from either the eye or the light source. Ideally, this should not affect the outcome due to the principle of reciprocity in physics-based path tracing. However, using the multi-scatter color texture violates this assumption, causing the volume integration result to vary based on view and light directions.
 
 ### Phase Function
 
