@@ -159,9 +159,11 @@ For example, a new extension `EXT_gaussian_splatting_kernel_customShape` could b
 
 The `colorSpace` property is an optional property that specifies the color space of the 3D Gaussian Splat when spherical harmonics are being used for the lighting. The color space is typically determined by the training process for the splats. The default value is `BT.709-sRGB` to align with the base glTF specification. This color space value only applies to the 3D Gaussian splatting data and does not affect any other color data in the glTF.
 
-Renderers may ignore this property and assume `BT.709-sRGB` based on their implementation's capabilities. When a renderer does not support the specified color space, it may clamp to the `BT.709-sRGB` color space, but this may cause quality issues for the 3D Gaussian splatting data. When possible, renderers are encouraged to tone map values to the sRGB color space for display alongside other elements of the glTF.
+Renderers may ignore this property and assume `BT.709-sRGB` based on their implementation's capabilities. When a renderer does not support the specified color space, it may clamp to the `BT.709-sRGB` color space, but this may cause quality issues for the 3D Gaussian splatting data. When possible, renderers are encouraged to tone map blended values to the sRGB color space for display alongside other elements of the glTF.
 
 Additional values can be added over time by defining extensions to add new color spaces.
+
+*_Non-normative Note:_* The `BT.709-sRGB` color space assumes the 3D Gaussian splats have been trained with sRGB blending and gamma correction. This can cause issues with blending when many splats participate in blending for a pixel. Training processes should consider using `BT.709-linear` for better blending results.
 
 #### Available Color Spaces
 
