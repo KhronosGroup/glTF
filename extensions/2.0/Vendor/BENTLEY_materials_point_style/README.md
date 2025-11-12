@@ -35,7 +35,7 @@ For each point, implementations should render the point such that a filled circl
 
 ## Implementation Notes
 
-Some graphics APIs may not require that implementations directly support point sizes greater than one. For example, [Section 3.4 of the OpenGL ES 3.0 Specification](https://registry.khronos.org/OpenGL/specs/es/3.0/es_spec_3.0.pdf) only guarantees a maximum point size of at least one via `ALIASED_POINT_SIZE_RANGE`. In such cases, points with widths greater than `1` could be rendered as quads which are shaped into circles using a shader.
+Some graphics APIs may not require that implementations directly support point sizes greater than one. For example, [Section 3.4 of the OpenGL ES 3.0 Specification](https://registry.khronos.org/OpenGL/specs/es/3.0/es_spec_3.0.pdf) only guarantees a maximum point size of at least one via `ALIASED_POINT_SIZE_RANGE`. In such cases, points with widths greater than one could be rendered as quads which are shaped into circles using a shader.
 
 ## JSON Schema
 
