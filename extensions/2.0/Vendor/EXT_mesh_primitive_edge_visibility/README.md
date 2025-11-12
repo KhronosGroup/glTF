@@ -8,6 +8,7 @@ SPDX-License-Identifier: CC-BY-4.0
 ## Contributors
 
 * Paul Connelly, Bentley Systems, [@pmconne](https://github.com/pmconne)
+* Daniel Zhong, Bentley Systems, [@danielzhong](https://github.com/danielzhong)
 
 ## Status
 
