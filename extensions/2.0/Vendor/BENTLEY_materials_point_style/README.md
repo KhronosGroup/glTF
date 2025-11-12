@@ -20,13 +20,13 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-Points are fundamental elements in many 3D modeling and computer-aided design (CAD) environments. In such visualizations, points may have a variety of stylings, mainly centered around their width in screen pixels. Such width can be used to indicate a variety of meanings useful to CAD applications.
+Points are fundamental elements in many 3D modeling and computer-aided design (CAD) environments. In such visualizations, individual point primitives may differ in their styling, mainly focused around their width in screen pixels. Such width can be used to indicate a variety of meanings useful to CAD applications.
 
-This specification describes a minimal extension sufficient to meet Bentley Systems' requirements in supporting CAD-style visualizations using glTF.
+This specification describes a minimal extension sufficient to meet Bentley Systems' requirements in supporting CAD-style visualizations of points using glTF.
 
 ## Specifying Point Styles
 
-The `BENTLEY_materials_point_style` extension is applied to a material. When that material is used by points primitives (as indiciated by a value of `0` for `GLTF.MeshPrimitiveMode`), the extension dictates the size of those points in pixels.
+The `BENTLEY_materials_point_style` extension is applied to a material. When that material is used by points primitives (as indiciated by a value of `0` for `GLTF.MeshPrimitiveMode`), the extension dictates the width of those points in pixels.
 
 ### Width
 
