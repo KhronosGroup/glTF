@@ -8,6 +8,7 @@ SPDX-License-Identifier: CC-BY-4.0
 ## Contributors
 
 * Paul Connelly, Bentley Systems, [@pmconne](https://github.com/pmconne)
+* Mark Schlosser, Bentley Systems, [@markschlosseratbentley](https://github.com/markschlosseratbentley)
 
 ## Status
 
@@ -19,27 +20,23 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This specification describes a minimal extension sufficient to meet Bentley Systems' requirements, with some suggestions for how it might be broadened and/or generalized while retaining a focus on CAD visualization.
+Points are fundamental elements in many 3D modeling and computer-aided design (CAD) environments. In such visualizations, points may have a variety of stylings, mainly centered around their width in screen pixels. Such width can be used to indicate a variety of meanings useful to CAD applications.
+
+This specification describes a minimal extension sufficient to meet Bentley Systems' requirements in supporting CAD-style visualizations using glTF.
 
 ## Specifying Point Styles
 
-The `BENTLEY_materials_point_style` extension is applied to a material. When that material is used by a POINTS primitive, the extension dictates the size of the points.
+The `BENTLEY_materials_point_style` extension is applied to a material. When that material is used by points primitives (as indiciated by a value of `0` for `GLTF.MeshPrimitiveMode`), the extension dictates the size of those points in pixels.
 
-The `size` property specifies the diameter of each point in pixels.
+### Width
 
-> Potential generalization: we assume round points. Permit square points? Permit the material's texture to be mapped to the point's bounding box to support arbitrary point shapes?
-
-> Potential generalization: we currently assume points face the camera, which is sensible when using pixels as units of measure. But the glTF spec permits for points to have normal attributes for purposes of lighting; this could also be used to specify the plane in which they should be drawn.
-
-> Potential generalization: permit size to be specified in meters.
-
-## glTF Schema Updates
-
+The `width` property specifies the diameter of each point in pixels.
+For each point, implementations should render the point such that a filled circle is centered at the point's pixel screen position with a pixel diameter equal to `width`.
 
 ## Implementation Notes
 
+Some graphics APIs may not require that implementations directly support point sizes greater than one (For example: [OpenGL ES 3.0, Section 3.4](https://registry.khronos.org/OpenGL/specs/es/3.0/es_spec_3.0.pdf) only guarantees a maximum point size of at least one via `ALIASED_POINT_SIZE_RANGE`). In such cases, points could be rendered as quads which are shaped into circles using a shader.
 
 ## JSON Schema
 
-
-
+* [material.BENTLEY_materials_point_style.schema.json](schema/material.BENTLEY_materials_point_style.schema.json)
