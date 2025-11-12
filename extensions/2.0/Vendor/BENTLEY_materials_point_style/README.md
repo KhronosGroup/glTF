@@ -31,7 +31,7 @@ The `BENTLEY_materials_point_style` extension is applied to a material. When tha
 ### Width
 
 The `width` property specifies the diameter of each point in pixels.
-For each point, implementations should render the point such that a filled circle is centered at the point's pixel screen position with a pixel diameter equal to `width`.
+For each point, implementations should render the point such that a filled circle is centered at the point's pixel screen position with a pixel diameter equal to `width`. This point faces the camera.
 
 ## Implementation Notes
 
