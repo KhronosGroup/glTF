@@ -8,9 +8,9 @@
   ],
   "properties": {
     "width": {
-      "type": "number",
+      "type": "integer",
       "description": "Width of the point in screen pixels. Must be > 0.",
-      "minimum": 0
+      "minimum": 1
     },
     "extensions": {},
     "extras": {}
