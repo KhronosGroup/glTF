@@ -26,11 +26,12 @@ This specification describes a minimal extension sufficient to meet Bentley Syst
 
 ## Specifying Point Styles
 
-The `BENTLEY_materials_point_style` extension is applied to a material. When that material is used by points primitives (as indiciated by a value of `0` for `GLTF.MeshPrimitiveMode`), the extension dictates the width of those points in pixels.
+The `BENTLEY_materials_point_style` extension is applied to a material. When that material is used by a `POINTS` primitive (indicated by a value of `0` for [`mesh.primitive.mode`](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#_mesh_primitive_mode)), the extension dictates the width of those points in pixels.
 
 ### Width
 
-The `width` property specifies the diameter of each point in pixels.
+The `width` property specifies the diameter of each point in pixels. When specified, this value must be greater than zero.
+
 For each point, implementations should render the point such that a filled circle is centered at the point's pixel screen position with a pixel diameter equal to `width`. This point faces the camera.
 
 ## Implementation Notes
