@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "BENTLEY_material_point_style extension",
+  "type": "object",
+  "description": "Specifies point width for CAD-style visualization.",
+  "allOf": [
+    { "$ref": "glTFProperty.schema.json" }
+  ],
+  "properties": {
+    "width": {
+      "type": "number",
+      "description": "Width of the point in screen pixels. Must be > 0.",
+      "minimum": 0
+    },
+    "extensions": {},
+    "extras": {}
+  },
+  "required": ["width"]
+}
