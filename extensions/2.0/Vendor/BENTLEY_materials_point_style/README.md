@@ -1,5 +1,5 @@
 <!--
-Copyright 2015-2025 The Khronos Group Inc.
+Copyright 2025 Bentley Systems, Incorporated
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
