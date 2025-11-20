@@ -195,6 +195,16 @@ After pre-processing, both input and output data should be stored using mode 0 (
 
 When `EXT_mesh_gpu_instancing` extension is used, the instance transform data can also be compressed with the same techniques as animation data, using mode 0 (attributes) with filter 3 (exponential) for position and scale, and filter 2 (quaternion) for rotation.
 
+## Content guidelines
+
+> This section is non-normative.
+
+This extension expands the compression available by the existing extension `EXT_meshopt_compression`. Since existing tools and pipelines already support that extension, and existing assets already use it, the following guidelines are recommended for content creators and tool authors:
+
+- Tools that already support `EXT_meshopt_compression` extension should keep supporting it alongside this extension to be able to read pre-existing assets.
+- For maximum compabitility, DCC tools should give users a choice to use either variant when exporting assets. The default option should be eventually switched to the KHR variant once most loaders support it.
+- Existing assets that use the EXT variant can be losslessly converted to KHR, if needed, by changing the extension strings inside glTF JSON.
+
 # Appendix A: Bitstream
 
 The following sections specify the format of the bitstream for compressed data for various modes.
