@@ -204,6 +204,7 @@ This extension expands the compression available by the existing extension `EXT_
 - Tools that already support `EXT_meshopt_compression` extension should keep supporting it alongside this extension to be able to read pre-existing assets.
 - For maximum compabitility, DCC tools should give users a choice to use either variant when exporting assets. The default option should be eventually switched to the KHR variant once most loaders support it.
 - Existing assets that use the EXT variant can be losslessly converted to KHR, if needed, by changing the extension strings inside glTF JSON.
+- When producing assets that target loaders supporting both extensions, using this extension with v1 format should be preferred since it provides better compression ratio at no additional runtime cost.
 
 # Appendix A: Bitstream
 
