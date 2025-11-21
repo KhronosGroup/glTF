@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "BENTLEY_material_point_style extension",
   "type": "object",
   "description": "Specifies point width for CAD-style visualization.",
