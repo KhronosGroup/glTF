@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "BENTLEY_material_point_style extension",
+  "title": "BENTLEY_materials_point_style extension",
   "type": "object",
   "description": "Specifies point diameter for CAD-style visualization.",
   "allOf": [

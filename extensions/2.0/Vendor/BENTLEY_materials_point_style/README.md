@@ -3,7 +3,7 @@ Copyright 2025 Bentley Systems, Incorporated
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-# BENTLEY_material_point_style
+# BENTLEY_materials_point_style
 
 ## Contributors
 
@@ -27,7 +27,7 @@ This specification describes a minimal extension sufficient to meet Bentley Syst
 
 ## Specifying Point Styles
 
-The `BENTLEY_material_point_style` extension is applied to a material. When that material is used by a `POINTS` primitive (indicated by a value of `0` for [`mesh.primitive.mode`](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#_mesh_primitive_mode)), the extension dictates the diameter of those points in pixels.
+The `BENTLEY_materials_point_style` extension is applied to a material. When that material is used by a `POINTS` primitive (indicated by a value of `0` for [`mesh.primitive.mode`](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#_mesh_primitive_mode)), the extension dictates the diameter of those points in pixels.
 
 ### Diameter
 
@@ -41,4 +41,4 @@ Some graphics APIs may not require that implementations directly support point s
 
 ## JSON Schema
 
-* [material.BENTLEY_material_point_style.schema.json](schema/material.BENTLEY_material_point_style.schema.json)
+* [material.BENTLEY_materials_point_style.schema.json](schema/material.BENTLEY_materials_point_style.schema.json)
