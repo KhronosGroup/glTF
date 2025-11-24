@@ -194,7 +194,7 @@ Behavior graphs and trigger-action lists share common features, such as being sa
 On the other hand, behavior graphs are a superset of trigger-action lists, meaning that the former can support everything that trigger-action lists can, and more. Behavior graphs support “Queries”, “Logic” and “Control Flow” nodes, making them more expressive and capable of creating more sophisticated behaviors. This makes behavior graphs the preferred method of choice for high-end game engines, as it offers an identical safety model as trigger-action lists while being more expressive.
 
 === Turing Completeness
-The execution model and node choices for this extension mean that it is Turing-complete. This means that an implementation of this can execute any computation and it is also hard to predict if it will run forever, e.g., halt or not.
+The execution model and operation choices for this extension mean that it is Turing-complete. This means that an implementation of this can execute any computation and it is not always possible to predict if it will run forever, e.g., halt or not.
 
 While this may present security implications, it is not a major hindrance and can be safely mitigated so that any implementation does not become susceptible to denial of services by badly behaving behavior graphs, whether intentional or not.
 
