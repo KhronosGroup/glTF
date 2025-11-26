@@ -79,7 +79,7 @@ For the extension object to be valid, the following must hold:
 
 - When parent `bufferView` has `byteStride` defined, it matches `byteStride` in the extension JSON
 - The parent `bufferView.byteLength` is equal to `byteStride` times `count`
-- When `mode` is `"ATTRIBUTES"`, `byteStride` must be divisible by 4 and must be <= 256.
+- When `mode` is `"ATTRIBUTES"`, `byteStride` must be divisible by 4 and must be >= 4 and <= 256.
 - When `mode` is `"TRIANGLES"`, `count` must be divisible by 3
 - When `mode` is `"TRIANGLES"` or `"INDICES"`, `byteStride` must be equal to 2 or 4
 - When `mode` is `"TRIANGLES"` or `"INDICES"`, `filter` must be equal to `"NONE"` or omitted
@@ -88,7 +88,7 @@ For the extension object to be valid, the following must hold:
 - When `filter` is `"EXPONENTIAL"`, `byteStride` must be divisible by 4
 - When `filter` is `"COLOR"`, `byteStride` must be equal to 4 or 8
 
-The type of compressed data must match the bitstream specification (note that each `mode` specifies a different bitstream format).
+The compressed bitstream format is defined by the value of the `mode` property.
 
 The parent `bufferView` properties define a layout which can hold the data decompressed from the extension object.
 
@@ -112,7 +112,7 @@ Filter specifies the algorithm used to transform the data after decompression, a
 - Filter 1: octahedral. Suitable for storing unit length vectors (normals/tangents) as 4-byte or 8-byte values with variable precision octahedral encoding.
 - Filter 2: quaternion. Suitable for storing rotation data for animations or instancing as 8-byte values with variable precision max-component encoding.
 - Filter 3: exponential. Suitable for storing floating point data as 4-byte values with variable mantissa precision.
-- Filter 4: color. Suitable for storing color data as 4-byte or 8-byte values using variable precision YCoCg color space encoding.
+- Filter 4: color. Suitable for storing color data as 4-byte or 8-byte values using variable precision YCoCg color model.
 
 The filters are detailed further in [Appendix B (Filters)](#appendix-b-filters).
 
@@ -234,7 +234,7 @@ maxBlockElements = min((8192 / byteStride) & ~15, 256)
 blockElements = min(remainingElements, maxBlockElements)
 ```
 
-Where `remainingElements` is the number of elements that have yet to be decoded.
+Where `remainingElements` is the number of elements that have yet to be decoded (with the initial value of `count` extension property).
 
 Each attribute block consists of:
 - Control header (only in version 1): `byteStride / 4` bytes specifying 4 packed control modes for each byte of a 4-byte channel
@@ -256,10 +256,10 @@ controlByte = (controlForByte0 << 0) | (controlForByte1 << 2) | (controlForByte2
 
 The control bits specify the control mode for each byte:
 
-- bits 0: Use bit lengths `{0, 1, 2, 4}` for encoding
-- bits 1: Use bit lengths `{1, 2, 4, 8}` for encoding
-- bits 2: All delta bytes are 0; no data is stored for this byte
-- bits 3: Literal encoding; delta bytes are stored uncompressed with no header bits
+- control mode 0: Use bit lengths `{0, 1, 2, 4}` for encoding
+- control mode 1: Use bit lengths `{1, 2, 4, 8}` for encoding
+- control mode 2: All delta bytes are 0; no data is stored for this byte
+- control mode 3: Literal encoding; delta bytes are stored uncompressed with no header bits
 
 The structure of each "data block" (when using control mode 0 or 1, or when using version 0) breaks down as follows:
 - Header bits, with 2 bits for each group, aligned to the byte boundary if groupCount is not divisible by 4
@@ -274,22 +274,22 @@ Header bits are stored from least significant to most significant bit - header b
 The header bits establish the delta encoding mode for each group of 16 elements:
 
 For control mode 0 (version 1):
-- bits 0: All 16 byte deltas are 0; the size of the encoded block is 0 bytes
-- bits 1: Deltas are stored in 1-bit sentinel encoding; the size of the encoded block is [2..18] bytes
-- bits 2: Deltas are stored in 2-bit sentinel encoding; the size of the encoded block is [4..20] bytes
-- bits 3: Deltas are stored in 4-bit sentinel encoding; the size of the encoded block is [8..24] bytes
+- delta encoding mode 0: All 16 byte deltas are 0; the size of the encoded block is 0 bytes
+- delta encoding mode 1: Deltas are stored in 1-bit sentinel encoding; the size of the encoded block is [2..18] bytes
+- delta encoding mode 2: Deltas are stored in 2-bit sentinel encoding; the size of the encoded block is [4..20] bytes
+- delta encoding mode 3: Deltas are stored in 4-bit sentinel encoding; the size of the encoded block is [8..24] bytes
 
 For control mode 1 (version 1):
-- bits 0: Deltas are stored in 1-bit sentinel encoding; the size of the encoded block is [2..18] bytes
-- bits 1: Deltas are stored in 2-bit sentinel encoding; the size of the encoded block is [4..20] bytes
-- bits 2: Deltas are stored in 4-bit sentinel encoding; the size of the encoded block is [8..24] bytes
-- bits 3: All 16 byte deltas are stored as bytes; the size of the encoded block is 16 bytes
+- delta encoding mode 0: Deltas are stored in 1-bit sentinel encoding; the size of the encoded block is [2..18] bytes
+- delta encoding mode 1: Deltas are stored in 2-bit sentinel encoding; the size of the encoded block is [4..20] bytes
+- delta encoding mode 2: Deltas are stored in 4-bit sentinel encoding; the size of the encoded block is [8..24] bytes
+- delta encoding mode 3: All 16 byte deltas are stored as bytes; the size of the encoded block is 16 bytes
 
 For version 0:
-- bits 0: All 16 byte deltas are 0; the size of the encoded block is 0 bytes
-- bits 1: Deltas are stored in 2-bit sentinel encoding; the size of the encoded block is [4..20] bytes
-- bits 2: Deltas are stored in 4-bit sentinel encoding; the size of the encoded block is [8..24] bytes
-- bits 3: All 16 byte deltas are stored as bytes; the size of the encoded block is 16 bytes
+- delta encoding mode 0: All 16 byte deltas are 0; the size of the encoded block is 0 bytes
+- delta encoding mode 1: Deltas are stored in 2-bit sentinel encoding; the size of the encoded block is [4..20] bytes
+- delta encoding mode 2: Deltas are stored in 4-bit sentinel encoding; the size of the encoded block is [8..24] bytes
+- delta encoding mode 3: All 16 byte deltas are stored as bytes; the size of the encoded block is 16 bytes
 
 When using the sentinel encoding, each delta is stored as a 1-bit, 2-bit, or 4-bit value in packed bytes. For 2-bit and 4-bit encodings, deltas are stored from most significant to least significant bit inside the byte. For 1-bit encoding, deltas are stored from least significant to most significant bit to facilitate better reuse of lookup tables in efficient implementations. The 1-bit encoding is packed as follows with 8 deltas per byte:
 
@@ -313,7 +313,7 @@ A delta that has all bits set to 1 (corresponds to `1` for 1-bit encoding, `3` f
 
 To decode deltas into original values, the channel modes (specified in the tail block for version 1) are used. When using version 0, the channel mode is assumed to be 0 (byte deltas); other modes can only be present in version 1. The encoded stride is split into `byteStride / 4` channels, and each channel specifies the mode in a single byte in the tail block, with the low 4 bits of the byte specifying the mode:
 
-**Channel 0 (byte deltas)**: Byte deltas are stored as zigzag-encoded differences between the byte values of the element and the byte values of the previous element in the same position; the zigzag encoding scheme works as follows:
+**Channel mode 0 (byte deltas)**: Byte deltas are stored as zigzag-encoded differences between the byte values of the element and the byte values of the previous element in the same position; the zigzag encoding scheme works as follows:
 
 ```
 encode(uint8_t v) = ((v & 0x80) != 0) ? ~(v << 1) : (v << 1)
@@ -326,24 +326,24 @@ For a complete example, assuming 4-bit sentinel coding, the following byte seque
 0x17 0x5f 0xf0 0xbc 0x77 0xa9 0x21 0x00 0x34 0xb5
 ```
 
-Encodes 16 deltas, where the first 8 bytes of the sequence specifies 16 4-bit deltas, and the last 2 bytes of the sequence specify the explicit delta code values encoded for elements 3 and 4 in the sequence. After de-zigzagging, the decoded deltas look like:
+Encodes 16 deltas, where the first 8 bytes of the sequence specify 16 4-bit deltas, and the last 2 bytes of the sequence specify the explicit delta code values encoded for elements 3 and 4 in the sequence. After de-zigzagging, the decoded deltas look like:
 
 ```
 -1 -4 -3 26 -91 0 -6 6 -4 -4 5 -5 1 -1 0 0
 ```
 
-Finally, note that the deltas are computed in 8-bit integer space with wrap-around two-complement arithmetic; for example, if the values of the first byte of two consecutive elements are `0x00` and `0xff`, the byte delta that is stored is `-1` (`1` after zigzag encoding).
+Finally, note that the deltas are computed in 8-bit integer space with wraparound two's complement arithmetic; for example, if the values of the first byte of two consecutive elements are `0x00` and `0xff`, the byte delta that is stored is `-1` (`1` after zigzag encoding).
 
-**Channel 1 (2-byte deltas)**: 2-byte deltas are computed as zigzag-encoded differences between 16-bit values of the element and the previous element in the same position; the zigzag encoding scheme works as follows:
+**Channel mode 1 (2-byte deltas)**: 2-byte deltas are computed as zigzag-encoded differences between 16-bit values of the element and the previous element in the same position; the zigzag encoding scheme works as follows:
 
 ```
 encode(uint16_t v) = ((v & 0x8000) != 0) ? ~(v << 1) : (v << 1)
 decode(uint16_t v) = ((v & 1) != 0) ? ~(v >> 1) : (v >> 1)
 ```
 
-The deltas are computed in 16-bit integer space with wrap-around two-complement arithmetic. Values are assumed to be little-endian, so the least significant byte is encoded before the most significant byte.
+The deltas are computed in 16-bit integer space with wraparound two's complement arithmetic. Values are assumed to be little-endian, so the least significant byte is encoded before the most significant byte.
 
-**Channel 2 (4-byte XOR deltas)**: 4-byte deltas are computed as XOR between 32-bit values of the element and the previous element in the same position, with an additional rotation applied based on the high 4 bits of the channel mode byte:
+**Channel mode 2 (4-byte XOR deltas)**: 4-byte deltas are computed as XOR between 32-bit values of the element and the previous element in the same position, with an additional rotation applied based on the high 4 bits of the channel mode byte:
 
 ```
 rotate(uint32_t v, int r) = (v << r) | (v >> (32 - r))
@@ -360,16 +360,16 @@ Triangle compression compresses triangle list indices by exploiting similarity b
 The encoded stream structure is as follows:
 
 - Header byte, which must be equal to `0xe1`
-- Triangle codes, referred to as `code` below, with a single byte for each triangle
+- Triangle codes, referred to as `code` below, with a single byte for each triangle (for a total of `count` extension property divided by 3, since `count` counts index values)
 - Extra data which is necessary to decode triangles that don't fit into a single byte, referred to as `data` below
-- Tail block, which consists of a 16-byte lookup table, referred to as `codeaux` below
+- Tail block, which consists of a 16-byte lookup table (containing 16 one-byte values), referred to as `codeaux` below
 
 Note that there is no way to calculate the length of a stream; instead, it is expected that the input stream is correctly sized (using `byteLength`) so that the tail block element can be found.
 
 There are two limitations on the structure of the 16-byte lookup table:
 
 - The last two bytes must be 0
-- The remaining bytes must not contain any nibbles equal to `0xf`.
+- Neither high four bits nor low four bits of any of 16 bytes can be equal to `0xf`.
 
 During the decoding process, decoder maintains four variables:
 
@@ -481,7 +481,7 @@ Index compression exploits similarity between consecutive indices. Note that, un
 The encoded stream structure is as follows:
 
 - Header byte, which must be equal to `0xd1`
-- A sequence of index deltas, with encoding specified below
+- A sequence of index deltas (with number of elements equal to `count` extension property), with encoding specified below
 - Tail block, which consists of 4 bytes that are reserved and should be set to 0
 
 Instead of simply encoding deltas vs the previous index, the decoder tracks *two* baseline index values, that start at 0. Each delta is specified in relation to one of these values and updates it so that the next delta that references the same baseline uses the encoded index value as a reference. This encoding is more efficient at handling some types of bimodal sequences where two independent monotonic sequences are spliced together, which can occur for some common cases of triangle strips or line lists.
@@ -520,7 +520,7 @@ For performance reasons the results of the decoding process are specified to one
 
 Octahedral filter allows to encode unit length 3D vectors (normals/tangents) using octahedral encoding, which results in a more optimal quality vs precision tradeoff compared to storing raw components.
 
-This filter is only valid if `byteStride` is 4 or 8. When `byteStride` is 4, then the input and output of this filter are four 8-bit components, and when `byteStride` is 8, the input and output of this filter are four 16-bit signed components.
+This filter is only valid if `byteStride` is 4 or 8. When `byteStride` is 4, then the input and output of this filter are four 8-bit signed components, and when `byteStride` is 8, the input and output of this filter are four 16-bit signed components.
 
 The input to the filter is four 8-bit or 16-bit components, where the first two specify the X and Y components in octahedral encoding encoded as signed normalized K-bit integers (2 <= K <= 16, integers are stored in two's complement format), the third component explicitly encodes 1.0 as a signed normalized K-bit integer. The last component may contain arbitrary data which is passed through unfiltered (this can be useful for tangents).
 
@@ -608,7 +608,7 @@ Exponential filter allows to encode floating point values with a range close to 
 
 This filter is only valid if `byteStride` is a multiple of 4.
 
-The input to the filter is a sequence of 32-bit little endian integers, with the most significant 8 bits specifying a (signed) exponent value, and the remaining 24 bits specifying a (signed) mantissa value. The integers are stored in two-complement format.
+The input to the filter is a sequence of 32-bit little endian integers, with the most significant 8 bits specifying a (signed) exponent value, and the remaining 24 bits specifying a (signed) mantissa value. The integers are stored in two's complement format.
 
 The result of the filter is 2^e * m:
 
@@ -624,13 +624,13 @@ The valid range of `e` is [-100, +100], which facilitates performant implementat
 
 ## Filter 4: color
 
-Color filter allows to encode color data using YCoCg color space transformation, which results in better compression for typical color data by exploiting correlation between color channels.
+Color filter allows to encode color data using YCoCg color model, which results in better compression for typical color data by exploiting correlation between color channels.
 
 This filter is only valid if `byteStride` is 4 or 8. When `byteStride` is 4, then the input and output of this filter are four 8-bit components, and when `byteStride` is 8, the input and output of this filter are four 16-bit components.
 
 The input to the filter is four 8-bit or 16-bit components, where the first component stores the Y (luma) value as a K-bit unsigned integer, the second and third components store Co/Cg (chrominance) values as K-bit signed integers, and the fourth component stores the alpha value as a K-1-bit unsigned integer with the bit K set to 1. 1 <= K <= 16, signed integers are stored in two's complement format.
 
-The transformation uses YCoCg encoding; reconstruction of RGB values can be performed in integer space or in floating point space, depending on the implementation. The encoder must guarantee that RGB can be reconstructed using K-bit integer math without overflow or underflow.
+The transformation uses YCoCg encoding; reconstruction of RGB values can be performed in integer space or in floating point space, depending on the implementation. The encoder must guarantee that original RGB values can be reconstructed using K-bit integer math without overflow or underflow.
 
 The alpha component uses K-1 bits for the alpha value with the high bit set to 1; note that K can be smaller than the bit depth. This allows decoder to recover K and decode the color and alpha values correctly.
 
