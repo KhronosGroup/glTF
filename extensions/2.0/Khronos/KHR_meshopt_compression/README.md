@@ -571,13 +571,13 @@ Quaternion filter allows to encode unit length quaternions using normalized 16-b
 
 This filter is only valid if `byteStride` is 8.
 
-The input to the filter is three quaternion components, excluding the component with the largest magnitude, encoded as signed normalized K-bit integers (2 <= K <= 16, integers are stored in two's complement format), and an index of the largest component that is omitted in the encoding. The largest component is assumed to always be positive (which is possible due to quaternion double-cover). To allow per-element control over K, the last input element must explicitly encode 1.0 as a signed normalized K-bit integer, except for the least significant 2 bits that store the index of the maximum component.
+The input to the filter is three quaternion components, excluding the component with the largest magnitude, encoded as signed normalized K-bit integers (4 <= K <= 16, integers are stored in two's complement format), and an index of the largest component that is omitted in the encoding. The largest component is assumed to always be positive (which is possible due to quaternion double-cover). To allow per-element control over K, the last input element must explicitly encode 1.0 as a signed normalized K-bit integer, except for the least significant 2 bits that store the index of the maximum component.
 
 When storing a K-bit integer in a 16-bit component when K is not 16, the remaining bits (e.g. top 6 bits in case of K=10) must be equal to the sign bit; the valid range of the resulting integer is from `-max` to `max` where `max = (1 << (K - 1)) - 1`. The behavior of decoding values outside of that range is unspecified.
 
 The output of the filter is four decoded quaternion components, stored as 16-bit normalized integers.
 
-After eliminating the maximum component, the maximum magnitude of the remaining components is 1/sqrt(2). Because of this the input components store the original component value scaled by sqrt(2.0) to increase precision.
+After eliminating the maximum component, the maximum magnitude of the remaining components is `1.0/sqrt(2.0)`. Because of this the input components store the original component value scaled by `sqrt(2.0)` to increase precision.
 
 ```
 void decode(int16_t input[4], int16_t output[4]) {
