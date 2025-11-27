@@ -171,7 +171,7 @@ Vertex data should be quantized using the appropriate representation; this exten
 
 Morph targets can be treated identically to other vertex attributes, as long as vertex order optimization is performed on all target streams at the same time. It is recommended to use quantized storage for morph target deltas, possibly with a narrower type than that used for baseline values.
 
-When storing vertex data, mode 0 (attributes) should be used; for index data, mode 1 (triangles) or mode 2 (indices) should be used instead. Mode 1 only supports triangle list storage; indices of other topology types can be stored using mode 2. The use of triangle strip topology is not recommended since it's more efficient to store triangle lists using mode 1.
+When storing vertex data, mode 0 (attributes) should be used; for index data, mode 1 (triangles) or mode 2 (indices) should be used instead. Mode 1 only supports triangle list storage; indices of other topology types can be stored using mode 2 (indices). The use of triangle strip topology is not recommended since it's more efficient to store triangle lists using mode 1 (triangles). These are suggestions; the extension does not require any specific mode to be used for any specific type of data.
 
 Using filter 1 (octahedral) for normal/tangent data, and filter 4 (color) for color data, may improve compression ratio further.
 
