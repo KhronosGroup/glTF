@@ -395,8 +395,7 @@ Instead of using the raw index value, a zigzag-encoded 32-bit delta from `last` 
 
 ```
 uint32_t decodeIndex(uint32_t v) {
-	int32_t delta = (v & 1) != 0 ? ~(v >> 1) : (v >> 1);
-
+	uint32_t delta = (v & 1) != 0 ? ~(v >> 1) : (v >> 1);
 	last += delta; // unsigned 32-bit wraparound
 	return last;
 }
@@ -531,9 +530,8 @@ When decoding the deltas, the 32-bit value is read using the varint-7 encoding. 
 
 ```
 uint32_t decode(uint32_t v) {
-	int32_t baseline = v & 1;
-	int32_t delta = (v & 2) != 0 ? ~(v >> 2) : (v >> 2);
-
+	uint32_t baseline = v & 1;
+	uint32_t delta = (v & 2) != 0 ? ~(v >> 2) : (v >> 2);
 	last[baseline] += delta; // unsigned 32-bit wraparound
 	return last[baseline];
 }
