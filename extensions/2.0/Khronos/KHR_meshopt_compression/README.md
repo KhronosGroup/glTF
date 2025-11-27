@@ -401,106 +401,106 @@ uint32_t decodeIndex(uint32_t v) {
 }
 ```
 
-The encoding for `code` is split into various cases, some of which are self-sufficient and some need to read extra data. The encoding is detailed below; after either path the triangle (a, b, c) is emitted to the output.
-
 Any streams that require the decoder to read an edge or vertex FIFO entry that was not previously written are invalid.
 
+The encoding for `code` is split into various cases, some of which are self-sufficient and some need to read extra data. The encoding is detailed below; after either path the triangle (a, b, c) is emitted to the output.
+
 - `0xX0`, where `X < 0xf`: Encodes a recently encountered edge and a `next` vertex.
+	- The edge (a, b) is read from the edge FIFO at index X (where 0 is the most recently added edge).
+	- The third index, `c`, is set to `next`.
+	- `next` is incremented.
 
-The edge (a, b) is read from the edge FIFO at index X (where 0 is the most recently added edge).
-The third index, `c`, is equal to `next` (which is then incremented).
+	- Edge (c, b) is pushed to the edge FIFO.
+	- Edge (a, c) is pushed to the edge FIFO.
 
-Edge (c, b) is pushed to the edge FIFO.
-Edge (a, c) is pushed to the edge FIFO.
-Vertex c is pushed to the vertex FIFO.
+	- Vertex c is pushed to the vertex FIFO.
 
 - `0xXY`, where `X < 0xf` and `0 < Y < 0xd`: Encodes a recently encountered edge and a recently encountered vertex.
+	- The edge (a, b) is read from the edge FIFO at index X (where 0 is the most recently added edge).
+	- The third index, `c`, is read from the vertex FIFO at index Y (where 0 is the most recently added vertex; note that 0 is never actually read here, since `Y > 0`).
 
-The edge (a, b) is read from the edge FIFO at index X (where 0 is the most recently added edge).
-The third index, `c`, is read from the vertex FIFO at index Y (where 0 is the most recently added vertex; note that 0 is never actually read here, since `Y > 0`).
-
-Edge (c, b) is pushed to the edge FIFO.
-Edge (a, c) is pushed to the edge FIFO.
+	- Edge (c, b) is pushed to the edge FIFO.
+	- Edge (a, c) is pushed to the edge FIFO.
 
 - `0xXd` or `0xXe`, where `X < 0xf`: Encodes a recently encountered edge and a vertex that's adjacent to `last`.
 
-The edge (a, b) is read from the edge FIFO at index X (where 0 is the most recently added edge).
-The third index, `c`, is equal to `last-1` for `0xXd` and `last+1` for `0xXe`.
+	- The edge (a, b) is read from the edge FIFO at index X (where 0 is the most recently added edge).
+	- The third index, `c`, is equal to `last-1` for `0xXd` and `last+1` for `0xXe`.
+	- `last` is set to `c` (effectively decrementing or incrementing it accordingly).
 
-`last` is set to `c` (effectively decrementing or incrementing it accordingly).
+	- Edge (c, b) is pushed to the edge FIFO.
+	- Edge (a, c) is pushed to the edge FIFO.
 
-Edge (c, b) is pushed to the edge FIFO.
-Edge (a, c) is pushed to the edge FIFO.
-Vertex c is pushed to the vertex FIFO.
+	- Vertex c is pushed to the vertex FIFO.
 
 - `0xXf`, where `X < 0xf`: Encodes a recently encountered edge and a free-standing vertex encoded explicitly.
 
-The edge (a, b) is read from the edge FIFO at index X (where 0 is the most recently added edge).
-The third index, `c`, is decoded using `decodeIndex` by reading extra bytes from `data` (and also updates `last`).
+	- The edge (a, b) is read from the edge FIFO at index X (where 0 is the most recently added edge).
+	- The third index, `c`, is decoded using `decodeIndex` by reading extra bytes from `data` (note, this also updates `last`).
 
-Edge (c, b) is pushed to edge FIFO.
-Edge (a, c) is pushed to edge FIFO.
-Vertex c is pushed to the vertex FIFO.
+	- Edge (c, b) is pushed to edge FIFO.
+	- Edge (a, c) is pushed to edge FIFO.
+
+	- Vertex c is pushed to the vertex FIFO.
 
 - `0xfY`, where `Y < 0xe`: Encodes three indices using `codeaux` table lookup and vertex FIFO.
 
-The table `codeaux` is used to read the element Y; let's assume that results in `0xZW`.
+	- The table `codeaux` is used to read the element Y; let's assume that results in `0xZW`.
 
-The triangle indices are set as follows:
+	- The first index, `a`, is set to `next`.
+	- `next` is incremented.
 
-Set first index, `a`, to `next`.
-Increment `next`.
-If `Z == 0`:
-	Set second index, `b`, to `next`.
-	Increment `next`.
-Else read second index, `b`, from vertex FIFO at index `Z-1` (where 0 is the most recently added vertex).
-If `W == 0`:
-	Set third index, `c`, to `next`.
-	Increment `next`.
-Else read third index, `c`, from vertex FIFO at index `W-1` (where 0 is the most recently added vertex).
+	- If `Z == 0`:
+		- The second index, `b`, is set to `next`.
+		- `next` is incremented.
+	- Otherwise:
+		- The second index, `b`, is read from vertex FIFO at index `Z-1` (where 0 is the most recently added vertex).
 
-Note that in the process `next` is incremented from 1 to 3 times depending on values of Z/W.
+	- If `W == 0`:
+		- The third index, `c`, is set to `next`.
+		- `next` is incremented.
+	- Otherwise the third index, `c`, is read from vertex FIFO at index `W-1` (where 0 is the most recently added vertex).
 
-Edge (b, a) is pushed to the edge FIFO.
-Edge (c, b) is pushed to the edge FIFO.
-Edge (a, c) is pushed to the edge FIFO.
-Vertex a is pushed to the vertex FIFO.
-Vertex b is pushed to the vertex FIFO if `Z == 0`.
-Vertex c is pushed to the vertex FIFO if `W == 0`.
+	- Note that in the process `next` is incremented from 1 to 3 times depending on values of Z/W.
+
+	- Edge (b, a) is pushed to the edge FIFO.
+	- Edge (c, b) is pushed to the edge FIFO.
+	- Edge (a, c) is pushed to the edge FIFO.
+
+	- Vertex a is pushed to the vertex FIFO.
+	- Vertex b is pushed to the vertex FIFO if `Z == 0`.
+	- Vertex c is pushed to the vertex FIFO if `W == 0`.
 
 - `0xfe` or `0xff`: Encodes three indices explicitly.
+	- Read one byte from `data` as-is, without using LEB128 decoding; let's assume that results in `0xZW`.
+	- If `0xZW` == `0x00`, then `next` is reset to 0. This is a special mechanism used to restart the `next` sequence which is useful for concatenating independent triangle streams. This must be done before further processing.
 
-Read one byte from `data` as-is, without using LEB128 decoding; let's assume that results in `0xZW`.
+	- If using `0xfe` encoding:
+		- The first index, `a`, is set to `next`.
+		- `next` is incremented.
+	- Otherwise the first index, `a`, is read using `decodeIndex` by reading extra bytes from `data` (note, this also updates `last`).
 
-If `0xZW` == `0x00`, then `next` is reset to 0. This is a special mechanism used to restart the `next` sequence which is useful for concatenating independent triangle streams. This must be done before further processing.
+	- If `Z == 0`:
+		- The second index, `b`, is set to `next`.
+		- `next` is incremented.
+	- Else if `Z < 0xf`:
+		- The second index, `b`, is read from vertex FIFO at index `Z-1` (where 0 is the most recently added vertex).
+	- Otherwise the second index, `b`, is read using `decodeIndex` by reading extra bytes from `data` (note, this also updates `last`).
 
-The triangle indices are set as follows:
+	- If `W == 0`:
+		- The third index, `c`, is set to `next`.
+		- `next` is incremented.
+	- Else if `W < 0xf`:
+		- The third index, `c`, is read from vertex FIFO at index `W-1` (where 0 is the most recently added vertex).
+	- Otherwise the third index, `c`, is read using `decodeIndex` by reading extra bytes from `data` (note, this also updates `last`).
 
-If using `0xfe` encoding:
-	Set first index, `a`, to `next`.
-	Increment `next`.
-Else read first index, `a`, using `decodeIndex` by reading extra bytes from `data` (note, this also updates `last`).
+	- Edge (b, a) is pushed to the edge FIFO.
+	- Edge (c, b) is pushed to the edge FIFO.
+	- Edge (a, c) is pushed to the edge FIFO.
 
-If `Z == 0`:
-	Set second index, `b`, to `next`.
-	Increment `next`.
-Else if `Z < 0xf`:
-	Read second index, `b`, from vertex FIFO at index `Z-1` (where 0 is the most recently added vertex).
-Else read second index, `b`, using `decodeIndex` by reading extra bytes from `data` (note, this also updates `last`).
-
-If `W == 0`:
-	Set third index, `c`, to `next`.
-	Increment `next`.
-Else if `W < 0xf`:
-	Read third index, `c`, from vertex FIFO at index `W-1` (where 0 is the most recently added vertex).
-Else read third index, `c`, using `decodeIndex` by reading extra bytes from `data` (note, this also updates `last`).
-
-Edge (b, a) is pushed to the edge FIFO.
-Edge (c, b) is pushed to the edge FIFO.
-Edge (a, c) is pushed to the edge FIFO.
-Vertex a is pushed to the vertex FIFO.
-Vertex b is pushed to the vertex FIFO if `Z == 0` or `Z == 0xf`.
-Vertex c is pushed to the vertex FIFO if `W == 0` or `W == 0xf`.
+	- Vertex a is pushed to the vertex FIFO.
+	- Vertex b is pushed to the vertex FIFO if `Z == 0` or `Z == 0xf`.
+	- Vertex c is pushed to the vertex FIFO if `W == 0` or `W == 0xf`.
 
 At the end of the decoding, `data` is expected to be fully read by all the triangle codes and not contain any extra bytes.
 
