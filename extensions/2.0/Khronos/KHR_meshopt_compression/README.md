@@ -376,8 +376,8 @@ There are two limitations on the structure of the 16-byte lookup table:
 During the decoding process, decoder maintains five variables:
 
 - current offset into `data` section
-- `next`: an integer referring to the expected next unique index (also known as high-watermark), starts at 0 and is incremented with unsigned 32-bit wraparound
-- `last`: an integer referring to the last encoded index, starts at 0
+- `next`: a `uint32_t` referring to the expected next unique index (also known as high-watermark), starts at 0 and is incremented with unsigned 32-bit wraparound
+- `last`: a `uint32_t` referring to the last encoded index, starts at 0
 - `edgefifo`: a 16-entry FIFO with two `uint32_t` vertex indices in each entry; initial contents is undefined
 - `vertexfifo`: a 16-entry FIFO with a `uint32_t` vertex index in each entry; initial contents is undefined
 
@@ -391,7 +391,7 @@ When extra data is necessary to decode a triangle and it represents an index val
 0xff 0xa0 0x05 => 0x1fd005
 ```
 
-Instead of using the raw index value, a zigzag-encoded 32-bit delta from `last` is used:
+When decoding the deltas, the 32-bit value is read using the varint-7 encoding (with unsigned 32-bit wraparound). The resulting value specifies a zigzag-encoded signed delta from `last` and can be decoded as follows:
 
 ```
 uint32_t decodeIndex(uint32_t v) {
@@ -526,7 +526,7 @@ To specify the index delta, the varint-7 encoding scheme (also known as [unsigne
 0xff 0xa0 0x05 => 0x1fd005
 ```
 
-When decoding the deltas, the 32-bit value is read using the varint-7 encoding. The least significant bit of the value indicates one of the baseline values; the remaining bits specify a zigzag-encoded signed delta and can be decoded as follows:
+When decoding the deltas, the 32-bit value is read using the varint-7 encoding (with unsigned 32-bit wraparound). The least significant bit of the value indicates one of the baseline values; the remaining bits specify a zigzag-encoded signed delta and can be decoded as follows:
 
 ```
 uint32_t decode(uint32_t v) {
@@ -639,7 +639,7 @@ This filter is only valid if `byteStride` is a multiple of 4.
 
 The input to the filter is a sequence of 32-bit little endian integers, with the most significant 8 bits specifying a (signed) exponent value, and the remaining 24 bits specifying a (signed) mantissa value. The integers are stored in two's complement format.
 
-The result of the filter is 2^e * m:
+The output of the filter is a sequence of 32-bit floating point values, represented according to IEEE 754 standard. Each value is computed from the integer input as `2^e * m`:
 
 ```
 float32_t decode(int32_t input) {
