@@ -220,7 +220,7 @@ The encoded stream structure is as follows:
 
 - Header byte, which must be equal to `0xa1` (version 1) or `0xa0` (version 0)
 - One or more attribute blocks, detailed below
-- Tail padding, which pads the size of the subsequent tail block to a minimum of 24 bytes for version 1 or 32 bytes for version 0 (required for efficient decoding)
+- Tail padding, which pads the size of the subsequent tail block with zero bytes to a minimum of 24 bytes for version 1 or 32 bytes for version 0 (required for efficient decoding)
 - Tail block, which consists of a baseline element stored verbatim (`byteStride` bytes), followed by channel modes (`byteStride / 4` bytes, only in version 1)
 
 **Non-normative** While using version 1 is preferred for better compression, version 0 is provided for binary compatibility with `EXT_meshopt_compression`. When using version 0, the bitstream is identical to that defined in `EXT_meshopt_compression`.
@@ -375,12 +375,12 @@ During the decoding process, decoder maintains four variables:
 
 - `next`: an integer referring to the expected next unique index (also known as high-watermark), starts at 0
 - `last`: an integer referring to the last encoded index, starts at 0
-- `edgefifo`: a 16-entry FIFO with two vertex indices in each entry; initial contents is undefined
-- `vertexfifo`: a 16-entry FIFO with a vertex index in each entry; initial contents is undefined
+- `edgefifo`: a 16-entry FIFO with two `uint32_t` vertex indices in each entry; initial contents is undefined
+- `vertexfifo`: a 16-entry FIFO with a `uint32_t` vertex index in each entry; initial contents is undefined
 
 To decode each triangle, the decoder needs to analyze the `code` byte, read additional bytes from `data` as necessary, and update the internal state correctly. The `code` byte encoding is optimized to reach a single byte per triangle in most common cases; the resulting data can often be compressed by a general purpose compressor running on the resulting .bin/.glb file.
 
-When extra data is necessary to decode a triangle and it represents an index value, the decoder uses varint-7 encoding (also known as [unsigned LEB128](https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128)), which encodes an integer as one or more bytes, with the byte with the 0 most significant bit terminating the sequence:
+When extra data is necessary to decode a triangle and it represents an index value, the decoder uses varint-7 encoding (also known as [unsigned LEB128](https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128)) with up to 5 bytes, which encodes an integer as one or more bytes, with the byte with the 0 most significant bit terminating the sequence:
 
 ```
 0x7f => 0x7f
@@ -486,7 +486,7 @@ The encoded stream structure is as follows:
 
 Instead of simply encoding deltas vs the previous index, the decoder tracks *two* baseline index values, that start at 0. Each delta is specified in relation to one of these values and updates it so that the next delta that references the same baseline uses the encoded index value as a reference. This encoding is more efficient at handling some types of bimodal sequences where two independent monotonic sequences are spliced together, which can occur for some common cases of triangle strips or line lists.
 
-To specify the index delta, the varint-7 encoding scheme (also known as [unsigned LEB128](https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128)) is used, which encodes an integer as one or more bytes, with the byte with the 0 most significant bit terminating the sequence:
+To specify the index delta, the varint-7 encoding scheme (also known as [unsigned LEB128](https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128)) with up to 5 bytes is used, which encodes an integer as one or more bytes, with the byte with the 0 most significant bit terminating the sequence:
 
 ```
 0x7f => 0x7f
