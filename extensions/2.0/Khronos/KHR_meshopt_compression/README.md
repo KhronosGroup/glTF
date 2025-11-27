@@ -237,7 +237,7 @@ blockElements = min(remainingElements, maxBlockElements)
 Where `remainingElements` is the number of elements that have yet to be decoded (with the initial value of `count` extension property).
 
 Each attribute block consists of:
-- Control header (only in version 1): `byteStride / 4` bytes specifying 4 packed control modes for each byte of a 4-byte channel
+- Control header (only in version 1): `byteStride / 4` bytes specifying a packed 2-bit control mode for each byte position of the element
 - `byteStride` "data blocks" (one for each byte of the element), each containing deltas stored for groups of elements
 
 Each group always contains 16 elements; when the number of elements that needs to be encoded isn't divisible by 16, it gets rounded up and the remaining elements are ignored after decoding. In other terms:
@@ -343,15 +343,17 @@ decode(uint16_t v) = ((v & 1) != 0) ? ~(v >> 1) : (v >> 1)
 
 The deltas are computed in 16-bit integer space with wraparound two's complement arithmetic. Values are assumed to be little-endian, so the least significant byte is encoded before the most significant byte.
 
-**Channel mode 2 (4-byte XOR deltas)**: 4-byte deltas are computed as XOR between 32-bit values of the element and the previous element in the same position, with an additional rotation applied based on the high 4 bits of the channel mode byte:
+**Channel mode 2 (4-byte XOR deltas)**: 4-byte deltas are computed as XOR between 32-bit values of the element and the previous element in the same position, with an additional rotation `r` applied based on the high 4 bits of the channel mode byte:
 
 ```
-rotate(uint32_t v, int r) = (v << r) | (v >> (32 - r))
+rotate(uint32_t v, uint r) = (v << r) | (v >> ((32 - r) & 31))
 ```
 
 The deltas are computed in 32-bit integer space. Values are assumed to be little-endian, so the least significant byte is encoded before the most significant byte.
 
 Because the channel mode defines encoding for 4 bytes at once, it's impossible to mix modes 0 and 1 within the same channel: if the first 2-byte group of an aligned 4-byte group uses 2-byte deltas, the second 2-byte group must use 2-byte deltas as well.
+
+Streams that use channel mode 3 or above, as well as streams that use channel mode 0 or 1 with high 4 bits of the channel mode byte not equal to 0, are invalid.
 
 ## Mode 1: triangles
 
