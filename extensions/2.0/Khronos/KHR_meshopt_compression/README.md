@@ -539,9 +539,7 @@ uint32_t decode(uint32_t v) {
 }
 ```
 
-It's up to the encoder to determine the optimal selection of the baseline for each index; this encoding scheme can be used to do basic delta encoding (with baseline bit always set to 0) as well as more complex bimodal encodings.
-
-Note that the zigzag-encoded delta must fit in a 31-bit integer; as such, deltas are limited to [-2^30..2^30-1].
+It's up to the encoder to determine the optimal selection of the baseline for each index; this encoding scheme can be used to do basic delta encoding (with baseline bit always set to 0) as well as more complex bimodal encodings. Since zigzag-encoded delta uses a 31-bit integer, the deltas are limited to [-2^30..2^30-1].
 
 # Appendix B: Filters
 
