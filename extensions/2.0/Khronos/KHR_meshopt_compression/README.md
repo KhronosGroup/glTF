@@ -371,8 +371,9 @@ There are two limitations on the structure of the 16-byte lookup table:
 - The last two bytes must be 0
 - Neither high four bits nor low four bits of any of 16 bytes can be equal to `0xf`.
 
-During the decoding process, decoder maintains four variables:
+During the decoding process, decoder maintains five variables:
 
+- current offset into `data` section
 - `next`: an integer referring to the expected next unique index (also known as high-watermark), starts at 0
 - `last`: an integer referring to the last encoded index, starts at 0
 - `edgefifo`: a 16-entry FIFO with two `uint32_t` vertex indices in each entry; initial contents is undefined
