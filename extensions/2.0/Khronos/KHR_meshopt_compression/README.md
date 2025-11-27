@@ -225,7 +225,7 @@ The encoded stream structure is as follows:
 
 **Non-normative** While using version 1 is preferred for better compression, version 0 is provided for binary compatibility with `EXT_meshopt_compression`. When using version 0, the bitstream is identical to that defined in `EXT_meshopt_compression`.
 
-Note that there is no way to calculate the length of a stream; instead, it is expected that the input stream is correctly sized (using `byteLength`) so that the tail block element can be found.
+Note that there is no way to calculate the length of a stream; instead, the input stream must be correctly sized (using `byteLength`) so that the tail block element can be found. If the decoding procedure reaches the end of stream too early, or any unprocessed bytes remain after decoding and before tail, the stream is invalid.
 
 Each attribute block encodes a sequence of deltas, with the first element in the first block using the deltas from the baseline element stored in the tail block, and each subsequent element using the deltas from the previous element. The attribute block always stores an integer number of elements, with that number computed as follows:
 
@@ -364,7 +364,7 @@ The encoded stream structure is as follows:
 - Extra data which is necessary to decode triangles that don't fit into a single byte, referred to as `data` below
 - Tail block, which consists of a 16-byte lookup table (containing 16 one-byte values), referred to as `codeaux` below
 
-Note that there is no way to calculate the length of a stream; instead, it is expected that the input stream is correctly sized (using `byteLength`) so that the tail block element can be found.
+Note that there is no way to calculate the length of a stream; instead, the input stream must be correctly sized (using `byteLength`) so that the tail block element can be found. If the decoding procedure reaches the end of stream too early, or any unprocessed bytes remain after decoding and before tail, the stream is invalid.
 
 There are two limitations on the structure of the 16-byte lookup table:
 
@@ -400,6 +400,8 @@ uint32_t decodeIndex(uint32_t v) {
 ```
 
 The encoding for `code` is split into various cases, some of which are self-sufficient and some need to read extra data. The encoding is detailed below; after either path the triangle (a, b, c) is emitted to the output.
+
+Any streams that require the decoder to read an edge or vertex FIFO entry that was not previously written are invalid.
 
 - `0xX0`, where `X < 0xf`: Encodes a recently encountered edge and a `next` vertex.
 
@@ -483,6 +485,8 @@ The encoded stream structure is as follows:
 - Header byte, which must be equal to `0xd1`
 - A sequence of index deltas (with number of elements equal to `count` extension property), with encoding specified below
 - Tail block, which consists of 4 bytes that are reserved and should be set to 0
+
+Note that there is no way to calculate the length of a stream; instead, the input stream must be correctly sized (using `byteLength`) so that the tail block element can be found. If the decoding procedure reaches the end of stream too early, or any unprocessed bytes remain after decoding and before tail, the stream is invalid.
 
 Instead of simply encoding deltas vs the previous index, the decoder tracks *two* baseline index values, that start at 0. Each delta is specified in relation to one of these values and updates it so that the next delta that references the same baseline uses the encoded index value as a reference. This encoding is more efficient at handling some types of bimodal sequences where two independent monotonic sequences are spliced together, which can occur for some common cases of triangle strips or line lists.
 
