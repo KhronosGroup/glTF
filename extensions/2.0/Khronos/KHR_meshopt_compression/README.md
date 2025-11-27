@@ -376,7 +376,7 @@ There are two limitations on the structure of the 16-byte lookup table:
 During the decoding process, decoder maintains five variables:
 
 - current offset into `data` section
-- `next`: an integer referring to the expected next unique index (also known as high-watermark), starts at 0
+- `next`: an integer referring to the expected next unique index (also known as high-watermark), starts at 0 and is incremented with unsigned 32-bit wraparound
 - `last`: an integer referring to the last encoded index, starts at 0
 - `edgefifo`: a 16-entry FIFO with two `uint32_t` vertex indices in each entry; initial contents is undefined
 - `vertexfifo`: a 16-entry FIFO with a `uint32_t` vertex index in each entry; initial contents is undefined
@@ -397,7 +397,7 @@ Instead of using the raw index value, a zigzag-encoded 32-bit delta from `last` 
 uint32_t decodeIndex(uint32_t v) {
 	int32_t delta = (v & 1) != 0 ? ~(v >> 1) : (v >> 1);
 
-	last += delta;
+	last += delta; // unsigned 32-bit wraparound
 	return last;
 }
 ```
@@ -534,7 +534,7 @@ uint32_t decode(uint32_t v) {
 	int32_t baseline = v & 1;
 	int32_t delta = (v & 2) != 0 ? ~(v >> 2) : (v >> 2);
 
-	last[baseline] += delta;
+	last[baseline] += delta; // unsigned 32-bit wraparound
 	return last[baseline];
 }
 ```
