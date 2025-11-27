@@ -221,7 +221,9 @@ The encoded stream structure is as follows:
 - Header byte, which must be equal to `0xa1` (version 1) or `0xa0` (version 0)
 - One or more attribute blocks, detailed below
 - Tail padding, which pads the size of the subsequent tail block with zero bytes to a minimum of 24 bytes for version 1 or 32 bytes for version 0 (required for efficient decoding)
-- Tail block, which consists of a baseline element stored verbatim (`byteStride` bytes), followed by channel modes (`byteStride / 4` bytes, only in version 1)
+- Tail block, which consists of:
+	- Baseline element stored verbatim (`byteStride` bytes)
+	- Channel modes (`byteStride / 4` bytes, only in version 1)
 
 **Non-normative** While using version 1 is preferred for better compression, version 0 is provided for binary compatibility with `EXT_meshopt_compression`. When using version 0, the bitstream is identical to that defined in `EXT_meshopt_compression`.
 
@@ -234,7 +236,7 @@ maxBlockElements = min((8192 / byteStride) & ~15, 256)
 blockElements = min(remainingElements, maxBlockElements)
 ```
 
-Where `remainingElements` is the number of elements that have yet to be decoded (with the initial value of `count` extension property).
+Where `remainingElements` is the number of elements that have yet to be decoded (with the initial value of `count` extension property). Decoding the attribute block reduces `remainingElements` value by `blockElements`.
 
 Each attribute block consists of:
 - Control header (only in version 1): `byteStride / 4` bytes specifying a packed 2-bit control mode for each byte position of the element
@@ -262,7 +264,7 @@ The control bits specify the control mode for each byte:
 - control mode 3: Literal encoding; delta bytes are stored uncompressed with no header bits
 
 The structure of each "data block" (when using control mode 0 or 1, or when using version 0) breaks down as follows:
-- Header bits, with 2 bits for each group, aligned to the byte boundary if groupCount is not divisible by 4
+- Header bits, with 2 bits for each group, aligned to the byte boundary with zero padding if groupCount is not divisible by 4
 - Delta blocks, with variable number of bytes stored for each group
 
 Header bits are stored from least significant to most significant bit - header bits for 4 consecutive groups are packed in a byte together as follows:
@@ -501,6 +503,8 @@ The encoding for `code` is split into various cases, some of which are self-suff
 	- Vertex b is pushed to the vertex FIFO if `Z == 0` or `Z == 0xf`.
 	- Vertex c is pushed to the vertex FIFO if `W == 0` or `W == 0xf`.
 
+After decoding, the triangle indices a, b, c are emitted as 32-bit unsigned integers (if `byteStride == 4`) or 16-bit unsigned integers with wraparound (if `byteStride == 2`).
+
 At the end of the decoding, `data` is expected to be fully read by all the triangle codes and not contain any extra bytes.
 
 ## Mode 2: indices
@@ -535,6 +539,8 @@ uint32_t decode(uint32_t v) {
 	return last[baseline];
 }
 ```
+
+After decoding, the resulting value is emitted as a 32-bit unsigned integer (if `byteStride == 4`) or a 16-bit unsigned integer with wraparound (if `byteStride == 2`).
 
 It's up to the encoder to determine the optimal selection of the baseline for each index; this encoding scheme can be used to do basic delta encoding (with baseline bit always set to 0) as well as more complex bimodal encodings. Since zigzag-encoded delta uses a 31-bit integer, the deltas are limited to [-2^30..2^30-1].
 
