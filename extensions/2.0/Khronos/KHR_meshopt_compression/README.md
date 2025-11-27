@@ -18,6 +18,7 @@ Written against the glTF 2.0 spec.
 ## Exclusions
 
 - This extension must not be used on a buffer view that also uses `EXT_meshopt_compression`.
+- This extension must not be used on a buffer that also uses `EXT_meshopt_compression` (see "Fallback buffers").
 
 ## Overview
 
@@ -77,7 +78,6 @@ Each `bufferView` can contain an extension object with the following properties:
 
 For the extension object to be valid, the following must hold:
 
-- When parent `bufferView` has `byteStride` defined, it matches `byteStride` in the extension JSON
 - The parent `bufferView.byteLength` is equal to `byteStride` times `count`
 - When `mode` is `"ATTRIBUTES"`, `byteStride` must be divisible by 4 and must be >= 4 and <= 256.
 - When `mode` is `"TRIANGLES"`, `count` must be divisible by 3
