@@ -453,8 +453,7 @@ The encoding for `code` is split into various cases, some of which are self-suff
 	- If `Z == 0`:
 		- The second index, `b`, is set to `next`.
 		- `next` is incremented.
-	- Otherwise:
-		- The second index, `b`, is read from vertex FIFO at index `Z-1` (where 0 is the most recently added vertex).
+	- Otherwise the second index, `b`, is read from vertex FIFO at index `Z-1` (where 0 is the most recently added vertex).
 
 	- If `W == 0`:
 		- The third index, `c`, is set to `next`.
