@@ -118,6 +118,8 @@ The filters are detailed further in [Appendix B (Filters)](#appendix-b-filters).
 
 When using filters, the expectation is that the filter is applied after the attribute decoder on the contents of the resulting bufferView; the resulting data can then be used according to the referencing accessors without further modifications.
 
+When compression filters are used, the decompressed data may not match the original uncompressed data exactly due to precision loss. When a buffer view using filters also has an uncompressed fallback, the `min` and `max` values in accessor bounds must be exact with respect to the uncompressed fallback data and may not be exact with respect to the compressed data.
+
 **Non-normative** To decompress the data, [meshoptimizer](https://github.com/zeux/meshoptimizer) library may be used; it supports efficient decompression using C++ and/or WebAssembly, including fast SIMD implementation for attribute decoding.
 
 ## Fallback buffers
@@ -153,6 +155,8 @@ When a buffer is marked as a fallback buffer, the following must hold:
 - No references to the buffer may come from `KHR_meshopt_compression` extension JSON
 
 If a fallback buffer doesn't have a URI and doesn't refer to the GLB binary chunk, it follows that `KHR_meshopt_compression` must be a required extension.
+
+**Non-normative** To ensure consistency between compressed and uncompressed data, encoders should use the decompressed data to populate the fallback buffer view instead of using the original data. This reduces the chance of divergence between the two representations.
 
 ## Compressing geometry data
 
