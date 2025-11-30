@@ -385,7 +385,7 @@ During the decoding process, decoder maintains five variables:
 
 To decode each triangle, the decoder needs to analyze the `code` byte, read additional bytes from `data` as necessary, and update the internal state correctly. The `code` byte encoding is optimized to reach a single byte per triangle in most common cases; the resulting data can often be compressed by a general purpose compressor running on the resulting .bin/.glb file.
 
-When extra data is necessary to decode a triangle and it represents an index value, the decoder uses varint-7 encoding (also known as [unsigned LEB128](https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128)) with up to 5 bytes, which encodes an integer as one or more bytes, with the byte with the 0 most significant bit terminating the sequence:
+When extra data is necessary to decode a triangle and it represents an index value, the decoder uses varint-7 encoding (also known as [unsigned LEB128](https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128)). The encoding stores a 32-bit unsigned integer as a sequence of bytes, where each byte's most significant bit indicates whether more bytes follow. The sequence must consist of 1-5 bytes where the most significant bit of the last byte should be 0 and the most significant bits of all prior bytes should be 1. The value is reconstructed by concatenating the lower 7 bits of each byte, ignoring extra bits:
 
 ```
 0x7f => 0x7f
@@ -521,7 +521,7 @@ Note that there is no way to calculate the length of a stream; instead, the inpu
 
 Instead of simply encoding deltas vs the previous index, the decoder tracks *two* baseline index values, that start at 0. Each delta is specified in relation to one of these values and updates it so that the next delta that references the same baseline uses the encoded index value as a reference. This encoding is more efficient at handling some types of bimodal sequences where two independent monotonic sequences are spliced together, which can occur for some common cases of triangle strips or line lists.
 
-To specify the index delta, the varint-7 encoding scheme (also known as [unsigned LEB128](https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128)) with up to 5 bytes is used, which encodes an integer as one or more bytes, with the byte with the 0 most significant bit terminating the sequence:
+To specify the index delta, the varint-7 encoding (also known as [unsigned LEB128](https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128)) is used. The encoding stores a 32-bit unsigned integer as a sequence of bytes, where each byte's most significant bit indicates whether more bytes follow. The sequence must consist of 1-5 bytes where the most significant bit of the last byte should be 0 and the most significant bits of all prior bytes should be 1. The value is reconstructed by concatenating the lower 7 bits of each byte, ignoring extra bits:
 
 ```
 0x7f => 0x7f
@@ -662,11 +662,9 @@ Color filter allows to encode color data using YCoCg color model, which results 
 
 This filter is only valid if `byteStride` is 4 or 8. When `byteStride` is 4, then the input and output of this filter are four 8-bit components, and when `byteStride` is 8, the input and output of this filter are four 16-bit components.
 
-The input to the filter is four 8-bit or 16-bit components, where the first component stores the Y (luma) value as a K-bit unsigned integer, the second and third components store Co/Cg (chrominance) values as K-bit signed integers, and the fourth component stores the alpha value as a K-1-bit unsigned integer with the bit K set to 1. 1 <= K <= 16, signed integers are stored in two's complement format.
+The input to the filter is four 8-bit or 16-bit components, where the first component stores the Y (luma) value as a K-bit unsigned integer, the second and third components store Co/Cg (chrominance) values as K-bit signed integers, and the fourth component stores the alpha value as a K-1-bit unsigned integer with the bit K set to 1. K is defined by the position of the most significant bit of the fourth component. 2 <= K <= 16, signed integers are stored in two's complement format.
 
 The transformation uses YCoCg encoding; reconstruction of RGB values can be performed in integer space or in floating point space, depending on the implementation. The encoder must guarantee that original RGB values can be reconstructed using K-bit integer math without overflow or underflow.
-
-The alpha component uses K-1 bits for the alpha value with the high bit set to 1; note that K can be smaller than the bit depth. This allows decoder to recover K and decode the color and alpha values correctly.
 
 The output of the filter is four decoded color components (R, G, B, A), stored as 8-bit or 16-bit normalized integers.
 
