@@ -389,7 +389,7 @@ During the decoding process, decoder maintains five variables:
 
 To decode each triangle, the decoder needs to analyze the `code` byte, read additional bytes from `data` as necessary, and update the internal state correctly. The `code` byte encoding is optimized to reach a single byte per triangle in most common cases; the resulting data can often be compressed by a general purpose compressor running on the resulting .bin/.glb file.
 
-When extra data is necessary to decode a triangle and it represents an index value, the decoder uses varint-7 encoding (also known as [unsigned LEB128](https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128)). The encoding stores a 32-bit unsigned integer as a sequence of bytes, where each byte's most significant bit indicates whether more bytes follow. The sequence must consist of 1-5 bytes where the most significant bit of the last byte should be 0 and the most significant bits of all prior bytes should be 1. The value is reconstructed by concatenating the lower 7 bits of each byte, ignoring extra bits:
+When extra data is necessary to decode a triangle and it represents an index value, the decoder uses varint-7 encoding (also known as [unsigned LEB128](https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128)). The encoding stores a 32-bit unsigned integer as a sequence of bytes, where each byte's most significant bit indicates whether more bytes follow. The sequence must consist of 1-5 bytes where the most significant bit of the last byte must be 0 and the most significant bits of all prior bytes must be 1. The value is reconstructed by concatenating the lower 7 bits of each byte, ignoring extra bits:
 
 ```
 0x7f => 0x7f
@@ -525,7 +525,7 @@ Note that there is no way to calculate the length of a stream; instead, the inpu
 
 Instead of simply encoding deltas vs the previous index, the decoder tracks *two* baseline index values, that start at 0. Each delta is specified in relation to one of these values and updates it so that the next delta that references the same baseline uses the encoded index value as a reference. This encoding is more efficient at handling some types of bimodal sequences where two independent monotonic sequences are spliced together, which can occur for some common cases of triangle strips or line lists.
 
-To specify the index delta, the varint-7 encoding (also known as [unsigned LEB128](https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128)) is used. The encoding stores a 32-bit unsigned integer as a sequence of bytes, where each byte's most significant bit indicates whether more bytes follow. The sequence must consist of 1-5 bytes where the most significant bit of the last byte should be 0 and the most significant bits of all prior bytes should be 1. The value is reconstructed by concatenating the lower 7 bits of each byte, ignoring extra bits:
+To specify the index delta, the varint-7 encoding (also known as [unsigned LEB128](https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128)) is used. The encoding stores a 32-bit unsigned integer as a sequence of bytes, where each byte's most significant bit indicates whether more bytes follow. The sequence must consist of 1-5 bytes where the most significant bit of the last byte must be 0 and the most significant bits of all prior bytes must be 1. The value is reconstructed by concatenating the lower 7 bits of each byte, ignoring extra bits:
 
 ```
 0x7f => 0x7f
