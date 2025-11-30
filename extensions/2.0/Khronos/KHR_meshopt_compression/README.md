@@ -666,7 +666,7 @@ Color filter allows to encode color data using YCoCg color model, which results 
 
 This filter is only valid if `byteStride` is 4 or 8. When `byteStride` is 4, then the input and output of this filter are four 8-bit components, and when `byteStride` is 8, the input and output of this filter are four 16-bit components.
 
-The input to the filter is four 8-bit or 16-bit components, where the first component stores the Y (luma) value as a K-bit unsigned integer, the second and third components store Co/Cg (chrominance) values as K-bit signed integers, and the fourth component stores the alpha value as a K-1-bit unsigned integer with the bit K set to 1. K is defined by the position of the most significant bit of the fourth component. 2 <= K <= 16, signed integers are stored in two's complement format.
+The input to the filter is four 8-bit or 16-bit components, where the first component stores the Y (luma) value as a K-bit unsigned integer, the second and third components store Co/Cg (chrominance) values as K-bit signed integers, and the fourth component stores the alpha value as a K-1-bit unsigned integer with the bit K-1 set to 1 and more significant bits set to 0. K can be determined from the position of the most significant bit of the fourth component. 2 <= K <= 16, signed integers are stored in two's complement format.
 
 The transformation uses YCoCg encoding; reconstruction of RGB values can be performed in integer space or in floating point space, depending on the implementation. The encoder must guarantee that original RGB values can be reconstructed using K-bit integer math without overflow or underflow.
 
