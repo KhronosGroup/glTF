@@ -128,6 +128,14 @@ Gaussian splats can have a variety of shapes and this has the potential to chang
 
 A 2D `ellipse` kernel type is often used to represent 3D Gaussian splats in an ellipsoid shape. This simple type contains no parameters. This is the shape used by the reference renderer implementations for 3D Gaussian splatting. Following the original reference implementation this kernel assumes a 3σ cut-off (Mahalanobis distance of 3 units) for correct rendering.
 
+The scale (`KHR_gaussian_splatting:SCALE`) and rotation (`KHR_gaussian_splatting:ROTATION`) attributes define the size and orientation of the ellipsoid in 3D space. These attributes represent the covariance matrix of the Gaussian in a factored form. The scale attribute values correspond to the spread of the Gaussian along its local principal axes and the rotation attribute values correspond to the orientation of those axes in world space.
+
+`KHR_gaussian_splatting:SCALE` is stored in log-space, so the actual scale along each principal axis is computed as `exp(scale)`. This allows for representing a wide range of scales while maintaining numerical stability.
+
+`KHR_gaussian_splatting:ROTATION` is stored as a quaternion in the order (x, y, z, w), where `w` is the scalar component. This quaternion represents the rotation from the local space of the Gaussian to world space.
+
+Together, these values can be used to reconstruct the full covariance matrix of the Gaussian splat for rendering purposes. More details on how to interpret these attributes for rendering can be found in the [3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/) paper.
+
 #### Adding additional Kernel Types
 
 *This section is non-normative.*
@@ -219,6 +227,8 @@ Additional values can be added over time by defining an extension that adds new 
 Each 3D Gaussian splat has the following attributes. At minimum the attributes must contain `POSITION`, `KHR_gaussian_splatting:ROTATION`, `KHR_gaussian_splatting:SCALE`, and `KHR_gaussian_splatting:OPACITY`. `POSITION` is defined by the base glTF specification.
 
 The `KHR_gaussian_splatting:ROTATION` and `KHR_gaussian_splatting:SCALE` attributes support quantized storage using normalized signed `byte` or `short` component types to reduce file size. If quantization is not needed, content creators should use the `float` component type for maximum precision.
+
+The content of both `KHR_gaussian_splatting:ROTATION` and `KHR_gaussian_splatting:SCALE` are defined by their kernel. See the [Ellipse Kernel](#ellipse-kernel) section for more information for information about how these are defined for the default `ellipse` kernel.
 
 ### Spherical Harmonics Attributes
 
