@@ -132,7 +132,7 @@ The scale (`KHR_gaussian_splatting:SCALE`) and rotation (`KHR_gaussian_splatting
 
 `KHR_gaussian_splatting:SCALE` is stored in log-space, so the actual scale along each principal axis is computed as `exp(scale)`. This allows for representing a wide range of scales while maintaining numerical stability.
 
-`KHR_gaussian_splatting:ROTATION` is stored as a quaternion in the order (x, y, z, w), where `w` is the scalar component. This quaternion represents the rotation from the local space of the Gaussian to world space.
+`KHR_gaussian_splatting:ROTATION` is stored as a unit quaternion in the order (x, y, z, w), where `w` is the scalar component. This quaternion represents the rotation from the local space of the Gaussian to world space.
 
 Together, these values can be used to reconstruct the full covariance matrix of the Gaussian splat for rendering purposes. More details on how to interpret these attributes for rendering can be found in the [3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/) paper.
 
