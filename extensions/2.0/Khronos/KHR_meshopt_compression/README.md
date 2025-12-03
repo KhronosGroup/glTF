@@ -519,9 +519,9 @@ The encoded stream structure is as follows:
 
 - Header byte, which must be equal to `0xd1`
 - A sequence of index deltas (with number of elements equal to `count` extension property), with encoding specified below
-- Tail block, which consists of 4 bytes that are reserved and should be set to 0
+- Tail block, which consists of 4 padding bytes that should be set to 0
 
-Note that there is no way to calculate the length of a stream; instead, the input stream must be correctly sized (using `byteLength`) so that the tail block element can be found. If the decoding procedure reaches the end of stream too early, or any unprocessed bytes remain after decoding and before tail, the stream is invalid.
+Note that there is no way to calculate the length of a stream; instead, the input stream must be correctly sized (using `byteLength`). If the decoding procedure reaches the end of stream too early, or any unprocessed bytes remain after decoding and before tail, the stream is invalid.
 
 Instead of simply encoding deltas vs the previous index, the decoder tracks *two* baseline index values, that start at 0. Each delta is specified in relation to one of these values and updates it so that the next delta that references the same baseline uses the encoded index value as a reference. This encoding is more efficient at handling some types of bimodal sequences where two independent monotonic sequences are spliced together, which can occur for some common cases of triangle strips or line lists.
 
