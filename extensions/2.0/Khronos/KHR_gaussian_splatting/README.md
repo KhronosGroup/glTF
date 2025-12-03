@@ -130,7 +130,7 @@ A 2D `ellipse` kernel type is often used to represent 3D Gaussian splats in an e
 
 The mean vector for the Gaussian splat is provided by the position of the mesh primitive. This defines the center of the Gaussian splat ellipsoid in global space.
 
-The opacity of a Gaussian splat is defined by the `KHR_gaussian_splatting:OPACITY` attribute. This attribute stores a normalized value between 0.0 (fully transparent) and 1.0 (fully opaque). Because the sigmoid function is applied during training, the stored value is already bounded to this range, allowing renderers to use it directly for alpha blending without further processing.
+The opacity of a Gaussian splat is defined by the KHR_gaussian_splatting:OPACITY attribute. This attribute stores a normalized value between 0.0 (fully transparent) and 1.0 (fully opaque), with the sigmoid function applied during training to ensure the value always falls within this range. Values outside the range are invalid. Because the sigmoid function has already been applied, renderers can use the stored opacity directly for alpha blending without additional processing.
 
 The scale (`KHR_gaussian_splatting:SCALE`) and rotation (`KHR_gaussian_splatting:ROTATION`) attributes define the size and orientation of the ellipsoid in 3D space. These attributes represent the covariance matrix of the Gaussian in a factored form. The scale attribute values correspond to the spread of the Gaussian along its local principal axes and the rotation attribute values correspond to the orientation of those axes in global space.
 
