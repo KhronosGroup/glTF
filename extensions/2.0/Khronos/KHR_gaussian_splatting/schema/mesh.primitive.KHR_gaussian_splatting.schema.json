@@ -48,7 +48,7 @@
     },
     "colorSpace": {
       "type": "string",
-      "description": "Optional property specifying the color space of the spherical harmonics. This property defaults to BT.709.",
+      "description": "Optional property specifying the color space of the spherical harmonics. This property defaults to BT.709-sRGB.",
       "default": "BT.709-sRGB",
       "anyOf": [
         {

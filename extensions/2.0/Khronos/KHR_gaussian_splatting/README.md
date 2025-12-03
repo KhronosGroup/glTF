@@ -128,13 +128,19 @@ Gaussian splats can have a variety of shapes and this has the potential to chang
 
 A 2D `ellipse` kernel type is often used to represent 3D Gaussian splats in an ellipsoid shape. This simple type contains no parameters. This is the shape used by the reference renderer implementations for 3D Gaussian splatting. Following the original reference implementation this kernel assumes a 3σ cut-off (Mahalanobis distance of 3 units) for correct rendering.
 
-The scale (`KHR_gaussian_splatting:SCALE`) and rotation (`KHR_gaussian_splatting:ROTATION`) attributes define the size and orientation of the ellipsoid in 3D space. These attributes represent the covariance matrix of the Gaussian in a factored form. The scale attribute values correspond to the spread of the Gaussian along its local principal axes and the rotation attribute values correspond to the orientation of those axes in world space.
+The mean vector for the Gaussian splat is provided by the position of the mesh primitive. This defines the center of the Gaussian splat ellipsoid in global space.
+
+Opacity for the Gaussian splat is defined by the `KHR_gaussian_splatting:OPACITY` attribute. This value is stored as a normalized value between 0.0 (fully transparent) and 1.0 (fully opaque), with the sigmoid function already applied during the training process.
+
+The scale (`KHR_gaussian_splatting:SCALE`) and rotation (`KHR_gaussian_splatting:ROTATION`) attributes define the size and orientation of the ellipsoid in 3D space. These attributes represent the covariance matrix of the Gaussian in a factored form. The scale attribute values correspond to the spread of the Gaussian along its local principal axes and the rotation attribute values correspond to the orientation of those axes in global space.
 
 `KHR_gaussian_splatting:SCALE` is stored in log-space, so the actual scale along each principal axis is computed as `exp(scale)`. This allows for representing a wide range of scales while maintaining numerical stability.
 
-`KHR_gaussian_splatting:ROTATION` is stored as a unit quaternion in the order (x, y, z, w), where `w` is the scalar component. This quaternion represents the rotation from the local space of the Gaussian to world space.
+`KHR_gaussian_splatting:ROTATION` is stored as a unit quaternion in the order (x, y, z, w), where `w` is the scalar component. This quaternion represents the rotation from the local space of the Gaussian to global space.
 
-Together, these values can be used to reconstruct the full covariance matrix of the Gaussian splat for rendering purposes. More details on how to interpret these attributes for rendering can be found in the [3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/) paper.
+Together, the scale and rotation can be used to reconstruct the full covariance matrix of the Gaussian splat for rendering purposes. Combined with the position attribute, these values define the identity and shape of the ellipsoid in 3D space.
+
+More details on how to interpret these attributes for rendering can be found in the [3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/) paper.
 
 #### Adding additional Kernel Types
 
@@ -168,8 +174,6 @@ For example, a new extension `EXT_gaussian_splatting_kernel_customShape` could b
 The `colorSpace` property is an optional property that specifies the color space of the 3D Gaussian Splat when spherical harmonics are being used for the lighting. The color space is typically determined by the training process for the splats. The default value is `BT.709-sRGB` to align with the base glTF specification. This color space value only applies to the 3D Gaussian splatting data and does not affect any other color data in the glTF.
 
 Unless specified otherwise by additional extensions, color space information refers to the reconstructed splat color values, therefore splat reconstruction and alpha blending must be performed on the attribute values as-is, before any color gamut or transfer function conversions.
-
-Renderers may ignore this property and assume `BT.709-sRGB` based on their implementation's capabilities. When a renderer does not support the specified color space, it may clamp to the `BT.709-sRGB` color space, but this may cause quality issues for the 3D Gaussian splatting data. When possible, renderers are encouraged to tone map blended values to the sRGB color space for display alongside other elements of the glTF.
 
 Additional values can be added over time by defining extensions to add new color spaces.
 
@@ -228,7 +232,7 @@ Each 3D Gaussian splat has the following attributes. At minimum the attributes m
 
 The `KHR_gaussian_splatting:ROTATION` and `KHR_gaussian_splatting:SCALE` attributes support quantized storage using normalized signed `byte` or `short` component types to reduce file size. If quantization is not needed, content creators should use the `float` component type for maximum precision.
 
-The content of both `KHR_gaussian_splatting:ROTATION` and `KHR_gaussian_splatting:SCALE` are defined by their kernel. See the [Ellipse Kernel](#ellipse-kernel) section for more information for information about how these are defined for the default `ellipse` kernel.
+The content of `KHR_gaussian_splatting:OPACITY`, `KHR_gaussian_splatting:ROTATION` and `KHR_gaussian_splatting:SCALE` are defined by their kernel. See the [Ellipse Kernel](#ellipse-kernel) section for more information for information about how these are defined for the default `ellipse` kernel.
 
 ### Spherical Harmonics Attributes
 
