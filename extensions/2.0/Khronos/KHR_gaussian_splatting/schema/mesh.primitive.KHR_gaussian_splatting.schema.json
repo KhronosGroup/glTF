@@ -11,8 +11,7 @@
   "properties": {
     "kernel": {
       "type": "string",
-      "description": "Property specifying parameters regarding the kernel used to generate the Gaussians. This property defaults to ellipse.",
-      "default": "ellipse",
+      "description": "Property specifying parameters regarding the kernel used to generate the Gaussians.",
       "anyOf": [
         {
           "const": "ellipse"
@@ -24,8 +23,7 @@
     },
     "colorSpace": {
       "type": "string",
-      "description": "Property specifying the color space of the spherical harmonics. This property defaults to BT.709-sRGB.",
-      "default": "BT.709-sRGB",
+      "description": "Property specifying the color space of the spherical harmonics.",
       "anyOf": [
         {
           "const": "BT.709-sRGB"
@@ -67,5 +65,5 @@
     "extensions": {},
     "extras": {}
   },
-  "required": ["kernel", "colorSpace"]
+  "required": ["colorSpace", "kernel"]
 }

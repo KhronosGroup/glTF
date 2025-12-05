@@ -150,7 +150,7 @@ More details on how to interpret these attributes for rendering can be found in 
 
 ### Color Space
 
-The `colorSpace` property is an optional property that specifies the color space of the 3D Gaussian Splat when spherical harmonics are being used for the lighting. The color space is typically determined by the training process for the splats. The default value is `BT.709-sRGB` to align with the base glTF specification. This color space value only applies to the 3D Gaussian splatting data and does not affect any other color data in the glTF.
+The `colorSpace` property is an optional property that specifies the color space of the 3D Gaussian Splat when spherical harmonics are being used for the lighting. The color space is typically determined by the training process for the splats. This color space value only applies to the 3D Gaussian splatting data and does not affect any other color data in the glTF.
 
 Unless specified otherwise by additional extensions, color space information refers to the reconstructed splat color values, therefore splat reconstruction and alpha blending must be performed on the attribute values as-is, before any color gamut or transfer function conversions.
 
@@ -160,7 +160,7 @@ Additional values can be added over time by defining extensions to add new color
 
 | Color Space | Description |
 | --- | --- |
-| BT.709-sRGB | BT.709 sRGB color space. (Default) |
+| BT.709-sRGB | BT.709 sRGB color space. |
 | BT.709-linear | BT.709 linear color space. |
 
 ### Projection
