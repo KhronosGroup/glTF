@@ -42,3 +42,7 @@ Some graphics APIs may not require that implementations directly support point s
 ## JSON Schema
 
 * [material.BENTLEY_materials_point_style.schema.json](schema/material.BENTLEY_materials_point_style.schema.json)
+
+## Known implementations
+
+* [iTwin.js](https://github.com/iTwin/itwinjs-core/pull/8835)
