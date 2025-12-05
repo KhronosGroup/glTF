@@ -169,7 +169,7 @@ The `projection` property is an optional property that specifies how the Gaussia
 
 This base extension defines a single projection method, `perspective`, which is the default value. This keeps the behavior consistent with the original 3D Gaussian splatting paper.
 
-Additional values can be added over time by defining extensions to add new color spaces. See the section, [Extending the Base Extension](#extending-the-base-extension), for more information.
+Additional values can be added over time by defining extensions to add new projection methods. See the section, [Extending the Base Extension](#extending-the-base-extension), for more information.
 
 #### Known Projection Methods
 
@@ -179,11 +179,11 @@ Additional values can be added over time by defining extensions to add new color
 
 ### Sorting Method
 
-The `sortingMethod` property is an optional property that specifies how the Gaussian particles should be sorted during the rendering process. This typically is provided by the training process for the splats. This property is meant to be extended in the future as new projections become standardized within the community.
+The `sortingMethod` property is an optional property that specifies how the Gaussian particles should be sorted during the rendering process. This typically is provided by the training process for the splats. This property is meant to be extended in the future as new sorting methods become standardized within the community.
 
-This base extension defines a single projection method, `cameraDistance`, which is the default value. This keeps the behavior consistent with the original 3D Gaussian splatting paper.
+This base extension defines a single sorting method, `cameraDistance`, which is the default value. This keeps the behavior consistent with the original 3D Gaussian splatting paper.
 
-Additional values can be added over time by defining extensions to add new color spaces. See the section, [Extending the Base Extension](#extending-the-base-extension), for more information.
+Additional values can be added over time by defining extensions to add new sorting methods. See the section, [Extending the Base Extension](#extending-the-base-extension), for more information.
 
 #### Known Sorting Methods
 
