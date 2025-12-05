@@ -20,11 +20,13 @@ SPDX-License-Identifier: CC-BY-4.0
 - Arseny Kapoulkine, Independent
 - Nathan Morrical, Nvidia
 - Norbert Nopper, Huawei
+- Zehui Lin, Huawei
+- Chenxi Tu, Huawei
 - Michael Nikelsky, Autodesk
 
 ## Status
 
-Draft
+Review Draft
 
 ## Dependencies
 
@@ -44,7 +46,9 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension defines support for storing 3D Gaussian splats in glTF, bringing structure and conformity to the 3D Gaussian splatting space. 3D Gaussian splatting uses fields of Gaussians that can be treated as a point cloud for the purposes of storage. 3D Gaussian splats are defined by their position, rotation, scale, and spherical harmonics which provide both diffuse and specular color. These values are stored as values on a point primitive. Since we treat the 3D Gaussian splats as points primitives, a graceful fallback to treating the data as a sparse point cloud is possible.
+This extension defines basic support for storing 3D Gaussian splats in glTF, bringing structure and conformity to the 3D Gaussian splatting space. 3D Gaussian splatting uses fields of Gaussians that can be treated as a point cloud for the purposes of storage. 3D Gaussian splats are defined by their position, rotation, scale, and spherical harmonics which provide both diffuse and specular color. These values are stored as values on a point primitive. Since we treat the 3D Gaussian splats as points primitives, a graceful fallback to treating the data as a sparse point cloud is possible.
+
+A key objective of this extension is to establish a solid foundation for integrating 3D Gaussian splatting into glTF, while enabling future enhancements and innovation. To achieve this, the extension is intentionally designed for to be extended itself, allowing extensions to introduce new kernel types, color spaces, projection methods, and sorting methods over time as 3D Gaussian splatting techniques evolve and become standards within the glTF ecosystem.
 
 ## Adding 3D Gaussian Splats to Primitives
 
@@ -105,7 +109,9 @@ Example shown below including optional attributes and properties. This extension
 
 ### Kernel
 
-Gaussian splats can have a variety of shapes and this has the potential to change over time. The `kernel` property is an optional property that provides an indication to the renderer the properties of the kernel used. Renderers are free to ignore any values they do not recognize. In the event that `kernel` is either not provided or not recognized, the default value of `ellipse` should be assumed. Additional kernel types can be added over time by supplying an extension that defines an alternative shape definition.
+Gaussian splats can have a variety of shapes and this has the potential to change over time. The `kernel` property is a required property that provides an indication to the renderer the properties of the kernel used. Renderers are free to ignore any values they do not recognize.
+
+Additional kernel types can be added over time by supplying an extension that defines an alternative shape definition and parameters.
 
 | Kernel Type | Description |
 | --- | --- |
@@ -126,11 +132,11 @@ Gaussian splats can have a variety of shapes and this has the potential to chang
 
 #### Ellipse Kernel
 
-A 2D `ellipse` kernel type is often used to represent 3D Gaussian splats in an ellipsoid shape. This simple type contains no parameters. This is the shape used by the reference renderer implementations for 3D Gaussian splatting. Following the original reference implementation this kernel assumes a 3σ cut-off (Mahalanobis distance of 3 units) for correct rendering.
+A 2D `ellipse` kernel type is often used to represent 3D Gaussian splats in an ellipsoid shape based on the kernel defined in [3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/). This simple type contains no parameters. This is the shape used by the reference renderer implementations for 3D Gaussian splatting. Following the original reference implementation this kernel assumes a _3σ_ cut-off (Mahalanobis distance of 3 units) for correct rendering.
 
 The mean vector for the Gaussian splat is provided by the position of the mesh primitive. This defines the center of the Gaussian splat ellipsoid in global space.
 
-The opacity of a Gaussian splat is defined by the KHR_gaussian_splatting:OPACITY attribute. This attribute stores a normalized value between 0.0 (fully transparent) and 1.0 (fully opaque), with the sigmoid function applied during training to ensure the value always falls within this range. Values outside the range are invalid. Because the sigmoid function has already been applied, renderers can use the stored opacity directly for alpha blending without additional processing.
+The opacity of a Gaussian splat is defined by the `KHR_gaussian_splatting:OPACITY` attribute for this kernel. It stores a normalized value between _0.0_ (transparent) and _1.0_ (opaque). A sigmoid activation function applied during training ensures the value stays within this range. Out-of-range values are invalid. This guarantees that renderers can use the stored opacity directly for alpha blending without any extra processing.
 
 The scale (`KHR_gaussian_splatting:SCALE`) and rotation (`KHR_gaussian_splatting:ROTATION`) attributes define the size and orientation of the ellipsoid in 3D space. These attributes represent the covariance matrix of the Gaussian in a factored form. The scale attribute values correspond to the spread of the Gaussian along its local principal axes and the rotation attribute values correspond to the orientation of those axes in global space.
 
@@ -142,77 +148,48 @@ Together, the scale and rotation can be used to reconstruct the full covariance 
 
 More details on how to interpret these attributes for rendering can be found in the [3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/) paper.
 
-#### Adding additional Kernel Types
-
-*This section is non-normative.*
-
-In order to add additional kernel types, a new extension should be defined that extends `KHR_gaussian_splatting`. This new extension should define the new kernel type and any parameters it may require. A renderer that recognizes the new kernel type can then use the parameters defined in the new extension to render the splats appropriately. Renderers that do not recognize the new kernel type should fall back to the default `ellipse` type.
-
-For example, a new extension `EXT_gaussian_splatting_kernel_customShape` could be defined that adds a new kernel type `customShape` with additional parameters.
-
-```json
-"meshes": [{
-    "primitives": [{
-        // snip... 
-        "extensions": {
-            "KHR_gaussian_splatting": {
-                "kernel": "customShape",
-                "extensions": {
-                    "EXT_gaussian_splatting_kernel_customShape": {
-                        "customParameter1": 1.0,
-                        "customParameter2": [0.0, 1.0, 0.0]
-                    }
-                }
-            },
-        }
-    }]
-}]
-```
-
 ### Color Space
 
-The `colorSpace` property is an optional property that specifies the color space of the 3D Gaussian Splat when spherical harmonics are being used for the lighting. The color space is typically determined by the training process for the splats. The default value is `BT.709-sRGB` to align with the base glTF specification. This color space value only applies to the 3D Gaussian splatting data and does not affect any other color data in the glTF.
+The `colorSpace` property is an optional property that specifies the color space of the 3D Gaussian Splat when spherical harmonics are being used for the lighting. The color space is typically determined by the training process for the splats. This color space value only applies to the 3D Gaussian splatting data and does not affect any other color data in the glTF.
 
 Unless specified otherwise by additional extensions, color space information refers to the reconstructed splat color values, therefore splat reconstruction and alpha blending must be performed on the attribute values as-is, before any color gamut or transfer function conversions.
 
-Additional values can be added over time by defining extensions to add new color spaces.
+Additional values can be added over time by defining extensions to add new color spaces. See the section, [Extending the Base Extension](#extending-the-base-extension), for more information.
 
 #### Available Color Spaces
 
 | Color Space | Description |
 | --- | --- |
-| BT.709-sRGB | BT.709 sRGB color space. (Default) |
+| BT.709-sRGB | BT.709 sRGB color space. |
 | BT.709-linear | BT.709 linear color space. |
 
 ### Projection
 
-The `projection` property is an optional property that specifies how the Gaussians should be projected onto the kernel shape. This is typically provided by the training process for the splats. The default value is `perspective`.
+The `projection` property is an optional property that specifies how the Gaussians should be projected onto the kernel shape. This is typically provided by the training process for the splats. This property is meant to be extended in the future as new projections become standardized within the community.
 
-Renderers may ignore this property or values they do not support and assume `perspective` based on their implementation's capabilities.
+This base extension defines a single projection method, `perspective`, which is the default value. This keeps the behavior consistent with the original 3D Gaussian splatting paper.
 
-Additional values can be added over time by defining an extension that adds new projection methods.
+Additional values can be added over time by defining extensions to add new color spaces. See the section, [Extending the Base Extension](#extending-the-base-extension), for more information.
 
 #### Known Projection Methods
 
 | Projection Method | Description |
 | --- | --- |
 | perspective | (Default) The typical 3D perspective projection based on scene depth. |
-| orthographic | An orthogonal projection of splats into a scene to preserve shape and scale and reduce distortion. |
 
 ### Sorting Method
 
-The `sortingMethod` property is an optional property that specifies how the Gaussian particles should be sorted during the rendering process. This typically is provided by the training process for the splats. The default value is `cameraDistance`.
+The `sortingMethod` property is an optional property that specifies how the Gaussian particles should be sorted during the rendering process. This typically is provided by the training process for the splats. This property is meant to be extended in the future as new projections become standardized within the community.
 
-Renderers may ignore this property or values they do not support and assume `cameraDistance` based on their implementation's capabilities.
+This base extension defines a single projection method, `cameraDistance`, which is the default value. This keeps the behavior consistent with the original 3D Gaussian splatting paper.
 
-Additional values can be added over time by defining an extension that adds new sorting methods.
+Additional values can be added over time by defining extensions to add new color spaces. See the section, [Extending the Base Extension](#extending-the-base-extension), for more information.
 
 #### Known Sorting Methods
 
 | Sorting Method | Description |
 | --- | --- |
 | cameraDistance | (Default) Sort the splats based on the length of the vector from the splat to the camera origin. |
-| zDepth | Sort the splats based on the magnitude of the z-component of the splat's position. (e.g. Only along the viewing axis of the camera.) |
 
 ## Attributes
 
@@ -247,6 +224,82 @@ Spherical harmonic data is packed in an (r, g, b) format within the VEC3 accesso
 To support better fallback functionality, the `COLOR_0` attribute semantic from the base glTF specification may be used to provide the diffuse color of the 3D Gaussian splat. This allows renderers to color the points in the sparse point cloud when 3D Gaussian splatting is not supported by a renderer. The value of `COLOR_0` is derived by multiplying the 3 diffuse color components of the 3D Gaussian splat with the constant zeroth-order spherical harmonic (ℓ = 0) for the RGB channels. The alpha channel should contain the opacity of the splat.
 
 *_Non-normative Note:_* If the spherical harmonics are in the BT.709 gamut, the diffuse color can be computed from the `KHR_gaussian_splatting:SH_DEGREE_0_COEF_0` attribute by multiplying each of the RGB components by the constant spherical harmonic value of _0.282095_.
+
+## Extending the Base Extension
+
+3D Gaussian splatting is an evolving technology with new techniques and methods being developed over time. To provide a solid foundation for 3D Gaussian splatting in glTF while allowing for future growth and innovation, this extension is designed to be extensible. New kernel types, color spaces, projection methods, and sorting methods can be added over time without requiring changes to the base extension.
+
+Extensions may define additional attributes or custom properties as needed to support new features. Attribute semantics should be prefixed with their respective extension name to avoid naming collisions. Extensions may also define additional values for the `kernel`, `colorSpace`, `projection`, and `sortingMethod` properties. Custom properties should be included in the body of the new extension object.
+
+*_Non-normative Note: It is possible to share data between two attributes by using the same accessor index for multiple attribute semantics. This can be useful to optimize the storage of data._*
+
+Compression extensions that operate on 3D Gaussian splatting data should extend this base extension to ensure compatibility. Compression extensions must define how the data can be decoded back into the base 3D Gaussian splatting format defined by this extension, but may also allow optimizations specific to their compression method. (e.g. passing textures or other data directly to the GPU for decoding.)
+
+To use an extensions that extends `KHR_gaussian_splatting`, the extension must be included within the `extensions` property of the `KHR_gaussian_splatting` extension object. The extension must also be listed in `extensionsUsed` at the top level of the glTF.
+
+Extension authors are encouraged to define fallback behaviors for renderers that do not recognize the new extension, but this is not strictly required. If a fallback is not possible, the extension should be listed in `extensionsRequired` to ensure that renderers that do not support the extension do not attempt to render the data incorrectly.
+
+#### Example: Adding additional Kernel Types
+
+*This section is non-normative.*
+
+In order to add additional kernel types, a new extension should be defined that extends `KHR_gaussian_splatting`. This new extension would define the new kernel type and any parameters it may require. A renderer that recognizes the new kernel type can then use the parameters defined in the new extension to render the splats appropriately. Renderers that do not recognize the new kernel type should fall back to the default `ellipse` type.
+
+For example, a new extension `EXT_gaussian_splatting_kernel_customShape` could be defined that adds a new kernel type `customShape` with additional parameters.
+
+```json
+"meshes": [{
+    "primitives": [{
+        // ...omitted for brevity...
+        "extensions": {
+            "KHR_gaussian_splatting": {
+                "kernel": "customShape",
+                "extensions": {
+                    "EXT_gaussian_splatting_kernel_customShape": {
+                        "customParameter1": 1.0,
+                        "customParameter2": [0.0, 1.0, 0.0]
+                    }
+                }
+            },
+        }
+    }]
+}]
+```
+
+If the kernel type requires additional attributes, those attributes should be defined within the new extension using unique semantics to avoid collisions.
+
+```json
+"meshes": [{
+    "primitives": [{
+        "attributes": {
+            "POSITION": 0,
+            "KHR_gaussian_splatting:SCALE": 1,
+            "KHR_gaussian_splatting:ROTATION": 2,
+            "EXT_gaussian_splatting_kernel_customShape:CUSTOM_ATTRIBUTE": 3
+        },
+        // ...omitted for brevity...
+        "extensions": {
+            "KHR_gaussian_splatting": {
+                "kernel": "customShape",
+                "extensions": {
+                    "EXT_gaussian_splatting_kernel_customShape": {
+                        "customParameter1": 1.0
+                    }
+                }
+            }
+        }
+    }]
+}]
+```
+
+The extension must also be listed in `extensionsUsed` at the top level of the glTF.
+
+```json
+  "extensionsUsed" : [
+    "KHR_gaussian_splatting",
+    "EXT_gaussian_splatting_kernel_customShape"
+  ]
+```
 
 ## Known Implementations
 

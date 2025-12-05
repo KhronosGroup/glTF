@@ -11,8 +11,30 @@
   "properties": {
     "kernel": {
       "type": "string",
-      "description": "Optional property specifying parameters regarding the kernel used to generate the Gaussians. This property defaults to ellipse.",
-      "default": "ellipse"
+      "description": "Property specifying parameters regarding the kernel used to generate the Gaussians.",
+      "anyOf": [
+        {
+          "const": "ellipse"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "colorSpace": {
+      "type": "string",
+      "description": "Property specifying the color space of the spherical harmonics.",
+      "anyOf": [
+        {
+          "const": "BT.709-sRGB"
+        },
+        {
+          "const": "BT.709-linear"
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "projection": {
       "type": "string",
@@ -21,9 +43,6 @@
       "anyOf": [
         {
           "const": "perspective"
-        },
-        {
-          "const": "orthographic"
         },
         {
           "type": "string"
@@ -39,30 +58,12 @@
           "const": "cameraDistance"
         },
         {
-          "const": "zDepth"
-        },
-        {
-          "type": "string"
-        }
-      ]
-    },
-    "colorSpace": {
-      "type": "string",
-      "description": "Optional property specifying the color space of the spherical harmonics. This property defaults to BT.709-sRGB.",
-      "default": "BT.709-sRGB",
-      "anyOf": [
-        {
-          "const": "BT.709-sRGB"
-        },
-        {
-          "const": "BT.709-linear"
-        },
-        {
           "type": "string"
         }
       ]
     },
     "extensions": {},
     "extras": {}
-  }
+  },
+  "required": ["colorSpace", "kernel"]
 }
