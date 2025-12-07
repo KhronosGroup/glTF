@@ -3076,7 +3076,7 @@ with
 
 [latexmath]
 ++++
-G = \frac{\chi^{+}(H \cdot L) \, \chi^{+}(H \cdot V)}{2 \, (\left| N \cdot V \right| \, \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2} + \left| N \cdot L \right| \, \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2})}
+\nu = \frac{\chi^{+}(H \cdot L) \, \chi^{+}(H \cdot V)}{2 \, (\left| N \cdot V \right| \, \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2} + \left| N \cdot L \right| \, \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2})}
 ++++
 
 Thus, we have the function
