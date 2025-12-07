@@ -3049,11 +3049,11 @@ with the Trowbridge-Reitz/GGX microfacet distribution
 D = \frac{\alpha^2 \, \chi^{+}(N \cdot H)}{\pi ((N \cdot H)^2 (\alpha^2 - 1) + 1)^2}
 ++++
 
-and the separable form of the Smith joint masking-shadowing function
+and the height-correlated form of the Smith joint masking-shadowing function
 
 [latexmath]
 ++++
-G = \frac{2 \, \left| N \cdot L \right| \, \chi^{+}(H \cdot L)}{\left| N \cdot L \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2}} \frac{2 \, \left| N \cdot V \right| \, \chi^{+}(H \cdot V)}{\left| N \cdot V \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
+G = \frac{2 \, \left| N \cdot L \right| \, \left| N \cdot V \right| \, \chi^{+}(H \cdot L) \, \chi^{+}(H \cdot V)}{\left| N \cdot V \right| \, \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2} + \left| N \cdot L \right| \, \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
 ++++
 
 where χ^+^(*x*) denotes the Heaviside function: 1 if *x* > 0 and 0 if *x* <= 0. See <<Heitz2014,Heitz (2014)>> for a derivation of the formulas.
@@ -3076,7 +3076,7 @@ with
 
 [latexmath]
 ++++
-\nu = \frac{\, \chi^{+}(H \cdot L)}{\left| N \cdot L\right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2}} \frac{\, \chi^{+}(H \cdot V)}{\left| N \cdot V \right| + \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2}}
+G = \frac{\chi^{+}(H \cdot L) \, \chi^{+}(H \cdot V)}{2 \, (\left| N \cdot V \right| \, \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot L)^2} + \left| N \cdot L \right| \, \sqrt{\alpha^2 + (1 - \alpha^2) (N \cdot V)^2})}
 ++++
 
 Thus, we have the function
