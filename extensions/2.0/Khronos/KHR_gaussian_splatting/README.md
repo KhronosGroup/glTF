@@ -169,6 +169,8 @@ The `projection` property is an optional property that specifies how the Gaussia
 
 This base extension defines a single projection method, `perspective`, which is the default value. This keeps the behavior consistent with the original 3D Gaussian splatting paper.
 
+_Non-normative Note: See [the original 3D Gaussian Splatting paper](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/) appendix A, "Details of Gradiant Computation," for more details on how the perspective projection is computed._
+
 Additional values can be added over time by defining extensions to add new projection methods. See the section, [Extending the Base Extension](#extending-the-base-extension), for more information.
 
 #### Known Projection Methods
@@ -308,4 +310,5 @@ This is currently implemented within [3D Tiles and CesiumJS as an experimental f
 ## Resources
 
 - [3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/)
+- [Gaussian Splatting Algorithm Details](https://github.com/joeyan/gaussian_splatting/blob/main/MATH.md)
 
