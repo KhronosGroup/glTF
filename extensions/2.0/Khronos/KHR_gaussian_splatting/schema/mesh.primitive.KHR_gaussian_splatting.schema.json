@@ -26,10 +26,10 @@
       "description": "Property specifying the color space of the spherical harmonics.",
       "anyOf": [
         {
-          "const": "BT.709-sRGB"
+          "const": "srgb_rec709_display"
         },
         {
-          "const": "BT.709-linear"
+          "const": "lin_rec709_scene"
         },
         {
           "type": "string"

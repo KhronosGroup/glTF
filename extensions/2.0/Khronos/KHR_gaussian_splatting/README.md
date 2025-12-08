@@ -160,8 +160,8 @@ Additional values can be added over time by defining extensions to add new color
 
 | Color Space | Description |
 | --- | --- |
-| BT.709-sRGB | BT.709 sRGB color space. |
-| BT.709-linear | BT.709 linear color space. |
+| srgb_rec709_display | BT.709 sRGB (display-referred) color space. |
+| lin_rec709_scene | BT.709 linear (scene-referred) color space. |
 
 ### Projection
 
