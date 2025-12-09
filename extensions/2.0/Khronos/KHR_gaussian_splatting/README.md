@@ -200,10 +200,10 @@ Additional values can be added over time by defining extensions to add new sorti
 | Rotation | KHR_gaussian_splatting:ROTATION | VEC4 | _float_ <br/>_signed byte_ normalized <br/>_signed short_ normalized | yes | Rotation is a quaternion with `w` as the scalar. (xyzw) |
 | Scale | KHR_gaussian_splatting:SCALE | VEC3 | _float_ <br/>_signed byte_ <br/>_signed byte_ normalized <br/>_signed short_ <br/>_signed short_ normalized | yes | |
 | Opacity | KHR_gaussian_splatting:OPACITY | SCALAR | _float_ <br/>_unsigned byte_ normalized <br/>_unsigned short_ normalized | yes | |
-| Spherical Harmonics degree 0 | KHR_gaussian_splatting:SH_DEGREE_0_COEF_0 | VEC3 | _float_ <br/>_signed byte_ normalized <br/>_signed short_ normalized | yes (unless using a different method for lighting) | |
-| Spherical Harmonics degree 1 | KHR_gaussian_splatting:SH_DEGREE_1_COEF_n (n = 0 to 2) | VEC3 | _float_ <br/>_signed byte_ normalized <br/>_signed short_ normalized | no (yes if degree 2 or 3 are used) | |
-| Spherical Harmonics degree 2 | KHR_gaussian_splatting:SH_DEGREE_2_COEF_n (n = 0 to 4) | VEC3 | _float_ <br/>_signed byte_ normalized <br/>_signed short_ normalized | no (yes if degree 3 is used) | |
-| Spherical Harmonics degree 3 | KHR_gaussian_splatting:SH_DEGREE_3_COEF_n (n = 0 to 6) | VEC3 | _float_ <br/>_signed byte_ normalized <br/>_signed short_ normalized | no | |
+| Spherical Harmonics degree 0 | KHR_gaussian_splatting:SH_DEGREE_0_COEF_0 | VEC3 | _float_ | yes (unless using a different method for lighting) | |
+| Spherical Harmonics degree 1 | KHR_gaussian_splatting:SH_DEGREE_1_COEF_n (n = 0 to 2) | VEC3 | _float_ | no (yes if degree 2 or 3 are used) | |
+| Spherical Harmonics degree 2 | KHR_gaussian_splatting:SH_DEGREE_2_COEF_n (n = 0 to 4) | VEC3 | _float_ | no (yes if degree 3 is used) | |
+| Spherical Harmonics degree 3 | KHR_gaussian_splatting:SH_DEGREE_3_COEF_n (n = 0 to 6) | VEC3 | _float_ | no | |
 
 ### Basic Attributes
 
