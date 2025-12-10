@@ -50,7 +50,7 @@ Optionally, these expressions may be aligned with industry standards (or an endp
           "expression": "smile",
           "animation": 0,
           "extensions": {
-            "KHR_character_expressions_morphtarget": {
+            "KHR_character_expression_morphtarget": {
               "channels": [0]
             }
           }
@@ -59,7 +59,7 @@ Optionally, these expressions may be aligned with industry standards (or an endp
           "expression": "frown",
           "animation": 1,
           "extensions": {
-            "KHR_character_expressions_morphtarget": {
+            "KHR_character_expression_morphtarget": {
               "channels": [0]
             }
           }
@@ -74,7 +74,7 @@ Optionally, these expressions may be aligned with industry standards (or an endp
 
 | Property  | Type    | Description                                |
 | --------- | ------- | ------------------------------------------ |
-| `channel` | integet | Index representing the `"weights"` channel |
+| `channel` | integer | Index representing the `"weights"` channel |
 
 ## Animation Integration (Expressions Tab Recommendation)
 
@@ -124,7 +124,7 @@ All morph target expressions should be driven using standard glTF animation chan
           "expression": "smile",
           "animation": 0,
           "extensions": {
-            "KHR_character_expressions_morphtarget": {
+            "KHR_character_expression_morphtarget": {
               "channels": [0]
             }
           }
@@ -133,7 +133,7 @@ All morph target expressions should be driven using standard glTF animation chan
           "expression": "frown",
           "animation": 1,
           "extensions": {
-            "KHR_character_expressions_morphtarget": {
+            "KHR_character_expression_morphtarget": {
               "channels": [0]
             }
           }
