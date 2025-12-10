@@ -684,7 +684,7 @@ void decode(uintN_t input[4], uintN_t output[4]) {
 	int g = y + cg;
 	int b = y - co - cg;
 
-	// expand alpha by one bit to match other components, replicating last bit
+	// expand alpha by one bit to match other components, replicating least significant bit
 	int a = input[3] & (as >> 1);
 	a = (a << 1) | (a & 1);
 
