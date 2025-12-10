@@ -670,15 +670,15 @@ The input to the filter is four 8-bit or 16-bit components, where the first comp
 
 The transformation uses YCoCg encoding; reconstruction of RGB values can be performed in integer space or in floating point space, depending on the implementation. The encoder must guarantee that original RGB values can be reconstructed using K-bit integer math without overflow or underflow in the final result.
 
-The output of the filter is four decoded color components (R, G, B, A), stored as 8-bit or 16-bit normalized integers.
+The output of the filter is four decoded color components (R, G, B, A), stored as 8-bit or 16-bit unsigned normalized integers.
 
 ```
-void decode(intN_t input[4], intN_t output[4]) {
+void decode(uintN_t input[4], uintN_t output[4]) {
 	// recover scale from alpha high bit
 	int as = (1 << (findMSB(input[3]) + 1)) - 1;
 
 	// convert to RGB in fixed point
-	int y = input[0], co = input[1], cg = input[2];
+	int y = input[0], co = intN_t(input[1]), cg = intN_t(input[2]);
 
 	int r = y + co - cg;
 	int g = y + cg;
@@ -689,16 +689,26 @@ void decode(intN_t input[4], intN_t output[4]) {
 	a = (a << 1) | (a & 1);
 
 	// compute scaling factor
-	float ss = INTN_MAX / float(as);
+	float ss = UINTN_MAX / float(as);
 
 	output[0] = round(float(r) * ss);
 	output[1] = round(float(g) * ss);
 	output[2] = round(float(b) * ss);
 	output[3] = round(float(a) * ss);
 }
+
+// returns position of most significant bit set (0-based)
+int findMSB(uintN_t v) {
+	for (int i = N - 1; i >= 0; --i) {
+		if (v & (1u << i)) {
+			return i;
+		}
+	}
+	return -1;
+}
 ```
 
-`INTN_MAX` is equal to 255 when using 8-bit components (N is 8) and equal to 65535 when using 16-bit components (N is 16).
+`UINTN_MAX` is equal to 255 when using 8-bit components (N is 8) and equal to 65535 when using 16-bit components (N is 16).
 
 # Appendix C: Differences from EXT_meshopt_compression
 
