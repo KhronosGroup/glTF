@@ -30,7 +30,7 @@ Similarly to supercompressed textures (see `KHR_texture_basisu`), this extension
 
 The compressed format is designed to have two properties beyond optimizing compression ratio - very fast decoding (using WebAssembly SIMD, the decoders run at \~1 GB/sec on modern desktop hardware), and byte-wise storage compatible with general-purpose compression. That is, instead of reducing the encoded size as much as possible, the bitstream is constructed in such a way that general-purpose compressor can compress it further.
 
-This is beneficial for typical Web delivery scenarios, where all files are usually using lossess general-purpose compression (gzip, Brotli, Zstandard) - instead of completely replacing it, the codecs here augment it, while still reducing the size (which is valuable to optimize delivery size when general-purpose compression isn't available, and additionally reduces the performance impact of general-purpose decompression which is typically *much slower* than decoders proposed here).
+This is beneficial for typical Web delivery scenarios, where all files are usually using lossless general-purpose compression (gzip, Brotli, Zstandard) - instead of completely replacing it, the codecs here augment it, while still reducing the size (which is valuable to optimize delivery size when general-purpose compression isn't available, and additionally reduces the performance impact of general-purpose decompression which is typically *much slower* than decoders proposed here).
 
 ## Specifying compressed views
 
@@ -179,7 +179,7 @@ When storing vertex data, mode 0 (attributes) should be used; for index data, mo
 
 Using filter 1 (octahedral) for normal/tangent data, and filter 4 (color) for color data, may improve compression ratio further.
 
-While using quantized attributes is recommended for optimal compression, it's also possible to use non-quantized floating point attributes. To increase compression ratio in that case, filter 3 (exponential) is recommended - advanced encoders can additionally constraint the exponent to be the same for all components of a vector, or for all values of the same component across the entire mesh, which can further improve compression ratio.
+While using quantized attributes is recommended for optimal compression, it's also possible to use non-quantized floating point attributes. To increase compression ratio in that case, filter 3 (exponential) is recommended - advanced encoders can additionally constrain the exponent to be the same for all components of a vector, or for all values of the same component across the entire mesh, which can further improve compression ratio.
 
 ## Compressing animation data
 
@@ -203,10 +203,10 @@ When `EXT_mesh_gpu_instancing` extension is used, the instance transform data ca
 
 > This section is non-normative.
 
-This extension expands the compression available by the existing extension `EXT_meshopt_compression`. Since existing tools and pipelines already support that extension, and existing assets already use it, the following guidelines are recommended for content creators and tool authors:
+This extension expands the compression offered by the existing extension `EXT_meshopt_compression`. Since existing tools and pipelines already support that extension, and existing assets already use it, the following guidelines are recommended for content creators and tool authors:
 
 - Tools that already support `EXT_meshopt_compression` extension should keep supporting it alongside this extension to be able to read pre-existing assets.
-- For maximum compabitility, DCC tools should give users a choice to use either variant when exporting assets. The default option should be eventually switched to the KHR variant once most loaders support it.
+- For maximum compatibility, DCC tools should give users a choice to use either variant when exporting assets. The default option should be eventually switched to the KHR variant once most loaders support it.
 - Existing assets that use the EXT variant can be losslessly converted to KHR, if needed, by changing the extension strings inside glTF JSON.
 - When producing assets that target loaders supporting both extensions, using this extension with v1 format should be preferred since it provides better compression ratio at no additional runtime cost.
 
@@ -718,6 +718,6 @@ This extension is derived from `EXT_meshopt_compression` with the following chan
 
 - Vertex data supports an upgraded v1 format which provides more granular bit packing (via control modes) and enhanced delta encoding (via channel modes) to compress data better
 - For compatibility, the v0 format (identical to `EXT_meshopt_compression` format) is still supported; however, use of v1 format is preferred
-- New `COLOR` filter supports lossy color compression at smaller compression ratios using YCoCg encoding
+- New `COLOR` filter supports lossy color compression at higher compression ratios using YCoCg encoding
 
 These improvements achieve better compression ratios for typical glTF content while maintaining the same fast decompression performance.
