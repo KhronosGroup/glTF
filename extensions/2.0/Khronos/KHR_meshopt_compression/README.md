@@ -564,7 +564,7 @@ The input to the filter is four 8-bit or 16-bit components, where the first two 
 
 The encoding of the third component allows to compute K for each vector independently from the bit representation, and must encode 1.0 precisely which is equivalent to `(1 << (K - 1)) - 1` as an integer; values of the third component that aren't equal to `(1 << (K - 1)) - 1` for a valid `K` are invalid and the result of decoding such vectors is unspecified.
 
-When storing a K-bit integer in a 8-bit of 16-bit component when K is not 8 or 16, the remaining bits (e.g. top 6 bits in case of K=10) must be equal to the sign bit; the valid range of the resulting integer is from `-max` to `max` where `max = (1 << (K - 1)) - 1`. The behavior of decoding values outside of that range is unspecified.
+When storing a K-bit integer in a 8-bit of 16-bit component when K is less than the component's bit width, the remaining bits (e.g. top 6 bits in case of K=10) must be equal to the sign bit; the valid range of the resulting integer is from `-max` to `max` where `max = (1 << (K - 1)) - 1`. The behavior of decoding values outside of that range is unspecified.
 
 The output of the filter is three decoded unit vector components, stored as 8-bit or 16-bit normalized integers, and the last input component verbatim.
 
@@ -611,7 +611,7 @@ This filter is only valid if `byteStride` is 8.
 
 The input to the filter is three quaternion components, excluding the component with the largest magnitude, encoded as signed normalized K-bit integers (4 <= K <= 16, integers are stored in two's complement format), and an index of the largest component that is omitted in the encoding. The largest component is assumed to always be positive (which is possible due to quaternion double-cover). To allow per-element control over K, the last input element must explicitly encode 1.0 as a signed normalized K-bit integer, except for the least significant 2 bits that store the index of the maximum component.
 
-When storing a K-bit integer in a 16-bit component when K is not 16, the remaining bits (e.g. top 6 bits in case of K=10) must be equal to the sign bit; the valid range of the resulting integer is from `-max` to `max` where `max = (1 << (K - 1)) - 1`. The behavior of decoding values outside of that range is unspecified.
+When storing a K-bit integer in a 16-bit component when K is less than the component's bit width, the remaining bits (e.g. top 6 bits in case of K=10) must be equal to the sign bit; the valid range of the resulting integer is from `-max` to `max` where `max = (1 << (K - 1)) - 1`. The behavior of decoding values outside of that range is unspecified.
 
 The output of the filter is four decoded quaternion components, stored as 16-bit normalized integers.
 
@@ -668,9 +668,9 @@ This filter is only valid if `byteStride` is 4 or 8. When `byteStride` is 4, the
 
 The input to the filter is four 8-bit or 16-bit components, where the first component stores the Y (luma) value as a K-bit unsigned integer, the second and third components store Co/Cg (chrominance) values as K-bit signed integers, and the fourth component stores the alpha value as a K-1-bit unsigned integer with the bit K-1 set to 1 and more significant bits set to 0. K can be determined from the position of the most significant bit of the fourth component. 2 <= K <= 16, signed integers are stored in two's complement format.
 
-When storing a K-bit integer in a 8-bit of 16-bit component when K is not 8 or 16, the remaining bits (e.g. top 6 bits in case of K=10) must be zero for the first and fourth component, and equal to the sign bit for the second and third component, which are signed; the valid range of the two signed integers is from `-max` to `max` where `max = (1 << (K - 1)) - 1`. The behavior of decoding values outside of that range is unspecified.
+When storing a K-bit integer in a 8-bit of 16-bit component when K is less than the component's bit width, the remaining bits (e.g. top 6 bits in case of K=10) must be zero for the first and fourth component, and equal to the sign bit for the second and third component, which are signed; the valid range of the two signed integers is from `-max` to `max` where `max = (1 << (K - 1)) - 1`. The behavior of decoding values outside of that range is unspecified.
 
-The transformation uses YCoCg encoding; reconstruction of RGB values can be performed in integer space or in floating point space, depending on the implementation. The encoder must guarantee that original RGB values can be reconstructed using 32-bit signed integer math, with the final result fitting into a K-bit unsigned integer ([0..2^K-1]).
+The transformation uses YCoCg encoding; reconstruction of RGB values can be performed in integer space or in floating point space, depending on the implementation. The Y, Co and Cg values must be chosen so that the original RGB values can be reconstructed using 32-bit signed integer math, with the final result fitting into a K-bit unsigned integer ([0..2^K-1]).
 
 The output of the filter is four decoded color components (R, G, B, A), stored as 8-bit or 16-bit unsigned normalized integers.
 
