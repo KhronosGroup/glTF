@@ -31,9 +31,11 @@ The `BENTLEY_materials_point_style` extension is applied to a material. When tha
 
 ### Diameter
 
-The `diameter` property specifies the diameter of each point in pixels. When specified, this value must be greater than zero.
+The `diameter` property specifies the diameter of each point in CSS pixels. When specified, this value must be greater than zero.
 
-For each point, implementations should render the point such that a filled circle is centered at the point's pixel screen position with a pixel diameter equal to `diameter`. This point faces the camera.
+For each point, implementations should render the point such that a filled circle is centered at the point's CSS pixel screen position with a pixel diameter equal to `diameter`. This point faces the camera.
+
+Note: The term "CSS pixel" follows the [CSS3 definition](https://www.w3.org/TR/css-values-3/#absolute-lengths). Per that definition, the CSS pixel is defined as $1\text{px} = \frac{1}{96}\text{th}\ \text{of}\ 1\text{in}$, which this specification adopts for clarity and stability.
 
 ## Implementation Notes
 
