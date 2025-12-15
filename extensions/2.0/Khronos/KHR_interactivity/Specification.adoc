@@ -459,6 +459,14 @@ All value sockets of `floatN` or `floatNxN` types have the same type within a no
 | Output value sockets | `float value` | 3.141592653589793
 |===
 
+===== Tau
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/Tau` | Ratio of a circle's circumference to its radius
+| Output value sockets | `float value` | 6.283185307179586
+|===
+
 ===== Infinity
 
 [cols="1h,1,2"]
