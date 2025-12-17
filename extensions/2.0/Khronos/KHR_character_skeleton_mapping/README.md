@@ -50,20 +50,20 @@ Here's an example mapping from a custom rig into VRM Humanoid:
     "KHR_character_skeleton_mapping": {
       "skeletalRigMappings": {
         "vrmHumanoid": {
-          "myRig_hips": "hips",
-          "myRig_head": "head",
-          "myRig_leftFoot": "leftFoot",
-          "myRig_rightFoot": "rightFoot",
-          "myRig_leftHand": "leftHand",
-          "myRig_rightHand": "rightHand"
+          "hips": "myRig_hips",
+          "head": "myRig_head",
+          "leftFoot": "myRig_leftFoot",
+          "rightFoot": "myRig_rightFoot",
+          "leftHand": "myRig_leftHand",
+          "rightHand": "myRig_rightHand"
         },
         "example_rig": {
-          "myRig_hips": "hip_bone",
-          "myRig_head": "head_bone",
-          "myRig_leftFoot": "l_foot_bone",
-          "myRig_rightFoot": "r_foot_bone",
-          "myRig_leftHand": "l_hand_bone",
-          "myRig_rightHand": "r_hand_bone"
+          "hip_bone": "myRig_hips",
+          "head_bone": "myRig_head",
+          "l_foot_bone": "myRig_leftFoot",
+          "r_foot_bone": "myRig_rightFoot",
+          "l_hand_bone": "myRig_leftHand",
+          "r_hand_bone": "myRig_rightHand"
         }
       }
     }
@@ -73,27 +73,27 @@ Here's an example mapping from a custom rig into VRM Humanoid:
 
 In this example:
 
-- The key is the source joint name from the model's native rig (e.g., `"myRig_hips"`)
-- The value is the target joint name defined by the target standard rig (e.g., `"hips"` for VRM Humanoid)
+- The key is the target joint name defined by the target standard rig (e.g., `"hips"` for VRM Humanoid)
+- The value is the source joint name from the model's native rig (e.g., `"myRig_hips"`)
 - The system using this extension may understand what `"vrmHumanoid"` or `"example_rig"` means (i.e., the joint vocabulary and structure must be pre-declared by the consuming runtime)
 
 ### Breakdown and Lower-Level Properties
 
 The structure of the data contained in the extension can be described as a dictionary of dictionaries:
 
-**Target Skeleton/Rig Name** : **Joint Mapping Dictionary** (Source Joint Name : Target Joint Name)
+**Target Skeleton/Rig Name** : **Joint Mapping Dictionary** (Target Joint Name : Source Joint Name)
 
 Each mapping entry is simply:
 
-| Key (Source Joint) | Value (Target Joint) | Description                                              |
+| Key (Target Joint) | Value (Source Joint) | Description                                              |
 | ------------------ | -------------------- | -------------------------------------------------------- |
-| string             | string               | Direct mapping from source joint name to target joint name in the target vocabulary |
+| string             | string               | Direct mapping from target joint name in the target vocabulary to source joint name in the model's native rig |
 
 ### Mapping Types
 
 This extension supports one-to-one mappings:
 
-- **One-to-one**: A source joint maps directly to a single target joint via a simple string value.
+- **One-to-one**: A target joint maps directly to a single source joint via a simple string value.
 
 This approach ensures maximum simplicity, compatibility across all engines and tools, and follows glTF's design philosophy of keeping core extensions simple and stable.
 
@@ -107,11 +107,11 @@ While this extension does not mandate a central registry, developers are encoura
 
 ## Implementation Notes
 
-- Source joint names (keys) are assumed to refer to nodes in the glTF `nodes` array.
-- Target joint names (values) are defined by the target rig's vocabulary.
+- Target joint names (keys) are defined by the target rig's vocabulary.
+- Source joint names (values) are assumed to refer to nodes in the glTF `nodes` array.
 - The reference rig vocabulary may be shared across engines or projects.
 - This extension does not modify skinning behavior, but informs tooling and runtime animation retargeting.
-- For validation, ensure that all source joint names correspond to valid glTF nodes.
+- For validation, ensure that all source joint names (values) correspond to valid glTF nodes.
 
 ## License
 

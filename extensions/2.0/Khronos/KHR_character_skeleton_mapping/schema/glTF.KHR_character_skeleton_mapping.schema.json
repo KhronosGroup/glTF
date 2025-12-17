@@ -10,10 +10,10 @@
             "description": "Dictionary of target rig mappings. Each key is a target rig name, each value is a mapping dictionary.",
             "additionalProperties": {
                 "type": "object",
-                "description": "Joint mapping dictionary. Each key is a source joint name, each value is the target joint name.",
+                "description": "Joint mapping dictionary. Each key is a target joint name in the target rig vocabulary, each value is the source joint name from the model's native rig.",
                 "additionalProperties": {
                     "type": "string",
-                    "description": "Target joint name in the target rig vocabulary."
+                    "description": "Source joint name from the model's native rig."
                 }
             }
         },
