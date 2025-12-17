@@ -4,10 +4,10 @@
 
 - Ken Jakubzak, Meta
 - Hideaki Eguchi / VirtualCast, Inc.
-- K. S. Ernest (iFire) Lee, Individual Contributor / https://github.com/fire
+- K. S. Ernest (iFire) Lee, Independent Contributor / https://github.com/fire
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
-- Leonard Daly, Individual Contributor
+- Leonard Daly, Independent Contributor
 - Nick Burkard, Meta
 
 ## Status
@@ -16,7 +16,7 @@
 
 ## Dependencies
 
-Written against the glTF 2.0 specification.  
+Written against the glTF 2.0 specification.
 Requires the extension(s): `KHR_character`, `KHR_character_expression`, `KHR_animation_pointer`
 Can be used alongside: `KHR_character_expression_mapping`
 
@@ -257,5 +257,5 @@ Animation of either the texture index or texture transform must be implemented u
 
 ## License
 
-This extension specification is licensed under the Khronos Group Extension License.  
+This extension specification is licensed under the Khronos Group Extension License.
 See: https://www.khronos.org/registry/gltf/license.html

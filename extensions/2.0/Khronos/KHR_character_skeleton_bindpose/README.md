@@ -4,10 +4,10 @@
 
 - Ken Jakubzak, Meta
 - Hideaki Eguchi / VirtualCast, Inc.
-- K. S. Ernest (iFire) Lee, Individual Contributor / https://github.com/fire
+- K. S. Ernest (iFire) Lee, Independent Contributor / https://github.com/fire
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
-- Leonard Daly, Individual Contributor
+- Leonard Daly, Independent Contributor
 - Nick Burkard, Meta
 
 ## Status
