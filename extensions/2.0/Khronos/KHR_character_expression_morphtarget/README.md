@@ -16,9 +16,11 @@
 
 ## Dependencies
 
-Written against the glTF 2.0 specification.  
-Requires the extension(s): `KHR_character`,`KHR_character_expression`
+Written against the glTF 2.0 specification.
+Requires the extension(s): `KHR_character`, `KHR_character_expression`, `KHR_animation_pointer`
 Used in conjunction with: `KHR_character_expression_mapping`
+
+> **Note:** This extension explicitly requires `KHR_animation_pointer`. Implementations **MUST** support `KHR_animation_pointer` to use this extension. The `KHR_animation_pointer` extension enables animation of individual morph target weights via JSON pointers, which is essential for granular expression control.
 
 ## Overview
 
@@ -110,6 +112,141 @@ All morph target expressions should be driven using standard glTF animation chan
 - Use `"interpolation": "STEP"` for binary/toggle expressions like `blink`.
 - Each element of the `weights` array corresponds to one morph target on the associated mesh primitive.
 - Expression systems should coordinate with these indices using the bindings declared by this extension.
+
+### Integration with KHR_animation_pointer
+
+For advanced animation control of morph target weights, implementations should use the [`KHR_animation_pointer`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_animation_pointer) extension. This provides a standardized mechanism for animating weights via JSON pointers.
+
+As defined in the [glTF Object Model](https://github.com/KhronosGroup/glTF/blob/main/specification/2.0/ObjectModel.adoc#core-pointers), the following pointer templates are supported for morph target weights:
+
+| Pointer | Type | Description |
+| ------- | ---- | ----------- |
+| `/nodes/{}/weights` | `float[]` | Animate all morph target weights on a node simultaneously |
+| `/nodes/{}/weights/{}` | `float` | Animate a specific morph target weight by index |
+
+Where `{}` is replaced with the corresponding array element index (e.g., `/nodes/0/weights` or `/nodes/0/weights/2`).
+
+### Example: Animating All Weights on a Node
+
+This example animates all morph target weights on a node using the `/nodes/i/weights` pointer:
+
+```json
+{
+  "animations": [
+    {
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "path": "pointer",
+            "extensions": {
+              "KHR_animation_pointer": {
+                "pointer": "/nodes/0/weights"
+              }
+            }
+          }
+        }
+      ],
+      "samplers": [
+        {
+          "input": 0,
+          "output": 1,
+          "interpolation": "LINEAR"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Example: Animating a Specific Weight Index
+
+For more granular control, you can animate individual morph target weights using the `/nodes/i/weights/j` pointer. This is particularly useful when you want to animate a single expression without affecting other morph targets:
+
+```json
+{
+  "animations": [
+    {
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "path": "pointer",
+            "extensions": {
+              "KHR_animation_pointer": {
+                "pointer": "/nodes/0/weights/2"
+              }
+            }
+          }
+        }
+      ],
+      "samplers": [
+        {
+          "input": 0,
+          "output": 1,
+          "interpolation": "STEP"
+        }
+      ]
+    }
+  ]
+}
+```
+
+In this example, only the morph target at index 2 (e.g., `blinkLeft`) is animated, while other weights remain unchanged.
+
+### Example: Animating Multiple Specific Weights
+
+To animate multiple specific morph targets independently (e.g., left and right blinks with different timing):
+
+```json
+{
+  "animations": [
+    {
+      "name": "blink",
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "path": "pointer",
+            "extensions": {
+              "KHR_animation_pointer": {
+                "pointer": "/nodes/0/weights/2"
+              }
+            }
+          }
+        },
+        {
+          "sampler": 1,
+          "target": {
+            "path": "pointer",
+            "extensions": {
+              "KHR_animation_pointer": {
+                "pointer": "/nodes/0/weights/3"
+              }
+            }
+          }
+        }
+      ],
+      "samplers": [
+        {
+          "input": 0,
+          "output": 1,
+          "interpolation": "STEP"
+        },
+        {
+          "input": 2,
+          "output": 3,
+          "interpolation": "STEP"
+        }
+      ]
+    }
+  ]
+}
+```
+
+This allows `blinkLeft` (weight index 2) and `blinkRight` (weight index 3) to be animated with different timing samplers.
+
+This method ensures consistent and interoperable animation targeting for morph target-based expressions across glTF runtimes.
 
 ## Example: Expression with glTF Animation
 
@@ -203,5 +340,5 @@ This approach simplifies character implementation by centralizing expression pla
 
 ## License
 
-This extension specification is licensed under the Khronos Group Extension License.  
+This extension specification is licensed under the Khronos Group Extension License.
 See: https://www.khronos.org/registry/gltf/license.html
