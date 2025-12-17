@@ -21,11 +21,11 @@ Requires the extension(s):  `KHR_character`
 
 ## Overview
 
-The `KHR_character_skeleton_bindpose` extension defines a canonical bind pose for the character's skeleton. This pose serves as a neutral reference that supports animation retargeting, mesh deformation validation, and consistency across toolchains. The bind pose is defined per-skin and uses the same joint ordering as the skin's joints array for direct mapping and maximum simplicity.
+The `KHR_character_skeleton_bindpose` extension defines one or more canonical bind poses for the character's skeleton. These poses serve as neutral references that support animation retargeting, mesh deformation validation, and consistency across toolchains. Multiple bind poses can be defined per-skin (each with a unique pose type), using the same joint ordering as the skin's joints array for direct mapping and maximum simplicity.
 
 ## Extension Schema
 
-This extension is applied to individual skins in the glTF file, providing bind pose data that corresponds directly to the skin's joint array.
+This extension is applied to individual skins in the glTF file, providing bind pose data that corresponds directly to the skin's joint array. Multiple bind poses can be defined, each with a unique `poseType`.
 
 ```json
 {
@@ -34,12 +34,25 @@ This extension is applied to individual skins in the glTF file, providing bind p
       "joints": [2, 5, 8, 12],
       "extensions": {
         "KHR_character_skeleton_bindpose": {
-          "poseType": "TPose",
-          "bindPoses": [
-            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] },
-            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.5, 0, 1] },
-            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.0, 0, 1] },
-            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.5, 0, 1] }
+          "poses": [
+            {
+              "poseType": "TPose",
+              "bindPoses": [
+                { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] },
+                { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.5, 0, 1] },
+                { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.0, 0, 1] },
+                { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.5, 0, 1] }
+              ]
+            },
+            {
+              "poseType": "IPose",
+              "bindPoses": [
+                { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] },
+                { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.5, 0, 1] },
+                { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.0, 0, 1] },
+                { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.5, 0, 1] }
+              ]
+            }
           ]
         }
       }
@@ -52,7 +65,15 @@ This extension is applied to individual skins in the glTF file, providing bind p
 
 | Property | Type | Description |
 | -------- | ---- | ----------- |
-| `poseType` | string | Enum: `TPose`, `APose`, `Custom`. Declares the character's general pose classification. |
+| `poses` | array | Array of pose definitions. Each pose has a unique `poseType` and corresponding `bindPoses` array. |
+
+#### poses Array
+
+Each entry in the `poses` array contains:
+
+| Property | Type | Description |
+| -------- | ---- | ----------- |
+| `poseType` | string | Enum: `TPose`, `APose`, `IPose`, `Custom`. Declares the pose classification for this bind pose set. |
 | `bindPoses` | array | List of bind pose matrices corresponding directly to the skin's joints array. Each entry at index i corresponds to the joint at joints[i]. |
 
 #### bindPoses Array
@@ -75,6 +96,7 @@ The `bindPoses` array uses per-skin joint indexing for maximum simplicity and gl
 ### Example Mapping
 
 Given a skin with `"joints": [2, 5, 8, 12]`:
+
 - `bindPoses[0]` corresponds to joint node 2
 - `bindPoses[1]` corresponds to joint node 5
 - `bindPoses[2]` corresponds to joint node 8
@@ -90,18 +112,20 @@ This extension supplements or overrides that mechanism by defining joint rest po
 
 ### poseType Enum
 
-| Value    | Description                                                           |
-| -------- | --------------------------------------------------------------------- |
-| `TPose`  | Arms extended horizontally. Common neutral rest pose for retargeting. |
-| `APose`  | Arms angled downward. Used by some character authoring tools.         |
-| `Custom` | Any pose that does not fit T-Pose or A-Pose definitions.              |
+| Value    | Description                                                                          |
+| -------- | ------------------------------------------------------------------------------------ |
+| `TPose`  | Arms extended horizontally. Common neutral rest pose for retargeting.                |
+| `APose`  | Arms angled downward (~45°). Used by some character authoring tools.                 |
+| `IPose`  | Arms resting at sides, parallel to the body. Natural standing pose.                  |
+| `Custom` | Any pose that does not fit T-Pose, A-Pose, or I-Pose definitions.                    |
 
 ## Implementation Notes
 
-- The number of bind poses must match the number of joints in the skin's joints array.
+- Each `poseType` value must be unique within the `poses` array. A skin cannot have two poses with the same `poseType`.
+- The number of bind poses in each `bindPoses` array must match the number of joints in the skin's joints array.
 - The bind pose matrix must be specified in model space (i.e., world-relative).
 - This extension can be used in tandem with `skins[].inverseBindMatrices`, but is intended to expose clearer semantic meaning.
-- Validation should ensure that bindPoses array length equals joints array length.
+- Validation should ensure that each bindPoses array length equals joints array length.
 
 ## Example
 
@@ -120,12 +144,25 @@ This extension supplements or overrides that mechanism by defining joint rest po
       "joints": [0, 1, 2, 3],
       "extensions": {
         "KHR_character_skeleton_bindpose": {
-          "poseType": "TPose",
-          "bindPoses": [
-            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] },
-            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.5, 0, 1] },
-            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.0, 0, 1] },
-            { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.5, 0, 1] }
+          "poses": [
+            {
+              "poseType": "TPose",
+              "bindPoses": [
+                { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] },
+                { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.5, 0, 1] },
+                { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.0, 0, 1] },
+                { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.5, 0, 1] }
+              ]
+            },
+            {
+              "poseType": "IPose",
+              "bindPoses": [
+                { "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] },
+                { "matrix": [0.707, 0, -0.707, 0, 0, 1, 0, 0, 0.707, 0, 0.707, 0, 0, 0.5, 0, 1] },
+                { "matrix": [0.707, 0, -0.707, 0, 0, 1, 0, 0, 0.707, 0, 0.707, 0, 0, 1.0, 0, 1] },
+                { "matrix": [0.707, 0, -0.707, 0, 0, 1, 0, 0, 0.707, 0, 0.707, 0, 0, 1.5, 0, 1] }
+              ]
+            }
           ]
         }
       }
