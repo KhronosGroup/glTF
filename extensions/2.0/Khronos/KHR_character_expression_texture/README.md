@@ -9,6 +9,8 @@
 - 0b5vr / pixiv Inc.
 - Leonard Daly, Independent Contributor
 - Nick Burkard, Meta
+- Sarah Cooney, Microsoft XGTG
+- Aaron Franke, Independent Contributor
 
 ## Status
 
