@@ -5,14 +5,14 @@
     "description": "glTF extension for character-specific metadata and properties.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "sceneIndex": {
+        "rootNode": {
             "allOf": [{ "$ref": "glTFid.schema.json" }],
-            "description": "Index of the glTF scene representing the avatar. Used to distinguish the avatar root when multiple scenes exist."
+            "description": "Index of the glTF node representing the root of the character hierarchy. This node should be a common ancestor of all nodes containing character-related data, such as meshes, skins, and animations."
         },
         "extensions": { },
         "extras": { }
     },
     "required": [
-        "sceneIndex"
+        "rootNode"
     ]
 }

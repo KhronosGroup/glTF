@@ -4,11 +4,13 @@
 
 - Ken Jakubzak, Meta
 - Hideaki Eguchi / VirtualCast, Inc.
-- K. S. Ernest (iFire) Lee, Individual Contributor / https://github.com/fire
+- K. S. Ernest (iFire) Lee, Independent Contributor / https://github.com/fire
 - Shinnosuke Iwaki / VirtualCast, Inc.
 - 0b5vr / pixiv Inc.
-- Leonard Daly, Individual Contributor
+- Leonard Daly, Independent Contributor
 - Nick Burkard, Meta
+- Sarah Cooney, Microsoft XGTG
+- Aaron Franke, Independent Contributor
 
 ## Status
 
@@ -20,7 +22,7 @@ Written against the glTF 2.0 specification.
 
 Requires the extensions: `KHR_xmp_json_ld`
 
-This extension also leverages the `KHR_xmp_json_ld` pattern for attaching extensible metadata as JSON-LD blocks within glTF assets. For background on this approach, see:  
+This extension also leverages the `KHR_xmp_json_ld` pattern for attaching extensible metadata as JSON-LD blocks within glTF assets. For background on this approach, see:
 [KHR_xmp_json_ld](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_xmp_json_ld)
 
 ## Overview
@@ -29,7 +31,7 @@ The `KHR_character` extension designates a glTF asset as representing an charact
 
 This extension does not define character features directly but acts as a root declaration that character-related extensions may be present, and that consumers should treat the asset using character-specific logic and pipelines. It's part of the wider set of KHR character extensions that are meant to be building blocks to represent a contract stating functionality and data requirements between a given model and an endpoint.
 
-The extension supports referencing the source `scene` that represents the character and optionally includes structured metadata through the `KHR_xmp_json_ld` mechanism.
+The extension supports referencing the root `node` that represents the character and optionally includes structured metadata through the `KHR_xmp_json_ld` mechanism.
 
 ## Extension Schema
 
@@ -37,7 +39,7 @@ The extension supports referencing the source `scene` that represents the charac
 {
   "extensions": {
     "KHR_character": {
-      "sceneIndex": 0
+      "rootNode": 0
     }
   }
 }
@@ -45,9 +47,9 @@ The extension supports referencing the source `scene` that represents the charac
 
 ### Properties
 
-| Property     | Type    | Description                                                                                                              |
-| ------------ | ------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `sceneIndex` | integer | Index of the glTF `scene` representing the character. Used to distinguish the character root when multiple scenes exist. |
+| Property   | Type    | Description                                                                                                                                                                                  |
+| ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rootNode` | integer | Index of the glTF `node` representing the root of the character hierarchy. This node should be a common ancestor of all nodes containing character-related data, such as meshes, skins, and animations. |
 
 ## Metadata Attachment: KHR_xmp_json_ld
 
@@ -95,7 +97,7 @@ The `KHR_xmp_json_ld` block is placed at the root level of the glTF asset as par
   "extensionsUsed": ["KHR_character", "KHR_xmp_json_ld"],
   "extensions": {
     "KHR_character": {
-      "sceneIndex": 0
+      "rootNode": 0
     },
 
     "KHR_xmp_json_ld": {
@@ -139,7 +141,7 @@ The `KHR_xmp_json_ld` block is placed at the root level of the glTF asset as par
 
 ## Implementation Notes
 
-- `sceneIndex` is required, representing the index of the glTF `scene` corresponding to the character. Used to distinguish the character root when multiple scenes exist.
+- `rootNode` is required, representing the index of the glTF `node` that serves as the root of the character hierarchy. This node should be a common ancestor of all nodes containing character-related data, such as meshes, skins, and animations.
 - Consumers should use this marker as a signal to search for additional character-related extensions, including skeletal, expression, and other khronos character extensions.
 - Support for `KHR_xmp_json_ld` is encouraged to ensure interoperable metadata across tools and runtimes.
 
@@ -147,5 +149,5 @@ The `KHR_xmp_json_ld` block is placed at the root level of the glTF asset as par
 
 ## License
 
-This extension specification is licensed under the Khronos Group Extension License.  
+This extension specification is licensed under the Khronos Group Extension License.
 See: https://www.khronos.org/registry/gltf/license.html
