@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BENTLEY_materials_point_style extension",
+  "type": "object",
+  "description": "Specifies point diameter for CAD-style visualization.",
+  "allOf": [
+    { "$ref": "glTFProperty.schema.json" }
+  ],
+  "properties": {
+    "diameter": {
+      "type": "integer",
+      "description": "Diameter of the point in screen pixels. Must be > 0.",
+      "minimum": 1
+    },
+    "extensions": {},
+    "extras": {}
+  },
+  "required": ["diameter"]
+}
