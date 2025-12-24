@@ -70,9 +70,70 @@ The `mode` of the `primitive` must be `POINTS`.
 
 ## Lighting
 
-At the time of writing, the most common method for lighting 3D Gaussian splats is via spherical harmonics. This extension defines attributes to store spherical harmonic coefficients for each splat. The zeroth-order spherical harmonic coefficients are always required. Higher order coefficients are optional.
+At the time of writing, the most common method for lighting 3D Gaussian splats is via the real spherical harmonics. This extension defines attributes to store spherical harmonic coefficients for each splat. The zeroth-order spherical harmonic coefficients are always required. Higher order coefficients are optional. Each color channel has a separate coefficient, so for each degree $ℓ$, there are $(2ℓ + 1)$ coefficients, each containing RGB values.
 
 These rules may be relaxed by future extensions that define alternative lighting methods or have specific requirements for handling compression, such as when a compression method stores the diffuse color components as linear color values instead of the zeroth-order coefficients.
+
+### Calculating color from Spherical Harmonics
+
+The diffuse color of the splat can be computed by multiplying the RGB coefficients of the zeroth-order spherical harmonic by the constant real spherical harmonic value of $0.282095$. This constant is derived from the formula for the real spherical harmonic of degree 0, order 0:
+
+```math
+Y_{0,0}(θ, φ) = \frac{1}{2} \sqrt{\frac{1}{π}} ≈ 0.282095
+```
+
+To keep the spherical harmonics within the [0, 1] range, the forward pass of the training process applies a _0.5_ bias to the DC component of the spherical harmonics. The rendering process must also apply this bias when reconstructing the color values from the spherical harmonics. This allows the training to occur around 0, ensuring numeric stability for the spherical harmonics, but also allows the coefficients to remain within a valid range for easy rendering.
+
+Ergo, to calculate the diffuse RGB color from the DC component, the formula is:
+
+```math
+Color_{diffuse} = SH_{0,0} * 0.282095 + 0.5
+```
+
+Where $SH_{0,0}$ represents the RGB coefficients of the zeroth-order real spherical harmonic.
+
+Subsequent degrees of spherical harmonics can be used to compute more complex lighting effects, such as ambient occlusion and specular highlights, by evaluating the spherical harmonics at the appropriate angles based on the surface normal and light direction. Functions for the higher order real spherical harmonics are defined as follows:
+
+```math
+\begin{aligned}
+\text{ℓ = 1} \quad &
+\left\{
+    \begin{aligned}
+    Y_{1,-1}(θ, φ) &= \sqrt{\frac{3}{4π}} \cdot \frac{y}{r}\\
+    Y_{1,0}(θ, φ) &= \sqrt{\frac{3}{4π}} \cdot \frac{z}{r}\\
+    Y_{1,1}(θ, φ) &= \sqrt{\frac{3}{4π}} \cdot \frac{x}{r}\\
+    \end{aligned}
+\right.\\
+\text{ℓ = 2} \quad &
+\left\{
+    \begin{aligned}
+    Y_{2,-2}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{π}} \cdot \frac{xy}{r^2}\\
+    Y_{2,-1}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{π}} \cdot \frac{yz}{r^2}\\
+    Y_{2,0}(θ, φ) &= \frac{1}{4} \sqrt{\frac{5}{π}} \cdot \frac{3z^2 - r^2}{r^2}\\
+    Y_{2,1}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{π}} \cdot \frac{xz}{r^2}\\
+    Y_{2,2}(θ, φ) &= \frac{1}{4} \sqrt{\frac{15}{π}} \cdot \frac{x^2 - y^2}{r^2}\\
+    \end{aligned}
+\right.\\
+\text{ℓ = 3} \quad &
+\left\{
+    \begin{aligned}
+    Y_{3,-3}(θ, φ) &= \frac{1}{4} \sqrt{\frac{35}{2π}} \cdot \frac{y(3x^2 - y^2)}{r^3}\\
+    Y_{3,-2}(θ, φ) &= \frac{1}{2} \sqrt{\frac{105}{π}} \cdot \frac{xyz}{r^3}\\
+    Y_{3,-1}(θ, φ) &= \frac{1}{4} \sqrt{\frac{21}{2π}} \cdot \frac{y(5z^2 - r^2)}{r^3}\\
+    Y_{3,0}(θ, φ) &= \frac{1}{4} \sqrt{\frac{7}{π}} \cdot \frac{z(5z^2 - 3r^2)}{r^3}\\
+    Y_{3,1}(θ, φ) &= \frac{1}{4} \sqrt{\frac{21}{2π}} \cdot \frac{x(5z^2 - r^2)}{r^3}\\
+    Y_{3,2}(θ, φ) &= \frac{1}{4} \sqrt{\frac{105}{π}} \cdot \frac{z(x^2 - y^2)}{r^3}\\
+    Y_{3,3}(θ, φ) &= \frac{1}{4} \sqrt{\frac{35}{2π}} \cdot \frac{x(x^2 - 3y^2)}{r^3}\\
+    \end{aligned}
+\right.
+\end{aligned}
+```
+
+TODO: Explain the relationship of r to the unit sphere and normalizing the (x, y, z) coordinates.
+
+Other extensions may define alternative lighting methods, have specific requirements for handling compression, or define different spherical harmonics handling.
+
+See [Appendix A: Rendering with the base Ellipse Kernel and Spherical Harmonics](#appendix-a-rendering-with-the-base-ellipse-kernel-and-spherical-harmonics) for more details on how to properly implement the lighting used by this extension.
 
 ## Schema Example
 
@@ -147,6 +208,8 @@ The scale (`KHR_gaussian_splatting:SCALE`) and rotation (`KHR_gaussian_splatting
 Together, the scale and rotation can be used to reconstruct the full covariance matrix of the Gaussian splat for rendering purposes. Combined with the position attribute, these values define the identity and shape of the ellipsoid in 3D space.
 
 More details on how to interpret these attributes for rendering can be found in the [3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/) paper.
+
+See [Appendix A: Rendering with the base Ellipse Kernel and Spherical Harmonics](#appendix-a-rendering-with-the-base-ellipse-kernel-and-spherical-harmonics) for more details on how to properly implement the ellipse kernel used by this extension.
 
 ### Color Space
 
@@ -302,6 +365,14 @@ The extension must also be listed in `extensionsUsed` at the top level of the gl
     "EXT_gaussian_splatting_kernel_customShape"
   ]
 ```
+
+## Appendix A: Rendering with the base Ellipse Kernel and Spherical Harmonics
+
+*This section is non-normative.*
+
+The ellipse kernel defined in `KHR_gaussian_splatting` is based on the kernel and implementation described in the original research paper, [3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/). This kernel is defined by projecting a 3D ellipsoid onto a 2D plane using a perspective projection. The ellipsoid is defined by its mean (position), covariance matrix (derived from scale and rotation), and opacity. 
+
+TODO FINISH THIS THING
 
 ## Known Implementations
 
