@@ -39,7 +39,7 @@ The extension is added to the `textures` node and specifies a `source` property 
 ]
 ```
 
-When used in the glTF Binary (.glb) format the `images` node that points to the XNB file uses the `mimeType` value of *image/vnd-ms.xnb*.
+When used in the glTF Binary (.glb) format the `images` node that points to the XNB file uses the `mimeType` value of *image/vnd.ms-xnb*.
 
 ```json
 "textures": [
@@ -58,7 +58,7 @@ When used in the glTF Binary (.glb) format the `images` node that points to the 
         "bufferView": 1
     },
     {
-        "mimeType": "image/vnd-ms.xnb",
+        "mimeType": "image/vnd.ms-xnb",
         "bufferView": 2
     }
 ]
