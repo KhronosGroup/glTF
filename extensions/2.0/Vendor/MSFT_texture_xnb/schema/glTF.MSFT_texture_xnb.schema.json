@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "XNA_texture_xnb extension",
+  "title": "MSFT_texture_xnb extension",
   "type": "object",
   "description": "glTF extension to specify textures using the XNA Binary format (XNB).",
   "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
