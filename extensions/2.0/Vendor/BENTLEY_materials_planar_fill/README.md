@@ -3,7 +3,7 @@ Copyright 2015-2025 The Khronos Group Inc.
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-# BENTLEY_materials_planar\_fill
+# BENTLEY_materials_planar_fill
 
 ## Contributors
 
