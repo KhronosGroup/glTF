@@ -94,42 +94,43 @@ Where $SH_{0,0}$ represents the RGB coefficients of the zeroth-order real spheri
 
 Subsequent degrees of spherical harmonics can be used to compute more complex lighting effects, such as ambient occlusion and specular highlights, by evaluating the spherical harmonics at the appropriate angles based on the surface normal and light direction. Functions for the higher order real spherical harmonics are defined as follows:
 
-```math
-\begin{aligned}
-\text{ℓ = 1} \quad &
-\left\{
-    \begin{aligned}
-    Y_{1,-1}(θ, φ) &= \sqrt{\frac{3}{4π}} \cdot \frac{y}{r}\\
-    Y_{1,0}(θ, φ) &= \sqrt{\frac{3}{4π}} \cdot \frac{z}{r}\\
-    Y_{1,1}(θ, φ) &= \sqrt{\frac{3}{4π}} \cdot \frac{x}{r}\\
-    \end{aligned}
-\right.\\
-\text{ℓ = 2} \quad &
-\left\{
-    \begin{aligned}
-    Y_{2,-2}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{π}} \cdot \frac{xy}{r^2}\\
-    Y_{2,-1}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{π}} \cdot \frac{yz}{r^2}\\
-    Y_{2,0}(θ, φ) &= \frac{1}{4} \sqrt{\frac{5}{π}} \cdot \frac{3z^2 - r^2}{r^2}\\
-    Y_{2,1}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{π}} \cdot \frac{xz}{r^2}\\
-    Y_{2,2}(θ, φ) &= \frac{1}{4} \sqrt{\frac{15}{π}} \cdot \frac{x^2 - y^2}{r^2}\\
-    \end{aligned}
-\right.\\
-\text{ℓ = 3} \quad &
-\left\{
-    \begin{aligned}
-    Y_{3,-3}(θ, φ) &= \frac{1}{4} \sqrt{\frac{35}{2π}} \cdot \frac{y(3x^2 - y^2)}{r^3}\\
-    Y_{3,-2}(θ, φ) &= \frac{1}{2} \sqrt{\frac{105}{π}} \cdot \frac{xyz}{r^3}\\
-    Y_{3,-1}(θ, φ) &= \frac{1}{4} \sqrt{\frac{21}{2π}} \cdot \frac{y(5z^2 - r^2)}{r^3}\\
-    Y_{3,0}(θ, φ) &= \frac{1}{4} \sqrt{\frac{7}{π}} \cdot \frac{z(5z^2 - 3r^2)}{r^3}\\
-    Y_{3,1}(θ, φ) &= \frac{1}{4} \sqrt{\frac{21}{2π}} \cdot \frac{x(5z^2 - r^2)}{r^3}\\
-    Y_{3,2}(θ, φ) &= \frac{1}{4} \sqrt{\frac{105}{π}} \cdot \frac{z(x^2 - y^2)}{r^3}\\
-    Y_{3,3}(θ, φ) &= \frac{1}{4} \sqrt{\frac{35}{2π}} \cdot \frac{x(x^2 - 3y^2)}{r^3}\\
-    \end{aligned}
-\right.
-\end{aligned}
-```
+**Degree 1, ℓ = 1**
 
-TODO: Explain the relationship of r to the unit sphere and normalizing the (x, y, z) coordinates.
+$`
+\begin{aligned}
+Y_{1,-1}(θ, φ) &= \sqrt{\frac{3}{4\pi}} \cdot \frac{y}{r}\\
+Y_{1,0}(θ, φ) &= \sqrt{\frac{3}{4\pi}} \cdot \frac{z}{r}\\
+Y_{1,1}(θ, φ) &= \sqrt{\frac{3}{4\pi}} \cdot \frac{x}{r}\\
+\end{aligned}
+`$
+
+**Degree 2, ℓ = 2**
+
+$`
+\begin{aligned}
+Y_{2,-2}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{\pi}} \cdot \frac{xy}{r^2}\\
+Y_{2,-1}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{\pi}} \cdot \frac{yz}{r^2}\\
+Y_{2,0}(θ, φ) &= \frac{1}{4} \sqrt{\frac{5}{\pi}} \cdot \frac{3z^2 - r^2}{r^2}\\
+Y_{2,1}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{\pi}} \cdot \frac{xz}{r^2}\\
+Y_{2,2}(θ, φ) &= \frac{1}{4} \sqrt{\frac{15}{\pi}} \cdot \frac{x^2 - y^2}{r^2}\\
+\end{aligned}
+`$
+
+**Degree 3, ℓ = 3**
+
+$`
+\begin{aligned}
+Y_{3,-3}(θ, φ) &= \frac{1}{4} \sqrt{\frac{35}{2\pi}} \cdot \frac{y(3x^2 - y^2)}{r^3}\\
+Y_{3,-2}(θ, φ) &= \frac{1}{2} \sqrt{\frac{105}{\pi}} \cdot \frac{xyz}{r^3}\\
+Y_{3,-1}(θ, φ) &= \frac{1}{4} \sqrt{\frac{21}{2\pi}} \cdot \frac{y(5z^2 - r^2)}{r^3}\\
+Y_{3,0}(θ, φ) &= \frac{1}{4} \sqrt{\frac{7}{\pi}} \cdot \frac{z(5z^2 - 3r^2)}{r^3}\\
+Y_{3,1}(θ, φ) &= \frac{1}{4} \sqrt{\frac{21}{2\pi}} \cdot \frac{x(5z^2 - r^2)}{r^3}\\
+Y_{3,2}(θ, φ) &= \frac{1}{4} \sqrt{\frac{105}{\pi}} \cdot \frac{z(x^2 - y^2)}{r^3}\\
+Y_{3,3}(θ, φ) &= \frac{1}{4} \sqrt{\frac{35}{2\pi}} \cdot \frac{x(x^2 - 3y^2)}{r^3}\\
+\end{aligned}
+`$
+
+For all of these functions, $r$ represents the magnitude of the position vector, calculated as $r = \sqrt{x^2 + y^2 + z^2}$. Within 3D Gaussian splatting, normalization is used to ensure that the direction vectors are unit vectors. Therefore, $r$ is equal to $1$ when evaluating the spherical harmonics for lighting calculations.
 
 Other extensions may define alternative lighting methods, have specific requirements for handling compression, or define different spherical harmonics handling.
 
