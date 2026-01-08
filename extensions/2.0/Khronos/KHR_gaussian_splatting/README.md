@@ -132,7 +132,7 @@ Y_{3,3}(θ, φ) &= \frac{1}{4} \sqrt{\frac{35}{2\pi}} \cdot \frac{x(x^2 - 3y^2)}
 
 For all of these functions, $r$ represents the magnitude of the position vector, calculated as $r = \sqrt{x^2 + y^2 + z^2}$. Within 3D Gaussian splatting, normalization is used to ensure that the direction vectors are unit vectors. Therefore, $r$ is equal to $1$ when evaluating the spherical harmonics for lighting calculations.
 
-Other extensions may define alternative lighting methods, have specific requirements for handling compression, or define different spherical harmonics handling.
+Extensions extending this extension may define alternative lighting methods, have specific requirements for handling compression, or define different spherical harmonics handling.
 
 See [Appendix A: Rendering with the base Ellipse Kernel and Spherical Harmonics](#appendix-a-rendering-with-the-base-ellipse-kernel-and-spherical-harmonics) for more details on how to properly implement the lighting used by this extension.
 
