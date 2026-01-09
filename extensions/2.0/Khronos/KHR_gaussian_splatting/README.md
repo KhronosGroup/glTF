@@ -228,7 +228,9 @@ Additional values can be added over time by defining extensions to add new color
 | srgb_rec709_display | BT.709 sRGB (display-referred) color space. |
 | lin_rec709_display | BT.709 linear (display-referred) color space. |
 
-#### Display-referred vs Scene-referred Color Spaces
+*Non-normative Note: The string values for colorspace follow the color space identification pattern recommended by the ASWF Color Interoperability Forum (CIF). See: [ASWF Color Interoperability Forum](https://lf-aswf.atlassian.net/wiki/spaces/CIF/overview)*
+
+#### Color Space References
 
 TODO: Expand this section
 
