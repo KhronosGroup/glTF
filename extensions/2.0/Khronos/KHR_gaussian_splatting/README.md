@@ -97,29 +97,26 @@ Subsequent degrees of spherical harmonics can be used to compute more complex li
 ```math
 \textbf{Degree 1, ℓ = 1}\\
 \begin{aligned}
-\\
 Y_{1,-1}(θ, φ) &= \sqrt{\frac{3}{4\pi}} \cdot \frac{y}{r}\\
 Y_{1,0}(θ, φ) &= \sqrt{\frac{3}{4\pi}} \cdot \frac{z}{r}\\
-Y_{1,1}(θ, φ) &= \sqrt{\frac{3}{4\pi}} \cdot \frac{x}{r}\\
+Y_{1,1}(θ, φ) &= \sqrt{\frac{3}{4\pi}} \cdot \frac{x}{r}\\\\
 \end{aligned}
 ```
 
 ```math
 \textbf{Degree 2, ℓ = 2}\\
 \begin{aligned}
-\\
 Y_{2,-2}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{\pi}} \cdot \frac{xy}{r^2}\\
 Y_{2,-1}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{\pi}} \cdot \frac{yz}{r^2}\\
 Y_{2,0}(θ, φ) &= \frac{1}{4} \sqrt{\frac{5}{\pi}} \cdot \frac{3z^2 - r^2}{r^2}\\
 Y_{2,1}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{\pi}} \cdot \frac{xz}{r^2}\\
-Y_{2,2}(θ, φ) &= \frac{1}{4} \sqrt{\frac{15}{\pi}} \cdot \frac{x^2 - y^2}{r^2}\\
+Y_{2,2}(θ, φ) &= \frac{1}{4} \sqrt{\frac{15}{\pi}} \cdot \frac{x^2 - y^2}{r^2}\\\\
 \end{aligned}
 ```
 
 ```math
 \textbf{Degree 3, ℓ = 3}\\
 \begin{aligned}
-\\
 Y_{3,-3}(θ, φ) &= \frac{1}{4} \sqrt{\frac{35}{2\pi}} \cdot \frac{y(3x^2 - y^2)}{r^3}\\
 Y_{3,-2}(θ, φ) &= \frac{1}{2} \sqrt{\frac{105}{\pi}} \cdot \frac{xyz}{r^3}\\
 Y_{3,-1}(θ, φ) &= \frac{1}{4} \sqrt{\frac{21}{2\pi}} \cdot \frac{y(5z^2 - r^2)}{r^3}\\
@@ -225,7 +222,7 @@ Additional values can be added over time by defining extensions to add new color
 | Color Space | Description |
 | --- | --- |
 | srgb_rec709_display | BT.709 sRGB (display-referred) color space. |
-| lin_rec709_display | BT.709 linear (scene-referred) color space. |
+| lin_rec709_display | BT.709 linear (display-referred) color space. |
 
 #### Display-referred vs Scene-referred Color Spaces
 
