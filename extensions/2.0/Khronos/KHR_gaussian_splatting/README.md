@@ -78,6 +78,14 @@ At the time of writing, the most common method for lighting 3D Gaussian splats i
 
 These rules may be relaxed by future extensions that define alternative lighting methods or have specific requirements for handling compression, such as when a compression method stores the diffuse color components as linear color values instead of the zeroth-order coefficients.
 
+### Image State & Relighting
+
+Image state is defined by ISO 22028-1:2016 and indicates the rendering state of the image data. **_Display-referred_** (also known as _output-referred_ in ISO 22028-1:2016) image state represents data that has gone through color-rendering appropriate for display. **_Scene-referred_** image state represents data that represents the actual colorimetry of the scene.
+
+The default `ellipse` kernel based on the original 3D Gaussian splatting paper typically uses the _BT.709-sRGB_ color space with a _display-referred_ image state for training and rendering. This is different than the typical glTF PBR material model, where scene-referred linear color spaces are used. This extension defines two display-referred color spaces but scene-referred color spaces may be added by extensions. See: [Available Color Spaces](#available-color-spaces)
+
+Implementations are allowed to relight the splats than the one they were trained in, but this may lead to visual differences compared to the original training results.
+
 ### Calculating color from Spherical Harmonics
 
 The diffuse color of the splat can be computed by multiplying the RGB coefficients of the zeroth-order spherical harmonic by the constant real spherical harmonic value of $0.282095$. This constant is derived from the formula for the real spherical harmonic of degree 0, order 0:
@@ -229,10 +237,6 @@ Additional values can be added over time by defining extensions to add new color
 | lin_rec709_display | BT.709 linear (display-referred) color space. |
 
 *Non-normative Note: The string values for colorspace follow the color space identification pattern recommended by the ASWF Color Interoperability Forum (CIF). See: [ASWF Color Interoperability Forum](https://lf-aswf.atlassian.net/wiki/spaces/CIF/overview)*
-
-#### Color Space References
-
-TODO: Expand this section
 
 ### Projection
 
