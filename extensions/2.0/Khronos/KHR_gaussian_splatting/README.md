@@ -68,6 +68,10 @@ Other extensions that depend on this extension such as 3D Gaussian splatting com
 
 The `mode` of the `primitive` must be `POINTS`.
 
+### Reconstructing the Scene
+
+TODO: Expand this section
+
 ## Lighting
 
 At the time of writing, the most common method for lighting 3D Gaussian splats is via the real spherical harmonics. This extension defines attributes to store spherical harmonic coefficients for each splat. The zeroth-order spherical harmonic coefficients are always required. Higher order coefficients are optional. Each color channel has a separate coefficient, so for each degree $ℓ$, there are $(2ℓ + 1)$ coefficients, each containing RGB values.
