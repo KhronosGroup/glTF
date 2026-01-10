@@ -1,0 +1,38 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "lineString",
+    "title": "Line String",
+    "type": "object",
+    "description": "Represents one or more line strings to be drawn as edges of a triangle mesh",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "indices": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of the accessor that contains the vertex indices for the line strings",
+            "gltf_detailedDescription": "The index of the accessor that contains the vertex indices. The accessor **MUST** have `SCALAR` type and an unsigned integer component type. The indices are permitted to include the maximal index value for the component type, indicating the start of a new line string."
+        },
+        "material": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of a glTF material with which the edges are to be drawn.",
+            "gltf_detailedDescription": "The index of a glTF material with which the edges are to be drawn. If omitted, the edges are drawn using the same material as the edges encoded by the extension's `visibility` field, or else that of the triangle mesh primitive."
+        },
+        "name": {},
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "indices"
+    ]
+}
