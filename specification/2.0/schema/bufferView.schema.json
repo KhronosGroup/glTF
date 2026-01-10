@@ -48,10 +48,7 @@
                     "type": "integer"
                 }
             ]
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "buffer", "byteLength" ]
 }
