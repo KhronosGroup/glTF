@@ -68,9 +68,103 @@ Other extensions that depend on this extension such as 3D Gaussian splatting com
 
 The `mode` of the `primitive` must be `POINTS`.
 
-### Reconstructing the Scene
+## Mathematics of rendering using the default Ellipse Kernel
 
-TODO: Expand this section
+To render a field of 3D Gaussian splats, the renderer must reconstruct each Gaussian splat using the same forward pass algorithm used during training. This involves using the position, scale, rotation, opacity, and spherical harmonics attributes to reconstruct the Gaussian splat in 3D space.
+
+There are three key stages to reconstructing and rendering a 3D Gaussian splat:
+
+ 1. [3D Gaussian Representation](#3d-gaussian-representation)
+ 2. [Projection of 3D Gaussian onto 2D Kernel](#projection-of-3d-gaussian-onto-2d-kernel)
+ 3. [Rendering: Sorting and Alpha Blending](#rendering-sorting-and-alpha-blending)
+
+This extension defines a default `ellipse` kernel type that is based on the kernel defined in [3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/). See the [Ellipse Kernel](#ellipse-kernel) section for more details on how this is defined.
+
+### 3D Gaussian Representation
+
+Each Gaussian splat using the default `ellipse` kernel represents a 3D Gaussian defined by the following equation:
+
+```math
+G(x) = \exp\left(-\frac{1}{2}(x-\mu)^T \Sigma^{-1} (x-\mu)\right)
+```
+
+Where:
+- $G(x)$ is the value of the Gaussian at position $x$.
+- $x$ is a 3D position vector.
+- $\mu$ is the mean vector, representing the center of the Gaussian.
+- $\Sigma$ is the 3x3 covariance matrix, defining the Gaussian's size, shape, and orientation.
+
+For stable optimization and direct manipulation, the 3x3 covariance matrix $\Sigma$ is constructed from a rotation (quaternion) and a scaling vector. Using eigendecomposition of a covariance matrix, we can express $\Sigma$ as:
+
+```math
+\Sigma = \mathbf{R}\mathbf{S}\mathbf{S}^T\mathbf{R}^T
+```
+
+Where:
+- $\mathbf{R}$ is a 3x3 rotation matrix derived from the quaternion.
+- $\mathbf{S}$ is a 3x3 scaling matrix constructed from the scale vector.
+
+To derive the rotation matrix $\mathbf{R}$ from the quaternion $(q_x, q_y, q_z, q_w)$:
+
+```math
+\mathbf{R} = \begin{pmatrix}
+1 - 2(q_y^2 + q_z^2) & 2(q_x q_y - q_w q_z) & 2(q_x q_z + q_w q_y) \\
+2(q_x q_y + q_w q_z) & 1 - 2(q_x^2 + q_z^2) & 2(q_y q_z - q_w q_x) \\
+2(q_x q_z - q_w q_y) & 2(q_y q_z + q_w q_x) & 1 - 2(q_x^2 + q_y^2)
+\end{pmatrix}
+```
+
+To derive the scale matrix $\mathbf{S}$ from the scale vector $(s_x, s_y, s_z)$:
+
+```math
+\mathbf{S} = \begin{pmatrix}
+s_x & 0 & 0 \\
+0 & s_y & 0 \\
+0 & 0 & s_z
+\end{pmatrix}
+```
+
+### Projection of 3D Gaussian onto 2D Kernel
+
+To render the scene, each 3D Gaussian splat must be projected onto a 2D kernel shape based on the camera's perspective. This involves transforming the 3D covariance matrix $\Sigma$ into a 2D covariance matrix $\Sigma'$ that represents the Gaussian's shape on the image plane:
+
+```math
+\Sigma' = \mathbf{J}\mathbf{W}\Sigma\mathbf{W}^T\mathbf{J}^T
+```
+
+Where:
+- $\mathbf{W}$ is the view transformation matrix and performs a rigid transformation (rotation and translation) from the world space to the camera space. This is your standard world-to-camera extrinsic matrix.
+- $\mathbf{J}$ is the Jacobian matrix of the projection transformation. This is responsible for perspective.
+
+The Jacobian matrix $\mathbf{J}$ for standard perspective projection is defined as:
+
+```math
+\mathbf{J} = \begin{pmatrix}
+\frac{f_x}{z} & 0 & -\frac{f_x x}{z^2} \\
+0 & \frac{f_y}{z} & -\frac{f_y y}{z^2}
+\end{pmatrix}
+```
+
+### Rendering: Sorting and Alpha Blending
+
+Once the 2D projected Gaussian splats are computed, they must be sorted and alpha blended to produce the final image. The alpha-blending is order-dependent, so correct sorting is crucial for accurate rendering. 
+
+The sorting method for the `ellipse` kernel is based on the depth value of each Gaussian, which is the z-coordinate in camera space. Sorting order is front-to-back based on this depth value and typically uses a radix sort for performance. See the [Sorting Method](#sorting-method) section for more details on sorting.
+
+Once sorted, the final color of each pixel is computed by alpha blending the splats in sorted order. The alpha blending equation is defined as:
+
+```math
+C = \sum_{i \in \mathscr{N}} c_i \alpha_i \prod_{j=1}^{i-1} (1 - \alpha_j)
+```
+
+Where:
+- $C$ is the final color of the pixel.
+- $\mathscr{N}$ is the set of splats that contribute to the pixel.
+- $c_i$ is the color of the $i$-th Gaussian. See [Lighting](#lighting) for details on how to compute this color from the spherical harmonics.
+- $\alpha_i = \alpha \cdot G(x)$ where $G(x)$ is the value of the projected 2D Gaussian's probability density function evaluated at the pixel center $x$.
+- $\prod_{j=1}^{i-1} (1 - \alpha_j)$ is the accumulated transmittance.
+
+*Non-normative Note: Transmittance is often implicitly handled by the GPU's blending hardware. See [Appendix A: Sample rendering with the base Ellipse Kernel and Spherical Harmonics](#appendix-a-sample-rendering-with-the-base-ellipse-kernel-and-spherical-harmonics) for a deeper example.*
 
 ## Lighting
 
@@ -80,7 +174,7 @@ These rules may be relaxed by future extensions that define alternative lighting
 
 ### Image State & Relighting
 
-Image state is defined by ISO 22028-1:2016 and indicates the rendering state of the image data. **_Display-referred_** (also known as _output-referred_ in ISO 22028-1:2016) image state represents data that has gone through color-rendering appropriate for display. **_Scene-referred_** image state represents data that represents the actual colorimetry of the scene.
+Image state is defined by ISO 22028-1:2016 and indicates the rendering state of the image data. **_Display-referred_** (also known as _output-referred_ in ISO 22028-1:2016) image state represents data that has gone through color-rendering appropriate for display. **_Scene-referred_** image state represents data that represents the actual radiance of the scene.
 
 The default `ellipse` kernel based on the original 3D Gaussian splatting paper typically uses the _BT.709-sRGB_ color space with a _display-referred_ image state for training and rendering. This is different than the typical glTF PBR material model, where scene-referred linear color spaces are used. This extension defines two display-referred color spaces but scene-referred color spaces may be added by extensions. See: [Available Color Spaces](#available-color-spaces)
 
@@ -141,9 +235,11 @@ Y_{3,3}(θ, φ) &= \frac{1}{4} \sqrt{\frac{35}{2\pi}} \cdot \frac{x(x^2 - 3y^2)}
 
 For all of these functions, $r$ represents the magnitude of the position vector, calculated as $r = \sqrt{x^2 + y^2 + z^2}$. Within 3D Gaussian splatting, normalization is used to ensure that the direction vectors are unit vectors. Therefore, $r$ is equal to $1$ when evaluating the spherical harmonics for lighting calculations.
 
+The zeroth-order spherical harmonic is always required to ensure that the diffuse color can be accurately reconstructed, but higher order spherical harmonics are optional. If higher order spherical harmonics are used, lower order spherical harmonics must also be provided. Each order of spherical harmonics must be fully defined; partial definitions are not allowed.
+
 Extensions extending this extension may define alternative lighting methods, have specific requirements for handling compression, or define different spherical harmonics handling.
 
-See [Appendix A: Rendering with the base Ellipse Kernel and Spherical Harmonics](#appendix-a-rendering-with-the-base-ellipse-kernel-and-spherical-harmonics) for more details on how to properly implement the lighting used by this extension.
+See [Appendix A: Sample rendering with the base Ellipse Kernel and Spherical Harmonics](#appendix-a-sample-rendering-with-the-base-ellipse-kernel-and-spherical-harmonics) for more details on how to properly implement the lighting used by this extension.
 
 ## Schema Example
 
@@ -219,7 +315,7 @@ Together, the scale and rotation can be used to reconstruct the full covariance 
 
 More details on how to interpret these attributes for rendering can be found in the [3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/) paper.
 
-See [Appendix A: Rendering with the base Ellipse Kernel and Spherical Harmonics](#appendix-a-rendering-with-the-base-ellipse-kernel-and-spherical-harmonics) for more details on how to properly implement the ellipse kernel used by this extension.
+See [Appendix A: Sample rendering with the base Ellipse Kernel and Spherical Harmonics](#appendix-a-sample-rendering-with-the-base-ellipse-kernel-and-spherical-harmonics) for more details on how to properly implement the ellipse kernel used by this extension.
 
 ### Color Space
 
@@ -378,7 +474,7 @@ The extension must also be listed in `extensionsUsed` at the top level of the gl
   ]
 ```
 
-## Appendix A: Rendering with the base Ellipse Kernel and Spherical Harmonics
+## Appendix A: Sample rendering with the base Ellipse Kernel and Spherical Harmonics
 
 *This section is non-normative.*
 
