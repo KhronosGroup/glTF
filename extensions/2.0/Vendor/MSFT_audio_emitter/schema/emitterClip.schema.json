@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Emitter Clip",
+    "type": "object",
+    "description": "A clip reference and its associated weight.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "clip": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the clip used by this emitter."
+        },
+        "weight": {
+            "type": "number",
+            "description": "Random selection weight.",
+            "gltf_detailedDescription": "Random selection weight. Sum of all weights in the clip array must equal 1.",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 1.0
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "additionalProperties": false,
+    "required": [
+        "clip"
+    ]
+}
