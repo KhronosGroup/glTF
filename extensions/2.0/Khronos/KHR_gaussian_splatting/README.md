@@ -478,9 +478,282 @@ The extension must also be listed in `extensionsUsed` at the top level of the gl
 
 *This section is non-normative.*
 
-The ellipse kernel defined in `KHR_gaussian_splatting` is based on the kernel and implementation described in the original research paper, [3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/). This kernel is defined by projecting a 3D ellipsoid onto a 2D plane using a perspective projection. The ellipsoid is defined by its mean (position), covariance matrix (derived from scale and rotation), and opacity. 
+This appendix provides a high-level overview using WebGL2 of how to implement rendering for 3D Gaussian splats using the default `ellipse` kernel and spherical harmonics for lighting. This example assumes a basic understanding of shader programming and rendering pipelines.
 
-TODO FINISH THIS THING
+*Note: This is a simplified example and may not cover all edge cases or optimizations needed for production use.*
+
+### Rendering Process Overview
+
+The rendering process involves the following steps:
+
+1. **Reconstruct the 3D Gaussian**: For each splat, reconstruct the 3D Gaussian using the position, scale, and rotation attributes to form the covariance matrix.
+2. **Project onto 2D Kernel**: Use the camera's view and projection matrices to project the 3D Gaussian onto a 2D kernel shape on the image plane.
+3. **Sort the Splats**: Sort the splats based on their distance to the camera using the `cameraDistance` sorting method.
+4. **Alpha Blend**: Perform alpha blending of the sorted splats using the opacity attribute and the projected Gaussian values to compute the final pixel colors
+5. **Lighting with Spherical Harmonics**: Compute the color of each splat using the spherical harmonics coefficients provided in the attributes. The diffuse color is derived from the zeroth-order spherical harmonic, while higher-order coefficients can be used for more complex lighting effects.
+
+See the [Rendering: Sorting and Alpha Blending](#rendering-sorting-and-alpha-blending) and [Lighting](#lighting) sections for more details on the mathematical formulations used in these steps.
+
+### Before the Shaders
+
+Several tasks are performed on the CPU side before rendering:
+
+- **Data Preparation**: Load the glTF file and extract the 3D Gaussian splat attributes, including position, scale, rotation, opacity, and spherical harmonics coefficients.
+- **Sorting**: Sort the splats based on their distance to the camera using the `cameraDistance` method.
+- **Setup Blending State**: Configure the WebGL blending state to use alpha blending.
+
+```javascript
+// Enable alpha blending
+// Set this before you issue your draw call.
+gl.enable(gl.BLEND);
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+```
+
+Sorting can be performed on the CPU or GPU depending on the number of splats and performance considerations. It's common to use a radix sort for efficient sorting based on depth values.
+
+### Vertex Shader Example
+
+The vertex shader takes the 3D data for a single Gaussian splat and prepares it for the 2D rendering stage. It computes the 2D shape and position of the Gaussian splat on the screen.
+
+<details>
+
+<summary>Click to expand the vertex shader code example</summary>
+
+```glsl
+#version 300 es
+precision highp float;
+
+uniform mat4 u_projection_matrix;
+uniform mat4 u_view_matrix;
+uniform vec2 u_focal_length;
+uniform vec3 u_camera_position;
+
+// This uniform controls the SH degree at RUNTIME.
+// Set from JavaScript to 1, 2, or 3.
+uniform int u_sh_degree;
+
+// All attributes are now always declared. The shader program requires a fixed set of inputs.
+in vec2 a_quad_vertex;
+in vec3 a_glob_position;
+in vec3 a_glob_scale;
+in vec4 a_glob_rotation;
+in float a_glob_opacity;
+
+// L=0
+in vec3 a_sh_0;
+// L=1
+in vec3 a_sh_1;
+in vec3 a_sh_2;
+in vec3 a_sh_3;
+// L=2
+in vec3 a_sh_4;
+in vec3 a_sh_5;
+in vec3 a_sh_6;
+in vec3 a_sh_7;
+in vec3 a_sh_8;
+// L=3
+in vec3 a_sh_9;
+in vec3 a_sh_10;
+in vec3 a_sh_11;
+in vec3 a_sh_12;
+in vec3 a_sh_13;
+in vec3 a_sh_14;
+in vec3 a_sh_15;
+
+out vec3 v_color;
+out float v_opacity;
+out vec3 v_cov2d_inv_upper;
+out vec2 v_center_px;
+
+// --- SPHERICAL HARMONICS CONSTANTS ---
+const float SH_C0 = 0.28209479177f;
+const float SH_C1 = 0.4886025119f;
+const float SH_C2_0 = 1.09254843059f;
+const float SH_C2_1 = 0.31539156525f;
+const float SH_C2_2 = 0.54627421529f;
+const float SH_C3_0 = 0.5900435899f;
+const float SH_C3_1 = 2.8906114426f;
+const float SH_C3_2 = 0.4570457996f;
+const float SH_C3_3 = 0.3731763325f;
+
+void main() {
+    // Steps 1-4: Projection, Covariance, and Bounding Box logic (identical)
+    vec4 view_space_pos = u_view_matrix * vec4(a_glob_position, 1.0f);
+    
+    float z_depth = view_space_pos.z;
+    if(z_depth <= 0.1f) {
+        gl_Position = vec4(2.0f, 2.0f, 2.0f, 1.0f);
+        return;
+    }
+    
+    vec3 scale = exp(a_glob_scale);
+    
+    mat3 rotation_matrix = mat3(1.0f - 2.0f * (a_glob_rotation.y * a_glob_rotation.y + a_glob_rotation.z * a_glob_rotation.z), 
+                                2.0f * (a_glob_rotation.x * a_glob_rotation.y - a_glob_rotation.z * a_glob_rotation.w), 
+                                2.0f * (a_glob_rotation.x * a_glob_rotation.z + a_glob_rotation.y * a_glob_rotation.w), 
+                                2.0f * (a_glob_rotation.x * a_glob_rotation.y + a_glob_rotation.z * a_glob_rotation.w), 
+                                1.0f - 2.0f * (a_glob_rotation.x * a_glob_rotation.x + a_glob_rotation.z * a_glob_rotation.z), 
+                                2.0f * (a_glob_rotation.y * a_glob_rotation.z - a_glob_rotation.x * a_glob_rotation.w), 
+                                2.0f * (a_glob_rotation.x * a_glob_rotation.z - a_glob_rotation.y * a_glob_rotation.w), 
+                                2.0f * (a_glob_rotation.y * a_glob_rotation.z + a_glob_rotation.x * a_glob_rotation.w), 
+                                1.0f - 2.0f * (a_glob_rotation.x * a_glob_rotation.x + a_glob_rotation.y * a_glob_rotation.y));
+    
+    mat3 scale_matrix = mat3(scale.x, 0, 0, 
+                             0, scale.y, 0,
+                             0, 0, scale.z);
+    
+    mat3 M = rotation_matrix * scale_matrix;
+    mat3 sigma3d = M * transpose(M);
+    mat3 W = transpose(mat3(u_view_matrix));
+    mat3 T = W * sigma3d * transpose(W);
+    mat3 J = mat3(u_focal_length.x / z_depth, 0, -(u_focal_length.x * view_space_pos.x) / (z_depth * z_depth), 0, u_focal_length.y / z_depth, -(u_focal_length.y * view_space_pos.y) / (z_depth * z_depth), 0, 0, 0);
+    mat3 cov2d = transpose(J) * T * J;
+    
+    float det = cov2d[0][0] * cov2d[1][1] - cov2d[0][1] * cov2d[0][1];
+    if(det <= 0.0f) {
+        gl_Position = vec4(2.0f, 2.0f, 2.0f, 1.0f);
+        return;
+    }
+    
+    float mid = 0.5f * (cov2d[0][0] + cov2d[1][1]);
+    float lambda1 = mid + sqrt(max(0.01f, mid * mid - det));
+    float radius = ceil(3.0f * sqrt(max(lambda1, 0.0f)));
+    
+    vec4 clip_space_pos = u_projection_matrix * view_space_pos;
+    vec2 ndc_pos = clip_space_pos.xy / clip_space_pos.w;
+    clip_space_pos.xy += a_quad_vertex * radius / u_focal_length * clip_space_pos.w;
+    gl_Position = clip_space_pos;
+
+    // --- STEP 5: Calculate View-Dependent Color using Spherical Harmonics ---
+    vec3 view_dir = normalize(a_glob_position - u_camera_position);
+
+    // L=0 is always calculated.
+    vec3 result = SH_C0 * a_sh_0;
+
+    // Use `if` statements based on the uniform to conditionally add higher-order contributions.
+    if(u_sh_degree >= 1) {
+        float dx = view_dir.x, dy = view_dir.y, dz = view_dir.z;
+        result += SH_C1 * dy * a_sh_1;
+        result += SH_C1 * dz * a_sh_2;
+        result += SH_C1 * dx * a_sh_3;
+
+        if(u_sh_degree >= 2) {
+            float dx2 = dx * dx, dy2 = dy * dy, dz2 = dz * dz;
+            result += SH_C2_0 * dx * dy * a_sh_4;
+            result += SH_C2_0 * dy * dz * a_sh_5;
+            result += SH_C2_1 * (3.0f * dz2 - 1.0f) * a_sh_6;
+            result += SH_C2_0 * dx * dz * a_sh_7;
+            result += SH_C2_2 * (dx2 - dy2) * a_sh_8;
+
+            if(u_sh_degree >= 3) {
+                result += SH_C3_0 * dy * (3.0f * dx2 - dy2) * a_sh_9;
+                result += SH_C3_1 * dx * dy * dz * a_sh_10;
+                result += SH_C3_2 * dy * (5.0f * dz2 - 1.0f) * a_sh_11;
+                result += SH_C3_3 * dz * (5.0f * dz2 - 3.0f) * a_sh_12;
+                result += SH_C3_2 * dx * (5.0f * dz2 - 1.0f) * a_sh_13;
+                result += SH_C3_1 * dz * (dx2 - dy2) * a_sh_14;
+                result += SH_C3_0 * dx * (dx2 - 3.0f * dy2) * a_sh_15;
+            }
+        }
+    }
+
+    v_color = 1.0f / (1.0f + exp(-result));
+
+    // --- STEP 6: Pass Data to Fragment Shader ---
+    v_opacity = a_glob_opacity;
+    float inv_det = 1.0f / det;
+    v_cov2d_inv_upper.x = inv_det * cov2d[1][1];
+    v_cov2d_inv_upper.y = -inv_det * cov2d[0][1];
+    v_cov2d_inv_upper.z = inv_det * cov2d[0][0];
+    v_center_px = (ndc_pos * 0.5f + 0.5f) * vec2(gl_Position.w / u_projection_matrix[0][0] * 2.0f, gl_Position.w / u_projection_matrix[1][1] * 2.0f);
+}
+```
+
+</details>
+
+### Fragment Shader Example
+
+<details>
+
+<summary>Click to expand the fragment shader code example</summary>
+
+```glsl
+#version 300 es
+
+// Use high precision for floating-point calculations to avoid artifacts.
+precision highp float;
+
+// The final view-dependent color, pre-calculated by the vertex shader
+// using Spherical Harmonics.
+in vec3 v_color;
+
+// The base opacity of the Gaussian, learned during training.
+in float v_opacity;
+
+// The three unique components of the symmetric 2D inverse covariance matrix (Σ')⁻¹.
+// This defines the shape and orientation of the Gaussian's ellipse on the screen.
+in vec3 v_cov2d_inv_upper; // (Σ'⁻¹)[0][0], (Σ'⁻¹)[0][1], (Σ'⁻¹)[1][1]
+
+// The 2D center of the projected Gaussian in screen pixel coordinates.
+in vec2 v_center_px;
+
+
+// The final color output for the current pixel. This will be sent to the
+// GPU's blending unit.
+out vec4 o_frag_color;
+
+void main () {
+
+    // --- STEP 1: Calculate G(x), the Gaussian Influence ---
+
+    // Find the vector from the current pixel's coordinate (gl_FragCoord.xy)
+    // to the center of the projected Gaussian.
+    vec2 d = gl_FragCoord.xy - v_center_px;
+
+    // Evaluate the quadratic form: (x-μ)ᵀ * (Σ')⁻¹ * (x-μ)
+    // This gives us the squared Mahalanobis distance, which is the exponent's power.
+    // This value is 0 at the center of the Gaussian and increases as we move away.
+    float power = 0.5 * (d.x * d.x * v_cov2d_inv_upper.x + d.y * d.y * v_cov2d_inv_upper.z) + d.x * d.y * v_cov2d_inv_upper.y;
+    
+    // The value of the 2D Gaussian function is exp(-power).
+    // If the power is large, the influence is negligible. We can discard the pixel
+    // early to save computation. A threshold of 4.0 corresponds to e⁻⁴, which is
+    // very transparent and visually insignificant.
+    if (power > 4.0) {
+        discard;
+    }
+
+    // Calculate the actual influence value of the Gaussian at this pixel.
+    float G_x = exp(-power);
+
+
+    // --- STEP 2: Calculate the Final Alpha Contribution (aᵢ) ---
+
+    // The final alpha (aᵢ) is the product of the Gaussian's base opacity (α)
+    // and its influence at this specific pixel (G(x)).
+    float final_alpha = v_opacity * G_x;
+
+    // Optimization: If the final alpha is practically invisible, discard the pixel.
+    // This avoids sending nearly transparent pixels to the blending unit, which can
+    // improve performance, especially on mobile or integrated GPUs.
+    if (final_alpha < 1.0 / 255.0) {
+        discard;
+    }
+
+
+    // --- STEP 3: Set Final Pixel Color ---
+
+    // Output the final color in "pre-multiplied alpha" format.
+    // The RGB color channels are multiplied by the final alpha.
+    // The alpha channel is the final alpha itself.
+    //
+    // Format: vec4(color * alpha, alpha)
+    //
+    // This format is required for the blending function `glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA)`
+    // to correctly calculate the final blended color and transmittance on the GPU.
+    o_frag_color = vec4(v_color * final_alpha, final_alpha);
+}
+```
 
 ## Known Implementations
 
