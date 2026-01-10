@@ -1,0 +1,28 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.OMI_physics_body.schema.json",
+    "title": "OMI_physics_body glTF Document Extension",
+    "type": "object",
+    "description": "Top level physics properties and resources.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "physicsMaterials": {
+            "type": "array",
+            "description": "An array of physics materials.",
+            "items": {
+                "type": "object",
+                "$ref": "glTF.OMI_physics_body.material.schema.json"
+            }
+        },
+        "collisionFilters": {
+            "type": "array",
+            "description": "An array of collision filter descriptions.",
+            "items": {
+                "type": "object",
+                "$ref": "glTF.OMI_physics_body.collision_filter.schema.json"
+            }
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

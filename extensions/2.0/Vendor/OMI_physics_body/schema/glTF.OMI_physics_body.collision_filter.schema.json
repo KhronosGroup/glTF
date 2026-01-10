@@ -1,0 +1,36 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.OMI_physics_body.collision_filter.schema.json",
+    "title": "OMI_physics_body Collision Filter",
+    "type": "object",
+    "description": "Parameters describing a parameterization of a collision filter, allowing for disabling collision between pairs of shapes.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "collisionSystems": {
+            "type": "array",
+            "description": "An array of strings representing the names of the collision systems of which this object is a member.",
+            "items": {
+                "type": "string"
+            }
+        },
+        "collideWithSystems": {
+            "type": "array",
+            "description": "An array of strings representing the name of the collision systems which this object can collide with.",
+            "items": {
+                "type": "string"
+            }
+        },
+        "notCollideWithSystems": {
+            "type": "array",
+            "description": "An array of strings representing the names of the collision systems which this object does not collide with.",
+            "items": {
+                "type": "string"
+            }
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "not": {
+        "anyOf": [{ "required": ["collideWithSystems", "notCollideWithSystems"] }]
+    }
+}
