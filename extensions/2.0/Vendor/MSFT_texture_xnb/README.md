@@ -70,7 +70,11 @@ When used in the glTF Binary (.glb) format the `images` node that points to the 
 
 ## Known Implementations
 
-This extension is used by users of XNA like frameworks such as MonoGame,FNA and KNI to load glTF files at runtime by including XNB textures.
+This extension is used by users of XNA like frameworks such as MonoGame, FNA and KNI to load glTF files at runtime by including XNB textures.
+
+## Resources
+
+* **XNB Format Specification**: [XNB%20Format.docx](https://docs.monogame.net/articles/getting_to_know/whatis/content_pipeline/XNB%20Format.docx)
 
 ## License
 
