@@ -5,24 +5,13 @@
     "description": "glTF extension that extends KHR_character_expression to specify procedural expression animations.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "channels": {
-            "type": "array",
-            "description": "Array of animation channel indices that drive procedural expressions.",
-            "items": {
-                "allOf": [
-                    {
-                        "$ref": "glTFid.schema.json"
-                    }
-                ],
-                "description": "Index of the animation channel in the referenced animation."
-            },
-            "minItems": 1,
-            "uniqueItems": true
+        "conflictResolution": {
+            "type": "string",
+            "description": "Conflict resolution strategy used to determine how multiple sources (procedural and non-procedural) control a given expression.",
+            "enum": ["none", "block", "blend"],
+            "default": "none"
         },
         "extensions": { },
         "extras": { }
-    },
-    "required": [
-        "channels"
-    ]
+    }
 }
