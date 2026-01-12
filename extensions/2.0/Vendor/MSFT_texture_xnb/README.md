@@ -74,7 +74,7 @@ This extension is used by users of XNA like frameworks such as MonoGame, FNA and
 
 ## Resources
 
-* **XNB Format Specification**: [XNB%20Format.docx](https://docs.monogame.net/articles/getting_to_know/whatis/content_pipeline/XNB%20Format.docx)
+* **XNB Format Specification**: [XNB Format.docx](https://docs.monogame.net/articles/getting_to_know/whatis/content_pipeline/XNB%20Format.docx)
 
 ## License
 
