@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "KHR_character_skeleton_bindpose glTF Skin Extension",
     "type": "object",
     "description": "glTF extension that defines one or more canonical bind poses for the character's skeleton applied to individual skins.",

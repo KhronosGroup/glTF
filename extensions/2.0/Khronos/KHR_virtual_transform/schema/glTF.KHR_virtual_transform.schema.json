@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "KHR_virtual_transform glTF Document Extension",
     "type": "object",
     "description": "glTF extension that introduces virtual transforms - semantic attachment or control points relative to the model's node hierarchy.",

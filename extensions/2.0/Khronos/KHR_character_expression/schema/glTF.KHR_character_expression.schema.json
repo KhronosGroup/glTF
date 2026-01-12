@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "KHR_character_expression glTF Document Extension",
     "type": "object",
     "description": "glTF extension that provides a common interface for facial expression animations.",

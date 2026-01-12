@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "KHR_character_expression_mapping glTF Document Extension",
     "type": "object",
     "description": "glTF extension that enables encoding multiple expression set mappings, mapping source expressions present in the model to target expressions that a runtime/endpoint understands.",
