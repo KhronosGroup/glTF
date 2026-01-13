@@ -9,6 +9,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 * Paul Connelly, Bentley Systems, [@pmconne](https://github.com/pmconne)
 * Mark Schlosser, Bentley Systems, [@markschlosseratbentley](https://github.com/markschlosseratbentley)
+* Daniel Zhong, Bentley Systems, [@danielzhong](https://github.com/danielzhong)
 
 ## Status
 
