@@ -29,7 +29,7 @@
           "const": "srgb_rec709_display"
         },
         {
-          "const": "lin_rec709_scene"
+          "const": "lin_rec709_display"
         },
         {
           "type": "string"
