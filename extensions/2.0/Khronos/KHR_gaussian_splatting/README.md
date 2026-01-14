@@ -152,7 +152,7 @@ The Jacobian matrix $\mathbf{J}$ for standard perspective projection is defined 
 
 Once the 2D projected Gaussian splats are computed, they must be sorted and alpha blended to produce the final image. The alpha-blending is order-dependent, so correct sorting is crucial for accurate rendering. 
 
-The sorting method for the `ellipse` kernel is based on the depth value of each Gaussian, which is the z-coordinate in camera space. Sorting order is front-to-back based on this depth value and typically uses a radix sort for performance. See the [Sorting Method](#sorting-method) section for more details on sorting.
+The sorting method for the `ellipse` kernel is based on the depth value of each Gaussian, which is the z-coordinate in camera space. Sorting order is back-to-front based on this depth value and typically uses a radix sort for performance. See the [Sorting Method](#sorting-method) section for more details on sorting.
 
 Once sorted, the final color of each pixel is computed by alpha blending the splats in sorted order. The alpha blending equation is defined as:
 
