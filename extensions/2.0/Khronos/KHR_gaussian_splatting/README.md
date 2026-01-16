@@ -54,7 +54,7 @@ Written against the glTF 2.0 spec.
 
 This extension defines basic support for storing 3D Gaussian splats in glTF, bringing structure and conformity to the 3D Gaussian splatting space. 3D Gaussian splatting uses fields of Gaussians that can be treated as a point cloud for the purposes of storage. 3D Gaussian splats are defined by their position, rotation, scale, and spherical harmonics which provide both diffuse and specular color. These values are stored as values on a point primitive. Since we treat the 3D Gaussian splats as points primitives, a graceful fallback to treating the data as a sparse point cloud is possible.
 
-A key objective of this extension is to establish a solid foundation for integrating 3D Gaussian splatting into glTF, while enabling future enhancements and innovation. To achieve this, the extension is intentionally designed for to be extended itself, allowing extensions to introduce new kernel types, color spaces, projection methods, and sorting methods over time as 3D Gaussian splatting techniques evolve and become standards within the glTF ecosystem.
+A key objective of this extension is to establish a solid foundation for integrating 3D Gaussian splatting into glTF, while enabling future enhancements and innovation. To achieve this, the extension is intentionally designed to be extended itself, allowing extensions to introduce new kernel types, color spaces, projection methods, and sorting methods over time as 3D Gaussian splatting techniques evolve and become standards within the glTF ecosystem.
 
 ## Adding 3D Gaussian Splats to Primitives
 
