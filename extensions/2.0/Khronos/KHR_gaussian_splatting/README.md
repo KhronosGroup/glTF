@@ -34,16 +34,19 @@ Written against the glTF 2.0 spec.
 
 ## Table of Contents
 
+- [Contributors](#contributors)
+- [Status](#status)
+- [Dependencies](#dependencies)
 - [Overview](#overview)
 - [Adding 3D Gaussian Splats to Primitives](#adding-3d-gaussian-splats-to-primitives)
-    - [Geometry Type](#geometry-type)
-    - [Mathematics of rendering using the default Ellipse Kernel](#mathematics-of-rendering-using-the-default-ellipse-kernel)
-    - [glTF JSON Example](#gltf-json-example)
-    - [Extension Properties](#extension-properties)
-    - [Attributes](#attributes)
+- [Geometry Type](#geometry-type)
+- [Mathematics of rendering using the default Ellipse Kernel](#mathematics-of-rendering-using-the-default-ellipse-kernel)
 - [Lighting](#lighting)
+- [glTF JSON Example](#gltf-json-example)
+- [Extension Properties](#extension-properties)
+- [Attributes](#attributes)
 - [Extending the Base Extension](#extending-the-base-extension)
-- [Appendix A: Sample rendering with the base Ellipse Kernel and Spherical Harmonics](#appendix-a-sample-rendering-with-the-base-ellipse-kernel-and-spherical-harmonics)
+- [Appendix A: Spherical Harmonics Reference](#appendix-a-spherical-harmonics-reference)
 - [Known Implementations](#known-implementations)
 - [Resources](#resources)
 
@@ -167,7 +170,7 @@ Where:
 - $\alpha_i = \alpha \cdot G(x)$ where $G(x)$ is the value of the projected 2D Gaussian's probability density function evaluated at the pixel center $x$.
 - $\prod_{j=1}^{i-1} (1 - \alpha_j)$ is the accumulated transmittance.
 
-*Non-normative Note: Transmittance is often implicitly handled by the GPU's blending hardware. See [Appendix A: Sample rendering with the base Ellipse Kernel and Spherical Harmonics](#appendix-a-sample-rendering-with-the-base-ellipse-kernel-and-spherical-harmonics) for a deeper example.*
+*Non-normative Note: Within rasterizer implementations of 3DGS, transmittance can often be implicitly handled by the GPU's blending hardware. When using premultiplied alpha in WebGL2, using `glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA)` (or similar) will often work. Without premultiplied alpha, you can use `glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)` (or similar) instead.*
 
 ## Lighting
 
@@ -185,7 +188,15 @@ Implementations are allowed to relight the splats than the one they were trained
 
 ### Calculating color from Spherical Harmonics
 
-The diffuse color of the splat can be computed by multiplying the RGB coefficients of the zeroth-order spherical harmonic by the constant real spherical harmonic value of $\approx0.282095$. This constant is derived from the formula for the real spherical harmonic of degree 0, order 0:
+The real spherical harmonics included with the [Condon–Shortley phase](https://mathworld.wolfram.com/Condon-ShortleyPhase.html) are used to calculate the color and specular of the Gaussians. 3D Gaussian splatting can use up to 45 spherical harmonic coefficients. Each coefficient is split into 3 color channels. This means that each degree has:
+
+```math
+SH_{n} \times 3 = SH_{total}
+```
+
+Where $SH_{n}$ represents the number of coefficients for degree $n$. This gives us 3 coefficients for Degree 0, 9 for Degree 1, 15 for Degree 2, and finally 21 for Degree 3.
+
+The diffuse color of the splat can be computed by multiplying the RGB coefficients of the zeroth-order real spherical harmonic by the normalization constant value of $\approx0.282095$. This constant is derived from the formula for the real spherical harmonic of degree 0, order 0:
 
 ```math
 Y_{0,0}(θ, φ) = \frac{1}{2} \sqrt{\frac{1}{π}} ≈ 0.282095
@@ -193,56 +204,61 @@ Y_{0,0}(θ, φ) = \frac{1}{2} \sqrt{\frac{1}{π}} ≈ 0.282095
 
 To keep the spherical harmonics within the [0, 1] range, the forward pass of the training process applies a _0.5_ bias to the DC component of the spherical harmonics. The rendering process must also apply this bias when reconstructing the color values from the spherical harmonics. This allows the training to occur around 0, ensuring numeric stability for the spherical harmonics, but also allows the coefficients to remain within a valid range for easy rendering.
 
-Ergo, to calculate the diffuse RGB color from the DC component, the formula is:
+Ergo, to calculate the diffuse RGB color from the only the DC component, the formula is:
 
 ```math
-Color_{diffuse} = SH_{0,0} * 0.28209479177387814 + 0.5
+Color_{diffuse} = SH_{0,0} * 0.2820947917738781 + 0.5
 ```
 
-Where $SH_{0,0}$ represents the RGB coefficients of the zeroth-order real spherical harmonic.
+Where $SH_{0,0}$ represents the a vector of the RGB coefficients for the zeroth-order real spherical harmonic.
 
-Subsequent degrees of spherical harmonics can be used to compute more complex lighting effects, such as ambient occlusion and specular highlights, by evaluating the spherical harmonics at the appropriate angles based on the surface normal and light direction. Functions for the higher order real spherical harmonics are defined as follows:
+The [Condon–Shortley phase](https://mathworld.wolfram.com/Condon-ShortleyPhase.html) is the $(-1)^m$ sign factor included in some spherical‑harmonic definitions to keep their algebraic and normalization properties consistent. This convention ensures the spherical harmonics are orthogonal and behave cleanly with rotation. As defined, odd values for order ($m$) are negated. For Degree 2 and Degree 3, this gives some of the constants negative signs.
+
+Subsequent degrees of spherical harmonics are used to compute more complex lighting effects, such as ambient occlusion and specular highlights, by evaluating the spherical harmonics at the appropriate angles based on the surface normal and light direction. As an example, the Degree 1 functions are:
 
 ```math
-\textbf{Degree 1, ℓ = 1}\\
 \begin{aligned}
-Y_{1,-1}(θ, φ) &= \sqrt{\frac{3}{4\pi}} \cdot \frac{y}{r}\\
+Y_{1,-1}(θ, φ) &= -\sqrt{\frac{3}{4\pi}} \cdot \frac{y}{r}\\
 Y_{1,0}(θ, φ) &= \sqrt{\frac{3}{4\pi}} \cdot \frac{z}{r}\\
-Y_{1,1}(θ, φ) &= \sqrt{\frac{3}{4\pi}} \cdot \frac{x}{r}\\\\
+Y_{1,1}(θ, φ) &= -\sqrt{\frac{3}{4\pi}} \cdot \frac{x}{r}\\
 \end{aligned}
 ```
 
-```math
-\textbf{Degree 2, ℓ = 2}\\
-\begin{aligned}
-Y_{2,-2}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{\pi}} \cdot \frac{xy}{r^2}\\
-Y_{2,-1}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{\pi}} \cdot \frac{yz}{r^2}\\
-Y_{2,0}(θ, φ) &= \frac{1}{4} \sqrt{\frac{5}{\pi}} \cdot \frac{3z^2 - r^2}{r^2}\\
-Y_{2,1}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{\pi}} \cdot \frac{xz}{r^2}\\
-Y_{2,2}(θ, φ) &= \frac{1}{4} \sqrt{\frac{15}{\pi}} \cdot \frac{x^2 - y^2}{r^2}\\\\
-\end{aligned}
-```
-
-```math
-\textbf{Degree 3, ℓ = 3}\\
-\begin{aligned}
-Y_{3,-3}(θ, φ) &= \frac{1}{4} \sqrt{\frac{35}{2\pi}} \cdot \frac{y(3x^2 - y^2)}{r^3}\\
-Y_{3,-2}(θ, φ) &= \frac{1}{2} \sqrt{\frac{105}{\pi}} \cdot \frac{xyz}{r^3}\\
-Y_{3,-1}(θ, φ) &= \frac{1}{4} \sqrt{\frac{21}{2\pi}} \cdot \frac{y(5z^2 - r^2)}{r^3}\\
-Y_{3,0}(θ, φ) &= \frac{1}{4} \sqrt{\frac{7}{\pi}} \cdot \frac{z(5z^2 - 3r^2)}{r^3}\\
-Y_{3,1}(θ, φ) &= \frac{1}{4} \sqrt{\frac{21}{2\pi}} \cdot \frac{x(5z^2 - r^2)}{r^3}\\
-Y_{3,2}(θ, φ) &= \frac{1}{4} \sqrt{\frac{105}{\pi}} \cdot \frac{z(x^2 - y^2)}{r^3}\\
-Y_{3,3}(θ, φ) &= \frac{1}{4} \sqrt{\frac{35}{2\pi}} \cdot \frac{x(x^2 - 3y^2)}{r^3}\\
-\end{aligned}
-```
+A full list of all spherical harmonic functions and constants including the Condon–Shortley phase can be found in [Appendix A: Spherical Harmonics Reference](#appendix-a-spherical-harmonics-reference).
 
 For all of these functions, $r$ represents the magnitude of the position vector, calculated as $r = \sqrt{x^2 + y^2 + z^2}$. Within 3D Gaussian splatting, normalization is used to ensure that the direction vectors are unit vectors. Therefore, $r$ is equal to $1$ when evaluating the spherical harmonics for lighting calculations.
+
+We can use these functions combined with the DC component to calculate the full color of a Gaussian:
+
+```math
+\begin{aligned}
+Color_{SH_{0}} =\,&SH_{0,0} \cdot 0.2820947917738781\\\\
+Color_{SH_{1}} =\,&SH_{1,-1} \cdot y \cdot -0.4886025119029199\,+\\
+                  &SH_{1,0} \cdot z \cdot 0.4886025119029199\,+\\
+                  &SH_{1,1} \cdot x \cdot -0.4886025119029199\\\\
+Color_{SH_{2}} =\,&SH_{2,-2} \cdot xy \cdot 1.092548430592079\,+\\
+                  &SH_{2,-1} \cdot yz \cdot -1.092548430592079\,+\\
+                  &SH_{2,0} \cdot (2z^2 - x^2 - y^2) \cdot 0.3153915652525200\,+\\
+                  &SH_{2,1} \cdot xz \cdot -1.092548430592079\,+\\
+                  &SH_{2,2} \cdot (x^2 - y^2) \cdot 0.5462742152960395\\\\
+Color_{SH_{3}} =\,&SH_{3,-3} \cdot y(3x^2 - y^2) \cdot -0.5900435899266435\,+\\
+                  &SH_{3,-2} \cdot xyz \cdot 2.890611442640554\,+\\
+                  &SH_{3,-1} \cdot y(4z^2 - x^2 - y^2) \cdot -0.4570457994644657\,+\\
+                  &SH_{3,0} \cdot z(2z^2 - 3x - 3y) \cdot 0.3731763325901154\,+\\
+                  &SH_{3,1} \cdot x(4z^2 - x^2 - y^2) \cdot -0.4570457994644657\,+\\
+                  &SH_{3,2} \cdot z(x^2 - y^2) \cdot 1.445305721320277\,+\\
+                  &SH_{3,3} \cdot x(x^2 - 3y^2) \cdot -0.5900435899266435\\\\
+Color_{final} =\,&Color_{SH_{0}} + Color_{SH_{1}} + Color_{SH_{2}} + Color_{SH_{3}} + 0.5
+\end{aligned}\\
+```
+
+Where $SH_{\ell,m}$ represents the RGB spherical harmonic coefficients for a particular degree ($\ell$) and order ($m$) and $x$, $y$, and $z$ represent the independent parts of the direction vector.
 
 The zeroth-order spherical harmonic is always required to ensure that the diffuse color can be accurately reconstructed, but higher order spherical harmonics are optional. If higher order spherical harmonics are used, lower order spherical harmonics must also be provided. Each order of spherical harmonics must be fully defined; partial definitions are not allowed.
 
 Extensions extending this extension may define alternative lighting methods, have specific requirements for handling compression, or define different spherical harmonics handling.
 
-See [Appendix A: Sample rendering with the base Ellipse Kernel and Spherical Harmonics](#appendix-a-sample-rendering-with-the-base-ellipse-kernel-and-spherical-harmonics) for more details on how to properly implement the lighting used by this extension.
+See [Appendix A: Spherical Harmonics Reference](#appendix-a-spherical-harmonics-reference) for an easy reference of the spherical harmonic basis functions and normalization constants.
 
 ## glTF JSON Example
 
@@ -477,66 +493,70 @@ The extension must also be listed in `extensionsUsed` at the top level of the gl
   ]
 ```
 
-## Appendix A: Sample rendering with the base Ellipse Kernel and Spherical Harmonics
+## Appendix A: Spherical Harmonics Reference
 
-*This section is non-normative.*
+*This appendix is non-normative and provided for informational purposes only.*
 
-This appendix provides a high-level overview using WebGL2 of how to implement rendering for 3D Gaussian splats using the default `ellipse` kernel and spherical harmonics for lighting. This example assumes a basic understanding of shader programming and rendering pipelines.
+### Real Spherical Harmonic Basis Functions
 
-*Note: This is a simplified example and may not cover all edge cases or optimizations needed for production use.*
+Degrees $0$ through $3$, in cartesian space. Including the [Condon–Shortley phase](https://mathworld.wolfram.com/Condon-ShortleyPhase.html) $(-1)^m$.
 
-### Rendering Process Overview
-
-The rendering process involves the following steps:
-
-1. **Reconstruct the 3D Gaussian**: For each splat, reconstruct the 3D Gaussian using the position, scale, and rotation attributes to form the covariance matrix.
-2. **Project onto 2D Kernel**: Use the camera's view and projection matrices to project the 3D Gaussian onto a 2D kernel shape on the image plane.
-3. **Sort the Splats**: Sort the splats based on their distance to the camera using the `cameraDistance` sorting method.
-4. **Alpha Blend**: Perform alpha blending of the sorted splats using the opacity attribute and the projected Gaussian values to compute the final pixel colors
-5. **Lighting with Spherical Harmonics**: Compute the color of each splat using the spherical harmonics coefficients provided in the attributes. The diffuse color is derived from the zeroth-order spherical harmonic, while higher-order coefficients can be used for more complex lighting effects.
-
-See the [Rendering: Sorting and Alpha Blending](#rendering-sorting-and-alpha-blending) and [Lighting](#lighting) sections for more details on the mathematical formulations used in these steps.
-
-### Before the Shaders
-
-Several tasks are performed on the CPU side before rendering:
-
-- **Data Preparation**: Load the glTF file and extract the 3D Gaussian splat attributes, including position, scale, rotation, opacity, and spherical harmonics coefficients.
-- **Sorting**: Sort the splats based on their distance to the camera using the `cameraDistance` method.
-- **Setup Blending State**: Configure the WebGL blending state to use alpha blending.
-
-```javascript
-// Enable alpha blending
-// Set this before you issue your draw call.
-gl.enable(gl.BLEND);
-gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+```math
+\textbf{Degree 0, ℓ = 0}\\
+\begin{aligned}
+Y_{0,0}(θ, φ) &= \frac{1}{2} \sqrt{\frac{1}{\pi}}\\\\
+\end{aligned}
 ```
 
-Sorting can be performed on the CPU or GPU depending on the number of splats and performance considerations. It's common to use a radix sort for efficient sorting based on depth values.
-
-### Vertex Shader Example
-
-The vertex shader takes the 3D data for a single Gaussian splat and prepares it for the 2D rendering stage. It computes the 2D shape and position of the Gaussian splat on the screen.
-
-<details>
-
-<summary>Click to expand the vertex shader code example</summary>
-
-```glsl
-// TODO: Add vertex shader example here.
+```math
+\textbf{Degree 1, ℓ = 1}\\
+\begin{aligned}
+Y_{1,-1}(θ, φ) &= -\sqrt{\frac{3}{4\pi}} \cdot \frac{y}{r}\\
+Y_{1,0}(θ, φ) &= \sqrt{\frac{3}{4\pi}} \cdot \frac{z}{r}\\
+Y_{1,1}(θ, φ) &= -\sqrt{\frac{3}{4\pi}} \cdot \frac{x}{r}\\\\
+\end{aligned}
 ```
 
-</details>
-
-### Fragment Shader Example
-
-<details>
-
-<summary>Click to expand the fragment shader code example</summary>
-
-```glsl
-// TODO: Add fragment shader example here.
+```math
+\textbf{Degree 2, ℓ = 2}\\
+\begin{aligned}
+Y_{2,-2}(θ, φ) &= \frac{1}{2} \sqrt{\frac{15}{\pi}} \cdot \frac{xy}{r^2}\\
+Y_{2,-1}(θ, φ) &= -\frac{1}{2} \sqrt{\frac{15}{\pi}} \cdot -\frac{yz}{r^2}\\
+Y_{2,0}(θ, φ) &= \frac{1}{4} \sqrt{\frac{5}{\pi}} \cdot \frac{3z^2 - r^2}{r^2}\\
+Y_{2,1}(θ, φ) &= -\frac{1}{2} \sqrt{\frac{15}{\pi}} \cdot -\frac{xz}{r^2}\\
+Y_{2,2}(θ, φ) &= \frac{1}{4} \sqrt{\frac{15}{\pi}} \cdot \frac{x^2 - y^2}{r^2}\\\\
+\end{aligned}
 ```
+
+```math
+\textbf{Degree 3, ℓ = 3}\\
+\begin{aligned}
+Y_{3,-3}(θ, φ) &= -\frac{1}{4} \sqrt{\frac{35}{2\pi}} \cdot \frac{y(3x^2 - y^2)}{r^3}\\
+Y_{3,-2}(θ, φ) &= \frac{1}{2} \sqrt{\frac{105}{\pi}} \cdot \frac{xyz}{r^3}\\
+Y_{3,-1}(θ, φ) &= -\frac{1}{4} \sqrt{\frac{21}{2\pi}} \cdot \frac{y(5z^2 - r^2)}{r^3}\\
+Y_{3,0}(θ, φ) &= \frac{1}{4} \sqrt{\frac{7}{\pi}} \cdot \frac{z(5z^2 - 3r^2)}{r^3}\\
+Y_{3,1}(θ, φ) &= -\frac{1}{4} \sqrt{\frac{21}{2\pi}} \cdot \frac{x(5z^2 - r^2)}{r^3}\\
+Y_{3,2}(θ, φ) &= \frac{1}{4} \sqrt{\frac{105}{\pi}} \cdot \frac{z(x^2 - y^2)}{r^3}\\
+Y_{3,3}(θ, φ) &= -\frac{1}{4} \sqrt{\frac{35}{2\pi}} \cdot \frac{x(x^2 - 3y^2)}{r^3}\\
+\end{aligned}
+```
+
+### Table of Constants
+
+| Used In | Expression | Approximate Constant |
+| --- | --- | --- |
+| $Y_{0,0}(θ, φ)$ | $\frac{1}{2} \sqrt{\frac{1}{\pi}}$ | $0.2820947917738781$ |
+| $Y_{1,-1}(θ, φ)\\Y_{1,1}(θ, φ)$ | $\sqrt{\frac{3}{4\pi}}$ | $-0.4886025119029199$ |
+| $Y_{1,0}(θ, φ)$ | $\sqrt{\frac{3}{4\pi}}$ | $0.4886025119029199$ |
+| $Y_{2,-2}(θ, φ)$ | $\frac{1}{2} \sqrt{\frac{15}{\pi}}$ | $1.092548430592079$ |
+| $Y_{2,-1}(θ, φ)\\Y_{2,1}(θ, φ)$ | -$\frac{1}{2} \sqrt{\frac{15}{\pi}}$ | $-1.092548430592079$ |
+| $Y_{2,0}(θ, φ)$ | $\frac{1}{4} \sqrt{\frac{5}{\pi}}$ | $0.3153915652525200$ |
+| $Y_{2,2}(θ, φ)$ | $\frac{1}{4} \sqrt{\frac{15}{\pi}}$ | $0.5462742152960395$ |
+| $Y_{3,-3}(θ, φ)\\Y_{3,3}(θ, φ)$ | $-\frac{1}{4} \sqrt{\frac{35}{2\pi}}$ | $-0.5900435899266435$ |
+| $Y_{3,-2}(θ, φ)\\Y_{3,2}(θ, φ)$ | $\frac{1}{2} \sqrt{\frac{105}{\pi}}$ | 2.890611442640554 |
+| $Y_{3,-1}(θ, φ)\\Y_{3,1}(θ, φ)$ | $-\frac{1}{4} \sqrt{\frac{21}{2\pi}}$ | $-0.4570457994644657$ |
+| $Y_{3,0}(θ, φ)$ | $\frac{1}{4} \sqrt{\frac{7}{\pi}}$ | $0.3731763325901154$ |
+| $Y_{3,2}(θ, φ)$ | $\frac{1}{4} \sqrt{\frac{105}{\pi}}$ | $1.445305721320277$ |
 
 ## Known Implementations
 
