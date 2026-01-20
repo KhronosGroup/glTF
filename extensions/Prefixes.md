@@ -27,6 +27,7 @@ To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glT
 | `AUDACES` | Audaces Automacao Industrial | https://audaces.com/<br>`edward.boszczowski at audaces.com` | [#2231](https://github.com/KhronosGroup/glTF/issues/2231) |
 | `AVR` | AltspaceVR, Inc. | https://altvr.com/ | [#1009](https://github.com/KhronosGroup/glTF/issues/1009) |
 | `BENTLEY` | Bentley Systems, Inc. | https://www.bentley.com/<br>`paul.connelly at bentley.com` | [#2259](https://github.com/KhronosGroup/glTF/issues/2259) |
+| `BEVY` | Bevy Foundation | https://bevy.org/ | [#2497](https://github.com/KhronosGroup/glTF/issues/2497) |
 | `BLENDER` | Blender Foundation | https://www.blender.org/ | [#865](https://github.com/KhronosGroup/glTF/issues/865) |
 | `C3D` | Core3D, Inc. | https://core3d.io/ | [#2264](https://github.com/KhronosGroup/glTF/issues/2264) |
 | `CAPTURE` | Capture Visualisation AB | https://www.capture.se/ | [#1732](https://github.com/KhronosGroup/glTF/issues/1732) |
@@ -56,6 +57,7 @@ To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glT
 | `MANYFOLD` | Manyfold | https://manyfold.app/<br>`james at floppy.org.uk` | [#2398](https://github.com/KhronosGroup/glTF/issues/2398) |
 | `MAXAR` | Maxar Technologies | https://www.maxar.com/ | [#1869](https://github.com/KhronosGroup/glTF/issues/1869) |
 | `MESHOPT` | meshoptimizer | https://meshoptimizer.org/ | [#1634](https://github.com/KhronosGroup/glTF/issues/1634) |
+| `MF` | 3D Model Foundry | https://www.3dmf.com/<br>`mike at 3dmf.com` | [#2523](https://github.com/KhronosGroup/glTF/issues/2523) |
 | `MIRROR` | The Mirror Megaverse Inc. | https://www.themirror.space/<br>`khronos at themirror.space` | [#2230](https://github.com/KhronosGroup/glTF/issues/2230) |
 | `MODUPLAY` | Moduplay Group Pty Ltd. | https://moduplaygroup.com.au/<br>`matthew.h at moduplay.com.au` | [#2445](https://github.com/KhronosGroup/glTF/issues/2445) |
 | `MOZ` | Mozilla Corporation | https://www.mozilla.org/ | [#1349](https://github.com/KhronosGroup/glTF/issues/1349) |
