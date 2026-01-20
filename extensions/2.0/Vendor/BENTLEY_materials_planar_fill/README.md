@@ -177,6 +177,12 @@ A material for a surface that should appear behind its associated hatch pattern:
 
 This extension assumes that the rendering engine has the concept of a "wireframe view mode" or similar. Engines that do not support such a mode may ignore the `wireframeFill` property and always render the fill.
 
+### Background Fill and Base Color
+
+Implementations define what "view background color" means based on their rendering environment and should document this behavior for their users. Usually, this behavior involves filling a certain color in the viewport's background where geometry is not located (for example, clearing the framebuffer's color to a set value before drawing any geometry). Implementations could optionally include the ability to toggle off the application of view background color.
+
+When `backgroundFill` is `true`, the fill is rendered using the view's background color rather than the material's `baseColorFactor`. This can be utilized to mask out underlying geometry. In such cases, the base color serves as a fallback for implementations that do not support this extension or when the "view background color" feature is toggled off by a possible user preference.
+
 ### Depth Buffer Considerations
 
 When `behind` is `true`, implementations should use appropriate depth offset techniques (such as polygon offset) to ensure the fill renders behind coplanar geometry. Care should be taken to avoid visual artifacts that can occur with excessive or insufficient depth bias.
