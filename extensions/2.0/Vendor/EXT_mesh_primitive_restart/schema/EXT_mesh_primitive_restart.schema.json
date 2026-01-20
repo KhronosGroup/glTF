@@ -1,0 +1,27 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "EXT_mesh_primitive_restart",
+    "title": "EXT_mesh_primitive_restart glTF Mesh Primitive Extension",
+    "type": "object",
+    "description": "glTF extension enabling the use of primitive restart values in index buffers",
+    "allOf": [
+        {
+              "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "primitiveGroups": {
+            "type": "array",
+            "items": {
+                "$ref": "primitiveGroup.schema.json"
+            },
+            "minItems": 1,
+            "description": "The list of groups of primitives that can be drawn using a single index buffer with primitive restart"
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "primitiveGroups"
+    ]
+}
