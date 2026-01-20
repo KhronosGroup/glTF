@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_materials_diffuse_transmission glTF extension",
+    "title": "KHR_materials_diffuse_transmission glTF Material Extension",
     "type": "object",
     "description": "glTF extension that defines the diffuse transmission of the material.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
@@ -16,25 +16,26 @@
         "diffuseTransmissionTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "A texture that defines the percentage of light transmitted through the surface.",
-            "gltf_detailedDescription": "A texture that defines the strength of the diffuse transmission effect, stored in the alpha (A) channel. Will be multiplied by the diffuseTransmissionFactor."
+            "gltf_detailedDescription": "A texture that defines the strength of the diffuse transmission effect, stored in the alpha (A) channel. Will be multiplied by the `diffuseTransmissionFactor` value."
         },
         "diffuseTransmissionColorFactor": {
           "type": "array",
           "items": {
               "type": "number",
-              "minimum": 0.0
+              "minimum": 0.0,
+              "maximum": 1.0
           },
           "description": "The color of the transmitted light.",
           "default": [ 1.0, 1.0, 1.0 ],
           "minItems": 3,
           "maxItems": 3,
           "gltf_detailedDescription": "The color of the transmitted light."
-      },
-      "diffuseTransmissionColorTexture": {
-          "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-          "description": "A texture that defines the color of the transmitted light",
-          "gltf_detailedDescription": "A texture that defines the color of the transmitted light, stored in the RGB channels and encoded in sRGB. This texture will be multiplied by diffuseTransmissionColorFactor."
-      },
+        },
+        "diffuseTransmissionColorTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "A texture that defines the color of the transmitted light",
+            "gltf_detailedDescription": "A texture that defines the color of the transmitted light, stored in the RGB channels and encoded in sRGB. This texture will be multiplied by the `diffuseTransmissionColorFactor` value."
+        },
         "extensions": { },
         "extras": { }
     }
