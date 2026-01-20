@@ -177,7 +177,7 @@ A material for a surface that should appear behind its associated hatch pattern:
 
 This extension assumes that the rendering engine has the concept of a "wireframe view mode" or similar. Engines that do not support such a mode may ignore the `wireframeFill` property and always render the fill.
 
-### Background Fill and Base Color
+### Background Color and Base Color
 
 Implementations define what "view background color" means based on their rendering environment and should document this behavior for their users. Usually, this behavior involves filling a certain color in the viewport's background where geometry is not located (for example, clearing the framebuffer's color to a set value before drawing any geometry). Implementations could optionally include the ability to toggle off the application of view background color.
 
