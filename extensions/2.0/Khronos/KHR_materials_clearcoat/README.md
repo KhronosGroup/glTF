@@ -13,8 +13,8 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 - Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
 - Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
 - Romain Guy, Google [@romainguy](https://twitter.com/romainguy)
-- Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
-- Alex Wood, AGI [@abwood](https://twitter.com/abwood)
+- Ed Mackey, AGI [@emackey](https://github.com/emackey)
+- Alex Wood, AGI [@abwood](https://github.com/abwood)
 
 Copyright 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.

@@ -23,7 +23,7 @@ jobs:
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       # Build spec targets
       - name: spec-generate
@@ -32,7 +32,7 @@ jobs:
           make Specification.html Specification.pdf
 
       - name: Archive generated files
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: spec-outputs
           path: |

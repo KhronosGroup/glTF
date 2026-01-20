@@ -26,8 +26,8 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 - Sandra Voelker, Target
 - Alex Jamerson, Amazon
 - Thomas Dideriksen, Amazon
-- Alex Wood, AGI [@abwood](https://twitter.com/abwood)
-- Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
+- Alex Wood, AGI [@abwood](https://github.com/abwood)
+- Ed Mackey, AGI [@emackey](https://github.com/emackey)
 
 Copyright 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -94,7 +94,21 @@ dielectric_brdf =
       α = roughness^2))
 ```
 
-Valid values for `ior` are numbers greater than or equal to 1. In addition, a value of 0 is allowed. This value gives full weight to `layer`, i.e., the Fresnel term evaluates to 1 independent of the view or light direction. It is useful in combination with `KHR_materials_specular` to seamlessly support the specular-glossiness workflow.
+Valid values for `ior` are numbers greater than or equal to one. As a special case, a value of zero is allowed as described below.
+
+### Specular-Glossiness Backwards Compatibility Mode
+
+Setting IOR to zero permanently switches the material into a special specular-glossiness backwards compatibility mode designed to ease content transition from the legacy specular-glossiness model (previously available via `KHR_materials_pbrSpecularGlossiness` extension) to the glTF 2.0 core metallic-roughness PBR model.
+
+This mode has the following implications:
+
+- The effective IOR becomes positive infinity and the Fresnel term **MUST** evaluate to `1.0` independently of the view or light direction.
+
+- All material features **MUST** treat IOR as having a very large value representing positive infinity, subject to numerical precision. For example, this would cause the `dispersion` property (as defined in `KHR_materials_dispersion`) to have no effect on the material appearance.
+
+- This mode cannot be toggled dynamically, e.g., with `KHR_animation_pointer` or `KHR_interactivity` extensions. If the IOR property is set to zero in JSON, glTF Asset Object Model updates of it **MUST** be ignored.
+
+- A value of zero (as well as any other value less than one) **MUST NOT** be used in an animation sampler targeting the IOR property, even if the IOR is set to zero in glTF JSON.
 
 ## Implementation
 

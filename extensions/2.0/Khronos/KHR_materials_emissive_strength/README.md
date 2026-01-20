@@ -5,8 +5,8 @@
 - Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
 - Alex Jamerson, Amazon
 - Thomas Dideriksen, Amazon
-- Alex Wood, AGI, [@abwood](https://twitter.com/abwood)
-- Ed Mackey, AGI, [@emackey](https://twitter.com/emackey)
+- Alex Wood, AGI, [@abwood](https://github.com/abwood)
+- Ed Mackey, AGI, [@emackey](https://github.com/emackey)
 - Nicolas Savva, Autodesk, [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
 - Henrik Edstrom, Autodesk
 - Tobias Haeussler, Dassault Systemes, [@proog128](https://github.com/proog128)
