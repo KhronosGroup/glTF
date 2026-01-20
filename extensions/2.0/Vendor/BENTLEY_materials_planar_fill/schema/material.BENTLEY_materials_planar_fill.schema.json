@@ -25,9 +25,6 @@
           "const": 2,
           "description": "TOGGLE - The fill is drawn only if the user or application has enabled toggleable fill display.",
           "type": "integer"
-        },
-        {
-          "type": "integer"
         }
       ]
     },
