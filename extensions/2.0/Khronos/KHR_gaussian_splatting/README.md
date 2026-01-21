@@ -26,7 +26,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 ## Status
 
-Review Draft
+Release Candidate
 
 ## Dependencies
 
@@ -259,6 +259,8 @@ The zeroth-order spherical harmonic is always required to ensure that the diffus
 Extensions extending this extension may define alternative lighting methods, have specific requirements for handling compression, or define different spherical harmonics handling.
 
 See [Appendix A: Spherical Harmonics Reference](#appendix-a-spherical-harmonics-reference) for an easy reference of the spherical harmonic basis functions and normalization constants.
+
+*Non-normative Note: For training software and exporters, it is recommended that the Gaussians are trained within the [glTF coordinate system](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#coordinate-system-and-units) when targeting glTF. Otherwise, when converting pretrained data from other coordinate systems into the [glTF coordinate system](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#coordinate-system-and-units), the spherical harmonics must be properly rotated.*
 
 ## glTF JSON Example
 
