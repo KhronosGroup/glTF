@@ -97,7 +97,7 @@ Edge geometry associated with the primitive must render in front of the planar p
 
 ### Depth Ordering
 
-Planar primitives must render in front of other nonplanar primitives when they overlap or occupy similar depth ranges (when the depth test is ambiguous). This maintains the visual clarity of planar surfaces in CAD environments where precise geometric relationships are important, especially in cases where planar surfaces may be "sketched" onto non-planar surfaces..
+Planar primitives must render in front of other nonplanar primitives when they overlap or occupy similar depth ranges (when the depth test is ambiguous). This maintains the visual clarity of planar surfaces in CAD environments where precise geometric relationships are important, especially in cases where planar surfaces may be "sketched" onto non-planar surfaces.
 
 ## glTF Schema Updates
 
