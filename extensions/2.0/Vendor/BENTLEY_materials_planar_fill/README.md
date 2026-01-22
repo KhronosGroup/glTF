@@ -23,6 +23,8 @@ Written against the glTF 2.0 spec.
 
 Two- and three-dimensional planar polygons with filled interiors are fundamental elements in many 3D modeling and computer-aided design (CAD) environments. The `BENTLEY_materials_planar_fill` extension allows the behavior of a polygon's interior fill to be customized with the intent of being able to indicate a variety of meanings useful to CAD applications.
 
+The presence of this extension on a material indicates that any primitives using that material are planar and [should be treated accordingly](#planar-rendering-behavior) by the rendering engine for proper depth sorting and edge rendering.
+
 This specification describes a minimal extension sufficient to meet Bentley Systems' requirements, with some suggestions for how it might be broadened and/or generalized while retaining a focus on CAD visualization.
 
 ## Extending Materials
@@ -84,6 +86,18 @@ When `behind` is `true`, the fill should be drawn behind other coplanar geometry
 - Line work overlays a solid surface
 
 > **Implementation Note:** The concept of "belonging to the same logical object" has a specific meaning for Bentley (originating from the same element). Implementations should define how they determine coplanarity and object association.
+
+## Planar Rendering Behavior
+
+The presence of this extension on a material indicates that primitives using that material are planar. Rendering engines should then apply the following depth sorting rules to such primitives:
+
+### Edge Priority
+
+Edge geometry associated with the primitive must render in front of the planar primitive's fill. This ensures that edges remain visible and are not obscured by the fill they bound.
+
+### Depth Ordering
+
+Planar primitives must render in front of other nonplanar primitives when they overlap or occupy similar depth ranges (when the depth test is ambiguous). This maintains the visual clarity of planar surfaces in CAD environments where precise geometric relationships are important, especially in cases where planar surfaces may be "sketched" onto non-planar surfaces..
 
 ## glTF Schema Updates
 
@@ -172,6 +186,14 @@ A material for a surface that should appear behind its associated hatch pattern:
 ```
 
 ## Implementation Notes
+
+### Planar Primitive Rendering
+
+To achieve the required depth ordering for planar primitives (associated edges in front of fills, planar in front of nonplanar), implementations should use appropriate depth offset techniques such as:
+
+- **Polygon offset:** Adjusting the depth values of fragments during rasterization
+- **Depth bias:** Modifying depth test comparisons or depth buffer values
+- **Multi-pass rendering:** Rendering geometry in separate passes with controlled depth test settings
 
 ### Wireframe Mode Detection
 
