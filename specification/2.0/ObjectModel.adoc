@@ -119,7 +119,7 @@ This document defines a set of <<json-pointer,JSON pointers>> that glTF implemen
 
 1. The Object Model is defined only for valid glTF assets. Querying or setting properties of invalid glTF assets are undefined.
 
-2. Upon loading an asset, an implementation registers specific glTF object properties for the Object Model by resolving JSON pointers identified by templates provided by this document to JSON properties of the asset being loaded. Undefined glTF properties that have schema-default values are considered defined with their default values.
+2. Upon loading an asset, an implementation registers specific glTF object properties for the Object Model by resolving JSON pointers identified by templates provided by this document to JSON properties of the asset being loaded. Undefined glTF properties that have default values are considered defined with their default values.
 
 3. Each instance of empty curly braces (`{}`) in the pointer templates is replaced with the corresponding array element index for each glTF asset property matching the template.
 
@@ -185,8 +185,6 @@ The following pointer templates represent mutable properties defined in the core
 | `/materials/{}/pbrMetallicRoughness/baseColorFactor` | `float4`
 | `/materials/{}/pbrMetallicRoughness/metallicFactor`  | `float`
 | `/materials/{}/pbrMetallicRoughness/roughnessFactor` | `float`
-| `/meshes/{}/weights`                                 | `float[]`
-| `/meshes/{}/weights/{}`                              | `float`
 | `/nodes/{}/translation`                              | `float3`
 | `/nodes/{}/rotation`                                 | `float4`
 | `/nodes/{}/scale`                                    | `float3`
@@ -194,10 +192,16 @@ The following pointer templates represent mutable properties defined in the core
 | `/nodes/{}/weights/{}`                               | `float`
 |====
 
+The `/nodes/{}/weights` and `/nodes/{}/weights/{}` pointers represent the current morph target weights (as an array and as individual scalars respectively) of the mesh instantiated by the node regardless of whether the static `weights` property is defined on the node object in JSON. If the node instantiates no mesh or if the mesh has no morph targets, these pointers are undefined.
+
 [NOTE]
 .Note
 ====
-As in the core glTF 2.0 Specification, lengths of the `weights` arrays match the number of the associated morph targets.
+As in the core glTF 2.0 Specification, lengths of the `/nodes/{}/weights` arrays match the number of the associated morph targets.
+
+If a mesh defines default morph target weights (via its own `weights` JSON property), they are used as the `/nodes/{}/weights` and `/nodes/{}/weights/{}` default values for nodes that instantiate that mesh.
+
+If a mesh does not define default morph target weights, the `/nodes/{}/weights` and `/nodes/{}/weights/{}` default values are all zeros for nodes that instantiate that mesh.
 ====
 
 Additionally, the following pointer templates represent read-only runtime properties.
@@ -212,7 +216,6 @@ Additionally, the following pointer templates represent read-only runtime proper
 | `/meshes.length`                    | `int`      | Number of meshes
 | `/meshes/{}/primitives.length`      | `int`      | Number of primitives
 | `/meshes/{}/primitives/{}/material` | `int`      | Index of the material
-| `/meshes/{}/weights.length`         | `int`      | Number of morph targets
 | `/nodes.length`                     | `int`      | Number of nodes
 | `/nodes/{}/camera`                  | `int`      | Index of the camera
 | `/nodes/{}/children.length`         | `int`      | Number of children nodes
@@ -222,7 +225,7 @@ Additionally, the following pointer templates represent read-only runtime proper
 | `/nodes/{}/mesh`                    | `int`      | Index of the mesh
 | `/nodes/{}/parent`                  | `int`      | Index of the parent node
 | `/nodes/{}/skin`                    | `int`      | Index of the skin
-| `/nodes/{}/weights.length`          | `int`      | Number of the associated mesh's morph targets
+| `/nodes/{}/weights.length`          | `int`      | Number of the instantiated mesh's morph targets
 | `/scene`                            | `int`      | Index of the scene
 | `/scenes.length`                    | `int`      | Number of scenes
 | `/scenes/{}/nodes.length`           | `int`      | Number of root nodes
