@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BENTLEY_materials_planar_fill glTF Material Extension",
+  "type": "object",
+  "description": "Specifies planar fill behavior for CAD-style visualization.",
+  "allOf": [
+    { "$ref": "glTFProperty.schema.json" }
+  ],
+  "properties": {
+    "wireframeFill": {
+      "description": "Specifies whether and when the interior fill is displayed in wireframe view mode. 0 = NONE (never drawn), 1 = ALWAYS (always drawn), 2 = TOGGLE (drawn when fill display is enabled).",
+      "default": 0,
+      "anyOf": [
+        {
+          "const": 0,
+          "description": "NONE - The fill is never drawn in wireframe view.",
+          "type": "integer"
+        },
+        {
+          "const": 1,
+          "description": "ALWAYS - The fill is always drawn in wireframe view.",
+          "type": "integer"
+        },
+        {
+          "const": 2,
+          "description": "TOGGLE - The fill is drawn only if the user or application has enabled toggleable fill display.",
+          "type": "integer"
+        }
+      ]
+    },
+    "backgroundFill": {
+      "type": "boolean",
+      "description": "If true, the fill should be drawn using the view's background color, creating an invisible masking polygon.",
+      "default": false
+    },
+    "behind": {
+      "type": "boolean",
+      "description": "If true, the fill should be drawn behind other coplanar geometry belonging to the same logical object, useful for mitigating z-fighting with overlaid geometry such as hatch patterns or text.",
+      "default": false
+    },
+    "extensions": {},
+    "extras": {}
+  }
+}
