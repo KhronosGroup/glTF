@@ -225,4 +225,4 @@ Assets using this extension should list this extension in the `extensionsUsed` a
 
 ## Known Implementations
 
-* TBD
+* [iTwin.js](https://github.com/iTwin/itwinjs-core/pull/8906)
