@@ -3088,6 +3088,11 @@ function specular_brdf(α) {
 }
 ----
 
+[NOTE]
+====
+A roughness of zero (α = 0) cannot be evaluated directly with this formulation. As α approaches zero, the GGX distribution latexmath:[D] collapses to a delta function and the BRDF becomes singular, leading to divisions by zero or numerically unstable results. Implementations should therefore never use α = 0 in the equations above. Instead, α should be clamped to a small positive value, or the surface should be handled as an ideal specular (mirror) reflector using a separate code path.
+
+====
 
 [[diffuse-brdf]]
 === Diffuse BRDF
