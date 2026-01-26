@@ -192,7 +192,7 @@ The following pointer templates represent mutable properties defined in the core
 | `/nodes/{}/weights/{}`                               | `float`
 |====
 
-The `/nodes/{}/translation`, `/nodes/{}/rotation`, and `/nodes/{}/scale` pointers represent the current TRS properties of the node. If the static `matrix` property is defined on the node object in JSON, the corresponding rotation and scale pointers are undefined.
+The `/nodes/{}/translation`, `/nodes/{}/rotation`, and `/nodes/{}/scale` pointers represent the current TRS properties of the node. If the static `matrix` property is defined on the node object in JSON, the corresponding rotation and scale pointers are undefined; the translation pointer is always defined.
 
 [NOTE]
 .Rationale
