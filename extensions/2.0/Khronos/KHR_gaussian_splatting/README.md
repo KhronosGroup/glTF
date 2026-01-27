@@ -1,5 +1,5 @@
 <!--
-Copyright 2015-2025 The Khronos Group Inc.
+Copyright 2015-2026 The Khronos Group Inc.
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
@@ -249,7 +249,7 @@ Color_{SH_{3}} =\,&SH_{3,-3} \cdot y(3x^2 - y^2) \cdot -0.5900435899266435\,+\\
                   &SH_{3,2} \cdot z(x^2 - y^2) \cdot 1.445305721320277\,+\\
                   &SH_{3,3} \cdot x(x^2 - 3y^2) \cdot -0.5900435899266435\\\\
 Color_{final} =\,&Color_{SH_{0}} + Color_{SH_{1}} + Color_{SH_{2}} + Color_{SH_{3}} + 0.5
-\end{aligned}\\
+\end{aligned}
 ```
 
 Where $SH_{\ell,m}$ represents the RGB spherical harmonic coefficients for a particular degree ($\ell$) and order ($m$) and $x$, $y$, and $z$ represent the independent parts of the direction vector.
@@ -260,11 +260,11 @@ Extensions extending this extension may define alternative lighting methods, hav
 
 See [Appendix A: Spherical Harmonics Reference](#appendix-a-spherical-harmonics-reference) for an easy reference of the spherical harmonic basis functions and normalization constants.
 
-*Non-normative Note: For training software and exporters, it is recommended that the Gaussians are trained within the [glTF coordinate system](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#coordinate-system-and-units) when targeting glTF. Otherwise, when converting pretrained data from other coordinate systems into the [glTF coordinate system](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#coordinate-system-and-units), the spherical harmonics must be properly rotated.*
+*Non-normative Note: For training software and exporters, it is recommended that the Gaussians are trained within the [glTF coordinate system](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#coordinate-system-and-units) when targeting glTF. Otherwise, when converting pretrained data from other coordinate systems into the [glTF coordinate system](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#coordinate-system-and-units), the positions, quaternions and spherical harmonics must be properly rotated.*
 
 ## glTF JSON Example
 
-Partial glTF JSON example shown below including optional attributes and properties. This extension only affects any `primitive` nodes containting 3D Gaussian splat data.
+Partial glTF JSON example shown below including optional attributes and properties. This extension only affects any `primitive` nodes containing 3D Gaussian splat data.
 
 ```json
 "meshes": [{
@@ -409,9 +409,9 @@ The content of `KHR_gaussian_splatting:OPACITY`, `KHR_gaussian_splatting:ROTATIO
 
 When spherical harmonics are being used for lighting, the coefficients for the diffuse component must be provided using the `KHR_gaussian_splatting:SH_DEGREE_0_COEF_0` attribute semantic. The zero-order spherical harmonic coefficients are always required to allow for properly handling cases where the diffuse color is not in the _BT.709_ color gamut. The `KHR_gaussian_splatting:SH_DEGREE_ℓ_COEF_n` attributes where ℓ > 0 hold the higher degrees of spherical harmonics data and are not required. If higher degrees of spherical harmonics are used then lower degrees are required implicitly.
 
-Each increasing degree of spherical harmonics requires more coeffecients. At the 1st degree, 3 sets of coeffcients are required, increasing to 5 sets for the 2nd degree, and increasing to 7 sets at the 3rd degree. With all 3 degrees, this results in 45 spherical harmonic coefficients stored in the `KHR_gaussian_splatting:SH_DEGREE_ℓ_COEF_n` attributes.
+Each increasing degree of spherical harmonics requires more coefficients. At the 1st degree, 3 sets of coefficients are required, increasing to 5 sets for the 2nd degree, and increasing to 7 sets at the 3rd degree. With all 3 degrees, this results in 45 spherical harmonic coefficients stored in the `KHR_gaussian_splatting:SH_DEGREE_ℓ_COEF_n` attributes.
 
-Spherical harmonic data is packed in an (r, g, b) format within the VEC3 accessor type. Each coefficient contains 3 values representing the red, green, and blue channels of the spherical harmonic coefficient. Spherical harmonic degrees cannot be partially defined. For example, if any degree 2 spherical harmonics attribute sematnics are used, then all degree 2 and degree 1 spherical harmonic coefficients must be provided.
+Spherical harmonic data is packed in an (r, g, b) format within the VEC3 accessor type. Each coefficient contains 3 values representing the red, green, and blue channels of the spherical harmonic coefficient. Spherical harmonic degrees cannot be partially defined. For example, if any degree 2 spherical harmonics attribute semantics are used, then all degree 2 and degree 1 spherical harmonic coefficients must be provided.
 
 ### Improving Fallback with COLOR_0
 
