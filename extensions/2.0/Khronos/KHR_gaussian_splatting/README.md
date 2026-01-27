@@ -1,5 +1,5 @@
 <!--
-Copyright 2015-2026 The Khronos Group Inc.
+Copyright 2026 The Khronos Group Inc.
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
@@ -393,9 +393,9 @@ Additional values can be added over time by defining extensions to add new sorti
 | Scale | KHR_gaussian_splatting:SCALE | VEC3 | _float_ <br/>_signed byte_ <br/>_signed byte_ normalized <br/>_signed short_ <br/>_signed short_ normalized | yes | |
 | Opacity | KHR_gaussian_splatting:OPACITY | SCALAR | _float_ <br/>_unsigned byte_ normalized <br/>_unsigned short_ normalized | yes | |
 | Spherical Harmonics degree 0 | KHR_gaussian_splatting:SH_DEGREE_0_COEF_0 | VEC3 | _float_ | yes (unless using a different method for lighting) | |
-| Spherical Harmonics degree 1 | KHR_gaussian_splatting:SH_DEGREE_1_COEF_n (n = 0 to 2) | VEC3 | _float_ | no (yes if degree 2 or 3 are used) | |
-| Spherical Harmonics degree 2 | KHR_gaussian_splatting:SH_DEGREE_2_COEF_n (n = 0 to 4) | VEC3 | _float_ | no (yes if degree 3 is used) | |
-| Spherical Harmonics degree 3 | KHR_gaussian_splatting:SH_DEGREE_3_COEF_n (n = 0 to 6) | VEC3 | _float_ | no | |
+| Spherical Harmonics degree 1 | KHR_gaussian_splatting:SH_DEGREE_1_COEF_n (n = 0 to 2) | VEC3 | _float_ | no (yes if degree 2 or 3 are used) | Packed from lowest order $m$ (-1) to highest (1). |
+| Spherical Harmonics degree 2 | KHR_gaussian_splatting:SH_DEGREE_2_COEF_n (n = 0 to 4) | VEC3 | _float_ | no (yes if degree 3 is used) | Packed from lowest order $m$ (-2) to highest (2). |
+| Spherical Harmonics degree 3 | KHR_gaussian_splatting:SH_DEGREE_3_COEF_n (n = 0 to 6) | VEC3 | _float_ | no | Packed from lowest order $m$ (-3) to highest (3). |
 
 ### Basic Attributes
 
@@ -409,7 +409,7 @@ The content of `KHR_gaussian_splatting:OPACITY`, `KHR_gaussian_splatting:ROTATIO
 
 When spherical harmonics are being used for lighting, the coefficients for the diffuse component must be provided using the `KHR_gaussian_splatting:SH_DEGREE_0_COEF_0` attribute semantic. The zero-order spherical harmonic coefficients are always required to allow for properly handling cases where the diffuse color is not in the _BT.709_ color gamut. The `KHR_gaussian_splatting:SH_DEGREE_ℓ_COEF_n` attributes where ℓ > 0 hold the higher degrees of spherical harmonics data and are not required. If higher degrees of spherical harmonics are used then lower degrees are required implicitly.
 
-Each increasing degree of spherical harmonics requires more coefficients. At the 1st degree, 3 sets of coefficients are required, increasing to 5 sets for the 2nd degree, and increasing to 7 sets at the 3rd degree. With all 3 degrees, this results in 45 spherical harmonic coefficients stored in the `KHR_gaussian_splatting:SH_DEGREE_ℓ_COEF_n` attributes.
+Each increasing degree of spherical harmonics requires more coefficients. At the 1st degree, 3 sets of coefficients are required, increasing to 5 sets for the 2nd degree, and increasing to 7 sets at the 3rd degree. With all 3 degrees, this results in 45 spherical harmonic coefficients stored in the `KHR_gaussian_splatting:SH_DEGREE_ℓ_COEF_n` attributes. Attributes are packed from the lowest order ($m$) to highest for each degree. (i.e. Degree 2 spherical harmonics are packed order ($m$) -2 coefficients, rgb, then order -1 coefficients, rgb, and so forth.)
 
 Spherical harmonic data is packed in an (r, g, b) format within the VEC3 accessor type. Each coefficient contains 3 values representing the red, green, and blue channels of the spherical harmonic coefficient. Spherical harmonic degrees cannot be partially defined. For example, if any degree 2 spherical harmonics attribute semantics are used, then all degree 2 and degree 1 spherical harmonic coefficients must be provided.
 
