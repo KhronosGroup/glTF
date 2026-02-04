@@ -1,0 +1,66 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_implicit_shapes.shape.EXT_implicit_ellipsoid_region.schema.json",
+    "title": "EXT_implicit_ellipsoid_region extension on KHR_implicit_shapes.shape",
+    "type": "object",
+    "description": "Extension of `KHR_implicit_shapes.shape` to represent an implicit ellipsoid region in a glTF model.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "semiMajorAxisRadius": {
+            "type": "number",
+            "description": "The radius along the semi-major axis of the reference ellipsoid in meters. Corresponds to the radii along the X and Z axes.",
+            "minimum": 0
+        },
+        "semiMinorAxisRadius": {
+            "type": "number",
+            "description": "The radius along the semi-minor axis of the reference ellipsoid in meters. Corresponds to the radius along the Y-axis.",
+            "minimum": 0
+        },
+        "minHeight": {
+            "type": "number",
+            "description": "The minimum height of the region relative to the ellipsoid's surface, in meters. May be negative."
+        },
+        "maxHeight": {
+            "type": "number",
+            "description": "The maximum height of the region relative to the ellipsoid's surface, in meters. May be negative."
+        },
+        "minLatitude": {
+            "type": "number",
+            "description": "The minimum latitude (a.k.a. polar angle) of the region, in radians. Must be in the range [-pi/2, pi/2].",
+            "minimum": -1.57079632679,
+            "maximum": 1.57079632679,
+            "default": -1.57079632679
+        },
+        "maxLatitude": {
+            "type": "number",
+            "description": "The maximum latitude (a.k.a. polar angle) of the region, in radians. Must be in the range [-pi/2, pi/2].",
+            "minimum": -1.57079632679,
+            "maximum": 1.57079632679,
+            "default": 1.57079632679
+        },
+        "minLongitude": {
+            "type": "number",
+            "description": "The minimum longitude (a.k.a. azimuthal angle) of the region, in radians. Must be in the range [-pi, pi].",
+            "minimum": -3.14159265359,
+            "maximum": 3.14159265359,
+            "default": -3.14159265359
+        },
+        "maxLongitude": {
+            "type": "number",
+            "description": "The maximum longitude (a.k.a. azimuthal angle) of the region, in radians. Must be in the range [-pi, pi].",
+            "minimum": -3.14159265359,
+            "maximum": 3.14159265359,
+            "default": 3.14159265359
+        }
+    },
+    "required": [
+        "semiMajorAxisRadius",
+        "semiMinorAxisRadius",
+        "minHeight",
+        "maxHeight"
+    ]
+}
