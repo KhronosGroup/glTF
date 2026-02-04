@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="150" style="background-color:white" xmlns="http://www.w3.org/2000/svg">
+  <!-- Rectangle outline -->
+  <rect x="40" y="25" width="120" height="100" fill="none" stroke="black" stroke-width="2"/>
+  <!-- Diagonal line -->
+  <line x1="40" y1="25" x2="160" y2="125" stroke="black" stroke-width="2"/>
+  <!-- Corner labels -->
+  <text x="35" y="22" font-size="14" text-anchor="middle">0</text>
+  <text x="35" y="135" font-size="14" text-anchor="middle">1</text>
+  <text x="165" y="135" font-size="14" text-anchor="middle">2</text>
+  <text x="165" y="22" font-size="14" text-anchor="middle">3</text>
+</svg>
