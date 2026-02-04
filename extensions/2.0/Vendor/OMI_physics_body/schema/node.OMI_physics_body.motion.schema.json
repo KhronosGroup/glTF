@@ -1,0 +1,64 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "node.OMI_physics_body.motion.schema.json",
+    "title": "OMI_physics_body Node Motion Property",
+    "type": "object",
+    "description": "Parameters describing how a node's transform should be driven by physics simulation.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "type": {
+            "type": "string",
+            "description": "The motion type of this physics body as a string.",
+            "enum": [
+                "static",
+                "kinematic",
+                "dynamic"
+            ]
+        },
+        "mass": {
+            "type": "number",
+            "description": "The mass of this physics body in kilograms.",
+            "default": 1.0
+        },
+        "centerOfMass": {
+            "type": "array",
+            "description": "The center of mass of the object in local space.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [0.0, 0.0, 0.0]
+        },
+        "inertiaDiagonal": {
+            "type": "array",
+            "description": "The inertia around principle axes in kilogram meter squared. If zero or not specified, the inertia should be calculated automatically.",
+            "default": [0.0, 0.0, 0.0]
+        },
+        "inertiaOrientation": {
+            "type": "array",
+            "description": "The inertia orientation as a Quaternion. If not specified, the inertia is not rotated.",
+            "default": [0.0, 0.0, 0.0, 1.0]
+        },
+        "linearVelocity": {
+            "type": "array",
+            "description": "The initial linear velocity of the body in meters per second.",
+            "default": [0.0, 0.0, 0.0]
+        },
+        "angularVelocity": {
+            "type": "array",
+            "description": "The initial angular velocity of the body in radians per second.",
+            "default": [0.0, 0.0, 0.0]
+        },
+        "gravityFactor": {
+            "type": "number",
+            "description": "A multiplier applied to the global acceleration due to gravity.",
+            "default": 1.0
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "type"
+    ]
+}

@@ -1,0 +1,50 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensions": {
+        "OMI_physics_shape": {
+            "shapes": [
+                {
+                    "type": "sphere",
+                    "sphere": {
+                        "radius": 0.5
+                    }
+                }
+            ]
+        }
+    },
+    "extensionsUsed": [
+        "OMI_physics_body",
+        "OMI_physics_shape"
+    ],
+    "nodes": [
+        {
+            "children": [
+                1
+            ],
+            "extensions": {
+                "OMI_physics_body": {
+                    "motion": {
+                        "angularVelocity": [4, 5, 6],
+                        "linearVelocity": [1, 2, 3],
+                        "type": "dynamic"
+                    }
+                }
+            },
+            "name": "DynamicWithVelocity"
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
+                }
+            },
+            "name": "SphereShape"
+        }
+    ],
+    "scene": 0,
+    "scenes": [{ "nodes": [0] }]
+}
