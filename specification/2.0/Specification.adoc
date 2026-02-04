@@ -1133,7 +1133,7 @@ Each accessor **MUST** fit its `bufferView`, i.e.,
 accessor.byteOffset + EFFECTIVE_BYTE_STRIDE * (accessor.count - 1) + SIZE_OF_COMPONENT * NUMBER_OF_COMPONENTS
 ----
 
-**MUST** be less than or equal to `bufferView.length`.
+**MUST** be less than or equal to `bufferView.byteLength`.
 
 For performance and compatibility reasons, each element of a vertex attribute **MUST** be aligned to 4-byte boundaries inside a `bufferView` (i.e., `accessor.byteOffset` and `bufferView.byteStride` **MUST** be multiples of 4).
 
