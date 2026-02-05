@@ -1,0 +1,24 @@
+{
+    "title": "Branch Flow Node",
+    "properties": {
+        "type": {
+            "const": "flow/branch"
+        },
+        "flow": {
+            "type": "object",
+            "properties": {
+                "true": { "$ref": "behavior.types.flow.schema.json" },
+                "false": { "$ref": "behavior.types.flow.schema.json" }
+            }
+        },
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "condition": { "$ref": "behavior.types.boolean.schema.json" }
+            },
+            "required": ["condition"]
+        }
+    },
+    "sockets": [],
+    "required": ["type", "parameters"]
+}

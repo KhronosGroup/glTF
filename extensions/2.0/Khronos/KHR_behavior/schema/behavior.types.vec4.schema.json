@@ -1,0 +1,18 @@
+{
+    "title": "Vec4 Value",
+    "oneOf": [
+        {
+            "type": "array",
+            "items": [
+                {
+                    "type": "number"
+                }
+            ],
+            "minItems": 4,
+            "maxItems": 4
+        },
+        {
+            "$ref": "behavior.types.reference.schema.json"
+        }
+    ]
+}
