@@ -1,0 +1,61 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_lights_area Area Light Properties",
+    "type": "object",
+    "description": "An area light (rectangular or disk) that emits light uniformly from one side following Lambert's cosine law.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "The name of the light. This is not necessarily unique."
+        },
+        "color": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "description": "RGB color of the light in linear space. Each component should be in the range [0, 1].",
+            "default": [1.0, 1.0, 1.0]
+        },
+        "intensity": {
+            "type": "number",
+            "description": "The luminance of the light surface in nits (cd/m²). Must be a positive value.",
+            "default": 1000.0,
+            "minimum": 0.0
+        },
+        "size": {
+            "type": "number",
+            "description": "Size of the light. For rectangular lights, this is the height (y-axis) in local space. Must be a positive value. For disk lights, it is the diameter.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "exclusiveMinimum": true
+        },
+        "rect": {
+            "type": "object",
+            "$ref": "light.rect.schema.json"
+        },
+        "type": {
+            "type": "string",
+            "description": "Specifies the type of area light.",
+            "anyOf": [
+                {
+                    "enum": [ "rect" ],
+                    "description": "Rectangle lights emit light from a rectangular area."
+                },
+                {
+                    "enum": [ "disk" ],
+                    "description": "Disk lights emit light from a circular area."
+                }
+            ]
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "shape"
+    ]
+}
