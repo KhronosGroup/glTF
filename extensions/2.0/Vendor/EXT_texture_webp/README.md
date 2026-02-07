@@ -15,17 +15,19 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension allows glTF models to use WebP as a valid image format. A client that does not implement this extension can ignore the provided WebP image and continue to rely on the PNG and JPG textures available in the base specification. Defining a fallback texture is optional. The [best practices](#best-practices) section describes the intended use case of this extension and the expected behavior when using it without a fallback texture.
+This extension allows glTF assets to use WebP as a valid image format.
 
-WebP is an image format developed and maintained by Google that provides superior lossless and lossy compression rates for images on the web. It is typically 26% smaller in size compared to PNGs and 25-34% smaller than comparable JPEG images - [source](https://developers.google.com/speed/webp/).  
+WebP is an image format developed and maintained by Google that provides superior lossless and lossy compression rates for images on the web. It is typically 26% smaller in size compared to PNGs and 25-34% smaller than comparable JPEG images.
+
+A client implementation that does not support this extension may be able to ignore the provided WebP image if an optional fallback PNG or JPEG image is present. The [best practices](#best-practices) section describes the use cases of this extension with and without a fallback image.
 
 ## glTF Schema Updates
 
-The `EXT_texture_webp` extension is added to the `textures` node and specifies a `source` property that points to the index of the `images` node which in turn points to the WebP image.
+The `EXT_texture_webp` extension is added to the texture object and specifies a `source` property that contains the index of the WebP image object.
 
-The following glTF will load `image.webp` in clients that support this extension, and otherwise fall back to `image.png`.
+The following glTF will load `image.webp` in client implementations that support this extension, and otherwise fall back to `image.png`.
 
-```
+```json
 "textures": [
     {
         "source": 0,
@@ -46,9 +48,9 @@ The following glTF will load `image.webp` in clients that support this extension
 ]
 ```
 
-When used in the glTF Binary (.glb) format the `images` node that points to the WebP image uses the `mimeType` value of `image/webp`. 
+When an image is stored in a buffer and accessed via a buffer view, the WebP image object uses the `mimeType` value of `image/webp`.
 
-```
+```json
 "textures": [
     {
         "source": 0,
@@ -77,17 +79,17 @@ When used in the glTF Binary (.glb) format the `images` node that points to the 
 
 ## Best Practices
 
-Since WebP is not as widely supported as JPEG and PNG, it is recommended to use this extension only when transmission size is a significant bottleneck. For example, in geospatial applications the total texture payload can range from gigabytes to terabytes of data. In those situations, WebP textures can be used without a fallback to improve storage and transmission.
+It is recommended to use this extension when transmission size is a significant bottleneck. For example, in geospatial applications the total texture payload can range from gigabytes to terabytes of data. In those situations, WebP textures can be used without a fallback to improve storage and transmission.
 
-When a fallback image is defined, this extension should not be present in `extensionsRequired`. This will allow all clients to render the glTF correctly, and those that support this extension can request the optimized WebP version of the textures.
+When a fallback image is defined, this extension should not be present in `extensionsRequired`. This will allow all client implementations to render the glTF asset correctly, and those that support this extension can use the WebP version of the textures.
 
-WebP images using [extended file format](https://developers.google.com/speed/webp/docs/riff_container#extended_file_format) should not contain animations or color profile information.
+WebP images using extended file format (RFC 9649, Section 2.7) should not contain `ICCP`, `ANIM`, or `EXIF` chunks.
 
 ### Using Without a Fallback
 
-To use WebP images without a fallback, define `EXT_texture_webp` in both `extensionsUsed` and `extensionsRequired`. The `texture` node will then have only an `extensions` property as shown below.
+To use WebP images without a JPEG or PNG fallback, `EXT_texture_webp` must be present in both `extensionsUsed` and `extensionsRequired`. The texture object will then have only an `extensions` property as shown below.
 
-```
+```json
 "textures": [
     {
         "extensions": {
@@ -99,14 +101,14 @@ To use WebP images without a fallback, define `EXT_texture_webp` in both `extens
 ]
 ```
 
-If a glTF contains a WebP with no fallback texture and the browser does not support WebP, the client should either display an error or decode the WebP image at runtime (see [resource](#resources) for decoding libraries).
-
 ## Known Implementations
 
-CesiumJS uses it to significantly cut load times for massive models that contain gigabytes of texture data (see [implementation and sample model](https://github.com/AnalyticalGraphicsInc/cesium/pull/7486)). 
+CesiumJS uses it to significantly cut load times for massive models that contain gigabytes of texture data (see [implementation and sample model](https://github.com/AnalyticalGraphicsInc/cesium/pull/7486)).
 
 ## Resources
 
-Google's [WebP developer page](https://developers.google.com/speed/webp/) provides information about the format as well as [pre-compiled and source code versions](https://developers.google.com/speed/webp/download) of an encoder and a decoder. The [WebP Compression Study](https://developers.google.com/speed/webp/docs/webp_study) is a detailed comparison between JPEG and WebP.
+[RFC 9649, WebP Image Format](https://www.rfc-editor.org/info/rfc9649)
 
-For browsers that do not natively support WebP, [webp_js](https://chromium.googlesource.com/webm/libwebp/+/HEAD/webp_js/README.md) decodes WebP images in JavaScript. [Sharp](http://sharp.pixelplumbing.com/en/stable/) is a NodeJS library for fast encode/decode of WebP using native modules (built on top of Google's implementation above).
+Google's [WebP developer page](https://developers.google.com/speed/webp/) provides information about the format as well as pre-compiled and source code versions of the reference codec implementation
+
+[Sharp](http://sharp.pixelplumbing.com/) is a Node.js library for fast encode/decode of WebP using native modules
