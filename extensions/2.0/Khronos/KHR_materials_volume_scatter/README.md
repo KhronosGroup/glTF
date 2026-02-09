@@ -48,7 +48,7 @@ The scattering properties are defined by adding the `KHR_materials_volume_scatte
     {
         "extensions": {
             "KHR_materials_volume_scatter": {
-                "multiscatterColor": [ 0.572, 0.227, 0.075 ],
+                "multiscatterColorFactor": [ 0.572, 0.227, 0.075 ],
                 "scatterAnisotropy": 0.3
             },
             "KHR_materials_volume": {
@@ -67,11 +67,11 @@ The scattering properties are defined by adding the `KHR_materials_volume_scatte
 
 The extension defines the following parameters to describe the scattering behavior.
 
-|                              | Type                                                                                                 | Description                                                                                                   | Required                 |
-|------------------------------|------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|--------------------------|
-| **multiscatterColor**        | `number[3]`                                                                                          | The multi-scatter albedo.                                                                                     | No, default: `[0, 0, 0]` |
-| **multiscatterColorTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A surface texture sets the multi-scatter albedo at the volume's entry point, replacing the multiscatterColor. | No                       |
-| **scatterAnisotropy**        | `number`                                                                                             | The anisotropy of scatter events. Range is (-1, 1).                                                           | No, default: `0`         |
+|                              | Type                                                                                                 | Description                                                                                                                                                                                    | Required                 |
+|------------------------------|------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|
+| **multiscatterColorFactor**  | `number[3]`                                                                                          | The multi-scatter albedo.                                                                                                                                                                      | No, default: `[0, 0, 0]` |
+| **multiscatterColorTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A surface texture that defines the multi-scatter albedo at the volume's entry point. Stored in the RGB channels and encoded in sRGB. This will be multiplied by the `multiscatterColorFactor`. | No                       |
+| **scatterAnisotropy**        | `number`                                                                                             | The anisotropy of scatter events. Range is (-1, 1).                                                                                                                                            | No, default: `0`         |
 
 ## Scattering
 
@@ -135,10 +135,14 @@ $$
 
 The multi-scatter color is a volume property, so using a 2D surface to specify its values is physically nonsensical. However, other material models allow this texturing for added artistic flexibility. To ensure compatibility with these models, we also permit texturing of this parameter.
 
+If a texture is defined, the multi-scatter color is computed with:
+
+`multiscatterColor = multiscatterColorFactor * sampleLinear(multiscatterColorTexture).rgb`.
+
 > [!NOTE]
 > Applying a 2D surface texture to a volume property introduces ambiguity, as each texture pixel competes to define the volume's multi-scatter albedo. In path tracing, paths can be traced from either the eye or the light source. Ideally, this should not affect the outcome due to the principle of reciprocity in physics-based path tracing. However, using the multi-scatter color texture violates this assumption, causing the volume integration result to vary based on view and light directions.
 
-### Phase Function
+### Scatter Anisotropy
 
 For a single scattering event, the phase function $p(\mathbf{v},\mathbf{l})$ determines the probability density of outgoing directions $\mathbf{l}$ given an incident direction $\mathbf{v}$ at a scattering event. We use the phase function developed by [Henyey-Greenstein](#HenyeyGreenstein). It is controlled by a single parameter  g in the range [−1,1], the `scatterAnisotropy` parameter.
 
