@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "KHR_node_hoverability glTF Node Extension",
+  "type": "object",
+  "description": "glTF extension that defines node's hoverability.",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+  "properties": {
+      "hoverable": {
+          "type": "boolean",
+          "description": "Specifies whether the node is hoverable.",
+          "default": true,
+          "gltf_detailedDescription": "Specifies whether the node is hoverable. A value of false means that the node and all its children do not respond to hover actions."
+      },
+      "extensions": { },
+      "extras": { }
+  }
+}
