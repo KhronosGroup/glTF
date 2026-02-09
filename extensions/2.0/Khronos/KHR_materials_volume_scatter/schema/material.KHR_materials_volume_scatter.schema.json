@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_volume_scatter glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the scattering parameters for the volume of a material.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "multiscatterColor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "default": [ 0.0, 0.0, 0.0 ],
+            "minItems": 3,
+            "maxItems": 3,
+            "description": "The multi-scatter albedo.",
+            "gltf_detailedDescription": "The perceived color of the volume medium due to scattering (not absorption) after many scattering events."
+        },
+        "multiscatterColorTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The multi-scatter albedo (RGB) texture.",
+            "gltf_detailedDescription": "The multi-scatter albedo (RGB) texture. Stored in channel RGB, the multi-scatter albedo is in sRGB transfer function."
+        },
+        "scatterAnisotropy": {
+            "type": "number",
+            "minimum": -1.0,
+            "maximum": 1.0,
+            "default": 0.0,
+            "description": "The anisotropy of scatter events.",
+            "gltf_detailedDescription": "The anisotropy of scatter events. Range is (-1, 1). 1 indicates forward scattering, -1 indicates backscattering. The default is zero and indicates isotropic scattering."
+
+        }
+    }
+}
