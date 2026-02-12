@@ -1,0 +1,117 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "propertyTable.property.schema.json",
+    "title": "Property Table Property in EXT_structural_metadata",
+    "type": "object",
+    "description": "An array of binary property values.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "values": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of the buffer view containing property values. The data type of property values is determined by the property definition: When `type` is `BOOLEAN` values are packed into a bitstream. When `type` is `STRING` values are stored as byte sequences and decoded as UTF-8 strings. When `type` is `SCALAR`, `VECN`, or `MATN` the values are stored as the provided `componentType` and the buffer view `byteOffset` must be aligned to a multiple of the `componentType` size. When `type` is `ENUM` values are stored as the enum's `valueType` and the buffer view `byteOffset` must be aligned to a multiple of the `valueType` size. Each enum value in the array must match one of the allowed values in the enum definition. `arrayOffsets` is required for variable-length arrays and `stringOffsets` is required for strings (for variable-length arrays of strings, both are required)."
+        },
+        "arrayOffsets": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of the buffer view containing offsets for variable-length arrays. The number of offsets is equal to the property table `count` plus one. The offsets represent the start positions of each array, with the last offset representing the position after the last array. The array length is computed using the difference between the subsequent offset and the current offset. If `type` is `STRING` the offsets index into the string offsets array (stored in `stringOffsets`), otherwise they index into the property array (stored in `values`). The data type of these offsets is determined by `arrayOffsetType`. The buffer view `byteOffset` must be aligned to a multiple of the `arrayOffsetType` size."
+        },
+        "stringOffsets": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of the buffer view containing offsets for strings. The number of offsets is equal to the number of string elements plus one. The offsets represent the byte offsets of each string in the property array (stored in `values`), with the last offset representing the byte offset after the last string. The string byte length is computed using the difference between the subsequent offset and the current offset. The data type of these offsets is determined by `stringOffsetType`. The buffer view `byteOffset` must be aligned to a multiple of the `stringOffsetType` size."
+        },
+        "arrayOffsetType": {
+            "description": "The type of values in `arrayOffsets`.",
+            "default": "UINT32",
+            "anyOf": [
+                {
+                    "const": "UINT8"
+                },
+                {
+                    "const": "UINT16"
+                },
+                {
+                    "const": "UINT32"
+                },
+                {
+                    "const": "UINT64"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "stringOffsetType": {
+            "description": "The type of values in `stringOffsets`.",
+            "default": "UINT32",
+            "anyOf": [
+                {
+                    "const": "UINT8"
+                },
+                {
+                    "const": "UINT16"
+                },
+                {
+                    "const": "UINT32"
+                },
+                {
+                    "const": "UINT64"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "offset": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/numericValue"
+                }
+            ],
+            "description": "An offset to apply to property values. Only applicable when the component type is `FLOAT32` or `FLOAT64`, or when the property is `normalized`. Overrides the class property's `offset` if both are defined."
+        },
+        "scale": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/numericValue"
+                }
+            ],
+            "description": "A scale to apply to property values. Only applicable when the component type is `FLOAT32` or `FLOAT64`, or when the property is `normalized`. Overrides the class property's `scale` if both are defined."
+        },
+        "max": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/numericValue"
+                }
+            ],
+            "description": "Maximum value present in the property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the maximum of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
+        },
+        "min": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/numericValue"
+                }
+            ],
+            "description": "Minimum value present in the property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the minimum of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "values"
+    ]
+}
