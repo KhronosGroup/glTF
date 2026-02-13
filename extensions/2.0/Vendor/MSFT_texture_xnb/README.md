@@ -14,7 +14,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds the ability to specify textures using the XNA Binary format (XNB). An implementation of this extension can use the textures provided in the XNB files as an alternative to the PNG or JPG textures available in glTF 2.0.
+This extension adds the ability to specify textures using the XNA Binary format (XNB). An implementation of this extension can use the textures provided in the XNB files as an alternative to the PNG or JPG textures available in glTF 2.0. The extension only supports Textures in XNB format, other types such as Audio, Video and 3D Models are not supported.
 
 The extension is added to the `textures` node and specifies a `source` property that points to the index of the `images` node which in turn points to the XNB texture file. A client that does not understand this extension can ignore the XNB file and continue to rely on the PNG or JPG textures specified.
 
