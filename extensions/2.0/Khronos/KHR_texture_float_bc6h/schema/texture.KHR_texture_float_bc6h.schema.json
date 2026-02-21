@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "KHR_texture_float_bc6h glTF extension",
+  "type": "object",
+  "description": "glTF extension to specify textures using the KTX v2 images in VK_FORMAT_BC6H_UFLOAT_BLOCK format.",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+  "properties": {
+    "source": {
+      "allOf": [ { "$ref": "glTFid.schema.json" } ],
+      "description": "The index of the image which points to a KTX v2 resource in VK_FORMAT_BC6H_UFLOAT_BLOCK format."
+    },
+    "extensions": {},
+    "extras": {}
+  }
+}
