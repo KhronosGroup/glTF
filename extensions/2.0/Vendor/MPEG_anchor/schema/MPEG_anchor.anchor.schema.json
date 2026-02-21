@@ -1,0 +1,55 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_anchor.anchor.schema.json",
+    "type": "object",
+    "description": "Anchor schema",
+    "properties": {
+        "trackable": {
+            "description": "Index of the trackable in the trackables array that will be used for this anchor",
+            "type": "integer"
+        },
+        "requiresAnchoring": {
+            "description": "Indicates if AR anchoring is required for the rendering of the associated nodes. If TRUE, the application shall skip the virtual assets attached to this anchor until the pose of this anchor in the real world is known. if FALSE, the application shall process the virtual assets attached to this anchor",
+            "type": "boolean"
+        },
+        "minimumRequiredSpace": {
+            "description": "Space required to anchor the AR asset (width, heigh, depth in meters). This space corresponds to an axis-aligned bounding box placed at the origine of the trackable local space. Width is aligned with x axis, height with y axis and depth with z axis, expressed in trackable local space.  This value shall be compared to the bounding box of the real-world available space associated with the trackable as estimated by the XR runtime.",
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "default": [
+                0, 0, 0
+            ],
+            "minItems": 3,
+            "maxItems": 3
+        },
+        "aligned": {
+            "type": "integer",
+            "enum": [
+                0, 1, 2
+            ],
+            "default": 0,
+            "description": "If ALIGNED_SCALED is set, the bounding box of the virtual assets attached to that anchor is aligned and scaled to match the bounding box of the real available space determined by the application.",
+            "gltf_detailedDescription":"Value is oneOf NOT_USED=0, ALIGNED_NOTSCALED=1, ALIGNED_SCALED=2."
+        },
+        "actions": {
+            "description": "Indices of the actions in the actions array of the interactivity extension to be executed once the pose of this anchor is determined. An example is a setTransform action to place the virtual assets attached to that anchor.",
+            "type": "array",
+            "items": {
+                "type": "integer"
+            }
+        },
+        "light": {
+            "description": "Reference to an item in the lights array of the MPEG_lights_video_based extension.",
+            "type": "integer"
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "allOf": [{ "$ref" : "glTFProperty.schema.json" }],
+    "required": [
+        "trackable",
+        "requiresAnchoring"
+    ]
+}
