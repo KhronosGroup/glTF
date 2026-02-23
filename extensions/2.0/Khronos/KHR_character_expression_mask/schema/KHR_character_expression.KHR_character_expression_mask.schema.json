@@ -1,8 +1,8 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "title": "KHR_character_expression_procedural KHR_character_expression Extension",
+    "title": "KHR_character_expression_mask KHR_character_expression Extension",
     "type": "object",
-    "description": "glTF extension that extends KHR_character_expression to specify procedural expression animations.",
+    "description": "glTF extension that extends KHR_character_expression to specify mask behavior for expression animations.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "conflictResolution": {
