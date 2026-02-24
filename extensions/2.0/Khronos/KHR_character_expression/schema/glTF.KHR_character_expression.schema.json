@@ -1,0 +1,40 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "KHR_character_expression glTF Document Extension",
+    "type": "object",
+    "description": "glTF extension that provides a common interface for facial expression animations.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "expressions": {
+            "type": "array",
+            "description": "Array of mappings between animation/channels and expression labels.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "expression": {
+                        "type": "string",
+                        "description": "Expression name this animation contributes to."
+                    },
+                    "animation": {
+                        "allOf": [
+                            {
+                                "$ref": "glTFid.schema.json"
+                            }
+                        ],
+                        "description": "Index into the glTF animations array representing an expression animation."
+                    },
+                    "extensions": { },
+                    "extras": { }
+                },
+                "required": ["expression", "animation"],
+                "additionalProperties": false
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "expressions"
+    ]
+}
