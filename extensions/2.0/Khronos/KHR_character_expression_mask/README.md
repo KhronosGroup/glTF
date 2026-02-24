@@ -108,14 +108,8 @@ When `conflictResolution` is set to `blend`, implementations should follow these
 For scalar values (e.g., morph target weights) and vector values (e.g., translations, scales), implementations **SHOULD** use traditional linear interpolation (lerp):
 
 ```text
-result = lerp(animation_value, procedural_value, blend_weight)
-       = animation_value + blend_weight * (procedural_value - animation_value)
-```
-
-Alternatively, additive blending may be used where procedural values are added as offsets:
-
-```text
-result = animation_value + procedural_value * blend_weight
+result = lerp(base_value, blend_value, blend_weight)
+       = base_value + blend_weight * (blend_value - base_value)
 ```
 
 ### Quaternion Joint Rotations
@@ -123,7 +117,7 @@ result = animation_value + procedural_value * blend_weight
 For joint rotations represented as quaternions, implementations **SHOULD** use the logarithmic (log/exp) approach to ensure smooth, geodesic interpolation on the rotation manifold:
 
 ```text
-result = exp(lerp(log(animation_rotation), log(procedural_rotation), blend_weight))
+result = exp(lerp(log(base_rotation), log(blend_rotation), blend_weight))
 ```
 
 This approach:
@@ -131,12 +125,6 @@ This approach:
 - Provides the shortest-path interpolation between rotations
 - Avoids issues with gimbal lock present in Euler angle representations
 - Produces more natural blending for skeletal animations, especially for large rotation differences
-
-For small rotation differences, spherical linear interpolation (slerp) may be used as an acceptable alternative:
-
-```text
-result = slerp(animation_rotation, procedural_rotation, blend_weight)
-```
 
 ### Implementation Guidance
 

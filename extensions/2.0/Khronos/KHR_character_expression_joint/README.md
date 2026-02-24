@@ -105,6 +105,29 @@ STEP interpolation ensures that an expression toggles cleanly between fully off 
 - Expression states should be normalized to the [0.0–1.0] range for consistent runtime interpretation.
 - This extension does not conflict with standard rigging or skinning systems.
 
+### Blending Behavior
+
+When blending joint transforms from multiple sources (e.g., layered animations or runtime overrides), implementations **SHOULD** use the following approaches:
+
+**For translation and scale values**, use traditional linear interpolation (lerp):
+
+```text
+result = lerp(base_value, blend_value, blend_weight)
+       = base_value + blend_weight * (blend_value - base_value)
+```
+
+**For rotation values** (quaternions), use the logarithmic (log/exp) approach to ensure smooth, geodesic interpolation on the rotation manifold:
+
+```text
+result = exp(lerp(log(base_rotation), log(blend_rotation), blend_weight))
+```
+
+This approach:
+
+- Provides the shortest-path interpolation between rotations
+- Avoids issues with gimbal lock present in Euler angle representations
+- Produces more natural blending for skeletal animations, especially for large rotation differences
+
 ## License
 
 This extension is licensed under the Khronos Group Extension License.

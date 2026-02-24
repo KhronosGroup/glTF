@@ -252,6 +252,17 @@ Animation of either the texture index or texture transform must be implemented u
 - The `STEP` interpolation is ideal for switching texture indices (e.g., on/off or binary swaps).
 - The `LINEAR` interpolation may be used for UV offset transitions or subtle animations.
 
+### Blending Behavior
+
+When blending UV transform values (offset, scale) from multiple sources (e.g., layered animations or runtime overrides), implementations **SHOULD** use traditional linear interpolation (lerp):
+
+```text
+result = lerp(base_value, blend_value, blend_weight)
+       = base_value + blend_weight * (blend_value - base_value)
+```
+
+For texture index swaps, blending is typically not applicable—use `STEP` interpolation for discrete texture switching.
+
 ### Runtime Behavior
 
 - Expression weights should animate between `0.0` (off) and `1.0` (fully active).

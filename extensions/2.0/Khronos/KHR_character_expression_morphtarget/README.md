@@ -326,6 +326,15 @@ The animation should update the relevant morph target weight (in this case index
 - Multiple morph targets can be bound to the same expression.
 - Tools may use this metadata to validate expression sets, retarget character blendshape names, or drive runtime animation.
 
+### Blending Behavior
+
+When blending morph target weights from multiple sources (e.g., layered animations or runtime overrides), implementations **SHOULD** use traditional linear interpolation (lerp):
+
+```text
+result = lerp(base_value, blend_value, blend_weight)
+       = base_value + blend_weight * (blend_value - base_value)
+```
+
 ### Recommended Interpolation for Binary Expressions
 
 For expressions that represent binary or toggle states (such as eye blinks, mouth open/close states, or other on/off expressions), the use of glTF animation channels with `"interpolation": "STEP"` is strongly recommended.
