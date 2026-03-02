@@ -1,4 +1,4 @@
-# KHR_gaussian_splatting_lgsc
+# KHR_gaussian_splatting_compression_lgsc
 
 ## Contributors
 - Imed Bouazizi, Qualcomm
@@ -31,7 +31,7 @@ Before quantization, optional preprocess steps may be applied to improve compres
 Decoding reverses the process by reading the header metadata, inverse quantizing each stream, and applying the inverse transforms. The codec treats splats as order agnostic, so the original point order may not be preserved if Morton sorting is enabled.
 
 ## Adding L-GSC compressed data to primitives
-If a primitive contains the `KHR_gaussian_splatting` extension and that object includes `extensions.KHR_gaussian_splatting_lgsc`, then L-GSC decoding is required for that primitive.
+If a primitive contains the `KHR_gaussian_splatting` extension and that object includes `extensions.KHR_gaussian_splatting_compression_lgsc`, then L-GSC decoding is required for that primitive.
 
 At this time, there is no requirement for a backup uncompressed buffer.
 
@@ -40,7 +40,7 @@ The extension MUST be listed in `extensionsUsed` along with `KHR_gaussian_splatt
 ```json
 "extensionsUsed": [
   "KHR_gaussian_splatting",
-  "KHR_gaussian_splatting_lgsc"
+  "KHR_gaussian_splatting_compression_lgsc"
 ]
 ```
 
@@ -49,11 +49,11 @@ It MUST also be listed in `extensionsRequired`.
 ```json
 "extensionsRequired": [
   "KHR_gaussian_splatting",
-  "KHR_gaussian_splatting_lgsc"
+  "KHR_gaussian_splatting_compression_lgsc"
 ]
 ```
 
-Note: `KHR_gaussian_splatting_lgsc` extends `KHR_gaussian_splatting`, so both are required to interpret the decoded attributes correctly.
+Note: `KHR_gaussian_splatting_compression_lgsc` extends `KHR_gaussian_splatting`, so both are required to interpret the decoded attributes correctly.
 
 ## Geometry type
 The `mode` of the primitive MUST be `POINTS`.
@@ -84,7 +84,7 @@ Example L-GSC extension shown below. This extension only affects primitives cont
               "kernel": "ellipse",
               "colorSpace": "lin_rec709_scene",
               "extensions": {
-                "KHR_gaussian_splatting_lgsc": {
+                "KHR_gaussian_splatting_compression_lgsc": {
                   "bufferView": 0,
                   "numPoints": 590392,
                   "shDegree": 1,
@@ -189,7 +189,7 @@ This extension uses the same attribute names as `KHR_gaussian_splatting`.
 | SH coefficients | `KHR_gaussian_splatting:SH_DEGREE_1_COEF_0` to `KHR_gaussian_splatting:SH_DEGREE_3_COEF_6` | `VEC3` | `FLOAT` | no |
 
 ## Accessors
-Accessors MUST be defined for each attribute listed in `KHR_gaussian_splatting.extensions.KHR_gaussian_splatting_lgsc.attributes`.
+Accessors MUST be defined for each attribute listed in `KHR_gaussian_splatting.extensions.KHR_gaussian_splatting_compression_lgsc.attributes`.
 
 Each accessor MUST define `componentType`, `count`, and `type`.
 
@@ -200,12 +200,12 @@ The accessor `type` and `componentType` describe the decompressed data after dec
 ## Conformance
 A loader MUST follow this process.
 
-1. If the loader does not support `KHR_gaussian_splatting_lgsc`, it MUST fail to load the asset when the extension is required.
-2. If the loader does support `KHR_gaussian_splatting_lgsc` then it MUST do the following.
-   1. Read the L-GSC payload from `KHR_gaussian_splatting.extensions.KHR_gaussian_splatting_lgsc.bufferView`.
-   2. Decode the payload to obtain attribute arrays for the attributes referenced by `KHR_gaussian_splatting.extensions.KHR_gaussian_splatting_lgsc.attributes`.
+1. If the loader does not support `KHR_gaussian_splatting_compression_lgsc`, it MUST fail to load the asset when the extension is required.
+2. If the loader does support `KHR_gaussian_splatting_compression_lgsc` then it MUST do the following.
+   1. Read the L-GSC payload from `KHR_gaussian_splatting.extensions.KHR_gaussian_splatting_compression_lgsc.bufferView`.
+   2. Decode the payload to obtain attribute arrays for the attributes referenced by `KHR_gaussian_splatting.extensions.KHR_gaussian_splatting_compression_lgsc.attributes`.
    3. When processing those referenced attributes, the loader MUST ignore any accessor `bufferView` and `byteOffset` and instead use the decoded streams.
-   4. Any primitive attributes not listed in `KHR_gaussian_splatting.extensions.KHR_gaussian_splatting_lgsc.attributes` MUST be processed normally.
+   4. Any primitive attributes not listed in `KHR_gaussian_splatting.extensions.KHR_gaussian_splatting_compression_lgsc.attributes` MUST be processed normally.
 
 ## Implementation
 This section is non normative.
@@ -215,7 +215,7 @@ A common implementation path is to decode the payload once, then either populate
 An implementation may choose to also populate `COLOR_0` for point-cloud fallback. This attribute is outside of the `KHR_gaussian_splatting` semantics and is ignored by this extension.
 
 ## Schema
-- [`schema/KHR_gaussian_splatting_lgsc.schema.json`](schema/KHR_gaussian_splatting_lgsc.schema.json)
+- [`schema/KHR_gaussian_splatting_compression_lgsc.schema.json`](schema/KHR_gaussian_splatting_compression_lgsc.schema.json)
 
 ## Known implementations
 - Reference codec library and sample API usage are available in the Qualcomm lite-3Dgsplat-codec repository.
