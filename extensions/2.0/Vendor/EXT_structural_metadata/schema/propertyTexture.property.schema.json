@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "propertyTexture.schema.json",
+    "$id": "propertyTexture.property.schema.json",
     "title": "Property Texture Property in EXT_structural_metadata",
     "type": "object",
     "description": "A texture containing property values.",
