@@ -1,0 +1,90 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "KHR_virtual_transform glTF Document Extension",
+    "type": "object",
+    "description": "glTF extension that introduces virtual transforms - semantic attachment or control points relative to the model's node hierarchy.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "virtualTransforms": {
+            "type": "array",
+            "description": "Array of virtual transform objects.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Semantic identifier of the virtual transform."
+                    },
+                    "parent": {
+                        "allOf": [
+                            {
+                                "$ref": "glTFid.schema.json"
+                            }
+                        ],
+                        "description": "Index of the parent node in the glTF nodes array."
+                    },
+                    "translation": {
+                        "type": "array",
+                        "description": "Local offset (X, Y, Z) relative to the parent node.",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 3,
+                        "maxItems": 3,
+                        "default": [0.0, 0.0, 0.0]
+                    },
+                    "rotation": {
+                        "type": "array",
+                        "description": "Local orientation as quaternion (X, Y, Z, W) relative to the parent node.",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 4,
+                        "maxItems": 4,
+                        "default": [0.0, 0.0, 0.0, 1.0]
+                    },
+                    "scale": {
+                        "type": "array",
+                        "description": "Local scale (X, Y, Z) relative to the parent node.",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 3,
+                        "maxItems": 3,
+                        "default": [1.0, 1.0, 1.0]
+                    },
+                    "respectParentPosition": {
+                        "type": "boolean",
+                        "description": "Whether this should respect the parent node position post-initialization.",
+                        "default": true
+                    },
+                    "respectParentRotation": {
+                        "type": "boolean",
+                        "description": "Whether this should respect the parent node rotation post-initialization.",
+                        "default": true
+                    },
+                    "respectParentScale": {
+                        "type": "boolean",
+                        "description": "Whether this should respect the parent node scale post-initialization.",
+                        "default": true
+                    },
+                    "tags": {
+                        "type": "array",
+                        "description": "Array of strings used to denote tags that can be attributed to the virtual transform.",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": ["name", "parent"],
+                "additionalProperties": false
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "virtualTransforms"
+    ]
+}
