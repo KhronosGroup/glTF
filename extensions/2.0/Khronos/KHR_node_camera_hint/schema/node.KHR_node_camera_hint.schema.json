@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "node.KHR_node_camera_hint.schema.json",
+  "title": "KHR_node_camera_hint glTF Node Extension",
+  "description": "Marks a node as an authored camera positioning suggestion. The node's world-space transform defines the recommended camera placement. The runtime MAY use this as a default view, orbit center, portrait framing, or other camera-related viewpoint.",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "description": "The semantic purpose of this camera hint. Determines how runtimes interpret the node's transform.",
+      "minLength": 1
+    },
+    "fovHint": {
+      "type": "number",
+      "description": "Suggested vertical field of view in radians. Runtimes MAY override this for platform reasons.",
+      "exclusiveMinimum": 0,
+      "exclusiveMaximum": 3.14159265358979
+    },
+    "nearHint": {
+      "type": "number",
+      "description": "Suggested near clipping plane distance in meters.",
+      "exclusiveMinimum": 0
+    },
+    "farHint": {
+      "type": "number",
+      "description": "Suggested far clipping plane distance in meters. When both nearHint and farHint are specified, farHint MUST be greater than nearHint.",
+      "exclusiveMinimum": 0
+    },
+    "targetNode": {
+      "type": "integer",
+      "description": "Index of a glTF node that this camera should orient toward. When specified, the camera's look-at direction is computed from the vector between this node and the target node.",
+      "minimum": 0
+    },
+    "label": {
+      "type": "string",
+      "description": "Human-readable label for this camera position. Used for UI display in model viewers and camera selection menus.",
+      "minLength": 1
+    }
+  },
+  "required": ["role"],
+  "additionalProperties": false
+}
