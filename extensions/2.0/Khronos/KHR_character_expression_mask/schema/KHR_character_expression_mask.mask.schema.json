@@ -1,0 +1,45 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Mask",
+    "type": "object",
+    "description": "Defines how the parent expression affects a target expression.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "target": {
+            "type": "string",
+            "description": "The name of the target expression that this mask will affect."
+        },
+        "type": {
+            "description": "The type of the mask. 'blend' reduces the target proportionally to this expression's value. 'block' fully reduces the target when this expression exceeds the threshold.",
+            "anyOf": [
+                {
+                    "const": "blend"
+                },
+                {
+                    "const": "block"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "default": "blend"
+        },
+        "amount": {
+            "type": "number",
+            "description": "The amount of influence this mask has on the target expression. A value of 1.0 means full influence.",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 1.0
+        },
+        "threshold": {
+            "type": "number",
+            "description": "For 'block' type masks, the threshold value above which the target expression is blocked. When this expression's value exceeds the threshold, the target is reduced by the amount.",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 0.0
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": ["target"]
+}
