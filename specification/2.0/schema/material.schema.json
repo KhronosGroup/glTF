@@ -74,7 +74,7 @@
             "description": "A set of parameter values that are used to define the metallic-roughness material model from Physically Based Rendering (PBR) methodology. When undefined, all the default values of `pbrMetallicRoughness` **MUST** apply."
         }
     },
-     "dependencies" : {
+    "dependentRequired": {
         "alphaCutoff" : [ "alphaMode" ]
     }
 }
