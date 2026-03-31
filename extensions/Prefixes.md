@@ -57,6 +57,7 @@ To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glT
 | `MANYFOLD` | Manyfold | https://manyfold.app/<br>`james at floppy.org.uk` | [#2398](https://github.com/KhronosGroup/glTF/issues/2398) |
 | `MAXAR` | Maxar Technologies | https://www.maxar.com/ | [#1869](https://github.com/KhronosGroup/glTF/issues/1869) |
 | `MESHOPT` | meshoptimizer | https://meshoptimizer.org/ | [#1634](https://github.com/KhronosGroup/glTF/issues/1634) |
+| `MF` | 3D Model Foundry | https://www.3dmf.com/<br>`mike at 3dmf.com` | [#2523](https://github.com/KhronosGroup/glTF/issues/2523) |
 | `MIRROR` | The Mirror Megaverse Inc. | https://www.themirror.space/<br>`khronos at themirror.space` | [#2230](https://github.com/KhronosGroup/glTF/issues/2230) |
 | `MODUPLAY` | Moduplay Group Pty Ltd. | https://moduplaygroup.com.au/<br>`matthew.h at moduplay.com.au` | [#2445](https://github.com/KhronosGroup/glTF/issues/2445) |
 | `MOZ` | Mozilla Corporation | https://www.mozilla.org/ | [#1349](https://github.com/KhronosGroup/glTF/issues/1349) |
