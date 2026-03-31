@@ -7,7 +7,8 @@ SPDX-License-Identifier: CC-BY-4.0
 
 ## Contributors
 
-* Paul Connelly, Bentley Systems, [@pmconne](https://github.com/pmconne)
+- Paul Connelly, Bentley Systems, [@pmconne](https://github.com/pmconne)
+- Don McCurdy, Bentley Systems, [@donmccurdy](https://github.com/donmccurdy)
 
 ## Status
 
@@ -25,7 +26,28 @@ glTF 2.0 explicitly prohibits index buffers from containing maximal index values
 
 > `indices` accessor **MUST NOT** contain the maximum possible value for the component type used (i.e., 255 for unsigned bytes, 65535 for unsigned shorts, 4294967295 for unsigned ints).
 
-This extension permits the above prohibition to be selectively relaxed, while providing a trivial fallback for implementations that don't support primitive restart.
+This extension removes the restriction above, allowing `indices` accessors to contain the maximum possible value for the component type in select primitive draw modes, and specifying that these values indicate primitive restart commands.
+
+Because the extension does not provide a way to specify fallback indices without restart values, files that use the extension must specify it in `extensionsRequired` array - the extension is not optional.
+
+> **Implementation Note:** Implementations on graphics APIs without primitive restart may still support the extension, by rewriting primitive indices. Compared to processing many more primitives and accessors, the extension may still provide performance advantages even for these implementations, in assets with many primitives.
+
+## Extending Mesh Indices
+
+When the `EXT_mesh_primitive_restart` extension is supported, `indices` accessors may contain the maximum possible index values, as primitive restart values, for the following primitive draw modes:
+
+- `2 LINE_LOOP`
+- `3 LINE_STRIP`
+- `5 TRIANGLE_STRIP`
+- `6 TRIANGLE_FAN`
+
+The applicable primitive restart value is determined by the accessor component type:
+
+| `accessor.componentType`     | restart value |
+| ---------------------------- | ------------- |
+| `5121`&nbsp;(UNSIGNED_BYTE)  | `255`         |
+| `5123`&nbsp;(UNSIGNED_SHORT) | `65535`       |
+| `5125`&nbsp;(UNSIGNED_INT)   | `4294967295`  |
 
 ## Example
 
@@ -35,128 +57,19 @@ Consider the simple example of a pair of line strings with a total of 5 vertices
 [0, 1, 255, 2, 3, 4]
 ```
 
-Over this same buffer, we can alternatively produce 2 separate accessors - one per line string - splitting at (and omitting) the prohibited primitive restart value:
+Without `EXT_mesh_primitive_restart`, this pair of line strings would require two separate mesh primitives - one per line string - with two separate indices accessors, splitting at (and omitting) the prohibited primitive restart value:
 
 ```
 [0, 1, 255, 2, 3, 4]
 [0, 1]     [2, 3, 4]
 ```
 
-This permits two equivalent representations of the geometry without duplicating any binary data. In glTF, the accessors look like this:
-
-```json
-    "accessors": [
-        {
-            "bufferView": 0,
-            "count": 2,
-            "componentType": 5121,
-            "type": "SCALAR",
-            "name": "Line string 1 indices"
-        },
-        {
-            "bufferView": 0,
-            "byteOffset": 3,
-            "count": 3,
-            "componentType": 5121,
-            "type": "SCALAR",
-            "name": "Line string 2 indices"
-        },
-        {
-            "bufferView": 0,
-            "componentType": 5121,
-            "count": 6,
-            "type": "SCALAR",
-            "name": "All indices"
-        },
-        {
-            "bufferView": 1,
-            "componentType": 5126,
-            "count": 5,
-            "type": "VEC3",
-            "max": [
-                0.5,
-                0.5,
-                0.0
-            ],
-            "min": [
-                -0.5,
-                -0.5,
-                0.0
-            ],
-            "name": "Positions accessor"
-        }
-    ],
-```
-
-The mesh looks like this:
-
-```json
-    "meshes": [
-        {
-            "primitives": [
-                {
-                    "attributes": {
-                        "POSITION": 3
-                    },
-                    "indices": 0,
-                    "material": 0,
-                    "mode": 3
-                },
-                {
-                    "attributes": {
-                        "POSITION": 3
-                    },
-                    "indices": 1,
-                    "material": 0,
-                    "mode": 3
-                }
-            ],
-            "extensions": {
-                "EXT_mesh_primitive_restart": {
-                    "primitiveGroups": [
-                        {
-                            "primitives": [
-                                0,
-                                1
-                            ],
-                            "indices": 2
-                        }
-                    ]
-                }
-            }
-        }
-    ],
-```
-
-By default, this mesh draws two separate line strip primitives, each using its own `indices` accessor. The `EXT_mesh_primitive_restart` extension specifies that both primitives can be replaced with a single one using a combined `indices` accessor containing primitive restart values.
-
-## glTF Schema Updates
-
-The `EXT_mesh_primitive_restart` extension is applied to a mesh. Its `primitiveGroups` property is a list of groups of primitives that can be replaced with a single primitive using primitive restart. Each group is described by a list of indices into `mesh.primitives`, along with the index of the accessor that supplies the vertex indices for the replacement primitive.
-
-## Constraints
-
-The extension is subject to the following constraints. Violation of any constraint renders the entire extension invalid, in which case the extension **SHOULD** be ignored and the `mesh.primitives` objects **SHOULD** be rendered as defined in the glTF 2.0 specification.
-
-- A given primitive index **MUST NOT** appear in more than one primitive group.
-
-- Each primitive index in a primitive group **MUST NOT** appear more than once in that group.
-
-- Each primitive in each group **MUST** use one of the following topology types, as specified by the `mode` property: 2 (line loop), 3 (line strip), 5 (triangle strip), or 6 (triangle fan). No other topology types are permitted.
-
-- All primitives in a given group **MUST** have identical property values (e.g., attributes, material, mode, etc), with the exception of `indices`. This includes the `extensions` property - e.g., if any primitive in a group has a `KHR_materials_variants` extension object, then all other primitives in the same group **MUST** have that extension with identical content.
-
-- Each primitive in each group **MUST** define an `indices` property, i.e., they **MUST** use indexed geometry.
-
-- The `indices` accessor specified by each primitive group **MUST** be a valid index accessor as per the base glTF 2.0 specification, i.e., their types **MUST** be scalar, their component types **MUST** be any of the unsigned integer types, and their buffer views (if defined) **MUST NOT** be used for any purpose other than vertex indices.
-
-- Primitives referred to by this extension **MUST NOT** have morph targets.
+For large collections of line strings and other primitive topologies, encoding indices with restart values can greatly reduce the number of mesh primitives and accessors required, and the associated JSON data.
 
 ## JSON Schema
 
-- [EXT_mesh_primitive_restart.schema.json](schema/EXT_mesh_primitive_restart.schema.json)
-- [primitiveGroup.schema.json](schema/primitiveGroup.schema.json)
+The `"EXT_mesh_primitive_restart"` string must be added to the root-level `extensionsUsed` and `extensionsRequired` arrays. The extension is always required. No additional extensions are added to meshes or mesh primitives; all mesh primitives with applicable draw modes are permitted to use primitive restart values.
 
 ## Known Implementations
 
-- [iTwin.js](https://github.com/iTwin/itwinjs-core/pull/8312)
+- TODO
