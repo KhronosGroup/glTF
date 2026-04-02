@@ -73,15 +73,15 @@ The content of a billboard is defined by the meshes and children of the Node. Th
 When `KHR_billboard` is present on a node, that node **does not inherit orientation from its parent nodes**. The node's global transform is computed as follows:
 
 1. The global translation is computed normally per the glTF 2.0 specification (§3.5.3), accumulating the full parent `T * R * S` chain but extracting only the resulting global-space position.
-2. The global rotation and global scale of all ancestor nodes are **discarded** and replaced by a camera-derived rotation and billboard scale as defined below.
+2. The global rotation and global scale of all parent nodes are **discarded** and replaced by a camera-derived rotation and billboard scale as defined below.
 
 The final global transform of a billboard node MUST be:
 
 ```math
-G_{billboard} = T_{global} \cdot R_{camera} \cdot S_{billboard}
+G_{billboard} = T_{G_{parent}} \cdot R_{camera} \cdot S_{billboard}
 ```
 
-where $T_{global}$ is the global translation derived from the ancestor chain, $R_{camera}$ is the camera-derived rotation matrix, and $S_{billboard}$ is the effective scale as defined below.
+where $T_{G_{parent}}$ is the global translation derived from the parent chain, $R_{camera}$ is the camera-derived rotation matrix, and $S_{billboard}$ is the effective scale as defined below.
 
 ### Camera-Derived Rotation
 
@@ -115,7 +115,7 @@ where $d_{initial}$ is the view-space depth (camera-space Z) of the node's globa
 
 Children of a billboard node inherit the billboard node's final global transform $G_{billboard}$ as their parent transform, per the glTF 2.0 specification (§3.5.3). The scene graph suspension applies only to the billboard node itself; children accumulate their local TRS on top of $G_{billboard}$ normally.
 
-If a child node also defines `KHR_billboard`, that child's global transform is computed independently using the same rules, with the global translation derived from $G_{billboard}$ of the parent billboard node and all ancestor orientations again discarded.
+If a child node also defines `KHR_billboard`, that child's global transform is computed independently using the same rules, with the global translation derived from $G_{billboard}$ of the parent billboard node and all parent orientations again discarded.
 
 ### Overlay Rendering
 
