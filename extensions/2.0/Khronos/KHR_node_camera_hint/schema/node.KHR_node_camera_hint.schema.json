@@ -7,24 +7,13 @@
   "properties": {
     "role": {
       "type": "string",
-      "description": "The semantic purpose of this camera hint. Determines how runtimes interpret the node's transform.",
+      "description": "The semantic purpose of this camera hint. Determines how runtimes interpret the node's transform. Standard vocabulary values provide interoperability guarantees; custom values are permitted for domain-specific use cases.",
       "minLength": 1
     },
-    "fovHint": {
-      "type": "number",
-      "description": "Suggested vertical field of view in radians. Runtimes MAY override this for platform reasons.",
-      "exclusiveMinimum": 0,
-      "exclusiveMaximum": 3.14159265358979
-    },
-    "nearHint": {
-      "type": "number",
-      "description": "Suggested near clipping plane distance in meters.",
-      "exclusiveMinimum": 0
-    },
-    "farHint": {
-      "type": "number",
-      "description": "Suggested far clipping plane distance in meters. When both nearHint and farHint are specified, farHint MUST be greater than nearHint.",
-      "exclusiveMinimum": 0
+    "camera": {
+      "type": "integer",
+      "description": "Index of a glTF camera in the root cameras array whose projection parameters (FOV, clip planes, type) and any camera extensions apply to this hint. Advisory — runtimes MAY override.",
+      "minimum": 0
     },
     "targetNode": {
       "type": "integer",
