@@ -21,7 +21,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-3D modeling and computer-aided drafting environments like SketchUp, MicroStation, and Revit provide non-photorealistic visualizations that render 3D objects with their edges visible. The edges can improve the readability of complex models and convey semantics of the underlying topology. The `EXT_mesh_primitive_edge_visibility` extension augments a triangle mesh primitive with sufficient information to enable engines to produce such visualizations. The information is encoded in a compact form to minimize the impact on the size of the glTF asset.
+3D modeling and computer-aided drafting environments often provide non-photorealistic visualizations that render 3D objects with their edges visible. The edges can improve the readability of complex models and convey semantics of the underlying topology. The `EXT_mesh_primitive_edge_visibility` extension augments a triangle mesh primitive with sufficient information to enable engines to produce such visualizations. The information is encoded in a compact form to minimize the impact on the size of the glTF asset.
 
 Figure 1 illustrates a typical rendering of a cylinder with its edges. The width of the edges has been exaggerated for emphasis.
 
