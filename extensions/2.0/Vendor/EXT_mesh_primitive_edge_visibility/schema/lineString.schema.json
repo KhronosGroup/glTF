@@ -28,7 +28,6 @@
             "description": "The index of a glTF material with which the edges are to be drawn.",
             "gltf_detailedDescription": "The index of a glTF material with which the edges are to be drawn. If omitted, the edges are drawn using the same material as the edges encoded by the extension's `visibility` field, or else that of the triangle mesh primitive."
         },
-        "name": {},
         "extensions": {},
         "extras": {}
     },
