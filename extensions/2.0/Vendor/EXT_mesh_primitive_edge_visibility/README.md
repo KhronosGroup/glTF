@@ -191,8 +191,8 @@ The `silhouetteNormals` property **MUST** be defined *if and only if* at least o
 ## Rendering requirements
 
 - Engines **MUST** render all edges according to their specified visibility values, though some engines may permit the user to toggle the display of edges on and off.
-- The edges **MUST** draw in front of their corresponding triangles with no depth-fighting.
-- The edges **MUST** draw using the materials specified by the extension by default, though some engines may provide options for the user to override those materials.
+- The edges **MUST** be drawn in front of their corresponding triangles with no depth-fighting.
+- The edges **MUST** be drawn using the materials specified by the extension by default, though some engines may provide options for the user to override those materials.
 - Each silhouette edge **MUST** be rendered unless both adjacent triangles are front-facing or both are back-facing, as determined by their normal vectors.
 
 ## JSON Schema
