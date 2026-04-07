@@ -126,7 +126,9 @@ Assume that the vertical edges `0:1` and `2:3` and the shared diagonal edge `0:2
 
 ### Material
 
-The extension's `material` property optionally specifies the index of a glTF material with which the edges are to be drawn. If unspecified, the edges should be drawn using the same material as the triangle mesh primitive.
+The extension's `material` property optionally specifies the index of a glTF material describing the appearance of the edges. If unspecified, the edges inherit the appearance of the triangle mesh primitive material and may therefore be visually indistinguishable from the triangles. Authors who require a distinct edge appearance **SHOULD** specify an explicit material.
+
+Material properties that require surface normals, tangents, bitangents, or other surface-local shading inputs do not apply to edge rendering and **MUST** be ignored when drawing edges.
 
 ### Line Strings
 
@@ -134,7 +136,7 @@ The representation of hard edges in the `visibility` property - while compact - 
 
 The extension's `lineStrings` property provides an alternate representation for some or all of the hard edges that would otherwise be encoded in `visibility`. It is an array in which each entry is an object with the following properties:
 - `indices` (required): the index of an accessor of type `SCALAR` and component type `UNSIGNED_BYTE` (5121), `UNSIGNED_SHORT` (5123), or `UNSIGNED_INT` (5125) encoding one or more line strings as indices into the triangle mesh's vertex attribute array. Each line string is encoded as a series of two or more indices. Multiple line strings can be encoded by inserting a primitive restart value between each line string. The primitive restart value is always the maximal possible value for the accessor's component type, such as 255 for `UNSIGNED_BYTE`, and **MUST** be interpreted as a restart marker rather than as a vertex index. Therefore, the accessor referenced by `indices` **MUST NOT** begin or end with a primitive restart value, **MUST NOT** contain consecutive primitive restart values, and **MUST NOT** contain any vertex index equal to the primitive restart value. Writers **MUST** choose a component type large enough that all referenced vertex indices are strictly less than the primitive restart value.
-- `material` (optional): the index of the material with which the edges encoded by `indices` are to be drawn. If omitted, the extension's own `material` property is used, if defined; otherwise, the material of the triangle mesh primitive is used.
+- `material` (optional): the index of the material with which the edges encoded by `indices` are to be drawn. If omitted, the extension's own `material` property is used, if defined; otherwise, the material of the triangle mesh primitive is used. This material is applied to edges subject to the constraints described in the Material section above.
 
 Each pair of adjacent non-restart indices in `lineStrings` **MUST** identify a hard edge of the triangle mesh primitive.
 
@@ -194,7 +196,7 @@ The `silhouetteNormals` property **MUST** be defined *if and only if* at least o
 
 - Engines **MUST** render all edges according to their specified visibility values, though some engines may permit the user to toggle the display of edges on and off.
 - The edges **MUST** be drawn in front of their corresponding triangles with no depth-fighting.
-- The edges **MUST** be drawn using the materials specified by the extension by default, though some engines may provide options for the user to override those materials.
+- The edges **MUST** be drawn using the applicable properties of the materials specified by the extension by default, though some engines may provide options for the user to override those materials.
 - Each silhouette edge **MUST** be rendered unless both adjacent triangles are front-facing or both are back-facing, as determined by their normal vectors. This determination **MUST** be independent of whether the corresponding material is double-sided.
 
 ## JSON Schema
