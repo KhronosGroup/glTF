@@ -243,14 +243,20 @@ C = \sum_{i \in \mathscr{N}} c_i \alpha_i \prod_{j=1}^{i-1} (1 - \alpha_j)
 
 Where:
 
-- $C$ is the final color of the pixel.
+- $C$ is the final color of the pixel. This value MUST be either clamped or tonemapped in an implementation-specific manner to fit into the splat's color space.
 - $\mathscr{N}$ is the set of splats that contribute to the pixel.
-- $c_i$ is the color of the $i$-th Gaussian.
+- $c_i$ is the color of the $i$-th Gaussian. Unless specified otherwise by additional extensions, negative $c_i$ values MUST be clamped to zero.
 - $\alpha_i = \alpha \cdot G(x)$ where $G(x)$ is the value of the projected 2D Gaussian's probability density function evaluated at the pixel center $x$ and $\alpha$ is the splat's opacity attribute value.
 - $\prod_{j=1}^{i-1} (1 - \alpha_j)$ is the accumulated transmittance.
 
 > [!NOTE]
-> Within rasterizer implementations, transmittance can often be implicitly handled by the GPU's blending hardware. When using premultiplied alpha, setting the blend factors to _one_ and _one minus source alpha_ for the _source_ and _destination_ color values respectively will work. Without premultiplied alpha, one can use _source alpha_ and _one minus source alpha_ instead.
+> Within rasterizer implementations, transmittance is usually handled by the GPU's blending hardware.
+>
+> Since intermediate results of splats composition are not explicitly limited to any range, blending should be performed using floating-point color buffer formats. This approach more closely follows the design of the original paper.
+>
+> In a case when a normalized color buffer format is used instead, e.g., for performance or memory reasons, blending should be performed with alpha-premultiplied values by passing the $c_i \alpha_i$ product to the blending unit and setting the source blend factor to one. While still lossy, this approach causes less range clamping than passing color and alpha values separately.
+>
+> If using unsigned normalized color buffers, clamping of $c_i$ values less than zero and $C$ values greater then one happens automatically.
 
 ## Lighting
 
