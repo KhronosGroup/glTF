@@ -308,6 +308,136 @@ A scene with a general look-at target that any system may use.
 
 **Runtime behavior:** The target has no `hint`, so it's available for any system. A runtime might use it for camera framing, character attention, spotlight targeting, or any other look-at purpose.
 
+### Example 6: Guided Architectural Walkthrough
+
+An architectural model with look-at targets at key points of interest along a virtual tour path.
+
+```json
+{
+  "asset": { "version": "2.0" },
+  "extensionsUsed": ["KHR_node_lookat_target"],
+  "nodes": [
+    {
+      "name": "CondoModel",
+      "mesh": 0
+    },
+    {
+      "name": "KitchenIslandView",
+      "translation": [4.2, 1.1, -3.5],
+      "extensions": {
+        "KHR_node_lookat_target": {
+          "hint": "tour_stop"
+        }
+      }
+    },
+    {
+      "name": "RooftopTerrace",
+      "translation": [0, 12.5, -8.0],
+      "extensions": {
+        "KHR_node_lookat_target": {
+          "hint": "tour_stop"
+        }
+      }
+    }
+  ]
+}
+```
+
+**Runtime behavior:** A walkthrough viewer discovers all `tour_stop` targets and presents them as a sequential guided tour. The camera interpolates between stops, always orienting toward the current target. The architectural model becomes self-describing — it carries attention intent alongside geometry.
+
+### Example 7: Directional Signage Orientation
+
+A hospital model where directional signs face toward their destinations. Each destination is a look-at target.
+
+```json
+{
+  "nodes": [
+    {
+      "name": "EmergencyExitB",
+      "translation": [22.0, 0.0, -15.3],
+      "extensions": {
+        "KHR_node_lookat_target": {
+          "hint": "wayfinding_target"
+        }
+      }
+    },
+    {
+      "name": "ElevatorBank_Floor2",
+      "translation": [10.0, 6.0, 0],
+      "extensions": {
+        "KHR_node_lookat_target": {
+          "hint": "wayfinding_target"
+        }
+      }
+    }
+  ],
+  "extensionsUsed": ["KHR_node_lookat_target"]
+}
+```
+
+**Runtime behavior:** A signage constraint system orients each directional sign toward its assigned `wayfinding_target`. When the floor plan is revised and a target node moves, every sign pointing at it reorients automatically without re-authoring individual sign rotations.
+
+### Example 8: Product Feature Callout Hotspots
+
+A product model with look-at targets at key features for annotation and camera framing.
+
+```json
+{
+  "asset": { "version": "2.0" },
+  "extensionsUsed": ["KHR_node_lookat_target"],
+  "nodes": [
+    {
+      "name": "RunningShoe",
+      "mesh": 0
+    },
+    {
+      "name": "CushionedSoleHighlight",
+      "translation": [0.0, -0.02, 0.05],
+      "extensions": {
+        "KHR_node_lookat_target": {
+          "hint": "feature_callout"
+        }
+      }
+    },
+    {
+      "name": "BreathableMeshUpper",
+      "translation": [0.0, 0.06, 0.03],
+      "extensions": {
+        "KHR_node_lookat_target": {
+          "hint": "feature_callout"
+        }
+      }
+    }
+  ]
+}
+```
+
+**Runtime behavior:** A product viewer discovers all `feature_callout` targets and renders floating annotation cards tethered to each target position. Clicking a callout smoothly orbits the camera to frame that feature. The same model works across a detailed product page, an AR preview, and a comparison shopping tool — each consuming the targets differently.
+
+### Example 9: Shared Attention Anchor in Multiplayer VR
+
+A shared VR classroom where a presenter highlights a region and all participants' avatars gaze at the same point.
+
+```json
+{
+  "nodes": [
+    {
+      "name": "SharedAttentionPoint",
+      "translation": [0.35, 1.2, -0.8],
+      "extensions": {
+        "KHR_node_lookat_target": {
+          "hint": "attention_anchor"
+        }
+      }
+    }
+  ],
+  "extensionsUsed": ["KHR_node_lookat_target"]
+}
+```
+
+**Runtime behavior:** The presenter places an `attention_anchor` target at the highlighted point and its position is replicated over the network. Every participant's avatar runtime discovers the target and feeds it into their local eye/head constraint systems, causing all avatars to naturally gaze at the same spot. This replicates a single `vec3` instead of per-participant gaze quaternions.
+
+
 ---
 
 ## Interaction with Other Extensions
