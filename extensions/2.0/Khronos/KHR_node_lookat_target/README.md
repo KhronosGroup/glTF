@@ -40,6 +40,12 @@ This separation enables:
 - **Decoupling**: Targets exist in the scene graph as inert data. Constraints are added by the runtime based on application needs.
 - **Discovery**: Applications can scan the scene for look-at targets without understanding specific constraint implementations.
 
+The following diagram illustrates the core architecture. The target (this extension) is a passive position marker. Constraints (defined elsewhere) consume the target position and produce orientation:
+
+![Target/Constraint Architecture — the target is a passive position marker; constraints on the aiming side consume the position](figures/target-constraint-architecture.svg)
+
+> **Key insight:** The target does not know its consumers. Multiple systems can independently aim at the same target. Configuration (axis, clamping, weight) lives on the constraint side, never on the target.
+
 ### What This Extension Is NOT
 
 - **Not a constraint system.** This extension does not define HOW to look at a target. It does not specify rotation limits, blend weights, damping, or IK chain parameters. Constraint behavior belongs to extensions like `VRMC_node_constraint` or runtime logic.
@@ -270,6 +276,12 @@ An avatar with separate targets for eyes, head, and body orientation.
 
 **Runtime behavior:** A sophisticated avatar system uses different targets for different body parts. Eyes track the nearby `eye_target`. The head turns toward the mid-distance `head_target`. The body orients toward the far `body_target`. This creates natural, layered attention behavior.
 
+The following diagram shows how layered targets at different distances create natural attention behavior. Each body system tracks its own target independently:
+
+![Layered Gaze Targets — eyes, head, and body each track separate targets at increasing distances](figures/layered-gaze-targets.svg)
+
+> **Why different distances?** Placing targets at increasing distances creates natural gaze layering. The eyes make large angular movements to the near target. The head makes moderate rotations to the mid-distance target. The body makes subtle turns to the far target. This mimics how humans naturally attend to a point of interest — eyes first, then head, then body.
+
 ### Example 5: General-Purpose Target (No Hint)
 
 A scene with a general look-at target that any system may use.
@@ -328,6 +340,12 @@ VRM's `lookAt` defines the **constraint** (how eyes/head rotate toward a target)
 3. Use the node's world-space position as the `lookAt` target.
 
 This separation allows targets to be authored into the glTF file while VRM handles constraint behavior.
+
+The following diagram shows how `KHR_node_lookat_target` feeds into the VRM `lookAt` evaluation pipeline. Both output paths — bone rotations and morph target blending — are expressions in the `KHR_character_expression` context:
+
+![VRM Integration Pipeline — target position flows through gaze angle computation, range map clamping, and into joint expressions or morph target expressions via KHR_character_expression](figures/vrm-integration-pipeline.svg)
+
+> **This extension fills VRM's target gap.** VRM defines everything about how eyes respond to a gaze direction (range maps, bone/expression mode, gaze origin offset). This extension defines what the target IS — a node in the scene graph with a world-space position. Both output modes — `KHR_character_expression_joint` (bone rotation) and `KHR_character_expression_morphtarget` (blend shape) — are expressions under `KHR_character_expression`. The two extensions are complementary and compose without conflict.
 
 ### VRMC\_node\_constraint
 

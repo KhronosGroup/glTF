@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 320" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#888"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="780" height="320" fill="#fafafa" rx="8"/>
+
+  <!-- Avatar column -->
+  <rect x="20" y="20" width="200" height="280" rx="10" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="120" y="48" text-anchor="middle" font-size="14" font-weight="bold" fill="#bf360c">Avatar</text>
+
+  <!-- Eye box -->
+  <rect x="40" y="70" width="160" height="50" rx="8" fill="#fff" stroke="#e65100" stroke-width="1.5"/>
+  <text x="120" y="92" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">👁️ Eyes</text>
+  <text x="120" y="110" text-anchor="middle" font-size="10" fill="#888">precise, fast rotation</text>
+
+  <!-- Head box -->
+  <rect x="40" y="140" width="160" height="50" rx="8" fill="#fff" stroke="#e65100" stroke-width="1.5"/>
+  <text x="120" y="162" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">🗣️ Head</text>
+  <text x="120" y="180" text-anchor="middle" font-size="10" fill="#888">moderate, smooth turn</text>
+
+  <!-- Body box -->
+  <rect x="40" y="210" width="160" height="50" rx="8" fill="#fff" stroke="#e65100" stroke-width="1.5"/>
+  <text x="120" y="232" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">🧍 Body</text>
+  <text x="120" y="250" text-anchor="middle" font-size="10" fill="#888">coarse, slow orient</text>
+
+  <!-- Distance scale -->
+  <text x="440" y="305" text-anchor="middle" font-size="11" fill="#999">← Near                              Distance                              Far →</text>
+  <line x1="280" y1="290" x2="740" y2="290" stroke="#ddd" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- Eye Target -->
+  <rect x="280" y="58" width="160" height="74" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="360" y="82" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b5e20">🎯 eye_target</text>
+  <text x="360" y="100" text-anchor="middle" font-size="11" fill="#555">[0.5, 1.6, 2.0]</text>
+  <text x="360" y="120" text-anchor="middle" font-size="12" font-weight="bold" fill="#2e7d32">Near — 2m</text>
+
+  <!-- Head Target -->
+  <rect x="470" y="128" width="160" height="74" rx="10" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+  <text x="550" y="152" text-anchor="middle" font-size="13" font-weight="bold" fill="#0d47a1">🎯 head_target</text>
+  <text x="550" y="170" text-anchor="middle" font-size="11" fill="#555">[0.3, 1.5, 3.0]</text>
+  <text x="550" y="190" text-anchor="middle" font-size="12" font-weight="bold" fill="#1565c0">Mid — 3m</text>
+
+  <!-- Body Target -->
+  <rect x="600" y="198" width="160" height="74" rx="10" fill="#fce4ec" stroke="#c62828" stroke-width="2"/>
+  <text x="680" y="222" text-anchor="middle" font-size="13" font-weight="bold" fill="#b71c1c">🎯 body_target</text>
+  <text x="680" y="240" text-anchor="middle" font-size="11" fill="#555">[0, 1.0, 5.0]</text>
+  <text x="680" y="260" text-anchor="middle" font-size="12" font-weight="bold" fill="#c62828">Far — 5m</text>
+
+  <!-- Arrows -->
+  <line x1="200" y1="95" x2="275" y2="95" stroke="#2e7d32" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="6,3"/>
+  <line x1="200" y1="165" x2="465" y2="165" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="6,3"/>
+  <line x1="200" y1="235" x2="595" y2="235" stroke="#c62828" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="6,3"/>
+</svg>
