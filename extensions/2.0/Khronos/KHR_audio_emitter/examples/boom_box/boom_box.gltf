@@ -122,7 +122,7 @@
                 {
                     "gain": 0.3,
                     "name": "BoomBoxAudioEmitter",
-                    "positional": { "refDistance": 1 },
+                    "positional": { "refDistance": 1.0 },
                     "sources": [0],
                     "type": "positional"
                 }
@@ -215,24 +215,23 @@
     ],
     "materials": [
         {
-            "emissiveFactor": [0, 0, 0],
+            "emissiveFactor": [1.0, 1.0, 1.0],
             "emissiveTexture": { "index": 3 },
-            "extensions": {},
             "name": "BoomBox_Mat",
-            "normalTexture": { "index": 2, "scale": 1 },
+            "normalTexture": { "index": 2, "scale": 1.0 },
             "occlusionTexture": { "index": 1 },
             "pbrMetallicRoughness": {
-                "baseColorFactor": [1, 1, 1, 1],
+                "baseColorFactor": [1.0, 1.0, 1.0, 1.0],
                 "baseColorTexture": { "index": 0 },
-                "metallicFactor": 1,
+                "metallicFactor": 1.0,
                 "metallicRoughnessTexture": { "index": 1 },
-                "roughnessFactor": 1
+                "roughnessFactor": 1.0
             }
         }
     ],
     "meshes": [
         {
-            "extras": { "targetNames": [] },
+            "name": "boom_box_mesh",
             "primitives": [
                 {
                     "attributes": { "NORMAL": 2, "POSITION": 0, "TANGENT": 1, "TEXCOORD_0": 3 },
@@ -242,29 +241,23 @@
                 }
             ]
         },
-        {
-            "extras": { "targetNames": [] },
-            "primitives": [{ "attributes": { "POSITION": 5 }, "indices": 6, "mode": 4 }]
-        },
-        {
-            "extras": { "targetNames": [] },
-            "primitives": [{ "attributes": { "POSITION": 7 }, "indices": 8, "mode": 4 }]
-        }
+        { "primitives": [{ "attributes": { "POSITION": 5 }, "indices": 6, "mode": 4 }] },
+        { "primitives": [{ "attributes": { "POSITION": 7 }, "indices": 8, "mode": 4 }] }
     ],
     "nodes": [
         {
             "children": [1, 2, 3, 4, 5, 6],
-            "extensions": { "OMI_physics_body": { "motion": { "mass": 5, "type": "dynamic" } } },
+            "extensions": { "OMI_physics_body": { "motion": { "mass": 5.0, "type": "dynamic" } } },
             "name": "BoomBox"
         },
         {
             "mesh": 0,
             "name": "BoomBoxMesh",
-            "rotation": [0, 1, 0, 0]
+            "rotation": [0.0, 1.0, 0.0, 0.0]
         },
         {
             "extensions": {
-                "KHR_audio_emitter": { "emitter": 0 }
+                "KHR_audio_emitter": { "emitters": [0] }
             },
             "name": "BoomBoxAudioEmitter"
         },
@@ -273,14 +266,14 @@
                 "OMI_physics_body": { "collider": { "shape": 0 } }
             },
             "name": "MainColliderShape",
-            "rotation": [0, 1, 0, 0]
+            "rotation": [0.0, 1.0, 0.0, 0.0]
         },
         {
             "extensions": {
                 "OMI_physics_body": { "collider": { "shape": 1 } }
             },
             "name": "HandleColliderShape",
-            "rotation": [0, 1, 0, 0]
+            "rotation": [0.0, 1.0, 0.0, 0.0]
         },
         {
             "extensions": {

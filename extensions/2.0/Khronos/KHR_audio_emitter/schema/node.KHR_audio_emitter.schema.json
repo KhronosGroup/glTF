@@ -3,15 +3,20 @@
     "$id": "node.KHR_audio_emitter.schema.json",
     "title": "KHR_audio_emitter glTF Node Extension",
     "type": "object",
-    "description": "Node extension that references an audio emitter.",
+    "description": "Node extension that references audio emitters.",
     "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
-        "emitter": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The id of the audio emitter referenced by this node."
+        "emitters": {
+            "type": "array",
+            "description": "The indices of each audio emitter referenced by this node.",
+            "items": {
+                "allOf": [ { "$ref": "glTFid.schema.json" } ]
+            },
+            "uniqueItems": true,
+            "minItems": 1
         },
         "extensions": {},
         "extras": {}
     },
-    "required": ["emitter"]
+    "required": ["emitters"]
 }

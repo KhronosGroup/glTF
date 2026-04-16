@@ -20,7 +20,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension allows for the addition of spatialized and non-spatialized audio to glTF scenes.
+This extension allows for the addition of spatial and non-spatial audio to glTF scenes.
 
 Audio emitter objects may be added to 3D nodes for positional audio or to the scene for environmental or ambient audio such as background music.
 
@@ -94,7 +94,7 @@ Audio emitter objects may be added to 3D nodes for positional audio or to the sc
             "translation": [1.0, 2.0, 3.0],
             "extensions": {
                 "KHR_audio_emitter": {
-                    "emitter": 0
+                    "emitters": [0]
                 }
             }
         }
@@ -310,7 +310,7 @@ Audio emitters of type `global` may be added to nodes using the following syntax
         {
             "extensions": {
                 "KHR_audio_emitter": {
-                    "emitter": 1
+                    "emitters": [1]
                 }
             }
         }
@@ -326,7 +326,7 @@ Audio emitters of type `positional` may be added to nodes using the following sy
         {
             "extensions": {
                 "KHR_audio_emitter": {
-                    "emitter": 0
+                    "emitters": [0]
                 }
             }
         }
@@ -334,7 +334,27 @@ Audio emitters of type `positional` may be added to nodes using the following sy
 }
 ```
 
-Note that multiple global audio emitters are allowed on the scene, but only a single audio emitter may be added to a node.
+Note that only global audio emitters are allowed on the scene, but both global and positional audio emitters are allowed on nodes.
+
+#### Scene Properties
+
+The `"KHR_audio_emitter"` extension may be defined on a glTF scene, in the `"extensions"` object.
+
+|              | Type       | Description                                                                           | Default value |
+| ------------ | ---------- | ------------------------------------------------------------------------------------- | ------------- |
+| **emitters** | `number[]` | The indices of each global audio emitter referenced by this scene. Must not be empty. | Required      |
+
+Only emitters with `"type": "global"` may be referenced by scene-level `"emitters"`.
+
+#### Node Properties
+
+The `"KHR_audio_emitter"` extension may be defined on a glTF node, in the `"extensions"` object.
+
+|              | Type       | Description                                                                   | Default value |
+| ------------ | ---------- | ----------------------------------------------------------------------------- | ------------- |
+| **emitters** | `number[]` | The indices of each audio emitter referenced by this node. Must not be empty. | Required      |
+
+Node-level `"emitters"` may reference both `"global"` and `"positional"` audio emitters.
 
 ### Audio Rolloff Formula
 
@@ -394,10 +414,19 @@ Additionally, the following JSON pointers are defined for read-only properties:
 
 ### JSON Schema
 
-See [glTF.KHR_audio_emitter.schema.json](schema/glTF.KHR_audio_emitter.schema.json) for the main document-level schema.
+See the following schema files:
+
+- Document-level extension: [schema/glTF.KHR_audio_emitter.schema.json](schema/glTF.KHR_audio_emitter.schema.json)
+- Audio data: [schema/glTF.KHR_audio_emitter.audio.schema.json](schema/glTF.KHR_audio_emitter.audio.schema.json)
+- Audio source: [schema/glTF.KHR_audio_emitter.source.schema.json](schema/glTF.KHR_audio_emitter.source.schema.json)
+- Audio emitter: [schema/glTF.KHR_audio_emitter.emitter.schema.json](schema/glTF.KHR_audio_emitter.emitter.schema.json)
+- Positional audio emitter properties: [schema/glTF.KHR_audio_emitter.emitter.positional.schema.json](schema/glTF.KHR_audio_emitter.emitter.positional.schema.json)
+- Node-level extension: [schema/node.KHR_audio_emitter.schema.json](schema/node.KHR_audio_emitter.schema.json)
+- Scene-level extension: [schema/scene.KHR_audio_emitter.schema.json](schema/scene.KHR_audio_emitter.schema.json)
 
 ## Known Implementations
 
+- Godot Engine - https://github.com/godotengine/godot/pull/88204
 - Third Room - https://github.com/thirdroom/thirdroom
 - Three Object Viewer (WordPress Plugin) - https://wordpress.org/plugins/three-object-viewer/
 - UX3D Experimental C++ implementation - https://github.com/ux3d/OMI
