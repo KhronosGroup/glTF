@@ -1,3 +1,8 @@
+<!--
+Copyright 2025 Bentley Systems, Incorporated
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # EXT_mesh_primitive_restart
 
 ## Contributors
