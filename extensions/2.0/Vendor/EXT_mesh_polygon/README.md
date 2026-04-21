@@ -20,7 +20,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-Extends glTF mesh primitives, adding an encoding of polygon primitive topology, including triangulation (indices) for backwards-compatible rendering. While the core glTF 2.0 specification already allows polygons to be triangulated and encoded as TRIANGLES, TRIANGLE_STRIP, or TRIANGLE_FAN primitive modes, the original topology — which triangles together form a polygon? — is lost without the additional specification and metadata provided by this extension.
+Extends glTF mesh primitives, adding an encoding of polygon primitive topology, including triangle indices for backwards-compatible rendering. While the core glTF 2.0 specification already allows polygons to be triangulated and encoded as TRIANGLES, TRIANGLE_STRIP, or TRIANGLE_FAN primitive modes, the original topology would be lost without the additional specification and metadata provided by this extension.
 
 ## Extending Mesh Primitives
 
@@ -28,7 +28,7 @@ The `EXT_mesh_polygon` extension may be added to a mesh primitive, indicating th
 
 An extended mesh primitive **MUST** include `primitive.mode = 4` ("TRIANGLES"), `primitive.mode = 5` ("TRIANGLE_STRIP"), or `primitive.mode = 6` ("TRIANGLE_FAN").
 
-An extended mesh primitive **MUST** include `indices`. Indices for each polygon must be contiguous: for a polygon composed of 4 triangles, indices defining these triangles must occupy a single contiguous range within the primitive's indices accessor. Primitive vertices associated with the polygon are not required to be contiguous.
+An extended mesh primitive **MUST** include `indices`. Indices for each polygon must be contiguous: for a polygon composed of 4 triangles, indices defining these triangles must occupy a single range within the primitive's indices accessor. Only indices, not vertex attributes, are required to be contiguous.
 
 The `EXT_mesh_polygon` extension includes the following additional properties, all required.
 
@@ -42,9 +42,11 @@ Integer number of polygons encoded in the mesh primitive.
 
 ### loopIndices
 
-Index of the accessor containing indices of the polygons' exterior and interior loops. The accessor **MUST** have `SCALAR` type and an unsigned integer component type.
+Index of an accessor containing indices of the polygons' exterior and interior loops. The accessor **MUST** have `SCALAR` type and an unsigned integer component type.
 
-A polygon is composed of 1 or more loops, encoded as indices equivalent to `primitive.mode = 2` ("LINE_LOOP") topology. Each loop must be separated by the "primitive restart" value applicable to the accessor type:
+A polygon is composed of 1 or more loops, encoded as indices equivalent to `primitive.mode = 2` ("LINE_LOOP") topology. The first loop in each polygon represents the polygon's exterior ring, or boundary. Additional loops, if any, represent interior rings ("holes") within the polygon. Polygons must be fully-connected: holes cannot intersect the exterior ring, and additional exterior rings ("islands") are not allowed, whether outside the exterior ring or within holes.
+
+Each loop must be separated by a primitive restart value, including loops associated with different polygons. Primitive restart values applicable to each accessor type are:
 
 | `accessor.componentType`     | restart value             |
 | ---------------------------- | ------------------------- |
@@ -52,17 +54,15 @@ A polygon is composed of 1 or more loops, encoded as indices equivalent to `prim
 | `5123`&nbsp;(UNSIGNED_SHORT) | `65535` (0xFFFF)          |
 | `5125`&nbsp;(UNSIGNED_INT)   | `4294967295` (0xFFFFFFFF) |
 
-The first loop in each polygon represents the polygon's exterior ring, or boundary. Additional loops, if any, represent interior rings ("holes") within the exterior ring. Polygons must be fully-connected — holes cannot intersect the exterior ring, and additional exterior rings ("islands") are not allowed, whether outside the exterior ring or within holes.
-
 - **Type:** `number`
 - **Required:** ✓ Yes
 - **Minimum:** ≥ 0
 
 ### loopIndicesOffsets
 
-Index of the accessor containing one integer offset per polygon in the primitive, indicating the first index of the first linear ring associated with that polygon. The accessor **MUST** have `SCALAR` type and an unsigned integer component type, and the accessor's `count` **MUST** be the same as `EXT_mesh_polygon.count` for the primitive.
+Index of an accessor containing one integer offset per polygon in the primitive, indicating the first index of the first linear ring associated with that polygon. The accessor **MUST** have `SCALAR` type and an unsigned integer component type, and the accessor's `count` **MUST** be the same as `EXT_mesh_polygon.count` for the primitive.
 
-All loops associated with a polygon MUST be contiguous, one (1) exterior ring followed immediately by zero or more interior rings.\
+All loops associated with a polygon MUST be contiguous: one exterior ring followed immediately by zero or more interior rings.
 
 > **Implementation note:** The range of loop indices for the `nth` polygon is `loopIndicesOffsets[n]` to `loopIndicesOffsets[n+1]` if `n < count - 1`, otherwise `loopIndicesOffsets[n]` to the end of the `loopIndices` accessor.
 
@@ -72,7 +72,7 @@ All loops associated with a polygon MUST be contiguous, one (1) exterior ring fo
 
 ### indicesOffsets
 
-Index of the accessor containing one integer offset per polygon in the primitive, indicating the first index of the first triangle associated with that polygon. The accessor **MUST** have `SCALAR` type and an unsigned integer component type, and the accessor's `count` **MUST** be the same as `EXT_mesh_polygon.count` for the primitive.
+Index of an accessor containing one integer offset per polygon in the primitive, indicating the first index of the first triangle associated with that polygon. The accessor **MUST** have `SCALAR` type and an unsigned integer component type, and the accessor's `count` **MUST** be the same as `EXT_mesh_polygon.count` for the primitive.
 
 Indices for each polygon **MUST** be contiguous.
 
@@ -123,7 +123,7 @@ The JSON example below shows a mesh having one mesh primitive, which contains 10
 
 Consider a simple mesh primitive containing three polygons, one with a single hole, and two without:
 
-![Polygon encoding](./figures/polygon-encoding)
+![Polygon encoding](./figures/polygon-encoding.png)
 
 One valid encoding of `EXT_mesh_polygon` for this polygon set, based on `UNSIGNED_SHORT` indices and restart values, would be as follows:
 
