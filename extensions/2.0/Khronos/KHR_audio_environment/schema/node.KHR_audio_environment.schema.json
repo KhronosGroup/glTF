@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_environment glTF Node Extension",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "listener": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "The index of the listener attached to this node."
+        },
+        "environment": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "The index of the environment attached to this node."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "anyOf": [
+        { "required": ["listener"] },
+        { "required": ["environment"] }
+    ]
+}

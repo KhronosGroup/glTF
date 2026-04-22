@@ -1,22 +1,19 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "glTF KHR_audio_graph extension",
-  "type": "object",
-  "description": "Root container for audio data and graphs.",
-  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
-  "properties": {
-    "schemaVersion": { "type": "string", "description": "Optional schema version tag (e.g., '0.1')." },
-    "audioData": {
-      "type": "array",
-      "items": { "$ref": "KHR_audio_graph.audiodata.schema.json" }
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph glTF Document Extension",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "graphs": {
+            "type": "array",
+            "description": "Audio graphs declared at the document level.",
+            "items": {
+                "$ref": "KHR_audio_graph.graph.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
     },
-    "graphs": {
-      "type": "array",
-      "items": { "$ref": "KHR_audio_graph.graph.schema.json" }
-    },
-    "extensions": {},
-    "extras": {}
-  },
-  "additionalProperties": false
+    "required": ["graphs"]
 }
-

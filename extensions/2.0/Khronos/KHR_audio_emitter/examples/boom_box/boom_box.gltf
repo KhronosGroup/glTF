@@ -264,7 +264,7 @@
         },
         {
             "extensions": {
-                "KHR_audio_emitter": { "emitter": 0 }
+                "KHR_audio_emitter": { "emitters": [0] }
             },
             "name": "BoomBoxAudioEmitter"
         },

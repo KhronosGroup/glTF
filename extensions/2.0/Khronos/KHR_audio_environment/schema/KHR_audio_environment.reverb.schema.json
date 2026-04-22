@@ -1,0 +1,114 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_environment Reverb",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "type": {
+            "type": "string",
+            "enum": ["parametric", "impulseResponse"],
+            "description": "The reverb model.",
+            "default": "parametric"
+        },
+        "mix": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "The wet/dry mix.",
+            "default": 0.5
+        },
+        "roomSize": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The approximate room size in meters.",
+            "default": 10.0
+        },
+        "reflectivity": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "The base surface reflectivity.",
+            "default": 0.5
+        },
+        "reflectivityHigh": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "The high-frequency reflectivity."
+        },
+        "reflectivityLow": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "The low-frequency reflectivity."
+        },
+        "earlyReflections": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 32,
+            "description": "The number of early reflections.",
+            "default": 8
+        },
+        "earlyReflectionsGain": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The gain applied to early reflections.",
+            "default": 1.0
+        },
+        "diffusionGain": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The gain applied to late diffuse reverb.",
+            "default": 1.0
+        },
+        "reflectionDelay": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The initial reflection delay in seconds.",
+            "default": 0.02
+        },
+        "reverbDelay": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The late reverb onset delay in seconds.",
+            "default": 0.04
+        },
+        "decayTime": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The reverb decay time in seconds.",
+            "default": 1.5
+        },
+        "audio": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "The KHR_audio_emitter audio asset used as an impulse response."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "oneOf": [
+        {
+            "properties": {
+                "type": { "enum": ["impulseResponse"] }
+            },
+            "required": ["type", "audio"]
+        },
+        {
+            "properties": {
+                "type": { "enum": ["parametric"] }
+            },
+            "required": ["type"],
+            "not": {
+                "required": ["audio"]
+            }
+        },
+        {
+            "not": {
+                "anyOf": [
+                    { "required": ["type"] },
+                    { "required": ["audio"] }
+                ]
+            }
+        }
+    ]
+}

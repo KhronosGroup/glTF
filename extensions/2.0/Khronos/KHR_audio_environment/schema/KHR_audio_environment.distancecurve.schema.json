@@ -1,0 +1,12 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_environment Distance Curve",
+    "type": "array",
+    "description": "A uniformly sampled custom distance-attenuation curve.",
+    "items": {
+        "type": "number",
+        "minimum": 0.0,
+        "maximum": 1.0
+    },
+    "minItems": 2
+}

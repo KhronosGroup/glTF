@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_environment glTF Document Extension",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "listeners": {
+            "type": "array",
+            "description": "Document-level listeners.",
+            "items": {
+                "$ref": "KHR_audio_environment.listener.schema.json"
+            },
+            "minItems": 1
+        },
+        "environments": {
+            "type": "array",
+            "description": "Document-level acoustic environments.",
+            "items": {
+                "$ref": "KHR_audio_environment.environment.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "anyOf": [
+        { "required": ["listeners"] },
+        { "required": ["environments"] }
+    ]
+}

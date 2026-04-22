@@ -1,0 +1,23 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_environment Positional Emitter Extension",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "distanceCurve": {
+            "$ref": "KHR_audio_environment.distancecurve.schema.json",
+            "description": "A sampled custom distance-attenuation curve."
+        },
+        "spatializationModel": {
+            "type": "string",
+            "enum": ["equalpower", "HRTF", "custom"],
+            "description": "An optional per-emitter spatialization override."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "anyOf": [
+        { "required": ["distanceCurve"] },
+        { "required": ["spatializationModel"] }
+    ]
+}

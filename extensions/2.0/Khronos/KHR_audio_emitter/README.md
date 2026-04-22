@@ -24,6 +24,8 @@ This extension allows for the addition of spatialized and non-spatialized audio 
 
 Audio emitter objects may be added to 3D nodes for positional audio or to the scene for environmental or ambient audio such as background music.
 
+Nodes may reference one or more emitters through `extensions.KHR_audio_emitter.emitters`.
+
 ### Example:
 
 ```json
@@ -96,7 +98,7 @@ Audio emitter objects may be added to 3D nodes for positional audio or to the sc
             "translation": [1.0, 2.0, 3.0],
             "extensions": {
                 "KHR_audio_emitter": {
-                    "emitter": 0
+                    "emitters": [0]
                 }
             }
         }
@@ -185,7 +187,7 @@ The index of the audio data in the "audio" array assigned to this audio source. 
 
 ### Audio Emitter
 
-Audio emitters define how audio sources are played back. Emitter properties are defined at the document level and are references by nodes. Audio may be played globally or positionally. Positional audio has further properties that define how audio volume scales with distance and angle.
+Audio emitters define how audio sources are played back. Emitter properties are defined at the document level and are referenced by nodes or scenes. A node may reference one or more emitters. Audio may be played globally or positionally. Positional audio has further properties that define how audio volume scales with distance and angle.
 
 #### Property Summary
 
@@ -255,6 +257,7 @@ Specifies the distance model for the audio emitter.
     `refDistance / (refDistance + rolloffFactor * (Math.max(distance, refDistance) - refDistance))`
 - `exponential` An exponential distance model calculating the gain induced by the distance according to:
     `pow((Math.max(distance, refDistance) / refDistance, -rolloffFactor))`
+- `custom` A custom distance model defined by an extension on the `positional` object, such as `KHR_audio_environment`.
 
 #### `maxDistance`
 
@@ -296,7 +299,7 @@ Audio emitters of type `global` may be added to nodes using the following syntax
         {
             "extensions": {
                 "KHR_audio_emitter": {
-                    "emitter": 1
+                    "emitters": [1]
                 }
             }
         }
@@ -312,7 +315,7 @@ Audio emitters of type `positional` may be added to nodes using the following sy
         {
             "extensions": {
                 "KHR_audio_emitter": {
-                    "emitter": 0
+                    "emitters": [0]
                 }
             }
         }
@@ -320,13 +323,15 @@ Audio emitters of type `positional` may be added to nodes using the following sy
 }
 ```
 
-Note that multiple global audio emitters are allowed on the scene, but only a single audio emitter may be added to a node.
+Multiple global audio emitters are allowed on the scene, and one or more audio emitters may be added to a node.
+
+For compatibility with earlier drafts, implementations may continue to accept the legacy node-level form `"emitter": N` and treat it as equivalent to `"emitters": [N]`.
 
 ### Audio Rolloff Formula
 
 The Audio Rolloff range is `(0.0, +∞)`. The default is `1.0`.
 
-The rolloff formula is dependant on the distance model defined. The available distance models are `linear`, `inverse`, and `exponential`.
+The rolloff formula is dependant on the distance model defined. The built-in distance models are `linear`, `inverse`, and `exponential`. Additional extension-defined models, such as `custom`, may define their own attenuation behavior.
 
 - linear formula: `1.0 - rolloffFactor * (distance - refDistance) / (maxDistance - refDistance)`
 - inverse formula: `refDistance / (refDistance + rolloffFactor * (Math.max(distance, refDistance) - refDistance))`

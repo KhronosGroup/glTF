@@ -1,41 +1,31 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "KHR_audio_graph Wave Shaper Node",
-  "type": "object",
-  "description": "Applies waveshaping distortion to an audio signal.",
-  "properties": {
-    "id": {
-      "description": "A unique identifier of the wave shaper node in the scene.",
-      "type": "integer"
-    },
-    "amount": {
-      "type": "number",
-      "description": "Distortion intensity in [0..1]; implementations may map this to a shaping curve (e.g., tanh).",
-      "minimum": 0,
-      "maximum": 1
-    },
-    "oversample": {
-      "type": "string",
-      "description": "Optional oversampling factor for distortion quality.",
-      "enum": ["none", "2x", "4x"]
-    },
-    "curve": {
-      "type": "array",
-      "description": "Optional explicit shaping curve as a normalized array in [-1..1].",
-      "items": { "type": "number", "minimum": -1, "maximum": 1 }
-    },
-    "bypass": {
-      "type": "boolean",
-      "description": "Disables this processor while still allowing unprocessed audio signals to pass."
-    },
-    "channelInterpretation": {
-      "type": "string",
-      "description": "Channel ordering for speaker channel interpretation are captured here.",
-      "enum": ["speakers", "discrete"]
-    },
-    "extensions": {},
-    "extras": {}
-  },
-  "required": ["id"]
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Waveshaper Node",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "amount": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "The distortion amount."
+        },
+        "oversample": {
+            "type": "string",
+            "enum": ["none", "2x", "4x"],
+            "description": "The oversampling factor.",
+            "default": "none"
+        },
+        "curve": {
+            "type": "array",
+            "description": "An explicit shaping curve in the range [-1, 1].",
+            "items": {
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            }
+        },
+        "extensions": {},
+        "extras": {}
+    }
 }
-

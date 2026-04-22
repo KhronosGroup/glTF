@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_environment Listener",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "An optional listener name."
+        },
+        "spatializationModel": {
+            "type": "string",
+            "enum": ["equalpower", "HRTF", "custom"],
+            "description": "The default spatialization model used by this listener.",
+            "default": "equalpower"
+        },
+        "hrtf": {
+            "$ref": "KHR_audio_environment.hrtf.schema.json",
+            "description": "Optional HRTF configuration."
+        },
+        "interauralDistance": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The distance between ears in meters.",
+            "default": 0.17
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}

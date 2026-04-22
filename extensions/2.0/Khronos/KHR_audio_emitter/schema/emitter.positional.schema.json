@@ -40,6 +40,10 @@
                 {
                     "enum": ["exponential"],
                     "description": "An exponential distance model calculating the gain induced by the distance according to: pow((Math.max(distance, refDistance) / refDistance, -rolloffFactor))"
+                },
+                {
+                    "enum": ["custom"],
+                    "description": "A custom distance model defined by an extension on the positional object."
                 }
             ],
             "default": "inverse"

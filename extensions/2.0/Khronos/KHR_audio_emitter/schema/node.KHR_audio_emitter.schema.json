@@ -4,16 +4,34 @@
     "type": "object",
     "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
+        "emitters": {
+            "type": "array",
+            "description": "The ids of the audio emitters referenced by this node.",
+            "items": {
+                "$ref": "glTFid.schema.json"
+            },
+            "uniqueItems": true,
+            "minItems": 1
+        },
         "emitter": {
-            "description": "The id of the positional audio emitter referenced by this node.",
-            "allOf": [
-                {
-                    "$ref": "glTFid.schema.json"
-                }
-            ]
+            "description": "Deprecated legacy single-emitter form. Use `emitters` instead.",
+            "allOf": [{ "$ref": "glTFid.schema.json" }]
         },
         "extensions": {},
         "extras": {}
     },
-    "required": ["emitter"]
+    "oneOf": [
+        {
+            "required": ["emitters"],
+            "not": {
+                "required": ["emitter"]
+            }
+        },
+        {
+            "required": ["emitter"],
+            "not": {
+                "required": ["emitters"]
+            }
+        }
+    ]
 }

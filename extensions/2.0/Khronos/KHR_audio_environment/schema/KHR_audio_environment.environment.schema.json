@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_environment Environment",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "An optional environment name."
+        },
+        "reverb": {
+            "$ref": "KHR_audio_environment.reverb.schema.json",
+            "description": "Optional reverb properties for this environment."
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}

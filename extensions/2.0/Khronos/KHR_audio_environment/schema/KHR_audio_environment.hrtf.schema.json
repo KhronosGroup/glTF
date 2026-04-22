@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_environment HRTF Configuration",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "audio": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "The index of a KHR_audio_emitter audio asset containing HRTF impulse-response data."
+        },
+        "profile": {
+            "type": "string",
+            "enum": ["generic", "small", "medium", "large"],
+            "description": "A built-in HRTF profile hint.",
+            "default": "generic"
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}

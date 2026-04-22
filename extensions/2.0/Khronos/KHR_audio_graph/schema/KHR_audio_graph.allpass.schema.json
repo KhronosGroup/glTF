@@ -1,34 +1,22 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$schema": "http://json-schema.org/draft-04/schema",
     "title": "KHR_audio_graph Allpass Filter Node",
     "type": "object",
-    "description": "An allpass filter allows all frequencies through, but changes the phase relationship between the various frequencies. It implements a second-order allpass filter.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
         "frequency": {
             "type": "number",
-            "description": "The frequency where the center of the phase transition occurs. Viewed another way, this is the frequency with maximal group delay."
+            "minimum": 0.0,
+            "description": "The center frequency in Hertz."
         },
         "qualityFactor": {
             "type": "number",
-            "description": "Controls how sharp the phase transition is at the center frequency. A larger value implies a sharper transition and a larger group delay."
+            "minimum": 0.0,
+            "description": "The phase transition sharpness.",
+            "default": 1.0
         },
-        "bypass": {
-            "type": "boolean",
-            "description": "Disables this filter while still allowing unprocessed audio signals to pass."
-        },
-        "channelInterpretation": {
-            "type": "string",
-            "description": "Channel ordering for speaker channel interpretation are captured here. When the number of channels do not match any of the basic speaker layouts, use discrete to  maps channels to outputs. ",
-            "enum": [
-              "speakers",
-              "discrete"
-            ]
-          },
         "extensions": {},
         "extras": {}
     },
-    "required": [
-        "frequency",
-        "qualityFactor"
-    ]
+    "required": ["frequency"]
 }

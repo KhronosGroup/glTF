@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_environment glTF Scene Extension",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "environment": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "The index of the environment attached to this scene."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["environment"]
+}

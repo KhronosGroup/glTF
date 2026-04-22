@@ -1,66 +1,46 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "KHR_audio_graph Graph",
-  "type": "object",
-  "description": "Audio processing graph composed of nodes and connections.",
-  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
-  "properties": {
-    "name": { "type": "string" },
-    "nodes": {
-      "type": "array",
-      "items": {
-        "oneOf": [
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "source" }, "params": { "$ref": "KHR_audio_graph.source.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "gain" }, "params": { "$ref": "KHR_audio_graph.gain.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "delay" }, "params": { "$ref": "KHR_audio_graph.delay.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "lowpass" }, "params": { "$ref": "KHR_audio_graph.lowpass.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "highpass" }, "params": { "$ref": "KHR_audio_graph.highpass.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "bandpass" }, "params": { "$ref": "KHR_audio_graph.bandpass.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "lowshelf" }, "params": { "$ref": "KHR_audio_graph.lowshelf.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "highshelf" }, "params": { "$ref": "KHR_audio_graph.highshelf.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "peaking" }, "params": { "$ref": "KHR_audio_graph.peaking.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "notch" }, "params": { "$ref": "KHR_audio_graph.notch.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "allpass" }, "params": { "$ref": "KHR_audio_graph.allpass.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "reverb" }, "params": { "$ref": "KHR_audio_graph.reverb.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "waveshaper" }, "params": { "$ref": "KHR_audio_graph.waveshaper.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "splitter" }, "params": { "$ref": "KHR_audio_graph.splitter.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "channelmerger" }, "params": { "$ref": "KHR_audio_graph.channelmerger.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "channelmixer" }, "params": { "$ref": "KHR_audio_graph.channelmixer.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "audiomixer" }, "params": { "$ref": "KHR_audio_graph.audiomixer.schema.json" } }, "required": ["kind","params"], "additionalProperties": false },
-          { "properties": { "label": { "type": "string" }, "kind": { "const": "emitter" }, "params": { "$ref": "KHR_audio_graph.emitter.schema.json" } }, "required": ["kind","params"], "additionalProperties": false }
-        ]
-      },
-      "minItems": 1
-    },
-    "connections": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "from": {
-            "type": "object",
-            "properties": {
-              "node": { "allOf": [ { "$ref": "glTFid.schema.json" } ] },
-              "output": { "type": "integer", "minimum": 0 }
-            },
-            "required": ["node"]
-          },
-          "to": {
-            "type": "object",
-            "properties": {
-              "node": { "allOf": [ { "$ref": "glTFid.schema.json" } ] },
-              "input": { "type": "integer", "minimum": 0 }
-            },
-            "required": ["node"]
-          }
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Graph",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "An optional human-readable graph name."
         },
-        "required": ["from", "to"],
-        "additionalProperties": false
-      }
+        "nodes": {
+            "type": "array",
+            "description": "The graph's audio nodes.",
+            "items": {
+                "$ref": "KHR_audio_graph.node.schema.json"
+            },
+            "minItems": 1
+        },
+        "connections": {
+            "type": "array",
+            "description": "Edges between graph nodes.",
+            "items": {
+                "$ref": "KHR_audio_graph.connection.schema.json"
+            }
+        },
+        "inputs": {
+            "type": "array",
+            "description": "Bindings from KHR_audio_emitter sources into graph nodes.",
+            "items": {
+                "$ref": "KHR_audio_graph.input.schema.json"
+            },
+            "minItems": 1
+        },
+        "outputs": {
+            "type": "array",
+            "description": "Bindings from graph nodes to KHR_audio_emitter emitters.",
+            "items": {
+                "$ref": "KHR_audio_graph.output.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
     },
-    "outputs": { "type": "array", "items": { "type": "integer", "minimum": 0 } },
-    "extensions": {},
-    "extras": {}
-  },
-  "required": ["nodes", "connections"]
+    "required": ["nodes", "connections"]
 }
