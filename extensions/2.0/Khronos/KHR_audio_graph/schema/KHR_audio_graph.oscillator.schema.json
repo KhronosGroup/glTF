@@ -1,39 +1,34 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "KHR_audio_graph Audio Oscillator",
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Oscillator Node",
     "type": "object",
-    "description": "This represents an audio source generating a periodic waveform. It can be set to a few commonly used waveforms.",
-    "allOf": [
-        {
-            "$ref": "glTFProperty.schema.json"
-        }
-    ],
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
         "type": {
-            "type": "integer",
-            "description": "Specifies the waveform type (0 = sawtooth, 1 = square, 2 = triangle, 3 = sine, 4 = white noise, 5 = custom).",
-            "minimum": 0,
-            "maximum": 5
+            "type": "string",
+            "enum": ["sine", "square", "triangle", "sawtooth", "custom"],
+            "description": "The oscillator waveform."
         },
         "frequency": {
             "type": "number",
-            "description": "The Oscillator frequency, from 0-20kHz. The default value is 440 Hz.",
-            "minimum": 0,
-            "maximum": 20000,
-            "default": 440
+            "minimum": 0.0,
+            "description": "The oscillator frequency in Hertz.",
+            "default": 440.0
+        },
+        "detune": {
+            "type": "number",
+            "description": "Oscillator detune in cents.",
+            "default": 0.0
         },
         "pulseWidth": {
             "type": "number",
-            "description": "The amount of pulse width modulation applied when the “square” waveform is selected. A 0.5 value will produce a pure square wave, and increasing or decreasing the value will add harmonics which change the timbre of the sound.",
-            "minimum": 0,
-            "maximum": 1,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "The pulse width used for square waves.",
             "default": 0.5
         },
         "extensions": {},
         "extras": {}
     },
-    "required": [
-        "type",
-        "frequency"
-    ]
+    "required": ["type"]
 }

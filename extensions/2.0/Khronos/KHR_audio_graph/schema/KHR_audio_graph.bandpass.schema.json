@@ -1,34 +1,22 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$schema": "http://json-schema.org/draft-04/schema",
     "title": "KHR_audio_graph Bandpass Filter Node",
     "type": "object",
-    "description": "A bandpass filter allows a range of frequencies to pass through and attenuates the frequencies below and above this frequency range. It implements a second-order bandpass filter.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
         "frequency": {
             "type": "number",
-            "description": "The cutoff frequency in Hz."
+            "minimum": 0.0,
+            "description": "The center frequency in Hertz."
         },
         "qualityFactor": {
             "type": "number",
-            "description": "Controls the width of the band. The width becomes narrower as the Q value increases."
+            "minimum": 0.0,
+            "description": "The filter bandwidth control.",
+            "default": 1.0
         },
-        "bypass": {
-            "type": "boolean",
-            "description": "Disables this filter while still allowing unprocessed audio signals to pass."
-        },
-        "channelInterpretation": {
-            "type": "string",
-            "description": "Channel ordering for speaker channel interpretation are captured here. When the number of channels do not match any of the basic speaker layouts, use discrete to  maps channels to outputs. ",
-            "enum": [
-              "speakers",
-              "discrete"
-            ]
-          },
         "extensions": {},
         "extras": {}
     },
-    "required": [
-        "frequency",
-        "qualityFactor"
-    ]
+    "required": ["frequency"]
 }

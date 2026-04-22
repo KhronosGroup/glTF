@@ -1,26 +1,22 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "KHR_audio_graph Channel mixer Node",
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Channel Mixer Node",
     "type": "object",
-    "description": "Up-mixing refers to the process of taking a stream with a smaller number of channels and converting it to a stream with a larger number of channels. Down-mixing refers to the process of taking a stream with a larger number of channels and converting it to a stream with a smaller number of channels. Channel mixer node should ideally use these mixing rules. ",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
-        
         "outputChannels": {
             "type": "integer",
-            "description": "Number of channels in output audio."
+            "minimum": 1,
+            "description": "The desired output channel count."
         },
         "channelInterpretation": {
-          "type": "string",
-          "description": "Channel ordering for speaker channel interpretation are captured here. When the number of channels do not match any of the basic speaker layouts, use discrete to  maps channels to outputs. ",
-          "enum": [
-            "speakers",
-            "discrete"
-          ]
+            "type": "string",
+            "enum": ["speakers", "discrete"],
+            "description": "The channel interpretation applied by the mixer.",
+            "default": "speakers"
         },
         "extensions": {},
         "extras": {}
-      },
-      "required": [
-        "outputChannels"
-      ]
+    },
+    "required": ["outputChannels"]
 }

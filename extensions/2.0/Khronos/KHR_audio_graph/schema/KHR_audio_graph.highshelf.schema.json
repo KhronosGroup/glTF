@@ -1,34 +1,21 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$schema": "http://json-schema.org/draft-04/schema",
     "title": "KHR_audio_graph Highshelf Filter Node",
     "type": "object",
-    "description": "The highshelf filter is the opposite of the lowshelf filter and allows all frequencies through, but adds a boost to the higher frequencies. It implements a second-order highshelf filter.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
-        
         "frequency": {
             "type": "number",
-            "description": "The lower limit of the frequences where the boost (or attenuation) is applied in Hz."
+            "minimum": 0.0,
+            "description": "The lower shelf frequency in Hertz."
         },
         "gain": {
             "type": "number",
-            "description": "The boost, in dB, to be applied. If the value is negative, the frequencies are attenuated."
+            "description": "The shelf gain in decibels.",
+            "default": 0.0
         },
-        "bypass": {
-            "type": "boolean",
-            "description": "Disables this filter while still allowing unprocessed audio signals to pass."
-        },
-        "channelInterpretation": {
-            "type": "string",
-            "description": "Channel ordering for speaker channel interpretation are captured here. When the number of channels do not match any of the basic speaker layouts, use discrete to  maps channels to outputs. ",
-            "enum": [
-              "speakers",
-              "discrete"
-            ]
-          },
         "extensions": {},
         "extras": {}
     },
-    "required": [
-        "frequency"
-    ]
+    "required": ["frequency"]
 }

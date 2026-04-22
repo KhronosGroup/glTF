@@ -1,37 +1,28 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$schema": "http://json-schema.org/draft-04/schema",
     "title": "KHR_audio_graph Gain Node",
     "type": "object",
-    "description": "The gain property specifies the amount of amplification to apply, with the actual gain transitioning from its current value to the new one over a specified duration, while the interpolation property determines the curve used for this transition (linear or custom), and the duration property controls the length of time spent interpolating between the old and new gain values.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
         "gain": {
             "type": "number",
-            "description": "The gain to apply. In's a linear value in the range [0..1]. Should be nultiplied to previous node (emitter, source) gain. Once set, the actual gain applied will transition from it’s current setting to the new one set over 'duration' milliseconds."
+            "minimum": 0.0,
+            "description": "The gain multiplier.",
+            "default": 1.0
         },
         "interpolation": {
             "type": "string",
-            "description": "The curve to apply when changing gains (linear, custom).",
-            "enum": [
-                "linear",
-                "custom"
-            ]
+            "enum": ["linear", "custom"],
+            "description": "The curve used when gain changes over time.",
+            "default": "linear"
         },
         "duration": {
             "type": "number",
-            "description": "When changing gain, this parameter controls how long to spend interpolating in ms from the previously set gain value to the one that is specified."
+            "minimum": 0.0,
+            "description": "The interpolation duration in seconds.",
+            "default": 0.0
         },
-        "channelInterpretation": {
-            "type": "string",
-            "description": "Channel ordering for speaker channel interpretation are captured here. When the number of channels do not match any of the basic speaker layouts, use discrete to  maps channels to outputs. ",
-            "enum": [
-              "speakers",
-              "discrete"
-            ]
-          },
         "extensions": {},
         "extras": {}
-    },
-    "required": [
-        "gain"
-    ]
+    }
 }

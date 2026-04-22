@@ -1,19 +1,16 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "KHR_audio_graph Channel Merger Node",
-  "type": "object",
-  "description": "Node for combining channels from multiple audio streams into a single audio stream. It has a variable number of inputs, and a single output whose audio stream has a number of channels equal to the number of inputs. To merge multiple inputs into one stream, each input should be a single channel audio stream. ",
-  "properties": {
-    "channelInterpretation": {
-      "type": "string",
-      "description": "Channel ordering for speaker channel interpretation are captured here. When the number of channels do not match any of the basic speaker layouts, use discrete to  maps channels to outputs. ",
-      "enum": [
-        "speakers",
-        "discrete"
-      ]
-    },
-    "extensions": {},
-    "extras": {}
-  },
-  "required": []
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Channel Merger Node",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "channelInterpretation": {
+            "type": "string",
+            "enum": ["speakers", "discrete"],
+            "description": "The channel interpretation applied by the merger.",
+            "default": "discrete"
+        },
+        "extensions": {},
+        "extras": {}
+    }
 }

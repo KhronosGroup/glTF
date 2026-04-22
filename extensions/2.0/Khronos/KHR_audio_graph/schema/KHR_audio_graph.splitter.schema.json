@@ -1,19 +1,16 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "KHR_audio_graph Splitter Node",
-  "type": "object",
-  "description": "Node for accessing the individual channels of an audio stream in the routing graph. It has a single input, and a number of outputs which equals the number of channels in the input audio stream. For example, if a stereo input is connected to this node then the number of active outputs will be two (one from the left channel and one from the right). ",
-  "properties": {
-    "channelInterpretation": {
-      "type": "string",
-      "description": "Channel ordering for speaker channel interpretation are captured here. When the number of channels do not match any of the basic speaker layouts, use discrete to  maps channels to outputs. ",
-      "enum": [
-        "speakers",
-        "discrete"
-      ]
-    },
-    "extensions": {},
-    "extras": {}
-  },
-  "required": []
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Splitter Node",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "channelInterpretation": {
+            "type": "string",
+            "enum": ["speakers", "discrete"],
+            "description": "The channel interpretation applied by the splitter.",
+            "default": "discrete"
+        },
+        "extensions": {},
+        "extras": {}
+    }
 }

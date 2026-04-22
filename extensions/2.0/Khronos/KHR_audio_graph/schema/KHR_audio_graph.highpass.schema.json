@@ -1,36 +1,22 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$schema": "http://json-schema.org/draft-04/schema",
     "title": "KHR_audio_graph Highpass Filter Node",
     "type": "object",
-    "description": "A highpass filter allows frequencies above the cutoff frequency to pass through and attenuates frequencies below the cutoff. It implements a standard second-order resonant highpass filter with 12dB/octave rolloff.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
     "properties": {
         "frequency": {
             "type": "number",
-            "description": "The cutoff frequency in Hz."
+            "minimum": 0.0,
+            "description": "The cutoff frequency in Hertz."
         },
         "qualityFactor": {
             "type": "number",
-            "description": "Controls how peaked the response will be at the cutoff frequency. A large value makes the response more peaked.",
-            "minimum": -770.63678,
-            "maximum": 770.63678
+            "minimum": 0.0,
+            "description": "The resonance at the cutoff frequency.",
+            "default": 1.0
         },
-        "bypass": {
-            "type": "boolean",
-            "description": "Disables this filter while still allowing unprocessed audio signals to pass."
-        },
-        "channelInterpretation": {
-            "type": "string",
-            "description": "Channel ordering for speaker channel interpretation are captured here. When the number of channels do not match any of the basic speaker layouts, use discrete to  maps channels to outputs. ",
-            "enum": [
-              "speakers",
-              "discrete"
-            ]
-          },
         "extensions": {},
         "extras": {}
     },
-    "required": [
-        "frequency",
-        "qualityFactor"
-    ]
+    "required": ["frequency"]
 }
