@@ -64,7 +64,8 @@ Index of an accessor containing one integer offset per polygon in the primitive,
 
 All loops associated with a polygon MUST be contiguous: one exterior ring followed immediately by zero or more interior rings.
 
-> **Implementation note:** The range of loop indices for the `nth` polygon is `loopIndicesOffsets[n]` to `loopIndicesOffsets[n+1]` if `n < count - 1`, otherwise `loopIndicesOffsets[n]` to the end of the `loopIndices` accessor.
+> [!NOTE]
+> The range of loop indices for the `nth` polygon is `loopIndicesOffsets[n]` to `loopIndicesOffsets[n+1]` if `n < count - 1`, otherwise `loopIndicesOffsets[n]` to the end of the `loopIndices` accessor.
 
 - **Type:** `number`
 - **Required:** ✓ Yes
@@ -88,7 +89,8 @@ Polygon `loopIndices` values **MUST** be associated with at least one triangle. 
 
 Polygon `loopIndices` values **MUST** be unique within each exterior or interior loop. The same vertex index cannot be used twice within a loop.
 
-> **Implementation note:** As in LINE_LOOP topology, the first and last indices are defined to be connected by a line segment. Unlike in some geospatial formats, it is NOT necessary that the first index be repeated at the end of the loop to indicate a closed ring, and doing so would violate the requirement above.
+> [!NOTE]
+> As in LINE_LOOP topology, the first and last indices are defined to be connected by a line segment. Unlike in some geospatial formats, it is NOT necessary that the first index be repeated at the end of the loop to indicate a closed ring, and doing so would violate the requirement above.
 
 ## Example
 
@@ -127,23 +129,6 @@ Consider a simple mesh primitive containing three polygons, one with a single ho
 
 One valid encoding of `EXT_mesh_polygon` for this polygon set, based on `UNSIGNED_SHORT` indices and restart values, would be as follows:
 
-```plaintext
-indices
-0 2 1 / 0 3 2 / 0 4 3
-5 7 6 / 6 8 7
-9 17 18 / 9 18 10 / 10 18 11 / ...
-
-indicesOffsets
-0 3 6
-
-loopIndices
-0 1 2 3 4 0xFFFF
-5 6 7 8 0xFFFF
-9 10 11 12 13 14 15 16 / 17 18 19 20
-
-loopIndiceOffsets
-0 6 11
-```
 
 ## JSON Schema
 
