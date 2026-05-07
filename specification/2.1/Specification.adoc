@@ -4,7 +4,7 @@
 
 // :regtitle: is explained in
 // https://discuss.asciidoctor.org/How-to-add-markup-to-author-information-in-document-title-td6488.html
-= glTF{tmtitle} 2.0 Specification
+= glTF{tmtitle} 2.1 Specification
 :tmtitle: pass:q,r[^™^]
 :regtitle: pass:q,r[^®^]
 The Khronos{regtitle} 3D Formats Working Group
@@ -384,7 +384,7 @@ https://www.iana.org/assignments/media-types/image/png
 [[motivation]]
 == Motivation and Design Goals (Informative)
 
-glTF is an open interoperable 3D asset ‘transmission’ format that is compact, and efficient to process and render at runtime. glTF 2.0 is designed to be vendor- and runtime-neutral, usable by a wide variety of native and web-based engines and applications regardless of underlying platforms and 3D graphics APIs.
+glTF is an open interoperable 3D asset ‘transmission’ format that is compact, and efficient to process and render at runtime. glTF 2.1 is designed to be vendor- and runtime-neutral, usable by a wide variety of native and web-based engines and applications regardless of underlying platforms and 3D graphics APIs.
 
 glTF’s focus on run-time efficiency is a different design goal than typical 3D ‘authoring’ formats. Authoring formats are typically more verbose, with higher processing overheads, to carry authoring data that is no longer needed after iterative design is complete. glTF is complementary to authoring formats, providing a common, interoperable distillation target for publishing 3D assets to a wide audience of end users.
 
@@ -402,9 +402,9 @@ glTF has been designed to meet the following goals:
 
 * **Extensibility.** glTF is fully extensible, enabling the addition of both general-purpose and vendor-specific extensions, including geometry and texture compression. Widely adopted extensions may be considered for integration into future versions of the glTF specification.
 
-The following are outside the scope of glTF 2.0:
+The following are outside the scope of glTF 2.1:
 
-* **glTF is not a streaming format.** The binary data in glTF is inherently streamable, and the buffer design allows for fetching data incrementally, but there are no other streaming constructs in glTF 2.0.
+* **glTF is not a streaming format.** The binary data in glTF is inherently streamable, and the buffer design allows for fetching data incrementally, but there are no other streaming constructs in glTF 2.1.
 
 * **glTF is not an authoring format.** glTF deliberately does not retain 3D authoring information, in order to preserve runtime efficiency, however glTF files may be ingested by 3D authoring tools for remixing.
 
@@ -484,7 +484,7 @@ These two examples represent the same glTF JSON data.
 -----
 {
     "asset": {
-        "version": "2.0"
+        "version": "2.1"
     },
     "nodes": [
         {
@@ -501,7 +501,7 @@ These two examples represent the same glTF JSON data.
 -----
 {
     "asset": {
-        "version": "2.0"
+        "version": "2.1"
     },
     "nodes": [
         {
@@ -606,7 +606,7 @@ Each glTF asset **MUST** have an `asset` property. The `asset` object **MUST** c
 ----
 {
     "asset": {
-        "version": "2.0",
+        "version": "2.1",
         "generator": "collada2gltf@f356b99aef8868f74877c7ca545f2cd206b9d3b7",
         "copyright": "2017 (c) Khronos Group"
     }
@@ -684,7 +684,7 @@ Chromaticity coordinates define the interpretation of each primary color channel
 [[scenes-overview]]
 === Overview
 
-glTF 2.0 assets **MAY** contain zero or more _scenes_, the set of visual objects to render. Scenes are defined in a `scenes` array. All nodes listed in `scene.nodes` array **MUST** be root nodes, i.e., they **MUST NOT** be listed in a `node.children` array of any node. The same root node **MAY** appear in multiple scenes.
+glTF 2.1 assets **MAY** contain zero or more _scenes_, the set of visual objects to render. Scenes are defined in a `scenes` array. All nodes listed in `scene.nodes` array **MUST** be root nodes, i.e., they **MUST NOT** be listed in a `node.children` array of any node. The same root node **MAY** appear in multiple scenes.
 
 An additional root-level property, `scene` (note singular), identifies which of the scenes in the array **SHOULD** be displayed at load time. When `scene` is undefined, client implementations **MAY** delay rendering until a particular scene is requested.
 
@@ -1500,7 +1500,7 @@ For assets that contain a higher number of morphed attributes, client implementa
 [NOTE]
 .Implementation Note
 ====
-A significant number of authoring and client implementations associate names with morph targets. While the glTF 2.0 specification currently does not provide a way to specify names, most tools use an array of strings, `mesh.extras.targetNames`, for this purpose. The `targetNames` array and all primitive `targets` arrays must have the same length.
+A significant number of authoring and client implementations associate names with morph targets. While the glTF 2.1 specification currently does not provide a way to specify names, most tools use an array of strings, `mesh.extras.targetNames`, for this purpose. The `targetNames` array and all primitive `targets` arrays must have the same length.
 ====
 
 
@@ -1510,7 +1510,7 @@ A significant number of authoring and client implementations associate names wit
 [[skins-overview]]
 ==== Overview
 
-glTF 2.0 meshes support Linear Blend Skinning via skin objects, joint hierarchies, and designated vertex attributes.
+glTF 2.1 meshes support Linear Blend Skinning via skin objects, joint hierarchies, and designated vertex attributes.
 
 Skins are stored in the `skins` array of the asset. Each skin is defined by a **REQUIRED** `joints` property that lists the indices of nodes used as joints to pose the skin and an **OPTIONAL** `inverseBindMatrices` property that points to an accessor with inverse bind matrices data used to bring coordinates being skinned into the same space as each joint.
 
@@ -1762,7 +1762,7 @@ The following example shows a skinned mesh instance: a skin object, a node with 
 [[texture-data-overview]]
 === Overview
 
-glTF 2.0 separates texture access into three distinct types of objects: Textures, Images, and Samplers.
+glTF 2.1 separates texture access into three distinct types of objects: Textures, Images, and Samplers.
 
 
 [[textures]]
@@ -1782,7 +1782,7 @@ Textures are stored in the asset's `textures` array. A texture is defined by an 
 }
 ----
 
-glTF 2.0 supports only static 2D textures.
+glTF 2.1 supports only static 2D textures.
 
 When `texture.source` is undefined, the image **SHOULD** be provided by an extension or application-specific means, otherwise the texture object is undefined.
 
@@ -2266,7 +2266,7 @@ ifndef::revdate[]
 .Note
 ====
 This section contains formulas that may not display correctly in all preview tools.
-View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#infinite-perspective-projection[infinite perspective projection].
+View the full https://www.khronos.org/registry/glTF/specs/2.1/glTF-2.1.html#infinite-perspective-projection[infinite perspective projection].
 ====
 endif::[]
 
@@ -2299,7 +2299,7 @@ ifndef::revdate[]
 .Note
 ====
 This section contains formulas that may not display correctly in all preview tools.
-View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#finite-perspective-projection[finite perspective projection].
+View the full https://www.khronos.org/registry/glTF/specs/2.1/glTF-2.1.html#finite-perspective-projection[finite perspective projection].
 ====
 endif::[]
 
@@ -2332,7 +2332,7 @@ ifndef::revdate[]
 .Note
 ====
 This section contains formulas that may not display correctly in all preview tools.
-View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#orthographic-projection[orthographic projection].
+View the full https://www.khronos.org/registry/glTF/specs/2.1/glTF-2.1.html#orthographic-projection[orthographic projection].
 ====
 endif::[]
 
@@ -2353,24 +2353,24 @@ When `r / t` does not match the aspect ratio of the viewport, client implementat
 
 glTF supports articulated and skinned animation via key frame animations of nodes' transforms. Key frame data is stored in buffers and referenced in animations using accessors.
 
-glTF 2.0 also supports animation of instantiated morph targets in a similar fashion.
+glTF 2.1 also supports animation of instantiated morph targets in a similar fashion.
 
 [NOTE]
 .Note
 ====
-glTF 2.0 only supports animating node transforms and morph target weights. Extensions or a future version of the specification may support animating arbitrary properties, such as material colors and texture transformation matrices.
+glTF 2.1 only supports animating node transforms and morph target weights. Extensions or a future version of the specification may support animating arbitrary properties, such as material colors and texture transformation matrices.
 ====
 
 [NOTE]
 .Note
 ====
-glTF 2.0 defines only storage of animation keyframes, so this specification doesn't define any runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc. When loading a glTF 2.0 asset, client implementations may select an animation entry and pause it on the first frame, play it automatically, or ignore all animations until further user requests. When a playing animation is stopped, client implementations may reset the scene to the initial state or freeze it at the current frame.
+glTF 2.1 defines only storage of animation keyframes, so this specification doesn't define any runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc. When loading a glTF 2.1 asset, client implementations may select an animation entry and pause it on the first frame, play it automatically, or ignore all animations until further user requests. When a playing animation is stopped, client implementations may reset the scene to the initial state or freeze it at the current frame.
 ====
 
 [NOTE]
 .Implementation Note
 ====
-glTF 2.0 does not specifically define how an animation will be used when imported but, as a best practice, it is recommended that each animation is self-contained as an action. For example, "`Walk`" and "`Run`" animations might each contain multiple channels targeting a model's various bones. The client implementation may choose when to play any of the available animations.
+glTF 2.1 does not specifically define how an animation will be used when imported but, as a best practice, it is recommended that each animation is self-contained as an action. For example, "`Walk`" and "`Run`" animations might each contain multiple channels targeting a model's various bones. The client implementation may choose when to play any of the available animations.
 ====
 
 All animations are stored in the `animations` array of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
@@ -2777,8 +2777,8 @@ ifndef::revdate[]
 .Note
 ====
 This section is auto-generated, and will be a broken link when previewing.
-View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#properties-reference[Properties Reference Section].
-To suggest changes, open a Pull Request to edit the https://github.com/KhronosGroup/glTF/tree/main/specification/2.0/schema[JSON Schema Files].
+View the full https://www.khronos.org/registry/glTF/specs/2.1/glTF-2.1.html#properties-reference[Properties Reference Section].
+To suggest changes, open a Pull Request to edit the https://github.com/KhronosGroup/glTF/tree/main/specification/2.1/schema[JSON Schema Files].
 ====
 endif::[]
 
@@ -2854,8 +2854,8 @@ ifndef::revdate[]
 .Note
 ====
 This section is auto-generated, and will be a broken link when previewing.
-View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-a-json-schema-reference[JSON Schema Reference].
-To suggest changes, open a Pull Request to edit the https://github.com/KhronosGroup/glTF/tree/main/specification/2.0/schema[JSON Schema Files].
+View the full https://www.khronos.org/registry/glTF/specs/2.1/glTF-2.1.html#appendix-a-json-schema-reference[JSON Schema Reference].
+To suggest changes, open a Pull Request to edit the https://github.com/KhronosGroup/glTF/tree/main/specification/2.1/schema[JSON Schema Files].
 ====
 endif::[]
 
@@ -2869,7 +2869,7 @@ include::JsonSchemaReference.adoc[]
 [[appendix-b-brdf-implementation-general]]
 == General
 
-This chapter presents the bidirectional reflectance distribution function (BRDF) of the glTF 2.0 metallic-roughness material. The BRDF describes the reflective properties of the surface of a physically based material. For a pair of directions, the BRDF returns how much light from the incoming direction is reflected from the surface in the outgoing direction.
+This chapter presents the bidirectional reflectance distribution function (BRDF) of the glTF 2.1 metallic-roughness material. The BRDF describes the reflective properties of the surface of a physically based material. For a pair of directions, the BRDF returns how much light from the incoming direction is reflected from the surface in the outgoing direction.
 
 [NOTE]
 .Note
@@ -3031,7 +3031,7 @@ ifndef::revdate[]
 .Note
 ====
 This section contains formulas that may not display correctly in all preview tools.
-View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#specular-brdf[Specular BRDF Section].
+View the full https://www.khronos.org/registry/glTF/specs/2.1/glTF-2.1.html#specular-brdf[Specular BRDF Section].
 ====
 endif::[]
 
@@ -3102,7 +3102,7 @@ ifndef::revdate[]
 .Note
 ====
 This section contains formulas that may not display correctly in all preview tools.
-View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#diffuse-brdf[Diffuse BRDF Section].
+View the full https://www.khronos.org/registry/glTF/specs/2.1/glTF-2.1.html#diffuse-brdf[Diffuse BRDF Section].
 ====
 endif::[]
 
@@ -3131,7 +3131,7 @@ ifndef::revdate[]
 .Note
 ====
 This section contains formulas that may not display correctly in all preview tools.
-View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#fresnel[Fresnel Section].
+View the full https://www.khronos.org/registry/glTF/specs/2.1/glTF-2.1.html#fresnel[Fresnel Section].
 ====
 endif::[]
 
@@ -3267,7 +3267,7 @@ ifndef::revdate[]
 .Note
 ====
 This appendix contains formulas that may not display correctly in all preview tools.
-View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-c-interpolation[Appendix C: Animation Sampler Interpolation Modes].
+View the full https://www.khronos.org/registry/glTF/specs/2.1/glTF-2.1.html#appendix-c-interpolation[Appendix C: Animation Sampler Interpolation Modes].
 ====
 endif::[]
 
