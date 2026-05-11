@@ -5260,6 +5260,7 @@ the behavior graph is invalid and thus cannot be used; this has no effect on oth
 ... _reject the graph_;
 .. validate each element of the `declarations` array as described in the <<validation-declaration-object,Declaration Object Validation>> section.
 6. If "`the graph`" object has the `nodes` property:
+.. _assert_ that the graph has the `declarations` property;
 .. _assert_ that the `nodes` property is a non-empty JSON array having no more than 2147483648 elements;
 .. if the `nodes` array length is greater than the implementation-specific limit on the number of interactivity nodes,
 ... _reject the graph_;
