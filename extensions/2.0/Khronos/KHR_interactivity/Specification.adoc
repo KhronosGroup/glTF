@@ -4169,8 +4169,8 @@ During the last 5 seconds, the position of the glTF node zero is well-defined ag
 | Input value sockets
 | `ref animation` | Animation reference
 .2+| Output flow sockets
-d| `out` | The flow to be activated if the animation index is valid
-d| `err` | The flow to be activated if the animation index is invalid
+d| `out` | The flow to be activated if the animation reference is valid
+d| `err` | The flow to be activated if the animation reference is invalid
 |===
 
 This operation stops a playing animation.
@@ -4555,7 +4555,7 @@ To check if a given reference value represents a valid delay object, the behavio
 
 If the input reference value is not null and it is contained in the dynamic array of delay activation references (see the `flow/setDelay` operation), the `pointer/get` operation succeeds and thus sets the `isValid` output value to true and the `value` output value to the input reference value.
 
-If the input reference value is null or it is not contained in the dynamic array of delay activation references, the `pointer/get` operation fails and thus sets the `isValid` output value is false and the `value` output value is null.
+If the input reference value is null or it is not contained in the dynamic array of delay activation references, the `pointer/get` operation fails and thus sets the `isValid` output value to false and the `value` output value to null.
 
 The following pointer represents the read-only property defined in this section.
 
@@ -4563,6 +4563,22 @@ The following pointer represents the read-only property defined in this section.
 |===
 | Pointer                                   | Type
 | `/extensions/KHR_interactivity/delays/{}` | `ref`
+|===
+
+=== Event References
+
+To check if a given reference value represents an event object, the behavior graph can query the runtime value of the corresponding read-only virtual property using the `pointer/get` operation as described in this section.
+
+If the input reference value is not null and it was produced by an event operation, i.e., it is an event reference, the `pointer/get` operation succeeds and thus sets the `isValid` output value to true and the `value` output value to the input reference value. The internal state of the event object has no effect on this operation.
+
+If the input reference value is null or it was not produced by an event operation, i.e., it is not an event reference, the `pointer/get` operation fails and thus sets the `isValid` output value to false and the `value` output value to null.
+
+The following pointer represents the read-only property defined in this section.
+
+[options="header",cols="50%,15%"]
+|===
+| Pointer                                   | Type
+| `/extensions/KHR_interactivity/events/{}` | `ref`
 |===
 
 = JSON Syntax
