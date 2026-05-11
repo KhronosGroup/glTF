@@ -1,0 +1,37 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_scatter glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines scattering properties for both thin-walled and volumetric materials.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "multiscatterColorFactor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "description": "The multi-scatter color.",
+            "default": [ 1.0, 1.0, 1.0 ],
+            "minItems": 3,
+            "maxItems": 3,
+            "gltf_detailedDescription": "In volumetric mode (KHR_materials_volume present with thicknessFactor > 0), this is the multi-scatter albedo: the perceived color of the scattering medium after many internal bounces. In thin-walled mode, this is a multiplicative tint on the transmitted light. A value of [1, 1, 1] applies no tint."
+        },
+        "multiscatterColorTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "A texture that defines the multi-scatter color, stored in the RGB channels and encoded in sRGB.",
+            "gltf_detailedDescription": "A texture that defines the multi-scatter color, stored in the RGB channels and encoded in sRGB. This texture will be multiplied by the multiscatterColorFactor value."
+        },
+        "scatterAnisotropy": {
+            "type": "number",
+            "description": "The anisotropy of scatter events. Range is (-1, 1).",
+            "default": 0.0,
+            "exclusiveMinimum": -1.0,
+            "exclusiveMaximum": 1.0,
+            "gltf_detailedDescription": "Controls the directionality of scattered light. In volumetric mode, this is the g parameter of the Henyey-Greenstein phase function. In thin-walled mode, this biases the diffuse BTDF toward forward (positive) or backward (negative) scattering. A value of 0 gives isotropic (Lambertian) diffuse transmission."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
