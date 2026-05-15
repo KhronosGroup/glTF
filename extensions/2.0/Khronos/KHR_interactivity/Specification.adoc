@@ -843,6 +843,43 @@ d| `floatN c` or +
   `floatNxN value` | stem:[(1 - c) * a + c * b]
 |===
 
+===== Smooth Step
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/smoothStep` | Smooth step (Hermit interpolation) operation
+.3+| Input value sockets
+d| `floatN a` | First edge
+d| `floatN b` | Second edge
+d| `floatN c` | Value to interpolate
+| Output value sockets
+| `floatN value` | Computed interpolation coefficient
+|===
+
+Let
+
+[latexmath]
++++++
+t = \operatorname{saturate}(\frac{c - \min(a, b)}{|b - a|})
++++++
+
+Then the components of the `value` output socket value are computed as the components of the following value:
+
+[latexmath]
++++++
+t \cdot t \cdot (3 - 2 \cdot t)
++++++
+
+This operation is defined in terms of `math/min` and `math/saturate` operations defined above.
+
+Since this operation is a shortcut for the combination of arithmetic operations, NaN and infinity values are propagated accordingly.
+
+[NOTE]
+.Authoring Note
+====
+This operation correctly handles a case when stem:[a] is greater than stem:[b].
+====
+
 ==== Comparison Operations
 
 If any input value is _NaN_, the output value is false.
