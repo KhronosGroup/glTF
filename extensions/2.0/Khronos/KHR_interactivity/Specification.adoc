@@ -2914,6 +2914,126 @@ d| `bool b` | Second argument
 | `bool value` | True if and only if stem:[a] is not equal to stem:[b]; false otherwise
 |===
 
+==== Color Model Conversion Operations
+
+===== RGB to OkLCh
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/rgbToOkLCh` | RGB to OkLCh conversion operation
+.3+| Input value sockets
+d| `float r` | Red value
+d| `float g` | Green value
+d| `float b` | Blue value
+.3+| Output value sockets
+d| `float l` | Lightness value
+d| `float c` | Chroma value
+d| `float h` | Hue value in radians
+|===
+
+[CAUTION]
+====
+Although this operation assumes that input values represent linear color values from the BT.709 gamut, it does not perform any input or output clamping or gamut mapping.
+====
+
+The output values are computed as follows:
+
+1. Let stem:[L'], stem:[M'], and stem:[S'] be
++
+[stem]
++++++
+((L'), (M'), (S')) = ((0.4122214708, 0.5363325363, 0.0514459929),
+                      (0.2119034982, 0.6806995451, 0.1073969566),
+                      (0.0883024619, 0.2817188376, 0.6299787005)) cdot ((r), (g), (b))
++++++
+
+2. Then stem:[L], stem:[a], and stem:[b] values are
++
+[stem]
++++++
+((L), (a), (b)) = ((+0.2104542553, +0.7936177850, -0.0040720468),
+                   (+1.9779984951, -2.4285922050, +0.4505937099),
+                   (+0.0259040371, +0.7827717662, -0.8086757660)) cdot ((\root[3\]{L'}), (\root[3\]{M'}), (\root[3\]{S'}))
++++++
++
+[CAUTION]
+====
+It is important to use a cube root implementation that supports negative values, such as `Math.cbrt` in ECMAScript.
+====
+
+3. Set the `l` output value to the value of stem:[L].
+4. Set the `c` output value to stem:[sqrt(a^2 + b^2)].
+5. Set the `h` output value to the result of the `math/atan2` operation with stem:[a] and stem:[b] input values swapped.
+
+Since this operation is a shortcut for the combination of arithmetic, exponential, and trigonometry operations, NaN and infinity values are propagated accordingly.
+
+[TIP]
+.Implementation Tip
+====
+The constant matrix values above were taken from the original OkLab document and are optimized for single-precision computations. When implementing this operation on platforms that support only double-precision arithmetic, such as ECMAScript, consider using the revised matrix values that can be found in CSS Color Module Level 4.
+====
+
+[TIP]
+.Authoring Tip
+====
+This operation does not implicitly clamp the input values. If needed, that step could be done explicitly by adding interactivity nodes with the `math/saturate` operation.
+====
+
+===== OkLCh to RGB
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/rgbFromOkLCh` | OkLCh to RGB conversion operation
+.3+| Input value sockets
+d| `float l` | Lightness value
+d| `float c` | Chroma value
+d| `float h` | Hue value in radians
+.3+| Output value sockets
+d| `float r` | Red value
+d| `float g` | Green value
+d| `float b` | Blue value
+|===
+
+[CAUTION]
+====
+This operation produces negative of greater than one RGB values for input OkLCh values that are outside of the BT.709 gamut. This operation does not perform any input or output clamping or gamut mapping.
+====
+
+The output values are computed as follows:
+
+1. Let stem:[L], stem:[C], and stem:[h] be equal to the `l`, `c`, and `h` input values respectively.
+2. Let stem:[L'], stem:[M'], and stem:[S'] values be
++
+[stem]
++++++
+((L'), (M'), (S')) = ((1.0, +0.3963377774, +0.2158037573),
+                      (1.0, -0.1055613458, -0.0638541728),
+                      (1.0, -0.0894841775, -1.2914855480)) cdot ((L), (C \cdot \cos(h)), (C \cdot \sin(h)))
++++++
+
+3. Then the `r`, `g`, and `b` output values are computed as
++
+[stem]
++++++
+((r), (g), (b)) = ((+4.0767416621, -3.3077115913, +0.2309699292),
+                   (-1.2684380046, +2.6097574011, -0.3413193965),
+                   (-0.0041960863, -0.7034186147, +1.7076147010)) cdot ((L'^3), (M'^3), (S'^3))
++++++
+
+Since this operation is a shortcut for the combination of arithmetic, exponential, and trigonometry operations, NaN and infinity values are propagated accordingly.
+
+[TIP]
+.Implementation Tip
+====
+The constant matrix values above were taken from the original OkLab document and are optimized for single-precision computations. When implementing this operation on platforms that support only double-precision arithmetic, such as ECMAScript, consider using revised matrix values that can be found in CSS Color Module Level 4.
+====
+
+[TIP]
+.Authoring Tip
+====
+This operation does not implicitly clamp the output values. If needed, that step could be done explicitly by adding interactivity nodes with the `math/saturate` operation.
+====
+
 === Reference Operations
 
 ==== Reference Comparison Operations
