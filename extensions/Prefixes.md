@@ -75,6 +75,7 @@ To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glT
 | `PANDA3D` | Panda3D | https://www.panda3d.org/ | [#1828](https://github.com/KhronosGroup/glTF/pull/1828) |
 | `POLUTROPON` | Polutropon Games | https://polutropon.games/<br>`ybalrid at polutropon.games` | [#1632](https://github.com/KhronosGroup/glTF/issues/1632) |
 | `PTC` | PTC Inc. | https://www.ptc.com/ | [#1851](https://github.com/KhronosGroup/glTF/issues/1851) |
+| `PYTHA` | PYTHA Lab GmbH | https://www.pytha.com/ | [#2581](https://github.com/KhronosGroup/glTF/issues/2581) |
 | `S8S` | Soft8Soft | https://www.soft8soft.com/ | [#1240](https://github.com/KhronosGroup/glTF/issues/1240) |
 | `SE` | Schneider Electric SE | https://www.se.com/ | [#2134](https://github.com/KhronosGroup/glTF/issues/2134) |
 | `SEIN` | Hiloteam | https://seinjs.com/ | [#1840](https://github.com/KhronosGroup/glTF/issues/1840) |
