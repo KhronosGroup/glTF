@@ -16,6 +16,7 @@ To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glT
 
 | Prefix | Company or Project Name | Contacts | Request |
 |--------------|--------------------------------|---------------------------------------------------------------|-----------|
+| `3DVOX` | 3DVOX | https://3dvox.com/ | [#2583](https://github.com/KhronosGroup/glTF/issues/2583) |
 | `ADOBE` | Adobe, Inc. | https://adobe.com/ | [#1431](https://github.com/KhronosGroup/glTF/issues/1431) |
 | `AGI` | Analytical Graphics, Inc. | https://agi.com/ | [#1405](https://github.com/KhronosGroup/glTF/pull/1405) |
 | `AGT` | Augment SAS | https://www.augment.com/ | [#1571](https://github.com/KhronosGroup/glTF/issues/1571) |
