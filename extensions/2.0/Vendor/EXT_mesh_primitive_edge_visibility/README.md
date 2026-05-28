@@ -218,3 +218,7 @@ The [pull request](https://github.com/iTwin/itwinjs-core/pull/5581) that informe
 iTwin.js [implements](https://github.com/iTwin/itwinjs-core/blob/03b760e1e91bde5221aa7370ea45c52f966e3368/core/frontend/src/internal/render/webgl/glsl/Edge.ts#L107) conditional display of silhouette edges. It also draws edges in a separate pass from surfaces to [mitigate z-fighting](https://github.com/iTwin/itwinjs-core/blob/03b760e1e91bde5221aa7370ea45c52f966e3368/core/frontend/src/internal/render/webgl/glsl/FeatureSymbology.ts#L426).
 
 Assets containing silhouette edges tend to contain *a lot* of them. Using component type 5120 (byte) to encode the silhouette normal vectors is recommended to minimize their impact on the size of the glTF asset. Using `EXT_meshopt_compression` can further reduce the transmission size.
+
+## License
+
+This work is licensed under CC BY 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/
