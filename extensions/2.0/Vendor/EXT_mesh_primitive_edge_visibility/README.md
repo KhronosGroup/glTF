@@ -1,5 +1,5 @@
 <!--
-Copyright 2025 Bentley Systems, Incorporated
+Copyright 2026 Bentley Systems, Incorporated
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
