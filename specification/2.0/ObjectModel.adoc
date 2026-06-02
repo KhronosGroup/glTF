@@ -192,6 +192,16 @@ The following pointer templates represent mutable properties defined in the core
 | `/nodes/{}/weights/{}`                               | `float`
 |====
 
+The `/nodes/{}/translation`, `/nodes/{}/rotation`, and `/nodes/{}/scale` pointers represent the current TRS properties of the node. If the static `matrix` property is defined on the node object in JSON, the corresponding rotation and scale pointers are undefined; the translation pointer is always defined.
+
+[NOTE]
+.Rationale
+====
+Since the glTF 2.0 specification allows negative scale factors, TRS matrix decomposition is ambiguous with regard to rotation and scale. Two implementations that choose different scale factor signs for the same matrix may produce two different rotation quaternions for it. Therefore, updating only the rotation or the scale may result in different node transformation matrices in different implementations.
+
+This restriction does not apply to the translation because the translation vector directly corresponds to the first three values of the last column of the transformation matrix regardless of the decomposition process.
+====
+
 The `/nodes/{}/weights` and `/nodes/{}/weights/{}` pointers represent the current morph target weights (as an array and as individual scalars respectively) of the mesh instantiated by the node regardless of whether the static `weights` property is defined on the node object in JSON. If the node instantiates no mesh or if the mesh has no morph targets, these pointers are undefined.
 
 [NOTE]
