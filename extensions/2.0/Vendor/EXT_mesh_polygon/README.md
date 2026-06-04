@@ -26,23 +26,9 @@ Extends glTF mesh primitives, adding an encoding of polygon primitive topology, 
 
 The `EXT_mesh_polygon` extension may be added to a mesh primitive, indicating that the primitive represents a series of polygons.
 
-An extended mesh primitive **MUST** include `primitive.mode = 2` ("LINE_LOOP").
+An extended mesh primitive **MUST** include `primitive.mode = 4` ("TRIANGLES"), defining the tessellated surface of each polygon as a series of triangles.
 
-Each polygon is composed of 1 or more loops. The first loop in each polygon represents the polygon's exterior ring, or boundary. Additional loops, if any, represent interior rings ("holes") within the polygon. Polygons must be fully-connected: holes cannot intersect the exterior ring, and additional exterior rings ("islands") are not allowed, whether outside the exterior ring or within holes.
-
-Each loop must be separated by a primitive restart value, including loops associated with different polygons. Primitive restart values applicable to each accessor type are:
-
-| `accessor.componentType`     | restart value             |
-| ---------------------------- | ------------------------- |
-| `5121`&nbsp;(UNSIGNED_BYTE)  | `255` (0xFF)              |
-| `5123`&nbsp;(UNSIGNED_SHORT) | `65535` (0xFFFF)          |
-| `5125`&nbsp;(UNSIGNED_INT)   | `4294967295` (0xFFFFFFFF) |
-
-A single mesh primitive may contain any number of line loops, defining exterior and interior rings for any number of polygons. Each polygon is associated with its loop(s) within the mesh primitive according to the `indicesOffsets` extension property.
-
-Winding order of exterior rings is counterclockwise; winding order of interior rings (holes) is clockwise.
-
-An extended mesh primitive **MUST** include `indices`. Indices for each polygon must be contiguous: for a polygon composed of 4 loops (1 exterior, 3 holes), indices defining these loops must occupy an uninterrupted range within the primitive's indices accessor. Only indices, not vertex attributes, are required to be contiguous.
+An extended mesh primitive **MUST** include `indices`. All triangle indices associated with a polygon MUST be contiguous. For a polygon composed of N triangles, indices defining these triangles must occupy an uninterrupted range within the primitive's indices accessor. Only indices, not vertex attributes, are required to be contiguous.
 
 The `EXT_mesh_polygon` extension includes the following additional properties.
 
@@ -56,49 +42,56 @@ Integer number of polygons encoded in the mesh primitive.
 
 ### indicesOffsets
 
-Index of an accessor containing one integer offset per polygon in the primitive, indicating the first index of the first line loop associated with the polygon. The accessor **MUST** have `SCALAR` type and an unsigned integer component type, and the accessor's `count` **MUST** be the same as `EXT_mesh_polygon.count` for the primitive.
+Index of an accessor containing one integer offset per polygon in the primitive, indicating the first index of the first triangle associated with the polygon. The accessor **MUST** have `SCALAR` type and an unsigned integer component type, and the accessor's `count` **MUST** be the same as `EXT_mesh_polygon.count` for the primitive.
 
-All line loop indices associated with a polygon MUST be contiguous: one exterior ring followed immediately by zero or more interior rings.
+All triangle indices associated with a polygon MUST be contiguous.
 
 - **Type:** `number`
 - **Required:** ✓ Yes
 - **Minimum:** ≥ 0
 
-### triangleIndices
+### loopIndices
 
-Index of an accessor containing indices satisfying all requirements associated with `primitive.mode = 4` ("TRIANGLES"), defining the tessellated surface of the polygon as a series of triangles. These indices refer to the same vertex attributes as the primitive's line loop indices. The accessor **MUST** have `SCALAR` type and an unsigned integer component type.
+Index of an accessor containing indices satisfying all requirements associated with `primitive.mode = 2` ("LINE_LOOP"). These indices refer to the same vertex attributes as the primitive's triangle indices. The accessor **MUST** have `SCALAR` type and an unsigned integer component type.
 
-When omitted, client implementations **MUST** compute a tessellation for the polygon, or fall back on another method of rendering the polygon.
+Each polygon is composed of 1 or more loops. The first loop in each polygon represents the polygon's exterior ring, or boundary. Additional loops, if any, represent interior rings ("holes") within the polygon. Polygons must be fully-connected: holes cannot intersect the exterior ring, and additional exterior rings ("islands") are not allowed.
 
-> [!NOTE]
-> Runtime tessellation of polygons is expensive and not uniquely-defined for all 3D line loops; authoring implementations should include `triangleIndices` whenever practical.
+Each loop must be separated by a primitive restart value, including loops associated with different polygons. Primitive restart values applicable to each accessor type are:
+
+| `accessor.componentType`     | restart value             |
+| ---------------------------- | ------------------------- |
+| `5121`&nbsp;(UNSIGNED_BYTE)  | `255` (0xFF)              |
+| `5123`&nbsp;(UNSIGNED_SHORT) | `65535` (0xFFFF)          |
+| `5125`&nbsp;(UNSIGNED_INT)   | `4294967295` (0xFFFFFFFF) |
+
+A single mesh primitive may contain any number of line loops, defining 1 exterior and >=0 interior rings for any number of polygons. Each polygon is associated with its loop(s) within the mesh primitive according to the `indicesOffsets` extension property.
+
+Winding order of exterior rings is counterclockwise; winding order of interior rings (holes) is clockwise.
 
 - **Type:** `number`
-- **Required:** No
+- **Required:** ✓ Yes
 - **Minimum:** ≥ 0
 
-### triangleIndicesOffsets
+### loopIndicesOffsets
 
-Index of an accessor containing one integer offset per polygon in the primitive, indicating the first index of the first triangle in the `triangleIndices` accessor associated with that polygon. The accessor **MUST** have `SCALAR` type and an unsigned integer component type, and the accessor's `count` **MUST** be the same as `EXT_mesh_polygon.count` for the primitive.
+Index of an accessor containing one integer offset per polygon in the primitive, indicating the first index of the first loop in the `loopIndices` accessor associated with that polygon. The accessor **MUST** have `SCALAR` type and an unsigned integer component type, and the accessor's `count` **MUST** be the same as `EXT_mesh_polygon.count` for the primitive.
 
-All triangles associated with a polygon MUST be contiguous.
-
-When `triangleIndices` is defined, `triangleIndicesOffsets` is required. When `triangleIndices` is omitted, `triangleIndicesOffsets` must be undefined.
+All line loop indices associated with a polygon MUST be contiguous: one exterior ring followed immediately by zero or more interior rings. Only indices, not vertex attributes, are required to be contiguous.
 
 > [!NOTE]
 > The range of loop indices for the `nth` polygon is `loopIndicesOffsets[n]` to `loopIndicesOffsets[n+1]` if `n < count - 1`, otherwise `loopIndicesOffsets[n]` to the end of the `loopIndices` accessor.
 
 - **Type:** `number`
-- **Required:** No
+- **Required:** ✓ Yes
 - **Minimum:** ≥ 0
 
 ## Additional Restrictions
 
 Triangles in the extended mesh primitive **MUST** be associated with exactly one polygon. Loose triangles cannot be included, and a single triangle cannot be associated with multiple polygons.
 
-Polygon `indices` values **MUST** be associated with at least one triangle. Exterior and interior loops may not contain additional vertex indices missing from triangulation.
+Polygon `loopIndices` values **MUST** be associated with at least one triangle. Exterior and interior loops may not contain additional vertex indices missing from triangulation.
 
-Polygon `indices` values **MUST** be unique within each exterior or interior loop. The same vertex index cannot be used twice within a loop.
+Polygon `loopIndices` values **MUST** be unique within each exterior or interior loop. The same vertex index cannot be used twice within a loop.
 
 > [!NOTE]
 > Unlike in some geospatial formats, it is NOT necessary that the first index be repeated at the end of the loop to indicate a closed ring, and doing so would violate the requirement above. The first and last index are implicitly connected, as defined for line loop indices in the core glTF 2.0 specification.
@@ -107,7 +100,7 @@ Polygon `indices` values **MUST** be unique within each exterior or interior loo
 
 _This section is non-normative._
 
-The JSON example below shows a mesh having one mesh primitive, which contains 100 polygon primitives. The `indices` accessor defines `LINE_LOOP` indices delimiting the exterior (and interior, if holes are present) rings of each polygon. The `triangleIndices` accessor defines triangle indices available to draw the polygons as filled surfaces. `indicesOffsets` and `triangleIndicesOffsets` accessors enable random access, allowing implementations to immediately find the particular indices (for loops and triangles, respectively) associated with the Nth polygon.
+The JSON example below shows a mesh having one mesh primitive, which contains 100 polygon primitives. The `indices` accessor defines `TRIANGLES` indices delimiting the tessellated surface of each polygon. The `loopIndices` accessor defines each polygon's exterior (and interior, if holes are present) rings. `indicesOffsets` and `loopIndicesOffsets` accessors enable random access, allowing implementations to immediately find the particular indices (for triangles and loops, respectively) associated with the Nth polygon.
 
 ```jsonc
 {
@@ -116,7 +109,7 @@ The JSON example below shows a mesh having one mesh primitive, which contains 10
   "meshes": [{
     "name": "MyMesh",
     "primitives": [{
-      "mode": 2, // LINE_LOOP
+      "mode": 4, // TRIANGLES
       "indices": 0,
       "attributes": {
         "POSITION": 1,
@@ -125,8 +118,8 @@ The JSON example below shows a mesh having one mesh primitive, which contains 10
         "EXT_mesh_polygon": {
           "count": 100,
           "indicesOffsets": 2,
-          "triangleIndices": 3,
-          "triangleIndicesOffsets": 4
+          "loopIndices": 3,
+          "loopIndicesOffsets": 4
         }
       }
     }]
