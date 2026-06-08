@@ -1711,6 +1711,71 @@ d| `float4x4 b` | Transformation matrix
 | `float4 value` | Transformed vector
 |===
 
+===== Vector Spherical Linear Interpolation
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/slerp` | Spherical linear interpolation operation
+.3+| Input value sockets
+d| `float2 a` | First vector
+d| `float2 b` | Second vector
+d| `float c` |  Unclamped interpolation coefficient
+| Output value sockets
+| `float2 value` | Interpolated value
+|===
+
+The `value` output socket value is computed as follows:
+
+1. Let latexmath:[|\vec{a}|] be the length of latexmath:[\vec{a}] and latexmath:[|\vec{b}|] be the length of latexmath:[\vec{b}].
+2. If latexmath:[|\vec{a}|] or latexmath:[|\vec{b}|] are close to zero within an implementation-defined threshold,
+.. set the `value` output to latexmath:[(1 - c) \cdot \vec{a} + c \cdot \vec{b}];
+.. skip the next steps.
+3. Let latexmath:[\hat{a}] and latexmath:[\hat{b}] be the normalized vectors latexmath:[\vec{a}] and latexmath:[\vec{b}] respectively.
+4. Let latexmath:[\theta = \arccos(\hat{a} \cdot \hat{b})].
+5. If latexmath:[\hat{a}_x \cdot \hat{b}_y − \hat{a}_y \cdot \hat{b}_x] is negative, negate latexmath:[\theta].
+6. Let latexmath:[L = (1 - c) \cdot |\vec{a}| + c \cdot |\vec{b}|].
+7. Set the components of the `value` output socket value using the following expressions:
++
+[latexmath]
++++++
+x = (\hat{a}_x \cdot \cos(c \cdot \theta) - \hat{a}_y \cdot \sin(c \cdot \theta)) \cdot L \\
+y = (\hat{a}_x \cdot \sin(c \cdot \theta) + \hat{a}_y \cdot \cos(c \cdot \theta)) \cdot L
++++++
+
+Since this operation is a shortcut for the combination of arithmetic and trigonometry operations, NaN and infinity values are propagated accordingly.
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/slerp` | Spherical linear interpolation operation
+.3+| Input value sockets
+d| `float3 a` | First vector
+d| `float3 b` | Second vector
+d| `float c` |  Unclamped interpolation coefficient
+| Output value sockets
+| `float3 value` | Interpolated value
+|===
+
+The `value` output socket value is computed as follows:
+
+1. Let latexmath:[|\vec{a}|] be the length of latexmath:[\vec{a}] and latexmath:[|\vec{b}|] be the length of latexmath:[\vec{b}].
+2. If latexmath:[|\vec{a}|] or latexmath:[|\vec{b}|] are close to zero within an implementation-defined threshold,
+.. set the `value` output to latexmath:[(1 - c) \cdot \vec{a} + c \cdot \vec{b}];
+.. skip the next steps.
+3. Let latexmath:[\hat{a}] and latexmath:[\hat{b}] be the normalized vectors latexmath:[\vec{a}] and latexmath:[\vec{b}] respectively.
+4. Let latexmath:[d = \hat{a} \cdot \hat{b}].
+5. If latexmath:[d] is close to positive one within an implementation-defined threshold,
+.. set the `value` output to latexmath:[(1 - c) \cdot \vec{a} + c \cdot \vec{b}];
+.. skip the next steps.
+6. If latexmath:[d] is close to negative one within an implementation-defined threshold,
+.. let latexmath:[\hat{r}] be any unit vector perpendicular to latexmath:[\hat{a}].
+7. Else,
+.. let latexmath:[\hat{r}] be a normalized cross product of latexmath:[\hat{a}] and latexmath:[\hat{b}].
+8. Let latexmath:[Q] be a unit quaternion created from the rotation axis of latexmath:[\hat{r}] and the rotation angle of latexmath:[c \cdot \arccos(d)].
+9. Let latexmath:[L = (1 - c) \cdot |\vec{a}| + c \cdot |\vec{b}|].
+10. Set the `value` output to latexmath:[\hat{a}] rotated by latexmath:[Q] and then multiplied by latexmath:[L].
+
+Since this operation is a shortcut for the combination of arithmetic and trigonometry operations, NaN and infinity values are propagated accordingly.
+
 ==== Matrix Operations
 
 ===== Transpose
