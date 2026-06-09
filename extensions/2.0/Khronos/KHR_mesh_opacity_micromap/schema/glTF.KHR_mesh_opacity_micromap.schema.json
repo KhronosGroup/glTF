@@ -1,0 +1,67 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_mesh_opacity_micromap glTF Document Extension",
+    "type": "object",
+    "description": "Root-level opacity micromap build data.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "micromaps": {
+            "type": "array",
+            "description": "An array of opacity micromap build data objects.",
+            "gltf_detailedDescription": "Each element describes one opacity micromap's packed data, triangle records, and usage summary arrays.",
+            "items": {
+                "type": "object",
+                "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+                "properties": {
+                    "data": {
+                        "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                        "description": "The index of the bufferView containing packed opacity micromap data bits.",
+                        "gltf_detailedDescription": "Packed microtriangle opacity bits in LSB-to-MSB order within each byte."
+                    },
+                    "triangles": {
+                        "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                        "description": "The index of the bufferView containing micromap triangle records.",
+                        "gltf_detailedDescription": "An array of 8-byte records: uint32 dataOffset, uint16 subdivisionLevel, uint16 format."
+                    },
+                    "usageCounts": {
+                        "type": "array",
+                        "description": "Per-bucket micromap triangle counts.",
+                        "gltf_detailedDescription": "Parallel to usageLevels and usageFormats. The sum of all values must equal the number of records in triangles.",
+                        "items": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "minItems": 1
+                    },
+                    "usageLevels": {
+                        "type": "array",
+                        "description": "Per-bucket subdivision levels.",
+                        "gltf_detailedDescription": "Parallel to usageCounts and usageFormats.",
+                        "items": {
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "minItems": 1
+                    },
+                    "usageFormats": {
+                        "type": "array",
+                        "description": "Per-bucket opacity formats.",
+                        "gltf_detailedDescription": "Parallel to usageCounts and usageLevels. Values must be 1 (two-state) or 2 (four-state).",
+                        "items": {
+                            "type": "integer",
+                            "enum": [ 1, 2 ]
+                        },
+                        "minItems": 1
+                    },
+                    "extensions": { },
+                    "extras": { }
+                },
+                "required": [ "data", "triangles", "usageCounts", "usageLevels", "usageFormats" ]
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "micromaps" ]
+}

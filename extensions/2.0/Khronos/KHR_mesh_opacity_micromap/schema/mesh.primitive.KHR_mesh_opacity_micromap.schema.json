@@ -1,0 +1,29 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_mesh_opacity_micromap glTF Mesh Primitive Extension",
+    "type": "object",
+    "description": "Per-primitive opacity micromap mapping data.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "micromap": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "Index into the root-level KHR_mesh_opacity_micromap.micromaps array.",
+            "gltf_detailedDescription": "References the micromap build data used when attaching opacity micromaps to this primitive's triangles."
+        },
+        "micromapIndices": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "Accessor index for per-geometry-triangle micromap lookup values.",
+            "gltf_detailedDescription": "Optional accessor with one scalar per geometry triangle. If omitted, geometry triangle t maps to micromap triangle t plus micromapBaseTriangle. Values are either special indices (-1 through -4) or non-negative micromap triangle indices. When provided, the accessor count must equal the primitive triangle count."
+        },
+        "micromapBaseTriangle": {
+            "type": "integer",
+            "description": "Offset added to non-special micromap indices before lookup.",
+            "gltf_detailedDescription": "Added to each non-special lookup value before indexing into the micromap triangles array. Defaults to 0.",
+            "minimum": 0,
+            "default": 0
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "micromap" ]
+}

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="73.923 107.251 327.192 209.593" width="327.192" height="209.593" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <marker id="ahBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1565C0"/>
+    </marker>
+    <marker id="ahRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#C62828"/>
+    </marker>
+  </defs>
+
+  <path d="M 148.794 172.547 L 213.338 301.635 L 84.25 301.635 L 148.794 172.547 Z" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" bx:shape="triangle 84.25 172.547 129.088 129.088 0.5 0 1@2f5ba8d9"/>
+  <path d="M 148.654 -301.635 L 180.926 -237.952 L 116.382 -237.952 L 148.654 -301.635 Z" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" transform="matrix(1, 0, 0, -1, 0, 0)" bx:shape="triangle 116.382 -301.635 64.544 63.683 0.5 0 1@2be11a3d"/>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 12px;" x="73.923" y="314.066">v0</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 12px;" x="209.465" y="312.775">v1</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 12px;" x="142.769" y="162.172">v2</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 12px;" x="110.497" y="284.376">0</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 12px;" x="145.642" y="261.279">1</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 12px;" x="180.205" y="284.376">2</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 12px;" x="145.2" y="220.262">3</text>
+
+  <!-- T0 winding arrows: v0 -> m01 -> m02 (normal, blue) -->
+  <circle cx="97.2" cy="293.0" r="2.5" fill="#1565C0"/>
+  <line x1="101.8" y1="293.0" x2="131.3" y2="293.0" stroke="#1565C0" stroke-width="1.5" marker-end="url(#ahBlue)"/>
+  <line x1="133.6" y1="288.4" x2="118.8" y2="258.9" stroke="#1565C0" stroke-width="1.5" marker-end="url(#ahBlue)"/>
+  <line x1="114.2" y1="258.9" x2="99.5" y2="288.4" stroke="#1565C0" stroke-width="1.5" marker-end="url(#ahBlue)"/>
+
+  <!-- T1 winding arrows: m02 -> m12 -> m01 (FLIPPED, red) -->
+  <circle cx="129.4" cy="245.7" r="2.5" fill="#C62828"/>
+  <line x1="134.1" y1="245.7" x2="163.5" y2="245.7" stroke="#C62828" stroke-width="1.5" marker-end="url(#ahRed)"/>
+  <line x1="165.9" y1="250.3" x2="151.1" y2="279.8" stroke="#C62828" stroke-width="1.5" marker-end="url(#ahRed)"/>
+  <line x1="146.5" y1="279.8" x2="131.7" y2="250.3" stroke="#C62828" stroke-width="1.5" marker-end="url(#ahRed)"/>
+
+  <!-- T2 winding arrows: m01 -> v1 -> m12 (normal, blue) -->
+  <circle cx="161.7" cy="293.0" r="2.5" fill="#1565C0"/>
+  <line x1="166.3" y1="293.0" x2="195.8" y2="293.0" stroke="#1565C0" stroke-width="1.5" marker-end="url(#ahBlue)"/>
+  <line x1="198.1" y1="288.4" x2="183.4" y2="258.9" stroke="#1565C0" stroke-width="1.5" marker-end="url(#ahBlue)"/>
+  <line x1="178.8" y1="258.9" x2="164.0" y2="288.4" stroke="#1565C0" stroke-width="1.5" marker-end="url(#ahBlue)"/>
+
+  <!-- T3 winding arrows: m12 -> m02 -> v2 (FLIPPED, red) -->
+  <circle cx="168.2" cy="228.5" r="2.5" fill="#C62828"/>
+  <line x1="163.5" y1="228.5" x2="134.1" y2="228.5" stroke="#C62828" stroke-width="1.5" marker-end="url(#ahRed)"/>
+  <line x1="131.7" y1="223.9" x2="146.5" y2="194.4" stroke="#C62828" stroke-width="1.5" marker-end="url(#ahRed)"/>
+  <line x1="151.1" y1="194.4" x2="165.9" y2="223.9" stroke="#C62828" stroke-width="1.5" marker-end="url(#ahRed)"/>
+
+  <path d="M 327.763 171.485 L 392.307 300.573 L 263.219 300.573 L 327.763 171.485 Z" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" bx:shape="triangle 263.219 171.485 129.088 129.088 0.5 0 1@8ef7d94b"/>
+  <path d="M 327.623 -300.573 L 359.895 -236.89 L 295.351 -236.89 L 327.623 -300.573 Z" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" transform="matrix(1, 0, 0, -1, 0, 0)" bx:shape="triangle 295.351 -300.573 64.544 63.683 0.5 0 1@9020b4f4"/>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 12px;" x="252.892" y="313.004">v0</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 12px;" x="388.434" y="311.713">v1</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 12px;" x="321.738" y="161.11">v2</text>
+  <path d="M 295.684 -300.573 L 312.107 -268.164 L 279.26 -268.164 L 295.684 -300.573 Z" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" transform="matrix(1, 0, 0, -1, 0, 0)" bx:shape="triangle 279.26 -300.573 32.847 32.409 0.5 0 1@0507e9e0"/>
+  <path d="M 359.792 -300.416 L 376.215 -268.007 L 343.368 -268.007 L 359.792 -300.416 Z" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" transform="matrix(1, 0, 0, -1, 0, 0)" bx:shape="triangle 343.368 -300.416 32.847 32.409 0.5 0 1@92a3e3ee"/>
+  <path d="M 327.879 -236.442 L 344.302 -204.033 L 311.455 -204.033 L 327.879 -236.442 Z" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" transform="matrix(1, 0, 0, -1, 0, 0)" bx:shape="triangle 311.455 -236.442 32.847 32.409 0.5 0 1@fe99ef55"/>
+  <path d="M 327.799 235.644 L 344.223 268.053 L 311.376 268.053 L 327.799 235.644 Z" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" bx:shape="triangle 311.376 235.644 32.847 32.409 0.5 0 1@30302937"/>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 309.186122, 249.271405)">4</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 325.397365, 259.078793)">5</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 341.893001, 248.702587)">6</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 325.112941, 281.40002)">7</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 276.19479, 291.656917)">0</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 292.415188, 280.702755)">1</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 310.030178, 292.923)">2</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 292.121639, 258.225582)">3</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 340.755366, 293.198238)">8</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 356.682215, 280.546779)">9</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 372.893458, 292.785366)">10</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 356.251033, 259.363186)">11</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 339.333308, 228.22543)">12</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 322.268855, 217.427197)">13</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 305.488796, 228.638287)">14</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.312849, 0, 0, 0.312846, 323.2597, 195.80325)">15</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.611032, 0, 0, 0.611027, 121.846228, 124.47064)">Level 1</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" transform="matrix(0.611032, 0, 0, 0.611027, 299.707607, 122.804205)">Level 2<tspan x="0" dy="1em">​</tspan></text>
+
+</svg>
