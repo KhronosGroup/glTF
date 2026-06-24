@@ -1,6 +1,6 @@
 <!--
-Copyright 2026 Bentley Systems, Incorporated
-SPDX-License-Identifier: CC-BY-4.0
+Copyright 2026 The Khronos Group Inc.
+SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 -->
 
 # KHR_mesh_primitive_restart
