@@ -1,5 +1,5 @@
 <!--
-Copyright 2025 Bentley Systems, Incorporated
+Copyright 2026 Bentley Systems, Incorporated
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
@@ -27,25 +27,25 @@ glTF 2.0 explicitly prohibits index buffers from containing maximal index values
 
 > `indices` accessor **MUST NOT** contain the maximum possible value for the component type used (i.e., 255 for unsigned bytes, 65535 for unsigned shorts, 4294967295 for unsigned ints).
 
-This extension removes the restriction above, allowing `indices` accessors to contain the maximum possible value for the component type in select primitive draw modes, and specifying that these values indicate primitive restart commands.
+This extension modifies the restriction above, allowing `indices` accessors to contain the maximum possible value for the component type in select primitive draw modes, and specifying that these values indicate primitive restart commands.
 
-Because the extension does not provide a way to specify fallback indices without restart values, assets that use the extension must specify it in `extensionsRequired` array - the extension is not optional.
+Because the extension does not provide a way to specify fallback indices without restart indices, assets that use the extension must specify it in `extensionsRequired` array - the extension is not optional.
 
 > [!NOTE]
 > Implementations on graphics APIs without primitive restart may still support the extension, by rewriting primitive indices. Compared to processing a larger number of primitives and accessors, the extension may still provide performance advantages even for these implementations.
 
 ## Extending Mesh Indices
 
-When the `KHR_mesh_primitive_restart` extension is supported, `indices` accessors may contain the maximum possible index values, as primitive restart values, for the following primitive draw modes:
+When the `KHR_mesh_primitive_restart` extension is supported, `indices` accessors may contain the maximum possible index values, as primitive restart indices, for the following primitive draw modes:
 
 - `2 LINE_LOOP`
 - `3 LINE_STRIP`
 - `5 TRIANGLE_STRIP`
 - `6 TRIANGLE_FAN`
 
-The applicable primitive restart value is determined by the accessor component type:
+The applicable primitive restart index is determined by the accessor component type:
 
-| `accessor.componentType`     | restart value |
+| `accessor.componentType`     | restart index |
 | ---------------------------- | ------------- |
 | `5121`&nbsp;(UNSIGNED_BYTE)  | `255`         |
 | `5123`&nbsp;(UNSIGNED_SHORT) | `65535`       |
@@ -59,18 +59,18 @@ Consider the simple example of a pair of line strings with a total of 5 vertices
 [0, 1, 255, 2, 3, 4]
 ```
 
-Without `KHR_mesh_primitive_restart`, this pair of line strings would require two separate mesh primitives - one per line string - with two separate indices accessors, splitting at (and omitting) the prohibited primitive restart value:
+Without `KHR_mesh_primitive_restart`, this pair of line strings would require two separate mesh primitives - one per line string - with two separate indices accessors, splitting at (and omitting) the prohibited primitive restart index:
 
 ```
 [0, 1, 255, 2, 3, 4]
 [0, 1]     [2, 3, 4]
 ```
 
-For large collections of line strings and other primitive topologies, encoding indices with restart values can greatly reduce the number of mesh primitives and accessors required, and the associated JSON data.
+For large collections of line strings and other primitive topologies, encoding indices with restart indices can greatly reduce the number of mesh primitives and accessors required, and the associated JSON data.
 
 ## JSON Schema
 
-The `"KHR_mesh_primitive_restart"` string must be added to the root-level `extensionsUsed` and `extensionsRequired` arrays. The extension is always required. No additional extensions are added to meshes or mesh primitives; all mesh primitives with applicable draw modes are permitted to use primitive restart values.
+The `"KHR_mesh_primitive_restart"` string must be added to the root-level `extensionsUsed` and `extensionsRequired` arrays. The extension is always required. No additional extensions are added to meshes or mesh primitives; all mesh primitives with applicable draw modes are permitted to use primitive restart indices.
 
 ## Known Implementations
 
