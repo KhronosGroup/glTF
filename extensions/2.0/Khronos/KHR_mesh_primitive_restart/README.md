@@ -27,7 +27,7 @@ glTF 2.0 explicitly prohibits index buffers from containing maximal index values
 
 > `indices` accessor **MUST NOT** contain the maximum possible value for the component type used (i.e., 255 for unsigned bytes, 65535 for unsigned shorts, 4294967295 for unsigned ints).
 
-This extension modifies the restriction above, allowing `indices` accessors to contain the maximum possible value for the component type in select primitive draw modes, and specifying that these values indicate primitive restart commands.
+This extension relaxes the restriction above, allowing `indices` accessors to contain the maximum possible value for the component type in select primitive draw modes, and specifying that these values indicate primitive restart commands.
 
 Because the extension does not provide a way to specify fallback indices without restart indices, assets that use the extension must specify it in `extensionsRequired` array - the extension is not optional.
 
