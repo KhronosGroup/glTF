@@ -31,7 +31,8 @@ This extension removes the restriction above, allowing `indices` accessors to co
 
 Because the extension does not provide a way to specify fallback indices without restart values, assets that use the extension must specify it in `extensionsRequired` array - the extension is not optional.
 
-> **Implementation Note:** Implementations on graphics APIs without primitive restart may still support the extension, by rewriting primitive indices. Compared to processing a larger number of primitives and accessors, the extension may still provide performance advantages even for these implementations.
+> [!NOTE]
+> Implementations on graphics APIs without primitive restart may still support the extension, by rewriting primitive indices. Compared to processing a larger number of primitives and accessors, the extension may still provide performance advantages even for these implementations.
 
 ## Extending Mesh Indices
 
