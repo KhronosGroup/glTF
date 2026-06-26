@@ -38,7 +38,7 @@ Written against the glTF 2.0 spec. This extension has no effect unless combined 
     - [Thin-Walled Mode](#thin-walled-mode)
     - [Volumetric Mode](#volumetric-mode)
   - [Scattering Parameters](#scattering-parameters)
-    - [Scatter Factor](#scatter-factor)
+    - [Scatter Strength](#scatter-strength)
     - [Multi-Scatter Color](#multi-scatter-color)
     - [Scatter Anisotropy](#scatter-anisotropy)
   - [Material Structure Updates](#material-structure-updates)
@@ -131,7 +131,7 @@ The mode is determined by the presence and configuration of `KHR_materials_volum
 A material is in thin-walled mode when `KHR_materials_volume` is absent, or when `KHR_materials_volume` is present with `thicknessFactor = 0`. In this mode, `KHR_materials_scatter` modifies the surface BSDF:
 
 - `scatterStrength` linearly interpolates between the specular BTDF (at 0) and a diffuse scatter BSDF (at 1). The BTDF uses the `baseColor` as the multiplier and the BSDF uses `multiscatterColor`.
-- `multiscatterColor` is the color of the fully-scattered lobe, analogous to `diffuseTransmissionColor` in `KHR_materials_diffuse_transmission`.
+- `multiscatterColor` is the color of the fully-scattered lobe.
 - `scatterAnisotropy` controls the directional split of scattered light between the two hemispheres. At `+1`, all scattered light is transmitted forward (pure diffuse BTDF). At `-1`, all scattered light is reflected back (pure diffuse BRDF), making the surface appear opaque and Lambertian with albedo defined by `multiscatterColor`. At `0`, scattered light is split equally between reflection and transmission.
 
 This mode is appropriate for thin objects with dense internal structure, such as leaves, fabric, paper, wax sheets, or frosted glass panels.
@@ -140,20 +140,20 @@ This mode is appropriate for thin objects with dense internal structure, such as
 
 A material is in volumetric mode when `KHR_materials_volume` is present with `thicknessFactor > 0`. In this mode, `KHR_materials_scatter` adds volumetric scattering to the interior of the medium:
 
-- `scatterStrength` effectively scales the multi-scatter albedo. At 0, the multi-scatter albedo becomes black and there is no scattering (the medium is purely absorbing, as in `KHR_materials_volume` alone); at 1, the full `multiscatterColor` albedo is used to split attenuation between absorption and scattering.
+- `scatterStrength` effectively scales the multi-scatter albedo. At 0, the multi-scatter albedo becomes black so there is no scattering (i.e. the medium is purely absorbing, as in `KHR_materials_volume` alone); at 1, the full `multiscatterColor` albedo is used to split attenuation between absorption and scattering.
 - `multiscatterColor` defines the multi-scatter albedo, representing the perceived color of the scattering medium after many internal bounces.
-- `scatterAnisotropy` controls the Henyey-Greenstein phase function for individual scattering events. The Henyey-Greenstein phase function is the standard model for anisotropic volumetric scattering in production renderers, parameterized by a single asymmetry parameter.
+- `scatterAnisotropy` controls the Henyey-Greenstein phase function for individual scattering events. The Henyey-Greenstein phase function is the standard model for anisotropic volumetric scattering in production renderers, parameterized by a single asymmetry parameter between -1 and 1.
 
-This mode is appropriate for optically thick objects with participating media, such as wax candles, skin, milk, or colored glass with subsurface color.
+This mode is appropriate for thick objects with participating media, such as wax candles, skin, milk, or colored glass with subsurface color.
 
 ## Scattering Parameters
 
-### Scatter Factor
+### Scatter Strength
 
-`scatterStrengthFactor` is the primary on/off and blending control for the extension. Its evaluation is the same in both modes:
+`scatterStrength` is the primary on/off and blending control for the extension. Its evaluation is the same in both modes:
 
 ```
-scatter = scatterStrengthFactor * scatterStrengthTexture.a
+scatterStrength = scatterStrengthFactor * scatterStrengthTexture.a
 ```
 
 When no `scatterStrengthTexture` is provided, `scatterStrength = scatterStrengthFactor`. The alpha channel is used so that `scatterStrengthTexture` can share a texture object with `multiscatterColorTexture`, packing the scatter strength into the unused alpha channel of the RGB scatter color. The resulting `scatterStrength` value drives the interpolation described in each mode's [Material Structure Updates](#material-structure-updates) section below. At `scatterStrength = 0` the material behaves exactly as if `KHR_materials_scatter` were not present. At `scatterStrength = 1` the full scattering effect is applied.
