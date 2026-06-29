@@ -56,7 +56,7 @@ Written against the glTF 2.0 spec. This extension has no effect unless combined 
 
 Light that enters a material can be scattered before it exits, producing effects from the bright subsurface glow of skin and wax to the hazy translucency of frosted glass. The character of this scattering depends on whether the object is modeled as a thin surface or as a solid volume. `KHR_materials_scatter` is a unified scattering extension that works in both contexts.
 
-When applied to a thin-walled material (no `KHR_materials_volume`, or `thicknessFactor = 0`), it converts the specular transmission lobe defined by `KHR_materials_transmission` into a linear interpolation between a diffuse transmission lobe and diffuse reflection lobe based on scatter anisotropy. When applied to a volumetric material (`KHR_materials_volume` with `thicknessFactor > 0`), it adds volumetric scattering to the medium, augmenting the pure-absorption model of `KHR_materials_volume`.
+When used with a thin-walled material (no `KHR_materials_volume`, or `thicknessFactor = 0`), it converts the specular transmission lobe defined by `KHR_materials_transmission` into a linear interpolation between a diffuse transmission lobe and diffuse reflection lobe based on scatter anisotropy. When applied to a volumetric material (`KHR_materials_volume` with `thicknessFactor > 0`), it adds volumetric scattering to the medium, augmenting the pure-absorption model of `KHR_materials_volume`.
 
 <figure style="text-align:center">
 <img src="./figures/thin-walled-volume.png"/>
@@ -134,7 +134,7 @@ A material is in thin-walled mode when `KHR_materials_volume` is absent, or when
 - `multiscatterColor` is the color of the fully-scattered lobe.
 - `scatterAnisotropy` controls the directional split of scattered light between the two hemispheres. At `+1`, all scattered light is transmitted forward (pure diffuse BTDF). At `-1`, all scattered light is reflected back (pure diffuse BRDF), making the surface appear opaque and Lambertian with albedo defined by `multiscatterColor`. At `0`, scattered light is split equally between reflection and transmission.
 
-This mode is appropriate for thin objects with dense internal structure, such as leaves, fabric, paper, wax sheets, or frosted glass panels.
+The thin-walled mode is appropriate for thin objects with dense internal structure, such as leaves, fabric, paper, wax sheets, or frosted glass panels.
 
 ### Volumetric Mode
 
@@ -142,9 +142,9 @@ A material is in volumetric mode when `KHR_materials_volume` is present with `th
 
 - `scatterStrength` effectively scales the multi-scatter albedo. At 0, the multi-scatter albedo becomes black so there is no scattering (i.e. the medium is purely absorbing, as in `KHR_materials_volume` alone); at 1, the full `multiscatterColor` albedo is used to split attenuation between absorption and scattering.
 - `multiscatterColor` defines the multi-scatter albedo, representing the perceived color of the scattering medium after many internal bounces.
-- `scatterAnisotropy` controls the Henyey-Greenstein phase function for individual scattering events. The Henyey-Greenstein phase function is the standard model for anisotropic volumetric scattering in production renderers, parameterized by a single asymmetry parameter between -1 and 1.
+- `scatterAnisotropy` controls the single-parameter phase function for individual scattering events. At `-1`, all scattering events are backscattering and, at `+1`, all events are forward scattering.
 
-This mode is appropriate for thick objects with participating media, such as wax candles, skin, milk, or colored glass with subsurface color.
+The volumetric mode is appropriate for thick objects with participating media, such as wax candles, skin, milk, or colored glass with subsurface color.
 
 ## Scattering Parameters
 
@@ -274,7 +274,7 @@ function scatter_bsdf(color, g) {
 }
 ```
 
-At `g = +1`, `scatter_bsdf` is a pure Lambertian BTDF. At `g = -1`, it is a pure Lambertian BRDF, making the surface opaque with diffuse color `scatterColor`. At `g = 0`, energy is split equally between the two hemispheres.
+At `g = +1`, `scatter_bsdf` is a pure Lambertian BTDF. At `g = -1`, it is a pure Lambertian BRDF, making the surface opaque with diffuse color `multiscatterColor`. At `g = 0`, energy is split equally between the two hemispheres.
 
 At `scatterStrength = 0`, the inner `mix` collapses to `specular_btdf * baseColor`, recovering plain `KHR_materials_transmission` behaviour. At `scatterStrength = 1`, only `scatter_bsdf(multiscatterColor, g)` remains. The amount of transmission is still gated by `transmissionFactor` from `KHR_materials_transmission`.
 
