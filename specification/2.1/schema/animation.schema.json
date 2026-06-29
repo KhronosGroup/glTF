@@ -1,0 +1,30 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "animation.schema.json",
+    "title": "Animation",
+    "type": "object",
+    "description": "A keyframe animation.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "channels": {
+            "type": "array",
+            "description": "An array of animation channels. An animation channel combines an animation sampler with a target property being animated. Different channels of the same animation **MUST NOT** have the same targets.",
+            "items": {
+                "$ref": "animation.channel.schema.json"
+            },
+            "minItems": 1
+        },
+        "samplers": {
+            "type": "array",
+            "description": "An array of animation samplers. An animation sampler combines timestamps with a sequence of output values and defines an interpolation algorithm.",
+            "items": {
+                "$ref": "animation.sampler.schema.json"
+            },
+            "minItems": 1
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "channels", "samplers" ]
+}

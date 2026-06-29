@@ -1,0 +1,97 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "node.schema.json",
+    "title": "Node",
+    "type": "object",
+    "description": "A node in the node hierarchy.  When the node contains `skin`, all `mesh.primitives` **MUST** contain `JOINTS_0` and `WEIGHTS_0` attributes.  A node **MAY** have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation. If none are provided, the transform is the identity. When a node is targeted for animation (referenced by an animation.channel.target), `matrix` **MUST NOT** be present.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "camera": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the camera referenced by this node."
+        },
+        "children": {
+            "type": "array",
+            "description": "The indices of this node's children.",
+            "items": {
+                "$ref": "glTFid.schema.json"
+            },
+            "uniqueItems": true,
+            "minItems": 1
+        },
+        "skin": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the skin referenced by this node.",
+            "gltf_detailedDescription": "The index of the skin referenced by this node. When a skin is referenced by a node within a scene, all joints used by the skin **MUST** belong to the same scene. When defined, `mesh` **MUST** also be defined."
+        },
+        "matrix": {
+            "type": "array",
+            "description": "A floating-point 4x4 transformation matrix stored in column-major order.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 16,
+            "maxItems": 16,
+            "default": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+            "gltf_webgl": "`uniformMatrix4fv()` with the transpose parameter equal to false"
+        },
+        "mesh": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the mesh in this node."
+        },
+        "rotation": {
+            "type": "array",
+            "description": "The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar.",
+            "items": {
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            "minItems": 4,
+            "maxItems": 4,
+            "default": [ 0.0, 0.0, 0.0, 1.0 ]
+        },
+        "scale": {
+            "type": "array",
+            "description": "The node's non-uniform scale, given as the scaling factors along the x, y, and z axes.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [ 1.0, 1.0, 1.0 ]
+        },
+        "translation": {
+            "type": "array",
+            "description": "The node's translation along the x, y, and z axes.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [ 0.0, 0.0, 0.0 ]
+        },
+        "weights": {
+            "type": "array",
+            "description": "The weights of the instantiated morph target. The number of array elements **MUST** match the number of morph targets of the referenced mesh. When defined, `mesh` **MUST** also be defined.",
+            "minItems": 1,
+            "items": {
+                "type": "number"
+            }
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "dependencies": {
+        "weights": [ "mesh" ],
+        "skin": [ "mesh" ]
+    },
+    "not": {
+        "anyOf": [
+            { "required": [ "matrix", "translation" ] },
+            { "required": [ "matrix", "rotation" ] },
+            { "required": [ "matrix", "scale" ] }
+        ]
+    }
+}

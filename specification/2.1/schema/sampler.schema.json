@@ -1,0 +1,122 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "sampler.schema.json",
+    "title": "Sampler",
+    "type": "object",
+    "description": "Texture sampler properties for filtering and wrapping modes.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "magFilter": {
+            "description": "Magnification filter.",
+            "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_MAG_FILTER",
+            "anyOf": [
+                {
+                    "const": 9728,
+                    "description": "NEAREST",
+                    "type": "integer"
+                },
+                {
+                    "const": 9729,
+                    "description": "LINEAR",
+                    "type": "integer"
+                },
+                {
+                    "type": "integer"
+                }
+            ]
+        },
+        "minFilter": {
+            "description": "Minification filter.",
+            "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_MIN_FILTER",
+            "anyOf": [
+                {
+                    "const": 9728,
+                    "description": "NEAREST",
+                    "type": "integer"
+                },
+                {
+                    "const": 9729,
+                    "description": "LINEAR",
+                    "type": "integer"
+                },
+                {
+                    "const": 9984,
+                    "description": "NEAREST_MIPMAP_NEAREST",
+                    "type": "integer"
+                },
+                {
+                    "const": 9985,
+                    "description": "LINEAR_MIPMAP_NEAREST",
+                    "type": "integer"
+                },
+                {
+                    "const": 9986,
+                    "description": "NEAREST_MIPMAP_LINEAR",
+                    "type": "integer"
+                },
+                {
+                    "const": 9987,
+                    "description": "LINEAR_MIPMAP_LINEAR",
+                    "type": "integer"
+                },
+                {
+                    "type": "integer"
+                }
+            ]
+        },
+        "wrapS": {
+            "description": "S (U) wrapping mode.",
+            "default": 10497,
+            "gltf_detailedDescription": "S (U) wrapping mode.  All valid values correspond to WebGL enums.",
+            "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_WRAP_S",
+            "anyOf": [
+                {
+                    "const": 33071,
+                    "description": "CLAMP_TO_EDGE",
+                    "type": "integer"
+                },
+                {
+                    "const": 33648,
+                    "description": "MIRRORED_REPEAT",
+                    "type": "integer"
+                },
+                {
+                    "const": 10497,
+                    "description": "REPEAT",
+                    "type": "integer"
+                },
+                {
+                    "type": "integer"
+                }
+            ]
+        },
+        "wrapT": {
+            "description": "T (V) wrapping mode.",
+            "default": 10497,
+            "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_WRAP_T",
+            "anyOf": [
+                {
+                    "const": 33071,
+                    "description": "CLAMP_TO_EDGE",
+                    "type": "integer"
+                },
+                {
+                    "const": 33648,
+                    "description": "MIRRORED_REPEAT",
+                    "type": "integer"
+                },
+                {
+                    "const": 10497,
+                    "description": "REPEAT",
+                    "type": "integer"
+                },
+                {
+                    "type": "integer"
+                }
+            ]
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "camera.orthographic.schema.json",
+    "title": "Camera Orthographic",
+    "type": "object",
+    "description": "An orthographic camera containing properties to create an orthographic projection matrix.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "xmag": {
+            "type": "number",
+            "description": "The floating-point horizontal magnification of the view. This value **MUST NOT** be equal to zero. This value **SHOULD NOT** be negative."
+        },
+        "ymag": {
+            "type": "number",
+            "description": "The floating-point vertical magnification of the view. This value **MUST NOT** be equal to zero. This value **SHOULD NOT** be negative."
+        },
+        "zfar": {
+            "type": "number",
+            "description": "The floating-point distance to the far clipping plane. This value **MUST NOT** be equal to zero. `zfar` **MUST** be greater than `znear`.",
+            "exclusiveMinimum": 0.0
+        },
+        "znear": {
+            "type": "number",
+            "description": "The floating-point distance to the near clipping plane.",
+            "minimum": 0.0
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "xmag", "ymag", "zfar", "znear" ]
+}

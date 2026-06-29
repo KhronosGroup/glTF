@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "accessor.sparse.values.schema.json",
+    "title": "Accessor Sparse Values",
+    "type": "object",
+    "description": "An object pointing to a buffer view containing the deviating accessor values. The number of elements is equal to `accessor.sparse.count` times number of components. The elements have the same component type as the base accessor. The elements are tightly packed. Data **MUST** be aligned following the same rules as the base accessor.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "bufferView": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the bufferView with sparse values. The referenced buffer view **MUST NOT** have its `target` or `byteStride` properties defined."
+        },
+        "byteOffset": {
+            "type": "integer",
+            "description": "The offset relative to the start of the bufferView in bytes.",
+            "minimum": 0,
+            "default": 0
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "bufferView" ]
+}

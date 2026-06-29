@@ -1,0 +1,44 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "animation.sampler.schema.json",
+    "title": "Animation Sampler",
+    "type": "object",
+    "description": "An animation sampler combines timestamps with a sequence of output values and defines an interpolation algorithm.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "input": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of an accessor containing keyframe timestamps.",
+            "gltf_detailedDescription": "The index of an accessor containing keyframe timestamps. The accessor **MUST** be of scalar type with floating-point components. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`."
+        },
+        "interpolation": {
+            "description": "Interpolation algorithm.",
+            "default": "LINEAR",
+            "gltf_detailedDescription": "Interpolation algorithm.",
+            "anyOf": [
+                {
+                    "const": "LINEAR",
+                    "description": "The animated values are linearly interpolated between keyframes. When targeting a rotation, spherical linear interpolation (slerp) **SHOULD** be used to interpolate quaternions. The number of output elements **MUST** equal the number of input elements."
+                },
+                {
+                    "const": "STEP",
+                    "description": "The animated values remain constant to the output of the first keyframe, until the next keyframe. The number of output elements **MUST** equal the number of input elements."
+                },
+                {
+                    "const": "CUBICSPLINE",
+                    "description": "The animation's interpolation is computed using a cubic spline with specified tangents. The number of output elements **MUST** equal three times the number of input elements. For each input element, the output stores three elements, an in-tangent, a spline vertex, and an out-tangent. There **MUST** be at least two keyframes when using this interpolation."
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "output": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of an accessor, containing keyframe output values."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "input", "output" ]
+}

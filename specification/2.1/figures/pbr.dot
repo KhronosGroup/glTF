@@ -1,0 +1,70 @@
+digraph D {
+  graph [rankdir="LR", fontname="Helvetica"]
+  node [shape=plaintext, fontname="Helvetica"]
+  edge [fontname="Helvetica"]
+
+  subgraph cluster_dielectric {
+    label="Dielectric"
+
+    dielectric_specular_brdf [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>specular_brdf</b></font></td></tr>
+        <tr><td><font point-size="10">α = <i>&lt;roughness&gt;</i><sup>2</sup></font></td></tr>
+      </table>
+    >]
+
+    dielectric_diffuse_brdf [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>diffuse_brdf</b></font></td></tr>
+        <tr><td><font point-size="10">color = <i>&lt;baseColor&gt;</i></font></td></tr>
+      </table>
+    >]
+
+    dielectric_fresnel_mix [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>fresnel_mix&nbsp;</b></font></td></tr>
+        <tr><td port="in_layer"><font point-size="10">layer</font></td></tr>
+        <tr><td port="in_base"><font point-size="10">base</font></td></tr>
+        <tr><td><font point-size="10">ior = 1.5</font></td></tr>
+      </table>
+    >]
+
+    dielectric_diffuse_brdf:out -> dielectric_fresnel_mix:in_base
+    dielectric_specular_brdf:out -> dielectric_fresnel_mix:in_layer
+  }
+
+  subgraph cluster_metal {
+    label="Metal"
+
+    metal_specular_brdf [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>specular_brdf</b></font></td></tr>
+        <tr><td><font point-size="10">α = <i>&lt;roughness&gt;</i><sup>2</sup></font></td></tr>
+      </table>
+    >]
+
+    metal_conductor_fresnel [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>conductor_fresnel&nbsp;&nbsp;</b></font></td></tr>
+        <tr><td port="in_bsdf"><font point-size="10">bsdf</font></td></tr>
+        <tr><td><font point-size="10">f0 = <i>&lt;baseColor&gt;</i></font></td></tr>
+      </table>
+    >]
+
+    metal_specular_brdf:out -> metal_conductor_fresnel:in_bsdf
+  }
+
+  subgraph core {
+    core_mix [label=<
+      <table border="1" cellborder="0">
+        <tr><td port="out"><font point-size="14"><b>mix</b></font></td></tr>
+        <tr><td port="in_bsdf0"><font point-size="10">bsdf0</font></td></tr>
+        <tr><td port="in_bsdf1"><font point-size="10">bsdf1</font></td></tr>
+        <tr><td><font point-size="10">weight = <i>&lt;metallic&gt;</i></font></td></tr>
+      </table>
+    >]
+
+    dielectric_fresnel_mix:out -> core_mix:in_bsdf0
+    metal_conductor_fresnel:out -> core_mix:in_bsdf1
+  }
+}

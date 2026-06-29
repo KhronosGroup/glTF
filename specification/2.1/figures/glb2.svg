@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd" stroke-linejoin="round" stroke-width="28.222" preserveAspectRatio="xMidYMid" version="1.2" viewBox="232 171 22536 5678">
+  <path fill="none" d="M232 1535h2536v1236H232z"/>
+  <path fill="none" stroke="#000" stroke-width="35" d="M1500 2752H250V1553h2499v1199H1500Z"/>
+  <text><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="971" y="2031" ><tspan>magic</tspan></tspan></tspan><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="653" y="2454" ><tspan>(</tspan><tspan fill="#558ED5">uint32</tspan><tspan>)</tspan></tspan></tspan></text>
+  <path fill="none" d="M2732 1535h2536v1236H2732z"/>
+  <path fill="none" stroke="#000" stroke-width="35" d="M4000 2752H2750V1553h2499v1199H4000Z"/>
+  <text><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="3259" y="2031" ><tspan>version</tspan></tspan></tspan><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="3153" y="2454" ><tspan>(</tspan><tspan fill="#558ED5">uint32</tspan><tspan>)</tspan></tspan></tspan></text>
+  <path fill="none" d="M250 802h7502v249H250z"/>
+  <path fill="none" stroke="#000" stroke-width="35" d="m479 927 7042-2"/>
+  <path d="m250 927 218-123 27 27-149 78h149v35H346l149 80-27 25-218-122Zm7500-2-218 123-27-27 149-78h-149v-35h149l-149-80 27-25 218 122Z"/>
+  <path fill="none" d="M2250 171h3501v759H2250z"/>
+  <text><tspan font-family="Noto Sans, sans-serif" font-size="423" font-weight="400"><tspan x="2502" y="719" ><tspan>12-byte header</tspan></tspan></tspan></text>
+  <path fill="none" d="M5232 1535h2536v1236H5232z"/>
+  <path fill="none" stroke="#000" stroke-width="35" d="M6500 2752H5250V1553h2499v1199H6500Z"/>
+  <text><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="5865" y="2031" ><tspan>length</tspan></tspan></tspan><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="5653" y="2454" ><tspan>(</tspan><tspan fill="#558ED5">uint32</tspan><tspan>)</tspan></tspan></tspan></text>
+  <path fill="none" d="M10232 1535h2536v1236h-2536z"/>
+  <path fill="none" stroke="#000" stroke-width="35" d="M11500 2752h-1250V1553h2499v1199h-1249Z"/>
+  <text><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="10548" y="2031" ><tspan>chunkType</tspan></tspan></tspan><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="10653" y="2454" ><tspan>(</tspan><tspan fill="#558ED5">uint32</tspan><tspan>)</tspan></tspan></tspan></text>
+  <path fill="none" d="M7732 1535h2536v1236H7732z"/>
+  <path fill="none" stroke="#000" stroke-width="35" d="M9000 2752H7750V1553h2499v1199H9000Z"/>
+  <text><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="7836" y="2031" ><tspan>chunkLength</tspan></tspan></tspan><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="8153" y="2454" ><tspan>(</tspan><tspan fill="#558ED5">uint32</tspan><tspan>)</tspan></tspan></tspan></text>
+  <path fill="none" d="M12732 1535h2536v1236h-2536z"/>
+  <path fill="none" stroke="#000" stroke-width="35" d="M14000 2752h-1250V1553h2499v1199h-1249Z"/>
+  <text><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="13048" y="2031" ><tspan>chunkData</tspan></tspan></tspan><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="13047" y="2454" ><tspan>(</tspan><tspan fill="#558ED5">ubyte[]</tspan><tspan>)</tspan></tspan></tspan></text>
+  <path fill="none" d="M7750 805h7501v249H7750z"/>
+  <path fill="none" stroke="#000" stroke-width="35" d="m7979 928 7042 2"/>
+  <path d="m7750 928 218-122 27 26-149 79h149v35h-149l149 79-27 26-218-123Zm7500 2-218 122-27-26 149-79h-149v-35h149l-149-79 27-26 218 123Z"/>
+  <path fill="none" d="M9708 171h3535v759H9708z"/>
+  <text><tspan font-family="Noto Sans, sans-serif" font-size="423" font-weight="400"><tspan x="9960" y="719" ><tspan>Chunk 0 (JSON)</tspan></tspan></tspan></text>
+  <path fill="none" d="M12140 4101h3763v1748h-3763z"/>
+  <path fill="none" stroke="#000" stroke-dasharray="50" stroke-linecap="round" stroke-width="35" d="M12158 4975h0c0-150 86-298 250-428 163-130 398-238 682-313 283-75 604-115 931-115h0c327 0 648 40 931 115 284 75 519 183 682 313 164 130 250 278 250 428h0c0 150-86 298-250 428-163 130-398 238-681 313-284 75-605 114-932 114h0c-327 0-648-39-931-114-284-75-519-183-682-313-164-130-250-278-250-428Z"/>
+  <text><tspan font-family="Noto Sans, sans-serif" font-size="423" font-weight="400"><tspan x="13204" y="4891" ><tspan>External </tspan></tspan><tspan x="13576" y="5398" ><tspan>data</tspan></tspan></tspan></text>
+  <path fill="none" d="M13891 2735h247v1311h-247z"/>
+  <path fill="none" stroke="#000" stroke-dasharray="100" stroke-width="35" d="m14012 2753 2 1063"/>
+  <path d="m14014 4045-123-218 27-27 78 149v-149h35v149l79-149 26 26-122 219Z"/>
+  <path fill="none" d="M15875 3373h2829v672h-2829z"/>
+  <text><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="16231" y="3851" ><tspan>buffers[0]</tspan></tspan></tspan></text>
+  <path fill="none" d="M13987 2740h7497v729h-7497z"/>
+  <path fill="none" stroke="#000" stroke-width="25" d="M14000 2753c964 887 5973 949 7345 99"/>
+  <path d="m21483 2753-110 207-122-171 232-36Z"/>
+  <path fill="none" d="M17732 1535h2536v1236h-2536z"/>
+  <path fill="none" stroke="#000" stroke-width="35" d="M19000 2752h-1250V1553h2499v1199h-1249Z"/>
+  <text><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="18048" y="2031" ><tspan>chunkType</tspan></tspan></tspan><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="18153" y="2454" ><tspan>(</tspan><tspan fill="#558ED5">uint32</tspan><tspan>)</tspan></tspan></tspan></text>
+  <path fill="none" d="M15232 1535h2536v1236h-2536z"/>
+  <path fill="none" stroke="#000" stroke-width="35" d="M16500 2752h-1250V1553h2499v1199h-1249Z"/>
+  <text><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="15336" y="2031" ><tspan>chunkLength</tspan></tspan></tspan><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="15653" y="2454" ><tspan>(</tspan><tspan fill="#558ED5">uint32</tspan><tspan>)</tspan></tspan></tspan></text>
+  <path fill="none" d="M20232 1535h2536v1236h-2536z"/>
+  <path fill="none" stroke="#000" stroke-width="35" d="M21500 2752h-1250V1553h2499v1199h-1249Z"/>
+  <text><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="20548" y="2031" ><tspan>chunkData</tspan></tspan></tspan><tspan font-family="monospace" font-size="353" font-weight="400"><tspan x="20547" y="2454" ><tspan>(</tspan><tspan fill="#558ED5">ubyte[]</tspan><tspan>)</tspan></tspan></tspan></text>
+  <path fill="none" d="M15250 805h7501v249h-7501z"/>
+  <path fill="none" stroke="#000" stroke-width="35" d="m15479 928 7042 2"/>
+  <path d="m15250 928 218-122 27 26-149 79h149v35h-149l149 79-27 26-218-123Zm7500 2-218 122-27-26 149-79h-149v-35h149l-149-79 27-26 218 123Z"/>
+  <path fill="none" d="M16457 171h5118v759h-5118z"/>
+  <text><tspan font-family="Noto Sans, sans-serif" font-size="423" font-weight="400"><tspan x="16709" y="719" ><tspan>Chunk 1 (Binary Buffer)</tspan></tspan></tspan></text>
+</svg>

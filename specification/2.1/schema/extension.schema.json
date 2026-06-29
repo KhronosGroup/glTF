@@ -1,0 +1,12 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "extension.schema.json",
+    "title": "Extension",
+    "type": "object",
+    "description": "JSON object with extension-specific objects.",
+    "properties": {
+    },
+    "additionalProperties": {
+        "type": "object"
+    }
+}

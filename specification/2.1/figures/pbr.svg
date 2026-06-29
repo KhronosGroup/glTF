@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="487pt" height="296pt" font-family="sans-serif" viewBox="0 0 487 296">
+  <path fill="#fff" stroke="#fff" d="M0 296V0h487v296H0z"/>
+  <path fill="none" stroke="#000" d="M12 284V177h331v107H12z"/>
+  <text x="173.5" y="-99.8" font-size="14" text-anchor="middle" transform="translate(4 292)">Metal</text>
+  <path fill="none" stroke="#000" d="M12 169V12h307.5v157H12z"/>
+  <text x="161.75" y="-264.8" font-size="14" text-anchor="middle" transform="translate(4 292)">Dielectric</text>
+  <text x="29" y="-229.8" font-size="14" font-weight="bold" transform="translate(4 292)">specular_brdf</text>
+  <text x="37" y="-212" font-size="10" transform="translate(4 292)">
+    <tspan font-family="">α</tspan><tspan> = </tspan><tspan font-style="italic">&lt;roughness&gt;</tspan><tspan font-size="14">²</tspan>
+  </text>
+  <path fill="none" stroke="#000" d="M28 89V47h108v42H28z"/>
+  <text x="212.5" y="-198.8" font-size="14" font-weight="bold" transform="translate(4 292)">fresnel_mix</text>
+  <text x="242.5" y="-180" font-size="10" transform="translate(4 292)">layer</text>
+  <text x="242.5" y="-163" font-size="10" transform="translate(4 292)">base</text>
+  <text x="235" y="-146" font-size="10" transform="translate(4 292)">ior = 1.5</text>
+  <path fill="none" stroke="#000" d="M211.5 154V78h92v76h-92zM134 59c37.99 0 38.11 41.42 69.29 48.86"/>
+  <path stroke="#000" d="m203.95 104.41 9.55 4.59-10.33 2.37.78-6.96z"/>
+  <text x="36" y="-161.8" font-size="14" font-weight="bold" transform="translate(4 292)">diffuse_brdf</text>
+  <text x="33" y="-144" font-size="10" transform="translate(4 292)">color = </text>
+  <text x="67" y="-144" font-size="10" font-style="italic" transform="translate(4 292)">&lt;baseColor&gt;</text>
+  <path fill="none" stroke="#000" d="M31.5 157v-42h101v42h-101zm99.5-30h72.49"/>
+  <path stroke="#000" d="m203.5 123.5 10 3.5-10 3.5v-7z"/>
+  <text x="410.5" y="-158.8" font-size="14" font-weight="bold" transform="translate(4 292)">mix</text>
+  <text x="411" y="-140" font-size="10" transform="translate(4 292)">bsdf0</text>
+  <text x="411" y="-123" font-size="10" transform="translate(4 292)">bsdf1</text>
+  <text x="380" y="-107" font-size="10" transform="translate(4 292)">weight = </text>
+  <text x="420" y="-107" font-size="10" font-style="italic" transform="translate(4 292)">&lt;metallic&gt;</text>
+  <path fill="none" stroke="#000" d="M379 194v-76h96v76h-96zM301.5 90c40.22 0 36.57 49.3 69.25 57.77"/>
+  <path stroke="#000" d="M371.49 144.33 381 149l-10.35 2.28.84-6.95z"/>
+  <text x="29" y="-46.8" font-size="14" font-weight="bold" transform="translate(4 292)">specular_brdf</text>
+  <text x="37" y="-29" font-size="10" transform="translate(4 292)">
+      <tspan font-family="">α</tspan><tspan> = </tspan><tspan font-style="italic">&lt;roughness&gt;</tspan><tspan font-size="14">²</tspan>
+  </text>
+  <path fill="none" stroke="#000" d="M28 272v-42h108v42H28z"/>
+  <text x="189.5" y="-63.8" font-size="14" font-weight="bold" transform="translate(4 292)">conductor_fresnel</text>
+  <text x="244.5" y="-45" font-size="10" transform="translate(4 292)">bsdf</text>
+  <text x="215.5" y="-29" font-size="10" transform="translate(4 292)">f0 = </text>
+  <text x="235.5" y="-29" font-size="10" font-style="italic" transform="translate(4 292)">&lt;baseColor&gt;</text>
+  <path fill="none" stroke="#000" d="M188 271.5v-59h139v59H188zM134 242c21.41 0 29.09 2.18 46.43 2.82"/>
+  <path stroke="#000" d="m180.56 241.32 9.94 3.68-10.06 3.32.12-7z"/>
+  <path fill="none" stroke="#000" d="M325.5 225c31.78 0 22.67-46.01 45.51-56.07"/>
+  <path stroke="#000" d="M370.52 165.46 381 167l-9.15 5.33-1.33-6.87z"/>
+</svg>

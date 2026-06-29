@@ -1,0 +1,36 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "camera.perspective.schema.json",
+    "title": "Camera Perspective",
+    "type": "object",
+    "description": "A perspective camera containing properties to create a perspective projection matrix.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "aspectRatio": {
+            "type": "number",
+            "description": "The floating-point aspect ratio of the field of view.",
+            "exclusiveMinimum": 0.0,
+            "gltf_detailedDescription": "The floating-point aspect ratio of the field of view. When undefined, the aspect ratio of the rendering viewport **MUST** be used."
+        },
+        "yfov": {
+            "type": "number",
+            "description": "The floating-point vertical field of view in radians. This value **SHOULD** be less than π.",
+            "exclusiveMinimum": 0.0
+        },
+        "zfar": {
+            "type": "number",
+            "description": "The floating-point distance to the far clipping plane.",
+            "exclusiveMinimum": 0.0,
+            "gltf_detailedDescription": "The floating-point distance to the far clipping plane. When defined, `zfar` **MUST** be greater than `znear`. If `zfar` is undefined, client implementations **SHOULD** use infinite projection matrix."
+        },
+        "znear": {
+            "type": "number",
+            "description": "The floating-point distance to the near clipping plane.",
+            "exclusiveMinimum": 0.0,
+            "gltf_detailedDescription": "The floating-point distance to the near clipping plane."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "yfov", "znear" ]
+}
