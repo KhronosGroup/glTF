@@ -56,7 +56,7 @@ Written against the glTF 2.0 spec. This extension has no effect unless combined 
 
 Light that enters a material can be scattered before it exits, producing effects from the bright subsurface glow of skin and wax to the hazy translucency of frosted glass. The character of this scattering depends on whether the object is modeled as a thin surface or as a solid volume. `KHR_materials_scatter` is a unified scattering extension that works in both contexts.
 
-When used with a thin-walled material (no `KHR_materials_volume`, or `thicknessFactor = 0`), it converts the specular transmission lobe defined by `KHR_materials_transmission` into a linear interpolation between a diffuse transmission lobe and diffuse reflection lobe based on scatter anisotropy. When applied to a volumetric material (`KHR_materials_volume` with `thicknessFactor > 0`), it adds volumetric scattering to the medium, augmenting the pure-absorption model of `KHR_materials_volume`.
+When used with a thin-walled material (no `KHR_materials_volume`, or `thicknessFactor = 0`), it converts the specular transmission lobe defined by `KHR_materials_transmission` into a linear interpolation between a diffuse transmission lobe and diffuse reflection lobe based on scatter anisotropy. When applied to a volumetric material (`KHR_materials_volume` with `thicknessFactor > 0`), it adds volumetric scattering to the medium, augmenting the pure-absorption model of `KHR_materials_volume`. This scattering can be adjusted to be more forward or backward scattering using the anisotropy parameter. In all contexts, the `scatterStrength` parameter controls the amount of scattering.
 
 <figure style="text-align:center">
 <img src="./figures/thin-walled-volume.png"/>
@@ -140,7 +140,7 @@ The thin-walled mode is appropriate for thin objects with dense internal structu
 
 A material is in volumetric mode when `KHR_materials_volume` is present with `thicknessFactor > 0`. In this mode, `KHR_materials_scatter` adds volumetric scattering to the interior of the medium:
 
-- `scatterStrength` effectively scales the multi-scatter albedo. At 0, the multi-scatter albedo becomes black so there is no scattering (i.e. the medium is purely absorbing, as in `KHR_materials_volume` alone); at 1, the full `multiscatterColor` albedo is used to split attenuation between absorption and scattering.
+- `scatterStrength` effectively scales the multi-scatter albedo. At 0, the multi-scatter albedo becomes black so there is no scattering (i.e. the medium is purely absorbing, as in `KHR_materials_volume` alone); at 1, the full `multiscatterColor` albedo is used to split attenuation between absorption and scattering. See below for more details.
 - `multiscatterColor` defines the multi-scatter albedo, representing the perceived color of the scattering medium after many internal bounces.
 - `scatterAnisotropy` controls the single-parameter phase function for individual scattering events. At `-1`, all scattering events are backscattering and, at `+1`, all events are forward scattering.
 
@@ -171,12 +171,15 @@ However, the behaviour differs between the two modes:
 
 **Volumetric mode:** `multiscatterColor` is the multi-scatter albedo $\rho_{ms}$ as defined by [Kulla and Conty (2017)](#KullaConty2017). It is a more intuitive parameterization of the scattering albedo because it corresponds to the perceived color of the medium after many bounces, rather than the single-scatter albedo that directly parameterizes the scattering coefficient.
 
-The single-scatter albedo $\rho_{ss}$ is derived from the multi-scatter albedo $\rho_{ms}$ as:
+The single-scatter albedo $\rho_{ss}$ is derived from the multi-scatter albedo $\rho_{ms}$ and the anisotropy $g$ as:
 
 $$
-\rho_{ss} = 1 - \left(4.09712 + 4.20863\,\rho_{ms} - \sqrt{9.59217 + 41.6808\,\rho_{ms} + 17.7126\,\rho_{ms}^2}\right)^2
+s = 4.09712 + 4.20863\,\rho_{ms} - \sqrt{9.59217 + 41.6808\,\rho_{ms} + 17.7126\,\rho_{ms}^2}
+\\
+\rho_{ss} = \frac{1 - s^2}{\left(1.0 - g * s * s\right)}
 $$
 
+The single-scatter albedo defines the fraction of the attenuation coefficient that goes to scattering versus absorption.
 Given the attenuation coefficient $\sigma_t = -\log(c)/d$ from `KHR_materials_volume`, the scattering and absorption coefficients are:
 
 $$
@@ -195,13 +198,7 @@ $$
 
 **Thin-walled mode:** `scatterAnisotropy` controls how scattered light is split between the reflected and transmitted hemispheres. At `+1`, all scattered energy exits through the transmission hemisphere (pure diffuse BTDF — tissue paper, thin wax). At `-1`, all scattered energy exits through the reflection hemisphere (pure diffuse BRDF — the surface appears opaque and Lambertian with `multiscatterColor`). At `0`, energy is split equally between the two hemispheres.
 
-**Volumetric mode:** `scatterAnisotropy` controls the Henyey-Greenstein phase function $p(\mathbf{v}, \mathbf{l}; g)$, which determines the probability density of outgoing directions $\mathbf{l}$ given an incident direction $\mathbf{v}$ at each volumetric scattering event:
-
-$$
-p(\mathbf{v},\mathbf{l}; g) = \frac{1}{4\pi} \frac{1-g^2}{\left(1 + g^2 + 2g(\mathbf{v} \cdot \mathbf{l})\right)^{3/2}}
-$$
-
-The parameter $g$ maps directly to `scatterAnisotropy`. $g = 0$ gives isotropic scattering; $g > 0$ gives forward scattering (light continues in roughly the same direction); $g < 0$ gives backward scattering.
+**Volumetric mode:** `scatterAnisotropy` controls the single-parameter phase function which determines the probability that light is scattered forward or backwards.`scatterAnisotropy = 0` gives isotropic scattering; `scatterAnisotropy > 0` gives forward scattering (light continues in roughly the same direction); `scatterAnisotropy < 0` gives backward scattering.
 
 <table>
   <tr>
@@ -323,6 +320,20 @@ For renderers that do not support full volumetric path tracing, it is acceptable
 ### KHR\_materials\_ior
 
 When `KHR_materials_ior` is present, it sets the IOR for Fresnel calculations at the surface boundary. This applies regardless of scatter mode. In volumetric mode, the IOR also governs refraction of transmitted rays per the definitions in `KHR_materials_volume`.
+
+## Implementation
+
+**This section is non-normative**
+
+### Anisotropic Phase Function
+A very common single-channel phase function in wide use is the Henyey-Greenstein phase function, $p(\mathbf{v}, \mathbf{l}; g)$, which determines the probability density of outgoing directions $\mathbf{l}$ given an incident direction $\mathbf{v}$ at each volumetric scattering event:
+
+$$
+p(\mathbf{v},\mathbf{l}; g) = \frac{1}{4\pi} \frac{1-g^2}{\left(1 + g^2 + 2g(\mathbf{v} \cdot \mathbf{l})\right)^{3/2}}
+$$
+
+The parameter $g$ maps directly to `scatterAnisotropy`where $g = 0$ gives isotropic scattering; $g > 0$ gives forward scattering (light continues in roughly the same direction); $g < 0$ gives backward scattering.
+
 
 ## Schema
 
