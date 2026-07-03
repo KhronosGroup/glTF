@@ -174,16 +174,18 @@ However, the behaviour differs between the two modes:
 The single-scatter albedo $\rho_{ss}$ is derived from the multi-scatter albedo $\rho_{ms}$ and the anisotropy $g$ as:
 
 $$
-s = 4.09712 + 4.20863\,\rho_{ms} - \sqrt{9.59217 + 41.6808\,\rho_{ms} + 17.7126\,\rho_{ms}^2}
-\\
-\rho_{ss} = \frac{1 - s^2}{\left(1.0 - g * s * s\right)}
+\begin{aligned}
+s &= 4.09712 + 4.20863\,\rho_{ms} - \sqrt{9.59217 + 41.6808\,\rho_{ms} + 17.7126\,\rho_{ms}^2}
+\\\\
+\rho_{ss} &= \frac{1 - s^2}{\left(1.0 - g * s * s\right)}
+\end{aligned}
 $$
 
 The single-scatter albedo defines the fraction of the attenuation coefficient that goes to scattering versus absorption.
 Given the attenuation coefficient $\sigma_t = -\log(c)/d$ from `KHR_materials_volume`, the scattering and absorption coefficients are:
 
 $$
-\sigma_s = \sigma_t\,\rho_{ss}, \qquad \sigma_a = \sigma_t\,(1 - \rho_{ss})
+\sigma_s = \sigma_t\,\rho_{ss}, \\\\ \qquad \sigma_a = \sigma_t\,(1 - \rho_{ss})
 $$
 
 > [!NOTE]
@@ -282,24 +284,28 @@ In volumetric mode, `KHR_materials_scatter` does not modify the surface BSDF. Th
 With `KHR_materials_volume` alone:
 
 $$
-\sigma_t = \sigma_a, \qquad \sigma_s = 0
+\begin{aligned}
+\sigma_t &= \sigma_a, \\\\ \qquad \sigma_s &= 0
+\end{aligned}
 $$
 
 With `KHR_materials_scatter` added:
 
 $$
-\sigma_t = \sigma_a + \sigma_s, \qquad \sigma_s = \sigma_t\,\rho_{ss}(\rho_{ms}^*)
+\begin{aligned}
+\sigma_t &= \sigma_a + \sigma_s, \\\\ \qquad \sigma_s &= \sigma_t\,\rho_{ss}(\rho_{ms}^*)
+\end{aligned}
 $$
 
 where the effective multi-scatter albedo $\rho_{ms}^*$ is scaled by `scatterStrength`:
 
 $$
-\rho_{ms}^* = \mathtt{scatterStrength} \times \rho_{ms}, \qquad 
-\\
-\mathtt{scatterStrength} = \mathtt{scatterStrengthFactor} \times \mathtt{scatterStrengthTexture.a}
+\begin{aligned}
+\rho_{ms}^* &= \mathtt{scatterStrength} \times \rho_{ms}, \qquad \\\\ \mathtt{scatterStrength} &= \mathtt{scatterStrengthFactor} \times \mathtt{scatterStrengthTexture.a}
+\end{aligned}
 $$
 
-$\rho_{\text{ms}}$ is derived from `multiscatterColorFactor` (and `multiscatterColorTexture`) as described in [Multi-Scatter Color](#multi-scatter-color) above, and $`\rho_{\text{ss}}`$ is derived from $\rho_{\text{ms}}^*$ via the Kulla-Conty mapping. At `scatter = 0`, $\rho_{\text{ms}}^* = 0$ and therefore $\rho_{\text{ss}} = 0$, giving a purely absorbing medium identical to `KHR_materials_volume` alone. $\sigma_{\text{t}}$ now accounts for both absorption and scattering, not absorption alone.
+$\rho_{\text{ms}}$ is derived from `multiscatterColorFactor` (and `multiscatterColorTexture`) as described in [Multi-Scatter Color](#multi-scatter-color) above, and $\rho_{\text{ss}}$ is derived from $\rho_{\text{ms}}^*$ via the Kulla-Conty mapping. At `scatterStrength = 0`, $\rho_{\text{ms}}^* = 0$ and therefore $\rho_{\text{ss}} = 0$, giving a purely absorbing medium identical to `KHR_materials_volume` alone. $\sigma_{\text{t}}$ now accounts for both absorption and scattering, not absorption alone.
 
 ## Interaction with Other Extensions
 
