@@ -291,13 +291,15 @@ $$
 \sigma_t = \sigma_a + \sigma_s, \qquad \sigma_s = \sigma_t\,\rho_{ss}(\rho_{ms}^*)
 $$
 
-where the effective multi-scatter albedo $\rho_{ms}^*$ is scaled by `scatter`:
+where the effective multi-scatter albedo $\rho_{ms}^*$ is scaled by `scatterStrength`:
 
 $$
-\rho_{ms}^* = \mathtt{scatter} \times \rho_{ms}, \qquad \mathtt{scatter} = \mathtt{scatterStrengthFactor} \times \mathtt{scatterStrengthTexture.a}
+\rho_{ms}^* = \mathtt{scatterStrength} \times \rho_{ms}, \qquad 
+\\
+\mathtt{scatterStrength} = \mathtt{scatterStrengthFactor} \times \mathtt{scatterStrengthTexture.a}
 $$
 
-$\rho_{ms}$ is derived from `multiscatterColorFactor` (and `multiscatterColorTexture`) as described in [Multi-Scatter Color](#multi-scatter-color) above, and $\rho_{ss}$ is derived from $\rho_{ms}^*$ via the Kulla-Conty mapping. At `scatter = 0`, $\rho_{ms}^* = 0$ and therefore $\rho_{ss} = 0$, giving a purely absorbing medium identical to `KHR_materials_volume` alone. $\sigma_t$ now accounts for both absorption and scattering, not absorption alone.
+$\rho\\_{ms}$ is derived from `multiscatterColorFactor` (and `multiscatterColorTexture`) as described in [Multi-Scatter Color](#multi-scatter-color) above, and $\rho\\_{ss}$ is derived from $\rho\\_{ms}^*$ via the Kulla-Conty mapping. At `scatter = 0`, $\rho\\_{ms}^* = 0$ and therefore $\rho\\_{ss} = 0$, giving a purely absorbing medium identical to `KHR_materials_volume` alone. $\sigma\\_t$ now accounts for both absorption and scattering, not absorption alone.
 
 ## Interaction with Other Extensions
 
@@ -315,7 +317,7 @@ $\rho_{ms}$ is derived from `multiscatterColorFactor` (and `multiscatterColorTex
 - When absent (or `thicknessFactor = 0`): thin-walled mode.
 - When present with `thicknessFactor > 0`: volumetric mode.
 
-For renderers that do not support full volumetric path tracing, it is acceptable to approximate volumetric mode using thin-walled mode behavior. In particular, for materials with very short scattering distances relative to their size (dense subsurface), the visual difference is small and the thin-walled diffuse approximation is efficient and widely applicable. Ray-tracers should use the actual geometry to compute path lengths through the volume rather than relying on `thicknessFactor`.
+For renderers that do not support full volumetric rendering, it is acceptable to approximate volumetric mode using thin-walled mode behavior. In particular, for materials with very short scattering distances relative to their size (dense subsurface), the visual difference is small and the thin-walled diffuse approximation is efficient and widely applicable. Ray-tracers should use the actual geometry to compute path lengths through the volume rather than relying on `thicknessFactor`.
 
 ### KHR\_materials\_ior
 
