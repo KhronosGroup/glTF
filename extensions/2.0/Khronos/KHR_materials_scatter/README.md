@@ -299,7 +299,7 @@ $$
 \mathtt{scatterStrength} = \mathtt{scatterStrengthFactor} \times \mathtt{scatterStrengthTexture.a}
 $$
 
-$\rho\\_{ms}$ is derived from `multiscatterColorFactor` (and `multiscatterColorTexture`) as described in [Multi-Scatter Color](#multi-scatter-color) above, and $\rho\\_{ss}$ is derived from $\rho\\_{ms}^*$ via the Kulla-Conty mapping. At `scatter = 0`, $\rho\\_{ms}^* = 0$ and therefore $\rho\\_{ss} = 0$, giving a purely absorbing medium identical to `KHR_materials_volume` alone. $\sigma\\_t$ now accounts for both absorption and scattering, not absorption alone.
+$\rho_{\text{ms}}$ is derived from `multiscatterColorFactor` (and `multiscatterColorTexture`) as described in [Multi-Scatter Color](#multi-scatter-color) above, and $`\rho_{\text{ss}}`$ is derived from $\rho_{\text{ms}}^*$ via the Kulla-Conty mapping. At `scatter = 0`, $\rho_{\text{ms}}^* = 0$ and therefore $\rho_{\text{ss}} = 0$, giving a purely absorbing medium identical to `KHR_materials_volume` alone. $\sigma_{\text{t}}$ now accounts for both absorption and scattering, not absorption alone.
 
 ## Interaction with Other Extensions
 
