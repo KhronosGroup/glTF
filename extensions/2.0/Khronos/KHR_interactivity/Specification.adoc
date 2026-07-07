@@ -4740,7 +4740,28 @@ This Specification defines additional glTF Object Model pointers for use with `p
 
 === Implementation-Specific Runtime Limits
 
-TBD
+The `maxActiveAnimations` read-only property represents the implementation-dependent maximum number of simultaneously active animations for the purpose of the `animation/start` operation.
+
+The `maxActiveDelays` read-only property represents the implementation-dependent maximum number of simultaneously scheduled delays for the purpose of the `flow/setDelay` operation.
+
+The `maxActivePropertyInterpolations` read-only property represents the implementation-dependent maximum number of simultaneously active property interpolations for the purpose of the `pointer/interpolate` operation.
+
+The `maxActiveVariableInterpolations` read-only property represents the implementation-dependent maximum number of simultaneously active variable interpolations for the purpose of the `variable/interpolate` operation.
+
+Values of all these properties **MUST** be at least 1.
+
+An implementation **MAY** set any of these properties to 2147483647 (max possible value for the `int` type) if it does not have an explicit limit for the corresponding value or decides to not disclose it.
+
+The following pointers represent the read-only properties defined in this section.
+
+[options="header",cols="50%,5%"]
+|===
+| Pointer                                                                | Type
+| `/extensions/KHR_interactivity/limits/maxActiveAnimations`             | `int`
+| `/extensions/KHR_interactivity/limits/maxActiveDelays`                 | `int`
+| `/extensions/KHR_interactivity/limits/maxActivePropertyInterpolations` | `int`
+| `/extensions/KHR_interactivity/limits/maxActiveVariableInterpolations` | `int`
+|===
 
 === Active Camera State
 
