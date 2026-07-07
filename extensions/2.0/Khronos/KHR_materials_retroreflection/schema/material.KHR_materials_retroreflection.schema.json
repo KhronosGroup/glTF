@@ -1,0 +1,25 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "$id": "material.KHR_materials_retroreflection.schema.json",
+    "title": "KHR_materials_retroreflection glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that adds a retroreflective microfacet lobe to metallic-roughness materials.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "retroreflectionFactor": {
+            "type": "number",
+            "description": "Linear blend between forward microfacet and retroreflective microfacet.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "Linear blend between the regular forward microfacet (0.0) and the retroreflective microfacet (1.0). This will be multiplied by the retroreflection texture when present."
+        },
+        "retroreflectionTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "A texture that defines the retroreflection factor in the red channel.",
+            "gltf_detailedDescription": "A texture that defines a per-texel multiplier for retroreflectionFactor, stored in the red (R) channel with a linear transfer function. This will be multiplied by retroreflectionFactor. Values outside [0, 1] are clamped."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
