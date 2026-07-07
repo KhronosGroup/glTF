@@ -2228,6 +2228,31 @@ M = ((s_x, t_x, r_x),
 This operation implies that both input vectors are normalized. Interactivity nodes with the `math/normalize` operation could be added to handle non-normalized inputs.
 ====
 
+===== Quaternion From Three Angles
+
+[cols="1h,1,2"]
+|===
+| Operation | `math/quatFromAngles` | Create a quaternion from the specified angles
+| Configuration
+| `string order` | The rotation order; `yxz` in the default configuration
+.3+| Input value sockets
+d| `float x` | Rotation around X in radians
+d| `float y` | Rotation around Y in radians
+d| `float z` | Rotation around Z in radians
+| Output value sockets
+| `float4 value` | Rotation quaternion
+|===
+
+In the default configuration, the `order` configuration value is `yxz`.
+
+If the `order` configuration property is not provided by the behavior graph, if it is not a literal string, if its value is not exactly one of `xyz`, `xzy`, `yxz`, `yzx`, `zxy`, or `zyx`, the default configuration **MUST** be used.
+
+The input values represent Tait–Bryan intrinsic angles.
+
+The output value is a unit quaternion representing the rotation produced by applying the angles in the order specified by the configuration.
+
+Since this operation is a shortcut for the combination of arithmetic and trigonometry functions, NaN and infinity values are propagated accordingly.
+
 ===== Quaternion Spherical Linear Interpolation
 
 [cols="1h,1,2"]
