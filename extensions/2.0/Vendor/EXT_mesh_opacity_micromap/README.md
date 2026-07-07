@@ -3,7 +3,7 @@ Copyright 2018-2026 The Khronos Group Inc.
 SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 -->
 
-# KHR\_mesh\_opacity\_micromap
+# EXT\_mesh\_opacity\_micromap
 
 ## Contributors
 
@@ -36,12 +36,12 @@ This extension normatively defines glTF JSON structure and stored buffer layouts
 
 ## Extending the glTF root
 
-The glTF root object **MAY** define `extensions.KHR_mesh_opacity_micromap` with a `micromaps` array.
+The glTF root object **MAY** define `extensions.EXT_mesh_opacity_micromap` with a `micromaps` array.
 
 ```json
 {
   "extensions": {
-    "KHR_mesh_opacity_micromap": {
+    "EXT_mesh_opacity_micromap": {
       "micromaps": [
         {
           "data": 0,
@@ -85,7 +85,7 @@ The `triangles` `bufferView` **MUST** contain a tightly packed array of micromap
 
 ## Extending mesh primitives
 
-Each `mesh.primitive` **MAY** define `extensions.KHR_mesh_opacity_micromap`.
+Each `mesh.primitive` **MAY** define `extensions.EXT_mesh_opacity_micromap`.
 
 ```json
 {
@@ -97,7 +97,7 @@ Each `mesh.primitive` **MAY** define `extensions.KHR_mesh_opacity_micromap`.
           "indices": 1,
           "mode": 4,
           "extensions": {
-            "KHR_mesh_opacity_micromap": {
+            "EXT_mesh_opacity_micromap": {
               "micromap": 0,
               "micromapIndices": 2,
               "micromapBaseTriangle": 0
@@ -114,7 +114,7 @@ Each `mesh.primitive` **MAY** define `extensions.KHR_mesh_opacity_micromap`.
 
 | Property | Type | Description | Required |
 |----------|------|-------------|----------|
-| **micromap** | `integer` | Index into root `extensions.KHR_mesh_opacity_micromap.micromaps`. | Yes |
+| **micromap** | `integer` | Index into root `extensions.EXT_mesh_opacity_micromap.micromaps`. | Yes |
 | **micromapIndices** | `integer` | Accessor index for per-geometry-triangle micromap lookup values. | No |
 | **micromapBaseTriangle** | `integer` | Offset added to each non-special lookup value. Default: `0`. | No |
 
@@ -240,8 +240,8 @@ When `componentType` is `5122` (`SHORT`) or `5124` (`INT`):
 
 ## Schema
 
-- [glTF.KHR_mesh_opacity_micromap.schema.json](schema/glTF.KHR_mesh_opacity_micromap.schema.json)
-- [mesh.primitive.KHR_mesh_opacity_micromap.schema.json](schema/mesh.primitive.KHR_mesh_opacity_micromap.schema.json)
+- [glTF.EXT_mesh_opacity_micromap.schema.json](schema/glTF.EXT_mesh_opacity_micromap.schema.json)
+- [mesh.primitive.EXT_mesh_opacity_micromap.schema.json](schema/mesh.primitive.EXT_mesh_opacity_micromap.schema.json)
 
 ## Reference
 
@@ -268,7 +268,7 @@ When mapping stored glTF data to graphics API micromap build inputs, implementat
 | `usageCounts` length | `usageCountsCount` | `NumOmmHistogramEntries` |
 | `usageCounts` / `usageLevels` / `usageFormats` | `pUsageCounts` | `pOmmHistogram` |
 | | | |
-| mesh primitive `KHR_mesh_opacity_micromap` | `VkAccelerationStructureTrianglesOpacityMicromapKHR` | `D3D12_RAYTRACING_GEOMETRY_OMM_LINKAGE_DESC` |
+| mesh primitive `EXT_mesh_opacity_micromap` | `VkAccelerationStructureTrianglesOpacityMicromapKHR` | `D3D12_RAYTRACING_GEOMETRY_OMM_LINKAGE_DESC` |
 | `micromap` | `micromap` | `OpacityMicromapArray` |
 | `micromapIndices` (accessor buffer) | `indexBuffer` | `OpacityMicromapIndexBuffer` |
 | `micromapIndices` (`componentType`) | `indexType` | `OpacityMicromapIndexFormat` |

@@ -1,13 +1,13 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_mesh_opacity_micromap glTF Mesh Primitive Extension",
+    "title": "EXT_mesh_opacity_micromap glTF Mesh Primitive Extension",
     "type": "object",
     "description": "Per-primitive opacity micromap mapping data.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "micromap": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "Index into the root-level KHR_mesh_opacity_micromap.micromaps array.",
+            "description": "Index into the root-level EXT_mesh_opacity_micromap.micromaps array.",
             "gltf_detailedDescription": "References the micromap build data used when attaching opacity micromaps to this primitive's triangles."
         },
         "micromapIndices": {

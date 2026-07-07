@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_mesh_opacity_micromap glTF Document Extension",
+    "title": "EXT_mesh_opacity_micromap glTF Document Extension",
     "type": "object",
     "description": "Root-level opacity micromap build data.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
