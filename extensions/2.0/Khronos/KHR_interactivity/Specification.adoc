@@ -4746,11 +4746,15 @@ TBD
 
 In some viewers, such as, but not limited to, augmented reality viewers and virtual reality viewers, the viewer implementation gives the user direct control over a virtual camera. This virtual camera **MAY** be controlled by user head movements, by movements of the user's phone with their hands, or by mouse, keyboard or touch input on a laptop, or by other means. It is useful for interactivity to be able to react to the position of this virtual camera.
 
-This Specification defines the “active camera” as the camera transformation that ought to be reacted to by interactivity. When there is only one camera being displayed to the user the implementation **SHOULD** use this camera as the “active camera”. When there are multiple cameras being controlled by the user, the implementation **MAY** select one such camera or construct a synthetic camera to use as the “active camera” (for example the midpoint of two stereoscopic camera positions). When zero cameras are being controlled by the user but views from one or more cameras are being displayed to the user, the implementation **SHOULD** select one of the cameras that is being displayed as the “active camera”.
+This Specification defines the “active camera” as the camera transformation that ought to be reacted to by interactivity. When there is only one camera being displayed to the user, the implementation **SHOULD** use this camera as the “active camera”. When there are multiple cameras being controlled by the user, the implementation **MAY** select one such camera or construct a synthetic camera to use as the “active camera” (for example the midpoint of two stereoscopic camera positions). When zero cameras are being controlled by the user but views from one or more cameras are being displayed to the user, the implementation **SHOULD** select one of the cameras that is being displayed as the “active camera”.
 
 The `position` read-only property represents the “active camera” position in the global space using the glTF coordinate system. The `rotation` read-only property represents the “active camera” rotation quaternion (using XYZW notation); the identity quaternion corresponds to the camera orientation defined in the glTF 2.0 Specification.
 
-An implementation **MAY** provide no “active camera” data, for example for privacy reasons or if no cameras are being displayed to the user. If the “active camera” position is unavailable, the `position` property **MUST** be set to all NaNs; if the “active camera” rotation is unavailable, the `rotation` property **MUST** be set to all NaNs.
+If the “active camera” uses a perspective projection, the `aspectRatio`, `yfov`, `znear`, and `zfar` read-only properties nested in the `perspective` path represent the aspect ratio (width over height), vertical field of view in radians, distance to the near clipping plane, and distance to the far clipping plane respectively. If the far clipping plane is at infinity, the `zfar` value is infinity. If the “active camera” does not use a perspective projection, all these four values are NaNs.
+
+If the “active camera” uses an orthographic projection, the `xmag`, `ymag`, `znear`, and `zfar` read-only properties nested in the `orthographic` path represent the half the orthographic width, half the orthographic height, distance to the near clipping plane, and distance to the far clipping plane respectively. If the “active camera” does not use an orthographic projection, all these four values are NaNs.
+
+An implementation **MAY** provide no “active camera” data, for example for privacy reasons or if no cameras are being displayed to the user. If the “active camera” position is unavailable, the `position` property **MUST** be set to all NaNs; if the “active camera” rotation is unavailable, the `rotation` property **MUST** be set to all NaNs; if the “active camera” projection is unavailable, all properties corresponding to the projection information **MUST** be set to NaNs.
 
 The following pointers represent the read-only properties defined in this section.
 
@@ -4759,6 +4763,14 @@ The following pointers represent the read-only properties defined in this sectio
 | Pointer                                               | Type
 | `/extensions/KHR_interactivity/activeCamera/rotation` | `float4`
 | `/extensions/KHR_interactivity/activeCamera/position` | `float3`
+| `/extensions/KHR_interactivity/activeCamera/perspective/aspectRatio` | `float`
+| `/extensions/KHR_interactivity/activeCamera/perspective/yfov`        | `float`
+| `/extensions/KHR_interactivity/activeCamera/perspective/znear`       | `float`
+| `/extensions/KHR_interactivity/activeCamera/perspective/zfar`        | `float`
+| `/extensions/KHR_interactivity/activeCamera/orthographic/xmag`  | `float`
+| `/extensions/KHR_interactivity/activeCamera/orthographic/ymag`  | `float`
+| `/extensions/KHR_interactivity/activeCamera/orthographic/znear` | `float`
+| `/extensions/KHR_interactivity/activeCamera/orthographic/zfar`  | `float`
 |===
 
 === Animation State
