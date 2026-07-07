@@ -5035,6 +5035,7 @@ This example defines a declaration that maps to the `event/onSelect` operation d
 
 ```json
 "types": [
+  { "signature": "ref" },
   { "signature": "int" },
   { "signature": "float3" }
 ],
@@ -5043,9 +5044,9 @@ This example defines a declaration that maps to the `event/onSelect` operation d
     "op": "event/onSelect",
     "extension": "KHR_node_selectability",
     "outputValueSockets": {
-      "selectedNodeIndex": { "type": 0 },
-      "controllerIndex":   { "type": 0 },
-      "selectionPoint":    { "type": 1 }
+      "selectedNode":    { "type": 0 },
+      "controllerIndex": { "type": 1 },
+      "selectionPoint":  { "type": 2 }
     }
   }
 ]
