@@ -4744,7 +4744,7 @@ This Specification defines additional glTF Object Model pointers for use with `p
 
 === Asset Capabilities
 
-The `majorVersion` and `minorVersion` read-only properties nested in the `asset` path represent the major and minor version of the glTF asset. Values of these properties **MUST** exactly match the major and minor version numbers of the glTF asset.
+The `majorVersion` and `minorVersion` read-only properties nested in the `asset` path represent the major and minor version components of the glTF specification that is used for presenting the asset. The glTF version manifested by these properties **MUST** be the minimum of the glTF asset version specified in glTF JSON and the maximum glTF version supported by the implementation.
 
 Each glTF extension that is listed in the glTF asset's `extensionsUsed` array and supported by the implementation **MUST** create a corresponding virtual object nested in the `asset/extensions` path with a boolean `enabled` property set to true. Behavior graphs **MAY** use those properties to adjust their execution depending on the extension support.
 
