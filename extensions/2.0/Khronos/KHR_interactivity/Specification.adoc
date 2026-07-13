@@ -5025,6 +5025,14 @@ Values for matrix types use the column-major order of elements. For example, ele
 
 Values for the reference type are specified using static JSON Pointers without any template parameters. If the JSON pointer can be resolved against the glTF asset to a valid reference value, that value is used; if the pointer cannot be resolved, the reference value is null.
 
+[NOTE]
+.Example
+====
+The `/animations/1` JSON pointer would initialize a reference type variable to a runtime-specific reference to the glTF animation with index 1.
+
+If that animation object does not exist in glTF JSON, the variable would be initialized to null.
+====
+
 If the `value` property array length does not match the array length for the specified type, the variable is invalid and the graph **MUST** be rejected.
 
 If the variable type is **bool** and the only array element is not a JSON boolean literal, i.e., neither `true` nor `false`, the variable is invalid and the graph **MUST** be rejected.
