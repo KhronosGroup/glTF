@@ -4738,6 +4738,34 @@ When the `in` input flow is activated:
 
 This Specification defines additional glTF Object Model pointers for use with `pointer/*` operations.
 
+=== Asset Capabilities
+
+The `majorVersion` and `minorVersion` read-only properties nested in the `asset` path represent the major and minor version of the glTF asset. Values of these properties **MUST** exactly match the major and minor version numbers of the glTF asset.
+
+Each glTF extension that is listed in the glTF asset's `extensionsUsed` array and supported by the implementation **MUST** create a corresponding virtual object nested in the `asset/extensions` path with a boolean `enabled` property set to true. Behavior graphs **MAY** use those properties to adjust their execution depending on the extension support.
+
+[NOTE]
+.Example
+====
+If an asset uses the `KHR_node_visibility` extension and the implementation supports it, executing `pointer/get` on the following virtual property will return true:
+
+```
+/extensions/KHR_interactivity/asset/extensions/KHR_node_visibility/enabled
+```
+====
+
+Extensions **MAY** define additional implementation-dependent virtual properties inside their objects.
+
+The following pointers represent the read-only properties defined in this section.
+
+[options="header",cols="50%,5%"]
+|===
+| Pointer                                                                   | Type
+| `/extensions/KHR_interactivity/asset/majorVersion`                        | `int`
+| `/extensions/KHR_interactivity/asset/minorVersion`                        | `int`
+| `/extensions/KHR_interactivity/asset/extensions/<EXTENSION_MANE>/enabled` | `bool`
+|===
+
 === Implementation-Specific Runtime Limits
 
 The `maxActiveAnimations` read-only property represents the implementation-dependent maximum number of simultaneously active animations for the purpose of the `animation/start` operation.
