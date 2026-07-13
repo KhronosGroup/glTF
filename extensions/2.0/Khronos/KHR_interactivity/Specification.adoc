@@ -4327,9 +4327,13 @@ latexmath:[t=\begin{cases}
            \end{cases}]
 
 [TIP]
-.Authoring Tip
+.Authoring Tips
 ====
 The `/animations/{}/extensions/KHR_interactivity/maxTime` virtual property can be used to query the value of stem:[T] for a given animation. By setting the `endTime` input value socket to that value, the graph can play the animation to completion without statically knowing its duration.
+
+To loop an animation infinitely in forward direction, set the `endTime` to positive infinity.
+
+To loop an animation infinitely in reverse direction, set the `endTime` to negative infinity.
 ====
 
 This operation has no internal state.
