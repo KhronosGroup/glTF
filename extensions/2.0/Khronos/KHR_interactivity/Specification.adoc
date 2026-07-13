@@ -3746,7 +3746,7 @@ This operation has no internal state.
 | Input flow sockets
 | `in` | The entry flow into this operation
 | Input value sockets
-| `Ti <index>`  | One or more input value sockets; `<index>` refers to the corresponding variable index and `Ti` refers to its type
+| `Ti <index>`  | One or more input value sockets; `<index>` refers to the custom variable index from the behavior graph and `Ti` refers to its type
 | Output flow sockets
 | `out` | The flow to be activated after the values are set
 |===
