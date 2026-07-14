@@ -3,6 +3,11 @@
 ## Contributors
 
 - Ken Jakubzak, Meta
+- 0b5vr / pixiv Inc.
+- Aaron Franke, Independent Contributor
+- Hideaki Eguchi / VirtualCast, Inc.
+- Leonard Daly, Independent Contributor
+- Nick Burkard, Meta
 
 ## Status
 
@@ -24,7 +29,7 @@ glTF 2.0 has no portable way to express this. `KHR_node_visibility` provides a r
 
 ### The Solution
 
-`KHR_node_visibility_hint` annotates a node with a semantic **`role`** describing the view context(s) in which it should be visible. It follows the vocabulary and advisory pattern established by [`KHR_node_camera_hint`](#relationship-to-khr_node_camera_hint): the view-context tokens (`first_person`, `third_person`) are shared, so a runtime that activates a `first_person` camera hint knows to hide `third_person_only` nodes and show `first_person_only` ones.
+`KHR_node_visibility_hint` annotates a node with a semantic **`role`** describing the view context(s) in which it should be visible. It follows the vocabulary and advisory pattern established by [`KHR_node_camera_hint`](#relationship-to-khr_node_camera_hint): the view-context tokens (`first_person`, `third_person`) are shared, so a runtime that activates a `first_person` camera hint knows to hide `third_person` nodes and show `first_person` ones.
 
 Visibility hints are **advisory**. A runtime resolves the active view context, computes each annotated node's visibility, and applies it — building on `KHR_node_visibility` where available. Runtimes MAY ignore hints; the model still renders.
 
@@ -60,7 +65,7 @@ Declared in the asset-level `extensionsUsed` array. It SHOULD NOT appear in `ext
 }
 ```
 
-An implementation that does not support this extension SHOULD render all nodes normally (equivalent to every node being `both`). No visual content is lost, though first-person/third-person culling intent is.
+An implementation that does not support this extension SHOULD render all nodes normally (equivalent to every node being `always`). No visual content is lost, though first-person/third-person culling intent is.
 
 ---
 
@@ -79,16 +84,16 @@ The extension data is placed on individual `node` objects within the glTF `nodes
 
 ### Inheritance
 
-A visibility hint applies to the annotated node and all of its descendants. A descendant that carries its own `KHR_node_visibility_hint` **overrides** the inherited role for its own subtree. Nodes with no hint (and no annotated ancestor) behave as `both`.
+A visibility hint applies to the annotated node and all of its descendants. A descendant that carries its own `KHR_node_visibility_hint` **overrides** the inherited role for its own subtree. Nodes with no hint (and no annotated ancestor) behave as `always`.
 
 ### Resolving Visibility
 
 Given the runtime's active view context `C`, a node's **context-visible** state is:
 
-- `both` → visible in all contexts.
-- `first_person_only` → visible only when `C` is `first_person`.
-- `third_person_only` → visible only when `C` is `third_person`.
-- *custom* → runtime-defined; unrecognized roles SHOULD be treated as `both`.
+- `always` → visible in all contexts.
+- `first_person` → visible only when `C` is `first_person`.
+- `third_person` → visible only when `C` is `third_person`.
+- *custom* → runtime-defined; unrecognized roles SHOULD be treated as `always`.
 
 The node is rendered only if it is context-visible **and** not otherwise hidden. When `KHR_node_visibility` is present, the effective result is the logical AND of the context-visible state and `KHR_node_visibility.visible`; i.e. an explicit `visible: false` (e.g. from `KHR_interactivity`) always hides the node regardless of view context.
 
@@ -100,9 +105,9 @@ Runtimes that support this extension SHOULD recognize and correctly interpret al
 
 | Role | Description |
 |------|-------------|
-| `"both"` | Visible in all view contexts. Equivalent to the default (no annotation); used to state intent explicitly or to override an inherited role. |
-| `"first_person_only"` | Visible only in the first-person view context (paired with `KHR_node_camera_hint` `role: "first_person"`). Example: first-person-only detailed hands/gloves. |
-| `"third_person_only"` | Hidden in first-person, visible otherwise (paired with `KHR_node_camera_hint` `role: "third_person"`). Example: head, hair, or hat meshes that would occlude an inside-the-head first-person camera. |
+| `"always"` | Visible in all view contexts. Equivalent to the default (no annotation); used to state intent explicitly or to override an inherited role. |
+| `"first_person"` | Visible only in the first-person view context (paired with `KHR_node_camera_hint` `role: "first_person"`). Example: first-person-only detailed hands/gloves. |
+| `"third_person"` | Hidden in first-person, visible otherwise (paired with `KHR_node_camera_hint` `role: "third_person"`). Example: head, hair, or hat meshes that would occlude an inside-the-head first-person camera. |
 
 ---
 
@@ -113,7 +118,7 @@ The `role` property is a free-form string; this extension does not restrict its 
 - **Lowercase with underscores**, matching the standard style (e.g. `mirror_only`).
 - **Vendor prefix** to avoid collisions, formatted `VENDORNAME_role_name` (e.g. `ACME_mirror_only`, `MYAPP_photo_mode_only`).
 
-Runtimes that encounter an unrecognized role SHOULD treat the node as `both` (always visible) rather than rejecting the asset or hiding the node.
+Runtimes that encounter an unrecognized role SHOULD treat the node as `always` (always visible) rather than rejecting the asset or hiding the node.
 
 ---
 
@@ -136,9 +141,9 @@ A node MAY carry both extensions: the hint provides the view-context baseline; `
 The two extensions are complementary and share view-context vocabulary:
 
 - `KHR_node_camera_hint` (`role: "first_person"` / `"third_person"`) defines **where the camera is** for each context.
-- `KHR_node_visibility_hint` (`first_person_only` / `third_person_only` / `both`) defines **what renders** in each context.
+- `KHR_node_visibility_hint` (`first_person` / `third_person` / `always`) defines **what renders** in each context.
 
-When a runtime activates a `first_person` camera hint, it enters the `first_person` context and hides `third_person_only` nodes; activating a `third_person` camera hint reveals them again.
+When a runtime activates a `first_person` camera hint, it enters the `first_person` context and hides `third_person` nodes; activating a `third_person` camera hint reveals them again.
 
 ## Relationship to VRM firstPerson (VRMC\_vrm)
 
@@ -146,9 +151,9 @@ This extension generalizes VRM 1.0's `firstPerson.meshAnnotations`:
 
 | VRM `meshAnnotations[].type` | `KHR_node_visibility_hint` `role` |
 |------------------------------|-----------------------------------|
-| `both` | `both` |
-| `firstPersonOnly` | `first_person_only` |
-| `thirdPersonOnly` | `third_person_only` |
+| `both` | `always` |
+| `firstPersonOnly` | `first_person` |
+| `thirdPersonOnly` | `third_person` |
 | `auto` | *(not generalized; runtime-specific headless-mesh generation is out of scope)* |
 
 A converter MAY translate VRM mesh annotations to this extension by mapping node references to the annotated nodes and the `type` value per the table above.
@@ -159,7 +164,7 @@ A converter MAY translate VRM mesh annotations to this extension by mapping node
 
 ### Example 1: Hide the head in first-person
 
-The head subtree is annotated `third_person_only`, so it renders from the outside but not when the camera is inside the head.
+The head subtree is annotated `third_person`, so it renders from the outside but not when the camera is inside the head.
 
 ```json
 {
@@ -173,7 +178,7 @@ The head subtree is annotated `third_person_only`, so it renders from the outsid
       "mesh": 1,
       "extensions": {
         "KHR_node_visibility_hint": {
-          "role": "third_person_only",
+          "role": "third_person",
           "label": "Head (hidden in first-person)"
         }
       }
@@ -182,7 +187,7 @@ The head subtree is annotated `third_person_only`, so it renders from the outsid
 }
 ```
 
-### Example 2: First-person-only gloves + explicit both
+### Example 2: First-person-only gloves + explicit always
 
 ```json
 {
@@ -193,19 +198,19 @@ The head subtree is annotated `third_person_only`, so it renders from the outsid
     {
       "name": "Body",
       "mesh": 0,
-      "extensions": { "KHR_node_visibility_hint": { "role": "both" } }
+      "extensions": { "KHR_node_visibility_hint": { "role": "always" } }
     },
     {
       "name": "FPGloves",
       "mesh": 1,
       "extensions": {
-        "KHR_node_visibility_hint": { "role": "first_person_only", "label": "First-Person Gloves" }
+        "KHR_node_visibility_hint": { "role": "first_person", "label": "First-Person Gloves" }
       }
     },
     {
       "name": "Hair",
       "mesh": 2,
-      "extensions": { "KHR_node_visibility_hint": { "role": "third_person_only" } }
+      "extensions": { "KHR_node_visibility_hint": { "role": "third_person" } }
     }
   ]
 }
@@ -213,7 +218,7 @@ The head subtree is annotated `third_person_only`, so it renders from the outsid
 
 ### Example 3: Composing with KHR_node_visibility
 
-`Hat` is `third_person_only` (view-context baseline) and can still be toggled off entirely at runtime via `KHR_node_visibility`.
+`Hat` is `third_person` (view-context baseline) and can still be toggled off entirely at runtime via `KHR_node_visibility`.
 
 ```json
 {
@@ -224,7 +229,7 @@ The head subtree is annotated `third_person_only`, so it renders from the outsid
       "name": "Hat",
       "mesh": 0,
       "extensions": {
-        "KHR_node_visibility_hint": { "role": "third_person_only" },
+        "KHR_node_visibility_hint": { "role": "third_person" },
         "KHR_node_visibility": { "visible": true }
       }
     }
@@ -242,15 +247,15 @@ The head subtree is annotated `third_person_only`, so it renders from the outsid
 
 1. `role` MUST be present and MUST be a non-empty string.
 2. `label`, when present, SHOULD be a concise, human-readable string.
-3. Annotating a node with `both` is permitted and equivalent to omitting the extension; it MAY be used to state intent or override an inherited role.
+3. Annotating a node with `always` is permitted and equivalent to omitting the extension; it MAY be used to state intent or override an inherited role.
 4. Authors SHOULD annotate the highest node whose entire subtree shares a view context, relying on inheritance rather than annotating every mesh node.
 
 ### Runtime Requirements
 
 1. Implementations SHOULD resolve the active view context and render each node according to its (possibly inherited) `role`.
 2. Implementations SHOULD apply the resolved visibility through `KHR_node_visibility` semantics where supported, combining with any explicit `visible` state via logical AND.
-3. Implementations SHOULD treat unrecognized `role` values as `both`.
-4. Implementations that do not support this extension SHOULD render all nodes (treat every node as `both`).
+3. Implementations SHOULD treat unrecognized `role` values as `always`.
+4. Implementations that do not support this extension SHOULD render all nodes (treat every node as `always`).
 
 ### Fallback Behavior
 
@@ -282,7 +287,7 @@ If the extension appears only in `extensionsUsed`, an unsupporting implementatio
 ## Known Limitations
 
 1. **View contexts are runtime-defined.** This extension standardizes the `first_person`/`third_person` tokens (shared with `KHR_node_camera_hint`) but does not define how a runtime enters a context or how many contexts exist. Custom contexts (e.g. `mirror`) are expressible only as custom roles.
-2. **No `auto` equivalent.** VRM's `auto` (runtime headless-mesh generation) is intentionally not generalized; authors should provide explicit meshes annotated `third_person_only`.
+2. **No `auto` equivalent.** VRM's `auto` (runtime headless-mesh generation) is intentionally not generalized; authors should provide explicit meshes annotated `third_person`.
 3. **Binary per context.** A node is either visible or not in a context; there is no partial/fade visibility. Transitions are a runtime concern.
 4. **Index/hierarchy sensitivity.** Because the role is inherited through the node hierarchy, restructuring the subtree can change which nodes are affected. Authoring tools SHOULD preserve annotations when reparenting.
 

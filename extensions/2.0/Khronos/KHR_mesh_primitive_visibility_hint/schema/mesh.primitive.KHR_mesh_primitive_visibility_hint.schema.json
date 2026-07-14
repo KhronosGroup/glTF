@@ -7,7 +7,7 @@
   "properties": {
     "role": {
       "type": "string",
-      "description": "The view context in which this primitive is visible. Standard vocabulary values ('both', 'first_person_only', 'third_person_only') provide interoperability guarantees; custom, vendor-prefixed values are permitted for domain-specific view contexts.",
+      "description": "The view context in which this primitive is visible. Standard vocabulary values ('always', 'first_person', 'third_person') provide interoperability guarantees; custom, vendor-prefixed values are permitted for domain-specific view contexts.",
       "minLength": 1
     },
     "label": {
