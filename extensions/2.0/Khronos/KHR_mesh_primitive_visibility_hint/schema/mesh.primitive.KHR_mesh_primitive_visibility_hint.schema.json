@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mesh.primitive.KHR_mesh_primitive_visibility_hint.schema.json",
+  "title": "KHR_mesh_primitive_visibility_hint glTF Mesh Primitive Extension",
+  "description": "Marks a mesh primitive as visible only in a particular view context, such as first-person or third-person. Applies to this primitive only (no inheritance). Advisory: the runtime resolves the active view context and skips rendering the primitive when the context does not match. Use when a view-context-specific region is baked into a mesh that cannot be separated by node.",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "description": "The view context in which this primitive is visible. Standard vocabulary values ('always', 'first_person', 'third_person') provide interoperability guarantees; custom, vendor-prefixed values are permitted for domain-specific view contexts.",
+      "minLength": 1
+    },
+    "label": {
+      "type": "string",
+      "description": "Human-readable label for this visibility annotation. Used for UI display in authoring tools and inspectors.",
+      "minLength": 1
+    }
+  },
+  "required": ["role"],
+  "additionalProperties": false
+}
