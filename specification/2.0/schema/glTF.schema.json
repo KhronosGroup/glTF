@@ -145,9 +145,7 @@
                 "$ref": "texture.schema.json"
             },
             "minItems": 1
-        },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "dependencies": {
         "scene": [ "scenes" ]

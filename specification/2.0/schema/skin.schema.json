@@ -25,10 +25,7 @@
             "uniqueItems": true,
             "minItems": 1,
             "gltf_detailedDescription": "Indices of skeleton nodes, used as joints in this skin."
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "joints" ]
 }

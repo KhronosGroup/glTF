@@ -30,10 +30,7 @@
         "bufferView": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The index of the bufferView that contains the image. This field **MUST NOT** be defined when `uri` is defined."
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "dependencies": {
         "bufferView": [ "mimeType" ]

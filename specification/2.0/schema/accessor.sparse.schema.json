@@ -18,9 +18,7 @@
         "values": {
             "allOf": [ { "$ref": "accessor.sparse.values.schema.json" } ],
             "description": "An object pointing to a buffer view containing the deviating accessor values."
-        },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "count", "indices", "values" ]
 }

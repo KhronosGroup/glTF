@@ -17,10 +17,7 @@
             "type": "integer",
             "description": "The length of the buffer in bytes.",
             "minimum": 1
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "byteLength" ]
 }

@@ -78,10 +78,7 @@
             "items": {
                 "type": "number"
             }
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "dependencies": {
         "weights": [ "mesh" ],

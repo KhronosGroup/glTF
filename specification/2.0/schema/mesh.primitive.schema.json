@@ -80,9 +80,7 @@
                 "description": "A plain JSON object specifying attributes displacements in a morph target, where each key corresponds to one of the three supported attribute semantic (`POSITION`, `NORMAL`, or `TANGENT`) and each value is the index of the accessor containing the attribute displacements' data."
             },
             "minItems": 1
-        },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "gltf_webgl": "`drawElements()` and `drawArrays()`",
     "required": [ "attributes" ]
