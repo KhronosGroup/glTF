@@ -1,0 +1,51 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "graph.KHR_interactivity.schema.json",
+    "title": "Behavior graph",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "types": {
+            "title": "An array of graph types.",
+            "type": "array",
+            "items": { "$ref": "type.KHR_interactivity.schema.json" },
+            "minItems": 1,
+            "maxItems": 2147483648
+        },
+        "variables": {
+            "title": "An array of graph variables.",
+            "type": "array",
+            "items": { "$ref": "variable.KHR_interactivity.schema.json" },
+            "minItems": 1,
+            "maxItems": 2147483648
+        },
+        "events": {
+            "title": "An array of graph events.",
+            "type": "array",
+            "items": { "$ref": "event.KHR_interactivity.schema.json" },
+            "minItems": 1,
+            "maxItems": 2147483648
+        },
+        "declarations": {
+            "title": "An array of graph declarations.",
+            "type": "array",
+            "items": { "$ref": "declaration.KHR_interactivity.schema.json" },
+            "minItems": 1,
+            "maxItems": 2147483648
+        },
+        "nodes": {
+            "title": "An array of graph nodes.",
+            "type": "array",
+            "items": { "$ref": "node.KHR_interactivity.schema.json" },
+            "minItems": 1,
+            "maxItems": 2147483648
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "dependentRequired": {
+        "variables": [ "types" ],
+        "nodes": [ "declarations" ]
+    }
+}
