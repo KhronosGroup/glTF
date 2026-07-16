@@ -1,0 +1,36 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "Clip",
+    "type" : "object",
+    "description" : "Audio clip data used to create an audio emitter. Clip can be referenced by `uri` or `bufferView` index. `mimeType` is required in the latter case.",
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties" : {
+        "uri" : {
+            "type" : "string",
+            "description" : "The uri of the audio source.",
+            "format" : "uriref",
+            "gltf_detailedDescription" : "The uri of the audio source.  Relative paths are relative to the `.gltf` file.  Instead of referencing an external file, the uri can also be a data-uri.",
+            "gltf_uriType" : "audio"
+        },
+        "mimeType": {
+            "type": "string",
+            "enum": [ "audio/wav" ],
+            "description": "The audio file's MIME type."
+        },
+        "bufferView" : {
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The index of the bufferView that contains the audio data. Use this instead of the clip's uri property."
+        },
+        "name" : {},
+        "extensions" : {},
+        "extras" : {}
+    },
+    "additionalProperties": false,
+    "dependencies": {
+        "bufferView": [ "mimeType" ]
+    },
+    "oneOf": [
+        { "required": [ "uri" ] },
+        { "required": [ "bufferView" ] }
+    ]
+}

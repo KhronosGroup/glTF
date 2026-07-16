@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "MSFT_audio_emitter glTF Extension",
+    "type": "object",
+    "description": " A specification for spatialized and ambient audio with clip randomization.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "clips": {
+            "type": "array",
+            "items": {
+                "$ref": "clip.schema.json"
+            }, 
+            "minItems": 1 
+        },
+        "emitters": {
+            "type": "array",
+            "items": {
+                "$ref": "emitter.schema.json"
+            }, 
+            "minItems": 1 
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "additionalProperties": false,
+    "required": [ "clips", "emitters" ]
+}
