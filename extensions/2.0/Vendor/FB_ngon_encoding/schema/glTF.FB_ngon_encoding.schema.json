@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "FB_ngon_encoding glTF extension",
+    "type": "object",
+    "description": "glTF extension for reconstruction general polygonal meshes",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "extensions": {},
+        "extras": {}
+    }
+}
