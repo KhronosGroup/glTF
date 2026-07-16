@@ -1,0 +1,28 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "node.KHR_physics_rigid_bodies.schema.json",
+    "title": "KHR_physics_rigid_bodies glTF Node Extension",
+    "type": "object",
+    "description": "Physics properties for a node.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "motion": {
+            "allOf": [ { "$ref": "node.KHR_physics_rigid_bodies.motion.schema.json" } ],
+            "description": "A set of parameter values that enable this node and its children to be moved by physics simuation."
+        },
+        "collider": {
+            "allOf": [ { "$ref": "node.KHR_physics_rigid_bodies.collider.schema.json" } ],
+            "description": "A set of parameter values that are used to provide a collision geometry for physics simulation."
+        },
+        "trigger": {
+            "allOf": [ { "$ref": "node.KHR_physics_rigid_bodies.trigger.schema.json" } ],
+            "description": "A set of parameter values that are used to provide a collision geometry for trigger events."
+        },
+        "joint": {
+            "allOf": [ { "$ref": "node.KHR_physics_rigid_bodies.joint.schema.json" } ],
+            "description": "A set of parameter values that are used to constrain how this node moves relative to another during physics simulation."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
