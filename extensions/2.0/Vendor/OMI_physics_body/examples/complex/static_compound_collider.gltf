@@ -1,0 +1,44 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensions": {
+        "OMI_physics_shape": {
+            "shapes": [
+                {
+                    "type": "box",
+                    "box": {
+                        "size": [1, 2, 3]
+                    }
+                }
+            ]
+        }
+    },
+    "extensionsUsed": [
+        "OMI_physics_body",
+        "OMI_physics_shape"
+    ],
+    "nodes": [
+        {
+            "children": [1],
+            "extensions": {
+                "OMI_physics_body": {
+                    "collider": {}
+                }
+            },
+            "name": "StaticCompoundCollider"
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": {
+                    "collider": {
+                        "shape": 0
+                    }
+                }
+            },
+            "name": "BoxShape"
+        }
+    ],
+    "scene": 0,
+    "scenes": [{ "nodes": [0] }]
+}

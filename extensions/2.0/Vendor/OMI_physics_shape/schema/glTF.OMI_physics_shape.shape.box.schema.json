@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.OMI_physics_shape.shape.box.schema.json",
+    "title": "OMI_physics_shape Box Shape",
+    "type": "object",
+    "description": "Parameters describing a box physics shape.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "size": {
+            "type": "array",
+            "description": "Three number array representing the width, height, and depth of the box (x, y, z).",
+            "items": {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [ 1.0, 1.0, 1.0 ]
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.OMI_physics_body.material.schema.json",
+    "title": "OMI_physics_body Physics Material",
+    "type": "object",
+    "description": "Parameters describing the physical properties of a surface in a physics simulation.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "staticFriction": {
+            "type": "number",
+            "description": "The friction used when an object is laying still on a surface. Usually a value from 0 to 1. A value of 0 feels like ice, a value of 1 will make it very hard to get the object moving. Simulations which do not differentiate between static and dynamic friction should use the dynamic friction value.",
+            "minimum": 0.0,
+            "default": 0.6
+        },
+        "dynamicFriction": {
+            "type": "number",
+            "description": "The friction used when already moving. Usually a value from 0 to 1. A value of 0 feels like ice, a value of 1 will make it come to rest very quickly unless a lot of force or gravity pushes the object.",
+            "minimum": 0.0,
+            "default": 0.6
+        },
+        "restitution": {
+            "type": "number",
+            "description": "How bouncy is the surface? A value of 0 will not bounce. A value of 1 will bounce without any loss of energy.",
+            "minimum": 0.0,
+            "default": 0.0
+        },
+        "frictionCombine": {
+            "type": "string",
+            "description": "Determines how friction should be combined when two objects interact.",
+            "enum": ["average", "minimum", "maximum", "multiply"]
+        },
+        "restitutionCombine": {
+            "type": "string",
+            "description": "Determines how restitution should be combined when two objects interact.",
+            "enum": ["average", "minimum", "maximum", "multiply"]
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
