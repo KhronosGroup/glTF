@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "node.KHR_node_camera_hint.schema.json",
+  "title": "KHR_node_camera_hint glTF Node Extension",
+  "description": "Marks a node as an authored camera positioning suggestion. The node's world-space transform defines the recommended camera placement. The runtime MAY use this as a default view, orbit center, portrait framing, or other camera-related viewpoint.",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "description": "The semantic purpose of this camera hint. Determines how runtimes interpret the node's transform. Standard vocabulary values provide interoperability guarantees; custom values are permitted for domain-specific use cases.",
+      "minLength": 1
+    },
+    "camera": {
+      "type": "integer",
+      "description": "Index of a glTF camera in the root cameras array whose projection parameters (FOV, clip planes, type) and any camera extensions apply to this hint. Advisory — runtimes MAY override.",
+      "minimum": 0
+    },
+    "targetNode": {
+      "type": "integer",
+      "description": "Index of a glTF node that this camera should orient toward. When specified, the camera's look-at direction is computed from the vector between this node and the target node.",
+      "minimum": 0
+    },
+    "label": {
+      "type": "string",
+      "description": "Human-readable label for this camera position. Used for UI display in model viewers and camera selection menus.",
+      "minLength": 1
+    }
+  },
+  "required": ["role"],
+  "additionalProperties": false
+}

@@ -1,0 +1,20 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "KHR_character_expression_mask KHR_character_expression Extension",
+    "type": "object",
+    "description": "glTF extension that extends KHR_character_expression to define how this expression masks or influences other expressions.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "masks": {
+            "type": "array",
+            "description": "An array of mask objects that define how this expression affects other expressions.",
+            "items": {
+                "$ref": "KHR_character_expression_mask.mask.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": ["masks"]
+}

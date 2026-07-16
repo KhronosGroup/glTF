@@ -1,0 +1,44 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "KHR_character_expression_mapping glTF Document Extension",
+    "type": "object",
+    "description": "glTF extension that enables encoding multiple expression set mappings, mapping source expressions present in the model to target expressions that a runtime/endpoint understands.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "expressionSetMappings": {
+            "type": "object",
+            "description": "Dictionary of expression set mappings, where each key is a target expression set name.",
+            "additionalProperties": {
+                "type": "object",
+                "description": "Expression mapping dictionary where each key is a target expression name and each value is an array of source expression mappings.",
+                "additionalProperties": {
+                    "type": "array",
+                    "description": "Array of source expression mappings that contribute to the target expression.",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "source": {
+                                "type": "string",
+                                "description": "Name of the source expression in the model."
+                            },
+                            "weight": {
+                                "type": "number",
+                                "description": "Relative influence of this source expression on the target. Weights represent the proportional contribution needed to achieve the desired target result."
+                            }
+                        },
+                        "required": [
+                            "source",
+                            "weight"
+                        ]
+                    },
+                    "minItems": 1
+                }
+            }
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "expressionSetMappings"
+    ]
+}

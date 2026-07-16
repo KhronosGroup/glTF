@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "node.KHR_node_lookat_target.schema.json",
+  "title": "KHR_node_lookat_target glTF Node Extension",
+  "description": "Marks a node as a passive target for look-at systems. The node's world-space position is the target point. Constraint behavior is delegated to other systems.",
+  "type": "object",
+  "properties": {
+    "hint": {
+      "type": "string",
+      "description": "Advisory string suggesting the intended use of this target. Free-form; not a closed vocabulary.",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}
