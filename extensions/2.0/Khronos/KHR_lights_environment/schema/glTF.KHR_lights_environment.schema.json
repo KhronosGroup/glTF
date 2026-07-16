@@ -1,0 +1,34 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_lights_environment glTF extension",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "lights": {
+            "type": "array",
+            "description": "Array of lights to be used with this extension, referenced from a scene by the lights property.",
+            "items": {
+                "type": "object",
+                "$ref": "light.schema.json"
+            },
+            "minItems": 1
+        },
+        "images": "array",
+        "description": "Array of image declarations, each image shall point to a KTX V2 file containing at least one cubemap.",
+        "items": {
+            "type": "object",
+            "$ref": "image.schema.json"
+        },
+        "cubemaps": "array",
+        "description": "Array of cubemaps that are referenced by the environment light declaration in a scene.",
+        "items": {
+            "type": "object",
+            "$ref": "cubemap.schema.json"
+        }
+        "extensions": { },
+        "extras": { }
+    },
+    "required":[
+        "lights"
+    ]
+}
