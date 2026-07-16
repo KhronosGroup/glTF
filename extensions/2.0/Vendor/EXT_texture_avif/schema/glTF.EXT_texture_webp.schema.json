@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "EXT_texture_avif glTF extension",
+  "type": "object",
+  "description": "glTF extension to specify textures using the AVIF image format.",
+  "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+  "properties": {
+    "source": {
+      "allOf": [{ "$ref": "glTFid.schema.json" }],
+      "description": "The index of the images node which points to a AVIF image."
+    },
+    "extensions": {},
+    "extras": {}
+  }
+}
