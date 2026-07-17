@@ -1,0 +1,93 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title" : "MPEG_scene_interactivity.trigger object",
+    "type" : "object",
+    "description" : "glTF extension to specify trigger formats at scene level",
+    "properties" : {
+        "type" : {
+            "type": "integer",
+            "enum":[0,1,2,3],
+            "description": "Type of the trigger.",
+            "gltf_detailedDescription":"Value is oneOf TRIGGER_COLLISION = 0, TRIGGER_PROXIMITY = 1, TRIGGER_USER_INPUT = 2, TRIGGER_VISIBILITY = 3 and can be extended"
+        },
+        "userInputDescription": { 
+            "type": "string",
+            "description":"Describe the user body part and gesture related to the input."  
+        },
+        "distanceLowerLimit": { 
+            "type": "number",
+            "default": 0.0,
+            "description":"Threshold minimum in meters for the proximity calculation" 
+        },
+        "distanceUpperLimit": { 
+            "type": "number",
+            "description":"Threshold maximum in meters for the proximity calculation"  
+        },
+        "referenceNode" :{
+            "type":"integer",
+            "description":"Index in the nodes array, of the node to consider for the proximity evaluation"
+        }, 
+        "cameraNode": { 
+            "type": "integer",
+            "description":"Index to the node containing a camera in the nodes array for which the visibilities are determined " 
+        },
+        "nodes": { 
+            "type": "array", 
+            "items":{"type":"integer"},
+            "minItems": 1,
+            "description": "Indices of the nodes in the nodes array to be considered"
+        },
+        "primitives" :{
+            "type": "array", 
+            "items":{ "$ref": "MPEG_interactivity.trigger.primitive.schema.json" },
+            "minItems": 1,
+            "description": "List of primitives used to activate the proximity or collision trigger. "
+        }, 
+        "extensions": {},
+        "extras": {}
+    },
+    "allOf": [
+        { "$ref" : "glTFProperty.schema.json" },
+        {
+          "if": {
+            "properties": { 
+              "type": { "const": 0,"description":"TRIGGER_COLLISION" }},
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["nodes"]
+          }
+        },
+        {
+          "if": {
+            "properties": { 
+              "type": { "const": 1, "description":"TRIGGER_PROXIMITY" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["nodes","distanceUpperLimit"]              
+          }
+        },
+        {
+          "if": {
+            "properties": { 
+              "type": { "const": 2, "description":"TRIGGER_USER_INPUT" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["userInputDescription"]
+          }
+        },
+        {
+          "if": {
+            "properties": { 
+              "type": { "const": 3,"description":"TRIGGER_VISIBILITY" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["cameraNode","nodes"]
+          }
+        }
+      ],
+      "required":["type"]
+}

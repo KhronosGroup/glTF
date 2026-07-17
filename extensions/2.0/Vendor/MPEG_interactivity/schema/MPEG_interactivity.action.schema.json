@@ -1,0 +1,271 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title" : "MPEG_scene_interactivity.action object",
+    "type" : "object",
+    "description" : "glTF extension to specify action formats at scene level",
+    "properties" : {
+        "type" : {
+            "type": "integer",
+            "enum": [0,1,2,3,4,5,6,7,8],
+            "description": "Type of the action.",
+            "gltf_detailedDescription":"Value is oneOf ACTION_ACTIVATE = 0, ACTION_TRANSFORM = 1, ACTION_BLOCK = 2, ACTION_ANIMATION = 3, ACTION_MEDIA = 4, ACTION_MANIPULATE = 5, ACTION_SET_MATERIAL = 6, ACTION_HAPTIC = 7, ACTION_SET_AVATAR = 8 and can be extended"
+        },
+        "delay":{
+            "type": "number",
+            "default": 0.0,
+            "description": "Duration of delay in second before executing the action"
+        },
+        "activationStatus":{
+            "type": "integer",
+            "enum":[0,1],
+            "description":"Indicates if the node shall be processed or skipped by the application",
+            "gltf_detailedDescription":"Value is oneOf ENABLED = 0, DISABLED = 1"
+        },
+        "transform":{
+            "type":"array",
+            "items":{ "type":"number"},
+            "minItems": 16,
+            "maxitem": 16,
+            "description":"4x4 transformation matrix to apply to the nodes."
+        },
+        "animation": {
+            "type": "integer",
+            "description":"Index of the animation in the animations array to be considered "
+        },
+        "animationControl":{
+            "type": "integer",
+            "enum":[0,1,2,3],
+            "description":"Defines the control of the animation.",
+            "gltf_detailedDescription":"Value is oneOf ANIMATION_PLAY = 0, ANIMATION_PAUSE = 1, ANIMATION_STOP = 2, ANIMATION_RESUME = 3 and can be extended"
+        },
+        "media": {
+            "type": "integer",
+            "description":"Index of the media in the MPEG media array to be considered"
+        },
+        "mediaControl":{
+            "type": "integer",
+            "enum": [0,1,2,3],
+            "description":"Defines the control of the media.",
+            "gltf_detailedDescription":"Value is oneOf MEDIA_PLAY = 0, MEDIA_PAUSE = 1, MEDIA_STOP = 2, MEDIA_RESUME = 3 and can be extended"
+        },
+        "axis": {
+            "type": "array",
+            "items": { "type":"number"},
+            "default": [0.0, 1.0, 0.0],
+            "minItems": 3,
+            "maxItems": 3,
+            "description":"Coordinates of the axis used for rotation and sliding"
+        },
+        "manipulateActionType": {
+            "type": "integer",
+            "enum": [0,1,2,3,4],
+            "description":"Defines the manipulate type.",
+            "gltf_detailedDescription":"Value is oneOf ACTION_MANIPULATE_FREE = 0, ACTION_MANIPULATE_SLIDE = 1, ACTION_MANIPULATE_TRANSLATE = 2, ACTION_MANIPULATE_ROTATE = 3,ACTION_MANIPULATE_SCALE = 4 and can be extended"
+        },
+        "userInputDescription": {
+            "type": "string",
+            "description":"Describe the user input related to the manipulation action. ",
+            "gltf_detailedDescription":"The format shall follow the OpenXR input path description. An example is: /user/hand/left/aim/pose."
+        },
+        "material": {
+            "type": "integer",
+            "description":"Index of the material in the materials array to apply to the set of nodes"
+        },
+        "nodes": {
+            "type": "array",
+            "items":{ "type":"integer"},
+            "minItems": 1,
+            "description": "Indices of the nodes in the nodes array to be considered"
+        },
+        "hapticActionNodes": {
+            "type": "array",
+            "items":{ "$ref" : "MPEG_scene_interactivity.hapticActionNode.schema.json"},
+            "minItems": 1,
+            "description": "Array of hapticActionNodes"
+        },
+        "avatarAction":{
+            "type": "string",
+            "description":"The avatarAction is provided by a URN that uniquely identifies the avatar action."
+        },
+        "authorised": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Required when type=ACTION_SET_AVATAR and avatarAction='urn:mpeg:sd:2023:avatar:actionslist/social'. Defines avatar social actions."
+        },
+        "permissionId": {
+            "type": "string",
+            "description": "Required when type=ACTION_SET_AVATAR and avatarAction='urn:mpeg:sd:2023:avatar:actionslist/restricted'. Unique string identifier that restricts interaction between nodes without an equal permission_id."
+        },
+        "age": {
+            "type": "integer",
+            "description": "Required when type=ACTION_SET_AVATAR and avatarAction='urn:mpeg:sd:2023:avatar:actionslist/parental'. Minimum age recommendation for users given the content of the list of nodes."
+        },
+        "descriptors": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Required when type=ACTION_SET_AVATAR and avatarAction='urn:mpeg:sd:2023:avatar:actionslist/parental'. Adds additional explicit semantics of the content present in the list of nodes."
+        },
+        "microphone": {
+            "type": "boolean",
+            "description": "Required when type=ACTION_SET_AVATAR and avatarAction='urn:mpeg:sd:2023:avatar:actionslist/speech'. Indicates if the user uses a microphone type of input device for audio."
+        },
+        "capabilities": {
+            "type": "array",
+            "items": {
+            "type": "string"
+            },
+            "description": "Required when type=ACTION_SET_AVATAR and avatarAction='urn:mpeg:sd:2023:avatar:actionslist/capabilities'. Defines the capabilities of an avatar/object."
+        },
+        "disabilities": {
+            "type": "array",
+            "items": {
+            "type": "string"
+            },
+            "description": "Required when type=ACTION_SET_AVATAR and avatarAction='urn:mpeg:sd:2023:avatar:actionslist/disabilities'. Defines the disabilities of an avatar/object."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "allOf": [
+        { "$ref" : "glTFProperty.schema.json" },
+        {
+          "if": {
+            "properties": { "type": { "const": 0, "description":"ACTION_ACTIVATE"} },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["activationStatus","nodes"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": 1,"description":"ACTION_TRANSFORM" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["transform","nodes"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": 2,"description":"ACTION_BLOCK" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["nodes"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": 3, "description":"ACTION_ANIMATION" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["animation","animationControl"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": 4,"description":"ACTION_MEDIA" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["media","mediaControl"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": 5, "description":"ACTION_MANIPULATE" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["manipulateActionType","userInputDescription","nodes"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": 6,"description":"ACTION_SET_MATERIAL" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["material","nodes"]
+            }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": 7,"description":"ACTION_HAPTIC" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["hapticActionNodes"]
+            }
+          },
+        {
+          "if": {
+            "properties": { "type": { "const": 8,"description":"ACTION_SET_AVATAR" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["avatarAction"],
+            "allOf": [
+              { "$ref" : "glTFProperty.schema.json" },
+              {
+                "if": {
+                  "properties": { "avatarAction": { "const": "urn:mpeg:sd:2023:avatar:actionslist/social" } },
+                  "required": ["avatarAction"]
+                },
+                "then": {
+                  "required": ["authorised", "nodes"]
+                }
+              },
+              {
+                "if": {
+                  "properties": { "avatarAction": { "const": "urn:mpeg:sd:2023:avatar:actionslist/restricted" } },
+                  "required": ["avatarAction"]
+                },
+                "then": {
+                  "required": ["permissionId", "nodes"]
+                }
+              },
+              {
+                "if": {
+                  "properties": { "avatarAction": { "const": "urn:mpeg:sd:2023:avatar:actionslist/parental" } },
+                  "required": ["avatarAction"]
+                },
+                "then": {
+                  "required": ["age", "descriptors", "nodes"]
+                }
+              },
+              {
+                "if": {
+                  "properties": { "avatarAction": { "const": "urn:mpeg:sd:2023:avatar:actionslist/speech" } },
+                  "required": ["avatarAction"]
+                },
+                "then": {
+                  "required": ["nodes"]
+                }
+              },
+              {
+                "if": {
+                  "properties": { "avatarAction": { "const": "urn:mpeg:sd:2023:avatar:actionslist/capabilities" } },
+                  "required": ["avatarAction"]
+                },
+                "then": {
+                  "required": ["capabilities", "nodes"]
+                }
+              },
+              {
+                "if": {
+                  "properties": { "avatarAction": { "const": "urn:mpeg:sd:2023:avatar:actionslist/disabilities" } },
+                  "required": ["avatarAction"]
+                },
+                "then": {
+                  "required": ["disabilities", "nodes"]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "required":["type"]
+} 
