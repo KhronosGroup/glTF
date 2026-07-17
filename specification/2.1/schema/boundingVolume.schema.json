@@ -1,0 +1,47 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "boundingVolume.schema.json",
+    "title": "Bounding Volume",
+    "type": "object",
+    "description": "A bounding volume.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "shape": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the shape used for this bounding volume."
+        },
+        "rotation": {
+            "type": "array",
+            "description": "The bounding volume's unit quaternion rotation relative to the node's local coordinate system.",
+            "items": {
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            "minItems": 4,
+            "maxItems": 4,
+            "default": [ 0.0, 0.0, 0.0, 1.0 ]
+        },
+        "scale": {
+            "type": "array",
+            "description": "The bounding volume's scale along the rotated local X, Y, and Z axes.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [ 1.0, 1.0, 1.0 ]
+        },
+        "translation": {
+            "type": "array",
+            "description": "The bounding volume's translation along the node's local X, Y, and Z axes.",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [ 0.0, 0.0, 0.0 ]
+        }
+    },
+    "required": [ "shape" ]
+}

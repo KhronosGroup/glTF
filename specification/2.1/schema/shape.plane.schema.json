@@ -1,0 +1,20 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "shape.plane.schema.json",
+    "title": "glTF Plane Shape",
+    "type": "object",
+    "description": "Parameters describing a plane shape.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "sizeX": {
+            "type": "number",
+            "description": "The extents along the X axis in local space. If not provided, this dimension should be considered infinite.",
+            "exclusiveMinimum": 0.0
+        },
+        "sizeZ": {
+            "type": "number",
+            "description": "The extents along the Z axis in local space. If not provided, this dimension should be considered infinite.",
+            "exclusiveMinimum": 0.0
+        }
+    }
+}

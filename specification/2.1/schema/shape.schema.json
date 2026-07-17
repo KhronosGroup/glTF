@@ -1,0 +1,66 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "shape.schema.json",
+    "title": "glTF Shape Resource",
+    "type": "object",
+    "description": "Parameters describing a shape used for physics, BVH, or any other use case.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "type": {
+            "description": "Specifies the shape type.",
+            "anyOf": [
+                {
+                    "const": "box",
+                    "description": "An axis-aligned box with a size per-axis, centered at the origin in local space, with normals facing outwards along each axis."
+                },
+                {
+                    "const": "capsule",
+                    "description": "A capsule, centered at the origin in local space with potentially different radii at each end, equivalent to the convex hull of two spheres located along the Y axis (in local space) at a specified distance, with normals facing outwards."
+                },
+                {
+                    "const": "cylinder",
+                    "description": "A cylinder, centered at the origin in local space with potentially different radii at each end, equivalent to the convex hull of two circles in the X/Z plane positioned along the Y axis at a specified distance, with the top cap normal facing along the +Y axis, the bottom cap normal facing along the -Y axis, and the side normals facing outwards along the X/Z plane."
+                },
+                {
+                    "const": "plane",
+                    "description": "A plane centered at the origin in local space, optionally with finite extents, with normal along the +Y axis in local space. The plane is one-sided."
+                },
+                {
+                    "const": "sphere",
+                    "description": "A sphere, centered at the origin in local space with a radius equal in all directions, with normals facing outwards."
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "box": {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a box shape.",
+            "$ref": "shape.box.schema.json"
+        },
+        "capsule": {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a capsule shape.",
+            "$ref": "shape.capsule.schema.json"
+        },
+        "cylinder": {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a cylinder shape.",
+            "$ref": "shape.cylinder.schema.json"
+        },
+        "plane": {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a plane shape.",
+            "$ref": "shape.plane.schema.json"
+        },
+        "sphere": {
+            "type": "object",
+            "description": "A set of parameter values that are used to define a sphere shape.",
+            "$ref": "shape.sphere.schema.json"
+        }
+    },
+    "required": [
+        "type"
+    ]
+}
