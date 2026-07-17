@@ -600,7 +600,61 @@ image::figures/objects.svg[pdfwidth=6in,align=left]
 [[asset]]
 == Asset
 
-Each glTF asset **MUST** have an `asset` property. The `asset` object **MUST** contain a `version` property that specifies the target glTF version of the asset. Additionally, an optional `minVersion` property **MAY** be used to specify the minimum glTF version support required to load the asset. The `minVersion` property allows asset creators to specify a minimum version that a client implementation **MUST** support in order to load the asset. This is very similar to the `extensionsRequired` concept described in <<specifying-extensions>>, where an asset **SHOULD NOT** be loaded if the client does not support the specified extension. Additional metadata **MAY** be stored in optional properties such as `generator` or `copyright`.  For example,
+Each glTF asset **MUST** have an `asset` property.
+
+The `asset` object **MUST** contain a `version` property that specifies the target glTF version of the asset. Additionally, an optional `minVersion` property **MAY** be used to specify the minimum glTF version support required to load the asset.
+
+Both `version` and `minVersion` properties **MUST** conform to the asset version string syntax defined as follows.
+
+The version string is a concatenation of a major version component, a single "`dot`" character (`0x2E`), and a minor version component. Each version component is either a string consisting of a single decimal "`zero`" character (`0x30`), or a single non-zero decimal character (with codes from `0x31` to `0x39`) optionally followed by up to eight any decimal characters (with codes from `0x30` to `0x39`).
+
+[NOTE]
+====
+In other words, a version string is two decimal numbers from 0 to 999999999 without leading zeros joined with a single dot.
+====
+
+[NOTE]
+.Example valid version strings
+====
+`````
+"0.0", "0.12", "2.0", "12.34", "999999999.999999999"
+`````
+====
+
+[NOTE]
+.Example invalid version strings
+====
+`````
+"+1.0", "2.0.1", "2.00", "01.1"
+`````
+====
+
+A version `"A.B"` is less than a version `"C.D"`, if and only if `A` is less than `C`, or if `A` is equal to `C` and `B` is less than `D`, where `A`, `B`, `C`, and `D` are version components of the version strings as described above.
+
+[NOTE]
+.Version string comparison examples
+====
+- `"2.0"` is less than `"3.0"`
+- `"2.0"` is less than `"2.1"`
+- `"2.1"` is less than `"2.10"`
+- `"2.10"` is less than `"3.0"`
+====
+
+The `minVersion` property allows asset creators to specify a minimum version that a client implementation **MUST** support in order to load the asset. If present, the minimum version specified by the `minVersion` property **MUST** be less than or equal to the version specified by the `version` property.
+
+[NOTE]
+.Implementation Note
+====
+Client implementations should first check whether a `minVersion` property is specified and ensure both its major and minor versions can be supported. If no `minVersion` is specified, then clients should check the `version` property and ensure its major version is supported.
+====
+
+[CAUTION]
+.Implementation Note
+====
+The version specified in the <<glb-file-format-specification,GLB format>> header refers only to the GLB container version and is not related to the version of glTF JSON.
+====
+
+Additional metadata **MAY** be stored in optional properties such as `generator` or `copyright`.  For example,
 
 [source,json]
 ----
@@ -612,14 +666,6 @@ Each glTF asset **MUST** have an `asset` property. The `asset` object **MUST** c
     }
 }
 ----
-
-[NOTE]
-.Implementation Note
-====
-Client implementations should first check whether a `minVersion` property is specified and ensure both major and minor versions can be supported. If no `minVersion` is specified, then clients should check the `version` property and ensure the major version is supported. Clients that load <<glb-file-format-specification,GLB format>> should also check for the `minVersion` and `version` properties in the JSON chunk as the version specified in the GLB header only refers to the GLB container version.
-====
-
-
 
 [[indices-and-names]]
 == Indices and Names
@@ -657,16 +703,16 @@ For property names, glTF usually uses camel case, `likeThis`.
 [[coordinate-system-and-units]]
 == Coordinate System and Units
 
-glTF uses a right-handed coordinate system. glTF defines +Y as up, +Z as forward, and -X as right; the front of a glTF asset faces +Z.
+glTF uses a right-handed coordinate system.
+
+glTF defines +Y as up; the front side of a glTF asset faces +Z, the left side of a glTF asset faces +X.
 
 .glTF Coordinate System Orientation
-image::figures/coordinate-system.png[pdfwidth=2in,align=left]
+image::figures/coordinate-system.svg[pdfwidth=2in,align=left]
 
 The units for all linear distances are meters.
 
 All angles are in radians.
-
-Positive rotation is counterclockwise.
 
 Red, Green, and Blue primary colors use <<bt709,Recommendation ITU-R BT.709>> chromaticity coordinates.
 

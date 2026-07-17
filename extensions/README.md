@@ -46,11 +46,11 @@ This section tracks the status of extensions and projects that are in developmen
 | KHR_audio_graph | Proposal | [PR #2421](https://github.com/KhronosGroup/glTF/pull/2421) |
 | KHR_collision_shapes | Review Draft | [PR #2370](https://github.com/KhronosGroup/glTF/pull/2370) |
 | KHR_gaussian_splatting | Release Candidate | [Specification](2.0/Khronos/KHR_gaussian_splatting/README.md) |
-| KHR_interactivity | Review Draft | [PR #2293](https://github.com/KhronosGroup/glTF/pull/2293) |
+| KHR_interactivity | Release Candidate | [Specification](2.0/Khronos/KHR_interactivity/Specification.adoc) |
 | KHR_materials_diffuse_transmission | Release Candidate | [Specification](2.0/Khronos/KHR_materials_diffuse_transmission/README.md) |
 | KHR_materials_subsurface | Initial Draft | [PR #1928](https://github.com/KhronosGroup/glTF/pull/1928) |
-| KHR_node_hoverability | Review Draft | [PR #2426](https://github.com/KhronosGroup/glTF/pull/2426) |
-| KHR_node_selectability | Review Draft | [PR #2422](https://github.com/KhronosGroup/glTF/pull/2422) |
+| KHR_node_hoverability | Release Candidate | [Specification](2.0/Khronos/KHR_node_hoverability/README.md) |
+| KHR_node_selectability | Release Candidate | [Specification](2.0/Khronos/KHR_node_selectability/README.md) |
 | KHR_physics_rigid_bodies | Review Draft | [PR #2424](https://github.com/KhronosGroup/glTF/pull/2424) |
 | KHR_texture_procedurals | Initial Draft | [PR #2381](https://github.com/KhronosGroup/glTF/pull/2381) |
 | EXT_texture_procedurals_mx_1_39 | Review Draft | [PR #2381](https://github.com/KhronosGroup/glTF/pull/2381) |

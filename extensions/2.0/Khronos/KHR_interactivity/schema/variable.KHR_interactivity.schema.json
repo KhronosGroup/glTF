@@ -1,0 +1,21 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "variable.KHR_interactivity.schema.json",
+    "title": "Behavior graph variable",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "type": {
+            "title": "The type index.",
+            "allOf": [ { "$ref": "glTFid.schema.json" } ]
+        },
+        "value": {
+            "title": "The initial value.",
+            "type": "array",
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "type" ]
+}
