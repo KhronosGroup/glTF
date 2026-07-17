@@ -752,7 +752,7 @@ The node hierarchy is defined using a node's `children` property, as in the foll
 
 The node named `Car` has four children. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
 
-Nodes **MAY** reference external assets. Nodes which contain an external reference **SHOULD NOT** include a camera or mesh. After loading the external asset file, implementations **SHOULD** connect the external asset to the parent file's node hierarchy by attaching all root nodes in the default scene as children.
+Nodes **MAY** reference external assets. After loading the external asset file, implementations **SHOULD** connect the external asset to the parent file's node hierarchy by attaching all root nodes in the default scene as children.
 
 [[transformations]]
 === Transformations
