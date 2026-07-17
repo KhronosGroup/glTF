@@ -17,7 +17,7 @@
         "retroreflectionTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "A texture that defines the retroreflection factor in the red channel.",
-            "gltf_detailedDescription": "A texture that defines a per-texel multiplier for retroreflectionFactor, stored in the red (R) channel with a linear transfer function. This will be multiplied by retroreflectionFactor. Values outside [0, 1] are clamped."
+            "gltf_detailedDescription": "A texture that defines a per-texel multiplier for retroreflectionFactor, stored in the red (R) channel with a linear transfer function. This will be multiplied by retroreflectionFactor."
         },
         "extensions": { },
         "extras": { }
