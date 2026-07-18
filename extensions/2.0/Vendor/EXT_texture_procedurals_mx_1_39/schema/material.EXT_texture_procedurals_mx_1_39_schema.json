@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EXT_texture_procedurals_mx_1_39 MaterialX Procedural Texture Extension",
+  "type": "object",
+  "description": "Extension to define procedural texture graphs using elements defined in MaterialX Specification 1.39",
+  "definitions" : {},
+  "properties": {
+    "materials": {},
+    "textures": {},
+    "images": {},
+    "extensionsUsed": {
+      "type": "array",
+      "items": { "type": "string" },
+      "contains": { "enum": ["KHR_texture_procedurals", "EXT_texture_procedurals_mx_1_39"] }
+    },
+    "extensions": {
+      "type": "object",
+      "properties": {
+
+      },
+      "required": ["KHR_texture_procedurals"]
+    }
+  },
+  "required": ["materials", "extensionsUsed", "extensions"]
+}
