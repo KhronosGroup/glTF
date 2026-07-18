@@ -45,6 +45,7 @@ This section tracks the status of extensions and projects that are in developmen
 | KHR_accessor_float64 | Review Draft | [PR #2397](https://github.com/KhronosGroup/glTF/pull/2397) |
 | KHR_audio_graph | Proposal | [PR #2421](https://github.com/KhronosGroup/glTF/pull/2421) |
 | KHR_collision_shapes | Review Draft | [PR #2370](https://github.com/KhronosGroup/glTF/pull/2370) |
+| KHR_gaussian_splatting_compression_lgsc | Initial Draft | [Specification](2.0/Khronos/KHR_gaussian_splatting_compression_lgsc/README.md) |
 | KHR_gaussian_splatting | Release Candidate | [Specification](2.0/Khronos/KHR_gaussian_splatting/README.md) |
 | KHR_interactivity | Release Candidate | [Specification](2.0/Khronos/KHR_interactivity/Specification.adoc) |
 | KHR_materials_diffuse_transmission | Release Candidate | [Specification](2.0/Khronos/KHR_materials_diffuse_transmission/README.md) |
