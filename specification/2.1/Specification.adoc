@@ -1231,15 +1231,26 @@ The following table lists effective component types with their corresponding acc
 |  _**snorm16**_ | 16-bit signed normalized integer          | 2             | `5122`          | true
 |  _**uint16**_  | 16-bit unsigned integer                   | 2             | `5123`          | false
 |  _**unorm16**_ | 16-bit unsigned normalized integer        | 2             | `5123`          | true
+|  _**sint32**_  | 32-bit signed integer                     | 4             | `5124`          | false
 |  _**uint32**_  | 32-bit unsigned integer                   | 4             | `5125`          | false
 |  _**float32**_ | 32-bit signed <<ieee-754,IEEE-754>> float | 4             | `5126`          | false
+|  _**float64**_ | 64-bit signed <<ieee-754,IEEE-754>> float | 8             | `5130`          | false
+|  _**float16**_ | 16-bit signed <<ieee-754,IEEE-754>> float | 2             | `5131`          | false
+|  _**sint64**_  | 64-bit signed integer                     | 8             | `5134`          | false
+|  _**uint64**_  | 64-bit unsigned integer                   | 8             | `5135`          | false
 |====
+
+[NOTE]
+.Note
+====
+The core glTF 2.1 specification defines all of the above component types. However, only a subset of these types are used in the core specification. Individual properties that reference accessors will define which component types are valid for that property, such as the table for <<meshes-attributes,Mesh Primitive Vertex Attributes>>.
+====
 
 All multi-byte component types use little endian byte order.
 
 Signed integers use two's complement representation.
 
-The `normalized` property **MUST NOT** be true when the `componentType` is `5125` or `5126`.
+The `normalized` property **MUST NOT** be true when the `componentType` is set to `5124` (_sint32_), `5125` (_uint32_), `5126` (_float32_), `5130` (_float64_), `5131` (_float16_), `5134` (_sint64_), or `5135` (_uint64_).
 
 Only the values of the `componentType` property present in the table above are in scope of this Specification; support for others **MAY** be added by extensions or future Specification versions.
 
@@ -1578,6 +1589,8 @@ If the accessor's component type is a non-normalized integer type, the minimum a
 
 If the accessor's component type is a normalized integer type, the minimum and maximum values stored as JSON decimal numbers **MUST** exactly match integer minimum and maximum values that would be accessed before they are converted to normalized floats. In other words, even if the accessor's `normalized` property is true, the bounds are stored as if it is false.
 
+If the accessor's component type is a 64-bit integer (_sint64_ or _uint64_), the `min` and `max` values may not be exactly representable in JSON-implied double precision. Implementations **SHOULD NOT** write incorrect `min` or `max` properties, including integers changed by converting to double precision.
+
 If the accessor's component type is a floating-point type, the minimum and maximum values stored as JSON decimal numbers **SHOULD** exactly match minimum and maximum values that would be accessed. If they do not match exactly as is, they **MUST** match exactly after being rounded to the accessor's specific floating-point component type.
 
 [NOTE]
@@ -1587,13 +1600,15 @@ JSON usually implies double precision and some tools output JSON numbers that ar
 
 Let's say the accessor's component type is _float32_ and the exact minimum value accessed with it is `1.2000000476837158203125`. The accessor's `min` property can be `1.2` in this case because rounding `1.2` to a single-precision float would produce the accessed value.
 
-It is therefore recommended to apply rounding to the `min` and `max` property values of floating-point accessors when loading glTF assets to avoid any potential runtime mismatches. If using ECMAScript, the `Math.fround` function could be used to round a JSON number to the nearest single-precision float.
+It is therefore recommended to apply rounding to the `min` and `max` property values of floating-point accessors when loading glTF assets to avoid any potential runtime mismatches. If using ECMAScript, the `Math.fround` function could be used to round a JSON number from _float64_ to _float32_, and the `Math.f16round` function could be used to round a JSON number from _float64_ to _float16_.
 ====
 
 [NOTE]
 .Implementation Note
 ====
 The rules above imply that values of the `min` and `max` properties are always in the range of the accessor's component type and therefore implementations can internally use the same data type for the bounds as for the accessor elements.
+
+However, for the _sint64_ and _uint64_ component types, when the values are outside the range of `[-(2^53^)+1, (2^53^)-1]`, the `min` and `max` values may not be exactly representable in JSON-implied double precision. In such implementations, the parsed `min` and `max` may only be approximations of the actual value written in JSON. Implementations intending to correctly parse and use such accessors would need to take their handling of `min` and `max` precision into account.
 ====
 
 If the accessor is sparse, its `min` and `max` properties correspond to the minimum and maximum component values after applying the sparse replacements.
@@ -1682,8 +1697,6 @@ Attribute semantic names not belonging to any of these categories are out of sco
 The following table provides attribute semantic names with their compatible accessor types and effective accessor component types for the attribute semantics defined in this Specification. Any combination of types and/or effective component types not present in this table **MUST NOT** be used for attribute semantics defined in this Specification.
 
 Future specification versions or extensions **MAY** define new attribute semantics as well as additional compatible types and/or effective component types for existing attribute semantics.
-
-Accessors of the _uint32_ effective component type **SHOULD NOT** be used for any vertex attribute semantic, including application-specific semantics, unless explicitly enabled by future specification versions or extensions.
 
 [options="header",cols="20%,20%,30%,30%"]
 |====

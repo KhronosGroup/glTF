@@ -20,36 +20,60 @@
         },
         "componentType": {
             "description": "The datatype of the accessor's components.",
-            "gltf_detailedDescription": "The datatype of the accessor's components.  UNSIGNED_INT type **MUST NOT** be used for any accessor that is not referenced by `mesh.primitive.indices`.",
             "anyOf": [
                 {
                     "const": 5120,
-                    "description": "BYTE",
+                    "description": "8-bit signed integer (sint8) or 8-bit signed normalized integer (snorm8).",
                     "type": "integer"
                 },
                 {
                     "const": 5121,
-                    "description": "UNSIGNED_BYTE",
+                    "description": "8-bit unsigned integer (uint8) or 8-bit unsigned normalized integer (unorm8).",
                     "type": "integer"
                 },
                 {
                     "const": 5122,
-                    "description": "SHORT",
+                    "description": "16-bit signed integer (sint16) or 16-bit signed normalized integer (snorm16).",
                     "type": "integer"
                 },
                 {
                     "const": 5123,
-                    "description": "UNSIGNED_SHORT",
+                    "description": "16-bit unsigned integer (uint16) or 16-bit unsigned normalized integer (unorm16).",
+                    "type": "integer"
+                },
+                {
+                    "const": 5124,
+                    "description": "32-bit signed integer (sint32).",
                     "type": "integer"
                 },
                 {
                     "const": 5125,
-                    "description": "UNSIGNED_INT",
+                    "description": "32-bit unsigned integer (uint32).",
                     "type": "integer"
                 },
                 {
                     "const": 5126,
-                    "description": "FLOAT",
+                    "description": "32-bit floating-point number (float32) in IEEE 754 single-precision format (binary32).",
+                    "type": "integer"
+                },
+                {
+                    "const": 5130,
+                    "description": "64-bit floating-point number (float64) in IEEE 754 double-precision format (binary64).",
+                    "type": "integer"
+                },
+                {
+                    "const": 5131,
+                    "description": "16-bit floating-point number (float16) in IEEE 754 half-precision format (binary16).",
+                    "type": "integer"
+                },
+                {
+                    "const": 5134,
+                    "description": "64-bit signed integer (sint64).",
+                    "type": "integer"
+                },
+                {
+                    "const": 5135,
+                    "description": "64-bit unsigned integer (uint64).",
                     "type": "integer"
                 },
                 {
@@ -87,7 +111,7 @@
             "type": "boolean",
             "description": "Specifies whether integer data values are normalized before usage.",
             "default": false,
-            "gltf_detailedDescription": "Specifies whether integer data values are normalized (`true`) to [0, 1] (for unsigned types) or to [-1, 1] (for signed types) when they are accessed. This property **MUST NOT** be set to `true` for accessors with `FLOAT` or `UNSIGNED_INT` component type."
+            "gltf_detailedDescription": "Specifies whether integer data values are normalized (`true`) to [0, 1] (for unsigned types) or to [-1, 1] (for signed types) when they are accessed. This property **MUST NOT** be set to `true` for accessors with a component type of `5124` (sint32), `5125` (uint32), `5126` (float32), `5130` (float64), `5131` (float16), `5134` (sint64), or `5135` (uint64)."
         },
         "sparse": {
             "$ref": "accessor.sparse.schema.json",
