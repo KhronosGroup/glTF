@@ -1,0 +1,63 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "MAXAR_mesh_variants node extension",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "mappings": {
+            "type": "array",
+            "description": "A list of mesh to variant mappings",
+            "items": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "glTFProperty.schema.json"
+                    }
+                ],
+                "properties": {
+                    "variants": {
+                        "uniqueItems": true,
+                        "type": "array",
+                        "description": "An array of variant index values.",
+                        "items": {
+                            "allOf": [
+                                {
+                                    "$ref": "glTFid.schema.json"
+                                }
+                            ]
+                        },
+                        "minItems": 1
+                    },
+                    "mesh": {
+                        "allOf": [
+                            {
+                                "$ref": "glTFid.schema.json"
+                            }
+                        ],
+                        "description": "The mesh associated with the set of variants."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The user-defined name of this variant mesh mapping."
+                    },
+                    "extras": {},
+                    "extensions": {}
+                },
+                "required": [
+                    "variants",
+                    "mesh"
+                ]
+            },
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "mappings"
+    ]
+}
