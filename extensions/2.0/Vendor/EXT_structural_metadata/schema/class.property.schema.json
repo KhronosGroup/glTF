@@ -1,0 +1,182 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "class.property.schema.json",
+    "title": "Class Property in EXT_structural_metadata",
+    "type": "object",
+    "description": "A class property.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The name of the property, e.g. for display purposes."
+        },
+        "description": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The description of the property."
+        },
+        "type": {
+            "description": "The element type.",
+            "anyOf": [
+                {
+                    "const": "SCALAR"
+                },
+                {
+                    "const": "VEC2"
+                },
+                {
+                    "const": "VEC3"
+                },
+                {
+                    "const": "VEC4"
+                },
+                {
+                    "const": "MAT2"
+                },
+                {
+                    "const": "MAT3"
+                },
+                {
+                    "const": "MAT4"
+                },
+                {
+                    "const": "STRING"
+                },
+                {
+                    "const": "BOOLEAN"
+                },
+                {
+                    "const": "ENUM"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "componentType": {
+            "description": "The datatype of the element's components. Only applicable to `SCALAR`, `VECN`, and `MATN` types.",
+            "anyOf": [
+                {
+                    "const": "INT8"
+                },
+                {
+                    "const": "UINT8"
+                },
+                {
+                    "const": "INT16"
+                },
+                {
+                    "const": "UINT16"
+                },
+                {
+                    "const": "INT32"
+                },
+                {
+                    "const": "UINT32"
+                },
+                {
+                    "const": "INT64"
+                },
+                {
+                    "const": "UINT64"
+                },
+                {
+                    "const": "FLOAT32"
+                },
+                {
+                    "const": "FLOAT64"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "enumType": {
+            "type": "string",
+            "description": "Enum ID as declared in the `enums` dictionary. Required when `type` is `ENUM`."
+        },
+        "array": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether the property is an array. When `count` is defined the property is a fixed-length array. Otherwise the property is a variable-length array."
+        },
+        "count": {
+            "type": "integer",
+            "minimum": 2,
+            "description": "The number of array elements. May only be defined when `array` is true."
+        },
+        "normalized": {
+            "type": "boolean",
+            "description": "Specifies whether integer values are normalized. Only applicable to `SCALAR`, `VECN`, and `MATN` types with integer component types. For unsigned integer component types, values are normalized between `[0.0, 1.0]`. For signed integer component types, values are normalized between `[-1.0, 1.0]`. For all other component types, this property must be false.",
+            "default": false
+        },
+        "offset": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/numericValue"
+                }
+            ],
+            "description": "An offset to apply to property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types when the component type is `FLOAT32` or `FLOAT64`, or when the property is `normalized`."
+        },
+        "scale": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/numericValue"
+                }
+            ],
+            "description": "A scale to apply to property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types when the component type is `FLOAT32` or `FLOAT64`, or when the property is `normalized`."
+        },
+        "max": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/numericValue"
+                }
+            ],
+            "description": "Maximum allowed value for the property. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the maximum of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
+        },
+        "min": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/numericValue"
+                }
+            ],
+            "description": "Minimum allowed value for the property. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the minimum of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
+        },
+        "required": {
+            "type": "boolean",
+            "description": "If required, the property must be present in every entity conforming to the class. If not required, individual entities may include `noData` values, or the entire property may be omitted. As a result, `noData` has no effect on a required property. Client implementations may use required properties to make performance optimizations.",
+            "default": false
+        },
+        "noData": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/noDataValue"
+                }
+            ],
+            "description": "A `noData` value represents missing data — also known as a sentinel value — wherever it appears. `BOOLEAN` properties may not specify `noData` values. This is given as the plain property value, without the transforms from the `normalized`, `offset`, and `scale` properties. Must not be defined if `required` is true."
+        },
+        "default": {
+            "allOf": [
+                {
+                    "$ref": "definitions.schema.json#/definitions/anyValue"
+                }
+            ],
+            "description": "A default value to use when encountering a `noData` value or an omitted property. The value is given in its final form, taking the effect of `normalized`, `offset`, and `scale` properties into account. Must not be defined if `required` is true."
+        },
+        "semantic": {
+            "type": "string",
+            "minLength": 1,
+            "description": "An identifier that describes how this property should be interpreted. The semantic cannot be used by other properties in the class."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "type"
+    ]
+}
