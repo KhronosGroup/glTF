@@ -1,0 +1,18 @@
+{
+    "title": "on<Name>Event Node",
+    "properties": {
+        "type": {
+            "type": "string",
+            "pattern": "^events\/on(.+)Event$"
+        },
+        "flow": {
+            "type": "object",
+            "properties": {
+                "next": { "$ref": "behavior.types.flow.schema.json"}
+            },
+            "required": ["next"]
+        }
+    },
+    "sockets": [],
+    "required": ["type", "flow"]
+}
