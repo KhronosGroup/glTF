@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Lowpass Filter Node",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "frequency": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The cutoff frequency in Hertz."
+        },
+        "qualityFactor": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The resonance at the cutoff frequency.",
+            "default": 1.0
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["frequency"]
+}
