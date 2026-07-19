@@ -1,0 +1,50 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_scatter glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines scattering properties for both thin-walled and volumetric materials.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "scatterFactor": {
+            "type": "number",
+            "description": "The weight of the scattering effect. Range is [0, 1].",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "Controls the overall strength of scattering. At 0, scattering is fully disabled and the material behaves as if KHR_materials_scatter were absent. At 1, the full scattering effect defined by multiscatterColorFactor and scatterAnisotropy is applied. In thin-walled mode, this lerps the transmission lobe between specular and diffuse and the transmitted color between baseColor and multiscatterColor. In volumetric mode, this scales the effective multi-scatter albedo."
+        },
+        "scatterTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "A texture that defines the per-texel scatter weight, stored in the alpha (A) channel.",
+            "gltf_detailedDescription": "A texture that defines the per-texel scatter weight, stored in the alpha (A) channel. This texture will be multiplied by the scatterFactor value. The alpha channel is used so that this texture can be shared with multiscatterColorTexture, packing the scatter weight alongside the RGB scatter color."
+        },
+        "multiscatterColorFactor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "description": "The multi-scatter color.",
+            "default": [ 1.0, 1.0, 1.0 ],
+            "minItems": 3,
+            "maxItems": 3,
+            "gltf_detailedDescription": "In volumetric mode (KHR_materials_volume present with thicknessFactor > 0), this is the multi-scatter albedo: the perceived color of the scattering medium after many internal bounces. In thin-walled mode, this is a multiplicative tint on the transmitted light. A value of [1, 1, 1] applies no tint."
+        },
+        "multiscatterColorTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "A texture that defines the multi-scatter color, stored in the RGB channels and encoded in sRGB.",
+            "gltf_detailedDescription": "A texture that defines the multi-scatter color, stored in the RGB channels and encoded in sRGB. This texture will be multiplied by the multiscatterColorFactor value."
+        },
+        "scatterAnisotropy": {
+            "type": "number",
+            "description": "The anisotropy of scatter events. Range is (-1, 1).",
+            "default": 0.0,
+            "exclusiveMinimum": -1.0,
+            "exclusiveMaximum": 1.0,
+            "gltf_detailedDescription": "Controls the directionality of scattered light. In volumetric mode, this is the g parameter of the Henyey-Greenstein phase function. In thin-walled mode, this controls the split of scattered energy between the two hemispheres: at +1, all light is transmitted forward (pure diffuse BTDF); at -1, all light is reflected back (pure diffuse BRDF, opaque Lambertian with multiscatterColor); at 0, energy is split equally between reflection and transmission."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
