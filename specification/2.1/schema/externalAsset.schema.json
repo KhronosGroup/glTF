@@ -1,0 +1,16 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "externalAsset.schema.json",
+    "title": "External Asset",
+    "type": "object",
+    "description": "An external asset referenced by a node.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "file": {
+            "$ref": "glTFid.schema.json",
+            "description": "The index of the file reference used for this external asset.",
+            "gltf_detailedDescription": "The index of the file reference used for this external asset."
+        }
+    },
+    "required": [ "file" ]
+}

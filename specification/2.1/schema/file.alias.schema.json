@@ -1,0 +1,19 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "file.alias.schema.json",
+    "title": "Alias to External File",
+    "type": "object",
+    "description": "Used to alias files referenced within an external file to other paths by the parent.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "alias": {
+            "type": "string",
+            "description": "String alias matched against an inner path."
+        },
+        "file": {
+            "$ref": "glTFid.schema.json",
+            "description": "The index of the file to the files array."
+        }
+    },
+    "required": [ "alias", "file" ]
+}

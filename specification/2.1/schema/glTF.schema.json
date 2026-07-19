@@ -72,6 +72,24 @@
             "minItems": 1,
             "gltf_detailedDescription": "An array of cameras.  A camera defines a projection matrix."
         },
+        "externalAssets": {
+            "type": "array",
+            "description": "An array of external assets.",
+            "items": {
+                "$ref": "externalAsset.schema.json"
+            },
+            "minItems": 1,
+            "gltf_detailedDescription": "An array of external assets.  An external asset is a node that references an external file."
+        },
+        "files": {
+            "type": "array",
+            "description": "An array of file references.",
+            "items": {
+                "$ref": "file.schema.json"
+            },
+            "minItems": 1,
+            "gltf_detailedDescription": "An array of file references.  A file reference is a pointer to an external file."
+        },
         "images": {
             "type": "array",
             "description": "An array of images.",

@@ -752,6 +752,7 @@ The node hierarchy is defined using a node's `children` property, as in the foll
 
 The node named `Car` has four children. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
 
+Nodes **MAY** reference external assets. After loading the external asset file, implementations **SHOULD** connect the external asset to the parent file's node hierarchy by attaching all root nodes in the default scene as children.
 
 [[transformations]]
 === Transformations
@@ -1083,7 +1084,7 @@ On top of that, a sparse accessor includes a `sparse` JSON object describing the
 
 - `count`: number of displaced elements. This number **MUST NOT** be greater than the number of the base accessor elements.
 
-- `indices`: object describing the location and the component type of indices of values to be replaced. The indices **MUST** form a strictly increasing sequence. The indices **MUST NOT** be greater than or equal to the number of the base accessor elements. 
+- `indices`: object describing the location and the component type of indices of values to be replaced. The indices **MUST** form a strictly increasing sequence. The indices **MUST NOT** be greater than or equal to the number of the base accessor elements.
 
 - `values`: object describing the location of displaced elements corresponding to the indices referred from the `indices`.
 
@@ -2588,6 +2589,144 @@ See <<appendix-c-interpolation,Appendix C>> for additional information about int
 
 Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
 
+[[file-references]]
+== Unified file references
+
+Files **MAY** be added to a top-level `files` array. The file's data **MAY** be stored externally and referenced by a `uri` or stored as binary in a buffer and referenced by `bufferView` index.
+
+Each file object **MUST** define a `mimeType` property, which may be any media type that matches the file's contents. Cyclical references between files are strictly prohibited.
+
+Files with a `mimeType` of `model/gltf+json` or `model/gltf-binary` **MAY** define a list of `aliases` that can be used to match and redirect a `uri` inside of the referred file. Any `uri` in the referenced file that matches the value `alias` exactly **SHOULD** use the associated `file` instead. This allows for efficient packing of resources shared across several referred files, or overriding inner data. Aliases are not inherited from the parent asset. Extensions may add additional mime types that can define `aliases`.
+
+[NOTE]
+.Implementation Note
+====
+If the same `uri` is used within multiple file references, implementations should not assume that the files are identical without validation.
+====
+
+[source,json]
+----
+{
+    "files": [
+        {
+            "uri": "path-to-a.gltf",
+            "mimeType": "model/gltf+json",
+            "aliases": [
+                {
+                    "alias": "path-to-a.bin",
+                    "file": 1
+                }
+            ]
+        },
+        {
+            "uri": "path-to-a.bin",
+            "mimeType": "application/gltf-buffer"
+        },
+        {
+            "uri": "https://example.org/path-to-a.glb",
+            "mimeType": "model/gltf-binary"
+        },
+        {
+            "bufferView": 0,
+            "mimeType": "model/gltf-binary"
+        }
+    ]
+}
+----
+
+[[external-assets]]
+== Referencing external assets
+
+glTF 2.1 defines the ability to compose multiple glTF files together, by referencing external glTF files from another glTF file. Any glTF file which references another glTF file as an external asset is called a complex scene. Complex scenes are defined using multiple components: file references to define where the data is stored and external asset definitions that define the properties of the asset node.
+
+External glTF assets **MAY** be added to a top-level `externalAssets` array. The external asset **MUST** contain a `file` property that refers to an object in the `files` array by index. Multiple objects in the `externalAssets` array may refer to the same `file`. All external assets **MUST** refer to files with the `"model/gltf-binary"` or `"model/gltf+json"` media types.
+
+[source,json]
+----
+{
+    "files": [
+        {
+            "uri": "path-to-a.gltf",
+            "mimeType": "model/gltf+json"
+        },
+        {
+            "uri": "path-to-a.bin",
+            "mimeType": "application/gltf-buffer"
+        },
+        {
+            "uri": "path-to-b.glb",
+            "mimeType": "model/gltf-binary"
+        },
+        {
+            "bufferView": 0
+            "mimeType": "model/gltf-binary"
+        }
+    ],
+    "externalAssets": [
+        {
+            "file": 0
+        },
+        {
+            "file": 2
+        },
+        {
+            "file": 3
+        }
+    ],
+}
+----
+
+[NOTE]
+.Implementation Note
+====
+When an embedded external asset is embedded via a <<data-uri,Data URI>> or a `bufferView`, any relative URIs it contains should resolve against the same filesystem root as the parent asset, unless the URI is remapped by an alias. _E.g._, If asset `A` embeds external asset `B`, and `B` references textures at the relative path `./textures/**`, those textures resolve relative to the location of `A`, making them accessible to both `A` and `B`.
+====
+
+Nodes *MAY* contain an `externalAsset` property that refers to an external glTF asset in the `externalAssets` array by index.
+
+[NOTE]
+.Implementation Note
+====
+When the same external asset is referenced by multiple nodes, implementations should load independent copies of the external asset. Each copy of the external asset should copy any glTF JSON and hierarchy, but may share buffer data between the copies. This balances compatibility with existing features and extensions while also minimizing the amount of copied data.
+====
+
+Once loaded, the root nodes defined by the external asset's default scene and those root nodes full node hierarchies *SHOULD* be treated as being attached as a child to the node containing the `externalAsset` reference.
+
+[source,json]
+----
+{
+    "nodes": [
+        {
+            "name": "RootNode",
+            "translation": [0, 0, 0],
+            "children": [1, 2]
+        },
+        {
+            "translation": [2, 0, 20],
+            "externalAsset": 0
+        },
+        {
+            "translation": [0, 0, 0],
+            "children": [3],
+            "externalAsset": 1
+        },
+        {
+            "translation": [0, 1, 1],
+            "externalAsset": 2
+        }
+    ]
+}
+----
+
+This instantiates the external asset as this node in the scene hierarchy, such that the root of the file becomes this node. The root nodes in the default `scene` of the nested glTF become children of this external asset node. Assets that have no `scenes` array or lack a default `scene` are valid but have nothing to attach to the node hierarchy and should be treated as such. Extensions or future spec versions **MAY** alter this behavior.
+
+[NOTE]
+.Implementation Note
+====
+Nodes may contain both an `externalAsset` and other `children`. For consistency between implementations, it is recommended that the root node(s) of the external asset are attached after the other children of the node.
+====
+
+See <<appendix-d-external-asset-diagrams, Appendix D>> for detailed diagrams outlining a sample structure and the expected scene graph.
 
 [[specifying-extensions]]
 == Specifying Extensions
@@ -3374,3 +3513,132 @@ This can be achieved by ensuring that stem:[v_k != -v_{k+1}] for all keyframes.
 ====
 
 The first in-tangent stem:[a_1] and last out-tangent stem:[b_n] **SHOULD** be zeros as they are not used in the spline calculations.
+
+[appendix]
+[[appendix-d-external-asset-diagrams]]
+= External Asset Scene Graph Diagrams
+
+== Overview
+
+This section provides informative example JSON and diagrams of External Assets to demonstrate the expected node hierarchy from implementations. For full normative details, see the sections on <<nodes-and-hierarchy>>, <<file-references>>, and <<external-assets>>.
+
+The following three sections represent the same asset and structure. The first two sections are diagrams to visually demonstrate hierarchy, and the third section is the equivalent glTF JSON for the assets represented within the diagrams.
+
+== Expected Scene Graph
+
+.Expected Scene Graph
+image::figures/external-assets-expected-scene-graph.svg[pdfwidth=100%,align=left]
+
+== glTF Structure & Hierarchy
+
+.glTF Structure & Hierarchy
+image::figures/external-assets-hierarchy.svg[pdfwidth=100%,align=left]
+
+== JSON
+
+=== Asset A
+
+[source,json]
+----
+{
+    "asset": {
+        "version": "2.1"
+    },
+    "scene": 0,
+    "scenes": [ { "nodes": [0] } ],
+    "files": [
+        {
+            "name": "File Ref. to Asset B",
+            "uri": "asset-b.glb",
+            "mimeType": "model/gltf-binary"
+        },
+        {
+            "name": "File Ref. to Asset C",
+            "uri": "asset-c.glb",
+            "mimeType": "model/gltf-binary"
+        },
+    ],
+    "externalAssets": [
+        {
+            "name": "External Asset 1",
+            "file": 0
+        },
+        {
+            "name": "External Asset 2",
+            "file": 1
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Root Node A1",
+            "children": [ 1, 2, 3 ]
+        },
+        {
+            "name": "Node A1",
+            "externalAsset": 0
+        },
+        {
+            "name": "Node A2",
+            "externalAsset": 0
+        },
+        {
+            "name": "Node A3",
+            "externalAsset": 1
+        }
+    ]
+}
+----
+
+=== Asset B
+
+[source,json]
+----
+{
+    "asset": {
+        "version": "2.1"
+    },
+    "scene": 0,
+    "scenes": [ { "nodes": [0] } ],
+    "nodes": [
+        {
+            "name": "Root Node B1",
+            "children": [ 1, 2 ]
+        },
+        {
+            "name": "Node B1",
+        },
+        {
+            "name": "Node B2",
+        }
+    ]
+}
+----
+
+=== Asset C
+
+[source,json]
+----
+{
+    "asset": {
+        "version": "2.1"
+    },
+    "scene": 0,
+    "scenes": [ { "nodes": [0, 1] } ],
+    "nodes": [
+        {
+            "name": "Root Node C1",
+            "children": [ 2 ]
+        },
+        {
+            "name": "Root Node C2",
+            "children": [ 3 ]
+        },
+        {
+            "name": "Node C1",
+        },
+        {
+            "name": "Node C2",
+        }
+    ]
+}
+----
