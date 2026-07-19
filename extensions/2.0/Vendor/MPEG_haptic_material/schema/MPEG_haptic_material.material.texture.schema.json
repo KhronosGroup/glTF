@@ -1,0 +1,23 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "MPEG_haptic_material.material.texture",
+    "type": "object",
+    "description": "Texture for haptic material.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "texture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "A texture information.",
+            "gltf_detailedDescription": "Haptic texture described with a 2D texture."
+        },
+        "type": {
+            "type": "string",
+            "enum": ["High_Resolution", "Low_Resolution", "Reference", "Other"],
+            "description": "Indicates the type of texture",
+            "default": "High_Resolution"
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "texture", "type" ]
+}
