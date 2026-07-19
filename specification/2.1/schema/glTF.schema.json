@@ -129,6 +129,14 @@
             },
             "minItems": 1
         },
+        "shapes": {
+            "type": "array",
+            "description": "An array of shapes.",
+            "items": {
+                "$ref": "shape.schema.json"
+            },
+            "minItems": 1
+        },
         "skins": {
             "type": "array",
             "description": "An array of skins.",

@@ -845,6 +845,39 @@ The next example defines the transform for a node with attached camera using the
 ----
 
 
+[[bounding-volumes]]
+=== Bounding Volumes
+
+Any glTF node **MAY** define a local space bounding volume using a node's `boundingVolume` property. A bounding volume is a simple geometric shape, optionally transformed, that **SHOULD** completely enclose the node's geometry.
+
+Bounding volumes contain the following properties:
+
+[options="header"]
+|====
+| Property      | Description
+| `shape`       | The index of the shape in the top-level `shapes` array. Required.
+| `rotation`    | The bounding volume's unit quaternion rotation relative to the node's local coordinate system.
+| `scale`       | The bounding volume's scale along the rotated local X, Y, and Z axes.
+| `translation` | The bounding volume's translation along the node's local X, Y, and Z axes.
+|====
+
+Multiple bounding volumes defined in a node hierarchy form a bounding volume hierarchy (BVH), which can be used to accelerate frustum culling, occlusion culling, ray tracing, and so on. Bounding volume hierarchies **SHOULD** have spatial coherence, meaning that a node's bounding volume completely encloses the geometry of its descendants.
+
+Bounding volumes may be used to defer loading of content based on application-specific criteria, such as the angular size on a player's camera, or any other metric. Bounding volumes may be used to restrict rendering, interactions, or anything else to a specific volume of space. Implementations may choose to use bounding volumes for any purpose.
+
+The tightness or looseness of the bounding volume may be customized by the asset author depending on the use case. For example, a bounding volume used for a skinned mesh is **RECOMMENDED** to be large enough to contain the mesh in all reasonable deformation states, such as the possible poses of a character. Similarly, a bounding volume placed on a parent with multiple animated children is **RECOMMENDED** to be large enough to contain all of the children in all reasonable animation states. Alternatively, such a parent could simply not define a bounding volume, and dynamically rely on the bounding volumes of its children, if any.
+
+`"box"`` and `"sphere"` are the supported shape types for bounding volumes due to their simplicity and efficiency. Additional shape types **MAY** be allowed via extensions.
+
+Additionally, changing the shape parameters **SHOULD** be preferred over changing the bounding volume's `scale`.
+
+[NOTE]
+.Implementation Note
+====
+Many engines use axis-aligned bounding boxes (AABBs) for mesh culling. When converting from bounding volumes to AABBs programmatically, the resulting AABB should include all extents of the original bounding volume, including any transformations. Note that the transformations may be non-conformal (e.g. a transformation with a skew or a non-uniform scale).
+====
+
+
 [[binary-data-storage]]
 == Binary Data Storage
 
@@ -2587,6 +2620,49 @@ a~1~,a~2~,...a~n~,v~1~,v~2~,...v~n~,b~1~,b~2~,...b~n~
 See <<appendix-c-interpolation,Appendix C>> for additional information about interpolation modes.
 
 Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
+
+
+[[shapes]]
+== Shapes
+
+glTF defines an array of shapes. All built-in shape types are "implicit" shapes, meaning that they have a surface defined by a mathematical function, and they have a distinct inside and outside.
+
+Similarly to other glTF objects, shapes in this array do not automatically have behavior. Other objects in the glTF document may use these shapes to instance them in the scene, providing the geometry data required for the behavior of that object, such as bounding volumes, or extension-defined physics colliders.
+
+Each shape is specified with a mandatory `type` property, and an additional structure with various size parameters depending on the type of shape. The following example defines a sphere shape with a radius of 0.1 meters.
+
+[source,json]
+----
+{
+    "shapes": [
+        {
+            "sphere": { "radius": 0.1 },
+            "type": "sphere"
+        }
+    ]
+}
+----
+
+
+The core glTF 2.1 specification includes the following shape types:
+
+[options="header"]
+|====
+| `"box"`      | An axis-aligned box with a size per-axis, centered at the origin in local space, with normals facing outwards along each axis.
+| `"capsule"`  | A capsule, centered at the origin in local space with potentially different radii at each end, equivalent to the convex hull of two spheres located along the Y axis (in local space) at a specified distance, with normals facing outwards.
+| `"cylinder"` | A cylinder, centered at the origin in local space with potentially different radii at each end, equivalent to the convex hull of two circles in the X/Z plane positioned along the Y axis at a specified distance, with the top cap normal facing along the +Y axis, the bottom cap normal facing along the -Y axis, and the side normals facing outwards along the X/Z plane.
+| `"plane"`    | A plane centered at the origin in local space, optionally with finite extents, with normal along the +Y axis in local space. The plane is one-sided.
+| `"sphere"`   | A sphere, centered at the origin in local space with a radius equal in all directions, with normals facing outwards.
+|====
+
+
+A sub-object with a key matching the shape type **MAY** be used to specify the size parameters of the shape. When the `type` of a shape refers to a built-in shape type, the shape must not supply a sub-object for a different shape type: for example, a shape whose `type` is "box" must not have a `sphere` property defined.
+
+By default, planes have infinite extents along their tangent and bitangent vectors, specified as X and Z in local space, respectively. A plane may optionally provide `sizeX` and `sizeZ` properties to specify a finite total size along these axes. The center of the plane's surface is at the origin in local space. The entirety of the space behind the plane, in its local -Y direction, is considered inside of the plane.
+
+Degenerate shapes are prohibited. A sphere must have a positive, non-zero radius. A box shape must have positive non-zero values for each component of `size`. The cylinder and capsule shapes must have a positive, non-zero `height`, both `radiusTop` and `radiusBottom` must be non-negative, and at least one of `radiusTop` and `radiusBottom` must be non-zero. A plane must have positive non-zero `sizeX` and `sizeZ` extents, if provided.
+
+Extensions **MAY** define additional shape types, in which case the `type` **MAY** be set to a custom value, or set to one of the built-in shape types to provide a fallback.
 
 
 [[specifying-extensions]]
