@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GEO_LOD",
+  "description": "Attach to any node whose subtree is a LOD variant—show it only when camera metric ∈ [switchIn, switchOut).",
+  "type": "object",
+  
+  "not": { "required": [ "mesh" ] },
+  
+  "properties": {
+    "mode": {
+      "type": "string",
+      "enum": [ "DISTANCE", "SCREEN_COVERAGE" ],
+      "description": "Which metric drives the switch: world-space distance or on-screen coverage."
+    },
+    "switchinout": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "[switchIn, switchOut] thresholds for this LOD node. "
+        + "For DISTANCE: switchIn = activation distance when approaching, "
+        + "switchOut = deactivation when receding. "
+        + "For SCREEN_COVERAGE: switchIn = activation coverage when coming into view, "
+        + "switchOut = deactivation when shrinking out of view."
+    }
+  },
+
+  "required": [ "mode", "switchinout" ],
+  "additionalProperties": false
+}
