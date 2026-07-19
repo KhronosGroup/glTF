@@ -1,0 +1,17 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "EXT_lights_area Rectangular Light Properties",
+    "type" : "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties" : {
+        "aspect" : {
+            "type" : "number",
+            "description" : "Aspect ratio of the light (width / height).",
+            "default" : 1.0,
+            "minimum": 0.0,
+            "exclusiveMinimum": true
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
