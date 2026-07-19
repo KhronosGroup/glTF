@@ -1,0 +1,91 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_anchor.trackable.schema.json",
+    "type": "object",
+    "description": "Trackable schema",
+    "properties": {
+        "type": {
+            "type": "integer",
+            "enum": [ 0, 1, 2, 3, 4, 5, 6, 7],
+            "description": "Type of the trackable",
+            "gltf_detailedDescription":"Value is oneOf TRACKABLE_FLOOR=0, TRACKABLE_VIEWER=1, TRACKABLE_CONTROLLER=2, TRACKABLE_PLANE=3, TRACKABLE_MARKER_2D=4, TRACKABLE_MARKER_3D=5, TRACKABLE_MARKER_GEO=6, TRACKABLE_APPLICATION=7"
+        },
+        "path": {
+            "type": "string",
+            "description":"Path that describes the action space "
+        },
+        "geometricConstraint": {
+            "type": "integer",
+            "enum": [0, 1],
+            "description": "GeometricConstraint flag",
+            "gltf_detailedDescription":"Value is oneOf HORIZONTAL_PLANE=0, VERTICAL_PLANE=1"
+        },
+        "markerNode": {
+            "type": "integer",
+            "description": "Index to the node in the nodes array in which the marker geometry and texture are described"
+        },
+        "coordinate": {
+            "type": "array",
+            "items": { "type":"number"},
+            "minItems": 3,
+            "maxItems": 3,            
+            "description": "Array of 3 float numbers giving the longitude, the latitude, and the elevation of the geolocation of the center, that shall be as specified in [GeoJSON] for the point geometry type. ",
+            "gltf_detailedDescription":"The longitude in units of decimal degrees. The value is in range of −180.0 to 180.0, inclusive. Positive values represent eastern longitude and negative values represent western longitude. the latitude in units of decimal degrees. The value is in range of −90.0 to 90.0, inclusive. Positive value represents northern latitude and negative value represents southern latitude. the elevation is in units of meters above the WGS 84 reference ellipsoid."
+        },
+        "trackableId": {
+            "type": "string",            
+            "description": "An application-defined trackable id, that is known to the application."
+        }
+    },
+    "allOf": [
+        {
+            "if": { 
+                "properties": {
+                    "type" : {"const": 2,"description":"TRACKABLE_CONTROLLER"}     
+                }
+            },
+            "then": { "required": ["path"] }
+        },
+        {
+            "if": { 
+                "properties": {
+                    "type" : {"const": 3,"description":"TRACKABLE_PLANE"}
+                }  
+            },
+            "then": { "required": ["geometricConstraint"] }
+        },
+        {
+            "if": { 
+                "properties": {
+                    "type" : {"const": 4,"description":"TRACKABLE_MARKER_2D"} 
+                }
+            },
+            "then": { "required": ["markerNode"] }
+        },
+        {
+            "if": { 
+                "properties": {
+                    "type" : {"const": 5,"description":"TRACKABLE_MARKER_3D"} 
+                }
+            },
+            "then": { "required": ["markerNode"] } 
+        },
+        {
+            "if": { 
+                "properties": {
+                    "type" : {"const": 6,"description":"TRACKABLE_MARKER_GEO"} 
+                }
+            },
+            "then": { "required": ["geoCoordinate"] }
+        },
+        {
+            "if": { 
+                "properties": {
+                    "type" : {"const": 7,"description":"TRACKABLE_APPLICATION"} 
+                } 
+            },
+            "then": { "required": ["trackableId"] }
+        }
+    ],
+    "required": ["type"]
+}

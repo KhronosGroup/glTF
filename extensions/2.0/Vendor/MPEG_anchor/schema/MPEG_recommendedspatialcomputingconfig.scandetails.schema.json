@@ -1,0 +1,25 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_recommendedspatialcomputingconfig.scanDetails.schema.json",
+    "type": "object",
+    "description": "The required level of detail for the mesh",
+    "properties": {
+        "primitivesNumber": {
+            "description": "The quantity of geometric primitives per m3",
+            "type": "number"
+        },
+        "textureOption": {
+            "description": "The resolution of the texture of textured mesh..",
+            "type": "integer",
+            "enum": [
+                0, 1, 2
+                ],
+            "default": 0,
+            "gltf_detailedDescription":"Value is oneOf R512x512=0, R1024x1024=1, R2048x2048=1."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "allOf": [{ "$ref" : "glTFProperty.schema.json" }],
+    "required": []
+}

@@ -1,0 +1,66 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_recommendedspatialcomputingconfig.scanVolume.schema.json",
+    "type": "object",
+    "description": "The bounding volume used to defined the scan volume",
+    "properties": {
+        "type": {
+            "description": "The type of bounding volume",
+            "type": "integer",
+            "enum": [
+                0, 1, 2
+                ],
+            "default": 0,
+            "gltf_detailedDescription":"Value is oneOf SPHERE=0, BOX=1, FRUSTUM=2."
+        },
+        "center": { 
+            "description":"3D coordinate of the center of the sphere." ,
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "default": [
+                0, 0, 0
+            ],
+            "minItems": 3,
+            "maxItems": 3 
+        },
+        "radius": {
+            "description":"Radius of the sphere in meters.." ,
+            "type": "number"
+        },
+        "pose": {
+            "type":"array",
+            "items":{ "type":"number"},
+            "minItems": 16,
+            "maxitem": 16,
+            "description":"4x4 matrix representing the center position and orientation of the bounding volume."
+        },
+        "extents" : {
+            "type":"array",
+            "items":{ "type":"number"},
+            "minItems": 3,
+            "maxitem": 3,
+            "description":"Edge-to-edge length of the box along each dimension."
+        },
+        "fov": {
+            "description": "Angles of the four sides of the frustum",
+            "type": "array",
+            "items":{ "type":"number"},
+            "minItems": 4,
+            "maxitem": 4
+        },
+        "far": {
+            "description": "Positive distance of the far plane of the frustum",
+            "type": "number"
+        },
+        "near": {
+            "description": "Positive distance of the near plane of the frustum",
+            "type": "number"
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "allOf": [{ "$ref" : "glTFProperty.schema.json" }],
+    "required": []
+}
