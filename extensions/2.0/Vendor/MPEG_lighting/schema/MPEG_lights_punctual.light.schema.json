@@ -1,0 +1,34 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "required": ["light", "nature"],
+    "properties": {
+      "light": {
+        "type": "integer",
+        "description": "Index of the item in the array of the lights parameter of the KHR_lights_punctual extension"
+      },
+      "nature": {
+        "type": "string",
+        "enum": ["PHYSICAL", "VIRTUAL", "PHYSICAL_VIRTUAL", "UNSPECIFIED"],
+        "description": "Indicates whether the lighting information corresponds to physical, virtual, both, or unspecified light",
+        "enumDescriptions": {
+          "PHYSICAL": "A physical light",
+          "VIRTUAL": "A virtual light",
+          "PHYSICAL_VIRTUAL": "Both physical and virtual",
+          "UNSPECIFIED": "Unknown"
+        }
+      },
+      "color_accessor": {
+        "type": "integer",
+        "description": "Reference to the accessor giving a sequence of color value. If absent, the value in the referenced light is considered constant."
+      },
+      "intensity_accessor": {
+        "type": "integer",
+        "description": "Reference to the accessor giving a sequence of intensity value. If absent, the value in the referenced light is considered constant."
+      },
+      "range_accessor": {
+        "type": "integer",
+        "description": "Reference to the accessor giving a sequence of range value. If absent, the value in the referenced light is considered constant."
+      }
+    }
+  }
