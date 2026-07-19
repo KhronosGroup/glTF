@@ -1,0 +1,44 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "mesh.primitive.NV_micromap_tooling.schema.json",
+    "title": "NV_micromap_tooling",
+    "type": "object",
+    "description": "Allows tools to store and retrieve data about how to generate micromaps. All properties are optional.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+		"mapIndices": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the accessor providing the index mapping buffer.",
+            "gltf_detailedDescription": "The index of the `accessor` providing the index mapping buffer. The accessor's `type` **MUST** be `SCALAR`, and its `componentType` **MUST** be 5121, 5123, or 5125 (unsigned byte, unsigned short, or unsigned int)."
+        },
+		"mapOffset": {
+            "type": "integer",
+            "description": "An offset to be added to each value of the index mapping buffer.",
+            "minimum": 0,
+            "default": 0
+        },
+		"directions": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the accessor providing the vertex displacement directions.",
+            "gltf_detailedDescription": "The index of the `accessor` providing the vertex displacement directions. There is 1 direction per primitive vertex. The index of the `accessor` whose data overrides that referenced by `directionsOffset`. The accessor's `type` **MUST** be either `VEC3` with a `componentType` of 5126 (float), or it **MUST** be `VEC4` with a `componentType` of 5126 or 5131 (float or half float)."
+        },
+		"directionBounds": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the accessor providing the vertex displacement bounds.",
+            "gltf_detailedDescription": "The index of the `accessor` providing one 2-element {bias, scale} vector of vertex displacement bounds. This should give a shell for raycasting when baking: in other words, a tool should assume that the displaced mesh can fit between the shell defined by this mesh with all micromap values equal to 0.0, and this mesh with all values equal to 1.0. The accessor's `type` **MUST** be `VEC2`, and its `componentType` **MUST** be 5126 or 5131 (float or half float)."
+        },
+		"primitiveFlags": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the accessor providing the flags per base mesh primitive.",
+            "gltf_detailedDescription": "The index of the `accessor` providing the flags per base mesh primitive, such as adjacency bits for bridging between triangles with different subdivision levels. The accessor's `type` **MUST** be `SCALAR`, and its `componentType` **MUST** be 5121 (unsigned byte)."
+        },
+		"subdivisionLevels": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the accessor providing the subdivision level per base mesh primitive.",
+            "gltf_detailedDescription": "The index of an `accessor`; element `i` of this accessor gives an intended subdivision level for primitive triangle `i`. Its `type` **MUST** be `SCALAR`, and its `componentType` **MUST** be 5121 (unsigned byte) or 5123 (unsigned short)."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ ]
+}

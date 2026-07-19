@@ -1,0 +1,42 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "mesh.primitive.NV_opacity_micromap.schema.json",
+    "title": "NV_opacity_micromap",
+    "type": "object",
+    "description": "Allows geometry to express *opacity micromeshes*, which encode the opacity of microtriangles from a subdivided base mesh. Micromaps used in this context are also called *opacity micromaps* (OMMs).",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "micromap": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the micromap in the NV_micromaps micromaps array to use for opacity information."
+        },
+        "groupIndex": {
+            "type": "integer",
+            "description": "The index of the group to use within the micromap.",
+			"gltf_detailedDescription": "A micromap **MAY** contain multiple *groups*, much like how a scene file **MAY** contain multiple meshes. This is the index of the MM group to use.",
+            "minimum": 0,
+            "default": 0
+        },
+		"mapIndicesOffset": {
+            "type": "integer",
+            "description": "The element offset into the OMM's index mapping buffer.",
+			"gltf_detailedDescription": "The element offset into the OMM's index mapping buffer (in the BARY format, this is the `eMeshTriangleMappings` standard property). Its data can be overridden by `mapIndices`. If the OMM contains no index mapping buffer, then it defaults to the identity mapping: triangle ID `i` uses mesh primitive `i`.",
+            "minimum": 0,
+            "default": 0
+        },
+		"mapIndices": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the accessor providing the index mapping buffer. Overrides `mapIndicesOffset`.",
+            "gltf_detailedDescription": "The index of the `accessor` whose data overrides that referenced by `mapIndicesOffset`. The accessor's `type` **MUST** be `SCALAR`, and its `componentType` **MUST** be 5121, 5123, or 5125 (unsigned byte, unsigned short, or unsigned int)."
+        },
+		"mapOffset": {
+            "type": "integer",
+            "description": "An offset to be added to each value of the index mapping buffer.",
+            "minimum": 0,
+            "default": 0
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "micromap" ]
+}
