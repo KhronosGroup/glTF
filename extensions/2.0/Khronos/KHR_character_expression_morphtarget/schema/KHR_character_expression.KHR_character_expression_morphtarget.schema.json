@@ -14,7 +14,8 @@
                         "$ref": "glTFid.schema.json"
                     }
                 ],
-                "description": "Index of the animation channel in the referenced animation."
+                "description": "Index of an animation channel in the expression's selected animation.",
+                "gltf_detailedDescription": "This value MUST be a valid index into the `channels` array of the animation selected by the containing expression entry's `animation` property."
             },
             "minItems": 1,
             "uniqueItems": true

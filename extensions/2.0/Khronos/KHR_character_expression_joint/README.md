@@ -19,8 +19,10 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.
-Requires the extension(s): `KHR_character`,`KHR_character_expression`
+Requires the extension(s): `KHR_character`, `KHR_character_expression`
 Typically used in conjunction with: `KHR_character_expression_mapping`
+
+Assets using `KHR_character_expression_joint` MUST list `KHR_character_expression_joint`, `KHR_character_expression`, `KHR_character`, and the transitive `KHR_xmp_json_ld` dependency in `extensionsUsed`. They MUST contain the top-level `KHR_character` and `KHR_character_expression` extension objects. The `KHR_character_expression_joint` object MUST be attached to an expression entry in that top-level expression object.
 
 ## Overview
 
@@ -42,6 +44,8 @@ For examples of relevant types of expressions, you can reference concepts such a
 Optionally, these expressions may be aligned with industry standards (or an endpoint/experiences expected expressions set).
 
 ## Extension Schema
+
+The following is a partial extension fragment. Dependency declarations, the character objects, and the referenced animations are omitted.
 
 ```json
 {
@@ -76,7 +80,7 @@ Optionally, these expressions may be aligned with industry standards (or an endp
 
 | Property   | Type  | Description                                                                                                                        |
 | ---------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `channels` | array | array representing channels that must correspond to either `"rotation"`, `"translation"`, or `"scale"`; indicates transform types. |
+| `channels` | array | Nonempty array of unique indices into the `channels` array of the animation selected by the containing expression entry. Each selected channel MUST target `"rotation"`, `"translation"`, or `"scale"`. |
 
 ## Animation Integration
 

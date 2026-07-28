@@ -19,10 +19,12 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.
-Requires the extension(s): `KHR_character`, `KHR_character_expression`, `KHR_animation_pointer`
+Requires the extension(s): `KHR_character`, `KHR_character_expression`
 Used in conjunction with: `KHR_character_expression_mapping`
 
-> **Note:** This extension explicitly requires `KHR_animation_pointer`. Implementations **MUST** support `KHR_animation_pointer` to use this extension. The `KHR_animation_pointer` extension enables animation of individual morph target weights via JSON pointers, which is essential for granular expression control.
+Assets using `KHR_character_expression_morphtarget` MUST list `KHR_character_expression_morphtarget`, `KHR_character_expression`, `KHR_character`, and the transitive `KHR_xmp_json_ld` dependency in `extensionsUsed`. They MUST contain the top-level `KHR_character` and `KHR_character_expression` extension objects. The `KHR_character_expression_morphtarget` object MUST be attached to an expression entry in that top-level expression object.
+
+Selected channels MAY use an ordinary animation target with `path` set to `"weights"`, or a `KHR_animation_pointer` target that resolves to `/nodes/{}/weights` or `/nodes/{}/weights/{}`. Only assets using the pointer form MUST list `KHR_animation_pointer` in `extensionsUsed` and contain the corresponding `KHR_animation_pointer` target extension object.
 
 ## Overview
 
@@ -44,6 +46,8 @@ For examples of relevant types of expressions, you can reference concepts such a
 Optionally, these expressions may be aligned with industry standards (or an endpoint/experiences expected expressions set).
 
 ## Extension Schema
+
+The following is a partial extension fragment. Dependency declarations, the character objects, and the referenced animations are omitted.
 
 ```json
 {
@@ -76,15 +80,15 @@ Optionally, these expressions may be aligned with industry standards (or an endp
 
 ### Properties
 
-| Property  | Type    | Description                                |
-| --------- | ------- | ------------------------------------------ |
-| `channel` | integer | Index representing the `"weights"` channel |
+| Property   | Type  | Description |
+| ---------- | ----- | ----------- |
+| `channels` | array | Nonempty array of unique indices into the `channels` array of the animation selected by the containing expression entry. Each selected channel MUST target morph weights using one of the forms described below. |
 
 ## Animation Integration (Expressions Tab Recommendation)
 
 This extension **does not animate morph targets directly**. It provides metadata only.
 
-All morph target expressions should be driven using standard glTF animation channels, targeting the `weights` path on the corresponding node:
+Morph target expressions can be driven using standard glTF animation channels targeting the `weights` path on the corresponding node:
 
 ```json
 {
@@ -117,7 +121,7 @@ All morph target expressions should be driven using standard glTF animation chan
 
 ### Integration with KHR_animation_pointer
 
-For advanced animation control of morph target weights, implementations should use the [`KHR_animation_pointer`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_animation_pointer) extension. This provides a standardized mechanism for animating weights via JSON pointers.
+For animation control of all weights or an individual morph target weight, assets may use the [`KHR_animation_pointer`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_animation_pointer) extension. This is an alternative to the ordinary `weights` target, not an unconditional dependency.
 
 As defined in the [glTF Object Model](https://github.com/KhronosGroup/glTF/blob/main/specification/2.0/ObjectModel.adoc#core-pointers), the following pointer templates are supported for morph target weights:
 

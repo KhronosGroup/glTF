@@ -20,7 +20,8 @@
 
 Written against the glTF 2.0 specification.
 Requires the extension(s):  `KHR_character`
-Typically used in conjunction with: `KHR_character_skeleton_biped`
+
+Assets using `KHR_character_skeleton_mapping` MUST list `KHR_character_skeleton_mapping`, `KHR_character`, and the transitive `KHR_xmp_json_ld` dependency in `extensionsUsed`. They MUST contain top-level `KHR_character_skeleton_mapping` and `KHR_character` extension objects. The `KHR_xmp_json_ld` declaration does not require an XMP extension object or packet unless metadata is provided.
 
 ## Overview
 
@@ -45,25 +46,42 @@ Here's an example mapping from a custom rig into VRM Humanoid:
 
 ```json
 {
-  "extensionsUsed": ["KHR_character_skeleton_mapping"],
+  "asset": { "version": "2.0" },
+  "extensionsUsed": [
+    "KHR_character",
+    "KHR_character_skeleton_mapping",
+    "KHR_xmp_json_ld"
+  ],
+  "nodes": [
+    { "name": "CharacterRoot", "children": [1] },
+    { "name": "Hips", "children": [2] },
+    { "name": "Head" },
+    { "name": "LeftFoot" },
+    { "name": "RightFoot" },
+    { "name": "LeftHand" },
+    { "name": "RightHand" }
+  ],
   "extensions": {
+    "KHR_character": {
+      "rootNode": 0
+    },
     "KHR_character_skeleton_mapping": {
       "skeletalRigMappings": {
         "vrmHumanoid": {
           "hips": 1,
-          "head": 5,
-          "leftFoot": 11,
-          "rightFoot": 15,
-          "leftHand": 24,
-          "rightHand": 28
+          "head": 2,
+          "leftFoot": 3,
+          "rightFoot": 4,
+          "leftHand": 5,
+          "rightHand": 6
         },
         "example_rig": {
           "hip_bone": 1,
-          "head_bone": 5,
-          "l_foot_bone": 11,
-          "r_foot_bone": 15,
-          "l_hand_bone": 24,
-          "r_hand_bone": 28
+          "head_bone": 2,
+          "l_foot_bone": 3,
+          "r_foot_bone": 4,
+          "l_hand_bone": 5,
+          "r_hand_bone": 6
         }
       }
     }

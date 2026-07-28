@@ -21,6 +21,8 @@
 Written against the glTF 2.0 specification.
 Requires the extension(s): `KHR_character`
 
+Assets using `KHR_character_expression` MUST list `KHR_character_expression`, `KHR_character`, and the transitive `KHR_xmp_json_ld` dependency in `extensionsUsed`. They MUST contain a top-level `KHR_character` extension object and a top-level `KHR_character_expression` extension object. The `KHR_xmp_json_ld` declaration does not require an XMP extension object or packet unless metadata is provided.
+
 ## Overview
 
 The `KHR_character_expression` extension provides a common interface for facial expression animations. It enables tools and runtimes to associate expressions like `blink`, `smile`, or `jawOpen` with specific animations in the glTF model's animations field.
@@ -71,6 +73,8 @@ Optionally, these expressions may be aligned with industry standards (or an endp
 | `animation`   | integer | Index into the glTF `animations[]` array representing an expression animation. |
 | `expression`  | string  | Expression name this joint contributes to.                                     |
 
+Extensions on an expression entry that contain channel indices MUST resolve those indices against the `channels` array of the animation selected by that same entry's `animation` property. A channel index MUST NOT be resolved against another animation.
+
 ## Animation Integration
 
 - Expression timing, blending, and control must use glTF `animations` channels.
@@ -96,6 +100,8 @@ For expressions that represent binary or toggle states (such as `blinkLeft`, `bl
 STEP interpolation ensures that an expression toggles cleanly between fully off (`0.0`) and fully on (`1.0`) states, providing crisp visual transitions and avoiding interpolation artifacts that could occur with `LINEAR` interpolation in binary scenarios.
 
 ## Extension Example w/ typed extensions
+
+The following is a partial extension fragment. A complete asset must include the dependency declarations and objects described above, together with the referenced animations.
 
 ```json
 {
