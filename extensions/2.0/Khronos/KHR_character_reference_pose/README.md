@@ -22,6 +22,8 @@ Written against the glTF 2.0 specification.
 
 Requires the extension(s): `KHR_character`
 
+Assets using `KHR_character_reference_pose` MUST list `KHR_character_reference_pose`, `KHR_character`, and the transitive `KHR_xmp_json_ld` dependency in `extensionsUsed`. They MUST contain a top-level `KHR_character` extension object. The `KHR_xmp_json_ld` declaration does not require an XMP extension object or packet unless metadata is provided.
+
 ## Overview
 
 The `KHR_character_reference_pose` extension defines canonical reference poses for character skeletons by tagging standard glTF animations with semantic pose type information. These poses serve as neutral references that support animation retargeting, mesh deformation validation, and consistency across toolchains.
@@ -140,7 +142,7 @@ Complete example showing a T-Pose reference for a simple 3-joint skeleton:
 ```json
 {
   "asset": { "version": "2.0" },
-  "extensionsUsed": ["KHR_character", "KHR_character_reference_pose"],
+  "extensionsUsed": ["KHR_character", "KHR_character_reference_pose", "KHR_xmp_json_ld"],
   "scene": 0,
   "scenes": [{ "nodes": [0] }],
   "nodes": [
@@ -149,12 +151,19 @@ Complete example showing a T-Pose reference for a simple 3-joint skeleton:
     { "name": "Head", "translation": [0, 0.4, 0] }
   ],
   "buffers": [
-    { "byteLength": 76, "uri": "pose_data.bin" }
+    {
+      "byteLength": 88,
+      "uri": "data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAIA/AAAAAAAAAACamZk+AAAAAAAAAADNzMw+AAAAAA=="
+    }
   ],
   "bufferViews": [
     { "buffer": 0, "byteOffset": 0, "byteLength": 4 },
-    { "buffer": 0, "byteOffset": 4, "byteLength": 48 },
-    { "buffer": 0, "byteOffset": 52, "byteLength": 36 }
+    { "buffer": 0, "byteOffset": 4, "byteLength": 16 },
+    { "buffer": 0, "byteOffset": 20, "byteLength": 16 },
+    { "buffer": 0, "byteOffset": 36, "byteLength": 16 },
+    { "buffer": 0, "byteOffset": 52, "byteLength": 12 },
+    { "buffer": 0, "byteOffset": 64, "byteLength": 12 },
+    { "buffer": 0, "byteOffset": 76, "byteLength": 12 }
   ],
   "accessors": [
     {
@@ -168,13 +177,37 @@ Complete example showing a T-Pose reference for a simple 3-joint skeleton:
     {
       "bufferView": 1,
       "componentType": 5126,
-      "count": 3,
+      "count": 1,
       "type": "VEC4"
     },
     {
       "bufferView": 2,
       "componentType": 5126,
-      "count": 3,
+      "count": 1,
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 1,
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5126,
+      "count": 1,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5126,
+      "count": 1,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 1,
       "type": "VEC3"
     }
   ],
@@ -188,15 +221,19 @@ Complete example showing a T-Pose reference for a simple 3-joint skeleton:
       },
       "channels": [
         { "sampler": 0, "target": { "node": 0, "path": "rotation" } },
-        { "sampler": 0, "target": { "node": 1, "path": "rotation" } },
-        { "sampler": 0, "target": { "node": 2, "path": "rotation" } },
-        { "sampler": 1, "target": { "node": 0, "path": "translation" } },
-        { "sampler": 1, "target": { "node": 1, "path": "translation" } },
-        { "sampler": 1, "target": { "node": 2, "path": "translation" } }
+        { "sampler": 1, "target": { "node": 1, "path": "rotation" } },
+        { "sampler": 2, "target": { "node": 2, "path": "rotation" } },
+        { "sampler": 3, "target": { "node": 0, "path": "translation" } },
+        { "sampler": 4, "target": { "node": 1, "path": "translation" } },
+        { "sampler": 5, "target": { "node": 2, "path": "translation" } }
       ],
       "samplers": [
         { "input": 0, "output": 1, "interpolation": "STEP" },
-        { "input": 0, "output": 2, "interpolation": "STEP" }
+        { "input": 0, "output": 2, "interpolation": "STEP" },
+        { "input": 0, "output": 3, "interpolation": "STEP" },
+        { "input": 0, "output": 4, "interpolation": "STEP" },
+        { "input": 0, "output": 5, "interpolation": "STEP" },
+        { "input": 0, "output": 6, "interpolation": "STEP" }
       ]
     }
   ],
@@ -231,7 +268,7 @@ For each joint `i` with global matrix `M_i` from the old format:
 
 ## Known Implementations
 
-(To be added as implementations become available)
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and Unity reference-pose demo.
 
 ## License
 

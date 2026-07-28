@@ -29,7 +29,7 @@ There is no portable way in glTF 2.0 to say "this *primitive* is only visible in
 
 ### The Solution
 
-`KHR_mesh_primitive_visibility_hint` annotates an individual mesh **primitive** with a semantic **`role`** describing the view context(s) in which it renders — using the same vocabulary as `KHR_node_visibility_hint` and the same view-context tokens (`first_person`, `third_person`) as `KHR_node_camera_hint`. A runtime resolves the active view context and skips rendering primitives whose role does not match.
+`KHR_mesh_primitive_visibility_hint` annotates an individual mesh **primitive** with a semantic **`role`** describing the view context(s) in which it renders — using the same vocabulary as `KHR_node_visibility_hint` and the same view-context tokens (`first_person`, `third_person`) as `KHR_node_camera_hint`. A runtime resolves primitive visibility from the active view context according to the role's semantics.
 
 Primitive visibility hints are **advisory**, but note that **not every engine or runtime supports per-primitive culling**. Because this is a distinct extension, an author whose model depends on primitive-level hiding can list it in `extensionsRequired`, and a runtime that cannot honor it will reject the asset rather than silently rendering hidden geometry (e.g. the inside of a head in first-person).
 
@@ -97,14 +97,14 @@ Given the runtime's active view context `C`, a primitive is rendered when:
 
 - `always` → in all contexts (equivalent to no annotation).
 - `first_person` → only when `C` is `first_person`.
-- `third_person` → only when `C` is `third_person`.
+- `third_person` → in every context except when `C` is `first_person`.
 - *custom* → runtime-defined; unrecognized roles SHOULD be treated as `always`.
 
 Unlike the node extension, this extension does not build on `KHR_node_visibility` — there is no core per-primitive visibility state to drive. A runtime realizes the hint by directly including or excluding the primitive from the draw for the active context. If the primitive's containing node is hidden (by `KHR_node_visibility` or `KHR_node_visibility_hint`), the primitive is hidden regardless of its own role (node-level hiding takes precedence).
 
 ### Implementation Note: Hiding a Primitive in Game Engines
 
-Many real-time engines batch a mesh's primitives (sub-meshes) into a single renderer and cannot cheaply exclude one primitive from the draw; disabling the whole renderer would incorrectly hide the mesh's other primitives as well. For these engines it is RECOMMENDED to realize a hidden primitive by swapping the non-matching sub-mesh to a fully transparent **invisible material/shader** (for example, a transparent material with alpha `0` and depth writes disabled), and restoring the original material when the active view context matches the primitive's `role` again. This removes only the hinted primitive from the visible result while leaving the rest of the mesh intact. Engines that *can* cull an individual primitive MAY instead skip it in the draw directly. Both are valid, non-normative realizations of this advisory hint; the choice is an engine-specific concern.
+Many real-time engines batch a mesh's primitives (sub-meshes) into a single renderer and cannot cheaply exclude one primitive from the draw; disabling the whole renderer would incorrectly hide the mesh's other primitives as well. For these engines it is RECOMMENDED to realize a hidden primitive by swapping it to a fully transparent **invisible material/shader** (for example, a transparent material with alpha `0` and depth writes disabled), and restoring the original material when the role's semantics make the primitive visible again. This removes only the hinted primitive from the visible result while leaving the rest of the mesh intact. Engines that *can* cull an individual primitive MAY instead skip it in the draw directly. Both are valid, non-normative realizations of this advisory hint; the choice is an engine-specific concern.
 
 ---
 
@@ -187,7 +187,7 @@ A single body mesh whose head is a separate primitive that must be hidden in fir
 
 ### Runtime Requirements
 
-1. Implementations that support this extension SHOULD render each annotated primitive only when the active view context matches its (self-only) `role`.
+1. Implementations that support this extension SHOULD render each annotated primitive according to the visibility semantics of its (self-only) `role` and the active view context.
 2. Implementations SHOULD treat unrecognized `role` values as `always`.
 3. If the containing node is hidden by a node-level mechanism, the primitive MUST NOT render regardless of its role.
 4. Implementations that do not support this extension SHOULD render all primitives (treat each as `always`). If the extension is required and unsupported, the asset MUST be rejected.
@@ -208,16 +208,22 @@ If the extension appears only in `extensionsUsed`, an unsupporting implementatio
   "$id": "mesh.primitive.KHR_mesh_primitive_visibility_hint.schema.json",
   "title": "KHR_mesh_primitive_visibility_hint glTF Mesh Primitive Extension",
   "type": "object",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
   "properties": {
     "role": { "type": "string", "minLength": 1 },
-    "label": { "type": "string", "minLength": 1 }
+    "label": { "type": "string", "minLength": 1 },
+    "extensions": { },
+    "extras": { }
   },
-  "required": ["role"],
-  "additionalProperties": false
+  "required": ["role"]
 }
 ```
 
 ---
+
+## Known Implementations
+
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and primitive-visibility demo.
 
 ## Known Limitations
 

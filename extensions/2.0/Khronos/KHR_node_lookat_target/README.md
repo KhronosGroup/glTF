@@ -549,18 +549,24 @@ If an implementation does not support `KHR_node_lookat_target`, the extension is
   "title": "KHR_node_lookat_target glTF Node Extension",
   "description": "Marks a node as a passive target for look-at systems. The node's world-space position is the target point. Constraint behavior is delegated to other systems.",
   "type": "object",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
   "properties": {
     "hint": {
       "type": "string",
       "description": "Advisory string suggesting the intended use of this target. Free-form; not a closed vocabulary.",
       "minLength": 1
-    }
-  },
-  "additionalProperties": false
+    },
+    "extensions": { },
+    "extras": { }
+  }
 }
 ```
 
 ---
+
+## Known Implementations
+
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and Unity gaze demo.
 
 ## Known Limitations
 

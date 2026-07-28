@@ -19,15 +19,17 @@
 ## Dependencies
 
 Written against the glTF 2.0 specification.
-Requires the extension(s): `KHR_character`, `KHR_character_expression`, `KHR_animation_pointer`
+Requires the extension(s): `KHR_character`, `KHR_character_expression`, `KHR_animation_pointer`, `KHR_texture_transform`
 Can be used alongside: `KHR_character_expression_mapping`
+
+Assets using `KHR_character_expression_texture` MUST list `KHR_character_expression_texture`, `KHR_character_expression`, `KHR_character`, `KHR_animation_pointer`, `KHR_texture_transform`, and the transitive `KHR_xmp_json_ld` dependency in `extensionsUsed`. They MUST contain the top-level `KHR_character` and `KHR_character_expression` extension objects. The `KHR_character_expression_texture` object MUST be attached to an expression entry, every selected animation channel MUST contain a `KHR_animation_pointer` target extension object, and every pointer MUST resolve to the `offset`, `scale`, or `rotation` property of an actual `KHR_texture_transform` extension object.
 
 ## Overview
 
-The `KHR_character_expression_texture` extension enables expression-level control using texture swaps or UV transformations. This approach is beneficial for characters that represent expressions visually via changes in texture, such as cartoon or anime-style characters.
+The `KHR_character_expression_texture` extension enables expression-level control using UV transformations. This approach is beneficial for characters that represent expressions visually using texture atlases, such as cartoon or anime-style characters.
 
 - Expression timing, blending, and control must use glTF `animations` channels.
-- Animations targeting expression-driven texture transforms must adhere strictly to glTF animation standards and khr_animation_pointer semantics.
+- Animations targeting expression-driven texture transforms must adhere strictly to glTF animation standards and `KHR_animation_pointer` semantics.
 
 ## Reference Expression Vocabulary
 
@@ -43,6 +45,8 @@ For examples of relevant types of expressions, you can reference concepts such a
 Optionally, these expressions may be aligned with industry standards (or an endpoint/experiences expected expressions set).
 
 ## Extension Schema
+
+The following is a partial extension fragment. Dependency declarations, the character objects, texture-transform objects, and referenced animations are omitted.
 
 ```json
 {
@@ -77,8 +81,7 @@ Optionally, these expressions may be aligned with industry standards (or an endp
 
 | Property | Type | Description |
 | -------- | ---- | ----------- |
-
-| `channel` | array | Array representing the target channels that are texture transform-based |
+| `channels` | array | Array representing the target channels that are texture transform-based. |
 
 ### textureTransform properties
 
@@ -86,23 +89,15 @@ Optionally, these expressions may be aligned with industry standards (or an endp
 | -------- | -------- | ------------------------------------ |
 | `offset` | float[2] | UV offset for texture placement.     |
 | `scale`  | float[2] | UV scale for texture transformation. |
+| `rotation` | float | UV rotation in radians. |
 
 ### Integration with KHR_animation_pointer
 
-For animations that involve texture swaps or UV transformations, implementations should rely on the [`KHR_animation_pointer`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_animation_pointer) extension. This provides a standardized mechanism for animating texture and UV transform properties via JSON pointers.
+Texture transformation animations use the [`KHR_animation_pointer`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_animation_pointer) extension. This provides a standardized mechanism for animating `KHR_texture_transform` properties via JSON pointers.
 
 This method ensures consistent and interoperable animation targeting for texture-based expressions across glTF runtimes.
 
-## Clarifications on Texture Manipulations
-
-### Texture Swaps
-
-Dynamic texture swaps are not explicitly defined within the core glTF 2.0 specification. To implement runtime texture swapping:
-
-- Predefine all textures in the glTF `textures` array.
-- Use the [`KHR_animation_pointer`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_animation_pointer) extension to animate pointers that reference texture indices within material definitions.
-
-### UV Transformations
+## UV Transformations
 
 UV manipulations (offset, scale, rotation) require the widely adopted [`KHR_texture_transform`](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_texture_transform) extension.
 
@@ -119,9 +114,10 @@ UV manipulations (offset, scale, rotation) require the widely adopted [`KHR_text
         {
           "sampler": 0,
           "target": {
+            "path": "pointer",
             "extensions": {
               "KHR_animation_pointer": {
-                "pointer": "/materials/2/pbrMetallicRoughness/baseColorTexture/index"
+                "pointer": "/materials/2/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/scale"
               }
             }
           }
@@ -129,6 +125,7 @@ UV manipulations (offset, scale, rotation) require the widely adopted [`KHR_text
         {
           "sampler": 1,
           "target": {
+            "path": "pointer",
             "extensions": {
               "KHR_animation_pointer": {
                 "pointer": "/materials/3/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/offset"
@@ -195,11 +192,11 @@ Using STEP interpolation ensures that the expression toggles cleanly between ful
 }
 ```
 
-This binds material index 2 to the `"happy"` expression and material index 3 to `"angry"`.
+This associates the listed texture-transform animation channels with the `"happy"` and `"angry"` expressions.
 
 ### Step 2: Animate Texture Properties Using KHR_animation_pointer
 
-Animation of either the texture index or texture transform must be implemented using `KHR_animation_pointer`.
+Animation of texture-transform properties must be implemented using `KHR_animation_pointer`.
 
 ```json
 {
@@ -209,9 +206,10 @@ Animation of either the texture index or texture transform must be implemented u
         {
           "sampler": 0,
           "target": {
+            "path": "pointer",
             "extensions": {
               "KHR_animation_pointer": {
-                "pointer": "/materials/2/pbrMetallicRoughness/baseColorTexture/index"
+                "pointer": "/materials/2/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/scale"
               }
             }
           }
@@ -219,6 +217,7 @@ Animation of either the texture index or texture transform must be implemented u
         {
           "sampler": 1,
           "target": {
+            "path": "pointer",
             "extensions": {
               "KHR_animation_pointer": {
                 "pointer": "/materials/3/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/offset"
@@ -247,9 +246,9 @@ Animation of either the texture index or texture transform must be implemented u
 ## Implementation Notes
 
 - Use this extension when morph targets or joint animations alone are insufficient or stylistically undesirable for expressions.
-- Expression-driven texture swaps or UV transformations are typically applied to materials on facial regions, such as eyes or mouth.
-- This extension does not define animation sequences, only the semantic binding between expressions and textures or UV transforms.
-- The `STEP` interpolation is ideal for switching texture indices (e.g., on/off or binary swaps).
+- Expression-driven UV transformations are typically applied to materials on facial regions, such as eyes or mouth.
+- This extension does not define animation sequences, only the semantic binding between expressions and texture transforms.
+- The `STEP` interpolation may be used for binary changes between regions of a texture atlas.
 - The `LINEAR` interpolation may be used for UV offset transitions or subtle animations.
 
 ### Blending Behavior
@@ -261,12 +260,15 @@ result = lerp(base_value, blend_value, blend_weight)
        = base_value + blend_weight * (blend_value - base_value)
 ```
 
-For texture index swaps, blending is typically not applicable—use `STEP` interpolation for discrete texture switching.
-
 ### Runtime Behavior
 
 - Expression weights should animate between `0.0` (off) and `1.0` (fully active).
-- The character system uses these animations to blend or toggle texture visuals in accordance with semantic expressions.
+- The character system uses these animations to transform texture coordinates in accordance with semantic expressions.
+
+## Known Implementations
+
+- [0b5vr/khr-character-testbed](https://github.com/0b5vr/khr-character-testbed) - Three.js loader and VRM conversion tooling.
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and Unity demos.
 
 ## License
 

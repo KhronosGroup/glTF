@@ -20,18 +20,20 @@
 
 Written against the glTF 2.0 specification.
 
-Requires the extensions: `KHR_xmp_json_ld`
+Requires the extension: `KHR_xmp_json_ld`
 
-This extension also leverages the `KHR_xmp_json_ld` pattern for attaching extensible metadata as JSON-LD blocks within glTF assets. For background on this approach, see:
+Assets using `KHR_character` MUST list both `KHR_character` and `KHR_xmp_json_ld` in `extensionsUsed`. This declaration does not by itself require a top-level `KHR_xmp_json_ld` extension object, an XMP packet, or an `asset`-level packet reference. When character metadata is provided, it MUST be encoded and attached as specified by `KHR_xmp_json_ld`. For background on this approach, see:
 [KHR_xmp_json_ld](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_xmp_json_ld)
 
 ## Overview
 
-The `KHR_character` extension designates a glTF asset as representing an character. This top-level marker enables tools and runtimes to interpret the asset as containing character-specific content such as rigging, blendshapes, animation retargeting, or metadata.
+The `KHR_character` extension designates a glTF asset as representing a character. This top-level marker enables tools and runtimes to interpret the asset as containing character-specific content such as rigging, blendshapes, animation retargeting, or metadata.
 
 This extension does not define character features directly but acts as a root declaration that character-related extensions may be present, and that consumers should treat the asset using character-specific logic and pipelines. It's part of the wider set of KHR character extensions that are meant to be building blocks to represent a contract stating functionality and data requirements between a given model and an endpoint.
 
-The extension supports referencing the root `node` that represents the character and optionally includes structured metadata through the `KHR_xmp_json_ld` mechanism.
+The extension references the root `node` that represents the character. This glTF 2.0 version of the extension identifies one character per asset. Support for multiple independently addressable characters is deferred for consideration alongside glTF 2.1 support.
+
+Structured character metadata, when present, is attached through `KHR_xmp_json_ld`. The presence of an XMP packet, a packet reference, and individual metadata properties remains optional unless another specification requires them.
 
 ## Extension Schema
 
@@ -49,27 +51,31 @@ The extension supports referencing the root `node` that represents the character
 
 | Property   | Type    | Description                                                                                                                                                                                  |
 | ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `rootNode` | integer | Index of the glTF `node` representing the root of the character hierarchy. This node should be a common ancestor of all nodes containing character-related data, such as meshes, skins, and animations. |
+| `rootNode` | integer | Index of the glTF `node` representing the root of the character hierarchy. This node SHOULD be a common ancestor of all nodes containing character-related meshes and joints. |
 
-## Metadata Attachment: KHR_xmp_json_ld
+## Non-Normative Metadata Guidance
 
-character metadata should be expressed using the `KHR_xmp_json_ld` format, a structured mechanism for attaching JSON-LD metadata blocks to glTF files. In the context of `KHR_character`, this allows consistent expression of character provenance, licensing, creator, versioning, and intended use, among others.
+This section is informative and does not define conformance requirements for `KHR_character`.
 
-The `KHR_xmp_json_ld` block is placed at the root level of the glTF asset as part of the defined extension usage. Metadata keys and structures are defined in the shared Khronos character Metadata schema (TBD).
+Character metadata can be expressed using the `KHR_xmp_json_ld` format, a structured mechanism for attaching JSON-LD metadata blocks to glTF files. In the context of `KHR_character`, this can describe character provenance, licensing, creator, versioning, and intended use, among others.
 
-| DC/XMP_JSON_LD Property | Why                                                                                                                                       | Required |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| dc:title                |                                                                                                                                           | Yes      |
-| dc:creator              |                                                                                                                                           | Yes      |
-| dc:license              |                                                                                                                                           | No       |
-| dc:rights               |                                                                                                                                           | No       |
-| dc:created              | Date on which the asset was created                                                                                                       | No       |
-| dc:publisher            | Identifies the entity responsible for making the resource available; important for understanding the source and authority of the content. | No       |
-| dc:description          | Context and a summary of the content                                                                                                      | No       |
-| dc:subject              | Can potentially be used for content tagging/association                                                                                   | No       |
-| dc:source               | Important for tracing the provenance and ensuring proper attribution.                                                                     | Yes      |
-| khr:version             |                                                                                                                                           | No       |
-| khr:thumbnailImage      |                                                                                                                                           | No       |
+When used, the `KHR_xmp_json_ld` block is placed according to the rules defined by that extension. This extension does not define a character-specific metadata vocabulary.
+
+The following properties are examples that authoring pipelines may find useful. Their presence is not required by this extension. For these examples, the `khr` prefix uses the proposed registry namespace `https://www.khronos.org/registry/glTF/character/metadata/`. This registry namespace is an example that has not yet been implemented or published; it must be established before these terms can be treated as part of a Khronos-managed vocabulary.
+
+| DC/XMP_JSON_LD Property | Example use                                                                                                                               |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| dc:title                | Human-readable title for the character.                                                                                                   |
+| dc:creator              | Person or organization that created the character.                                                                                        |
+| dc:license              | License governing use of the character.                                                                                                   |
+| dc:rights               | Copyright or other rights information.                                                                                                    |
+| dc:created              | Date on which the asset was created.                                                                                                      |
+| dc:publisher            | Entity responsible for making the resource available.                                                                                     |
+| dc:description          | Context and a summary of the content.                                                                                                     |
+| dc:subject              | Content tags or subject classifications.                                                                                                  |
+| dc:source               | Source information for provenance and attribution.                                                                                        |
+| khr:version             | Character or asset version as a string.                                                                                                   |
+| khr:thumbnailImage      | Zero-based index of an image in the top-level glTF `images` array to use as a character thumbnail.                                        |
 
 ## Example
 
@@ -94,6 +100,12 @@ The `KHR_xmp_json_ld` block is placed at the root level of the glTF asset as par
       "name": "characterRoot"
     }
   ],
+  "images": [
+    {
+      "name": "Character Thumbnail",
+      "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
+    }
+  ],
   "extensionsUsed": ["KHR_character", "KHR_xmp_json_ld"],
   "extensions": {
     "KHR_character": {
@@ -105,7 +117,7 @@ The `KHR_xmp_json_ld` block is placed at the root level of the glTF asset as par
         {
           "@context": {
             "dc": "http://purl.org/dc/elements/1.1/",
-            "vrm": "https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/meta.md"
+            "khr": "https://www.khronos.org/registry/glTF/character/metadata/"
           },
           "dc:title": "Example Model",
           "dc:creator": {
@@ -129,7 +141,7 @@ The `KHR_xmp_json_ld` block is placed at the root level of the glTF asset as par
           "dc:subject": {
             "@list": ["Example trait", "Another example trait"]
           },
-          "dc:source": "imaginaryCompany.com/characterl",
+          "dc:source": "https://example.com/characters/example-model",
           "khr:version": "1.0",
           "khr:thumbnailImage": 0
         }
@@ -141,11 +153,14 @@ The `KHR_xmp_json_ld` block is placed at the root level of the glTF asset as par
 
 ## Implementation Notes
 
-- `rootNode` is required, representing the index of the glTF `node` that serves as the root of the character hierarchy. This node should be a common ancestor of all nodes containing character-related data, such as meshes, skins, and animations.
+- `rootNode` is required, representing the index of the glTF `node` that serves as the root of the character hierarchy. This node SHOULD be a common ancestor of all nodes containing character-related meshes and joints.
 - Consumers should use this marker as a signal to search for additional character-related extensions, including skeletal, expression, and other khronos character extensions.
-- Support for `KHR_xmp_json_ld` is encouraged to ensure interoperable metadata across tools and runtimes.
+- Consumers of `KHR_character` MUST support its `KHR_xmp_json_ld` dependency. Assets are not required to contain an XMP packet solely because they use `KHR_character`.
 
 ## Known Implementations
+
+- [0b5vr/khr-character-testbed](https://github.com/0b5vr/khr-character-testbed) - Three.js viewer and VRM-to-KHR_character converter.
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and Unity demos.
 
 ## License
 

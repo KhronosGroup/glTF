@@ -21,7 +21,8 @@
                                 "$ref": "glTFid.schema.json"
                             }
                         ],
-                        "description": "Index into the glTF animations array representing an expression animation."
+                        "description": "Index into the glTF animations array representing an expression animation.",
+                        "gltf_detailedDescription": "This value MUST be a valid index into the `animations` array."
                     },
                     "extensions": { },
                     "extras": { }

@@ -7,6 +7,7 @@
     "properties": {
         "target": {
             "type": "string",
+            "minLength": 1,
             "description": "The name of the target expression that this mask will affect."
         },
         "type": {
@@ -19,7 +20,8 @@
                     "const": "block"
                 },
                 {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1
                 }
             ],
             "default": "blend"

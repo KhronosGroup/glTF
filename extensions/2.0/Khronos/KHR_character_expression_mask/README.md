@@ -20,7 +20,9 @@
 
 Written against the glTF 2.0 specification.
 Requires the extension(s): `KHR_character`, `KHR_character_expression`
-Works alongside: `KHR_character_expression_mapping`, `KHR_character_expression_joint`, `KHR_character_expression_texture`, `KHR_character_expression_morphtargets`.
+Works alongside: `KHR_character_expression_mapping`, `KHR_character_expression_joint`, `KHR_character_expression_texture`, `KHR_character_expression_morphtarget`.
+
+Assets using `KHR_character_expression_mask` MUST list `KHR_character_expression_mask`, `KHR_character_expression`, `KHR_character`, and the transitive `KHR_xmp_json_ld` dependency in `extensionsUsed`. They MUST contain the top-level `KHR_character` and `KHR_character_expression` extension objects. The `KHR_character_expression_mask` object MUST be attached to an expression entry in that top-level expression object.
 
 ## Overview
 
@@ -83,6 +85,8 @@ The execution order of expressions does not affect the result because:
 - The total influence is the product of all masks targeting the same expression, which is commutative
 
 ## Schema
+
+The following is a partial extension fragment. Dependency declarations, the character objects, and animations are omitted.
 
 ```json
 {
@@ -153,11 +157,13 @@ The execution order of expressions does not affect the result because:
 | Property    | Type   | Description                                                                                      | Required |
 | ----------- | ------ | ------------------------------------------------------------------------------------------------ | -------- |
 | `target`    | string | The name of the target expression that this mask will affect                                     | Yes      |
-| `type`      | string | The type of the mask: `"blend"` or `"block"`. Default: `"blend"`                                 | No       |
+| `type`      | string | The mask type. `"blend"` and `"block"` are standardized; custom nonempty strings are permitted. Default: `"blend"` | No       |
 | `amount`    | number | The amount of influence (0.0–1.0). Default: `1.0`                                                | No       |
 | `threshold` | number | For `"block"` type: the threshold above which the target is blocked (0.0–1.0). Default: `0.0`   | No       |
 
 ### Mask Type Enum
+
+The following values have standardized behavior. Other nonempty strings are application-defined mask types and MUST be preserved by readers even when their behavior is not understood.
 
 | Value   | Description                                                                            |
 | ------- | -------------------------------------------------------------------------------------- |
@@ -179,6 +185,10 @@ When blending expression values from multiple sources, implementations **SHOULD*
 result = lerp(base_value, blend_value, blend_weight)
        = base_value + blend_weight * (blend_value - base_value)
 ```
+
+## Known Implementations
+
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and Unity demos.
 
 ## License
 
