@@ -81,9 +81,13 @@ Each animation channel used to drive an expression should operate within a **nor
 - `0.0` indicates the expression is fully inactive.
 - `1.0` indicates the expression is fully active.
 
+Implementations MUST evaluate each expression's referenced animation using the effective expression value as a normalized animation time in the `[0.0, 1.0]` range. When expression masks are present, masking is resolved before animation evaluation.
+
 The transformation values themselves (e.g., degree of rotation or distance of translation) should scale proportionally with the normalized input range.
 
-This approach simplifies character implementation by centralizing expression playback in the glTF animation system and unifying runtime logic for blending and prioritization.
+This approach simplifies character implementation by centralizing expression playback in the glTF animation system and providing a common normalized evaluation parameter.
+
+This extension does not define how multiple animations are blended, accumulated, prioritized, or resolved when they target the same property. These behaviors are runtime-defined because the glTF 2.0 animation model does not specify animation mixing semantics.
 
 ### Recommended Interpolation for Binary Expressions
 
@@ -102,13 +106,13 @@ STEP interpolation ensures that an expression toggles cleanly between fully off 
           "expression": "smile",
           "animation": 0,
           "extensions": {
-            "KHR_avatar_expression_joint": {
+            "KHR_character_expression_joint": {
               "channels": [0, 1]
             },
-            "KHR_avatar_expression_texture": {
+            "KHR_character_expression_texture": {
               "channels": [2]
             },
-            "KHR_avatar_expression_morphtarget": {
+            "KHR_character_expression_morphtarget": {
               "channels": [4, 5]
             }
           }
@@ -117,13 +121,13 @@ STEP interpolation ensures that an expression toggles cleanly between fully off 
           "expression": "frown",
           "animation": 1,
           "extensions": {
-            "KHR_avatar_expression_joint": {
+            "KHR_character_expression_joint": {
               "channels": [0]
             },
-            "KHR_avatar_expression_texture": {
+            "KHR_character_expression_texture": {
               "channels": [1, 2]
             },
-            "KHR_avatar_expression_morphtarget": {
+            "KHR_character_expression_morphtarget": {
               "channels": [3]
             }
           }
@@ -137,6 +141,15 @@ STEP interpolation ensures that an expression toggles cleanly between fully off 
 ## Implementation Notes
 
 - Expression states should be normalized to the [0.0–1.0] range for consistent runtime interpretation.
+
+## Known Limitations
+
+Results may differ between runtimes when multiple active expressions target the same property. Standardized animation mixing is outside the scope of this extension and the glTF 2.0 animation model.
+
+## Known Implementations
+
+- [0b5vr/khr-character-testbed](https://github.com/0b5vr/khr-character-testbed) - Three.js loader and VRM conversion tooling.
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and Unity demos.
 
 ## License
 

@@ -114,6 +114,11 @@ While this extension does not mandate a central registry, developers are encoura
 - This extension does not modify skinning behavior, but informs tooling and runtime animation retargeting.
 - For validation, ensure that every value is a valid, non-negative index into the top-level `nodes` array.
 
+## Known Implementations
+
+- [0b5vr/khr-character-testbed](https://github.com/0b5vr/khr-character-testbed) - Three.js loader, retargeting helpers, and VRM conversion tooling.
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and rig-switching demo.
+
 ## License
 
 This extension specification is licensed under the Khronos Group Extension License.

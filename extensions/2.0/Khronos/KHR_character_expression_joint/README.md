@@ -128,6 +128,11 @@ This approach:
 - Avoids issues with gimbal lock present in Euler angle representations
 - Produces more natural blending for skeletal animations, especially for large rotation differences
 
+## Known Implementations
+
+- [0b5vr/khr-character-testbed](https://github.com/0b5vr/khr-character-testbed) - Three.js loader and VRM conversion tooling.
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and Unity demos.
+
 ## License
 
 This extension is licensed under the Khronos Group Extension License.

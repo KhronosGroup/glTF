@@ -349,6 +349,11 @@ All expression-driven changes defined by this extension should rely on standard 
 
 This approach simplifies character implementation by centralizing expression playback in the glTF animation system, reducing custom handling and improving cross-platform compatibility.
 
+## Known Implementations
+
+- [0b5vr/khr-character-testbed](https://github.com/0b5vr/khr-character-testbed) - Three.js loader and VRM conversion tooling.
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and Unity demos.
+
 ## License
 
 This extension specification is licensed under the Khronos Group Extension License.

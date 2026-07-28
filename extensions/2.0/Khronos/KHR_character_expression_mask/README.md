@@ -180,6 +180,10 @@ result = lerp(base_value, blend_value, blend_weight)
        = base_value + blend_weight * (blend_value - base_value)
 ```
 
+## Known Implementations
+
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and Unity demos.
+
 ## License
 
 This extension is licensed under the Khronos Group Extension License.

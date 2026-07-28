@@ -50,7 +50,7 @@ Optionally, these expressions may be aligned with industry standards (or an endp
         "example_set_1": {
           "Smile": [
             { "source": "smileLeft", "weight": 0.8 },
-            { "source": "smileRight", "weight": 0.8 },
+            { "source": "smileRight", "weight": 0.8 }
           ],
           "LeftCheekRaise": [
             { "source": "smileLeft", "weight": 0.2 }
@@ -59,7 +59,7 @@ Optionally, these expressions may be aligned with industry standards (or an endp
         },
         "example_set_2": {
           "smile_small": [
-            { "source": "smileLeft", "weight": 0.2 }
+            { "source": "smileLeft", "weight": 0.2 },
             { "source": "smileRight", "weight": 0.2 }
           ],
           "left_dimple": [
@@ -97,6 +97,11 @@ This allows developers to bridge between custom expression sets and shared vocab
 - This extension is typically used at the top level of the glTF file.
 - Expression names should match those used in `KHR_character_expression_morphtarget`, `KHR_character_expression_texture`, or `KHR_character_expression_joint`;
 - Tools can interpret this mapping to apply automatic translation between expression sets.
+
+## Known Implementations
+
+- [0b5vr/khr-character-testbed](https://github.com/0b5vr/khr-character-testbed) - TypeScript schema types and conversion tooling.
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, and sample assets.
 
 ## License
 

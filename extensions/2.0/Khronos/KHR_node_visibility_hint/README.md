@@ -92,7 +92,7 @@ Given the runtime's active view context `C`, a node's **context-visible** state 
 
 - `always` → visible in all contexts.
 - `first_person` → visible only when `C` is `first_person`.
-- `third_person` → visible only when `C` is `third_person`.
+- `third_person` → visible in every context except when `C` is `first_person`.
 - *custom* → runtime-defined; unrecognized roles SHOULD be treated as `always`.
 
 The node is rendered only if it is context-visible **and** not otherwise hidden. When `KHR_node_visibility` is present, the effective result is the logical AND of the context-visible state and `KHR_node_visibility.visible`; i.e. an explicit `visible: false` (e.g. from `KHR_interactivity`) always hides the node regardless of view context.
@@ -273,16 +273,22 @@ If the extension appears only in `extensionsUsed`, an unsupporting implementatio
   "$id": "node.KHR_node_visibility_hint.schema.json",
   "title": "KHR_node_visibility_hint glTF Node Extension",
   "type": "object",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
   "properties": {
     "role": { "type": "string", "minLength": 1 },
-    "label": { "type": "string", "minLength": 1 }
+    "label": { "type": "string", "minLength": 1 },
+    "extensions": { },
+    "extras": { }
   },
-  "required": ["role"],
-  "additionalProperties": false
+  "required": ["role"]
 }
 ```
 
 ---
+
+## Known Implementations
+
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and first-/third-person visibility demo.
 
 ## Known Limitations
 

@@ -566,6 +566,7 @@ If an implementation does not support `KHR_node_camera_hint` and the extension a
   "title": "KHR_node_camera_hint glTF Node Extension",
   "description": "Marks a node as an authored camera positioning suggestion. The node's world-space transform defines the recommended camera placement. The runtime MAY use this as a default view, orbit center, portrait framing, or other camera-related viewpoint.",
   "type": "object",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
   "properties": {
     "role": {
       "type": "string",
@@ -573,23 +574,24 @@ If an implementation does not support `KHR_node_camera_hint` and the extension a
       "minLength": 1
     },
     "camera": {
-      "type": "integer",
+      "allOf": [ { "$ref": "glTFid.schema.json" } ],
       "description": "Index of a glTF camera in the root cameras array whose projection parameters (FOV, clip planes, type) and any camera extensions apply to this hint. Advisory — runtimes MAY override.",
-      "minimum": 0
+      "gltf_detailedDescription": "This value MUST be a valid index into the cameras array."
     },
     "targetNode": {
-      "type": "integer",
+      "allOf": [ { "$ref": "glTFid.schema.json" } ],
       "description": "Index of a glTF node that this camera should orient toward. When specified, the camera's look-at direction is computed from the vector between this node and the target node.",
-      "minimum": 0
+      "gltf_detailedDescription": "This value MUST be a valid index into the nodes array and MUST NOT refer to the node containing this extension."
     },
     "label": {
       "type": "string",
       "description": "Human-readable label for this camera position. Used for UI display in model viewers and camera selection menus.",
       "minLength": 1
-    }
+    },
+    "extensions": { },
+    "extras": { }
   },
-  "required": ["role"],
-  "additionalProperties": false
+  "required": ["role"]
 }
 ```
 
@@ -602,6 +604,11 @@ The following constraints cannot be expressed in JSON Schema and MUST be enforce
 3. A camera hint node MUST NOT reference its own index via `targetNode`.
 
 ---
+
+## Known Implementations
+
+- [0b5vr/khr-character-testbed](https://github.com/0b5vr/khr-character-testbed) - Three.js loader, helper, and VRM conversion tooling.
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and Unity camera-hint demo.
 
 ## Known Limitations
 
