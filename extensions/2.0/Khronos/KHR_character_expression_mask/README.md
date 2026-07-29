@@ -112,7 +112,7 @@ The following is a partial extension fragment. Dependency declarations, the char
             "KHR_character_expression_mask": {
               "masks": [
                 {
-                  "target": "aa",
+                  "target": 0,
                   "type": "blend",
                   "amount": 0.5
                 }
@@ -130,7 +130,7 @@ The following is a partial extension fragment. Dependency declarations, the char
             "KHR_character_expression_mask": {
               "masks": [
                 {
-                  "target": "aa",
+                  "target": 0,
                   "type": "block",
                   "threshold": 0.2
                 }
@@ -156,10 +156,12 @@ The following is a partial extension fragment. Dependency declarations, the char
 
 | Property    | Type   | Description                                                                                      | Required |
 | ----------- | ------ | ------------------------------------------------------------------------------------------------ | -------- |
-| `target`    | string | The name of the target expression that this mask will affect                                     | Yes      |
+| `target`    | integer | Index of the target expression in the top-level `KHR_character_expression.expressions[]` array. | Yes      |
 | `type`      | string | The mask type. `"blend"` and `"block"` are standardized; custom nonempty strings are permitted. Default: `"blend"` | No       |
 | `amount`    | number | The amount of influence (0.0–1.0). Default: `1.0`                                                | No       |
 | `threshold` | number | For `"block"` type: the threshold above which the target is blocked (0.0–1.0). Default: `0.0`   | No       |
+
+Each `target` MUST resolve to an entry in the top-level `KHR_character_expression.expressions[]` array. Expression indices are independent of expression labels and remain unambiguous when labels are duplicated or changed.
 
 ### Mask Type Enum
 

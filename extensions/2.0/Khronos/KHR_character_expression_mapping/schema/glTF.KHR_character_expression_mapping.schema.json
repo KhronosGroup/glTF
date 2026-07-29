@@ -18,8 +18,13 @@
                         "type": "object",
                         "properties": {
                             "source": {
-                                "type": "string",
-                                "description": "Name of the source expression in the model."
+                                "allOf": [
+                                    {
+                                        "$ref": "glTFid.schema.json"
+                                    }
+                                ],
+                                "description": "Index of the source expression in the top-level KHR_character_expression extension object.",
+                                "gltf_detailedDescription": "This value MUST be a valid index into the `expressions` array of the top-level `KHR_character_expression` extension object."
                             },
                             "weight": {
                                 "type": "number",

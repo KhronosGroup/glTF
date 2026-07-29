@@ -104,23 +104,23 @@ Optionally, these expressions may be aligned with industry standards (or an endp
       "expressionSetMappings": {
         "example_set_1": {
           "Smile": [
-            { "source": "smileLeft", "weight": 0.8 },
-            { "source": "smileRight", "weight": 0.8 }
+            { "source": 0, "weight": 0.8 },
+            { "source": 1, "weight": 0.8 }
           ],
           "LeftCheekRaise": [
-            { "source": "smileLeft", "weight": 0.2 }
+            { "source": 0, "weight": 0.2 }
           ],
-          "MouthOpen": [{ "source": "jawOpen", "weight": 1.0 }]
+          "MouthOpen": [{ "source": 2, "weight": 1.0 }]
         },
         "example_set_2": {
           "smile_small": [
-            { "source": "smileLeft", "weight": 0.2 },
-            { "source": "smileRight", "weight": 0.2 }
+            { "source": 0, "weight": 0.2 },
+            { "source": 1, "weight": 0.2 }
           ],
           "left_dimple": [
-            { "source": "smileLeft", "weight": 0.8 }
+            { "source": 0, "weight": 0.8 }
           ],
-          "mouth_open": [{ "source": "jawOpen", "weight": 1.0 }]
+          "mouth_open": [{ "source": 2, "weight": 1.0 }]
         }
       }
     }
@@ -135,7 +135,7 @@ Target Expression Set Name : Expression Mapping Dictionary (Expression Name : Li
 
 | Property | Type   | Description                                                   |
 | -------- | ------ | ------------------------------------------------------------- |
-| `source` | string | Name of the source expression in the model.                   |
+| `source` | integer | Index of the source expression in the top-level `KHR_character_expression.expressions[]` array. |
 | `weight` | number | Relative influence of this source expression on the target. Weights represent the proportional contribution needed to achieve the desired target result and do not need to sum to any specific value. |
 
 ### Mapping Types
@@ -150,7 +150,7 @@ This allows developers to bridge between custom expression sets and shared vocab
 ## Implementation Notes
 
 - This extension is typically used at the top level of the glTF file.
-- Expression names should match those used in `KHR_character_expression`. This extension does not define an asset-validation requirement to resolve mapping source names.
+- Each `source` MUST resolve to an entry in the top-level `KHR_character_expression.expressions[]` array.
 - Tools can interpret this mapping to apply automatic translation between expression sets.
 
 ## Known Implementations
