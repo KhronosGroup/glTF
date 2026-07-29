@@ -1,0 +1,62 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "type.KHR_interactivity.schema.json",
+    "title": "Behavior graph type",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "signature": {
+            "title": "The type signature.",
+            "type": "string",
+            "oneOf": [
+                {
+                    "title": "A boolean value.",
+                    "const": "bool"
+                },
+                {
+                    "title": "A double precision IEEE-754 floating-point scalar value.",
+                    "const": "float"
+                },
+                {
+                    "title": "A two-component vector of float values.",
+                    "const": "float2"
+                },
+                {
+                    "title": "A three-component vector of float values.",
+                    "const": "float3"
+                },
+                {
+                    "title": "A four-component vector of float values.",
+                    "const": "float4"
+                },
+                {
+                    "title": "A double precision IEEE-754 floating-point scalar value.",
+                    "const": "float2x2"
+                },
+                {
+                    "title": "A 3x3 matrix of float values.",
+                    "const": "float3x3"
+                },
+                {
+                    "title": "A 4x4 matrix of float values.",
+                    "const": "float4x4"
+                },
+                {
+                    "title": "A two’s complement 32-bit signed integer scalar value.",
+                    "const": "int"
+                },
+                {
+                    "title": "An opaque reference value.",
+                    "const": "ref"
+                },
+                {
+                    "title": "A value of a custom type.",
+                    "const": "custom"
+                }
+            ]
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "signature" ]
+}

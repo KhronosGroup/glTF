@@ -1,0 +1,97 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "node.KHR_interactivity.schema.json",
+    "title": "Behavior graph interactivity node",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "declaration": {
+            "title": "The declaration index.",
+            "allOf": [ { "$ref": "glTFid.schema.json" } ]
+        },
+        "configuration": {
+            "title": "The configuration.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+                "properties": {
+                    "value": {
+                        "title": "The value.",
+                        "type": "array",
+                        "minItems": 1
+                    },
+                    "extensions": { },
+                    "extras": { }
+                }
+            },
+            "minProperties": 1
+        },
+        "values": {
+            "title": "The input value sockets.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+                "properties": {
+                    "node": {
+                        "title": "The index of the interactivity node.",
+                        "allOf": [ { "$ref": "glTFid.schema.json" } ]
+                    },
+                    "socket": {
+                        "title": "The id of the output value socket of the interactivity node.",
+                        "type": "string",
+                        "default": "value"
+                    },
+                    "type": {
+                        "title": "The type index.",
+                        "allOf": [ { "$ref": "glTFid.schema.json" } ]
+                    },
+                    "value": {
+                        "title": "The inline input socket value.",
+                        "type": "array",
+                        "minItems": 1
+                    },
+                    "extensions": { },
+                    "extras": { }
+                },
+                "dependentRequired": {
+                    "socket": [ "node" ],
+                    "value": ["type"]
+                },
+                "not": { "required": [ "node", "value" ] },
+                "anyOf": [
+                    { "required": [ "type" ] },
+                    { "required": [ "node" ] }
+                ]
+            },
+            "minProperties": 1
+        },
+        "flows": {
+            "title": "The output flow sockets.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+                "properties": {
+                    "node": {
+                        "title": "The index of the interactivity node to be activated.",
+                        "allOf": [ { "$ref": "glTFid.schema.json" } ]
+                    },
+                    "socket": {
+                        "title": "The id of the input flow socket of the interactivity node to be activated.",
+                        "type": "string",
+                        "default": "in"
+                    },
+                    "extensions": { },
+                    "extras": { }
+                },
+                "required": [ "node" ]
+            },
+            "minProperties": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "declaration" ]
+}

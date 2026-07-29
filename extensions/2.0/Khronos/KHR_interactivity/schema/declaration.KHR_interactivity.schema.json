@@ -1,0 +1,51 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "declaration.KHR_interactivity.schema.json",
+    "title": "Behavior graph declaration",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "$defs": {
+        "declarationValueSocket": {
+            "type": "object",
+            "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+            "properties": {
+                "type": {
+                    "title": "The type index.",
+                    "allOf": [ { "$ref": "glTFid.schema.json" } ]
+                },
+                "extensions": { },
+                "extras": { }
+            },
+            "required": [ "type" ]
+        }
+    },
+    "properties": {
+        "op": {
+            "title": "The operation.",
+            "type": "string"
+        },
+        "inputValueSockets": {
+            "title": "The extension-defined input value sockets.",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/$defs/declarationValueSocket" },
+            "minProperties": 1
+        },
+        "outputValueSockets": {
+            "title": "The extension-defined output value sockets.",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/$defs/declarationValueSocket" },
+            "minProperties": 1
+        },
+        "extension": {
+            "title": "The name of the extension defining the operation.",
+            "type": "string"
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "op" ],
+    "dependentRequired": {
+        "inputValueSockets": [ "extension" ],
+        "outputValueSockets": [ "extension" ]
+    }
+}
