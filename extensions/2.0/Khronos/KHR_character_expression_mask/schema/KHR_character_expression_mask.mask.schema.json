@@ -6,9 +6,9 @@
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "target": {
-            "type": "string",
-            "minLength": 1,
-            "description": "The name of the target expression that this mask will affect."
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "Index of the target expression that this mask will affect.",
+            "gltf_detailedDescription": "This value MUST be a valid index into the `expressions` array of the top-level `KHR_character_expression` extension object."
         },
         "type": {
             "description": "The type of the mask. 'blend' reduces the target proportionally to this expression's value. 'block' fully reduces the target when this expression exceeds the threshold.",
