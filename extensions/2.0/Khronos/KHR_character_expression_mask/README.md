@@ -113,6 +113,7 @@ The following is a partial extension fragment. Dependency declarations, the char
               "masks": [
                 {
                   "target": 0,
+                  "name": "aa",
                   "type": "blend",
                   "amount": 0.5
                 }
@@ -131,6 +132,7 @@ The following is a partial extension fragment. Dependency declarations, the char
               "masks": [
                 {
                   "target": 0,
+                  "name": "aa",
                   "type": "block",
                   "threshold": 0.2
                 }
@@ -157,11 +159,14 @@ The following is a partial extension fragment. Dependency declarations, the char
 | Property    | Type   | Description                                                                                      | Required |
 | ----------- | ------ | ------------------------------------------------------------------------------------------------ | -------- |
 | `target`    | integer | Index of the target expression in the top-level `KHR_character_expression.expressions[]` array. | Yes      |
+| `name`      | string | Optional name of the target expression. When present, it MUST exactly match the referenced expression's `expression` property. | No       |
 | `type`      | string | The mask type. `"blend"` and `"block"` are standardized; custom nonempty strings are permitted. Default: `"blend"` | No       |
 | `amount`    | number | The amount of influence (0.0–1.0). Default: `1.0`                                                | No       |
 | `threshold` | number | For `"block"` type: the threshold above which the target is blocked (0.0–1.0). Default: `0.0`   | No       |
 
 Each `target` MUST resolve to an entry in the top-level `KHR_character_expression.expressions[]` array. Expression indices are independent of expression labels and remain unambiguous when labels are duplicated or changed.
+
+When `name` is present, it MUST exactly and case-sensitively match the referenced expression's `expression` property. Resolution is always performed using `target`.
 
 ### Mask Type Enum
 

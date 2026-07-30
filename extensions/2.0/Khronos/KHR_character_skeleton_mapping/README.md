@@ -68,20 +68,20 @@ Here's an example mapping from a custom rig into VRM Humanoid:
     "KHR_character_skeleton_mapping": {
       "skeletalRigMappings": {
         "vrmHumanoid": {
-          "hips": 1,
-          "head": 2,
-          "leftFoot": 3,
-          "rightFoot": 4,
-          "leftHand": 5,
-          "rightHand": 6
+          "hips": { "node": 1, "name": "Hips" },
+          "head": { "node": 2, "name": "Head" },
+          "leftFoot": { "node": 3, "name": "LeftFoot" },
+          "rightFoot": { "node": 4, "name": "RightFoot" },
+          "leftHand": { "node": 5, "name": "LeftHand" },
+          "rightHand": { "node": 6, "name": "RightHand" }
         },
         "example_rig": {
-          "hip_bone": 1,
-          "head_bone": 2,
-          "l_foot_bone": 3,
-          "r_foot_bone": 4,
-          "l_hand_bone": 5,
-          "r_hand_bone": 6
+          "hip_bone": { "node": 1, "name": "Hips" },
+          "head_bone": { "node": 2, "name": "Head" },
+          "l_foot_bone": { "node": 3, "name": "LeftFoot" },
+          "r_foot_bone": { "node": 4, "name": "RightFoot" },
+          "l_hand_bone": { "node": 5, "name": "LeftHand" },
+          "r_hand_bone": { "node": 6, "name": "RightHand" }
         }
       }
     }
@@ -92,7 +92,8 @@ Here's an example mapping from a custom rig into VRM Humanoid:
 In this example:
 
 - The key is the target joint name defined by the target standard rig (e.g., `"hips"` for VRM Humanoid)
-- The value is the index of the source joint's glTF node in the model's native rig — a 0-based index into the document's top-level `nodes` array (e.g., `1`)
+- The value is a joint association object whose required `node` is the index of the source joint's glTF node in the model's native rig — a 0-based index into the document's top-level `nodes` array (e.g., `1`)
+- The optional `name` is a human-readable label. When present, it MUST exactly match the referenced node's `name` property.
 - Because the value is a node index, two different target rigs that map to the same source joint reference the **same** node index (e.g., `vrmHumanoid.hips` and `example_rig.hip_bone` both resolve to node `1`)
 - The system using this extension may understand what `"vrmHumanoid"` or `"example_rig"` means (i.e., the joint vocabulary and structure must be pre-declared by the consuming runtime)
 
@@ -100,19 +101,19 @@ In this example:
 
 The structure of the data contained in the extension can be described as a dictionary of dictionaries:
 
-**Target Skeleton/Rig Name** : **Joint Mapping Dictionary** (Target Joint Name : Source Node Index)
+**Target Skeleton/Rig Name** : **Joint Mapping Dictionary** (Target Joint Name : Joint Association)
 
 Each mapping entry is simply:
 
-| Key (Target Joint) | Value (Source Node) | Description                                              |
-| ------------------ | ------------------- | -------------------------------------------------------- |
-| string             | integer             | Direct mapping from a target joint name in the target vocabulary to the index of the source joint's glTF node (a 0-based index into the top-level `nodes` array) in the model's native rig |
+| Key (Target Joint) | Value (Joint Association) | Description                                              |
+| ------------------ | ------------------------- | -------------------------------------------------------- |
+| string             | object                    | Direct mapping from a target joint name in the target vocabulary to a required source `node` index and optional matching `name` |
 
 ### Mapping Types
 
 This extension supports one-to-one mappings:
 
-- **One-to-one**: A target joint maps directly to a single source joint via a node index (an integer `glTFid`).
+- **One-to-one**: A target joint maps directly to a single source joint through a joint association object containing a `node` index (an integer `glTFid`).
 
 This approach ensures maximum simplicity, compatibility across all engines and tools, and follows glTF's design philosophy of keeping core extensions simple and stable.
 
@@ -127,7 +128,8 @@ While this extension does not mandate a central registry, developers are encoura
 ## Implementation Notes
 
 - Target joint names (keys) are defined by the target rig's vocabulary.
-- Source joint values are 0-based indices into the glTF `nodes` array (a `glTFid`), identifying the node in the model's native rig.
+- Each source joint association has a required `node`, a 0-based index into the glTF `nodes` array (a `glTFid`), identifying the node in the model's native rig.
+- An association `name`, when present, MUST exactly and case-sensitively match the referenced node's `name` property. Resolution is always performed using `node`.
 - The reference rig vocabulary may be shared across engines or projects.
 - This extension does not modify skinning behavior, but informs tooling and runtime animation retargeting.
 - For validation, ensure that every value is a valid, non-negative index into the top-level `nodes` array.

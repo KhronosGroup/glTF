@@ -10,6 +10,11 @@
             "description": "Index of the target expression that this mask will affect.",
             "gltf_detailedDescription": "This value MUST be a valid index into the `expressions` array of the top-level `KHR_character_expression` extension object."
         },
+        "name": {
+            "type": "string",
+            "description": "The name of the target expression.",
+            "gltf_detailedDescription": "When defined, this value MUST exactly match the `expression` property of the expression referenced by `target`."
+        },
         "type": {
             "description": "The type of the mask. 'blend' reduces the target proportionally to this expression's value. 'block' fully reduces the target when this expression exceeds the threshold.",
             "anyOf": [
