@@ -16,6 +16,7 @@
                     "description": "Array of source expression mappings that contribute to the target expression.",
                     "items": {
                         "type": "object",
+                        "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
                         "properties": {
                             "source": {
                                 "allOf": [
@@ -26,10 +27,17 @@
                                 "description": "Index of the source expression in the top-level KHR_character_expression extension object.",
                                 "gltf_detailedDescription": "This value MUST be a valid index into the `expressions` array of the top-level `KHR_character_expression` extension object."
                             },
+                            "name": {
+                                "type": "string",
+                                "description": "The name of the source expression.",
+                                "gltf_detailedDescription": "When defined, this value MUST exactly match the `expression` property of the expression referenced by `source`."
+                            },
                             "weight": {
                                 "type": "number",
                                 "description": "Relative influence of this source expression on the target. Weights represent the proportional contribution needed to achieve the desired target result."
-                            }
+                            },
+                            "extensions": { },
+                            "extras": { }
                         },
                         "required": [
                             "source",
