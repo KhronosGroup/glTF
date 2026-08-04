@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "scene.KHR_audio_environment.schema.json",
+    "title": "KHR_audio_environment glTF Scene Extension",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "environment": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "Index into KHR_audio_environment.environments[]; the scene's default environment when the listener is inside no zone."
+        },
+        "activeListener": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "Index into KHR_audio_environment.listeners[]; pins the active listener."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "anyOf": [
+        { "required": ["environment"] },
+        { "required": ["activeListener"] }
+    ]
+}
