@@ -41,7 +41,7 @@ ADOCHTMLOPTS = -a stylesheet=khronos.css -a sectanchors
 SPECDEPS = $(SPEC).adoc $(GENERATED)
 
 PATCHVERSION = 1
-SPECREVISION = 2.0.$(PATCHVERSION)
+SPECREVISION = 2.1.$(PATCHVERSION)
 
 # Spell out ISO 8601 format as not all date commands support --rfc-3339
 SPECDATE = $(shell echo `date -u "+%Y-%m-%d %TZ"`)
