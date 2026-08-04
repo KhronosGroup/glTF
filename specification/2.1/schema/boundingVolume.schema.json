@@ -6,10 +6,6 @@
     "description": "A bounding volume.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
-        "shape": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the shape used for this bounding volume."
-        },
         "rotation": {
             "type": "array",
             "description": "The bounding volume's unit quaternion rotation relative to the node's local coordinate system.",
@@ -31,6 +27,10 @@
             "minItems": 3,
             "maxItems": 3,
             "default": [ 1.0, 1.0, 1.0 ]
+        },
+        "shape": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the shape in the top-level `shapes` array used for this bounding volume. Required."
         },
         "translation": {
             "type": "array",

@@ -8,7 +8,7 @@
     "properties": {
         "height": {
             "type": "number",
-            "description": "The distance between the centers of the two capping spheres of capsule.",
+            "description": "The distance between the centers of the two capping spheres of capsule, also known as the mid-height.",
             "exclusiveMinimum": 0.0,
             "default": 1.0
         },
