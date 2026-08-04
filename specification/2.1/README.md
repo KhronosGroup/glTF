@@ -7,12 +7,12 @@ SPDX-License-Identifier: CC-BY-4.0
 <img src="../figures/glTF_RGB_June16.svg" width="340" height="170" />
 </p>
 
-# The glTF 2.0 Specification
+# The glTF 2.1 Specification
 
 The full specification is available in two forms:
 
-- [Specification as HTML](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html) - for viewing in a browser
-- [Specification as PDF](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.pdf) - for viewing as a document
+- [Specification as HTML](https://www.khronos.org/registry/glTF/specs/2.1/glTF-2.1.html) - for viewing in a browser
+- [Specification as PDF](https://www.khronos.org/registry/glTF/specs/2.1/glTF-2.1.pdf) - for viewing as a document
 
 ## Extensions
 
@@ -20,15 +20,15 @@ Features not covered by the core glTF specification may be contributed by way of
 
 ## Contributing
 
-Although the file structure is finalized for glTF 2.0, error corrections and clarifications are most welcome here. Begin by checking the [list of issues](https://github.com/KhronosGroup/glTF/issues) to see if there has already been a discussion of the topic, and if not, file a new issue to get one started.
+Although the file structure is finalized for glTF 2.1, error corrections and clarifications are most welcome here. Begin by checking the [list of issues](https://github.com/KhronosGroup/glTF/issues) to see if there has already been a discussion of the topic, and if not, file a new issue to get one started.
 
-After discussing the issue, if corrections are needed to the core glTF 2.0 specification, they may be submitted in the form of GitHub Pull Requests to this repository. The choice of file to edit depends on the section that needs editing:
+After discussing the issue, if corrections are needed to the core glTF 2.1 specification, they may be submitted in the form of GitHub Pull Requests to this repository. The choice of file to edit depends on the section that needs editing:
 
-- **Section 5 (Properties Reference)** - This section is auto-generated using the [JSON Schema files](https://github.com/KhronosGroup/glTF/tree/main/specification/2.0/schema). Corrections to the wording must be made directly in those JSON files. Changes to the JSON structure are not being accepted at this time.
+- **Section 5 (Properties Reference)** - This section is auto-generated using the [JSON Schema files](https://github.com/KhronosGroup/glTF/tree/main/specification/2.1/schema). Corrections to the wording must be made directly in those JSON files. Changes to the JSON structure are not being accepted at this time.
 
-- **Appendix A (JSON Schema Reference)** - This section is likewise auto-generated using the [JSON Schema files](https://github.com/KhronosGroup/glTF/tree/main/specification/2.0/schema).
+- **Appendix A (JSON Schema Reference)** - This section is likewise auto-generated using the [JSON Schema files](https://github.com/KhronosGroup/glTF/tree/main/specification/2.1/schema).
 
-- **All other sections** - The remainder of the specification is contained in [Specification.adoc](https://github.com/KhronosGroup/glTF/blob/main/specification/2.0/Specification.adoc). General edits may be made here.
+- **All other sections** - The remainder of the specification is contained in [Specification.adoc](https://github.com/KhronosGroup/glTF/blob/main/specification/2.1/Specification.adoc). General edits may be made here.
 
 ## Building with GitHub Actions
 
@@ -50,7 +50,7 @@ Then, open a terminal inside the new container, and do the following:
 
 1. `git clone ...` this repository, or your fork.
 2. `git checkout ...` the branch with your changes.
-3. `cd specification/2.0`
+3. `cd specification/2.1`
 4. `make`
 
 This should build `Specification.html` and `Specification.pdf`, containing the HTML and PDF versions of the specification, including any changes from the current git branch.
