@@ -79,7 +79,7 @@
                 "$ref": "externalAsset.schema.json"
             },
             "minItems": 1,
-            "gltf_detailedDescription": "An array of external assets.  An external asset is a node that references an external file."
+            "gltf_detailedDescription": "An array of external assets.  An external asset references a file in the `files` array and may be instantiated by glTF scene nodes."
         },
         "files": {
             "type": "array",

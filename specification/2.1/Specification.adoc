@@ -537,7 +537,7 @@ This is typically achieved with algorithms like Grisu2 used by common JSON libra
 [[uris]]
 == URIs
 
-glTF assets use <<uri,URIs>> or <<iri,IRIs>> to reference buffers and image resources. Assets **MAY** contain at least these two URI types:
+glTF assets use <<uri,URIs>> or <<iri,IRIs>> to reference buffers, files, and image resources. Assets **MAY** contain at least these two URI types:
 
 - **Data URIs** that embed binary resources in the glTF JSON as defined by the <<data-uri,RFC 2397>>. The Data URI's `mediatype` field **MUST** match the encoded content.
 +

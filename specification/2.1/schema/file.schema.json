@@ -3,20 +3,25 @@
     "$id": "file.schema.json",
     "title": "File Reference to External File",
     "type": "object",
-    "description": "A file reference to an external file.",
+    "description": "A file reference to an external file. Files **MAY** be referenced by an URI (or IRI) or a buffer view index.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
-        "uri": {
-            "type": "string",
-            "description": "The URI (or IRI) of the external file.",
-            "format": "iri-reference",
-            "gltf_detailedDescription": "The URI (or IRI) of the external file.  Relative paths are relative to the current glTF asset.  Instead of referencing an external file, this field **MAY** contain a `data:`-URI. This field **MUST NOT** be defined when `bufferView` is defined.",
-            "gltf_uriType": "external-file"
+        "aliases": {
+            "type": "array",
+            "description": "An array of aliases used for files within this external file. Aliases allow overriding inner file URIs.",
+            "items": {
+                "$ref": "file.alias.schema.json"
+            }
+        },
+        "bufferView": {
+            "$ref": "glTFid.schema.json",
+            "description": "The index of the bufferView that contains the file data.",
+            "gltf_detailedDescription": "The index of the bufferView that contains the file data. This field **MUST NOT** be defined when `uri` is defined."
         },
         "mimeType": {
             "type": "string",
-            "description": "The MIME type of the external file.",
-            "gltf_detailedDescription": "The MIME type of the external file.",
+            "description": "The media type or MIME type of the external file.",
+            "gltf_detailedDescription": "The media type or MIME type of the external file. This field is required and **MUST** always be defined.",
             "anyOf": [
                 {
                     "const": "model/gltf+json"
@@ -29,17 +34,12 @@
                 }
             ]
         },
-        "bufferView": {
-            "$ref": "glTFid.schema.json",
-            "description": "The index of the bufferView that contains the external file.",
-            "gltf_detailedDescription": "The index of the bufferView that contains the external file. This field **MUST NOT** be defined when `uri` is defined."
-        },
-        "aliases": {
-            "type": "array",
-            "description": "An array of aliases used for files within this external file. Aliases allow overriding inner file URIs.",
-            "items": {
-                "$ref": "file.alias.schema.json"
-            }
+        "uri": {
+            "type": "string",
+            "description": "The URI (or IRI) of the external file.",
+            "format": "iri-reference",
+            "gltf_detailedDescription": "The URI (or IRI) of the external file.  Relative paths are relative to the current glTF asset.  Instead of referencing an external file, this field **MAY** contain a `data:`-URI. This field **MUST NOT** be defined when `bufferView` is defined.",
+            "gltf_uriType": "external-file"
         }
     },
     "required": [

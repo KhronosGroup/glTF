@@ -3,13 +3,13 @@
     "$id": "externalAsset.schema.json",
     "title": "External Asset",
     "type": "object",
-    "description": "An external asset referenced by a node.",
+    "description": "An external asset that references a file in the `files` array and may be instantiated by glTF scene nodes.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
         "file": {
             "$ref": "glTFid.schema.json",
             "description": "The index of the file reference used for this external asset.",
-            "gltf_detailedDescription": "The index of the file reference used for this external asset."
+            "gltf_detailedDescription": "The index of the file reference in the top-level `files` array used for this external asset."
         }
     },
     "required": [ "file" ]

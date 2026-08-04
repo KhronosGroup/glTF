@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "file.alias.schema.json",
-    "title": "Alias to External File",
+    "title": "File Reference to External File Remap Alias",
     "type": "object",
     "description": "Used to alias files referenced within an external file to other paths by the parent.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
@@ -12,7 +12,7 @@
         },
         "file": {
             "$ref": "glTFid.schema.json",
-            "description": "The index of the file to the files array."
+            "description": "The index of the file in the files array."
         }
     },
     "required": [ "alias", "file" ]
