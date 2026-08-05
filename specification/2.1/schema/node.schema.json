@@ -37,7 +37,7 @@
         },
         "mesh": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the mesh in this node. Cannot be used together with `externalAsset`."
+            "description": "The index of the mesh in this node."
         },
         "externalAsset": {
             "$ref": "glTFid.schema.json",
