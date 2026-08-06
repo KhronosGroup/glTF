@@ -3,7 +3,7 @@
     "$id": "externalAsset.schema.json",
     "title": "External Asset",
     "type": "object",
-    "description": "An external asset that references a file in the `files` array and may be instantiated by glTF scene nodes.",
+    "description": "An external asset that references a file in the `files` array and may be instantiated by any node.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
         "file": {
