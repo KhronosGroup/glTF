@@ -88,6 +88,9 @@ When an extension is implemented by more than one vendor, its name can use the r
 
 ## Vendor Extensions
 
+This is a historical list of vendor extensions. All extensions listed here are in the process of moving to the new [glTF-Community](https://github.com/KhronosGroup/glTF-Community/) repo. There will be no additions to this list.
+
+
 Vendor extensions are not covered by the Khronos IP framework.
 
 * [ADOBE_materials_clearcoat_specular](2.0/Vendor/ADOBE_materials_clearcoat_specular/README.md)
@@ -114,11 +117,7 @@ Vendor extensions are not covered by the Khronos IP framework.
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 * [NV_materials_mdl](2.0/Vendor/NV_materials_mdl/README.md)
 
-The list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any vendor, not just Khronos members, can request an extension prefix by submitting an [issue on GitHub](https://github.com/KhronosGroup/glTF/issues/new) requesting one.  Requests should include:
-
-* The name of the prefix.
-* The name of the vendor requesting the prefix.
-* The vendor's URL and/or contact information.
+The list of vendor prefixes is maintained in the [glTF-Community Prefixes table](https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/PREFIX.md).  See the [instructions](https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/README.md) for requesting a prefix. 
 
 ## Archived Extensions
 

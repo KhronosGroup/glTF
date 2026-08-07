@@ -10,9 +10,18 @@ The following extension prefixes are reserved by the spec maintainers:
 * `KHR` - Ratified or intended-to-be-ratified by Khronos Group
 * `EXT` - Prefix for extensions proposed by multiple vendors
 
-To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glTF/issues/new) with the name of the requested prefix and the vendor that will be using it. Maintainers, please assign the `extension` label to the issue.
+To request a prefix, follow the instructions in the [glTF Community Repo Vendor Instructions README](https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/README.md). All requests and PR created in this repo will be closed.
 
-## Registered Vendor Prefixes
+## [NEW] Vendor Extensions
+
+All vendor extensions, including prefix reservations **MUST** be done in the [glTF-Community](https://github.com/KhronosGroup/glTF-Community/) repo. 
+
+This repo is designed for non-Khronos extensions and has appropriate licensing for the repo and extensions. There are complete [contributing instructions](https://github.com/KhronosGroup/glTF-Community/blob/main/CONTRIBUTING.md) in the repo along with other vendor supporting material.
+
+The table below is provided strictly for historical reasons. It will not be updated.
+
+
+## Registered Vendor Prefixes (READONLY)
 
 | Prefix | Company or Project Name | Contacts | Request |
 |--------------|--------------------------------|---------------------------------------------------------------|-----------|
