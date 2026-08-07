@@ -848,7 +848,8 @@ The next example defines the transform for a node with attached camera using the
 [[bounding-volumes]]
 === Bounding Volumes
 
-Any glTF node **MAY** define a local space bounding volume using a node's `boundingVolume` property. A bounding volume is a simple geometric shape, optionally transformed, that **SHOULD** completely enclose the node's geometry.
+Any glTF node **MAY** define a local space bounding volume using a node's `boundingVolume` property. A bounding volume is a simple geometric shape, optionally transformed, that **SHOULD** completely enclose the node's geometry. 
+Bounding volumes for skinned meshes SHOULD be placed on the skin nodes (or their ancestors) rather than on the node with the skinned mesh.
 
 Bounding volumes contain the following properties:
 
@@ -2658,7 +2659,7 @@ The core glTF 2.1 specification includes the following shape types:
 
 A sub-object with a key matching the shape type **MAY** be used to specify the size parameters of the shape. When the `type` of a shape refers to a built-in shape type, the shape must not supply a sub-object for a different shape type: for example, a shape whose `type` is "box" must not have a `sphere` property defined.
 
-By default, planes have infinite extents along their tangent and bitangent vectors, specified as X and Z in local space, respectively. A plane may optionally provide `sizeX` and `sizeZ` properties to specify a finite total size along these axes. The center of the plane's surface is at the origin in local space. The entirety of the space behind the plane, in its local -Y direction, is considered inside of the plane.
+By default, planes have infinite extents along their tangent and bitangent vectors, specified as +X and +Z in local space, respectively. A plane may optionally provide `sizeX` and `sizeZ` properties to specify a finite total size along these axes. The center of the plane's surface is at the origin in local space. The entirety of the space behind the plane, in its local -Y direction, is considered inside of the plane.
 
 Degenerate shapes are prohibited. A sphere must have a positive, non-zero radius. A box shape must have positive non-zero values for each component of `size`. The cylinder and capsule shapes must have a positive, non-zero `height`, both `radiusTop` and `radiusBottom` must be non-negative, and at least one of `radiusTop` and `radiusBottom` must be non-zero. A plane must have positive non-zero `sizeX` and `sizeZ` extents, if provided.
 
