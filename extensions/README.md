@@ -52,6 +52,7 @@ This section tracks the status of extensions and projects that are in developmen
 | KHR_node_hoverability | Release Candidate | [Specification](2.0/Khronos/KHR_node_hoverability/README.md) |
 | KHR_node_selectability | Release Candidate | [Specification](2.0/Khronos/KHR_node_selectability/README.md) |
 | KHR_physics_rigid_bodies | Review Draft | [PR #2424](https://github.com/KhronosGroup/glTF/pull/2424) |
+| KHR_pmc_mesh_compression | Initial Draft | [Specification](2.0/Khronos/KHR_pmc_mesh_compression/README.md) |
 | KHR_texture_procedurals | Initial Draft | [PR #2381](https://github.com/KhronosGroup/glTF/pull/2381) |
 | EXT_texture_procedurals_mx_1_39 | Review Draft | [PR #2381](https://github.com/KhronosGroup/glTF/pull/2381) |
 | KHR_texture_video | Initial Draft | [PR #2285](https://github.com/KhronosGroup/glTF/pull/2285) |
