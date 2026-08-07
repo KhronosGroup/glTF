@@ -3,7 +3,7 @@
     "$id": "shape.sphere.schema.json",
     "title": "Sphere Shape",
     "type": "object",
-    "description": "Parameters describing a sphere shape.",
+    "description": "A sphere, centered at the origin in local space with a radius equal in all directions, with normals facing outwards.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "radius": {

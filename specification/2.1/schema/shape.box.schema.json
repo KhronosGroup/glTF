@@ -3,12 +3,12 @@
     "$id": "shape.box.schema.json",
     "title": "Box Shape",
     "type": "object",
-    "description": "Parameters describing a box shape.",
+    "description": "An axis-aligned box with a size per-axis, centered at the origin in local space, with normals facing outwards along each axis.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "size": {
             "type": "array",
-            "description": "The size (diameter) of the box in each axis in local space.",
+            "description": "The size of the box in each axis in local space.",
             "items": {
                 "type": "number",
                 "exclusiveMinimum": 0.0

@@ -3,7 +3,7 @@
     "$id": "shape.capsule.schema.json",
     "title": "Capsule Shape",
     "type": "object",
-    "description": "Parameters describing a capsule shape.",
+    "description": "A capsule, centered at the origin in local space with potentially different radii at each end, equivalent to the convex hull of two spheres located along the Y axis (in local space) at a specified distance, with normals facing outwards.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "height": {

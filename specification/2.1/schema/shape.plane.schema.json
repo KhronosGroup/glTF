@@ -3,7 +3,7 @@
     "$id": "shape.plane.schema.json",
     "title": "Plane Shape",
     "type": "object",
-    "description": "Parameters describing a plane shape.",
+    "description": "A plane centered at the origin in local space, optionally with finite extents, with normal along the +Y axis in local space. The plane is one-sided.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "sizeX": {
