@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "shape.sphere.schema.json",
-    "title": "glTF Sphere Shape",
+    "title": "Sphere Shape",
     "type": "object",
     "description": "Parameters describing a sphere shape.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "shape.capsule.schema.json",
-    "title": "glTF Capsule Shape",
+    "title": "Capsule Shape",
     "type": "object",
     "description": "Parameters describing a capsule shape.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "shape.schema.json",
-    "title": "glTF Shape Resource",
+    "title": "Shape Resource",
     "type": "object",
     "description": "Parameters describing a shape used for physics, BVH, or any other use case.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],

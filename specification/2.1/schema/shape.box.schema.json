@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "shape.box.schema.json",
-    "title": "glTF Box Shape",
+    "title": "Box Shape",
     "type": "object",
     "description": "Parameters describing a box shape.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

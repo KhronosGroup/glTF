@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "shape.cylinder.schema.json",
-    "title": "glTF Cylinder Shape",
+    "title": "Cylinder Shape",
     "type": "object",
     "description": "Parameters describing a cylinder shape.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
