@@ -71,13 +71,9 @@ The PMC encoder can change the order of faces and vertices for better compressio
 
 The PMC bitstream must contain encoded `indices` and all `attributes` specified in the parent primitive. When compressing the attributes, the encoder must specify attribute names in PMC (via the codec's `pmc::AttributeInfo::name`), matching the keys in the `attributes` JSON object, such as `POSITIONS`, `JOINTS_0`, etc. Loaders will then identify the decoded attributes by corresponding names.
 
-## glTF Schema Updates
+## Schema
 
-TODO
-
-### JSON Schema
-
-TODO: Links to the JSON schema for the new extension properties.
+* [mesh.primitive.KHR_pmc_mesh_compression.schema.json](schema/mesh.primitive.KHR_pmc_mesh_compression.schema.json)
 
 ## Conformance
 
