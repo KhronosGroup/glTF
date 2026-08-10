@@ -27,9 +27,12 @@ which turns a BRDF into a retroreflective one by substituting the outgoing view 
 This redirects the specular peak into the back-scatter direction, producing the bright
 retroreflective highlight seen on high-visibility clothing,
 glass-bead road markings, many safety signs, and other materials.
-In addition, MRM preserves reciprocity and energy conservation under reflection-symmetric NDFs (including GGX, Beckmann, and Phong).
+In addition, MRM preserves reciprocity and energy conservation under reflection-symmetric normal distribution functions (including GGX, Beckmann, and Phong).
 
-A *retroreflection weight* then linearly blends between the regular metallic and dielectric BRDFs (at a factor of 0) and their retroreflective variants (at a factor of 1). This matches the OpenPBR `specular_retroreflectivity` parameter.
+A *retroreflection weight* then linearly blends between the regular metallic and dielectric BRDFs (at a factor of 0) and their retroreflective variants (at a factor of 1).
+
+> [!NOTE]
+> This matches the OpenPBR `specular_retroreflectivity` parameter.
 
 <figure>
 <img src="./figures/retroreflection.png"/>
@@ -136,6 +139,8 @@ This extension should not be listed in the `extensionsRequired` list, as retrore
 * [NVIDIA DesignWorks Samples' vk_gltf_renderer](https://github.com/nvpro-samples/vk_gltf_renderer)
 
 ## Resources
+
+*This section is non-normative.*
 
 * [Jamie Portsmouth, Matthias Raab, Laurent Belcour, and Francis Liu, The Minimal Retroreflective Microfacet Model, *Journal of Computer Graphics Techniques (JCGT)*, vol. 15, no. 1, 60-75, 2026](http://jcgt.org/published/0015/01/04/)
 * [Retroreflection in MaterialX](https://github.com/AcademySoftwareFoundation/MaterialX/pull/2783)
