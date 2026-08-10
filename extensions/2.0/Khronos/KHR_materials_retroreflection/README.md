@@ -35,7 +35,7 @@ A *retroreflection weight* then linearly blends between the regular metallic and
 > This matches the OpenPBR `specular_retroreflectivity` parameter.
 
 <figure>
-<img src="./figures/retroreflection.png"/>
+<img src="./figures/retroreflection.jpg"/>
 <figcaption><em>Left: A traffic cone with <code>KHR_materials_retroreflection</code> on both sleeves (using a <code>retroreflectionFactor</code> of 1, masked by <code>retroreflectionTexture</code>). The lower sleeve appears brighter than the top sleeve because the light and camera are more closely aligned there. Right: The same traffic cone model and material without the extension. Rendered in <a href="https://github.com/nvpro-samples/vk_gltf_renderer">vk_gltf_renderer</a>.</em></figcaption>
 </figure>
 
