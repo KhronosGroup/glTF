@@ -752,7 +752,7 @@ The node hierarchy is defined using a node's `children` property, as in the foll
 
 The node named `Car` has four children. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
 
-Nodes **MAY** reference external assets. After loading the external asset file, implementations **SHOULD** connect the external asset to the parent file's node hierarchy by attaching all root nodes in the default scene as children. See the section on <<external-assets,referencing External Assets>> for further details.
+Nodes **MAY** reference external assets. After loading the external asset file, the root nodes in the external asset's default scene are treated as children of the referencing node. See the section on <<external-assets,referencing External Assets>> for further details.
 
 [[transformations]]
 === Transformations
@@ -2687,10 +2687,10 @@ Nodes *MAY* contain an `externalAsset` property that refers to an external glTF 
 [NOTE]
 .Implementation Note
 ====
-When the same external asset is referenced by multiple nodes, implementations should load independent copies of the external asset. Each copy of the external asset should copy any glTF JSON and hierarchy, but may share buffer data between the copies. This balances compatibility with existing features and extensions while also minimizing the amount of copied data.
+When the same external asset is referenced by multiple nodes, it is recommended that all related JSON objects except for `buffer` objects are cloned. The `buffer` reference may be retained to allow sharing binary data between external asset instances. This maximizes compatibility with existing extensions while also minimizing the amount of duplicated binary data. Future specification versions or extensions may introduce mechanisms to allow better sharing of object definitions across external asset instances.
 ====
 
-Once loaded, the root nodes defined by the external asset's default scene and those root nodes full node hierarchies *SHOULD* be treated as being attached as a child to the node containing the `externalAsset` reference.
+Once loaded, the root nodes defined by the external asset's default scene and their node hierarchies are treated as being attached as children to the node containing the `externalAsset` reference.
 
 [source,json]
 ----
