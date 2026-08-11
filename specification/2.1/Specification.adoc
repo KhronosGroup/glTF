@@ -2766,7 +2766,7 @@ See <<appendix-d-external-asset-diagrams, Appendix D>> for detailed diagrams out
 [[shapes]]
 == Shapes
 
-glTF defines an array of shapes. All built-in shape types are "implicit" shapes, meaning that they have a surface defined by a mathematical function, and they have a distinct inside and outside.
+glTF defines an array of shapes. Most built-in shape types are implicit, meaning their surface is described by a mathematical function that gives them a well-defined inside and outside. Concave mesh-based shapes are the exception, since they may not distinguish inside from outside.
 
 Similar to other glTF objects, shapes in this array do not automatically have behavior. Other objects in the glTF document may use these shapes to instance them in the scene, providing the geometry data required for the behavior of that object, such as bounding volumes, or extension-defined physics colliders.
 
@@ -2791,17 +2791,30 @@ The core glTF 2.1 specification includes the following shape types:
 |====
 | `"box"`      | An axis-aligned box with a size per-axis, centered at the origin in local space, with normals facing outwards along each axis.
 | `"capsule"`  | A capsule, centered at the origin in local space with potentially different radii at each end, equivalent to the convex hull of two spheres located along the Y axis (in local space) at a specified distance, with normals facing outwards.
+| `"concave"`  | A concave mesh-based shape, relative to the local space, with normals facing the same way as the mesh's face normals determined by the triangle winding order.
+| `"convex"`   | A convex mesh-based shape, relative to the local space, with normals facing outwards, away from the center of the convex hull.
 | `"cylinder"` | A cylinder, centered at the origin in local space with potentially different radii at each end, equivalent to the convex hull of two circles in the X/Z plane positioned along the Y axis at a specified distance, with the top cap normal facing along the +Y axis, the bottom cap normal facing along the -Y axis, and the side normals facing outwards along the X/Z plane.
 | `"plane"`    | A plane centered at the origin in local space, optionally with finite extents, with normal along the +Y axis in local space. The plane is one-sided.
 | `"sphere"`   | A sphere, centered at the origin in local space with a radius equal in all directions, with normals facing outwards.
 |====
 
 
-A sub-object with a key matching the shape type **MAY** be used to specify the size parameters of the shape. When the `type` of a shape refers to a built-in shape type, the shape must not supply a sub-object for a different shape type: for example, a shape whose `type` is "box" must not have a `sphere` property defined.
+A sub-object with a key matching the shape type **MAY** be used to specify the size parameters of the shape. For the `concave` and `convex` shape types, the matching sub-object **MUST** be present. When the `type` of a shape refers to a built-in shape type, the shape must not supply a sub-object for a different shape type: for example, a shape whose `type` is "box" must not have a `sphere` property defined.
 
 By default, planes have infinite extents along their tangent and bitangent vectors, specified as +X and +Z in local space, respectively. A plane may optionally provide `sizeX` and `sizeZ` properties to specify a finite total size along these axes. The center of the plane's surface is at the origin in local space. The entirety of the space behind the plane, in its local -Y direction, is considered inside of the plane.
 
 Degenerate shapes are prohibited. A sphere must have a positive, non-zero radius. A box shape must have positive non-zero values for each component of `size`. The cylinder and capsule shapes must have a positive, non-zero `height`, both `radiusTop` and `radiusBottom` must be non-negative, and at least one of `radiusTop` and `radiusBottom` must be non-zero. A plane must have positive non-zero `sizeX` and `sizeZ` extents, if provided.
+
+The `concave` and `convex` shape types are defined by a mesh, specified by a `mesh` index. The following conditions apply to meshes used by mesh-based shapes:
+
+- Meshes used by shapes **MUST** have a single mesh primitive.
+- The primitive **MUST** have a triangle-based `mode`, meaning `TRIANGLES` (4), `TRIANGLE_STRIP` (5), or `TRIANGLE_FAN` (6), and **MUST** have a `POSITION` attribute.
+- The generated shape **MUST** take into account morphing from any `mesh.weights` present.
+- Meshes used by shapes are **RECOMMENDED** to be watertight, manifold, and not self-intersecting, but this is not required.
+- Meshes used by convex hull shapes **MUST** be pre-computed convex hulls with a non-zero volume.
+- Meshes used by convex hull shapes **SHOULD** surround the local origin, such that the local origin is inside the convex hull, but this is not required.
+
+Mesh-based shapes use meshes directly. Shapes do not take into account node weights, skinning, or anything else related to `node.mesh` instancing.
 
 Extensions **MAY** define additional shape types, in which case the `type` **MAY** be set to a custom value, or set to one of the built-in shape types to provide a fallback.
 

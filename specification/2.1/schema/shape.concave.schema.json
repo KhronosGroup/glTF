@@ -1,0 +1,15 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "shape.concave.schema.json",
+    "title": "Concave Mesh Shape",
+    "type": "object",
+    "description": "Parameters describing a concave mesh shape.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "mesh": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the mesh in the top-level `meshes` array used to generate the triangles for this concave shape. Required."
+        }
+    },
+    "required": [ "mesh" ]
+}
