@@ -654,11 +654,6 @@ Authors may define their own additional statistics, like `_mode` in the example 
 > }
 > ```
 
-
-## Optional vs. Required
-
-This extension is optional, meaning it should be placed in the `extensionsUsed` list, but not in the `extensionsRequired` list.
-
 ## Schema
 
 * [glTF.EXT_structural_metadata.schema.json](./schema/glTF.EXT_structural_metadata.schema.json)
