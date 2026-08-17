@@ -4,18 +4,10 @@
     "title": "EXT_structural_metadata glTF Document extension",
     "type": "object",
     "description": "glTF extension that provides structural metadata about vertices, texels, and features in a glTF asset.",
-    "allOf": [
-        {
-            "$ref": "glTFProperty.schema.json"
-        }
-    ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "schema": {
-            "allOf": [
-                {
-                    "$ref": "schema.schema.json"
-                }
-            ],
+            "$ref": "schema.schema.json",
             "description": "An object defining classes and enums."
         },
         "schemaUri": {
@@ -46,9 +38,7 @@
             "items": {
                 "$ref": "propertyAttribute.schema.json"
             }
-        },
-        "extensions": {},
-        "extras": {}
+        }
     },
     "oneOf": [
         {

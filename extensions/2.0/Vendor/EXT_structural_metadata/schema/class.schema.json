@@ -4,11 +4,7 @@
     "title": "Class in EXT_structural_metadata",
     "type": "object",
     "description": "A class containing a set of properties.",
-    "allOf": [
-        {
-            "$ref": "glTFProperty.schema.json"
-        }
-    ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "name": {
             "type": "string",
@@ -27,8 +23,6 @@
             "additionalProperties": {
                 "$ref": "class.property.schema.json"
             }
-        },
-        "extensions": {},
-        "extras": {}
+        }
     }
 }

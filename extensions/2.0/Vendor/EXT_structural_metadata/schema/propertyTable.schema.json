@@ -4,11 +4,7 @@
     "title": "Property Table in EXT_structural_metadata",
     "type": "object",
     "description": "Properties conforming to a class, organized as property values stored in binary columnar arrays.",
-    "allOf": [
-        {
-            "$ref": "glTFProperty.schema.json"
-        }
-    ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "name": {
             "type": "string",
@@ -31,9 +27,7 @@
             "additionalProperties": {
                 "$ref": "propertyTable.property.schema.json"
             }
-        },
-        "extensions": {},
-        "extras": {}
+        }
     },
     "required": [
         "class",

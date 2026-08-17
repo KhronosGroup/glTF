@@ -4,11 +4,7 @@
     "title": "Property Attribute in EXT_structural_metadata",
     "type": "object",
     "description": "Properties conforming to a class, organized as property values stored in attributes.",
-    "allOf": [
-        {
-            "$ref": "glTFProperty.schema.json"
-        }
-    ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "name": {
             "type": "string",
@@ -26,9 +22,7 @@
             "additionalProperties": {
                 "$ref": "propertyAttribute.property.schema.json"
             }
-        },
-        "extensions": {},
-        "extras": {}
+        }
     },
     "required": [
         "class"

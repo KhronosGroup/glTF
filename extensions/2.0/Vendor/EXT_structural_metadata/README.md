@@ -40,6 +40,7 @@ Written against the glTF 2.0 specification.
   - [Property Textures](#property-textures)
   - [Binary Data Storage](#binary-data-storage)
 - [Assigning Metadata](#assigning-metadata)
+- [Statistics](#statistics)
 - [Optional vs. Required](#optional-vs-required)
 - [Schema](#schema-1)
 - [Revision History](#revision-history)
@@ -562,9 +563,96 @@ Each glTF object can contain an `EXT_structural_metadata` object that defines th
 > }
 > ```
 
-## Optional vs. Required
+### Statistics
 
-This extension is optional, meaning it should be placed in the `extensionsUsed` list, but not in the `extensionsRequired` list.
+*Defined in [statistics.schema.json](./schema/statistics.class.property.schema.json).*
+
+Statistics provide aggregate information about the distribution of property values, summarized over all instances of a metadata class within an asset. For example, statistics may include the minimum/maximum values of a numeric property, or the number of occurrences for specific enum values.
+
+These summary statistics allow applications to analyze or display metadata, e.g. with the [3D Tiles declarative styling language](https://github.com/CesiumGS/3d-tiles/tree/main/specification/Styling), without first having to process the complete dataset to identify bounds for color ramps and histograms. Statistics are provided on a per-class basis, so that applications can provide styling or context based on the asset as a whole.
+
+![](./figures/statistics.png)
+
+The statistics are stored in the top-level `statistics` object of the extension. The structure of this statistics object is defined in [statistics.schema.json](./schema/statistics.class.property.schema.json).
+
+The statistics are defined for each metadata class, including the following elements:
+
+* `count` is the number of entities of a class occurring within the asset
+* `properties` contains summary statistics about properties of a class occurring within the asset
+
+Properties may include the following built-in statistics:
+
+| Name                | Description                                   | Type                                                                                                                                 |
+|---------------------|-----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `min`           | The minimum property value                    | Scalars, vector, matrices                                                                                                            |
+| `max`           | The maximum property value                    | ...                                                                                                                                  |
+| `mean`              | The arithmetic mean of the property values    | ...                                                                                                                                  |
+| `median`            | The median of the property values             | ...                                                                                                                                  |
+| `standardDeviation` | The standard deviation of the property values | ...                                                                                                                                  |
+| `variance`          | The variance of the property values           | ...                                                                                                                                  |
+| `sum`               | The sum of the property values                | ...                                                                                                                                  |
+| `occurrences`       | Frequencies of value occurrences              | Object in which keys are property values (for enums, the enum name), and values are the number of occurrences of that property value |
+
+Authors may define their own additional statistics, like `_mode` in the example below. Application-specific statistics should use an underscore prefix (`_*`) and lowerCamelCase for consistency and to avoid conflicting with future built-in statistics.
+
+> **Example:** Definition of a "building" class, with three properties. Summary statistics provide a minimum, maximum, and (application-specific) "_mode" for the numerical "height" property. The enum "buildingType" property is summarized by the number of distinct enum value occurrences.
+>
+> ```jsonc
+> {
+>   "schema": {
+>     "classes": {
+>       "building": {
+>         "properties": {
+>           "height": {
+>             "type": "SCALAR",
+>             "componentType": "FLOAT32"
+>           },
+>           "owners": {
+>             "type": "STRING",
+>             "array": true
+>           },
+>           "buildingType": {
+>             "type": "ENUM",
+>             "enumType": "buildingType"
+>           }
+>         }
+>       }
+>     },
+>     "enums": {
+>       "buildingType": {
+>         "valueType": "UINT16",
+>         "values": [
+>           {"name": "Residential", "value": 0},
+>           {"name": "Commercial", "value": 1},
+>           {"name": "Hospital", "value": 2},
+>           {"name": "Other", "value": 3}
+>         ]
+>       }
+>     }
+>   },
+>   "statistics": {
+>     "classes": {
+>       "building": {
+>         "count": 100000,
+>         "properties": {
+>           "height": {
+>             "min": 3.9,
+>             "max": 341.7,
+>             "_mode": 5.0
+>           },
+>           "buildingType": {
+>             "occurrences": {
+>               "Residential": 50000,
+>               "Commercial": 40950,
+>               "Hospital": 50
+>             }
+>           }
+>         }
+>       }
+>     }
+>   }
+> }
+> ```
 
 ## Schema
 

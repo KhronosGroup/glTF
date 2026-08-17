@@ -4,11 +4,7 @@
     "title": "EXT_structural_metadata glTF extension",
     "type": "object",
     "description": "Structural metadata about a glTF element.",
-    "allOf": [
-        {
-            "$ref": "glTFProperty.schema.json"
-        }
-    ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "class": {
             "type": "string",
@@ -21,8 +17,6 @@
             "additionalProperties": {
                 "$ref": "definitions.schema.json#/definitions/anyValue"
             }
-        },
-        "extensions": {},
-        "extras": {}
+        }
     }
 }

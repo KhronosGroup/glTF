@@ -4,11 +4,7 @@
     "title": "Schema in EXT_structural_metadata",
     "type": "object",
     "description": "An object defining classes and enums.",
-    "allOf": [
-        {
-            "$ref": "glTFProperty.schema.json"
-        }
-    ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "id": {
             "type": "string",
@@ -45,9 +41,7 @@
             "additionalProperties": {
                 "$ref": "enum.schema.json"
             }
-        },
-        "extensions": {},
-        "extras": {}
+        }
     },
     "required": [
         "id"
