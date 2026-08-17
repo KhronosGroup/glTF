@@ -7,31 +7,31 @@
     "properties": {
         "min": {
             "$ref": "definitions.schema.json#/definitions/numericValue",
-            "description": "The minimum property value occurring in the tileset. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the minimum of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
+            "description": "The minimum property value occurring in the asset. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the minimum of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
         },
         "max": {
             "$ref": "definitions.schema.json#/definitions/numericValue",
-            "description": "The maximum property value occurring in the tileset. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the maximum of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
+            "description": "The maximum property value occurring in the asset. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the maximum of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
         },
         "mean": {
             "$ref": "definitions.schema.json#/definitions/numericValue",
-            "description": "The arithmetic mean of property values occurring in the tileset. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the mean of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
+            "description": "The arithmetic mean of property values occurring in the asset. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the mean of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
         },
         "median": {
             "$ref": "definitions.schema.json#/definitions/numericValue",
-            "description": "The median of property values occurring in the tileset. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the median of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
+            "description": "The median of property values occurring in the asset. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the median of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
         },
         "standardDeviation": {
             "$ref": "definitions.schema.json#/definitions/numericValue",
-            "description": "The standard deviation of property values occurring in the tileset. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the standard deviation of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
+            "description": "The standard deviation of property values occurring in the asset. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the standard deviation of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
         },
         "variance": {
             "$ref": "definitions.schema.json#/definitions/numericValue",
-            "description": "The variance of property values occurring in the tileset. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the variance of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
+            "description": "The variance of property values occurring in the asset. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the variance of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
         },
         "sum": {
             "$ref": "definitions.schema.json#/definitions/numericValue",
-            "description": "The sum of property values occurring in the tileset. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the sum of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
+            "description": "The sum of property values occurring in the asset. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the sum of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
         },
         "occurrences": {
             "type": "object",
