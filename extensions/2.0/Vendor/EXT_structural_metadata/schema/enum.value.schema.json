@@ -4,11 +4,7 @@
     "title": "Enum Value in EXT_structural_metadata",
     "type": "object",
     "description": "An enum value.",
-    "allOf": [
-        {
-            "$ref": "glTFProperty.schema.json"
-        }
-    ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "name": {
             "type": "string",
@@ -23,9 +19,7 @@
         "value": {
             "type": "integer",
             "description": "The integer enum value."
-        },
-        "extensions": {},
-        "extras": {}
+        }
     },
     "required": [
         "name",

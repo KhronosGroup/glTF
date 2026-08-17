@@ -4,11 +4,7 @@
     "title": "Class Property in EXT_structural_metadata",
     "type": "object",
     "description": "A class property.",
-    "allOf": [
-        {
-            "$ref": "glTFProperty.schema.json"
-        }
-    ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "name": {
             "type": "string",
@@ -116,35 +112,19 @@
             "default": false
         },
         "offset": {
-            "allOf": [
-                {
-                    "$ref": "definitions.schema.json#/definitions/numericValue"
-                }
-            ],
+            "$ref": "definitions.schema.json#/definitions/numericValue",
             "description": "An offset to apply to property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types when the component type is `FLOAT32` or `FLOAT64`, or when the property is `normalized`."
         },
         "scale": {
-            "allOf": [
-                {
-                    "$ref": "definitions.schema.json#/definitions/numericValue"
-                }
-            ],
+            "$ref": "definitions.schema.json#/definitions/numericValue",
             "description": "A scale to apply to property values. Only applicable to `SCALAR`, `VECN`, and `MATN` types when the component type is `FLOAT32` or `FLOAT64`, or when the property is `normalized`."
         },
         "max": {
-            "allOf": [
-                {
-                    "$ref": "definitions.schema.json#/definitions/numericValue"
-                }
-            ],
+            "$ref": "definitions.schema.json#/definitions/numericValue",
             "description": "Maximum allowed value for the property. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the maximum of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
         },
         "min": {
-            "allOf": [
-                {
-                    "$ref": "definitions.schema.json#/definitions/numericValue"
-                }
-            ],
+            "$ref": "definitions.schema.json#/definitions/numericValue",
             "description": "Minimum allowed value for the property. Only applicable to `SCALAR`, `VECN`, and `MATN` types. This is the minimum of all property values, after the transforms based on the `normalized`, `offset`, and `scale` properties have been applied."
         },
         "required": {
@@ -153,28 +133,18 @@
             "default": false
         },
         "noData": {
-            "allOf": [
-                {
-                    "$ref": "definitions.schema.json#/definitions/noDataValue"
-                }
-            ],
+            "$ref": "definitions.schema.json#/definitions/noDataValue",
             "description": "A `noData` value represents missing data — also known as a sentinel value — wherever it appears. `BOOLEAN` properties may not specify `noData` values. This is given as the plain property value, without the transforms from the `normalized`, `offset`, and `scale` properties. Must not be defined if `required` is true."
         },
         "default": {
-            "allOf": [
-                {
-                    "$ref": "definitions.schema.json#/definitions/anyValue"
-                }
-            ],
+            "$ref": "definitions.schema.json#/definitions/anyValue",
             "description": "A default value to use when encountering a `noData` value or an omitted property. The value is given in its final form, taking the effect of `normalized`, `offset`, and `scale` properties into account. Must not be defined if `required` is true."
         },
         "semantic": {
             "type": "string",
             "minLength": 1,
             "description": "An identifier that describes how this property should be interpreted. The semantic cannot be used by other properties in the class."
-        },
-        "extensions": {},
-        "extras": {}
+        }
     },
     "required": [
         "type"

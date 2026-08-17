@@ -4,11 +4,7 @@
     "title": "Enum in EXT_structural_metadata",
     "type": "object",
     "description": "An object defining the values of an enum.",
-    "allOf": [
-        {
-            "$ref": "glTFProperty.schema.json"
-        }
-    ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "name": {
             "type": "string",
@@ -60,9 +56,7 @@
                 "$ref": "enum.value.schema.json"
             },
             "minItems": 1
-        },
-        "extensions": {},
-        "extras": {}
+        }
     },
     "required": [
         "values"
