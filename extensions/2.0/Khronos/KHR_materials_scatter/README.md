@@ -21,7 +21,7 @@ Written against the glTF 2.0 spec. This extension has no effect unless combined 
 
 - This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
 - This extension must not be used on a material that also uses `KHR_materials_unlit`.
-- This extension must not be used on a material that also uses `KHR_materials_diffuse_transmission`.
+- This extension must not be used on a material that also uses `KHR_materials_diffuse_transmission`. `KHR_materials_scatter` accomplishes the same behavior when in thin-walled mode and is the recommended extension.
 
 ## Table of Contents
 
@@ -132,7 +132,7 @@ A material is in thin-walled mode when `KHR_materials_volume` is absent, or when
 
 - `scatterStrength` linearly interpolates between the specular BTDF (at 0) and a diffuse scatter BSDF (at 1). The BTDF uses the `baseColor` as the multiplier and the BSDF uses `multiscatterColor`.
 - `multiscatterColor` is the color of the fully-scattered lobe.
-- `scatterAnisotropy` controls the directional split of scattered light between the two hemispheres. At `+1`, all scattered light is transmitted forward (pure diffuse BTDF). At `-1`, all scattered light is reflected back (pure diffuse BRDF), making the surface appear opaque and Lambertian with albedo defined by `multiscatterColor`. At `0`, scattered light is split equally between reflection and transmission.
+- `scatterAnisotropy` controls the directional split of scattered light between the two hemispheres. Near `+1`, all scattered light is transmitted forward (pure diffuse BTDF). Near `-1`, all scattered light is reflected back (pure diffuse BRDF), making the surface appear opaque and Lambertian with albedo defined by `multiscatterColor`. At `0`, scattered light is split equally between reflection and transmission.
 
 The thin-walled mode is appropriate for thin objects with dense internal structure, such as leaves, fabric, paper, wax sheets, or frosted glass panels.
 
@@ -142,7 +142,7 @@ A material is in volumetric mode when `KHR_materials_volume` is present with `th
 
 - `scatterStrength` effectively scales the multi-scatter albedo. At 0, the multi-scatter albedo becomes black so there is no scattering (i.e. the medium is purely absorbing, as in `KHR_materials_volume` alone); at 1, the full `multiscatterColor` albedo is used to split attenuation between absorption and scattering. See below for more details.
 - `multiscatterColor` defines the multi-scatter albedo, representing the perceived color of the scattering medium after many internal bounces.
-- `scatterAnisotropy` controls the single-parameter phase function for individual scattering events. At `-1`, all scattering events are backscattering and, at `+1`, all events are forward scattering.
+- `scatterAnisotropy` controls the single-parameter phase function for individual scattering events. Near `-1`, all scattering events are backscattering and, near `+1`, all events are forward scattering.
 
 The volumetric mode is appropriate for thick objects with participating media, such as wax candles, skin, milk, or colored glass with subsurface color.
 
@@ -181,6 +181,8 @@ s &= 4.09712 + 4.20863\,\rho_{ms} - \sqrt{9.59217 + 41.6808\,\rho_{ms} + 17.7126
 \end{aligned}
 $$
 
+Note: $s$ should be clamped to $[0, 1]$ and $g$ is $(-1, 1)$ so a divide by zero should not happen here.
+
 The single-scatter albedo defines the fraction of the attenuation coefficient that goes to scattering versus absorption.
 Given the attenuation coefficient $\sigma_t = -\log(c)/d$ from `KHR_materials_volume`, the scattering and absorption coefficients are:
 
@@ -209,9 +211,9 @@ $$
     <td><img src="figures/sss_anisotropy_0.95.png"/></td>
   </tr>
   <tr>
-    <td align="center">g = -0.95</td>
-    <td align="center">g = 0.0</td>
-    <td align="center">g = 0.95</td>
+    <td align="center">scatterAnisotropy = -0.95</td>
+    <td align="center">scatterAnisotropy = 0.0</td>
+    <td align="center">scatterAnisotropy = 0.95</td>
   </tr>
   <tr>
     <td colspan="3" align="center">
@@ -285,7 +287,7 @@ With `KHR_materials_volume` alone:
 
 $$
 \begin{aligned}
-\sigma_t &= \sigma_a, \\\\ \qquad \sigma_s &= 0
+\sigma_t &= \sigma_a \\\\ \qquad \sigma_s &= 0
 \end{aligned}
 $$
 
