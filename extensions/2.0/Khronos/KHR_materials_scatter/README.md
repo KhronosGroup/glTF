@@ -187,7 +187,10 @@ The single-scatter albedo defines the fraction of the attenuation coefficient th
 Given the attenuation coefficient $\sigma_t = -\log(c)/d$ from `KHR_materials_volume`, the scattering and absorption coefficients are:
 
 $$
-\sigma_s = \sigma_t\,\rho_{ss}, \\\\ \qquad \sigma_a = \sigma_t\,(1 - \rho_{ss})
+\sigma_s = \sigma_t\ * \rho_{ss}
+$$
+$$
+\sigma_a = \sigma_t\,(1 - \rho_{ss})
 $$
 
 > [!NOTE]
@@ -200,7 +203,7 @@ $$
 
 ### Scatter Anisotropy
 
-**Thin-walled mode:** `scatterAnisotropy` controls how scattered light is split between the reflected and transmitted hemispheres. At `+1`, all scattered energy exits through the transmission hemisphere (pure diffuse BTDF — tissue paper, thin wax). At `-1`, all scattered energy exits through the reflection hemisphere (pure diffuse BRDF — the surface appears opaque and Lambertian with `multiscatterColor`). At `0`, energy is split equally between the two hemispheres.
+**Thin-walled mode:** `scatterAnisotropy` controls how scattered light is split between the reflected and transmitted hemispheres. Near `+1`, all scattered energy exits through the transmission hemisphere (pure diffuse BTDF — tissue paper, thin wax). Near `-1`, all scattered energy exits through the reflection hemisphere (pure diffuse BRDF — the surface appears opaque and Lambertian with `multiscatterColor`). At `0`, energy is split equally between the two hemispheres.
 
 **Volumetric mode:** `scatterAnisotropy` controls the single-parameter phase function which determines the probability that light is scattered forward or backwards.`scatterAnisotropy = 0` gives isotropic scattering; `scatterAnisotropy > 0` gives forward scattering (light continues in roughly the same direction); `scatterAnisotropy < 0` gives backward scattering.
 
@@ -286,20 +289,23 @@ In volumetric mode, `KHR_materials_scatter` does not modify the surface BSDF. Th
 With `KHR_materials_volume` alone:
 
 $$
-\begin{aligned}
-\sigma_t &= \sigma_a \\\\ \qquad \sigma_s &= 0
-\end{aligned}
+\sigma_t = \sigma_a
+$$
+
+$$
+\sigma_s = 0
 $$
 
 With `KHR_materials_scatter` added:
 
 $$
-\begin{aligned}
-\sigma_t &= \sigma_a + \sigma_s, \\\\ \qquad \sigma_s &= \sigma_t\,\rho_{ss}(\rho_{ms}^*)
-\end{aligned}
+\sigma_t = \sigma_a + \sigma_s,
+$$
+$$
+\sigma_s = \sigma_t * \rho_{ss}
 $$
 
-where the effective multi-scatter albedo $\rho_{ms}^*$ is scaled by `scatterStrength`:
+$\rho_{ms}$ is derived from `multiscatterColorFactor` (and `multiscatterColorTexture`) as described in [Multi-Scatter Color](#multi-scatter-color) above and then we derive the effective multi-scatter albedo $\rho_{ms}^*$ by scaling $\rho_{ms}$ by `scatterStrength`:
 
 $$
 \begin{aligned}
@@ -307,7 +313,7 @@ $$
 \end{aligned}
 $$
 
-$\rho_{\text{ms}}$ is derived from `multiscatterColorFactor` (and `multiscatterColorTexture`) as described in [Multi-Scatter Color](#multi-scatter-color) above, and $\rho_{\text{ss}}$ is derived from $\rho_{\text{ms}}^*$ via the Kulla-Conty mapping. At `scatterStrength = 0`, $\rho_{\text{ms}}^* = 0$ and therefore $\rho_{\text{ss}} = 0$, giving a purely absorbing medium identical to `KHR_materials_volume` alone. $\sigma_{\text{t}}$ now accounts for both absorption and scattering, not absorption alone.
+$\rho_{ss}$ is derived from $\rho_{ms}^*$ via the Kulla-Conty mapping. At `scatterStrength = 0`, $\rho_{ms}^* = 0$ and therefore $\rho_{ss} = 0$, giving a purely absorbing medium identical to `KHR_materials_volume` alone. $\sigma_{t}$ now accounts for both absorption and scattering, not absorption alone.
 
 ## Interaction with Other Extensions
 
