@@ -313,7 +313,7 @@ $$
 \end{aligned}
 $$
 
-$\rho_{ss}$ is derived from $\rho_{ms}^*$ via the Kulla-Conty mapping. At `scatterStrength = 0`, $\rho_{ms}^* = 0$ and therefore $\rho_{ss} = 0$, giving a purely absorbing medium identical to `KHR_materials_volume` alone. $\sigma_{t}$ now accounts for both absorption and scattering, not absorption alone.
+$\rho_{ss}$ is derived from $\rho_{ms}^\*$ via the Kulla-Conty mapping. At `scatterStrength = 0`, $\rho_{ms}^* = 0$ and therefore $\rho_{ss} = 0$, giving a purely absorbing medium identical to `KHR_materials_volume` alone. $\sigma_{t}$ now accounts for both absorption and scattering, not absorption alone.
 
 ## Interaction with Other Extensions
 
