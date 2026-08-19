@@ -39,6 +39,10 @@
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The index of the mesh in this node."
         },
+        "externalAsset": {
+            "$ref": "glTFid.schema.json",
+            "description": "The index of the external asset in this node. Cannot be used together with `mesh`."
+        },
         "rotation": {
             "type": "array",
             "description": "The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar.",
