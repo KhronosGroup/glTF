@@ -348,7 +348,9 @@ Informative reference values (final values to be normative in the ratified spec;
 }
 ```
 
-**Web Audio Mapping (informative)**: each active environment is one shared reverb bus. Emitters feed the bus via their `reverbLevel` send gain (3.1); the bus output is scaled by `mix` and summed into the destination. Parametric reverb is realized by an algorithmic reverberator or a generated IR honoring decay/diffusion/density; impulse-response reverb maps to `ConvolverNode` (1, 2, or 4 channel IRs, per Web Audio conventions) with `normalize` as specified.
+**Web Audio Mapping (informative)**: each active environment is one shared reverb bus. Emitters feed the bus via their `reverbLevel` send gain (3.1); the bus output is scaled by `mix` and summed into the destination. Impulse-response reverb maps to `ConvolverNode` (1, 2, or 4 channel IRs, per Web Audio conventions) with `normalize` as specified.
+
+**Parametric realization (recommendation)**: implementations SHOULD realize parametric reverb by *generating an impulse response* from the parametric values (early-reflection taps after `reflectionsDelay`, followed by an exponentially decaying noise tail with RT60 = `decayTime`, low-passed per `decayHFRatio`) and rendering it by convolution. Convolution has no feedback path and is unconditionally stable. Algorithmic (feedback-network) realizations are permitted but MUST remain stable under sustained wide-band input; naive single-comb topologies are known to accumulate energy and are discouraged. (This recommendation comes directly from reference-implementation experience.)
 
 ### 2.5 Doppler Properties
 
@@ -367,6 +369,8 @@ pitch = (c + s·vL) / (c − s·vS)
 ```
 
 where `c` is `speedOfSound`, `s` is `scale`, `vL` is the radial velocity of the listener toward the emitter, and `vS` is the radial velocity of the emitter toward the listener (both derived from node transforms; positive = approaching, so approach raises pitch from either side). Implementations MUST clamp the denominator to remain positive (and the numerator non-negative) and SHOULD smooth velocity estimates across frames. Individual emitters may opt out via `dopplerEnabled: false` (3.2).
+
+**Interaction with `KHR_audio_graph` (normative)**: Doppler is a per-emitter effect, but pitch-based realizations act on source playback. When an emitter is fed by a graph output whose graph consumes sources shared with other emitters (no 1:1 source-to-emitter path), implementations MAY omit Doppler for that emitter. Authors requiring Doppler SHOULD keep Doppler-critical emitters on direct (non-graph) source paths or give them dedicated graph sources.
 
 ---
 
