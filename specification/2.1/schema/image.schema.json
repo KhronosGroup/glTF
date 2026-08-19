@@ -3,7 +3,7 @@
     "$id": "image.schema.json",
     "title": "Image",
     "type": "object",
-    "description": "Image data used to create a texture. Image **MAY** be referenced by an URI (or IRI) or a buffer view index.",
+    "description": "Image data used to create a texture. Image **MAY** be referenced by a URI (or IRI) or a buffer view index.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
         "uri": {
