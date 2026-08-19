@@ -1,0 +1,61 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "shape.schema.json",
+    "title": "Shape Resource",
+    "type": "object",
+    "description": "A generic, re-usable shape definition with no inherent meaning attached to it.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "type": {
+            "description": "The type of shape this shape object represents. If any properties are explicitly specified for the shape, the shape properties object MUST match the shape type.",
+            "anyOf": [
+                {
+                    "const": "box",
+                },
+                {
+                    "const": "capsule",
+                },
+                {
+                    "const": "cylinder",
+                },
+                {
+                    "const": "plane",
+                },
+                {
+                    "const": "sphere",
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "box": {
+            "type": "object",
+            "description": "Parameter values defining a box shape.",
+            "$ref": "shape.box.schema.json"
+        },
+        "capsule": {
+            "type": "object",
+            "description": "Parameter values defining a capsule shape.",
+            "$ref": "shape.capsule.schema.json"
+        },
+        "cylinder": {
+            "type": "object",
+            "description": "Parameter values defining a cylinder shape.",
+            "$ref": "shape.cylinder.schema.json"
+        },
+        "plane": {
+            "type": "object",
+            "description": "Parameter values defining a plane shape.",
+            "$ref": "shape.plane.schema.json"
+        },
+        "sphere": {
+            "type": "object",
+            "description": "Parameter values defining a sphere shape.",
+            "$ref": "shape.sphere.schema.json"
+        }
+    },
+    "required": [
+        "type"
+    ]
+}

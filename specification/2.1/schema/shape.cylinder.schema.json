@@ -1,0 +1,28 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "shape.cylinder.schema.json",
+    "title": "Cylinder Shape",
+    "type": "object",
+    "description": "A cylinder, centered at the origin in local space with potentially different radii at each end, equivalent to the convex hull of two circles in the X/Z plane positioned along the Y axis at a specified distance, with the top cap normal facing along the +Y axis, the bottom cap normal facing along the -Y axis, and the side normals facing outwards along the X/Z plane.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "height": {
+            "type": "number",
+            "description": "The height of the cylinder, centered along the Y axis.",
+            "exclusiveMinimum": 0.0,
+            "default": 2.0
+        },
+        "radiusBottom": {
+            "type": "number",
+            "description": "The radius of the bottom of the cylinder (the disc located along -Y.)",
+            "minimum": 0.0,
+            "default": 0.5
+        },
+        "radiusTop": {
+            "type": "number",
+            "description": "The radius of the top of the cylinder (the disc located along +Y.)",
+            "minimum": 0.0,
+            "default": 0.5
+        }
+    }
+}

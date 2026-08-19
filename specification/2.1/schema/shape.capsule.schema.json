@@ -1,0 +1,28 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "shape.capsule.schema.json",
+    "title": "Capsule Shape",
+    "type": "object",
+    "description": "A capsule, centered at the origin in local space with potentially different radii at each end, equivalent to the convex hull of two spheres located along the Y axis (in local space) at a specified distance, with normals facing outwards.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "height": {
+            "type": "number",
+            "description": "The distance between the centers of the two capping spheres of capsule, also known as the mid-height.",
+            "exclusiveMinimum": 0.0,
+            "default": 1.0
+        },
+        "radiusBottom": {
+            "type": "number",
+            "description": "The radius of the sphere located at the bottom of the capsule (i.e. the sphere at the half-height along -Y)",
+            "minimum": 0.0,
+            "default": 0.5
+        },
+        "radiusTop": {
+            "type": "number",
+            "description": "The radius of the sphere located at the top of the capsule (i.e. the sphere at the half-height along +Y)",
+            "minimum": 0.0,
+            "default": 0.5
+        }
+    }
+}

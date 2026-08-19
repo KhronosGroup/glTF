@@ -185,11 +185,24 @@ The following pointer templates represent mutable properties defined in the core
 | `/materials/{}/pbrMetallicRoughness/baseColorFactor` | `float4`
 | `/materials/{}/pbrMetallicRoughness/metallicFactor`  | `float`
 | `/materials/{}/pbrMetallicRoughness/roughnessFactor` | `float`
+| `/nodes/{}/boundingVolume/rotation`                  | `float4`
+| `/nodes/{}/boundingVolume/scale`                     | `float3`
+| `/nodes/{}/boundingVolume/translation                | `float3`
 | `/nodes/{}/translation`                              | `float3`
 | `/nodes/{}/rotation`                                 | `float4`
 | `/nodes/{}/scale`                                    | `float3`
 | `/nodes/{}/weights`                                  | `float[]`
 | `/nodes/{}/weights/{}`                               | `float`
+| `/shapes/{}/box/size`                                | `float3`
+| `/shapes/{}/capsule/height`                          | `float`
+| `/shapes/{}/capsule/radiusBottom`                    | `float`
+| `/shapes/{}/capsule/radiusTop`                       | `float`
+| `/shapes/{}/cylinder/height`                         | `float`
+| `/shapes/{}/cylinder/radiusBottom`                   | `float`
+| `/shapes/{}/cylinder/radiusTop`                      | `float`
+| `/shapes/{}/plane/sizeX`                             | `float`
+| `/shapes/{}/plane/sizeZ`                             | `float`
+| `/shapes/{}/sphere/radius`                           | `float`
 |====
 
 The `/nodes/{}/translation`, `/nodes/{}/rotation`, and `/nodes/{}/scale` pointers represent the current TRS properties of the node. If the static `matrix` property is defined on the node object in JSON, the corresponding rotation and scale pointers are undefined; the translation pointer is always defined.
@@ -240,6 +253,7 @@ Additionally, the following pointer templates represent read-only runtime proper
 | `/scenes.length`                    | `int`      | Number of scenes
 | `/scenes/{}/nodes.length`           | `int`      | Number of root nodes
 | `/scenes/{}/nodes/{}`               | `int`      | Index of the root node
+| `/shapes.length`                    | `int`      | Number of shapes
 | `/skins.length`                     | `int`      | Number of skins
 | `/skins/{}/joints.length`           | `int`      | Number of joints
 | `/skins/{}/joints/{}`               | `int`      | Index of the joint node
