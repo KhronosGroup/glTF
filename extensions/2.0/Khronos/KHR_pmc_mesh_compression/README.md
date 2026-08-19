@@ -4,6 +4,7 @@
 
 * Igor Vytyaz, Google, <vytyaz@google.com>
 * Ondrej Stava, Google, <ostava@google.com>
+* Roshan Baliga, Google, <rdb@google.com>
 * Frank Galligan, Google, <fgalligan@google.com>
 
 ## Status
