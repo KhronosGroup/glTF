@@ -1,0 +1,93 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Oscillator Node",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "type": {
+            "type": "string",
+            "enum": [
+                "sine",
+                "square",
+                "triangle",
+                "sawtooth",
+                "custom"
+            ],
+            "description": "The oscillator waveform."
+        },
+        "frequency": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The oscillator frequency in Hertz.",
+            "default": 440.0
+        },
+        "detune": {
+            "type": "number",
+            "description": "Oscillator detune in cents.",
+            "default": 0.0
+        },
+        "pulseWidth": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "The pulse width used for square waves.",
+            "default": 0.5
+        },
+        "extensions": {},
+        "extras": {},
+        "periodicWave": {
+            "type": "object",
+            "description": "Custom waveform as Fourier coefficients (Web Audio / X3D PeriodicWave). Required when type is 'custom'.",
+            "properties": {
+                "real": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 2,
+                    "description": "Cosine (real) coefficients; element 0 is DC and should be 0."
+                },
+                "imag": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 2,
+                    "description": "Sine (imaginary) coefficients, same length as real; element 0 is ignored."
+                }
+            },
+            "required": [
+                "real",
+                "imag"
+            ]
+        }
+    },
+    "required": [
+        "type"
+    ],
+    "anyOf": [
+        {
+            "not": {
+                "properties": {
+                    "type": {
+                        "enum": [
+                            "custom"
+                        ]
+                    }
+                },
+                "required": [
+                    "type"
+                ]
+            }
+        },
+        {
+            "required": [
+                "periodicWave"
+            ]
+        }
+    ]
+}
