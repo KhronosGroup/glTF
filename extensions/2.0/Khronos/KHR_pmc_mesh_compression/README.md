@@ -46,7 +46,7 @@ To enable PMC mesh compression for a glTF primitive, add `KHR_pmc_mesh_compressi
 }
 ```
 
-The compressed mesh data (the bitstream) is stored in a glTF buffer. The extension refers to a `bufferView` at index 5 that describes the location of the mesh data in the buffer. The bitstream is encoded and decoded using an implementation of the PMC compression standard. The `bufferView` is the only extension property, and it is a required extension property (see extension schema).
+The compressed mesh data (the bitstream) is stored in a glTF buffer. The extension refers to a `bufferView` at index 5 that describes the location of the mesh data in the buffer. The bitstream is encoded and decoded using an implementation of the PMC compression standard. The `bufferView` is the only extension property, and it is a required extension property (see [extension schema](schema/mesh.primitive.KHR_pmc_mesh_compression.schema.json)).
 
 When using this extension, the `mode` of the primitive must be 4 (`TRIANGLES`).
 
