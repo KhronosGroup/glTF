@@ -17,7 +17,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension provides the ability to compress mesh primitives using a 3D mesh compression standard called Polygonal Mesh Coding (PMC) developed by the Alliance for Open Media's (AOM) Volumetric Visual Media (VVM) Working Group. With contributions from the authors of Draco compression, the PMC compression format is designed for efficient transmission and storage of 3D meshes. The `KHR_pmc_mesh_compression` extension enables faster transmission and reduced storage requirements of glTF assets.
+This extension provides the ability to compress mesh primitives using a 3D mesh compression standard called Polygonal Mesh Coding (PMC) developed by the Alliance for Open Media's (AOM) Volumetric Visual Media (VVM) Working Group. PMC compression is designed for efficient transmission and storage of 3D meshes. The `KHR_pmc_mesh_compression` extension enables faster transmission and reduced storage requirements of glTF assets.
 
 ## Enabling Mesh Compression
 
@@ -66,11 +66,11 @@ The uncompressed data may be provided along with the compressed version. Loader 
 ]
 ```
 
-When the uncompressed data is not provided in a primitive, then the `attributes` and `indices` accessors of the primitive should not provide the `bufferView` and `byteOffset` properties, because the loaders must ignore those properties and use the compressed data instead. Other accessor properties like `type`, `count`, etc. should be provided in a manner conforming with the base glTF specification.
+When the uncompressed data is not provided in a primitive, then the `attributes` and `indices` accessors of the primitive must not provide the `bufferView` and `byteOffset` properties, because the loaders must ignore those properties and use the compressed data instead. Other accessor properties like `type`, `count`, etc. should be provided in a manner conforming with the base glTF specification.
 
 The PMC encoder can change the order of faces and vertices for better compression. To avoid any data inconsistencies, the loader must obtain the indices and all attributes either from compressed data only or from the fallback uncompressed data only. For example, decoding `POSITION` from PMC bitstream while reading `NORMAL` from the fallback uncompressed data is not allowed and will lead to data inconsistency.
 
-The PMC bitstream must contain encoded `indices` and all `attributes` specified in the parent primitive. When compressing the attributes, the encoder must specify attribute names in PMC (via the codec's `pmc::AttributeInfo::name`), matching the keys in the `attributes` JSON object, such as `POSITIONS`, `JOINTS_0`, etc. Loaders will then identify the decoded attributes by corresponding names.
+The PMC bitstream must contain encoded `indices` and all `attributes` specified in the parent primitive. When compressing the attributes, the encoder must specify attribute names in PMC (see `ad_attribute_name_present` in PMC specification), matching the keys in the `attributes` JSON object, such as `POSITIONS`, `JOINTS_0`, etc. Loaders will then identify the decoded attributes by corresponding names.
 
 ## Schema
 
@@ -85,7 +85,7 @@ The recommended process for loaders that do not support this extension:
 
 The required process for loaders that support this extension:
 
-* Get the bitstream from this extension's `bufferView`, decompress the `indices` and `attributes` data from the bitstream using PMC decoder, and get desired attribute data by attribute names like `NORMAL` specified in the bitstream (via the codec's `pmc::AttributeInfo::name`).
+* Get the bitstream from this extension's `bufferView`, decompress the `indices` and `attributes` data from the bitstream using PMC decoder, and get desired attribute data by attribute names like `NORMAL` specified in the bitstream.
 * Process `attributes` and `indices` accessors of the primitive while ignoring accessor `bufferView` and `byteOffset` and use the previously decompressed data directly.
 
 ## Implementation note
@@ -101,3 +101,4 @@ It is recommended to store compressed data and uncompressed fallback data in sep
 ## Resources
 
 * [PMC reference software](https://gitlab.com/AOMediaVVM/reference-software/aomedia-pmc)
+* TODO: Link to PMC standard specification.
