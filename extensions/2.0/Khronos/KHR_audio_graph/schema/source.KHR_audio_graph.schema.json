@@ -49,6 +49,14 @@
             "description": "The channel interpretation applied when graph processing needs one."
         },
         "extensions": {},
-        "extras": {}
+        "extras": {},
+        "oscillator": {
+            "allOf": [
+                {
+                    "$ref": "KHR_audio_graph.oscillator.schema.json"
+                }
+            ],
+            "description": "Procedural waveform for a source without an 'audio' property. A source MUST NOT declare both audio and oscillator. loop/loopStart/loopEnd/offset/playbackRate are ignored for oscillator sources."
+        }
     }
 }

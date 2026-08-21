@@ -41,5 +41,26 @@
             "minItems": 2,
             "description": "Transition shape for interpolation 'custom': gain factors sampled uniformly over duration, scaled to the target gain."
         }
-    }
+    },
+    "anyOf": [
+        {
+            "not": {
+                "properties": {
+                    "interpolation": {
+                        "enum": [
+                            "custom"
+                        ]
+                    }
+                },
+                "required": [
+                    "interpolation"
+                ]
+            }
+        },
+        {
+            "required": [
+                "curve"
+            ]
+        }
+    ]
 }

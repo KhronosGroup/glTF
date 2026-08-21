@@ -37,18 +37,6 @@
             "properties": {
                 "kind": {
                     "enum": [
-                        "oscillator"
-                    ]
-                },
-                "params": {
-                    "$ref": "KHR_audio_graph.oscillator.schema.json"
-                }
-            }
-        },
-        {
-            "properties": {
-                "kind": {
-                    "enum": [
                         "gain"
                     ]
                 },

@@ -27,7 +27,7 @@ This extension adds graph-based audio processing to `KHR_audio_emitter`. It allo
 - Document-level graph declarations.
 - Explicit graph bindings from `KHR_audio_emitter.sources[]` into graph inputs.
 - Explicit graph bindings from graph outputs to `KHR_audio_emitter.emitters[]`.
-- Graph-only procedural sources through oscillator nodes.
+- Procedural (oscillator) sources declared as `KHR_audio_emitter` source entries through this extension's source properties (section 8).
 - Optional encoding metadata and extended playback properties on `KHR_audio_emitter` audio and source objects.
 
 ### Motivation
@@ -75,7 +75,7 @@ Add `KHR_audio_graph` to `extensionsUsed`. The extension payload is declared und
 
 - Time values are expressed in seconds.
 - Angles are expressed in radians.
-- Gain values are linear, unitless multipliers in the range `[0, +inf)`.
+- Gain values are linear, unitless multipliers in the range `[0, +∞)`; a gain of `0` mutes the signal.
 - Frequencies are expressed in Hertz.
 - Connections use graph-local node indices with optional `input` and `output` port indices. Omitted ports refer to port `0`.
 - Graphs are directed acyclic graphs. Cycles are not permitted.
@@ -118,6 +118,14 @@ Graph inputs bind an existing `KHR_audio_emitter` source to a graph node input.
 }
 ```
 
+A source that should reach an emitter **with no processing applied** is bound
+through an identity node — e.g. a `gain` node with `gain: 1.0` — rather than
+a direct source-to-emitter binding: `inputs[]` and `outputs[]` always bind
+through a graph node index. If **none** of an emitter's sources require
+processing, the emitter should not be graph-bound at all — the base
+`KHR_audio_emitter` `emitter.sources[]` mechanism already plays it directly,
+and rule 12 only applies to emitters actually bound via `outputs[]`.
+
 ### 1.3 Graph Outputs
 
 Graph outputs bind a graph node output to a `KHR_audio_emitter` emitter.
@@ -136,6 +144,10 @@ Graph outputs bind a graph node output to a `KHR_audio_emitter` emitter.
     ]
 }
 ```
+
+`outputs[]` entries always bind a graph node; see the note in section 1.2 for
+the identity-node idiom and for when an emitter should not be graph-bound at
+all.
 
 ### 1.4 Connections
 
@@ -226,7 +238,6 @@ Each graph node is defined by a `kind` discriminator and a `params` object.
 
 | Kind | Category | I/O |
 |---|---|---|
-| `oscillator` | Source | `0 -> 1` |
 | `gain` | Processing | `1 -> 1` |
 | `delay` | Processing | `1 -> 1` |
 | `compressor` | Processing | `1 -> 1` |
@@ -244,46 +255,17 @@ Each graph node is defined by a `kind` discriminator and a `params` object.
 | `channelmixer` | Channel routing | `1 -> 1` |
 | `audiomixer` | Channel routing | `N -> 1` |
 
-## 3. Source Nodes
+## 3. Signal Sources
 
-Source nodes generate audio within the graph. `KHR_audio_graph` defines one graph-only source node: the oscillator.
-
-### 3.1 Oscillator Node
-
-The oscillator node generates a periodic waveform. It does not reference `KHR_audio_emitter.audio[]` or `KHR_audio_emitter.sources[]`.
-
-| Property | Type | Description | Required |
-|---|---|---|---|
-| **type** | `string` | Waveform: `sine`, `square`, `triangle`, `sawtooth`, `custom`. | Yes |
-| **frequency** | `number` | Frequency in Hertz. Default: `440`. | No |
-| **detune** | `number` | Detune in cents. Default: `0`. | No |
-| **pulseWidth** | `number` | Pulse width for `square` waveforms. Range: `[0, 1]`. Default: `0.5`. | No |
-| **periodicWave** | `object` | Custom waveform definition. **Required when `type` is `custom`**; ignored otherwise. | No |
-
-**Periodic wave object** (matching Web Audio / X3D 4.0 `PeriodicWave`): Fourier coefficients of the waveform.
-
-| Property | Type | Description | Required |
-|---|---|---|---|
-| **real** | `number[]` | Cosine (real) coefficients. Element 0 is DC and SHOULD be `0`. | Yes |
-| **imag** | `number[]` | Sine (imaginary) coefficients, same length as `real`. Element 0 is ignored. | Yes |
-
-Informative Web Audio mapping: implementations typically map this node to `OscillatorNode`, using `PeriodicWave` when `type` is `custom`, or when `type` is `square` and `pulseWidth` is not `0.5`.
-
-```json
-{
-    "name": "test-tone",
-    "nodes": [
-        { "kind": "oscillator", "params": { "type": "sine", "frequency": 440.0 } },
-        { "kind": "gain", "params": { "gain": 0.3 } }
-    ],
-    "connections": [
-        { "from": { "node": 0 }, "to": { "node": 1 } }
-    ],
-    "outputs": [
-        { "node": 1, "emitter": 0 }
-    ]
-}
-```
+Graphs contain no signal-originating node kinds: **every signal enters a graph
+through an `inputs[]` binding** of a `KHR_audio_emitter` source (section 1.2)
+and leaves through an `outputs[]` binding or terminal-node routing (sections
+1.3, 9). Clip sources reference `KHR_audio_emitter.audio[]`; procedural
+oscillator sources are sources without `audio` whose waveform is supplied by
+this extension (section 8). This gives every source type — clip or procedural
+— identical playback control (`autoplay`, gain, scheduling, and event-driven
+control via the glTF Object Model), matching the Web Audio API and X3D 4.0,
+where oscillators are scheduled sources exactly like buffer sources.
 
 ## 4. Processing Nodes
 
@@ -291,9 +273,12 @@ Processing nodes transform audio. Unless otherwise noted, they have one input an
 
 ### 4.1 Gain Node
 
+When **interpolation** is `custom`, **curve** MUST be present; it is ignored
+when **interpolation** is `linear`.
+
 | Property | Type | Description | Required |
 |---|---|---|---|
-| **gain** | `number` | Linear gain multiplier. Range `[0, +∞)`. Default: `1.0`. | No |
+| **gain** | `number` | Linear gain multiplier. Range `[0, +∞)` (0 mutes the signal). Default: `1.0`. | No |
 | **interpolation** | `string` | Gain transition curve: `linear` or `custom`. Default: `linear`. | No |
 | **duration** | `number` | Interpolation duration in seconds. Default: `0`. | No |
 | **curve** | `number[]` | Transition shape for `interpolation: "custom"`: gain factors in `[0, 1]` sampled uniformly over `duration`, scaled to the target gain, linearly interpolated between samples. **Required when `interpolation` is `custom`**; ignored otherwise. | No |
@@ -510,6 +495,52 @@ When `KHR_audio_graph` is present, entries in `KHR_audio_emitter.sources[]` MAY 
 
 > **Note on removed properties**: earlier drafts defined `playbackRate` (duplicating the base `KHR_audio_emitter` source property — the base definition is authoritative) and a mutable `state` string (play/pause/stop semantics). Playback *control* is a cross-cutting concern being resolved jointly with `KHR_audio_emitter` (#2137) and KHR_interactivity; see the discussion in KhronosGroup/glTF#2561.
 
+### Oscillator Sources
+
+A `KHR_audio_emitter` source **without an `audio` property** (the base
+specification's placeholder form) MAY declare a procedural waveform through
+this extension. Such a source behaves like any other source — it is bound
+into graphs via `inputs[]`, and `autoplay`, `gain`, `when`, and `duration`
+apply normally; starting playback (including a re-trigger) begins the
+waveform at phase zero. `loop`, `loopStart`, `loopEnd`, `offset`, and
+`playbackRate` are ignored for oscillator sources (a continuous waveform has
+no loop region; pitch is controlled by `frequency` and `detune`).
+
+When **type** is `custom`, **periodicWave** MUST be present; it is ignored
+for every other waveform.
+
+| Property | Type | Description | Required |
+|---|---|---|---|
+| **type** | `string` | Waveform: `sine`, `square`, `triangle`, `sawtooth`, `custom`. | Yes |
+| **frequency** | `number` | Frequency in Hertz. Default: `440`. | No |
+| **detune** | `number` | Detune in cents. Default: `0`. | No |
+| **pulseWidth** | `number` | Pulse width for `square` waveforms. Range: `[0, 1]`. Default: `0.5`. | No |
+| **periodicWave** | `object` | Custom waveform as Fourier coefficients (`real[]`, `imag[]`), matching Web Audio / X3D 4.0 `PeriodicWave`. Required when `type` is `custom`. | No |
+
+```json
+{
+    "extensions": {
+        "KHR_audio_emitter": {
+            "sources": [
+                {
+                    "name": "test-tone",
+                    "autoplay": true,
+                    "extensions": {
+                        "KHR_audio_graph": {
+                            "oscillator": { "type": "sine", "frequency": 440.0 },
+                            "when": 0.0,
+                            "duration": 0.5
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+
+A source MUST NOT declare both `audio` and `oscillator`.
+
 ## 9. Graph Rules
 
 The following rules are normative:
@@ -522,8 +553,8 @@ The following rules are normative:
 6. Multiple graphs may reference the same sources and emitters.
 7. Fan-out is allowed: one node output may feed multiple downstream inputs.
 8. Fan-in is allowed: one node input may receive multiple upstream outputs. Signals are summed.
-9. Splitter output count equals the channel count of its input.
-10. Channel merger input count equals the channel count of its output.
+9. A splitter's output count is the highest `from.output` port index referenced on it in `connections[]`, plus one. Output ports beyond the runtime channel count of the splitter's input produce silence.
+10. A channel merger's input count is the highest input port index referenced on it in `connections[]` or `inputs[]`, plus one. Its output has that many channels; unconnected input ports contribute silent channels. (To pad a stream to a larger explicit channel count, follow the merger with a `channelmixer` using `outputChannels` and `discrete` interpretation.)
 11. Audio mixer inputs must have the same channel count.
 12. If an emitter is bound through `outputs[]`, that emitter's base `sources` array is ignored.
 13. If `outputs[]` is omitted, the implementation routes terminal graph outputs to the global audio destination.
@@ -536,6 +567,9 @@ Recorded so review does not re-litigate them:
 - **No audio-rate parameter connections.** Node outputs carry audio only; connecting a signal to another node's *parameter* (Web Audio's LFO/envelope mechanism) is deliberately out of scope. The connection form `to: {node, param}` is reserved for a future extension; X3D 4.0 made the same omission.
 - **No envelopes or scheduled automation curves.** The gain node's `interpolation`/`duration`/`curve` smoothing is the sanctioned transition mechanism; scene-driven parameter animation uses the glTF Object Model (KHR_animation_pointer / KHR_interactivity).
 - **Graphs process source signals before emission.** There is no post-spatialization insert point in this extension; master-bus processing is provided by `KHR_audio_environment`'s listener-bus hook.
+- **No reverb or convolution node kind.** Reverberation is an environment concern, deliberately layered into `KHR_audio_environment`: per-environment reverb (parametric presets or impulse response) fed by per-emitter `reverbLevel` sends, with zone-based selection. A graph-level convolver would duplicate that machinery inside the signal path and re-couple the layers this architecture separates.
+- **No direct source-to-emitter binding.** `inputs[]`/`outputs[]` always bind through a graph node (rules 2–3); pass-through is expressed with an identity `gain: 1.0` node — and an emitter none of whose sources need processing belongs to the base layer, not the graph (see section 1.2).
+- **No signal-originating node kinds.** All sources — clip and oscillator alike — are `KHR_audio_emitter` sources entering via `inputs[]`, so playback control is uniform (section 3).
 
 ## 10. Bypass Behavior
 
@@ -548,11 +582,13 @@ Implementations may realize bypass either by rewiring the graph or by providing 
 
 ## 11. Web Audio API Mapping
 
-The following mappings are informative.
+The following mappings are informative. Oscillator *sources* (section 8) map
+to `OscillatorNode`, scheduled with `start(when)` / `stop(when + duration)`
+exactly like buffer sources; `custom` waveforms (and `pulseWidth` square
+approximations) use `PeriodicWave`.
 
 | Node Kind | Web Audio API | Notes |
 |---|---|---|
-| `oscillator` | `OscillatorNode` | `pulseWidth` for square waves may be approximated with `PeriodicWave`. |
 | `gain` | `GainNode` | `interpolation = linear` maps to `linearRampToValueAtTime`; `custom` to `setValueCurveAtTime`. |
 | `delay` | `DelayNode` | |
 | `compressor` | `DynamicsCompressorNode` | |
@@ -582,9 +618,8 @@ The following JSON pointers are defined for mutable properties and may be used w
 |---|---|---|
 | `/extensions/KHR_audio_graph/graphs/{}/nodes/{}/params/gain` | `float` | Gain node gain |
 | `/extensions/KHR_audio_graph/graphs/{}/nodes/{}/params/delayTime` | `float` | Delay time in seconds |
-| `/extensions/KHR_audio_graph/graphs/{}/nodes/{}/params/frequency` | `float` | Filter or oscillator frequency |
+| `/extensions/KHR_audio_graph/graphs/{}/nodes/{}/params/frequency` | `float` | Filter frequency |
 | `/extensions/KHR_audio_graph/graphs/{}/nodes/{}/params/qualityFactor` | `float` | Filter Q factor |
-| `/extensions/KHR_audio_graph/graphs/{}/nodes/{}/params/detune` | `float` | Oscillator detune |
 | `/extensions/KHR_audio_graph/graphs/{}/nodes/{}/params/threshold` | `float` | Compressor threshold (dB) |
 | `/extensions/KHR_audio_graph/graphs/{}/nodes/{}/params/knee` | `float` | Compressor knee (dB) |
 | `/extensions/KHR_audio_graph/graphs/{}/nodes/{}/params/ratio` | `float` | Compressor ratio |
@@ -602,6 +637,8 @@ The following JSON pointers are defined for mutable properties and may be used w
 | `/extensions/KHR_audio_emitter/sources/{}/extensions/KHR_audio_graph/when` | `float` |
 | `/extensions/KHR_audio_emitter/sources/{}/extensions/KHR_audio_graph/duration` | `float` |
 | `/extensions/KHR_audio_emitter/sources/{}/extensions/KHR_audio_graph/priority` | `int` |
+| `/extensions/KHR_audio_emitter/sources/{}/extensions/KHR_audio_graph/oscillator/frequency` | `float` |
+| `/extensions/KHR_audio_emitter/sources/{}/extensions/KHR_audio_graph/oscillator/detune` | `float` |
 
 (`playbackRate` is animatable through the base `KHR_audio_emitter` pointer table; the former `state` pointer is removed pending the joint playback-control resolution — see section 8.)
 
