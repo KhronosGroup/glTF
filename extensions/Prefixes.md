@@ -18,8 +18,7 @@ All vendor extensions, including prefix reservations **MUST** be done in the [gl
 
 This repo is designed for non-Khronos extensions and has appropriate licensing for the repo and extensions. There are complete [contributing instructions](https://github.com/KhronosGroup/glTF-Community/blob/main/CONTRIBUTING.md) in the repo along with other vendor supporting material.
 
-The table below is provided strictly for historical reasons. It will not be updated.
-
+The table below is provided strictly for historical reasons. It will not be updated. It will be removed with the extension transition period is complete.
 
 ## Registered Vendor Prefixes (READONLY)
 
