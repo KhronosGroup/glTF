@@ -10,19 +10,19 @@
             "description": "The type of shape this shape object represents. If any properties are explicitly specified for the shape, the shape properties object MUST match the shape type.",
             "anyOf": [
                 {
-                    "const": "box",
+                    "const": "box"
                 },
                 {
-                    "const": "capsule",
+                    "const": "capsule"
                 },
                 {
-                    "const": "cylinder",
+                    "const": "cylinder"
                 },
                 {
-                    "const": "plane",
+                    "const": "plane"
                 },
                 {
-                    "const": "sphere",
+                    "const": "sphere"
                 },
                 {
                     "type": "string"
