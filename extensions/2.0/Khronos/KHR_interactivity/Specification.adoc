@@ -3798,13 +3798,27 @@ The `useSlerp` configuration value **MUST** be a boolean literal and it **MUST N
 
 This operation has no internal state.
 
+This operation uses an easing function to map input progress positions to output progress positions. That easing function is derived from a cubic Bézier curve defined on a 2D plane as follows:
+
+1. The points latexmath:[P_0] located at latexmath:[(0, 0)] and latexmath:[P_3] located at latexmath:[(1, 1)] are the curve's start and end respectively.
+2. The control points latexmath:[P_1] and latexmath:[P_2] define the curve's tangent vectors latexmath:[\vec{P_0P_1}] and latexmath:[\vec{P_2P_3}]. The latexmath:[x] coordinates of latexmath:[P_1] and latexmath:[P_2] are restricted to the latexmath:[[0, 1\]] range.
+3. As such, the parametric form of the curve is:
++
+[latexmath]
++++++
+f_{x,y}(u) = (3P_1 - 3P_2 + 1) \cdot u^3 + (-6P_1 + 3P_2) \cdot u^2 + (3P_1) \cdot u
++++++
++
+where latexmath:[u \in [0, 1\]] is the parameter and latexmath:[f_{x,y}(u)] returns a point that belongs to the cubic Bézier curve on a 2D plane.
+4. The corresponding easing function is then defined as latexmath:[q = g(t)] where latexmath:[t] is the input progress position, latexmath:[q] is the output progress position, and latexmath:[g(t) = f_y(f_x^{-1}(t))].
+
 The internal state of an execution graph having one or more interactivity nodes with the `variable/interpolate` operation includes an implementation-defined _variable interpolation state dynamic array_ each element of which contains the following data:
 
 - The reference to the variable being interpolated
 - Implementation-defined high precision timestamp value representing the interpolation start time
 - Interpolation duration value converted to the implementation-defined high precision time type
 - Variable value at the time of the successful interactivity node activation
-- Information needed for cubic Bézier spline evaluation derived from the interactivity node's input values
+- Information needed for evaluation of the easing function derived from the interactivity node's input values
 - Target variable value
 - Implementation-specific pointer to the `done` output flow of the interactivity node that has added this entry
 
@@ -3821,7 +3835,7 @@ When the `in` input flow is activated:
 .. activate the `err` output flow and skip the next steps.
 5. If the _variable interpolation state dynamic array_ contains an entry with the same variable reference,
 .. remove it from the array.
-6. Using the implicitly-defined end points stem:[P_0 (0, 0)] and stem:[P_3 (1, 1)] together with the control points stem:[P_1] and stem:[P_2] provided via the input values construct a cubic Bézier easing function for the stem:[[0, 1]] input range.
+6. Using the cubic Bézier curve control points stem:[P_1] and stem:[P_2] provided via the input values, construct the corresponding easing function as described above.
 7. Add a new entry to the _variable interpolation state dynamic array_ filling it with the required information based on the evaluated input values.
 8. Activate the `out` output flow.
 
@@ -3835,7 +3849,7 @@ On each tick, for each entry of the _variable interpolation state dynamic array_
 .. remove the current entry from the _variable interpolation state dynamic array_;
 .. activate the `done` output flow linked to the current entry;
 .. skip the next steps.
-4. Using the cubic Bézier spline information, compute the output progress position _q_ based on the _t_ value. This step implies that latexmath:[t \in (0; 1)].
+4. Using the constructed easing function, compute the output progress position _q_ based on the _t_ value. This step implies that latexmath:[t \in (0, 1)].
 5. Set the variable to the new value computed as a linear or spherical linear interpolation depending on the `useSlerp` configuration value between the original and the target variable values using the output progress position _q_ as the interpolation coefficient.
 
 [NOTE]
@@ -4202,13 +4216,15 @@ If the current glTF Asset Object Model property value is already undefined due t
 
 This operation has no internal state.
 
+This operation uses an easing function to map input progress positions to output progress positions. That easing function is derived the same way as in the `variable/interpolate` operation.
+
 The internal state of an execution graph having one or more interactivity nodes with the `pointer/interpolate` operation includes an implementation-defined _pointer interpolation state dynamic array_ each element of which contains the following data:
 
 - The resolved JSON Pointer to the Object Model property being interpolated
 - Implementation-defined high precision timestamp value representing the interpolation start time
 - Interpolation duration value converted to the implementation-defined high precision time type
 - Object Model property value at the time of the successful interactivity node activation
-- Information needed for cubic Bézier spline evaluation derived from the interactivity node's input values
+- Information needed for evaluation of the easing function derived from the interactivity node's input values
 - Target property value
 - Implementation-specific pointer to the `done` output flow of the interactivity node that has added this entry
 
@@ -4230,7 +4246,7 @@ When the `in` input flow is activated:
 .. activate the `err` output flow and skip the next steps.
 8. If the _pointer interpolation state dynamic array_ contains an entry with the same effective JSON Pointer value,
 .. remove it from the array.
-9. Using the implicitly-defined end points stem:[P_0 (0, 0)] and stem:[P_3 (1, 1)] together with the control points stem:[P_1] and stem:[P_2] provided via the input values construct a cubic Bézier easing function for the stem:[[0, 1]] input range.
+9. Using the cubic Bézier curve control points stem:[P_1] and stem:[P_2] provided via the input values, construct the corresponding easing function as described above.
 10. Add a new entry to the _pointer interpolation state dynamic array_ filling it with the required information based on the evaluated input values.
 11. Activate the `out` output flow.
 
@@ -4244,7 +4260,7 @@ On each tick, for each entry in the _pointer interpolation state dynamic array_:
 .. remove the current entry from the _pointer interpolation state dynamic array_;
 .. activate the `done` output flow linked to the current entry;
 .. skip the next steps.
-4. Using the cubic Bézier spline information, compute the output progress position _q_ based on the _t_ value. This step implies that latexmath:[t \in (0; 1)].
+4. Using the constructed easing function, compute the output progress position _q_ based on the _t_ value. This step implies that latexmath:[t \in (0, 1)].
 5. Set the glTF Asset Object Model property to the new value computed as a linear interpolation between the original and the target property values using the output progress position _q_ as the interpolation coefficient. If the glTF Asset Object Model property is a quaternion, e.g., `/nodes/0/rotation`, spherical linear interpolation **MUST** be used.
 
 [NOTE]
@@ -4553,6 +4569,11 @@ This operation does not have a default configuration.
 [CAUTION]
 ====
 The configuration of this operation affects its value sockets.
+====
+
+[NOTE]
+====
+Custom events cannot define sockets with id `event` (see the JSON Syntax section), so the node's `event` output socket is always unambiguous.
 ====
 
 Interactivity nodes with this operation are activated when a custom event specified by the `event` configuration value occurs. The types, ids, and semantics of the output value sockets are defined by the custom event index.
@@ -4949,7 +4970,7 @@ This means that, for example, two entries with the signature `"int"` are still d
 [[json-variables]]
 == Variables
 
-The `variables` array defines variables with their types and optional initial values.
+The `variables` array defines variables with their types, optional initial values, and optional user-facing variable names.
 
 The `variables` array **MUST NOT** have more than 2147483648 elements.
 
@@ -5019,10 +5040,12 @@ If the variable type is **ref** and the only array element is not a JSON string 
 
 If the variable type is custom, the `value` property is defined by the extension defining the custom type.
 
+The optional `name` property defines the user-facing name of the variable. If the `name` property is defined and its value is not a JSON string, the variable is invalid and the graph **MUST** be rejected. Variable names are not used for graph execution and are only intended for user interfaces. As such, variable names **MAY** be non-unique.
+
 [[json-events]]
 == Events
 
-The `events` array defines external ids and value sockets for custom events.
+The `events` array defines external ids, value sockets, and optional user-facing names for custom events.
 
 The `events` array **MUST NOT** have more than 2147483648 elements.
 
@@ -5059,6 +5082,8 @@ Socket ids defined by the properties of the `values` object are case-sensitive. 
 The type of the event value socket is determined by the **REQUIRED** `type` property that points to the element of the `types` array. If the `type` property is undefined or its value is not a non-negative integer less than the length of the `types` array, the event is invalid and the graph **MUST** be rejected.
 
 The `value` property of the event value socket has the same syntax and semantics as the `value` property of variable definitions (see the previous section).
+
+The optional `name` property defines the user-facing name of the event. If the `name` property is defined and its value is not a JSON string, the event is invalid and the graph **MUST** be rejected. Event names are not used for graph execution and are only intended for user interfaces. As such, event names **MAY** be non-unique.
 
 [[json-declarations]]
 == Declarations
@@ -5556,6 +5581,8 @@ the behavior graph is invalid and thus cannot be used; this has no effect on oth
 .. if the `nodes` array length is greater than the implementation-specific limit on the number of interactivity nodes,
 ... _reject the graph_;
 .. validate each element of the `nodes` array as described in the <<validation-node-object,Node Object Validation>> section.
+7. If "`the graph`" object has the `name` property,
+.. _assert_ that the `name` property is a JSON string.
 
 [[validation-variable-object]]
 == Variable Object Validation
@@ -5564,9 +5591,11 @@ the behavior graph is invalid and thus cannot be used; this has no effect on oth
 2. _Assert_ that "`the variable`" object has the `type` property that is a _JSON index_.
 3. If the `type` property value is not less than the `types` graph array length,
 .. _reject the graph_.
-4. If the "`the variable`" object has the `value` property:
+4. If "`the variable`" object has the `value` property:
 .. _assert_ that the `value` property is a non-empty JSON array;
 .. validate the `value` property value according to the <<inline-value-validation,Inline Value Validation>> section using the `type` property value.
+5. If "`the variable`" object has the `name` property,
+.. _assert_ that the `name` property is a JSON string.
 
 [[validation-event-object]]
 == Event Object Validation
@@ -5587,6 +5616,8 @@ the behavior graph is invalid and thus cannot be used; this has no effect on oth
 ... if the "`the event value`" object has the `value` property:
 .... _assert_ that the `value` property is a non-empty JSON array;
 .... validate the `value` property value according to the <<inline-value-validation,Inline Value Validation>> using the `type` property.
+4. If "`the event`" object has the `name` property,
+.. _assert_ that the `name` property is a JSON string.
 
 [[validation-declaration-object]]
 == Declaration Object Validation
