@@ -47,12 +47,12 @@
         },
         "concave": {
             "type": "object",
-            "description": "A set of parameter values that are used to define a concave mesh shape.",
+            "description": "Parameter values defining a concave mesh shape.",
             "$ref": "shape.concave.schema.json"
         },
         "convex": {
             "type": "object",
-            "description": "A set of parameter values that are used to define a convex hull mesh shape.",
+            "description": "Parameter values defining a convex mesh shape.",
             "$ref": "shape.convex.schema.json"
         },
         "cylinder": {

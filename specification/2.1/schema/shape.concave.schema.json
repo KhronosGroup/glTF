@@ -3,12 +3,12 @@
     "$id": "shape.concave.schema.json",
     "title": "Concave Mesh Shape",
     "type": "object",
-    "description": "Parameters describing a concave mesh shape.",
+    "description": "A concave triangular mesh shape.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "mesh": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the mesh in the top-level `meshes` array used to generate the triangles for this concave shape. Required."
+            "description": "The index of the mesh defining the geometry for this shape."
         }
     },
     "required": [ "mesh" ]
