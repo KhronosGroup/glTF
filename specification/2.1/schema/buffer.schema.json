@@ -6,6 +6,11 @@
     "description": "A buffer points to binary geometry, animation, or skins.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
+        "chunk": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the chunk that contains the buffer data.",
+            "gltf_detailedDescription": "The index of the chunk that contains the buffer data. If neither `chunk` nor `uri` is defined on buffer 0, then buffer 0 implicitly refers to chunk 1. There is no default chunk index for other buffers."
+        },
         "uri": {
             "type": "string",
             "description": "The URI (or IRI) of the buffer.",
