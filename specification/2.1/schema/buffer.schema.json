@@ -6,11 +6,6 @@
     "description": "A buffer points to binary geometry, animation, or skins.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
-        "byteLength": {
-            "type": "integer",
-            "description": "The length of the buffer in bytes.",
-            "minimum": 1
-        },
         "chunk": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The index of the chunk that contains the buffer data.",
@@ -22,6 +17,11 @@
             "format": "iri-reference",
             "gltf_detailedDescription": "The URI (or IRI) of the buffer.  Relative paths are relative to the current glTF asset.  Instead of referencing an external file, this field **MAY** contain a `data:`-URI.",
             "gltf_uriType": "application"
+        },
+        "byteLength": {
+            "type": "integer",
+            "description": "The length of the buffer in bytes.",
+            "minimum": 1
         },
         "name": { },
         "extensions": { },
