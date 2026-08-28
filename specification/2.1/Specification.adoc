@@ -2634,7 +2634,7 @@ Skinned animation is achieved by animating the joints in the skin's joint hierar
 
 Files references **MAY** be added to a top-level `files` array. The file's data **MAY** be stored externally and referenced by a `uri` or stored as binary in a buffer and referenced by `bufferView` index.
 
-Each file object **MUST** define a `mimeType` property, which may be any media type that matches the file's contents. 
+Each file object **MUST** define a `mimeType` property, which may be any media type that matches the file's contents.
 
 Files with a `mimeType` of `model/gltf+json` or `model/gltf-binary` **MAY** define a list of `aliases` that can be used to match and redirect a `uri` inside of the referred file. Any `uri` in the referenced file that matches the value `alias` exactly **SHOULD** use the associated `file` instead. This allows for efficient packing of resources shared across several referenced files, or overriding inner data. Aliases are not inherited from the parent asset. Extensions may add additional mime types that can define `aliases`.
 
@@ -2679,7 +2679,7 @@ If the same `uri` is used within multiple file references, implementations shoul
 
 glTF 2.1 defines the ability to compose complex scenes. A complex scene is one or more glTF assets including a scene from another glTF asset by referencing that glTF as an external asset. Complex scenes are defined using multiple components: file references to define where the data is stored and external asset definitions that define the scene from the referenced glTF asset to include.
 
-External glTF assets **MAY** be added to a top-level `externalAssets` array. The external asset **MUST** contain a `file` property that refers to an object in the `files` array by index. Multiple objects in the `externalAssets` array may refer to the same `file`. All external assets **MUST** refer to files with the `"model/gltf-binary"` or `"model/gltf+json"` media types. Cyclical references between external assets are strictly prohibited. 
+External glTF assets **MAY** be added to a top-level `externalAssets` array. The external asset **MUST** contain a `file` property that refers to an object in the `files` array by index. Multiple objects in the `externalAssets` array may refer to the same `file`. All external assets **MUST** refer to files with the `"model/gltf-binary"` or `"model/gltf+json"` media types. Cyclical references between external assets are strictly prohibited.
 
 [source,json]
 ----
@@ -2771,9 +2771,7 @@ See <<appendix-d-external-asset-diagrams, Appendix D>> for detailed diagrams out
 [[shapes]]
 == Shapes
 
-glTF defines an array of shapes. All built-in shape types are "implicit" shapes, meaning that they have a surface defined by a mathematical function, and they have a distinct inside and outside.
-
-Similar to other glTF objects, shapes in this array do not automatically have behavior. Other objects in the glTF document may use these shapes to instance them in the scene, providing the geometry data required for the behavior of that object, such as bounding volumes, or extension-defined physics colliders.
+glTF defines an array of shapes. Similar to other glTF objects, shapes in this array do not automatically have behavior. Other objects in the glTF document may use these shapes to instance them in the scene, providing the geometry data required for the behavior of that object, such as bounding volumes, or extension-defined physics colliders.
 
 Each shape is specified with a mandatory `type` property, and an additional structure with various size parameters depending on the type of shape. The following example defines a sphere shape with a radius of 0.1 meters.
 
@@ -2796,17 +2794,31 @@ The core glTF 2.1 specification includes the following shape types:
 |====
 | `"box"`      | An axis-aligned box with a size per-axis, centered at the origin in local space, with normals facing outwards along each axis.
 | `"capsule"`  | A capsule, centered at the origin in local space with potentially different radii at each end, equivalent to the convex hull of two spheres located along the Y axis (in local space) at a specified distance, with normals facing outwards.
+| `"concave"`  | A concave mesh-based shape, relative to the local space, with normals facing the same way as the mesh's face normals determined by the triangle winding order.
+| `"convex"`   | A convex mesh-based shape, relative to the local space, with normals facing outwards, away from the center of the convex hull.
 | `"cylinder"` | A cylinder, centered at the origin in local space with potentially different radii at each end, equivalent to the convex hull of two circles in the X/Z plane positioned along the Y axis at a specified distance, with the top cap normal facing along the +Y axis, the bottom cap normal facing along the -Y axis, and the side normals facing outwards along the X/Z plane.
 | `"plane"`    | A plane centered at the origin in local space, optionally with finite extents, with normal along the +Y axis in local space. The plane is one-sided.
 | `"sphere"`   | A sphere, centered at the origin in local space with a radius equal in all directions, with normals facing outwards.
 |====
 
 
-A sub-object with a key matching the shape type **MAY** be used to specify the size parameters of the shape. When the `type` of a shape refers to a built-in shape type, the shape must not supply a sub-object for a different shape type: for example, a shape whose `type` is "box" must not have a `sphere` property defined.
+A sub-object with a key matching the shape type **MAY** be used to specify the size parameters of the shape. For the `concave` and `convex` shape types, the matching sub-object **MUST** be present. When the `type` of a shape refers to a built-in shape type, the shape must not supply a sub-object for a different shape type: for example, a shape whose `type` is "box" must not have a `sphere` property defined.
 
 By default, planes have infinite extents along their tangent and bitangent vectors, specified as +X and +Z in local space, respectively. A plane may optionally provide `sizeX` and `sizeZ` properties to specify a finite total size along these axes. The center of the plane's surface is at the origin in local space. The entirety of the space behind the plane, in its local -Y direction, is considered inside of the plane.
 
 Degenerate shapes are prohibited. A sphere must have a positive, non-zero radius. A box shape must have positive non-zero values for each component of `size`. The cylinder and capsule shapes must have a positive, non-zero `height`, both `radiusTop` and `radiusBottom` must be non-negative, and at least one of `radiusTop` and `radiusBottom` must be non-zero. A plane must have positive non-zero `sizeX` and `sizeZ` extents, if provided.
+
+The `concave` and `convex` shape types are defined by a mesh, specified by a `mesh` index. The following conditions apply to meshes used by mesh-based shapes:
+
+- Meshes used by shapes **MUST** have a single mesh primitive.
+- The primitive **MUST** have a triangle-based `mode`, meaning `TRIANGLES` (4), `TRIANGLE_STRIP` (5), or `TRIANGLE_FAN` (6), and **MUST** have a `POSITION` attribute.
+- The generated shape **MUST** take into account morphing from any `mesh.weights` present.
+- Meshes used by shapes are **RECOMMENDED** to be watertight, manifold, and not self-intersecting, but this is not required.
+- Meshes used by convex shapes **MUST** be pre-computed convex hulls with a non-zero volume.
+- Meshes used by convex shapes **MUST** have the triangles wound such that the normals face outwards from the center of the convex shape. The `NORMAL` attribute is ignored by convex shapes.
+- Meshes used by convex shapes **SHOULD** surround the local origin, such that the local origin is inside the convex hull, but this is not required.
+
+Mesh-based shapes use meshes directly. Shapes do not take into account node weights, skinning, or anything else related to `node.mesh` instancing.
 
 Extensions **MAY** define additional shape types, in which case the `type` **MAY** be set to a custom value, or set to one of the built-in shape types to provide a fallback.
 

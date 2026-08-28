@@ -1,0 +1,15 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "shape.convex.schema.json",
+    "title": "Convex Mesh Shape",
+    "type": "object",
+    "description": "A convex hull mesh shape.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "mesh": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the mesh defining the geometry for this shape."
+        }
+    },
+    "required": [ "mesh" ]
+}
