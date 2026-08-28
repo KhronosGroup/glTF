@@ -2980,7 +2980,7 @@ ubyte[] chunkData
 * `chunkLength` is the length of `chunkData`, in bytes. In binary format version 3, the most significant bit **MUST** be 0, which limits chunk sizes to 8 EiB (exbibytes).
 * `chunkData` is the binary payload of the chunk.
 
-In binary format version 2, the start and the end of each chunk **MUST** be aligned to a 4-byte boundary. In binary format version 3, the start of each chunk **MUST** be aligned to an 8-byte boundary. The start of each chunk is the next 4-byte (v2) or 8-byte (v3) aligned boundary after the end of the previous chunk. See chunks definitions for padding schemes. Chunks **MUST** (v2) or **SHOULD** (v3) appear in exactly the order given in <<table-chunktypes>>.
+In binary format version 2, the start and the end of each chunk **MUST** be aligned to a 4-byte boundary. In binary format version 3, the start of each chunk **MUST** be aligned to an 8-byte boundary. The start of each chunk is the next 4-byte (v2) or 8-byte (v3) aligned boundary after the end of the previous chunk. See chunk definitions for padding schemes. Chunks **MUST** (v2) or **SHOULD** (v3) appear in exactly the order given in <<table-chunktypes>>.
 
 [[table-chunktypes]]
 .Chunk types
