@@ -600,7 +600,9 @@ image::figures/objects.svg[pdfwidth=6in,align=left]
 [[asset]]
 == Asset
 
-Each glTF asset **MUST** have an `asset` property. The `asset` object **MUST** contain a `version` property that specifies the target glTF version of the asset. Additionally, an optional `minVersion` property **MAY** be used to specify the minimum glTF version support required to load the asset. The `minVersion` property allows asset creators to specify a minimum version that a client implementation **MUST** support in order to load the asset. This is very similar to the `extensionsRequired` concept described in <<specifying-extensions>>, where an asset **SHOULD NOT** be loaded if the client does not support the specified extension. Additional metadata **MAY** be stored in optional properties such as `generator` or `copyright`.  For example,
+Each glTF asset **MUST** have an `asset` property. The `asset` object **MUST** contain a `version` property that specifies the target glTF version of the asset. Additionally, an optional `minVersion` property **MAY** be used to specify the minimum glTF version support required to load the asset. The `minVersion` property allows asset creators to specify a minimum version that a client implementation **MUST** support in order to load the asset. This is very similar to the `extensionsRequired` concept described in <<specifying-extensions>>, where an asset **SHOULD NOT** be loaded if the client does not support the specified extension.
+
+Additional metadata **MAY** be stored in optional properties such as `generator`, `copyright`, and/or `thumbnail`. For example:
 
 [source,json]
 ----
@@ -608,7 +610,8 @@ Each glTF asset **MUST** have an `asset` property. The `asset` object **MUST** c
     "asset": {
         "version": "2.1",
         "generator": "collada2gltf@f356b99aef8868f74877c7ca545f2cd206b9d3b7",
-        "copyright": "2017 (c) Khronos Group"
+        "copyright": "2026 (c) Khronos Group",
+        "thumbnail": 0
     }
 }
 ----
