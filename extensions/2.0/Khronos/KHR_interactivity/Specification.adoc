@@ -68,7 +68,7 @@ Khronos® is a registered trademark, and glTF™ is a trademark of The Khronos G
 [[introduction-status]]
 == Status
 
-Release Candidate
+Complete, Ratified by the Khronos Group
 
 [[introduction-dependencies]]
 == Dependencies
