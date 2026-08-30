@@ -1,0 +1,29 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_clearcoat_color glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines the colored transmittance of the clearcoat.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "clearcoatColorFactor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "description": "The colored transmittance of the clearcoat layer.",
+            "default": [ 1.0, 1.0, 1.0 ],
+            "minItems": 3,
+            "maxItems": 3,
+            "gltf_detailedDescription": "The color of light allowed to be transmitted through the clearcoat layer of the material. A value of black means no light passes through. A value of white means all light passes through. These values are linear."
+        },
+        "clearcoatColorTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The clearcoat layer color texture.",
+            "gltf_detailedDescription": "The clearcoat layer color texture.  The values are stored in sRGB.  Assume white colour if no texture is supplied."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
