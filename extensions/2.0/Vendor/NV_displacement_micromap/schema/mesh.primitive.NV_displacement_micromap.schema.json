@@ -1,0 +1,78 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "mesh.primitive.NV_displacement_micromap.schema.json",
+    "title": "NV_displacement_micromap",
+    "type": "object",
+    "description": "Defines geometry in the form of a displaced micromesh, using a micromap (called a displacement micromap [DMM] in this context).",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "micromap": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the micromap in the NV_micromaps micromaps array to use for displacement information."
+        },
+        "groupIndex": {
+            "type": "integer",
+            "description": "The index of the group to use within the micromap.",
+			"gltf_detailedDescription": "A micromap **MAY** contain multiple *groups*, much like how a scene file **MAY** contain multiple meshes. This is the index of the MM group to use.",
+            "minimum": 0,
+            "default": 0
+        },
+		"mapIndicesOffset": {
+            "type": "integer",
+            "description": "The element offset into the DMM's index mapping buffer.",
+			"gltf_detailedDescription": "The element offset into the DMM's index mapping buffer (in the BARY format, this is the `eMeshTriangleMappings` standard property). Its data can be overridden by `mapIndices`. If the DMM contains no index mapping buffer, then it defaults to the identity mapping: triangle ID `i` uses mesh primitive `i`.",
+            "minimum": 0,
+            "default": 0
+        },
+		"mapIndices": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the accessor providing the index mapping buffer. Overrides `mapIndicesOffset`.",
+            "gltf_detailedDescription": "The index of the `accessor`whose data overrides that referenced by `mapIndicesOffset`. The accessor's `type` **MUST** be `SCALAR`, and its `componentType` **MUST** be 5121, 5123, or 5125 (unsigned byte, unsigned short, or unsigned int)."
+        },
+		"mapOffset": {
+            "type": "integer",
+            "description": "An offset to be added to each value of the index mapping buffer.",
+            "minimum": 0,
+            "default": 0
+        },
+		"directionsOffset": {
+            "type": "integer",
+            "description": "The element offset into the DMM's vertex displacement direction vectors array.",
+			"gltf_detailedDescription": "The element offset into the DMM's vertex displacement direction vectors (in the BARY format, this is the `eMeshDisplacementDirections` standard property). There is 1 direction per primitive vertex. Its data can be overridden by `directions`. If the DMM contains no directions, then they default to the vertex normals; if the primitive has no vertex normals, this property **MUST** be overridden.",
+            "minimum": 0,
+            "default": 0
+        },
+		"directions": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the accessor providing the vertex displacement directions. Overrides `directionsOffset`.",
+            "gltf_detailedDescription": "The index of the `accessor` whose data overrides that referenced by `directionsOffset`. The accessor's `type` **MUST** be either `VEC3` and with a `componentType` of 5126 (float), or it **MUST** be `VEC4` with a `componentType` of 5126 or 5131 (float or half float)."
+        },
+		"directionBoundsOffset": {
+            "type": "integer",
+            "description": "The element offset into the DMM's vertex displacement direction bounds array.",
+			"gltf_detailedDescription": "The element offset into the DMM's vertex displacement direction bounds (in the BARY format, this is the `eMeshDisplacementDirectionBounds` standard property). There is 1 direction bound per primitive vertex. Its data can be overridden by `directionBounds`. If the DMM contains no per-vertex displacement direction bounds, then they default to a *bias* of 0 and a *scale* of 1 for each vertex.",
+            "minimum": 0,
+            "default": 0
+        },
+		"directionBounds": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the accessor providing the vertex displacement bounds. Overrides `directionBoundsOffset`.",
+            "gltf_detailedDescription": "The index of the `accessor` whose data overrides that referenced by `directionBoundsOffset`. The accessor's `type` **MUST** be `VEC3`, and its `componentType` **MUST** be 5126 or 5131 (float or half float)."
+        },
+		"primitiveFlagsOffset": {
+            "type": "integer",
+            "description": "The element offset into the DMM's flags per base mesh primitive.",
+			"gltf_detailedDescription": "The element offset into the DMM's flags per base mesh primitive, such as adjacency bits for bridging between triangles with different subdivision levels. (In the BARY format, this is the `eMeshTriangleFlags` standard property). Its data can be overridden by `primitiveFlags`. If the DMM does not contain primitive flags, then they default to all 0.",
+            "minimum": 0,
+            "default": 0
+        },
+		"primitiveFlags": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the accessor providing the flags per base mesh primitive. Overrides `primitiveFlagsOffset`.",
+            "gltf_detailedDescription": "The index of the `accessor` whose data overrides that referenced by `primitiveFlagsOffset`. The accessor's `type` **MUST** be `SCALAR`, and its `componentType` **MUST** be 5121 (unsigned byte)."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "micromap" ]
+}
