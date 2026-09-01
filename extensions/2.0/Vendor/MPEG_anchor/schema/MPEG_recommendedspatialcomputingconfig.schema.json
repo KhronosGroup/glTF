@@ -1,0 +1,68 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_recommendedspatialcomputingconfig.schema.json",
+    "type": "object",
+    "description": "Recommendedspatialcomputingconfig schema",
+    "properties": {
+        "scanOptions": {
+            "description": "Array of options (enumeration) for the scan computation",
+            "type": "array",
+            "items": {
+                "type": "integer",
+                "enum": [
+                0, 1, 2, 3, 4, 5, 6
+                ],
+            "default": 0,
+            "description": "Type of the Mesh",
+            "gltf_detailedDescription":"Value is oneOf PLANE=0, PLANAR_MESH=1, VISUAL_MESH=2, COLLIDER_MESH=3, FREE_VOLUME=4, BOUNDING_BOX=5, TEXTURED_MESH=6."
+            }
+        },
+        "scanDetails": {
+            "description": "The required level of detail for the mesh",
+            "type": "object",
+            "$ref": "MPEG_recommendedSpatialComputingConfig.scanDetails.schema.json"
+        },
+        "scanUpdate": {
+            "description": "Specifies the frequency at which the spatial description must be updated.",
+            "type": "object",
+            "$ref": "MPEG_recommendedSpatialComputingConfig.update.schema.json" 
+        },
+        "scanVolumes": {
+            "description": "Array of bounding volumes that determine the spaces where scanned objects must be provided. Real scan objects that intersect one or more of the bounding volumes should be provided, and all other objects ignored. ",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "MPEG_recommendedSpatialComputingConfig.scanVolume.schema.json"
+            }
+        },
+        "realSemantic": {
+            "description": "Semantic descriptions of nodes that are needed.",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "gltf_detailedDescription":"Value is a string, for instance table, room, chair, wall, light, freespace ... )."
+            }
+        },
+        "lightOptions": {
+            "description": "Array of option (enumeration) for the light extraction.",
+            "type": "array",
+            "items": {
+                "type": "integer",
+                "enum": [
+                0, 1, 2, 3, 4
+                ],
+                "default": 0,
+                "gltf_detailedDescription":"Value is oneOf DIRECTIONAL_LIGHT =0, ENV_LIGHT=1, POINT_LIGHT=2, SPOT_LIGHT=3, AREA_LIGHT=4."
+            }
+        },
+        "lightUpdate": {
+            "description": "Specifies the frequency at which the extraction of real light must be updated.",
+            "type": "object",
+            "$ref": "MPEG_recommendedSpatialComputingConfig.update.schema.json"
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "allOf": [{ "$ref" : "glTFProperty.schema.json" }],
+    "required": []
+}
