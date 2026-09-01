@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "required": ["type", "mappings"],
+    "properties": {
+      "type": {
+        "type": "string",
+        "format": "uri",
+        "description": "URN that uniquely identifies the avatar representation scheme"
+      },
+      "mappings": {
+        "type": "array",
+        "description": "The mapping between child nodes and their associated avatar path",
+        "items": {
+          "$ref": "MPEG_node_avatar.mapping.schema.json"
+        }
+      }
+    }
+  }
