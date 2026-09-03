@@ -11,6 +11,7 @@ The following extensions have been ratified by the Khronos Group:
 
 * [KHR_animation_pointer](2.0/Khronos/KHR_animation_pointer/README.md)
 * [KHR_draco_mesh_compression](2.0/Khronos/KHR_draco_mesh_compression/README.md)
+* [KHR_gaussian_splatting](2.0/Khronos/KHR_gaussian_splatting/README.md)
 * [KHR_interactivity](2.0/Khronos/KHR_interactivity/Specification.adoc)
 * [KHR_lights_punctual](2.0/Khronos/KHR_lights_punctual/README.md)
 * [KHR_materials_anisotropy](2.0/Khronos/KHR_materials_anisotropy/README.md)
@@ -48,7 +49,6 @@ This section tracks the status of extensions and projects that are in developmen
 | KHR_accessor_float64 | Review Draft | [PR #2397](https://github.com/KhronosGroup/glTF/pull/2397) |
 | KHR_audio_graph | Proposal | [PR #2421](https://github.com/KhronosGroup/glTF/pull/2421) |
 | KHR_collision_shapes | Review Draft | [PR #2370](https://github.com/KhronosGroup/glTF/pull/2370) |
-| KHR_gaussian_splatting | Release Candidate | [Specification](2.0/Khronos/KHR_gaussian_splatting/README.md) |
 | KHR_materials_diffuse_transmission | Release Candidate | [Specification](2.0/Khronos/KHR_materials_diffuse_transmission/README.md) |
 | KHR_materials_subsurface | Initial Draft | [PR #1928](https://github.com/KhronosGroup/glTF/pull/1928) |
 | KHR_physics_rigid_bodies | Review Draft | [PR #2424](https://github.com/KhronosGroup/glTF/pull/2424) |
