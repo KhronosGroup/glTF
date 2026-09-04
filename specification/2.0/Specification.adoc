@@ -770,7 +770,12 @@ Nodes are organized in a parent-child hierarchy known informally as the _node hi
 
 The node hierarchy **MUST** be a set of disjoint strict trees. That is node hierarchy **MUST NOT** contain cycles and each node **MUST** have zero or one parent node.
 
-The node hierarchy is defined using a node's `children` property, as in the following example:
+A node lists its children node indices in the `children` array property. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
+
+[NOTE]
+.Example
+====
+In the following example, the node named `Car` has four children each of which has one child node.
 
 [source,json]
 ----
@@ -781,54 +786,82 @@ The node hierarchy is defined using a node's `children` property, as in the foll
             "children": [1, 2, 3, 4]
         },
         {
-            "name": "wheel_1"
+            "name": "wheel_1",
+            "children": [5]
         },
         {
-            "name": "wheel_2"
+            "name": "wheel_2",
+            "children": [6]
         },
         {
-            "name": "wheel_3"
+            "name": "wheel_3",
+            "children": [7]
         },
         {
-            "name": "wheel_4"
+            "name": "wheel_4",
+            "children": [8]
+        },
+        {
+            "name": "tire_1"
+        },
+        {
+            "name": "tire_2"
+        },
+        {
+            "name": "tire_3"
+        },
+        {
+            "name": "tire_4"
         }
     ]
 }
 ----
-
-The node named `Car` has four children. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
+====
 
 
 [[transformations]]
 === Transformations
 
-Any node **MAY** define a local space transform either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as _TRS properties_). `translation` and `scale` are 3D vectors in the local coordinate system. `rotation` is a unit quaternion value, XYZW, in the local coordinate system, where W is the scalar.
+By default, a node's local space transform is identity.
 
-When `matrix` is defined, it **MUST** be decomposable to TRS properties.
+Any node **MAY** define a local space transform either by supplying a precomputed transformation matrix in the `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as _TRS properties_). _Translation_ and _scale_ are 3D vectors in the local coordinate system; _rotation_ is a quaternion value stored in XYZW order where W is the scalar. If defined, the rotation quaternion **MUST** be unit.
+
+When the `matrix` property is not defined, the local transform is computed from the TRS properties as follows, where
+
+- stem:[t_x], stem:[t_y], and stem:[t_z] are the translation vector components;
+- stem:[r_x], stem:[r_y], stem:[r_z], and stem:[r_w] are the rotation quaternion components;
+- stem:[s_x], stem:[s_y], and stem:[s_z] are the scale vector components.
+
+[stem]
++++++
+((s_x * (1 - 2(r_y^2 + r_z^2)), s_y * 2(r_xr_y - r_zr_w),     s_z * 2(r_xr_z + r_yr_w),     t_x),
+ (s_x * 2(r_xr_y + r_zr_w),     s_y * (1 - 2(r_x^2 + r_z^2)), s_z * 2(r_yr_z - r_xr_w),     t_y),
+ (s_x * 2(r_xr_z - r_yr_w),     s_y * 2(r_yr_z + r_xr_w),     s_z * (1 - 2(r_x^2 + r_y^2)), t_z),
+ (0, 0, 0, 1))
++++++
+
+When the `matrix` property is defined, it **MUST** be decomposable to TRS properties, i.e., the specified matrix **MUST** conform to the following conditions:
+
+- the last row is stem:[(0, 0, 0, 1)];
+- none of the first three columns is all-zeros;
+- the absolute value of the determinant of the upper-left 3x3 matrix formed by dividing each matrix element by the length of its column is close to positive one.
+
 [NOTE]
 .Implementation Note
 ====
-Transformation matrices cannot skew or shear.
-====
+These conditions ensure that the matrix has the following properties:
 
-When a node is targeted for animation (referenced by an `animation.channel.target`), only TRS properties **MAY** be present; `matrix` **MUST NOT** be present.
+- the matrix does not contain shear or perspective transforms;
+- decomposing the matrix into TRS properties and composing them back would produce nearly the same matrix, subject to floating-point precision.
 
-To compose the local transformation matrix, TRS properties **MUST** be converted to matrices and postmultiplied in the `T * R * S` order; first the scale is applied to the vertices, then the rotation, and then the translation.
-
-[NOTE]
-.Implementation Note
-====
-Non-invertible transforms (e.g., scaling one axis to zero) could lead to lighting and/or visibility artifacts.
-====
-
-[NOTE]
-.Implementation Note
-====
-When the scale is zero on all three axes (by node transform or by animated scale), implementations are free to optimize away rendering of the node's mesh, and all of the node's children's meshes. This provides a mechanism to animate visibility. Skinned meshes must not use this optimization unless all of the joints in the skin are scaled to zero simultaneously.
+The `matrix` property cannot represent zero scale; assets would need to use the explicit `scale` property for that.
 ====
 
 The global transformation matrix of a node is the product of the global transformation matrix of its parent node and its own local transformation matrix. When the node has no parent node, its global transformation matrix is identical to its local transformation matrix.
 
+[NOTE]
+.Example
+====
 In the example below, a node named `Box` defines non-default rotation and translation.
 
 [source,json]
@@ -889,7 +922,21 @@ The next example defines the transform for a node with attached camera using the
     ]
 }
 ----
+====
 
+Computing local and global transformation matrices **SHOULD** be done in double precision.
+
+[NOTE]
+.Implementation Note
+====
+Keeping double precision for intermediate values usually helps with preventing visual artifacts that could be caused by specific combinations of vertex data and/or node transforms. Since most GPUs do not directly support double-precision data, final values might still be truncated to single precision prior to rendering.
+====
+
+[NOTE]
+.Implementation Note
+====
+When the scale is zero on all three axes (by node transform or by animated scale), implementations are free to optimize away rendering of the node's mesh, and all of the node's children's meshes. This provides a mechanism to animate visibility. Skinned meshes must not use this optimization unless all of the joints in the skin are scaled to zero simultaneously.
+====
 
 [[binary-data-storage]]
 == Binary Data Storage
@@ -2453,18 +2500,31 @@ This specification does not define size or style of non-triangular primitives (s
 [[cameras-overview]]
 === Overview
 
-Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details. A camera is instantiated within a node using the `node.camera` property.
+Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details. A camera is instantiated within a node using the `camera` property of the node.
 
 A camera object defines the projection matrix that transforms scene coordinates from the view space to the clip space.
 
-A node containing the camera instance defines the view matrix that transforms scene coordinates from the global space to the view space.
+A node containing the `camera` property instantiates a camera with that projection matrix and defines the associated view matrix that transforms scene coordinates from the global space to the view space.
 
 [[view-matrix]]
 === View Matrix
 
-The camera is defined such that the local +X axis is to the right, the "`lens`" looks towards the local -Z axis, and the top of the camera is aligned with the local +Y axis.
+A camera is defined such that the local +X axis is to the right, the "`lens`" looks towards the local -Z axis, and the top of the camera is aligned with the local +Y axis.
 
-The view matrix is derived from the global transform of the node containing the camera with the scaling ignored. If the node's global transform is identity, the location of the camera is at the origin.
+The node that instantiates a camera defines the view matrix iff its global transformation matrix conforms to all of the following conditions:
+
+- none of the first three columns is all-zeros;
+- the determinant of the upper-left 3x3 matrix formed by dividing each matrix element by the length of its column is close to positive one.
+
+[NOTE]
+.Implementation Note
+====
+These conditions ensure that the rotation component can be unambiguously extracted from the matrix assuming that all scale factors are positive.
+====
+
+The view matrix is then derived from the rotation and translation components of the node's transformation matrix. If the node's global transform is identity, the location of the camera is at the origin.
+
+If the node's global transformation matrix does not conform to any of the conditions above, the view matrix is undefined.
 
 [[projection-matrices]]
 === Projection Matrices
@@ -2476,6 +2536,9 @@ The projection can be perspective or orthographic.
 
 There are two subtypes of perspective projections: finite and infinite. When the `zfar` property is undefined, the camera defines an infinite projection. Otherwise, the camera defines a finite projection.
 
+[NOTE]
+.Example
+====
 The following example defines two perspective cameras with supplied values for Y field of view, aspect ratio, and clipping information.
 
 [source,json]
@@ -2504,106 +2567,47 @@ The following example defines two perspective cameras with supplied values for Y
     ]
 }
 ----
+====
 
-Client implementations **SHOULD** use the following projection matrices.
+The effective projection matrices would heavily depend on the implementation details, in particular the clip space conventions, such as the range (zero-to-one or minus-one-to-one) and direction of the Z axis.
+
+[NOTE]
+.Implementation Note
+====
+When the aspect ratio derived from the camera properties (regardless of the camera type) does not match the aspect ratio of the current viewport, client implementations are free to use any context-appropriate content adaptation, such as cropping and/or uniform scaling. It is generally not recommended to perform non-uniform scaling ("`stretching`") as that would distort the content.
+====
 
 [[infinite-perspective-projection]]
-==== Infinite perspective projection
+==== Infinite Perspective Projection
 
-Let
+The infinite perspective projection is defined by the effective aspect ratio (width over height) and the `yfov` and `znear` properties that represent the vertical field of view in radians and the distance to the near clipping plane, respectively. The far clipping plane is at infinity.
 
-- `a` be the aspect ratio (width over height) of the field of view, set by `camera.perspective.aspectRatio`, or the aspect ratio of the viewport;
-- `y` be the vertical field of view in radians, set by `camera.perspective.yfov`;
-- `n` be the distance to the near clipping plane, set by `camera.perspective.znear`.
+If the `aspectRatio` property is present, it defines the effective aspect ratio. If the `aspectRatio` property is not present, the effective aspect ratio is equal to the aspect ratio of the viewport.
 
-Then, the projection matrix is defined as follows.
-
-ifndef::revdate[]
-[NOTE]
-.Note
-====
-This section contains formulas that may not display correctly in all preview tools.
-View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#infinite-perspective-projection[infinite perspective projection].
-====
-endif::[]
-
-[latexmath]
-++++
-\begin{bmatrix}
-1 \over { a \times \tan(0.5 \times y) } & 0 & 0 & 0 \\
-0 & 1 \over { \tan(0.5 \times y) } & 0 & 0 \\
-0 & 0 & -1 & -2n \\
-0 & 0 & -1 & 0
-\end{bmatrix}
-++++
-
-When the provided camera's aspect ratio does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** crop or perform non-uniform scaling ("`stretching`") to fill the viewport.
+The values of the properties mentioned in this section **MUST** be greater than zero.
 
 [[finite-perspective-projection]]
-==== Finite perspective projection
+==== Finite Perspective Projection
 
-Let
+The finite perspective projection is defined by the effective aspect ratio (width over height) and the `yfov`, `znear`, and `zfar` properties that represent the vertical field of view in radians, the distance to the near clipping plane, and the distance to the far clipping plane, respectively.
 
-- `a` be the aspect ratio (width over height) of the field of view, set by `camera.perspective.aspectRatio`, or the aspect ratio of the viewport;
-- `y` be the vertical field of view in radians, set by `camera.perspective.yfov`;
-- `f` be the distance to the far clipping plane, set by `camera.perspective.zfar`;
-- `n` be the distance to the near clipping plane, set by `camera.perspective.znear`.
+If the `aspectRatio` property is present, it defines the effective aspect ratio. If the `aspectRatio` property is not present, the effective aspect ratio is equal to the aspect ratio of the viewport.
 
-Then, the projection matrix is defined as follows.
+The values of the properties mentioned in this section **MUST** be greater than zero.
 
-ifndef::revdate[]
-[NOTE]
-.Note
-====
-This section contains formulas that may not display correctly in all preview tools.
-View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#finite-perspective-projection[finite perspective projection].
-====
-endif::[]
-
-[latexmath]
-++++
-\begin{bmatrix}
-1 \over { a \times \tan(0.5 \times y) } & 0 & 0 & 0 \\
-0 & 1 \over { \tan(0.5 \times y) } & 0 & 0 \\
-0 & 0 & { f + n } \over { n - f } & { 2 f n } \over { n - f } \\
-0 & 0 & -1 & 0
-\end{bmatrix}
-++++
-
-When the provided camera's aspect ratio does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** crop or perform non-uniform scaling ("`stretching`") to fill the viewport.
+The value of the `zfar` property **MUST** be greater than the value of the `znear` property.
 
 [[orthographic-projection]]
-==== Orthographic projection
+==== Orthographic Projection
 
-Let
+The orthographic projection is defined by the `xmag`, `ymag`, `znear`, and `zfar` properties that represent the horizontal magnification factor (half of the orthographic width), the vertical magnification factor (half of the orthographic height), the distance to the near clipping plane, and the distance to the far clipping plane, respectively.
 
-- `r` be half the orthographic width, set by `camera.orthographic.xmag`;
-- `t` be half the orthographic height, set by `camera.orthographic.ymag`;
-- `f` be the distance to the far clipping plane, set by `camera.orthographic.zfar`;
-- `n` be the distance to the near clipping plane, set by `camera.orthographic.znear`.
+The values of the `xmag` and `ymag` properties **SHOULD** be positive and they **MUST NOT** be zeros.
 
-Then, the projection matrix is defined as follows.
+The value of the `znear` property **MUST** greater than or equal to zero.
 
-ifndef::revdate[]
-[NOTE]
-.Note
-====
-This section contains formulas that may not display correctly in all preview tools.
-View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#orthographic-projection[orthographic projection].
-====
-endif::[]
+The value of the `zfar` property **MUST** be greater than zero and greater than the value of the `znear` property.
 
-[latexmath]
-++++
-\begin{bmatrix}
-1 \over r & 0 & 0 & 0 \\
-0 & 1 \over t & 0 & 0 \\
-0 & 0 & 2 \over { n - f } & { f + n } \over { n - f } \\
-0 & 0 & 0 & 1
-\end{bmatrix}
-++++
-
-When `r / t` does not match the aspect ratio of the viewport, client implementations **SHOULD NOT** crop or perform non-uniform scaling ("`stretching`") to fill the viewport.
 
 [[animations]]
 == Animations
@@ -2775,7 +2779,17 @@ The following examples show the expected usage of animations.
 
 _Channels_ connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the index of one of the samplers present in the containing animation's `samplers` array. The `target` property is an object that identifies which node to animate using its `node` property, and which property of the node to animate using `path`. Non-animated properties **MUST** keep their values during animation.
 
-When `node` isn't defined, channel **SHOULD** be ignored. Valid path names are `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
+When the `node` property is not defined, the animation channel is ignored unless target information is provided by other means, such as extensions.
+
+When the `node` property is defined, valid values for the `path` property include `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
+
+If the node has the `matrix` property defined, its TRS properties **MUST NOT** be targeted, i.e., the `path` property of an animation channel target that points to such a node **MUST NOT** be any of `"translation"`, `"rotation"`, or `"scale"`.
+
+[NOTE]
+.Rationale
+====
+Since matrix decomposition is generally ambiguous, animating only one property could result in non-portable implementation-dependent results. Note that `matrix` property presence does not affect the `"weights"` path.
+====
 
 Nodes that do not contain a mesh with morph targets **MUST NOT** be targeted with `"weights"` path.
 
