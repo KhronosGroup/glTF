@@ -895,24 +895,23 @@ The next example defines the transform for a node with attached camera using the
 == Binary Data Storage
 
 
-[[buffers-and-buffer-views]]
-=== Buffers and Buffer Views
+[[buffers]]
+=== Buffers
 
-
-[[buffers-and-buffer-views-overview]]
+[[buffers-overview]]
 ==== Overview
 
-A *buffer* is arbitrary data stored as a binary blob. The buffer **MAY** contain any combination of geometry, animation, skins, and images.
+A _buffer_ is arbitrary data stored as a binary blob. Buffers **MAY** contain any combination of any data used by the glTF asset.
 
 Binary blobs allow efficient creation of GPU buffers and textures since they require no additional parsing, except perhaps decompression.
 
-glTF assets **MAY** have any number of buffer resources. Buffers are defined in the asset's `buffers` array.
+A buffer is defined by the `byteLength` and `uri` properties that specify the byte size of the buffer and the URI to the buffer data, respectively. glTF assets **MAY** have any number of buffers. Buffers are defined in the asset's `buffers` array.
 
-While there's no hard upper limit on buffer's size, glTF assets **SHOULD NOT** use buffers bigger than 2^53^ bytes because some JSON parsers may be unable to parse their `byteLength` correctly. Buffers stored as <<glb-file-format-specification,GLB>> binary chunk have an implicit limit of 2^32^-1 bytes.
+While there's no hard upper limit on a buffer's byte size, glTF assets **SHOULD NOT** use buffers bigger than 2^53^-1 bytes because some JSON parsers may be unable to parse the value of their `byteLength` property correctly. Buffers stored as <<glb-file-format-specification,GLBv2>> binary chunk have an implicit size limit of 2^32^-1 bytes.
 
-All buffer data defined in this specification (i.e., geometry attributes, geometry indices, sparse accessor data, animation inputs and outputs, inverse bind matrices) **MUST** use little endian byte order.
-
-The following example defines a buffer. The `byteLength` property specifies the size of the buffer file. The `uri` property is the URI to the buffer data.
+[NOTE]
+.Example
+====
 [source,json]
 ----
 {
@@ -924,26 +923,69 @@ The following example defines a buffer. The `byteLength` property specifies the 
    ]
 }
 ----
+====
 
-The byte length of the referenced resource **MUST** be greater than or equal to the `buffer.byteLength` property.
+The byte length of the referenced resource **MUST** be greater than or equal to the buffer's `byteLength` property. Only the resource's byte range from zero (inclusive) to `byteLength` (exclusive) is considered referenced by the buffer object.
 
-Buffer data **MAY** alternatively be embedded in the glTF file via `data:` URI with base64 encoding. When `data:` URI is used for buffer storage, its `mediatype` field **MUST** be set to `application/octet-stream` or `application/gltf-buffer`.
+Buffer data **MAY** alternatively be embedded in the glTF file via `data:` URIs. When a `data:` URI is used for buffer storage, its `mediatype` field **MUST** be set to `application/gltf-buffer` or `application/octet-stream`.
 
-A _buffer view_ represents a contiguous segment of data in a buffer, defined by a byte offset into the buffer specified in the `byteOffset` property and a total byte length specified by the `byteLength` property of the buffer view.
+If the `uri` property is undefined, the buffer's data is provided by other means, such as a GLBv2 chunk (see below) or additional extensions. In absence of data sources, the buffer's content is undefined and handling of such buffers is implementation-dependent.
 
-Buffer views used for images, vertex indices, vertex attributes, or inverse bind matrices **MUST** contain only one kind of data, i.e., the same buffer view **MUST NOT** be used both for vertex indices and vertex attributes.
+[[glb-stored-buffer]]
+==== GLB-stored Buffer
 
-When a buffer view is used by vertex indices or attribute accessors it **SHOULD** specify `bufferView.target` with a value of _element array buffer_ or _array buffer_ respectively.
+The glTF asset **MAY** use the GLBv2 file container format to pack glTF JSON and one glTF buffer into the same file. Data for that buffer is provided by the GLB-stored `BIN` chunk.
+
+When the glTF asset is stored inside a GLBv2 file, a glTF buffer that has index zero, i.e., the first element of the `buffers` array, and has its `uri` property undefined represents the GLB-stored buffer. The GLB file **MUST** have a `BIN` chunk in this case.
+
+[NOTE]
+.Example
+====
+In the following snippet, the first buffer object refers to GLB-stored data, while the second buffer uses an external resource.
+
+[source,json]
+----
+{
+    "buffers": [
+        {
+            "byteLength": 35884
+        },
+        {
+            "byteLength": 504,
+            "uri": "external.bin"
+        }
+    ]
+}
+----
+====
+
+Any glTF buffer with undefined `uri` property that is not the first element of the `buffers` array does not refer to the GLB-stored BIN chunk, and the behavior of such buffers is left undefined to accommodate future extensions and specification versions.
+
+The byte length of the GLB's `BIN` chunk **MUST** be greater than or equal to the byte length of the corresponding glTF buffer.
 
 [NOTE]
 .Implementation Note
 ====
-This allows client implementations to early designate each buffer view to a proper processing step, e.g, buffer views with vertex indices and attributes would be copied to the appropriate GPU buffers, while buffer views with image data would be passed to format-specific image decoders.
+Not requiring strict equality of chunk's and buffer's lengths is consistent with how buffers use external resources and slightly simplifies glTF to GLBv2 conversion: buffer's `byteLength` does not need to be updated after applying GLBv2 padding.
 ====
 
-The `bufferView.target` value uses integer enums defined in the <<_bufferview_target,Properties Reference>>.
+See <<glb-file-format-specification,GLB File Format Specification>> for details on GLBv2 File Format.
 
-The following example defines two buffer views: the first holds the indices for an indexed triangle set, and the second holds the vertex data for the triangle set.
+
+[[buffer-views]]
+=== Buffer Views
+
+[[buffer-views-overview]]
+==== Overview
+
+A _buffer view_ represents a span of bytes defined by the `byteLength`, `buffer`, `byteOffset`, `byteStride`, and `target` properties. The `byteLength` property defines the buffer view's byte length, the `buffer` and `byteOffset` properties define the buffer to use as the data source and the byte offset within it, respectively, the `byteStride` property defines the stride when the buffer view is used for vertex attributes, and the optional `target` property hints at the buffer usage when transferring mesh data. Buffer views are defined in the asset's `bufferViews` array.
+
+If the `byteOffset` property is not defined, it is assumed to be zero.
+
+[NOTE]
+.Example
+====
+The following snippet defines two buffer views: the first holds the indices for an indexed triangle set, and the second holds the vertex data for the triangle set.
 
 [source,json]
 ----
@@ -965,47 +1007,29 @@ The following example defines two buffer views: the first holds the indices for 
     ]
 }
 ----
+====
 
-When a buffer view is used for vertex attribute data, it **MAY** have a `byteStride` property. This property defines the stride in bytes between each vertex. Buffer views with other types of data **MUST NOT** not define `byteStride` (unless such layout is explicitly enabled by an extension).
+The referenced buffer **MUST** have enough bytes for the buffer view, i.e., the buffer's byte length **MUST** be greater than or equal to the sum of the buffer view's `byteOffset` and `byteLength` property values.
 
-Buffers and buffer views do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF asset (meshes, skins, animations) access buffers or buffer views via *accessors*.
+Buffer views directly used by vertex indices accessors, vertex attribute accessors, or inverse bind matrices accessors **MUST NOT** contain more than one kind of data, e.g., if a buffer view is used by a vertex attribute accessor, that buffer view cannot be used by anything else except other vertex attribute accessors.
 
+Buffer views used by images or any other objects introduced by extensions or future Specification versions that refer to a buffer view as a whole, i.e., without specifying byte offset and/or byte length, **MUST NOT** be used by any objects that can refer to buffer view regions, such as accessors.
 
-[[glb-stored-buffer]]
-==== GLB-stored Buffer
-
-The glTF asset **MAY** use the GLB file container to pack glTF JSON and one glTF buffer into one file. Data for such a buffer is provided via the GLB-stored `BIN` chunk.
-
-A buffer with data provided by the GLB-stored `BIN` chunk, **MUST** be the first element of `buffers` array and it **MUST** have its `buffer.uri` property undefined. When such a buffer exists, a `BIN` chunk **MUST** be present.
-
-Any glTF buffer with undefined `buffer.uri` property that is not the first element of `buffers` array does not refer to the GLB-stored BIN chunk, and the behavior of such buffers is left undefined to accommodate future extensions and specification versions.
-
-The byte length of the `BIN` chunk **MAY** be up to 3 bytes bigger than JSON-defined `buffer.byteLength` value to satisfy GLB padding requirements.
+When a buffer view is directly used by vertex indices accessors or vertex attribute accessors, it **MAY** define the `target` property with a value of _element array buffer_ or _array buffer_, respectively. The `target` value uses integer enums defined in the <<_bufferview_target,Properties Reference>>. Buffer views used for other kinds of data **MUST NOT** define the `target` property.
 
 [NOTE]
 .Implementation Note
 ====
-Not requiring strict equality of chunk's and buffer's lengths slightly simplifies glTF to GLB conversion: `buffer.byteLength` does not need to be updated after applying GLB padding.
+This allows client implementations to early designate each buffer view to a proper processing step, e.g., data from buffer views with vertex indices and vertex attributes would be copied to the appropriate GPU buffers, while buffer views with image data would be passed to format-specific image decoders.
 ====
 
-In the following example, the first buffer object refers to GLB-stored data, while the second points to external resource:
+When a buffer view is used for vertex attribute data, it **MAY** define the `byteStride` property. This property specifies the stride in bytes between the first bytes of any two consecutive vertex attribute values. If two or more vertex attributes use the same buffer view, that buffer view **MUST** define its byte stride. Buffer views with other kinds of data **MUST NOT** not define the byte stride.
 
-[source,json]
-----
-{
-    "buffers": [
-        {
-            "byteLength": 35884
-        },
-        {
-            "byteLength": 504,
-            "uri": "external.bin"
-        }
-  ]
-}
-----
+If the `byteStride` property is defined, all of the following restrictions apply to it:
 
-See <<glb-file-format-specification,GLB File Format Specification>> for details on GLB File Format.
+- its value **MUST** be a multiple of four;
+- its value **MUST** be greater than or equal to 4 and less than or equal to 252;
+- its value **MUST** be less than or equal to the value of the `byteLength` property.
 
 
 [[accessors]]
@@ -1014,15 +1038,26 @@ See <<glb-file-format-specification,GLB File Format Specification>> for details 
 [[accessors-overview]]
 ==== Overview
 
-All binary data for meshes, skins, and animations is stored in buffers and retrieved via accessors.
+Buffers and buffer views do not contain type information. They simply define the byte ranges for retrieval from the referenced resources. Structured binary data needed by objects within the glTF asset, such as meshes, skins, and animations, is accessed via _accessors_. Accessors are stored in the asset's `accessors` array.
 
-An _accessor_ defines a method for retrieving data as typed arrays from within a buffer view. The accessor specifies a component type (e.g., _float_) and a data type (e.g., `VEC3` for 3D vectors), which when combined define the complete data type for each data element. The number of elements is specified using the `count` property. Elements could be, e.g., vertex indices, vertex attributes, animation keyframes, etc.
+An accessor provides a finite non-empty sequence of typed values. The number of elements provided by the accessor is defined by its `count` property.
 
-The `byteOffset` property specifies the location of the first data element within the referenced buffer view. If the accessor is used for vertex attributes (i.e., it is referenced by a mesh primitive or its morph targets), the locations of the subsequent data elements are controlled by the `bufferView.byteStride` property. If the accessor is used for any other kind of data (vertex indices, animation keyframes, etc.), its data elements are tightly packed.
+The dimensionality of accessor elements is defined by the `type` property and the data type of those elements is defined by the `componentType` and `normalized` properties.
 
-All accessors are stored in the asset's `accessors` array.
+If the `bufferView` accessor property is defined, the accessor elements are sourced from the referenced buffer view and the `byteOffset` property defines the byte offset of the first accessed element within it. If the `byteOffset` property is not defined, it is assumed to be zero. If the buffer view's `byteStride` property is present, it defines the stride in bytes between the first bytes of consecutive accessor elements.
 
-The following example shows two accessors, the first is a scalar accessor for retrieving a primitive's indices, and the second is a 3-float-component vector accessor for retrieving the primitive's position data.
+If the `bufferView` accessor property is not defined, the accessor elements are not sourced from a buffer view and the `byteOffset` property **MUST NOT** be defined.
+
+An accessor element source **MAY** be defined by an extension. In absence of element sources, accessor elements are sourced from an infinite sequence of zero bytes.
+
+If the `sparse` accessor property is defined, the accessor elements are selectively replaced based on the properties of the `sparse` object. Such replacements happen after resolving the element source.
+
+Optional `min` and `max` properties provide minimum and maximum values that the accessor can provide, respectively.
+
+[NOTE]
+.Example
+====
+The following snippet shows two accessors, the first is a scalar 16-bit integer accessor, and the second is a floating-point three-component vector accessor.
 
 [source,json]
 ----
@@ -1033,107 +1068,271 @@ The following example shows two accessors, the first is a scalar accessor for re
             "byteOffset": 0,
             "componentType": 5123,
             "count": 12636,
-            "max": [
-                4212
-            ],
-            "min": [
-                0
-            ],
             "type": "SCALAR"
         },
         {
             "bufferView": 1,
-            "byteOffset": 0,
+            "byteOffset": 12,
             "componentType": 5126,
             "count": 2399,
-            "max": [
-                0.961799,
-                1.6397,
-                0.539252
-            ],
-            "min": [
-                -0.692985,
-                0.0992937,
-                -0.613282
-            ],
+            "max": [  0.9617, 1.6397,  0.5392 ],
+            "min": [ -0.6929, 0.0992, -0.6132 ],
             "type": "VEC3"
         }
     ]
 }
 ----
+====
+
+The following sections provide more details on each aspect of accessors.
 
 [[accessor-data-types]]
 ==== Accessor Data Types
 
-[options="header"]
+The effective component type of accessor elements is defined by the combination of the enumerated `componentType` and boolean `normalized` properties.
+
+The following table lists effective component types with their corresponding accessor properties and short names used in the subsequent sections of the Specification.
+
+[options="header",cols="10%,30%,10%,10%,10%"]
 |====
-| `componentType` | Data Type | Signed | Bits
-| `5120` | _signed byte_ | Signed, two's complement | 8
-| `5121` | _unsigned byte_ | Unsigned | 8
-| `5122` | _signed short_ | Signed, two's complement | 16
-| `5123` | _unsigned short_ | Unsigned | 16
-| `5125` | _unsigned int_ | Unsigned | 32
-| `5126` | _float_ | Signed | 32
-|====
-
-Signed 32-bit integer components are not supported.
-
-Floating-point data **MUST** use <<ieee-754,IEEE-754>> single precision format.
-
-Values of `NaN`, `+Infinity`, and `-Infinity` **MUST NOT** be present.
-
-[options="header"]
-|====
-| `type`     | Number of components
-| `"SCALAR"` | 1
-| `"VEC2"`   | 2
-| `"VEC3"`   | 3
-| `"VEC4"`   | 4
-| `"MAT2"`   | 4
-| `"MAT3"`   | 9
-| `"MAT4"`   | 16
+|   Short Name   | Description                               | Size in Bytes | `componentType` | `normalized`
+|  _**sint8**_   | 8-bit signed integer                      | 1             | `5120`          | false
+|  _**snorm8**_  | 8-bit signed normalized integer           | 1             | `5120`          | true
+|  _**uint8**_   | 8-bit unsigned integer                    | 1             | `5121`          | false
+|  _**unorm8**_  | 8-bit unsigned normalized integer         | 1             | `5121`          | true
+|  _**sint16**_  | 16-bit signed integer                     | 2             | `5122`          | false
+|  _**snorm16**_ | 16-bit signed normalized integer          | 2             | `5122`          | true
+|  _**uint16**_  | 16-bit unsigned integer                   | 2             | `5123`          | false
+|  _**unorm16**_ | 16-bit unsigned normalized integer        | 2             | `5123`          | true
+|  _**uint32**_  | 32-bit unsigned integer                   | 4             | `5125`          | false
+|  _**float32**_ | 32-bit signed <<ieee-754,IEEE-754>> float | 4             | `5126`          | false
 |====
 
-Element size, in bytes, is
-`(size in bytes of the 'componentType') * (number of components defined by 'type')`.
+All multi-byte component types use little endian byte order.
 
-For example:
+Signed integers use two's complement representation.
+
+The `normalized` property **MUST NOT** be true when the `componentType` is `5125` or `5126`.
+
+Only the values of the `componentType` property present in the table above are in scope of this Specification; support for others **MAY** be added by extensions or future Specification versions.
+
+Unsigned normalized integers represent floating-point numbers in the range latexmath:[[0, 1\]]. Signed normalized integers represent floating-point numbers in the range latexmath:[[-1, +1\]]. The conversions for the supported `componentType` property values are defined as follows, where stem:[c] is the accessed integer value and stem:[f] is the effective floating-point value. These conversions **SHOULD** use at least 32-bit floating-point precision.
+
+[options="header",cols="15%,20%"]
+|====
+|  Short Name   | Conversion
+| _**snorm8**_  | latexmath:[f = \frac{\max(c, -127)}{127.0}]
+| _**unorm8**_  | latexmath:[f = \frac{c}{255.0}]
+| _**snorm16**_ | latexmath:[f = \frac{\max(c, -32767)}{32767.0}]
+| _**unorm16**_ | latexmath:[f = \frac{c}{65535.0}]
+|====
+
+[NOTE]
+.Implementation Note
+====
+Signed normalized representations have redundant encodings. Both `-127` and `-128` represent `-1.0` for _snorm8_; both `-32767` and `-32768` represent `-1.0` for _snorm16_.
+====
+
+[NOTE]
+.Implementation Note
+====
+When accessor elements are used for vertex attributes, these normalization conversions are usually performed by GPU hardware.
+====
+
+[[accessor-components]]
+==== Accessor Components
+
+The number and semantics of components per a single accessor element are defined by the `type` property as follows.
+
+[options="header",cols="5%,10%,10%"]
+|====
+| `type`    | Description            | Number of components
+| `"SCALAR"`| Scalar value           | 1
+| `"VEC2"`  | Two-component vector   | 2
+| `"VEC3"`  | Three-component vector | 3
+| `"VEC4"`  | Four-component vector  | 4
+| `"MAT2"`  | 2x2 matrix             | 4
+| `"MAT3"`  | 3x3 matrix             | 9
+| `"MAT4"`  | 4x4 matrix             | 16
+|====
+
+The vector components are stored in `(x, y, z, w)` order. The matrix elements are stored in the column-major order.
+
+[[accessor-element-size]]
+==== Accessor Element Size
+
+The byte size of one non-matrix accessor element is a product of its component type byte size and the number of components as defined above.
+
+The following table provides element byte sizes for all supported combinations of non-matrix accessor types and component byte sizes.
+
+[options="header",cols="5%,10%,10%"]
+|====
+| `type`     | Component size in bytes | Element size in bytes
+| `"SCALAR"` | 1                       | 1
+| `"SCALAR"` | 2                       | 2
+| `"SCALAR"` | 4                       | 4
+| `"VEC2"`   | 1                       | 2
+| `"VEC2"`   | 2                       | 4
+| `"VEC2"`   | 4                       | 8
+| `"VEC3"`   | 1                       | 3
+| `"VEC3"`   | 2                       | 6
+| `"VEC3"`   | 4                       | 12
+| `"VEC4"`   | 1                       | 4
+| `"VEC4"`   | 2                       | 8
+| `"VEC4"`   | 4                       | 16
+|====
+
+The byte size of one matrix accessor element is a product of the number of matrix columns and the byte size of one matrix column. The byte size of one matrix column is the accessor component type byte size multiplied by the number of matrix rows and rounded up to the nearest multiple of four.
+
+The following table provides element byte sizes for all supported combinations of matrix accessor types and component byte sizes.
+
+[options="header",cols="5%,10%,10%"]
+|====
+| `type`     | Component size in bytes | Element size in bytes
+| `"MAT2"`   | 1                       | 8
+| `"MAT2"`   | 2                       | 8
+| `"MAT2"`   | 4                       | 16
+| `"MAT3"`   | 1                       | 12
+| `"MAT3"`   | 2                       | 24
+| `"MAT3"`   | 4                       | 36
+| `"MAT4"`   | 1                       | 16
+| `"MAT4"`   | 2                       | 32
+| `"MAT4"`   | 4                       | 64
+|====
+
+Data layouts for accessors of `"MAT2"` type and any one-byte component type as well as accessors of `"MAT3"` type and any one- or two-byte component types include extra padding bytes (marked as `X`) as follows.
+
+.Matrix 2x2, 1-byte components
+image::figures/padding-mat2-1byte.svg[pdfwidth=2in,align=left]
+
+.Matrix 3x3, 1-byte components
+image::figures/padding-mat3-1byte.svg[pdfwidth=2in,align=left]
+
+.Matrix 3x3, 2-byte components
+image::figures/padding-mat3-2byte.svg[pdfwidth=4in,align=left]
+
+[[data-alignment]]
+==== Accessing Data from Buffer Views
+
+When the accessor's `bufferView` property is defined, the referenced buffer view is the source of accessor elements.
+
+Let:
+
+- _offset_ be the value of the accessor's `byteOffset` property;
+- _size_ be the accessor's element size in bytes as defined above;
+- _stride_ be the value of the buffer view's `byteStride` property if it is defined or _size_ otherwise;
+- _count_ be the value of the accessor's `count` property.
+
+Then the byte offset of the _i_-th accessor element within the buffer view is defined by the following expression where _i_ is the accessor element index from zero (inclusive) to _count_ (exclusive).
+
+[latexmath]
++++++
+\mathit{offset} + i \times \mathit{stride}
++++++
+
+[NOTE]
+.Implementation Note
+====
+When _stride_ is greater than _size_, accessor elements are not tightly-packed and thus interleaved bytes would need to be skipped during iteration over accessor elements. Graphics APIs usually support that directly by accepting byte stride values associated with vertex attributes.
+====
+
+The referenced buffer view **MUST** be large enough to fit all accessed elements, i.e., the buffer view's byte length **MUST** be greater than or equal to the value of the following expression.
+
+[latexmath]
++++++
+\mathit{offset} + (\mathit{count} - 1) \times \mathit{stride} + \mathit{size}
++++++
+
+The accessor's byte offset into the buffer view and the buffer view's byte offset into the buffer **MUST** be multiples of the accessor's component type byte size.
+
+[NOTE]
+.Implementation Note
+====
+These alignment requirements allow client implementations to more efficiently process binary buffers because creating aligned data views usually does not require extra copying.
+====
+
+Accessors used for vertex attributes **MAY** reference buffer views with a defined `byteStride` property; accessors that are not used for vertex attributes **MUST NOT** reference buffer views that define byte stride. If two or more vertex attribute accessors use the same buffer view, that buffer view **MUST** define its byte stride.
+
+If the referenced buffer view defines its byte stride, the following restrictions apply in addition to those mentioned in the section about buffer views:
+
+- The byte stride of the referenced buffer view **MUST** be greater than or equal to the accessor's element byte size.
++
+[NOTE]
+.Rationale
+====
+This restriction ensures that adjacent accessor elements do not overlap.
+====
+
+- The byte stride of the referenced buffer view **MUST** be a multiple of the accessor's component type byte size.
++
+[NOTE]
+.Rationale
+====
+This restriction is currently redundant because the byte stride value has to be a multiple of four anyway and that implicitly covers all component type byte sizes defined in this Specification. However, if an extension or a future Specification version add support for accessors with another component type byte size, e.g., greater than four, the byte stride of buffer views used with such accessors would have to be a multiple of that size.
+====
+
+If the accessor is used for vertex attributes, its elements **MUST** be aligned to 4-byte boundaries inside the buffer view, i.e., the accessor's byte offset **MUST** be a multiple of four and either the component type byte size **MUST** be a multiple of four or the buffer view's byte stride **MUST** be defined.
+
+[NOTE]
+.Implementation Note
+====
+Multiple GPU platforms require vertex data alignment for performance and/or compatibility reasons.
+====
+
+[NOTE]
+.Example
+====
+The following snippet defines two accessors that refer to a buffer view with a byte stride greater than the byte size of the accessor elements. The first accessor provides 3 two-component vectors of the _unorm16_ component type and the second accessor provides 3 three-component vectors of the _unorm8_ type. The first accessor retrieves data from the `[0, 3]`, `[8, 11]`, and `[16, 19]` inclusive byte ranges of the buffer view, and the second accessor retrieves data from the `[4, 6]`, `[12, 14]`, and `[20, 22]` inclusive byte ranges of the buffer view. Note that bytes `7` and `15` are not accessed, and the byte `23` does not even have to be included in the buffer view (as per the rules of this section).
 
 [source,json]
 ----
 {
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 23,
+            "byteStride": 8
+        }
+    ],
     "accessors": [
         {
-            "bufferView": 1,
-            "byteOffset": 7032,
-            "componentType": 5126,
-            "count": 585,
+            "bufferView": 0,
+            "componentType": 5123,
+            "count": 3,
+            "normalized": true,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 0,
+            "byteOffset": 4,
+            "componentType": 5121,
+            "count": 3,
+            "normalized": true,
             "type": "VEC3"
         }
     ]
 }
 ----
-
-In this accessor, the `componentType` is `5126` (_float_), so each component is four bytes.  The `type` is `"VEC3"`, so there are three components.  The size of each element is 12 bytes (`4 * 3`). Thus, the accessor takes 7020 bytes (`[7032 ... 14051]` inclusive range of the buffer view).
-
+====
 
 [[sparse-accessors]]
 ==== Sparse Accessors
 
-Sparse encoding of arrays is often more memory-efficient than dense encoding when describing incremental changes with respect to a reference array.
-This is often the case when encoding morph targets (it is, in general, more efficient to describe a few displaced vertices in a morph target than transmitting all morph target vertices).
+[[sparse-accessors-overview]]
+===== Overview
 
-Similar to a standard accessor, a sparse accessor initializes an array of typed elements from data stored in a `bufferView`. When `accessor.bufferView` is undefined, the sparse accessor is initialized as an array of zeros of size `(size of the accessor element) * (accessor.count)` bytes.
+Sparse data encoding is usually more memory-efficient than dense encoding when describing incremental changes with respect to reference values. This is often the case when encoding morph targets; it is, in general, more efficient to describe a few displaced vertices in a morph target than transmitting all morph target vertices.
 
-On top of that, a sparse accessor includes a `sparse` JSON object describing the elements that are different from their initialization values. The `sparse` object contains the following **REQUIRED** properties:
+The `sparse` property of the accessor object defines which accessor elements are replaced. The `sparse` property value is a JSON object that contains the following **REQUIRED** properties:
 
-- `count`: number of displaced elements. This number **MUST NOT** be greater than the number of the base accessor elements.
+- `count`: the number of replaced elements, it **MUST** be greater than zero and less than or equal to the value of the accessor's `count` property;
+- `indices`: the object describing the location and the component type of indices of accessor elements to be replaced;
+- `values`: the object describing the location of the replacement elements corresponding to the indices.
 
-- `indices`: object describing the location and the component type of indices of values to be replaced. The indices **MUST** form a strictly increasing sequence. The indices **MUST NOT** be greater than or equal to the number of the base accessor elements. 
-
-- `values`: object describing the location of displaced elements corresponding to the indices referred from the `indices`.
-
-The following example shows an example of a sparse accessor with 10 elements that are different from the initialization array.
+[NOTE]
+.Example
+====
+The following snippet shows a sparse accessor with ten replaced elements.
 
 [source,json]
 ----
@@ -1142,7 +1341,7 @@ The following example shows an example of a sparse accessor with 10 elements tha
         {
             "bufferView": 0,
             "byteOffset": 0,
-            "componentType": 5123,
+            "componentType": 5126,
             "count": 12636,
             "type": "VEC3",
             "sparse": {
@@ -1161,112 +1360,120 @@ The following example shows an example of a sparse accessor with 10 elements tha
     ]
 }
 ----
+====
 
+[[sparse-accessor-indices]]
+===== Sparse Accessor Indices
 
-[[data-alignment]]
-==== Data Alignment
+The `indices` object contains three properties: `componentType`, `bufferView`, and `byteOffset`.
 
-The offset of an `accessor` into a `bufferView` (i.e., `accessor.byteOffset`) and the offset of an `accessor` into a `buffer` (i.e., `accessor.byteOffset + bufferView.byteOffset`) **MUST** be a multiple of the size of the accessor's component type.
+The `componentType` property defines the component type of the sparse index values and it **MUST** correspond to any of the unsigned integer data types defined above.
 
-When `byteStride` of the referenced `bufferView` is not defined, it means that accessor elements are tightly packed, i.e., effective stride equals the size of the element. When `byteStride` is defined, it **MUST** be a multiple of the size of the accessor's component type.
+The `bufferView` and `byteOffset` properties define the buffer view containing the indices of the replaced elements and the byte offset of the first index value within the buffer view, respectively. If the `byteOffset` property is not defined, it is assumed to be zero. The referenced buffer view **MUST NOT** have its `byteStride` or `target` properties defined.
 
-When two or more vertex attribute accessors use the same `bufferView`, its `byteStride` **MUST** be defined.
+The index values are tightly packed, i.e., the distance between the first bytes of adjacent index values is equal to the byte size of the index component type.
 
-Each accessor **MUST** fit its `bufferView`, i.e.,
+Let:
 
-[source]
-----
-accessor.byteOffset + EFFECTIVE_BYTE_STRIDE * (accessor.count - 1) + SIZE_OF_COMPONENT * NUMBER_OF_COMPONENTS
-----
+- _sparseCount_ be the number of replaced elements;
+- _sparseIndexSize_ be the byte size of the sparse index component type;
+- _sparseIndicesOffset_ be the value of the `byteOffset` property of the `indices` object.
 
-**MUST** be less than or equal to `bufferView.length`.
+The _sparseIndicesOffset_ and the buffer view's byte offset into the buffer **MUST** be multiples of the _sparseIndexSize_.
 
-For performance and compatibility reasons, each element of a vertex attribute **MUST** be aligned to 4-byte boundaries inside a `bufferView` (i.e., `accessor.byteOffset` and `bufferView.byteStride` **MUST** be multiples of 4).
+Then the byte offset of the _j_-th sparse index within the sparse indices buffer view is defined by the following expression where _j_ is the sparse index from zero (inclusive) to _sparseCount_ (exclusive).
 
-Accessors of matrix type have data stored in column-major order; start of each column **MUST** be aligned to 4-byte boundaries. Specifically, when `ROWS * SIZE_OF_COMPONENT` (where `ROWS` is the number of rows of the matrix) is not a multiple of 4, then `(ROWS * SIZE_OF_COMPONENT) % 4` padding bytes **MUST** be inserted at the end of each column.
+[latexmath]
++++++
+\mathit{sparseIndicesOffset} + j \times \mathit{sparseIndexSize}
++++++
 
-Only the following three accessor configurations require padding.
+The referenced buffer view **MUST** be large enough to fit all indices, i.e., the byte length of the referenced buffer view **MUST** be greater than or equal to the value of the following expression.
 
-.Matrix 2x2, 1-byte Components
-image::figures/padding-mat2-1byte.svg[pdfwidth=2in,align=left]
+[latexmath]
++++++
+\mathit{sparseIndicesOffset} + \mathit{sparseCount} \times \mathit{sparseIndexSize}
++++++
 
-.Matrix 3x3, 1-byte Components
-image::figures/padding-mat3-1byte.svg[pdfwidth=2in,align=left]
+The sequence of stored indices **MUST** be strictly increasing and all index values **MUST** be less than the value of the accessor's `count` property.
 
-.Matrix 3x3, 2-byte Components
-image::figures/padding-mat3-2byte.svg[pdfwidth=4in,align=left]
+[[sparse-accessor-values]]
+===== Sparse Accessor Values
 
-Alignment requirements apply only to the start of each column, so trailing bytes **MAY** be omitted if there's no further data.
+The `values` object contains `bufferView` and `byteOffset` properties. They define the buffer view containing the replacement accessor elements and the byte offset of the first replacement element within the buffer view, respectively. If the `byteOffset` property is not defined, it is assumed to be zero. The referenced buffer view **MUST NOT** have its `byteStride` or `target` properties defined.
+
+The replacement elements have the same dimensionality and component type as the original accessor elements. The replacement elements are always tightly packed, i.e., the distance between the first bytes of adjacent replacement elements is equal to the accessor element byte size.
+
+Let:
+
+- _sparseCount_ be the number of replaced elements;
+- _size_ be the accessor's element size in bytes;
+- _sparseValuesOffset_ be the value of the `byteOffset` property of the `values` object.
+
+The _sparseValuesOffset_ and the buffer view's byte offset into the buffer **MUST** be multiples of the accessor's component byte size.
+
+Then the byte offset of the _j_-th replacement element within the sparse values buffer view is defined by the following expression where _j_ is the replacement element index from zero (inclusive) to _sparseCount_ (exclusive).
+
+[latexmath]
++++++
+\mathit{sparseValuesOffset} + j \times \mathit{size}
++++++
+
+The referenced buffer view **MUST** be large enough to fit all replacement elements, i.e., the byte length of the referenced buffer view **MUST** be greater than or equal to the value of the following expression.
+
+[latexmath]
++++++
+\mathit{sparseValuesOffset} + \mathit{sparseCount} \times \mathit{size}
++++++
+
+[[sparse-accessor-usage]]
+===== Sparse Accessor Usage
+
+When the accessor has sparse data, retrieving the _i_-th accessor element is done by performing the following steps, where _i_ is the accessor element index from zero (inclusive) to _count_ (exclusive):
+
+1. Let _sparseCount_ be the number of replaced elements as defined by the `count` property of the `sparse` object.
+2. Let _sparseIndices_ be the array of sparse indices and _sparseValues_ be the array of replacement elements as defined above; both arrays have _sparseCount_ elements.
+3. If the _sparseIndices_ array contains the value of _i_, the value of the _i_-th accessor element is the _j_-th value of the _sparseValues_ array where _j_ is the index of the value of _i_ in the _sparseIndices_ array.
++
+[NOTE]
+.Implementation Note
+====
+Binary search can be used for finding _i_ in the _sparseIndices_ array because the array is pre-sorted and does not contain duplicates. For the same reasons, the search can be avoided entirely if iterating over all accessor elements.
+====
+4. Else if the _sparseIndices_ array does not contain the value of _i_, the value of the _i_-th accessor element is as if the `sparse` property is not defined.
+
+[[accessor-bounds]]
+==== Accessor Bounds
+
+The `min` and `max` properties of the accessor are arrays that contain per-component minimum and maximum values, respectively. The length of these arrays **MUST** be equal to the number of accessor's components.
+
+If the accessor's component type is a non-normalized integer type, the minimum and maximum values stored as JSON decimal numbers **MUST** exactly match minimum and maximum values that would be accessed.
+
+If the accessor's component type is a normalized integer type, the minimum and maximum values stored as JSON decimal numbers **MUST** exactly match integer minimum and maximum values that would be accessed before they are converted to normalized floats. In other words, even if the accessor's `normalized` property is true, the bounds are stored as if it is false.
+
+If the accessor's component type is a floating-point type, the minimum and maximum values stored as JSON decimal numbers **SHOULD** exactly match minimum and maximum values that would be accessed. If they do not match exactly as-is, they **MUST** match exactly after being rounded to the accessor's specific floating-point component type.
 
 [NOTE]
 .Implementation Note
 ====
-Alignment requirements allow client implementations to more efficiently process binary buffers because creating aligned data views usually does not require extra copying.
+JSON usually implies double precision and some tools output JSON numbers that are not representable with single-precision floats but are close enough to match the accessed values after being rounded to the accessor's component type.
+
+Let's say the accessor's component type is _float32_ and the exact minimum value accessed with it is `1.2000000476837158203125`. The accessor's `min` property can be `1.2` in this case because rounding `1.2` to a single-precision float would produce the accessed value.
+
+It is therefore recommended to apply rounding to the `min` and `max` property values of floating-point accessors when loading glTF assets to avoid any potential runtime mismatches. If using ECMAScript, the `Math.fround` function could be used to round a JSON number to the nearest single-precision float.
 ====
-
-Consider the following example:
-
-[source,json]
-----
-{
-    "bufferViews": [
-        {
-            "buffer": 0,
-            "byteLength": 17136,
-            "byteOffset": 620
-        }
-    ],
-    "accessors": [
-        {
-            "bufferView": 0,
-            "byteOffset": 4608,
-            "componentType": 5123,
-            "count": 42,
-            "type": "VEC2"
-        }
-    ]
-}
-----
-
-In this example, the accessor describes tightly-packed two-component unsigned short values.
-
-The corresponding segment of the underlying buffer would start from byte 5228
-[source]
-----
-start = accessor.byteOffset + accessor.bufferView.byteOffset
-----
-
-and continue until byte 5396 exclusive
-[source]
-----
-end = 2 * 2 * accessor.count + start
-----
-
-The unsigned short view for the resulting buffer range could be created without copying: 84 scalar values starting from byte offset 5228.
-
-When accessor values are not tightly-packed (i.e., `bufferView.byteStride` is greater than element's byte length), iteration over the created data view would need to take interleaved values into account (i.e., skip them).
-
-
-[[accessors-bounds]]
-==== Accessors Bounds
-
-`accessor.min` and `accessor.max` properties are arrays that contain per-component minimum and maximum values, respectively. The length of these arrays **MUST** be equal to the number of accessor's components.
-
-Values stored in glTF JSON **MUST** match actual minimum and maximum binary values stored in buffers. The `accessor.normalized` flag has no effect on these properties.
-
-A sparse accessor `min` and `max` properties correspond, respectively, to the minimum and maximum component values once the sparse substitution is applied.
-
-When neither `sparse` nor `bufferView` is defined, `min` and `max` properties **MAY** have any values. This is intended for use cases when binary data is supplied by external means (e.g., via extensions).
-
-For floating-point components, JSON-stored minimum and maximum values represent single precision floats and **SHOULD** be rounded to single precision before usage to avoid any potential boundary mismatches.
 
 [NOTE]
-.ECMAScript Implementation Note
+.Implementation Note
 ====
-`Math.fround` function could be used to achieve that.
+The rules above imply that values of the `min` and `max` properties are always in the range of the accessor's component type and therefore implementations can internally use the same data type for the bounds as for the accessor elements.
 ====
 
-Animation input and vertex position attribute accessors **MUST** have `accessor.min` and `accessor.max` defined. For all other accessors, these properties are optional.
+If the accessor is sparse, its `min` and `max` properties correspond to the minimum and maximum component values after applying the sparse replacements.
+
+When neither `sparse` nor `bufferView` properties are defined, i.e., if all accessed elements are implicit zeros, the `min` and `max` properties **MAY** have any values representable with the accessor's component type. This is intended for use cases when data is supplied by external means (e.g., via extensions) and accessors are only used as format descriptors.
+
+Although the `min` and `max` properties are optional in general, accessors used for vertex positions or animation sampler inputs **MUST** define these properties.
 
 
 [[geometry]]
@@ -1323,29 +1530,31 @@ Each attribute is defined as a property of the `attributes` object. The name of 
 
 The specification defines the following attribute semantics: `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_n`, `COLOR_n`, `JOINTS_n`, and `WEIGHTS_n`.
 
-Application-specific attribute semantics **MUST** start with an underscore, e.g., `_TEMPERATURE`. Application-specific attribute semantics **MUST NOT** use __unsigned int__ component type.
+Application-specific attribute semantics **MUST** start with an underscore, e.g., `_TEMPERATURE`. Application-specific attribute semantics **MUST NOT** use __uint32__ component type.
 
 Valid accessor type and component type for each attribute semantic property are defined below.
 
-[options="header",cols="15%,20%,35%,30%"]
+[options="header",cols="15%,20%,30%,35%"]
 |====
-| Name        | Accessor Type(s)| Component Type(s)           | Description
-| `POSITION`  | VEC3            | _float_                     | Unitless XYZ vertex positions
-| `NORMAL`    | VEC3            | _float_                     | Normalized XYZ vertex normals
-| `TANGENT`   | VEC4            | _float_                     | XYZW vertex tangents where the XYZ portion is normalized, and the W component is a sign value (-1 or +1) indicating handedness of the tangent basis
-| `TEXCOORD_n`| VEC2            | _float_ +
-                                  _unsigned byte_ normalized +
-                                  _unsigned short_ normalized | ST texture coordinates
+| Name        | Accessor Type(s)| Effective Component Type(s) | Description
+| `POSITION`  | VEC3            | _float32_                   | Unitless XYZ vertex positions
+| `NORMAL`    | VEC3            | _float32_                   | Normalized XYZ vertex normals
+| `TANGENT`   | VEC4            | _float32_                   | XYZW vertex tangents where the XYZ portion is normalized, and the W component is a sign value (-1 or +1) indicating handedness of the tangent basis
+| `TEXCOORD_n`| VEC2            | _float32_ +
+                                  _unorm8_ +
+                                  _unorm16_                   | ST texture coordinates
 | `COLOR_n`   | VEC3 +
-                VEC4            | _float_ +
-                                  _unsigned byte_ normalized +
-                                  _unsigned short_ normalized | RGB or RGBA vertex color linear multiplier
-| `JOINTS_n`  | VEC4            | _unsigned byte_
-                                  _unsigned short_            | See <<skinned-mesh-attributes,Skinned Mesh Attributes>>
-| `WEIGHTS_n` | VEC4            | _float_ +
-                                  _unsigned byte_ normalized +
-                                  _unsigned short_ normalized | See <<skinned-mesh-attributes,Skinned Mesh Attributes>>
+                VEC4            | _float32_ +
+                                  _unorm8_ +
+                                  _unorm16_                   | RGB or RGBA vertex color linear multiplier
+| `JOINTS_n`  | VEC4            | _uint8_ +
+                                  _uint16_                    | See <<skinned-mesh-attributes,Skinned Mesh Attributes>>
+| `WEIGHTS_n` | VEC4            | _float32_ +
+                                  _unorm8_  +
+                                  _unorm16_                   | See <<skinned-mesh-attributes,Skinned Mesh Attributes>>
 |====
+
+Attribute data accessed with floating-point accessors **MUST NOT** contain infinite or NaN values.
 
 `POSITION` accessor **MUST** have its `min` and `max` properties defined.
 
@@ -1472,22 +1681,24 @@ Accessor type and component type for each morphed attribute semantic property **
 
 [options="header"]
 |====
-| Name         | Accessor Type(s) | Component Type(s)            | Description
-| `POSITION`   | VEC3             | _float_                      | XYZ vertex position displacements
-| `NORMAL`     | VEC3             | _float_                      | XYZ vertex normal displacements
-| `TANGENT`    | VEC3             | _float_                      | XYZ vertex tangent displacements
-| `TEXCOORD_n` | VEC2             | _float_ +
-                                    _signed byte_ normalized +
-                                    _signed short_ normalized +
-                                    _unsigned byte_ normalized +
-                                    _unsigned short_ normalized  | ST texture coordinate displacements
+| Name         | Accessor Type(s) | Effective Component Type(s) | Description
+| `POSITION`   | VEC3             | _float32_                   | XYZ vertex position displacements
+| `NORMAL`     | VEC3             | _float32_                   | XYZ vertex normal displacements
+| `TANGENT`    | VEC3             | _float32_                   | XYZ vertex tangent displacements
+| `TEXCOORD_n` | VEC2             | _float32_ +
+                                    _snorm8_ +
+                                    _snorm16_ +
+                                    _unorm8_ +
+                                    _unorm16_                   | ST texture coordinate displacements
 | `COLOR_n`    | VEC3 +
-                 VEC4             | _float_ +
-                                    _signed byte_ normalized +
-                                    _signed short_ normalized +
-                                    _unsigned byte_ normalized +
-                                    _unsigned short_ normalized  | RGB or RGBA color deltas
+                 VEC4             | _float32_ +
+                                    _snorm8_ +
+                                    _snorm16_ +
+                                    _unorm8_ +
+                                    _unorm16_                   | RGB or RGBA color deltas
 |====
+
+Displacement data accessed with floating-point accessors **MUST NOT** contain infinite or NaN values.
 
 `POSITION` accessor **MUST** have its `min` and `max` properties defined.
 
@@ -1568,7 +1779,7 @@ The order of joints is defined by the `skin.joints` array and it **MUST** match 
 Although the `skeleton` property is not needed for computing skinning transforms, it may be used to provide a specific "`pivot point`" for the skinned geometry.
 ====
 
-An accessor referenced by `inverseBindMatrices` **MUST** have floating-point components of `"MAT4"` type. The number of elements of the accessor referenced by `inverseBindMatrices` **MUST** be greater than or equal to the number of `joints` elements. The fourth row of each matrix **MUST** be set to `[0.0, 0.0, 0.0, 1.0]`.
+An accessor referenced by `inverseBindMatrices` **MUST** have floating-point components of `"MAT4"` type. The number of elements of the accessor referenced by `inverseBindMatrices` **MUST** be greater than or equal to the number of `joints` elements. The fourth row of each matrix **MUST** be set to `[0.0, 0.0, 0.0, 1.0]`. The accessed matrices **MUST NOT** contain infinite or NaN values.
 
 [NOTE]
 .Implementation Note
@@ -1674,8 +1885,8 @@ In the following example, a mesh primitive defines `JOINTS_0` and `WEIGHTS_0` ve
 
 The number of joints that influence one vertex is limited to 4 per set, so the referenced accessors **MUST** have `VEC4` type and following component types:
 
-* *`JOINTS_n`*: _unsigned byte_ or _unsigned short_
-* *`WEIGHTS_n`*: _float_, or _normalized unsigned byte_, or _normalized unsigned short_
+* *`JOINTS_n`*: _uint8_ or _uint16_
+* *`WEIGHTS_n`*: _float32_, or _unorm8_, or _unorm16_
 
 The joint weights for each vertex **MUST NOT** be negative.
 
@@ -1683,7 +1894,7 @@ Joints **MUST NOT** contain more than one non-zero weight for a given vertex.
 
 When the weights are stored using _float_ component type, their linear sum **SHOULD** be as close as reasonably possible to `1.0` for a given vertex.
 
-When the weights are stored using _normalized unsigned byte_, or _normalized unsigned short_ component types, their linear sum before normalization **MUST** be `255` or `65535` respectively. Without these requirements, vertices would be deformed significantly because the weight error would get multiplied by the joint position. For example, an error of `1/255` in the weight sum would result in an unacceptably large difference in the joint position.
+When the weights are stored using _unorm8_, or _unorm16_ component types, their linear sum before normalization **MUST** be `255` or `65535`, respectively. Without these requirements, vertices would be deformed significantly because the weight error would get multiplied by the joint position. For example, an error of `1/255` in the weight sum would result in an unacceptably large difference in the joint position.
 
 [NOTE]
 .Implementation Note
@@ -2590,33 +2801,24 @@ Samplers within a given animation **MAY** have different inputs.
 
 [options="header",cols="15%,15%,35%,35%"]
 |====
-| `channel.path`  | Accessor Type | Component Type(s)           | Description
-| `"translation"` | `"VEC3"`      | _float_                     | XYZ translation vector
-| `"rotation"`    | `"VEC4"`      | _float_ +
-                                    _signed byte_ normalized +
-                                    _unsigned byte_ normalized +
-                                    _signed short_ normalized +
-                                    _unsigned short_ normalized | XYZW rotation quaternion
-| `"scale"`       | `"VEC3"`      | _float_ |XYZ scale vector
-| `"weights"`     | `"SCALAR"`    | _float_ +
-                                    _signed byte_ normalized +
-                                    _unsigned byte_ normalized +
-                                    _signed short_ normalized +
-                                    _unsigned short_ normalized | Weights of morph targets
-|====
-
-Implementations **MUST** use following equations to decode real floating-point value `f` from a normalized integer `c` and vise-versa:
-
-[options="header"]
-|====
-| `accessor.componentType` | int-to-float                 | float-to-int
-| _signed byte_            | `f = max(c / 127.0, -1.0)`   | `c = round(f * 127.0)`
-| _unsigned byte_          | `f = c / 255.0`              | `c = round(f * 255.0)`
-| _signed short_           | `f = max(c / 32767.0, -1.0)` | `c = round(f * 32767.0)`
-| _unsigned short_         | `f = c / 65535.0`            | `c = round(f * 65535.0)`
+| `channel.path`  | Accessor Type | Component Type(s) | Description
+| `"translation"` | `"VEC3"`      | _float32_         | XYZ translation vector
+| `"rotation"`    | `"VEC4"`      | _float32_ +
+                                    _snorm8_ +
+                                    _unorm8_ +
+                                    _snorm16_ +
+                                    _unorm16_         | XYZW rotation quaternion
+| `"scale"`       | `"VEC3"`      | _float32_         | XYZ scale vector
+| `"weights"`     | `"SCALAR"`    | _float32_ +
+                                    _snorm8_ +
+                                    _unorm8_ +
+                                    _snorm16_ +
+                                    _unorm16_         | Weights of morph targets
 |====
 
 Animation sampler's `input` accessor **MUST** have its `min` and `max` properties defined.
+
+Animation sampler data accessed with floating-point accessors **MUST NOT** contain infinite or NaN values.
 
 [NOTE]
 .Implementation Note
