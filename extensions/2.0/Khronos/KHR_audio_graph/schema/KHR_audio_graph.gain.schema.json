@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Gain Node",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "gain": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The gain multiplier.",
+            "default": 1.0
+        },
+        "interpolation": {
+            "type": "string",
+            "enum": ["linear", "custom"],
+            "description": "The curve used when gain changes over time.",
+            "default": "linear"
+        },
+        "duration": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The interpolation duration in seconds.",
+            "default": 0.0
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}

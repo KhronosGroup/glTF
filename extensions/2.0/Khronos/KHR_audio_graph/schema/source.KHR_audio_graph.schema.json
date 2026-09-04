@@ -1,0 +1,59 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Source Extension",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "loopStart": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The loop start position in seconds."
+        },
+        "loopEnd": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The loop end position in seconds."
+        },
+        "offset": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The playback start offset in seconds."
+        },
+        "when": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The scheduled start time in seconds."
+        },
+        "duration": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The requested playback duration in seconds."
+        },
+        "playbackRate": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The playback rate multiplier.",
+            "default": 1.0
+        },
+        "priority": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 256,
+            "description": "Playback priority where 0 is highest and 256 is lowest.",
+            "default": 128
+        },
+        "state": {
+            "type": "string",
+            "enum": ["playing", "paused", "stopped"],
+            "description": "The desired playback state.",
+            "default": "stopped"
+        },
+        "channelInterpretation": {
+            "type": "string",
+            "enum": ["speakers", "discrete"],
+            "description": "The channel interpretation applied when graph processing needs one."
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}
