@@ -88,6 +88,8 @@ When an extension is implemented by more than one vendor, its name can use the r
 
 ## Vendor Extensions
 
+This is a historical list of vendor extensions. All extensions listed here are in the process of moving to the new [glTF-Community](https://github.com/KhronosGroup/glTF-Community/) repo. There will be no additions to this list. This list will be removed when the transition period is complete.1
+
 Vendor extensions are not covered by the Khronos IP framework.
 
 * [ADOBE_materials_clearcoat_specular](2.0/Vendor/ADOBE_materials_clearcoat_specular/README.md)
@@ -114,11 +116,7 @@ Vendor extensions are not covered by the Khronos IP framework.
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 * [NV_materials_mdl](2.0/Vendor/NV_materials_mdl/README.md)
 
-The list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any vendor, not just Khronos members, can request an extension prefix by submitting an [issue on GitHub](https://github.com/KhronosGroup/glTF/issues/new) requesting one.  Requests should include:
-
-* The name of the prefix.
-* The name of the vendor requesting the prefix.
-* The vendor's URL and/or contact information.
+The list of vendor prefixes is maintained in the [glTF-Community Prefixes table](https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/PREFIX.md).  See the [instructions](https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/README.md) for requesting a prefix. 
 
 ## Archived Extensions
 
@@ -175,7 +173,7 @@ An extension is considered _required_ if a typical glTF loader would fail to loa
 
 ## Creating Extensions
 
-To create a new extension, use the [extension template](Template.md) and open a pull request into this repo.  Make sure to add the extension to the glTF Extension Registry (top of this file).
+To create a new extension, use the [extension template](Template.md). If this is a KHR_ or EXT_ prefix, contact the 3D Formats Working Group for instructions. Vendor extensions go into the [glTF-Community](https://github.com/KhronosGroup/glTF-Community/) repo - follow the instructions there.
 
 If the extension adds a new top-level array (by extending the root glTF object), its elements should inherit all properties of `glTFChildOfRootProperty.schema.json`. Other objects introduced by the extension should inherit all properties of `glTFProperty.schema.json`. By glTF 2.0 conventions, schemas should allow additional properties. See [`KHR_lights_punctual`](2.0/Khronos/KHR_lights_punctual) as an example.
 
