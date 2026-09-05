@@ -1,0 +1,35 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "node.KHR_audio_environment.schema.json",
+    "title": "KHR_audio_environment glTF Node Extension",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "listener": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "Index into KHR_audio_environment.listeners[]. The listener inherits this node's transform."
+        },
+        "environment": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "Index into KHR_audio_environment.environments[]. Declares an environment zone at this node."
+        },
+        "shape": { "$ref": "zoneShape.schema.json" },
+        "blendDistance": {
+            "type": "number",
+            "description": "Width in meters of the crossfade band, measured inward from the zone boundary.",
+            "minimum": 0.0,
+            "default": 0.0
+        },
+        "priority": {
+            "type": "integer",
+            "description": "Zone precedence when zones overlap; higher wins.",
+            "default": 0
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "oneOf": [
+        { "required": ["listener"] },
+        { "required": ["environment", "shape"] }
+    ]
+}
