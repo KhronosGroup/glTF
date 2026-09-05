@@ -1,0 +1,51 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "light",
+    "type": "object",
+    "description": "An image based environment light.",
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "irradianceCoefficients": {
+            "description": "Declares spherical harmonic coefficients for irradiance up to l=2. This is a 9x3 array.",
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+            },
+            "minItems": 9,
+            "maxItems": 9
+        },
+        "cubemap": {
+            "type": "integer",
+            "description": "Texture reference to one of the declared cubemaps in this extension.",
+        },
+        "boundingBoxMin": {
+            "description": "Local boundingbox min. The minimum 3D point of the cubemap boundingbox. In world coordinates (meters)",
+            "type": "array",
+                "items": {
+                    "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+        },
+        "boundingBoxMax": {
+            "description": "Local boundingbox max. The maximum 3D point of the cubemap boundingbox. In world coordinates (meters)",
+            "type": "array",
+                "items": {
+                    "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "cubemap",
+    ]
+}
