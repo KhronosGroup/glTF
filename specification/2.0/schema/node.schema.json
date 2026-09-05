@@ -83,7 +83,7 @@
         "extensions": { },
         "extras": { }
     },
-    "dependencies": {
+    "dependentRequired": {
         "weights": [ "mesh" ],
         "skin": [ "mesh" ]
     },
