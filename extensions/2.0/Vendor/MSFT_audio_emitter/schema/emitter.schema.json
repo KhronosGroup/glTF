@@ -1,0 +1,80 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Emitter",
+    "type": "object",
+    "description": "Audio Emitters refer to one or more clips and define rendering properties.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "distanceModel": {
+            "type": "string",
+            "enum": [ "linear", "inverse", "exponential" ],
+            "default": "exponential",
+            "description": "Attenuation function to use on the audio source as it moves away from the listener.",
+            "gltf_detailedDescription": "Attenuation function to use on the audio source as it moves away from the listener. The attenuation calculation is done in emitter space."
+        },
+        "refDistance": {
+            "type": "number",
+            "default": 1,
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "description": "A reference distance for reducing volume as source moves further from the listener."
+        },
+        "maxDistance": {
+            "type": "number",
+            "default": 256,
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "description": "The maximum distance between source and listener outside of which there will be no sound.",
+            "gltf_detailedDescription": "The maximum distance between source and listener outside of which there will be no sound. Must be larger than refDistance and only applies to linear distanceModel."
+        },
+        "rolloffFactor": {
+            "type": "number",
+            "default": 1,
+            "minimum": 0,
+            "description": "Factor at which attenuation occurs as the source moves further from the listener.",
+            "gltf_detailedDescription": "Factor at which attenuation occurs as the source moves further from the listener. Value must be <= 1 if distanceModel is linear, unbounded otherwise."
+        },
+        "innerAngle": {
+            "type": "number",
+            "description": "Size of cone in radians for a directional sound in which there will be no attenuation.",
+            "gltf_detailedDescription": "Size of cone in radians for a directional sound in which there will be no attenuation. The cone will be symmetrical and face the forward direction (Z+). The outerAngle value must be greater than or equal to the innerAngle value. If neither innerAngle or outerAngle are defined the emitter will behave as an omnidirectional source. ",
+            "minimum": 0.0,
+            "maximum": 3.141592653589793,
+            "default": 3.141592653589793
+        },
+        "outerAngle": {
+            "type": "number",
+            "description": "Size of cone in radians for a directional sound outside of which there will be no sound. Listener angles between innerAngle and outerAngle will falloff linearly.",
+            "gltf_detailedDescription": "Size of cone in radians for a directional sound outside of which there will be no sound. Listener angles between innerAngle and outerAngle will falloff linearly. The cone will be symmetrical and face the forward direction (Z+). The outerAngle value must be greater than or equal to the innerAngle value. If neither innerAngle or outerAngle are defined the emitter will behave as an omnidirectional source. ",
+            "minimum": 0.0,
+            "maximum": 3.141592653589793,
+            "default": 3.141592653589793
+        },
+        "loop": {
+            "type": "boolean",
+            "description": "Selected source must be played in loops.",
+            "default": false
+        },
+        "volume": {
+            "type": "number",
+            "description": "Playback volume.",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 1.0
+        },
+        "clips": {
+            "type": "array",
+            "items": {
+                "$ref": "emitterClip.schema.json"
+            }, 
+            "minItems": 1 
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "additionalProperties": false,
+    "required": [
+        "clips"
+    ]
+}
