@@ -2790,7 +2790,7 @@ The core glTF 2.1 specification includes the following shape types:
 | `"box"`      | An axis-aligned box with a size per-axis, centered at the origin in local space, with normals facing outwards along each axis.
 | `"capsule"`  | A capsule, centered at the origin in local space with potentially different radii at each end, equivalent to the convex hull of two spheres located along the Y axis (in local space) at a specified distance, with normals facing outwards.
 | `"concave"`  | A concave mesh-based shape, relative to the local space, with normals facing the same way as the mesh's face normals determined by the triangle winding order.
-| `"convex"`   | A convex mesh-based shape, relative to the local space, with normals facing outwards, away from the center of the convex hull.
+| `"convex"`   | A convex mesh-based shape, relative to the local space, with normals facing outwards, away from the center of the convex shape.
 | `"cylinder"` | A cylinder, centered at the origin in local space with potentially different radii at each end, equivalent to the convex hull of two circles in the X/Z plane positioned along the Y axis at a specified distance, with the top cap normal facing along the +Y axis, the bottom cap normal facing along the -Y axis, and the side normals facing outwards along the X/Z plane.
 | `"plane"`    | A plane centered at the origin in local space, optionally with finite extents, with normal along the +Y axis in local space. The plane is one-sided.
 | `"sphere"`   | A sphere, centered at the origin in local space with a radius equal in all directions, with normals facing outwards.
@@ -2809,9 +2809,9 @@ The `concave` and `convex` shape types are defined by a mesh, specified by a `me
 - The primitive **MUST** have a triangle-based `mode`, meaning `TRIANGLES` (4), `TRIANGLE_STRIP` (5), or `TRIANGLE_FAN` (6), and **MUST** have a `POSITION` attribute.
 - The generated shape **MUST** take into account morphing from any `mesh.weights` present.
 - Meshes used by shapes are **RECOMMENDED** to be watertight, manifold, and not self-intersecting, but this is not required.
-- Meshes used by convex shapes **MUST** be pre-computed convex hulls with a non-zero volume.
+- Meshes used by convex shapes **MUST** be pre-computed convex meshes with a non-zero volume.
 - Meshes used by convex shapes **MUST** have the triangles wound such that the normals face outwards from the center of the convex shape. The `NORMAL` attribute is ignored by convex shapes.
-- Meshes used by convex shapes **SHOULD** surround the local origin, such that the local origin is inside the convex hull, but this is not required.
+- Meshes used by convex shapes **SHOULD** surround the local origin, such that the local origin is inside the convex shape, but this is not required.
 
 Mesh-based shapes use meshes directly. Shapes do not take into account node weights, skinning, or anything else related to `node.mesh` instancing.
 
