@@ -871,9 +871,17 @@ Multiple bounding volumes defined in a node hierarchy form a bounding volume hie
 
 Bounding volumes may be used to defer loading of content based on application-specific criteria, such as the angular size on a player's camera, or any other metric. Bounding volumes may be used to restrict rendering, interactions, or anything else to a specific volume of space. Implementations may choose to use bounding volumes for any purpose.
 
-The tightness or looseness of the bounding volume may be customized by the asset author depending on the use case. For example, a bounding volume used for a skinned mesh is **RECOMMENDED** to be large enough to contain the mesh in all reasonable deformation states, such as the possible poses of a character. Similarly, a bounding volume placed on a parent with multiple animated children is **RECOMMENDED** to be large enough to contain all of the children in all reasonable animation states. Alternatively, such a parent could simply not define a bounding volume, and dynamically rely on the bounding volumes of its children, if any.
+The tightness or looseness of the bounding volume may be customized by the asset author depending on the use case. For example, a bounding volume used for a skinned mesh is **RECOMMENDED** to be large enough to contain the mesh in all reasonable deformation states, such as the possible poses of the skinned geometry. Similarly, a bounding volume placed on a parent with multiple animated children is **RECOMMENDED** to be large enough to contain all of the children in all reasonable animation states. Alternatively, such a parent could simply not define a bounding volume, and dynamically rely on the bounding volumes of its children, if any.
 
-Skinned mesh nodes with bounding volumes **SHOULD** be placed as children of the skeleton root node (if the skin defines a skeleton root node), or as a sibling of a root of its joint hierarchy. This allows the bounding volume to be transformed together with the skeletal hierarchy, such that root motion is applied to the bounding volume. This keeps the skinned mesh's bounding volume consistent with its skin-joint-node-determined visual representation.
+[NOTE]
+.Implementation Note
+====
+A bounding volume defined on a skinned mesh node is transformed by the mesh node's world transform (the composition of the node's local transform with all ancestor transforms), not by the skin's joint transforms. Because a skinned mesh node's own transform is ignored for the skinning computation, the mesh node's position in the scene hierarchy affects only the bounding volume, not the deformed geometry.
+
+If an ancestor node's animated transform displaces the skinned geometry (for example, a translation animation targeting a joint or a navigation node), the skinned mesh node needs to be a descendant of that animated node for its bounding volume to track the displacement. A mesh node placed as a sibling of the displaced node will not inherit that displacement, and the bounding volume will remain stationary while the deformed mesh moves away from it. Animation applied to the root of the skinned joints therefore diverges from a bounding volume placed in parallel with the joint hierarchy: such a volume tracks the animation only when defined on the displaced node itself or on one of its descendants. See <<joint-hierarchy,Joint Hierarchy>>.
+
+Node placement determines the bounding volume's world transform (translation, rotation, and scale inherited from ancestors); it does not account for skinned deformation. Bounding volumes are not skeleton-aware: a volume follows joint motion only through the transforms inherited from its node's ancestors. Per-frame tracking of skinned deformation (for example, recomputing bounds from posed joint transforms) would require runtime handling not defined by this specification. Skinned deformation may cause vertices to exceed any statically-defined volume regardless of the mesh node's placement.
+====
 
 `"box"`` and `"sphere"` are the supported shape types for bounding volumes due to their simplicity and efficiency. Additional shape types **MAY** be allowed via extensions.
 
@@ -1558,7 +1566,9 @@ glTF 2.1 meshes support Linear Blend Skinning via skin objects, joint hierarchie
 
 Skins are stored in the `skins` array of the asset. Each skin is defined by a **REQUIRED** `joints` property that lists the indices of nodes used as joints to pose the skin and an **OPTIONAL** `inverseBindMatrices` property that points to an accessor with inverse bind matrices data used to bring coordinates being skinned into the same space as each joint.
 
-The order of joints is defined by the `skin.joints` array and it **MUST** match the order of `inverseBindMatrices` accessor elements (when the latter is present). The `skeleton` property (if present) points to the node that is the common root of a joints hierarchy or to a direct or indirect parent node of the common root.
+The order of joints is defined by the `skin.joints` array and it **MUST** match the order of `inverseBindMatrices` accessor elements (when the latter is present). The `skeleton` property (if present) identifies the skeleton root of the skin: the common root of the skin's joints hierarchy or an ancestor thereof.
+
+The skeleton root **SHOULD** be defined. When defined, it **SHOULD** be an ancestor of every node whose `skin` property references this skin, it **SHOULD** be the lowest common ancestor of the skin's joints and the nodes that reference the skin, and it **MAY** itself be a joint node.
 
 [NOTE]
 .Implementation Note
