@@ -1032,7 +1032,7 @@ If the `byteOffset` property is not defined, it is assumed to be zero.
 [NOTE]
 .Example
 ====
-The following snippet defines two buffer views: the first holds the indices for an indexed triangle set, and the second holds the vertex data for the triangle set.
+The following snippet defines two buffer views: the first holds the vertex indices for an indexed mesh primitive, and the second holds the vertex data for a mesh primitive.
 
 [source,json]
 ----
@@ -1540,7 +1540,7 @@ Any node **MAY** contain one mesh, defined in its `mesh` property. The mesh **MA
 
 A _mesh_ is defined as an array of _primitives_.
 
-A primitive object describes vertex attributes (data associated with each vertex), primitive topology (e.g., triangle set), vertex connectivity, and an optional material.
+A primitive object describes vertex attributes (data associated with each vertex), primitive topology (e.g., triangle list), vertex connectivity, and an optional material.
 
 Vertex attribute values are provided by accessors associated with vertex attribute semantics defined in the `attributes` property, primitive topology is defined in the enumerated `mode` property, and vertex connectivity is either directly derived from the order of attribute values, or it is defined by the index values provided by the accessor referenced by the `indices` property.
 
@@ -1549,7 +1549,7 @@ The material used for rendering the primitive is defined by the `material` prope
 [NOTE]
 .Implementation Note
 ====
-Splitting one mesh into several primitives can be useful to limit the number of vertices per draw call or to assign different materials to different parts of the mesh.
+Splitting one mesh into several primitives can be useful to limit the amount of geometry rendered per a single draw call or to assign different materials to different parts of the mesh.
 ====
 
 [NOTE]
@@ -1597,9 +1597,11 @@ Properties of the `attributes` object **SHOULD** belong to one of the following 
 
 Attribute semantic names not belonging to any of these categories are out of scope of this Specification and **SHOULD NOT** be present in the `attributes` object.
 
-The following table provides attribute semantic names with their compatible accessor types and effective accessor component types for attribute semantics defined in this Specification. Future specification versions or extensions **MAY** define additional compatible types and/or effective component types for existing attribute semantics.
+The following table provides attribute semantic names with their compatible accessor types and effective accessor component types for the attribute semantics defined in this Specification. Any combination of types and/or effective component types not present in this table **MUST NOT** be used for attribute semantics defined in this Specification.
 
-Accessors of the _uint32_ effective component type **MUST NOT** be used for any vertex attribute semantic, including application-specific semantics, unless explicitly enabled by future specification versions or extensions.
+Future specification versions or extensions **MAY** define new attribute semantics as well as additional compatible types and/or effective component types for existing attribute semantics.
+
+Accessors of the _uint32_ effective component type **SHOULD NOT** be used for any vertex attribute semantic, including application-specific semantics, unless explicitly enabled by future specification versions or extensions.
 
 [options="header",cols="20%,20%,30%,30%"]
 |====
@@ -1613,7 +1615,7 @@ Accessors of the _uint32_ effective component type **MUST NOT** be used for any 
 | `COLOR_n`     | VEC3 +
                   VEC4            | _float32_ +
                                     _unorm8_ +
-                                    _unorm16_                   | RGB or RGBA vertex color linear multiplier
+                                    _unorm16_                   | RGB or RGBA vertex color
 | `JOINTS_n`    | VEC4            | _uint8_ +
                                     _uint16_                    | See <<skinned-mesh-attributes,Skinned Mesh Attributes>>
 | `WEIGHTS_n`   | VEC4            | _float32_ +
@@ -1621,24 +1623,30 @@ Accessors of the _uint32_ effective component type **MUST NOT** be used for any 
                                     _unorm16_                   | See <<skinned-mesh-attributes,Skinned Mesh Attributes>>
 |====
 
-The `TEXCOORD_n`, `COLOR_n`, `JOINTS_n`, and `WEIGHTS_n` attribute semantic property names are stored in the form `[semantic]_[index]`, where `[index]` is a non-negative decimal integer, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. Additionally, the following rules apply to the `[index]` syntax:
+The `TEXCOORD_n`, `COLOR_n`, `JOINTS_n`, and `WEIGHTS_n` attribute semantic property names have the form `[semantic]_[index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. The following rules apply to the `[index]` syntax:
 
-- the `[index]` values **MUST NOT** use leading zeroes for positive index values, e.g., `TEXCOORD_01` is invalid;
-- the `[index]` values **MUST NOT** have more than nine digits.
+- the `[index]` value **MUST** be a non-negative decimal integer;
+- the `[index]` value **MUST NOT** use leading zeroes for positive index values, e.g., `TEXCOORD_01` is invalid;
+- the `[index]` value **MUST NOT** have more than nine digits.
 
-Indexed attribute semantics **MUST NOT** have gaps, i.e., if an indexed attribute semantic with index `n` is present for any positive `n`, then the same indexed attribute semantic name with index `n-1` **MUST** also be present.
+[NOTE]
+====
+In other words, the `[index]` value is a decimal number from 0 to 999999999 without leading zeros.
+====
+
+Any attribute semantic name that starts with `TEXCOORD_`, `COLOR_`, `JOINTS_`, or `WEIGHTS_` characters that are not followed by a valid index value is invalid and **MUST NOT** be present.
+
+Index values used for the same attribute semantic within a single primitive **MUST NOT** have gaps, i.e., if an indexed attribute semantic name with index `n` is present for any positive `n`, then the same indexed attribute semantic name with index `n-1` **MUST** also be present.
 
 Skinning-related attribute semantics are always used together, so either both `JOINTS_n` and `WEIGHTS_n` names **MUST** be present or none for any given `n`.
 
-Among all possible indexed attribute semantic names, client implementations **SHOULD** support at least `TEXCOORD_0` and `TEXCOORD_1`, `COLOR_0`, and `JOINTS_0`/`WEIGHTS_0`.
+Among all possible indexed attribute semantic names, client implementations **SHOULD** support at least `TEXCOORD_0` and `TEXCOORD_1`, `COLOR_0`, and `JOINTS_0` with `WEIGHTS_0`.
 
 Attribute data accessed with floating-point accessors **MUST NOT** contain infinite or NaN values.
 
 Accessors for the `POSITION` semantic **MUST** have their bounds, i.e., `min` and `max` properties, defined.
 
 The W components provided by accessors for the `TANGENT` semantic **MUST** have the absolute value of stem:[1.0].
-
-When a `COLOR_n` attribute uses an accessor of the `"VEC3"` type, its alpha component is assumed to have a value of stem:[1.0].
 
 All components of each `COLOR_0` accessor element **MUST** be in the stem:[[0.0, 1.0\]] range.
 
@@ -1647,67 +1655,97 @@ All attribute accessors for a given primitive **MUST** have the same number of e
 [[meshes-topology]]
 ==== Topology and Connectivity
 
-If the primitive's `indices` property is not defined, the total number of vertices of the primitive is equal to the value of the `count` property of any attribute accessor, and the order of vertices is defined by the order of accessors' elements.
+Accessors referenced from the `attributes` object only provide attribute values without implying any specific topology or connectivity. Assembling the mesh primitive from those attribute values is controlled by the `indices` and `mode` properties.
 
-If the primitive's `indices` property is defined, the total number of vertices of the primitive is equal to the value of the `count` property of the indices accessor, and the order of vertices is defined by the values provided by the indices accessor. All values provided by the indices accessor **MUST** be less than the value of the `count` properties of the attribute accessors.
-
-The accessor referenced by the `indices` property **MUST** have the `"SCALAR"` type and any of the _uint8_, _uint16_, or _uint32_ effective component types; the accessor **MUST NOT** provide the maximum possible value for its component type, i.e., 255 for _uint8_, 65535 for _uint16_, or 4294967295 for _uint32_.
+If the primitive's `indices` property is not defined, the mesh primitive is assembled by taking all elements of the attribute accessors in the order as they are provided by the accessors. The total number of the primitive's vertices is equal to the value of the `count` property of any attribute accessor referenced from the primitive's `attributes` object.
 
 [NOTE]
 .Implementation Note
 ====
-The maximum values trigger primitive restart in some graphics APIs and would require client implementations to rebuild the index buffer.
+In other words, the attribute values of the stem:[i]-th vertex of the mesh primitive are given by the stem:[i]-th elements of the corresponding accessors. For example, the position and normal of the first vertex of the mesh primitive are given by the first elements of the accessors referenced by the `POSITION` and `NORMAL` attributes, respectively; the position and normal of the second vertex of the mesh primitive are given by the second elements of those accessors, and so on.
+
+This kind of data layout is often called "`non-indexed`" because there is no indirection between the primitive's vertices and the attribute values. It is typically used for topology types that do not reuse the same vertex multiple times, such as point lists, line strips, or triangle strips (see below).
 ====
 
-The number of vertices of the primitive **MUST** be valid for the topology type used:
+If the primitive's `indices` property is defined, it refers to the accessor that provides vertex indices, and the mesh primitive is assembled by taking the elements of the vertex indices accessor and fetching the corresponding elements of the attribute accessors in the order as they are provided by the vertex indices accessor. The total number of the primitive's vertices is equal to the value of the `count` property of the vertex indices accessor.
 
-* For _points_, it **MUST** be positive.
-* For _line loops_ and _line strips_, it **MUST** be greater than or equal to two.
-* For _triangle strips_ and _triangle fans_, it **MUST** be greater than or equal to three.
-* For _lines_, it **MUST** be positive and divisible by two.
-* For _triangles_, it **MUST** be positive and divisible by three.
+[NOTE]
+.Implementation Note
+====
+In other words, the attribute values of the stem:[i]-th vertex of the mesh primitive are given by the stem:[k_i]-th elements of the corresponding accessors, where stem:[k_i] is the stem:[i]-th element value of the vertex indices accessor. Let's say the `POSITION` accessor provides five elements stem:[{ p_0, p_1, p_2, p_3, p_4 }], and the vertex indices accessor provides the following six elements stem:[{ 1, 2, 4, 2, 3, 4 }]. Then the mesh primitive has six vertices with positions stem:[{ p_1, p_2, p_4, p_2, p_3, p_4 }]. Note that the index values do not have to be unique or cover all possible accessor elements.
 
-Topology types are defined as follows.
+If there are multiple vertex attributes, the same index values are used for all of them. For example, it is not possible to specify separate index values for positions and normals, so representing a cube made of twelve triangles with positions and flat normals would require 24 unique index values.
 
-* **Points**
+This kind of data layout is often called "`indexed`" and it is typically used for topology types that reuse colocated vertices, such as triangle lists or line lists (see below).
+====
+
+The accessor referenced by the `indices` property **MUST** have the `"SCALAR"` type and any of the _uint8_, _uint16_, or _uint32_ effective component types.
+
+All values provided by the indices accessor **MUST** be less than the value of the `count` properties of the attribute accessors, i.e., each index value **MUST** refer to an existing vertex attribute value.
+
+Additionally, the accessor **MUST NOT** provide the maximum possible value for its component type, i.e., 255 for _uint8_, 65535 for _uint16_, or 4294967295 for _uint32_.
+
+[NOTE]
+.Implementation Note
+====
+The maximum values unconditionally trigger primitive restart in some graphics APIs and would require client implementations to rebuild the index data.
+====
+
+The rest of this section uses the "`number of the primitive's vertices`" term as defined above, i.e., the value of the `count` property of the vertex indices accessor if it is defined, or the value of the `count` property of the attribute accessors otherwise. In all cases, the number of the primitive's vertices **MUST** be positive.
+
+The primitive's vertices are connected based on the value of the enumerated `mode` property that defines the topology type of the mesh primitive. The following list provides all topology types defined by this specification. Most topology types have specific requirements for the number of the primitive's vertices.
+
+* **Point Lists**
 +
 Each vertex defines a single point primitive, according to the equation:
 
-  {empty}:: [eq]#p~i~ = {v~i~}#
+  {empty}:: stem:[P_i = { v_i }]
 
 * **Line Strips**
 +
+The number of the primitive's vertices **MUST** be greater than or equal to two.
++
 One line primitive is defined by each vertex and the following vertex, according to the equation:
 
-  {empty}:: [eq]#p~i~ = {v~i~, v~i+1~}#
+  {empty}:: stem:[P_i = { v_i, v_{i+1} }]
 
 * **Line Loops**
 +
+The number of the primitive's vertices **MUST** be greater than or equal to two.
++
 Loops are the same as line strips except that a final segment is added from the final specified vertex to the first vertex.
 
-* **Lines**
+* **Line Lists**
++
+The number of the primitive's vertices **MUST** be divisible by two.
 +
 Each consecutive pair of vertices defines a single line primitive, according to the equation:
 
-  {empty}:: [eq]#p~i~ = {v~2i~, v~2i+1~}#
+  {empty}:: stem:[P_i = { v_{2i}, v_{2i+1} }]
 
-* **Triangles**
+* **Triangle Lists**
++
+The number of the primitive's vertices **MUST** be divisible by three.
 +
 Each consecutive set of three vertices defines a single triangle primitive, according to the equation:
 
-  {empty}:: [eq]#p~i~ = {v~3i~, v~3i+1~, v~3i+2~}#
+  {empty}:: stem:[P_i = { v_{3i}, v_{3i+1}, v_{3i+2} }]
 
 * **Triangle Strips**
 +
+The number of the primitive's vertices **MUST** be greater than or equal to three.
++
 One triangle primitive is defined by each vertex and the two vertices that follow it, according to the equation:
 
-  {empty}:: [eq]#p~i~ = {v~i~, v~i+(1+i%2)~, v~i+(2-i%2)~}#
+  {empty}:: stem:[P_i = { v_i, v_{i+(1+i%2)}, v_{i+(2-i%2)} }]
 
 * **Triangle Fans**
 +
+The number of the primitive's vertices **MUST** be greater than or equal to three.
++
 Triangle primitives are defined around a shared common vertex, according to the equation:
 
-  {empty}:: [eq]#p~i~ = {v~i+1~, v~i+2~, v~0~}#
+  {empty}:: stem:[P_i = { v_{i+1}, v_{i+2}, v_0 }]
 
 Mesh geometry **SHOULD NOT** contain degenerate lines or triangles, i.e., lines or triangles that use the same vertex more than once per topology primitive.
 
@@ -1728,6 +1766,8 @@ The bitangent vectors are computed by taking the cross product of the XYZ compon
 +++++
 \vec{B} = (\vec{N_{xyz}} \times \vec{T_{xyz}}) \cdot T_w
 +++++
+
+When a `COLOR_n` attribute uses an accessor of the `"VEC3"` type, its alpha component is assumed to have a value of stem:[1.0].
 
 [[morph-targets]]
 ==== Morph Targets
