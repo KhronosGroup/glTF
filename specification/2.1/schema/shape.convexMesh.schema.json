@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "shape.convex.schema.json",
+    "$id": "shape.convexMesh.schema.json",
     "title": "Convex Mesh Shape",
     "type": "object",
     "description": "A convex triangular mesh shape.",

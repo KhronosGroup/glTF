@@ -16,13 +16,13 @@
                     "const": "capsule"
                 },
                 {
-                    "const": "concave"
-                },
-                {
-                    "const": "convex"
+                    "const": "convexMesh"
                 },
                 {
                     "const": "cylinder"
+                },
+                {
+                    "const": "mesh"
                 },
                 {
                     "const": "plane"
@@ -45,20 +45,20 @@
             "description": "Parameter values defining a capsule shape.",
             "$ref": "shape.capsule.schema.json"
         },
-        "concave": {
-            "type": "object",
-            "description": "Parameter values defining a concave mesh shape.",
-            "$ref": "shape.concave.schema.json"
-        },
-        "convex": {
+        "convexMesh": {
             "type": "object",
             "description": "Parameter values defining a convex mesh shape.",
-            "$ref": "shape.convex.schema.json"
+            "$ref": "shape.convexMesh.schema.json"
         },
         "cylinder": {
             "type": "object",
             "description": "Parameter values defining a cylinder shape.",
             "$ref": "shape.cylinder.schema.json"
+        },
+        "mesh": {
+            "type": "object",
+            "description": "Parameter values defining a generic mesh shape.",
+            "$ref": "shape.mesh.schema.json"
         },
         "plane": {
             "type": "object",
