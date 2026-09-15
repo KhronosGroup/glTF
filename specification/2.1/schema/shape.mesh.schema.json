@@ -1,0 +1,15 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "shape.mesh.schema.json",
+    "title": "Generic Mesh Shape",
+    "type": "object",
+    "description": "A generic triangular mesh shape, which may be either concave or convex.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "mesh": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the mesh defining the geometry for this shape."
+        }
+    },
+    "required": [ "mesh" ]
+}
