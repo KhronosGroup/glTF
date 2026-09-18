@@ -8,16 +8,16 @@
     "$ref": "glTFProperty.schema.json",
     "properties": {
         "tileAvailability": {
-            "$ref": "availability.schema.json",
+            "$ref": "3DTILES_subtree.availability.schema.json",
             "description": "The availability of tiles in the subtree.",
             "gltf_detailedDescription": "The availability of tiles in the subtree. The availability bitstream is a 1D boolean array where tiles are ordered by their level in the subtree and Morton index within that level. A tile's availability is determined by a single bit, 1 meaning a tile exists at that spatial index, and 0 meaning it does not. The number of elements in the array is `(N^subtreeLevels - 1)/(N - 1)` where N is 4 for subdivision scheme `QUADTREE` and 8 for `OCTREE`. Availability may be stored in a buffer view or as a constant value that applies to all tiles. If a non-root tile's availability is 1 its parent tile's availability must also be 1. `tileAvailability.constant: 0` is disallowed, as subtrees must have at least one tile."
         },
         "contentAvailability": {
-            "$ref": "availability.schema.json",
+            "$ref": "3DTILES_subtree.availability.schema.json",
             "description": "The availability of contents in the subtree."
         },
         "childSubtreeAvailability": {
-            "$ref": "availability.schema.json",
+            "$ref": "3DTILES_subtree.availability.schema.json",
             "description": "The availability of child subtrees.",
             "gltf_detailedDescription": "The availability of children subtrees. The availability bitstream is a 1D boolean array where subtrees are ordered by their Morton index in the level of the tree immediately below the bottom row of the subtree. A child subtree's availability is determined by a single bit, 1 meaning a subtree exists at that spatial index, and 0 meaning it does not. The number of elements in the array is `N^subtreeLevels` where N is 4 for subdivision scheme `QUADTREE` and 8 for `OCTREE`. Availability may be stored in a buffer view or as a constant value that applies to all child subtrees. If availability is 0 for all child subtrees, then the tileset does not subdivide further."
         },
