@@ -137,5 +137,5 @@ The following example describes a voxel tileset containing two metadata values i
 
 ## Schema
 
-- [gltf.3DTILES_tileset_voxels.schema.json](schema/gltf.3DTILES_tileset_voxels.schema.json)
+- [glTF.3DTILES_tileset_voxels.schema.json](schema/glTF.3DTILES_tileset_voxels.schema.json)
 - [padding.schema.json](schema/padding.schema.json)

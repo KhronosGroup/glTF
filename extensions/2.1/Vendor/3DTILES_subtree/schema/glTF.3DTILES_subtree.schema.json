@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "gltf.3DTILES_subtree.schema.json",
+    "$id": "glTF.3DTILES_subtree.schema.json",
     "title": "Subtree",
     "type": "object",
     "description": "An object describing tile, content, and child subtree availability, attributes, and properties.",

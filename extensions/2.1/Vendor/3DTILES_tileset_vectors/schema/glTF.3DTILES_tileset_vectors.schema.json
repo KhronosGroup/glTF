@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "gltf.3DTILES_tileset_vectors.schema.json",
+    "$id": "glTF.3DTILES_tileset_vectors.schema.json",
     "title": "3DTILES_tileset_vectors",
     "type": "object",
     "description": "3D Tiles vector content extension. Specifies that a tileset's tiles contains vector point, line, or polygon geometries with intrinsic semantic meaning, but without intrinsic rendering intent.",
