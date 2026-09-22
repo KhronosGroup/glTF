@@ -132,4 +132,5 @@ Loaders conforming to this extension MUST adhere to the following:
 
 
 ## Resources
-- Codec code link: to be updated (coming soon)
+- https://gitlab.khronos.org/3dformats/3dgs-codec-comparison/-/tree/EGSC?ref_type=heads
+- Related tools https://github.com/UHD-World-Association/spatial-vivid-egsc
