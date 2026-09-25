@@ -2152,8 +2152,15 @@ glTF 2.0 separates texture access into three distinct types of objects: Textures
 [[textures]]
 === Textures
 
-Textures are stored in the asset's `textures` array. A texture is defined by an image index, denoted by the `source` property and a sampler index (`sampler`). For example:
+glTF 2.0 supports only static 2D textures.
 
+Textures are stored in the asset's `textures` array. A texture is defined by the `source` and `sampler` properties that define the texture's image and sampler, respectively.
+
+The image provides texture's data, and the sampler defines wrapping and filtering modes for the texture.
+
+[NOTE]
+.Example
+====
 [source,json]
 ----
 {
@@ -2165,18 +2172,23 @@ Textures are stored in the asset's `textures` array. A texture is defined by an 
     ]
 }
 ----
+====
 
-glTF 2.0 supports only static 2D textures.
-
-When `texture.source` is undefined, the image **SHOULD** be provided by an extension or application-specific means, otherwise the texture object is undefined.
+When the `source` property of a texture is undefined, the texture's image **SHOULD** be provided by an extension or application-specific means, otherwise the texture's image is undefined and using the texture could result in undefined rendering results.
 
 [NOTE]
 .Implementation Note
 ====
-Client implementations may render such textures with a predefined placeholder image or being filled with some error color (usually magenta).
+Client implementations could render such textures with a predefined placeholder image or being filled with an error color (e.g., magenta).
 ====
 
-When `texture.sampler` is undefined, a sampler with repeat wrapping (in both directions) and auto filtering **MUST** be used.
+When the `sampler` property of a texture is undefined, a sampler with repeat wrapping in both directions and implementation-dependent default texture filtering is used.
+
+[NOTE]
+.Implementation Note
+====
+This behavior matches the default state of a sampler object with all its properties omitted.
+====
 
 
 [[images]]
