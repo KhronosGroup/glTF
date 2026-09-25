@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_gaussian_splatting_transport",
+    "type": "object",
+    "description": "MPEG transport and streaming extension for KHR_gaussian_splatting. Provides alternative SH coefficient layouts, progressive download signaling, timed media support, and mesh stitching.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "shEncoding": {
+            "$ref": "MPEG_gaussian_splatting_transport.shEncoding.schema.json"
+        },
+        "stitching": {
+            "$ref": "MPEG_gaussian_splatting_transport.stitching.schema.json"
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["shEncoding"]
+}

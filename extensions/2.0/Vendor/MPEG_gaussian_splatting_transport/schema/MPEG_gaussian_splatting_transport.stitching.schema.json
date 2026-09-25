@@ -1,0 +1,63 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_gaussian_splatting_transport.stitching",
+    "type": "object",
+    "description": "Parameters to attach Gaussian splats to a 3D triangular mesh primitive.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "mesh": {
+            "type": "integer",
+            "description": "Index of the mesh in the glTF meshes array to which the Gaussian splats are stitched.",
+            "minimum": 0
+        },
+        "primitive": {
+            "type": "integer",
+            "description": "Index of the mesh primitive to which the Gaussian splats are stitched.",
+            "minimum": 0
+        },
+        "vertices": {
+            "type": "integer",
+            "description": "Accessor index containing vertex indices defining splat locations on mesh vertices. Mutually exclusive with faces and weights.",
+            "minimum": 0
+        },
+        "faces": {
+            "type": "integer",
+            "description": "Accessor index containing face indices defining splat locations on triangular faces. Mutually exclusive with vertices.",
+            "minimum": 0
+        },
+        "weights": {
+            "type": "integer",
+            "description": "Accessor index containing barycentric weight triplets (VEC3). Required when faces is present.",
+            "minimum": 0
+        },
+        "distances": {
+            "type": "integer",
+            "description": "Accessor index containing scalar distance values along the vertex or face normal.",
+            "minimum": 0
+        },
+        "displacement": {
+            "type": "integer",
+            "description": "Accessor index containing 3D displacement vectors (VEC3) from the mesh surface.",
+            "minimum": 0
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "oneOf": [
+        {
+            "required": ["vertices"],
+            "not": {
+                "anyOf": [
+                    { "required": ["faces"] },
+                    { "required": ["weights"] }
+                ]
+            }
+        },
+        {
+            "required": ["faces", "weights"],
+            "not": {
+                "required": ["vertices"]
+            }
+        }
+    ]
+}

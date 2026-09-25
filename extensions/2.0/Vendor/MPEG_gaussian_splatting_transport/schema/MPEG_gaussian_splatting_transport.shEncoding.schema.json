@@ -1,0 +1,74 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_gaussian_splatting_transport.shEncoding",
+    "type": "object",
+    "description": "Signals how SH coefficients are encoded for this splat primitive.",
+    "allOf": [
+        { "$ref": "glTFProperty.schema.json" },
+        {
+            "if": {
+                "properties": {
+                    "layout": { "const": "mpegProgressive" }
+                }
+            },
+            "then": {
+                "required": ["mpegProgressive"]
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "layout": { "const": "mpegPerChannel" }
+                }
+            },
+            "then": {
+                "required": ["mpegPerChannel"]
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "layout": { "const": "mpegProgressive" },
+                    "maxDegree": { "minimum": 2 }
+                },
+                "required": ["layout", "maxDegree"]
+            },
+            "then": {
+                "properties": {
+                    "mpegProgressive": {
+                        "required": ["first", "second"]
+                    }
+                }
+            }
+        }
+    ],
+    "properties": {
+        "layout": {
+            "type": "string",
+            "description": "Indicates the encoding mode of the SH coefficients.",
+            "enum": ["khrPacked", "mpegProgressive", "mpegPerChannel"]
+        },
+        "maxDegree": {
+            "type": "integer",
+            "description": "Maximum SH degree available to the receiver.",
+            "minimum": 0,
+            "maximum": 3
+        },
+        "dcFromColor0": {
+            "type": "boolean",
+            "description": "If true, receivers reconstruct the degree-0 (DC) term from COLOR_0.rgb. If false, degree 0 is carried explicitly via KHR_gaussian_splatting:SH_DEGREE_0_COEF_0."
+        },
+        "mpegProgressive": {
+            "$ref": "MPEG_gaussian_splatting_transport.shEncoding.mpegProgressive.schema.json"
+        },
+        "mpegPerChannel": {
+            "$ref": "MPEG_gaussian_splatting_transport.shEncoding.mpegPerChannel.schema.json"
+        },
+        "progressive": {
+            "$ref": "MPEG_gaussian_splatting_transport.shEncoding.progressive.schema.json"
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["layout", "maxDegree", "dcFromColor0"]
+}
