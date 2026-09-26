@@ -1,0 +1,108 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "reverb.schema.json",
+    "title": "KHR_audio_environment Reverb",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "type": {
+            "description": "Reverb realization.",
+            "anyOf": [
+                { "const": "parametric" },
+                { "const": "impulseResponse" },
+                { "type": "string" }
+            ],
+            "default": "parametric"
+        },
+        "preset": {
+            "description": "Named starting point for parametric reverb. Explicit parameters override preset values.",
+            "anyOf": [
+                { "const": "generic" },
+                { "const": "smallRoom" },
+                { "const": "mediumRoom" },
+                { "const": "largeRoom" },
+                { "const": "bathroom" },
+                { "const": "concertHall" },
+                { "const": "cathedral" },
+                { "const": "cave" },
+                { "const": "arena" },
+                { "const": "hangar" },
+                { "const": "corridor" },
+                { "const": "forest" },
+                { "const": "underwater" },
+                { "type": "string" }
+            ]
+        },
+        "mix": {
+            "type": "number",
+            "description": "Return level of the environment's reverb bus into the final mix.",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 0.5
+        },
+        "decayTime": {
+            "type": "number",
+            "description": "RT60 decay time in seconds at mid frequencies.",
+            "exclusiveMinimum": 0.0,
+            "default": 1.5
+        },
+        "decayHFRatio": {
+            "type": "number",
+            "description": "Ratio of high-frequency decay time to decayTime.",
+            "exclusiveMinimum": 0.0,
+            "maximum": 2.0,
+            "default": 0.83
+        },
+        "reflectionsGain": {
+            "type": "number",
+            "description": "Level of early reflections. Linear.",
+            "minimum": 0.0,
+            "default": 1.0
+        },
+        "reflectionsDelay": {
+            "type": "number",
+            "description": "Delay of the first reflection relative to the direct sound, in seconds.",
+            "minimum": 0.0,
+            "default": 0.02
+        },
+        "reverbGain": {
+            "type": "number",
+            "description": "Level of the late diffuse tail. Linear.",
+            "minimum": 0.0,
+            "default": 1.0
+        },
+        "reverbDelay": {
+            "type": "number",
+            "description": "Onset of the late tail relative to the first reflection, in seconds.",
+            "minimum": 0.0,
+            "default": 0.04
+        },
+        "diffusion": {
+            "type": "number",
+            "description": "Echo density of the late tail.",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 1.0
+        },
+        "density": {
+            "type": "number",
+            "description": "Modal density of the late tail.",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 1.0
+        },
+        "audio": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "Index into KHR_audio_emitter.audio[] for impulse-response data. Required when type is impulseResponse."
+        },
+        "normalize": {
+            "type": "boolean",
+            "description": "Impulse response only: apply equal-power normalization to the IR.",
+            "default": true
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "if": { "properties": { "type": { "const": "impulseResponse" } }, "required": ["type"] },
+    "then": { "required": ["audio"] }
+}
