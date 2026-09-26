@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "NV_texture_swizzle glTF extension",
+  "type": "object",
+  "description": "glTF extension to specify textures as a subset of channels from an image",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+  "properties": {
+    "options": {
+      "type": "array",
+      "description": "The array of options for the texture swizzle.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the images node which points to a source image file."
+          },
+          "channels": {
+            "type": "array",
+            "description": "The array of channel indices.",
+            "gltf_detailedDescription": "The indices specify which channels of the source image must be used to fill the R, G, B, A channels of the texture, in that order. The value of -1 means the texture channel is not used and may be filled with arbitrary data.",
+            "items": {
+                "type": "integer",
+                "minimum": -1
+            },
+            "minItems": 1,
+            "maxItems": 4
+          },
+          "arrayLayer": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The layer of the image array to get texture data from."
+          }
+        },
+        "required": [
+          "source",
+          "channels"
+        ]
+      },
+      "minItems": 1
+    },
+    "extensions": {},
+    "extras": {}
+  },
+  "required": [
+    "options"
+  ]
+}
