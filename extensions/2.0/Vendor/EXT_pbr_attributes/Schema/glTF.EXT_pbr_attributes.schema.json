@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_pbr_attributes glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the metalness-roughness material model from Physically-Based Rendering (PBR) as a per vertex attribute.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "baseColorAttribSpace": {
+            "type": "string",
+            "enum": ["sRGB", "linear"],
+            "description": "Color space of baseColor (COLOR_0) vertex attribute",
+            "default": "linear",
+            "gltf_detailedDescription": "This enum provides information about the color space interpretation of the baseColor (COLOR_0) vertex attribute. If not present, 'linear' is assumed. If color space is sRGB, the implementation is required to convert the color to linear space in order to correctly interpolate via the fixed function pipeline."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
