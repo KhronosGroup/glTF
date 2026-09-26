@@ -1,0 +1,22 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "material.EXT_materials_anisotropy_openpbr.schema.json",
+    "title": "EXT_materials_anisotropy_openpbr glTF Material Extension",
+    "type": "object",
+    "description": "OpenPBR anisotropy interpretation extension.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "openPbrAnisotropyEnabled": {
+            "type": "boolean",
+            "description": "Enables OpenPBR interpretation of anisotropy parameters.",
+            "default": false
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "additionalProperties": false
+}
