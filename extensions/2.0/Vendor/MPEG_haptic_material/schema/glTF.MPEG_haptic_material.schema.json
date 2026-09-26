@@ -1,0 +1,19 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title" : "MPEG_haptic_material",
+    "type" : "object",
+    "description" : "glTF extension to specify haptic materials",
+    "properties" : {
+        "materials" : {
+            "type": "array",
+            "items": {
+                "$ref" : "MPEG_haptic_material.material.schema.json"
+            },
+            "minItems": 1,
+            "description": "Provides a list of haptic materials at the glTF file level to enable haptic support."
+        },
+      "extensions": {},
+      "extras": {}
+    },
+    "required":["materials"]
+}
