@@ -1,0 +1,54 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "mesh.primitive.EXT_primitive_voxels.schema.json",
+    "title": "EXT_primitive_voxels glTF Mesh Primitive extension",
+    "type": "object",
+    "description": "`EXT_primitive_voxels` extension for a primitive in a glTF model to indicate voxel-based volumetric data",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "shape": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of the shape in `KHR_implicit_shapes` that the voxel grid adheres to."
+        },
+        "dimensions": {
+            "type": "array",
+            "description": "Dimensions of the voxel grid. The values are interpreted with respect to the shape indicated by `KHR_implicit_shapes`.",
+            "items": {
+                "type": "integer",
+                "minimum": 1
+            },
+            "minItems": 3,
+            "maxItems": 3
+        },
+        "padding": {
+            "description": "The optional padding of the voxels.",
+            "$ref": "padding.schema.json"
+        },
+        "noData": {
+            "description": "A plain JSON object, where each key corresponds to an existing semantic in the primitive's `attributes`, and each value is the attribute's `noData` value. A `noData` value represents missing data — also known as a sentinel value — wherever it appears.",
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+                "type": "array",
+                    "description": "The `noData` value for the corresponding attribute. Array elements **MUST** follow the accessor's `componentType`, and its length must align with the accessor's `type`.",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 1,
+                    "maxItems": 16
+            }
+        }
+    },
+    "required": [
+        "shape",
+        "dimensions"
+    ]
+}

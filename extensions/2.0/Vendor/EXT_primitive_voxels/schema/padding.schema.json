@@ -1,0 +1,36 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "padding.schema.json",
+    "title": "Padding",
+    "type": "object",
+    "description": "The padding around a voxel grid. Specifies how many rows of attribute data come from neighboring grids in each dimension.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "before": {
+            "type": "array",
+            "items": {
+                "type": "integer",
+                "minimum": 0
+            },
+            "minItems": 3,
+            "maxItems": 3
+        },
+        "after": {
+            "type": "array",
+            "items": {
+                "type": "integer",
+                "minimum": 0
+            },
+            "minItems": 3,
+            "maxItems": 3
+        }
+    },
+    "required": [
+        "before",
+        "after"
+    ]
+}
