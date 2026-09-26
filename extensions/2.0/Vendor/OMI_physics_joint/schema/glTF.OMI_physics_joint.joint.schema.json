@@ -1,0 +1,28 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.OMI_physics_joint.schema.json",
+    "title": "OMI_physics_joint Physics Joint Settings",
+    "type": "object",
+    "description": "Parameters describing joint settings, which may be referenced by nodes to constrain or drive the relative motion of pairs of nodes.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "limits": {
+            "type": "array",
+            "description": "The set of limits which constrain relative motion between a pair of nodes.",
+            "items": {
+                "type": "object",
+                "$ref": "glTF.OMI_physics_joint.joint.limit.schema.json"
+            }
+        },
+        "drives": {
+            "type": "array",
+            "description": "The set of drives applying forces to this joint. Drives include motors and springs.",
+            "items": {
+                "type": "object",
+                "$ref": "glTF.OMI_physics_joint.joint.drive.schema.json"
+            }
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

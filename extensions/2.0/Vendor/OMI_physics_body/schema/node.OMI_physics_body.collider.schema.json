@@ -1,0 +1,27 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "node.OMI_physics_body.collider.schema.json",
+    "title": "OMI_physics_body Node Collider Property",
+    "type": "object",
+    "description": "Parameters describing the geometric shape used for collisions.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "shape": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The id of the shape referenced by this node.",
+            "default": -1
+        },
+        "physicsMaterial": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the physics material in the top level physicsMaterials array.",
+            "default": -1
+        },
+        "collisionFilter": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the filter information in the top level collisionFilters array.",
+            "default": -1
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

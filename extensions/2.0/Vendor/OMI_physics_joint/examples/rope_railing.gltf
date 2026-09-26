@@ -1,0 +1,703 @@
+{
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [0.0750000029802322, 0.550000011920929, 0.0750000029802322],
+            "min": [-0.07500000298023, -0.55000001192093, -0.07500000298023],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [1, 0, 1, 1],
+            "min": [-1, -0.00001525948755, -1, 1],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [1, 1, 1],
+            "min": [-1, -1, -1],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [1, 1],
+            "min": [0, 0],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 36,
+            "max": [23],
+            "min": [0],
+            "normalized": false,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [0.05, 0.25, 0.05],
+            "min": [-0.05, -0.25, -0.05],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 6,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [1, 0, 1, 1],
+            "min": [-1, -0.00002157984454, -1, 1],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 7,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [1, 1, 1],
+            "min": [-1, -1, -1],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 8,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [1, 1],
+            "min": [0, 0],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 9,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 10368,
+            "max": [1949],
+            "min": [0],
+            "normalized": false,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 10,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [0.05, 0.25, 0.05],
+            "min": [-0.05, -0.25, -0.05],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 11,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [1, 0, 1, 1],
+            "min": [-1, -0.00002157984454, -1, 1],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 12,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [1, 1, 1],
+            "min": [-1, -1, -1],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 13,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [1, 1],
+            "min": [0, 0],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 14,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 10368,
+            "max": [1949],
+            "min": [0],
+            "normalized": false,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 15,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [0.05, 0.25, 0.05],
+            "min": [-0.05, -0.25, -0.05],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 16,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [1, 0, 1, 1],
+            "min": [-1, -0.00002157984454, -1, 1],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 17,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [1, 1, 1],
+            "min": [-1, -1, -1],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 18,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [1, 1],
+            "min": [0, 0],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 19,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 10368,
+            "max": [1949],
+            "min": [0],
+            "normalized": false,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 20,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [0.05, 0.25, 0.05],
+            "min": [-0.05, -0.25, -0.05],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 21,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [1, 0, 1, 1],
+            "min": [-1, -0.00002157984454, -1, 1],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 22,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [1, 1, 1],
+            "min": [-1, -1, -1],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 23,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [1, 1],
+            "min": [0, 0],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 24,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 10368,
+            "max": [1949],
+            "min": [0],
+            "normalized": false,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 25,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [0.05, 0.25, 0.05],
+            "min": [-0.05, -0.25, -0.05],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 26,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [1, 0, 1, 1],
+            "min": [-1, -0.00002157984454, -1, 1],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 27,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [1, 1, 1],
+            "min": [-1, -1, -1],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 28,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1950,
+            "max": [1, 1],
+            "min": [0, 0],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 29,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 10368,
+            "max": [1949],
+            "min": [0],
+            "normalized": false,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 30,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [0.0750000029802322, 0.550000011920929, 0.0750000029802322],
+            "min": [-0.07500000298023, -0.55000001192093, -0.07500000298023],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 31,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [1, 0, 1, 1],
+            "min": [-1, -0.00001525948755, -1, 1],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 32,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [1, 1, 1],
+            "min": [-1, -1, -1],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 33,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [1, 1],
+            "min": [0, 0],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 34,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 36,
+            "max": [23],
+            "min": [0],
+            "normalized": false,
+            "type": "SCALAR"
+        }
+    ],
+    "asset": {
+        "generator": "Godot Engine v4.4.dev.custom_build@1855bc0edb8caa8c7d0ee19f3867674bc7aeb43f",
+        "version": "2.0"
+    },
+    "bufferViews": [
+        { "buffer": 0, "byteLength": 288, "byteOffset": 0, "byteStride": 12, "target": 34962 },
+        { "buffer": 0, "byteLength": 384, "byteOffset": 288, "byteStride": 16, "target": 34962 },
+        { "buffer": 0, "byteLength": 288, "byteOffset": 672, "byteStride": 12, "target": 34962 },
+        { "buffer": 0, "byteLength": 192, "byteOffset": 960, "byteStride": 8, "target": 34962 },
+        { "buffer": 0, "byteLength": 72, "byteOffset": 1152, "target": 34963 },
+        { "buffer": 0, "byteLength": 23400, "byteOffset": 1224, "byteStride": 12, "target": 34962 },
+        { "buffer": 0, "byteLength": 31200, "byteOffset": 24624, "byteStride": 16, "target": 34962 },
+        { "buffer": 0, "byteLength": 23400, "byteOffset": 55824, "byteStride": 12, "target": 34962 },
+        { "buffer": 0, "byteLength": 15600, "byteOffset": 79224, "byteStride": 8, "target": 34962 },
+        { "buffer": 0, "byteLength": 20736, "byteOffset": 94824, "target": 34963 },
+        { "buffer": 0, "byteLength": 23400, "byteOffset": 115560, "byteStride": 12, "target": 34962 },
+        { "buffer": 0, "byteLength": 31200, "byteOffset": 138960, "byteStride": 16, "target": 34962 },
+        { "buffer": 0, "byteLength": 23400, "byteOffset": 170160, "byteStride": 12, "target": 34962 },
+        { "buffer": 0, "byteLength": 15600, "byteOffset": 193560, "byteStride": 8, "target": 34962 },
+        { "buffer": 0, "byteLength": 20736, "byteOffset": 209160, "target": 34963 },
+        { "buffer": 0, "byteLength": 23400, "byteOffset": 229896, "byteStride": 12, "target": 34962 },
+        { "buffer": 0, "byteLength": 31200, "byteOffset": 253296, "byteStride": 16, "target": 34962 },
+        { "buffer": 0, "byteLength": 23400, "byteOffset": 284496, "byteStride": 12, "target": 34962 },
+        { "buffer": 0, "byteLength": 15600, "byteOffset": 307896, "byteStride": 8, "target": 34962 },
+        { "buffer": 0, "byteLength": 20736, "byteOffset": 323496, "target": 34963 },
+        { "buffer": 0, "byteLength": 23400, "byteOffset": 344232, "byteStride": 12, "target": 34962 },
+        { "buffer": 0, "byteLength": 31200, "byteOffset": 367632, "byteStride": 16, "target": 34962 },
+        { "buffer": 0, "byteLength": 23400, "byteOffset": 398832, "byteStride": 12, "target": 34962 },
+        { "buffer": 0, "byteLength": 15600, "byteOffset": 422232, "byteStride": 8, "target": 34962 },
+        { "buffer": 0, "byteLength": 20736, "byteOffset": 437832, "target": 34963 },
+        { "buffer": 0, "byteLength": 23400, "byteOffset": 458568, "byteStride": 12, "target": 34962 },
+        { "buffer": 0, "byteLength": 31200, "byteOffset": 481968, "byteStride": 16, "target": 34962 },
+        { "buffer": 0, "byteLength": 23400, "byteOffset": 513168, "byteStride": 12, "target": 34962 },
+        { "buffer": 0, "byteLength": 15600, "byteOffset": 536568, "byteStride": 8, "target": 34962 },
+        { "buffer": 0, "byteLength": 20736, "byteOffset": 552168, "target": 34963 },
+        { "buffer": 0, "byteLength": 288, "byteOffset": 572904, "byteStride": 12, "target": 34962 },
+        { "buffer": 0, "byteLength": 384, "byteOffset": 573192, "byteStride": 16, "target": 34962 },
+        { "buffer": 0, "byteLength": 288, "byteOffset": 573576, "byteStride": 12, "target": 34962 },
+        { "buffer": 0, "byteLength": 192, "byteOffset": 573864, "byteStride": 8, "target": 34962 },
+        { "buffer": 0, "byteLength": 72, "byteOffset": 574056, "target": 34963 }
+    ],
+    "buffers": [{ "byteLength": 574128, "uri": "rope_railing0.bin" }],
+    "cameras": [{ "perspective": { "yfov": 1.30899693899575, "zfar": 4000, "znear": 0.05 }, "type": "perspective" }],
+    "extensions": {
+        "OMI_physics_joint": {
+            "physicsJoints": [
+                { "limits": [{ "damping": 1, "linearAxes": [0, 1, 2], "max": 0, "min": 0, "stiffness": 0.3 }] }
+            ]
+        },
+        "OMI_physics_shape": {
+            "shapes": [
+                { "box": { "size": [0.15, 1.1, 0.15] }, "type": "box" },
+                { "capsule": { "height": 0.5, "radius": 0.05 }, "type": "capsule" }
+            ]
+        }
+    },
+    "extensionsUsed": ["GODOT_single_root", "OMI_physics_body", "OMI_physics_joint", "OMI_physics_shape"],
+    "materials": [
+        {
+            "extensions": {},
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [1, 1, 1, 1],
+                "metallicFactor": 0,
+                "roughnessFactor": 1
+            }
+        },
+        {
+            "extensions": {},
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [1, 1, 1, 1],
+                "metallicFactor": 0,
+                "roughnessFactor": 1
+            }
+        },
+        {
+            "extensions": {},
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [1, 1, 1, 1],
+                "metallicFactor": 0,
+                "roughnessFactor": 1
+            }
+        },
+        {
+            "extensions": {},
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [1, 1, 1, 1],
+                "metallicFactor": 0,
+                "roughnessFactor": 1
+            }
+        },
+        {
+            "extensions": {},
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [1, 1, 1, 1],
+                "metallicFactor": 0,
+                "roughnessFactor": 1
+            }
+        },
+        {
+            "extensions": {},
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [1, 1, 1, 1],
+                "metallicFactor": 0,
+                "roughnessFactor": 1
+            }
+        },
+        {
+            "extensions": {},
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [1, 1, 1, 1],
+                "metallicFactor": 0,
+                "roughnessFactor": 1
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "extras": { "targetNames": [] },
+            "primitives": [
+                {
+                    "attributes": { "NORMAL": 2, "POSITION": 0, "TANGENT": 1, "TEXCOORD_0": 3 },
+                    "indices": 4,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": { "targetNames": [] },
+            "primitives": [
+                {
+                    "attributes": { "NORMAL": 7, "POSITION": 5, "TANGENT": 6, "TEXCOORD_0": 8 },
+                    "indices": 9,
+                    "material": 1,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": { "targetNames": [] },
+            "primitives": [
+                {
+                    "attributes": { "NORMAL": 12, "POSITION": 10, "TANGENT": 11, "TEXCOORD_0": 13 },
+                    "indices": 14,
+                    "material": 2,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": { "targetNames": [] },
+            "primitives": [
+                {
+                    "attributes": { "NORMAL": 17, "POSITION": 15, "TANGENT": 16, "TEXCOORD_0": 18 },
+                    "indices": 19,
+                    "material": 3,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": { "targetNames": [] },
+            "primitives": [
+                {
+                    "attributes": { "NORMAL": 22, "POSITION": 20, "TANGENT": 21, "TEXCOORD_0": 23 },
+                    "indices": 24,
+                    "material": 4,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": { "targetNames": [] },
+            "primitives": [
+                {
+                    "attributes": { "NORMAL": 27, "POSITION": 25, "TANGENT": 26, "TEXCOORD_0": 28 },
+                    "indices": 29,
+                    "material": 5,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": { "targetNames": [] },
+            "primitives": [
+                {
+                    "attributes": { "NORMAL": 32, "POSITION": 30, "TANGENT": 31, "TEXCOORD_0": 33 },
+                    "indices": 34,
+                    "material": 6,
+                    "mode": 4
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        { "children": [1, 6, 11, 16, 21, 26, 31, 34], "name": "RopeRailing" },
+        {
+            "children": [2, 4],
+            "extensions": { "OMI_physics_body": { "motion": { "type": "static" } } },
+            "name": "PoleLeft",
+            "translation": [-1.1, 0.55, 0]
+        },
+        {
+            "children": [3],
+            "extensions": { "OMI_physics_body": { "collider": { "shape": 0 } } },
+            "name": "PoleColliderLeft"
+        },
+        { "mesh": 0, "name": "PoleMeshLeft" },
+        {
+            "extensions": { "OMI_physics_joint": { "connectedNode": 5, "joint": 0 } },
+            "name": "PinJoint1",
+            "translation": [0.07, 0.43, 0]
+        },
+        {
+            "name": "RopeSegmentLeftJointAttachment",
+            "rotation": [0, 0, 0.258819142609008, 0.965925800162279],
+            "translation": [-0.19722438793381, 0.00160250112074917, -0]
+        },
+        {
+            "children": [7, 9, 5],
+            "extensions": { "OMI_physics_body": { "motion": { "type": "dynamic" } } },
+            "name": "RopeSegmentLeft",
+            "rotation": [0, 0, -0.25881914260901, 0.965925800162279],
+            "translation": [-0.86, 0.88, 0]
+        },
+        {
+            "children": [8],
+            "extensions": { "OMI_physics_body": { "collider": { "shape": 1 } } },
+            "name": "RopeColliderLeft",
+            "rotation": [0, 0, 0.707106796640861, 0.707106765732234]
+        },
+        { "mesh": 1, "name": "RopeMeshLeft" },
+        {
+            "extensions": { "OMI_physics_joint": { "connectedNode": 10, "joint": 0 } },
+            "name": "PinJoint2",
+            "rotation": [0, 0, 0.258819142609008, 0.965925800162279],
+            "translation": [0.233205163097861, -0.00392300274365, 0.000000000000000111611896513389]
+        },
+        {
+            "name": "RopeSegmentLeftMiddleJointAttachment",
+            "rotation": [0, 0, 0.173648047484773, 0.984807775966826],
+            "translation": [-0.22469699189022, 0.0033512379401649, -0]
+        },
+        {
+            "children": [12, 14, 10],
+            "extensions": { "OMI_physics_body": { "motion": { "type": "dynamic" } } },
+            "name": "RopeSegmentLeftMiddle",
+            "rotation": [0, 0, -0.17364804748477, 0.984807775966826],
+            "translation": [-0.45, 0.68, 0]
+        },
+        {
+            "children": [13],
+            "extensions": { "OMI_physics_body": { "collider": { "shape": 1 } } },
+            "name": "RopeColliderLeftMiddle",
+            "rotation": [0, 0, 0.707106796640861, 0.707106765732234]
+        },
+        { "mesh": 2, "name": "RopeMeshLeftMiddle" },
+        {
+            "extensions": { "OMI_physics_joint": { "connectedNode": 15, "joint": 0 } },
+            "name": "PinJoint3",
+            "rotation": [0, 0, 0.173648047484773, 0.984807775966826],
+            "translation": [0.234093916114409, 0.0000689599576137456, 0]
+        },
+        { "name": "RopeSegmentMiddleJointAttachment", "translation": [-0.23000000000208, 0, 0] },
+        {
+            "children": [17, 19, 15],
+            "extensions": { "OMI_physics_body": { "motion": { "type": "dynamic" } } },
+            "name": "RopeSegmentMiddle",
+            "translation": [0, 0.6, 0]
+        },
+        {
+            "children": [18],
+            "extensions": { "OMI_physics_body": { "collider": { "shape": 1 } } },
+            "name": "RopeColliderMiddle",
+            "rotation": [0, 0, 0.707106796640861, 0.707106765732234]
+        },
+        { "mesh": 3, "name": "RopeMeshMiddle" },
+        {
+            "extensions": { "OMI_physics_joint": { "connectedNode": 20, "joint": 0 } },
+            "name": "PinJoint4",
+            "translation": [0.23, 0, 0]
+        },
+        {
+            "name": "RopeSegmentRightMiddleJointAttachment",
+            "rotation": [0, 0, -0.17364804748477, 0.984807775966826],
+            "translation": [-0.23409391611441, 0.0000689599576137456, -0]
+        },
+        {
+            "children": [22, 24, 20],
+            "extensions": { "OMI_physics_body": { "motion": { "type": "dynamic" } } },
+            "name": "RopeSegmentRightMiddle",
+            "rotation": [0, 0, 0.173648047484773, 0.984807775966826],
+            "translation": [0.45, 0.68, 0]
+        },
+        {
+            "children": [23],
+            "extensions": { "OMI_physics_body": { "collider": { "shape": 1 } } },
+            "name": "RopeColliderRightMiddle",
+            "rotation": [0, 0, 0.707106796640861, 0.707106765732234]
+        },
+        { "mesh": 4, "name": "RopeMeshRightMiddle" },
+        {
+            "extensions": { "OMI_physics_joint": { "connectedNode": 25, "joint": 0 } },
+            "name": "PinJoint5",
+            "rotation": [0, 0, -0.17364804748477, 0.984807775966826],
+            "translation": [0.224696991890219, 0.0033512379401649, 0.0000000000000000453421807645889]
+        },
+        {
+            "name": "RopeSegmentRightJointAttachment",
+            "rotation": [0, 0, -0.25881914260901, 0.965925800162279],
+            "translation": [-0.23320516309786, -0.00392300274365, -0]
+        },
+        {
+            "children": [27, 29, 25],
+            "extensions": { "OMI_physics_body": { "motion": { "type": "dynamic" } } },
+            "name": "RopeSegmentRight",
+            "rotation": [0, 0, 0.258819142609008, 0.965925800162279],
+            "translation": [0.86, 0.88, 0]
+        },
+        {
+            "children": [28],
+            "extensions": { "OMI_physics_body": { "collider": { "shape": 1 } } },
+            "name": "RopeColliderRight",
+            "rotation": [0, 0, 0.707106796640861, 0.707106765732234]
+        },
+        { "mesh": 5, "name": "RopeMeshRight" },
+        {
+            "extensions": { "OMI_physics_joint": { "connectedNode": 30, "joint": 0 } },
+            "name": "PinJoint6",
+            "rotation": [0, 0, -0.25881914260901, 0.965925800162279],
+            "translation": [0.197224387933806, 0.00160250112074917, 0]
+        },
+        { "name": "PoleRightJointAttachment", "translation": [-0.07, 0.43, 0] },
+        {
+            "children": [32, 30],
+            "extensions": { "OMI_physics_body": { "motion": { "type": "static" } } },
+            "name": "PoleRight",
+            "translation": [1.1, 0.55, 0]
+        },
+        {
+            "children": [33],
+            "extensions": { "OMI_physics_body": { "collider": { "shape": 0 } } },
+            "name": "PoleColliderRight"
+        },
+        { "mesh": 6, "name": "PoleMeshRight" },
+        { "camera": 0, "name": "Camera", "translation": [0, 0.6, 1.5] }
+    ],
+    "scene": 0,
+    "scenes": [{ "nodes": [0] }]
+}
