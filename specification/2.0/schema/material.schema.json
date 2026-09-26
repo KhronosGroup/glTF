@@ -77,7 +77,7 @@
             "gltf_detailedDescription": "Specifies whether the material is double sided. When this value is false, back-face culling is enabled. When this value is true, back-face culling is disabled and double-sided lighting is enabled. The back-face **MUST** have its normals reversed before the lighting equation is evaluated."
         }
     },
-     "dependencies" : {
+    "dependentRequired" : {
         "alphaCutoff" : ["alphaMode"]
     }
 }
