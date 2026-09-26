@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_clearcoat_darkening glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines the amount that the coat darkens the underlying surface due to internal reflections.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "clearcoatDarkeningFactor": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "The amount of physically-correct darkening of the clearcoat layer.",
+            "default": 1.0,
+            "gltf_detailedDescription": "The amount of physically-correct darkening of the clearcoat layer. If zero, no darkening due to internal reflections occurs."
+        },
+        "clearcoatDarkeningTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The clearcoat layer darkening texture.",
+            "gltf_detailedDescription": "The clearcoat layer darkening texture."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
