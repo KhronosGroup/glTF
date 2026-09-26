@@ -1,0 +1,126 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Node",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "kind": {
+            "type": "string",
+            "description": "The node kind discriminator."
+        },
+        "label": {
+            "type": "string",
+            "description": "An optional human-readable label."
+        },
+        "bypass": {
+            "type": "boolean",
+            "description": "When true, processing and filter nodes are bypassed.",
+            "default": false
+        },
+        "params": {
+            "type": "object",
+            "description": "Node-kind-specific parameters."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["kind", "params"],
+    "oneOf": [
+        {
+            "properties": {
+                "kind": { "enum": ["oscillator"] },
+                "params": { "$ref": "KHR_audio_graph.oscillator.schema.json" }
+            }
+        },
+        {
+            "properties": {
+                "kind": { "enum": ["gain"] },
+                "params": { "$ref": "KHR_audio_graph.gain.schema.json" }
+            }
+        },
+        {
+            "properties": {
+                "kind": { "enum": ["delay"] },
+                "params": { "$ref": "KHR_audio_graph.delay.schema.json" }
+            }
+        },
+        {
+            "properties": {
+                "kind": { "enum": ["waveshaper"] },
+                "params": { "$ref": "KHR_audio_graph.waveshaper.schema.json" }
+            }
+        },
+        {
+            "properties": {
+                "kind": { "enum": ["lowpass"] },
+                "params": { "$ref": "KHR_audio_graph.lowpass.schema.json" }
+            }
+        },
+        {
+            "properties": {
+                "kind": { "enum": ["highpass"] },
+                "params": { "$ref": "KHR_audio_graph.highpass.schema.json" }
+            }
+        },
+        {
+            "properties": {
+                "kind": { "enum": ["bandpass"] },
+                "params": { "$ref": "KHR_audio_graph.bandpass.schema.json" }
+            }
+        },
+        {
+            "properties": {
+                "kind": { "enum": ["lowshelf"] },
+                "params": { "$ref": "KHR_audio_graph.lowshelf.schema.json" }
+            }
+        },
+        {
+            "properties": {
+                "kind": { "enum": ["highshelf"] },
+                "params": { "$ref": "KHR_audio_graph.highshelf.schema.json" }
+            }
+        },
+        {
+            "properties": {
+                "kind": { "enum": ["peaking"] },
+                "params": { "$ref": "KHR_audio_graph.peaking.schema.json" }
+            }
+        },
+        {
+            "properties": {
+                "kind": { "enum": ["notch"] },
+                "params": { "$ref": "KHR_audio_graph.notch.schema.json" }
+            }
+        },
+        {
+            "properties": {
+                "kind": { "enum": ["allpass"] },
+                "params": { "$ref": "KHR_audio_graph.allpass.schema.json" }
+            }
+        },
+        {
+            "properties": {
+                "kind": { "enum": ["splitter"] },
+                "params": { "$ref": "KHR_audio_graph.splitter.schema.json" }
+            }
+        },
+        {
+            "properties": {
+                "kind": { "enum": ["channelmerger"] },
+                "params": { "$ref": "KHR_audio_graph.channelmerger.schema.json" }
+            }
+        },
+        {
+            "properties": {
+                "kind": { "enum": ["channelmixer"] },
+                "params": { "$ref": "KHR_audio_graph.channelmixer.schema.json" }
+            }
+        },
+        {
+            "properties": {
+                "kind": { "enum": ["audiomixer"] },
+                "params": { "$ref": "KHR_audio_graph.audiomixer.schema.json" }
+            }
+        }
+    ]
+}

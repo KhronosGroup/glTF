@@ -1,0 +1,46 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Graph",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "An optional human-readable graph name."
+        },
+        "nodes": {
+            "type": "array",
+            "description": "The graph's audio nodes.",
+            "items": {
+                "$ref": "KHR_audio_graph.node.schema.json"
+            },
+            "minItems": 1
+        },
+        "connections": {
+            "type": "array",
+            "description": "Edges between graph nodes.",
+            "items": {
+                "$ref": "KHR_audio_graph.connection.schema.json"
+            }
+        },
+        "inputs": {
+            "type": "array",
+            "description": "Bindings from KHR_audio_emitter sources into graph nodes.",
+            "items": {
+                "$ref": "KHR_audio_graph.input.schema.json"
+            },
+            "minItems": 1
+        },
+        "outputs": {
+            "type": "array",
+            "description": "Bindings from graph nodes to KHR_audio_emitter emitters.",
+            "items": {
+                "$ref": "KHR_audio_graph.output.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["nodes", "connections"]
+}
