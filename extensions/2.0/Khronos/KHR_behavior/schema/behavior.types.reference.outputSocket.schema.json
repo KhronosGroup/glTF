@@ -1,0 +1,15 @@
+{
+    "title": "Node Output Socket Reference",
+    "description": "Reference to the returned value of another node.",
+    "type": "object",
+    "properties": {
+        "$node": {
+            "type": "integer"
+        },
+        "socket": {
+            "description": "Identifier ",
+            "type": "string"
+        }
+    },
+    "required": ["$node"]
+}

@@ -1,0 +1,23 @@
+{
+    "title": "Less Comparison Node",
+    "properties": {
+        "type": {
+            "const": "math/less"
+        },
+        "flow": {
+            "type": "object",
+            "properties": {
+                "next": { "$ref": "behavior.node.flow.reference.schema.json" }
+            }
+        },
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "condition": { "$ref": "behavior.types.boolean.schema.json" }
+            },
+            "required": ["condition"]
+        }
+    },
+    "sockets": ["result"],
+    "required": ["type", "parameters"]
+}
