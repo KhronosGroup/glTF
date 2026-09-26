@@ -1,0 +1,11 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_data_sizes glTF extension",
+    "type": "object",
+    "description": "glTF extension that defines the asset data sizes.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "extensions": { },
+        "extras": { }
+    }
+}
