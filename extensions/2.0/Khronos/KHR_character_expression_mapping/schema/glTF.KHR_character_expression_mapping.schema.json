@@ -1,0 +1,57 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "KHR_character_expression_mapping glTF Document Extension",
+    "type": "object",
+    "description": "glTF extension that enables encoding multiple expression set mappings, mapping source expressions present in the model to target expressions that a runtime/endpoint understands.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "expressionSetMappings": {
+            "type": "object",
+            "description": "Dictionary of expression set mappings, where each key is a target expression set name.",
+            "additionalProperties": {
+                "type": "object",
+                "description": "Expression mapping dictionary where each key is a target expression name and each value is an array of source expression mappings.",
+                "additionalProperties": {
+                    "type": "array",
+                    "description": "Array of source expression mappings that contribute to the target expression.",
+                    "items": {
+                        "type": "object",
+                        "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+                        "properties": {
+                            "source": {
+                                "allOf": [
+                                    {
+                                        "$ref": "glTFid.schema.json"
+                                    }
+                                ],
+                                "description": "Index of the source expression in the top-level KHR_character_expression extension object.",
+                                "gltf_detailedDescription": "This value MUST be a valid index into the `expressions` array of the top-level `KHR_character_expression` extension object."
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "The name of the source expression.",
+                                "gltf_detailedDescription": "When defined, this value MUST exactly match the `expression` property of the expression referenced by `source`."
+                            },
+                            "weight": {
+                                "type": "number",
+                                "description": "Relative influence of this source expression on the target. Weights represent the proportional contribution needed to achieve the desired target result."
+                            },
+                            "extensions": { },
+                            "extras": { }
+                        },
+                        "required": [
+                            "source",
+                            "weight"
+                        ]
+                    },
+                    "minItems": 1
+                }
+            }
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "expressionSetMappings"
+    ]
+}

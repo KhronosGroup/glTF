@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 470" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- glTF Scene -->
+  <rect x="220" y="10" width="260" height="70" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="350" y="36" text-anchor="middle" font-size="12" fill="#2e7d32">glTF Scene</text>
+  <text x="350" y="56" text-anchor="middle" font-size="14" font-weight="bold" fill="#1b5e20">🎯 Target Node</text>
+  <text x="350" y="72" text-anchor="middle" font-size="11" fill="#555">KHR_node_lookat_target · hint: "gaze_target"</text>
+
+  <!-- Arrow down -->
+  <line x1="350" y1="80" x2="350" y2="110" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- World-Space Position -->
+  <rect x="250" y="115" width="200" height="40" rx="8" fill="#c8e6c9" stroke="#2e7d32" stroke-width="1.5"/>
+  <text x="350" y="140" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b5e20">World-Space Position</text>
+
+  <!-- Arrow down -->
+  <line x1="350" y1="155" x2="350" y2="180" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- VRM Pipeline background -->
+  <rect x="80" y="185" width="540" height="130" rx="10" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+  <text x="350" y="207" text-anchor="middle" font-size="13" font-weight="bold" fill="#0d47a1">VRM lookAt Pipeline</text>
+
+  <!-- Gaze Angle -->
+  <rect x="230" y="218" width="240" height="36" rx="8" fill="#fff" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="350" y="238" text-anchor="middle" font-size="12" fill="#333">Compute Gaze Angle</text>
+  <text x="350" y="250" text-anchor="middle" font-size="10" fill="#888">from offsetFromHeadBone</text>
+
+  <!-- Arrow down -->
+  <line x1="350" y1="254" x2="350" y2="268" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Range Maps -->
+  <rect x="230" y="272" width="240" height="36" rx="8" fill="#fff" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="350" y="292" text-anchor="middle" font-size="12" fill="#333">Apply Range Maps</text>
+  <text x="350" y="304" text-anchor="middle" font-size="10" fill="#888">clamp horizontal / vertical</text>
+
+  <!-- Arrow splits to two -->
+  <line x1="350" y1="308" x2="350" y2="330" stroke="#555" stroke-width="1.5"/>
+
+  <!-- KHR_character_expression background -->
+  <rect x="50" y="335" width="600" height="125" rx="10" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="350" y="357" text-anchor="middle" font-size="13" font-weight="bold" fill="#bf360c">KHR_character_expression</text>
+
+  <!-- lookAt.type diamond -->
+  <polygon points="350,365 400,385 350,405 300,385" fill="#ffe0b2" stroke="#e65100" stroke-width="1.5"/>
+  <text x="350" y="389" text-anchor="middle" font-size="10" font-weight="bold" fill="#bf360c">type?</text>
+
+  <!-- Left branch: joint -->
+  <line x1="300" y1="385" x2="180" y2="385" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="240" y="378" text-anchor="middle" font-size="10" fill="#777">bone</text>
+
+  <rect x="90" y="416" width="180" height="36" rx="8" fill="#fff" stroke="#e65100" stroke-width="1.5"/>
+  <text x="180" y="432" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">Joint Expression</text>
+  <text x="180" y="446" text-anchor="middle" font-size="9" fill="#888">KHR_character_expression_joint</text>
+
+  <!-- Left box connection -->
+  <line x1="180" y1="385" x2="180" y2="416" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Right branch: morphtarget -->
+  <line x1="400" y1="385" x2="520" y2="385" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="460" y="378" text-anchor="middle" font-size="10" fill="#777">expression</text>
+
+  <rect x="430" y="416" width="180" height="36" rx="8" fill="#fff" stroke="#e65100" stroke-width="1.5"/>
+  <text x="520" y="432" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">Morph Target Expression</text>
+  <text x="520" y="446" text-anchor="middle" font-size="9" fill="#888">KHR_character_expression_morphtarget</text>
+
+  <!-- Right box connection -->
+  <line x1="520" y1="385" x2="520" y2="416" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+</svg>
