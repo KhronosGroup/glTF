@@ -1,0 +1,25 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_recommendedspatialcomputingconfig.update.schema.json",
+    "type": "object",
+    "description": "Specifies the frequency of the update process.",
+    "properties": {
+        "occurences": {
+            "description": "An occurrence value: - ONCE = 0: the update is performed only once, for instance in case of a static real scene, -N_FRAME: the update is performed periodically, every N rendering frames, N depending on the dynamism of the real scene. The N value is provided in the frameNumber parameter. -AUTO: the update frequency is managed by the module that compute the representation. This module may perform an analysis to detect significant changes in the real world and start an update. This analysis may be performed from raw images data, like RGB images from a camera or depth images from a depth sensor.",
+            "type": "integer",
+            "enum": [
+                0, 1, 2
+                ],
+            "default": 0,
+            "gltf_detailedDescription":"Value is oneOf ONCE=0, N_FRAME=1, AUTO=2."
+        },
+        "numberOfFrames": {
+            "description": "Indicate the periodicity, in number of frames, of the update, when the occurrences value is N_FRAME.",
+            "type": "number"
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "allOf": [{ "$ref" : "glTFProperty.schema.json" }],
+    "required": []
+}
