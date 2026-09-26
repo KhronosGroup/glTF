@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Encoding Properties",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "sampleRate": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The audio sampling rate in Hertz."
+        },
+        "channels": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The number of audio channels."
+        },
+        "bitsPerSample": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The number of bits per sample."
+        },
+        "duration": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The total audio duration in seconds."
+        },
+        "samples": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The total number of samples."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["sampleRate", "channels"]
+}

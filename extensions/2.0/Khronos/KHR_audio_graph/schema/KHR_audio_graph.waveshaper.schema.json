@@ -1,0 +1,31 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Waveshaper Node",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "amount": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "The distortion amount."
+        },
+        "oversample": {
+            "type": "string",
+            "enum": ["none", "2x", "4x"],
+            "description": "The oversampling factor.",
+            "default": "none"
+        },
+        "curve": {
+            "type": "array",
+            "description": "An explicit shaping curve in the range [-1, 1].",
+            "items": {
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            }
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Peaking Filter Node",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "frequency": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The center frequency in Hertz."
+        },
+        "qualityFactor": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The filter bandwidth control.",
+            "default": 1.0
+        },
+        "gain": {
+            "type": "number",
+            "description": "The gain in decibels.",
+            "default": 0.0
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["frequency"]
+}
