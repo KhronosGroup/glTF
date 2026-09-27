@@ -1918,6 +1918,24 @@ Then the effective value of the vertex attribute stem:[A] for the vertex stem:[i
 A'_i = A_i + \sum_{m=0}^{M-1} \Delta{A}_{m,i} \cdot W_m
 +++++
 
+If the accessor providing stem:[A_i] values has fewer components than are otherwise supported for the vertex attribute semantic, the omitted components are considered present with their implied values for the purpose of this computation.
+
+[NOTE]
+.Implementation Note
+====
+For example, original `COLOR_n` values stored with the `"VEC3"` type imply that their alpha values are stem:[1.0] and thus `COLOR_n` delta values provided by `"VEC4"` accessors are applied as if the original values also used the `"VEC4"` type.
+====
+
+If the accessor providing latexmath:[\Delta{A}_{m,i}] values has fewer components than are otherwise supported for the vertex attribute semantic, the omitted components are considered zeros for the purpose of this computation.
+
+[NOTE]
+.Implementation Note
+====
+For example, deltas for the `TANGENT` vertex attribute semantic do not contain the W component so morph targets do not modify tangent space handedness.
+
+Similarly, deltas for `COLOR_n` vertex attribute semantics provided via `"VEC3"` accessors do not modify alpha components.
+====
+
 These computations **SHOULD** use at least 32-bit floating-point precision.
 
 Displacements for `POSITION`, `NORMAL`, and `TANGENT` attributes are applied before any transformation matrices affecting the mesh vertices such as skinning or node transforms.
@@ -1926,13 +1944,11 @@ When a mesh primitive does not specify tangents, client implementations **SHOULD
 
 When a mesh primitive does not specify normals, client implementations **MUST** calculate flat normals for each morph target; the provided tangents and their displacements (if present) are ignored.
 
-When `COLOR_n` deltas use an accessor of `"VEC3"` type, their alpha components are assumed to be zeros.
-
 Client implementations **SHOULD** clamp all `COLOR_0` attribute components to the to stem:[[0, 1\]] range after applying morph deltas.
 
 The number of morph targets is not limited. Client implementations **SHOULD** support at least eight morphed attributes. This means that they **SHOULD** support eight morph targets when each morph target has one attribute, four morph targets where each morph target has two attributes, or two morph targets where each morph target has three or four attributes.
 
-For assets that contain a higher number of morphed attributes, client implementations can choose to only use the eight attributes of the morph targets with the highest weights.
+For assets that contain more morphed attributes than could be efficiently supported, client implementations **SHOULD** choose morph targets with the highest weights.
 
 
 [[skins]]
