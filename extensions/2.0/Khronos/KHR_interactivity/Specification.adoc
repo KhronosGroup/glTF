@@ -4200,7 +4200,7 @@ The type `T` is determined by the `type` configuration value which points to the
 
 If the `pointer` configuration value is not provided, if it is not a string, if it is invalid (as defined in the previous sections), or if it contains template parameters `[value]`, `{value}`, `[duration]`, `{duration}`, `[p1]`, `{p1}`, `[p2]`, or `{p2}` the interactivity node is invalid and the graph **MUST** be rejected.
 
-If the `type` configuration value is not provided, if it is not a literal number, if it is not exactly representable as a 32-bit signed integer, if it is negative, if it is greater than or equal to the length of the `types` array, or if it point to the type entry with `bool` or `int` type signatures, the interactivity node is invalid and the graph **MUST** be rejected.
+If the `type` configuration value is not provided, if it is not a literal number, if it is not exactly representable as a 32-bit signed integer, if it is negative, if it is greater than or equal to the length of the `types` array, or if it points to the type entry with `bool` or `int` type signatures, the interactivity node is invalid and the graph **MUST** be rejected.
 
 If the number of input value sockets derived from the pointer template string plus four exceeds an implementation-specific limit on the maximum number of input value sockets, the graph **MUST** be rejected.
 
@@ -4758,7 +4758,7 @@ The following pointers represent the read-only properties defined in this sectio
 | Pointer                                                                   | Type
 | `/extensions/KHR_interactivity/asset/majorVersion`                        | `int`
 | `/extensions/KHR_interactivity/asset/minorVersion`                        | `int`
-| `/extensions/KHR_interactivity/asset/extensions/<EXTENSION_MANE>/enabled` | `bool`
+| `/extensions/KHR_interactivity/asset/extensions/<EXTENSION_NAME>/enabled` | `bool`
 |===
 
 === Implementation-Specific Runtime Limits
@@ -5241,7 +5241,7 @@ An interactivity node with the `math/E` operation with its declaration.
 
 === Input Value Sockets
 
-If the operation has input value sockets, the `values` object **MUST** be defined and it *MUST** have properties matching the input value socket ids defined by the declaration and/or configuration; if the `values` object does not have a corresponding property for each input value socket id, the interactivity node is invalid and the graph **MUST** be rejected. The `values` object **MAY** have additional properties not matching the input value socket ids of the operation; such properties have no effect on the operation but their values **MUST** still conform to the JSON schema and other rules defined in this section. If the operation does not have input value sockets, the `values` object **SHOULD NOT** be defined.
+If the operation has input value sockets, the `values` object **MUST** be defined and it **MUST** have properties matching the input value socket ids defined by the declaration and/or configuration; if the `values` object does not have a corresponding property for each input value socket id, the interactivity node is invalid and the graph **MUST** be rejected. The `values` object **MAY** have additional properties not matching the input value socket ids of the operation; such properties have no effect on the operation but their values **MUST** still conform to the JSON schema and other rules defined in this section. If the operation does not have input value sockets, the `values` object **SHOULD NOT** be defined.
 
 Some operations, e.g., `pointer/get` or `variable/get`, define their input value socket ids and/or types based on the operation's configuration. Therefore, the configuration **MAY** need to be processed prior to the input value sockets.
 
@@ -5384,7 +5384,7 @@ Each property of the `flows` object is a JSON object containing a **REQUIRED** `
 
 Socket ids referenced by the `socket` property are case-sensitive.
 
-The `node` property value **MUST** be an integer greater than the index of the current interactivity node and less then the total number of interactivity nodes, otherwise the interactivity node is invalid and the graph **MUST** be rejected.
+The `node` property value **MUST** be an integer greater than the index of the current interactivity node and less than the total number of interactivity nodes, otherwise the interactivity node is invalid and the graph **MUST** be rejected.
 
 [NOTE]
 .Rationale
