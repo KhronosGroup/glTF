@@ -837,7 +837,7 @@ Scenes are defined in the `scenes` array. A scene is defined by a set of root no
 
 The root JSON object's `scene` property (note singular) identifies which of the scenes **SHOULD** be displayed at load time. When the `scene` property is undefined, client implementations **MAY** delay rendering until a particular scene is requested.
 
-As of glTF 2.1, the ability to define more than one scene is deprecated. The `scenes` array **SHOULD** contain at most one scene, and if the `scene` property is defined, it **SHOULD** be set to `0`. When importing glTF 2.x assets, client implementations **SHOULD** use the `scene` property. When exporting glTF 2.1+ assets, client implementations **SHOULD NOT** include more than one scene in the `scenes` array or set the `scene` property to a value other than `0`.
+The ability to define more than one scene is deprecated. The `scenes` array **SHOULD** contain at most one scene, and if the `scene` property is defined, it **SHOULD** be set to `0`. For compatibility, client implementations **SHOULD** continue to honor the `scene` property and handle assets that contain more than one scene, while glTF 2.1+ assets **SHOULD NOT** include more than one scene or set the `scene` property to a value other than `0`.
 
 A glTF asset that does not contain any scenes **SHOULD** be treated as a library of individual entities, such as materials or meshes.
 
