@@ -1757,9 +1757,15 @@ Mesh geometry **SHOULD NOT** contain degenerate lines or triangles, i.e., lines 
 
 When positions are not specified, client implementations **SHOULD** skip primitive's rendering unless its positions are provided by other means (e.g., by an extension). This applies to both indexed and non-indexed geometry.
 
-When tangents are not specified, client implementations **SHOULD** calculate tangents using default <<mikktspace,MikkTSpace>> algorithms with the specified vertex positions, normals, and texture coordinates associated with the normal texture.
+When normals are not specified, the mesh primitive has implicit flat normals. The provided tangents are ignored in this case and thus they **SHOULD NOT** be present.
 
-When normals are not specified, client implementations **MUST** calculate flat normals and the provided tangents (if present) **MUST** be ignored.
+[NOTE]
+.Implementation Note
+====
+Flat normals mean that there is only one normal vector value per each rendered triangle. Depending on the mesh primitive connectivity, precomputing flat normals could require increasing the number of vertices and reassembling the mesh primitive.
+====
+
+When tangents are not specified and the material has a normal texture, the tangent vectors are calculated using default <<mikktspace,MikkTSpace>> algorithms with the vertex positions, normals (specified or generated as mentioned above), and texture coordinates associated with the normal texture.
 
 Vertices of the same triangle **SHOULD** have equal W components of their `TANGENT` values. When vertices of the same triangle have different W values, its tangent space is considered undefined.
 
@@ -1940,9 +1946,13 @@ These computations **SHOULD** use at least 32-bit floating-point precision.
 
 Displacements for `POSITION`, `NORMAL`, and `TANGENT` attributes are applied before any transformation matrices affecting the mesh vertices such as skinning or node transforms.
 
-When a mesh primitive does not specify tangents, client implementations **SHOULD** calculate tangents for each morph target using default <<mikktspace,MikkTSpace>> algorithms with the updated vertex positions, normals, and texture coordinates associated with the normal texture.
+If the mesh primitive does not specify normals, i.e., if they are implicitly flat, then each morph target also has flat normals, adjusted for the vertex position deltas if necessary.
 
-When a mesh primitive does not specify normals, client implementations **MUST** calculate flat normals for each morph target; the provided tangents and their displacements (if present) are ignored.
+If the mesh primitive does specify normals but a morph target does not provide deltas for them, the normal vectors remain intact for that morph target.
+
+If the tangent vectors were calculated for the mesh primitive (because they were not provided or because the provided tangent vectors were ignored), the tangent vector deltas are also calculated for each morph target using the same algorithms and vertex positions, normals, and texture coordinates with the corresponding deltas applied. The provided tangent deltas are ignored in this case and thus they **SHOULD NOT** be present.
+
+If the mesh primitive does specify normals and tangents but a morph target does not provide tangent deltas, the tangent vectors remain intact for that morph target.
 
 Client implementations **SHOULD** clamp all `COLOR_0` attribute components to the to stem:[[0, 1\]] range after applying morph deltas.
 
@@ -2137,7 +2147,9 @@ This example instantiates the same mesh twice: without any transforms and with t
 
 After applying the node's global transform, mesh vertex position values are meters.
 
-When a mesh primitive uses any triangle-based topology (i.e., _triangles_, _triangle strip_, or _triangle fan_), the determinant of the node's global transform defines the winding order of that primitive. If the determinant is a positive value, the winding order triangle faces is counterclockwise; in the opposite case, the winding order is clockwise.
+When a mesh primitive uses any triangle-based topology (i.e., _triangle lists_, _triangle strips_, or _triangle fans_), the determinant of the node's global transform defines the winding order of the instantiated mesh primitives:
+- if the determinant is a positive value, the front-facing triangles use the counterclockwise order, and the back-facing triangles use the clockwise order;
+- if the determinant is a negative value, the front-facing triangles use the clockwise order, and the back-facing triangles use the counterclockwise order.
 
 [NOTE]
 .Implementation Note
@@ -2467,7 +2479,7 @@ The metallic-roughness material model is defined by the following properties:
 
 The _base color_ has two different interpretations depending on the value of _metalness_. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used.
 
-The value for each property **MAY** be defined using factors and/or textures (e.g., `baseColorTexture` and `baseColorFactor`). If a texture is not given, all respective texture components within this material model **MUST** be assumed to have a value of `1.0`. If both factors and textures are present, the factor value acts as a linear multiplier for the corresponding texture values. A texture binding is defined by an `index` of a _texture_ object and an optional index of texture coordinates.
+The value for each property **MAY** be defined using factors and/or textures (e.g., `baseColorTexture` and `baseColorFactor`). If a texture is not given, all respective texture components within this material model have a value of `1.0`. The factor value is a linear multiplier for the corresponding texture components. A texture binding is defined by an `index` of a _texture_ object and an optional index of texture coordinates.
 
 The following example shows a material that uses a texture for its _base color_ property.
 
@@ -2635,7 +2647,7 @@ The `doubleSided` property specifies whether the material is double sided.
 
 When this value is false, back-face culling is enabled, i.e., only front-facing triangles are rendered.
 
-When this value is true, back-face culling is disabled and double sided lighting is enabled. The back-face **MUST** have its normals reversed before the lighting equation is evaluated.
+When this value is true, back-face culling is disabled, triangles are rendered from both sides, and the normal vectors of the back-facing triangles are negated.
 
 
 [[default-material]]
