@@ -32,6 +32,11 @@
             "maximum": 1.0,
             "gltf_detailedDescription": "The factor for the metalness of the material. This value defines a linear multiplier for the sampled metalness values of the metallic-roughness texture."
         },
+        "metallicRoughnessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The metallic-roughness texture.",
+            "gltf_detailedDescription": "The metallic-roughness texture. The metalness values are sampled from the B channel. The roughness values are sampled from the G channel. These values **MUST** be encoded with a linear transfer function. If other channels are present (R or A), they **MUST** be ignored for metallic-roughness calculations. When undefined, the texture **MUST** be sampled as having `1.0` in G and B components."
+        },
         "roughnessFactor": {
             "type": "number",
             "description": "The factor for the roughness of the material.",
@@ -39,13 +44,6 @@
             "minimum": 0.0,
             "maximum": 1.0,
             "gltf_detailedDescription": "The factor for the roughness of the material. This value defines a linear multiplier for the sampled roughness values of the metallic-roughness texture."
-        },
-        "metallicRoughnessTexture": {
-            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "The metallic-roughness texture.",
-            "gltf_detailedDescription": "The metallic-roughness texture. The metalness values are sampled from the B channel. The roughness values are sampled from the G channel. These values **MUST** be encoded with a linear transfer function. If other channels are present (R or A), they **MUST** be ignored for metallic-roughness calculations. When undefined, the texture **MUST** be sampled as having `1.0` in G and B components."
-        },
-        "extensions": { },
-        "extras": { }
+        }
     }
 }
