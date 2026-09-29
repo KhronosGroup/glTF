@@ -14,18 +14,16 @@
             "type": "string",
             "description": "Tool that generated this glTF model.  Useful for debugging."
         },
-        "version": {
-            "type": "string",
-            "description": "The glTF version in the form of `<major>.<minor>` that this asset targets.",
-            "pattern": "^(0|[1-9][0-9]{0,8})\\.(0|[1-9][0-9]{0,8})$"
-        },
         "minVersion": {
             "type": "string",
             "description": "The minimum glTF version in the form of `<major>.<minor>` that this asset targets. This property **MUST NOT** be greater than the asset version.",
             "pattern": "^(0|[1-9][0-9]{0,8})\\.(0|[1-9][0-9]{0,8})$"
         },
-        "extensions": { },
-        "extras": { }
+        "version": {
+            "type": "string",
+            "description": "The glTF version in the form of `<major>.<minor>` that this asset targets.",
+            "pattern": "^(0|[1-9][0-9]{0,8})\\.(0|[1-9][0-9]{0,8})$"
+        }
     },
     "required": [ "version" ]
 }
