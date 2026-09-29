@@ -2637,7 +2637,7 @@ Skinned animation is achieved by animating the joints in the skin's joint hierar
 
 Files references **MAY** be added to a top-level `files` array. The file's data **MAY** be stored externally and referenced by a `uri` or stored as binary in a buffer and referenced by `bufferView` index.
 
-Each file object **MUST** define a `mimeType` property, which may be any media type that matches the file's contents. 
+Each file object **MUST** define a `mimeType` property, which may be any media type that matches the file's contents.
 
 Files with a `mimeType` of `model/gltf+json` or `model/gltf-binary` **MAY** define a list of `aliases` that can be used to match and redirect a `uri` inside of the referred file. Any `uri` in the referenced file that matches the value `alias` exactly **SHOULD** use the associated `file` instead. This allows for efficient packing of resources shared across several referenced files, or overriding inner data. Aliases are not inherited from the parent asset. Extensions may add additional mime types that can define `aliases`.
 
@@ -2682,7 +2682,7 @@ If the same `uri` is used within multiple file references, implementations shoul
 
 glTF 2.1 defines the ability to compose complex scenes. A complex scene is one or more glTF assets including a scene from another glTF asset by referencing that glTF as an external asset. Complex scenes are defined using multiple components: file references to define where the data is stored and external asset definitions that define the scene from the referenced glTF asset to include.
 
-External glTF assets **MAY** be added to a top-level `externalAssets` array. The external asset **MUST** contain a `file` property that refers to an object in the `files` array by index. Multiple objects in the `externalAssets` array may refer to the same `file`. All external assets **MUST** refer to files with the `"model/gltf-binary"` or `"model/gltf+json"` media types. Cyclical references between external assets are strictly prohibited. 
+External glTF assets **MAY** be added to a top-level `externalAssets` array. The external asset **MUST** contain a `file` property that refers to an object in the `files` array by index. Multiple objects in the `externalAssets` array may refer to the same `file`. All external assets **MUST** refer to files with the `"model/gltf-binary"` or `"model/gltf+json"` media types. Cyclical references between external assets are strictly prohibited.
 
 [source,json]
 ----
