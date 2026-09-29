@@ -14,9 +14,7 @@
         "target": {
             "allOf": [ { "$ref": "animation.channel.target.schema.json" } ],
             "description": "The descriptor of the animated property."
-        },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "sampler", "target" ]
 }

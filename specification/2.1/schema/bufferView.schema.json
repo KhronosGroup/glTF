@@ -10,16 +10,16 @@
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The index of the buffer."
         },
+        "byteLength": {
+            "type": "integer",
+            "description": "The length of the bufferView in bytes.",
+            "minimum": 1
+        },
         "byteOffset": {
             "type": "integer",
             "description": "The offset into the buffer in bytes.",
             "minimum": 0,
             "default": 0
-        },
-        "byteLength": {
-            "type": "integer",
-            "description": "The length of the bufferView in bytes.",
-            "minimum": 1
         },
         "byteStride": {
             "type": "integer",
@@ -27,12 +27,10 @@
             "minimum": 4,
             "maximum": 252,
             "multipleOf": 4,
-            "gltf_detailedDescription": "The stride, in bytes, between vertex attributes.  When this is not defined, data is tightly packed. When two or more accessors use the same buffer view, this field **MUST** be defined.",
-            "gltf_webgl": "`vertexAttribPointer()` stride parameter"
+            "gltf_detailedDescription": "The stride, in bytes, between vertex attributes.  When this is not defined, data is tightly packed. When two or more accessors use the same buffer view, this field **MUST** be defined."
         },
         "target": {
             "description": "The hint representing the intended GPU buffer type to use with this buffer view.",
-            "gltf_webgl": "`bindBuffer()`",
             "anyOf": [
                 {
                     "const": 34962,
@@ -48,10 +46,7 @@
                     "type": "integer"
                 }
             ]
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "buffer", "byteLength" ]
 }

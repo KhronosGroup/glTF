@@ -15,9 +15,7 @@
             "description": "The offset relative to the start of the bufferView in bytes.",
             "minimum": 0,
             "default": 0
-        },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "bufferView" ]
 }

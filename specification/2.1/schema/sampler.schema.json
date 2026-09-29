@@ -8,7 +8,6 @@
     "properties": {
         "magFilter": {
             "description": "Magnification filter.",
-            "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_MAG_FILTER",
             "anyOf": [
                 {
                     "const": 9728,
@@ -27,7 +26,6 @@
         },
         "minFilter": {
             "description": "Minification filter.",
-            "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_MIN_FILTER",
             "anyOf": [
                 {
                     "const": 9728,
@@ -67,9 +65,12 @@
         "wrapS": {
             "description": "S (U) wrapping mode.",
             "default": 10497,
-            "gltf_detailedDescription": "S (U) wrapping mode.  All valid values correspond to WebGL enums.",
-            "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_WRAP_S",
             "anyOf": [
+                {
+                    "const": 10497,
+                    "description": "REPEAT",
+                    "type": "integer"
+                },
                 {
                     "const": 33071,
                     "description": "CLAMP_TO_EDGE",
@@ -78,11 +79,6 @@
                 {
                     "const": 33648,
                     "description": "MIRRORED_REPEAT",
-                    "type": "integer"
-                },
-                {
-                    "const": 10497,
-                    "description": "REPEAT",
                     "type": "integer"
                 },
                 {
@@ -93,8 +89,12 @@
         "wrapT": {
             "description": "T (V) wrapping mode.",
             "default": 10497,
-            "gltf_webgl": "`samplerParameteri()` with pname equal to TEXTURE_WRAP_T",
             "anyOf": [
+                {
+                    "const": 10497,
+                    "description": "REPEAT",
+                    "type": "integer"
+                },
                 {
                     "const": 33071,
                     "description": "CLAMP_TO_EDGE",
@@ -106,17 +106,9 @@
                     "type": "integer"
                 },
                 {
-                    "const": 10497,
-                    "description": "REPEAT",
-                    "type": "integer"
-                },
-                {
                     "type": "integer"
                 }
             ]
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        }
     }
 }
