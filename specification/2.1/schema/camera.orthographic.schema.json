@@ -23,9 +23,7 @@
             "type": "number",
             "description": "The floating-point distance to the near clipping plane.",
             "minimum": 0.0
-        },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "xmag", "ymag", "zfar", "znear" ]
 }

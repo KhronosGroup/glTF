@@ -14,6 +14,11 @@
             "type": "string",
             "description": "Tool that generated this glTF model.  Useful for debugging."
         },
+        "minVersion": {
+            "type": "string",
+            "description": "The minimum glTF version in the form of `<major>.<minor>` that this asset targets. This property **MUST NOT** be greater than the asset version.",
+            "pattern": "^(0|[1-9][0-9]{0,8})\\.(0|[1-9][0-9]{0,8})$"
+        },
         "thumbnail": {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description": "The index of the image in the `images` array to use as a thumbnail for this asset. The image **SHOULD** be a common, widely-supported format, but **MAY** have any media type."
@@ -21,15 +26,8 @@
         "version": {
             "type": "string",
             "description": "The glTF version in the form of `<major>.<minor>` that this asset targets.",
-            "pattern": "^[0-9]+\\.[0-9]+$"
-        },
-        "minVersion": {
-            "type": "string",
-            "description": "The minimum glTF version in the form of `<major>.<minor>` that this asset targets. This property **MUST NOT** be greater than the asset version.",
-            "pattern": "^[0-9]+\\.[0-9]+$"
-        },
-        "extensions": { },
-        "extras": { }
+            "pattern": "^(0|[1-9][0-9]{0,8})\\.(0|[1-9][0-9]{0,8})$"
+        }
     },
     "required": [ "version" ]
 }
