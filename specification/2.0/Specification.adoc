@@ -1070,7 +1070,7 @@ When a buffer view is directly used by vertex indices accessors or vertex attrib
 This allows client implementations to early designate each buffer view to a proper processing step, e.g., data from buffer views with vertex indices and vertex attributes would be copied to the appropriate GPU buffers, while buffer views with image data would be passed to format-specific image decoders.
 ====
 
-When a buffer view is used for vertex attribute data, it **MAY** define the `byteStride` property. This property specifies the stride in bytes between the first bytes of any two consecutive vertex attribute values. If two or more vertex attributes use the same buffer view, that buffer view **MUST** define its byte stride. Buffer views with other kinds of data **MUST NOT** not define the byte stride.
+When a buffer view is used for vertex attribute data, it **MAY** define the `byteStride` property. This property specifies the stride in bytes between the first bytes of any two consecutive vertex attribute values. If two or more vertex attributes use the same buffer view, that buffer view **MUST** define its byte stride. Buffer views with other kinds of data **MUST NOT** define the byte stride.
 
 If the `byteStride` property is defined, all of the following restrictions apply to it:
 
