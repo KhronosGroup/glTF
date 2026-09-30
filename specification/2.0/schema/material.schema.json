@@ -11,7 +11,7 @@
             "minimum": 0.0,
             "default": 0.5,
             "description": "The alpha cutoff value of the material.",
-            "gltf_detailedDescription": "Specifies the cutoff threshold when in `MASK` alpha mode. If the alpha value is greater than or equal to this value then it is rendered as fully opaque, otherwise, it is rendered as fully transparent. A value greater than `1.0` will render the entire material as fully transparent. This value **MUST** be ignored for other alpha modes. When `alphaMode` is not defined, this value **MUST NOT** be defined."
+            "gltf_detailedDescription": "Specifies the cutoff threshold when in `MASK` alpha mode. If the alpha value is greater than or equal to this value then it is rendered as fully opaque, otherwise, it is rendered as fully transparent. A value greater than `1.0` will render the entire material as fully transparent. This value **MUST** be ignored for other alpha modes."
         },
         "alphaMode": {
             "default": "OPAQUE",
@@ -73,8 +73,5 @@
             "allOf": [ { "$ref": "material.pbrMetallicRoughness.schema.json" } ],
             "description": "A set of parameter values that are used to define the metallic-roughness material model from Physically Based Rendering (PBR) methodology. When undefined, all the default values of `pbrMetallicRoughness` **MUST** apply."
         }
-    },
-    "dependentRequired": {
-        "alphaCutoff" : [ "alphaMode" ]
     }
 }
