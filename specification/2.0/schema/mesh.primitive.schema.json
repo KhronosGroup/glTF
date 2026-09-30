@@ -8,7 +8,7 @@
     "properties": {
         "attributes": {
             "type": "object",
-            "description": "A plain JSON object, where each key corresponds to a mesh attribute semantic and each value is the index of the accessor containing attribute's data.",
+            "description": "A JSON object that maps attribute semantic names to the indices of accessors providing the corresponding data.",
             "minProperties": 1,
             "additionalProperties": {
                 "$ref": "glTFid.schema.json"
@@ -16,8 +16,8 @@
         },
         "indices": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the accessor that contains the vertex indices.",
-            "gltf_detailedDescription": "The index of the accessor that contains the vertex indices.  When this is undefined, the primitive defines non-indexed geometry.  When defined, the accessor **MUST** have `SCALAR` type and an unsigned integer component type."
+            "description": "The index of the accessor that provides the vertex indices.",
+            "gltf_detailedDescription": "The index of the accessor that provides the vertex indices.  The accessor **MUST** have the `SCALAR` type and any of the _uint8_, _uint16_, or _uint32_ effective component types. When undefined, the primitive uses non-indexed geometry."
         },
         "material": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
@@ -76,7 +76,7 @@
                 "additionalProperties": {
                     "$ref": "glTFid.schema.json"
                 },
-                "description": "A plain JSON object specifying attributes displacements in a morph target, where each key corresponds to one of the three supported attribute semantic (`POSITION`, `NORMAL`, or `TANGENT`) and each value is the index of the accessor containing the attribute displacements' data."
+                "description": "A JSON object that maps attribute semantic names to the indices of accessors providing the corresponding morph target difference values."
             },
             "minItems": 1
         }
