@@ -79,7 +79,7 @@
             }
         }
     },
-    "dependencies": {
+    "dependentRequired": {
         "skin": [ "mesh" ],
         "weights": [ "mesh" ]
     },

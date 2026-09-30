@@ -31,7 +31,7 @@
             "gltf_detailedDescription": "The URI (or IRI) of the image.  Relative paths are relative to the current glTF asset.  Instead of referencing an external file, this field **MAY** contain a `data:`-URI. This field **MUST NOT** be defined when `bufferView` is defined."
         }
     },
-    "dependencies": {
+    "dependentRequired": {
         "bufferView": [ "mimeType" ]
     },
     "oneOf": [

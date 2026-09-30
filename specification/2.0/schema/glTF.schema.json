@@ -147,7 +147,7 @@
             "minItems": 1
         }
     },
-    "dependencies": {
+    "dependentRequired": {
         "scene": [ "scenes" ]
     },
     "required": [ "asset" ]
