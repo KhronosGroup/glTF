@@ -4,10 +4,10 @@
     "title": "Buffer View",
     "type": "object",
     "description": "A view into a buffer generally representing a subset of the buffer.",
-    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "buffer": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "$ref": "glTFid.schema.json",
             "description": "The index of the buffer."
         },
         "byteLength": {

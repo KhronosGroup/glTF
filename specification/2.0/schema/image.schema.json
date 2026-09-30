@@ -4,10 +4,10 @@
     "title": "Image",
     "type": "object",
     "description": "Image data used to create a texture. Image **MAY** be referenced by an URI (or IRI) or a buffer view index.",
-    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "bufferView": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "$ref": "glTFid.schema.json",
             "description": "The index of the bufferView that contains the image. This field **MUST NOT** be defined when `uri` is defined."
         },
         "mimeType": {

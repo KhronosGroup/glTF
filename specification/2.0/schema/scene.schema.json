@@ -4,7 +4,7 @@
     "title": "Scene",
     "type": "object",
     "description": "The root nodes of a scene.",
-    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "nodes": {
             "type": "array",

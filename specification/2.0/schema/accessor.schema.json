@@ -4,10 +4,10 @@
     "title": "Accessor",
     "type": "object",
     "description": "A typed view into a buffer view that contains raw binary data.",
-    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "bufferView": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "$ref": "glTFid.schema.json",
             "description": "The index of the bufferView.",
             "gltf_detailedDescription": "The index of the buffer view. When undefined, the accessor **MUST** be initialized with zeros; `sparse` property or extensions **MAY** override zeros with actual values."
         },
@@ -90,7 +90,7 @@
             "gltf_detailedDescription": "Specifies whether integer data values are normalized (`true`) to [0, 1] (for unsigned types) or to [-1, 1] (for signed types) when they are accessed. This property **MUST NOT** be set to `true` for accessors with `FLOAT` or `UNSIGNED_INT` component type."
         },
         "sparse": {
-            "allOf": [ { "$ref": "accessor.sparse.schema.json" } ],
+            "$ref": "accessor.sparse.schema.json",
             "description": "Sparse storage of elements that deviate from their initialization value."
         },
         "type": {

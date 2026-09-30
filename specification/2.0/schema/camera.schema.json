@@ -4,14 +4,14 @@
     "title": "Camera",
     "type": "object",
     "description": "A camera's projection.  A node **MAY** reference a camera to apply a transform to place the camera in the scene.",
-    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "orthographic": {
-            "allOf": [ { "$ref": "camera.orthographic.schema.json" } ],
+            "$ref": "camera.orthographic.schema.json",
             "description": "An orthographic camera containing properties to create an orthographic projection matrix. This property **MUST NOT** be defined when `perspective` is defined."
         },
         "perspective": {
-            "allOf": [ { "$ref": "camera.perspective.schema.json" } ],
+            "$ref": "camera.perspective.schema.json",
             "description": "A perspective camera containing properties to create a perspective projection matrix. This property **MUST NOT** be defined when `orthographic` is defined."
         },
         "type": {
