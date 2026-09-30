@@ -3711,7 +3711,7 @@ View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appe
 ====
 endif::[]
 
-Animation sampler interpolation modes define how to compute values of animated properties for the timestamps located between the keyframes. When the current (requested) timestamp exists in the animation data, its associated property value **MUST** be used as-is, without interpolation.
+Animation sampler interpolation modes define how to compute values of animated properties for the timestamps located between the keyframes. When the current (requested) timestamp exists in the animation data, its associated property value is used as-is, without interpolation.
 
 For the following sections, let
 
@@ -3747,7 +3747,7 @@ The interpolated sampler value stem:[v_t] at the current (requested) timestamp s
 
 [latexmath]
 ++++
-v_t = (1 - t) * v_k + t * v_{k+1}
+v_t = (1 - t) \cdot v_k + t \cdot v_{k+1}
 ++++
 
 
@@ -3758,14 +3758,14 @@ This mode is used when the animation sampler interpolation mode is set to `LINEA
 
 Let
 [none]
-* stem:[a = arccos(|v_k \cdot v_{k+1}|)] be the arccosine of the absolute value of the dot product of two consecutive quaternions;
+* latexmath:[a = \arccos(|v_k \cdot v_{k+1}|)] be the arccosine of the absolute value of the dot product of two consecutive quaternions;
 * latexmath:[s = \frac{v_k \cdot v_{k+1}}{|v_k \cdot v_{k+1}|}] be the sign of the dot product of two consecutive quaternions.
 
 The interpolated sampler value stem:[v_t] at the timestamp stem:[t_c] is computed as follows.
 
 [latexmath]
 ++++
-v_t = \frac{sin(a(1 - t))}{sin(a)} * v_k + s * \frac{sin(at)}{sin(a)} * v_{k+1}
+v_t = \frac{\sin(a \cdot (1 - t))}{\sin(a)} \cdot v_k + s \cdot \frac{\sin(a \cdot t)}{\sin(a)} \cdot v_{k+1}
 ++++
 
 [NOTE]
@@ -3800,7 +3800,7 @@ The interpolated sampler value stem:[v_t] at the timestamp stem:[t_c] is compute
 
 [latexmath]
 ++++
-v_t = (2t^3 - 3t^2 + 1) * v_k + t_d(t^3 - 2t^2 + t) * b_k + (-2t^3 + 3t^2) * v_{k+1} + t_d(t^3 - t^2) * a_{k+1}
+v_t = (2t^3 - 3t^2 + 1) \cdot v_k + t_d \cdot (t^3 - 2t^2 + t) \cdot b_k + (-2t^3 + 3t^2) \cdot v_{k+1} + t_d \cdot (t^3 - t^2) \cdot a_{k+1}
 ++++
 
 When the animation sampler targets a node's rotation property, the interpolated quaternion **MUST** be normalized before applying the result to the node's rotation.
