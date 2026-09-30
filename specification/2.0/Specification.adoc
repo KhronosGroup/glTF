@@ -279,7 +279,7 @@ _Portable Network Graphics (PNG): Functional specification_
 [NOTE]
 .Note
 ====
-A free version of this standard is available from W3C: https://www.w3.org/TR/PNG/
+A free version of this standard is available from W3C at <https://www.w3.org/TR/PNG/>.
 ====
 
 * [[jpeg]]
@@ -290,7 +290,9 @@ _Digital compression and coding of continuous-tone still images: Requirements an
 [NOTE]
 .Note
 ====
-An earlier edition of this standard called ITU Recommendation T.81 is available from W3C: https://www.w3.org/Graphics/JPEG/itu-t81.pdf
+This standard is equivalent to Recommendation ITU-T T.81 available at <https://www.itu.int/rec/T-REC-T.81-199209-I>.
+
+A free version of it is available from W3C at <https://www.w3.org/Graphics/JPEG/itu-t81.pdf>.
 ====
 
 * [[jfif]]
@@ -301,7 +303,7 @@ _Digital compression and coding of continuous-tone still images: JPEG File Inter
 [NOTE]
 .Note
 ====
-An earlier edition of this standard is available from W3C: https://www.w3.org/Graphics/JPEG/jfif3.pdf
+This standard is equivalent to Recommendation ITU-T T.871 available for free at <https://www.itu.int/rec/T-REC-T.871-201105-I>.
 ====
 
 * [[exif]]
@@ -443,20 +445,6 @@ Major version updates **MAY** be incompatible with previous versions.
 * Files representing binary buffers **SHOULD** use either:
 ** `.bin` file extension with <<octet-stream,`application/octet-stream`>> Media Type;
 ** `.bin`, `.glbin`, or `.glbuf` file extensions with <<gltf-buffer,`application/gltf-buffer`>> Media Type.
-
-* <<png,PNG>> images **SHOULD** use `.png` file extension with <<image-png,`image/png`>> Media Type;
-** PNG images **SHOULD NOT** contain animations, non-square pixel ratios, or embedded ICC profiles. Such features, if present, **MUST** be ignored by client implementations.
-
-* <<jpeg,JPEG>> images **SHOULD** use `.jpeg` or `.jpg` file extensions with <<image-jpeg,`image/jpeg`>> Media Type
-** JPEG images **MUST** be compatible with <<jfif,JPEG File Interchange Format>>.
-** JPEG images **SHOULD NOT** contain embedded ICC profiles. If present, embedded ICC profiles **MUST** be ignored by client implementations.
-** <<exif,Exchangeable image file format (Exif)>> chunks **MAY** be ignored by client implementations.
-+
-[NOTE]
-.Implementation Note
-====
-Certain Exif chunks, e.g., "`Orientation`", may severely impact an asset's portability.
-====
 
 [[json-encoding]]
 == JSON Encoding
@@ -2276,26 +2264,47 @@ When the `sampler` property of a texture is undefined, a sampler with repeat wra
 This behavior matches the default state of a sampler object with all its properties omitted.
 ====
 
+The origin of the texture coordinates (0, 0) corresponds to the upper left corner of a texture image. This is illustrated in the following figure, where the respective coordinates are shown for all four corners of a normalized texture space:
+
+.Normalized Texture Coordinates
+image::figures/texcoords.svg[pdfwidth=3in,align=left]
+
 
 [[images]]
 === Images
 
-Images referred to by textures are stored in the `images` array of the asset.
+[[images-overview]]
+==== Overview
 
-Each image contains one of
+Image objects are stored in the asset's `images` array.
 
-- a URI (or IRI) to an external file in one of the supported image formats, or
-- a Data URI with embedded data, or
-- a reference to a `bufferView`; in that case `mimeType` **MUST** be defined.
+An image object represents a reference to an image resource. The glTF 2.0 specification supports only image resources stored in PNG and JPEG image formats (further defined below). Support for other image formats **MAY** be added by extensions or future Specification versions.
 
-The following example shows an image pointing to an external PNG image file and another image referencing a `bufferView` with JPEG data.
+The image reference is given either by the `bufferView` or `uri` properties; exactly one of these two properties **MUST** be defined.
+
+If the `uri` property is defined, it either provides a URI (or IRI) to the external image file, or embeds the image in the URI using the Data URI scheme. When the Data URI scheme is used for image storage, the `mediatype` field of the URI **MUST** be set to the media type of the embedded image data. If the URI cannot be resolved, the image's content is undefined and handling of such image objects is implementation-dependent.
+
+If the `bufferView` property is defined, the image data is sourced from the referenced buffer view. The buffer view **MUST NOT** have its `byteStride` or `target` properties defined.
+
+[NOTE]
+.Implementation Note
+====
+The entire buffer view is used as the image data source, i.e., there is no way to specify start or end byte offsets.
+====
+
+If the `mimeType` property is defined, it explicitly specifies the media type of the image object and the format of the image data **MUST** match the value of that property. The `mimeType` property **MUST** be defined if the image is sourced from a buffer view.
+
+[NOTE]
+.Example
+====
+This example shows an image pointing to an external PNG image file and another image referencing a buffer view with JPEG data.
 
 [source,json]
 ----
 {
     "images": [
         {
-            "uri": "duckCM.png"
+            "uri": "duck.png"
         },
         {
             "bufferView": 14,
@@ -2304,8 +2313,9 @@ The following example shows an image pointing to an external PNG image file and 
     ]
 }
 ----
+====
 
-Client implementations **MAY** need to manually determine the media type of some images. In such a case, the following table **SHOULD** be used to check the values of the first few bytes.
+Client implementations **MAY** need to manually determine image media types. In such a case, the following table **SHOULD** be used to derive the media type based in the values of the first few bytes of the resource.
 
 [options="header"]
 |====
@@ -2314,14 +2324,7 @@ Client implementations **MAY** need to manually determine the media type of some
 | `image/jpeg` | 3              | `0xFF 0xD8 0xFF`
 |====
 
-The image data **MUST** match the `image.mimeType` property when the latter is defined.
-
-The origin of the texture coordinates (0, 0) corresponds to the upper left corner of a texture image. This is illustrated in the following figure, where the respective coordinates are shown for all four corners of a normalized texture space:
-
-.Normalized Texture Coordinates
-image::figures/texcoords.svg[pdfwidth=3in,align=left]
-
-Any colorspace information (such as ICC profiles, intents, gamma values, etc.) from PNG or JPEG images **MUST** be ignored. Effective transfer function (encoding) is defined by a glTF object that refers to the image (in most cases it's a texture that is used by a material).
+Any colorspace information (such as ICC profiles, intents, gamma values, etc.) found in images **MUST** be ignored. The effective transfer function (encoding) is defined by a glTF object that refers to the image (in most cases it's a texture that is used by a material). The effective color gamut for all images that are used as color textures is ITU-R BT.709.
 
 [NOTE]
 .Web Implementation Note
@@ -2329,6 +2332,84 @@ Any colorspace information (such as ICC profiles, intents, gamma values, etc.) f
 To ignore embedded colorspace information when using WebGL API, set `UNPACK_COLORSPACE_CONVERSION_WEBGL` flag to `NONE`.
 
 To ignore embedded colorspace information when using ImageBitmap API, set `colorSpaceConversion` option to `none`.
+====
+
+Regardless of the storage format, images always have four color channels: red, green, blue, and alpha. Format-specific sections below define how these four channels correspond to the stored image channels.
+
+[[images-png]]
+==== PNG Support
+
+<<png,PNG>> images **MUST** use the <<image-png,`image/png`>> Media Type. PNG images **SHOULD** use the `.png` file extension when stored as separate files.
+
+If a PNG image does not have an explicit alpha channel but includes a `tRNS` chunk, the image's alpha channel is controlled by the content of that chunk as defined in the PNG specification.
+
+If a PNG image has neither an explicit alpha channel, nor a `tRNS` chunk, the image is fully opaque, i.e., its alpha channel has a uniform value of stem:[1.0].
+
+If a PNG image uses a "`Greyscale`" or "`Greyscale with alpha`" color types, the values of the red, green, and blue channels of the image are equal to the "`Grey`" samples.
+
+The following PNG features **SHOULD NOT** be present and **SHOULD** be ignored by client implementations if encountered:
+
+- colorspace and/or display information (`cHRM`, `gAMA`, `iCCP`, `sBIT`, `sRGB`, `cICP`, `mDCV`, and/or `cLLI` chunks);
+- non-square pixel aspect ratio (`pHYs` chunk);
+- Exchangeable Image File Profile (`eXIf` chunk or embedded in `tEXt`, `iTXt`, or `zTXt` chunks);
+- animations (`acTL`, `fcTL`, `fdAT` chunks).
+
+[NOTE]
+.Rationale
+====
+These features are not universally implemented, can conflict with glTF definitions, and thus they may severely impact an asset's portability, especially, Exif's "`Orientation`".
+====
+
+[NOTE]
+.Implementation Note
+====
+Chunk presence does not always mean that the corresponding feature is used, see the PNG specification for more information on how PNG chunks are interpreted.
+====
+
+[[images-jpeg]]
+==== JPEG Support
+
+<<png,JPEG>> images **MUST** use the <<image-jpeg,`image/jpeg`>> Media Type. JPEG images **SHOULD** use the `.jpg` or `.jpeg` file extensions when stored as separate files.
+
+JPEG images **MUST** conform to the <<jfif,JPEG File Interchange Format>>, namely:
+
+- JPEG images **MUST** have an APP~0~ marker containing the null-terminated string `JFIF` immediately after the SOI marker;
+- JPEG images **MUST** have one or three image components with 8 bits per component;
+- JPEG images that have three image components **MUST** use the _YC~B~C~R~_ color model and ordered such that _Y_ is the first component, _C~B~_ is the second component, and _C~R~_ is the third component.
++
+[NOTE]
+.Implementation Note
+====
+The _YC~B~C~R~_ color model is implicitly converted to RGB as defined in JFIF when the image is decoded.
+====
+
+If a JPEG image has only one image component (called _Y_ in JFIF), the values of the red, green, and blue channels of the image are equal to the _Y_ component.
+
+A JPEG image is always fully opaque, its alpha channel has a uniform value of stem:[1.0].
+
+Additionally, for glTF compatibility the following restrictions apply.
+
+- JPEG images **MUST NOT** contain any start-of-frame markers other than SOF~0~, SOF~1~, or SOF~2~.
++
+[NOTE]
+.Rationale
+====
+This restriction implies that JPEG images cannot use arithmetic coding, lossless process, or hierarchical mode of operation. These features are not widely supported and images that rely on them would not be portable.
+====
+- JPEG images **MUST NOT** contain DNL markers.
++
+[NOTE]
+.Rationale
+====
+This restriction ensures that the image's height is equal to the number of lines set in the start-of-frame marker. DNL markers are not widely supported and images that rely on them would not be portable.
+====
+- JPEG images **SHOULD NOT** contain embedded ICC profiles. If present, they **MUST** be ignored by client implementations.
+- JPEG images **SHOULD NOT** contain <<exif,Exchangeable image file format (Exif)>> data. If present, it  **SHOULD** be ignored by client implementations.
++
+[NOTE]
+.Rationale
+====
+JFIF and Exif formats are mutually exclusive. Some of Exif features, e.g., "`Orientation`", may severely impact an asset's portability, .
 ====
 
 
