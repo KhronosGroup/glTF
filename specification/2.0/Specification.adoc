@@ -942,7 +942,7 @@ Binary blobs allow efficient creation of GPU buffers and textures since they req
 
 A buffer is defined by the `byteLength` and `uri` properties that specify the byte size of the buffer and the URI to the buffer data, respectively. glTF assets **MAY** have any number of buffers. Buffers are defined in the asset's `buffers` array.
 
-While there's no hard upper limit on a buffer's byte size, glTF assets **SHOULD NOT** use buffers bigger than 2^53^-1 bytes because some JSON parsers may be unable to parse the value of their `byteLength` property correctly. Buffers stored as <<glb-file-format-specification,GLBv2>> binary chunk have an implicit size limit of 2^32^-1 bytes.
+While there's no hard upper limit on a buffer's byte size, glTF assets **SHOULD NOT** use buffers bigger than 2^53^-1 bytes because some JSON parsers may be unable to parse the value of their `byteLength` property correctly. Buffers stored in a chunk of a <<glb-file-format-specification,GLB>> binary format version 2 file have an implicit size limit, since the entire file may be at most 2^32^-4 bytes.
 
 [NOTE]
 .Example
