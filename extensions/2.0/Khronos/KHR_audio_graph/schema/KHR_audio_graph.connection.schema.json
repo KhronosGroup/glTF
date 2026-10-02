@@ -1,0 +1,49 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Connection",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "from": {
+            "type": "object",
+            "description": "The upstream endpoint.",
+            "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+            "properties": {
+                "node": {
+                    "allOf": [{ "$ref": "glTFid.schema.json" }],
+                    "description": "The upstream node index."
+                },
+                "output": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "The upstream output port index."
+                },
+                "extensions": {},
+                "extras": {}
+            },
+            "required": ["node"]
+        },
+        "to": {
+            "type": "object",
+            "description": "The downstream endpoint.",
+            "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+            "properties": {
+                "node": {
+                    "allOf": [{ "$ref": "glTFid.schema.json" }],
+                    "description": "The downstream node index."
+                },
+                "input": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "The downstream input port index."
+                },
+                "extensions": {},
+                "extras": {}
+            },
+            "required": ["node"]
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["from", "to"]
+}
