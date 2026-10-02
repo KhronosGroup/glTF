@@ -1,0 +1,20 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "NV_micromaps glTF extension",
+    "type": "object",
+    "description": "glTF Extension that adds a list of micromaps for other extensions to reference. These are used, for instance, to define micro-triangle displacement or opacity.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "micromaps": {
+            "type": "array",
+            "description": "An array of micromaps.",
+            "items": {
+                "$ref": "micromap.schema.json"
+            },
+            "minItems": 1,
+            "gltf_detailedDescription": "An array of micromaps.  A micromap contains an array of (formatted, possibly compressed) *values*, and **MAY** store additional *micromap properties*, such as vertex displacement directions."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
