@@ -3,7 +3,7 @@
     "$id": "material.occlusionTextureInfo.schema.json",
     "title": "Material Occlusion Texture Info",
     "type": "object",
-    "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+    "$ref": "textureInfo.schema.json",
     "properties": {
         "strength": {
             "type": "number",

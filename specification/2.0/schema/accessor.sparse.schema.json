@@ -4,7 +4,7 @@
     "title": "Accessor Sparse",
     "type": "object",
     "description": "Sparse storage of accessor values that deviate from their initialization value.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "count": {
             "type": "integer",
@@ -12,11 +12,11 @@
             "minimum": 1
         },
         "indices": {
-            "allOf": [ { "$ref": "accessor.sparse.indices.schema.json" } ],
+            "$ref": "accessor.sparse.indices.schema.json",
             "description": "An object pointing to a buffer view containing the indices of deviating accessor values. The number of indices is equal to `count`. Indices **MUST** strictly increase."
         },
         "values": {
-            "allOf": [ { "$ref": "accessor.sparse.values.schema.json" } ],
+            "$ref": "accessor.sparse.values.schema.json",
             "description": "An object pointing to a buffer view containing the deviating accessor values."
         }
     },

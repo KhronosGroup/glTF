@@ -4,7 +4,7 @@
     "title": "Mesh Primitive",
     "type": "object",
     "description": "Geometry to be rendered with the given material.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "attributes": {
             "type": "object",
@@ -15,12 +15,12 @@
             }
         },
         "indices": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "$ref": "glTFid.schema.json",
             "description": "The index of the accessor that provides the vertex indices.",
             "gltf_detailedDescription": "The index of the accessor that provides the vertex indices.  The accessor **MUST** have the `SCALAR` type and any of the _uint8_, _uint16_, or _uint32_ effective component types. When undefined, the primitive uses non-indexed geometry."
         },
         "material": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "$ref": "glTFid.schema.json",
             "description": "The index of the material to apply to this primitive when rendering."
         },
         "mode": {

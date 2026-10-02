@@ -4,10 +4,10 @@
     "title": "Accessor Sparse Indices",
     "type": "object",
     "description": "An object pointing to a buffer view containing the indices of deviating accessor values. The number of indices is equal to `accessor.sparse.count`. Indices **MUST** strictly increase.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "bufferView": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "$ref": "glTFid.schema.json",
             "description": "The index of the buffer view with sparse indices. The referenced buffer view **MUST NOT** have its `target` or `byteStride` properties defined. The buffer view and the optional `byteOffset` **MUST** be aligned to the `componentType` byte length."
         },
         "byteOffset": {

@@ -4,7 +4,7 @@
     "title": "Camera Perspective",
     "type": "object",
     "description": "A perspective camera containing properties to create a perspective projection matrix.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "aspectRatio": {
             "type": "number",

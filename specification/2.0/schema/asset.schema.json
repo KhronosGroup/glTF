@@ -4,7 +4,7 @@
     "title": "Asset",
     "type": "object",
     "description": "Metadata about the glTF asset.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "copyright": {
             "type": "string",
