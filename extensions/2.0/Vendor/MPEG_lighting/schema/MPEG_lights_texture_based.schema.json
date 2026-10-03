@@ -1,0 +1,18 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title": "glTF_MPEG_lights_texture_based_extension",
+    "type": "object",
+    "description": "Provides a list of texture based light objects.",
+    "properties": {
+        "lights": {
+            "type": "array",
+            "description": "Provides a list of texture based light objects.",
+            "items": {
+                "type": "object",
+                "$ref": "MPEG_lights_texture_based.light.schema.json"
+            },
+            "minItems": 1
+        }
+    },
+    "required": ["lights"]
+}
