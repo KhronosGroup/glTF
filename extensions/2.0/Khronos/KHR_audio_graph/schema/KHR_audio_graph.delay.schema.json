@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Delay Node",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "delayTime": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The delay time in seconds.",
+            "default": 0.0
+        },
+        "maxDelayTime": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The maximum supported delay time in seconds.",
+            "default": 1.0
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}
