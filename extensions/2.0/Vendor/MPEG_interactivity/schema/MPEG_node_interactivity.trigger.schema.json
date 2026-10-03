@@ -1,0 +1,110 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title" : "MPEG_node_interactivity.trigger object",
+    "type" : "object",
+    "description" : "glTF extension to specify trigger formats at node level",
+    "properties" : {
+        "type" : {
+            "type": "integer",
+            "enum":[0,1,2,3],
+            "description": "Type of the trigger.",
+            "gltf_detailedDescription":"Value is oneOf TRIGGER_COLLISION = 0, TRIGGER_PROXIMITY = 1, TRIGGER_USER_INPUT = 2, TRIGGER_VISIBILITY = 3 and can be extended"
+        },
+        "collider": { 
+            "type": "integer", 
+            "description": "Index of the mesh element that provides the collider geometry for the current node"
+        },
+        "isStatic" :{ 
+            "type": "boolean",
+            "default": "true",
+            "description": "If True, the collider is defined as a static collider"
+        },
+        "physics" :{
+            "type": "object",
+            "description": "Provides a set of parameters at node level to be used for the physics simulation. ",
+            "$ref": "MPEG_node_interactivity.trigger.physicsobject.schema.json"
+        },
+        "primitives" :{
+            "type": "array", 
+            "items": { "$ref": "MPEG_interactivity.trigger.primitive.schema.json"},
+            "minItems": 1,
+            "description": "List of primitives used to activate the proximity or collision trigger. "
+        },
+        "allowOcclusion":{
+            "type": "boolean",
+            "description": "Indicates if occlusion by other nodes should be considered"
+        },
+        "upperDistanceWeight":{
+            "type":"number",
+            "default":1.0,
+            "description": "The weight applied to the distanceUpperLimit parameter defined at scene level "
+        },
+        "lowerDistanceWeight":{
+            "type":"number",
+            "default":1.0,
+            "description": "The weight applied to the distanceLowerLimit parameter defined at scene level "
+        },
+        "userInputParameters": { 
+            "type": "array", 
+            "items":{"type":"string"},
+            "minItems": 1,
+            "description": "Provides additional information related to the user inputs (e.g., “max speed = 0.5”)"
+        },
+        "allowsPartialOcclusion": { 
+            "type": "boolean",
+            "description": "If TRUE, a partial visibility of this node activates the trigger. If FALSE, this node shall be fully in the camera frustrum and not be occluded by any other node(s) except the nodes listed in the nodes array to activate the trigger." 
+        },
+        "nodes": { 
+            "type": "array", 
+            "items":{"type":"integer"},
+            "minItems": 1,
+            "description": "Set of nodes that shall not be considered for the visibility computation, when the allowsPartialOcclusion is FALSE."
+        },
+        "mesh":{
+            "type": "integer",
+            "description":"Index of the mesh in the scene meshes array that will be used to compute visibility"
+        },     
+        "extensions": {},
+        "extras": {}
+    },
+    "allOf": [
+        { "$ref" : "glTFProperty.schema.json" },
+        {
+          "if": {
+            "properties": { "type": { "const": 0, "description":"TRIGGER_COLLISION"} },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["collider","isStatic"]
+          }   
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": 1,"description":"TRIGGER_PROXIMITY" } },
+            "required": ["type"]
+          },
+          "then": {
+                "required": ["allowOcclusion"]
+          }            
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": 2, "description":"TRIGGER_USER_INPUT" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["userInputParameters"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": 3, "description":"TRIGGER_VISIBILITY" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["allowsPartialOcclusion"]
+          }
+        }
+      ],
+      "required":["type"]
+}
