@@ -1,0 +1,26 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "emitter.KHR_audio_environment.schema.json",
+    "title": "KHR_audio_environment Emitter Extension",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "directLevel": {
+            "type": "number",
+            "description": "Gain of the emitter's direct (dry) path. Linear.",
+            "minimum": 0.0,
+            "default": 1.0
+        },
+        "reverbLevel": {
+            "type": "number",
+            "description": "Gain of the emitter's send into the active environment's reverb bus. Linear. Default: 1.0 for positional emitters, 0.0 for global emitters.",
+            "minimum": 0.0
+        },
+        "environment": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "Force this emitter's reverb send to a specific environment, regardless of the listener's active zone."
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}
