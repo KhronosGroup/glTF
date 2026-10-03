@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_pmc_mesh_compression glTF Mesh Primitive Extension",
+    "type": "object",
+    "description": "glTF extension that defines PMC mesh compression.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "bufferView": {
+            "allOf": [ { "$ref" : "glTFid.schema.json" } ],
+            "description": "The index of the bufferView."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "bufferView" ]
+}
