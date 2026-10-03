@@ -1,0 +1,11 @@
+{
+    "title": "Integer Value",
+    "oneOf": [
+        {
+            "type": "integer"
+        },
+        {
+            "$ref": "behavior.types.reference.schema.json"
+        }
+    ]
+}

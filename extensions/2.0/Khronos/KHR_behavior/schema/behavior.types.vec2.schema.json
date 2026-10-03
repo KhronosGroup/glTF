@@ -1,0 +1,18 @@
+{
+    "title": "Vec2 Value",
+    "oneOf": [
+        {
+            "type": "array",
+            "items": [
+                {
+                    "type": "number"
+                }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+        },
+        {
+            "$ref": "behavior.types.reference.schema.json"
+        }
+    ]
+}
