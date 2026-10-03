@@ -1,0 +1,44 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Model",
+    "type": "object",
+    "description": "Model data used to create a model. Model can be referenced by URI or `bufferView` index. `mimeType` is required in the latter case.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "uri": {
+            "type": "string",
+            "description": "The uri of the model.",
+            "format": "uriref",
+            "gltf_detailedDescription": "The uri of the model.  Relative paths are relative to the .gltf file.  Instead of referencing an external file, the uri can also be a data-uri. The model format must be gltf or glb.",
+            "gltf_uriType": "image"
+        },
+        "mimeType": {
+            "anyOf": [
+                {
+                    "enum": [ "model/gltf+json" ]
+                },
+                {
+                    "enum": [ "model/gltf-binary" ]
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "description": "The models's MIME type. Required if `bufferView` is defined."
+        },
+        "bufferView": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the bufferView that contains the model. Use this instead of the model's uri property."
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "dependencies": {
+        "bufferView": [ "mimeType" ]
+    },
+    "oneOf": [
+        { "required": [ "uri" ] },
+        { "required": [ "bufferView" ] }
+    ]
+}
