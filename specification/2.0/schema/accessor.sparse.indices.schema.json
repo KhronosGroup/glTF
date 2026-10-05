@@ -38,9 +38,7 @@
                     "type": "integer"
                 }
             ]
-        },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "bufferView", "componentType" ]
 }

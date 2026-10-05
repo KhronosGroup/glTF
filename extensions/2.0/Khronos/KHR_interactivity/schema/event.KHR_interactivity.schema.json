@@ -3,7 +3,7 @@
     "$id": "event.KHR_interactivity.schema.json",
     "title": "Behavior graph event",
     "type": "object",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "allOf": [ { "$ref": "nameableProperty.KHR_interactivity.schema.json" } ],
     "properties": {
         "id": {
             "title": "The event id.",
@@ -33,6 +33,7 @@
             "minProperties": 1,
             "not": { "required": [ "event" ] }
         },
+        "name": { },
         "extensions": { },
         "extras": { }
     }

@@ -19,22 +19,19 @@
             "gltf_detailedDescription": "Specifies if the camera uses a perspective or orthographic projection.  Based on this, either the camera's `perspective` or `orthographic` property **MUST** be defined.",
             "anyOf": [
                 {
-                    "const": "perspective"
+                    "const": "orthographic"
                 },
                 {
-                    "const": "orthographic"
+                    "const": "perspective"
                 },
                 {
                     "type": "string"
                 }
             ]
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "type" ],
     "not": {
-        "required": [ "perspective", "orthographic" ]
+        "required": [ "orthographic", "perspective" ]
     }
 }

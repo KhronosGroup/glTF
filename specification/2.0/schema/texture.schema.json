@@ -8,15 +8,11 @@
     "properties": {
         "sampler": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the sampler used by this texture. When undefined, a sampler with repeat wrapping and auto filtering **SHOULD** be used."
+            "description": "The index of the sampler used by this texture. When undefined, a sampler with repeat wrapping in both directions and implementation-dependent default texture filtering is used."
         },
         "source": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The index of the image used by this texture. When undefined, an extension or other mechanism **SHOULD** supply an alternate texture source, otherwise behavior is undefined."
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
-    },
-    "gltf_webgl": "`createTexture()`, `deleteTexture()`, `bindTexture()`, `texImage2D()`, and `texParameterf()`"
+        }
+    }
 }
