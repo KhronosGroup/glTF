@@ -26,18 +26,20 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension stores **pre-build source data** for opacity micromaps in a glTF asset. It does **not** store serialized micromap acceleration structures produced by a graphics API after build. An opacity micromap compactly encodes per-microtriangle opacity for each base triangle in a mesh. The on-disk representation defined here is layout-compatible with the build inputs of Vulkan `VK_KHR_opacity_micromap` and DirectX 12 `D3D12_RAYTRACING_TIER_1_2` opacity micromaps, so content can be baked once and uploaded when building opacity micromaps and bottom-level ray-tracing acceleration structures.
+An *opacity micromap* stores a coarse, pre-computed opacity classification for the surface of a triangle. The triangle is uniformly subdivided into *microtriangles*, and each microtriangle stores one of up to four opacity states (transparent, opaque, unknown-transparent, unknown-opaque). Ray-tracing hardware uses these states to accept or reject ray-triangle intersections without invoking an any-hit shader, which greatly reduces the cost of tracing rays through alpha-tested geometry such as foliage.
 
-The extension defines:
+This extension stores opacity micromaps in a glTF asset in the form of **build inputs**: the packed microtriangle states, one record per micromap triangle, and a usage summary. The stored layout is binary-compatible with the build inputs of Vulkan [`VK_KHR_opacity_micromap`](https://docs.vulkan.org/refpages/latest/refpages/source/VK_KHR_opacity_micromap.html) and of DirectX 12 opacity micromaps ([`D3D12_RAYTRACING_TIER_1_2`](https://microsoft.github.io/DirectX-Specs/d3d/Raytracing.html#opacity-micromaps)), so that the data can be passed to the graphics API without conversion. This extension does not store the opaque, implementation-specific micromap objects that a graphics API produces from these inputs.
 
-1. A root-level `micromaps` array describing micromap build inputs (`data`, `triangles`, and usage summary arrays), compatible with `VkAccelerationStructureGeometryMicromapDataKHR` and `D3D12_RAYTRACING_OPACITY_MICROMAP_ARRAY_DESC`.
-2. A per-`mesh.primitive` extension describing how geometry triangles map into a micromap (`micromap`, `micromapIndices`, optional `micromapBaseTriangle`), compatible with `VkAccelerationStructureTrianglesOpacityMicromapKHR` and `D3D12_RAYTRACING_GEOMETRY_OMM_LINKAGE_DESC`.
+The extension consists of two parts:
 
-This extension normatively defines glTF JSON structure and stored buffer layouts. Runtime micromap build options, device limits, and ray-traversal behavior are out of scope and are defined by the target graphics API.
+1. An array of `micromaps` in the glTF root extension object. Each micromap references the buffer views that hold its data.
+2. A mesh primitive extension object that associates each triangle of the primitive with a micromap triangle, or with a uniform opacity state.
 
-## Extending the glTF root
+How opacity states affect ray traversal (for example, when an any-hit shader is invoked for unknown states) is defined by the graphics API and is outside the scope of this extension.
 
-The glTF root object **MAY** define `extensions.EXT_mesh_opacity_micromap` with a `micromaps` array.
+## Extending the glTF Root
+
+Micromaps are defined in the `micromaps` array of the `EXT_mesh_opacity_micromap` extension object in the glTF root.
 
 ```json
 {
@@ -45,48 +47,46 @@ The glTF root object **MAY** define `extensions.EXT_mesh_opacity_micromap` with 
     "EXT_mesh_opacity_micromap": {
       "micromaps": [
         {
-          "data": 0,
-          "triangles": 1,
-          "usageCounts": [32, 12],
-          "usageLevels": [8, 5],
-          "usageFormats": [1, 1]
+          "data": 8,
+          "triangles": 9,
+          "usageCounts": [4, 42, 84, 26],
+          "usageLevels": [4, 5, 6, 7],
+          "usageFormats": [2, 2, 2, 2]
         }
       ]
     }
-  }
+  },
+  "extensionsUsed": [ "EXT_mesh_opacity_micromap" ]
 }
 ```
 
-Each element of `micromaps` describes one opacity micromap's pre-build source inputs (`data`, `triangles`, and usage summary arrays).
+Each micromap object has the following properties:
 
-### Properties (`micromaps[]`)
+| | Type | Description | Required |
+|-|------|-------------|----------|
+| **data** | `integer` | The index of the buffer view containing the packed microtriangle states. See [Microtriangle Data](#microtriangle-data). | :white_check_mark: Yes |
+| **triangles** | `integer` | The index of the buffer view containing the micromap triangle records. See [Micromap Triangle Records](#micromap-triangle-records). | :white_check_mark: Yes |
+| **usageCounts** | `integer[1-*]` | The number of micromap triangles for each usage entry. | :white_check_mark: Yes |
+| **usageLevels** | `integer[1-*]` | The subdivision level of each usage entry. | :white_check_mark: Yes |
+| **usageFormats** | `integer[1-*]` | The opacity format of each usage entry. | :white_check_mark: Yes |
+| **name** | `string` | The user-defined name of this object. | No |
 
-| Property | Type | Description | Required |
-|----------|------|-------------|----------|
-| **data** | `integer` | Index of the `bufferView` containing packed opacity micromap bits. | Yes |
-| **triangles** | `integer` | Index of the `bufferView` containing [micromap triangle records](#micromap-triangle-records). | Yes |
-| **usageCounts** | `integer[]` | Number of micromap triangles per `(subdivisionLevel, format)` bucket. Parallel to `usageLevels` and `usageFormats`. | Yes |
-| **usageLevels** | `integer[]` | Subdivision level per bucket. Parallel to `usageCounts` and `usageFormats`. | Yes |
-| **usageFormats** | `integer[]` | Opacity format per bucket (`1` or `2`). Parallel to `usageCounts` and `usageLevels`. | Yes |
+The `usageCounts`, `usageLevels`, and `usageFormats` arrays together form a list of *usage entries*: entry `i` states that `usageCounts[i]` micromap triangles of the micromap have subdivision level `usageLevels[i]` and format `usageFormats[i]`. The following requirements apply:
 
-### Validity (root `micromaps[]`)
+- `usageCounts`, `usageLevels`, and `usageFormats` **MUST** have the same length.
+- Each element of `usageCounts` **MUST** be greater than or equal to `1`.
+- Each element of `usageLevels` **MUST** be in the range `[0, 12]`.
+- Each element of `usageFormats` **MUST** be `1` or `2`.
+- For each distinct pair of subdivision level and format, the sum of `usageCounts[i]` over all entries `i` with that pair **MUST** equal the number of micromap triangle records with that subdivision level and format.
 
-For each micromap object to be valid, the following **MUST** hold:
+> [!NOTE]
+> As a consequence, the sum of all `usageCounts` elements equals the number of micromap triangle records. The usage entries let an implementation compute the memory required to build a micromap without reading the records.
 
-- `usageCounts`, `usageLevels`, and `usageFormats` **MUST** have equal length.
-- Every `usageFormats[i]` **MUST** be `1` or `2`.
-- Every `usageCounts[i]` **MUST** be greater than or equal to `1`.
-- Every `usageLevels[i]` **MUST** be greater than or equal to `0`.
-- Multiple entries with the same `(usageLevels[i], usageFormats[i])` **MAY** appear; validators **MUST** treat the effective count for each distinct pair as the sum of matching `usageCounts` values.
-- The sum of all effective `usageCounts` values **MUST** equal the number of 8-byte records in the referenced `triangles` `bufferView` (see [Micromap triangle records](#micromap-triangle-records)).
-- For each micromap triangle record, `dataOffset` and the record's `subdivisionLevel` and `format` **MUST** describe a region within the `data` `bufferView` that satisfies [bit packing rules](#bit-packing-in-data), and regions **MUST NOT** overlap.
-- Referenced `bufferView` indices **MUST** be valid glTF `bufferView` indices.
+The buffer views referenced by `data` and `triangles` **MUST NOT** define `byteStride`.
 
-The `triangles` `bufferView` **MUST** contain a tightly packed array of micromap triangle records. If `bufferView.byteStride` is omitted, it **MUST** be treated as `8`. If `byteStride` is present, it **MUST** be greater than or equal to `8` and a multiple of `4`.
+## Extending Mesh Primitives
 
-## Extending mesh primitives
-
-Each `mesh.primitive` **MAY** define `extensions.EXT_mesh_opacity_micromap`.
+A mesh primitive references a micromap through the `EXT_mesh_opacity_micromap` extension object.
 
 ```json
 {
@@ -94,14 +94,13 @@ Each `mesh.primitive` **MAY** define `extensions.EXT_mesh_opacity_micromap`.
     {
       "primitives": [
         {
-          "attributes": { "POSITION": 0 },
-          "indices": 1,
-          "mode": 4,
+          "attributes": { "POSITION": 0, "TEXCOORD_0": 1 },
+          "indices": 2,
+          "material": 0,
           "extensions": {
             "EXT_mesh_opacity_micromap": {
               "micromap": 0,
-              "micromapIndices": 2,
-              "micromapBaseTriangle": 0
+              "micromapIndices": 3
             }
           }
         }
@@ -111,133 +110,158 @@ Each `mesh.primitive` **MAY** define `extensions.EXT_mesh_opacity_micromap`.
 }
 ```
 
-### Properties
+The extension object has the following properties:
 
-| Property | Type | Description | Required |
-|----------|------|-------------|----------|
-| **micromap** | `integer` | Index into root `extensions.EXT_mesh_opacity_micromap.micromaps`. | Yes |
-| **micromapIndices** | `integer` | Accessor index for per-geometry-triangle micromap lookup values. | No |
-| **micromapBaseTriangle** | `integer` | Offset added to each non-special lookup value. Default: `0`. | No |
+| | Type | Description | Required |
+|-|------|-------------|----------|
+| **micromap** | `integer` | The index of the micromap in the root `micromaps` array. | :white_check_mark: Yes |
+| **micromapIndices** | `integer` | The index of the accessor containing one micromap index per triangle of the primitive. See [Micromap Indices](#micromap-indices). | No |
+| **micromapBaseTriangle** | `integer` | The offset added to each micromap index that is not a special index. | No, default: `0` |
 
-See [Per-primitive micromap indices](#per-primitive-micromap-indices) for accessor and lookup rules.
+A primitive using this extension **MUST** have a `mode` of `4` (TRIANGLES).
 
-## Opacity micromap encoding
+## Micromap Data
 
-This section defines the stored pre-build micromap representation referenced by root `micromaps` objects. It does not define post-build serialized micromap acceleration structure contents.
+### Base Triangles and Barycentric Coordinates
 
-### Subdivision levels
+For each triangle `t` of a mesh primitive, the *base triangle* vertices `v0`, `v1`, and `v2` are the vertices of that triangle in the order defined by the glTF 2.0 specification for the TRIANGLES topology: when the primitive defines `indices`, they are the vertices referenced by index elements `3t`, `3t + 1`, and `3t + 2`; otherwise, they are vertices `3t`, `3t + 1`, and `3t + 2`.
 
-For subdivision level $L$, a base triangle is subdivided into $4^L$ microtriangles.
+A point `p` on the base triangle has barycentric coordinates $(u, v)$ such that
 
-Each micromap triangle record specifies its own subdivision level and format. The `usageCounts`, `usageLevels`, and `usageFormats` arrays summarize how many micromap triangles exist for each `(subdivisionLevel, format)` pair in a micromap.
+$$
+p = (1 - u - v) \cdot v_0 + u \cdot v_1 + v \cdot v_2
+$$
 
-### Microtriangle ordering
+All microtriangle positions and orderings in this extension are defined in terms of $(u, v)$.
 
-Microtriangle indices within a micromap triangle **MUST** use the recursive space-filling curve ordering illustrated in [Appendix A](#appendix-a-microtriangle-indexing). Authoring tools **MUST** encode `data` bits in that linear index order.
+> [!NOTE]
+> This is the barycentric convention used by ray-tracing hit attributes in Vulkan and DirectX 12. Because the association between geometry and micromap data depends on the triangle order and on the order of the vertices within each triangle, any processing that reorders triangles, rotates the vertices of a triangle, or changes its winding invalidates the association. Such processing has to update `micromapIndices` (and the micromap data, when the vertex order changes) or remove this extension from the primitive.
 
-At runtime, graphics APIs map intersection barycentrics to a microtriangle index using the same ordering.
+### Subdivision and Microtriangle Order
 
-### Formats and state values
+A micromap triangle with subdivision level $L$ divides its base triangle into $4^L$ congruent microtriangles by recursively connecting edge midpoints. The subdivision level **MUST** be in the range `[0, 12]`.
 
-`usageFormats` values and micromap triangle record `format` fields **MUST** be one of:
+Microtriangles are numbered from `0` to $4^L - 1$ along a hierarchical space-filling curve. The index of the microtriangle containing barycentric coordinates $(u, v)$ is the value returned by the reference function in [Appendix A](#appendix-a-microtriangle-indexing).
 
-| Value | Meaning |
-|------:|---------|
-| `1` | Two-state format: one bit per microtriangle (opaque or transparent). |
-| `2` | Four-state format: two bits per microtriangle. |
+### Opacity Formats and States
 
-For four-state data, each two-bit microtriangle value **MUST** be one of:
+Each micromap triangle uses one of the following formats:
 
-| Value | Meaning |
-|------:|---------|
-| `0` | Transparent |
-| `1` | Opaque |
-| `2` | Unknown transparent |
-| `3` | Unknown opaque |
+| Format | Bits per microtriangle | Allowed states |
+|-------:|-----------------------:|----------------|
+| `1` | 1 | `0` (transparent), `1` (opaque) |
+| `2` | 2 | `0` (transparent), `1` (opaque), `2` (unknown-transparent), `3` (unknown-opaque) |
 
-For two-state data, each one-bit microtriangle value **MUST** be interpreted as:
+### Microtriangle Data
 
-| Value | Meaning |
-|------:|---------|
-| `0` | Transparent |
-| `1` | Opaque |
-
-How these stored values affect ray traversal is defined by the target graphics API and is not specified by this extension.
-
-### Bit packing in `data`
-
-The `data` `bufferView` contains packed microtriangle state bits for all micromap triangles.
-
-- Two-state (`format` `1`) data **MUST** use one bit per microtriangle.
-- Four-state (`format` `2`) data **MUST** use two bits per microtriangle.
-- Bits **MUST** be packed from least significant bit to most significant bit within each byte.
-- For a micromap triangle with subdivision level $L$ and format $F$, the number of bytes required at `dataOffset` **MUST** be:
+The buffer view referenced by `data` contains the packed microtriangle states of all micromap triangles of the micromap. The states of a micromap triangle with subdivision level $L$ and format $F$ occupy
 
 $$
 \left\lceil \frac{4^L \cdot b}{8} \right\rceil
 $$
 
-where $b$ is `1` for format `1` and `2` for format `2`.
+bytes, starting at the byte offset `dataOffset` of its [record](#micromap-triangle-records), where $b$ is `1` for format `1` and `2` for format `2`.
 
-Unused bits in the final byte of a micromap triangle's region **MUST** be ignored.
+Within this region, the state of microtriangle `i` occupies bits `i * b` to `i * b + b - 1`, where bit `0` is the least significant bit of the first byte. Bits in the final byte beyond the last microtriangle are unused, and their values **MUST** be ignored.
 
-### Micromap triangle records
+The region of each micromap triangle **MUST** lie entirely within the `data` buffer view, and regions of different micromap triangles **MUST NOT** overlap.
 
-Each element of the `triangles` `bufferView` **MUST** be an 8-byte record with the following layout:
+### Micromap Triangle Records
 
-| Offset (bytes) | Type | Field |
-|---------------:|------|-------|
-| `0` | `uint32` | `dataOffset` |
-| `4` | `uint16` | `subdivisionLevel` |
-| `6` | `uint16` | `format` |
+The buffer view referenced by `triangles` contains a tightly packed array of 8-byte records, one per micromap triangle. Its `byteLength` **MUST** be a multiple of `8`. Micromap triangles are numbered by their position in this array, starting at `0`.
 
-- `dataOffset` **MUST** be a byte offset relative to the start of the `data` `bufferView`.
-- `subdivisionLevel` **MUST** be greater than or equal to `0`.
-- `format` **MUST** be `1` or `2`.
+| Byte offset | Type | Name | Description |
+|------------:|------|------|-------------|
+| `0` | `uint32` | `dataOffset` | Byte offset of the micromap triangle's states, relative to the start of the `data` buffer view. |
+| `4` | `uint16` | `subdivisionLevel` | Subdivision level. **MUST** be in the range `[0, 12]`. |
+| `6` | `uint16` | `format` | Opacity format. **MUST** be `1` or `2`. |
 
-The number of records in `triangles` **MUST** equal the sum of all `usageCounts` values for that micromap.
+## Micromap Indices
 
-This record layout is compatible with `VkMicromapTriangleKHR` in Vulkan `VK_KHR_opacity_micromap` and `D3D12_RAYTRACING_OPACITY_MICROMAP_DESC` in DirectX 12 when consumed as micromap build input.
+### Lookup
 
-## Per-primitive micromap indices
+Each triangle `t` of a primitive is associated with a lookup value `m`:
 
-Primitives using this extension **MUST** have `mode` `TRIANGLES` (`4`).
+- When `micromapIndices` is defined, `m` is element `t` of the accessor.
+- When `micromapIndices` is undefined, `m` is equal to `t`.
 
-The extension `micromapIndices` accessor is separate from the geometry `indices` accessor. It stores one lookup value per geometry triangle.
-If provided, the accessor **MUST** have a `count` equal to the primitive's triangle count (as defined by the glTF 2.0 specification for `TRIANGLES` mode: the `indices` accessor `count` divided by `3`, or the `POSITION` accessor `count` divided by `3` when `indices` is undefined) and element `t` of the `micromapIndices` accessor **MUST** correspond to geometry triangle `t`.
+If `m` is a [special index](#special-indices), triangle `t` has the uniform opacity state given by that index and does not reference a micromap triangle. Otherwise, triangle `t` uses micromap triangle `m + micromapBaseTriangle` of the referenced micromap. This value **MUST** be less than the number of micromap triangle records of the micromap.
 
-### Lookup resolution
+> [!NOTE]
+> When `micromapIndices` is undefined, this requires the number of micromap triangle records to be at least the primitive's triangle count plus `micromapBaseTriangle`.
 
-For geometry triangle `t`, let `v` be the accessor value at element `t`. If no accessor is provided `v` equals `t`.
+Several triangles, including triangles of different primitives, **MAY** use the same micromap triangle.
 
-- If `v` is a [special index](#special-indices), no micromap triangle fetch is performed.
-- Otherwise, the micromap triangle index **MUST** be computed as `v + micromapBaseTriangle` and **MUST** reference a record in the micromap's `triangles` array.
+### Special Indices
 
-This lookup resolution is compatible with `VkAccelerationStructureTrianglesOpacityMicromapKHR` in Vulkan `VK_KHR_opacity_micromap` and `D3D12_RAYTRACING_GEOMETRY_OMM_LINKAGE_DESC` in DirectX 12.
+| Special index | Uniform state |
+|--------------:|---------------|
+| `-1` | Transparent |
+| `-2` | Opaque |
+| `-3` | Unknown-transparent |
+| `-4` | Unknown-opaque |
 
-### Special indices
+### Accessor Requirements
 
-The following signed lookup values **MUST** be supported:
+When defined, the `micromapIndices` accessor **MUST** meet the following requirements:
 
-| Signed value | Meaning |
-|-------------:|---------|
-| `-1` | Fully transparent |
-| `-2` | Fully opaque |
-| `-3` | Fully unknown transparent |
-| `-4` | Fully unknown opaque |
+- Its `type` **MUST** be `SCALAR`.
+- Its `componentType` **MUST** be `5121` (UNSIGNED_BYTE), `5123` (UNSIGNED_SHORT), `5125` (UNSIGNED_INT), `5122` (SHORT), or `5124` (INT).
+- Its `normalized` property **MUST NOT** be set to `true`.
+- Its `count` **MUST** be equal to the number of triangles of the primitive.
 
-### Encoding in accessors
+As for all accessors that do not contain vertex attributes, the elements of this accessor are tightly packed and its buffer view **MUST NOT** define `byteStride`.
 
-If `micromapIndices` is provided, the accessor **MUST** have `type` `SCALAR` and `componentType` one of `5121` (`UNSIGNED_BYTE`), `5123` (`UNSIGNED_SHORT`), `5125` (`UNSIGNED_INT`), `5122` (`SHORT`), or `5124` (`INT`).
+For signed component types, special indices are stored as their signed values, and every element **MUST** be greater than or equal to `-4`.
 
-When `componentType` is `5121` (`UNSIGNED_BYTE`), `5123` (`UNSIGNED_SHORT`), or `5125` (`UNSIGNED_INT`):
+For unsigned component types, special indices are stored as the two's-complement bit patterns of their signed values (for example, `-1` is stored as `255`, `65535`, or `4294967295` for UNSIGNED_BYTE, UNSIGNED_SHORT, or UNSIGNED_INT, respectively). Elements that are not special indices are therefore less than $2^n - 4$, where $n$ is the bit width of the component type.
 
-- Non-special micromap triangle indices **MUST** be non-negative.
-- Special indices **MUST** be stored as the two's-complement bit pattern of the signed value in the accessor's component type (for example, `4294967295` represents `-1` with `UNSIGNED_INT`).
+> [!NOTE]
+> Signed and unsigned component types of the same width have identical bit patterns for all valid values, so the data can be passed to a graphics API as an unsigned index buffer of that width.
 
-When `componentType` is `5122` (`SHORT`) or `5124` (`INT`):
+## Interaction with Materials
 
-- Lookup values **MAY** be stored directly as signed integers, including `-1` through `-4`.
+*This section is non-normative.*
+
+This extension does not define a relationship between the micromap and the primitive's material. Opacity micromaps are typically created by baking the alpha coverage of the material (its base color alpha, `alphaMode`, and `alphaCutoff`) using format `2`, so that microtriangles straddling an alpha edge are marked as unknown and resolved by the renderer's alpha test, and the result matches rendering without the extension.
+
+Renderers that do not support this extension, including rasterizers, render the primitive using its material alone. A micromap that does not match the material's coverage therefore produces different results across renderers.
+
+Data that changes the material's coverage after baking, such as `KHR_materials_variants`, `KHR_texture_transform`, or animations of texture coordinates or `alphaCutoff` through `KHR_animation_pointer`, is not reflected in the micromap.
+
+## Interaction with Other Extensions
+
+When a primitive uses a mesh compression extension, such as `KHR_draco_mesh_compression` or `EXT_meshopt_compression`, triangles and their vertex order are defined by the decompressed data. Encoders that reorder triangles or rotate triangle vertices have to update the micromap association accordingly (see [Base Triangles and Barycentric Coordinates](#base-triangles-and-barycentric-coordinates)).
+
+Because micromaps are defined in barycentric space, they remain associated with the same surface under skinning, morph targets, and instancing with `EXT_mesh_gpu_instancing`.
+
+## Optional vs. Required
+
+This extension **SHOULD NOT** be listed in `extensionsRequired`. The primitive's geometry and material remain a complete description of the asset when the extension is ignored.
+
+## Graphics API Correspondence
+
+*This section is non-normative.*
+
+The following table lists the graphics API inputs that correspond to the data defined by this extension.
+
+| glTF | Vulkan `VK_KHR_opacity_micromap` | DirectX 12 |
+|------|----------------------------------|------------|
+| Micromap | `VkAccelerationStructureGeometryMicromapDataKHR` | `D3D12_RAYTRACING_OPACITY_MICROMAP_ARRAY_DESC` |
+| `data` | `data` | `InputBuffer` |
+| `triangles` | `triangleArray` (`triangleArrayStride` = `8`) | `PerOmmDescs` (stride `8`) |
+| Usage entries | `pUsageCounts` (`VkMicromapUsageKHR`) | `pOmmHistogram` (`D3D12_RAYTRACING_OPACITY_MICROMAP_HISTOGRAM_ENTRY`) |
+| `usageCounts[i]`, `usageLevels[i]`, `usageFormats[i]` | `count`, `subdivisionLevel`, `format` | `Count`, `SubdivisionLevel`, `Format` |
+| Micromap triangle record | `VkMicromapTriangleKHR` | `D3D12_RAYTRACING_OPACITY_MICROMAP_DESC` |
+| Mesh primitive extension | `VkAccelerationStructureTrianglesOpacityMicromapKHR` | `D3D12_RAYTRACING_GEOMETRY_OMM_LINKAGE_DESC` |
+| `micromap` | `micromap` | `OpacityMicromapArray` |
+| `micromapIndices` | `indexBuffer`, `indexType`, `indexStride` | `OpacityMicromapIndexBuffer`, `OpacityMicromapIndexFormat` |
+| `micromapIndices` undefined | `indexType` = `VK_INDEX_TYPE_NONE_KHR` | `OpacityMicromapIndexFormat` = `DXGI_FORMAT_UNKNOWN` |
+| `micromapBaseTriangle` | `baseTriangle` | `OpacityMicromapBaseLocation` |
+| Format `1`, `2` | `VK_OPACITY_MICROMAP_FORMAT_2_STATE_KHR`, `VK_OPACITY_MICROMAP_FORMAT_4_STATE_KHR` | `D3D12_RAYTRACING_OPACITY_MICROMAP_FORMAT_OC1_2_STATE`, `D3D12_RAYTRACING_OPACITY_MICROMAP_FORMAT_OC1_4_STATE` |
+| Special indices `-1` to `-4` | `VkOpacityMicromapSpecialIndexKHR` | `D3D12_RAYTRACING_OPACITY_MICROMAP_SPECIAL_INDEX` |
+
+The `micromap` and `OpacityMicromapArray` fields refer to the micromap object that the application builds from the referenced micromap, not to the stored data. Graphics APIs may support lower maximum subdivision levels than this extension allows; Vulkan reports them in `VkPhysicalDeviceOpacityMicromapPropertiesKHR`.
 
 ## Schema
 
@@ -246,92 +270,23 @@ When `componentType` is `5122` (`SHORT`) or `5124` (`INT`):
 
 ## Known Implementations
 
-- [nvpro-samples/vk_gltf_renderer](https://github.com/nvpro-samples/vk_gltf_renderer): loads the extension and builds opacity micromaps for ray tracing with Vulkan `VK_KHR_opacity_micromap`.
+- [nvpro-samples/vk_gltf_renderer](https://github.com/nvpro-samples/vk_gltf_renderer): loads the extension and builds opacity micromaps for Vulkan ray tracing.
 - [nvpro-samples/gltf_omm_baker](https://github.com/nvpro-samples/gltf_omm_baker): bakes opacity micromaps from material alpha coverage and writes them using this extension.
 
-## Reference
-
-### Normative external references
-
-When mapping stored glTF data to graphics API micromap build inputs, implementations **MUST** preserve compatibility with the field correspondences below.
-
-| glTF | Vulkan (`VK_KHR_opacity_micromap`) | DirectX 12 |
-|------|-------------------------------------|------------|
-| | `VkMicromapUsageKHR` | `D3D12_RAYTRACING_OPACITY_MICROMAP_HISTOGRAM_ENTRY` |
-| `micromaps[].usageCounts[i]` | `count` | `Count` |
-| `micromaps[].usageLevels[i]` | `subdivisionLevel` | `SubdivisionLevel` |
-| `micromaps[].usageFormats[i]` | `format` | `Format` |
-| | | |
-| | `VkMicromapTriangleKHR` | `D3D12_RAYTRACING_OPACITY_MICROMAP_DESC` |
-| `micromaps[].triangles[t].dataOffset` | `dataOffset` | `ByteOffset` |
-| `micromaps[].triangles[t].subdivisionLevel` | `subdivisionLevel` | `SubdivisionLevel` |
-| `micromaps[].triangles[t].format` | `format` | `Format` |
-| | | |
-| global micromap | `VkAccelerationStructureGeometryMicromapDataKHR` | `D3D12_RAYTRACING_OPACITY_MICROMAP_ARRAY_DESC` |
-| `micromaps[].data` | `data` | `InputBuffer` |
-| `micromaps[].triangles` | `triangleArray` | `PerOmmDescs` |
-| `micromaps[].triangles` `bufferView.byteStride` | `triangleArrayStride` | `PerOmmDescs` stride |
-| `usageCounts` length | `usageCountsCount` | `NumOmmHistogramEntries` |
-| `usageCounts` / `usageLevels` / `usageFormats` | `pUsageCounts` | `pOmmHistogram` |
-| | | |
-| mesh primitive `EXT_mesh_opacity_micromap` | `VkAccelerationStructureTrianglesOpacityMicromapKHR` | `D3D12_RAYTRACING_GEOMETRY_OMM_LINKAGE_DESC` |
-| `micromap` | `micromap` | `OpacityMicromapArray` |
-| `micromapIndices` (accessor buffer) | `indexBuffer` | `OpacityMicromapIndexBuffer` |
-| `micromapIndices` (`componentType`) | `indexType` | `OpacityMicromapIndexFormat` |
-| `micromapIndices` (`byteStride`) | `indexStride` | `OpacityMicromapIndexBuffer` stride |
-| `micromapBaseTriangle` | `baseTriangle` | `OpacityMicromapBaseLocation` |
-
-In the mesh primitive rows, the Vulkan `micromap` and DirectX 12 `OpacityMicromapArray` fields refer to the micromap object built from the referenced `micromaps` element, not to the stored glTF data itself.
-
-References:
-
-- [Vulkan `VK_KHR_opacity_micromap`](https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_opacity_micromap.html)
-- [Microsoft DirectX Raytracing — opacity micromaps](https://microsoft.github.io/DirectX-Specs/d3d/Raytracing.html#opacity-micromaps)
-
-### Informative references
+## Resources
 
 *This section is non-normative.*
 
-- [Vulkan proposals index](https://docs.vulkan.org/proposals/) — design rationale for opacity micromaps.
+- [Vulkan `VK_KHR_opacity_micromap`](https://docs.vulkan.org/refpages/latest/refpages/source/VK_KHR_opacity_micromap.html)
+- [DirectX Raytracing: Opacity Micromaps](https://microsoft.github.io/DirectX-Specs/d3d/Raytracing.html#opacity-micromaps)
 - [SPIR-V `SPV_KHR_opacity_micromap`](https://github.khronos.org/SPIRV-Registry/extensions/KHR/SPV_KHR_opacity_micromap.html)
 - [NVIDIA Opacity Micromap SDK](https://github.com/NVIDIA-RTX/OMM)
 
-## Appendix A: Microtriangle indexing
+## Appendix A: Microtriangle Indexing
 
-Opacity micromap bits in the `data` buffer are indexed by a hierarchical space-filling curve over recursively subdivided microtriangles.
+### Reference Function
 
-### Recursive subdivision
-
-A base triangle with vertices `v0`, `v1`, and `v2` is split into four congruent microtriangles by connecting edge midpoints. This split is applied recursively: subdivision level `1` yields `4` microtriangles, and each additional level multiplies the count by `4` (level `L` yields `4^L` microtriangles).
-
-The figure below shows level `1` (left) and level `2` (right). Microtriangle labels `0` … `3` at level `1` and `0` … `15` at level `2` are the linear indices used when packing opacity bits in `data` (least significant bit first within each byte).
-
-<img src="./figures/micromap-subdivision.svg" alt="Recursive micromap subdivision and microtriangle index ordering at levels 1 and 2"/>
-
-In the diagram:
-
-- Each inner triangle is one microtriangle at the shown subdivision level.
-- The numbered labels are the linear microtriangle indices at that level.
-- The dot in each level-`1` microtriangle marks the entry point of the curve into that sub-triangle.
-- Blue arrows show the default vertex winding used when traversing a sub-triangle's children.
-- Red arrows show sub-triangles whose child winding is flipped at the next subdivision level.
-
-### Curve traversal order
-
-Within a microtriangle, child sub-triangles are visited in this order:
-
-1. The sub-triangle nearest vertex `v0`.
-2. The middle sub-triangle, using flipped child ordering.
-3. The sub-triangle nearest vertex `v1`.
-4. The sub-triangle nearest vertex `v2`, using flipped child ordering.
-
-This traversal is applied recursively. The resulting linear index is the position of a microtriangle's opacity value in the packed `data` bitstream for that micromap triangle record.
-
-At intersection time, graphics APIs quantize barycentric coordinates $(u, v)$ and map them to the same linear index.
-
-### Reference function
-
-The following function is a reference implementation that maps quantized barycentric coordinates $(u, v)$ inside a base triangle to a microtriangle index for subdivision level `level`, using the recursive splitting order described above. It is reproduced from the Vulkan `VK_KHR_opacity_micromap` specification reference code.
+The following function maps barycentric coordinates $(u, v)$ on a base triangle to the index of the microtriangle containing them, for subdivision level `level`. It is reproduced from the reference code of the Vulkan `VK_KHR_opacity_micromap` specification and is normative for this extension.
 
 ```cpp
 uint32_t BarycentricsToSpaceFillingCurveIndex(float u, float v, uint32_t level)
@@ -387,6 +342,21 @@ uint32_t BarycentricsToSpaceFillingCurveIndex(float u, float v, uint32_t level)
     return b0 | (b1 << 1u);
 }
 ```
+
+### Illustration
+
+*This section is non-normative.*
+
+The resulting order follows a recursive space-filling curve. Each triangle is split into four sub-triangles, which are visited in the following order:
+
+1. The sub-triangle nearest `v0`.
+2. The middle sub-triangle, with its child order flipped.
+3. The sub-triangle nearest `v1`.
+4. The sub-triangle nearest `v2`, with its child order flipped.
+
+The figure below shows the resulting microtriangle indices for subdivision levels 1 (left) and 2 (right), with `v0` at the bottom left, `v1` at the bottom right, and `v2` at the top. Blue arrows show the default child order and red arrows show flipped child order.
+
+<img src="./figures/micromap-subdivision.svg" alt="Microtriangle indices at subdivision levels 1 and 2"/>
 
 ## Appendix: Full Khronos Copyright Statement
 

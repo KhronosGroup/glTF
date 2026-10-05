@@ -11,7 +11,7 @@
             "gltf_detailedDescription": "Each element describes one opacity micromap's packed data, triangle records, and usage summary arrays.",
             "items": {
                 "type": "object",
-                "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+                "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
                 "properties": {
                     "data": {
                         "allOf": [ { "$ref": "glTFid.schema.json" } ],
@@ -21,7 +21,7 @@
                     "triangles": {
                         "allOf": [ { "$ref": "glTFid.schema.json" } ],
                         "description": "The index of the bufferView containing micromap triangle records.",
-                        "gltf_detailedDescription": "An array of 8-byte records: uint32 dataOffset, uint16 subdivisionLevel, uint16 format."
+                        "gltf_detailedDescription": "A tightly packed array of 8-byte records: uint32 dataOffset, uint16 subdivisionLevel, uint16 format. The buffer view must not define byteStride."
                     },
                     "usageCounts": {
                         "type": "array",
@@ -39,7 +39,8 @@
                         "gltf_detailedDescription": "Parallel to usageCounts and usageFormats.",
                         "items": {
                             "type": "integer",
-                            "minimum": 0
+                            "minimum": 0,
+                            "maximum": 12
                         },
                         "minItems": 1
                     },
@@ -53,6 +54,7 @@
                         },
                         "minItems": 1
                     },
+                    "name": { },
                     "extensions": { },
                     "extras": { }
                 },

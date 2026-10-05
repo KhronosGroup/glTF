@@ -7,13 +7,13 @@
     "properties": {
         "micromap": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "Index into the root-level EXT_mesh_opacity_micromap.micromaps array.",
+            "description": "The index of the micromap in the root `micromaps` array.",
             "gltf_detailedDescription": "References the micromap build data used when attaching opacity micromaps to this primitive's triangles."
         },
         "micromapIndices": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "Accessor index for per-geometry-triangle micromap lookup values.",
-            "gltf_detailedDescription": "Optional accessor with one scalar per geometry triangle. If omitted, geometry triangle t maps to micromap triangle t plus micromapBaseTriangle. Values are either special indices (-1 through -4) or non-negative micromap triangle indices. When provided, the accessor count must equal the primitive triangle count."
+            "description": "The index of the accessor containing one micromap index per triangle.",
+            "gltf_detailedDescription": "The index of a `SCALAR` accessor with one element per triangle of the primitive. Each element is either a micromap triangle index or a special index (-1 to -4, stored as two's-complement bit patterns for unsigned component types). When undefined, triangle `t` uses micromap triangle `t + micromapBaseTriangle`."
         },
         "micromapBaseTriangle": {
             "type": "integer",
