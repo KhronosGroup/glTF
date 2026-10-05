@@ -10,7 +10,8 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 - Christoph Kubisch, NVIDIA, [@pixeljetstream](https://github.com/pixeljetstream)
 - Nia Bickford, NVIDIA, [@NBickford-NV](https://github.com/NBickford-NV)
 - Arseny Kapoulkine, Independent, [@zeuxcg](https://zeux.io/)
-- Pyarelal Knowles, NVIDIA, [pknowlesnv](https://github.com/pknowlesnv)
+- Pyarelal Knowles, NVIDIA, [@pknowlesnv](https://github.com/pknowlesnv)
+- Martin-Karl Lefrançois, NVIDIA, [@mklefrancois](https://github.com/mklefrancois)
 
 Copyright 2018-2026 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -126,7 +127,7 @@ This section defines the stored pre-build micromap representation referenced by 
 
 ### Subdivision levels
 
-For subdivision level \(L\), a base triangle is subdivided into \(4^L\) microtriangles.
+For subdivision level $L$, a base triangle is subdivided into $4^L$ microtriangles.
 
 Each micromap triangle record specifies its own subdivision level and format. The `usageCounts`, `usageLevels`, and `usageFormats` arrays summarize how many micromap triangles exist for each `(subdivisionLevel, format)` pair in a micromap.
 
@@ -170,13 +171,13 @@ The `data` `bufferView` contains packed microtriangle state bits for all microma
 - Two-state (`format` `1`) data **MUST** use one bit per microtriangle.
 - Four-state (`format` `2`) data **MUST** use two bits per microtriangle.
 - Bits **MUST** be packed from least significant bit to most significant bit within each byte.
-- For a micromap triangle with subdivision level \(L\) and format \(F\), the number of bytes required at `dataOffset` **MUST** be:
+- For a micromap triangle with subdivision level $L$ and format $F$, the number of bytes required at `dataOffset` **MUST** be:
 
-\[
+$$
 \left\lceil \frac{4^L \cdot b}{8} \right\rceil
-\]
+$$
 
-where \(b\) is `1` for format `1` and `2` for format `2`.
+where $b$ is `1` for format `1` and `2` for format `2`.
 
 Unused bits in the final byte of a micromap triangle's region **MUST** be ignored.
 
@@ -203,7 +204,7 @@ This record layout is compatible with `VkMicromapTriangleKHR` in Vulkan `VK_KHR_
 Primitives using this extension **MUST** have `mode` `TRIANGLES` (`4`).
 
 The extension `micromapIndices` accessor is separate from the geometry `indices` accessor. It stores one lookup value per geometry triangle.
-If provided, the accessor **MUST** have a `count` equal to the primitive's triangle count and element `t` of the `micromapIndices` accessor **MUST** correspond to geometry triangle `t`.
+If provided, the accessor **MUST** have a `count` equal to the primitive's triangle count (as defined by the glTF 2.0 specification for `TRIANGLES` mode: the `indices` accessor `count` divided by `3`, or the `POSITION` accessor `count` divided by `3` when `indices` is undefined) and element `t` of the `micromapIndices` accessor **MUST** correspond to geometry triangle `t`.
 
 ### Lookup resolution
 
@@ -243,6 +244,11 @@ When `componentType` is `5122` (`SHORT`) or `5124` (`INT`):
 - [glTF.EXT_mesh_opacity_micromap.schema.json](schema/glTF.EXT_mesh_opacity_micromap.schema.json)
 - [mesh.primitive.EXT_mesh_opacity_micromap.schema.json](schema/mesh.primitive.EXT_mesh_opacity_micromap.schema.json)
 
+## Known Implementations
+
+- [nvpro-samples/vk_gltf_renderer](https://github.com/nvpro-samples/vk_gltf_renderer): loads the extension and builds opacity micromaps for ray tracing with Vulkan `VK_KHR_opacity_micromap`.
+- [nvpro-samples/gltf_omm_baker](https://github.com/nvpro-samples/gltf_omm_baker): bakes opacity micromaps from material alpha coverage and writes them using this extension.
+
 ## Reference
 
 ### Normative external references
@@ -275,6 +281,8 @@ When mapping stored glTF data to graphics API micromap build inputs, implementat
 | `micromapIndices` (`byteStride`) | `indexStride` | `OpacityMicromapIndexBuffer` stride |
 | `micromapBaseTriangle` | `baseTriangle` | `OpacityMicromapBaseLocation` |
 
+In the mesh primitive rows, the Vulkan `micromap` and DirectX 12 `OpacityMicromapArray` fields refer to the micromap object built from the referenced `micromaps` element, not to the stored glTF data itself.
+
 References:
 
 - [Vulkan `VK_KHR_opacity_micromap`](https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_opacity_micromap.html)
@@ -282,9 +290,11 @@ References:
 
 ### Informative references
 
+*This section is non-normative.*
+
 - [Vulkan proposals index](https://docs.vulkan.org/proposals/) — design rationale for opacity micromaps.
 - [SPIR-V `SPV_KHR_opacity_micromap`](https://github.khronos.org/SPIRV-Registry/extensions/KHR/SPV_KHR_opacity_micromap.html)
-- [NVIDIA Opacity Micromap SDK](https://developer.nvidia.com/rtx/ray-tracing/opacity-micromap)
+- [NVIDIA Opacity Micromap SDK](https://github.com/NVIDIA-RTX/OMM)
 
 ## Appendix A: Microtriangle indexing
 
@@ -317,11 +327,11 @@ Within a microtriangle, child sub-triangles are visited in this order:
 
 This traversal is applied recursively. The resulting linear index is the position of a microtriangle's opacity value in the packed `data` bitstream for that micromap triangle record.
 
-At intersection time, graphics APIs quantize barycentric coordinates \((u, v)\) and map them to the same linear index.
+At intersection time, graphics APIs quantize barycentric coordinates $(u, v)$ and map them to the same linear index.
 
 ### Reference function
 
-The following function is a reference implementation that maps quantized barycentric coordinates \((u, v)\) inside a base triangle to a microtriangle index for subdivision level `level`, using the recursive splitting order described above. It is reproduced from the Vulkan `VK_KHR_opacity_micromap` specification reference code.
+The following function is a reference implementation that maps quantized barycentric coordinates $(u, v)$ inside a base triangle to a microtriangle index for subdivision level `level`, using the recursive splitting order described above. It is reproduced from the Vulkan `VK_KHR_opacity_micromap` specification reference code.
 
 ```cpp
 uint32_t BarycentricsToSpaceFillingCurveIndex(float u, float v, uint32_t level)
