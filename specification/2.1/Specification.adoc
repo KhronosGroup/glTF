@@ -856,6 +856,8 @@ The next example defines the transform for a node with attached camera using the
 
 Any glTF node **MAY** define a local space bounding volume using a node's `boundingVolume` property. A bounding volume is a simple geometric shape, optionally transformed, that **SHOULD** completely enclose the node's geometry.
 
+A bounding volume is defined in its own local coordinate system, which is relative to the local coordinate system defined by the node that instantiates it. Any transform defined by the bounding volume's TRS properties **MUST** be applied before the node's global transformation matrix is applied, transforming the shape first into the node's local coordinate system and then into global space, as described in the <<transformations,Transformations>> section.
+
 Bounding volumes contain the following properties:
 
 [options="header"]
