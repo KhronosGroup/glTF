@@ -29,7 +29,7 @@ This extension is optional, meaning it should be placed in the glTF root's `exte
 
 "Layers" are a common concept when working with geospatial data, representing semantic or functional groups of geometries requiring common handling by the application. For example, in a vector basemap, land and water boundaries are typically rendered behind geometries like roads and buildings, and will have different styling rules applied. In this case, semantic layers such as "water", "land", "roads", and "buildings" may be appropriate.
 
-The document-level `3DTILES_layers` extension defines the layers in the asset. Each layer has a `name` property. A layer may also have application-specific [properties](#properties) used for filtering and styling.
+The document-level `3DTILES_layers` extension defines the layers in the asset. Each layer **MUST** supply a `name` property (usually optional for glTF objects). A layer may also have application-specific [properties](#properties) used for filtering and styling.
 
 ```json
 {
