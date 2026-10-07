@@ -1,0 +1,18 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "node.EXT_voxels.EXT_structural_metadata.schema.json",
+    "title": "EXT_structural_metadata EXT_voxels extension",
+    "type": "object",
+    "description": "Structural metadata about EXT_voxels attributes.",
+    "$ref": "glTFProperty.schema.json",
+    "properties": {
+        "propertyAttributes": {
+            "type": "array",
+            "description": "An array of indexes of property attributes in the root `EXT_structural_metadata` object.",
+            "minItems": 1,
+            "items": {
+                "$ref": "glTFid.schema.json"
+            }
+        }
+    }
+}

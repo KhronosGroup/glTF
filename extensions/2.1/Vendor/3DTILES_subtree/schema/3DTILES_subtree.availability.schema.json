@@ -8,7 +8,7 @@
     "properties": {
         "bitstream": {
             "$ref": "glTFid.schema.json",
-            "description": "Index of a buffer view that contains availability bits. If an element is available, its bit is 1, and if it is unavailable, its bit is 0.",
+            "description": "Index of a buffer view that contains availability bits. If an element is available, its bit is 1, and if it is unavailable, its bit is 0."
         },
         "availableCount": {
             "type": "integer",

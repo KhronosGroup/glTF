@@ -28,6 +28,10 @@
                     "type": "string"
                 }
             ]
+        },
+        "content": {
+            "description": "An object that provides additional information about the tile's content. If the tile does not have content (i.e. the node's `externalAsset` property is not defined) then `content` **MUST** be omitted.",
+            "$ref": "content.schema.json"
         }
     },
     "required": [

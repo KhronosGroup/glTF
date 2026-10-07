@@ -297,4 +297,4 @@ Subtrees may store application-specific properties for available tiles and conte
 ## Schema
 
 - [3DTILES_subtree.availability.schema.json](schema/3DTILES_subtree.availability.schema.json)
-- [gltf.3DTILES_subtree.schema.json](schema/gltf.3DTILES_subtree.schema.json)
+- [glTF.3DTILES_subtree.schema.json](schema/glTF.3DTILES_subtree.schema.json)
