@@ -121,7 +121,7 @@ The following example describes a voxel tileset containing two metadata values i
         },
         "3DTILES_implicit_tiling": {
           "contentUri": "content/{level}/{right}/{forward}/{up}.glb",
-          "subtreeUri": "subtrees/{level}/{right}/{forward}{up}.subtree.glb",
+          "subtreeUri": "subtrees/{level}/{right}/{forward}/{up}.subtree.glb",
           "subdivisionScheme": "OCTREE",
           "availableLevels": 9,
           "subtreeLevels": 3
