@@ -1,0 +1,35 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "valueSocket.node.KHR_interactivity.schema.json",
+    "title": "Behavior graph interactivity node value socket",
+    "type": "object",
+    "$ref": "glTFProperty.schema.json",
+    "properties": {
+        "node": {
+            "title": "The index of the interactivity node.",
+            "$ref": "glTFid.schema.json"
+        },
+        "socket": {
+            "title": "The id of the output value socket of the interactivity node.",
+            "type": "string"
+        },
+        "type": {
+            "title": "The type index.",
+            "$ref": "glTFid.schema.json"
+        },
+        "value": {
+            "title": "The inline input socket value.",
+            "type": "array",
+            "minItems": 1
+        }
+    },
+    "dependentRequired": {
+        "socket": [ "node" ],
+        "value": ["type"]
+    },
+    "not": { "required": [ "node", "value" ] },
+    "anyOf": [
+        { "required": [ "node" ] },
+        { "required": [ "type" ] }
+    ]
+}

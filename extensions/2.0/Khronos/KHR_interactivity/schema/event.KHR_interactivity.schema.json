@@ -3,7 +3,7 @@
     "$id": "event.KHR_interactivity.schema.json",
     "title": "Behavior graph event",
     "type": "object",
-    "allOf": [ { "$ref": "nameableProperty.KHR_interactivity.schema.json" } ],
+    "$ref": "nameableProperty.KHR_interactivity.schema.json",
     "properties": {
         "id": {
             "title": "The event id.",
@@ -12,29 +12,9 @@
         "values": {
             "title": "The event value sockets.",
             "type": "object",
-            "additionalProperties": {
-                "type": "object",
-                "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
-                "properties": {
-                    "type": {
-                        "title": "The type index.",
-                        "allOf": [ { "$ref": "glTFid.schema.json" } ]
-                    },
-                    "value": {
-                        "title": "The initial value.",
-                        "type": "array",
-                        "minItems": 1
-                    },
-                    "extensions": { },
-                    "extras": { }
-                },
-                "required": [ "type" ]
-            },
+            "additionalProperties": { "$ref": "valueSocket.event.KHR_interactivity.schema.json" },
             "minProperties": 1,
             "not": { "required": [ "event" ] }
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        }
     }
 }

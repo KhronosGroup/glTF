@@ -3,12 +3,11 @@
     "$id": "nameableProperty.KHR_interactivity.schema.json",
     "title": "KHR_interactivity Nameable Property",
     "type": "object",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "name": {
-            "type": "string",
-            "description": "The user-defined name of this object.",
-            "gltf_detailedDescription": "The user-defined name of this object.  It does not have to be unique or scoped to the object type."
+            "title": "The user-defined name of this object.",
+            "type": "string"
         }
     }
 }
