@@ -4,7 +4,7 @@
     "title": "Mesh",
     "type": "object",
     "description": "A set of primitives to be rendered.  Its global transform is defined by a node that references it.",
-    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "primitives": {
             "type": "array",

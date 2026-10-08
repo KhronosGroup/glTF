@@ -4,10 +4,10 @@
     "title": "Texture Info",
     "type": "object",
     "description": "Reference to a texture.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "index": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "$ref": "glTFid.schema.json",
             "description": "The index of the texture."
         },
         "texCoord": {

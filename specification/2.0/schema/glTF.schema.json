@@ -4,7 +4,7 @@
     "title": "glTF",
     "type": "object",
     "description": "The root object for a glTF asset.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "accessors": {
             "type": "array",
@@ -24,7 +24,7 @@
             "minItems": 1
         },
         "asset": {
-            "allOf": [ { "$ref": "asset.schema.json" } ],
+            "$ref": "asset.schema.json",
             "description": "Metadata about the glTF asset."
         },
         "bufferViews": {
@@ -117,7 +117,7 @@
             "gltf_detailedDescription": "An array of samplers.  A sampler contains properties for texture filtering and wrapping modes."
         },
         "scene": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "$ref": "glTFid.schema.json",
             "description": "The index of the default scene.",
             "gltf_detailedDescription": "The index of the default scene.  This property **MUST NOT** be defined, when `scenes` is undefined."
         },
