@@ -1,0 +1,35 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema",
+	"title": "EXT_volumetricvideo glTF extension",
+	"type": "object",
+	"description": "glTF extension that enables the simple Volumetric Video playback with two mode, sequence of mesh or  in glTF. A list of mesh sequence indicate the total frame of mesh sequence stored in the gltf file ",
+	"allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+	"properties": {
+		"mpeg_media": {
+			"type": "object",
+			"$ref": "MPEG_media.schema.json"
+		},
+		"meshAccessorList": {
+			"type": "array",
+			"items": {
+				"type": "integer",
+				"minProperties": 2,
+				"$ref": "glTFid.schema.json"
+			},
+			"minItems": 1
+		},
+		"meshStep": {
+			"type": "array",
+			"items": {
+				"type": "integer",
+				"minProperties": 1
+			},
+			"minItems": 1
+		},
+		"extensions": {},
+		"extras": {}
+	},
+	"required": [
+		"lights"
+	]
+}
