@@ -1,0 +1,29 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "KHR_character_expression_morphtarget KHR_character_expression Extension",
+    "type": "object",
+    "description": "glTF extension that extends KHR_character_expression to specify morph target-based expression animations.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "channels": {
+            "type": "array",
+            "description": "Array of animation channel indices that drive morph target-based expressions.",
+            "items": {
+                "allOf": [
+                    {
+                        "$ref": "glTFid.schema.json"
+                    }
+                ],
+                "description": "Index of an animation channel in the expression's selected animation.",
+                "gltf_detailedDescription": "This value MUST be a valid index into the `channels` array of the animation selected by the containing expression entry's `animation` property."
+            },
+            "minItems": 1,
+            "uniqueItems": true
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "channels"
+    ]
+}
