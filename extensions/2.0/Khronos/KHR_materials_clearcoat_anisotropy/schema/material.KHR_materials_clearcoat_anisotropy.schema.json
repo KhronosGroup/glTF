@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_clearcoat_anisotropy glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines anisotropy for the clearcoat material layer.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "clearcoatAnisotropyStrength": {
+            "type": "number",
+            "description": "The clearcoat anisotropy strength.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The clearcoat anisotropy strength. When the clearcoat anisotropy texture is present, this value is multiplied by the texture's blue channel."
+        },
+        "clearcoatAnisotropyRotation": {
+            "type": "number",
+            "description": "The rotation of the clearcoat anisotropy.",
+            "default": 0.0,
+            "gltf_detailedDescription": "The rotation of the clearcoat anisotropy in tangent, bitangent space, measured in radians counter-clockwise from the tangent. When the clearcoat anisotropy texture is present, this value provides additional rotation to the vectors in the texture."
+        },
+        "clearcoatAnisotropyTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The clearcoat anisotropy texture.",
+            "gltf_detailedDescription": "The clearcoat anisotropy texture. Red and green channels represent the clearcoat anisotropy direction in $[-1, 1]$ tangent, bitangent space, to be rotated by the clearcoat anisotropy rotation. The blue channel contains strength as $[0, 1]$ to be multiplied by the clearcoat anisotropy strength."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
