@@ -1,0 +1,28 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "doppler.schema.json",
+    "title": "KHR_audio_environment Doppler",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "enabled": {
+            "type": "boolean",
+            "description": "Enable Doppler shift for positional emitters in this environment.",
+            "default": false
+        },
+        "scale": {
+            "type": "number",
+            "description": "Exaggeration factor applied to relative velocities.",
+            "minimum": 0.0,
+            "default": 1.0
+        },
+        "speedOfSound": {
+            "type": "number",
+            "description": "Propagation speed in meters per second.",
+            "exclusiveMinimum": 0.0,
+            "default": 343.0
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}
