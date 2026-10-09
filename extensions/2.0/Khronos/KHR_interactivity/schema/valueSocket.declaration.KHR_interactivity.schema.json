@@ -1,0 +1,14 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "valueSocket.declaration.KHR_interactivity.schema.json",
+    "title": "Behavior graph declaration value socket",
+    "type": "object",
+    "$ref": "glTFProperty.schema.json",
+    "properties": {
+        "type": {
+            "title": "The type index.",
+            "$ref": "glTFid.schema.json"
+        }
+    },
+    "required": [ "type" ]
+}

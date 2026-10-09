@@ -1,9 +1,9 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "variable.KHR_interactivity.schema.json",
-    "title": "Behavior graph variable",
+    "$id": "valueSocket.event.KHR_interactivity.schema.json",
+    "title": "Behavior graph event value socket",
     "type": "object",
-    "$ref": "nameableProperty.KHR_interactivity.schema.json",
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "type": {
             "title": "The type index.",

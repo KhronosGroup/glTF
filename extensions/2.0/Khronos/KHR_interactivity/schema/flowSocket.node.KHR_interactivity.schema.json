@@ -1,0 +1,19 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "flowSocket.node.KHR_interactivity.schema.json",
+    "title": "Behavior graph interactivity node flow socket",
+    "type": "object",
+    "$ref": "glTFProperty.schema.json",
+    "properties": {
+        "node": {
+            "title": "The index of the interactivity node.",
+            "$ref": "glTFid.schema.json"
+        },
+        "socket": {
+            "title": "The id of the input flow socket of the interactivity node.",
+            "type": "string",
+            "default": "in"
+        }
+    },
+    "required": [ "node" ]
+}

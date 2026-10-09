@@ -1,0 +1,15 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "configurationValue.node.KHR_interactivity.schema.json",
+    "title": "Behavior graph interactivity node configuration value",
+    "type": "object",
+    "$ref": "glTFProperty.schema.json",
+    "properties": {
+        "value": {
+            "title": "The value.",
+            "type": "array",
+            "minItems": 1
+        }
+    },
+    "required": [ "value" ]
+}

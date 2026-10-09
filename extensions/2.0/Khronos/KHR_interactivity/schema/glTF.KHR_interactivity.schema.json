@@ -3,24 +3,20 @@
     "$id": "glTF.KHR_interactivity.schema.json",
     "title": "KHR_interactivity glTF extension",
     "type": "object",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
+        "graph": {
+            "title": "The index of the default behavior graph.",
+            "$ref": "glTFid.schema.json",
+            "default": 0
+        },
         "graphs": {
             "title": "An array of behavior graphs.",
             "type": "array",
-            "items": {
-                "$ref": "graph.KHR_interactivity.schema.json"
-            },
+            "items": { "$ref": "graph.KHR_interactivity.schema.json" },
             "minItems": 1,
             "maxItems": 2147483648
-        },
-        "graph": {
-            "title": "The index of the default behavior graph.",
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "default": 0
-        },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "graphs" ]
 }
