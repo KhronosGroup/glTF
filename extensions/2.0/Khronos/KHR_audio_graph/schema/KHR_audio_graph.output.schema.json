@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Graph Output",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "node": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "The source graph node."
+        },
+        "output": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The output port on the source node."
+        },
+        "emitter": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "The index of the target KHR_audio_emitter emitter."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["node", "emitter"]
+}

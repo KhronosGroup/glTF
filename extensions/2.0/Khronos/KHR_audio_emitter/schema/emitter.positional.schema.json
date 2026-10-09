@@ -1,0 +1,69 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_emitter Positional Audio Emitter",
+    "type": "object",
+    "description": "Positional audio emitter properties.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "coneInnerAngle": {
+            "description": "The angle, in radians, of a cone inside of which there will be no volume reduction. This angle represents the angular diameter of the cone, from side to side. If not specified, the angle of Tau radians (360 degrees) is used, which means the audio emits in all directions (not in a cone).",
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 6.2831853071795864,
+            "default": 6.2831853071795864
+        },
+        "coneOuterAngle": {
+            "description": "The angle, in radians, of a cone outside of which the volume will be reduced to a constant value of `coneOuterGain`. This angle represents the angular diameter of the cone, from side to side. If not specified, the angle of Tau radians (360 degrees) is used, which means some audio will emit in all directions.",
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 6.2831853071795864,
+            "default": 6.2831853071795864
+        },
+        "coneOuterGain": {
+            "description": "The linear volume gain of the audio emitter set when outside the cone defined by the `coneOuterAngle` property. It is a linear value (not dB). If not specified, the cone outer gain is `0.0`, meaning the audio will be silent outside of the cone.",
+            "type": "number",
+            "minimum": 0.0,
+            "default": 0.0
+        },
+        "distanceModel": {
+            "type": "string",
+            "description": "Specifies the distance model for the audio emitter.",
+            "anyOf": [
+                {
+                    "enum": ["linear"],
+                    "description": "A linear distance model calculating the gain induced by the distance according to: 1.0 - rolloffFactor * (distance - refDistance) / (maxDistance - refDistance)"
+                },
+                {
+                    "enum": ["inverse"],
+                    "description": "An inverse distance model calculating the gain induced by the distance according to: refDistance / (refDistance + rolloffFactor * (Math.max(distance, refDistance) - refDistance))"
+                },
+                {
+                    "enum": ["exponential"],
+                    "description": "An exponential distance model calculating the gain induced by the distance according to: pow((Math.max(distance, refDistance) / refDistance, -rolloffFactor))"
+                }
+            ],
+            "default": "inverse"
+        },
+        "maxDistance": {
+            "description": "The maximum distance between the emitter and listener, after which the volume will not be reduced any further. If zero or not specified, the audio emitter does not have a maximum distance, and it can be heard from any distance.",
+            "type": "number",
+            "minimum": 0.0,
+            "default": 0.0
+        },
+        "refDistance": {
+            "description": "A reference distance for reducing volume as the emitter moves further from the listener. For distances less than this, the volume is not reduced. This value cannot be zero or a negative number. If not specified, the default value is `1.0`.",
+            "type": "number",
+            "minimum": 0.0,
+            "exclusiveMinimum": true,
+            "default": 1.0
+        },
+        "rolloffFactor": {
+            "type": "number",
+            "description": "Describes how quickly the volume is reduced as the emitter moves away from listener. When distanceModel is set to linear, the maximum value is 1. Otherwise, there is no upper limit to the rolloff factor. If not specified, the default value is `1.0`.",
+            "minimum": 0.0,
+            "default": 1.0
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}
