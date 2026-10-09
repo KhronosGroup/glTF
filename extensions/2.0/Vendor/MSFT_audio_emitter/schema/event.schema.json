@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Event",
+    "type": "object",
+    "description": "Animation events that trigger an action.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "action": {
+            "type": "string",
+            "enum": [ "play", "pause", "stop" ],
+            "description": "Action to take on the target emitter."
+        },
+        "emitter": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the emitter to target."
+        },
+        "time": {
+            "type": "number",
+            "description": "Linear time in seconds that the event should occur.",
+            "minimum": 0
+        },
+        "startOffset": {
+            "type": "number",
+            "description": "Position the clip head at a specific time in seconds.",
+            "gltf_detailedDescription": "Position the clip head at a specific time in seconds. Only used when action is play and emitter was not most recently paused.",
+            "minimum": 0
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "additionalProperties": false,
+    "required": [ "action", "emitter", "time" ]
+}
