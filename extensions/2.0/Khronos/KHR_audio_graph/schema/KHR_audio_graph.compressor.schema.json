@@ -1,0 +1,49 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Compressor Node",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "threshold": {
+            "type": "number",
+            "minimum": -100.0,
+            "maximum": 0.0,
+            "default": -24.0,
+            "description": "Level in dB above which compression starts."
+        },
+        "knee": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 40.0,
+            "default": 30.0,
+            "description": "Width in dB of the transition into compression."
+        },
+        "ratio": {
+            "type": "number",
+            "minimum": 1.0,
+            "maximum": 20.0,
+            "default": 12.0,
+            "description": "Input/output dB ratio above the threshold."
+        },
+        "attack": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 0.003,
+            "description": "Time in seconds to reduce gain by 10 dB."
+        },
+        "release": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 0.25,
+            "description": "Time in seconds to increase gain by 10 dB."
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}
