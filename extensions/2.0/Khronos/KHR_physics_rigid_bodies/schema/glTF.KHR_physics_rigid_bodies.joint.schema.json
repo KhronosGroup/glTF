@@ -1,0 +1,28 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_physics_rigid_bodies.joint.schema.json",
+    "title": "KHR_physics_rigid_bodies Physics Joint",
+    "type": "object",
+    "description": "Parameters describing a joint, which may constrain or drive the relative motion of a pair of nodes.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "limits": {
+            "type": "array",
+            "description": "The set of limits which constrain relative motion.",
+            "items": {
+                "type": "object",
+                "$ref": "glTF.KHR_physics_rigid_bodies.joint.limit.schema.json"
+            }
+        },
+        "drives": {
+            "type": "array",
+            "description": "The set of drives applying forces to this joint.",
+            "items": {
+                "type": "object",
+                "$ref": "glTF.KHR_physics_rigid_bodies.joint.drive.schema.json"
+            }
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
