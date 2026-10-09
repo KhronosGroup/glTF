@@ -1,0 +1,72 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensionsUsed": ["OMI_physics_body", "OMI_physics_shape"],
+    "extensions": {
+        "OMI_physics_shape": {
+            "shapes": [
+                {
+                    "type": "box",
+                    "box": {
+                        "size": [3, 1, 1]
+                    }
+                },
+                {
+                    "type": "box",
+                    "box": {
+                        "size": [1, 3, 1]
+                    }
+                }
+            ]
+        }
+    },
+    "nodes": [
+        {
+            "children": [1, 2, 3],
+            "extensions": {
+                "OMI_physics_body": {
+                    "trigger": {
+                        "nodes": [1, 2]
+                    }
+                }
+            },
+            "name": "CompoundTriggerL"
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": {
+                    "trigger": {
+                        "shape": 0
+                    }
+                }
+            },
+            "name": "BottomOfL",
+            "translation": [1, 0, 0]
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": {
+                    "trigger": {
+                        "shape": 1
+                    }
+                }
+            },
+            "name": "TopOfL",
+            "translation": [0, 2, 0]
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": {
+                    "trigger": {
+                        "shape": 0
+                    }
+                }
+            },
+            "name": "SeparateTrigger",
+            "translation": [0, 0, 4]
+        }
+    ],
+    "scene": 0,
+    "scenes": [{ "nodes": [0] }]
+}
