@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_node_lod glTF extension",
+    "type": "object",
+    "description": "glTF extension for specifying levels of detail (LOD).",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "lod": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+                "properties": {
+                    "node": {
+                        "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                        "description": "LOD node index"
+                    },
+                    "coverage": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "maximum": 1.0,
+                        "description": "Screen coverage for switching to this LOD"
+                    },
+                    "extensions": { },
+                    "extras": { }
+                }
+                "required": [ "node", "coverage" ]
+            },
+            "description": "Array containing the objects including the node index as a lower LOD and screen coverage as a hint to switch to this LOD.",
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "lod" ]
+}
