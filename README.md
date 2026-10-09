@@ -68,6 +68,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
   - [BabylonJS Sandbox](https://www.babylonjs.com/sandbox/)
   - [Drag-and-drop viewer](https://gltf-viewer.donmccurdy.com/)
   - [glTF VSCode Extension](https://marketplace.visualstudio.com/items?itemName=cesium.gltf-vscode) 3D previews, glTF validation, conversion to/from GLB
+  - [ZeroXR Model Explorer](https://0xr.space/) Real-world scale in WebXR, section planes, wireframe and UV views, assembly tree
 
 ## Contents
 
