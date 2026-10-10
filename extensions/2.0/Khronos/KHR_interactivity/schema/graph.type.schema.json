@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "type.KHR_interactivity.schema.json",
+    "$id": "graph.type.schema.json",
     "title": "Behavior graph type",
     "type": "object",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

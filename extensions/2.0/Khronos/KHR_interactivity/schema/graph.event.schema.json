@@ -1,9 +1,9 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "event.KHR_interactivity.schema.json",
+    "$id": "graph.event.schema.json",
     "title": "Behavior graph event",
     "type": "object",
-    "allOf": [ { "$ref": "nameableProperty.KHR_interactivity.schema.json" } ],
+    "allOf": [ { "$ref": "graph.nameableProperty.schema.json" } ],
     "properties": {
         "id": {
             "title": "The event id.",

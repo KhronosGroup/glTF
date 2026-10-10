@@ -9,7 +9,7 @@
             "title": "An array of behavior graphs.",
             "type": "array",
             "items": {
-                "$ref": "graph.KHR_interactivity.schema.json"
+                "$ref": "graph.schema.json"
             },
             "minItems": 1,
             "maxItems": 2147483648

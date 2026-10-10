@@ -1,9 +1,9 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "variable.KHR_interactivity.schema.json",
+    "$id": "graph.variable.schema.json",
     "title": "Behavior graph variable",
     "type": "object",
-    "allOf": [ { "$ref": "nameableProperty.KHR_interactivity.schema.json" } ],
+    "allOf": [ { "$ref": "graph.nameableProperty.schema.json" } ],
     "properties": {
         "type": {
             "title": "The type index.",

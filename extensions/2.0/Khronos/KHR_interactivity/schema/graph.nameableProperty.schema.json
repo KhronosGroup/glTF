@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "nameableProperty.KHR_interactivity.schema.json",
+    "$id": "graph.nameableProperty.schema.json",
     "title": "KHR_interactivity Nameable Property",
     "type": "object",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
