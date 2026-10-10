@@ -2530,18 +2530,35 @@ glTF defines materials using a common set of parameters that are based on widely
 .Physically Based Rendering Example
 image::figures/materials.svg[pdfwidth=6in,align=left]
 
+A material object describes material parameters that control mesh primitive rendering. Material parameters can be uniform, i.e., with a single value applied to the whole mesh primitive, or texturable, i.e., with parameter values varying across the mesh primitive's surface.
+
+Values of properties that represent texturable material parameters are JSON objects that contain the `index` property that specifies the texture index and the `texCoord` property that specifies the texture coordinate set index used for sampling from that texture. Some texturable parameters include additional parameter-specific properties that affect how the sampled values are applied.
 
 [[metallic-roughness-material]]
 === Metallic-Roughness Material
 
-All parameters related to the metallic-roughness material model are defined under the `pbrMetallicRoughness` property of `material` object. The following example shows how to define a gold-like material using the metallic-roughness parameters:
+All parameters related to the metallic-roughness material model are defined under the `pbrMetallicRoughness` object property of a material object.
+
+The metallic-roughness material model is defined by the following parameters:
+
+* _base color_ - The base color of the material.
+* _metalness_ - The metalness of the material; values range from stem:[0.0] (non-metal) to stem:[1.0] (metal); see <<appendix-b-brdf-implementation, Appendix B>> for the interpretation of intermediate values.
+* _roughness_ - The roughness of the material; values range from stem:[0.0] (smooth) to stem:[1.0] (rough).
+
+The base color has two different interpretations depending on the value of metalness. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal, the base color represents the reflected diffuse color of the material. The F0 value for non-metals is fixed to 4% (0.04).
+
+The value for each of these parameters **MAY** be defined using factors and/or textures (e.g., `baseColorTexture` and `baseColorFactor`). If a texture is not given, all respective texture components within this material model have a value of stem:[1.0]. The factor value is a linear multiplier for the corresponding texture components.
+
+[NOTE]
+.Example
+====
+This example shows a gold-like material defined using only factors.
 
 [source,json]
 ----
 {
     "materials": [
         {
-            "name": "gold",
             "pbrMetallicRoughness": {
                 "baseColorFactor": [ 1.000, 0.766, 0.336, 1.0 ],
                 "metallicFactor": 1.0,
@@ -2551,18 +2568,47 @@ All parameters related to the metallic-roughness material model are defined unde
     ]
 }
 ----
+====
 
-The metallic-roughness material model is defined by the following properties:
+If a mesh primitive specifies a vertex color using the `COLOR_0` attribute semantic name, its per-vertex values are interpolated across topology primitives and used as an extra multiplier for the base color value. Vertex colors that use the `COLOR_0` attribute semantic name are encoded with the linear transfer function, i.e., their values are used as-is.
 
-* _base color_ - The base color of the material.
-* _metalness_ - The metalness of the material; values range from `0.0` (non-metal) to `1.0` (metal); see <<appendix-b-brdf-implementation, Appendix B>> for the interpretation of intermediate values.
-* _roughness_ - The roughness of the material; values range from `0.0` (smooth) to `1.0` (rough).
+[NOTE]
+.Implementation Note
+====
+As defined in the vertex attributes section, all `COLOR_0` components are always in the stem:[[0.0, 1.0\]] range.
+====
 
-The _base color_ has two different interpretations depending on the value of _metalness_. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used.
+The _base color_ texture is represented by the `baseColorTexture` property. The red, green, and blue components of the texture **MUST** be encoded with the piecewise <<srgb, sRGB opto-electronic transfer function>>. Client implementations **SHOULD** apply the inverse of that function to get linear base color texture values before multiplying them with base color factors or vertex colors. When the texture sampler uses linear filtering, the transfer function **SHOULD** be decoded prior to linear interpolation.
 
-The value for each property **MAY** be defined using factors and/or textures (e.g., `baseColorTexture` and `baseColorFactor`). If a texture is not given, all respective texture components within this material model have a value of `1.0`. The factor value is a linear multiplier for the corresponding texture components. A texture binding is defined by an `index` of a _texture_ object and an optional index of texture coordinates.
+[NOTE]
+.Implementation Note
+====
+Graphics APIs usually support dedicated sRGB texture format enums that enable correct transfer function decoding and texture filtering.
+====
 
-The following example shows a material that uses a texture for its _base color_ property.
+[NOTE]
+.Example
+====
+Let:
+
+- latexmath:[\langle 0.2, 1.0, 0.7, 1.0 \rangle] be the base color factor value;
+- latexmath:[\langle 0.7, 0.8, 0.9, 0.5 \rangle] be the vertex color value interpolated at the current pixel;
+- latexmath:[\langle 64, 124, 231, 255 \rangle] be the 8-bit value stored in the base color texture for the current pixel; this value is dequantized and decoded to latexmath:[\langle 0.051, 0.202, 0.799, 1.0 \rangle].
+
+Then the effective per-pixel base color RGBA value is
+[latexmath]
++++++
+\langle 0.2, 1.0, 0.7, 1.0 \rangle \odot \langle 0.7, 0.8, 0.9, 0.5 \rangle \odot \langle 0.051, 0.202, 0.799, 1.0 \rangle =\
+\langle 0.00918, 0.1616, 0.39151, 0.5 \rangle
++++++
+====
+
+The textures for metalness and roughness parameters are packed together in a single texture represented by the `metallicRoughnessTexture` property. Its green channel contains roughness values and its blue channel contains metalness values. This texture **MUST** be encoded with the linear transfer function.
+
+[NOTE]
+.Example
+====
+The following example shows a material that uses two textures.
 
 [source,json]
 ----
@@ -2571,110 +2617,151 @@ The following example shows a material that uses a texture for its _base color_ 
         {
             "pbrMetallicRoughness": {
                 "baseColorTexture": {
-                    "index": 0,
-                    "texCoord": 1
+                    "index": 0
                 },
+                "metallicRoughnessTexture": {
+                    "index": 1
+                }
             }
         }
     ],
     "textures": [
         {
             "source": 0
+        },
+        {
+            "source": 1
         }
     ],
     "images": [
         {
             "uri": "base_color.png"
+        },
+        {
+            "uri": "metallic_roughness.png"
         }
     ]
 }
 ----
-
-
-The _base color_ texture **MUST** contain 8-bit values encoded with the <<srgb, sRGB opto-electronic transfer function>> so RGB values **MUST** be decoded to real linear values before they are used for any computations. To achieve correct filtering, the transfer function **SHOULD** be decoded before performing linear interpolation.
-
-The textures for _metalness_ and _roughness_ properties are packed together in a single texture called `metallicRoughnessTexture`. Its _green_ channel contains roughness values and its _blue_ channel contains metalness values. This texture **MUST** be encoded with linear transfer function and **MAY** use more than 8 bits per channel.
-
-For example, assume an 8-bit RGBA value of `[64, 124, 231, 255]` is sampled from `baseColorTexture` and assume that `baseColorFactor` is given as `[0.2, 1.0, 0.7, 1.0]`. Then, the final _base color_ value would be (after decoding the transfer function and multiplying by the factor)
-
-[source,c]
-----
-[0.051 * 0.2, 0.202 * 1.0, 0.799 * 0.7, 1.0 * 1.0] = [0.0102, 0.202, 0.5593, 1.0]
-----
-
-In addition to the material properties, if a primitive specifies a vertex color using the attribute semantic property `COLOR_0`, then this value acts as an additional linear multiplier to _base color_.
+====
 
 Implementations of the bidirectional reflectance distribution function (BRDF) itself **MAY** vary based on device performance and resource constraints. See <<appendix-b-brdf-implementation,Appendix B>> for more details on the BRDF calculations.
 
+[[emissive]]
+=== Emissive Parameter
 
-[[additional-textures]]
-=== Additional Textures
+The _emissive_ parameter controls the color and intensity of the light being emitted by the material. This parameter is provided by the `emissiveFactor` and `emissiveTexture` properties.
 
-The material definition also provides for additional textures that **MAY** also be used with the metallic-roughness material model as well as other material models, which could be provided via glTF extensions.
+If the `emissiveTexture` property is not defined, the emissive texture components implicitly have a value of stem:[1.0].
 
-The following additional textures are supported:
+The red, green, and blue components of the emissive texture **MUST** be encoded with the piecewise <<srgb, sRGB opto-electronic transfer function>>. Client implementations **SHOULD** apply the inverse of that function to get linear emissive texture values before multiplying them with the factors. When the texture sampler uses linear filtering, the transfer function **SHOULD** be decoded prior to linear interpolation.
 
-- *normal* : A tangent space normal texture. The texture encodes XYZ components of a normal vector in tangent space as RGB values stored with linear transfer function. Normal textures **SHOULD NOT** contain _alpha_ channel as it not used anyway. After dequantization, texel values **MUST** be mapped as follows: _red_ [0.0 .. 1.0] to X [-1 .. 1], _green_ [0.0 .. 1.0] to Y [-1 .. 1], _blue_ (0.5 .. 1.0] maps to Z (0 .. 1]. Normal textures **SHOULD NOT** contain blue values less than or equal to `0.5`.
-+
+The units for the multiplicative product of the emissive texture and factor are candela per square meter (**cd / m^2^**), sometimes called _nits_.
+
 [NOTE]
 .Implementation Note
 ====
-This mapping is usually implemented as `sampledValue * 2.0 - 1.0`.
+Because the value is specified per square meter, it indicates the brightness of any given point along the surface. However, the exact conversion from scene-referred photometric units to the brightness of rendered screen pixels requires knowledge of the camera's exposure settings, which are left as an implementation detail unless otherwise defined by a glTF extension.
+
+Some rendering engines simplify this calculation by assuming that an emissive factor of stem:[1.0] results in a fully exposed pixel; however, that may not match the authoring intent.
 ====
-+
-The texture binding for normal textures **MAY** additionally contain a scalar `scale` value that linearly scales X and Y components of the normal vector.
-+
-Normal vectors **MUST** be normalized before being used in lighting equations. When scaling is used, vector normalization happens after scaling.
 
-- *occlusion* : The occlusion texture; it indicates areas that receive less indirect lighting from ambient sources. Direct lighting is not affected. The _red_ channel of the texture encodes the occlusion value, where `0.0` means fully-occluded area (no indirect lighting) and `1.0` means not occluded area (full indirect lighting). Other texture channels (if present) do not affect occlusion.
-+
-The texture binding for occlusion maps **MAY** optionally contain a scalar `strength` value that is used to reduce the occlusion effect. When present, it affects the occlusion value as `1.0 + strength * (occlusionTexture - 1.0)`.
-
-- *emissive* : The emissive texture and factor control the color and intensity of the light being emitted by the material. The texture **MUST** contain 8-bit values encoded with the <<srgb, sRGB opto-electronic transfer function>> so RGB values **MUST** be decoded to real linear values before they are used for any computations. To achieve correct filtering, the transfer function **SHOULD** be decoded before performing linear interpolation.
-+
-For implementations where a physical light unit is needed, the units for the multiplicative product of the emissive texture and factor are candela per square meter (**cd / m^2^**), sometimes called _nits_.
-+
 [NOTE]
-.Implementation Note
+.Example
 ====
-Because the value is specified per square meter, it indicates the brightness of any given point along the surface.  However, the exact conversion from physical light units to the brightness of rendered pixels requires knowledge of the camera's exposure settings, which are left as an implementation detail unless otherwise defined by a glTF extension.
-
-Many rendering engines simplify this calculation by assuming that an emissive factor of `1.0` results in a fully exposed pixel.
-====
-
-The following example shows a material that is defined using `pbrMetallicRoughness` parameters as well as additional textures:
+This material defines its emissive parameter. Since the default emissive factor component values are zeros, the `emissiveFactor` property has to be defined for the emissive texture to have any effect. All other material parameters use their default values in this example.
 
 [source,json]
 ----
 {
     "materials": [
         {
-            "name": "Material0",
-            "pbrMetallicRoughness": {
-                "baseColorFactor": [ 0.5, 0.5, 0.5, 1.0 ],
-                "baseColorTexture": {
-                    "index": 1,
-                    "texCoord": 1
-                },
-                "metallicFactor": 1,
-                "roughnessFactor": 1,
-                "metallicRoughnessTexture": {
-                    "index": 2,
-                    "texCoord": 1
-                }
-            },
-            "normalTexture": {
-                "scale": 2,
-                "index": 3,
-                "texCoord": 1
-            },
-            "emissiveFactor": [ 0.2, 0.1, 0.0 ]
+            "emissiveFactor": [ 0.2, 0.1, 0.0 ],
+            "emissiveTexture": {
+                "index": 0
+            }
         }
     ]
 }
 ----
+====
 
-If a client implementation is resource-bound and cannot support all the textures defined it **SHOULD** support these additional textures in the following priority order.  Resource-bound implementations **SHOULD** drop textures from the bottom to the top.
+[[additional-textures]]
+=== Additional Textures
+
+[[additional-textures-overview]]
+==== Overview
+
+The material definition also provides for _normal_ and _occlusion_ textures that **MAY** also be used with the metallic-roughness material model as well as other material models, which could be provided via glTF extensions.
+
+[NOTE]
+.Example
+====
+The following material defines these additional textures. All other material parameters use their default values in this example.
+
+[source,json]
+----
+{
+    "materials": [
+        {
+            "normalTexture": {
+                "index": 1,
+                "texCoord": 0,
+                "scale": 2
+            },
+            "occlusionTexture": {
+                "index": 2,
+                "texCoord": 1,
+                "strength": 0.5
+            }
+        }
+    ]
+}
+----
+====
+
+[[additional-textures-normal]]
+==== Normal Texture
+
+The `normalTexture` property defines a tangent space normal texture. The texture encodes XYZ components of a normal vector in tangent space as RGB values.
+
+If the `normalTexture` property is not defined, the material uses surface normal vectors as is.
+
+[NOTE]
+====
+This could also be interpreted as an implicit normal texture filled with the latexmath:[\langle 0.5, 0.5, 1.0 \rangle] solid RGB values.
+====
+
+The normal texture **MUST** be encoded with the linear transfer function. Normal textures **SHOULD NOT** contain _alpha_ channel as it not used anyway.
+
+The sampled RGB values are linearly mapped to XYZ directions as follows: red latexmath:[[0.0, 1.0\]] to X latexmath:[[-1.0, +1.0\]], green latexmath:[[0.0, 1.0\]] to Y latexmath:[[-1.0, +1.0\]], blue latexmath:[(0.5, 1.0\]] to Z latexmath:[(0.0, +1.0\]]. Normal textures **SHOULD NOT** contain blue values less than or equal to stem:[0.5]. After mapping RGB values to XYZ directions, the X and Y components are multiplied by the value of the `scale` property of the object that refers to the normal texture.
+
+[latexmath]
++++++
+(\mathit{sampledNormalValue_{rgb}} \cdot 2.0 - 1.0) \odot \langle \mathit{scale}, \mathit{scale}, 1.0 \rangle
++++++
+
+Finally, the scaled normal vector is normalized before being used in lighting equations.
+
+[[additional-textures-occlusion]]
+==== Occlusion Texture
+
+The `occlusionTexture` property defines an occlusion texture. It indicates areas that receive less indirect lighting from ambient sources. Direct lighting is not affected.
+
+The occlusion texture **MUST** be encoded with the linear transfer function. The red channel of the texture encodes the occlusion value, where stem:[0.0] means fully-occluded area (no indirect lighting) and stem:[1.0] means unoccluded area (full indirect lighting). Other texture channels (if present) are ignored.
+
+The effective occlusion value is computed from the value sampled from the occlusion texture and the value of the `strength` property of the object that refers to the occlusion texture as follows.
+
+[latexmath]
++++++
+1.0 + \mathit{strength} \cdot (\mathit{sampledOcclusionValue} - 1.0)
++++++
+
+
+[[texture-priority]]
+=== Texture Priority
+
+If a client implementation is resource-bound and cannot support all the textures defined, it **SHOULD** support textures in the following priority order. Resource-bound implementations **SHOULD** drop textures from the bottom to the top.
 
 [options="header",cols="20%,80%"]
 |====
