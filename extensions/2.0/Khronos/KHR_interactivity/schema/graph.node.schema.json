@@ -5,10 +5,6 @@
     "type": "object",
     "$ref": "glTFProperty.schema.json",
     "properties": {
-        "declaration": {
-            "title": "The declaration index.",
-            "$ref": "glTFid.schema.json"
-        },
         "configuration": {
             "title": "The configuration.",
             "type": "object",
@@ -22,6 +18,31 @@
                         "minItems": 1
                     }
                 }
+            },
+            "minProperties": 1
+        },
+        "declaration": {
+            "title": "The declaration index.",
+            "$ref": "glTFid.schema.json"
+        },
+        "flows": {
+            "title": "The output flow sockets.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "$ref": "glTFProperty.schema.json",
+                "properties": {
+                    "node": {
+                        "title": "The index of the interactivity node to be activated.",
+                        "$ref": "glTFid.schema.json"
+                    },
+                    "socket": {
+                        "title": "The id of the input flow socket of the interactivity node to be activated.",
+                        "type": "string",
+                        "default": "in"
+                    }
+                },
+                "required": [ "node" ]
             },
             "minProperties": 1
         },
@@ -57,30 +78,9 @@
                 },
                 "not": { "required": [ "node", "value" ] },
                 "anyOf": [
-                    { "required": [ "type" ] },
-                    { "required": [ "node" ] }
+                    { "required": [ "node" ] },
+                    { "required": [ "type" ] }
                 ]
-            },
-            "minProperties": 1
-        },
-        "flows": {
-            "title": "The output flow sockets.",
-            "type": "object",
-            "additionalProperties": {
-                "type": "object",
-                "$ref": "glTFProperty.schema.json",
-                "properties": {
-                    "node": {
-                        "title": "The index of the interactivity node to be activated.",
-                        "$ref": "glTFid.schema.json"
-                    },
-                    "socket": {
-                        "title": "The id of the input flow socket of the interactivity node to be activated.",
-                        "type": "string",
-                        "default": "in"
-                    }
-                },
-                "required": [ "node" ]
             },
             "minProperties": 1
         }

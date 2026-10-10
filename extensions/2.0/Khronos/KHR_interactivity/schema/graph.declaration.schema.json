@@ -18,8 +18,8 @@
         }
     },
     "properties": {
-        "op": {
-            "title": "The operation.",
+        "extension": {
+            "title": "The name of the extension defining the operation.",
             "type": "string"
         },
         "inputValueSockets": {
@@ -28,15 +28,15 @@
             "additionalProperties": { "$ref": "#/$defs/declarationValueSocket" },
             "minProperties": 1
         },
+        "op": {
+            "title": "The operation.",
+            "type": "string"
+        },
         "outputValueSockets": {
             "title": "The extension-defined output value sockets.",
             "type": "object",
             "additionalProperties": { "$ref": "#/$defs/declarationValueSocket" },
             "minProperties": 1
-        },
-        "extension": {
-            "title": "The name of the extension defining the operation.",
-            "type": "string"
         }
     },
     "required": [ "op" ],
