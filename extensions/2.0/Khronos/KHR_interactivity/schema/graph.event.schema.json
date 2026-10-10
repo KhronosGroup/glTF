@@ -12,22 +12,7 @@
         "values": {
             "title": "The event value sockets.",
             "type": "object",
-            "additionalProperties": {
-                "type": "object",
-                "$ref": "glTFProperty.schema.json",
-                "properties": {
-                    "type": {
-                        "title": "The type index.",
-                        "$ref": "glTFid.schema.json"
-                    },
-                    "value": {
-                        "title": "The initial value.",
-                        "type": "array",
-                        "minItems": 1
-                    }
-                },
-                "required": [ "type" ]
-            },
+            "additionalProperties": { "$ref": "graph.event.valueSocket.schema.json" },
             "minProperties": 1,
             "not": { "required": [ "event" ] }
         }

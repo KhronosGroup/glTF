@@ -4,19 +4,6 @@
     "title": "Behavior graph declaration",
     "type": "object",
     "$ref": "glTFProperty.schema.json",
-    "$defs": {
-        "declarationValueSocket": {
-            "type": "object",
-            "$ref": "glTFProperty.schema.json",
-            "properties": {
-                "type": {
-                    "title": "The type index.",
-                    "$ref": "glTFid.schema.json"
-                }
-            },
-            "required": [ "type" ]
-        }
-    },
     "properties": {
         "extension": {
             "title": "The name of the extension defining the operation.",
@@ -25,7 +12,7 @@
         "inputValueSockets": {
             "title": "The extension-defined input value sockets.",
             "type": "object",
-            "additionalProperties": { "$ref": "#/$defs/declarationValueSocket" },
+            "additionalProperties": { "$ref": "graph.declaration.valueSocket.schema.json" },
             "minProperties": 1
         },
         "op": {
@@ -35,7 +22,7 @@
         "outputValueSockets": {
             "title": "The extension-defined output value sockets.",
             "type": "object",
-            "additionalProperties": { "$ref": "#/$defs/declarationValueSocket" },
+            "additionalProperties": { "$ref": "graph.declaration.valueSocket.schema.json" },
             "minProperties": 1
         }
     },
