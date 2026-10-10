@@ -2532,7 +2532,7 @@ image::figures/materials.svg[pdfwidth=6in,align=left]
 
 A material object describes material parameters that control mesh primitive rendering. Material parameters can be uniform, i.e., with a single value applied to the whole mesh primitive, or texturable, i.e., with parameter values varying across the mesh primitive's surface.
 
-Values of properties that represent texturable material parameters are JSON objects that contain the `index` property that specifies the texture index and the `texCoord` property that specifies the texture coordinate set index used for sampling from that texture. Those JSON objects **MAY** also contain additional parameter-specific properties that affect how the sampled values are used.
+Values of properties that represent texturable material parameters are JSON objects that contain the `index` property that specifies the texture index and the `texCoord` property that specifies the texture coordinate set index used for sampling from that texture. Some texturable parameters include additional parameter-specific properties that affect how the sampled values are applied.
 
 [[metallic-roughness-material]]
 === Metallic-Roughness Material
@@ -2652,6 +2652,8 @@ Implementations of the bidirectional reflectance distribution function (BRDF) it
 
 The _emissive_ parameter controls the color and intensity of the light being emitted by the material. This parameter is provided by the `emissiveFactor` and `emissiveTexture` properties.
 
+If the `emissiveTexture` property is not defined, the emissive texture components implicitly have a value of stem:[1.0].
+
 The red, green, and blue components of the emissive texture **MUST** be encoded with the piecewise <<srgb, sRGB opto-electronic transfer function>>. Client implementations **SHOULD** apply the inverse of that function to get linear emissive texture values before multiplying them with the factors. When the texture sampler uses linear filtering, the transfer function **SHOULD** be decoded prior to linear interpolation.
 
 The units for the multiplicative product of the emissive texture and factor are candela per square meter (**cd / m^2^**), sometimes called _nits_.
@@ -2659,7 +2661,7 @@ The units for the multiplicative product of the emissive texture and factor are 
 [NOTE]
 .Implementation Note
 ====
-Because the value is specified per square meter, it indicates the brightness of any given point along the surface.  However, the exact conversion from scene-referred photometric units to the brightness of rendered screen pixels requires knowledge of the camera's exposure settings, which are left as an implementation detail unless otherwise defined by a glTF extension.
+Because the value is specified per square meter, it indicates the brightness of any given point along the surface. However, the exact conversion from scene-referred photometric units to the brightness of rendered screen pixels requires knowledge of the camera's exposure settings, which are left as an implementation detail unless otherwise defined by a glTF extension.
 
 Some rendering engines simplify this calculation by assuming that an emissive factor of stem:[1.0] results in a fully exposed pixel; however, that may not match the authoring intent.
 ====
@@ -2722,6 +2724,13 @@ The following material defines these additional textures. All other material par
 ==== Normal Texture
 
 The `normalTexture` property defines a tangent space normal texture. The texture encodes XYZ components of a normal vector in tangent space as RGB values.
+
+If the `normalTexture` property is not defined, the material uses surface normal vectors as is.
+
+[NOTE]
+====
+This could also be interpreted as an implicit normal texture filled with the latexmath:[\langle 0.5, 0.5, 1.0 \rangle] solid RGB values.
+====
 
 The normal texture **MUST** be encoded with the linear transfer function. Normal textures **SHOULD NOT** contain _alpha_ channel as it not used anyway.
 
