@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "MOZ_lightmap glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines a baked light map containing linear diffuse irradiance.",
+    "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+    "properties": {
+        "index": { },
+        "texCoord": {
+            "type": "integer",
+            "description": "The set index of the texture's TEXCOORD attribute used for texture coordinate mapping.",
+            "default": 1,
+            "minimum": 0,
+            "gltf_detailedDescription": "This integer value is used to construct a string in the format `TEXCOORD_<set index>` which is a reference to a key in `mesh.primitives.attributes` (e.g. a value of `1` corresponds to `TEXCOORD_1`). A mesh primitive **MUST** have the corresponding texture coordinate attributes for the material to be applicable to it. Unlike core `textureInfo`, the default is `1`, matching existing light-mapped content that uses the second texture coordinate set."
+        },
+        "intensity": {
+            "type": "number",
+            "description": "A linear multiplier applied to the light map texel values.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "gltf_detailedDescription": "A linear multiplier applied to the RGB values sampled from the light map. The product is the diffuse irradiance incident on the surface, in lux (lm/m²)."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "index" ]
+}
