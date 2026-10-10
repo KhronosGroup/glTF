@@ -10,5 +10,6 @@
             "type": "array",
             "minItems": 1
         }
-    }
+    },
+    "required": [ "value" ]
 }

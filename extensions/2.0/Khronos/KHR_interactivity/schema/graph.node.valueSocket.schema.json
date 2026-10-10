@@ -11,8 +11,7 @@
         },
         "socket": {
             "title": "The id of the output value socket of the interactivity node.",
-            "type": "string",
-            "default": "value"
+            "type": "string"
         },
         "type": {
             "title": "The type index.",
