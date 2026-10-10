@@ -3,18 +3,16 @@
     "$id": "graph.declaration.schema.json",
     "title": "Behavior graph declaration",
     "type": "object",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "$ref": "glTFProperty.schema.json",
     "$defs": {
         "declarationValueSocket": {
             "type": "object",
-            "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+            "$ref": "glTFProperty.schema.json",
             "properties": {
                 "type": {
                     "title": "The type index.",
-                    "allOf": [ { "$ref": "glTFid.schema.json" } ]
-                },
-                "extensions": { },
-                "extras": { }
+                    "$ref": "glTFid.schema.json"
+                }
             },
             "required": [ "type" ]
         }
@@ -39,9 +37,7 @@
         "extension": {
             "title": "The name of the extension defining the operation.",
             "type": "string"
-        },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "op" ],
     "dependentRequired": {

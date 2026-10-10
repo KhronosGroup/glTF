@@ -3,7 +3,7 @@
     "$id": "graph.schema.json",
     "title": "Behavior graph",
     "type": "object",
-    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "types": {
             "title": "An array of graph types.",
@@ -39,10 +39,7 @@
             "items": { "$ref": "graph.node.schema.json" },
             "minItems": 1,
             "maxItems": 2147483648
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "dependentRequired": {
         "variables": [ "types" ],
