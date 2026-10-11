@@ -1,12 +1,15 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "material.MOZ_lightmap.schema.json",
     "title": "MOZ_lightmap glTF Material Extension",
     "type": "object",
     "description": "glTF extension that defines a baked light map containing sRGB-encoded diffuse lighting.",
-    "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
-        "index": { },
+        "index": {
+            "$ref": "glTFid.schema.json",
+            "description": "The index of the texture that contains the light map."
+        },
         "texCoord": {
             "type": "integer",
             "description": "The set index of the texture's TEXCOORD attribute used for texture coordinate mapping.",
