@@ -1,0 +1,31 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "material.MOZ_lightmap.schema.json",
+    "title": "MOZ_lightmap glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines a baked light map containing sRGB-encoded diffuse lighting.",
+    "$ref": "glTFProperty.schema.json",
+    "properties": {
+        "index": {
+            "$ref": "glTFid.schema.json",
+            "description": "The index of the texture that contains the light map."
+        },
+        "texCoord": {
+            "type": "integer",
+            "description": "The set index of the texture's TEXCOORD attribute used for texture coordinate mapping.",
+            "default": 1,
+            "minimum": 0,
+            "gltf_detailedDescription": "This integer value selects the texture coordinate attribute `TEXCOORD_<set index>` in `mesh.primitives.attributes` (e.g. `1` selects `TEXCOORD_1`). A supported KHR_texture_transform texCoord overrides this selection. A mesh primitive MUST provide the attribute for the effective set index. When KHR_texture_transform is optional, usable fallback coordinates for this outer selection MUST also be provided; otherwise KHR_texture_transform MUST be listed in extensionsRequired. Unlike core textureInfo, the default is 1."
+        },
+        "intensity": {
+            "type": "number",
+            "description": "A dimensionless linear multiplier applied to the light map RGB values after sRGB decoding.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "gltf_detailedDescription": "This multiplier is dimensionless. The light map RGB values MUST be decoded from sRGB to linear RGB before it is applied. For PBR materials, the product is the diffuse irradiance incident on the surface, in lux (lm/m²). For unlit materials, the product multiplies the linear base color and the occlusion factor without division by pi."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "index" ]
+}
