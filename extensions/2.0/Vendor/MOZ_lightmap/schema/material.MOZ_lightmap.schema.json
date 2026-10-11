@@ -1,5 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
+    "$id": "material.MOZ_lightmap.schema.json",
     "title": "MOZ_lightmap glTF Material Extension",
     "type": "object",
     "description": "glTF extension that defines a baked light map containing linear diffuse irradiance.",
