@@ -70,9 +70,36 @@ The extension object is a [`textureInfo`](../../../../specification/2.0/Specific
 
 Light maps usually need a unique, non-overlapping UV layout, which is generally different from the layout used for the material's other textures. For this reason `texCoord` defaults to `1` (`TEXCOORD_1`), **unlike** core `textureInfo`, where it defaults to `0`. This matches existing light-mapped content, which has always used the second texture coordinate set. Exporters **SHOULD** always write `texCoord` explicitly.
 
-Mesh primitives that use a material with this extension **MUST** provide the `TEXCOORD_<texCoord>` attribute.
-
 The light map `textureInfo` may use `KHR_texture_transform`. One use is placing several materials into one shared light map atlas.
+
+The effective texture coordinate set is `MOZ_lightmap.texCoord` (default `1`), unless a supported `KHR_texture_transform` specifies its own `texCoord`, in which case that value overrides it. Mesh primitives using the light map **MUST** provide the `TEXCOORD_<effective set index>` attribute.
+
+If `KHR_texture_transform` is optional, content creators **MUST** also provide usable fallback texture coordinates for the outer `MOZ_lightmap.texCoord` selection. If the asset relies on the override or transform without a usable fallback, `KHR_texture_transform` **MUST** be listed in `extensionsRequired`.
+
+For example, this material uses `TEXCOORD_2` in clients supporting `KHR_texture_transform`, and `TEXCOORD_1` as its fallback in clients that do not:
+
+```json
+{
+    "pbrMetallicRoughness": {
+        "metallicFactor": 0.0
+    },
+    "extensions": {
+        "MOZ_lightmap": {
+            "index": 0,
+            "texCoord": 1,
+            "extensions": {
+                "KHR_texture_transform": {
+                    "texCoord": 2,
+                    "offset": [ 0.25, 0.0 ],
+                    "scale": [ 0.5, 0.5 ]
+                }
+            }
+        }
+    }
+}
+```
+
+Both UV sets are required for this optional-transform fallback. If `KHR_texture_transform` is required instead, only the effective `TEXCOORD_2` set is needed for the light map. All extensions used by an asset, including `MOZ_lightmap` and `KHR_texture_transform` in this example, **MUST** be listed in `extensionsUsed`.
 
 ## Light Map Content
 
