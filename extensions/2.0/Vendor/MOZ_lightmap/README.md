@@ -42,6 +42,7 @@ A light map is added to a material by adding the `MOZ_lightmap` extension to the
     {
         "pbrMetallicRoughness": {
             "baseColorFactor": [ 1.0, 0.0, 0.0, 1.0 ],
+            "metallicFactor": 0.0,
             "baseColorTexture": {
                 "index": 0
             }
