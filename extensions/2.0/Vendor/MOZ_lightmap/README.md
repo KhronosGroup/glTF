@@ -121,7 +121,7 @@ E = intensity * lightmapLinear
 
 ### Shading
 
-Light map irradiance is diffuse irradiance arriving from the hemisphere above the surface. Implementations **MUST** treat it like diffuse irradiance from image-based lighting: it goes through the material's diffuse BRDF and is weighted by everything that weights the diffuse lobe (for example metallic, Fresnel, and layering terms from extensions such as `KHR_materials_clearcoat` or `KHR_materials_sheen`). For the core metallic-roughness material, ignoring those weights, the light map adds:
+Light map irradiance is diffuse irradiance arriving from the hemisphere above the surface. It **MUST** contribute additively to the material's diffuse lighting through its diffuse BRDF. Runtime lighting, including diffuse image-based lighting, may contribute alongside it. This extension does not prescribe the renderer's image-based lighting calculations. For the core metallic-roughness material, the Lambertian diffuse contribution is:
 
 ```
 f_lightmap = (c_diff / π) * E
@@ -155,7 +155,7 @@ The renderer always adds light map irradiance on top of whatever lighting it com
 * If the light map contains **indirect diffuse lighting only**, the scene's lights (for example, defined with `KHR_lights_punctual`) remain in the asset and supply direct lighting and all specular lighting at runtime.
 * If the light map contains **total diffuse lighting**, lights whose direct contribution was baked **SHOULD NOT** also illuminate the light-mapped surfaces at runtime. They can be removed from the asset or kept only for specular highlights or unbaked objects, depending on what the target renderer supports.
 
-Light maps usually include light from the environment (sky) as well. Applications **SHOULD NOT** also add diffuse image-based lighting from the same environment to light-mapped materials. Specular image-based lighting is unaffected.
+If the light map already includes diffuse lighting from an environment (such as the sky), adding the same environment's diffuse image-based lighting again will double-count that contribution. Content creators **SHOULD** avoid this duplication. Diffuse image-based lighting whose contribution is not already included in the bake may be added normally. Specular image-based lighting is unaffected.
 
 ## Implementation Notes
 
