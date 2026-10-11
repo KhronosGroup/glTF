@@ -19,10 +19,10 @@
         },
         "intensity": {
             "type": "number",
-            "description": "A linear multiplier applied to the light map RGB values after sRGB decoding.",
+            "description": "A dimensionless linear multiplier applied to the light map RGB values after sRGB decoding.",
             "default": 1.0,
             "minimum": 0.0,
-            "gltf_detailedDescription": "The light map RGB values MUST be decoded from sRGB to linear RGB before this multiplier is applied. For PBR materials, the product is the diffuse irradiance incident on the surface, in lux (lm/m²). For unlit materials, the product directly multiplies the linear base color without division by pi."
+            "gltf_detailedDescription": "This multiplier is dimensionless. The light map RGB values MUST be decoded from sRGB to linear RGB before it is applied. For PBR materials, the product is the diffuse irradiance incident on the surface, in lux (lm/m²). For unlit materials, the product multiplies the linear base color and the occlusion factor without division by pi."
         },
         "extensions": { },
         "extras": { }

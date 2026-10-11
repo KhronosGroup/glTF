@@ -1,3 +1,8 @@
+<!--
+Copyright 2026 Ben Houston
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # MOZ\_lightmap
 
 ## Contributors
@@ -30,7 +35,7 @@ Both are diffuse irradiance and are rendered the same way. The content creator c
 
 <figure>
 <img src="./figures/cornell_box.jpg"/>
-<figcaption><em>A Cornell box with baked indirect diffuse lighting stored using <code>MOZ_lightmap</code>, combined with a dynamic <code>KHR_lights_punctual</code> point light.</em></figcaption>
+<figcaption><em>A Cornell box with baked indirect diffuse lighting stored using <code>MOZ_lightmap</code>, combined with a dynamic <code>KHR_lights_punctual</code> point light. Figure by Ben Houston, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</em></figcaption>
 </figure>
 
 ## Extending Materials
@@ -64,7 +69,7 @@ The extension object is a [`textureInfo`](../../../../specification/2.0/Specific
 |:---------|:-----|:------------|:---------|
 | **index** | `integer` | The index of the texture that contains the light map. | :white_check_mark: Yes |
 | **texCoord** | `integer` | The set index of the texture's `TEXCOORD` attribute used for texture coordinate mapping. | No, default: `1` |
-| **intensity** | `number` | A linear multiplier applied to the light map's RGB values. Must be greater than or equal to `0`. | No, default: `1.0` |
+| **intensity** | `number` | A dimensionless linear multiplier applied to the light map's RGB values after sRGB decoding. Must be greater than or equal to `0`. | No, default: `1.0` |
 
 ### Texture Coordinates
 
@@ -117,30 +122,45 @@ For PBR materials, the diffuse irradiance `E` incident on the surface is:
 E = intensity * lightmapLinear
 ```
 
-`E` is expressed in lux (lm/m²). This is the same photometric convention as `KHR_lights_punctual`, where a directional light's intensity is the illuminance on a surface facing the light. So a baked light and the same light kept dynamic produce the same result. Some baking tools produce values already divided by π (so that "outgoing color = albedo × value"). When exporting for PBR materials, exporters **MUST** convert such values to irradiance by multiplying them, or `intensity`, by π. Unlit materials use the separate normalization defined below.
+`E` is expressed in lux (lm/m²). `intensity` is dimensionless; it scales the illuminance represented by the decoded light map values. This is the same photometric convention as `KHR_lights_punctual`, where a directional light's intensity is the illuminance on a surface facing the light. Consistent units and normalization allow baked and runtime diffuse lighting to be combined, but a nondirectional light map cannot reproduce every directional BRDF effect. Exposure, tone mapping, and renderer approximations can also affect the displayed result; this extension does not specify exposure or guarantee identical rendered pixels.
+
+Some baking tools produce values already divided by π (so that "outgoing color = albedo × value"). When exporting for PBR materials, exporters **MUST** convert such values to irradiance by multiplying them, or `intensity`, by π. Unlit materials use the separate normalization defined below.
 
 ### Shading
 
-Light map irradiance is diffuse irradiance arriving from the hemisphere above the surface. It **MUST** contribute additively to the material's diffuse lighting through its diffuse BRDF. Runtime lighting, including diffuse image-based lighting, may contribute alongside it. This extension does not prescribe the renderer's image-based lighting calculations. For the core metallic-roughness material, the Lambertian diffuse contribution is:
+Light map irradiance is diffuse irradiance arriving from the hemisphere above the surface. It **MUST** contribute additively to the material's diffuse reflection through its diffuse BRDF. Runtime lighting, including diffuse image-based lighting, may contribute alongside it. This extension does not prescribe the renderer's image-based lighting calculations. For the core metallic-roughness material, the base Lambertian diffuse contribution, before occlusion and any additional material-layer attenuation, is:
 
 ```
 f_lightmap = (c_diff / π) * E
 c_diff = lerp(baseColor.rgb, black, metallic)
 ```
 
-Light maps contain no directional information and do not contribute to specular reflection. Emission is unaffected.
+Light maps contain no directional information and do not contribute to specular reflection. For PBR materials, the emissive contribution is unchanged. Materials using `KHR_materials_unlit` continue to ignore the core `emissiveFactor` and `emissiveTexture` properties.
 
-The core `occlusionTexture` applies to indirect lighting. For this purpose, light map irradiance counts as indirect lighting, so occlusion **MUST** be applied to it. Bakes usually already contain occlusion, so content creators **SHOULD** make sure the occlusion texture does not darken the same regions twice. Either omit it or limit it to detail finer than the light map resolution.
+The light map contribution **MUST** follow the material's diffuse-reflection lobe attenuation, including reductions caused by `KHR_materials_transmission` or `KHR_materials_diffuse_transmission` when present. It **MUST NOT** be used as an additional source for a transmission BTDF: one RGB irradiance value does not supply separately baked illumination from the opposite hemisphere.
+
+For double-sided materials, both visible sides sample the same light map texel; the extension does not provide separate front- and back-side lighting. Authors needing different bakes for the two sides should use separate geometry and materials. A normal map cannot reconstruct the missing incident-light directions or reorient the baked irradiance to account for normal-mapped detail. Normal maps may still affect runtime lighting.
+
+The core `occlusionTexture` applies to indirect lighting. For this purpose, light map irradiance counts as indirect lighting, so occlusion **MUST** be applied to it, including when this extension is combined with `KHR_materials_unlit`. The occlusion multiplier is:
+
+```
+occlusionFactor = 1.0 + occlusionTexture.strength * (occlusionTexture.r - 1.0)
+```
+
+The red-channel sample is linear, and `occlusionTexture.strength` defaults to `1.0`. If there is no occlusion texture, `occlusionFactor` is `1.0`. Bakes usually already contain occlusion, so content creators **SHOULD** make sure the occlusion texture does not darken the same regions twice. Either omit it or limit it to detail finer than the light map resolution.
 
 ### Unlit Materials
 
-When a material also uses `KHR_materials_unlit`, the light map multiplies the unlit base color. Before applying occlusion, the RGB result is:
+When a material also uses `KHR_materials_unlit`, the light map multiplies the unlit base color. The RGB result, including occlusion, is:
 
 ```
-color = baseColor.rgb * lightmapLinear * intensity
+baseColor.rgb = baseColorFactor.rgb * baseColorTextureLinear.rgb * vertexColor.rgb
+color = baseColor.rgb * lightmapLinear * intensity * occlusionFactor
 ```
 
-Here `baseColor` is the linear RGB product of `baseColorFactor`, the decoded `baseColorTexture`, and vertex color, as defined by `KHR_materials_unlit`. The occlusion rule above still applies. Alpha coverage and `doubleSided` behavior are unchanged.
+Here `baseColorTextureLinear` is the base color texture after sRGB decoding, and `vertexColor` is the linear `COLOR_0` attribute. An absent texture or vertex color contributes a multiplier of `1.0`, and `baseColorFactor` uses its core default. Base color alpha, including texture and vertex alpha when present, continues to determine coverage through `alphaMode` and `alphaCutoff`. The light map does not modify alpha, and `doubleSided` behavior is unchanged.
+
+In this combination, the light map and its occlusion multiplier are the only changes to the unlit RGB calculation. Runtime lights and IBL do not illuminate the unlit material, and the other core PBR lighting properties, including the emissive slot, remain ignored as specified by `KHR_materials_unlit`.
 
 This normalization preserves the deployed Mozilla Hubs behavior: unlit materials **MUST NOT** divide the light map contribution by π. It differs from the PBR diffuse BRDF normalization above. An unlit light map is a color multiplier rather than a physically normalized Lambertian irradiance input; exporters **MUST NOT** apply the PBR π conversion to it.
 
@@ -150,10 +170,12 @@ This allows fully baked scenes to be rendered with unlit materials at minimal co
 
 ### Baked and Dynamic Lights
 
-The renderer always adds light map irradiance on top of whatever lighting it computes at runtime. To avoid counting the same light twice, the content creator decides which lighting is baked and which is dynamic:
+For PBR materials, the renderer adds light map irradiance on top of whatever lighting it computes at runtime. To avoid counting the same light twice, the content creator decides which lighting is baked and which is dynamic:
 
 * If the light map contains **indirect diffuse lighting only**, the scene's lights (for example, defined with `KHR_lights_punctual`) remain in the asset and supply direct lighting and all specular lighting at runtime.
 * If the light map contains **total diffuse lighting**, lights whose direct contribution was baked **SHOULD NOT** also illuminate the light-mapped surfaces at runtime. They can be removed from the asset or kept only for specular highlights or unbaked objects, depending on what the target renderer supports.
+
+`KHR_lights_punctual` does not define specular-only lights or per-surface light exclusions. Keeping fully baked diffuse lighting while using those lights only for live highlights or unbaked objects therefore requires application-specific controls; the authoring guidance above does not encode such controls in the asset. Indirect-only bakes combined with ordinary runtime direct lighting provide a portable baseline for PBR materials.
 
 If the light map already includes diffuse lighting from an environment (such as the sky), adding the same environment's diffuse image-based lighting again will double-count that contribution. Content creators **SHOULD** avoid this duplication. Diffuse image-based lighting whose contribution is not already included in the bake may be added normally. Specular image-based lighting is unaffected.
 
@@ -164,7 +186,7 @@ If the light map already includes diffuse lighting from an environment (such as 
 * **Unwrapping and padding.** Light map UV charts should not overlap, and should be padded and dilated so that bilinear filtering and mipmapping don't bleed between charts.
 * **Dynamic range.** Irradiance often exceeds `1.0`. With 8-bit formats such as PNG and JPEG, normalize the linear lighting values, encode the normalized values with the sRGB transfer function, and put the linear scale factor in `intensity`. Store dark scenes with care to avoid banding. Any texture extension used for the referenced texture must preserve the sRGB decoding convention defined above.
 * **Static content.** Light maps only describe the lighting of the geometry and lights at bake time. They are suited to static geometry. A light map on a moving or deforming mesh stays attached to the surface and will look incorrect.
-* **Instancing.** The light map belongs to the material and is addressed through mesh texture coordinates. A mesh referenced by several nodes therefore shares one light map region. To give instances unique lighting, use distinct meshes or primitives with their own `TEXCOORD` data, or distinct materials with different `KHR_texture_transform` offsets.
+* **Instancing.** The light map belongs to the material and is addressed through mesh texture coordinates. A mesh referenced by several nodes therefore shares one light map region. In core glTF, materials are bound by mesh primitives, not by nodes. To give nodes unique lighting, use distinct mesh/primitive definitions with separate UV data or material bindings. These definitions may share geometry accessors when only the material binding differs, for example to use different `KHR_texture_transform` atlas offsets. This extension does not add per-node or per-instance light map transforms.
 
 ## Fallback
 
@@ -186,7 +208,7 @@ This extension is optional. Assets using it **SHOULD NOT** add `MOZ_lightmap` to
 
 ## Sample Assets
 
-* [LightmappedCornellBox.glb](https://github.com/bhouston/three.js/tree/gltf-light-map/examples/models/gltf/LightmappedCornellBox): Cornell box with baked indirect diffuse lighting in a shared light map atlas and a dynamic `KHR_lights_punctual` point light.
+* [LightmappedCornellBox.glb](https://github.com/bhouston/three.js/blob/94b4693d0f207a8b2ad88a043fe15325eb9676dc/examples/models/gltf/LightmappedCornellBox/LightmappedCornellBox.glb): Cornell box with baked indirect diffuse lighting in a shared light map atlas and a dynamic `KHR_lights_punctual` point light. Created by Ben Houston with three.js, with no external models or textures, and provided under the three.js repository's MIT license. This pinned revision predates the sRGB encoding requirement above; its light map texture requires conversion to sRGB before use as a conforming sample.
 
 ## Resources
 
