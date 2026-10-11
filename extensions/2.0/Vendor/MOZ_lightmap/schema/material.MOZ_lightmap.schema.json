@@ -3,7 +3,7 @@
     "$id": "material.MOZ_lightmap.schema.json",
     "title": "MOZ_lightmap glTF Material Extension",
     "type": "object",
-    "description": "glTF extension that defines a baked light map containing linear diffuse irradiance.",
+    "description": "glTF extension that defines a baked light map containing sRGB-encoded diffuse lighting.",
     "allOf": [ { "$ref": "textureInfo.schema.json" } ],
     "properties": {
         "index": { },
@@ -16,10 +16,10 @@
         },
         "intensity": {
             "type": "number",
-            "description": "A linear multiplier applied to the light map texel values.",
+            "description": "A linear multiplier applied to the light map RGB values after sRGB decoding.",
             "default": 1.0,
             "minimum": 0.0,
-            "gltf_detailedDescription": "A linear multiplier applied to the RGB values sampled from the light map. The product is the diffuse irradiance incident on the surface, in lux (lm/m²)."
+            "gltf_detailedDescription": "The light map RGB values MUST be decoded from sRGB to linear RGB before this multiplier is applied. For PBR materials, the product is the diffuse irradiance incident on the surface, in lux (lm/m²). For unlit materials, the product directly multiplies the linear base color without division by pi."
         },
         "extensions": { },
         "extras": { }

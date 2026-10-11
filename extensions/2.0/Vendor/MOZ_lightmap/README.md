@@ -19,7 +19,7 @@ This extension may be used together with `KHR_texture_transform`, `KHR_materials
 
 A light map is a texture containing precomputed (baked) diffuse lighting for a surface. Light maps let real-time renderers display global illumination effects such as indirect bounce lighting, color bleeding, and soft shadowing at the cost of a single texture lookup. They are widely used in games, architectural visualization, and web and XR scenes where the scene's static geometry and lighting are known ahead of time.
 
-This extension adds a light map to a glTF material. The light map stores linear RGB diffuse irradiance, usually in a dedicated, non-overlapping texture coordinate set. The renderer adds this irradiance to the material's diffuse lighting. Light maps do not affect specular reflections.
+This extension adds a light map to a glTF material. The light map stores sRGB-encoded RGB baked diffuse lighting, usually in a dedicated, non-overlapping texture coordinate set. The renderer decodes these values to linear RGB before shading. For PBR materials, the renderer interprets the decoded values, scaled by `intensity`, as diffuse irradiance and adds them to the material's diffuse lighting. Unlit materials use the multiplication convention defined in [Unlit Materials](#unlit-materials). Light maps do not affect specular reflections.
 
 The baked irradiance may contain either:
 
@@ -75,15 +75,21 @@ The light map `textureInfo` may use `KHR_texture_transform`. One use is placing 
 
 ## Light Map Content
 
-The light map texture contains **linear** (not sRGB-encoded) RGB values. The alpha channel, if present, **MUST** be ignored. Implementations **MUST NOT** apply the sRGB transfer function when sampling the light map, even if the same image is also used by a color texture slot.
+The light map texture's RGB values **MUST** be encoded with the sRGB transfer function, using the same encoding convention as the core `emissiveTexture`. Implementations **MUST** decode these values to linear RGB before applying `intensity` or performing shading computations. To achieve correct filtering, the transfer function **SHOULD** be decoded before performing linear interpolation. The alpha channel, if present, **MUST** be ignored.
 
-The diffuse irradiance `E` incident on the surface is:
+In the equations below, `lightmapLinear` is the sampled RGB value after sRGB decoding:
 
 ```
-E = intensity * lightmap.rgb
+lightmapLinear = sRGBToLinear(lightmap.rgb)
 ```
 
-`E` is expressed in lux (lm/m²). This is the same photometric convention as `KHR_lights_punctual`, where a directional light's intensity is the illuminance on a surface facing the light. So a baked light and the same light kept dynamic produce the same result. Some baking tools produce values already divided by π (so that "outgoing color = albedo × value"). Exporters **MUST** convert such values to irradiance by multiplying them, or `intensity`, by π.
+For PBR materials, the diffuse irradiance `E` incident on the surface is:
+
+```
+E = intensity * lightmapLinear
+```
+
+`E` is expressed in lux (lm/m²). This is the same photometric convention as `KHR_lights_punctual`, where a directional light's intensity is the illuminance on a surface facing the light. So a baked light and the same light kept dynamic produce the same result. Some baking tools produce values already divided by π (so that "outgoing color = albedo × value"). When exporting for PBR materials, exporters **MUST** convert such values to irradiance by multiplying them, or `intensity`, by π. Unlit materials use the separate normalization defined below.
 
 ### Shading
 
@@ -100,15 +106,19 @@ The core `occlusionTexture` applies to indirect lighting. For this purpose, ligh
 
 ### Unlit Materials
 
-When a material also uses `KHR_materials_unlit`, the light map shades it as a Lambertian surface lit only by the light map:
+When a material also uses `KHR_materials_unlit`, the light map multiplies the unlit base color. Before applying occlusion, the RGB result is:
 
 ```
-color = baseColor.rgb * E / π
+color = baseColor.rgb * lightmapLinear * intensity
 ```
+
+Here `baseColor` is the linear RGB product of `baseColorFactor`, the decoded `baseColorTexture`, and vertex color, as defined by `KHR_materials_unlit`. The occlusion rule above still applies. Alpha coverage and `doubleSided` behavior are unchanged.
+
+This normalization preserves the deployed Mozilla Hubs behavior: unlit materials **MUST NOT** divide the light map contribution by π. It differs from the PBR diffuse BRDF normalization above. An unlit light map is a color multiplier rather than a physically normalized Lambertian irradiance input; exporters **MUST NOT** apply the PBR π conversion to it.
 
 This allows fully baked scenes to be rendered with unlit materials at minimal cost. Without this extension, an unlit material displays `baseColor` unchanged.
 
-> **Implementation Note:** Some existing Mozilla Hubs content and tools scaled unlit light maps so that `color = baseColor.rgb * E`. Implementations that must match that legacy behavior can do so by multiplying `intensity` by π for unlit materials when importing such content.
+> **Implementation Note:** Renderers whose unlit material internally divides light maps by π can implement this equation by multiplying their internal light map intensity by π. This is a renderer conversion, not a change to the extension's serialized `intensity`; exporters must reverse it when writing the extension.
 
 ### Baked and Dynamic Lights
 
@@ -124,7 +134,7 @@ Light maps usually include light from the environment (sky) as well. Application
 *This section is non-normative.*
 
 * **Unwrapping and padding.** Light map UV charts should not overlap, and should be padded and dilated so that bilinear filtering and mipmapping don't bleed between charts.
-* **Dynamic range.** Irradiance often exceeds `1.0`. With 8-bit formats such as PNG and JPEG, store normalized values and put the scale factor in `intensity`. Store dark scenes with care to avoid banding. Where available, texture extensions providing higher dynamic range or higher precision formats may be used for the referenced texture.
+* **Dynamic range.** Irradiance often exceeds `1.0`. With 8-bit formats such as PNG and JPEG, normalize the linear lighting values, encode the normalized values with the sRGB transfer function, and put the linear scale factor in `intensity`. Store dark scenes with care to avoid banding. Any texture extension used for the referenced texture must preserve the sRGB decoding convention defined above.
 * **Static content.** Light maps only describe the lighting of the geometry and lights at bake time. They are suited to static geometry. A light map on a moving or deforming mesh stays attached to the surface and will look incorrect.
 * **Instancing.** The light map belongs to the material and is addressed through mesh texture coordinates. A mesh referenced by several nodes therefore shares one light map region. To give instances unique lighting, use distinct meshes or primitives with their own `TEXCOORD` data, or distinct materials with different `KHR_texture_transform` offsets.
 
