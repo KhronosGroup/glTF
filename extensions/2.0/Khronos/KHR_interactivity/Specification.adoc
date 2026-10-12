@@ -3792,7 +3792,7 @@ This operation interpolates and updates the specified custom variable multiple t
 
 The type `T` is determined by the referenced variable. The variable index **MUST** be a non-negative integer less than the total number of custom variables, otherwise the interactivity node is invalid and the graph **MUST** be rejected.
 
-If the referenced variable is integer or boolean, the interactivity node is invalid and the graph **MUST** be rejected.
+If the referenced variable type signature is `bool`, `int`, or `ref`, the interactivity node is invalid and the graph **MUST** be rejected.
 
 The `useSlerp` configuration value **MUST** be a boolean literal and it **MUST NOT** be true if the type `T` is not `float4`, otherwise the interactivity node is invalid and the graph **MUST** be rejected.
 
@@ -4200,7 +4200,7 @@ The type `T` is determined by the `type` configuration value which points to the
 
 If the `pointer` configuration value is not provided, if it is not a string, if it is invalid (as defined in the previous sections), or if it contains template parameters `[value]`, `{value}`, `[duration]`, `{duration}`, `[p1]`, `{p1}`, `[p2]`, or `{p2}` the interactivity node is invalid and the graph **MUST** be rejected.
 
-If the `type` configuration value is not provided, if it is not a literal number, if it is not exactly representable as a 32-bit signed integer, if it is negative, if it is greater than or equal to the length of the `types` array, or if it points to the type entry with `bool` or `int` type signatures, the interactivity node is invalid and the graph **MUST** be rejected.
+If the `type` configuration value is not provided, if it is not a literal number, if it is not exactly representable as a 32-bit signed integer, if it is negative, if it is greater than or equal to the length of the `types` array, or if it points to a type with any of `bool`, `int`, or `ref` type signatures, the interactivity node is invalid and the graph **MUST** be rejected.
 
 If the number of input value sockets derived from the pointer template string plus four exceeds an implementation-specific limit on the maximum number of input value sockets, the graph **MUST** be rejected.
 
