@@ -1,0 +1,20 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "graph.event.schema.json",
+    "title": "Behavior graph event",
+    "type": "object",
+    "$ref": "graph.nameableProperty.schema.json",
+    "properties": {
+        "id": {
+            "title": "The event id.",
+            "type": "string"
+        },
+        "values": {
+            "title": "The event value sockets.",
+            "type": "object",
+            "additionalProperties": { "$ref": "graph.event.valueSocket.schema.json" },
+            "minProperties": 1,
+            "not": { "required": [ "event" ] }
+        }
+    }
+}
