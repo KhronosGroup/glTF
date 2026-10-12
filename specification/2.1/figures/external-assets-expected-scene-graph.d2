@@ -1,0 +1,37 @@
+title: Expected Scene Graph {
+  shape: text
+  near: top-center
+  style: {
+    font-size: 32
+    bold: true
+  }
+}
+
+scene_node_root: Scene Root Node {shape: oval}
+glTF_1_node_1: Node A1 {shape: oval}
+glTF_1_node_2: Node A2 {shape: oval}
+glTF_1_node_3: Node A3 {shape: oval}
+glTF_2_1_node_root: Root Node B1\n(Copy 1) {shape: oval}
+glTF_2_1_node_1: Node B1\n(Copy 1) {shape: oval}
+glTF_2_1_node_2: Node B2\n(Copy 1) {shape: oval}
+glTF_2_2_node_root: Root Node B1\n(Copy 2) {shape: oval}
+glTF_2_2_node_1: Node B1\n(Copy 2) {shape: oval}
+glTF_2_2_node_2: Node B2\n(Copy 2) {shape: oval}
+glTF_3_node_root_1: Root Node C1 {shape: oval}
+glTF_3_node_root_2: Root Node C2 {shape: oval}
+glTF_3_node_1: Node C1 {shape: oval}
+glTF_3_node_2: Node C2 {shape: oval}
+
+scene_node_root -> glTF_1_node_1
+scene_node_root -> glTF_1_node_2
+scene_node_root -> glTF_1_node_3
+glTF_1_node_1 -> glTF_2_1_node_root
+glTF_1_node_2 -> glTF_2_2_node_root
+glTF_1_node_3 -> glTF_3_node_root_1
+glTF_1_node_3 -> glTF_3_node_root_2
+glTF_2_1_node_root -> glTF_2_1_node_1
+glTF_2_1_node_root -> glTF_2_1_node_2
+glTF_2_2_node_root -> glTF_2_2_node_1
+glTF_2_2_node_root -> glTF_2_2_node_2
+glTF_3_node_root_1 -> glTF_3_node_1
+glTF_3_node_root_2 -> glTF_3_node_2

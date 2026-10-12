@@ -1,0 +1,70 @@
+title: External Asset Referencing {
+  shape: text
+  near: top-center
+  style: {
+    font-size: 32
+    bold: true
+  }
+}
+
+glTF_1: glTF Asset A {
+  scenes: Scenes list {
+    scene: Scene {shape: oval}
+  }
+  files: Files References list {
+    file_1: File Ref. to Asset B {shape: oval}
+    file_2: File Ref. to Asset C {shape: oval}
+  }
+  externalAssets: External Assets list {
+    externalAsset_1: External Asset 1 {shape: oval}
+    externalAsset_2: External Asset 2 {shape: oval}
+  }
+  nodes: {
+    node_root: Root Node A1 {shape: oval}
+    node_1: Node A1 {shape: oval}
+    node_2: Node A2 {shape: oval}
+    node_3: Node A3 {shape: oval}
+  }
+  scenes.scene -> nodes.node_root
+  nodes.node_root -> nodes.node_1: Node Index
+  nodes.node_1 -> externalAssets.externalAsset_1: External Asset Index
+  nodes.node_root -> nodes.node_2: Node Index
+  nodes.node_2 -> externalAssets.externalAsset_1: External Asset Index
+  nodes.node_root -> nodes.node_3: Node Index
+  nodes.node_3 -> externalAssets.externalAsset_2: External Asset Index
+  externalAssets.externalAsset_1 -> files.file_1: File Ref. Index
+  externalAssets.externalAsset_2 -> files.file_2: File Ref. Index
+}
+
+glTF_2: glTF Asset B {
+  scenes: Scenes list {
+    scene: Scene {shape: oval}
+  }
+  nodes: Nodes list {
+    node_root: Root Node B1 {shape: oval}
+    node_1: Node B1 {shape: oval}
+    node_2: Node B2 {shape: oval}
+  }
+  scenes.scene -> nodes.node_root
+  nodes.node_root -> nodes.node_1
+  nodes.node_root -> nodes.node_2
+}
+
+glTF_3: glTF Asset C {
+  scenes: Scenes list {
+    scene: Scene {shape: oval}
+  }
+  nodes: Nodes list {
+    node_root_1: Root Node C1 {shape: oval}
+    node_root_2: Root Node C2 {shape: oval}
+    node_1: Node C1 {shape: oval}
+    node_2: Node C2 {shape: oval}
+  }
+  scenes.scene -> nodes.node_root_1
+  scenes.scene -> nodes.node_root_2
+  nodes.node_root_1 -> nodes.node_1
+  nodes.node_root_2 -> nodes.node_2
+}
+
+glTF_1.files.file_1 -> glTF_2: URI to Asset B
+glTF_1.files.file_2 -> glTF_3: URI to Asset C
