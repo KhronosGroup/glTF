@@ -2578,7 +2578,7 @@ If a mesh primitive specifies a vertex color using the `COLOR_0` attribute seman
 As defined in the vertex attributes section, all `COLOR_0` components are always in the stem:[[0.0, 1.0\]] range.
 ====
 
-The _base color_ texture is represented by the `baseColorTexture` property. The red, green, and blue components of the texture **MUST** be encoded with the piecewise <<srgb, sRGB opto-electronic transfer function>>. Client implementations **SHOULD** apply the inverse of that function to get linear base color texture values before multiplying them with base color factors or vertex colors. When the texture sampler uses linear filtering, the transfer function **SHOULD** be decoded prior to linear interpolation.
+The _base color_ texture is represented by the `baseColorTexture` property. The red, green, and blue components of the texture **MUST** be encoded with the piecewise <<srgb, sRGB opto-electronic transfer function>>. Client implementations **SHOULD** apply the inverse of that function to get linear base color texture values before multiplying them with base color factors or vertex colors. When the texture sampler uses linear filtering, the transfer function **SHOULD** be decoded prior to linear interpolation. The alpha channel, if present, **MUST** be encoded with the linear transfer function.
 
 [NOTE]
 .Implementation Note
@@ -2599,11 +2599,11 @@ Then the effective per-pixel base color RGBA value is
 [latexmath]
 +++++
 \langle 0.2, 1.0, 0.7, 1.0 \rangle \odot \langle 0.7, 0.8, 0.9, 0.5 \rangle \odot \langle 0.051, 0.202, 0.799, 1.0 \rangle =\
-\langle 0.00918, 0.1616, 0.39151, 0.5 \rangle
+\langle 0.00714, 0.1616, 0.50337, 0.5 \rangle
 +++++
 ====
 
-The textures for metalness and roughness parameters are packed together in a single texture represented by the `metallicRoughnessTexture` property. Its green channel contains roughness values and its blue channel contains metalness values. This texture **MUST** be encoded with the linear transfer function.
+The textures for metalness and roughness parameters are packed together in a single texture represented by the `metallicRoughnessTexture` property. Its green channel contains roughness values and its blue channel contains metalness values. This texture **MUST** be encoded with the linear transfer function. The red and alpha channels are ignored.
 
 [NOTE]
 .Example
@@ -2654,7 +2654,7 @@ The _emissive_ parameter controls the color and intensity of the light being emi
 
 If the `emissiveTexture` property is not defined, the emissive texture components implicitly have a value of stem:[1.0].
 
-The red, green, and blue components of the emissive texture **MUST** be encoded with the piecewise <<srgb, sRGB opto-electronic transfer function>>. Client implementations **SHOULD** apply the inverse of that function to get linear emissive texture values before multiplying them with the factors. When the texture sampler uses linear filtering, the transfer function **SHOULD** be decoded prior to linear interpolation.
+The red, green, and blue components of the emissive texture **MUST** be encoded with the piecewise <<srgb, sRGB opto-electronic transfer function>>. Client implementations **SHOULD** apply the inverse of that function to get linear emissive texture values before multiplying them with the factors. When the texture sampler uses linear filtering, the transfer function **SHOULD** be decoded prior to linear interpolation. The alpha channel is ignored.
 
 The units for the multiplicative product of the emissive texture and factor are candela per square meter (**cd / m^2^**), sometimes called _nits_.
 
@@ -2732,7 +2732,7 @@ If the `normalTexture` property is not defined, the material uses surface normal
 This could also be interpreted as an implicit normal texture filled with the latexmath:[\langle 0.5, 0.5, 1.0 \rangle] solid RGB values.
 ====
 
-The normal texture **MUST** be encoded with the linear transfer function. Normal textures **SHOULD NOT** contain _alpha_ channel as it not used anyway.
+The normal texture **MUST** be encoded with the linear transfer function. The alpha channel is ignored.
 
 The sampled RGB values are linearly mapped to XYZ directions as follows: red latexmath:[[0.0, 1.0\]] to X latexmath:[[-1.0, +1.0\]], green latexmath:[[0.0, 1.0\]] to Y latexmath:[[-1.0, +1.0\]], blue latexmath:[(0.5, 1.0\]] to Z latexmath:[(0.0, +1.0\]]. Normal textures **SHOULD NOT** contain blue values less than or equal to stem:[0.5]. After mapping RGB values to XYZ directions, the X and Y components are multiplied by the value of the `scale` property of the object that refers to the normal texture.
 
@@ -2746,9 +2746,17 @@ Finally, the scaled normal vector is normalized before being used in lighting eq
 [[additional-textures-occlusion]]
 ==== Occlusion Texture
 
-The `occlusionTexture` property defines an occlusion texture. It indicates areas that receive less indirect lighting from ambient sources. Direct lighting is not affected.
+The `occlusionTexture` property defines an occlusion texture. It indicates areas that would receive less indirect lighting from ambient sources. Direct lighting is not affected.
 
-The occlusion texture **MUST** be encoded with the linear transfer function. The red channel of the texture encodes the occlusion value, where stem:[0.0] means fully-occluded area (no indirect lighting) and stem:[1.0] means unoccluded area (full indirect lighting). Other texture channels (if present) are ignored.
+Client implementations that are capable of computing indirect lighting themselves, e.g., via path tracing, **SHOULD** ignore the occlusion texture.
+
+The occlusion texture **MUST** be encoded with the linear transfer function. The red channel of the texture encodes the occlusion value, where stem:[0.0] means fully-occluded area (no indirect lighting) and stem:[1.0] means unoccluded area (full indirect lighting). Other texture channels are ignored.
+
+[NOTE]
+.Implementation Note
+====
+Since occlusion textures use only the red channel and metallic-roughness textures use only green and blue channels, the `occlusionTexture` and `metallicRoughnessTexture` properties could point to the same texture that packs all three parameters.
+====
 
 The effective occlusion value is computed from the value sampled from the occlusion texture and the value of the `strength` property of the object that refers to the occlusion texture as follows.
 
