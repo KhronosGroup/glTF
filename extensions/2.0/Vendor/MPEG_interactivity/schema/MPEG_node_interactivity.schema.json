@@ -1,0 +1,19 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title" : "MPEG_node_interactivity",
+    "type" : "object",
+    "description" : "glTF extension to specify interactivity formats at node level",
+    "properties" : {
+        "triggers" : {
+            "type": "array",
+            "items": {
+                "$ref" : "MPEG_node_interactivity.trigger.schema.json"
+            },
+            "minItems": 1,
+            "description": "Array of node triggers . Only distinct types are allowed.The minimum size of this array is 1, and the maximum size is size of trigger types of AMD2."
+        },
+      "extensions": {},
+      "extras": {}
+    },
+    "required":["triggers"]
+}
