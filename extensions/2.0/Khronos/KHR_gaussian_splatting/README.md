@@ -120,16 +120,16 @@ The camera used for splat rendering SHOULD use perspective projection. Splat ren
 
 This kernel defines the following attributes for the mesh primitive.
 
-| Splat Data                   | Attribute Semantic                | Accessor Type | Component Type | Required |
+| Splat Data                   | Attribute Semantic                | Accessor Type | Effective Component Type | Required |
 | ---------------------------- | --------------------------------- | - | - | - |
 | Position                     | `POSITION`                        | VEC3   | Inherited from the glTF specification | :white_check_mark: Yes |
-| Rotation                     | `KHR_gaussian_splatting:ROTATION` | VEC4   | _float_ <br/>_signed byte_ normalized <br/>_signed short_ normalized | :white_check_mark: Yes |
-| Scale                        | `KHR_gaussian_splatting:SCALE`    | VEC3   | _float_ <br/>_unsigned byte_ <br/>_unsigned byte_ normalized <br/>_unsigned short_ <br/>_unsigned short_ normalized | :white_check_mark: Yes |
-| Opacity                      | `KHR_gaussian_splatting:OPACITY`  | SCALAR | _float_ <br/>_unsigned byte_ normalized <br/>_unsigned short_ normalized | :white_check_mark: Yes |
-| Spherical Harmonics degree 0 | `KHR_gaussian_splatting:SH_DEGREE_0_COEF_0`     | VEC3 | _float_ | :white_check_mark: Yes |
-| Spherical Harmonics degree 1 | `KHR_gaussian_splatting:SH_DEGREE_1_COEF_[0-2]` | VEC3 | _float_ | no (yes if degree 2 or 3 are used) |
-| Spherical Harmonics degree 2 | `KHR_gaussian_splatting:SH_DEGREE_2_COEF_[0-4]` | VEC3 | _float_ | no (yes if degree 3 is used) |
-| Spherical Harmonics degree 3 | `KHR_gaussian_splatting:SH_DEGREE_3_COEF_[0-6]` | VEC3 | _float_ | no |
+| Rotation                     | `KHR_gaussian_splatting:ROTATION` | VEC4   | _float32_ <br/> _snorm8_ <br/> _snorm16_ | :white_check_mark: Yes |
+| Scale                        | `KHR_gaussian_splatting:SCALE`    | VEC3   | _float32_ <br/> _uint8_ <br/> _unorm8_ <br/> _uint16_ <br/> _unorm16_ | :white_check_mark: Yes |
+| Opacity                      | `KHR_gaussian_splatting:OPACITY`  | SCALAR | _float32_ <br/> _unorm8_ <br/> _unorm16_ | :white_check_mark: Yes |
+| Spherical Harmonics degree 0 | `KHR_gaussian_splatting:SH_DEGREE_0_COEF_0`     | VEC3 | _float32_ | :white_check_mark: Yes |
+| Spherical Harmonics degree 1 | `KHR_gaussian_splatting:SH_DEGREE_1_COEF_[0-2]` | VEC3 | _float32_ | no (yes if degree 2 or 3 are used) |
+| Spherical Harmonics degree 2 | `KHR_gaussian_splatting:SH_DEGREE_2_COEF_[0-4]` | VEC3 | _float32_ | no (yes if degree 3 is used) |
+| Spherical Harmonics degree 3 | `KHR_gaussian_splatting:SH_DEGREE_3_COEF_[0-6]` | VEC3 | _float32_ | no |
 
 The mean vector for the Gaussian splat is provided by the `POSITION` position of the mesh primitive. This defines the center of the Gaussian splat ellipsoid in local space. The effective global mean vector for the Gaussian splat is derived from the `POSITION` attribute value and the global transformation matrix of the glTF node that instantiates the mesh containing the splat primitive as defined in the glTF specification.
 
