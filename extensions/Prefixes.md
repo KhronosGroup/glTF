@@ -10,17 +10,19 @@ The following extension prefixes are reserved by the spec maintainers:
 * `KHR` - Ratified or intended-to-be-ratified by Khronos Group
 * `EXT` - Prefix for extensions proposed by multiple vendors
 
-To request a prefix, follow the instructions in the [glTF Community Repo Vendor Instructions README](https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/README.md). All requests and PR created in this repo will be closed.
+Both prefixes are managed by the Khronos 3D Formats Working Group, and `KHR` and `EXT` extensions remain in this repository.
 
-## [NEW] Vendor Extensions
+## Vendor Prefixes Have Moved
 
-All vendor extensions, including prefix reservations **MUST** be done in the [glTF-Community](https://github.com/KhronosGroup/glTF-Community/) repo. 
+All glTF 2.0 vendor prefix registrations and vendor extensions **MUST** be submitted to the [glTF-Community](https://github.com/KhronosGroup/glTF-Community/) repository. Follow the [vendor instructions](https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/README.md) there. Prefix requests (issues or pull requests) opened in this repository will be closed and redirected to glTF-Community.
 
-This repo is designed for non-Khronos extensions and has appropriate licensing for the repo and extensions. There are complete [contributing instructions](https://github.com/KhronosGroup/glTF-Community/blob/main/CONTRIBUTING.md) in the repo along with other vendor supporting material.
+glTF-Community is designed for non-Khronos extensions and has licensing suited to vendor-owned extensions. Its [contributing instructions](https://github.com/KhronosGroup/glTF-Community/blob/main/CONTRIBUTING.md) cover prefixes, new extensions, and moving existing extensions from this repository.
 
-The table below is provided strictly for historical reasons. It will not be updated. It will be removed with the extension transition period is complete.
+Every prefix in the table below remains **reserved for the organization that currently controls it**. These prefixes are listed in the glTF-Community [legacy prefix list](https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/LEGACY_PREFIXES.md) and can only be registered there by their current holder.
 
-## Registered Vendor Prefixes (READONLY)
+The table below is kept for historical reference and will not be updated. It will be removed when the transition period (currently ending 31 December 2026, which may be extended) is complete.
+
+## Registered Vendor Prefixes (Read-Only)
 
 | Prefix | Company or Project Name | Contacts | Request |
 |--------------|--------------------------------|---------------------------------------------------------------|-----------|
