@@ -26,12 +26,13 @@ A light map is a texture containing precomputed (baked) diffuse lighting for a s
 
 This extension adds a light map to a glTF material. The light map stores sRGB-encoded RGB baked diffuse lighting, usually in a dedicated, non-overlapping texture coordinate set. The renderer decodes these values to linear RGB before shading. For PBR materials, the renderer interprets the decoded values, scaled by `intensity`, as diffuse irradiance and adds them to the material's diffuse lighting. Unlit materials use the multiplication convention defined in [Unlit Materials](#unlit-materials). Light maps do not affect specular reflections.
 
-The baked irradiance may contain either:
+Common uses of baked irradiance include:
 
-* **indirect diffuse lighting only**, for scenes where direct lighting from some or all lights is still computed at runtime, or
-* **total diffuse lighting** (direct and indirect), for fully baked scenes.
+* **Indirect diffuse lighting only**, with direct lighting computed at runtime.
+* **Total diffuse lighting** (direct and indirect) from all scene lights, for fully baked scenes.
+* **Total diffuse lighting from a chosen subset of scene lights**, often the static ones, with the remaining lights computed at runtime.
 
-Both are diffuse irradiance and are rendered the same way. The content creator chooses which one to bake and which lights to keep in the scene (see [Baked and Dynamic Lights](#baked-and-dynamic-lights)).
+These are illustrative examples, not an exhaustive list. In every case the light map holds diffuse irradiance and is rendered the same way; the content creator chooses what to bake (see [Baked and Dynamic Lights](#baked-and-dynamic-lights)).
 
 <figure>
 <img src="./figures/cornell_box.jpg"/>
