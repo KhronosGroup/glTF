@@ -1,0 +1,19 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "KHR_character glTF Document Extension",
+    "type": "object",
+    "description": "glTF extension for character-specific metadata and properties.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "rootNode": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "Index of the glTF node representing the root of the character hierarchy. This node SHOULD be a common ancestor of all nodes containing character-related meshes and joints.",
+            "gltf_detailedDescription": "This value MUST be a valid index into the `nodes` array."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "rootNode"
+    ]
+}

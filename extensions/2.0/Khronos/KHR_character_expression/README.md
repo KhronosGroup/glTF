@@ -1,0 +1,163 @@
+# KHR_character_expression
+
+## Contributors
+
+- Ken Jakubzak, Meta
+- Hideaki Eguchi / VirtualCast, Inc.
+- K. S. Ernest (iFire) Lee, Independent Contributor / https://github.com/fire
+- Shinnosuke Iwaki / VirtualCast, Inc.
+- 0b5vr / pixiv Inc.
+- Leonard Daly, Independent Contributor
+- Nick Burkard, Meta
+- Sarah Cooney, Microsoft XGTG
+- Aaron Franke, Independent Contributor
+
+## Status
+
+**Draft** – This extension is not yet ratified by the Khronos Group and is subject to change.
+
+## Dependencies
+
+Written against the glTF 2.0 specification.
+Requires the extension(s): `KHR_character`
+
+Assets using `KHR_character_expression` MUST list `KHR_character_expression`, `KHR_character`, and the transitive `KHR_xmp_json_ld` dependency in `extensionsUsed`. They MUST contain a top-level `KHR_character` extension object and a top-level `KHR_character_expression` extension object. The `KHR_xmp_json_ld` declaration does not require an XMP extension object or packet unless metadata is provided.
+
+## Overview
+
+The `KHR_character_expression` extension provides a common interface for facial expression animations. It enables tools and runtimes to associate expressions like `blink`, `smile`, or `jawOpen` with specific animations in the glTF model's animations field.
+
+When used in conjunction with the other expression extensions, enables a data contract with endpoints allowing them to understand just what kind of data is present and being powered.
+
+This extension is purely descriptive: it does not define or store animation data itself.
+
+## Reference Expression Categories/Vocabularies
+
+Expressions in this context describe face-localized animations used to drive small and/or larger movements across the face and/or down-chain meshes needed for reasonable conveyance of emotion/intent.
+
+For examples of relevant types of expressions, you can reference concepts such as:
+
+- **Emotions** (Emotion-derived facial movements such as what [VRM defines as presets](https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/expressions.md), e.g. `happy`, `angry`, `surprised`)
+- **Visemes** (A visual representations of mouth movements for parts of speech, e.g. `aa`, `oo`, `th`)
+- **FACS** ([Facial Action Coding System (FACS)](https://en.wikipedia.org/wiki/Facial_Action_Coding_System) which is a system intended to describe visually distinguishable facial movements (and is often split further based on left/right), e.g. `brow lowerer`, `chin raiser`, `lid droop`)
+- **Gestures and Actions** (Larger descriptors that describe general facial actionse (but not emotion), e.g. `blink`, `smile`, `jawOpen`)
+
+Optionally, these expressions may be aligned with industry standards (or an endpoint/experiences expected expressions set).
+
+## Extension Schema
+
+```json
+{
+  "extensions": {
+    "KHR_character_expression": {
+      "expressions": [
+        {
+          "expression": "smile",
+          "animation": 0
+        },
+        {
+          "expression": "frown",
+          "animation": 1
+        }
+      ]
+    }
+  }
+}
+```
+
+### Properties
+
+| Property      | Type    | Description                                                                    |
+| ------------- | ------- | ------------------------------------------------------------------------------ |
+| `expressions` | array   | Array of mappings between animation/channels and expression labels.            |
+| `animation`   | integer | Index into the glTF `animations[]` array representing an expression animation. |
+| `expression`  | string  | Expression name this joint contributes to.                                     |
+
+Extensions on an expression entry that contain channel indices MUST resolve those indices against the `channels` array of the animation selected by that same entry's `animation` property. A channel index MUST NOT be resolved against another animation.
+
+## Animation Integration
+
+- Expression timing, blending, and control must use glTF `animations` channels.
+- This ensures consistency, ease of implementation, and interoperability across runtimes.
+
+Each animation channel used to drive an expression should operate within a **normalized 0-to-1 range**, where:
+
+- `0.0` indicates the expression is fully inactive.
+- `1.0` indicates the expression is fully active.
+
+Implementations MUST evaluate each expression's referenced animation using the effective expression value as a normalized animation time in the `[0.0, 1.0]` range. When expression masks are present, masking is resolved before animation evaluation.
+
+The transformation values themselves (e.g., degree of rotation or distance of translation) should scale proportionally with the normalized input range.
+
+This approach simplifies character implementation by centralizing expression playback in the glTF animation system and providing a common normalized evaluation parameter.
+
+This extension does not define how multiple animations are blended, accumulated, prioritized, or resolved when they target the same property. These behaviors are runtime-defined because the glTF 2.0 animation model does not specify animation mixing semantics.
+
+### Recommended Interpolation for Binary Expressions
+
+For expressions that represent binary or toggle states (such as `blinkLeft`, `blinkRight`, or `jawOpen`), the use of glTF animation channels with `"interpolation": "STEP"` is strongly recommended.
+
+STEP interpolation ensures that an expression toggles cleanly between fully off (`0.0`) and fully on (`1.0`) states, providing crisp visual transitions and avoiding interpolation artifacts that could occur with `LINEAR` interpolation in binary scenarios.
+
+## Extension Example w/ typed extensions
+
+The following is a partial extension fragment. A complete asset must include the dependency declarations and objects described above, together with the referenced animations.
+
+```json
+{
+  "extensions": {
+    "KHR_character_expression": {
+      "expressions": [
+        {
+          "expression": "smile",
+          "animation": 0,
+          "extensions": {
+            "KHR_character_expression_joint": {
+              "channels": [0, 1]
+            },
+            "KHR_character_expression_texture": {
+              "channels": [2]
+            },
+            "KHR_character_expression_morphtarget": {
+              "channels": [4, 5]
+            }
+          }
+        },
+        {
+          "expression": "frown",
+          "animation": 1,
+          "extensions": {
+            "KHR_character_expression_joint": {
+              "channels": [0]
+            },
+            "KHR_character_expression_texture": {
+              "channels": [1, 2]
+            },
+            "KHR_character_expression_morphtarget": {
+              "channels": [3]
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+## Implementation Notes
+
+- Expression states should be normalized to the [0.0–1.0] range for consistent runtime interpretation.
+
+## Known Limitations
+
+Results may differ between runtimes when multiple active expressions target the same property. Standardized animation mixing is outside the scope of this extension and the glTF 2.0 animation model.
+
+## Known Implementations
+
+- [0b5vr/khr-character-testbed](https://github.com/0b5vr/khr-character-testbed) - Three.js loader and VRM conversion tooling.
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and Unity demos.
+
+## License
+
+This extension is licensed under the Khronos Group Extension License.
+See: https://www.khronos.org/registry/gltf/license.html
