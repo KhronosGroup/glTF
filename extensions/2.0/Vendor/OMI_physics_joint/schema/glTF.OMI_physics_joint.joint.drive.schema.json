@@ -1,0 +1,78 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.OMI_physics_joint.drive.schema.json",
+    "title": "OMI_physics_joint Physics Joint Drive",
+    "type": "object",
+    "description": "Parameters describing a drive or motor which applies forces within a joint.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "type": {
+            "description": "Determines the degree of freedom which this drive controls.",
+            "anyOf": [
+                {
+                    "const": "linear",
+                    "description": "The drive applies a linear force along the driven axis."
+                },
+                {
+                    "const": "angular",
+                    "description": "The drive applies a torque about the driven axis."
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "mode": {
+            "description": "Specifies the force calculation mode.",
+            "anyOf": [
+                {
+                    "const": "force",
+                    "description": "Value computed from the spring equation is the force to apply along the axis."
+                },
+                {
+                    "const": "acceleration",
+                    "description": "Value computed from the spring equation is the acceleration to apply along the axis."
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "axis": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2,
+            "description": "The index of the axis which this drive applies forces on."
+        },
+        "maxForce": {
+            "type": "number",
+            "description": "The maximum force (or torque, for angular drives) the drive can apply. If not provided, this drive is not force-limited.",
+            "minimum": 0
+        },
+        "positionTarget": {
+            "type": "number",
+            "description": "The target translation/angle along the axis that this drive attempts to achieve."
+        },
+        "velocityTarget": {
+            "type": "number",
+            "description": "The target velocity along/about the axis that this drive attempts to achieve."
+        },
+        "stiffness": {
+            "type": "number",
+            "description": "The stiffness of the drive, scaling the force based on the position target.",
+            "default": 0,
+            "minimum": 0
+        },
+        "damping": {
+            "type": "number",
+            "description": "The damping of the drive, scaling the force based on the velocity target.",
+            "default": 0,
+            "minimum": 0
+        }
+    },
+    "required": [
+        "type",
+        "mode",
+        "axis"
+    ]
+}
