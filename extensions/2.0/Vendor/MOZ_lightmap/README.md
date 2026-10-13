@@ -135,7 +135,7 @@ f_lightmap = (c_diff / π) * E
 c_diff = lerp(baseColor.rgb, black, metallic)
 ```
 
-Light maps contain no directional information and do not contribute to specular reflection. For PBR materials, the emissive contribution is unchanged. Materials using `KHR_materials_unlit` continue to ignore the core `emissiveFactor` and `emissiveTexture` properties.
+Light maps contain no directional information and do not contribute to specular reflection. For PBR materials, the emissive contribution is unchanged.
 
 The light map contribution **MUST** follow the material's diffuse-reflection lobe attenuation, including reductions caused by `KHR_materials_transmission` or `KHR_materials_diffuse_transmission` when present. It **MUST NOT** be used as an additional source for a transmission BTDF: one RGB irradiance value does not supply separately baked illumination from the opposite hemisphere.
 
@@ -151,20 +151,15 @@ The red-channel sample is linear, and `occlusionTexture.strength` defaults to `1
 
 ### Unlit Materials
 
-When a material also uses `KHR_materials_unlit`, the light map multiplies the unlit base color. The RGB result, including occlusion, is:
+When a material also uses `KHR_materials_unlit`, the light map multiplies the unlit base color:
 
 ```
-baseColor.rgb = baseColorFactor.rgb * baseColorTextureLinear.rgb * vertexColor.rgb
-color = baseColor.rgb * lightmapLinear * intensity * occlusionFactor
+color.rgb = baseColor.rgb * lightmapLinear * intensity * occlusionFactor
 ```
 
-Here `baseColorTextureLinear` is the base color texture after sRGB decoding, and `vertexColor` is the linear `COLOR_0` attribute. An absent texture or vertex color contributes a multiplier of `1.0`, and `baseColorFactor` uses its core default. Base color alpha, including texture and vertex alpha when present, continues to determine coverage through `alphaMode` and `alphaCutoff`. The light map does not modify alpha, and `doubleSided` behavior is unchanged.
+`baseColor` is the linear unlit base color defined by `KHR_materials_unlit`. Alpha and all other unlit behavior are unchanged; runtime lights and image-based lighting do not apply.
 
-In this combination, the light map and its occlusion multiplier are the only changes to the unlit RGB calculation. Runtime lights and IBL do not illuminate the unlit material, and the other core PBR lighting properties, including the emissive slot, remain ignored as specified by `KHR_materials_unlit`.
-
-This normalization preserves the deployed Mozilla Hubs behavior: unlit materials **MUST NOT** divide the light map contribution by π. It differs from the PBR diffuse BRDF normalization above. An unlit light map is a color multiplier rather than a physically normalized Lambertian irradiance input; exporters **MUST NOT** apply the PBR π conversion to it.
-
-This allows fully baked scenes to be rendered with unlit materials at minimal cost. Without this extension, an unlit material displays `baseColor` unchanged.
+Unlike in PBR materials, the light map value is a color multiplier rather than irradiance. Implementations **MUST NOT** divide it by π, and exporters **MUST NOT** apply the PBR π conversion to it. This matches the deployed Mozilla Hubs behavior.
 
 > **Implementation Note:** Renderers whose unlit material internally divides light maps by π can implement this equation by multiplying their internal light map intensity by π. This is a renderer conversion, not a change to the extension's serialized `intensity`; exporters must reverse it when writing the extension.
 
