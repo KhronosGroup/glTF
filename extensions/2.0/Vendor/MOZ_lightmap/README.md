@@ -18,7 +18,7 @@ Complete
 
 Written against the glTF 2.0 spec.
 
-This extension may be used together with `KHR_texture_transform`, `KHR_materials_unlit`, and `KHR_lights_punctual`.
+This extension may be used together with `KHR_texture_transform` and `KHR_materials_unlit`.
 
 ## Overview
 
@@ -170,14 +170,11 @@ This allows fully baked scenes to be rendered with unlit materials at minimal co
 
 ### Baked and Dynamic Lights
 
-For PBR materials, the renderer adds light map irradiance on top of whatever lighting it computes at runtime. To avoid counting the same light twice, the content creator decides which lighting is baked and which is dynamic:
+A light map stores precomputed diffuse lighting that is not computed at runtime. The baked contribution may include direct diffuse lighting, indirect diffuse lighting, or both. For PBR materials, light map irradiance is added to the lighting computed at runtime. Content creators **SHOULD** ensure that any lighting contribution included in the light map is not also computed at runtime, including diffuse image-based lighting from an environment whose contribution was baked.
 
-* If the light map contains **indirect diffuse lighting only**, the scene's lights (for example, defined with `KHR_lights_punctual`) remain in the asset and supply direct lighting and all specular lighting at runtime.
-* If the light map contains **total diffuse lighting**, lights whose direct contribution was baked **SHOULD NOT** also illuminate the light-mapped surfaces at runtime. They can be removed from the asset or kept only for specular highlights or unbaked objects, depending on what the target renderer supports.
+For example, a light map may contain only indirect diffuse lighting, while runtime lights (for example, defined with `KHR_lights_punctual`) supply direct diffuse and specular lighting. The runtime contribution is then added to the baked indirect contribution without duplication.
 
-`KHR_lights_punctual` does not define specular-only lights or per-surface light exclusions. Keeping fully baked diffuse lighting while using those lights only for live highlights or unbaked objects therefore requires application-specific controls; the authoring guidance above does not encode such controls in the asset. Indirect-only bakes combined with ordinary runtime direct lighting provide a portable baseline for PBR materials.
-
-If the light map already includes diffuse lighting from an environment (such as the sky), adding the same environment's diffuse image-based lighting again will double-count that contribution. Content creators **SHOULD** avoid this duplication. Diffuse image-based lighting whose contribution is not already included in the bake may be added normally. Specular image-based lighting is unaffected.
+The division between baked and runtime lighting is an authoring and renderer design decision. This extension intentionally does not prescribe it. Consequently, light maps typically encode assumptions about the target renderer and are not guaranteed to produce equivalent results across renderers. This is comparable to ambient occlusion textures, whose appearance depends on authoring parameters such as the occlusion sampling radius.
 
 ## Implementation Notes
 
