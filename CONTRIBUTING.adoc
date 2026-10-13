@@ -16,6 +16,26 @@ Please keep contributions focused on solving a single issue or bug.
 For contributions to the glTF 2.0 core specification, see:
 link:specification/2.0/README.md#contributing[glTF 2.0 Contributions].
 
+== Vendor Extensions and Prefixes
+
+New glTF 2.0 vendor extensions, updates to existing glTF 2.0 vendor
+extensions, and vendor prefix requests are not accepted in this repository.
+Submit them to
+link:https://github.com/KhronosGroup/glTF-Community[KhronosGroup/glTF-Community]
+following its
+link:https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/README.md[vendor instructions].
+Issues and pull requests for these will be closed and redirected there.
+
+Owners of glTF 2.0 vendor extensions in `extensions/2.0/Vendor` are
+responsible for moving them to glTF-Community. See
+link:extensions/2.0/Vendor/README.md[extensions/2.0/Vendor/README.md]. The
+only vendor-extension pull requests accepted here are those that replace a
+moved extension with a link to its new location.
+
+This repository continues to accept contributions to Khronos (`KHR_`) and
+multi-vendor (`EXT_`) extensions, which are managed by the Khronos 3D Formats
+Working Group, and to glTF 1.0 extensions.
+
 == Copyright Notice and License Template
 
 If you are adding a new file, it must be under one of the following
