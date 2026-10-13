@@ -184,7 +184,7 @@ This extension is optional. Assets using it **SHOULD NOT** add `MOZ_lightmap` to
 
 ## Sample Assets
 
-* [LightmappedCornellBox.glb](https://github.com/bhouston/three.js/blob/94b4693d0f207a8b2ad88a043fe15325eb9676dc/examples/models/gltf/LightmappedCornellBox/LightmappedCornellBox.glb): Cornell box with baked indirect diffuse lighting in a shared light map atlas and a dynamic `KHR_lights_punctual` point light. Created by Ben Houston with three.js, with no external models or textures, and provided under the three.js repository's MIT license. This pinned revision predates the sRGB encoding requirement above; its light map texture requires conversion to sRGB before use as a conforming sample.
+* [LightmappedCornellBox.glb](https://github.com/bhouston/three.js/blob/93817415af173d813e8ebf6b97e8bee8a3bdb6bb/examples/models/gltf/LightmappedCornellBox/LightmappedCornellBox.glb): Cornell box with baked indirect diffuse lighting in a shared light map atlas and a dynamic `KHR_lights_punctual` point light. MIT license.
 
 ## Resources
 
