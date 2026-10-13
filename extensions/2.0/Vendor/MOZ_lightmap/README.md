@@ -73,15 +73,9 @@ The extension object is a [`textureInfo`](../../../../specification/2.0/Specific
 
 ### Texture Coordinates
 
-Light maps usually need a unique, non-overlapping UV layout, which is generally different from the layout used for the material's other textures. For this reason `texCoord` defaults to `1` (`TEXCOORD_1`), **unlike** core `textureInfo`, where it defaults to `0`. This matches existing light-mapped content, which has always used the second texture coordinate set. Exporters **SHOULD** always write `texCoord` explicitly.
+Light maps usually need a unique, non-overlapping UV layout that differs from the material's other textures. For this reason `texCoord` defaults to `1` (`TEXCOORD_1`), **unlike** core `textureInfo`, where it defaults to `0`. This matches existing light-mapped content. Exporters **SHOULD** always write `texCoord` explicitly.
 
-The light map `textureInfo` may use `KHR_texture_transform`. One use is placing several materials into one shared light map atlas.
-
-The effective texture coordinate set is `MOZ_lightmap.texCoord` (default `1`), unless a supported `KHR_texture_transform` specifies its own `texCoord`, in which case that value overrides it. Mesh primitives using the light map **MUST** provide the `TEXCOORD_<effective set index>` attribute.
-
-If `KHR_texture_transform` is optional, content creators **MUST** also provide usable fallback texture coordinates for the outer `MOZ_lightmap.texCoord` selection. If the asset relies on the override or transform without a usable fallback, `KHR_texture_transform` **MUST** be listed in `extensionsRequired`.
-
-For example, this material uses `TEXCOORD_2` in clients supporting `KHR_texture_transform`, and `TEXCOORD_1` as its fallback in clients that do not:
+The light map `textureInfo` may use `KHR_texture_transform`, for example to place several materials into one shared light map atlas. Texture coordinate overrides and fallback behavior are as defined by `KHR_texture_transform`. In this example, clients supporting `KHR_texture_transform` use `TEXCOORD_2`, and other clients fall back to `TEXCOORD_1`:
 
 ```json
 {
@@ -104,50 +98,40 @@ For example, this material uses `TEXCOORD_2` in clients supporting `KHR_texture_
 }
 ```
 
-Both UV sets are required for this optional-transform fallback. If `KHR_texture_transform` is required instead, only the effective `TEXCOORD_2` set is needed for the light map. All extensions used by an asset, including `MOZ_lightmap` and `KHR_texture_transform` in this example, **MUST** be listed in `extensionsUsed`.
-
 ## Light Map Content
 
-The light map texture's RGB values **MUST** be encoded with the sRGB transfer function, using the same encoding convention as the core `emissiveTexture`. Implementations **MUST** decode these values to linear RGB before applying `intensity` or performing shading computations. To achieve correct filtering, the transfer function **SHOULD** be decoded before performing linear interpolation. The alpha channel, if present, **MUST** be ignored.
+The light map texture's RGB values **MUST** be encoded with the sRGB transfer function. Implementations **MUST** decode them to linear RGB, denoted `lightmapLinear`, before applying `intensity` or performing shading computations, and **SHOULD** decode before filtering. The alpha channel, if present, **MUST** be ignored.
 
-In the equations below, `lightmapLinear` is the sampled RGB value after sRGB decoding:
-
-```
-lightmapLinear = sRGBToLinear(lightmap.rgb)
-```
-
-For PBR materials, the diffuse irradiance `E` incident on the surface is:
+For PBR materials, the diffuse irradiance `E` incident on the surface, in lux (lm/m²), is:
 
 ```
 E = intensity * lightmapLinear
 ```
 
-`E` is expressed in lux (lm/m²). `intensity` is dimensionless; it scales the illuminance represented by the decoded light map values. This is the same photometric convention as `KHR_lights_punctual`, where a directional light's intensity is the illuminance on a surface facing the light. Consistent units and normalization allow baked and runtime diffuse lighting to be combined, but a nondirectional light map cannot reproduce every directional BRDF effect. Exposure, tone mapping, and renderer approximations can also affect the displayed result; this extension does not specify exposure or guarantee identical rendered pixels.
+This is the same photometric convention as `KHR_lights_punctual`, so baked and runtime diffuse lighting can be combined consistently.
 
-Some baking tools produce values already divided by π (so that "outgoing color = albedo × value"). When exporting for PBR materials, exporters **MUST** convert such values to irradiance by multiplying them, or `intensity`, by π. Unlit materials use the separate normalization defined below.
+Some baking tools produce values already divided by π (so that "outgoing color = albedo × value"). When exporting for PBR materials, exporters **MUST** convert such values to irradiance by multiplying them, or `intensity`, by π.
 
 ### Shading
 
-Light map irradiance is diffuse irradiance arriving from the hemisphere above the surface. It **MUST** contribute additively to the material's diffuse reflection through its diffuse BRDF. Runtime lighting, including diffuse image-based lighting, may contribute alongside it. This extension does not prescribe the renderer's image-based lighting calculations. For the core metallic-roughness material, the base Lambertian diffuse contribution, before occlusion and any additional material-layer attenuation, is:
+For PBR materials, light map irradiance **MUST** contribute additively to the material's diffuse reflection through its diffuse BRDF. For the core metallic-roughness material, the base Lambertian diffuse contribution, before occlusion and any additional material-layer attenuation, is:
 
 ```
 f_lightmap = (c_diff / π) * E
 c_diff = lerp(baseColor.rgb, black, metallic)
 ```
 
-Light maps contain no directional information and do not contribute to specular reflection. For PBR materials, the emissive contribution is unchanged.
+Light maps do not contribute to specular reflection. The light map contribution **MUST** follow the material's diffuse-reflection lobe attenuation, including reductions caused by `KHR_materials_transmission` or `KHR_materials_diffuse_transmission` when present, and **MUST NOT** be used as a source for a transmission BTDF.
 
-The light map contribution **MUST** follow the material's diffuse-reflection lobe attenuation, including reductions caused by `KHR_materials_transmission` or `KHR_materials_diffuse_transmission` when present. It **MUST NOT** be used as an additional source for a transmission BTDF: one RGB irradiance value does not supply separately baked illumination from the opposite hemisphere.
+Light maps store a single nondirectional value per texel. Normal maps cannot reorient the baked lighting, and both sides of a double-sided surface receive the same value.
 
-For double-sided materials, both visible sides sample the same light map texel; the extension does not provide separate front- and back-side lighting. Authors needing different bakes for the two sides should use separate geometry and materials. A normal map cannot reconstruct the missing incident-light directions or reorient the baked irradiance to account for normal-mapped detail. Normal maps may still affect runtime lighting.
-
-The core `occlusionTexture` applies to indirect lighting. For this purpose, light map irradiance counts as indirect lighting, so occlusion **MUST** be applied to it, including when this extension is combined with `KHR_materials_unlit`. The occlusion multiplier is:
+Light map irradiance counts as indirect lighting for the core `occlusionTexture`, so occlusion **MUST** be applied to it using the core occlusion multiplier:
 
 ```
 occlusionFactor = 1.0 + occlusionTexture.strength * (occlusionTexture.r - 1.0)
 ```
 
-The red-channel sample is linear, and `occlusionTexture.strength` defaults to `1.0`. If there is no occlusion texture, `occlusionFactor` is `1.0`. Bakes usually already contain occlusion, so content creators **SHOULD** make sure the occlusion texture does not darken the same regions twice. Either omit it or limit it to detail finer than the light map resolution.
+If there is no occlusion texture, `occlusionFactor` is `1.0`. Bakes usually already contain occlusion, so content creators **SHOULD** avoid darkening the same regions twice, either by omitting the occlusion texture or by limiting it to detail finer than the light map resolution.
 
 ### Unlit Materials
 
