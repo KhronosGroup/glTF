@@ -32,11 +32,11 @@ Common uses of baked irradiance include:
 * **Total diffuse lighting** (direct and indirect) from all scene lights, for fully baked scenes.
 * **Total diffuse lighting from a chosen subset of scene lights**, often the static ones, with the remaining lights computed at runtime.
 
-These are illustrative examples, not an exhaustive list. In every case the light map holds diffuse irradiance and is rendered the same way; the content creator chooses what to bake (see [Baked and Dynamic Lights](#baked-and-dynamic-lights)).
+These are illustrative examples, not an exhaustive list. In every case the light map holds diffuse irradiance and is rendered the same way; the content creator chooses what to bake (see [Baked and Runtime Lights](#baked-and-runtime-lights)).
 
 <figure>
 <img src="./figures/cornell_box.jpg"/>
-<figcaption><em>A Cornell box with baked indirect diffuse lighting stored using <code>MOZ_lightmap</code>, combined with a dynamic <code>KHR_lights_punctual</code> point light. Figure by Ben Houston, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</em></figcaption>
+<figcaption><em>A Cornell box with baked indirect diffuse lighting stored using <code>MOZ_lightmap</code>, combined with a runtime <code>KHR_lights_punctual</code> point light. Figure by Ben Houston, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</em></figcaption>
 </figure>
 
 ## Extending Materials
@@ -148,7 +148,7 @@ Unlike in PBR materials, the light map value is a color multiplier rather than i
 
 > **Implementation Note:** Renderers whose unlit material internally divides light maps by π can implement this equation by multiplying their internal light map intensity by π. This is a renderer conversion, not a change to the extension's serialized `intensity`; exporters must reverse it when writing the extension.
 
-### Baked and Dynamic Lights
+### Baked and Runtime Lights
 
 A light map stores precomputed diffuse lighting that is not computed at runtime. The baked contribution may include direct diffuse lighting, indirect diffuse lighting, or both. For PBR materials, light map irradiance is added to the lighting computed at runtime. Content creators **SHOULD** ensure that any lighting contribution included in the light map is not also computed at runtime, including diffuse image-based lighting from an environment whose contribution was baked.
 
@@ -185,7 +185,7 @@ This extension is optional. Assets using it **SHOULD NOT** add `MOZ_lightmap` to
 
 ## Sample Assets
 
-* [LightmappedCornellBox.glb](https://github.com/bhouston/three.js/blob/93817415af173d813e8ebf6b97e8bee8a3bdb6bb/examples/models/gltf/LightmappedCornellBox/LightmappedCornellBox.glb): Cornell box with baked indirect diffuse lighting in a shared light map atlas and a dynamic `KHR_lights_punctual` point light. MIT license.
+* [LightmappedCornellBox.glb](https://github.com/bhouston/three.js/blob/93817415af173d813e8ebf6b97e8bee8a3bdb6bb/examples/models/gltf/LightmappedCornellBox/LightmappedCornellBox.glb): Cornell box with baked indirect diffuse lighting in a shared light map atlas and a runtime `KHR_lights_punctual` point light. MIT license.
 
 ## Resources
 
