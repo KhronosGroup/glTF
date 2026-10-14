@@ -8,6 +8,11 @@ SPDX-License-Identifier: CC-BY-4.0
 ## Contributors
 
 * Ben Houston, [@bhouston](https://github.com/bhouston)
+* Felix Herbst, [@hybridherbst](https://github.com/hybridherbst)
+* Robert Long, [@robertlong](https://github.com/robertlong)
+* Takahiro, [@takahirox](https://github.com/takahirox)
+* [@Exairnous](https://github.com/Exairnous)
+* Aaron Franke, [@aaronfranke](https://github.com/aaronfranke)
 
 ## Status
 
