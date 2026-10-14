@@ -5,7 +5,7 @@
     "type": "object",
     "allOf": [
         {
-            "$ref": "../../../../../specification/2.1/schema/glTFProperty.schema.json"
+            "$ref": "../../../../../specification/2.0/schema/glTFProperty.schema.json"
         }
     ],
     "properties": {

@@ -1,7 +1,7 @@
 {
     "asset": {
-        "version": "2.1",
-        "minVersion": "2.1",
+        "version": "2.0",
+        "minVersion": "2.0",
         "generator": "KHR_lightmap proposal example",
         "copyright": "2026 Ben Houston, CC0-1.0"
     },
@@ -166,6 +166,7 @@
                     "attributes": {
                         "POSITION": 0,
                         "NORMAL": 1,
+                        "TEXCOORD_0": 2,
                         "TEXCOORD_1": 2
                     },
                     "material": 0

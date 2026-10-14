@@ -2,7 +2,7 @@ Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: glTF
 Source: https://github.com/KhronosGroup/glTF
 
-Files: extensions/2.1/Khronos/KHR_lightmap/examples/*
+Files: extensions/2.0/Khronos/KHR_lightmap/examples/*
 Copyright: 2026 Ben Houston
 License: CC0-1.0
 
