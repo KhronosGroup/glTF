@@ -22,7 +22,7 @@
             "type": "number",
             "minimum": 0,
             "default": 1,
-            "description": "Dimensionless linear irradiance multiplier applied after decoding."
+            "description": "Dimensionless linear irradiance multiplier applied after decoding. The scaled texture, including any instance multiplier, represents illuminance in lux; neutral RGB [1, 1, 1] at unit multipliers represents 1 lux."
         }
     },
     "required": [

@@ -120,6 +120,12 @@ E = intensity * instanceIntensity * lightmapLinear
 
 `instanceIntensity` is the GPU instance's `_LIGHTMAP_INTENSITY` value, or `1` when absent or when the node is not GPU instanced.
 
+The product `E` **MUST** use an absolute photometric scale: with both multipliers equal to `1`, a decoded neutral texel `[1, 1, 1]` represents white illumination of **1 lux**. Both multipliers are dimensionless, so their product with the decoded texture remains in lux. There is no additional renderer-dependent lightmap scale. As in `KHR_lights_punctual`, RGB represents the color of the illumination; lux is the photometric quantity, not a separate physical measurement for each color channel. Here, "irradiance" refers to the RGB lighting quantity; its photometric counterpart is illuminance.
+
+For example, a decoded neutral texel `[0.5, 0.5, 0.5]` with `intensity: 1000` and no instance multiplier represents **500 lux**. The same illumination may be stored directly as `[500, 500, 500]` in an HDR image with `intensity: 1`. A GPU instance multiplier of `0.5` reduces either representation to **250 lux**. Normalizing a texture changes its stored numbers, but exporters **MUST** compensate with the binding or instance multiplier to preserve the illumination in lux.
+
+For calibration, baking only the unoccluded direct contribution of a white `KHR_lights_punctual` directional light with intensity `1` onto a surface facing the light at normal incidence, **MUST** produce `E = [1, 1, 1]`. Exporters using arbitrary baker units **MUST** convert them to this scale; an uncalibrated bake does not establish an absolute lux value.
+
 `lightmapTexture.index` references an ordinary glTF texture, whose image is selected using core `texture.source` or an applicable texture/image extension. Without a separate image-format extension, images **MUST** use formats supported by glTF 2.0 (PNG or JPEG).
 
 For core PNG/JPEG images, RGB **MUST** contain linear irradiance samples; implementations **MUST NOT** apply sRGB decoding. Image color-space metadata is ignored according to core glTF rules. Alpha **MUST** be ignored for lighting. Authors may normalize irradiance to `[0, 1]` and store the removed scale in `intensity`.
@@ -143,6 +149,8 @@ c_diff = (1 - metallic) * baseColor.rgb
 L_lightmap = occlusionFactor * (c_diff / π) * E
 occlusionFactor = 1 + occlusionTexture.strength * (occlusionTexture.r - 1)
 ```
+
+For an ideal Lambertian surface, dividing illuminance by π and multiplying by diffuse reflectance yields outgoing luminance in cd/m² (nits), before display exposure or tone mapping. For example, 500 lux on a white Lambertian surface with unit diffuse reflectance and no occlusion gives 500/π ≈ 159 cd/m²; a reflectance of 0.18 gives approximately 28.6 cd/m². Material-layer attenuation may reduce this further.
 
 Use the core linear base color, including its texture, factor, and vertex-color terms. Without an occlusion texture, `occlusionFactor = 1`. The occlusion texture retains its own UV set and transform. The lightmap term **MUST** follow the material's diffuse-reflection lobe attenuation, including transmission and additional layers when present. It **MUST NOT** contribute to specular reflection or be used as illumination for a transmission BTDF. A fully metallic material therefore has no core diffuse lightmap term.
 
