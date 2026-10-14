@@ -6,10 +6,12 @@
         "copyright": "2026 Ben Houston, CC0-1.0"
     },
     "extensionsUsed": [
-        "KHR_lightmap"
+        "KHR_lightmap",
+        "KHR_texture_transform"
     ],
     "extensionsRequired": [
-        "KHR_lightmap"
+        "KHR_lightmap",
+        "KHR_texture_transform"
     ],
     "scene": 0,
     "scenes": [
@@ -186,15 +188,17 @@
                             "lightmapTexture": {
                                 "index": 0,
                                 "texCoord": 1,
-                                "transform": {
-                                    "offset": [
-                                        0.0,
-                                        0
-                                    ],
-                                    "scale": [
-                                        0.5,
-                                        1
-                                    ]
+                                "extensions": {
+                                    "KHR_texture_transform": {
+                                        "offset": [
+                                            0,
+                                            0
+                                        ],
+                                        "scale": [
+                                            0.5,
+                                            1
+                                        ]
+                                    }
                                 }
                             },
                             "intensity": 10
@@ -218,15 +222,17 @@
                             "lightmapTexture": {
                                 "index": 0,
                                 "texCoord": 1,
-                                "transform": {
-                                    "offset": [
-                                        0.5,
-                                        0
-                                    ],
-                                    "scale": [
-                                        0.5,
-                                        1
-                                    ]
+                                "extensions": {
+                                    "KHR_texture_transform": {
+                                        "offset": [
+                                            0.5,
+                                            0
+                                        ],
+                                        "scale": [
+                                            0.5,
+                                            1
+                                        ]
+                                    }
                                 }
                             },
                             "intensity": 10

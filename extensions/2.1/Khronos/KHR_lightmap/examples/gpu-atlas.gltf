@@ -7,11 +7,13 @@
     },
     "extensionsUsed": [
         "KHR_lightmap",
-        "EXT_mesh_gpu_instancing"
+        "EXT_mesh_gpu_instancing",
+        "KHR_texture_transform"
     ],
     "extensionsRequired": [
         "KHR_lightmap",
-        "EXT_mesh_gpu_instancing"
+        "EXT_mesh_gpu_instancing",
+        "KHR_texture_transform"
     ],
     "scene": 0,
     "scenes": [

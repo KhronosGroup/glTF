@@ -20,7 +20,7 @@ Draft proposal for discussion. Not ratified by Khronos. No conformant implementa
 
 ## Dependencies
 
-Written against the [glTF 2.1 draft](../../../../specification/2.1/Specification.adoc), including this branch's **proposed** [core texture transforms](../../../../specification/2.1/Specification.adoc#texture-coordinate-transforms). Upstream `draft-2.1` does not yet contain that promotion. Assets using this extension **MUST** set `asset.version` and `asset.minVersion` to `"2.1"` or later within major version 2.
+Written against the [glTF 2.1 draft](../../../../specification/2.1/Specification.adoc). Assets using this extension **MUST** set `asset.version` and `asset.minVersion` to `"2.1"` or later within major version 2. Texture coordinate transforms use [KHR_texture_transform](../../../2.0/Khronos/KHR_texture_transform/README.md).
 
 GPU instances use [EXT_mesh_gpu_instancing](../../../2.0/Vendor/EXT_mesh_gpu_instancing/README.md). Unlit preview materials may use [KHR_materials_unlit](../../../2.0/Khronos/KHR_materials_unlit/README.md).
 
@@ -28,7 +28,7 @@ GPU instances use [EXT_mesh_gpu_instancing](../../../2.0/Vendor/EXT_mesh_gpu_ins
 
 A light map stores precomputed diffuse irradiance on a surface. It can represent indirect bounce lighting, color bleeding, and soft shadows with one texture lookup. This extension defines irradiance bindings, diffuse BRDF integration, ambient occlusion, and unique lighting for shared mesh instances. Authors control which lighting contributions are baked and which are computed at runtime.
 
-Bindings may be shared through a material or replaced per primitive on a mesh node. Core texture transforms place each binding in an atlas. Custom `EXT_mesh_gpu_instancing` attributes place individual GPU instances in that atlas. Image formats and HDR decoding are delegated to core glTF and separate texture/image extensions.
+Bindings may be shared through a material or replaced per primitive on a mesh node. Texture transforms place each binding in an atlas. Custom `EXT_mesh_gpu_instancing` attributes place individual GPU instances in that atlas. Image formats and HDR decoding are delegated to core glTF and separate texture/image extensions.
 
 ## Bindings
 
@@ -44,7 +44,7 @@ Add `KHR_lightmap` to a material's `extensions` object:
             "lightmapTexture": {
                 "index": 0,
                 "texCoord": 1,
-                "transform": { "offset": [0, 0], "scale": [0.5, 0.5] }
+                "extensions": { "KHR_texture_transform": { "offset": [0, 0], "scale": [0.5, 0.5] } }
             },
             "intensity": 1
         }
@@ -54,7 +54,7 @@ Add `KHR_lightmap` to a material's `extensions` object:
 
 | Property | Type | Required | Meaning |
 |---|---|---|---|
-| `lightmapTexture` | glTF 2.1 `textureInfo` | Yes | Irradiance texture, UV set, and core transform. |
+| `lightmapTexture` | glTF 2.1 `textureInfo` | Yes | Irradiance texture, UV set, and texture transform. |
 | `intensity` | number ≥ 0 | No, default `1` | Dimensionless linear multiplier, applied after image decoding. |
 
 `texCoord` has the core default **0**. Exporters **SHOULD** write it explicitly; lightmaps commonly use `TEXCOORD_1`. Every affected primitive **MUST** have the selected UV attribute. All numbers **MUST** be finite. Texture and image indices **MUST** reference existing entries in the asset.
@@ -74,7 +74,7 @@ For ordinary mesh instances, add `KHR_lightmap` to the node's `extensions` objec
                     "lightmapTexture": {
                         "index": 0,
                         "texCoord": 1,
-                        "transform": { "offset": [0.5, 0], "scale": [0.5, 0.5] }
+                        "extensions": { "KHR_texture_transform": { "offset": [0.5, 0], "scale": [0.5, 0.5] } }
                     }
                 }
             ]
@@ -97,9 +97,9 @@ For nodes using `EXT_mesh_gpu_instancing`, the following optional attributes are
 | `_LIGHTMAP_SCALE` | `VEC2` | `5126` (`FLOAT`) | `[1, 1]` |
 | `_LIGHTMAP_ROTATION` | `SCALAR` | `5126` (`FLOAT`) | `0` radians |
 
-These accessors **MUST NOT** be normalized. Components **MUST** be finite. Counts **MUST** equal those of every other instance attribute on the node. Their values form a per-instance transform using the **same** core texture transform matrix convention. They apply only to effective lightmap bindings, across all primitives of the instanced mesh; they do not affect other material textures. These attributes **MUST NOT** occur as mesh vertex attributes, and the node **MUST** have at least one effective lightmap binding. `KHR_lightmap` **MUST** be listed in `extensionsUsed` when they are used, even when the bindings are supplied only by materials.
+These accessors **MUST NOT** be normalized. Components **MUST** be finite. Counts **MUST** equal those of every other instance attribute on the node. Their values form a per-instance transform using the **same** `KHR_texture_transform` matrix convention. They apply only to effective lightmap bindings, across all primitives of the instanced mesh; they do not affect other material textures. These attributes **MUST NOT** occur as mesh vertex attributes, and the node **MUST** have at least one effective lightmap binding. `KHR_lightmap` **MUST** be listed in `extensionsUsed` when they are used, even when the bindings are supplied only by materials.
 
-Binding selection happens first. Let `B` be the selected binding's core texture transform and `I_j` the transform for GPU instance `j`. Using column vectors:
+Binding selection happens first. Let `B` be the selected binding's `KHR_texture_transform` and `I_j` the transform for GPU instance `j`. Using column vectors:
 
 ```text
 uv_lightmap = I_j * B * vec3(TEXCOORD_n, 1)
@@ -165,17 +165,16 @@ UV charts **SHOULD** be non-overlapping and padded/dilated for all used mip leve
 
 ## Extension Declarations
 
-`KHR_lightmap` **MUST** be in `extensionsUsed`. Assets whose appearance depends on baked lighting **SHOULD** also require it; optional assets render without its baked contribution in unsupported clients. Follow image-format extension and GPU instancing requirements independently. Core texture transforms require glTF 2.1 support via `asset.minVersion`, not a `KHR_texture_transform` declaration.
+`KHR_lightmap` **MUST** be in `extensionsUsed`. Assets whose appearance depends on baked lighting **SHOULD** also require it; optional assets render without its baked contribution in unsupported clients. Follow image-format extension and GPU instancing requirements independently. Declare `KHR_texture_transform` according to its extension requirements when texture transforms are used.
 
 ## Schemas and Examples
 
 * [Material binding](schema/material.KHR_lightmap.schema.json)
 * [Node bindings](schema/node.KHR_lightmap.schema.json)
 * [Node primitive binding](schema/lightmapBinding.schema.json)
-* [Core texture transform proposal](../../../../specification/2.1/schema/textureTransform.schema.json)
 * [Ordinary node atlas example](examples/node-atlas.gltf): two nodes share geometry and material but select different atlas regions.
 * [GPU atlas example](examples/gpu-atlas.gltf): the same two regions selected through instance attributes.
 
 The examples are self-contained structural fixtures with a two-texel PNG atlas and nearest filtering. Their appearance has not been verified in a KHR_lightmap renderer.
 
-JSON schemas validate structure. Index bounds, distinct primitive indices, decoded irradiance values, image-format compatibility, extension declarations, transform conflicts, and instance accessor constraints require semantic validation.
+JSON schemas validate structure. Index bounds, distinct primitive indices, decoded irradiance values, image-format compatibility, extension declarations, and instance accessor constraints require semantic validation.
