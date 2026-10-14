@@ -1,0 +1,30 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "featureIdTexture.schema.json",
+    "title": "Feature ID Texture in EXT_mesh_features",
+    "type": "object",
+    "description": "A texture containing feature IDs",
+    "allOf": [
+        {
+            "$ref": "textureInfo.schema.json"
+        }
+    ],
+    "properties": {
+        "channels": {
+            "type": "array",
+            "items": {
+                "type": "integer",
+                "minimum": 0
+            },
+            "minItems": 1,
+            "description": "Texture channels containing feature IDs, identified by index. Feature IDs may be packed into multiple channels if a single channel does not have sufficient bit depth to represent all feature ID values. The values are packed in little-endian order.",
+            "default": [
+                0
+            ]
+        },
+        "index": {},
+        "texCoord": {},
+        "extensions": {},
+        "extras": {}
+    }
+}
