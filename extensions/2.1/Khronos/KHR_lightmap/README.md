@@ -175,6 +175,4 @@ UV charts **SHOULD** be non-overlapping and padded/dilated for all used mip leve
 
 The examples are self-contained structural fixtures with a two-texel PNG atlas and nearest filtering. Their appearance has not been verified in a KHR_lightmap renderer.
 
-To run the proposal checks, from this directory run `npm ci`, `npm test`, and `npm run lint`. There is no TypeScript implementation to typecheck.
-
-JSON schemas validate structure. Index bounds, distinct primitive indices, decoded irradiance values, image-format compatibility, extension declarations, transform conflicts, and instance accessor constraints require semantic validation. The accompanying validation script checks schemas, illustrative examples, and fixture accessor constraints; it is not a complete glTF validator or rendering implementation.
+JSON schemas validate structure. Index bounds, distinct primitive indices, decoded irradiance values, image-format compatibility, extension declarations, transform conflicts, and instance accessor constraints require semantic validation.
