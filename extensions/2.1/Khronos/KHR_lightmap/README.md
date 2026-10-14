@@ -124,8 +124,6 @@ Baking tools that output irradiance divided by π (so that outgoing diffuse colo
 
 The image-format extension's source-selection and decoding rules **MUST** be followed. Decoded samples **MUST** provide linear RGB irradiance before filtering and multiplication by `intensity`. Alpha may be used during image decoding but **MUST** be ignored for lighting.
 
-Authors **SHOULD** store one image-format variant per lightmap to keep assets small. Clients **MUST** skip lightmaps whose optional image-format extension is unsupported. Declare image-format extensions according to their own requirements; an unsupported extension listed in `extensionsRequired` prevents loading the asset.
-
 ## Shading and Ambient Occlusion
 
 Lightmap irradiance **MUST** contribute additively through the material's diffuse reflection BRDF, like diffuse image-based lighting. For the core metallic-roughness material, before additional material-layer attenuation:
