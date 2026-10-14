@@ -25,8 +25,8 @@
     ],
     "buffers": [
         {
-            "byteLength": 160,
-            "uri": "data:application/octet-stream;base64,zczMvgAAAAAAAAAAzczMPgAAAAAAAAAAAAAAAM3MTD8AAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/zczMPc3MzD1mZmY/zczMPQAAAD9mZmY/mpkZvwAAAAAAAAAAmpkZPwAAAAAAAAAAAAAAAAAAAAAAAAA/AAAAAAAAAD8AAIA/AAAAPwAAgD8AAAAAAAAAAA=="
+            "byteLength": 168,
+            "uri": "data:application/octet-stream;base64,zczMvgAAAAAAAAAAzczMPgAAAAAAAAAAAAAAAM3MTD8AAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/zczMPc3MzD1mZmY/zczMPQAAAD9mZmY/mpkZvwAAAAAAAAAAmpkZPwAAAAAAAAAAAAAAAAAAAAAAAAA/AAAAAAAAAD8AAIA/AAAAPwAAgD8AAAAAAAAAAAAAgD8AAAA/"
         }
     ],
     "bufferViews": [
@@ -66,6 +66,11 @@
         {
             "buffer": 0,
             "byteOffset": 152,
+            "byteLength": 8
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 160,
             "byteLength": 8
         }
     ],
@@ -118,6 +123,12 @@
         },
         {
             "bufferView": 6,
+            "componentType": 5126,
+            "count": 2,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 7,
             "componentType": 5126,
             "count": 2,
             "type": "SCALAR"
@@ -183,7 +194,8 @@
                         "TRANSLATION": 3,
                         "_LIGHTMAP_OFFSET": 4,
                         "_LIGHTMAP_SCALE": 5,
-                        "_LIGHTMAP_ROTATION": 6
+                        "_LIGHTMAP_ROTATION": 6,
+                        "_LIGHTMAP_INTENSITY": 7
                     }
                 }
             }

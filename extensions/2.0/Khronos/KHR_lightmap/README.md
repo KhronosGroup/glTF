@@ -83,7 +83,7 @@ For ordinary mesh instances, add `KHR_lightmap` to the node's `extensions` objec
 
 The array **MUST** be nonempty; primitive indices **MUST** exist and **MUST NOT** repeat. An entry completely replaces the material binding for that primitive on this node, including the texture, UV set, transform, and intensity (which defaults to `1` independently). Missing fields are not inherited. A node entry may supply a binding even when the material has none; a primitive without an explicit material uses the core default material. Primitives absent from the array retain their material bindings, if any. Parent node bindings are not inherited by children.
 
-Two nodes referencing the same mesh can therefore use different regions or different textures without duplicating geometry or materials. An entry with `intensity: 0` disables the baked contribution on that primitive. Node spatial transforms do not change lightmap UV transforms.
+Two nodes referencing the same mesh can therefore use different regions or different textures. Core glTF can already achieve this with separate meshes that share accessors but reference different materials; node bindings avoid duplicating those mesh and material definitions and keep one material shared across all copies. An entry with `intensity: 0` disables the baked contribution on that primitive. Node spatial transforms do not change lightmap UV transforms.
 
 > **Implementation Note**: Node bindings are keyed by primitive index. Tools that reorder, merge, split, or remove a mesh's primitives (for example, optimizers that join or deduplicate primitives) change those indices. Such tools should understand `KHR_lightmap` and update or remove the affected node bindings. A tool unaware of this extension can silently attach a binding to the wrong primitive.
 
@@ -180,7 +180,7 @@ UV charts **SHOULD** be non-overlapping and padded/dilated for all used mip leve
 * [Node bindings](schema/node.KHR_lightmap.schema.json)
 * [Node primitive binding](schema/lightmapBinding.schema.json)
 * [Ordinary node atlas example](examples/node-atlas.gltf): two nodes share geometry and material but select different atlas regions.
-* [GPU atlas example](examples/gpu-atlas.gltf): the same two regions selected through instance attributes.
+* [GPU atlas example](examples/gpu-atlas.gltf): the same two regions selected through instance attributes, with the second instance at half intensity.
 
 The examples are self-contained structural fixtures with a two-texel PNG atlas and nearest filtering. Their appearance has not been verified in a KHR_lightmap renderer.
 
