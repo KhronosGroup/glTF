@@ -16,7 +16,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 ## Status
 
-Draft proposal for discussion in the bhouston fork. Not ratified by Khronos. No conformant implementations or rendered sample assets are claimed.
+Draft proposal for discussion. Not ratified by Khronos. No conformant implementations or rendered sample assets are claimed.
 
 ## Dependencies
 

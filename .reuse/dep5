@@ -6,10 +6,6 @@ Files: extensions/2.1/Khronos/KHR_lightmap/examples/*
 Copyright: 2026 Ben Houston
 License: CC0-1.0
 
-Files: extensions/2.1/Khronos/KHR_lightmap/package.json extensions/2.1/Khronos/KHR_lightmap/package-lock.json
-Copyright: 2026 Ben Houston
-License: Apache-2.0
-
 Files: extensions/0.8/Vendor/CESIUM_binary_glTF/*
 Copyright: 2012-2021 Cesium GS, Inc.
 License: LicenseRef-TBD
