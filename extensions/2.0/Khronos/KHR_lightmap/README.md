@@ -106,7 +106,7 @@ Binding selection happens first. Let `B` be the selected binding's `KHR_texture_
 uv_lightmap = I_j * B * vec3(TEXCOORD_n, 1)
 ```
 
-`TEXCOORD_n` is the binding's effective UV set. Thus the binding's transform is applied **first**, then the instance's transform, then sampler wrapping and filtering. Missing attributes give identity components. No GPU instance attributes means `I_j` is identity. A node replacement is not an extra transform layer. Rotation is fully supported and **MUST NOT** be ignored; exporters may use scale/offset only for easier interoperability. For example, `(0.2, 0.4)` with binding scale `(0.5, 0.5)`, instance scale `(0.5, 1)`, and instance offset `(0.5, 0)` becomes `(0.55, 0.2)`.
+`TEXCOORD_n` is the binding's effective UV set. Thus the binding's transform is applied **first**, then the instance's transform, then sampler wrapping and filtering. Missing attributes give identity components. No GPU instance attributes means `I_j` is identity. A node replacement is not an extra transform layer. Rotation is optional. Because implementations handle `KHR_texture_transform` rotation inconsistently, exporters **SHOULD** place atlas regions using offset and scale only, omitting rotation from both the binding transform and `_LIGHTMAP_ROTATION`. When rotation is present, implementations **SHOULD** apply it as defined here. For example, `(0.2, 0.4)` with binding scale `(0.5, 0.5)`, instance scale `(0.5, 1)`, and instance offset `(0.5, 0)` becomes `(0.55, 0.2)`.
 
 Use the usual `EXT_mesh_gpu_instancing` declaration and fallback requirements. Per-instance texture indices, UV set selection, or per-primitive instance attributes are not defined; split batches when those differ.
 
@@ -130,7 +130,7 @@ Baking tools that output irradiance divided by π (so that outgoing diffuse colo
 
 ### Image Format Extensions
 
-`KHR_lightmap` supports glTF image-format extensions for additional image formats.
+`KHR_lightmap` supports glTF image-format extensions for additional image formats. This extension does not recommend a particular HDR image format. Lightmaps would benefit from HDR image-format extensions, and their development is encouraged.
 
 The image-format extension's source-selection and decoding rules **MUST** be followed. Decoded samples **MUST** provide linear RGB irradiance before filtering and multiplication by `intensity`. Alpha may be used during image decoding but **MUST** be ignored for lighting.
 
