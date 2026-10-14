@@ -5,6 +5,10 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # glTF 2.0 Extension Registry
 
+## Draft glTF 2.1 Proposals
+
+* [KHR_lightmap](2.1/Khronos/KHR_lightmap/README.md): baked diffuse irradiance, HDR images, and per-instance atlas transforms. This fork proposal includes companion core texture transform changes; it is not ratified.
+
 ## Ratified Khronos Extensions
 
 The following extensions have been ratified by the Khronos Group:

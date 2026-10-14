@@ -1,0 +1,17 @@
+{
+  "name": "khr-lightmap-proposal-checks",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/validation.test.mjs",
+    "lint": "node test/lint.mjs && node --check test/validation.test.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "markdownlint": "^0.41.1"
+  },
+  "overrides": {
+    "katex": "0.18.2"
+  }
+}

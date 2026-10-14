@@ -1,0 +1,26 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "material.KHR_lightmap.schema.json",
+    "title": "KHR_lightmap Material Binding",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "../../../../../specification/2.1/schema/glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "lightmapTexture": {
+            "$ref": "../../../../../specification/2.1/schema/textureInfo.schema.json",
+            "description": "Baked diffuse irradiance texture. texCoord defaults to 0, as in core textureInfo."
+        },
+        "intensity": {
+            "type": "number",
+            "minimum": 0,
+            "default": 1,
+            "description": "Dimensionless linear irradiance multiplier applied after decoding."
+        }
+    },
+    "required": [
+        "lightmapTexture"
+    ]
+}
