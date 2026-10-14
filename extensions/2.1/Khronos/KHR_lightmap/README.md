@@ -21,9 +21,9 @@ GPU instances use [EXT_mesh_gpu_instancing](../../../2.0/Vendor/EXT_mesh_gpu_ins
 
 ## Overview
 
-A light map stores precomputed diffuse irradiance on a surface. It can represent indirect bounce lighting, color bleeding, and soft shadows with one texture lookup. This proposal preserves the irradiance, diffuse BRDF, ambient occlusion, and author-controlled baked/runtime split of `MOZ_lightmap`, while adding explicit HDR image support and unique lighting for shared mesh instances. It defines new behavior under a new name; it does not change existing `MOZ_lightmap` assets or implementations.
+A light map stores precomputed diffuse irradiance on a surface. It can represent indirect bounce lighting, color bleeding, and soft shadows with one texture lookup. This proposal preserves the irradiance, diffuse BRDF, ambient occlusion, and author-controlled baked/runtime split of `MOZ_lightmap`, while adding unique lighting for shared mesh instances. It defines new behavior under a new name; it does not change existing `MOZ_lightmap` assets or implementations.
 
-Bindings may be shared through a material or replaced per primitive on a mesh node. Core texture transforms place each binding in an atlas. Custom `EXT_mesh_gpu_instancing` attributes place individual GPU instances in that atlas. HDR uses a small, explicitly defined KTX2 half-float profile, without RGBM or RGBE shader decoding.
+Bindings may be shared through a material or replaced per primitive on a mesh node. Core texture transforms place each binding in an atlas. Custom `EXT_mesh_gpu_instancing` attributes place individual GPU instances in that atlas. Image formats and HDR decoding are delegated to core glTF and separate texture/image extensions.
 
 ## Bindings
 
@@ -104,64 +104,35 @@ Thus the binding's transform is applied **first**, then the instance's transform
 
 Use the usual `EXT_mesh_gpu_instancing` declaration and fallback requirements. Per-instance texture indices, UV set selection, or per-primitive instance attributes are not defined; split batches when those differ. Sparse accessors are interpreted according to core accessor rules.
 
-## Irradiance and HDR
+## Irradiance and Image Formats
 
-Decoded RGB values represent diffuse irradiance in linear BT.709/sRGB primaries, using the photometric convention of `KHR_lights_punctual`, in lux (lm/m²). Alpha **MUST** be ignored. Values **MUST** be finite and nonnegative. Implementations **MUST** preserve values above `1` through texture sampling and lighting calculations, before display mapping or exposure:
+Decoded RGB values represent diffuse irradiance in linear BT.709/sRGB primaries, using the photometric convention of `KHR_lights_punctual`, in lux (lm/m²). Values **MUST** be finite and nonnegative. Implementations **MUST** preserve values above `1` through texture sampling and lighting calculations, before display mapping or exposure:
 
 ```text
 E = intensity * lightmapLinear
 ```
 
-There are two image paths:
+`lightmapTexture.index` references an ordinary glTF texture, whose image is selected using core `texture.source` or an applicable texture/image extension. This extension defines no alternative image source, MIME type, container, compression profile, or HDR encoding. Without a separate image-format extension, images **MUST** use formats supported by the glTF 2.1 draft (PNG or JPEG).
 
-* **PNG/JPEG:** RGB **MUST** be sRGB encoded and decoded to linear before multiplying by intensity. Decode **SHOULD** occur before filtering. HDR can be represented by normalizing linear irradiance to `[0, 1]` and storing the removed scale in `intensity`. This is useful for compatibility, but 8-bit precision may be insufficient for dark regions of high-contrast bakes.
-* **KTX2 half-float:** use the HDR texture source below. RGB is already linear and **MUST NOT** undergo sRGB decoding, tone mapping, clamping to `[0, 1]`, or alpha-based unpacking. Store the actual irradiance with intensity `1`, or use any consistent linear normalization and multiplier.
+For core PNG/JPEG images, RGB **MUST** contain linear irradiance samples; implementations **MUST NOT** apply sRGB decoding. Image color-space metadata is ignored according to core glTF rules. Alpha **MUST** be ignored for lighting. Authors may normalize irradiance to `[0, 1]` and store the removed scale in `intensity`. This preserves range after multiplication but does not provide an HDR image format; limited sample precision may lose detail in high-contrast bakes.
 
 Baking tools that output irradiance divided by π (so that outgoing diffuse color equals albedo times their value) **MUST** multiply those values, or the exported intensity, by π. Do not bake base color, metallic response, or display exposure into irradiance.
 
-### HDR texture source
+### Composition with HDR extensions
 
-Add a `KHR_lightmap` object to a **texture**, with `source` identifying an HDR image. This uses the existing alternative-source pattern rather than giving the lightmap binding another texture index:
+Selecting an HDR texture format is deliberately outside the scope of `KHR_lightmap`. Authors are encouraged to combine it with separate texture/image extensions that support HDR and provide decoded linear RGB irradiance. Supporting `KHR_lightmap` alone does not require support for any HDR image format.
 
-```json
-{
-    "asset": { "version": "2.1", "minVersion": "2.1" },
-    "extensionsUsed": ["KHR_lightmap"],
-    "extensionsRequired": ["KHR_lightmap"],
-    "textures": [
-        { "extensions": { "KHR_lightmap": { "source": 0 } } }
-    ],
-    "images": [
-        { "uri": "irradiance.ktx2", "mimeType": "image/ktx2" }
-    ]
-}
-```
+When such an extension is used, its source-selection, format, decoding, and fallback rules **MUST** be followed. Decode any packing or transfer function to linear irradiance before filtering and applying `intensity`; do not apply an additional sRGB conversion to already linear samples. Alpha may participate in an extension-defined decoding operation, but the resulting alpha **MUST** be ignored for lighting. Mipmaps **SHOULD** represent filtered linear irradiance. Texture reuse in other material slots **MUST** respect each slot's sampling semantics.
 
-This is an illustrative fragment; a renderable asset also supplies bindings, geometry, and a scene. Image URIs, data URIs, and GLB buffer views follow core image rules. `mimeType`, when present, **MUST** be `image/ktx2`; it **MUST** be present for a buffer-view image.
+Declare the image-format extension in `extensionsUsed` and, when required by that extension (for example, when no core fallback exists), `extensionsRequired`, independently of `KHR_lightmap`. An optional fallback **SHOULD** approximate the same linear irradiance using the same binding intensity; there is no source-dependent intensity or hidden exposure adjustment.
 
-An implementation supporting `KHR_lightmap` **MUST** choose its HDR `source` when present. An optional core `texture.source` may reference a PNG/JPEG fallback. With no core fallback, `KHR_lightmap` **MUST** be in `extensionsRequired`. This HDR texture source **MUST NOT** coexist on the same texture with another alternative-source extension. Textures carrying it **MUST** be used exclusively by lightmap bindings, because the linear HDR sampling semantics are specific to this proposal.
+Existing related extensions illustrate both opportunities and limits:
 
-The image **MUST** conform to [KTX version 2](https://registry.khronos.org/KTX/specs/2.0/ktxspec.v2.html), with this restricted profile:
+* [MSFT_texture_dds](../../../2.0/Vendor/MSFT_texture_dds/README.md) is a **vendor draft** that adds DDS texture sources and core-image fallbacks. [DDS can carry floating-point formats](https://learn.microsoft.com/en-us/windows/win32/direct3ddds/dx-graphics-dds-pguide), including HDR data, so implementations that agree on an HDR DDS format and its decoding can compose that support with a lightmap binding. The draft does not mandate a particular HDR profile or universal reader support.
+* [EXT_lights_image_based](../../../2.0/Vendor/EXT_lights_image_based/README.md) is a **multi-vendor** lighting extension with RGBD-packed PNG environment images. Its HDR decoding applies to its environment images, not arbitrary material textures; declaring it does **not** enable RGBD lightmaps. It is related prior art for a separate HDR texture/image extension.
+* [KHR_texture_basisu](../../../2.0/Khronos/KHR_texture_basisu/README.md) is **ratified**, but its specified ETC1S/UASTC image profiles are LDR. General HDR support in KTX2 or Basis tooling does not authorize HDR payloads under this glTF extension.
 
-| Field or content | Requirement |
-|---|---|
-| `vkFormat` | `VK_FORMAT_R16G16B16A16_SFLOAT` (`97`) |
-| `typeSize` | `2` |
-| Dimensions | 2D: positive width and height; `pixelDepth = 0`, `layerCount = 0`, `faceCount = 1` |
-| `supercompressionScheme` | `0` (none) or `2` (Zstandard); conformant readers **MUST** support both |
-| DFD | Must match RGBA16F; `colorPrimaries = KHR_DF_PRIMARIES_BT709`, `transferFunction = KHR_DF_TRANSFER_LINEAR` |
-| RGB | Finite, nonnegative half-float values; no NaN or infinity |
-| Alpha | Finite; ignored, never premultiplied |
-| `KTXorientation` | `rd` or omitted |
-| `KTXswizzle` | `rgba` or omitted |
-| Premultiplication | `KHR_DF_FLAG_ALPHA_PREMULTIPLIED` **MUST NOT** be set |
-| Mipmaps | `levelCount >= 1`; full pyramid **SHOULD** be included for mipmapped sampling |
-
-Mip levels **MUST** contain filtered linear irradiance. An implementation may convert to a supported GPU storage format, but **MUST** retain HDR range and linear sampling. No particular GPU API format is required. This profile avoids choosing a platform-specific compressed GPU format; optional Zstandard reduces transmission size, not GPU texture memory.
-
-`KHR_texture_basisu` currently defines LDR ETC1S and UASTC, **not** HDR Basis payloads. New HDR encoder support in Basis/KTX tooling is not sufficient to make those payloads conformant to that glTF extension. The draft `KHR_texture_float_*` proposals are related work, not dependencies of this proposal. A later shared HDR image extension could replace this narrow profile after agreement; this draft defines everything a reader needs today.
-
-A PNG/JPEG fallback uses the **same** binding intensity as the HDR source. It **SHOULD** approximate the same decoded values; values beyond its representable range may be clipped. Exporters seeking a closer fallback may normalize both sources with a common intensity, at the cost of fallback precision. There is no source-dependent intensity or hidden exposure adjustment.
+These examples do not establish a ratified general-purpose HDR lightmap format. Future HDR texture/image extensions can compose with these bindings without adding format-specific properties to `KHR_lightmap`.
 
 ## Shading and Ambient Occlusion
 
@@ -199,16 +170,15 @@ UV charts **SHOULD** be non-overlapping and padded/dilated for all used mip leve
 
 ## Fallback and Migration
 
-`KHR_lightmap` **MUST** be in `extensionsUsed`. Assets whose appearance depends on baked lighting **SHOULD** also require it; optional assets render without its baked contribution in unsupported clients. Follow the HDR source and GPU instancing requirements independently. Core texture transforms require glTF 2.1 support via `asset.minVersion`, not a `KHR_texture_transform` declaration.
+`KHR_lightmap` **MUST** be in `extensionsUsed`. Assets whose appearance depends on baked lighting **SHOULD** also require it; optional assets render without its baked contribution in unsupported clients. Follow image-format extension and GPU instancing requirements independently. Core texture transforms require glTF 2.1 support via `asset.minVersion`, not a `KHR_texture_transform` declaration.
 
-This proposal does not relabel deployed MOZ data. Migration wraps MOZ's texture info in `lightmapTexture`, writes the effective `texCoord` explicitly (MOZ's default is `1`), moves legacy transforms to core `transform`, preserves the linear irradiance scale for PBR, and converts unlit normalization as above. HDR vendor encodings such as `MOZ_texture_rgbe` or RGBM **MUST** be decoded to irradiance before re-encoding; simply renaming extension objects is insufficient. Existing Hubs implementations are not claimed as KHR implementations.
+This proposal does not relabel deployed MOZ data. Migration wraps MOZ's texture info in `lightmapTexture`, writes the effective `texCoord` explicitly (MOZ's default is `1`), moves legacy transforms to core `transform`, preserves the linear irradiance scale for PBR, and converts unlit normalization as above. HDR vendor encodings such as `MOZ_texture_rgbe` or RGBM require a separate compatible texture/image extension, or decoding to linear irradiance and re-encoding in a supported format; simply renaming extension objects is insufficient. Existing Hubs implementations are not claimed as KHR implementations.
 
 ## Schemas and Examples
 
 * [Material binding](schema/material.KHR_lightmap.schema.json)
 * [Node bindings](schema/node.KHR_lightmap.schema.json)
 * [Node primitive binding](schema/lightmapBinding.schema.json)
-* [HDR texture source](schema/texture.KHR_lightmap.schema.json)
 * [Core texture transform proposal](../../../../specification/2.1/schema/textureTransform.schema.json)
 * [Ordinary node atlas example](examples/node-atlas.gltf): two nodes share geometry and material but select different atlas regions.
 * [GPU atlas example](examples/gpu-atlas.gltf): the same two regions selected through instance attributes.
@@ -217,13 +187,13 @@ The examples are self-contained structural fixtures with a two-texel PNG atlas a
 
 To run the proposal checks, from this directory run `npm ci`, `npm test`, and `npm run lint`. There is no TypeScript implementation to typecheck.
 
-JSON schemas validate structure. Index bounds, distinct primitive indices, HDR contents, allowed image usage, extension declarations, transform conflicts, and instance accessor constraints require semantic validation. The accompanying validation script checks schemas, illustrative examples, and fixture accessor constraints; it is not a complete glTF validator or rendering implementation.
+JSON schemas validate structure. Index bounds, distinct primitive indices, decoded irradiance values, image-format compatibility, extension declarations, transform conflicts, and instance accessor constraints require semantic validation. The accompanying validation script checks schemas, illustrative examples, and fixture accessor constraints; it is not a complete glTF validator or rendering implementation.
 
 ## Feedback Addressed
 
 This proposal follows the complete discussion and inline review of [KhronosGroup/glTF#2672](https://github.com/KhronosGroup/glTF/pull/2672):
 
-* hybridherbst: defined HDR and diffuse BRDF behavior, atlas offset/scale, and an explicit rotation convention; core transforms proposed for 2.1.
+* hybridherbst: HDR interoperability and diffuse BRDF behavior, atlas offset/scale, and an explicit rotation convention; core transforms proposed for 2.1.
 * robertlong: ordinary node instances and atlas transforms, informed by Third Room's [MX_lightmap](https://github.com/matrix-org/thirdroom/tree/main/docs/gltf/MX_lightmap).
 * takahirox: separate extension, reuse of texture transform math, and reuse of custom GPU instance attributes with types, defaults, and application order.
 * Exairnous: preserve MOZ compatibility under its existing name, account for HDR vendor exports during migration, and require integer UV selection in new assets. Hubs remains a separate existing ecosystem.

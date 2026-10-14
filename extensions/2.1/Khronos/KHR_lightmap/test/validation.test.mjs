@@ -27,7 +27,6 @@ for (const directory of [core, schemaDir]) {
 const validator = name => ajv.getSchema(uri(resolve(schemaDir, name)));
 const material = validator('material.KHR_lightmap.schema.json');
 const node = validator('node.KHR_lightmap.schema.json');
-const texture = validator('texture.KHR_lightmap.schema.json');
 
 test('all extension schemas have identifiers, resolve their refs and compile', () => {
   for (const name of readdirSync(schemaDir)) {
@@ -53,27 +52,20 @@ test('bindings reuse core UV defaults and validate transform structure', () => {
   ]) assert.equal(material(value), false, JSON.stringify(value));
 });
 
-test('node replacements are complete bindings; HDR image indices are integers', () => {
+test('node replacements are complete bindings', () => {
   assert(node({ lightmaps: [{ primitive: 0, lightmapTexture: { index: 1 }, intensity: 0 }] }));
   assert(!node({ lightmaps: [] }));
   assert(!node({ lightmaps: [{ primitive: 0 }] }));
   assert(!node({ lightmaps: [{ primitive: -1, lightmapTexture: { index: 0 } }] }));
-  assert(texture({ source: 0 }));
-  assert(!texture({ source: -1 }));
-  assert(!texture({ source: 1.5 }));
-  assert(!texture({}));
 });
 
 test('README JSON fragments parse and match their extension schemas', () => {
   const text = readFileSync(resolve(extension, 'README.md'), 'utf8');
   const blocks = [...text.matchAll(/```json\n([\s\S]*?)\n```/g)];
-  assert.equal(blocks.length, 3);
-  const [materialExample, nodeExample, hdrExample] = blocks.map(block => JSON.parse(block[1]));
+  assert.equal(blocks.length, 2);
+  const [materialExample, nodeExample] = blocks.map(block => JSON.parse(block[1]));
   assert(material(materialExample.extensions.KHR_lightmap));
   assert(node(nodeExample.extensions.KHR_lightmap));
-  assert(texture(hdrExample.textures[0].extensions.KHR_lightmap));
-  assert.equal(hdrExample.asset.minVersion, '2.1');
-  assert(hdrExample.extensionsRequired.includes('KHR_lightmap'));
 });
 
 test('local Markdown links resolve', () => {
