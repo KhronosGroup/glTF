@@ -5124,7 +5124,7 @@ If the `extension` property is undefined, the operation with all its value socke
 [NOTE]
 .Example
 ====
-This example defines a declaration that maps to the `event/onSelect` operation defined in the `KHR_node_selectability` extension. The operations has three output value sockets and zero input value sockets.
+This example defines a declaration that maps to the `event/onSelect` operation defined in the `KHR_node_selectability` extension. The operation has five output value sockets and zero input value sockets.
 
 ```json
 "types": [
@@ -5137,9 +5137,11 @@ This example defines a declaration that maps to the `event/onSelect` operation d
     "op": "event/onSelect",
     "extension": "KHR_node_selectability",
     "outputValueSockets": {
-      "selectedNode":    { "type": 0 },
-      "controllerIndex": { "type": 1 },
-      "selectionPoint":  { "type": 2 }
+      "selectedNode":       { "type": 0 },
+      "controllerIndex":    { "type": 1 },
+      "selectionPoint":     { "type": 2 },
+      "selectionRayOrigin": { "type": 2 },
+      "event":              { "type": 0 }
     }
   }
 ]
