@@ -2209,14 +2209,17 @@ A skinned mesh primitive cannot have vertices not affected by skinning because i
 [NOTE]
 .Example
 ====
-The example below instantiates a mesh with a skin. The rotation of the node 0 and the scale of the node 1 are ignored for the skinned mesh primitives but the translation and scale parameters of nodes 2 and 3 are applied through skinning because those nodes are used as the skin's joints.
+The example below instantiates a mesh with a skin. The rotation of the node 1 and the scale of the node 2 are ignored for the skinned mesh primitives but the translation and scale parameters of nodes 3 and 4 are applied through skinning because those nodes are used as the skin's joints.
 
 [source,json]
 ----
 {
     "nodes": [
         {
-            "children": [ 1 ],
+            "children": [ 1, 3 ]
+        },
+        {
+            "children": [ 2 ],
             "rotation": [ 0.0, 1.0, 0.0, 0.0 ]
         },
         {
@@ -2225,7 +2228,7 @@ The example below instantiates a mesh with a skin. The rotation of the node 0 an
             "skin": 0
         },
         {
-            "children": [ 3 ],
+            "children": [ 4 ],
             "translation": [ 0.0, 1.0, 0.0 ]
         },
         {
@@ -2234,8 +2237,8 @@ The example below instantiates a mesh with a skin. The rotation of the node 0 an
     ],
     "skins": [
         {
-            "joints": [ 2, 3 ],
-            "skeleton": 2
+            "joints": [ 3, 4 ],
+            "skeleton": 0
         }
     ]
 }
