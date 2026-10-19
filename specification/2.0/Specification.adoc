@@ -1608,10 +1608,10 @@ Accessors of the _uint32_ effective component type **SHOULD NOT** be used for an
                                     _unorm8_ +
                                     _unorm16_                   | RGB or RGBA vertex color
 | `JOINTS_n`    | VEC4            | _uint8_ +
-                                    _uint16_                    | See <<skinned-primitive-attributes,Skinned Primitive Attributes>>
+                                    _uint16_                    | See <<skinned-mesh-primitive-attributes,Skinned Mesh Primitive Attributes>>
 | `WEIGHTS_n`   | VEC4            | _float32_ +
                                     _unorm8_  +
-                                    _unorm16_                   | See <<skinned-primitive-attributes,Skinned Primitive Attributes>>
+                                    _unorm16_                   | See <<skinned-mesh-primitive-attributes,Skinned Mesh Primitive Attributes>>
 |====
 
 The `TEXCOORD_n`, `COLOR_n`, `JOINTS_n`, and `WEIGHTS_n` attribute semantic property names have the form `[semantic]_[index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. The following rules apply to the `[index]` syntax:
@@ -1631,7 +1631,7 @@ Index values used for the same attribute semantic within a single primitive **MU
 
 [NOTE]
 ====
-The `JOINTS_n` and `WEIGHTS_n` vertex attribute semantics are described in the <<skinned-primitive-attributes,Skinned Primitive Attributes>> section below.
+The `JOINTS_n` and `WEIGHTS_n` vertex attribute semantics are described in the <<skinned-mesh-primitive-attributes,Skinned Mesh Primitive Attributes>> section below.
 ====
 
 Among all possible indexed attribute semantic names, client implementations **SHOULD** support at least `TEXCOORD_0` and `TEXCOORD_1`, `COLOR_0`, and `JOINTS_0` with `WEIGHTS_0`.
@@ -1951,8 +1951,8 @@ The number of morph targets is not limited. Client implementations **SHOULD** su
 
 For assets that contain more morphed attributes than could be efficiently supported, client implementations **SHOULD** choose morph targets with the highest weights.
 
-[[skinned-primitive-attributes]]
-==== Skinned Primitive Attributes
+[[skinned-mesh-primitive-attributes]]
+==== Skinned Mesh Primitive Attributes
 
 A mesh primitive **MAY** define attributes used for _linear blend skinning_.
 
@@ -1995,14 +1995,34 @@ Then for that vertex:
 As this particular vertex is influenced only by seven joints, the joint index zero is used twice: with its actual weight (stem:[0.15]) and with zero weight (as the last component of the second pair of attributes).
 ====
 
-The linear sum of weights across all `WEIGHTS_n` attribute values for every vertex **SHOULD** be as close as reasonably possible to stem:[1.0]. The **RECOMMENDED** epsilon value is latexmath:[2 \cdot 10^{-7}] multiplied by the number of non-zero weights per vertex.
+If all sets of weights are provided by accessors that use the _unorm8_ or _unorm16_ effective component types, the linear sum of weights for every vertex of that mesh primitive **MUST** be exactly stem:[1.0] after dequantization.
+
+[NOTE]
+.Implementation Note
+====
+To confirm the linear sum of weights in this case without using floating-point math, i.e., prior to dequantization, an implementation can multiply all integer _unorm8_ values by stem:[257] to upscale them to the equivalent _unorm16_ values and confirm that the sum is stem:[65535].
+
+For example, let
+
+- `WEIGHTS_0` value be latexmath:[\langle 1, 4, 16, 64 \rangle] provided by a _unorm8_ accessor;
+- `WEIGHTS_1` value be latexmath:[\langle 640, 2080, 8200, 32770 \rangle] provided by a _unorm16_ accessor.
+
+Then the sum of the weights would be
+
+[latexmath]
++++++
+\frac{85}{255}+\frac{43690}{65535} = \frac{85 \cdot 257 + 43690}{65535} = \frac{65535}{65535} = 1
++++++
+====
+
+If any set of weights is provided by an accessor that has a floating-point component type, the linear sum of weights for every vertex of that mesh primitive **SHOULD** be as close as reasonably possible to stem:[1.0]. The **RECOMMENDED** epsilon value is latexmath:[2 \cdot 10^{-7}] multiplied by the number of non-zero weights per vertex.
 
 [NOTE]
 .Implementation Note
 ====
 Without these requirements, vertices would be deformed significantly because the weight error would get multiplied by the joint position. For example with _unorm8_ storage, an error of latexmath:[1/255] in the weight sum would result in an unacceptably large difference in the joint position.
 
-Since the recommended threshold is much lower than minimum possible step for quantized component types, the weight sum may need to be renormalized after quantization during asset authoring.
+When using quantized component types, the weight sum may need to be renormalized after quantization during asset authoring.
 ====
 
 Client implementations **MAY** support only a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the asset's appearance.
@@ -2041,7 +2061,7 @@ The first accessor element provides an inverse bind matrix for node 3 and the se
 ----
 ====
 
-The `inverseBindMatrices` property (if defined) **MUST** refer to an accessor with `"MAT4"` type, the _float32_ effective component type, and the number of elements that is greater than or equal to the number of elements of the `joints` array. The fourth row of the matrices provided by that accessor **MUST** be latexmath:[\langle 0, 0, 0, 1 \rangle]. The accessed matrices **MUST NOT** contain infinite or NaN values.
+The `inverseBindMatrices` property (if defined) **MUST** refer to an accessor with the `"MAT4"` type, the _float32_ effective component type, and the number of elements that is greater than or equal to the number of elements of the `joints` array. Inverse bind matrices associated with the joints, i.e., accessor elements with indices from zero to the number of joints (exclusive), **MUST NOT** contain infinite or NaN values and their fourth row **MUST** be latexmath:[\langle 0, 0, 0, 1 \rangle].
 
 [NOTE]
 .Implementation Note
@@ -2179,6 +2199,12 @@ Then the effective transformation matrix of the current vertex is computed as a 
 +++++
 \sum_{i=0}^{N-1} W_i \cdot M_{J_i} \cdot B_{J_i}
 +++++
+
+[NOTE]
+.Implementation Note
+====
+A skinned mesh primitive cannot have vertices not affected by skinning because its vertices are controlled exclusively by the joint nodes, ignoring the transform of the node that instantiates the mesh. Therefore, a vertex with all-zero joint weights would not have any applicable transformation matrix.
+====
 
 [NOTE]
 .Example
