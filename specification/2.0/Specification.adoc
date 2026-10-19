@@ -2069,7 +2069,7 @@ The `inverseBindMatrices` property (if defined) **MUST** refer to an accessor wi
 Some authoring pipelines support a matrix defining how to pose the skin's geometry for use with the joints (also known as "`Bind Shape Matrix`"). Such matrix is not supported in glTF and therefore it would have to be premultiplied to mesh data or to Inverse Bind Matrices.
 ====
 
-The `skeleton` property (if present) identifies the node that is the skeleton root of the skin. That node **MUST** be the common root of the nodes listed in the `joints` array or a direct or indirect parent node of that common root.
+The `skeleton` property (if present) identifies the node that is the skeleton root of the skin. That node **MUST** be the root of all nodes listed in the `joints` array or their common ancestor.
 
 [NOTE]
 .Implementation Note
