@@ -4450,7 +4450,7 @@ When the `in` input flow is activated:
 .. activate the `err` output flow and skip the next steps.
 3. If the `stopTime` input value is NaN,
 .. activate the `err` output flow and skip the next steps.
-4. If the _animation state dynamic array_ exists and does contain an entry with the same animation index,
+4. If the _animation state dynamic array_ exists and does contain an entry with the same animation reference,
 .. update the entry's _stop completion_ pointer to the `done` output flow of this interactivity node;
 .. update the entry's _stop time_ to the `stopTime` input value.
 5. Activate the `out` output flow.
@@ -4833,7 +4833,7 @@ As defined in the base glTF 2.0 specification, animated properties are snapped t
 
 The `playhead` read-only property represents the current animation position within the glTF animation data. For valid glTF animations, the property value is equal to the last effective timestamp, so it is always greater than or equal to zero and less than or equal to `maxTime`. Before the animation start, this property value is zero; when the animation stops, the property retains its last value until the animation is restarted. For invalid glTF animations, the property value is always NaN.
 
-The `virtualPlayhead` read-only property represents the current animation position on the infinite timeline that is used for the input value sockets of the `animation/start` and `animation/stop` operations. For valid glTF animations, the property value is equal to the last requested timestamp. Before the animation start, this property is zero; when the animation stops, the property value retains its last value until the animation is restarted. For invalid glTF animations, the property value is always NaN.
+The `virtualPlayhead` read-only property represents the current animation position on the infinite timeline that is used for the input value sockets of the `animation/start` and `animation/stopAt` operations. For valid glTF animations, the property value is equal to the last requested timestamp. Before the animation start, this property is zero; when the animation stops, the property value retains its last value until the animation is restarted. For invalid glTF animations, the property value is always NaN.
 
 The following pointers represent the read-only properties defined in this section.
 
@@ -5124,7 +5124,7 @@ If the `extension` property is undefined, the operation with all its value socke
 [NOTE]
 .Example
 ====
-This example defines a declaration that maps to the `event/onSelect` operation defined in the `KHR_node_selectability` extension. The operations has three output value sockets and zero input value sockets.
+This example defines a declaration that maps to the `event/onSelect` operation defined in the `KHR_node_selectability` extension. The operation has five output value sockets and zero input value sockets.
 
 ```json
 "types": [
@@ -5137,9 +5137,11 @@ This example defines a declaration that maps to the `event/onSelect` operation d
     "op": "event/onSelect",
     "extension": "KHR_node_selectability",
     "outputValueSockets": {
-      "selectedNode":    { "type": 0 },
-      "controllerIndex": { "type": 1 },
-      "selectionPoint":  { "type": 2 }
+      "selectedNode":       { "type": 0 },
+      "controllerIndex":    { "type": 1 },
+      "selectionPoint":     { "type": 2 },
+      "selectionRayOrigin": { "type": 2 },
+      "event":              { "type": 0 }
     }
   }
 ]
