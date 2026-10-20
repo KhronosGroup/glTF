@@ -1,0 +1,267 @@
+{
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5121,
+      "count": 186,
+      "max": [
+        127
+      ],
+      "min": [
+        0
+      ],
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 128,
+      "max": [
+        0.9999999403953552,
+        1.000000238418579,
+        0.06060600280761719
+      ],
+      "min": [
+        -0.9999998807907104,
+        -0.9999997615814209,
+        -1.939394235610962
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 128,
+      "max": [
+        0.8909767270088196,
+        0.8909767866134644,
+        0.9999999403953552
+      ],
+      "min": [
+        -0.8909767866134644,
+        -0.8909767866134644,
+        -0.4454885721206665
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 5,
+      "max": [
+        4.958333333333333
+      ],
+      "min": [
+        0
+      ],
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5126,
+      "count": 5,
+      "max": [
+        0,
+        1,
+        0,
+        1
+      ],
+      "min": [
+        0,
+        -0.7071068286895752,
+        0,
+        -4.371138828673793e-8
+      ],
+      "type": "VEC4"
+    }
+  ],
+  "animations": [
+    {
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 0,
+            "path": "rotation"
+          }
+        }
+      ],
+      "samplers": [
+        {
+          "input": 3,
+          "interpolation": "LINEAR",
+          "output": 4
+        }
+      ],
+      "extensions": {
+        "MSFT_audio_emitter": {
+          "events": [
+            {
+              "time": 0,
+              "action": "play",
+              "emitter": 0
+            },
+            {
+              "time": 2,
+              "action": "pause",
+              "emitter": 0
+            },
+            {
+              "time": 2.5,
+              "action": "play",
+              "emitter": 0
+            },
+            {
+              "time": 2,
+              "action": "play",
+              "emitter": 1,
+              "startOffset": 1.5
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "asset": {
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 188,
+      "byteOffset": 0,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1536,
+      "byteOffset": 188,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1536,
+      "byteOffset": 1724,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 20,
+      "byteOffset": 3260
+    },
+    {
+      "buffer": 0,
+      "byteLength": 80,
+      "byteOffset": 3280
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "cone.bin",
+      "byteLength": 3360
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Cone",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 2,
+            "POSITION": 1
+          },
+          "indices": 0,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.1,
+          0.5,
+          0.1,
+          1
+        ],
+        "metallicFactor": 1,
+        "roughnessFactor": 0.1
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "extensions": {
+        "MSFT_audio_emitter": {
+          "emitters": [
+            0
+          ]
+        }
+      }
+    },
+    {
+      "mesh": 0,
+      "name": "Cone",
+      "translation": [
+        0,
+        0,
+        2
+      ]
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Scene",
+      "nodes": [
+        0
+      ],
+      "extensions": {
+        "MSFT_audio_emitter": {
+          "emitters": [
+            1
+          ]
+        }
+      }
+    }
+  ],
+  "extensions": {
+    "MSFT_audio_emitter": {
+      "clips": [
+        {
+          "uri": "thisisanaudiotestfile.wav"
+        }
+      ],
+      "emitters": [
+        {
+          "name": "This is an audio test file (node)",
+          "loop": true,
+          "innerAngle": 1.04719755,
+          "outerAngle": 1.57079633,
+          "distanceModel": "linear",
+          "clips": [
+            {
+              "clip": 0
+            }
+          ]
+        },
+        {
+          "name": "This is an audio test file (scene)",
+          "loop": false,
+          "clips": [
+            {
+              "clip": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "extensionsUsed": [
+    "MSFT_audio_emitter"
+  ]
+}
