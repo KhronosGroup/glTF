@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_framebuffer_value_mapping glTF Scene Extension",
+    "type": "object",
+    "description": "glTF extension that defines the mapping of light intensity values to frambuffer values.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "maxLight": {
+            "type": "number",
+            "description": "Light intensity value mapped to max framebuffer value.",
+            "gltf_detailedDescription": "The value defines how calculated light intensity values, in the form of RGB triplets, shall be mapped to the framebuffer. RGB values are scaled by (max_framebuffer_value / maxWhite)"
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
