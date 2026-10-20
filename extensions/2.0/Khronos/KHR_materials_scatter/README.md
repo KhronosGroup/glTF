@@ -73,6 +73,9 @@ The scattering properties are defined by adding the `KHR_materials_scatter` exte
 {
   "materials": [
     {
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0.0
+      },
       "extensions": {
         "KHR_materials_scatter": {
           "scatterStrengthFactor": 1.0,
@@ -99,6 +102,9 @@ The scattering properties are defined by adding the `KHR_materials_scatter` exte
 {
   "materials": [
     {
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0.0
+      },
       "extensions": {
         "KHR_materials_scatter": {
           "scatterStrengthFactor": 1.0,
