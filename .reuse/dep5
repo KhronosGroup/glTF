@@ -2,6 +2,10 @@ Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: glTF
 Source: https://github.com/KhronosGroup/glTF
 
+Files: extensions/2.0/Khronos/KHR_lightmap/examples/*
+Copyright: 2026 Ben Houston
+License: CC0-1.0
+
 Files: extensions/0.8/Vendor/CESIUM_binary_glTF/*
 Copyright: 2012-2021 Cesium GS, Inc.
 License: LicenseRef-TBD
