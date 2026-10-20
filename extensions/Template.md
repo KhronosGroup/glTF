@@ -11,11 +11,13 @@ SPDX-License-Identifier: CC-BY-4.0
 
 ## Status
 
-TODO: Draft or Stable
+TODO: Initial Draft (later: Review Draft, Release Candidate, Complete, Ratified)
 
 ## Dependencies
 
-Written against the glTF 2.0 spec.
+Written against the glTF 2.0 specification.
+
+TODO: A statement whether the extension is _optional_ or _required_
 
 ## Overview
 
