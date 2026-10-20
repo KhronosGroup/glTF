@@ -1,0 +1,22 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "airAbsorption.schema.json",
+    "title": "KHR_audio_environment Air Absorption",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "enabled": {
+            "type": "boolean",
+            "description": "Enable distance-dependent low-pass filtering.",
+            "default": false
+        },
+        "cutoffAtMaxDistance": {
+            "type": "number",
+            "description": "Low-pass cutoff frequency in Hz when the listener is at maxDistance. The cutoff is 20000 Hz at refDistance, interpolated linearly in log-frequency.",
+            "exclusiveMinimum": 0.0,
+            "default": 5000.0
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}
