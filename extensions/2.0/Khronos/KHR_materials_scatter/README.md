@@ -190,7 +190,7 @@ s &= 4.09712 + 4.20863\,\rho_{ms} - \sqrt{9.59217 + 41.6808\,\rho_{ms} + 17.7126
 \end{aligned}
 $$
 
-Note: $s$ should be clamped to $[0, 1]$ and $g$ is $(-1, 1)$ so a divide by zero should not happen here.
+Note: $s$ should be clamped to $[0, 1]$. For each component whose input multi-scatter albedo is zero (including the effective $\rho_{ms}^*$ after applying `scatterStrength`), set $s = 1$ exactly so that $\rho_{ss} = 0$ exactly. Since $g$ is in $(-1, 1)$, the denominator is nonzero.
 
 The single-scatter albedo defines the fraction of the attenuation coefficient that goes to scattering versus absorption.
 Given the attenuation coefficient $\sigma_t = -\log(c)/d$ from `KHR_materials_volume`, the scattering and absorption coefficients are:
