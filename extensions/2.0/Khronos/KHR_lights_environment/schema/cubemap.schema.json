@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "light",
+    "type": "object",
+    "description": "Cubemap definition used for environment lights.",
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "source": {
+            "description": "Image reference to one of the cubemap images declared by this extension.",
+            "type": "integer",
+        },
+        "layer": {
+            "description": "Layer in the image that contains the cubemap, defaults to 0 if no value supplied.",
+            "type": "integer"
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "source",
+    ]
+}
