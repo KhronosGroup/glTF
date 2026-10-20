@@ -75,6 +75,7 @@ The scattering properties are defined by adding the `KHR_materials_scatter` exte
     {
       "extensions": {
         "KHR_materials_scatter": {
+          "scatterStrengthFactor": 1.0,
           "multiscatterColorFactor": [1, 1, 1],
           "scatterAnisotropy": 0.999
         },
@@ -100,6 +101,7 @@ The scattering properties are defined by adding the `KHR_materials_scatter` exte
     {
       "extensions": {
         "KHR_materials_scatter": {
+          "scatterStrengthFactor": 1.0,
           "multiscatterColorFactor": [0.81, 0.8, 0.5],
           "scatterAnisotropy": 0.0
         },
