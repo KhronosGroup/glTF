@@ -2087,7 +2087,7 @@ Joints of a skin **MUST** have a common ancestor node called _common root_, whic
 [NOTE]
 .Implementation Note
 ====
-A node object does not specify whether it is a joint. Client implementations may need to traverse the `skins` array first, marking each joint node.
+A node object does not specify whether it is a joint. Client implementations that care about this distinction may need to traverse the `skins` array first, marking each joint node.
 ====
 
 A joint node **MAY** have other nodes attached to it, even a complete node sub graph with meshes.
@@ -3234,7 +3234,7 @@ a~1~,a~2~,...a~n~,v~1~,v~2~,...v~n~,b~1~,b~2~,...b~n~
 
 See <<appendix-c-interpolation,Appendix C>> for additional information about interpolation modes.
 
-Skinned animation is achieved by directly or indirectly targeting transformation matrices of the nodes used as joints by skin objects.
+Animation of skinned mesh primitives is achieved by targeting TRS properties of the nodes used as joints by the corresponding skin objects or ancestors of those nodes.
 
 
 [[specifying-extensions]]
