@@ -38,6 +38,10 @@
             "items": {
                 "$ref": "propertyAttribute.schema.json"
             }
+        },
+        "statistics": {
+            "$ref": "statistics.schema.json",
+            "description": "An object containing statistics about metadata entities."
         }
     },
     "oneOf": [
