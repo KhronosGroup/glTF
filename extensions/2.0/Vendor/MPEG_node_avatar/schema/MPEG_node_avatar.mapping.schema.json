@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "required": ["path", "node"],
+    "properties": {
+      "path": {
+        "type": "string",
+        "description": "Provides the Avatar path for this node as described in clause 8.3.4."
+      },
+      "node": {
+        "type": "integer",
+        "description": "The index of the child node of the mesh part that corresponds to the label in the path."
+      }
+    }
+  }
