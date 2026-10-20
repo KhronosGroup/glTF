@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "KHR_gaussian_splatting_compression_EGSC glTF mesh primitive extension",
+  "type": "object",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+  "properties": {
+      "bufferView": {
+          "allOf": [ { "$ref" : "glTFid.schema.json" } ],
+          "description": "The index of the bufferView."
+      },
+      "extensions": { },
+      "extras": { }
+  },
+  "required": [ "bufferView"]
+}
