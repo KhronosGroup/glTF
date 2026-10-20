@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_gaussian_splatting_transport.shEncoding.progressive.stage",
+    "type": "object",
+    "description": "A progressive stage listing accessors that should be fetched together.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "accessors": {
+            "type": "array",
+            "description": "Array of accessor indices to fetch for this stage. An accessor is timed if and only if it carries MPEG_accessor_timed.",
+            "items": {
+                "type": "integer",
+                "minimum": 0
+            },
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["accessors"]
+}
