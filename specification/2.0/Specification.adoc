@@ -1608,10 +1608,10 @@ Accessors of the _uint32_ effective component type **SHOULD NOT** be used for an
                                     _unorm8_ +
                                     _unorm16_                   | RGB or RGBA vertex color
 | `JOINTS_n`    | VEC4            | _uint8_ +
-                                    _uint16_                    | See <<skinned-mesh-attributes,Skinned Mesh Attributes>>
+                                    _uint16_                    | See <<skinned-mesh-primitive-attributes,Skinned Mesh Primitive Attributes>>
 | `WEIGHTS_n`   | VEC4            | _float32_ +
                                     _unorm8_  +
-                                    _unorm16_                   | See <<skinned-mesh-attributes,Skinned Mesh Attributes>>
+                                    _unorm16_                   | See <<skinned-mesh-primitive-attributes,Skinned Mesh Primitive Attributes>>
 |====
 
 The `TEXCOORD_n`, `COLOR_n`, `JOINTS_n`, and `WEIGHTS_n` attribute semantic property names have the form `[semantic]_[index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. The following rules apply to the `[index]` syntax:
@@ -1629,7 +1629,10 @@ Any attribute semantic name that starts with `TEXCOORD_`, `COLOR_`, `JOINTS_`, o
 
 Index values used for the same attribute semantic within a single primitive **MUST NOT** have gaps, i.e., if an indexed attribute semantic name with index `n` is present for any positive `n`, then the same indexed attribute semantic name with index `n-1` **MUST** also be present.
 
-Skinning-related attribute semantics are always used together, so either both `JOINTS_n` and `WEIGHTS_n` names **MUST** be present or none for any given `n`.
+[NOTE]
+====
+The `JOINTS_n` and `WEIGHTS_n` vertex attribute semantics are described in the <<skinned-mesh-primitive-attributes,Skinned Mesh Primitive Attributes>> section below.
+====
 
 Among all possible indexed attribute semantic names, client implementations **SHOULD** support at least `TEXCOORD_0` and `TEXCOORD_1`, `COLOR_0`, and `JOINTS_0` with `WEIGHTS_0`.
 
@@ -1948,6 +1951,81 @@ The number of morph targets is not limited. Client implementations **SHOULD** su
 
 For assets that contain more morphed attributes than could be efficiently supported, client implementations **SHOULD** choose morph targets with the highest weights.
 
+[[skinned-mesh-primitive-attributes]]
+==== Skinned Mesh Primitive Attributes
+
+A mesh primitive **MAY** define attributes used for _linear blend skinning_.
+
+When a mesh primitive has skinning-related vertex attributes and it is instantiated by a node that references a skin object, the mesh primitive becomes skinned and its vertices are influenced by the skinning data that includes per-vertex influence information and a list of _joints_ defined by the skin object. This section describes skinning-related vertex attribute semantics; the details of skin objects and skinned mesh primitive instantiation are provided in the corresponding sections.
+
+The `JOINTS_n` attributes provide indices of the joints that influence each vertex and `WEIGHTS_n` attributes provide weights of those joints, i.e., how strongly each joint influences the vertex. These attribute semantics are always used together, so either both `JOINTS_n` and `WEIGHTS_n` names **MUST** be present or none for any given `n`.
+
+Each attribute pair provides up to four joint indices and their weights per vertex.
+
+[NOTE]
+.Implementation Note
+====
+The accessor type for these attribute semantics is always `"VEC4"` so a mesh primitive that uses no more than four influences per vertex would define `JOINTS_0` and `WEIGHTS_0` vertex attribute semantics, a mesh primitive that uses no more than eight influences per vertex would define `JOINTS_0`, `WEIGHTS_0`, `JOINTS_1`, and `WEIGHTS_1`, and so on.
+====
+
+Accessors for the `WEIGHTS_n` semantic **MUST** provide non-negative values.
+
+Joint indices associated with non-zero weights **MUST** be unique for a given vertex. Each unused component of the joint data, i.e., associated with zero weights, **SHOULD** be set to zero.
+
+[NOTE]
+.Example
+====
+For a single vertex, let:
+
+- `JOINTS_0` value be latexmath:[\langle 0, 1, 2, 3 \rangle];
+- `JOINTS_1` value be latexmath:[\langle 5, 8, 13, 0 \rangle];
+- `WEIGHTS_0` value be latexmath:[\langle 0.15, 0.05, 0.2, 0.3 \rangle];
+- `WEIGHTS_1` value be latexmath:[\langle 0.18, 0.02, 0.1, 0.0 \rangle].
+
+Then for that vertex:
+
+- the joint stem:[0] has a weight of stem:[0.15];
+- the joint stem:[1] has a weight of stem:[0.05];
+- the joint stem:[2] has a weight of stem:[0.2];
+- the joint stem:[3] has a weight of stem:[0.3];
+- the joint stem:[5] has a weight of stem:[0.18];
+- the joint stem:[8] has a weight of stem:[0.02];
+- the joint stem:[13] has a weight of stem:[0.1].
+
+As this particular vertex is influenced only by seven joints, the joint index zero is used twice: with its actual weight (stem:[0.15]) and with zero weight (as the last component of the second pair of attributes).
+====
+
+If all sets of weights are provided by accessors that use the _unorm8_ or _unorm16_ effective component types, the linear sum of weights for every vertex of that mesh primitive **MUST** be exactly stem:[1.0] after dequantization.
+
+[NOTE]
+.Implementation Note
+====
+To confirm the linear sum of weights in this case without using floating-point math, i.e., prior to dequantization, an implementation can multiply all integer _unorm8_ values by stem:[257] to upscale them to the equivalent _unorm16_ values and confirm that the sum is stem:[65535].
+
+For example, let
+
+- `WEIGHTS_0` value be latexmath:[\langle 1, 4, 16, 64 \rangle] provided by a _unorm8_ accessor;
+- `WEIGHTS_1` value be latexmath:[\langle 640, 2080, 8200, 32770 \rangle] provided by a _unorm16_ accessor.
+
+Then the sum of the weights would be
+
+[latexmath]
++++++
+\frac{85}{255}+\frac{43690}{65535} = \frac{85 \cdot 257 + 43690}{65535} = \frac{65535}{65535} = 1
++++++
+====
+
+If any set of weights is provided by an accessor that has a floating-point component type, the linear sum of weights for every vertex of that mesh primitive **SHOULD** be as close as reasonably possible to stem:[1.0]. The **RECOMMENDED** epsilon value is latexmath:[2 \cdot 10^{-7}] multiplied by the number of non-zero weights per vertex.
+
+[NOTE]
+.Implementation Note
+====
+Without these requirements, vertices would be deformed significantly because the weight error would get multiplied by the joint position. For example with _unorm8_ storage, an error of latexmath:[1/255] in the weight sum would result in an unacceptably large difference in the joint position.
+
+When using quantized component types, the weight sum may need to be renormalized after quantization during asset authoring.
+====
+
+Client implementations **MAY** support only a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the asset's appearance.
 
 [[skins]]
 === Skins
@@ -1955,11 +2033,43 @@ For assets that contain more morphed attributes than could be efficiently suppor
 [[skins-overview]]
 ==== Overview
 
-glTF 2.0 meshes support Linear Blend Skinning via skin objects, joint hierarchies, and designated vertex attributes.
+glTF 2.0 mesh primitives support Linear Blend Skinning via skin objects, joint hierarchies, and designated vertex attributes.
 
-Skins are stored in the `skins` array of the asset. Each skin is defined by a **REQUIRED** `joints` property that lists the indices of nodes used as joints to pose the skin and an **OPTIONAL** `inverseBindMatrices` property that points to an accessor with inverse bind matrices data used to bring coordinates being skinned into the same space as each joint.
+Skins are stored in the `skins` array of the asset. Each skin contains a **REQUIRED** `joints` property that lists the indices of nodes used as joints and an **OPTIONAL** `inverseBindMatrices` property that points to an accessor with inverse bind matrix data.
 
-The order of joints is defined by the `skin.joints` array and it **MUST** match the order of `inverseBindMatrices` accessor elements (when the latter is present). The `skeleton` property (if present) points to the node that is the common root of a joints hierarchy or to a direct or indirect parent node of the common root.
+The `joints` array defines mapping between skin's joint indices and glTF nodes.
+
+If the `inverseBindMatrices` property is defined, the elements of the referenced accessor provide inverse bind matrices in the order of joints. If the `inverseBindMatrices` property is not defined, all inverse bind matrices of the skin are implicitly identity.
+
+[NOTE]
+.Example
+====
+The following example defines node 3 as the first joint and node 5 as the second joint.
+
+The first accessor element provides an inverse bind matrix for node 3 and the second accessor element provides an inverse bind matrix for node 5. Note that these matrices are associated with those joints only within the scope of this skin object.
+
+[source,json]
+----
+{
+    "skins": [
+        {
+            "joints": [ 3, 5 ],
+            "inverseBindMatrices": 1
+        }
+    ]
+}
+----
+====
+
+The `inverseBindMatrices` property (if defined) **MUST** refer to an accessor with the `"MAT4"` type, the _float32_ effective component type, and the number of elements that is greater than or equal to the number of elements of the `joints` array. Inverse bind matrices associated with the joints, i.e., accessor elements with indices from zero to the number of joints (exclusive), **MUST NOT** contain infinite or NaN values and their fourth row **MUST** be latexmath:[\langle 0, 0, 0, 1 \rangle].
+
+[NOTE]
+.Implementation Note
+====
+Some authoring pipelines support a matrix defining how to pose the skin's geometry for use with the joints (also known as "`Bind Shape Matrix`"). Such matrix is not supported in glTF and therefore it would have to be premultiplied to mesh data or to Inverse Bind Matrices.
+====
+
+The `skeleton` property (if present) identifies the node that is the skeleton root of the skin. That node **MUST** be the root of all nodes listed in the `joints` array or their common ancestor.
 
 [NOTE]
 .Implementation Note
@@ -1967,23 +2077,17 @@ The order of joints is defined by the `skin.joints` array and it **MUST** match 
 Although the `skeleton` property is not needed for computing skinning transforms, it may be used to provide a specific "`pivot point`" for the skinned geometry.
 ====
 
-An accessor referenced by `inverseBindMatrices` **MUST** have floating-point components of `"MAT4"` type. The number of elements of the accessor referenced by `inverseBindMatrices` **MUST** be greater than or equal to the number of `joints` elements. The fourth row of each matrix **MUST** be set to `[0.0, 0.0, 0.0, 1.0]`. The accessed matrices **MUST NOT** contain infinite or NaN values.
-
-[NOTE]
-.Implementation Note
-====
-The matrix defining how to pose the skin's geometry for use with the joints (also known as "`Bind Shape Matrix`") should be premultiplied to mesh data or to Inverse Bind Matrices.
-====
-
 [[joint-hierarchy]]
 ==== Joint Hierarchy
 
-The joint hierarchy used for controlling skinned mesh pose is simply the node hierarchy, with each node designated as a _joint_ by a reference from the `skin.joints` array. Each skin's joints **MUST** have a common parent node (direct or indirect) called _common root_, which may or may not be a joint node itself. When a skin is referenced by a node within a scene, the common root **MUST** belong to the same scene.
+The joint hierarchy used for controlling skinned mesh pose is simply the node hierarchy, with each node designated as a _joint_ by a reference from the `joints` array.
+
+Joints of a skin **MUST** have a common ancestor node called _common root_, which may or may not be a joint node itself. When a skin is referenced by a node within a scene, the common root **MUST** belong to the same scene.
 
 [NOTE]
 .Implementation Note
 ====
-A node object does not specify whether it is a joint. Client implementations may need to traverse the `skins` array first, marking each joint node.
+A node object does not specify whether it is a joint. Client implementations that care about this distinction may need to traverse the `skins` array first, marking each joint node.
 ====
 
 A joint node **MAY** have other nodes attached to it, even a complete node sub graph with meshes.
@@ -1994,117 +2098,11 @@ A joint node **MAY** have other nodes attached to it, even a complete node sub g
 It's common to have an entire geometry attached to a joint node without having it being skinned (e.g., a sword attached to a hand). Note that the node transform is the local transform of the node relative to the joint, like any other node in the glTF node hierarchy as described in the <<transformations,Transformations>> section.
 ====
 
-Only the joint transforms are applied to the skinned mesh; the transform of the skinned mesh node **MUST** be ignored.
-
-In the example below, the translation of `node_0` and the scale of `node_1` are applied while the translation of `node_3` and rotation of `node_4` are ignored.
-
-[source,json]
-----
-{
-    "nodes": [
-        {
-            "name": "node_0",
-            "children": [ 1 ],
-            "translation": [ 0.0, 1.0, 0.0 ]
-        },
-        {
-            "name": "node_1",
-            "children": [ 2 ],
-            "scale": [ 0.5, 0.5, 0.5 ]
-        },
-        {
-            "name": "node_2"
-        },
-        {
-            "name": "node_3",
-            "children": [ 4 ],
-            "translation": [ 1.0, 0.0, 0.0 ]
-        },
-        {
-            "name": "node_4",
-            "mesh": 0,
-            "rotation": [ 0.0, 1.0, 0.0, 0.0 ],
-            "skin": 0
-        }
-    ],
-    "skins": [
-        {
-            "inverseBindMatrices": 0,
-            "joints": [ 1, 2 ],
-            "skeleton": 1
-        }
-    ]
-}
-----
-
-[[skinned-mesh-attributes]]
-==== Skinned Mesh Attributes
-
-The skinned mesh **MUST** have vertex attributes that are used in skinning calculations. The `JOINTS_n` attribute data contains the indices of the joints from the corresponding `skin.joints` array that affect the vertex. The `WEIGHTS_n` attribute data defines the weights indicating how strongly the joint influences the vertex.
-
-To apply skinning, a transformation matrix is computed for each joint. Then, the per-vertex transformation matrices are computed as weighted linear sums of the joint transformation matrices. Note that per-joint inverse bind matrices (when present) **MUST** be applied before the base node transforms.
-
-In the following example, a mesh primitive defines `JOINTS_0` and `WEIGHTS_0` vertex attributes:
-
-[source,json]
-----
-{
-    "meshes": [
-        {
-            "name": "skinned-mesh_1",
-            "primitives": [
-                {
-                    "attributes": {
-                        "JOINTS_0": 179,
-                        "NORMAL": 165,
-                        "POSITION": 163,
-                        "TEXCOORD_0": 167,
-                        "WEIGHTS_0": 176
-                    },
-                    "indices": 161,
-                    "material": 1,
-                    "mode": 4
-                }
-            ]
-        }
-    ]
-}
-----
-
-The number of joints that influence one vertex is limited to 4 per set, so the referenced accessors **MUST** have `VEC4` type and following component types:
-
-* *`JOINTS_n`*: _uint8_ or _uint16_
-* *`WEIGHTS_n`*: _float32_, or _unorm8_, or _unorm16_
-
-The joint weights for each vertex **MUST NOT** be negative.
-
-Joints **MUST NOT** contain more than one non-zero weight for a given vertex.
-
-When the weights are stored using _float_ component type, their linear sum **SHOULD** be as close as reasonably possible to `1.0` for a given vertex.
-
-When the weights are stored using _unorm8_, or _unorm16_ component types, their linear sum before normalization **MUST** be `255` or `65535`, respectively. Without these requirements, vertices would be deformed significantly because the weight error would get multiplied by the joint position. For example, an error of `1/255` in the weight sum would result in an unacceptably large difference in the joint position.
-
-[NOTE]
-.Implementation Note
-====
-The threshold in the official validation tool is set to `2e-7` times the number of non-zero weights per vertex.
-====
-
-[NOTE]
-.Implementation Note
-====
-Since the allowed threshold is much lower than minimum possible step for quantized component types, weight sum should be renormalized after quantization.
-====
-
-When any of the vertices are influenced by more than four joints, the additional joint and weight information are stored in subsequent sets. For example, `JOINTS_1` and `WEIGHTS_1` if present will reference the accessor for up to 4 additional joints that influence the vertices. For a given primitive, the number of `JOINTS_n` attribute sets **MUST** be equal to the number of `WEIGHTS_n` attribute sets.
-
-Client implementations **MAY** support only a single set of up to four weights and joints, however not supporting all weight and joint sets present in the file may have an impact on the asset's animation.
-
-All joint values **MUST** be within the range of joints in the skin. Unused joint values (i.e., joints with a weight of zero) **SHOULD** be set to zero.
-
-
 [[instantiation]]
 === Instantiation
+
+[[instantiation-overview]]
+==== Overview
 
 A mesh is instantiated by a node's `mesh` property. The same mesh **MAY** be instantiated by multiple nodes, which **MAY** specify different transforms, morph weights, and/or skins.
 
@@ -2145,6 +2143,9 @@ When a mesh primitive uses any triangle-based topology (i.e., _triangle lists_, 
 Switching the winding order to clockwise enables mirroring geometry via negative scale transforms.
 ====
 
+[[instantiation-morph-targets]]
+==== Morph Targets
+
 When an instantiated mesh has morph targets, the node's `weights` array property overrides mesh's default morph target weights; the number of elements of that array **MUST** be equal to the number of the morph targets of the mesh. If the `weights` property is not defined, the mesh is instantiated with its default morph target weights.
 
 [NOTE]
@@ -2153,6 +2154,9 @@ When an instantiated mesh has morph targets, the node's `weights` array property
 Default morph target weights of a mesh are either specified by the `weights` property of the mesh, if that property is defined, or zeros otherwise.
 ====
 
+[NOTE]
+.Example
+====
 The example below instantiates a Morph Target with non-default weights.
 
 [source,json]
@@ -2161,57 +2165,85 @@ The example below instantiates a Morph Target with non-default weights.
     "nodes": [
         {
             "mesh": 11,
-            "weights": [0, 0.5]
+            "weights": [ 0, 0.5 ]
         }
     ]
 }
 ----
+====
 
-A skin is instantiated within a node using a combination of the node's `mesh` and `skin` properties. The mesh for a skin instance is defined in the `mesh` property. The `skin` property contains the index of the skin to instance.
+[[instantiation-skinned]]
+==== Skinned Mesh Primitives
 
-The following example shows a skinned mesh instance: a skin object, a node with a skinned mesh, and two joint nodes.
+If a node defines the `skin` property, the mesh primitives that contain skinning-related attributes are instantiated as skinned mesh primitives. The `skin` property points to a skin object to use.
+
+Mesh primitives that do not have skinning-related attributes are instantiated as if the `skin` property is not defined.
+
+If none of the mesh primitives contain skinning-related attributes, the node's `skin` property **SHOULD NOT** be defined.
+
+All joint indices provided by the `JOINTS_n` vertex attribute accessors of the skinned mesh primitives **MUST** be less than the number of elements of the `joints` array of the referenced skin object.
+
+A skinned mesh primitive does not use the global transform of the node that instantiates the mesh. Instead, the transformation matrix is computed separately for each vertex of the mesh primitive as follows.
+
+Let:
+
+- stem:[N] be the number of joints with non-zero weights for the current vertex as derived from the skinning-related vertex attributes;
+- stem:[J_i] be one joint index as provided by `JOINTS_n` vertex attribute accessor components, stem:[i \in [0,N\)];
+- stem:[W_i] be one joint weight as provided by `WEIGHT_n` vertex attribute accessor components, stem:[i \in [0,N\)];
+- stem:[M_j] be the global transformation matrix of the node associated with the joint index stem:[j] (as defined by the skin's `joints` property);
+- stem:[B_j] be the inverse bind matrix associated with the joint index stem:[j] (as provided by the skin's `inverseBindMatrices` property).
+
+Then the effective transformation matrix of the current vertex is computed as a weighted linear sum of the global transformation matrices of the joints premultiplied with the corresponding inverse bind matrices.
+
+[latexmath]
++++++
+\sum_{i=0}^{N-1} W_i \cdot M_{J_i} \cdot B_{J_i}
++++++
+
+[NOTE]
+.Implementation Note
+====
+A skinned mesh primitive cannot have vertices not affected by skinning because its vertices are controlled exclusively by the joint nodes, ignoring the transform of the node that instantiates the mesh. Therefore, a vertex with all-zero joint weights would not have any applicable transformation matrix.
+====
+
+[NOTE]
+.Example
+====
+The example below instantiates a mesh with a skin. The rotation of the node 1 and the scale of the node 2 are ignored for the skinned mesh primitives but the translation and scale parameters of nodes 3 and 4 are applied through skinning because those nodes are used as the skin's joints.
 
 [source,json]
 ----
 {
-    "skins": [
-        {
-            "inverseBindMatrices": 29,
-            "joints": [1, 2]
-        }
-    ],
     "nodes": [
         {
-            "name":"Skinned mesh node",
+            "children": [ 1, 3 ]
+        },
+        {
+            "children": [ 2 ],
+            "rotation": [ 0.0, 1.0, 0.0, 0.0 ]
+        },
+        {
             "mesh": 0,
+            "scale": [ 2.0, 2.0, 2.0 ],
             "skin": 0
         },
         {
-            "name":"Skeleton root joint",
-            "children": [2],
-            "rotation": [
-                0,
-                0,
-                0.7071067811865475,
-                0.7071067811865476
-            ],
-            "translation": [
-                4.61599,
-                -2.032e-06,
-                -5.08e-08
-            ]
+            "children": [ 4 ],
+            "translation": [ 0.0, 1.0, 0.0 ]
         },
         {
-            "name":"Head",
-            "translation": [
-                8.76635,
-                0,
-                0
-            ]
+            "scale": [ 0.5, 0.5, 0.5 ]
+        }
+    ],
+    "skins": [
+        {
+            "joints": [ 3, 4 ],
+            "skeleton": 0
         }
     ]
 }
 ----
+====
 
 
 [[texture-data]]
@@ -3202,7 +3234,7 @@ a~1~,a~2~,...a~n~,v~1~,v~2~,...v~n~,b~1~,b~2~,...b~n~
 
 See <<appendix-c-interpolation,Appendix C>> for additional information about interpolation modes.
 
-Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
+Animation of skinned mesh primitives is achieved by targeting TRS properties of the nodes used as joints by the corresponding skin objects or ancestors of those nodes.
 
 
 [[specifying-extensions]]
