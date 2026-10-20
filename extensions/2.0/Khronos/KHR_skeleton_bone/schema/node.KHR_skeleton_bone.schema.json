@@ -1,0 +1,20 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "node.KHR_skeleton_bone.schema.json",
+    "title": "KHR_skeleton_bone glTF Node Extension",
+    "type": "object",
+    "description": "A bone in a skeleton, and optionally its length, representing a segment of a skeletal structure used for animation and posing of skinned meshes.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "connected": {
+            "type": "boolean",
+            "description": "Whether the bone is connected to its parent bone. A bone that is connected to its parent bone has its head positioned at the tail of its parent bone. This means that the child bone is not allowed to be translated away from the end of the parent bone, and MUST have its local origin's Y component equal to the length of the parent bone, with the X and Z components equal to zero.",
+            "default": false
+        },
+        "length": {
+            "type": "number",
+            "description": "The length of the bone in meters in the +Y direction. If defined, the value MUST NOT be negative. If not defined, this node does not have a defined length, and a length may be inferred through other means.",
+            "minimum": 0.0
+        }
+    }
+}
