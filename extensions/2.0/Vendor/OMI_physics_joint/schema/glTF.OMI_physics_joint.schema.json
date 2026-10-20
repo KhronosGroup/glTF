@@ -1,0 +1,24 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.OMI_physics_joint.schema.json",
+    "title": "OMI_physics_joint glTF Document Extension",
+    "type": "object",
+    "description": "Top level physics joint settings.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "physicsJoints": {
+            "type": "array",
+            "description": "An array of physics joint settings.",
+            "items": {
+                "type": "object",
+                "$ref": "glTF.OMI_physics_joint.joint.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "constraints"
+    ]
+}
