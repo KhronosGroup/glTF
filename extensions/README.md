@@ -5,6 +5,8 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # glTF 2.0 Extension Registry
 
+> **glTF 2.0 vendor extensions have moved.** New glTF 2.0 vendor extensions and vendor prefix requests are accepted only in [KhronosGroup/glTF-Community](https://github.com/KhronosGroup/glTF-Community). Owners of the [vendor extensions listed below](#vendor-extensions) must move them there by 31 December 2026 (this date may be extended), following the [migration instructions](https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/README.md#migrating-an-existing-extension-from-khronosgroupgltf). Khronos (`KHR_`) and multi-vendor (`EXT_`) extensions, and all glTF 1.0 extensions, remain in this repository.
+
 ## Ratified Khronos Extensions
 
 The following extensions have been ratified by the Khronos Group:
@@ -76,11 +78,13 @@ The status provides a guide to the current position of a specification through t
 
 ### Adding Additional Features to glTF
 
-If you have a requirement for a feature that is not listed as part of a Ratified or In-Progress extensions, please check to see if others have already identified similar requirements by reviewing the existing [Vendor Extensions](https://github.com/KhronosGroup/glTF/tree/main/extensions#vendor-extensions-for-gltf-20), [Multi-Vendor extensions](https://github.com/KhronosGroup/glTF/tree/main/extensions#multi-vendor-extensions-for-gltf-20), [glTF GitHub Issues](https://github.com/KhronosGroup/glTF/issues) and [glTF Pull Requests](https://github.com/KhronosGroup/glTF/pulls). If you do find something on a similar topic we recommend you reach out and collaborate. If nothing matches your requirement we encourage you to reach out to the community for feedback and collaborators.  As a consensus develops please reach out to Khronos to discuss how an extension can be brought into the broader ecosystem, and potentially added to the official Khronos glTF Roadmap.
+If you have a requirement for a feature that is not listed as part of a Ratified or In-Progress extensions, please check to see if others have already identified similar requirements by reviewing the existing [glTF-Community vendor extensions](https://github.com/KhronosGroup/glTF-Community/blob/main/extensions/README.md), [Vendor Extensions](#vendor-extensions) still listed in this repository, [Multi-Vendor extensions](#multi-vendor-extensions), [glTF GitHub Issues](https://github.com/KhronosGroup/glTF/issues) and [glTF Pull Requests](https://github.com/KhronosGroup/glTF/pulls). If you do find something on a similar topic we recommend you reach out and collaborate. If nothing matches your requirement we encourage you to reach out to the community for feedback and collaborators.  As a consensus develops please reach out to Khronos to discuss how an extension can be brought into the broader ecosystem, and potentially added to the official Khronos glTF Roadmap.
 
 ## Multi-Vendor Extensions
 
 When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix. Multi-vendor extensions are typically not covered by the Khronos IP framework, with a few notable exceptions (listed above) that have been through the Khronos ratification process after becoming widely used under the `EXT` prefix.
+
+`EXT` extensions are managed by the Khronos 3D Formats Working Group and remain in this repository. They are not part of the move to glTF-Community, even though their files are stored in the `2.0/Vendor` folder.
 
 * [EXT_lights_ies](2.0/Vendor/EXT_lights_ies/README.md)
 * [EXT_lights_image_based](2.0/Vendor/EXT_lights_image_based/README.md)
@@ -88,7 +92,11 @@ When an extension is implemented by more than one vendor, its name can use the r
 
 ## Vendor Extensions
 
+This is a historical list of glTF 2.0 vendor extensions. Their owners are moving them to the [glTF-Community](https://github.com/KhronosGroup/glTF-Community/blob/main/extensions/README.md) repository, and no extensions will be added to this list. When an extension has moved, its folder here is replaced with a link to its new location. Extensions that have not moved by the end of the transition period (31 December 2026, which may be extended) will be archived and removed from this repository some time after the period ends.
+
 Vendor extensions are not covered by the Khronos IP framework.
+
+Extensions marked _(moved)_ are now maintained in glTF-Community.
 
 * [ADOBE_materials_clearcoat_specular](2.0/Vendor/ADOBE_materials_clearcoat_specular/README.md)
 * [ADOBE_materials_clearcoat_tint](2.0/Vendor/ADOBE_materials_clearcoat_tint/README.md)
@@ -97,7 +105,7 @@ Vendor extensions are not covered by the Khronos IP framework.
 * [AGI_stk_metadata](2.0/Vendor/AGI_stk_metadata/README.md)
 * [CESIUM_primitive_outline](2.0/Vendor/CESIUM_primitive_outline/README.md)
 * [FB_geometry_metadata](2.0/Vendor/FB_geometry_metadata/README.md)
-* [GODOT_single_root](2.0/Vendor/GODOT_single_root/README.md)
+* [GODOT_single_root](https://github.com/KhronosGroup/glTF-Community/blob/main/extensions/GODOT/GODOT_single_root/README.md) _(moved)_
 * [GRIFFEL_bim_data](2.0/Vendor/GRIFFEL_bim_data/README.md)
 * [MPEG_accessor_timed](2.0/Vendor/MPEG_accessor_timed/README.md)
 * [MPEG_animation_timing](2.0/Vendor/MPEG_animation_timing/README.md)
@@ -114,11 +122,7 @@ Vendor extensions are not covered by the Khronos IP framework.
 * [MSFT_texture_dds](2.0/Vendor/MSFT_texture_dds/README.md)
 * [NV_materials_mdl](2.0/Vendor/NV_materials_mdl/README.md)
 
-The list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any vendor, not just Khronos members, can request an extension prefix by submitting an [issue on GitHub](https://github.com/KhronosGroup/glTF/issues/new) requesting one.  Requests should include:
-
-* The name of the prefix.
-* The name of the vendor requesting the prefix.
-* The vendor's URL and/or contact information.
+Vendor prefixes are registered in the [glTF-Community vendors folder](https://github.com/KhronosGroup/glTF-Community/tree/main/vendors). Prefixes previously registered in this repository ([Prefixes.md](Prefixes.md)) are reserved for their current holders in the [glTF-Community legacy prefix list](https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/LEGACY_PREFIXES.md). See the [instructions](https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/README.md) for requesting a prefix.
 
 ## Archived Extensions
 
@@ -175,7 +179,9 @@ An extension is considered _required_ if a typical glTF loader would fail to loa
 
 ## Creating Extensions
 
-To create a new extension, use the [extension template](Template.md) and open a pull request into this repo.  Make sure to add the extension to the glTF Extension Registry (top of this file).
+`KHR_` and `EXT_` extensions are developed by the Khronos 3D Formats Working Group in this repository. To propose one, open an [issue](https://github.com/KhronosGroup/glTF/issues) or contact the working group, and use the [extension template](Template.md).
+
+glTF 2.0 vendor extensions are not accepted in this repository. Submit them to [glTF-Community](https://github.com/KhronosGroup/glTF-Community/) following the [instructions there](https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/README.md), using the [glTF-Community extension template](https://github.com/KhronosGroup/glTF-Community/blob/main/extensions/TEMPLATE.md).
 
 If the extension adds a new top-level array (by extending the root glTF object), its elements should inherit all properties of `glTFChildOfRootProperty.schema.json`. Other objects introduced by the extension should inherit all properties of `glTFProperty.schema.json`. By glTF 2.0 conventions, schemas should allow additional properties. See [`KHR_lights_punctual`](2.0/Khronos/KHR_lights_punctual) as an example.
 
@@ -185,7 +191,7 @@ If lack of extension support prevents proper geometry loading, extension specifi
 
 > **NOTE:** For historical reasons, older extensions may not follow these guidelines. Future extensions should do so.
 
-1. Names MUST begin with an UPPERCASE prefix, followed by an underscore. Prefixes are `KHR` for [Khronos extensions](#ratified-khronos-extensions-for-gltf-20), `EXT` for [Multi-vendor extensions](#multi-vendor-extensions-for-gltf-20), and others may be reserved for [Vendor extensions](#vendor-extensions-for-gltf-20).
+1. Names MUST begin with an UPPERCASE prefix, followed by an underscore. Prefixes are `KHR` for [Khronos extensions](#ratified-khronos-extensions), `EXT` for [Multi-vendor extensions](#multi-vendor-extensions), and others may be reserved for vendor extensions in [glTF-Community](https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/README.md).
 2. Names MUST use lowercase snake-case following the prefix, e.g. `KHR_materials_unlit`.
 3. Names SHOULD be structured as `<PREFIX>_<scope>_<feature>`, where *scope* is an existing glTF concept (e.g. mesh, texture, image) and *feature* describes the functionality being added within that scope. This structure is recommended, but not required.
 4. Scope SHOULD be singular (e.g. mesh, texture), except where this would be inconsistent with an existing Khronos extension (e.g. materials, lights).
