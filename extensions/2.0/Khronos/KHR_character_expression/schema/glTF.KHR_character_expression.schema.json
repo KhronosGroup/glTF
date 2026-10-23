@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "KHR_character_expression glTF Document Extension",
+    "type": "object",
+    "description": "Associates character-expression entries with animations used as normalized, stateless response curves.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "expressions": {
+            "type": "array",
+            "description": "Nonempty array of expression entries with unique nonempty names. Array indices are the authoritative entry identities.",
+            "gltf_detailedDescription": "All entry names MUST be distinct by Unicode code point, without case folding, trimming, or Unicode normalization. Name uniqueness requires semantic validation beyond this schema.",
+            "items": {
+                "$ref": "expression.KHR_character_expression.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "expressions"
+    ]
+}

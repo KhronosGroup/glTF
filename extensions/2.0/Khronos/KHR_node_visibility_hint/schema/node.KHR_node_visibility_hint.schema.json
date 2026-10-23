@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "node.KHR_node_visibility_hint.schema.json",
+  "title": "KHR_node_visibility_hint glTF Node Extension",
+  "description": "Associates a node with a per-view visibility role. Effective hint visibility is the logical AND of the node's own hint and all ancestor hints. Evaluating the predicate does not alter glTF-authored or animated node state; the implementation technique is not prescribed.",
+  "type": "object",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+  "properties": {
+    "role": {
+      "type": "string",
+      "description": "Nonempty visibility role. The exact standard values are 'always', 'first_person', and 'third_person'; any other value is a custom role, and the specification recommends that a consumer not render content restricted by a role it does not support. The individual role predicate is true for 'always' in every render view, for 'first_person' only in views tagged 'first_person', and for 'third_person' only in views tagged 'third_person'. Ancestor node hints and KHR_node_visibility can further restrict visibility; 'always' cannot cancel an ancestor's restriction.",
+      "minLength": 1
+    },
+    "label": {
+      "type": "string",
+      "description": "Nonempty human-readable label, preferred over node.name and role whenever a host or tool presents the hint to a user. It has no effect on visibility.",
+      "minLength": 1
+    },
+    "extensions": { },
+    "extras": { }
+  },
+  "required": ["role"]
+}
