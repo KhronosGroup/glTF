@@ -1,0 +1,10 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "extensions.schema.json",
+    "title": "Extensions",
+    "type": "object",
+    "description": "JSON object with extension objects. Property names correspond to glTF extension names and property values are extension-specific objects.",
+    "additionalProperties": {
+        "type": "object"
+    }
+}

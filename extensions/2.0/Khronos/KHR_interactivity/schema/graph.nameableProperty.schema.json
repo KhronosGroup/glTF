@@ -1,0 +1,13 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "graph.nameableProperty.schema.json",
+    "title": "Behavior graph nameable property",
+    "type": "object",
+    "$ref": "glTFProperty.schema.json",
+    "properties": {
+        "name": {
+            "title": "The user-defined name of this object.",
+            "type": "string"
+        }
+    }
+}

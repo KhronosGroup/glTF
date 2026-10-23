@@ -16,6 +16,7 @@ To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glT
 
 | Prefix | Company or Project Name | Contacts | Request |
 |--------------|--------------------------------|---------------------------------------------------------------|-----------|
+| `3DVOX` | 3DVOX | https://3dvox.com/ | [#2583](https://github.com/KhronosGroup/glTF/issues/2583) |
 | `ADOBE` | Adobe, Inc. | https://adobe.com/ | [#1431](https://github.com/KhronosGroup/glTF/issues/1431) |
 | `AGI` | Analytical Graphics, Inc. | https://agi.com/ | [#1405](https://github.com/KhronosGroup/glTF/pull/1405) |
 | `AGT` | Augment SAS | https://www.augment.com/ | [#1571](https://github.com/KhronosGroup/glTF/issues/1571) |
@@ -57,6 +58,7 @@ To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glT
 | `MANYFOLD` | Manyfold | https://manyfold.app/<br>`james at floppy.org.uk` | [#2398](https://github.com/KhronosGroup/glTF/issues/2398) |
 | `MAXAR` | Maxar Technologies | https://www.maxar.com/ | [#1869](https://github.com/KhronosGroup/glTF/issues/1869) |
 | `MESHOPT` | meshoptimizer | https://meshoptimizer.org/ | [#1634](https://github.com/KhronosGroup/glTF/issues/1634) |
+| `MF` | 3D Model Foundry | https://www.3dmf.com/<br>`mike at 3dmf.com` | [#2523](https://github.com/KhronosGroup/glTF/issues/2523) |
 | `MIRROR` | The Mirror Megaverse Inc. | https://www.themirror.space/<br>`khronos at themirror.space` | [#2230](https://github.com/KhronosGroup/glTF/issues/2230) |
 | `MODUPLAY` | Moduplay Group Pty Ltd. | https://moduplaygroup.com.au/<br>`matthew.h at moduplay.com.au` | [#2445](https://github.com/KhronosGroup/glTF/issues/2445) |
 | `MOZ` | Mozilla Corporation | https://www.mozilla.org/ | [#1349](https://github.com/KhronosGroup/glTF/issues/1349) |
@@ -74,6 +76,7 @@ To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glT
 | `PANDA3D` | Panda3D | https://www.panda3d.org/ | [#1828](https://github.com/KhronosGroup/glTF/pull/1828) |
 | `POLUTROPON` | Polutropon Games | https://polutropon.games/<br>`ybalrid at polutropon.games` | [#1632](https://github.com/KhronosGroup/glTF/issues/1632) |
 | `PTC` | PTC Inc. | https://www.ptc.com/ | [#1851](https://github.com/KhronosGroup/glTF/issues/1851) |
+| `PYTHA` | PYTHA Lab GmbH | https://www.pytha.com/ | [#2581](https://github.com/KhronosGroup/glTF/issues/2581) |
 | `S8S` | Soft8Soft | https://www.soft8soft.com/ | [#1240](https://github.com/KhronosGroup/glTF/issues/1240) |
 | `SE` | Schneider Electric SE | https://www.se.com/ | [#2134](https://github.com/KhronosGroup/glTF/issues/2134) |
 | `SEIN` | Hiloteam | https://seinjs.com/ | [#1840](https://github.com/KhronosGroup/glTF/issues/1840) |

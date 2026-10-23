@@ -4,26 +4,8 @@
     "title": "glTF",
     "type": "object",
     "description": "The root object for a glTF asset.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
-        "extensionsUsed": {
-            "type": "array",
-            "description": "Names of glTF extensions used in this asset.",
-            "items": {
-                "type": "string"
-            },
-            "uniqueItems": true,
-            "minItems": 1
-        },
-        "extensionsRequired": {
-            "type": "array",
-            "description": "Names of glTF extensions required to properly load this asset.",
-            "items": {
-                "type": "string"
-            },
-            "uniqueItems": true,
-            "minItems": 1
-        },
         "accessors": {
             "type": "array",
             "description": "An array of accessors.",
@@ -42,17 +24,8 @@
             "minItems": 1
         },
         "asset": {
-            "allOf": [ { "$ref": "asset.schema.json" } ],
+            "$ref": "asset.schema.json",
             "description": "Metadata about the glTF asset."
-        },
-        "buffers": {
-            "type": "array",
-            "description": "An array of buffers.",
-            "items": {
-                "$ref": "buffer.schema.json"
-            },
-            "minItems": 1,
-            "gltf_detailedDescription": "An array of buffers.  A buffer points to binary geometry, animation, or skins."
         },
         "bufferViews": {
             "type": "array",
@@ -63,6 +36,15 @@
             "minItems": 1,
             "gltf_detailedDescription": "An array of bufferViews.  A bufferView is a view into a buffer generally representing a subset of the buffer."
         },
+        "buffers": {
+            "type": "array",
+            "description": "An array of buffers.",
+            "items": {
+                "$ref": "buffer.schema.json"
+            },
+            "minItems": 1,
+            "gltf_detailedDescription": "An array of buffers.  A buffer points to binary geometry, animation, or skins."
+        },
         "cameras": {
             "type": "array",
             "description": "An array of cameras.",
@@ -71,6 +53,24 @@
             },
             "minItems": 1,
             "gltf_detailedDescription": "An array of cameras.  A camera defines a projection matrix."
+        },
+        "extensionsRequired": {
+            "type": "array",
+            "description": "Names of glTF extensions required to properly load this asset.",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true,
+            "minItems": 1
+        },
+        "extensionsUsed": {
+            "type": "array",
+            "description": "Names of glTF extensions used in this asset.",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true,
+            "minItems": 1
         },
         "images": {
             "type": "array",
@@ -117,7 +117,7 @@
             "gltf_detailedDescription": "An array of samplers.  A sampler contains properties for texture filtering and wrapping modes."
         },
         "scene": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "$ref": "glTFid.schema.json",
             "description": "The index of the default scene.",
             "gltf_detailedDescription": "The index of the default scene.  This property **MUST NOT** be defined, when `scenes` is undefined."
         },
@@ -145,11 +145,9 @@
                 "$ref": "texture.schema.json"
             },
             "minItems": 1
-        },
-        "extensions": { },
-        "extras": { }
+        }
     },
-    "dependencies": {
+    "dependentRequired": {
         "scene": [ "scenes" ]
     },
     "required": [ "asset" ]

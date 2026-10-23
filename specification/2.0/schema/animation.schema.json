@@ -4,7 +4,7 @@
     "title": "Animation",
     "type": "object",
     "description": "A keyframe animation.",
-    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "channels": {
             "type": "array",
@@ -21,10 +21,7 @@
                 "$ref": "animation.sampler.schema.json"
             },
             "minItems": 1
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "channels", "samplers" ]
 }

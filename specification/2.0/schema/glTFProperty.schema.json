@@ -5,7 +5,7 @@
     "type": "object",
     "properties": {
         "extensions": {
-            "$ref": "extension.schema.json"
+            "$ref": "extensions.schema.json"
         },
         "extras": {
             "$ref": "extras.schema.json"
