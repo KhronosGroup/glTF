@@ -2,33 +2,15 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "KHR_character_expression glTF Document Extension",
     "type": "object",
-    "description": "glTF extension that provides a common interface for facial expression animations.",
+    "description": "Associates character-expression entries with animations used as normalized, stateless response curves.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "expressions": {
             "type": "array",
-            "description": "Array of mappings between animation/channels and expression labels.",
+            "description": "Nonempty array of expression entries with unique nonempty names. Array indices are the authoritative entry identities.",
+            "gltf_detailedDescription": "All entry names MUST be distinct by Unicode code point, without case folding, trimming, or Unicode normalization. Name uniqueness requires semantic validation beyond this schema.",
             "items": {
-                "type": "object",
-                "properties": {
-                    "expression": {
-                        "type": "string",
-                        "description": "Expression name this animation contributes to."
-                    },
-                    "animation": {
-                        "allOf": [
-                            {
-                                "$ref": "glTFid.schema.json"
-                            }
-                        ],
-                        "description": "Index into the glTF animations array representing an expression animation.",
-                        "gltf_detailedDescription": "This value MUST be a valid index into the `animations` array."
-                    },
-                    "extensions": { },
-                    "extras": { }
-                },
-                "required": ["expression", "animation"],
-                "additionalProperties": false
+                "$ref": "expression.KHR_character_expression.schema.json"
             },
             "minItems": 1
         },

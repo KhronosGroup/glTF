@@ -1,4 +1,4 @@
-# KHR\_mesh\_primitive\_visibility\_hint
+# KHR_mesh_primitive_visibility_hint
 
 ## Contributors
 
@@ -11,157 +11,141 @@
 
 ## Status
 
-Draft
+**Draft** – This extension is not yet ratified by the Khronos Group and is subject to change.
+
+## Conventions
+
+The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**, **NOT RECOMMENDED**, **MAY**, and **OPTIONAL** in this document are to be interpreted as described in [BCP 14](https://www.rfc-editor.org/info/bcp14) when, and only when, they appear in all capitals, as shown here. Sections labeled (Informative), their subsections, and all examples are informative; all other sections are normative.
 
 ## Dependencies
 
 Written against the glTF 2.0 specification.
 
-**Related:** [`KHR_node_visibility_hint`](../KHR_node_visibility_hint/README.md) provides the same view-context vocabulary at **node** granularity. This extension is the **primitive**-granularity counterpart. They are deliberately separate extensions so that support for each can be declared and required independently (see [Extension Declaration](#extension-declaration) and [Relationship to KHR_node_visibility_hint](#relationship-to-khr_node_visibility_hint)).
+This extension has no extension dependencies. It composes with [`KHR_node_visibility_hint`](../KHR_node_visibility_hint/README.md) and [`KHR_node_visibility`](../KHR_node_visibility/README.md) when the interacting extensions are supported, but does not require them.
 
-## Overview
+## Overview (Informative)
 
-### The Problem
+Some assets combine geometry with different visibility roles into separate primitives of one mesh. This extension associates a mesh primitive with a visibility role so that its visual contribution can be evaluated independently for each render view, based on the view tags the host gives that view.
 
-Node-level visibility (`KHR_node_visibility_hint`, `KHR_node_visibility`) can hide a whole node's subtree — ideal when a view-context-specific region (a head, hair, a hat) is authored as its own node. But geometry is frequently **baked into a single mesh**: a body mesh whose head is one of its `primitives`, or a merged mesh optimized for draw-call count. In that case there is no node to hide, and node-level visibility cannot express "hide only the head part in first-person."
+The role defines a pure per-view predicate. Evaluating it does not alter glTF-authored or animated material, primitive, mesh, or node data; tag views; create or activate a camera; or define transitions when a view's tags change.
 
-There is no portable way in glTF 2.0 to say "this *primitive* is only visible in this view context." The intent is either lost or hardcoded per application.
+## Extension usage
 
-### The Solution
+The extension object **MUST** be attached to an object in a mesh's `primitives` array. An asset using this extension **MUST** list `KHR_mesh_primitive_visibility_hint` in `extensionsUsed`.
 
-`KHR_mesh_primitive_visibility_hint` annotates an individual mesh **primitive** with a semantic **`role`** describing the view context(s) in which it renders — using the same vocabulary as `KHR_node_visibility_hint` and the same view-context tokens (`first_person`, `third_person`) as `KHR_node_camera_hint`. A runtime resolves primitive visibility from the active view context according to the role's semantics.
+An asset **MAY** list `KHR_mesh_primitive_visibility_hint` in `extensionsRequired`. A consumer claiming support for this extension **MUST** evaluate standard roles and omit hidden primitive instances from visual rendering as specified. A consumer that cannot provide that behavior **MUST** treat an asset listing `KHR_mesh_primitive_visibility_hint` in `extensionsRequired` as unsupported according to the glTF 2.0 extension rules.
 
-Primitive visibility hints are **advisory**, but note that **not every engine or runtime supports per-primitive culling**. Because this is a distinct extension, an author whose model depends on primitive-level hiding can list it in `extensionsRequired`, and a runtime that cannot honor it will reject the asset rather than silently rendering hidden geometry (e.g. the inside of a head in first-person).
+If the extension appears only in `extensionsUsed`, an implementation that does not support it ignores the hint and renders the asset as core glTF and the other extensions it supports define, so the hint suppresses no primitive.
 
-### What This Extension Is NOT
-
-- **Not node visibility.** For whole-node/subtree visibility use `KHR_node_visibility_hint` (view context) or `KHR_node_visibility` (on/off). This extension exists specifically for geometry that cannot be separated by node.
-- **Not a material variant.** It does not swap materials or geometry; it includes or excludes a primitive from rendering per view context. (`KHR_materials_variants` addresses material swapping.)
-- **Not an LOD or culling-distance system.**
-
-### Terminology
-
-| Term | Definition |
-|------|-----------|
-| **Primitive visibility hint** | A glTF mesh primitive annotated with this extension, declaring the view context(s) in which the primitive renders. |
-| **View context** | The active viewing mode a runtime presents, e.g. `first_person` or `third_person`. Shared tokens align with `KHR_node_camera_hint` and `KHR_node_visibility_hint`. |
-| **Role** | The semantic view-context membership of a primitive, expressed as a string. |
-
----
-
-## RFC 2119
-
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt).
-
----
-
-## Extension Declaration
-
-Declared in the asset-level `extensionsUsed` array.
-
-```json
-{
-  "extensionsUsed": ["KHR_mesh_primitive_visibility_hint"]
-}
-```
-
-Because per-primitive culling is not universally supported, authoring intent determines placement in `extensionsRequired`:
-
-- If the model still reads acceptably when hidden primitives are shown (the annotation is a refinement), keep it in `extensionsUsed` only — unsupporting runtimes render every primitive and lose only the view-context culling.
-- If correct presentation **depends** on hiding a primitive (e.g. a first-person camera would otherwise render the inside of a head baked into the body mesh), the author SHOULD list this extension in `extensionsRequired`. Runtimes that do not support it MUST then reject the asset.
-
-This is the core reason primitive visibility is a separate extension from node visibility: the two capabilities can be advertised and required independently.
-
----
-
-## Extension Specification
-
-### Extension Placement
-
-The extension data is placed on individual objects within a mesh's `primitives` array (`meshes[*].primitives[*].extensions`).
-
-### Extension Data
+### Extension object
 
 | Property | Type | Required | Default | Description |
 |----------|------|----------|---------|-------------|
-| `role` | `string` | **Yes** | -- | The view context in which this primitive is visible. See Standard Role Vocabulary and Custom Roles. |
-| `label` | `string` | No | -- | Human-readable label for authoring tools and inspectors. MUST be non-empty when present. |
+| `role` | string | Yes | — | Nonempty visibility role. Standard values are defined below. |
+| `label` | string | No | — | Nonempty human-readable label, preferred over `role` when a host or tool presents the hint to a user. It has no effect on visibility. |
 
-### No Inheritance
+When a host or tool presents a hint to a user, it **SHOULD** identify the hint by `label` when present, otherwise by its `role`.
 
-Unlike `KHR_node_visibility_hint`, this annotation applies to the **single primitive** it is attached to. Primitives are leaves; there is no subtree to inherit the role. Each primitive that needs a non-`always` context must be annotated individually.
+## View tags
 
-### Resolving Visibility
+A render view is a rendered viewpoint whose image is presented, such as a camera view, one eye of a stereo pair, or a mirror view. Shadow maps and lighting or reflection probes are not render views. The host gives each render view zero, one, or several view tags. The standard view tags are `"first_person"`, for a view presented from the character's own viewpoint, and `"third_person"`, for a third-person view of the character, such as a spectator or mirror view. A host **MAY** also give a render view custom view tags defined by a separate specification or application profile; this extension defines none. View tag strings are exact and case-sensitive. Custom view tags **SHOULD** be vendor-qualified, for example `"ACME_mirror"`, to reduce collisions. Their meaning comes only from the specification or application profile that defines them. View tags are not stored in the asset.
 
-Given the runtime's active view context `C`, a primitive is rendered when:
+How a host tags its views is host-defined, including when tags change and whether one render view has different tags for different instances of the asset, for example `"first_person"` for the instance that represents the user and `"third_person"` for other instances of the same asset. Where this extension refers to the view tags of a render view, it means the tags that apply to the instance being evaluated.
 
-- `always` → in all contexts (equivalent to no annotation).
-- `first_person` → only when `C` is `first_person`.
-- `third_person` → in every context except when `C` is `first_person`.
-- *custom* → runtime-defined; unrecognized roles SHOULD be treated as `always`.
+`KHR_character` designates a glTF asset as containing a character; representation of multiple characters within a single asset is outside its scope. This extension does not define character ownership.
 
-Unlike the node extension, this extension does not build on `KHR_node_visibility` — there is no core per-primitive visibility state to drive. A runtime realizes the hint by directly including or excluding the primitive from the draw for the active context. If the primitive's containing node is hidden (by `KHR_node_visibility` or `KHR_node_visibility_hint`), the primitive is hidden regardless of its own role (node-level hiding takes precedence).
+Using a `KHR_node_camera_hint`, including one whose role is `"first_person"`, does not by itself tag a view; the host tags its views and can take such hints into account.
 
-### Implementation Note: Hiding a Primitive in Game Engines
+## Standard role predicate
 
-Many real-time engines batch a mesh's primitives (sub-meshes) into a single renderer and cannot cheaply exclude one primitive from the draw; disabling the whole renderer would incorrectly hide the mesh's other primitives as well. For these engines it is RECOMMENDED to realize a hidden primitive by swapping it to a fully transparent **invisible material/shader** (for example, a transparent material with alpha `0` and depth writes disabled), and restoring the original material when the role's semantics make the primitive visible again. This removes only the hinted primitive from the visible result while leaving the rest of the mesh intact. Engines that *can* cull an individual primitive MAY instead skip it in the draw directly. Both are valid, non-normative realizations of this advisory hint; the choice is an engine-specific concern.
+The standard role strings are exact and case-sensitive. For a render view with view tags `T`, the standard role predicate is:
 
----
+| `role` | Visible when |
+|--------|--------------|
+| `"always"` | Always, including when `T` is empty. |
+| `"first_person"` | `T` includes `"first_person"`. |
+| `"third_person"` | `T` includes `"third_person"`. |
 
-## Standard Role Vocabulary
+Custom view tags in `T` do not affect these results. For an individual standard role predicate in a render view without view tags, only `"always"` returns `true`. A supported custom role returns `true` there only where the specification defining that role says. The containing node's ancestor-inclusive visibility can further restrict the final result.
 
-| Role | Description |
-|------|-------------|
-| `"always"` | Visible in all view contexts. Equivalent to omitting the extension; used to state intent explicitly. |
-| `"first_person"` | Visible only in the first-person view context. Example: a first-person-only hands primitive inside a shared arm mesh. |
-| `"third_person"` | Hidden in first-person, visible otherwise. Example: a head primitive baked into a body mesh that would occlude an inside-the-head first-person camera. |
+Every consumer that supports this extension supports the three standard roles. A consumer supports a custom role only as described under [Custom roles](#custom-roles). A consumer that supports this extension **SHOULD NOT** render a primitive whose role it does not support (the role-support rule); whether to render such a primitive anyway remains the application's decision.
 
----
+An unannotated primitive is equivalent to `role: "always"`. A differently cased token such as `"First_Person"` is not a standard role but a custom role.
 
-## Custom Roles
+### Authoring guidance (Informative)
 
-The `role` property is a free-form string. Custom roles SHOULD be lowercase-with-underscores and vendor-prefixed (`VENDORNAME_role_name`, e.g. `ACME_mirror_only`). Runtimes that encounter an unrecognized role SHOULD treat the primitive as `always` (always visible).
+Because a render view can have no view tags, and a primitive with a standard role other than `"always"` is visible only in views with the matching tag, authors are responsible for assigning roles so that primitives appear where intended. For example, a primitive intended for every view uses `"always"`, which is also the role of an unannotated primitive.
 
----
+## Primitive-instance composition
 
-## Relationship to KHR_node_visibility_hint
+Let `primitiveHintVisible(p, T)` be the standard role predicate for the role of primitive `p` and the view tags `T` of the render view, when that role is a standard role. For a supported custom role, this value is the visibility that the separate specification defining the role gives for that render view. For a role the consumer does not support, this value is `false` unless the application decides to render the primitive anyway, as described under [Standard role predicate](#standard-role-predicate). If `p` has no hint, this value is `true`.
 
-The two extensions share vocabulary and semantics but differ in granularity and capability:
+For an instance of primitive `p` through containing node `n`, let `nodeHintVisible(n, T)` be the ancestor-inclusive predicate `hintVisible(n, T)` from `KHR_node_visibility_hint` when that extension is present and supported; otherwise it is `true`. This includes every node hint on `n` and its ancestors in the same evaluated node-instance hierarchy. Let `coreVisible(n)` be the ancestor-inclusive predicate from `KHR_node_visibility` when that extension is present and supported; otherwise it is `true`.
 
-| | `KHR_node_visibility_hint` | `KHR_mesh_primitive_visibility_hint` |
-|--|----------------------------|--------------------------------------|
-| **Placement** | `node` | `mesh.primitive` |
-| **Scope** | The node and its subtree (inherited) | The single primitive (no inheritance) |
-| **Builds on** | `KHR_node_visibility` (`visible` state) | Nothing — the runtime culls the primitive directly |
-| **When to use** | The view-context region is (or can be) its own node | The region is baked into a shared mesh and cannot be split by node |
-| **Support** | Widely feasible (node hide/show) | Requires per-primitive culling, not universal |
+The primitive role is shared by every node referencing the mesh. For each primitive instance and render view, the visual-rendering predicate uses the containing node instance `n` and its view tags `T`:
 
-**Prefer node granularity when possible** — it is simpler and more widely supported. Reach for primitive granularity only when the geometry cannot be separated by node. A single asset MAY use both; because they are separate extensions, a runtime and an author can reason about, advertise, and require each independently — giving a complete picture of the visibility mechanisms a model needs.
+```text
+renderPrimitiveInstance(n, p, T) =
+    primitiveHintVisible(p, T)
+    AND nodeHintVisible(n, T)
+    AND coreVisible(n)
+```
 
-When a node is hidden by a node-level mechanism, its primitives are hidden regardless of their own primitive-level roles (node-level hiding wins).
+This predicate determines whether the primitive instance is drawn directly in that view. Rendering techniques and effects on shadows, reflections, and lighting are host-defined. `KHR_node_visibility` retains its own requirements.
 
----
+> Implementation Note (Informative): Visibility can differ between views or instances, including instances that share a mesh. Shared resources and temporary rendering state need to accommodate those differences.
 
-## JSON Example
+A primitive hint cannot make a primitive visible when its containing node is hidden, including when an ancestor's node hint makes `nodeHintVisible(n, T)` false. An `"always"` primitive imposes no additional primitive restriction; it cannot restore content hidden by a node hint. A visible containing node does not override a hidden primitive predicate.
 
-A single body mesh whose head is a separate primitive that must be hidden in first-person.
+Because `coreVisible(n)` is a logical AND over the containing node and all its ancestors, an invisible node higher in the hierarchy always takes priority: a `visible: false` at any level hides that node and its entire subtree, and no `visible: true` lower down can restore it. The following cases summarize this interaction for a primitive instance whose containing node has an ancestor, independent of any hint role:
+
+| Ancestor `visible` | Containing node `visible` | Result |
+|--------------------|---------------------------|--------|
+| `true`  | `false` | Primitive instance hidden. |
+| `false` | `true`  | Ancestor, containing node, and primitive instance hidden. |
+| `false` | `false` | Ancestor, containing node, and primitive instance hidden. |
+| `true`  | `true`  | Primitive instance visible, subject to the node and primitive hint predicates. |
+
+This mirrors the normative semantics of `KHR_node_visibility`; it is restated here only to make the composition explicit and does not modify that extension.
+
+When interacting extensions are used, the asset **MUST** list each one in `extensionsUsed`. Combined use does not change the rule for listing `KHR_mesh_primitive_visibility_hint` in `extensionsRequired` given under [Extension usage](#extension-usage); whether `KHR_node_visibility_hint` or `KHR_node_visibility` is listed there follows that extension's specification and the glTF 2.0 extension rules.
+
+## Custom roles
+
+A custom role is any nonempty role string other than the three standard values. A consumer supports a custom role only when it implements a separate specification or application profile that defines that role; every other custom role is unsupported by that consumer, and a primitive with that role falls under the role-support rule in [Standard role predicate](#standard-role-predicate).
+
+Custom roles **SHOULD** be vendor-qualified, for example `"ACME_mirror_only"`, to reduce collisions. Their meaning comes from the separate specification or application profile that defines them and is not portable under this extension alone.
+
+Custom-role semantics come only from a separate specification, such as a vendor extension or application profile. A primitive with a supported custom role is visible where that specification says, typically in render views with a custom view tag that it defines. That specification defines its own association with role tokens, data placement, behavior, and support contract; this extension does not prescribe a companion object or naming relationship. Any glTF extension used for that purpose **MUST** follow the ordinary `extensionsUsed` and `extensionsRequired` rules. Without separately supported semantics, the role is unsupported and the role-support rule applies.
+
+### Custom-role authoring guidance (Informative)
+
+Because a consumer that supports this extension is recommended not to render a primitive whose role it does not support, authors can reserve custom roles for primitives whose absence is acceptable in applications that do not support the role.
+
+For example, a VR application can tag its mirror views `"third_person"` and `"ACME_mirror"`, a custom view tag defined by its application profile. If that profile also defines a custom role `"ACME_mirror_only"` that is visible only in views tagged `"ACME_mirror"`, an avatar can give a mirror-only detail primitive that role. The detail then appears in the application's mirrors but not in its other third-person views, and an application without that profile does not support the role and is recommended not to render the detail.
+
+## Examples (Informative)
+
+The following partial fragment omits accessors and buffers. It marks a head primitive as visible only in views tagged `"third_person"`.
 
 ```json
 {
   "asset": { "version": "2.0" },
   "extensionsUsed": ["KHR_mesh_primitive_visibility_hint"],
+  "nodes": [
+    { "mesh": 0 }
+  ],
   "meshes": [
     {
       "name": "AvatarBody",
       "primitives": [
-        { "attributes": { "POSITION": 0 }, "material": 0 },
+        { "attributes": { "POSITION": 0 } },
         {
           "attributes": { "POSITION": 1 },
-          "material": 1,
           "extensions": {
             "KHR_mesh_primitive_visibility_hint": {
               "role": "third_person",
-              "label": "Head (baked into body mesh)"
+              "label": "Head"
             }
           }
         }
@@ -171,70 +155,90 @@ A single body mesh whose head is a separate primitive that must be hidden in fir
 }
 ```
 
-**Runtime behavior:** In third-person both primitives render. In first-person the runtime skips the second (head) primitive, so the camera inside the head does not render its interior. The first primitive (no annotation) is treated as `always`. If a runtime does not support primitive culling and the extension is in `extensionsRequired`, it rejects the asset instead of showing the head.
+In a render view tagged `"third_person"`, both primitives are hint-visible. In a view without that tag, such as a view tagged only `"first_person"` or a view without tags, the second primitive is omitted from visual rendering.
 
----
+The following partial fragment omits mesh attributes, accessors, and buffers. It demonstrates node-plus-primitive composition.
 
-## Conformance
+```json
+{
+  "asset": { "version": "2.0" },
+  "extensionsUsed": [
+    "KHR_node_visibility_hint",
+    "KHR_mesh_primitive_visibility_hint"
+  ],
+  "nodes": [
+    {
+      "mesh": 0,
+      "extensions": {
+        "KHR_node_visibility_hint": { "role": "first_person" }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "extensions": {
+            "KHR_mesh_primitive_visibility_hint": {
+              "role": "third_person"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+```
 
-### Authoring Requirements
+In a consumer that supports both hints, the node predicate is true only in views tagged `"first_person"` and the primitive predicate only in views tagged `"third_person"`, so the primitive instance is visible only in a view that carries both tags and is hidden in every other view. A consumer that supports this extension but not `KHR_node_visibility_hint` treats the node predicate as `true`, so it shows the primitive instance in every view tagged `"third_person"`.
 
-1. `role` MUST be present and MUST be a non-empty string.
-2. `label`, when present, SHOULD be a concise, human-readable string.
-3. Annotating a primitive with `always` is permitted and equivalent to omitting the extension.
-4. If correct presentation depends on hiding a primitive in some context, the author SHOULD list this extension in `extensionsRequired`.
-5. Authors SHOULD prefer node-level visibility (`KHR_node_visibility_hint`) when the region can be a separate node, using this extension only for baked-in geometry.
+### Ancestor hint example
 
-### Runtime Requirements
+Consider this node hierarchy, with the primitive inside `DetailMesh`:
 
-1. Implementations that support this extension SHOULD render each annotated primitive according to the visibility semantics of its (self-only) `role` and the active view context.
-2. Implementations SHOULD treat unrecognized `role` values as `always`.
-3. If the containing node is hidden by a node-level mechanism, the primitive MUST NOT render regardless of its role.
-4. Implementations that do not support this extension SHOULD render all primitives (treat each as `always`). If the extension is required and unsupported, the asset MUST be rejected.
+```text
+ThirdPersonParent (node hint: third_person)
+  -> DetailMesh (node hint: always)
+       -> primitive (primitive hint: always)
+```
 
-### Fallback Behavior
+In a view tagged only `"first_person"`, the primitive's own predicate is true, but its containing node's ancestor-inclusive hint result is false because of `ThirdPersonParent`. The primitive is hidden. In a view tagged `"third_person"`, both hint predicates are true and the primitive is visible when `coreVisible` is true. A `visible: false` on either node hides the primitive in every view when `KHR_node_visibility` is supported.
 
-If the extension appears only in `extensionsUsed`, an unsupporting implementation renders every primitive normally — only view-context culling of primitives is lost. Authors who cannot tolerate that loss MUST use `extensionsRequired`.
+If `DetailMesh` instead has a `"first_person"` node hint, the primitive is hint-visible only in a view carrying both `"first_person"` and `"third_person"` tags. A descendant node hint and a primitive hint can each add a restriction; neither removes an ancestor node-hint restriction. The primitive hint remains non-inherited.
 
----
+## Validation boundary
+
+The JSON Schema enforces only the extension object's local structure: `role` is required and nonempty, and `label` is nonempty when present.
+
+A validator that claims to validate this extension **MUST** verify placement on a mesh primitive and the ordinary `extensionsUsed` and `extensionsRequired` declarations. Custom roles remain structurally valid; validation of separately specified custom semantics is outside this extension.
+
+## Known implementations (Informative)
+
+- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and primitive-visibility demo.
+
+## Known limitations (Informative)
+
+- Per-primitive visual suppression may require splitting draw submissions in engines that otherwise batch mesh primitives.
+- The host chooses which view tags each render view has and when they change.
+- The standard predicate is binary; fades and transitions are host-defined.
+- Custom-role behavior is portable only through a separately supported specification.
 
 ## Schema
 
 - [mesh.primitive.KHR_mesh_primitive_visibility_hint.schema.json](./schema/mesh.primitive.KHR_mesh_primitive_visibility_hint.schema.json)
 
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "mesh.primitive.KHR_mesh_primitive_visibility_hint.schema.json",
-  "title": "KHR_mesh_primitive_visibility_hint glTF Mesh Primitive Extension",
-  "type": "object",
-  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
-  "properties": {
-    "role": { "type": "string", "minLength": 1 },
-    "label": { "type": "string", "minLength": 1 },
-    "extensions": { },
-    "extras": { }
-  },
-  "required": ["role"]
-}
-```
+## Appendix: Full Khronos Copyright Statement
 
----
+Copyright 2026 The Khronos Group Inc.
 
-## Known Implementations
+This Specification is protected by copyright laws and contains material proprietary to Khronos. Except as described by these terms, it or any components may not be reproduced, republished, distributed, transmitted, displayed, broadcast or otherwise exploited in any manner without the express prior written permission of Khronos.
 
-- [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and primitive-visibility demo.
+Khronos grants a conditional copyright license to use and reproduce the unmodified Specification for any purpose, without fee or royalty, EXCEPT no licenses to any patent, trademark or other intellectual property rights are granted under these terms.
 
-## Known Limitations
+Khronos makes no, and expressly disclaims any, representations or warranties, express or implied, regarding this Specification, including, without limitation: merchantability, fitness for a particular purpose, non-infringement of any intellectual property, correctness, accuracy, completeness, timeliness, and reliability. Under no circumstances will Khronos, or any of its Promoters, Contributors or Members, or their respective partners, officers, directors, employees, agents or representatives be liable for any damages, whether direct, indirect, special or consequential damages for lost revenues, lost profits, or otherwise, arising from or in connection with these materials.
 
-1. **Per-primitive culling is not universal.** Some engines cannot cheaply exclude a single primitive from a batched mesh. This is why the capability is a separate, independently requirable extension.
-2. **No inheritance.** Every affected primitive must be annotated individually.
-3. **View contexts are runtime-defined.** The `first_person`/`third_person` tokens are shared with `KHR_node_camera_hint`/`KHR_node_visibility_hint`, but how a runtime enters a context is out of scope.
-4. **No partial visibility.** A primitive is either drawn or not for a given context; there is no fade.
+This Specification has been created under the Khronos Intellectual Property Rights Policy, which is Attachment A of the Khronos Group Membership Agreement available at https://www.khronos.org/files/member_agreement.pdf. Parties desiring to implement the Specification and make use of Khronos trademarks in relation to that implementation, and receive reciprocal patent license protection under the Khronos Intellectual Property Rights Policy must become Adopters and confirm the implementation as conformant under the process defined by Khronos for this Specification; see https://www.khronos.org/conformance/adopters/file-format-adopter-program.
 
----
+Where this Specification identifies specific sections of external references, only those specifically identified sections define normative functionality. The Khronos Intellectual Property Rights Policy excludes external references to materials and associated enabling technology not created by Khronos from the Scope of this Specification, and any licenses that may be required to implement such referenced materials and associated technologies must be obtained separately and may involve royalty payments.
 
-## License
-
-This extension specification is licensed under the Khronos Group Extension License.
-See: <https://www.khronos.org/registry/gltf/license.html>
+Khronos® is a registered trademark, and glTF™ is a trademark of The Khronos Group Inc. All other product names, trademarks, and/or company names are used solely for identification and belong to their respective owners.

@@ -16,68 +16,89 @@
 
 **Draft** – This extension is not yet ratified by the Khronos Group and is subject to change.
 
+## Conventions
+
+The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**, **NOT RECOMMENDED**, **MAY**, and **OPTIONAL** in this document are to be interpreted as described in [BCP 14](https://www.rfc-editor.org/info/bcp14) when, and only when, they appear in all capitals, as shown here. Sections labeled (Informative), their subsections, and all examples are informative; all other sections are normative.
+
 ## Dependencies
 
 Written against the glTF 2.0 specification.
 
-Requires the extension: `KHR_xmp_json_ld`
+This extension has no extension dependencies.
 
-Assets using `KHR_character` MUST list both `KHR_character` and `KHR_xmp_json_ld` in `extensionsUsed`. This declaration does not by itself require a top-level `KHR_xmp_json_ld` extension object, an XMP packet, or an `asset`-level packet reference. When character metadata is provided, it MUST be encoded and attached as specified by `KHR_xmp_json_ld`. For background on this approach, see:
-[KHR_xmp_json_ld](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_xmp_json_ld)
+## Overview (Informative)
 
-## Overview
+The `KHR_character` extension designates a glTF asset as containing a character and provides a common discovery point for independently defined character-related extensions.
 
-The `KHR_character` extension designates a glTF asset as representing a character. This top-level marker enables tools and runtimes to interpret the asset as containing character-specific content such as rigging, blendshapes, animation retargeting, or metadata.
+The extension does not define which nodes, materials, animations, or other objects belong to the character. It does not define rigging, expressions, retargeting, metadata, traversal, rendering, or other runtime behavior. Those capabilities are defined, when present, by their respective extensions.
 
-This extension does not define character features directly but acts as a root declaration that character-related extensions may be present, and that consumers should treat the asset using character-specific logic and pipelines. It's part of the wider set of KHR character extensions that are meant to be building blocks to represent a contract stating functionality and data requirements between a given model and an endpoint.
+## Extension usage (Normative)
 
-The extension references the root `node` that represents the character. This glTF 2.0 version of the extension identifies one character per asset. Support for multiple independently addressable characters is deferred for consideration alongside glTF 2.1 support.
+The `KHR_character` object **MUST** be attached to the top-level glTF object. The asset **MUST** list `KHR_character` in `extensionsUsed` and **MAY** list it in `extensionsRequired` according to the rules of the glTF 2.0 specification.
 
-Structured character metadata, when present, is attached through `KHR_xmp_json_ld`. The presence of an XMP packet, a packet reference, and individual metadata properties remains optional unless another specification requires them.
+A consumer claiming support for this extension **MUST** recognize the `KHR_character` object and make the character designation available to host logic. Support does not require the consumer to traverse, render, animate, or otherwise operate on the character. A consumer that cannot provide this minimum behavior **MUST** treat an asset listing `KHR_character` in `extensionsRequired` as unsupported, according to the glTF 2.0 extension rules.
 
-## Extension Schema
+### Multiple characters
+
+The `KHR_character` designation covers at most one character in a glTF asset. It neither prohibits unrelated scene content nor identifies which nodes or other objects belong to that character. Representation of multiple characters within a single asset is outside the scope of this extension.
+
+## Extension structure (Normative)
 
 ```json
 {
+  "asset": {
+    "version": "2.0"
+  },
+  "extensionsUsed": [
+    "KHR_character"
+  ],
   "extensions": {
-    "KHR_character": {
-      "rootNode": 0
-    }
+    "KHR_character": {}
   }
 }
 ```
 
 ### Properties
 
-| Property   | Type    | Description                                                                                                                                                                                  |
-| ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `rootNode` | integer | Index of the glTF `node` representing the root of the character hierarchy. This node SHOULD be a common ancestor of all nodes containing character-related meshes and joints. |
+The `KHR_character` object defines no properties.
 
-## Non-Normative Metadata Guidance
+## Validation boundary (Normative)
+
+A validator claiming support for this extension **MUST** validate the `KHR_character` object against its schema and **MUST** verify its placement on the top-level glTF object. Ordinary glTF validation governs the `extensionsUsed` and `extensionsRequired` declarations.
+
+## Metadata guidance (Informative)
 
 This section is informative and does not define conformance requirements for `KHR_character`.
 
-Character metadata can be expressed using the `KHR_xmp_json_ld` format, a structured mechanism for attaching JSON-LD metadata blocks to glTF files. In the context of `KHR_character`, this can describe character provenance, licensing, creator, versioning, and intended use, among others.
+Asset metadata can be expressed using the `KHR_xmp_json_ld` format, a structured mechanism for attaching JSON-LD metadata blocks to glTF files. For an asset that uses `KHR_character`, this can describe provenance, licensing, and creators, among others.
 
-When used, the `KHR_xmp_json_ld` block is placed according to the rules defined by that extension. This extension does not define a character-specific metadata vocabulary.
+When used, the `KHR_xmp_json_ld` block is placed according to the rules defined by that extension. A packet referenced from `asset` describes the whole glTF asset, as `KHR_xmp_json_ld` defines, not only the character. This extension does not define a character-specific metadata vocabulary.
 
-The following properties are examples that authoring pipelines may find useful. Their presence is not required by this extension. For these examples, the `khr` prefix uses the proposed registry namespace `https://www.khronos.org/registry/glTF/character/metadata/`. This registry namespace is an example that has not yet been implemented or published; it must be established before these terms can be treated as part of a Khronos-managed vocabulary.
+The following properties are examples that authoring pipelines may find useful. Their presence is not required by this extension.
 
-| DC/XMP_JSON_LD Property | Example use                                                                                                                               |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| dc:title                | Human-readable title for the character.                                                                                                   |
-| dc:creator              | Person or organization that created the character.                                                                                        |
-| dc:license              | License governing use of the character.                                                                                                   |
-| dc:rights               | Copyright or other rights information.                                                                                                    |
-| dc:created              | Date on which the asset was created.                                                                                                      |
-| dc:publisher            | Entity responsible for making the resource available.                                                                                     |
-| dc:description          | Context and a summary of the content.                                                                                                     |
-| dc:subject              | Content tags or subject classifications.                                                                                                  |
-| dc:source               | Source information for provenance and attribution.                                                                                        |
-| khr:version             | Character or asset version as a string.                                                                                                   |
-| khr:thumbnailImage      | Zero-based index of an image in the top-level glTF `images` array to use as a character thumbnail.                                        |
+These examples use two Dublin Core vocabularies. The `dc` prefix is bound to the Dublin Core Metadata Element Set, Version 1.1 (`http://purl.org/dc/elements/1.1/`), which defines fifteen elements and no others: `contributor`, `coverage`, `creator`, `date`, `description`, `format`, `identifier`, `language`, `publisher`, `relation`, `rights`, `source`, `subject`, `title` and `type`. `created` and `license` are not among them. Both are DCMI Metadata Terms, so they take the `dcterms` prefix bound to `http://purl.org/dc/terms/`. Writing them under `dc` yields IRIs that DCMI does not define.
 
-## Example
+The value shape column gives the encoding these examples use for each term. `KHR_xmp_json_ld` defines the list, set and language alternative forms, and states the `rdf` prefix that a language alternative requires.
+
+`KHR_xmp_json_ld` lists the namespace prefixes it recommends for interoperable use. `dcterms` is not among them; the closest XMP-native properties in those namespaces are `xmp:CreateDate` for a creation date and `xmpRights` properties, such as `xmpRights:WebStatement`, for license information. An author who needs a term that no published vocabulary supplies can bind a prefix to a namespace the author controls, and consumers read such terms as author-specific.
+
+| Property             | Value shape                                          | Example use                                                                                        |
+| -------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `dc:title`           | XMP Language Alternative (`rdf:Alt`).                | Human-readable title for the asset.                                                                |
+| `dc:creator`         | Ordered `@list` of strings, one per creator.         | Person or organization that created the asset.                                                     |
+| `dcterms:license`    | Ordered `@list` of URI strings.                      | License governing use of the asset.                                                                |
+| `dc:rights`          | XMP Language Alternative (`rdf:Alt`).                | Copyright or other rights information.                                                             |
+| `dcterms:created`    | Single date string in the XMP Date format.           | Date on which the asset was created.                                                               |
+| `dc:publisher`       | Unordered `@set` of strings.                         | Entity responsible for making the resource available.                                              |
+| `dc:description`     | XMP Language Alternative (`rdf:Alt`).                | Context and a summary of the content.                                                              |
+| `dc:subject`         | Unordered `@set` of strings.                         | Content tags or subject classifications.                                                           |
+| `dc:source`          | Single URI string.                                   | Source information for provenance and attribution.                                                 |
+
+This extension does not define how multiple `dcterms:license` entries combine.
+
+An XMP packet describes, for metadata consumers, the glTF objects that reference it. It does not carry references to glTF objects. `KHR_xmp_json_ld` gives no meaning to a glTF array index written inside a packet, so the validity of such a reference, its update after an asset edit, and the image formats it can name are all undefined, and no validator checks them. A reference to a glTF object, such as an image used as a character thumbnail, belongs in a typed extension property. This extension does not define one.
+
+### Optional metadata example
 
 ```json
 {
@@ -89,61 +110,60 @@ The following properties are examples that authoring pipelines may find useful. 
       }
     }
   },
-  "scene": 0,
-  "scenes": [
-    {
-      "nodes": [0]
-    }
-  ],
-  "nodes": [
-    {
-      "name": "characterRoot"
-    }
-  ],
-  "images": [
-    {
-      "name": "Character Thumbnail",
-      "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
-    }
-  ],
   "extensionsUsed": ["KHR_character", "KHR_xmp_json_ld"],
   "extensions": {
-    "KHR_character": {
-      "rootNode": 0
-    },
+    "KHR_character": {},
 
     "KHR_xmp_json_ld": {
       "packets": [
         {
           "@context": {
             "dc": "http://purl.org/dc/elements/1.1/",
-            "khr": "https://www.khronos.org/registry/glTF/character/metadata/"
+            "dcterms": "http://purl.org/dc/terms/",
+            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
           },
-          "dc:title": "Example Model",
+          "@id": "",
+          "dc:title": {
+            "@type": "rdf:Alt",
+            "rdf:_1": {
+              "@language": "x-default",
+              "@value": "Example Model"
+            }
+          },
           "dc:creator": {
             "@list": [
-              "Author1",
-              "AuthorEmail1@email.com",
-              "Author2",
-              "AuthorEmail2@email.com"
+              "Author1 <AuthorEmail1@email.com>",
+              "Author2 <AuthorEmail2@email.com>"
             ]
           },
-          "dc:license": {
+          "dcterms:license": {
             "@list": [
               "https://vrm.dev/licenses/1.0/",
               "https://example.com/third-party-license"
             ]
           },
-          "dc:created": "2023-05-05",
-          "dc:rights": "Copyright information about the model",
-          "dc:publisher": "Imaginary Corporation A, LLC",
-          "dc:description": "A sentence, or paragraph describing the character at hand",
-          "dc:subject": {
-            "@list": ["Example trait", "Another example trait"]
+          "dcterms:created": "2023-05-05",
+          "dc:rights": {
+            "@type": "rdf:Alt",
+            "rdf:_1": {
+              "@language": "x-default",
+              "@value": "Copyright information about the model"
+            }
           },
-          "dc:source": "https://example.com/characters/example-model",
-          "khr:version": "1.0",
-          "khr:thumbnailImage": 0
+          "dc:publisher": {
+            "@set": ["Imaginary Corporation A, LLC"]
+          },
+          "dc:description": {
+            "@type": "rdf:Alt",
+            "rdf:_1": {
+              "@language": "x-default",
+              "@value": "A sentence or paragraph describing the asset"
+            }
+          },
+          "dc:subject": {
+            "@set": ["Example trait", "Another example trait"]
+          },
+          "dc:source": "https://example.com/characters/example-model"
         }
       ]
     }
@@ -151,18 +171,32 @@ The following properties are examples that authoring pipelines may find useful. 
 }
 ```
 
-## Implementation Notes
+## Implementation notes (Informative)
 
-- `rootNode` is required, representing the index of the glTF `node` that serves as the root of the character hierarchy. This node SHOULD be a common ancestor of all nodes containing character-related meshes and joints.
-- Consumers should use this marker as a signal to search for additional character-related extensions, including skeletal, expression, and other khronos character extensions.
-- Consumers of `KHR_character` MUST support its `KHR_xmp_json_ld` dependency. Assets are not required to contain an XMP packet solely because they use `KHR_character`.
+- Consumers cannot infer character ownership or relationships unless another extension defines them.
+- Consumers can use the character designation as a signal to inspect `extensionsUsed` for independently defined character-related extensions.
 
-## Known Implementations
+## Known implementations (Informative)
 
 - [0b5vr/khr-character-testbed](https://github.com/0b5vr/khr-character-testbed) - Three.js viewer and VRM-to-KHR_character converter.
 - [Kjakubzak/khr_character_testbed](https://github.com/Kjakubzak/khr_character_testbed) - UnityGLTF importer, exporter, sample assets, and Unity demos.
 
-## License
+## Schema
 
-This extension specification is licensed under the Khronos Group Extension License.
-See: https://www.khronos.org/registry/gltf/license.html
+- [glTF.KHR_character.schema.json](./schema/glTF.KHR_character.schema.json)
+
+## Appendix: Full Khronos Copyright Statement
+
+Copyright 2026 The Khronos Group Inc.
+
+This Specification is protected by copyright laws and contains material proprietary to Khronos. Except as described by these terms, it or any components may not be reproduced, republished, distributed, transmitted, displayed, broadcast or otherwise exploited in any manner without the express prior written permission of Khronos.
+
+Khronos grants a conditional copyright license to use and reproduce the unmodified Specification for any purpose, without fee or royalty, EXCEPT no licenses to any patent, trademark or other intellectual property rights are granted under these terms.
+
+Khronos makes no, and expressly disclaims any, representations or warranties, express or implied, regarding this Specification, including, without limitation: merchantability, fitness for a particular purpose, non-infringement of any intellectual property, correctness, accuracy, completeness, timeliness, and reliability. Under no circumstances will Khronos, or any of its Promoters, Contributors or Members, or their respective partners, officers, directors, employees, agents or representatives be liable for any damages, whether direct, indirect, special or consequential damages for lost revenues, lost profits, or otherwise, arising from or in connection with these materials.
+
+This Specification has been created under the Khronos Intellectual Property Rights Policy, which is Attachment A of the Khronos Group Membership Agreement available at https://www.khronos.org/files/member_agreement.pdf. Parties desiring to implement the Specification and make use of Khronos trademarks in relation to that implementation, and receive reciprocal patent license protection under the Khronos Intellectual Property Rights Policy must become Adopters and confirm the implementation as conformant under the process defined by Khronos for this Specification; see https://www.khronos.org/conformance/adopters/file-format-adopter-program.
+
+Where this Specification identifies specific sections of external references, only those specifically identified sections define normative functionality. The Khronos Intellectual Property Rights Policy excludes external references to materials and associated enabling technology not created by Khronos from the Scope of this Specification, and any licenses that may be required to implement such referenced materials and associated technologies must be obtained separately and may involve royalty payments.
+
+Khronos® is a registered trademark, and glTF™ is a trademark of The Khronos Group Inc. All other product names, trademarks, and/or company names are used solely for identification and belong to their respective owners.

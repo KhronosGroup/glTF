@@ -2,28 +2,16 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "KHR_character_reference_pose glTF Animation Extension",
     "type": "object",
-    "description": "glTF extension that marks an animation as a canonical reference pose for character retargeting.",
+    "description": "Identifies a static one-key node TRS animation as a character reference pose.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "poseType": {
-            "description": "The semantic classification of this reference pose.",
-            "anyOf": [
-                {
-                    "const": "TPose"
-                },
-                {
-                    "const": "APose"
-                },
-                {
-                    "const": "IPose"
-                },
-                {
-                    "type": "string"
-                }
-            ],
-            "default": "TPose"
+            "type": "string",
+            "minLength": 1,
+            "description": "Required nonempty classification label for this reference pose. The exact, case-sensitive standard labels are 't_pose', 'a_pose', and 'i_pose'; any other value is a custom label."
         },
         "extensions": { },
         "extras": { }
-    }
+    },
+    "required": ["poseType"]
 }

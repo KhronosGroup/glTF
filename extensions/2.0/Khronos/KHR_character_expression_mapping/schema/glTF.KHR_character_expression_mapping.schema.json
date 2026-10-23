@@ -2,39 +2,49 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "KHR_character_expression_mapping glTF Document Extension",
     "type": "object",
-    "description": "glTF extension that enables encoding multiple expression set mappings, mapping source expressions present in the model to target expressions that a runtime/endpoint understands.",
+    "description": "Maps inputs from external expression vocabularies to native expression drivers.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "expressionSetMappings": {
             "type": "object",
-            "description": "Dictionary of expression set mappings, where each key is a target expression set name.",
+            "description": "Nonempty dictionary of mapping sets from external expression inputs to native expression drivers. Each key identifies one external vocabulary.",
+            "minProperties": 1,
+            "propertyNames": {
+                "type": "string",
+                "minLength": 1
+            },
             "additionalProperties": {
                 "type": "object",
-                "description": "Expression mapping dictionary where each key is a target expression name and each value is an array of source expression mappings.",
+                "description": "Nonempty dictionary of input expression keys. Each value lists weighted contributions from that input to native expression drivers.",
+                "minProperties": 1,
+                "propertyNames": {
+                    "type": "string",
+                    "minLength": 1
+                },
                 "additionalProperties": {
                     "type": "array",
-                    "description": "Array of source expression mappings that contribute to the target expression.",
+                    "description": "Nonempty array of contributions from this input to native expression drivers.",
+                    "minItems": 1,
                     "items": {
                         "type": "object",
+                        "description": "Weighted contribution from an external expression input to a native expression driver.",
                         "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
                         "properties": {
                             "source": {
-                                "allOf": [
-                                    {
-                                        "$ref": "glTFid.schema.json"
-                                    }
-                                ],
-                                "description": "Index of the source expression in the top-level KHR_character_expression extension object.",
+                                "allOf": [ { "$ref": "glTFid.schema.json" } ],
+                                "description": "Index of the native expression to drive in the top-level KHR_character_expression expressions array.",
                                 "gltf_detailedDescription": "This value MUST be a valid index into the `expressions` array of the top-level `KHR_character_expression` extension object."
                             },
                             "name": {
                                 "type": "string",
-                                "description": "The name of the source expression.",
-                                "gltf_detailedDescription": "When defined, this value MUST exactly match the `expression` property of the expression referenced by `source`."
+                                "description": "Optional name of this mapping entry.",
+                                "gltf_detailedDescription": "This name is independent of the referenced expression entry's name. Resolution MUST use `source`, not this value."
                             },
                             "weight": {
                                 "type": "number",
-                                "description": "Relative influence of this source expression on the target. Weights represent the proportional contribution needed to achieve the desired target result."
+                                "minimum": 0.0,
+                                "maximum": 1.0,
+                                "description": "Contribution coefficient from this external input to the referenced native expression driver."
                             },
                             "extensions": { },
                             "extras": { }
@@ -43,8 +53,7 @@
                             "source",
                             "weight"
                         ]
-                    },
-                    "minItems": 1
+                    }
                 }
             }
         },

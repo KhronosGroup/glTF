@@ -2,28 +2,28 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "node.KHR_node_camera_hint.schema.json",
   "title": "KHR_node_camera_hint glTF Node Extension",
-  "description": "Marks a node as an authored camera positioning suggestion. The node's world-space transform defines the recommended camera placement. The runtime MAY use this as a default view, orbit center, portrait framing, or other camera-related viewpoint.",
+  "description": "Associates a node with a passive, advisory camera descriptor. For every role, the initial camera pose is interpreted from the node's global transform using the core glTF camera view-matrix rules. If those rules leave the view matrix undefined, no initial camera pose is defined; the host may ignore it or derive a pose through host-defined adaptation. An optional targetNode supplies the subject point without changing that pose.",
   "type": "object",
   "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
   "properties": {
     "role": {
       "type": "string",
-      "description": "The semantic purpose of this camera hint. Determines how runtimes interpret the node's transform. Standard vocabulary values provide interoperability guarantees; custom values are permitted for domain-specific use cases.",
+      "description": "Nonempty semantic role for this camera hint. The exact, case-sensitive standard values are 'default_view', 'detail', 'first_person', 'framing_view', 'full_body', 'orbit_view', 'portrait', and 'third_person'; any other value is a custom role. Every role, standard or custom, describes a candidate initial camera pose. Roles classify authored intent and never select or activate a camera; the specification recommends a deterministic choice among default_view hints for hosts that automatically choose a default view from camera hints without restricting the candidates to other roles, and recommends that hosts not use or surface hints with unrecognized custom roles in default camera affordances.",
       "minLength": 1
     },
     "camera": {
       "allOf": [ { "$ref": "glTFid.schema.json" } ],
-      "description": "Index of a glTF camera in the root cameras array whose projection parameters (FOV, clip planes, type) and any camera extensions apply to this hint. Advisory — runtimes MAY override.",
-      "gltf_detailedDescription": "This value MUST be a valid index into the cameras array."
+      "description": "Advisory index of a glTF camera whose projection definition is associated with this hint. The reference does not instantiate the camera or override node.camera. When undefined, the hint carries no projection data; a node.camera on the hint node does not supply it.",
+      "gltf_detailedDescription": "This value MUST be a valid index into the top-level `cameras` array. Extensions on the referenced camera retain their own support contracts."
     },
     "targetNode": {
       "allOf": [ { "$ref": "glTFid.schema.json" } ],
-      "description": "Index of a glTF node that this camera should orient toward. When specified, the camera's look-at direction is computed from the vector between this node and the target node.",
-      "gltf_detailedDescription": "This value MUST be a valid index into the nodes array and MUST NOT refer to the node containing this extension."
+      "description": "Index of a different glTF node whose global translation is the hint's subject point: the point of interest, framing subject, or orbit center. It does not change the initial camera pose or define any orientation. When undefined or not usable (an invalid index or a reference to the hint node itself), the hint defines no subject point and a host may choose one.",
+      "gltf_detailedDescription": "This value MUST be a valid index into the top-level `nodes` array and MUST NOT refer to the node containing this extension."
     },
     "label": {
       "type": "string",
-      "description": "Human-readable label for this camera position. Used for UI display in model viewers and camera selection menus.",
+      "description": "Nonempty human-readable label for the viewpoint, preferred over node.name whenever a host or tool presents the hint to a user. It has no camera behavior and no defined localization mechanism.",
       "minLength": 1
     },
     "extensions": { },

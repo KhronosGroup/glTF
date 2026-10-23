@@ -1,0 +1,22 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "KHR_character_skeleton_mapping Role Association Properties",
+    "type": "object",
+    "description": "Associates a role from an external skeletal vocabulary with a glTF node. The node index is authoritative; the optional name belongs to the association.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "node": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "Index of the associated glTF node in the top-level nodes array.",
+            "gltf_detailedDescription": "This value MUST be a valid index into the top-level `nodes` array. The referenced node is not required to be a member of any `skin.joints` array."
+        },
+        "name": {
+            "type": "string",
+            "description": "Optional name of this association.",
+            "gltf_detailedDescription": "This name is independent of the referenced node's name. Resolution MUST use `node`, not `name`."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": ["node"]
+}
