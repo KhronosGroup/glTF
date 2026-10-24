@@ -311,7 +311,7 @@ CIPA DC-008-Translation-2019
 _Exchangeable image file format for digital still cameras_
 <https://www.cipa.jp/std/documents/download_e.html?DC-008-Translation-2019-E>
 
-* [[data-uri]]
+* [[data-url]]
 Masinter, L., _The "data" URL scheme_, RFC 2397, DOI 10.17487/RFC2397, August 1998, <https://www.rfc-editor.org/info/rfc2397>
 
 * [[uri]]
@@ -422,7 +422,7 @@ A glTF asset is represented by:
 * Binary files (`.bin`) containing geometry, animation, and other buffer-based data.
 * Image files (`.jpg`, `.png`) containing texture images.
 
-Binary and image resources **MAY** also be embedded directly in JSON using <<data-uri,Data URI>> or stored side-by-side with JSON in <<glb-file-format-specification,GLB>> container.
+Binary and image resources **MAY** also be embedded directly in JSON using <<uris-data-urls,Data URLs>> or stored side-by-side with JSON in <<glb-file-format-specification,GLB>> container.
 
 A valid glTF asset **MUST** specify its version.
 
@@ -544,10 +544,10 @@ The following steps are **RECOMMENDED** for all IRI-reference strings when loadi
 - Removing all leading and trailing characters with code points from `U+0000` to `U+001F` inclusive.
 - Removing all tab (`U+0009`), line feed (`U+000A`), and carriage return (`U+000D`) characters.
 
-[[uris-data]]
+[[uris-data-urls]]
 === Data URLs
 
-A resource **MAY** be embedded directly in glTF JSON by being represented as a URL with the `data:` scheme (<<data-uri,RFC 2397>>). The URL's `mediatype` field **MUST** match its content.
+A resource **MAY** be embedded directly in glTF JSON by being represented as a URL with the `data:` scheme (<<data-url,RFC 2397>>). The URL's `mediatype` field **MUST** match its content.
 
 [NOTE]
 .Implementation Note
@@ -997,7 +997,7 @@ A _buffer_ is arbitrary data stored as a binary blob. Buffers **MAY** contain an
 
 Binary blobs allow efficient creation of GPU buffers and textures since they require no additional parsing, except perhaps decompression.
 
-A buffer is defined by the `byteLength` and `uri` properties that specify the byte size of the buffer and the URI to the buffer data, respectively. glTF assets **MAY** have any number of buffers. Buffers are defined in the asset's `buffers` array.
+A buffer is defined by the `byteLength` and `uri` properties that specify the byte size of the buffer and the IRI-reference to the buffer data, respectively. glTF assets **MAY** have any number of buffers. Buffers are defined in the asset's `buffers` array.
 
 While there's no hard upper limit on a buffer's byte size, glTF assets **SHOULD NOT** use buffers bigger than 2^53^-1 bytes because some JSON parsers may be unable to parse the value of their `byteLength` property correctly. Buffers stored in a chunk of a <<glb-file-format-specification,GLBv2>> file have an implicit size limit, since the entire file may be at most 2^32^-4 bytes.
 
@@ -1019,7 +1019,7 @@ While there's no hard upper limit on a buffer's byte size, glTF assets **SHOULD 
 
 The byte length of the referenced resource **MUST** be greater than or equal to the buffer's `byteLength` property. Only the resource's byte range from zero (inclusive) to `byteLength` (exclusive) is considered referenced by the buffer object.
 
-Buffer data **MAY** alternatively be embedded in the glTF file via `data:` URIs. When a `data:` URI is used for buffer storage, its `mediatype` field **MUST** be set to `application/gltf-buffer` or `application/octet-stream`.
+Buffer data **MAY** alternatively be embedded in the glTF file via data URLs. When a data URL is used for buffer storage, its `mediatype` field **MUST** be set to `application/gltf-buffer` or `application/octet-stream`.
 
 If the `uri` property is undefined, the buffer's data is provided by other means, such as a GLBv2 chunk (see below) or additional extensions. In absence of data sources, the buffer's content is undefined and handling of such buffers is implementation-dependent.
 
@@ -2371,7 +2371,7 @@ An image object represents a reference to an image resource. The glTF 2.0 specif
 
 The image reference is given either by the `bufferView` or `uri` properties; exactly one of these two properties **MUST** be defined.
 
-If the `uri` property is defined, it either provides a URI (or IRI) to the external image file, or embeds the image in the URI using the Data URI scheme. When the Data URI scheme is used for image storage, the `mediatype` field of the URI **MUST** be set to the media type of the embedded image data. If the URI cannot be resolved, the image's content is undefined and handling of such image objects is implementation-dependent.
+If the `uri` property is defined, it either provides an IRI-reference to the external image file, or embeds the image using a data URL. When a data URL is used for image storage, the `mediatype` field of the URL **MUST** be set to the media type of the embedded image data. If the IRI-reference cannot be resolved, the image's content is undefined and handling of such image objects is implementation-dependent.
 
 If the `bufferView` property is defined, the image data is sourced from the referenced buffer view. The buffer view **MUST NOT** have its `byteStride` or `target` properties defined.
 
@@ -3357,7 +3357,7 @@ All glTF extensions required to load and/or render an asset **MUST** be listed i
 glTF provides two delivery options that can be used together:
 
 * glTF JSON points to external binary data (geometry, key frames, skins), and images.
-* glTF JSON embeds base64-encoded binary data, and images inline using data URIs.
+* glTF JSON embeds base64-encoded binary data, and images inline using data URLs.
 
 Hence, loading glTF files usually requires either separate requests to fetch all binary data, or extra space due to base64-encoding. Base64-encoding requires extra processing to decode and increases the file size (by ~33% for encoded resources). While transport-layer gzip mitigates the file size increase, decompression and decoding still add significant loading time.
 
