@@ -26,14 +26,17 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-An *opacity micromap* stores a coarse, pre-computed opacity classification for the surface of a triangle. The triangle is uniformly subdivided into *microtriangles*, and each microtriangle stores one of up to four opacity states (transparent, opaque, unknown-transparent, unknown-opaque). Ray-tracing hardware uses these states to accept or reject ray-triangle intersections without invoking an any-hit shader, which greatly reduces the cost of tracing rays through alpha-tested geometry such as foliage.
+An *opacity micromap* stores a coarse, pre-computed opacity classification for the surface of a triangle. The triangle is uniformly subdivided into *microtriangles*, and each microtriangle stores one of up to four opacity states (transparent, opaque, unknown-transparent, unknown-opaque). Ray-tracing hardware can use these states to accept or reject ray-triangle intersections without invoking an any-hit shader, which greatly reduces the cost of tracing rays through alpha-tested geometry such as foliage.
 
-This extension stores opacity micromaps in a glTF asset in the form of **build inputs**: the packed microtriangle states, one record per micromap triangle, and a usage summary. The stored layout is binary-compatible with the build inputs of Vulkan [`VK_KHR_opacity_micromap`](https://docs.vulkan.org/refpages/latest/refpages/source/VK_KHR_opacity_micromap.html) and of DirectX 12 opacity micromaps ([`D3D12_RAYTRACING_TIER_1_2`](https://microsoft.github.io/DirectX-Specs/d3d/Raytracing.html#opacity-micromaps)), so that the data can be passed to the graphics API without conversion. This extension does not store the opaque, implementation-specific micromap objects that a graphics API produces from these inputs.
+This extension stores opacity micromaps in a glTF asset in the form of **build inputs**: for efficiency, its layout closely matches the inputs of Vulkan's [`VK_KHR_opacity_micromap`](https://docs.vulkan.org/refpages/latest/refpages/source/VK_KHR_opacity_micromap.html) and DirectX 12's [opacity micromaps](https://microsoft.github.io/DirectX-Specs/d3d/Raytracing.html#opacity-micromaps) build APIs, but it does not store the opaque, implementation-specific micromap objects that a graphics API produces from these inputs.
 
-The extension consists of two parts:
+More specifically, this extension consists of two parts within the glTF object structure:
 
-1. An array of `micromaps` in the glTF root extension object. Each micromap references the buffer views that hold its data.
-2. A mesh primitive extension object that associates each triangle of the primitive with a micromap triangle, or with a uniform opacity state.
+1. [An array of `micromaps`](#extending-the-gltf-root) in the glTF root extension object. Each element of this array contains data for a number of *micromap triangles*:
+    * the index of a buffer view of [packed microtriangle states](#microtriangle-data),
+    * the index of a buffer view of [triangle records](#micromap-triangle-records),
+    * and counts of the used [subdivision levels](#subdivision-and-microtriangle-order) and [formats](#opacity-formats-and-states).
+2. [A mesh primitive extension object](#extending-mesh-primitives) that associates each triangle of the primitive with a micromap triangle, or with a uniform opacity state.
 
 How opacity states affect ray traversal (for example, when an any-hit shader is invoked for unknown states) is defined by the graphics API and is outside the scope of this extension.
 
@@ -71,7 +74,7 @@ Each micromap object has the following properties:
 | **usageFormats** | `integer[1-*]` | The opacity format of each usage entry. | :white_check_mark: Yes |
 | **name** | `string` | The user-defined name of this object. | No |
 
-The `usageCounts`, `usageLevels`, and `usageFormats` arrays together form a list of *usage entries*: entry `i` states that `usageCounts[i]` micromap triangles of the micromap have subdivision level `usageLevels[i]` and format `usageFormats[i]`. The following requirements apply:
+The `usageCounts`, `usageLevels`, and `usageFormats` arrays together form a list of *usage entries*: entry `i` states that `usageCounts[i]` micromap triangles of the micromap have [subdivision level](#subdivision-and-microtriangle-order) `usageLevels[i]` and [format](#opacity-formats-and-states) `usageFormats[i]`. The following requirements apply:
 
 - `usageCounts`, `usageLevels`, and `usageFormats` **MUST** have the same length.
 - Each element of `usageCounts` **MUST** be greater than or equal to `1`.
@@ -124,7 +127,7 @@ A primitive using this extension **MUST** have a `mode` of `4` (TRIANGLES).
 
 ### Base Triangles and Barycentric Coordinates
 
-For each triangle `t` of a mesh primitive, the *base triangle* vertices `v0`, `v1`, and `v2` are the vertices of that triangle in the order defined by the glTF 2.0 specification for the TRIANGLES topology: when the primitive defines `indices`, they are the vertices referenced by index elements `3t`, `3t + 1`, and `3t + 2`; otherwise, they are vertices `3t`, `3t + 1`, and `3t + 2`.
+For each triangle $t$ of a mesh primitive, the *base triangle* vertices $v_0$, $v_1$, and $v_2$ are the vertices of that triangle in the order defined by the glTF 2.0 specification for the TRIANGLES topology: when the primitive defines `indices`, they are the vertices referenced by index elements $3t$, $3t+1$, and $3t+2$; otherwise, they are vertices $3t$, $3t+1$, and $3t+2$.
 
 A point `p` on the base triangle has barycentric coordinates $(u, v)$ such that
 
@@ -135,13 +138,25 @@ $$
 All microtriangle positions and orderings in this extension are defined in terms of $(u, v)$.
 
 > [!NOTE]
-> This is the barycentric convention used by ray-tracing hit attributes in Vulkan and DirectX 12. Because the association between geometry and micromap data depends on the triangle order and on the order of the vertices within each triangle, any processing that reorders triangles, rotates the vertices of a triangle, or changes its winding invalidates the association. Such processing has to update `micromapIndices` (and the micromap data, when the vertex order changes) or remove this extension from the primitive.
+> This is the barycentric convention used by ray-tracing hit attributes in Vulkan and DirectX 12. Because the association between geometry and micromap data depends on the triangle order and on the order of the vertices within each triangle, any processing that reorders triangles, rotates the vertices of a triangle, or changes its winding invalidates the association. Such processing must update `micromapIndices` (and the micromap data, when the vertex order changes) or remove this extension from the primitive.
 
 ### Subdivision and Microtriangle Order
 
 A micromap triangle with subdivision level $L$ divides its base triangle into $4^L$ congruent microtriangles by recursively connecting edge midpoints. The subdivision level **MUST** be in the range `[0, 12]`.
 
-Microtriangles are numbered from `0` to $4^L - 1$ along a hierarchical space-filling curve. The index of the microtriangle containing barycentric coordinates $(u, v)$ is the value returned by the reference function in [Appendix A](#appendix-a-microtriangle-indexing).
+Microtriangles are numbered from $0$ to $4^L - 1$ along a hierarchical space-filling curve.
+
+<img src="./figures/micromap-subdivision.svg" alt="Microtriangle indices at subdivision levels 1 and 2"/>
+
+The diagram above shows the microtriangle indices for subdivision levels 1 and 2, as well as the indexing used to recursively construct the space-filling curve.
+
+To construct the microtriangle indices for level $L+1$ from the microtriangle indices for level $L$, replace each microtriangle in level 1 with a copy of the subdivided triangle for level $L$, concatenated in the following order:
+1. The sub-triangle nearest `v0`.
+2. The middle sub-triangle, with its child order flipped.
+3. The sub-triangle nearest `v1`.
+4. The sub-triangle nearest `v2`, with its child order flipped.
+
+The index of the microtriangle containing barycentric coordinates $(u, v)$ can also be computed by the reference function in [Appendix A](#appendix-a-microtriangle-indexing).
 
 ### Opacity Formats and States
 
@@ -223,7 +238,7 @@ For unsigned component types, special indices are stored as the two's-complement
 
 *This section is non-normative.*
 
-This extension does not define a relationship between the micromap and the primitive's material. Opacity micromaps are typically created by baking the alpha coverage of the material (its base color alpha, `alphaMode`, and `alphaCutoff`) using format `2`, so that microtriangles straddling an alpha edge are marked as unknown and resolved by the renderer's alpha test, and the result matches rendering without the extension.
+This extension does not define a relationship between the micromap and the primitive's material. Opacity micromaps are often created by baking the alpha coverage of the material (its base color alpha, `alphaMode`, and `alphaCutoff`) using format `2`, so that microtriangles straddling an alpha edge are marked as unknown and resolved by the renderer's alpha test, and the result matches rendering without the extension.
 
 Renderers that do not support this extension, including rasterizers, render the primitive using its material alone. A micromap that does not match the material's coverage therefore produces different results across renderers.
 
@@ -231,7 +246,7 @@ Data that changes the material's coverage after baking, such as `KHR_materials_v
 
 ## Interaction with Other Extensions
 
-When a primitive uses a mesh compression extension, such as `KHR_draco_mesh_compression` or `EXT_meshopt_compression`, triangles and their vertex order are defined by the decompressed data. Encoders that reorder triangles or rotate triangle vertices have to update the micromap association accordingly (see [Base Triangles and Barycentric Coordinates](#base-triangles-and-barycentric-coordinates)).
+When a primitive uses a mesh compression extension, such as `KHR_draco_mesh_compression` or `EXT_meshopt_compression`, triangles and their vertex order are defined by the decompressed data. Encoders that reorder triangles or rotate triangle vertices must update the micromap association accordingly (see [Base Triangles and Barycentric Coordinates](#base-triangles-and-barycentric-coordinates)).
 
 Because micromaps are defined in barycentric space, they remain associated with the same surface under skinning, morph targets, and instancing with `EXT_mesh_gpu_instancing`.
 
@@ -284,81 +299,56 @@ The `micromap` and `OpacityMicromapArray` fields refer to the micromap object th
 
 ## Appendix A: Microtriangle Indexing
 
-### Reference Function
+The following pseudocode function takes a barycentric coordinate $(u, v), u+v<1$ on a base triangle with subdivision level $L \leq 12$, and returns the index of the microtriangle containing that coordinate. `f32` denotes a 32-bit floating-point number, `u32` denotes a 32-bit unsigned integer, `exp2(x)` is $2^x$, `floor(x)` is $\lfloor x \rfloor$, `~` is bitwise NOT, `^` is bitwise XOR, `&` is bitwise AND, `|` is  bitwise OR, and `>>` is a bitwise shift right.
 
-The following function maps barycentric coordinates $(u, v)$ on a base triangle to the index of the microtriangle containing them, for subdivision level `level`. It is reproduced from the reference code of the Vulkan `VK_KHR_opacity_micromap` specification and is normative for this extension.
+```python
+function BarycentricsToSpaceFillingCurveIndex(u : f32, v : f32, L : u32) : u32
+    # Scale up coordinates so each microtriangle has a side length of 1.
+    fu : f32 = u * exp2(L)
+    fv : f32 = v * exp2(L)
 
-```cpp
-uint32_t BarycentricsToSpaceFillingCurveIndex(float u, float v, uint32_t level)
-{
-    u = clamp(u, 0.0f, 1.0f);
-    v = clamp(v, 0.0f, 1.0f);
+    # Assign integer coordinates iu, iv, and iw to the microtriangle so that:
+    iu : u32 = floor(fu)
+    iv : u32 = floor(fv)
+    # and so that either iu + iv + iw == 2^32 - 1, in which case the
+    # microtriangle has the same orientation as the one nearest v0,
+    # or iu + iv + iw == 2^32 - 2, in which case it has the other orientation.
+    iw : u32 = ~(iu + iv)
+    if ((fu - f32(iu)) + (fv - f32(iv)) >= 1.0)
+    {
+        iw = iw - 1
+    }
 
-    uint32_t iu, iv, iw;
+    # Construct two integers b0 and b1; counting from the least
+    # significant bit, b0 will contain the even bits of the result,
+    # while b1 will contain the odd bits of the result.
+    b0 : u32 = ~(iu ^ iw)
+    # Mask it to L bits:
+    b0       = b0 & (exp2(L) - 1)
 
-    // Quantize barycentric coordinates
-    float fu = u * (1u << level);
-    float fv = v * (1u << level);
+    temp1 : u32 = (iu ^ iv) & b0
+    temp2 : u32 = temp1
+    temp2       = temp2 ^ temp2 >> 1
+    temp2       = temp2 ^ temp2 >> 2
+    temp2       = temp2 ^ temp2 >> 4
+    temp2       = temp2 ^ temp2 >> 8
+    b1    : u32 = ((temp2 ^ iu) & ~b0) | temp1
 
-    iu = (uint32_t)fu;
-    iv = (uint32_t)fv;
+    # Interleave the bits of b0 and b1.
+    b0 = (b0 | (b0 << 8)) & 0x00ff00ff
+    b0 = (b0 | (b0 << 4)) & 0x0f0f0f0f
+    b0 = (b0 | (b0 << 2)) & 0x33333333
+    b0 = (b0 | (b0 << 1)) & 0x55555555
 
-    float uf = fu - float(iu);
-    float vf = fv - float(iv);
+    b1 = (b1 | (b1 << 8)) & 0x00ff00ff
+    b1 = (b1 | (b1 << 4)) & 0x0f0f0f0f
+    b1 = (b1 | (b1 << 2)) & 0x33333333
+    b1 = (b1 | (b1 << 1)) & 0x55555555
 
-    if (iu >= (1u << level)) iu = (1u << level) - 1u;
-    if (iv >= (1u << level)) iv = (1u << level) - 1u;
-
-    uint32_t iuv = iu + iv;
-
-    if (iuv >= (1u << level))
-        iu -= iuv - (1u << level) + 1u;
-
-    iw = ~(iu + iv);
-
-    if (uf + vf >= 1.0f && iuv < (1u << level) - 1u) --iw;
-
-    uint32_t b0 = ~(iu ^ iw);
-    b0 &= ((1u << level) - 1u);
-    uint32_t t = (iu ^ iv) & b0;
-
-    uint32_t f = t;
-    f ^= f >> 1u;
-    f ^= f >> 2u;
-    f ^= f >> 4u;
-    f ^= f >> 8u;
-    uint32_t b1 = ((f ^ iu) & ~b0) | t;
-
-    // Interleave bits
-    b0 = (b0 | (b0 << 8u)) & 0x00ff00ffu;
-    b0 = (b0 | (b0 << 4u)) & 0x0f0f0f0fu;
-    b0 = (b0 | (b0 << 2u)) & 0x33333333u;
-    b0 = (b0 | (b0 << 1u)) & 0x55555555u;
-    b1 = (b1 | (b1 << 8u)) & 0x00ff00ffu;
-    b1 = (b1 | (b1 << 4u)) & 0x0f0f0f0fu;
-    b1 = (b1 | (b1 << 2u)) & 0x33333333u;
-    b1 = (b1 | (b1 << 1u)) & 0x55555555u;
-
-    return b0 | (b1 << 1u);
-}
+    return b0 | (b1 << 1)
 ```
 
-### Illustration
-
-*This section is non-normative.*
-
-The resulting order follows a recursive space-filling curve. Each triangle is split into four sub-triangles, which are visited in the following order:
-
-1. The sub-triangle nearest `v0`.
-2. The middle sub-triangle, with its child order flipped.
-3. The sub-triangle nearest `v1`.
-4. The sub-triangle nearest `v2`, with its child order flipped.
-
-The figure below shows the resulting microtriangle indices for subdivision levels 1 (left) and 2 (right), with `v0` at the bottom left, `v1` at the bottom right, and `v2` at the top. Blue arrows show the default child order and red arrows show flipped child order.
-
-<img src="./figures/micromap-subdivision.svg" alt="Microtriangle indices at subdivision levels 1 and 2"/>
-
-## Appendix: Full Khronos Copyright Statement
+## Appendix B: Full Khronos Copyright Statement
 
 Copyright 2018-2026 The Khronos Group Inc.
 
