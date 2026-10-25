@@ -580,6 +580,12 @@ In the following example, a very small glTF buffer is directly embedded in glTF 
 
 Relative paths represent external resource locations relative to the location of the glTF asset.
 
+[NOTE]
+.Implementation Note
+====
+Resolving external resources is environment-dependent and as such is subject to implementation details of specific filesystems and/or network protocols used. In particular, there could be various restrictions on path lengths, allowed sequences of characters, and/or specific filenames. Additionally, some filesystems perform case-insensitive matching -- for example, `"image.png"`, `"Image.png"`, and `"IMAGE.PNG"` may or may not be resolved to the same resource depending on the environment.
+====
+
 Relative paths **SHOULD** adhere to the `ipath-noscheme` syntax as defined in <<iri,RFC 3987>>, Section 2.2.
 
 [NOTE]
