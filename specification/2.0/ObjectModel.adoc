@@ -121,7 +121,7 @@ This document defines a set of <<json-pointer,JSON pointers>> that glTF implemen
 
 2. Upon loading an asset, an implementation registers specific glTF object properties for the Object Model by resolving JSON pointers identified by templates provided by this document to JSON properties of the asset being loaded. Undefined glTF properties that have default values are considered defined with their default values.
 
-3. Each instance of empty curly braces (`{}`) in the pointer templates is replaced with the corresponding array element index for each glTF asset property matching the template.
+3. Each instance of empty curly brackets (`{}`) in the pointer templates is replaced with the corresponding array element index or opaque reference, and each instance of empty square brackets (`[]`) is replaced with the corresponding array element index, for each glTF asset property matching the template.
 
 4. Since JSON does not natively support vectors and matrices, the Object Model defines explicit types for all supported properties. JSON pointers to properties of these types are resolved into implementation-specific vectors and matrices, not raw JSON arrays. Pointers to individual vector or matrix components are not resolved.
 
@@ -162,6 +162,9 @@ a boolean type
 int::
 a signed integer type with width of at least 32 bits
 
+ref::
+an implementation-defined opaque reference
+
 [[core-pointers]]
 = Core Pointers
 
@@ -189,7 +192,7 @@ The following pointer templates represent mutable properties defined in the core
 | `/nodes/{}/scale`                                    | `float3`
 | `/nodes/{}/translation`                              | `float3`
 | `/nodes/{}/weights`                                  | `float[]`
-| `/nodes/{}/weights/{}`                               | `float`
+| `/nodes/{}/weights/[]`                               | `float`
 |====
 
 The `/nodes/{}/translation`, `/nodes/{}/rotation`, and `/nodes/{}/scale` pointers represent the current TRS properties of the node. If the static `matrix` property is defined on the node object in JSON, the corresponding rotation and scale pointers are undefined; the translation pointer is always defined.
@@ -202,16 +205,16 @@ Since the glTF 2.0 specification allows negative scale factors, TRS matrix decom
 This restriction does not apply to the translation because the translation vector directly corresponds to the first three values of the last column of the transformation matrix regardless of the decomposition process.
 ====
 
-The `/nodes/{}/weights` and `/nodes/{}/weights/{}` pointers represent the current morph target weights (as an array and as individual scalars respectively) of the mesh instantiated by the node regardless of whether the static `weights` property is defined on the node object in JSON. If the node instantiates no mesh or if the mesh has no morph targets, these pointers are undefined.
+The `/nodes/{}/weights` and `/nodes/{}/weights/[]` pointers represent the current morph target weights (as an array and as individual scalars respectively) of the mesh instantiated by the node regardless of whether the static `weights` property is defined on the node object in JSON. If the node instantiates no mesh or if the mesh has no morph targets, these pointers are undefined.
 
 [NOTE]
 .Note
 ====
 As in the core glTF 2.0 Specification, lengths of the `/nodes/{}/weights` arrays match the number of the associated morph targets.
 
-If a mesh defines default morph target weights (via its own `weights` JSON property), they are used as the `/nodes/{}/weights` and `/nodes/{}/weights/{}` default values for nodes that instantiate that mesh.
+If a mesh defines default morph target weights (via its own `weights` JSON property), they are used as the `/nodes/{}/weights` and `/nodes/{}/weights/[]` default values for nodes that instantiate that mesh.
 
-If a mesh does not define default morph target weights, the `/nodes/{}/weights` and `/nodes/{}/weights/{}` default values are all zeros for nodes that instantiate that mesh.
+If a mesh does not define default morph target weights, the `/nodes/{}/weights` and `/nodes/{}/weights/[]` default values are all zeros for nodes that instantiate that mesh.
 ====
 
 Additionally, the following pointer templates represent read-only runtime properties.
@@ -220,37 +223,45 @@ Additionally, the following pointer templates represent read-only runtime proper
 |====
 | Pointer                             |  Type      | Comment
 | `/animations.length`                | `int`      | Number of animations
+| `/animations/{}`                    | `ref`      | Reference to the animation
 | `/cameras.length`                   | `int`      | Number of cameras
+| `/cameras/{}`                       | `ref`      | Reference to the camera
 | `/materials.length`                 | `int`      | Number of materials
+| `/materials/{}`                     | `ref`      | Reference to the material
 | `/materials/{}/doubleSided`         | `bool`     | Whether the material is double sided
 | `/meshes.length`                    | `int`      | Number of meshes
-| `/meshes/{}/primitives.length`      | `int`      | Number of primitives
-| `/meshes/{}/primitives/{}/material` | `int`      | Index of the material
+| `/meshes/{}`                        | `ref`      | Reference to the mesh
+| `/meshes/{}/primitives.length`      | `int`      | Number of mesh primitives
+| `/meshes/{}/primitives/{}`          | `ref`      | Reference to the mesh primitive
+| `/meshes/{}/primitives/{}/material` | `ref`      | Reference to the material
 | `/nodes.length`                     | `int`      | Number of nodes
-| `/nodes/{}/camera`                  | `int`      | Index of the camera
+| `/nodes/{}`                         | `ref`      | Reference to the node
+| `/nodes/{}/camera`                  | `ref`      | Reference to the camera
 | `/nodes/{}/children.length`         | `int`      | Number of children nodes
-| `/nodes/{}/children/{}`             | `int`      | Index of the child node
+| `/nodes/{}/children/[]`             | `ref`      | Reference to the child node
 | `/nodes/{}/globalMatrix`            | `float4x4` | Global transformation matrix of a node
 | `/nodes/{}/matrix`                  | `float4x4` | Local transformation matrix of a node
-| `/nodes/{}/mesh`                    | `int`      | Index of the mesh
-| `/nodes/{}/parent`                  | `int`      | Index of the parent node
-| `/nodes/{}/skin`                    | `int`      | Index of the skin
+| `/nodes/{}/mesh`                    | `ref`      | Reference to the mesh
+| `/nodes/{}/parent`                  | `ref`      | Reference to the parent node
+| `/nodes/{}/skin`                    | `ref`      | Reference to the skin
 | `/nodes/{}/weights.length`          | `int`      | Number of the instantiated mesh's morph targets
-| `/scene`                            | `int`      | Index of the scene
+| `/scene`                            | `ref`      | Reference to the scene
 | `/scenes.length`                    | `int`      | Number of scenes
+| `/scenes/{}`                        | `ref`      | Reference to the scene
 | `/scenes/{}/nodes.length`           | `int`      | Number of root nodes
-| `/scenes/{}/nodes/{}`               | `int`      | Index of the root node
+| `/scenes/{}/nodes/[]`               | `ref`      | Reference to the root node
 | `/skins.length`                     | `int`      | Number of skins
+| `/skins/{}`                         | `ref`      | Reference to the skin
 | `/skins/{}/joints.length`           | `int`      | Number of joints
-| `/skins/{}/joints/{}`               | `int`      | Index of the joint node
-| `/skins/{}/skeleton`                | `int`      | Index of the skeleton
+| `/skins/{}/joints/[]`               | `ref`      | Reference to the joint node
+| `/skins/{}/skeleton`                | `ref`      | Reference to the skeleton node
 |====
 
 All pointers named `*.length` return zero if the corresponding array is not defined.
 
 The `/nodes/{}/matrix` and `/nodes/{}/globalMatrix` pointers represent the node's effective transformation matrices, i.e., the runtime state, regardless of whether the static `matrix` property is used in JSON.
 
-The `/nodes/{}/parent` pointer represents the node's parent, i.e., the index of the node that has the current node listed in its `children` array. If the current node is a root node, this pointer is undefined.
+The `/nodes/{}/parent` pointer represents the node's parent, i.e., the reference to the node that has the current node listed in its `children` array. If the current node is a root node, this pointer is undefined.
 
 [[extension-pointers]]
 = Extension Pointers
@@ -299,7 +310,8 @@ Additional read-only properties
 |====
 | Pointer                                          |  Type | Comment
 | `/extensions/KHR_lights_punctual/lights.length`  | `int` | Number of punctual lights
-| `/nodes/{}/extensions/KHR_lights_punctual/light` | `int` | Index of the light
+| `/extensions/KHR_lights_punctual/lights/{}`      | `ref` | Reference to the punctual light
+| `/nodes/{}/extensions/KHR_lights_punctual/light` | `ref` | Reference to the punctual light
 |====
 
 == KHR_materials_anisotropy
@@ -477,6 +489,30 @@ Additional read-only properties
 | `/materials/{}/extensions/KHR_materials_volume/thicknessTexture/extensions/KHR_texture_transform/scale`    | `float2`
 |====
 
+== KHR_node_hoverability
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                |  Type
+| `/nodes/{}/extensions/KHR_node_hoverability/hoverable` | `bool`
+|====
+
+== KHR_node_selectability
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                                  |  Type
+| `/nodes/{}/extensions/KHR_node_selectability/selectable` | `bool`
+|====
+
+== KHR_node_visibility
+
+[options="header",cols="50%,15%"]
+|====
+| Pointer                                            |  Type
+| `/nodes/{}/extensions/KHR_node_visibility/visible` | `bool`
+|====
+
 == EXT_lights_ies
 
 [options="header",cols="50%,15%"]
@@ -490,8 +526,10 @@ Additional read-only properties
 
 [options="header",cols="50%,15%,35%"]
 |====
-| Pointer                                    |  Type | Comment
-| `/extensions/EXT_lights_ies/lights.length` | `int` | Number of IES light profiles
+| Pointer                                     |  Type | Comment
+| `/extensions/EXT_lights_ies/lights.length`  | `int` | Number of IES light profiles
+| `/extensions/EXT_lights_ies/lights/{}`      | `ref` | Reference to the IES light profile
+| `/nodes/{}/extensions/EXT_lights_ies/light` | `ref` | Reference to the IES light profile
 |====
 
 == EXT_lights_image_based
@@ -507,8 +545,10 @@ Additional read-only properties
 
 [options="header",cols="50%,15%,35%"]
 |====
-| Pointer                                            |  Type | Comment
-| `/extensions/EXT_lights_image_based/lights.length` | `int` | Number of image-based lights
+| Pointer                                              |  Type | Comment
+| `/extensions/EXT_lights_image_based/lights.length`   | `int` | Number of image-based lights
+| `/extensions/EXT_lights_image_based/lights/{}`       | `ref` | Reference to the image-based light
+| `/scenes/{}/extensions/EXT_lights_image_based/light` | `ref` | Reference to the image-based light
 |====
 
 == ADOBE_materials_clearcoat_specular
