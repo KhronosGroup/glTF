@@ -317,7 +317,7 @@ The `micromap` and `OpacityMicromapArray` fields refer to the micromap object th
 
 The following pseudocode function takes barycentric coordinates $(u, v)$ on a base triangle ($u \ge 0, v \ge 0, u+v \le 1$) and a subdivision level $L \leq 12$, and returns the index of the microtriangle containing that point, as defined in [Subdivision and Microtriangle Order](#subdivision-and-microtriangle-order). It produces the same results as the reference code of the Vulkan [`VK_KHR_opacity_micromap`](https://docs.vulkan.org/refpages/latest/refpages/source/VK_KHR_opacity_micromap.html) extension. For points on an edge shared by two microtriangles, the function returns one of them.
 
-`f32` denotes a 32-bit floating-point number and `u32` denotes a 32-bit unsigned integer; all `u32` arithmetic wraps modulo $2^{32}$. `exp2(x)` is $2^x$, `floor(x)` is $\lfloor x \rfloor$, `~` is bitwise NOT, `^` is bitwise XOR, `&` is bitwise AND, `|` is bitwise OR, and `<<` and `>>` are bitwise shifts left and right respectively.
+`f32` denotes a 32-bit floating-point number and `u32` denotes a 32-bit unsigned integer; all `u32` arithmetic wraps modulo $2^{32}$. `floor(x)` is $\lfloor x \rfloor$, `~` is bitwise NOT, `^` is bitwise XOR, `&` is bitwise AND, `|` is bitwise OR, and `<<` and `>>` are bitwise shifts left and right respectively.
 
 ```python
 function BarycentricsToSpaceFillingCurveIndex(u : f32, v : f32, L : u32) : u32
