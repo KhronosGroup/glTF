@@ -319,38 +319,39 @@ The following pseudocode function takes barycentric coordinates $(u, v)$ on a ba
 
 `f32` denotes a 32-bit floating-point number and `u32` denotes a 32-bit unsigned integer; all `u32` arithmetic wraps modulo $2^{32}$. `floor(x)` is $\lfloor x \rfloor$, `~` is bitwise NOT, `^` is bitwise XOR, `&` is bitwise AND, `|` is bitwise OR, and `<<` and `>>` are bitwise shifts left and right respectively.
 
-```python
+```typescript
 function BarycentricsToSpaceFillingCurveIndex(u : f32, v : f32, L : u32) : u32
-    # n is the number of microtriangles along each edge.
+{
+    // n is the number of microtriangles along each edge.
     n : u32 = 1 << L
 
-    # Scale up coordinates so each microtriangle has a side length of 1.
+    // Scale up coordinates so each microtriangle has a side length of 1.
     fu : f32 = u * n
     fv : f32 = v * n
 
-    # Assign integer coordinates iu and iv to the microtriangle,
-    # keeping them inside the triangle.
+    // Assign integer coordinates iu and iv to the microtriangle,
+    // keeping them inside the triangle.
     iu : u32 = floor(fu)
     iv : u32 = floor(fv)
-    # Handle the cases at (u, v) == (1, 0) and (0, 1).
+    // Handle the cases at (u, v) == (1, 0) and (0, 1).
     if (iu >= n) { iu = n - 1 }
     if (iv >= n) { iv = n - 1 }
-    # Handle the u + v == 1 edge.
+    // Handle the u + v == 1 edge.
     iuv : u32 = iu + iv
     if (iuv >= n) { iu = (n - 1) - iv }
 
-    # Assign iw so that either iu + iv + iw == 2^32 - 1, in which case the
-    # microtriangle has the same orientation as the one nearest v0,
-    # or iu + iv + iw == 2^32 - 2, in which case it has the other orientation.
+    // Assign iw so that either iu + iv + iw == 2^32 - 1, in which case the
+    // microtriangle has the same orientation as the one nearest v0,
+    // or iu + iv + iw == 2^32 - 2, in which case it has the other orientation.
     iw : u32 = ~(iu + iv)
-    if (((fu - f32(iu)) + (fv - f32(iv)) >= 1.0) and iuv < n - 1)
+    if (((fu - f32(iu)) + (fv - f32(iv)) >= 1.0) && iuv < n - 1)
     {
         iw = iw - 1
     }
 
-    # Construct two integers b0 and b1; counting from the least
-    # significant bit, b0 will contain the even bits of the result,
-    # while b1 will contain the odd bits of the result.
+    // Construct two integers b0 and b1; counting from the least
+    // significant bit, b0 will contain the even bits of the result,
+    // while b1 will contain the odd bits of the result.
     b0 : u32 = (~(iu ^ iw)) & (n - 1)
 
     temp1 : u32 = (iu ^ iv) & b0
@@ -361,7 +362,7 @@ function BarycentricsToSpaceFillingCurveIndex(u : f32, v : f32, L : u32) : u32
     temp2       = temp2 ^ (temp2 >> 8)
     b1    : u32 = ((temp2 ^ iu) & ~b0) | temp1
 
-    # Interleave the bits of b0 and b1.
+    // Interleave the bits of b0 and b1.
     b0 = (b0 | (b0 << 8)) & 0x00ff00ff
     b0 = (b0 | (b0 << 4)) & 0x0f0f0f0f
     b0 = (b0 | (b0 << 2)) & 0x33333333
@@ -373,6 +374,7 @@ function BarycentricsToSpaceFillingCurveIndex(u : f32, v : f32, L : u32) : u32
     b1 = (b1 | (b1 << 1)) & 0x55555555
 
     return b0 | (b1 << 1)
+}
 ```
 
 ## Appendix B: Full Khronos Copyright Statement
