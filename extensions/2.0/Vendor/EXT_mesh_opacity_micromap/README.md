@@ -315,37 +315,38 @@ The `micromap` and `OpacityMicromapArray` fields refer to the micromap object th
 
 *This section is non-normative.*
 
-The following pseudocode function takes barycentric coordinates $(u, v)$ on a base triangle and a subdivision level $L \leq 12$, and returns the index of the microtriangle containing that point, as defined in [Subdivision and Microtriangle Order](#subdivision-and-microtriangle-order). It is equivalent to the reference code of the Vulkan [`VK_KHR_opacity_micromap`](https://docs.vulkan.org/refpages/latest/refpages/source/VK_KHR_opacity_micromap.html) extension. Inputs slightly outside the triangle, for example due to floating-point error, are mapped to a microtriangle on its boundary; for points on an edge shared by two microtriangles, the function returns one of them.
+The following pseudocode function takes barycentric coordinates $(u, v)$ on a base triangle ($u \ge 0, v \ge 0, u+v \le 1$) and a subdivision level $L \leq 12$, and returns the index of the microtriangle containing that point, as defined in [Subdivision and Microtriangle Order](#subdivision-and-microtriangle-order). It is equivalent to the reference code of the Vulkan [`VK_KHR_opacity_micromap`](https://docs.vulkan.org/refpages/latest/refpages/source/VK_KHR_opacity_micromap.html) extension. Inputs slightly outside the triangle, for example due to floating-point error, are mapped to a microtriangle on its boundary; for points on an edge shared by two microtriangles, the function returns one of them.
 
-`f32` denotes a 32-bit floating-point number and `u32` denotes a 32-bit unsigned integer; all `u32` arithmetic wraps modulo $2^{32}$. `clamp(x, lo, hi)` is $\min(\max(x, lo), hi)$, `exp2(x)` is $2^x$, `floor(x)` is $\lfloor x \rfloor$, `~` is bitwise NOT, `^` is bitwise XOR, `&` is bitwise AND, `|` is bitwise OR, and `<<` and `>>` are bitwise shifts left and right.
+`f32` denotes a 32-bit floating-point number and `u32` denotes a 32-bit unsigned integer; all `u32` arithmetic wraps modulo $2^{32}$. `exp2(x)` is $2^x$, `floor(x)` is $\lfloor x \rfloor$, `~` is bitwise NOT, `^` is bitwise XOR, `&` is bitwise AND, `|` is bitwise OR, and `<<` and `>>` are bitwise shifts left and right respectively.
 
 ```python
 function BarycentricsToSpaceFillingCurveIndex(u : f32, v : f32, L : u32) : u32
     # n is the number of microtriangles along each edge.
     n : u32 = 1 << L
 
-    u = clamp(u, 0.0, 1.0)
-    v = clamp(v, 0.0, 1.0)
-
     # Scale up coordinates so each microtriangle has a side length of 1.
-    fu : f32 = u * exp2(L)
-    fv : f32 = v * exp2(L)
+    fu : f32 = u * n
+    fv : f32 = v * n
 
     # Assign integer coordinates iu and iv to the microtriangle,
     # keeping them inside the triangle.
     iu : u32 = floor(fu)
     iv : u32 = floor(fv)
-    upperHalf : bool = (fu - f32(iu)) + (fv - f32(iv)) >= 1.0
+    # Handle the cases at (u, v) == (1, 0) and (0, 1).
     if (iu >= n) { iu = n - 1 }
     if (iv >= n) { iv = n - 1 }
+    # Handle the u + v == 1 edge.
     iuv : u32 = iu + iv
-    if (iuv >= n) { iu = iu - (iuv - n + 1) }
+    if (iuv >= n) { iu = (n - 1) - iv }
 
     # Assign iw so that either iu + iv + iw == 2^32 - 1, in which case the
     # microtriangle has the same orientation as the one nearest v0,
     # or iu + iv + iw == 2^32 - 2, in which case it has the other orientation.
     iw : u32 = ~(iu + iv)
-    if (upperHalf and iuv < n - 1) { iw = iw - 1 }
+    if (((fu - f32(iu)) + (fv - f32(iv)) >= 1.0) and iuv < n - 1)
+    {
+        iw = iw - 1
+    }
 
     # Construct two integers b0 and b1; counting from the least
     # significant bit, b0 will contain the even bits of the result,
