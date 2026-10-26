@@ -14,7 +14,7 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 - Martin-Karl Lefrançois, NVIDIA, [@mklefrancois](https://github.com/mklefrancois)
 
 Copyright 2018-2026 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
-See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
+See [Appendix B](#appendix-b-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
 
@@ -35,7 +35,7 @@ More specifically, this extension consists of two parts within the glTF object s
 1. [An array of `micromaps`](#extending-the-gltf-root) in the glTF root extension object. Each element of this array contains data for a number of *micromap triangles*:
     * the index of a buffer view of [packed microtriangle states](#microtriangle-data),
     * the index of a buffer view of [triangle records](#micromap-triangle-records),
-    * and counts of the used [subdivision levels](#subdivision-and-microtriangle-order) and [formats](#opacity-formats-and-states).
+    * and the number of micromap triangles for each combination of [subdivision level](#subdivision-and-microtriangle-order) and [format](#opacity-formats-and-states).
 2. [A mesh primitive extension object](#extending-mesh-primitives) that associates each triangle of the primitive with a micromap triangle, or with a uniform opacity state.
 
 How opacity states affect ray traversal (for example, when an any-hit shader is invoked for unknown states) is defined by the graphics API and is outside the scope of this extension.
@@ -144,19 +144,33 @@ All microtriangle positions and orderings in this extension are defined in terms
 
 A micromap triangle with subdivision level $L$ divides its base triangle into $4^L$ congruent microtriangles by recursively connecting edge midpoints. The subdivision level **MUST** be in the range `[0, 12]`.
 
-Microtriangles are numbered from $0$ to $4^L - 1$ along a hierarchical space-filling curve.
+Microtriangles are numbered from $0$ to $4^L - 1$ along a hierarchical space-filling curve, defined recursively as follows.
+
+For a triangle with vertices $(a_0, a_1, a_2)$ and $L = 0$, the triangle itself is the only microtriangle and has index $0$. For $L \geq 1$, let $m_{01}$, $m_{12}$, and $m_{02}$ be the midpoints of the edges $a_0 a_1$, $a_1 a_2$, and $a_0 a_2$. Connecting these midpoints splits the triangle into four sub-triangles $k = 0, 1, 2, 3$, each with the vertex order given in the following table:
+
+| $k$ | Sub-triangle | $(a_0', a_1', a_2')$ |
+|-----|--------------|----------------------|
+| $0$ | Nearest $a_0$ | $(a_0, m_{01}, m_{02})$ |
+| $1$ | Middle | $(m_{02}, m_{12}, m_{01})$ |
+| $2$ | Nearest $a_1$ | $(m_{01}, a_1, m_{12})$ |
+| $3$ | Nearest $a_2$ | $(m_{12}, m_{02}, a_2)$ |
+
+A microtriangle that lies in sub-triangle $k$ and has index $j$ within that sub-triangle at subdivision level $L - 1$, using the vertex order $(a_0', a_1', a_2')$, has index $k \cdot 4^{L-1} + j$ in the triangle.
+
+The microtriangle indices of a micromap triangle are those obtained by applying this definition to its base triangle $(v_0, v_1, v_2)$ at its subdivision level.
+
+The figure below illustrates this rule for a base triangle. Each path starts at the first vertex $a_0'$ of a sub-triangle and visits its vertices in order. Sub-triangles $1$ and $3$ have the opposite winding from their parent.
+
+<img src="./figures/micromap-split-rule.svg" alt="Vertex order of the four sub-triangles of a subdivided triangle"/>
+
+The figure below shows the resulting microtriangle indices for subdivision levels 1 (left) and 2 (right), with $v_0$ at the bottom left, $v_1$ at the bottom right, and $v_2$ at the top. Blue arrows show the default child order and red arrows show flipped child order.
 
 <img src="./figures/micromap-subdivision.svg" alt="Microtriangle indices at subdivision levels 1 and 2"/>
 
-The diagram above shows the microtriangle indices for subdivision levels 1 and 2, as well as the indexing used to recursively construct the space-filling curve.
+[Appendix A](#appendix-a-microtriangle-indexing) gives a function that computes the index of the microtriangle containing barycentric coordinates $(u, v)$ directly.
 
-To construct the microtriangle indices for level $L+1$ from the microtriangle indices for level $L$, replace each microtriangle in level 1 with a copy of the subdivided triangle for level $L$, concatenated in the following order:
-1. The sub-triangle nearest `v0`.
-2. The middle sub-triangle, with its child order flipped.
-3. The sub-triangle nearest `v1`.
-4. The sub-triangle nearest `v2`, with its child order flipped.
-
-The index of the microtriangle containing barycentric coordinates $(u, v)$ can also be computed by the reference function in [Appendix A](#appendix-a-microtriangle-indexing).
+> [!NOTE]
+> This is the same microtriangle order as the one used by `VK_KHR_opacity_micromap` and by DirectX 12 opacity micromaps.
 
 ### Opacity Formats and States
 
@@ -299,39 +313,51 @@ The `micromap` and `OpacityMicromapArray` fields refer to the micromap object th
 
 ## Appendix A: Microtriangle Indexing
 
-The following pseudocode function takes a barycentric coordinate $(u, v), u+v<1$ on a base triangle with subdivision level $L \leq 12$, and returns the index of the microtriangle containing that coordinate. `f32` denotes a 32-bit floating-point number, `u32` denotes a 32-bit unsigned integer, `exp2(x)` is $2^x$, `floor(x)` is $\lfloor x \rfloor$, `~` is bitwise NOT, `^` is bitwise XOR, `&` is bitwise AND, `|` is  bitwise OR, and `>>` is a bitwise shift right.
+*This section is non-normative.*
+
+The following pseudocode function takes barycentric coordinates $(u, v)$ on a base triangle and a subdivision level $L \leq 12$, and returns the index of the microtriangle containing that point, as defined in [Subdivision and Microtriangle Order](#subdivision-and-microtriangle-order). It is equivalent to the reference code of the Vulkan [`VK_KHR_opacity_micromap`](https://docs.vulkan.org/refpages/latest/refpages/source/VK_KHR_opacity_micromap.html) extension. Inputs slightly outside the triangle, for example due to floating-point error, are mapped to a microtriangle on its boundary; for points on an edge shared by two microtriangles, the function returns one of them.
+
+`f32` denotes a 32-bit floating-point number and `u32` denotes a 32-bit unsigned integer; all `u32` arithmetic wraps modulo $2^{32}$. `clamp(x, lo, hi)` is $\min(\max(x, lo), hi)$, `exp2(x)` is $2^x$, `floor(x)` is $\lfloor x \rfloor$, `~` is bitwise NOT, `^` is bitwise XOR, `&` is bitwise AND, `|` is bitwise OR, and `<<` and `>>` are bitwise shifts left and right.
 
 ```python
 function BarycentricsToSpaceFillingCurveIndex(u : f32, v : f32, L : u32) : u32
+    # n is the number of microtriangles along each edge.
+    n : u32 = 1 << L
+
+    u = clamp(u, 0.0, 1.0)
+    v = clamp(v, 0.0, 1.0)
+
     # Scale up coordinates so each microtriangle has a side length of 1.
     fu : f32 = u * exp2(L)
     fv : f32 = v * exp2(L)
 
-    # Assign integer coordinates iu, iv, and iw to the microtriangle so that:
+    # Assign integer coordinates iu and iv to the microtriangle,
+    # keeping them inside the triangle.
     iu : u32 = floor(fu)
     iv : u32 = floor(fv)
-    # and so that either iu + iv + iw == 2^32 - 1, in which case the
+    upperHalf : bool = (fu - f32(iu)) + (fv - f32(iv)) >= 1.0
+    if (iu >= n) { iu = n - 1 }
+    if (iv >= n) { iv = n - 1 }
+    iuv : u32 = iu + iv
+    if (iuv >= n) { iu = iu - (iuv - n + 1) }
+
+    # Assign iw so that either iu + iv + iw == 2^32 - 1, in which case the
     # microtriangle has the same orientation as the one nearest v0,
     # or iu + iv + iw == 2^32 - 2, in which case it has the other orientation.
     iw : u32 = ~(iu + iv)
-    if ((fu - f32(iu)) + (fv - f32(iv)) >= 1.0)
-    {
-        iw = iw - 1
-    }
+    if (upperHalf and iuv < n - 1) { iw = iw - 1 }
 
     # Construct two integers b0 and b1; counting from the least
     # significant bit, b0 will contain the even bits of the result,
     # while b1 will contain the odd bits of the result.
-    b0 : u32 = ~(iu ^ iw)
-    # Mask it to L bits:
-    b0       = b0 & (exp2(L) - 1)
+    b0 : u32 = (~(iu ^ iw)) & (n - 1)
 
     temp1 : u32 = (iu ^ iv) & b0
     temp2 : u32 = temp1
-    temp2       = temp2 ^ temp2 >> 1
-    temp2       = temp2 ^ temp2 >> 2
-    temp2       = temp2 ^ temp2 >> 4
-    temp2       = temp2 ^ temp2 >> 8
+    temp2       = temp2 ^ (temp2 >> 1)
+    temp2       = temp2 ^ (temp2 >> 2)
+    temp2       = temp2 ^ (temp2 >> 4)
+    temp2       = temp2 ^ (temp2 >> 8)
     b1    : u32 = ((temp2 ^ iu) & ~b0) | temp1
 
     # Interleave the bits of b0 and b1.

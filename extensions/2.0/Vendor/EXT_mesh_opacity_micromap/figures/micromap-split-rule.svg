@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 440 390" width="440" height="390" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="440" height="390" fill="white"/>
+  <polygon points="60.0,300.0 380.0,300.0 220.0,22.9" fill="none" stroke="#555555" stroke-width="1.5"/>
+  <polygon points="220.0,300.0 300.0,161.4 140.0,161.4" fill="none" stroke="#555555" stroke-width="1"/>
+  <polyline points="96.0,279.2 184.0,279.2 140.0,203.0" fill="none" stroke="#1565C0" stroke-width="1.6"/>
+  <polygon points="140.0,203.0 148.0,208.8 141.0,212.8" fill="#1565C0"/>
+  <circle cx="96.0" cy="279.2" r="3" fill="#1565C0"/>
+  <text x="140.0" y="258.8" text-anchor="middle" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 15px; font-weight: bold;">0</text>
+  <polyline points="176.0,182.2 264.0,182.2 220.0,258.4" fill="none" stroke="#C62828" stroke-width="1.6"/>
+  <polygon points="220.0,258.4 221.0,248.6 228.0,252.7" fill="#C62828"/>
+  <circle cx="176.0" cy="182.2" r="3" fill="#C62828"/>
+  <text x="220.0" y="212.6" text-anchor="middle" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 15px; font-weight: bold;">1</text>
+  <polyline points="256.0,279.2 344.0,279.2 300.0,203.0" fill="none" stroke="#1565C0" stroke-width="1.6"/>
+  <polygon points="300.0,203.0 308.0,208.8 301.0,212.8" fill="#1565C0"/>
+  <circle cx="256.0" cy="279.2" r="3" fill="#1565C0"/>
+  <text x="300.0" y="258.8" text-anchor="middle" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 15px; font-weight: bold;">2</text>
+  <polyline points="264.0,140.7 176.0,140.7 220.0,64.4" fill="none" stroke="#C62828" stroke-width="1.6"/>
+  <polygon points="220.0,64.4 219.0,74.3 212.0,70.2" fill="#C62828"/>
+  <circle cx="264.0" cy="140.7" r="3" fill="#C62828"/>
+  <text x="220.0" y="120.2" text-anchor="middle" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 15px; font-weight: bold;">3</text>
+  <text x="41.4" y="318.0" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 14px;">v</text>
+  <text x="48.4" y="322.0" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 10px;">0</text>
+  <text x="386.0" y="318.0" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 14px;">v</text>
+  <text x="393.0" y="322.0" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 10px;">1</text>
+  <text x="213.7" y="14.9" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 14px;">v</text>
+  <text x="220.7" y="18.9" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 10px;">2</text>
+  <text x="208.6" y="322.0" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 14px;">m</text>
+  <text x="220.2" y="326.0" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 10px;">01</text>
+  <text x="310.0" y="161.4" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 14px;">m</text>
+  <text x="321.7" y="165.4" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 10px;">12</text>
+  <text x="107.1" y="161.4" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 14px;">m</text>
+  <text x="118.8" y="165.4" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 10px;">02</text>
+  <line x1="60" y1="355" x2="95" y2="355" stroke="#1565C0" stroke-width="1.6"/>
+  <polygon points="95.0,355.0 86.0,359.1 86.0,350.9" fill="#1565C0"/>
+  <text x="103" y="359" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 12px;">same winding as parent</text>
+  <line x1="250" y1="355" x2="285" y2="355" stroke="#C62828" stroke-width="1.6"/>
+  <polygon points="285.0,355.0 276.0,359.1 276.0,350.9" fill="#C62828"/>
+  <text x="293" y="359" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 12px;">flipped winding</text>
+  <text x="220" y="381" text-anchor="middle" style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 11px;">Each path starts at the sub-triangle's first vertex and visits its vertices in order.</text>
+</svg>
