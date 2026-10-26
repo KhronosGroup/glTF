@@ -185,9 +185,9 @@ The following pointer templates represent mutable properties defined in the core
 | `/materials/{}/pbrMetallicRoughness/baseColorFactor` | `float4`
 | `/materials/{}/pbrMetallicRoughness/metallicFactor`  | `float`
 | `/materials/{}/pbrMetallicRoughness/roughnessFactor` | `float`
-| `/nodes/{}/translation`                              | `float3`
 | `/nodes/{}/rotation`                                 | `float4`
 | `/nodes/{}/scale`                                    | `float3`
+| `/nodes/{}/translation`                              | `float3`
 | `/nodes/{}/weights`                                  | `float[]`
 | `/nodes/{}/weights/{}`                               | `float`
 |====
@@ -262,15 +262,15 @@ The following pointer templates represent mutable properties defined in glTF 2.0
 [options="header",cols="50%,15%"]
 |====
 | Pointer                                                                                                 |  Type
+| `/materials/{}/emissiveTexture/extensions/KHR_texture_transform/offset`                                 | `float2`
+| `/materials/{}/emissiveTexture/extensions/KHR_texture_transform/rotation`                               | `float`
+| `/materials/{}/emissiveTexture/extensions/KHR_texture_transform/scale`                                  | `float2`
 | `/materials/{}/normalTexture/extensions/KHR_texture_transform/offset`                                   | `float2`
 | `/materials/{}/normalTexture/extensions/KHR_texture_transform/rotation`                                 | `float`
 | `/materials/{}/normalTexture/extensions/KHR_texture_transform/scale`                                    | `float2`
 | `/materials/{}/occlusionTexture/extensions/KHR_texture_transform/offset`                                | `float2`
 | `/materials/{}/occlusionTexture/extensions/KHR_texture_transform/rotation`                              | `float`
 | `/materials/{}/occlusionTexture/extensions/KHR_texture_transform/scale`                                 | `float2`
-| `/materials/{}/emissiveTexture/extensions/KHR_texture_transform/offset`                                 | `float2`
-| `/materials/{}/emissiveTexture/extensions/KHR_texture_transform/rotation`                               | `float`
-| `/materials/{}/emissiveTexture/extensions/KHR_texture_transform/scale`                                  | `float2`
 | `/materials/{}/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/offset`           | `float2`
 | `/materials/{}/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/rotation`         | `float`
 | `/materials/{}/pbrMetallicRoughness/baseColorTexture/extensions/KHR_texture_transform/scale`            | `float2`
@@ -307,8 +307,8 @@ Additional read-only properties
 [options="header",cols="50%,15%"]
 |====
 | Pointer                                                                |  Type
-| `/materials/{}/extensions/KHR_materials_anisotropy/anisotropyStrength` | `float`
 | `/materials/{}/extensions/KHR_materials_anisotropy/anisotropyRotation` | `float`
+| `/materials/{}/extensions/KHR_materials_anisotropy/anisotropyStrength` | `float`
 |====
 
 === Interaction with KHR_texture_transform
@@ -327,8 +327,8 @@ Additional read-only properties
 |====
 | Pointer                                                                         |  Type
 | `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatFactor`              | `float`
-| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatRoughnessFactor`     | `float`
 | `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatNormalTexture/scale` | `float`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatRoughnessFactor`     | `float`
 |====
 
 === Interaction with KHR_texture_transform
@@ -336,15 +336,15 @@ Additional read-only properties
 [options="header",cols="50%,15%"]
 |====
 | Pointer                                                                                                                |  Type
-| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatTexture/extensions/KHR_texture_transform/offset`            | `float2`
-| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatTexture/extensions/KHR_texture_transform/rotation`          | `float`
-| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatTexture/extensions/KHR_texture_transform/scale`             | `float2`
-| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatRoughnessTexture/extensions/KHR_texture_transform/offset`   | `float2`
-| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatRoughnessTexture/extensions/KHR_texture_transform/rotation` | `float`
-| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatRoughnessTexture/extensions/KHR_texture_transform/scale`    | `float2`
 | `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatNormalTexture/extensions/KHR_texture_transform/offset`      | `float2`
 | `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatNormalTexture/extensions/KHR_texture_transform/rotation`    | `float`
 | `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatNormalTexture/extensions/KHR_texture_transform/scale`       | `float2`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatRoughnessTexture/extensions/KHR_texture_transform/offset`   | `float2`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatRoughnessTexture/extensions/KHR_texture_transform/rotation` | `float`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatRoughnessTexture/extensions/KHR_texture_transform/scale`    | `float2`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatTexture/extensions/KHR_texture_transform/offset`            | `float2`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatTexture/extensions/KHR_texture_transform/rotation`          | `float`
+| `/materials/{}/extensions/KHR_materials_clearcoat/clearcoatTexture/extensions/KHR_texture_transform/scale`             | `float2`
 |====
 
 == KHR_materials_dispersion
@@ -378,8 +378,8 @@ Additional read-only properties
 | Pointer                                                                          |  Type
 | `/materials/{}/extensions/KHR_materials_iridescence/iridescenceFactor`           | `float`
 | `/materials/{}/extensions/KHR_materials_iridescence/iridescenceIor`              | `float`
-| `/materials/{}/extensions/KHR_materials_iridescence/iridescenceThicknessMinimum` | `float`
 | `/materials/{}/extensions/KHR_materials_iridescence/iridescenceThicknessMaximum` | `float`
+| `/materials/{}/extensions/KHR_materials_iridescence/iridescenceThicknessMinimum` | `float`
 |====
 
 === Interaction with KHR_texture_transform
@@ -422,8 +422,8 @@ Additional read-only properties
 [options="header",cols="50%,15%"]
 |====
 | Pointer                                                               |  Type
-| `/materials/{}/extensions/KHR_materials_specular/specularFactor`      | `float`
 | `/materials/{}/extensions/KHR_materials_specular/specularColorFactor` | `float3`
+| `/materials/{}/extensions/KHR_materials_specular/specularFactor`      | `float`
 |====
 
 === Interaction with KHR_texture_transform
@@ -431,12 +431,12 @@ Additional read-only properties
 [options="header",cols="50%,15%"]
 |====
 | Pointer                                                                                                          |  Type
-| `/materials/{}/extensions/KHR_materials_specular/specularTexture/extensions/KHR_texture_transform/offset`        | `float2`
-| `/materials/{}/extensions/KHR_materials_specular/specularTexture/extensions/KHR_texture_transform/rotation`      | `float`
-| `/materials/{}/extensions/KHR_materials_specular/specularTexture/extensions/KHR_texture_transform/scale`         | `float2`
 | `/materials/{}/extensions/KHR_materials_specular/specularColorTexture/extensions/KHR_texture_transform/offset`   | `float2`
 | `/materials/{}/extensions/KHR_materials_specular/specularColorTexture/extensions/KHR_texture_transform/rotation` | `float`
 | `/materials/{}/extensions/KHR_materials_specular/specularColorTexture/extensions/KHR_texture_transform/scale`    | `float2`
+| `/materials/{}/extensions/KHR_materials_specular/specularTexture/extensions/KHR_texture_transform/offset`        | `float2`
+| `/materials/{}/extensions/KHR_materials_specular/specularTexture/extensions/KHR_texture_transform/rotation`      | `float`
+| `/materials/{}/extensions/KHR_materials_specular/specularTexture/extensions/KHR_texture_transform/scale`         | `float2`
 |====
 
 == KHR_materials_transmission
@@ -462,9 +462,9 @@ Additional read-only properties
 [options="header",cols="50%,15%"]
 |====
 | Pointer                                                             |  Type
-| `/materials/{}/extensions/KHR_materials_volume/thicknessFactor`     | `float`
-| `/materials/{}/extensions/KHR_materials_volume/attenuationDistance` | `float`
 | `/materials/{}/extensions/KHR_materials_volume/attenuationColor`    | `float3`
+| `/materials/{}/extensions/KHR_materials_volume/attenuationDistance` | `float`
+| `/materials/{}/extensions/KHR_materials_volume/thicknessFactor`     | `float`
 |====
 
 === Interaction with KHR_texture_transform
@@ -482,8 +482,8 @@ Additional read-only properties
 [options="header",cols="50%,15%"]
 |====
 | Pointer                                          |  Type
-| `/nodes/{}/extensions/EXT_lights_ies/multiplier` | `float`
 | `/nodes/{}/extensions/EXT_lights_ies/color`      | `float3`
+| `/nodes/{}/extensions/EXT_lights_ies/multiplier` | `float`
 |====
 
 Additional read-only properties
@@ -499,8 +499,8 @@ Additional read-only properties
 [options="header",cols="50%,15%"]
 |====
 | Pointer                                                  |  Type
-| `/extensions/EXT_lights_image_based/lights/{}/rotation`  | `float4`
 | `/extensions/EXT_lights_image_based/lights/{}/intensity` | `float`
+| `/extensions/EXT_lights_image_based/lights/{}/rotation`  | `float4`
 |====
 
 Additional read-only properties
