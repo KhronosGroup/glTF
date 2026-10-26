@@ -12,6 +12,7 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 - Arseny Kapoulkine, Independent, [@zeuxcg](https://zeux.io/)
 - Pyarelal Knowles, NVIDIA, [@pknowlesnv](https://github.com/pknowlesnv)
 - Martin-Karl Lefrançois, NVIDIA, [@mklefrancois](https://github.com/mklefrancois)
+- Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
 
 Copyright 2018-2026 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix B](#appendix-b-full-khronos-copyright-statement) for full Khronos Copyright Statement.
