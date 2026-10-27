@@ -1,0 +1,22 @@
+{
+    "$id": "behavior.schema.json",
+    "title": "KHR_behavior glTF extension",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "nodes": {
+            "type": "array",
+            "items": {
+                "$ref": "behavior.node.schema.json"
+            }
+        },
+        "variables": {
+            "type": "array",
+            "items": {
+                "$ref": "behavior.variable.schema.json"
+            }
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
