@@ -15,7 +15,7 @@ all: $(TARGETS)
 # accurately reflect changes to wetzel that impact the output here.
 # Please manually upgrade the version as often as needed, without unlocking.
 
-WETZEL = npx wetzel@0.2.2
+WETZEL = npx wetzel@0.3.0-beta01
 SCHEMALINK = schema
 EMBEDSCHEMA = JsonSchemaReference.adoc
 

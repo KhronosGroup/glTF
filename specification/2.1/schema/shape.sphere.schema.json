@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "shape.sphere.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.1/specification/shape.sphere.schema.json",
     "title": "Sphere Shape",
     "type": "object",
     "description": "A sphere, centered at the origin in local space with a radius equal in all directions, with normals facing outwards.",

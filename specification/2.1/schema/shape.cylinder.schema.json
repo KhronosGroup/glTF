@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "shape.cylinder.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.1/specification/shape.cylinder.schema.json",
     "title": "Cylinder Shape",
     "type": "object",
     "description": "A cylinder, centered at the origin in local space with potentially different radii at each end, equivalent to the convex hull of two circles in the X/Z plane positioned along the Y axis at a specified distance, with the top cap normal facing along the +Y axis, the bottom cap normal facing along the -Y axis, and the side normals facing outwards along the X/Z plane.",

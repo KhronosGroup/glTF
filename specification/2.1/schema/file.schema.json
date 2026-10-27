@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "file.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.1/specification/file.schema.json",
     "title": "File Reference",
     "type": "object",
     "description": "A reference to an external file. Files **MAY** be referenced by a URI (or IRI) or a buffer view index.",

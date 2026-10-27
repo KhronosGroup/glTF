@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "shape.capsule.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.1/specification/shape.capsule.schema.json",
     "title": "Capsule Shape",
     "type": "object",
     "description": "A capsule, centered at the origin in local space with potentially different radii at each end, equivalent to the convex hull of two spheres located along the Y axis (in local space) at a specified distance, with normals facing outwards.",

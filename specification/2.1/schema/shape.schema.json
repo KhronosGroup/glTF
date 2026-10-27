@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "shape.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.1/specification/shape.schema.json",
     "title": "Shape Resource",
     "type": "object",
     "description": "A generic, re-usable shape definition with no inherent meaning attached to it.",

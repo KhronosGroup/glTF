@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "shape.mesh.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.1/specification/shape.mesh.schema.json",
     "title": "Generic Mesh Shape",
     "type": "object",
     "description": "A generic triangular mesh shape, which may be either concave or convex.",

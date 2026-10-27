@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "externalAsset.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.1/specification/externalAsset.schema.json",
     "title": "External Asset",
     "type": "object",
     "description": "An external asset that references a file in the `files` array and may be instantiated by any node.",

@@ -1,10 +1,10 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "asset.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.1/specification/asset.schema.json",
     "title": "Asset",
     "type": "object",
     "description": "Metadata about the glTF asset.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "copyright": {
             "type": "string",

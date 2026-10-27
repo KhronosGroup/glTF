@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "shape.plane.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.1/specification/shape.plane.schema.json",
     "title": "Plane Shape",
     "type": "object",
     "description": "A plane centered at the origin in local space, optionally with finite extents, with normal along the +Y axis in local space. The plane is one-sided.",

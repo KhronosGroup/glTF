@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "file.alias.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.1/specification/file.alias.schema.json",
     "title": "File Reference to External File Remap Alias",
     "type": "object",
     "description": "Used to alias files referenced within an external file to other paths by the parent.",

@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "boundingVolume.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.1/specification/boundingVolume.schema.json",
     "title": "Bounding Volume",
     "type": "object",
     "description": "A bounding volume.",

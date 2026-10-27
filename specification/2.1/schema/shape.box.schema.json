@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "shape.box.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.1/specification/shape.box.schema.json",
     "title": "Box Shape",
     "type": "object",
     "description": "An axis-aligned box with a size per-axis, centered at the origin in local space, with normals facing outwards along each axis.",

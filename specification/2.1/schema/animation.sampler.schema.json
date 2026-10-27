@@ -1,13 +1,13 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "animation.sampler.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.1/specification/animation.sampler.schema.json",
     "title": "Animation Sampler",
     "type": "object",
     "description": "An animation sampler combines timestamps with a sequence of output values and defines an interpolation algorithm.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "input": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "$ref": "glTFid.schema.json",
             "description": "The index of an accessor containing keyframe timestamps.",
             "gltf_detailedDescription": "The index of an accessor containing keyframe timestamps. The accessor **MUST** be of scalar type with floating-point components. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`."
         },
@@ -34,7 +34,7 @@
             ]
         },
         "output": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "$ref": "glTFid.schema.json",
             "description": "The index of an accessor, containing keyframe output values."
         }
     },
