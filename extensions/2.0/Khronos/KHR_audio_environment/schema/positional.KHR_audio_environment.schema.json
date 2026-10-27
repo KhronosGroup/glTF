@@ -1,0 +1,37 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "positional.KHR_audio_environment.schema.json",
+    "title": "KHR_audio_environment Positional Emitter Extension",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "spatializationModel": {
+            "description": "Per-emitter override of the listener's spatialization model.",
+            "anyOf": [
+                { "const": "equalpower" },
+                { "const": "HRTF" },
+                { "const": "custom" },
+                { "type": "string" }
+            ]
+        },
+        "distanceCurve": {
+            "type": "array",
+            "description": "Gain values in [0, 1], sampled uniformly from refDistance (index 0) to maxDistance (last index), linearly interpolated. Used when the base emitter's distanceModel is 'custom'.",
+            "items": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+            "minItems": 2
+        },
+        "airAbsorption": { "$ref": "airAbsorption.schema.json" },
+        "coneOuterCutoff": {
+            "type": "number",
+            "description": "Low-pass cutoff in Hz applied at and outside the cone's outer angle; no filtering at or inside the inner angle; interpolated linearly in log-frequency between the angles. Only applies when shapeType is 'cone'.",
+            "exclusiveMinimum": 0.0
+        },
+        "dopplerEnabled": {
+            "type": "boolean",
+            "description": "Per-emitter Doppler opt-out within the environment's Doppler settings.",
+            "default": true
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}
