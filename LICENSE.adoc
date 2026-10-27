@@ -27,7 +27,10 @@ Files in this repository fall under one of these licenses:
   ** To Be Determined copyright - exact copyright holder and license terms
      currently unknown.
   ** Only for vendor extensions to glTF. We are working on determining full
-     details of these licenses in each case.
+     details of these licenses in each case. glTF 2.0 vendor extensions are
+     moving to the
+     link:https://github.com/KhronosGroup/glTF-Community[glTF-Community]
+     repository, where the vendor states the license.
 
 Full license text of these licenses is available at:
 
