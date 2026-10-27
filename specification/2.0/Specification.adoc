@@ -1779,11 +1779,11 @@ A mesh primitive **MAY** define _morph targets_.
 
 A morph target defines an alternative state of the primitive's vertex attribute values stored as differences (deltas) between the target vertex attribute values and the original vertex attributes values.
 
-Morph targets are specified in the primitive's `targets` array. The number of elements of the `targets` array defines the number of morph targets for the mesh primitive. Each element of that array is a non-empty JSON object that maps attribute semantic names to the indices of accessors providing the corresponding morph target difference values. Similarly to the primitive's `attributes` object, each element of the `targets` array is treated as a flat key-value storage and thus it **MUST NOT** have any nested objects or values that are not accessor references.
+Morph targets are specified in the primitive's `targets` array. The number of elements of the `targets` array defines the number of morph targets for the mesh primitive. Each element of that array is a JSON object that maps attribute semantic names to the indices of accessors providing the corresponding morph target difference values. Similarly to the primitive's `attributes` object, each element of the `targets` array is treated as a flat key-value storage and thus it **MUST NOT** have any nested objects or values that are not accessor references.
 
 Vertex attribute semantic names not present in the primitive's `attributes` object **MUST NOT** be present in its morph targets. Extension-defined and application-specific attribute semantics use the same naming conventions as for the primitive's `attributes` object.
 
-If a vertex attribute semantic name is not present in a morph target, the difference values for that vertex attribute semantic are zeros, i.e., the morph target does not modify values of that vertex attribute.
+If a vertex attribute semantic name is not present in a morph target, the difference values for that vertex attribute semantic are zeros, i.e., the morph target does not modify values of that vertex attribute. An empty morph target object does not modify any vertex attribute values.
 
 [NOTE]
 .Implementation Note
@@ -1806,7 +1806,7 @@ The `weights` property of the mesh, if defined, provides an array of default mor
 [NOTE]
 .Example
 ====
-The following example shows a mesh with three primitives and two morph targets. The first primitive has no morph targets and thus its vertex attributes have only one state. The second primitive defines two morph targets with difference values for both vertex attribute semantics. The third primitive defines two morph targets and each morph target provides difference values for only one vertex attribute. The mesh also defines default morph target weights.
+The following example shows a mesh with three primitives and two morph targets. The first primitive has no morph targets and thus its vertex attributes have only one state. The second primitive defines two morph targets with difference values for both vertex attribute semantics. The third primitive defines two morph targets: the first morph target provides difference values for only one vertex attribute, the second morph target is empty. The mesh also defines default morph target weights.
 
 [source,json]
 ----
@@ -1843,9 +1843,7 @@ The following example shows a mesh with three primitives and two morph targets. 
                 {
                     "POSITION": 10
                 },
-                {
-                    "COLOR_0": 11
-                }
+                { }
             ]
         }
     ],
