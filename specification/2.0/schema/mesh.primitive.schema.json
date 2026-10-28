@@ -72,7 +72,6 @@
             "description": "An array of morph targets.",
             "items": {
                 "type": "object",
-                "minProperties": 1,
                 "additionalProperties": {
                     "$ref": "glTFid.schema.json"
                 },
