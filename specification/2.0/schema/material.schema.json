@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "material.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/material.schema.json",
     "title": "Material",
     "type": "object",
     "description": "The material appearance of a primitive.",

@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "mesh.primitive.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/mesh.primitive.schema.json",
     "title": "Mesh Primitive",
     "type": "object",
     "description": "Geometry to be rendered with the given material.",

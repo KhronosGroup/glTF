@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "camera.perspective.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/camera.perspective.schema.json",
     "title": "Camera Perspective",
     "type": "object",
     "description": "A perspective camera containing properties to create a perspective projection matrix.",

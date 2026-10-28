@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "material.normalTextureInfo.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/material.normalTextureInfo.schema.json",
     "title": "Material Normal Texture Info",
     "type": "object",
     "$ref": "textureInfo.schema.json",

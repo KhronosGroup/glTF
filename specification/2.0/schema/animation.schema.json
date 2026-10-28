@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "animation.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/animation.schema.json",
     "title": "Animation",
     "type": "object",
     "description": "A keyframe animation.",

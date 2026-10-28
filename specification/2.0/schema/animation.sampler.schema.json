@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "animation.sampler.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/animation.sampler.schema.json",
     "title": "Animation Sampler",
     "type": "object",
     "description": "An animation sampler combines timestamps with a sequence of output values and defines an interpolation algorithm.",

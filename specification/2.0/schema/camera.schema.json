@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "camera.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/camera.schema.json",
     "title": "Camera",
     "type": "object",
     "description": "A camera's projection.  A node **MAY** reference a camera to apply a transform to place the camera in the scene.",

@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "accessor.sparse.indices.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/accessor.sparse.indices.schema.json",
     "title": "Accessor Sparse Indices",
     "type": "object",
     "description": "An object pointing to a buffer view containing the indices of deviating accessor values. The number of indices is equal to `accessor.sparse.count`. Indices **MUST** strictly increase.",

@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "scene.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/scene.schema.json",
     "title": "Scene",
     "type": "object",
     "description": "The root nodes of a scene.",

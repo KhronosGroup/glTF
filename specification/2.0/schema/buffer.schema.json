@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "buffer.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/buffer.schema.json",
     "title": "Buffer",
     "type": "object",
     "description": "A buffer points to binary geometry, animation, or skins.",

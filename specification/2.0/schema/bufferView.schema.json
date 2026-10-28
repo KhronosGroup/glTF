@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "bufferView.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/bufferView.schema.json",
     "title": "Buffer View",
     "type": "object",
     "description": "A view into a buffer generally representing a subset of the buffer.",

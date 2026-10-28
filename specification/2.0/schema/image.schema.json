@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "image.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/image.schema.json",
     "title": "Image",
     "type": "object",
     "description": "Image data used to create a texture. Image **MAY** be referenced by an URI (or IRI) or a buffer view index.",
