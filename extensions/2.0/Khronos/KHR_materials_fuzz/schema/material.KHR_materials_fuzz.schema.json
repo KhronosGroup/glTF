@@ -1,0 +1,55 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_fuzz glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines the fuzz material model.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "fuzzFactor": {
+            "type": "number",
+            "description": "The intensity of the fuzz layer.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The intensity (opacity) of the fuzz layer. A value of 0.0 means the material has no fuzz layer enabled."
+        },
+        "fuzzTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The fuzz intensity texture.",
+            "gltf_detailedDescription": "The fuzz intensity texture. These values are sampled from the R channel. The values are linear. Use value 1.0 if no texture is supplied."
+        },
+        "fuzzColorFactor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "description": "Color of the fuzz layer (in linear space).",
+            "default": [1.0, 1.0, 1.0],
+            "gltf_detailedDescription": "The fuzz color in linear space. These values are multiplied by the fuzzFactor and fuzzTexture to determine the final fuzz color."
+        },
+        "fuzzColorTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The fuzz color (RGB) texture.",
+            "gltf_detailedDescription": "The fuzz color (RGB) texture. Stored in channel RGB, the fuzz color is in sRGB transfer function."
+        },
+        "fuzzRoughnessFactor": {
+            "type": "number",
+            "description": "The fuzz layer roughness.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The fuzz layer roughness of the material."
+        },
+        "fuzzRoughnessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The fuzz roughness texture.",
+            "gltf_detailedDescription": "The fuzz roughness texture. Stored in alpha channel, the roughness value is in linear space."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
