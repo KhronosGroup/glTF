@@ -22,7 +22,7 @@ The Khronos{regtitle} 3D Formats Working Group
 
 // This causes cross references to chapters, sections, and tables to be
 // rendered as "Section A.B" (for example) rather than rendering the reference
-// as the text of the section title.  It also enables cross references to
+// as the text of the section title. It also enables cross references to
 // [source] blocks as "Listing N", but only if the [source] block has a title.
 :xrefstyle: short
 :listing-caption: Listing
@@ -104,7 +104,7 @@ for identification and belong to their respective owners.
 
 This document, referred to as the "`glTF Specification`" or just the "`Specification`" hereafter, describes the glTF file format.
 
-glTF is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern graphics applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
+glTF is an API-neutral runtime asset delivery format. glTF bridges the gap between 3D content creation tools and modern graphics applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
 
 [[introduction-conventions]]
@@ -642,7 +642,7 @@ The following steps are **RECOMMENDED** after the aforementioned invalid charact
 [[concepts-general]]
 == General
 
-The figure below shows relations between top-level arrays in a glTF asset.  See the <<properties-reference, Properties Reference>>.
+The figure below shows relations between top-level arrays in a glTF asset. See the <<properties-reference, Properties Reference>>.
 
 .glTF Object Hierarchy
 image::figures/objects.svg[pdfwidth=6in,align=left]
@@ -657,7 +657,7 @@ The `asset` object **MUST** contain a `version` property that specifies the targ
 
 Both `version` and `minVersion` properties **MUST** conform to the asset version string syntax defined as follows.
 
-The version string is a concatenation of a major version component, a single "`dot`" character (`0x2E`), and a minor version component. Each version component is either a string consisting of a single decimal "`zero`" character (`0x30`), or a single non-zero decimal character (with codes from `0x31` to `0x39`) optionally followed by up to eight any decimal characters (with codes from `0x30` to `0x39`).
+The version string is a concatenation of a major version component, a single "`dot`" character (`U+002E`), and a minor version component. Each version component is either a string consisting of a single decimal "`zero`" character (`U+0030`), or a single non-zero decimal character (with code points from `U+0031` to `U+0039`) optionally followed by up to eight any decimal characters (with code points from `U+0030` to `U+0039`).
 
 [NOTE]
 ====
@@ -705,7 +705,7 @@ Client implementations should first check whether a `minVersion` property is spe
 The version specified in the <<glb-file-format-specification,GLB format>> header refers only to the GLB container version and is not related to the version of glTF JSON.
 ====
 
-Additional metadata **MAY** be stored in optional properties such as `generator` or `copyright`.  For example,
+Additional metadata **MAY** be stored in optional properties such as `generator` or `copyright`. For example,
 
 [source,json]
 ----
@@ -721,7 +721,7 @@ Additional metadata **MAY** be stored in optional properties such as `generator`
 [[indices-and-names]]
 == Indices and Names
 
-Entities of a glTF asset are referenced by their indices in corresponding arrays, e.g., a `bufferView` refers to a `buffer` by specifying the buffer's index in `buffers` array.  For example:
+Entities of a glTF asset are referenced by their indices in corresponding arrays, e.g., a `bufferView` refers to a `buffer` by specifying the buffer's index in `buffers` array. For example:
 
 [source,json]
 ----
@@ -875,7 +875,7 @@ In the following example, the node named `Car` has four children each of which h
 
 By default, a node's local space transform is identity.
 
-Any node **MAY** define a local space transform either by supplying a precomputed transformation matrix in the `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as _TRS properties_). _Translation_ and _scale_ are 3D vectors in the local coordinate system; _rotation_ is a quaternion value stored in XYZW order where W is the scalar. If defined, the rotation quaternion **MUST** be unit.
+Any node **MAY** define a local space transform either by supplying a precomputed transformation matrix in the `matrix` property, or any of `translation`, `rotation`, and `scale` properties (also known as _TRS properties_). _Translation_ and _scale_ are 3D vectors in the local coordinate system; _rotation_ is a quaternion value stored in XYZW order where W is the scalar. If defined, the rotation quaternion **MUST** be unit.
 
 When the `matrix` property is not defined, the local transform is computed from the TRS properties as follows, where
 
@@ -1549,7 +1549,7 @@ If the accessor's component type is a non-normalized integer type, the minimum a
 
 If the accessor's component type is a normalized integer type, the minimum and maximum values stored as JSON decimal numbers **MUST** exactly match integer minimum and maximum values that would be accessed before they are converted to normalized floats. In other words, even if the accessor's `normalized` property is true, the bounds are stored as if it is false.
 
-If the accessor's component type is a floating-point type, the minimum and maximum values stored as JSON decimal numbers **SHOULD** exactly match minimum and maximum values that would be accessed. If they do not match exactly as-is, they **MUST** match exactly after being rounded to the accessor's specific floating-point component type.
+If the accessor's component type is a floating-point type, the minimum and maximum values stored as JSON decimal numbers **SHOULD** exactly match minimum and maximum values that would be accessed. If they do not match exactly as is, they **MUST** match exactly after being rounded to the accessor's specific floating-point component type.
 
 [NOTE]
 .Implementation Note
@@ -2502,7 +2502,7 @@ This restriction ensures that the image's height is equal to the number of lines
 [NOTE]
 .Rationale
 ====
-JFIF and Exif formats are mutually exclusive. Some of Exif features, e.g., "`Orientation`", may severely impact an asset's portability, .
+JFIF and Exif formats are mutually exclusive. Some of Exif features, e.g., "`Orientation`", may severely impact an asset's portability.
 ====
 
 
@@ -2663,7 +2663,7 @@ This example shows a gold-like material defined using only factors.
 ----
 ====
 
-If a mesh primitive specifies a vertex color using the `COLOR_0` attribute semantic name, its per-vertex values are interpolated across topology primitives and used as an extra multiplier for the base color value. Vertex colors that use the `COLOR_0` attribute semantic name are encoded with the linear transfer function, i.e., their values are used as-is.
+If a mesh primitive specifies a vertex color using the `COLOR_0` attribute semantic name, its per-vertex values are interpolated across topology primitives and used as an extra multiplier for the base color value. Vertex colors that use the `COLOR_0` attribute semantic name are encoded with the linear transfer function, i.e., their values are used as is.
 
 [NOTE]
 .Implementation Note
@@ -3958,7 +3958,7 @@ More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework f
 * [[LazanyiSzirmayKalos2005]] http://wscg.zcu.cz/WSCG2005/Papers_2005/Short/H29-full.pdf[Lazanyi, I. and L. Szirmay-Kalos (2005): Fresnel term approximations for metals]
 * [[Pharr2016]] https://www.pbr-book.org/[Pharr, M., W. Jakob, and G. Humphreys (2016): Physically Based Rendering: From Theory To Implementation, 3rd edition.]
 * [[Schlick1994]] https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.50.2297&rep=rep1&type=pdf[Schlick, C. (1994): An Inexpensive BRDF Model for Physically-based Rendering. Computer Graphics Forum 13, 233-246.]
-* [[Smith1967]] https://ieeexplore.ieee.org/document/1138991[Smith, B. (1967):  Geometrical shadowing of a random rough surface. IEEE Transactions on Antennas and Propagation 15 (5), 668-671.]
+* [[Smith1967]] https://ieeexplore.ieee.org/document/1138991[Smith, B. (1967): Geometrical shadowing of a random rough surface. IEEE Transactions on Antennas and Propagation 15 (5), 668-671.]
 * [[TorranceSparrow1967]] https://www.graphics.cornell.edu/~westin/pubs/TorranceSparrowJOSA1967.pdf[Torrance, K. E., E. M. Sparrow (1967): Theory for Off-Specular Reflection From Roughened Surfaces. Journal of the Optical Society of America 57 (9), 1105-1114.]
 * [[TrowbridgeReitz1975]] https://www.osapublishing.org/josa/abstract.cfm?uri=josa-65-5-531[Trowbridge, T., and K. P. Reitz (1975): Average irregularity representation of a rough surface for ray reflection. Journal of the Optical Society of America 65 (5), 531-536.]
 * [[Turquin2019]] https://blog.selfshadow.com/publications/turquin/ms_comp_final.pdf[Turquin E. (2019): Practical multiple scattering compensation for microfacet models]
@@ -3980,7 +3980,7 @@ View the full https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appe
 ====
 endif::[]
 
-Animation sampler interpolation modes define how to compute values of animated properties for the timestamps located between the keyframes. When the current (requested) timestamp exists in the animation data, its associated property value is used as-is, without interpolation.
+Animation sampler interpolation modes define how to compute values of animated properties for the timestamps located between the keyframes. When the current (requested) timestamp exists in the animation data, its associated property value is used as is, without interpolation.
 
 For the following sections, let
 
