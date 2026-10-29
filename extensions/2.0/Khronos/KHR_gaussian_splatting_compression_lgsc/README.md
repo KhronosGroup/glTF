@@ -10,7 +10,7 @@ Draft
 ## Dependencies
 Written against the glTF 2.0 specification.
 
-This extension depends on `KHR_gaussian_splatting`.
+This extension depends on the ratified `KHR_gaussian_splatting` extension.
 
 ## Overview
 L-GSC v1.0 is a codec for Gaussian Splat representations. It compresses the standard Gaussian splat attribute arrays into a single binary payload and later decompresses them back into attribute arrays suitable for rendering.
@@ -61,6 +61,8 @@ The `mode` of the primitive MUST be `POINTS`.
 ## Schema example
 Example L-GSC extension shown below. This extension only affects primitives containing Gaussian splat data.
 
+This example assumes data trained in `srgb_rec709_display`. The `colorSpace` MUST describe the reconstructed color values, as defined by `KHR_gaussian_splatting`. Without an additional extension defining another color space, it MUST be `srgb_rec709_display` or `lin_rec709_display`. Scene-referred data MUST NOT be relabeled as display-referred without the corresponding color rendering.
+
 ```json
 {
   "meshes": [
@@ -82,7 +84,7 @@ Example L-GSC extension shown below. This extension only affects primitives cont
           "extensions": {
             "KHR_gaussian_splatting": {
               "kernel": "ellipse",
-              "colorSpace": "lin_rec709_scene",
+              "colorSpace": "srgb_rec709_display",
               "extensions": {
                 "KHR_gaussian_splatting_compression_lgsc": {
                   "bufferView": 0,
@@ -143,7 +145,7 @@ At minimum it MUST contain the following keys.
 - `KHR_gaussian_splatting:ROTATION`
 - `KHR_gaussian_splatting:SCALE`
 
-`KHR_gaussian_splatting:SH_DEGREE_1_COEF_0` through `KHR_gaussian_splatting:SH_DEGREE_3_COEF_6` MAY be present to carry higher-order spherical harmonic coefficients, depending on `shDegree`.
+The `attributes` object MUST contain every spherical harmonic coefficient for each degree from 0 through `shDegree`. Partial degrees and missing lower degrees are invalid. It MUST NOT contain spherical harmonic coefficients above `shDegree`.
 
 ### numPoints
 Type: `integer`. Required.
@@ -162,9 +164,9 @@ The spherical harmonic degree represented by the decompressed data. The number o
 These coefficients are mapped to `KHR_gaussian_splatting:SH_DEGREE_1_COEF_0` through `KHR_gaussian_splatting:SH_DEGREE_3_COEF_6`.
 
 - `shDegree = 0` means only `KHR_gaussian_splatting:SH_DEGREE_0_COEF_0` is present.
-- `shDegree = 1` means `KHR_gaussian_splatting:SH_DEGREE_1_COEF_0` to `KHR_gaussian_splatting:SH_DEGREE_1_COEF_2` may be present.
-- `shDegree = 2` means `KHR_gaussian_splatting:SH_DEGREE_1_COEF_0` to `KHR_gaussian_splatting:SH_DEGREE_2_COEF_4` may be present.
-- `shDegree = 3` means `KHR_gaussian_splatting:SH_DEGREE_1_COEF_0` to `KHR_gaussian_splatting:SH_DEGREE_3_COEF_6` may be present.
+- `shDegree = 1` requires all coefficients of degrees 0 through 1, including `KHR_gaussian_splatting:SH_DEGREE_1_COEF_0` through `KHR_gaussian_splatting:SH_DEGREE_1_COEF_2`.
+- `shDegree = 2` requires all coefficients of degrees 0 through 2, including `KHR_gaussian_splatting:SH_DEGREE_2_COEF_0` through `KHR_gaussian_splatting:SH_DEGREE_2_COEF_4`.
+- `shDegree = 3` requires all coefficients of degrees 0 through 3, including `KHR_gaussian_splatting:SH_DEGREE_3_COEF_0` through `KHR_gaussian_splatting:SH_DEGREE_3_COEF_6`.
 
 ### compLevel
 Type: `integer`. Optional. Range 0 to 2.
@@ -186,7 +188,19 @@ This extension uses the same attribute names as `KHR_gaussian_splatting`.
 | Alpha | `KHR_gaussian_splatting:OPACITY` | `SCALAR` | `FLOAT` | yes |
 | Rotation | `KHR_gaussian_splatting:ROTATION` | `VEC4` | `FLOAT` | yes |
 | Scale | `KHR_gaussian_splatting:SCALE` | `VEC3` | `FLOAT` | yes |
-| SH coefficients | `KHR_gaussian_splatting:SH_DEGREE_1_COEF_0` to `KHR_gaussian_splatting:SH_DEGREE_3_COEF_6` | `VEC3` | `FLOAT` | no |
+| SH coefficients | `KHR_gaussian_splatting:SH_DEGREE_1_COEF_0` to `KHR_gaussian_splatting:SH_DEGREE_3_COEF_6` | `VEC3` | `FLOAT` | All coefficients through `shDegree` |
+
+## Decoded attribute values
+
+The decoded attribute arrays MUST conform to the ellipse kernel attribute definitions of `KHR_gaussian_splatting`.
+
+- `POSITION` values MUST be expressed in the glTF coordinate system and units.
+- `KHR_gaussian_splatting:SCALE` values MUST be linear and nonnegative. L-GSC v1.0 uses the INRIA log-scale representation. The encoder MUST convert positive linear glTF scales to natural logarithms before passing them to the reference codec. The loader MUST apply the exponential function to each decoded log-scale component before exposing the attribute values. A zero linear scale has no finite logarithm and MUST NOT be passed directly through this encoding path.
+- `KHR_gaussian_splatting:OPACITY` values MUST be linear values in the range [0, 1]. The L-GSC v1.0 reference API accepts and returns INRIA opacity logits. The loader MUST apply the sigmoid function to the returned logits. The internal codec sigmoid preprocessing and its inverse do not replace this conversion. An implementation that exposes already activated opacity values MUST NOT apply the sigmoid function twice.
+- `KHR_gaussian_splatting:ROTATION` values MUST be unit quaternions in glTF (x, y, z, w) order. The loader MUST reconstruct packed components, reorder components when required, and normalize the quaternion before exposing the attribute values.
+- Spherical harmonic attributes MUST contain RGB coefficients in the basis and ordering defined by `KHR_gaussian_splatting`. For each degree l, coefficient indices 0 through 2l correspond to orders m = -l through +l. Codec channel rearrangement and color transforms MUST be reversed. The zeroth-order attribute stores SH coefficients, not reconstructed diffuse RGB values.
+
+When converting data from another coordinate system, positions, rotations, and spherical harmonic coefficients MUST be transformed consistently into the glTF coordinate system. These requirements apply after codec decompression and before rendering. They do not change the L-GSC bitstream format.
 
 ## Accessors
 Accessors MUST be defined for each attribute listed in `KHR_gaussian_splatting.extensions.KHR_gaussian_splatting_compression_lgsc.attributes`.
@@ -204,8 +218,9 @@ A loader MUST follow this process.
 2. If the loader does support `KHR_gaussian_splatting_compression_lgsc` then it MUST do the following.
    1. Read the L-GSC payload from `KHR_gaussian_splatting.extensions.KHR_gaussian_splatting_compression_lgsc.bufferView`.
    2. Decode the payload to obtain attribute arrays for the attributes referenced by `KHR_gaussian_splatting.extensions.KHR_gaussian_splatting_compression_lgsc.attributes`.
-   3. When processing those referenced attributes, the loader MUST ignore any accessor `bufferView` and `byteOffset` and instead use the decoded streams.
-   4. Any primitive attributes not listed in `KHR_gaussian_splatting.extensions.KHR_gaussian_splatting_compression_lgsc.attributes` MUST be processed normally.
+   3. Convert the decoded arrays to the values specified in [Decoded attribute values](#decoded-attribute-values).
+   4. When processing those referenced attributes, the loader MUST ignore any accessor `bufferView` and `byteOffset` and instead use the decoded streams.
+   5. Any primitive attributes not listed in `KHR_gaussian_splatting.extensions.KHR_gaussian_splatting_compression_lgsc.attributes` MUST be processed normally.
 
 ## Implementation
 This section is non normative.
