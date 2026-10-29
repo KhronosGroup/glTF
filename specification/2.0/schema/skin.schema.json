@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "skin.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/skin.schema.json",
     "title": "Skin",
     "type": "object",
     "description": "Joints and matrices defining a skin.",

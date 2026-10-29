@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "glTF.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/glTF.schema.json",
     "title": "glTF",
     "type": "object",
     "description": "The root object for a glTF asset.",

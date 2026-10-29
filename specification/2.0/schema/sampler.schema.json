@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "sampler.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/sampler.schema.json",
     "title": "Sampler",
     "type": "object",
     "description": "Texture sampler properties for filtering and wrapping modes.",

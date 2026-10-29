@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "glTFProperty.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/glTFProperty.schema.json",
     "title": "glTF Property",
     "type": "object",
     "properties": {

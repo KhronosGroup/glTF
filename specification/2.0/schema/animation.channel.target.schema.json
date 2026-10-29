@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "animation.channel.target.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/animation.channel.target.schema.json",
     "title": "Animation Channel Target",
     "type": "object",
     "description": "The descriptor of the animated property.",

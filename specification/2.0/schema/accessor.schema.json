@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "accessor.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/accessor.schema.json",
     "title": "Accessor",
     "type": "object",
     "description": "A typed view into a buffer view that contains raw binary data.",

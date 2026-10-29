@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "extensions.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/extensions.schema.json",
     "title": "Extensions",
     "type": "object",
     "description": "JSON object with extension objects. Property names correspond to glTF extension names and property values are extension-specific objects.",

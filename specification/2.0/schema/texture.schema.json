@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "texture.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/texture.schema.json",
     "title": "Texture",
     "type": "object",
     "description": "A texture and its sampler.",
