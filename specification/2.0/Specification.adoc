@@ -514,13 +514,19 @@ These two examples represent the same glTF JSON data.
 `100`, `100.0`, and `1e2` represent the same value. See <<json,RFC 8259>>, Section 6 for more details.
 ====
 
-6. Non-integer numbers **SHOULD** be written in a way that preserves original values when these numbers are read back, i.e., they **SHOULD NOT** be altered by JSON serialization / deserialization roundtrip.
+6. Numbers with a fractional part **SHOULD** be written in a way that produces the shortest possible representation of the fractional part and guarantees exact equality when these numbers are deserialized to double-precision floating-point values.
 +
 [NOTE]
 .Implementation Note
 ====
-This is typically achieved with algorithms like Grisu2 used by common JSON libraries.
+This is typically achieved with dedicated serialization algorithms used by common JSON libraries.
 ====
+
+7. Although JSON numbers do not have any specific precision or range, it is generally safe to assume that they will be deserialized to double-precision floating-point values. This has the following implications:
+
+  - fractional parts exceeding the available precision would be dropped, e.g., `100.000000000000001` would be parsed as `100`;
+  - values that are too close to zero, e.g., `1e-324`, would be parsed as exactly zero;
+  - values that exceed the maximum or minimum representable numbers, e.g., `1.8e308`, would be parsed as positive or negative infinity, respectively.
 
 [[uris]]
 == URIs
