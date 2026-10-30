@@ -1,4 +1,4 @@
-// Copyright 2013-2021 The Khronos Group Inc.
+// Copyright 2013-2026 The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -47,7 +47,7 @@ toc::[]
 [[foreword]]
 = Foreword
 
-Copyright 2013-2021 The Khronos Group Inc.
+Copyright 2013-2026 The Khronos Group Inc.
 
 This specification is protected by copyright laws and contains material proprietary
 to Khronos. Except as described by these terms, it or any components
@@ -95,7 +95,6 @@ of Hewlett Packard Enterprise used under license by Khronos. ASTC is a trademark
 ARM Holdings PLC. All other product names, trademarks, and/or company names are used solely
 for identification and belong to their respective owners.
 
-
 [[introduction]]
 = Introduction
 
@@ -106,7 +105,6 @@ This document, referred to as the "`glTF Specification`" or just the "`Specifica
 
 glTF is an API-neutral runtime asset delivery format. glTF bridges the gap between 3D content creation tools and modern graphics applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
-
 [[introduction-conventions]]
 == Document Conventions
 
@@ -115,7 +113,6 @@ The glTF Specification is intended for use by both implementers of the asset exp
 Specification text can address either party; typically, the intended audience can be inferred from context, though some sections are defined to address only one of these parties.
 
 Any requirements, prohibitions, recommendations, or options defined by <<introduction-normative-terminology, normative terminology>> are imposed only on the audience of that text.
-
 
 [[introduction-normative-terminology]]
 === Normative Terminology and References
@@ -126,7 +123,6 @@ These key words are highlighted in the specification for clarity.
 
 References to external documents are considered normative if the Specification uses any of the normative terms defined in this section to refer to them or their requirements, either as a whole or in part.
 
-
 [[introduction-informative-language]]
 === Informative Language
 
@@ -135,7 +131,6 @@ Some language in the specification is purely informative, intended to give backg
 If an entire chapter or section contains only informative language, its title is suffixed with "`(Informative)`". If not designated as informative, all chapters, sections, and appendices in this document are normative.
 
 All Notes, Implementation notes, and Examples are purely informative.
-
 
 [[introduction-technical-terminology]]
 === Technical Terminology
@@ -230,7 +225,6 @@ The relative order in which vertices are defined within a triangle
 
 wrapping::
 A process of selecting an image pixel based on normalized texture coordinates.
-
 
 [[introduction-normative-references]]
 === Normative References
@@ -348,7 +342,7 @@ Thomas Porter and Tom Duff. 1984. _Compositing digital images._ SIGGRAPH Comput.
 [NOTE]
 .Note
 ====
-A free version of this paper is available from Pixar: https://graphics.pixar.com/library/Compositing/
+A free version of this paper is available from Pixar: https://research.pixar.com/docs/1984.SiggraphPapers.PD.pdf
 ====
 
 ==== Media Type Registrations
@@ -382,7 +376,6 @@ IANA.
 _image/png Media Type_.
 https://www.iana.org/assignments/media-types/image/png
 
-
 [[motivation]]
 == Motivation and Design Goals (Informative)
 
@@ -412,7 +405,6 @@ The following are outside the scope of glTF 2.0:
 
 * **glTF is not intended to be human-readable,** though by virtue of being represented in JSON, it is developer-friendly.
 
-
 [[gltf-basics]]
 == glTF Basics
 
@@ -426,7 +418,6 @@ Binary and image resources **MAY** also be embedded directly in JSON using <<uri
 
 A valid glTF asset **MUST** specify its version.
 
-
 [[versioning]]
 == Versioning
 
@@ -435,7 +426,6 @@ Any updates made to the glTF Specification in a minor version **MUST** be backwa
 A minor version update **MAY** introduce new features but **MUST NOT** change any previously existing behavior. Existing functionality **MAY** be deprecated in a minor version update, but it **MUST NOT** be removed.
 
 Major version updates **MAY** be incompatible with previous versions.
-
 
 [[file-extensions-and-media-types]]
 == File Extensions and Media Types
@@ -641,7 +631,6 @@ The following steps are **RECOMMENDED** after the aforementioned invalid charact
 - Replacing all reverse solidus (`U+005C`) characters with solidus (`U+002F`) characters.
 - Percent-encoding all characters from the following list: characters with code points from `U+0000` to `U+001F` inclusive, space (`U+0020`), quotation mark (`U+0022`), less-than sign (`U+003C`), greater-than sign (`U+003E`), left square bracket (`U+005B`), right square bracket (`U+005D`), circumflex accent (`U+005E`), grave accent (`U+0060`), left curly bracket (`U+007B`), vertical bar (`U+007C`), right curly bracket (`U+007D`), and <delete> (`U+007F`).
 
-
 [[concepts]]
 = Concepts
 
@@ -652,7 +641,6 @@ The figure below shows relations between top-level arrays in a glTF asset. See t
 
 .glTF Object Hierarchy
 image::figures/objects.svg[pdfwidth=6in,align=left]
-
 
 [[asset]]
 == Asset
@@ -711,23 +699,32 @@ Client implementations should first check whether a `minVersion` property is spe
 The version specified in the <<glb-file-format-specification,GLB format>> header refers only to the GLB container version and is not related to the version of glTF JSON.
 ====
 
-Additional metadata **MAY** be stored in optional properties such as `generator` or `copyright`. For example,
+The optional `copyright` and `generator` properties provide additional metadata.
 
+[NOTE]
+.Example
+====
 [source,json]
 ----
 {
     "asset": {
         "version": "2.0",
-        "generator": "collada2gltf@f356b99aef8868f74877c7ca545f2cd206b9d3b7",
-        "copyright": "2017 (c) Khronos Group"
+        "generator": "My glTF exporter v2.0",
+        "copyright": "Public domain"
     }
 }
 ----
+====
 
 [[indices-and-names]]
 == Indices and Names
 
-Entities of a glTF asset are referenced by their indices in corresponding arrays, e.g., a `bufferView` refers to a `buffer` by specifying the buffer's index in `buffers` array. For example:
+Entities of a glTF asset are referenced by their indices in corresponding arrays.
+
+[NOTE]
+.Example
+====
+In this example, the `buffers` and `bufferViews` arrays have only one element each. The buffer view refers to the buffer using the index 0.
 
 [source,json]
 ----
@@ -747,15 +744,11 @@ Entities of a glTF asset are referenced by their indices in corresponding arrays
     ]
 }
 ----
+====
 
-In this example, `buffers` and `bufferViews` arrays have only one element each. The bufferView refers to the buffer using the buffer's index: `"buffer": 0`.
-
-Indices **MUST** be non-negative integer numbers. Indices **MUST** always point to existing elements.
+Indices **MUST** be non-negative integer numbers. Indices **MUST** always point to existing array elements, i.e., they **MUST** be less than the length of the corresponding arrays.
 
 Whereas indices are used for internal glTF references, optional _names_ are used for application-specific uses such as display. Any top-level glTF object **MAY** have a `name` string property for this purpose. These property values are not guaranteed to be unique as they are intended to contain values created when the asset was authored.
-
-For property names, glTF usually uses camel case, `likeThis`.
-
 
 [[coordinate-system-and-units]]
 == Coordinate System and Units
@@ -779,20 +772,23 @@ Red, Green, and Blue primary colors use <<bt709,Recommendation ITU-R BT.709>> ch
 Chromaticity coordinates define the interpretation of each primary color channel of the color model. In the context of a typical display, color primaries describe the color of the red, green, and blue phosphors or filters. Unless a wide color gamut output is explicitly used, client implementations usually do not need to convert colors. Future specification versions or extensions may allow other color primaries (such as P3).
 ====
 
-
 [[scenes]]
 == Scenes
-
 
 [[scenes-overview]]
 === Overview
 
-glTF 2.0 assets **MAY** contain zero or more _scenes_, the set of visual objects to render. Scenes are defined in a `scenes` array. All nodes listed in `scene.nodes` array **MUST** be root nodes, i.e., they **MUST NOT** be listed in a `node.children` array of any node. The same root node **MAY** appear in multiple scenes.
+glTF 2.0 assets **MAY** contain zero or more _scenes_, the set of visual objects to render.
 
-An additional root-level property, `scene` (note singular), identifies which of the scenes in the array **SHOULD** be displayed at load time. When `scene` is undefined, client implementations **MAY** delay rendering until a particular scene is requested.
+Scenes are defined in the `scenes` array. A scene is defined by a set of root nodes, i.e., nodes that are not descendants of any node. The indices of the scene's root nodes are defined in the `nodes` array property of the scene. The same root nodes **MAY** appear in multiple scenes.
 
-A glTF asset that does not contain any scenes **SHOULD** be treated as a library of individual entities such as materials or meshes.
+The root JSON object's `scene` property (note singular) identifies which of the scenes **SHOULD** be displayed at load time. When the `scene` property is undefined, client implementations **MAY** delay rendering until a particular scene is requested.
 
+A glTF asset that does not contain any scenes **SHOULD** be treated as a library of individual entities, such as materials or meshes.
+
+[NOTE]
+.Example
+====
 The following example defines a glTF asset with a single scene that contains a single node.
 
 [source,json]
@@ -814,7 +810,7 @@ The following example defines a glTF asset with a single scene that contains a s
     "scene": 0
 }
 ----
-
+====
 
 [[nodes-and-hierarchy]]
 === Nodes and Hierarchy
@@ -874,7 +870,6 @@ In the following example, the node named `Car` has four children each of which h
 }
 ----
 ====
-
 
 [[transformations]]
 === Transformations
@@ -998,7 +993,6 @@ When the scale is zero on all three axes (by node transform or by animated scale
 [[binary-data-storage]]
 == Binary Data Storage
 
-
 [[buffers]]
 === Buffers
 
@@ -1075,7 +1069,6 @@ Not requiring strict equality of chunk's and buffer's lengths is consistent with
 
 See <<glb-file-format-specification,GLB File Format Specification>> for details on GLBv2 File Format.
 
-
 [[buffer-views]]
 === Buffer Views
 
@@ -1134,7 +1127,6 @@ If the `byteStride` property is defined, all of the following restrictions apply
 - its value **MUST** be a multiple of four;
 - its value **MUST** be greater than or equal to 4 and less than or equal to 252;
 - its value **MUST** be less than or equal to the value of the `byteLength` property.
-
 
 [[accessors]]
 === Accessors
@@ -1579,7 +1571,6 @@ When neither `sparse` nor `bufferView` properties are defined, i.e., if all acce
 
 Although the `min` and `max` properties are optional in general, accessors used for vertex positions or animation sampler inputs **MUST** define these properties.
 
-
 [[geometry]]
 == Geometry
 
@@ -1682,6 +1673,8 @@ Accessors of the _uint32_ effective component type **SHOULD NOT** be used for an
                                     _unorm8_  +
                                     _unorm16_                   | See <<skinned-mesh-primitive-attributes,Skinned Mesh Primitive Attributes>>
 |====
+
+All attribute semantics defined in this table except `JOINTS_n` are inherently continuous, i.e., they provide real numbers, and the `JOINTS_n` attribute semantic is inherently discrete, i.e., it provides non-negative integers, regardless of the storage method used.
 
 The `TEXCOORD_n`, `COLOR_n`, `JOINTS_n`, and `WEIGHTS_n` attribute semantic property names have the form `[semantic]_[index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. The following rules apply to the `[index]` syntax:
 
@@ -2149,7 +2142,7 @@ Although the `skeleton` property is not needed for computing skinning transforms
 
 The joint hierarchy used for controlling skinned mesh pose is simply the node hierarchy, with each node designated as a _joint_ by a reference from the `joints` array.
 
-Joints of a skin **MUST** have a common ancestor node called _common root_, which may or may not be a joint node itself. When a skin is referenced by a node within a scene, the common root **MUST** belong to the same scene.
+Joints of a skin **MUST** have a common ancestor node called _common root_, which may or may not be a joint node itself.
 
 [NOTE]
 .Implementation Note
@@ -2248,6 +2241,8 @@ Mesh primitives that do not have skinning-related attributes are instantiated as
 
 If none of the mesh primitives contain skinning-related attributes, the node's `skin` property **SHOULD NOT** be defined.
 
+If the node belongs to a scene, the common root of the joints of the referenced skin **MUST** belong to the same scene.
+
 All joint indices provided by the `JOINTS_n` vertex attribute accessors of the skinned mesh primitives **MUST** be less than the number of elements of the `joints` array of the referenced skin object.
 
 A skinned mesh primitive does not use the global transform of the node that instantiates the mesh. Instead, the transformation matrix is computed separately for each vertex of the mesh primitive as follows.
@@ -2312,7 +2307,6 @@ The example below instantiates a mesh with a skin. The rotation of the node 1 an
 ----
 ====
 
-
 [[texture-data]]
 == Texture Data
 
@@ -2320,7 +2314,6 @@ The example below instantiates a mesh with a skin. The rotation of the node 1 an
 === Overview
 
 glTF 2.0 separates texture access into three distinct types of objects: Textures, Images, and Samplers.
-
 
 [[textures]]
 === Textures
@@ -2367,7 +2360,6 @@ The origin of the texture coordinates (0, 0) corresponds to the upper left corne
 
 .Normalized Texture Coordinates
 image::figures/texcoords.svg[pdfwidth=3in,align=left]
-
 
 [[images]]
 === Images
@@ -2511,7 +2503,6 @@ This restriction ensures that the image's height is equal to the number of lines
 JFIF and Exif formats are mutually exclusive. Some of Exif features, e.g., "`Orientation`", may severely impact an asset's portability.
 ====
 
-
 [[samplers]]
 === Samplers
 
@@ -2559,7 +2550,6 @@ To properly support mipmap modes, client implementations **SHOULD** generate mip
   _Linear-mipmap-linear_     | _Linear_
 |====
 
-
 ==== Wrapping
 
 Per-vertex texture coordinates, which are provided via `TEXCOORD_n` attribute values, are normalized for the image size (not to confuse with the `normalized` accessor property, the latter refers only to data encoding). That is, the texture coordinate value of `(0.0, 0.0)` points to the beginning of the first (upper-left) image pixel, while the texture coordinate value of `(1.0, 1.0)` points to the end of the last (lower-right) image pixel.
@@ -2584,9 +2574,12 @@ Sampler's wrapping modes define how to handle texture coordinates that are negat
 
 * _Clamp to edge_. Texture coordinates with values outside the image are clamped to the closest existing image texel at the edge.
 
-==== Example
+==== Complete Example
 
-The following example defines a sampler with _linear_ magnification filtering, _linear-mipmap-linear_ minification filtering, and _repeat_ wrapping in both directions.
+[NOTE]
+.Example
+====
+The following snippet shows a sampler with _linear_ magnification filtering, _linear-mipmap-linear_ minification filtering, and _repeat_ wrapping in both directions.
 
 [source,json]
 ----
@@ -2601,7 +2594,7 @@ The following example defines a sampler with _linear_ magnification filtering, _
     ]
 }
 ----
-
+====
 
 ==== Non-power-of-two Textures
 
@@ -2617,7 +2610,6 @@ Specifically, if the `sampler` the texture references:
 * has a minification filter (`minFilter`) that uses mipmapping.
 ====
 
-
 [[materials]]
 == Materials
 
@@ -2632,6 +2624,8 @@ image::figures/materials.svg[pdfwidth=6in,align=left]
 A material object describes material parameters that control mesh primitive rendering. Material parameters can be uniform, i.e., with a single value applied to the whole mesh primitive, or texturable, i.e., with parameter values varying across the mesh primitive's surface.
 
 Values of properties that represent texturable material parameters are JSON objects that contain the `index` property that specifies the texture index and the `texCoord` property that specifies the texture coordinate set index used for sampling from that texture. Some texturable parameters include additional parameter-specific properties that affect how the sampled values are applied.
+
+The value of the `texCoord` property is used to compose a vertex attribute semantic name by converting the index to a decimal and appending it to the `TEXCOORD_` string. For example, texture coordinate set indices 0 and 1 would yield `"TEXCOORD_0"` and `"TEXCOORD_1"` vertex attribute semantic names, respectively. A mesh primitive that references a material that uses textures **MUST** define the corresponding texture coordinate vertex attribute semantics.
 
 [[metallic-roughness-material]]
 === Metallic-Roughness Material
@@ -2677,7 +2671,9 @@ If a mesh primitive specifies a vertex color using the `COLOR_0` attribute seman
 As defined in the vertex attributes section, all `COLOR_0` components are always in the stem:[[0.0, 1.0\]] range.
 ====
 
-The _base color_ texture is represented by the `baseColorTexture` property. The red, green, and blue components of the texture **MUST** be encoded with the piecewise <<srgb, sRGB opto-electronic transfer function>>. Client implementations **SHOULD** apply the inverse of that function to get linear base color texture values before multiplying them with base color factors or vertex colors. When the texture sampler uses linear filtering, the transfer function **SHOULD** be decoded prior to linear interpolation. The alpha channel, if present, **MUST** be encoded with the linear transfer function.
+The _base color_ texture is represented by the `baseColorTexture` property. The red, green, and blue components of the texture specify the base color, and the alpha component specifies the alpha coverage. The stored red, green, and blue values **MUST NOT** be premultiplied by the alpha value.
+
+The red, green, and blue components of the texture **MUST** be encoded with the piecewise <<srgb, sRGB opto-electronic transfer function>>. Client implementations **SHOULD** apply the inverse of that function to get linear base color texture values before multiplying them with base color factors or vertex colors. When the texture sampler uses linear filtering, the transfer function **SHOULD** be decoded prior to linear interpolation. The alpha channel, if present, **MUST** be encoded with the linear transfer function.
 
 [NOTE]
 .Implementation Note
@@ -2864,7 +2860,6 @@ The effective occlusion value is computed from the value sampled from the occlus
 1.0 + \mathit{strength} \cdot (\mathit{sampledOcclusionValue} - 1.0)
 +++++
 
-
 [[texture-priority]]
 === Texture Priority
 
@@ -2877,7 +2872,6 @@ If a client implementation is resource-bound and cannot support all the textures
 | Occlusion | Model will appear brighter in areas that are intended to be darker.
 | Emissive  | Model with lights will not be lit. For example, the headlights of a car model will be off instead of on.
 |====
-
 
 [[alpha-coverage]]
 === Alpha Coverage
@@ -2902,7 +2896,13 @@ This mode is used to simulate geometry such as tree leaves or wire fences.
 This mode is used to simulate geometry such as gauze cloth or animal fur.
 ====
 
-When `alphaMode` is set to `MASK` the `alphaCutoff` property specifies the cutoff threshold. If the alpha value is greater than or equal to the `alphaCutoff` value then it is rendered as fully opaque, otherwise, it is rendered as fully transparent. `alphaCutoff` value is ignored for other modes.
+When the `alphaMode` property is set to `"MASK"`, the `alphaCutoff` property specifies the cutoff threshold. If the alpha value is greater than or equal to the alpha cutoff value, the material is rendered as fully opaque, otherwise, it is rendered as fully transparent. The `alphaCutoff` property is ignored for other modes.
+
+[NOTE]
+.Implementation Note
+====
+An alpha cutoff value greater than stem:[1.0] would make the material fully transparent.
+====
 
 [NOTE]
 .Implementation Note for Real-Time Rasterizers
@@ -2914,7 +2914,6 @@ Real-time rasterizers typically use depth buffers and mesh sorting to support al
 * `BLEND` - Support for this mode varies. There is no perfect and fast solution that works for all cases. Client implementations should try to achieve the correct blending output for as many situations as possible. Whether depth value is written or whether to sort is up to the implementation. For example, implementations may discard pixels that have zero or close to zero alpha value to avoid sorting issues.
 ====
 
-
 [[double-sided]]
 === Double Sided
 
@@ -2923,7 +2922,6 @@ The `doubleSided` property specifies whether the material is double sided.
 When this value is false, back-face culling is enabled, i.e., only front-facing triangles are rendered.
 
 When this value is true, back-face culling is disabled, triangles are rendered from both sides, and the normal vectors of the back-facing triangles are negated.
-
 
 [[default-material]]
 === Default Material
@@ -2945,7 +2943,6 @@ This specification does not define size or style of non-triangular primitives (s
 * Points or Lines with `NORMAL` and `TANGENT` attributes **SHOULD** be rendered with standard lighting including normal textures.
 * Points or Lines with `NORMAL` but without `TANGENT` attributes **SHOULD** be rendered with standard lighting but ignoring any normal textures on the material.
 * Points or Lines with no `NORMAL` attribute **SHOULD** be rendered without lighting and instead use the sum of the _base color_ value (as defined above, multiplied by `COLOR_0` when present) and the _emissive_ value.
-
 
 [[cameras]]
 == Cameras
@@ -3039,6 +3036,8 @@ If the `aspectRatio` property is present, it defines the effective aspect ratio.
 
 The values of the properties mentioned in this section **MUST** be greater than zero.
 
+The value of the `yfov` property **SHOULD** be less than stem:[\pi].
+
 [[finite-perspective-projection]]
 ==== Finite Perspective Projection
 
@@ -3047,6 +3046,8 @@ The finite perspective projection is defined by the effective aspect ratio (widt
 If the `aspectRatio` property is present, it defines the effective aspect ratio. If the `aspectRatio` property is not present, the effective aspect ratio is equal to the aspect ratio of the viewport.
 
 The values of the properties mentioned in this section **MUST** be greater than zero.
+
+The value of the `yfov` property **SHOULD** be less than stem:[\pi].
 
 The value of the `zfar` property **MUST** be greater than the value of the `znear` property.
 
@@ -3060,7 +3061,6 @@ The values of the `xmag` and `ymag` properties **SHOULD** be positive and they *
 The value of the `znear` property **MUST** greater than or equal to zero.
 
 The value of the `zfar` property **MUST** be greater than zero and greater than the value of the `znear` property.
-
 
 [[animations]]
 == Animations
@@ -3303,12 +3303,14 @@ See <<appendix-c-interpolation,Appendix C>> for additional information about int
 
 Animation of skinned mesh primitives is achieved by targeting TRS properties of the nodes used as joints by the corresponding skin objects or ancestors of those nodes.
 
-
 [[specifying-extensions]]
 == Specifying Extensions
 
-glTF defines an extension mechanism that allows the base format to be extended with new capabilities. Any glTF object **MAY** have an optional `extensions` property, as in the following example:
+glTF defines an extension mechanism that allows the base format to be extended with new capabilities. Any glTF object **MAY** have an optional `extensions` property, as in the following snippet.
 
+[NOTE]
+.Example
+====
 [source,json]
 ----
 {
@@ -3328,9 +3330,13 @@ glTF defines an extension mechanism that allows the base format to be extended w
     ]
 }
 ----
+====
 
-All extensions used in a glTF asset **MUST** be listed in the top-level `extensionsUsed` array object, e.g.,
+All extensions used in a glTF asset **MUST** be listed in the top-level `extensionsUsed` array object.
 
+[NOTE]
+.Example
+====
 [source,json]
 ----
 {
@@ -3340,9 +3346,13 @@ All extensions used in a glTF asset **MUST** be listed in the top-level `extensi
     ]
 }
 ----
+====
 
-All glTF extensions required to load and/or render an asset **MUST** be listed in the top-level `extensionsRequired` array, e.g.,
+All glTF extensions required to load and/or render an asset **MUST** be listed in the top-level `extensionsRequired` array.
 
+[NOTE]
+.Example
+====
 [source,json]
 ----
 {
@@ -3354,9 +3364,9 @@ All glTF extensions required to load and/or render an asset **MUST** be listed i
     ]
 }
 ----
+====
 
-`extensionsRequired` is a subset of `extensionsUsed`. All values in `extensionsRequired` **MUST** also exist in `extensionsUsed`.
-
+The set of extension names listed in the `extensionsRequired` array **MUST** be a subset of the extensions listed in the `extensionsUsed` array.
 
 [[glb-file-format-specification]]
 = GLB File Format Specification
@@ -3405,7 +3415,6 @@ image::figures/glb2.svg[pdfwidth=6in,align=left]
 
 The following sections describe the structure more in detail.
 
-
 [[binary-header]]
 === Header
 
@@ -3423,7 +3432,6 @@ uint32 length
 +
 Client implementations that load GLB format **MUST** also check for the <<asset,asset version properties>> in the JSON chunk, as the version specified in the GLB header only refers to the GLB container version.
 * `length` is the total length of the Binary glTF, including _header_ and all _chunks_, in bytes.
-
 
 [[chunks]]
 === Chunks
@@ -3457,7 +3465,6 @@ The start and the end of each chunk **MUST** be aligned to a 4-byte boundary. Se
 
 Client implementations **MUST** ignore chunks with unknown types to enable glTF extensions to reference additional chunks with new types following the first two chunks.
 
-
 [[structured-json-content]]
 ==== Structured JSON Content
 
@@ -3472,7 +3479,6 @@ In a JavaScript implementation, the `TextDecoder` API can be used to extract the
 This chunk **MUST** be the very first chunk of a Binary glTF asset. By reading this chunk first, an implementation is able to progressively retrieve resources from subsequent chunks. This way, it is also possible to read only a selected subset of resources from a Binary glTF asset.
 
 This chunk **MUST** be padded with trailing `Space` chars (`0x20`) to satisfy alignment requirements.
-
 
 [[binary-buffer]]
 ==== Binary buffer
@@ -3499,7 +3505,6 @@ endif::[]
 
 // Generated with wetzel
 include::PropertiesReference.adoc[]
-
 
 [[acknowledgments]]
 = Acknowledgments (Informative)
@@ -3610,10 +3615,8 @@ Usually, a material is either metallic or dielectric. A texture provided for `me
 
 The logical structure of the material is presented below, using an abstract notation that describes the material as a directed acyclic graph (DAG). The vertices correspond to the basic building blocks of the material model: BRDFs, mixing operators, input parameters, and constants. This is followed by an informative sample implementation as a set of equations and source code for the BRDFs and mixing operators.
 
-
 [[material-structure]]
 == Material Structure
-
 
 [[metals]]
 === Metals
@@ -3636,7 +3639,6 @@ metal_brdf =
     bsdf = specular_brdf(
       α = roughness ^ 2))
 ----
-
 
 [[dielectrics]]
 === Dielectrics
@@ -3663,7 +3665,6 @@ dielectric_brdf =
     layer = specular_brdf(
       α = roughness ^ 2))
 ----
-
 
 [[microfacet-surfaces]]
 === Microfacet Surfaces
@@ -3704,7 +3705,6 @@ The difference between distribution and profile is detailed by <<Heitz2014,Heitz
 Microfacet models often do not consider multiple scattering. The shadowing term suppresses light that intersects the microsurface a second time. <<Heitz2016,Heitz et al. (2016)>> extended the Smith-based microfacet models to include a multiple scattering component, which significantly improves accuracy of predictions of the model. We suggest to incorporate multiple scattering whenever possible, either by making use of the unbiased stochastic evaluation introduced by Heitz, or one of the approximations presented later, for example by <<KullaConty2017,Kulla and Conty (2017)>> or <<Turquin2019,Turquin (2019)>>.
 ====
 
-
 [[complete-model]]
 === Complete Model
 
@@ -3718,7 +3718,6 @@ The glTF Specification is designed to allow applications to choose different lig
 In a physically accurate light simulation, the BRDFs **MUST** follow some basic principles: the BRDF **MUST** be positive, reciprocal, and energy conserving. This ensures that the visual output of the simulation is independent of the underlying rendering algorithm, if it is unbiased.
 
 The unbiased light simulation with physically realistic BRDFs will be the ground-truth for approximations in real-time renderers that are often biased, but still give visually pleasing results.
-
 
 [[implementation]]
 == Sample Implementation (Informative)
@@ -3736,7 +3735,6 @@ We use the following notation:
 * *L* is the normalized vector from the shading location to the light
 * *N* is the surface normal in the same space as the above values
 * *H* is the half vector, where *H* = normalize(*L* + *V*)
-
 
 [[specular-brdf]]
 === Specular BRDF
@@ -3837,7 +3835,6 @@ function diffuse_brdf(color) {
 }
 ----
 
-
 [[fresnel]]
 === Fresnel
 
@@ -3876,7 +3873,6 @@ function fresnel_mix(ior, base, layer) {
   return mix(base, layer, fr)
 }
 ----
-
 
 [[metal-brdf-and-dielectric-brdf]]
 === Metal BRDF and Dielectric BRDF
@@ -3917,16 +3913,13 @@ metal_brdf = metal_fresnel * specular_brdf
 material = mix(dielectric_brdf, metal_brdf, metallic)
 ----
 
-
 [[discussion]]
 === Discussion
-
 
 [[masking-shadowing-term-and-multiple-scattering]]
 ==== Masking-Shadowing Term and Multiple Scattering
 
 The model for specular reflection can be improved in several ways. <<Heitz2014,Heitz (2014)>> notes that a more accurate form of the masking-shadowing function takes the correlation between masking and shadowing due to the height of the microsurface into account. This correlation is accounted for in the height-correlated masking and shadowing function. Another improvement in accuracy can be achieved by modeling multiple scattering, see Section <<microfacet-surfaces,Microfacet Surfaces>>.
-
 
 [[schlicks-fresnel-approximation]]
 ==== Schlick's Fresnel Approximation
@@ -3936,7 +3929,6 @@ Although Schlick's Fresnel is a good approximation for a wide range of metallic 
 Metals often exhibit a "`dip`" in reflectance near grazing angles, which is not present in the Schlick Fresnel. <<LazanyiSzirmayKalos2005,Lazányi and Szirmay-Kalos (2005)>> extend the Schlick Fresnel with an error term to account for it. <<Hoffman2019,Hoffman (2019)>> improves the parameterization of this term by introducing an artist-friendly `f82` color, the color at an angle of about 82°. An additional color parameter for metals was also introduced by <<Gulbrandsen2014,Gulbrandsen (2014)>>. Gulbrandson calls it "`edge tint`" and uses it in the full Fresnel equations instead of Schlick's approximation. Even though the full Fresnel equations should give a more accurate result, Hoffman shows that it is worse than Schlick's approximation in the context of RGB renderers. As we target RGB renderers and do not provide an additional color parameter for metals in glTF, we suggest using the original Schlick Fresnel for metals.
 
 The index of refraction of most dielectrics is 1.5. For that reason, the dielectric Fresnel term uses a fixed `f0 = 0.04`. The Schlick Fresnel approximates the full Fresnel equations well for an index of refraction in the range [1.2, 2.2]. The main reason for a material to fall outside this range is transparency and nested objects. If a transparent object overlaps another transparent object and both have the same (or similar) index of refraction, the resulting ratio at the boundary is 1 (or close to 1). According to the full Fresnel equations, there is no (or almost no) reflection in this case. The reflection intensity computed from the Schlick Fresnel approximation will be too high. Implementations that care about accuracy in case of nested dielectrics are encouraged to use the full Fresnel equations for dielectrics. For metals Schlick's approximation is still a good choice.
-
 
 [[coupling-diffuse-and-specular-reflection]]
 ==== Coupling Diffuse and Specular Reflection
@@ -3948,7 +3940,6 @@ While the coupling of diffuse and specular components in `fresnel_mix` as propos
 More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework for computing BSDFs of layered materials, including multiple scattering within layers. Amongst much more complicated scenarios it also solves the special case of coupling diffuse and specular components, but it is too heavy for textured materials, even in offline rendering.
 
 <<KullaConty2017,Kulla and Conty (2017)>> found a solution tailored to the special case of coupling diffuse and specular components, which is easy to compute. It requires the directional albedo of the Fresnel-weighted specular BRDF to be precomputed and tabulated, but they found that the function is smooth, and a low-resolution 3D texture (16³ pixels) is sufficient. Their coupled diffuse-specular model is not only energy-__con__serving, but also energy-__pre__serving, meaning that if neither the specular nor the diffuse component absorb any energy, all energy is reflected.
-
 
 [[references]]
 == References
@@ -3969,7 +3960,6 @@ More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework f
 * [[TrowbridgeReitz1975]] https://www.osapublishing.org/josa/abstract.cfm?uri=josa-65-5-531[Trowbridge, T., and K. P. Reitz (1975): Average irregularity representation of a rough surface for ray reflection. Journal of the Optical Society of America 65 (5), 531-536.]
 * [[Turquin2019]] https://blog.selfshadow.com/publications/turquin/ms_comp_final.pdf[Turquin E. (2019): Practical multiple scattering compensation for microfacet models]
 * [[Walter2007]] https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.html[Walter, B., S. Marschner, H. Li, and K. Torrance (2007): Microfacet models for refraction through rough surfaces.]
-
 
 [appendix]
 [[appendix-c-interpolation]]
@@ -4000,7 +3990,6 @@ For the following sections, let
 
 The scalar-vector multiplications are per vector component.
 
-
 == Step Interpolation
 
 This mode is used when the animation sampler interpolation mode is set to `STEP`.
@@ -4011,7 +4000,6 @@ The interpolated sampler value stem:[v_t] at the current (requested) timestamp s
 ++++
 v_t = v_k
 ++++
-
 
 [[interpolation-lerp]]
 == Linear Interpolation
@@ -4024,7 +4012,6 @@ The interpolated sampler value stem:[v_t] at the current (requested) timestamp s
 ++++
 v_t = (1 - t) \cdot v_k + t \cdot v_{k+1}
 ++++
-
 
 [[interpolation-slerp]]
 == Spherical Linear Interpolation
@@ -4056,7 +4043,6 @@ Implementations **MAY** approximate these equations to reach application-specifi
 ====
 When stem:[a] is close to zero, spherical linear interpolation turns into regular linear interpolation.
 ====
-
 
 [[interpolation-cubic]]
 == Cubic Spline Interpolation
