@@ -1,0 +1,20 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "KHR_character_expression_suppression KHR_character_expression Expression Entry Extension",
+    "type": "object",
+    "description": "Defines a nonempty array of suppressions originating from the containing expression entry.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "suppressions": {
+            "type": "array",
+            "description": "Nonempty array of suppressions whose implicit source is the containing expression entry.",
+            "items": {
+                "$ref": "suppression.KHR_character_expression_suppression.schema.json"
+            },
+            "minItems": 1
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": ["suppressions"]
+}

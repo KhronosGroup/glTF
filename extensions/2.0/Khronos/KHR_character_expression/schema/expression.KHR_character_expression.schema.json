@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "KHR_character_expression Expression Entry Properties",
+    "type": "object",
+    "description": "One labeled expression driver and its response animation.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Nonempty descriptive name, unique among entries in the containing expressions array.",
+            "gltf_detailedDescription": "This name MUST be unique among all entries in the top-level KHR_character_expression.expressions array. Consumers MUST compare names by Unicode code point, without case folding, trimming, or Unicode normalization. Applications MAY provide name-based lookup using this comparison; array indices remain the authoritative entry identities. Name uniqueness requires semantic validation beyond this schema."
+        },
+        "animation": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "Index of the animation used as this entry's expression response curve.",
+            "gltf_detailedDescription": "This value MUST be a valid index into the top-level `animations` array. Every channel of that animation is subject to the expression evaluator's validity rules and contributes to the expression duration. A channel produces response records only when a derived expression extension on this entry lists it and the consumer supports that channel as defined by the expression response evaluator; every other channel is not animated by the expression."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": ["name", "animation"]
+}

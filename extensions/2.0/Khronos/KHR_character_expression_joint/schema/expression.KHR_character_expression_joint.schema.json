@@ -1,0 +1,29 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "KHR_character_expression_joint KHR_character_expression Expression Entry Extension",
+    "type": "object",
+    "description": "Classifies listed expression-animation channels as node-TRS channels.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "channels": {
+            "type": "array",
+            "description": "Nonempty array of unique indices classifying node-TRS channels. A consumer that supports this extension produces response records for the listed channels when the expression entry's effective driver is positive, subject to the base extension's target-support rules; a consumer that does not support it produces none for them. Every channel of the selected animation still contributes to the base expression duration.",
+            "items": {
+                "allOf": [
+                    {
+                        "$ref": "glTFid.schema.json"
+                    }
+                ],
+                "description": "Index of a classified channel in the expression entry's selected animation.",
+                "gltf_detailedDescription": "This value MUST be a valid index into the `channels` array of the animation selected by the containing expression entry's `animation` property. The channel MUST target node `translation`, `rotation`, or `scale` using an ordinary core target or a valid `KHR_animation_pointer` target. The target node MUST NOT define `matrix`."
+            },
+            "minItems": 1,
+            "uniqueItems": true
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "channels"
+    ]
+}
