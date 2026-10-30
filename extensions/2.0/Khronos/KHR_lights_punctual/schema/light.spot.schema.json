@@ -1,5 +1,6 @@
 {
-    "$schema" : "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "light.spot.schema.json",
     "title" : "KHR_lights_punctual Light Spot Properties",
     "type" : "object",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
@@ -9,16 +10,14 @@
             "description" : "Angle in radians from centre of spotlight where falloff begins.",
             "default" : 0.0,
             "minimum": 0,
-            "maximum": 1.5707963267948966,
-            "exclusiveMaximum": true
+            "exclusiveMaximum": 1.5707963267948966
         },
         "outerConeAngle" : {
             "type" : "number",
             "description" : "Angle in radians from centre of spotlight where falloff ends.",
             "default" : 0.7853981633974483,
-            "minimum": 0,
-            "maximum": 1.5707963267948966,
-            "exclusiveMinimum": true
+            "exclusiveMinimum": 0,
+            "maximum": 1.5707963267948966
         },
         "extensions": { },
         "extras": { }
