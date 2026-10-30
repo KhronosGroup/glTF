@@ -1,0 +1,125 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "extensions": {
+        "OMI_physics_shape": {
+            "shapes": [
+                {
+                    "type": "box",
+                    "box": {
+                        "size": [1, 1, 1]
+                    }
+                }
+            ]
+        }
+    },
+    "extensionsUsed": ["OMI_physics_shape", "OMI_physics_body"],
+    "nodes": [
+        {
+            "children": [1, 3, 5, 8, 11, 12],
+            "name": "IndirectColliders"
+        },
+        {
+            "children": [2],
+            "extensions": {
+                "OMI_physics_body": {
+                    "motion": { "type": "kinematic" }
+                }
+            },
+            "name": "KinematicDirect",
+            "translation": [0, 0, 0]
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": {
+                    "collider": { "shape": 0 }
+                }
+            },
+            "name": "BoxShapeKinematicDirect"
+        },
+        {
+            "children": [4],
+            "extensions": {
+                "OMI_physics_body": {
+                    "trigger": {}
+                }
+            },
+            "name": "TriggerDirect",
+            "translation": [0, 0, -2]
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": {
+                    "trigger": { "shape": 0 }
+                }
+            },
+            "name": "BoxShapeTriggerDirect"
+        },
+        {
+            "children": [6],
+            "extensions": {
+                "OMI_physics_body": {
+                    "motion": { "type": "kinematic" }
+                }
+            },
+            "name": "KinematicIndirect",
+            "translation": [-2, 0, 0]
+        },
+        {
+            "children": [7],
+            "name": "IntermediaryNodeKinematic"
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": {
+                    "collider": { "shape": 0 }
+                }
+            },
+            "name": "BoxShapeKinematicIndirect"
+        },
+        {
+            "children": [9],
+            "extensions": {
+                "OMI_physics_body": {
+                    "trigger": {}
+                }
+            },
+            "name": "TriggerIndirect",
+            "translation": [-2, 0, -2]
+        },
+        {
+            "children": [10],
+            "name": "IntermediaryNodeTrigger"
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": {
+                    "trigger": { "shape": 0 }
+                }
+            },
+            "name": "BoxShapeTriggerIndirect"
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": {
+                    "motion": { "type": "kinematic" },
+                    "collider": { "shape": 0 }
+                }
+            },
+            "name": "KinematicSameNode",
+            "translation": [2, 0, 0]
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": {
+                    "trigger": { "shape": 0 }
+                }
+            },
+            "name": "TriggerSameNode",
+            "translation": [2, 0, -2]
+        }
+    ],
+    "scene": 0,
+    "scenes": [{ "nodes": [0] }]
+}

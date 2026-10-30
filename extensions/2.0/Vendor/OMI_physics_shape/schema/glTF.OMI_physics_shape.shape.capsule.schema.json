@@ -1,0 +1,30 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.OMI_physics_shape.shape.capsule.schema.json",
+    "title": "OMI_physics_shape Capsule Shape",
+    "type": "object",
+    "description": "Parameters describing a capsule physics shape.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "height": {
+            "type": "number",
+            "description": "The mid height of the capsule shape in meters, the distance between the centers of the two capping hemispheres.",
+            "exclusiveMinimum": 0.0,
+            "default": 1.0
+        },
+        "radiusBottom": {
+            "type": "number",
+            "description": "The radius of the bottom of the capsule (the hemisphere located along -Y) in meters.",
+            "minimum": 0.0,
+            "default": 0.5
+        },
+        "radiusTop": {
+            "type": "number",
+            "description": "The radius of the top of the capsule (the hemisphere located along +Y) in meters.",
+            "minimum": 0.0,
+            "default": 0.5
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
