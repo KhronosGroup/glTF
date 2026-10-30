@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "EXT_camera_physical glTF Camera Extension",
+  "type": "object",
+  "description": "glTF extension whose primary purpose is preserving the authored focal length and physical sensor size of a perspective camera, with optional secondary physical-camera metadata.",
+  "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+  "properties": {
+    "focalLength": {
+      "type": "number",
+      "description": "The lens focal length, in meters.",
+      "minimum": 0.0,
+      "exclusiveMinimum": true
+    },
+    "sensorSize": {
+      "type": "array",
+      "description": "The physical sensor size as [width, height], in meters.",
+      "items": {
+        "type": "number",
+        "minimum": 0.0,
+        "exclusiveMinimum": true
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "fStop": {
+      "type": "number",
+      "description": "The lens f-number (focal length divided by the entrance pupil diameter). Used by renderers that support depth of field.",
+      "minimum": 0.0,
+      "exclusiveMinimum": true
+    },
+    "focusDistance": {
+      "type": "number",
+      "description": "The distance from the camera to the plane of focus, in meters. Used by renderers that support depth of field.",
+      "minimum": 0.0
+    },
+    "extensions": {},
+    "extras": {}
+  },
+  "required": ["focalLength", "sensorSize"]
+}
