@@ -1,10 +1,10 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "camera.orthographic.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/camera.orthographic.schema.json",
     "title": "Camera Orthographic",
     "type": "object",
     "description": "An orthographic camera containing properties to create an orthographic projection matrix.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "xmag": {
             "type": "number",
@@ -23,9 +23,7 @@
             "type": "number",
             "description": "The floating-point distance to the near clipping plane.",
             "minimum": 0.0
-        },
-        "extensions": { },
-        "extras": { }
+        }
     },
     "required": [ "xmag", "ymag", "zfar", "znear" ]
 }

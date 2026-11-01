@@ -1,0 +1,34 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "graph.declaration.schema.json",
+    "title": "Behavior graph declaration",
+    "type": "object",
+    "$ref": "glTFProperty.schema.json",
+    "properties": {
+        "extension": {
+            "title": "The name of the extension defining the operation.",
+            "type": "string"
+        },
+        "inputValueSockets": {
+            "title": "The extension-defined input value sockets.",
+            "type": "object",
+            "additionalProperties": { "$ref": "graph.declaration.valueSocket.schema.json" },
+            "minProperties": 1
+        },
+        "op": {
+            "title": "The operation.",
+            "type": "string"
+        },
+        "outputValueSockets": {
+            "title": "The extension-defined output value sockets.",
+            "type": "object",
+            "additionalProperties": { "$ref": "graph.declaration.valueSocket.schema.json" },
+            "minProperties": 1
+        }
+    },
+    "required": [ "op" ],
+    "dependentRequired": {
+        "inputValueSockets": [ "extension" ],
+        "outputValueSockets": [ "extension" ]
+    }
+}

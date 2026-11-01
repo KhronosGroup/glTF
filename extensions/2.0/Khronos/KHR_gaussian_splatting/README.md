@@ -26,7 +26,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 ## Status
 
-Release Candidate
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 
@@ -120,16 +120,16 @@ The camera used for splat rendering SHOULD use perspective projection. Splat ren
 
 This kernel defines the following attributes for the mesh primitive.
 
-| Splat Data                   | Attribute Semantic                | Accessor Type | Component Type | Required |
+| Splat Data                   | Attribute Semantic                | Accessor Type | Effective Component Type | Required |
 | ---------------------------- | --------------------------------- | - | - | - |
 | Position                     | `POSITION`                        | VEC3   | Inherited from the glTF specification | :white_check_mark: Yes |
-| Rotation                     | `KHR_gaussian_splatting:ROTATION` | VEC4   | _float_ <br/>_signed byte_ normalized <br/>_signed short_ normalized | :white_check_mark: Yes |
-| Scale                        | `KHR_gaussian_splatting:SCALE`    | VEC3   | _float_ <br/>_unsigned byte_ <br/>_unsigned byte_ normalized <br/>_unsigned short_ <br/>_unsigned short_ normalized | :white_check_mark: Yes |
-| Opacity                      | `KHR_gaussian_splatting:OPACITY`  | SCALAR | _float_ <br/>_unsigned byte_ normalized <br/>_unsigned short_ normalized | :white_check_mark: Yes |
-| Spherical Harmonics degree 0 | `KHR_gaussian_splatting:SH_DEGREE_0_COEF_0`     | VEC3 | _float_ | :white_check_mark: Yes |
-| Spherical Harmonics degree 1 | `KHR_gaussian_splatting:SH_DEGREE_1_COEF_[0-2]` | VEC3 | _float_ | no (yes if degree 2 or 3 are used) |
-| Spherical Harmonics degree 2 | `KHR_gaussian_splatting:SH_DEGREE_2_COEF_[0-4]` | VEC3 | _float_ | no (yes if degree 3 is used) |
-| Spherical Harmonics degree 3 | `KHR_gaussian_splatting:SH_DEGREE_3_COEF_[0-6]` | VEC3 | _float_ | no |
+| Rotation                     | `KHR_gaussian_splatting:ROTATION` | VEC4   | _float32_ <br/> _snorm8_ <br/> _snorm16_ | :white_check_mark: Yes |
+| Scale                        | `KHR_gaussian_splatting:SCALE`    | VEC3   | _float32_ <br/> _uint8_ <br/> _unorm8_ <br/> _uint16_ <br/> _unorm16_ | :white_check_mark: Yes |
+| Opacity                      | `KHR_gaussian_splatting:OPACITY`  | SCALAR | _float32_ <br/> _unorm8_ <br/> _unorm16_ | :white_check_mark: Yes |
+| Spherical Harmonics degree 0 | `KHR_gaussian_splatting:SH_DEGREE_0_COEF_0`     | VEC3 | _float32_ | :white_check_mark: Yes |
+| Spherical Harmonics degree 1 | `KHR_gaussian_splatting:SH_DEGREE_1_COEF_[0-2]` | VEC3 | _float32_ | no (yes if degree 2 or 3 are used) |
+| Spherical Harmonics degree 2 | `KHR_gaussian_splatting:SH_DEGREE_2_COEF_[0-4]` | VEC3 | _float32_ | no (yes if degree 3 is used) |
+| Spherical Harmonics degree 3 | `KHR_gaussian_splatting:SH_DEGREE_3_COEF_[0-6]` | VEC3 | _float32_ | no |
 
 The mean vector for the Gaussian splat is provided by the `POSITION` position of the mesh primitive. This defines the center of the Gaussian splat ellipsoid in local space. The effective global mean vector for the Gaussian splat is derived from the `POSITION` attribute value and the global transformation matrix of the glTF node that instantiates the mesh containing the splat primitive as defined in the glTF specification.
 
@@ -533,7 +533,12 @@ Y_{3,3}(θ, φ) &= -\frac{1}{4} \sqrt{\frac{35}{2\pi}} \cdot \frac{x(x^2 - 3y^2)
 
 ## Known Implementations
 
-_TODO: Add known implementations before final ratification._
+_This section is non-normative and provided for informational purposes only._
+
+- [CesiumJS](https://github.com/CesiumGS/Cesium)
+- [Cesium Native](https://github.com/CesiumGS/cesium-native)
+- [JSplat](https://github.com/javagl/JSplat)
+- [3dgs_ply2gltf](https://github.com/NorbertNopper-Huawei/3dgs_ply2gltf)
 
 ## Resources
 
@@ -545,45 +550,14 @@ _TODO: Add known implementations before final ratification._
 
 Copyright 2026 The Khronos Group Inc.
 
-This Specification is protected by copyright laws and contains material proprietary
-to Khronos. Except as described by these terms, it or any components
-may not be reproduced, republished, distributed, transmitted, displayed, broadcast
-or otherwise exploited in any manner without the express prior written permission
-of Khronos.
+This Specification is protected by copyright laws and contains material proprietary to Khronos. Except as described by these terms, it or any components may not be reproduced, republished, distributed, transmitted, displayed, broadcast or otherwise exploited in any manner without the express prior written permission of Khronos.
 
-Khronos grants a conditional copyright license to use and reproduce the unmodified
-Specification for any purpose, without fee or royalty, EXCEPT no licenses to any patent,
-trademark or other intellectual property rights are granted under these terms.
+Khronos grants a conditional copyright license to use and reproduce the unmodified Specification for any purpose, without fee or royalty, EXCEPT no licenses to any patent, trademark or other intellectual property rights are granted under these terms.
 
-Khronos makes no, and expressly disclaims any, representations or warranties,
-express or implied, regarding this Specification, including, without limitation:
-merchantability, fitness for a particular purpose, non-infringement of any
-intellectual property, correctness, accuracy, completeness, timeliness, and
-reliability. Under no circumstances will Khronos, or any of its Promoters,
-Contributors or Members, or their respective partners, officers, directors,
-employees, agents or representatives be liable for any damages, whether direct,
-indirect, special or consequential damages for lost revenues, lost profits, or
-otherwise, arising from or in connection with these materials.
+Khronos makes no, and expressly disclaims any, representations or warranties, express or implied, regarding this Specification, including, without limitation: merchantability, fitness for a particular purpose, non-infringement of any intellectual property, correctness, accuracy, completeness, timeliness, and reliability. Under no circumstances will Khronos, or any of its Promoters, Contributors or Members, or their respective partners, officers, directors, employees, agents or representatives be liable for any damages, whether direct, indirect, special or consequential damages for lost revenues, lost profits, or otherwise, arising from or in connection with these materials.
 
-This specification has been created under the Khronos Intellectual Property Rights
-Policy, which is Attachment A of the Khronos Group Membership Agreement available at
-https://www.khronos.org/files/member_agreement.pdf. Khronos grants a conditional
-copyright license to use and reproduce the unmodified specification for any purpose,
-without fee or royalty, EXCEPT no licenses to any patent, trademark or other
-intellectual property rights are granted under these terms. Parties desiring to
-implement the specification and make use of Khronos trademarks in relation to that
-implementation, and receive reciprocal patent license protection under the Khronos
-IP Policy must become Adopters and confirm the implementation as conformant under
-the process defined by Khronos for this specification;
-see https://www.khronos.org/conformance/adopters/file-format-adopter-program.
+This Specification has been created under the Khronos Intellectual Property Rights Policy, which is Attachment A of the Khronos Group Membership Agreement available at https://www.khronos.org/files/member_agreement.pdf. Parties desiring to implement the Specification and make use of Khronos trademarks in relation to that implementation, and receive reciprocal patent license protection under the Khronos Intellectual Property Rights Policy must become Adopters and confirm the implementation as conformant under the process defined by Khronos for this Specification; see https://www.khronos.org/conformance/adopters/file-format-adopter-program.
 
-Where this Specification identifies specific sections of external references, only those
-specifically identified sections define normative functionality. The Khronos Intellectual
-Property Rights Policy excludes external references to materials and associated enabling
-technology not created by Khronos from the Scope of this Specification, and any licenses
-that may be required to implement such referenced materials and associated technologies
-must be obtained separately and may involve royalty payments.
+Where this Specification identifies specific sections of external references, only those specifically identified sections define normative functionality. The Khronos Intellectual Property Rights Policy excludes external references to materials and associated enabling technology not created by Khronos from the Scope of this Specification, and any licenses that may be required to implement such referenced materials and associated technologies must be obtained separately and may involve royalty payments.
 
-Khronos® is a registered trademark, and glTF™ is a trademark of The Khronos Group Inc. All
-other product names, trademarks, and/or company names are used solely for identification
-and belong to their respective owners.
+Khronos® is a registered trademark, and glTF™ is a trademark of The Khronos Group Inc. All other product names, trademarks, and/or company names are used solely for identification and belong to their respective owners.

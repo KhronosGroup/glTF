@@ -9,7 +9,7 @@
 
 ## Status
 
-Release Candidate
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 
