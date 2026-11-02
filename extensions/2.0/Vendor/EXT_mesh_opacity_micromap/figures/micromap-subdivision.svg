@@ -10,8 +10,8 @@
     </marker>
   </defs>
 
-  <path d="M 148.794 172.547 L 213.338 301.635 L 84.25 301.635 L 148.794 172.547 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)" bx:shape="triangle 84.25 172.547 129.088 129.088 0.5 0 1@2f5ba8d9"/>
-  <path d="M 148.654 -301.635 L 180.926 -237.952 L 116.382 -237.952 L 148.654 -301.635 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)" transform="matrix(1, 0, 0, -1, 0, 0)" bx:shape="triangle 116.382 -301.635 64.544 63.683 0.5 0 1@2be11a3d"/>
+  <path d="M 148.794 172.547 L 213.338 301.635 L 84.25 301.635 L 148.794 172.547 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)"/>
+  <path d="M 148.654 -301.635 L 180.926 -237.952 L 116.382 -237.952 L 148.654 -301.635 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)" transform="matrix(1, 0, 0, -1, 0, 0)"/>
   <text white-space="pre" fill="rgb(51, 51, 51)" font-family="sans-serif" font-size="12px" x="73.923" y="314.066">v0</text>
   <text white-space="pre" fill="rgb(51, 51, 51)" font-family="sans-serif" font-size="12px" x="209.465" y="312.775">v1</text>
   <text white-space="pre" fill="rgb(51, 51, 51)" font-family="sans-serif" font-size="12px" x="142.769" y="162.172">v2</text>
@@ -44,15 +44,15 @@
   <line x1="131.7" y1="223.9" x2="146.5" y2="194.4" stroke="#C62828" stroke-width="1.5" marker-end="url(#ahRed)"/>
   <line x1="151.1" y1="194.4" x2="165.9" y2="223.9" stroke="#C62828" stroke-width="1.5" marker-end="url(#ahRed)"/>
 
-  <path d="M 327.763 171.485 L 392.307 300.573 L 263.219 300.573 L 327.763 171.485 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)" bx:shape="triangle 263.219 171.485 129.088 129.088 0.5 0 1@8ef7d94b"/>
-  <path d="M 327.623 -300.573 L 359.895 -236.89 L 295.351 -236.89 L 327.623 -300.573 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)" transform="matrix(1, 0, 0, -1, 0, 0)" bx:shape="triangle 295.351 -300.573 64.544 63.683 0.5 0 1@9020b4f4"/>
+  <path d="M 327.763 171.485 L 392.307 300.573 L 263.219 300.573 L 327.763 171.485 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)"/>
+  <path d="M 327.623 -300.573 L 359.895 -236.89 L 295.351 -236.89 L 327.623 -300.573 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)" transform="matrix(1, 0, 0, -1, 0, 0)"/>
   <text white-space="pre" fill="rgb(51, 51, 51)" font-family="sans-serif" font-size="12px" x="252.892" y="313.004">v0</text>
   <text white-space="pre" fill="rgb(51, 51, 51)" font-family="sans-serif" font-size="12px" x="388.434" y="311.713">v1</text>
   <text white-space="pre" fill="rgb(51, 51, 51)" font-family="sans-serif" font-size="12px" x="321.738" y="161.11">v2</text>
-  <path d="M 295.684 -300.573 L 312.107 -268.164 L 279.26 -268.164 L 295.684 -300.573 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)" transform="matrix(1, 0, 0, -1, 0, 0)" bx:shape="triangle 279.26 -300.573 32.847 32.409 0.5 0 1@0507e9e0"/>
-  <path d="M 359.792 -300.416 L 376.215 -268.007 L 343.368 -268.007 L 359.792 -300.416 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)" transform="matrix(1, 0, 0, -1, 0, 0)" bx:shape="triangle 343.368 -300.416 32.847 32.409 0.5 0 1@92a3e3ee"/>
-  <path d="M 327.879 -236.442 L 344.302 -204.033 L 311.455 -204.033 L 327.879 -236.442 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)" transform="matrix(1, 0, 0, -1, 0, 0)" bx:shape="triangle 311.455 -236.442 32.847 32.409 0.5 0 1@fe99ef55"/>
-  <path d="M 327.799 235.644 L 344.223 268.053 L 311.376 268.053 L 327.799 235.644 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)" bx:shape="triangle 311.376 235.644 32.847 32.409 0.5 0 1@30302937"/>
+  <path d="M 295.684 -300.573 L 312.107 -268.164 L 279.26 -268.164 L 295.684 -300.573 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)" transform="matrix(1, 0, 0, -1, 0, 0)"/>
+  <path d="M 359.792 -300.416 L 376.215 -268.007 L 343.368 -268.007 L 359.792 -300.416 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)" transform="matrix(1, 0, 0, -1, 0, 0)"/>
+  <path d="M 327.879 -236.442 L 344.302 -204.033 L 311.455 -204.033 L 327.879 -236.442 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)" transform="matrix(1, 0, 0, -1, 0, 0)"/>
+  <path d="M 327.799 235.644 L 344.223 268.053 L 311.376 268.053 L 327.799 235.644 Z" fill="rgb(216, 216, 216)" stroke="rgb(0, 0, 0)"/>
   <text white-space="pre" fill="rgb(51, 51, 51)" font-family="sans-serif" font-size="28px" transform="matrix(0.312849, 0, 0, 0.312846, 309.186122, 249.271405)">4</text>
   <text white-space="pre" fill="rgb(51, 51, 51)" font-family="sans-serif" font-size="28px" transform="matrix(0.312849, 0, 0, 0.312846, 325.397365, 259.078793)">5</text>
   <text white-space="pre" fill="rgb(51, 51, 51)" font-family="sans-serif" font-size="28px" transform="matrix(0.312849, 0, 0, 0.312846, 341.893001, 248.702587)">6</text>
