@@ -1,5 +1,5 @@
 <!--
-Copyright 2018-2026 The Khronos Group Inc.
+Copyright 2026 The Khronos Group Inc.
 SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 -->
 
@@ -14,7 +14,7 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 - Martin-Karl Lefrançois, NVIDIA, [@mklefrancois](https://github.com/mklefrancois)
 - Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
 
-Copyright 2018-2026 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright 2026 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix B](#appendix-b-full-khronos-copyright-statement) for full Khronos Copyright Statement.
 
 ## Status
@@ -37,9 +37,40 @@ More specifically, this extension consists of two parts within the glTF object s
     * the index of a buffer view of [packed microtriangle states](#microtriangle-data),
     * the index of a buffer view of [triangle records](#micromap-triangle-records),
     * and the number of micromap triangles for each combination of [subdivision level](#subdivision-and-microtriangle-order) and [format](#opacity-formats-and-states).
-2. [A mesh primitive extension object](#extending-mesh-primitives) that associates each triangle of the primitive with a micromap triangle, or with a uniform opacity state.
+2. [A mesh primitive extension object](#extending-mesh-primitives) that associates each triangle of the mesh primitive with a micromap triangle, or with a uniform opacity state.
 
 How opacity states affect ray traversal (for example, when an any-hit shader is invoked for unknown states) is defined by the graphics API and is outside the scope of this extension.
+
+> [!NOTE]
+> This was originally intended to accelerate alpha-tested geometry, where at
+> every point a material can be evaluated to determine whether that point is
+> opaque or transparent. In ray tracing, this evaluation is typically done
+> inside an any-hit shader.
+>
+> In Vulkan's `VK_KHR_opacity_micromap` and DirectX 12's opacity micromaps,
+> a *transparent* microtriangle state indicates that the microtriangle is
+> fully transparent (and thus that ray traversal can ignore this hit),
+> and an *opaque* state indicates that the microtriangle is fully opaque
+> (and thus that the hit candidate can be immediately confirmed).
+> In both cases, the hardware can avoid invoking an any-hit shader.
+>
+> The *unknown-transparent* and *unknown-opaque* states both indicate that a
+> microtriangle may have mixed opacity. However, these are distinct states
+> because `VK_KHR_opacity_micromap` and DirectX 12 allow configuring ray
+> traversal (on an instance or ray level) so that *unknown-transparent*
+> states are treated as *transparent*, and *unknown-opaque* states are
+> treated as *opaque*. In this mode, any-hit shaders can be avoided entirely
+> at some loss in visual quality, which can be worth it for effects like
+> soft shadows.
+>
+> Therefore, a common approach to baking an opacity micromap for a textured
+> mesh is, for each microtriangle, to emit a *transparent* state if its
+> area is 0% opaque, an *opaque* state if it is 100% opaque, and
+> otherwise to emit an *unknown-transparent* state or an *unknown-opaque*
+> state if its area is less or more than 50% opaque, respectively.
+> In practice, a baker might have modifications to support, for instance,
+> mipmapping or procedural texturing, and the exact method it uses is
+> outside the scope of this extension.
 
 ## Extending the glTF Root
 
@@ -81,12 +112,13 @@ The `usageCounts`, `usageLevels`, and `usageFormats` arrays together form a list
 - Each element of `usageCounts` **MUST** be greater than or equal to `1`.
 - Each element of `usageLevels` **MUST** be in the range `[0, 12]`.
 - Each element of `usageFormats` **MUST** be `1` or `2`.
-- For each distinct pair of subdivision level and format, the sum of `usageCounts[i]` over all entries `i` with that pair **MUST** equal the number of micromap triangle records with that subdivision level and format.
+- Each pair of `(usageLevels[i], usageFormats[i])` **MUST** be distinct from the others.
+- For each entry `i`, `usageCounts[i]` **MUST** equal the number of micromap triangle records with subdivision level `usageLevels[i]` and format `usageFormats[i]`.
 
 > [!NOTE]
 > As a consequence, the sum of all `usageCounts` elements equals the number of micromap triangle records. The usage entries let an implementation compute the memory required to build a micromap without reading the records.
 
-The buffer views referenced by `data` and `triangles` **MUST NOT** define `byteStride`.
+The buffer views referenced by `data` and `triangles` **MUST NOT** define `byteStride` or `target`.
 
 ## Extending Mesh Primitives
 
@@ -104,7 +136,8 @@ A mesh primitive references a micromap through the `EXT_mesh_opacity_micromap` e
           "extensions": {
             "EXT_mesh_opacity_micromap": {
               "micromap": 0,
-              "micromapIndices": 3
+              "micromapIndices": 3,
+              "micromapBaseTriangle": 0
             }
           }
         }
@@ -119,10 +152,10 @@ The extension object has the following properties:
 | | Type | Description | Required |
 |-|------|-------------|----------|
 | **micromap** | `integer` | The index of the micromap in the root `micromaps` array. | :white_check_mark: Yes |
-| **micromapIndices** | `integer` | The index of the accessor containing one micromap index per triangle of the primitive. See [Micromap Indices](#micromap-indices). | No |
+| **micromapIndices** | `integer` | The index of the accessor containing one micromap index per triangle of the mesh primitive. See [Micromap Indices](#micromap-indices). | No |
 | **micromapBaseTriangle** | `integer` | The offset added to each micromap index that is not a special index. | No, default: `0` |
 
-A primitive using this extension **MUST** have a `mode` of `4` (TRIANGLES).
+A mesh primitive using this extension **MUST** have a `mode` of `4` (TRIANGLES).
 
 ## Micromap Data
 
@@ -218,7 +251,9 @@ Each triangle `t` of a primitive is associated with a lookup value `m`:
 If `m` is a [special index](#special-indices), triangle `t` has the uniform opacity state given by that index and does not reference a micromap triangle. Otherwise, triangle `t` uses micromap triangle `m + micromapBaseTriangle` of the referenced micromap. This value **MUST** be less than the number of micromap triangle records of the micromap.
 
 > [!NOTE]
-> When `micromapIndices` is undefined, this requires the number of micromap triangle records to be at least the primitive's triangle count plus `micromapBaseTriangle`.
+> `micromapBaseTriangle` allows concatenating multiple micromap buffers into one.
+> When `micromapIndices` is undefined, this requires the number of micromap triangle
+> records to be at least the primitive's triangle count plus `micromapBaseTriangle`.
 
 Several triangles, including triangles of different primitives, **MAY** use the same micromap triangle.
 
@@ -236,18 +271,13 @@ Several triangles, including triangles of different primitives, **MAY** use the 
 When defined, the `micromapIndices` accessor **MUST** meet the following requirements:
 
 - Its `type` **MUST** be `SCALAR`.
-- Its `componentType` **MUST** be `5121` (UNSIGNED_BYTE), `5123` (UNSIGNED_SHORT), `5125` (UNSIGNED_INT), `5122` (SHORT), or `5124` (INT).
+- Its `componentType` **MUST** be `5121` (UNSIGNED_BYTE), `5123` (UNSIGNED_SHORT), or `5125` (UNSIGNED_INT).
 - Its `normalized` property **MUST NOT** be set to `true`.
 - Its `count` **MUST** be equal to the number of triangles of the primitive.
 
-As for all accessors that do not contain vertex attributes, the elements of this accessor are tightly packed and its buffer view **MUST NOT** define `byteStride`.
+As for all accessors that do not contain vertex attributes, the elements of this accessor are tightly packed and its buffer view **MUST NOT** define `byteStride` or `target`.
 
-For signed component types, special indices are stored as their signed values, and every element **MUST** be greater than or equal to `-4`.
-
-For unsigned component types, special indices are stored as the two's-complement bit patterns of their signed values (for example, `-1` is stored as `255`, `65535`, or `4294967295` for UNSIGNED_BYTE, UNSIGNED_SHORT, or UNSIGNED_INT, respectively). Elements that are not special indices are therefore less than $2^n - 4$, where $n$ is the bit width of the component type.
-
-> [!NOTE]
-> Signed and unsigned component types of the same width have identical bit patterns for all valid values, so the data can be passed to a graphics API as an unsigned index buffer of that width.
+Special indices are stored as the two's-complement bit patterns of their signed values (for example, `-1` is stored as `255`, `65535`, or `4294967295` for UNSIGNED_BYTE, UNSIGNED_SHORT, or UNSIGNED_INT, respectively). Elements that are not special indices are therefore less than $2^n - 4$, where $n$ is the bit width of the component type.
 
 ## Interaction with Materials
 
@@ -380,7 +410,7 @@ function BarycentricsToSpaceFillingCurveIndex(u : f32, v : f32, level : u32) : u
 
 ## Appendix B: Full Khronos Copyright Statement
 
-Copyright 2018-2026 The Khronos Group Inc.
+Copyright 2026 The Khronos Group Inc.
 
 Some parts of this Specification are purely informative and do not define requirements
 necessary for compliance and so are outside the Scope of this Specification. These

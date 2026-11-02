@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "EXT_mesh_opacity_micromap glTF Mesh Primitive Extension",
     "type": "object",
     "description": "Per-primitive opacity micromap mapping data.",
