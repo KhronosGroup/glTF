@@ -34,7 +34,7 @@ An asset **MAY** list `KHR_character_expression_joint` in `extensionsRequired`. 
 
 ## Overview (Informative)
 
-This extension classifies listed channels of an expression animation as node-TRS channels and adds validation metadata. It does not change their samples or require the targeted nodes to be skin joints. Translation responses aggregate additively. Rotation and scale composition and the final mix with ordinary animation and other runtime systems are host-defined.
+This extension classifies listed channels of an expression animation as node-TRS channels and adds validation metadata. It does not change their samples or require the targeted nodes to be skin joints. Translation responses aggregate additively. Rotation composition is host-defined, with approximately additive behavior recommended for small rotations. The final mix with ordinary animation and other runtime systems is host-defined.
 
 Channels listed here produce responses only on a consumer that supports this extension. A channel that no derived expression extension on the entry lists produces no response. Every channel in the selected animation still contributes to the base extension's duration.
 
@@ -91,7 +91,11 @@ Each listed channel and its sampler **MUST** satisfy all core animation rules, a
 
 Each listed channel produces the ordinary absolute node-TRS sample defined by `KHR_character_expression`. Listing a channel here does not reinterpret its response as a transform delta or blend weight, or change its driver-selected sample time.
 
-Multiple expression entries **MAY** target the same node's `translation`, `rotation`, or `scale`. Node translation uses the additive formula independently for its three components, and its aggregate is subject to the no-clamp rule (see `KHR_character_expression`, Additive aggregation). This extension does not prescribe quaternion blending, scale multiplication, override priority, a reference pose, or another method for combining rotation or scale responses; these use Other composition in the base extension. The final mix with ordinary animation or other non-expression property writers remains host-defined (see `KHR_character_expression`, Host integration boundary). The within-animation duplicate-target prohibition and all target-property validity rules continue to apply.
+Multiple expression entries **MAY** target the same node's `translation`, `rotation`, or `scale`. Node translation uses the additive formula independently for its three components, and its aggregate is subject to the no-clamp rule (see `KHR_character_expression`, Additive aggregation). Rotation and scale responses use Other composition in the base extension, with the recommendations below. The final mix with ordinary animation or other non-expression property writers remains host-defined (see `KHR_character_expression`, Host integration boundary). The within-animation duplicate-target prohibition and all target-property validity rules continue to apply.
+
+Hosts **SHOULD** compose simultaneous rotation responses targeting the same node so that their changes from their respective time-zero samples have an approximately additive effect for small rotations.
+
+Hosts **SHOULD** compose node `scale` responses independently for each component using `b + sum(s_r - n_r)`, where `b`, `s_r`, and `n_r` have the meanings defined in `KHR_character_expression`, Additive aggregation.
 
 ## Authoring guidance (Informative)
 
@@ -99,7 +103,9 @@ Several expression entries can translate, rotate, or scale the same node. A rig 
 
 For example, separate `lookUp` and `lookRight` expression animations can each contain one rotation channel targeting the same `leftEye` node. A zero driver produces no rotation response. A positive driver produces that animation's ordinary absolute sampled rotation. When both drivers are positive, both animations are sampled independently at their driver-selected times; the host decides how their responses affect the eye. The two channels remain in separate animations, where overlap is permitted; the core prohibition on duplicate targets within one animation still applies.
 
-For hosts that blend scale responses, linear interpolation is a useful choice, and normalized linear interpolation (nlerp) can be useful for rotations. Quaternion blending needs care with hemisphere/sign handling because `q` and `-q` represent the same rotation. Reference values, weights, ordering, neutral-response behavior, and the chosen method can affect the result; these are host choices for rotation and scale. They do not change the required additive aggregation of translation responses. The driver already selects the response-curve sample time; subsequent host blending is a separate operation.
+The intended behavior of the rotation-composition recommendation is that combining a 10-degree rightward rotation with a 10-degree upward rotation produces an orientation approximately 10 degrees rightward and 10 degrees upward, while combining two 10-degree rightward rotations produces approximately a 20-degree rightward rotation. These rotations are changes from each channel's neutral sample, expressed relative to a common neutral orientation. These examples illustrate the intended behavior; they do not prescribe a particular composition algorithm, rotation order, or numerical tolerance. The driver already selects the response-curve sample time; subsequent host blending is a separate operation.
+
+Quaternion composition needs care with sign handling because `q` and `-q` represent the same rotation.
 
 An exporter that bakes translation, rotation, and scale channels for every animated node can list only the channels that actually move. A listed channel that holds its node at its authored value still produces a response when the effective driver is positive. Listing such channels on several entries is valid. A constant translation channel contributes zero additive change from its time-zero sample; the effect of constant rotation or scale responses depends on the host's mixing policy. Left unlisted, a channel produces no response record and still contributes to the base extension's duration.
 

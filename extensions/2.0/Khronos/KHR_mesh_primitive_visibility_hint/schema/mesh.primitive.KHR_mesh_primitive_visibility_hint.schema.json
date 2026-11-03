@@ -2,22 +2,27 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "mesh.primitive.KHR_mesh_primitive_visibility_hint.schema.json",
   "title": "KHR_mesh_primitive_visibility_hint glTF Mesh Primitive Extension",
-  "description": "Associates one mesh primitive with a non-inherited per-view visibility role, combined with its containing node's ancestor-inclusive hint visibility. Evaluating the predicate does not alter glTF-authored or animated data; the implementation technique is not prescribed.",
+  "description": "Associates one mesh primitive, in every instance of the mesh, with one or more visibility roles that say when it is meant to be visible; the application's logic decides when each role applies. The hint is not inherited and adds a restriction to the containing node's ancestor-inclusive visibility hints. The specification recommends rendering from these results; applying hints does not alter glTF-authored or animated data.",
   "type": "object",
   "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
   "properties": {
-    "role": {
-      "type": "string",
-      "description": "Nonempty visibility role. The exact standard values are 'always', 'first_person', and 'third_person'; any other value is a custom role, and the specification recommends that a consumer not render a primitive whose role it does not support. The individual role predicate is true for 'always' in every render view, for 'first_person' only in views tagged 'first_person', and for 'third_person' only in views tagged 'third_person'. The containing node's ancestor-inclusive hint visibility and KHR_node_visibility can still hide the primitive; 'always' cannot cancel an ancestor's restriction.",
-      "minLength": 1
+    "roles": {
+      "type": "array",
+      "description": "One or more distinct nonempty visibility roles naming when the author intends the content to be visible; order has no meaning. The application's logic determines which roles apply in each render view. Standard values: 'always' (every view), 'first_person', and 'third_person'; where the application has no logic for a standard role, it applies in every view, and an application that applies 'first_person' should apply 'third_person' wherever 'first_person' does not apply. Any other value is a custom role; a host ignores custom roles it does not recognize. The hint allows a view when at least one recognized role applies there; a hint whose roles include 'always', or that has no recognized role, imposes no restriction. The containing node's ancestor-inclusive hint visibility and KHR_node_visibility can still hide the primitive.",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
     },
     "label": {
       "type": "string",
-      "description": "Nonempty human-readable label, preferred over role whenever a host or tool presents the hint to a user. It has no effect on visibility.",
+      "description": "Nonempty human-readable label, preferred over the roles when a host or tool presents the hint to a user. It has no effect on visibility.",
       "minLength": 1
     },
     "extensions": { },
     "extras": { }
   },
-  "required": ["role"]
+  "required": ["roles"]
 }

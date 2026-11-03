@@ -96,7 +96,7 @@ Hints whose role is `framing_view` or `orbit_view` **SHOULD** include `targetNod
 
 Multiple hints **MAY** use the same role. Except as recommended in [Default view selection](#default-view-selection) and [Custom roles](#custom-roles), array order, node traversal order, and role do not define priority or selection.
 
-Selecting a `"first_person"` or `"third_person"` hint does not by itself tag a view for `KHR_node_visibility_hint` or `KHR_mesh_primitive_visibility_hint`. A host can coordinate those features, but that coordination is outside the glTF asset contract.
+Selecting a `"first_person"` or `"third_person"` hint does not by itself make the role of the same name apply for `KHR_node_visibility_hint` or `KHR_mesh_primitive_visibility_hint`. A host can coordinate those features, but that coordination is outside the glTF asset contract.
 
 ### Default view selection
 
@@ -138,6 +138,8 @@ Apart from the recommendations in [Default view selection](#default-view-selecti
 A core glTF camera is an optical system. A `cameras` entry defines projection only; it carries no position or orientation. In core glTF, pose comes from the node a camera is attached to via `node.camera`.
 
 A camera hint keeps that separation. The hint node's global transform supplies the initial camera pose under the core camera rules, `role` classifies what that pose is for, an optional `targetNode` supplies the subject point, and an optional `camera` reference supplies advisory projection.
+
+> For a character facing +Z, a first-person camera hint should typically be rotated 180 degrees about Y so the camera faces forward.
 
 | Source | Contributes |
 |--------|-------------|

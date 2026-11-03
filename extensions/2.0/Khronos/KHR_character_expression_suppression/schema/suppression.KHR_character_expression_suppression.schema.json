@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "KHR_character_expression_suppression Suppression Properties",
     "type": "object",
-    "description": "Defines one multiplicative factor from the containing source expression to a target expression. All factors read one immutable pre-suppression driver vector.",
+    "description": "Defines one attenuation contribution from the containing source expression to a target expression.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "target": {
@@ -16,7 +16,7 @@
             "gltf_detailedDescription": "This name is independent of the target expression entry's name; no correspondence is implied or required. Resolution MUST use `target`, not this value."
         },
         "type": {
-            "description": "Suppression factor type. Standard values are 'blend' and 'block'. 'block' is threshold-triggered attenuation and fully blocks its target only when amount is 1. A custom value is shaped like a glTF vendor extension name and MUST be ignored at runtime unless a supported companion extension object on this suppression, keyed by exactly this value, defines its factor as one finite value in [0, 1].",
+            "description": "Suppression type. 'blend' contributes amount times the source driver; 'block' contributes amount when the source driver exceeds threshold, otherwise 0. All attenuation contributions are summed and clamped per target. A custom value is shaped like a glTF vendor extension name and MUST be ignored at runtime unless a supported companion extension object on this suppression, keyed by exactly this value, defines its attenuation as one finite value in [0, 1].",
             "anyOf": [
                 {
                     "const": "blend"
@@ -33,16 +33,16 @@
         },
         "amount": {
             "type": "number",
-            "description": "Attenuation amount used by the standard 'blend' and 'block' factors.",
-            "gltf_detailedDescription": "On a custom type it has no standard meaning, and only the factor of a supported same-object companion extension MAY read it. Such a factor reads an omitted value as `1`, so omitting it gives the same factor as authoring `1`.",
+            "description": "Attenuation amount used by the 'blend' and 'block' contributions.",
+            "gltf_detailedDescription": "On a custom type it has no standard meaning, and only the attenuation function of a supported same-object companion extension MAY read it. Such a function reads an omitted value as `1`, so omitting it gives the same attenuation as authoring `1`.",
             "minimum": 0.0,
             "maximum": 1.0,
             "default": 1.0
         },
         "threshold": {
             "type": "number",
-            "description": "Strict source-driver threshold for a standard 'block' factor. The factor activates only when the source value is greater than this value.",
-            "gltf_detailedDescription": "Among the standard factors, only 'block' reads this value. On a custom type it has no standard meaning, and only the factor of a supported same-object companion extension MAY read it. Such a factor reads an omitted value as `0`, so omitting it gives the same factor as authoring `0`. Exporters MUST NOT write it when `type` is `blend` or omitted; importers MUST ignore it there.",
+            "description": "Strict source-driver threshold for a 'block' suppression. The suppression contributes amount only when the source value is greater than this value.",
+            "gltf_detailedDescription": "On a custom type it has no standard meaning, and only the attenuation function of a supported same-object companion extension MAY read it. Such a function reads an omitted value as `0`, so omitting it gives the same attenuation as authoring `0`. Exporters MUST NOT write it when `type` is `blend` or omitted; importers MUST ignore it there.",
             "minimum": 0.0,
             "maximum": 1.0,
             "default": 0.0

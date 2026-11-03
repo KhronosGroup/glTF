@@ -30,17 +30,17 @@ Assets using `KHR_character_expression_suppression` **MUST** list `KHR_character
 
 ## Overview (Informative)
 
-`KHR_character_expression_suppression` lets one native expression attenuate the driver of another expression, or its own, before response-animation evaluation. Standard `blend` and `block` suppressions are deterministic scalar factors evaluated from one immutable native-driver vector.
+`KHR_character_expression_suppression` lets one native expression attenuate the driver of another expression, or its own, before response-animation evaluation.
 
 This extension does not acquire drivers, select an expression mapping set, define final animation mixing, or prescribe how sampled property values combine with other animation systems.
 
 ## Extension usage (Normative)
 
-A suppression is a directed rule that multiplies a target expression driver by a factor in `[0, 1]` computed from the immutable input vector `u`; standard factors read only the containing source expression's value.
+A suppression contributes an attenuation amount in `[0, 1]` to a target expression driver, computed from the immutable input vector `u`.
 
 The extension object contains a nonempty `suppressions` array. Each suppression's implicit source is the array index of the expression entry containing that extension object. Its required `target` is an index into the same top-level expressions array. A native expression is an entry of that array, identified by its index.
 
-An asset **MAY** list `KHR_character_expression_suppression` in `extensionsRequired`. A consumer claiming support for this extension **MUST** evaluate every standard suppression and apply the custom-type rules below. A consumer that cannot provide that behavior **MUST** treat the asset as unsupported when the extension is listed in `extensionsRequired`.
+An asset **MAY** list `KHR_character_expression_suppression` in `extensionsRequired`. A consumer claiming support for this extension **MUST** evaluate `"blend"` and `"block"` suppressions and apply the custom-type rules below. A consumer that cannot provide that behavior **MUST** treat the asset as unsupported when the extension is listed in `extensionsRequired`.
 
 ### Extension object
 
@@ -54,7 +54,7 @@ An asset **MAY** list `KHR_character_expression_suppression` in `extensionsRequi
 |----------|------|----------|---------|-------------|
 | `target` | integer | Yes | — | Index of the native expression attenuated by this suppression. |
 | `name` | string | No | — | Optional name of this suppression. |
-| `type` | string | No | `"blend"` | Standard `"blend"` or `"block"`, or a vendor-extension-name-shaped custom token. |
+| `type` | string | No | `"blend"` | `"blend"`, `"block"`, or a vendor-extension-name-shaped custom token. |
 | `amount` | number | No | `1` | Attenuation amount in `[0, 1]`. |
 | `threshold` | number | No | `0` | Strict activation threshold in `[0, 1]` for `"block"`. |
 
@@ -64,7 +64,7 @@ The `target` index identifies the suppressed expression. Consumers **MUST** reso
 
 The host supplies one final native-driver vector after any host-defined driver acquisition, mapping-set selection, and arbitration between direct-native and mapped input surfaces. Each supplied native-driver value **MUST** be finite. Consumers **MUST** clamp each supplied native-driver value to `[0, 1]` before evaluating suppressions. Let `u[i]` be the resulting value for native expression index `i`. A native expression for which the host supplies no driver has `u[i] = 0`. This `u` vector is the immutable pre-suppression input snapshot for one suppression evaluation.
 
-The suppression operation produces an effective driver vector `v` of the same length. Every suppression factor **MUST** use the pre-suppression value in `u` for its source expression. A suppression factor **MUST NOT** read any suppression output or any value from `v` as an input. The output vector `v` is produced only after all factors have been evaluated from `u`.
+The suppression operation produces an effective driver vector `v` of the same length. Every suppression **MUST** use the pre-suppression value in `u` for its source expression. A suppression **MUST NOT** read any suppression output or any value from `v` as an input. The output vector `v` is produced only after all attenuation amounts have been evaluated from `u`.
 
 For a suppression `s`, define:
 
@@ -75,60 +75,57 @@ amount(s) = s.amount when present; otherwise 1
 threshold(s) = s.threshold when present; otherwise 0
 ```
 
-## Standard suppression factors
+## Suppression and aggregation
 
-For a standard `"blend"` suppression:
-
-```text
-factor(s, u) = 1 - amount(s) * u[source(s)]
-```
-
-For a standard `"block"` suppression:
+For `"blend"`:
 
 ```text
-factor(s, u) =
-    1 - amount(s)    when u[source(s)] > threshold(s)
-    1                otherwise
+attenuation(s, u) = amount(s) * u[source(s)]
 ```
 
-The `"block"` factor is threshold-triggered attenuation, not necessarily a complete block: when `u[source(s)] > threshold(s)`, it multiplies the target by `1 - amount(s)` and fully blocks it only when `amount(s) == 1`; otherwise, its factor is `1`. The comparison is strict. The standard `"blend"` factor does not read `threshold`: an exporter **MUST NOT** write `threshold` on a suppression whose `type` is `"blend"` or omitted, and an importer **MUST** ignore `threshold` on such a suppression.
-
-Given all suppressions in all expression entries, each effective target driver is:
+For `"block"`:
 
 ```text
-v[t] = u[t] * product(
-    factor(s, u)
-    for every suppression s where target(s) == t
-)
+attenuation(s, u) =
+    amount(s)    when u[source(s)] > threshold(s)
+    0            otherwise
 ```
 
-An empty product is `1`, so a driver with no incoming suppressions is unchanged. Because `u`, `amount`, `threshold`, and every supported factor are in `[0, 1]`, every value in `v` is also in `[0, 1]`.
+For `"blend"`, an exporter **MUST NOT** write `threshold` on a suppression whose `type` is `"blend"` or omitted, and an importer **MUST** ignore `threshold` on such a suppression.
 
-Multiple suppressions **MAY** target the same expression, including multiple suppressions from the same source expression. All such suppressions participate in the product, so their combined influence is multiplicative; duplicate suppressions contribute duplicate factors. A self-suppression reads the source's unsuppressed value from `u` and contributes normally. Mutual and longer cycles are valid because every suppression factor reads the same immutable `u`. The resulting `v` is mathematically independent of JSON object order, expression-array traversal order, and suppression-array order.
+For each target expression `t`, consumers **MUST** sum the attenuation contributions of all incoming suppressions, regardless of type, clamp the sum to `[0, 1]`, and compute the effective target driver as:
 
-An expression's outgoing suppressions always read its value from `u`, even when incoming suppressions give that expression a different value in `v`.
+```text
+v[t] = u[t] * (1 - clamp(
+    sum(
+        attenuation(s, u)
+        for every suppression s where target(s) == t
+    ),
+    0, 1
+))
+```
+
+An empty sum is `0`. A total attenuation of at least `1` fully suppresses the target. Every output remains in `[0, 1]`.
+
+Multiple suppressions **MAY** target the same expression, including multiple suppressions from the same source expression. Duplicate suppressions contribute duplicate attenuation amounts. A self-suppression reads the source's unsuppressed value from `u` and contributes normally. Mutual and longer cycles are valid because every suppression reads the same immutable `u`. The resulting `v` is mathematically independent of JSON object order, expression-array traversal order, and suppression-array order.
 
 ## Custom suppression types
 
 A custom suppression type is any value other than `"blend"` or `"block"`. It **MUST** be shaped like a glTF vendor extension name: an uppercase alphanumeric prefix, an underscore, and a lowercase snake-case suffix, for example `"ACME_expression_suppression_curve"`.
 
-A custom token **MAY** appear without a companion extension object. Unless a supported companion defines its factor, as described below, a custom suppression **MUST** be ignored at runtime by this extension and **MUST** contribute a factor of `1`, so it does not alter the target driver. This covers a bare custom token and a custom token whose optional companion is not supported:
+A custom token **MAY** appear without a companion extension object. Unless a supported same-named companion defines its attenuation, a custom suppression **MUST** contribute `0` and **MUST** otherwise be ignored at runtime.
 
-```text
-factor(s, u) = 1
-```
+Portable custom behavior requires an extension object on the same suppression object whose key exactly equals the suppression's `type` value. That companion specification **MUST** define exactly one finite attenuation value in `[0, 1]` for the suppression. The attenuation **MUST** be a deterministic function only of the immutable vector `u`, the suppression's source index `source(s)`, and authored data on the suppression and companion objects, including authored asset data that those objects reference, such as accessors and their buffer data. It **MUST NOT** read any value from `v`, prior evaluations, time, or any host input other than `u`; mutate a driver; directly replace `v[target(s)]`; or otherwise bypass the effective-driver equation.
 
-Portable custom behavior requires an extension object on the same suppression object whose key exactly equals the suppression's `type` value. That companion specification **MUST** define exactly one finite factor in `[0, 1]` for the suppression. The factor **MUST** be a deterministic function only of the immutable vector `u`, the suppression's source index `source(s)`, and authored data on the suppression and companion objects, including authored asset data that those objects reference, such as accessors and their buffer data. It **MUST NOT** read any value from `v`, prior evaluations, time, or any host input other than `u`; mutate a driver; directly replace `v[target(s)]`; or otherwise bypass the product equation. A supported companion's factor participates in the same product as every standard factor.
+`amount` and `threshold` carry no standard meaning on a custom suppression type. A companion specification **MAY** define how its attenuation function reads either value, subject to the requirements above. A supported companion's attenuation function reads an omitted `amount` as `1` and an omitted `threshold` as `0`, as `amount(s)` and `threshold(s)` define for every suppression, so omitting either value gives the same attenuation as authoring its default explicitly. A consumer that ignores a custom type at runtime ignores both values with it.
 
-`amount` and `threshold` carry no standard meaning on a custom suppression type. A companion specification **MAY** define how its factor reads either value, subject to the requirements above. A supported companion's factor reads an omitted `amount` as `1` and an omitted `threshold` as `0`, as `amount(s)` and `threshold(s)` define for every suppression, so omitting either value gives the same factor as authoring its default explicitly. A consumer that ignores a custom type at runtime ignores both values with it.
+The companion extension **MUST** be listed in `extensionsUsed`. If correct presentation depends on its custom attenuation, both `KHR_character_expression_suppression` and the companion extension **MUST** be listed in `extensionsRequired`. For an unsupported optional companion, the zero-attenuation rule above applies; an unsupported required companion makes the asset unsupported under the ordinary glTF extension rules.
 
-The companion extension **MUST** be listed in `extensionsUsed`. If correct presentation depends on its custom factor, both `KHR_character_expression_suppression` and the companion extension **MUST** be listed in `extensionsRequired`. For an unsupported optional companion, the factor-`1` rule above applies; an unsupported required companion makes the asset unsupported under the ordinary glTF extension rules.
-
-An unrelated or differently named extension object on the same suppression does not define the custom type. It follows its own specification, while the unmatched custom token falls under the factor-`1` rule above.
+An unrelated or differently named extension object on the same suppression does not define the custom type. It follows its own specification, while the unmatched custom token falls under the zero-attenuation rule above.
 
 An implementation claiming read-write or round-trip support for this extension that retains a custom suppression when re-emitting an asset **MUST** preserve its unrecognized custom `type` token. It **MUST** also preserve any `amount` and `threshold` values authored on that suppression that it does not interpret. Preserving an unrecognized token or an ignored value does not make it affect runtime evaluation. If it retains a same-object companion extension that it does not interpret, it **MUST** preserve that extension's payload. These preservation requirements do not apply to data that the user deliberately edits or removes. Deliberately removing a custom suppression or companion extension is an authoring operation and requires the ordinary corresponding updates to `extensionsUsed` and `extensionsRequired`. Render-only consumers are not required to provide serialization.
 
-A companion payload can contain indices, such as expression indices or the indices of accessors whose data its factor reads. A tool that removes, inserts, or reorders elements of the indexed arrays without interpreting the payload cannot update those indices, so a preserved payload can go stale and refer to the wrong or missing data; such a tool can warn the user or remove the companion as an authoring operation.
+A companion payload can contain indices, such as expression indices or the indices of accessors whose data its attenuation function reads. A tool that removes, inserts, or reorders elements of the indexed arrays without interpreting the payload cannot update those indices, so a preserved payload can go stale and refer to the wrong or missing data; such a tool can warn the user or remove the companion as an authoring operation.
 
 ## Response-evaluator boundary
 
@@ -138,7 +135,7 @@ The effective vector `v` is the suppression operation's output. A character-expr
 
 The [evaluation pipeline overview](../KHR_character_expression/README.md#evaluation-pipeline) in `KHR_character_expression` illustrates how these stages fit together.
 
-## Standard-suppression example (Informative)
+## Suppression example (Informative)
 
 The following partial fragment omits the `asset` object, dependency declarations, the top-level `KHR_character` object, the referenced animations, and the derived expression extensions that list each entry's channels. In this fragment, `aa` is expression index 0, `happy` is index 1, and `angry` is index 2.
 
@@ -189,7 +186,7 @@ The following partial fragment omits the `asset` object, dependency declarations
 }
 ```
 
-For `u = [1, 0.5, 0.1]`, the blend factor is `0.75` and the block factor is `1` because the strict threshold comparison `0.1 > 0.2` is false. Therefore `v[0] = 0.75`. If `u[2]` is instead `0.6`, the comparison `0.6 > 0.2` is true, so the block factor becomes `0` and `v[0]` becomes `0`.
+For `u = [1, 0.5, 0.1]`, the blend and block contributions are `0.25` and `0`, giving `v[0] = 0.75`. With `u[2] = 0.6`, the block contributes `1`, so the sum is clamped to `1` and `v[0] = 0`.
 
 For a driver intended to equal a threshold, or within rounding error of it, implementations that hold the driver and the threshold at different precisions can resolve the strict comparison differently, so authors should avoid thresholds that coincide with expected positive driver values.
 
@@ -204,7 +201,7 @@ The following partial fragment omits the `asset` object, dependency declarations
 }
 ```
 
-The following partial fragment omits the `asset` object, dependency declarations, the top-level `KHR_character` object, the top-level `KHR_character_expression` object and its expression entries, the source expression entry's `KHR_character_expression_suppression` object whose `suppressions` array contains the suppression, and the referenced animations. It demonstrates where a portable companion extension would be attached. The payload is illustrative; only the `ACME_expression_suppression_curve` specification can define its factor.
+The following partial fragment omits the `asset` object, dependency declarations, the top-level `KHR_character` object, the top-level `KHR_character_expression` object and its expression entries, the source expression entry's `KHR_character_expression_suppression` object whose `suppressions` array contains the suppression, and the referenced animations. It demonstrates where a portable companion extension would be attached. The payload is illustrative; only the `ACME_expression_suppression_curve` specification can define its attenuation.
 
 ```json
 {
@@ -218,11 +215,11 @@ The following partial fragment omits the `asset` object, dependency declarations
 }
 ```
 
-An asset containing the companion object must list `ACME_expression_suppression_curve` in `extensionsUsed`. When the custom factor is essential, it must list both `KHR_character_expression_suppression` and `ACME_expression_suppression_curve` in `extensionsRequired`.
+An asset containing the companion object must list `ACME_expression_suppression_curve` in `extensionsUsed`. When the custom attenuation is essential, it must list both `KHR_character_expression_suppression` and `ACME_expression_suppression_curve` in `extensionsRequired`.
 
 ## Validation boundary
 
-The JSON Schemas enforce nonempty suppression arrays, required non-negative target indices, string-valued optional names, standard or vendor-extension-name-shaped type strings, and `amount` and `threshold` values in `[0, 1]`. A validator **MUST NOT** report an error solely because `threshold` is present on a suppression whose `type` is `"blend"` or omitted; it **SHOULD** report a warning.
+The JSON Schemas enforce nonempty suppression arrays, required non-negative target indices, string-valued optional names, `"blend"`, `"block"`, or vendor-extension-name-shaped type strings, and `amount` and `threshold` values in `[0, 1]`. A validator **MUST NOT** report an error solely because `threshold` is present on a suppression whose `type` is `"blend"` or omitted; it **SHOULD** report a warning.
 
 A validator that claims to validate this extension **MUST** additionally:
 
@@ -234,7 +231,7 @@ A validator that claims to validate this extension **MUST** additionally:
 
 A validator **MUST NOT** report an error or warning solely because a suppression's `name` differs from the target expression entry's `name`, including when that expression entry has no `name`.
 
-Bare custom types are valid; at runtime, a suppression with a bare custom type contributes a factor of `1`, as stated in [Custom suppression types](#custom-suppression-types). A validator does not execute suppression equations or validate host-defined final animation composition.
+A validator does not execute suppression equations or validate host-defined final animation composition.
 
 ## Known implementations (Informative)
 
