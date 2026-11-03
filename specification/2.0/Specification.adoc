@@ -529,7 +529,7 @@ glTF assets use <<iri,IRI-references>> to refer to external resources or embed r
 [NOTE]
 .Implementation Note
 ====
-This allows the application to decide the best approach for delivery: if different assets share many of the same resources, separate files may be preferred to reduce the total amount of data requested. With separate files, applications may progressively load data and do not need to load data for parts of a asset that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading. Alternatively, an asset could use the GLB container to store JSON and binary data in one file without base64 encoding. See <<glb-file-format-specification,GLB File Format Specification>> for details.
+This allows the application to decide the best approach for delivery: if different assets share many of the same resources, separate files may be preferred to reduce the total amount of data requested. With separate files, applications may progressively load data and do not need to load data for parts of an asset that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading. Alternatively, an asset could use the GLB container to store JSON and binary data in one file without base64 encoding. See <<glb-file-format-specification,GLB File Format Specification>> for details.
 ====
 
 Client implementations **MAY** optionally support additional reference types, such as `https://` or `file://` schemes, authorities, absolute paths, and query or fragment parameters. Assets containing such references would be less portable and are out of scope of this specification.
@@ -2251,7 +2251,7 @@ Let:
 
 - stem:[N] be the number of joints with non-zero weights for the current vertex as derived from the skinning-related vertex attributes;
 - stem:[J_i] be one joint index as provided by `JOINTS_n` vertex attribute accessor components, stem:[i \in [0,N\)];
-- stem:[W_i] be one joint weight as provided by `WEIGHT_n` vertex attribute accessor components, stem:[i \in [0,N\)];
+- stem:[W_i] be one joint weight as provided by `WEIGHTS_n` vertex attribute accessor components, stem:[i \in [0,N\)];
 - stem:[M_j] be the global transformation matrix of the node associated with the joint index stem:[j] (as defined by the skin's `joints` property);
 - stem:[B_j] be the inverse bind matrix associated with the joint index stem:[j] (as provided by the skin's `inverseBindMatrices` property).
 
@@ -2460,7 +2460,7 @@ Chunk presence does not always mean that the corresponding feature is used, see 
 [[images-jpeg]]
 ==== JPEG Support
 
-<<png,JPEG>> images **MUST** use the <<image-jpeg,`image/jpeg`>> Media Type. JPEG images **SHOULD** use the `.jpg` or `.jpeg` file extensions when stored as separate files.
+<<jpeg,JPEG>> images **MUST** use the <<image-jpeg,`image/jpeg`>> Media Type. JPEG images **SHOULD** use the `.jpg` or `.jpeg` file extensions when stored as separate files.
 
 JPEG images **MUST** conform to the <<jfif,JPEG File Interchange Format>>, namely:
 
@@ -3332,7 +3332,7 @@ glTF defines an extension mechanism that allows the base format to be extended w
 ----
 ====
 
-All extensions used in a glTF asset **MUST** be listed in the top-level `extensionsUsed` array object.
+All extensions used in a glTF asset **MUST** be listed in the top-level `extensionsUsed` array.
 
 [NOTE]
 .Example
