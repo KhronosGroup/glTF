@@ -11,7 +11,7 @@
             "default": 1.0,
             "minimum": 0.0,
             "maximum": 100.0,
-            "gltf_detailedDescription": "The height scale. When `heightSpace` is present, the height in metres per unit of the sampled red channel."
+            "gltf_detailedDescription": "The height in metres per unit of the sampled red channel, measured in the space given by `heightSpace`."
         },
         "bumpTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
@@ -21,8 +21,9 @@
         "heightSpace": {
             "type": "string",
             "enum": [ "world", "object" ],
+            "default": "object",
             "description": "The space in which the bump height is measured.",
-            "gltf_detailedDescription": "When present, `bumpFactor` is a length in metres per unit of the sampled red channel, measured in world space or in the node's local space. When absent, the scale is implementation-defined."
+            "gltf_detailedDescription": "`world` measures the height in world space. `object` measures it in the node's local space, so it scales with the node transform."
         },
         "extensions": { },
         "extras": { }
