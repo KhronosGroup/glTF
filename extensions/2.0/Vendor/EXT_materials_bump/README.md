@@ -64,15 +64,13 @@ Factor and texture are combined by multiplication to describe a single value.
 
 | |Type|Description|Required|
 |-|----|-----------|--------|
-| **bumpFactor** | `number` | The height scale. When `heightSpace` is present, the height in metres per unit of the sampled texture value. | No, default: `1.0`, or `0.001` when `heightSpace` is present |
+| **bumpFactor** | `number` | The height scale. When `heightSpace` is present, the height in metres per unit of the sampled texture value. | No, default: `1.0` |
 | **bumpTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A texture that defines the surface height, stored in the red (`R`) channel. This will be multiplied by bumpFactor. | No |
 | **heightSpace** | `string` | The space in which the height is measured: `"world"` or `"object"`. `"object"` is the node's local space and scales with the node transform. | No |
 
 ### Height Units
 
 When `heightSpace` is present, the height is `d = h * bumpFactor`, where `h` is the red channel of `bumpTexture` in [0, 1]. The texture **MUST** be read as linear data, without sRGB decoding. `d` is a length in metres measured in the space named by `heightSpace`. For `"world"`, `d` is the world-space height. For `"object"`, `d` scales with the node's world transform, so under uniform scale `s` the world-space height is `s * d`.
-
-In this case the default `bumpFactor` is `0.001` (1 mm), which matches the fine surface detail that bump maps usually represent, such as skin pores, wood grain, scratches, and fabric weave.
 
 The perturbed normal is `n_b = normalize(n - ∇d)`, where `∇d` is the surface gradient of `d` with respect to world-space position. Because both `d` and position are lengths, the result does not depend on texture resolution, UV scale, or viewing distance.
 
