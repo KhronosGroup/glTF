@@ -10,7 +10,6 @@
             "description": "The strength of the bump displacement.",
             "default": 1.0,
             "minimum": 0.0,
-            "maximum": 100.0,
             "gltf_detailedDescription": "The height in metres per unit of the sampled red channel, measured in the space given by `heightSpace`."
         },
         "bumpTexture": {
