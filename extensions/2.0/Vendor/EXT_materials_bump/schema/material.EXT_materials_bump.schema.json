@@ -11,12 +11,18 @@
             "default": 1.0,
             "minimum": 0.0,
             "maximum": 100.0,
-            "gltf_detailedDescription": "This parameter scales the amount of normal perturbation by the bump map on the surface normal."
+            "gltf_detailedDescription": "The height scale. When `heightSpace` is present, the height in metres per unit of the sampled red channel."
         },
         "bumpTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "A texture that defines the displacement in the red channel.",
             "gltf_detailedDescription": "A texture that defines the displacement in the red channel. This will be multiplied by bumpFactor."
+        },
+        "heightSpace": {
+            "type": "string",
+            "enum": [ "world", "object" ],
+            "description": "The space in which the bump height is measured.",
+            "gltf_detailedDescription": "When present, `bumpFactor` is a length in metres per unit of the sampled red channel, measured in world space or in the node's local space. When absent, the scale is implementation-defined."
         },
         "extensions": { },
         "extras": { }
