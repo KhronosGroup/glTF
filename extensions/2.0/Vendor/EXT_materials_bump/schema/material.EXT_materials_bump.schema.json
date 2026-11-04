@@ -8,7 +8,7 @@
         "bumpFactor": {
             "type": "number",
             "description": "The strength of the bump displacement.",
-            "default": 0.001,
+            "default": 1.0,
             "minimum": 0.0,
             "gltf_detailedDescription": "When `heightSpace` is absent, a unitless strength whose scale is implementation-defined. When `heightSpace` is present, the height in metres per unit of the sampled red channel, measured in that space; the default is then 0.001 (1 mm), which matches the fine surface detail that bump maps usually represent."
         },
