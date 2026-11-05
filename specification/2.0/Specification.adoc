@@ -3377,7 +3377,8 @@ This mode is used when the animation sampler interpolation mode is `"LINEAR"` an
 Let
 [none]
 * latexmath:[a = \arccos(|v_k \cdot v_{k+1}|)] be the arccosine of the absolute value of the dot product of two consecutive quaternions;
-* latexmath:[s = \frac{v_k \cdot v_{k+1}}{|v_k \cdot v_{k+1}|}] be the sign of the dot product of two consecutive quaternions.
+* latexmath:[d = v_k \cdot v_{k+1}] be the dot product of two consecutive quaternions;
+* latexmath:[s = \begin{cases} +1 & \text{if } d \ge 0 \\ -1 & \text{if } d \lt 0 \end{cases}].
 
 The interpolated animated property value stem:[v_t] at the timestamp stem:[t_c] is computed as follows.
 
@@ -3389,7 +3390,7 @@ v_t = \frac{\sin(a \cdot (1 - t))}{\sin(a)} \cdot v_k + s \cdot \frac{\sin(a \cd
 [NOTE]
 .Implementation Note
 ====
-Using the dot product's absolute value for computing stem:[a] and multiplying stem:[v_{k+1}] by the dot product's sign ensure that the spherical interpolation follows the short path along the great circle defined by the two quaternions.
+Using the dot product's absolute value for computing stem:[a] and negating stem:[v_{k+1}] when stem:[d] is negative ensure that the spherical interpolation follows the short path along the great circle defined by the two quaternions.
 ====
 
 Implementations **MAY** approximate these equations to reach application-specific accuracy and/or performance targets.
