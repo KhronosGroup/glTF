@@ -876,7 +876,7 @@ In the following example, the node named `Car` has four children each of which h
 
 By default, a node's local space transform is identity.
 
-Any node **MAY** define a local space transform either by supplying a precomputed transformation matrix in the `matrix` property, or any of `translation`, `rotation`, and `scale` properties (also known as _TRS properties_). _Translation_ and _scale_ are 3D vectors in the local coordinate system; _rotation_ is a quaternion value stored in XYZW order where W is the scalar. If defined, the rotation quaternion **MUST** be unit.
+Any node **MAY** define a local space transform either by supplying a precomputed transformation matrix in the `matrix` property, or any of `translation`, `rotation`, and `scale` properties (also known as _TRS properties_). _Translation_ and _scale_ are 3D vectors in the local coordinate system; _rotation_ is a quaternion value stored in XYZW order where W is the scalar. If defined, the rotation quaternion **MUST** be unit within the margin of floating point precision.
 
 When the `matrix` property is not defined, the local transform is computed from the TRS properties as follows, where
 
@@ -3101,7 +3101,7 @@ The sampler's `input` property refers to the sampler's input accessor. It provid
 
 The number of elements of the input accessor defines the number of keyframes provided by the animation sampler. The order of keyframes matches the order of elements provided by the input accessor.
 
-The referenced accessor **MUST** have the `"SCALAR"` type and the _float32_ component type; the accessor **MUST** define its `min` and `max` properties.
+The input accessor **MUST** have the `"SCALAR"` type and the _float32_ component type; the accessor **MUST** define its `min` and `max` properties.
 
 Timestamp values **MUST** be non-negative and they **MUST** strictly increase, i.e., each subsequent accessor element **MUST** be greater than the previous one.
 
@@ -3281,7 +3281,7 @@ The sampler's output accessor **MUST** be compatible with the animated property 
 
 The output accessor **MUST** provide the exact number of elements needed for all keyframes defined by the animation sampler and target. If the animated property is `"weights"`, its array length is equal to the number of the mesh's morph targets; other animatable properties defined in this specification are not arrays.
 
-If the animated property is `"rotation"`, quaternions provided by the output accessor **MUST** be unit.
+If the animated property is `"rotation"`, quaternions provided by the output accessor **MUST** be unit within the margin of floating point precision.
 
 [[animations-usage]]
 === Applying Animation Data
