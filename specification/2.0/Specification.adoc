@@ -3376,24 +3376,14 @@ The set of extension names listed in the `extensionsRequired` array **MUST** be 
 
 glTF provides two delivery options that can be used together:
 
-* glTF JSON points to external binary data (geometry, key frames, skins), and images.
-* glTF JSON embeds base64-encoded binary data, and images inline using data URLs.
+* glTF JSON points to external buffers and images.
+* glTF JSON embeds buffers and images inline using data URLs.
 
-Hence, loading glTF files usually requires either separate requests to fetch all binary data, or extra space due to base64-encoding. Base64-encoding requires extra processing to decode and increases the file size (by ~33% for encoded resources). While transport-layer gzip mitigates the file size increase, decompression and decoding still add significant loading time.
+Hence, loading glTF files usually requires either separate requests to fetch all binary data, or extra space and processing due to data URL encoding.
 
 To avoid this file size and processing overhead, a container format, _Binary glTF_ is introduced that enables a glTF asset, including JSON, buffers, and images, to be stored in a single binary blob.
 
 A Binary glTF asset can still refer to external resources. For example, an application that wants to keep images as separate files may embed everything needed for a scene, except images, in a Binary glTF.
-
-[[glb-file-format-specification-structure]]
-== Structure
-
-A Binary glTF (which can be a file, for example) has the following structure:
-
-* A 12-byte preamble, called the _header_.
-* One or more _chunks_ that contain JSON content and binary data.
-
-The _chunk_ containing JSON **MAY** refer to external resources as usual, and **MAY** also reference resources stored within other _chunks_.
 
 [[glb-file-format-specification-file-extension]]
 == File Extension & Media Type
@@ -3402,94 +3392,127 @@ The file extension to be used with Binary glTF is `.glb`.
 
 The registered media type is `model/gltf-binary`.
 
+[[glb-file-format-specification-structure]]
+== Structure
+
+A Binary glTF (which can be a file, for example) has the following structure:
+
+* An 8-byte preamble, called the _GLB header_
+* A version-specific asset size field, called the _size header_
+* One or more _chunks_ that contain JSON content, binary data, or other resources
+
 [[binary-gltf-layout]]
 == Binary glTF Layout
 
-[[binary-gltf-layout-overview]]
-=== Overview
+[[binary-gltf-glb-header]]
+=== GLB Header
 
-Binary glTF is little endian. The figure below shows an example of a Binary glTF asset.
-
-.Binary glTF Layout
-image::figures/glb2.svg[pdfwidth=6in,align=left]
-
-The following sections describe the structure more in detail.
-
-[[binary-header]]
-=== Header
-
-The 12-byte header consists of three 4-byte entries:
+The 8-byte header consists of two 4-byte little-endian fields.
 
 [source,c]
 ----
-uint32 magic
-uint32 version
-uint32 length
+uint32_t magic
+uint32_t version
 ----
 
-* `magic` **MUST** be equal to equal `0x46546C67`. It is ASCII string `glTF` and can be used to identify data as Binary glTF.
-* `version` indicates the version of the Binary glTF container format. This specification defines version 2.
-+
-Client implementations that load GLB format **MUST** also check for the <<asset,asset version properties>> in the JSON chunk, as the version specified in the GLB header only refers to the GLB container version.
-* `length` is the total length of the Binary glTF, including _header_ and all _chunks_, in bytes.
+* `magic` **MUST** be equal to equal `0x46546C67`. It is ASCII string `glTF` that can be used to identify data as Binary glTF.
+* `version` indicates the version of the Binary glTF container format.
 
-[[chunks]]
+This specification defines GLB version 2 ("`GLBv2`"); any other version value is out of scope.
+
+The version specified in the GLB header only refers to the GLB container version. The version of the contained glTF asset is determined by the glTF JSON.
+
+[[binary-gltf-size-header]]
+=== Size Header
+
+In GLBv2, the size header consists of one 4-byte little-endian field.
+
+[source,c]
+----
+uint32_t length
+----
+
+* `length` is the total byte length of the Binary glTF, including the GLB header, the size header, and all chunks.
+
+[[binary-gltf-chunks]]
 === Chunks
 
 [[chunks-overview]]
 ==== Overview
 
-Each chunk has the following structure:
+Each chunk has a fixed-size header followed by a variable-length payload. The chunk header structure depends on the GLB version.
+
+[[chunks-v2]]
+==== Chunk Structure (GLBv2)
+
+Each GLBv2 chunk header consists of two 4-byte little-endian fields.
 
 [source,c]
 ----
-uint32 chunkLength
-uint32 chunkType
-ubyte[] chunkData
+uint32_t chunkLength
+uint32_t chunkType
+uint8_t[] chunkData
 ----
 
-* `chunkLength` is the length of `chunkData`, in bytes.
-* `chunkType` indicates the type of chunk. See <<table-chunktypes>> for details.
-* `chunkData` is the binary payload of the chunk.
+* `chunkLength` is the byte length of `chunkData`.
+* `chunkType` is the type of the chunk.
+* `chunkData` is the payload of the chunk.
 
-The start and the end of each chunk **MUST** be aligned to a 4-byte boundary. See chunks definitions for padding schemes. Chunks **MUST** appear in exactly the order given in <<table-chunktypes>>.
+The `chunkLength` value **MUST** be a multiple of four.
 
-[[table-chunktypes]]
-.Chunk types
+[[chunks-types]]
+==== Chunk Types
+
+The following table lists chunk types defined by this specification. GLB files **MAY** contain chunks of other types but their semantics are out of scope of this specification.
+
 [options="header"]
 |====
-|    | Chunk Type | ASCII | Description             | Occurrences
-| 1. | 0x4E4F534A | JSON  | Structured JSON content | 1
-| 2. | 0x004E4942 | BIN   | Binary buffer           | 0 or 1
+|  Chunk Type  | ASCII | Description
+| `0x4E4F534A` | JSON  | Structured JSON content
+| `0x004E4942` | BIN\0 | Binary buffer
 |====
 
-Client implementations **MUST** ignore chunks with unknown types to enable glTF extensions to reference additional chunks with new types following the first two chunks.
-
-[[structured-json-content]]
+[[chunks-json]]
 ==== Structured JSON Content
 
-This chunk holds the glTF JSON, as it would be provided within a .gltf file.
+This chunk contains a glTF JSON, as it would be provided by a standalone glTF JSON file.
+
+GLBv2 assets **MUST** have exactly one chunk of this type and it **MUST** be the first chunk of the asset.
 
 [NOTE]
-.ECMAScript Implementation Note
+.Implementation Note
 ====
-In a JavaScript implementation, the `TextDecoder` API can be used to extract the glTF content from the ArrayBuffer, and then the JSON can be parsed with `JSON.parse` as usual.
+By reading this chunk first, an implementation is able to progressively retrieve resources from subsequent chunks. This way, it is also possible to read only a selected subset of resources from a Binary glTF asset.
 ====
 
-This chunk **MUST** be the very first chunk of a Binary glTF asset. By reading this chunk first, an implementation is able to progressively retrieve resources from subsequent chunks. This way, it is also possible to read only a selected subset of resources from a Binary glTF asset.
+[NOTE]
+.Implementation Note
+====
+If the JSON byte length is not a multiple of four as required for GLBv2, it can be padded by any valid whitespace JSON characters, such as space (`U+0020`), tab (`U+0009`), line feed (`U+000A`), or carriage return (`U+000D`), when producing a GLBv2 asset.
+====
 
-This chunk **MUST** be padded with trailing `Space` chars (`0x20`) to satisfy alignment requirements.
-
-[[binary-buffer]]
+[[chunks-bin]]
 ==== Binary buffer
 
-This chunk contains the binary payload for geometry, animation key frames, skins, and images. See <<glb-stored-buffer,GLB-stored Buffer>> for details on referencing this chunk from JSON.
+This chunk contains a binary payload that usually provides data for a glTF buffer. See <<glb-stored-buffer,GLB-stored Buffer>> for details on referencing this chunk from JSON.
 
-This chunk **MUST** be the second chunk of the Binary glTF asset.
+GLBv2 assets **MUST** have at most one chunk of this type and it **MUST** be the second chunk of the asset.
 
-This chunk **MUST** be padded with trailing zeros (`0x00`) to satisfy alignment requirements.
+[NOTE]
+.Implementation Note
+====
+If the buffer's byte length is not a multiple of four, it can be padded by any bytes as necessary. Note that the byte length of the corresponding glTF buffer can be less than the byte length of the chunk.
+====
 
-When the binary buffer is empty or when it is stored by other means, this chunk **SHOULD** be omitted.
+[[glb-examples]]
+== Examples
+
+[[glb-examples-2]]
+=== GLB version 2
+
+The figure below shows an example of a Binary glTF version 2 asset that contains a binary buffer chunk and also refers to external data (e.g., additional buffers or images) from its glTF JSON chunk.
+
+image::figures/glb2.svg[pdfwidth=6in,align=left]
 
 [[properties-reference]]
 = Properties Reference
