@@ -162,7 +162,7 @@ $$
 All microtriangle positions and orderings in this extension are defined in terms of $(u, v)$.
 
 > [!NOTE]
-> This is the barycentric convention used by ray-tracing hit attributes in Vulkan and DirectX 12. Because the association between geometry and micromap data depends on the triangle order and on the order of the vertices within each triangle, any processing that reorders triangles, rotates the vertices of a triangle, or changes its winding invalidates the association. Such processing must update `micromapIndices` (and the micromap data, when the vertex order changes) or remove this extension from the primitive.
+> This is the barycentric convention used by ray-tracing hit attributes in Vulkan and DirectX 12. Because the association between geometry and micromap data depends on the triangle order and on the order of the vertices within each triangle, any processing that reorders triangles or permutes a triangle's vertex order invalidates the association. Such processing must update `micromapIndices` (and the micromap data, when the vertex order changes) or remove this extension from the primitive.
 
 ### Subdivision and Microtriangle Order
 
@@ -183,7 +183,7 @@ A microtriangle that lies in sub-triangle $k$ and has index $j$ within that sub-
 
 The microtriangle indices of a micromap triangle are those obtained by applying this definition to its base triangle $(v_0, v_1, v_2)$ at its subdivision level.
 
-The figure below illustrates this rule for a base triangle. Each path starts at the first vertex $a_0'$ of a sub-triangle and visits its vertices in order. Sub-triangles $1$ and $3$ have the opposite winding from their parent.
+The figure below illustrates this rule for a base triangle. Each path starts at the first vertex $a_0'$ of a sub-triangle and visits its vertices in order. Note that sub-triangles $1$ and $3$ are both rotated and flipped relative to their parent. For clarity, when rendered, all sub-triangles have the same facingness as their parent.
 
 <img src="./figures/micromap-split-rule.svg" alt="Vertex order of the four sub-triangles of a subdivided triangle"/>
 

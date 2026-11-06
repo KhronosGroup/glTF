@@ -33,9 +33,9 @@
   <text x="118.8" y="165.4" fill="#333333" font-family="sans-serif" font-size="10px">02</text>
   <line x1="60" y1="355" x2="95" y2="355" stroke="#1565C0" stroke-width="1.6"/>
   <polygon points="95.0,355.0 86.0,359.1 86.0,350.9" fill="#1565C0"/>
-  <text x="103" y="359" fill="#333333" font-family="sans-serif" font-size="12px">same winding as parent</text>
+  <text x="103" y="359" fill="#333333" font-family="sans-serif" font-size="12px">same orientation as parent</text>
   <line x1="250" y1="355" x2="285" y2="355" stroke="#C62828" stroke-width="1.6"/>
   <polygon points="285.0,355.0 276.0,359.1 276.0,350.9" fill="#C62828"/>
-  <text x="293" y="359" fill="#333333" font-family="sans-serif" font-size="12px">flipped winding</text>
+  <text x="293" y="359" fill="#333333" font-family="sans-serif" font-size="12px">flipped</text>
   <text x="220" y="381" text-anchor="middle" fill="#333333" font-family="sans-serif" font-size="11px">Each path starts at the sub-triangle's first vertex and visits its vertices in order.</text>
 </svg>
