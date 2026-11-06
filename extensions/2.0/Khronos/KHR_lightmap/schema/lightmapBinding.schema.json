@@ -1,0 +1,32 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "lightmapBinding.schema.json",
+    "title": "KHR_lightmap Node Primitive Binding",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "../../../../../specification/2.0/schema/glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "primitive": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Index into the mesh primitives array of this node."
+        },
+        "lightmapTexture": {
+            "$ref": "../../../../../specification/2.0/schema/textureInfo.schema.json",
+            "description": "Baked diffuse irradiance texture. texCoord defaults to 0, as in core textureInfo."
+        },
+        "intensity": {
+            "type": "number",
+            "minimum": 0,
+            "default": 1,
+            "description": "Dimensionless linear irradiance multiplier applied after decoding. The scaled texture, including any instance multiplier, represents illuminance in lux; neutral RGB [1, 1, 1] at unit multipliers represents 1 lux."
+        }
+    },
+    "required": [
+        "primitive",
+        "lightmapTexture"
+    ]
+}
