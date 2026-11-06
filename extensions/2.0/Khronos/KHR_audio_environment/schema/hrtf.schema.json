@@ -1,0 +1,26 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "hrtf.schema.json",
+    "title": "KHR_audio_environment HRTF Configuration",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "audio": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "Index into KHR_audio_emitter.audio[] referencing an HRTF impulse-response dataset."
+        },
+        "profile": {
+            "description": "Named HRTF profile hint.",
+            "anyOf": [
+                { "const": "generic" },
+                { "const": "small" },
+                { "const": "medium" },
+                { "const": "large" },
+                { "type": "string" }
+            ],
+            "default": "generic"
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}
