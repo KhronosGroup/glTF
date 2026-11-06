@@ -3690,8 +3690,8 @@ The 8-byte header consists of two 4-byte little-endian fields.
 
 [source,c]
 ----
-uint32_t magic
-uint32_t version
+uint32 magic
+uint32 version
 ----
 
 * `magic` **MUST** be equal to equal `0x46546C67`. It is ASCII string `glTF` that can be used to identify data as Binary glTF.
@@ -3708,7 +3708,7 @@ In GLBv2, the size header consists of one 4-byte little-endian field.
 
 [source,c]
 ----
-uint32_t length
+uint32 length
 ----
 
 * `length` is the total byte length of the Binary glTF, including the GLB header, the size header, and all chunks.
@@ -3728,9 +3728,9 @@ Each GLBv2 chunk header consists of two 4-byte little-endian fields.
 
 [source,c]
 ----
-uint32_t chunkLength
-uint32_t chunkType
-uint8_t[] chunkData
+uint32 chunkLength
+uint32 chunkType
+uint8[] chunkData
 ----
 
 * `chunkLength` is the byte length of `chunkData`.
