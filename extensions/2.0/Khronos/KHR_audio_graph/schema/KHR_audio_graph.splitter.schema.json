@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Splitter Node",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "channelInterpretation": {
+            "type": "string",
+            "enum": ["speakers", "discrete"],
+            "description": "The channel interpretation applied by the splitter.",
+            "default": "discrete"
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}

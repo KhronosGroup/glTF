@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Audio Data Extension",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "encoding": {
+            "$ref": "KHR_audio_graph.encoding.schema.json",
+            "description": "Encoding metadata for the referenced audio asset."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["encoding"]
+}
