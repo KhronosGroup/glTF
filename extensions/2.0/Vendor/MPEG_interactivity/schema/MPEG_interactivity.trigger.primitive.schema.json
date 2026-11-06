@@ -1,0 +1,127 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title" : "MPEG_interactivity.trigger.primitive object",
+    "type" : "object",
+    "description" : "glTF extension to specify trigger primitive formats",
+    "properties" : {
+        "type" : {
+            "type": "number",
+            "description": "Type of the primitive used to activate the trigger.",
+            "gltf_detailedDescription": "Value is oneOf BV_CUBOID=0, BV_PLANE_REGION=1, BV_CYLINDER_REGION=2, BV_CAPSULE_REGION=3, BV_SPHEROID=4",
+            "default" : 0
+        },
+        "boundary" : {
+            "type": "number",
+            "description": "Defines the region of intersection within the primitive. if zero then all area of the primitive activates the triggerOtherwise, the region of intersection decreases following the normal direction of all sides of the primitive from its centroid. For the capsule primitive, it should be applied over the radius, top, and base attributes.",
+            "default" : 0.0
+        },
+        "transformationMatrix" : {
+            "type": "array",
+            "items": { "type" : "number"},
+            "minItem": 16,
+            "maxItems": 16,
+            "description": "Floating-point 4x4 matrix that defines the initial orientation, translation, and scale of a primitive.",
+            "gltf_detailedDescription":"Formatted in column-major order. The primitive shall follow x+ for width, y+ for height, z+ for length . The matrix transformation allows to transform any primitive after initialization.",
+            "default" : [1.0,0.0,0.0,0.0,
+                        0.0,1.0,0.0,0.0,
+                        0.0,0.0,1.0,0.0,
+                        0.0,0.0,0.0,1.0]
+        },
+        "width":
+        {
+            "type": "number",
+            "description": "Width of the primitive object. "
+        },
+        "height":
+        {
+            "type": "number",
+            "description": "Height of the primitive object. "
+        },
+        "length":
+        {
+            "type": "number",
+            "description": "Length of the primitive object. "
+        },
+        "radius":
+        {
+            "type": "number",
+            "description": "Radius of the primitive object. "
+        },
+        "baseCentroid":
+        {
+            "type": "array",
+            "items": { "type" : "number"},
+            "minItem": 3,
+            "maxItems": 3,
+            "description": "Centroid 3D coordinate (x,y,z) of the base semi-sphere of the primitive object. "
+        },
+        "topCentroid":
+        {
+            "type": "array",
+            "items": { "type" : "number"},
+            "minItem": 3,
+            "maxItems": 3,
+            "description": "Centroid 3D coordinate (x,y,z) of the top semi-sphere of the capsule. "
+        },
+        "centroid":
+        {
+            "type": "array",
+            "items": { "type" : "number"},
+            "minItem": 2,
+            "maxItems": 3,
+            "description": "Centroid 2d (x,y) or (y,z) or (x,z)  or 3D coordinate  (x,y,z) of the primitive object. "
+        },
+
+        "extensions": {},
+        "extras": {}
+    },
+    "allOf": [
+        { "$ref" : "glTFProperty.schema.json" },
+        {
+          "if": {
+            "properties": { "type": { "const": 0, "description":"BV_CUBOID" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["width", "height", "length", "centroid"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": 1, "description":"BV_PLANE_REGION" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["width", "height", "centroid"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": 2, "description":"BV_CYLINDER_REGION" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["radius", "length", "centroid"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": 3, "description":"BV_CAPSULE_REGION" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["radius", "baseCentroid", "topCentroid"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": 4, "description":"BV_SPHEROID"} },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["radius", "centroid"]
+          }
+        }
+      ],
+      "required":["type"]
+}

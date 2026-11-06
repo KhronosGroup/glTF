@@ -1,0 +1,50 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title" : "MPEG_scene_interactivity.behavior object",
+    "type" : "object",
+    "description" : "glTF extension to specify behavior formats at scene level",
+    "properties" : {
+        "triggers" : {
+            "type": "array",
+            "items":{"type":"integer"},
+            "minItems": 1,
+            "description": "Indices of the triggers in the triggers array considered for this behavior"
+        },
+        "actions" : {
+            "type": "array",
+            "items":{"type":"integer"},
+            "minItems": 1,
+            "description": "Indices of the actions in the actions array considered for this behavior"
+        },
+        "triggersCombinationControl":{
+            "type":"string",
+            "pattern":"([~&|]{0,2}[(]*[~]?#[0-9][)]*)+",
+            "description":"Set of logical operations to apply to the triggers. Example:((#1|#2)&(~#3|#4))|#5."
+        },
+        "triggersActivationControl":{
+            "type":"integer",
+            "enum":[0,1,2,3,4,5],
+            "description":"Indicates when the combination of the triggers shall be activated for launching the actions",
+            "gltf_detailedDescription":"Value is oneOf TRIGGER_ACTIVATE_FIRST_ENTER = 0, TRIGGER_ACTIVATE_EACH_ENTER = 1, TRIGGER_ACTIVATE_ON = 2, TRIGGER_ACTIVATE_FIRST_EXIT = 3, TRIGGER_ACTIVATE_EACH_EXIT = 4, TRIGGER_ACTIVATE_OFF = 5 and can be extended"
+        },
+        "actionsControl":{
+            "type":"integer",
+            "enum":[0,1],
+            "description":"Defines the way to execute the defined actions",
+            "gltf_detailedDescription":"Value is oneOf SEQUENTIAL = 0, PARALLEL = 1"
+        },
+        "interruptAction":{
+            "type":"integer",
+            "description":"Index of the action in the actions array to be executed if the behavior is still on-going and is no more defined in a newly received scene update"
+        },
+        "priority":{
+            "type":"number",
+            "default": 0,
+            "description": "Defines the priority associated to the behavior.",
+            "gltf_detailedDescription": "When several behaviors are in concurrence to affect the same node(s) at the same time, the behavior having the highest priority value shall be processed. The lower priority behavior(s) shall not be processed."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required":["triggers","actions","triggersCombinationControl","triggersActivationControl","actionsControl"]
+}
