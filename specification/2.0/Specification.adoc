@@ -764,6 +764,8 @@ The units for all linear distances are meters.
 
 All angles are in radians.
 
+The reference white point is D~65~.
+
 Red, Green, and Blue primary colors use <<bt709,Recommendation ITU-R BT.709>> chromaticity coordinates.
 
 [NOTE]
@@ -2745,20 +2747,22 @@ Implementations of the bidirectional reflectance distribution function (BRDF) it
 [[emissive]]
 === Emissive Parameter
 
-The _emissive_ parameter controls the color and intensity of the light being emitted by the material. This parameter is provided by the `emissiveFactor` and `emissiveTexture` properties.
+The _emissive_ parameter controls the color and luminance of the light being emitted by the material. This parameter is provided by the `emissiveFactor` and `emissiveTexture` properties.
 
 If the `emissiveTexture` property is not defined, the emissive texture components implicitly have a value of stem:[1.0].
 
 The red, green, and blue components of the emissive texture **MUST** be encoded with the piecewise <<srgb, sRGB opto-electronic transfer function>>. Client implementations **SHOULD** apply the inverse of that function to get linear emissive texture values before multiplying them with the factors. When the texture sampler uses linear filtering, the transfer function **SHOULD** be decoded prior to linear interpolation. The alpha channel is ignored.
 
-The units for the multiplicative product of the emissive texture and factor are candela per square meter (**cd / m^2^**), sometimes called _nits_.
+The emitted light is defined as coming from a light source with a relative spectral distribution of radiant flux approximating the reference white point and a luminance of one candela per square meter (**cd·m^-2^**, also known as _nit_).
+
+The emitted light is then filtered by the emissive color, i.e., the emissive parameter of the material, using the emissive RGB values to reduce the radiant flux of the corresponding wavelengths. Thus, any emissive color except latexmath:[\langle 1.0, 1.0, 1.0 \rangle] results in a lower effective luminance; an all-zero emissive color disables the emitted light completely.
 
 [NOTE]
 .Implementation Note
 ====
 Because the value is specified per square meter, it indicates the brightness of any given point along the surface. However, the exact conversion from scene-referred photometric units to the brightness of rendered screen pixels requires knowledge of the camera's exposure settings, which are left as an implementation detail unless otherwise defined by a glTF extension.
 
-Some rendering engines simplify this calculation by assuming that an emissive factor of stem:[1.0] results in a fully exposed pixel; however, that may not match the authoring intent.
+Directly adding emissive values to display pixel values is incorrect.
 ====
 
 [NOTE]
