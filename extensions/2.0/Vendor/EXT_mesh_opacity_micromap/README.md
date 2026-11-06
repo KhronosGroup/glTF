@@ -39,38 +39,28 @@ More specifically, this extension consists of two parts within the glTF object s
     * and the number of micromap triangles for each combination of [subdivision level](#subdivision-and-microtriangle-order) and [format](#opacity-formats-and-states).
 2. [A mesh primitive extension object](#extending-mesh-primitives) that associates each triangle of the mesh primitive with a micromap triangle, or with a uniform opacity state.
 
+Microtriangle opacity states are defined as follows:
+- _transparent_ means that the microtriangle is fully transparent
+- _opaque_ means that the microtriangle is fully opaque
+- _unknown-transparent_ means that the microtriangle's opacity is unknown but it **MAY**  be treated as fully transparent at some loss in visual quality
+- _unknown-opaque_ means that the microtriangle's opacity is unknown but it **MAY**  be treated as fully opaque at some loss in visual quality
+
 How opacity states affect ray traversal (for example, when an any-hit shader is invoked for unknown states) is defined by the graphics API and is outside the scope of this extension.
 
 > [!NOTE]
-> This was originally intended to accelerate alpha-tested geometry, where at
-> every point a material can be evaluated to determine whether that point is
-> opaque or transparent. In ray tracing, this evaluation is typically done
-> inside an any-hit shader.
+> This was originally intended to accelerate alpha-tested geometry,
+> where at every point a material can be evaluated to determine whether that
+> point is opaque or transparent.
+> In ray tracing, this evaluation is typically done inside an any-hit shader.
 >
-> In Vulkan's `VK_KHR_opacity_micromap` and DirectX 12's opacity micromaps,
-> a *transparent* microtriangle state indicates that the microtriangle is
-> fully transparent (and thus that ray traversal can ignore this hit),
-> and an *opaque* state indicates that the microtriangle is fully opaque
-> (and thus that the hit candidate can be immediately confirmed).
-> In both cases, the hardware can avoid invoking an any-hit shader.
->
-> The *unknown-transparent* and *unknown-opaque* states both indicate that a
-> microtriangle may have mixed opacity. However, these are distinct states
-> because `VK_KHR_opacity_micromap` and DirectX 12 allow configuring ray
-> traversal (on an instance or ray level) so that *unknown-transparent*
-> states are treated as *transparent*, and *unknown-opaque* states are
-> treated as *opaque*. In this mode, any-hit shaders can be avoided entirely
-> at some loss in visual quality, which can be worth it for effects like
-> soft shadows.
->
-> Therefore, a common approach to baking an opacity micromap for a textured
-> mesh is, for each microtriangle, to emit a *transparent* state if its
-> area is 0% opaque, an *opaque* state if it is 100% opaque, and
-> otherwise to emit an *unknown-transparent* state or an *unknown-opaque*
-> state if its area is less or more than 50% opaque, respectively.
+> A common approach to baking an opacity micromap for a textured mesh is,
+> for each microtriangle, to emit a *transparent* state if its area is
+> 0% opaque, an *opaque* state if it is 100% opaque, and otherwise to emit
+> an *unknown-transparent* state or an *unknown-opaque* state if its area
+> is less or more than 50% opaque, respectively.
 > In practice, a baker might have modifications to support, for instance,
-> mipmapping or procedural texturing, and the exact method it uses is
-> outside the scope of this extension.
+> mipmapping or procedural texturing, and the exact method it uses is outside
+> the scope of this extension.
 
 ## Extending the glTF Root
 
@@ -227,7 +217,7 @@ bytes, starting at the byte offset `dataOffset` of its [record](#micromap-triang
 
 Within this region, the state of microtriangle `i` occupies bits `i * b` to `i * b + b - 1`, where bit `0` is the least significant bit of the first byte. Bits in the final byte beyond the last microtriangle are unused, and their values **MUST** be ignored.
 
-The region of each micromap triangle **MUST** lie entirely within the `data` buffer view, and regions of different micromap triangles **MUST NOT** overlap.
+The region of each micromap triangle **MUST** lie entirely within the `data` buffer view.
 
 ### Micromap Triangle Records
 
