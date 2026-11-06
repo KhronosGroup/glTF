@@ -10,9 +10,19 @@ The following extension prefixes are reserved by the spec maintainers:
 * `KHR` - Ratified or intended-to-be-ratified by Khronos Group
 * `EXT` - Prefix for extensions proposed by multiple vendors
 
-To request a prefix, submit a [GitHub issue](https://github.com/KhronosGroup/glTF/issues/new) with the name of the requested prefix and the vendor that will be using it. Maintainers, please assign the `extension` label to the issue.
+Both prefixes are managed by the Khronos 3D Formats Working Group, and `KHR` and `EXT` extensions remain in this repository.
 
-## Registered Vendor Prefixes
+## Vendor Prefixes Have Moved
+
+All glTF 2.0 vendor prefix registrations and vendor extensions **MUST** be submitted to the [glTF-Community](https://github.com/KhronosGroup/glTF-Community/) repository. Follow the [vendor instructions](https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/README.md) there. Prefix requests (issues or pull requests) opened in this repository will be closed and redirected to glTF-Community.
+
+glTF-Community is designed for non-Khronos extensions and has licensing suited to vendor-owned extensions. Its [contributing instructions](https://github.com/KhronosGroup/glTF-Community/blob/main/CONTRIBUTING.md) cover prefixes, new extensions, and moving existing extensions from this repository.
+
+Every prefix in the table below remains **reserved for the organization that currently controls it**. These prefixes are listed in the glTF-Community [legacy prefix list](https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/LEGACY_PREFIXES.md) and can only be registered there by their current holder.
+
+The table below is kept for historical reference and will not be updated. It will be removed when the transition period (currently ending 31 December 2026, which may be extended) is complete.
+
+## Registered Vendor Prefixes (Read-Only)
 
 | Prefix | Company or Project Name | Contacts | Request |
 |--------------|--------------------------------|---------------------------------------------------------------|-----------|
