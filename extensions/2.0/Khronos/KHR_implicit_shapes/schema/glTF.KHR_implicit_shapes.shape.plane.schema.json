@@ -1,0 +1,27 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.KHR_implicit_shapes.shape.plane.schema.json",
+    "title": "KHR_implicit_shapes Plane Shape",
+    "type": "object",
+    "description": "Parameters describing a plane shape.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "doubleSided": {
+            "type": "boolean",
+            "default": false,
+            "description": "Specifies whether the plane is double sided."
+		},
+        "sizeX": {
+            "type": "number",
+            "description": "The extents along the X axis in local space. If not provided, this dimension should be considered infinite.",
+            "exclusiveMinimum": 0.0
+        },
+        "sizeZ": {
+            "type": "number",
+            "description": "The extents along the Z axis in local space. If not provided, this dimension should be considered infinite.",
+            "exclusiveMinimum": 0.0
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}
