@@ -239,6 +239,11 @@ Additionally, the following pointer templates represent read-only runtime proper
 | `/animations/{}`                    | `ref`      | Reference to the animation
 | `/cameras.length`                   | `int`      | Number of cameras
 | `/cameras/{}`                       | `ref`      | Reference to the camera
+| `/externalAssets.length`            | `int`      | Number of external assets
+| `/externalAssets/{}`                 | `ref`      | Reference to the external asset
+| `/externalAssets/{}/file`           | `ref`      | Reference to the file
+| `/files.length`                     | `int`      | Number of files
+| `/files/{}`                         | `ref`      | Reference to the file
 | `/materials.length`                 | `int`      | Number of materials
 | `/materials/{}`                     | `ref`      | Reference to the material
 | `/materials/{}/doubleSided`         | `bool`     | Whether the material is double sided
@@ -252,6 +257,7 @@ Additionally, the following pointer templates represent read-only runtime proper
 | `/nodes/{}/camera`                  | `ref`      | Reference to the camera
 | `/nodes/{}/children.length`         | `int`      | Number of children nodes
 | `/nodes/{}/children/[]`             | `ref`      | Reference to the child node
+| `/nodes/{}/externalAsset`           | `ref`      | Reference to the external asset
 | `/nodes/{}/globalMatrix`            | `float4x4` | Global transformation matrix of a node
 | `/nodes/{}/matrix`                  | `float4x4` | Local transformation matrix of a node
 | `/nodes/{}/mesh`                    | `ref`      | Reference to the mesh
