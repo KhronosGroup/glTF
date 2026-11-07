@@ -766,6 +766,8 @@ The units for all linear distances are meters.
 
 All angles are in radians.
 
+The reference white point is D~65~.
+
 Red, Green, and Blue primary colors use <<bt709,Recommendation ITU-R BT.709>> chromaticity coordinates.
 
 [NOTE]
@@ -882,7 +884,7 @@ Nodes **MAY** reference external assets. After loading the external asset file, 
 
 By default, a node's local space transform is identity.
 
-Any node **MAY** define a local space transform either by supplying a precomputed transformation matrix in the `matrix` property, or any of `translation`, `rotation`, and `scale` properties (also known as _TRS properties_). _Translation_ and _scale_ are 3D vectors in the local coordinate system; _rotation_ is a quaternion value stored in XYZW order where W is the scalar. If defined, the rotation quaternion **MUST** be unit.
+Any node **MAY** define a local space transform either by supplying a precomputed transformation matrix in the `matrix` property, or any of `translation`, `rotation`, and `scale` properties (also known as _TRS properties_). _Translation_ and _scale_ are 3D vectors in the local coordinate system; _rotation_ is a quaternion value stored in XYZW order where W is the scalar. If defined, the rotation quaternion **MUST** be unit within the margin of floating point precision.
 
 When the `matrix` property is not defined, the local transform is computed from the TRS properties as follows, where
 
@@ -1074,7 +1076,7 @@ If the `uri` property is undefined, the buffer's data is provided by other means
 [[glb-stored-buffer]]
 ==== GLB-stored Buffer
 
-The glTF asset **MAY** use one of the GLBv2 or GLBv3 file container formats to pack glTF JSON and glTF buffers into the same file. Data for such buffers is provided via GLB-stored `BIN` chunks.
+The glTF asset **MAY** use one of the GLBv2 or GLBv3 file container formats to pack glTF JSON and glTF buffers into the same file. Data for such buffers is provided via GLB-stored chunks.
 
 A buffer **MAY** have its data provided by a GLB-stored chunk. This is done explicitly by specifying the `buffer.chunk` property in the buffer object. When a buffer references a chunk by index, that chunk **MUST** be present in the GLB.
 
@@ -2790,20 +2792,22 @@ Implementations of the bidirectional reflectance distribution function (BRDF) it
 [[emissive]]
 === Emissive Parameter
 
-The _emissive_ parameter controls the color and intensity of the light being emitted by the material. This parameter is provided by the `emissiveFactor` and `emissiveTexture` properties.
+The _emissive_ parameter controls the color and luminance of the light being emitted by the material. This parameter is provided by the `emissiveFactor` and `emissiveTexture` properties.
 
 If the `emissiveTexture` property is not defined, the emissive texture components implicitly have a value of stem:[1.0].
 
 The red, green, and blue components of the emissive texture **MUST** be encoded with the piecewise <<srgb, sRGB opto-electronic transfer function>>. Client implementations **SHOULD** apply the inverse of that function to get linear emissive texture values before multiplying them with the factors. When the texture sampler uses linear filtering, the transfer function **SHOULD** be decoded prior to linear interpolation. The alpha channel is ignored.
 
-The units for the multiplicative product of the emissive texture and factor are candela per square meter (**cd / m^2^**), sometimes called _nits_.
+The emitted light is defined as coming from a light source with a relative spectral distribution of radiant flux approximating the reference white point and a luminance of one candela per square meter (**cd·m^-2^**, also known as _nit_).
+
+The emitted light is then filtered by the emissive color, i.e., the emissive parameter of the material, using the emissive RGB values to reduce the radiant flux of the corresponding wavelengths. Thus, any emissive color except latexmath:[\langle 1.0, 1.0, 1.0 \rangle] results in a lower effective luminance; an all-zero emissive color disables the emitted light completely.
 
 [NOTE]
 .Implementation Note
 ====
 Because the value is specified per square meter, it indicates the brightness of any given point along the surface. However, the exact conversion from scene-referred photometric units to the brightness of rendered screen pixels requires knowledge of the camera's exposure settings, which are left as an implementation detail unless otherwise defined by a glTF extension.
 
-Some rendering engines simplify this calculation by assuming that an emissive factor of stem:[1.0] results in a fully exposed pixel; however, that may not match the authoring intent.
+Directly adding emissive values to display pixel values is incorrect.
 ====
 
 [NOTE]
@@ -3110,18 +3114,15 @@ The value of the `zfar` property **MUST** be greater than zero and greater than 
 [[animations]]
 == Animations
 
-glTF supports articulated and skinned animation via key frame animations of nodes' transforms. Key frame data is stored in buffers and referenced in animations using accessors.
+[[animations-overview]]
+=== Overview
 
-glTF 2.1 also supports animation of instantiated morph targets in a similar fashion.
+glTF 2.1 supports animating node transforms and morph target weights.
 
-[NOTE]
-.Note
-====
-glTF 2.1 only supports animating node transforms and morph target weights. Extensions or a future version of the specification may support animating arbitrary properties, such as material colors and texture transformation matrices.
-====
+Animation of skinned mesh primitives is achieved by targeting transforms of the nodes used as joints by the corresponding skin objects or ancestors of those nodes.
 
 [NOTE]
-.Note
+.Implementation Note
 ====
 glTF 2.1 defines only storage of animation keyframes, so this specification doesn't define any runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc. When loading a glTF 2.1 asset, client implementations may select an animation entry and pause it on the first frame, play it automatically, or ignore all animations until further user requests. When a playing animation is stopped, client implementations may reset the scene to the initial state or freeze it at the current frame.
 ====
@@ -3132,21 +3133,433 @@ glTF 2.1 defines only storage of animation keyframes, so this specification does
 glTF 2.1 does not specifically define how an animation will be used when imported but, as a best practice, it is recommended that each animation is self-contained as an action. For example, "`Walk`" and "`Run`" animations might each contain multiple channels targeting a model's various bones. The client implementation may choose when to play any of the available animations.
 ====
 
-All animations are stored in the `animations` array of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
+Animations are stored in the `animations` array of the asset. An animation is defined as a set of animation channels, i.e., asset's properties being animated, and a set of animation samplers, i.e., keyframe data.
 
-The following examples show the expected usage of animations.
+[[animations-samplers]]
+=== Animation Samplers
+
+[[animations-samplers-overview]]
+==== Overview
+
+An animation sampler defines the input and output accessors that provide timestamps and the associated keyframe data, respectively, and the interpolation mode used to compute the animated property values between the keyframes. Animation samplers are stored in the `samplers` array property of the animation.
+
+[[animations-samplers-input]]
+==== Input Accessor
+
+The sampler's `input` property refers to the sampler's input accessor. It provides timestamp values, in seconds, relative to the animation's start.
+
+The number of elements of the input accessor defines the number of keyframes provided by the animation sampler. The order of keyframes matches the order of elements provided by the input accessor.
+
+The input accessor **MUST** have the `"SCALAR"` type and the _float32_ component type; the accessor **MUST** define its `min` and `max` properties.
+
+Timestamp values **MUST** be non-negative and they **MUST** strictly increase, i.e., each subsequent accessor element **MUST** be greater than the previous one.
+
+Timestamp data provided by the input accessor **MUST NOT** contain infinite or NaN values.
+
+[[animations-samplers-interpolation]]
+==== Interpolation
+
+The sampler's `interpolation` property defines the interpolation mode used to compute values of the animated properties for timestamps between the keyframes provided by the accessors. This specification defines three interpolation methods: `"STEP"`, `"LINEAR"`, and `"CUBICSPLINE"`.
+
+[NOTE]
+.Implementation Note
+====
+If an animation sampler has only one keyframe, its interpolation mode is irrelevant.
+====
+
+If the `interpolation` property is not defined, the sampler's effective interpolation mode is `"LINEAR"`.
+
+If the sampler's interpolation is `"CUBICSPLINE"`, the input accessor **MUST** provide at least two elements.
+
+[[animations-samplers-output]]
+==== Output Accessor
+
+The sampler's `output` property refers to the sampler's output accessor. The output accessor provides the animated property values associated with the keyframes and additional values needed to reconstruct interpolated values between the keyframes if such additional values are required by the interpolation mode.
+
+[NOTE]
+.Implementation Note
+====
+The output accessor's type and effective component type are not restricted in general but an animation channel will not be able to use an animation sampler that has an output accessor incompatible with the animated property. This is described later, in the section about animation channels.
+====
+
+Keyframe data provided by the output accessor **MUST NOT** contain infinite or NaN values.
+
+The exact layout of per-keyframe data depends on the interpolation mode and on whether the animated property is an array. If the animated property is an array, the output accessor provides all array elements for each keyframe.
+
+[NOTE]
+.Implementation Note
+====
+This specification defines only one array property that can be animated--morph weights of an instantiated mesh that has morph targets.
+====
+
+The `"STEP"` and `"LINEAR"` interpolation methods require only the animated property values. The accessor element index stem:[i] corresponding to the keyframe with index stem:[k] is given by the following expression.
+
+[latexmath]
++++++
+i_\mathit{val}(k, n, j) = k \cdot n + j
++++++
+
+where
+
+- stem:[n] is the array property's length if the animated property is an array, or one otherwise;
+- stem:[j] is the array property's index if the animated property is an array, or zero otherwise.
+
+[NOTE]
+.Example
+====
+If there are three keyframes and the animated property is not an array, the output accessor would have three elements:
+
+[latexmath]
++++++
+\left\{ \mathit{val}_{k,j} \right\} = \left\{ \mathit{val}_{0,0}, \mathit{val}_{1,0}, \mathit{val}_{2,0} \right\}
++++++
+
+If there are three keyframes and the animated property is an array of two elements, the output accessor would have six elements:
+
+[latexmath]
++++++
+\left\{ \mathit{val}_{k,j} \right\} = \left\{ \mathit{val}_{0,0}, \mathit{val}_{0,1}, \mathit{val}_{1,0}, \mathit{val}_{1,1}, \mathit{val}_{2,0}, \mathit{val}_{2,1} \right\}
++++++
+====
+
+The `"CUBICSPLINE"` interpolation mode requires the animated property values as well as their incoming and outgoing tangents. The accessor element indices corresponding to the incoming tangent, animated property value, and outgoing tangent for a keyframe with index stem:[k] are given by the following expressions.
+
+[latexmath]
++++++
+\begin{align*}
+i_\mathit{in}(k, n, j) &= k \cdot 3n + j \\
+i_\mathit{val}(k, n, j) &= k \cdot 3n + n + j \\
+i_\mathit{out}(k, n, j) &= k \cdot 3n + 2n + j
+\end{align*}
++++++
+
+where
+
+- stem:[n] is the array property's length if the animated property is an array, or one otherwise;
+- stem:[j] is the array property's index if the animated property is an array, or zero otherwise.
+
+[NOTE]
+.Example
+====
+If there are three keyframes and the animated property is not an array, the output accessor would have nine elements:
+
+[latexmath]
++++++
+\left\{ \mathit{in}_{k,j}, \mathit{val}_{k,j}, \mathit{out}_{k,j} \right\} =
+\begin{aligned}
+\bigl\{ & \mathit{in}_{0,0}, \mathit{val}_{0,0}, \mathit{out}_{0,0}, \\
+        & \mathit{in}_{1,0}, \mathit{val}_{1,0}, \mathit{out}_{1,0}, \\
+        & \mathit{in}_{2,0}, \mathit{val}_{2,0}, \mathit{out}_{2,0} \bigr\}
+\end{aligned}
++++++
+
+If there are three keyframes and the animated property is an array of two elements, the output accessor would have 18 elements:
+
+[latexmath]
++++++
+\left\{ \mathit{in}_{k,j}, \mathit{val}_{k,j}, \mathit{out}_{k,j} \right\} =
+\begin{aligned}
+\bigl\{ & \mathit{in}_{0,0}, \mathit{in}_{0,1}, \mathit{val}_{0,0}, \mathit{val}_{0,1}, \mathit{out}_{0,0}, \mathit{out}_{0,1}, \\
+        & \mathit{in}_{1,0}, \mathit{in}_{1,1}, \mathit{val}_{1,0}, \mathit{val}_{1,1}, \mathit{out}_{1,0}, \mathit{out}_{1,1}, \\
+        & \mathit{in}_{2,0}, \mathit{in}_{2,1}, \mathit{val}_{2,0}, \mathit{val}_{2,1}, \mathit{out}_{2,0}, \mathit{out}_{2,1} \bigr\}
+\end{aligned}
++++++
+====
+
+[[animations-channels]]
+=== Animation Channels
+
+[[animations-channels-overview]]
+==== Overview
+
+An animation channel defines the animation target, i.e., the asset property being animated, and the animation sampler that provides keyframe data. Animation channels are stored in the `channels` array property of the animation.
+
+[[animations-channels-target]]
+==== Channel Target
+
+The channel's `target` property is a JSON object; its properties specify the asset's property being animated.
+
+If the target's `node` property is defined, it specifies the index of the node containing the animated property and the target's `path` property specifies the animated property name.
+
+The node's animatable properties are defined as follows:
+
+- If the node does not define the `matrix` property, its animatable properties include `"translation"`, `"rotation"`, and `"scale"`.
++
+[NOTE]
+.Rationale
+====
+Since matrix decomposition is generally ambiguous, animating only one property could result in non-portable implementation-dependent results.
+====
+- If the node instantiates a mesh and that mesh has morph targets, its animatable properties include `"weights"`.
+
+If the target's `node` property is defined and the value of the `path` property is one of `"translation"`, `"rotation"`, `"scale"`, or `"weights"`, the property **MUST** be animatable as defined above.
+
+[NOTE]
+.Examples
+====
+If the node defines its `matrix` property and does not have a mesh with morph targets, it has no animatable properties.
+
+If the node does not define its `matrix` property and does have a mesh with morph targets, all four aforementioned properties are animatable.
+====
+
+If the target's `node` property is not defined, the animation channel is ignored unless animation channel target information is provided by other means, such as extensions.
+
+[[animations-channels-sampler]]
+==== Channel Sampler
+
+The channel's `sampler` property refers to an animation sampler defined in the same animation object. The animation sampler provides timestamp and keyframe data for the channel.
+
+The sampler's output accessor **MUST** be compatible with the animated property as defined in the table below.
+
+[options="header",cols="15%,25%,35%,25%"]
+|====
+| Property        | Output Accessor Type | Output Accessor Component Type(s) | Description
+| `"translation"` | `"VEC3"`             | _float32_                         | XYZ translation vector
+| `"rotation"`    | `"VEC4"`             | _float32_ +
+                                           _snorm8_ +
+                                           _unorm8_ +
+                                           _snorm16_ +
+                                           _unorm16_                         | XYZW rotation quaternion
+| `"scale"`       | `"VEC3"`             | _float32_                         | XYZ scale vector
+| `"weights"`     | `"SCALAR"`           | _float32_ +
+                                           _snorm8_ +
+                                           _unorm8_ +
+                                           _snorm16_ +
+                                           _unorm16_                         | Morph target weights
+|====
+
+The output accessor **MUST** provide the exact number of elements needed for all keyframes defined by the animation sampler and target. If the animated property is `"weights"`, its array length is equal to the number of the mesh's morph targets; other animatable properties defined in this specification are not arrays.
+
+If the animated property is `"rotation"`, quaternions provided by the output accessor **MUST** be unit within the margin of floating point precision.
+
+[[animations-usage]]
+=== Applying Animation Data
+
+An animation defines a timeline that starts from zero seconds (animation start) to the maximum element value of all input accessors referenced by the used samplers of the animation. An animation sampler is considered used if it is referenced by a non-ignored animation channel of the animation.
+
+[NOTE]
+.Implementation Note
+====
+Finding the maximum element of all input accessors does not require fetching actual accessor elements because animation sampler input accessors define their `max` properties.
+====
+
+Within one animation, all targets **MUST** be unique. Two targets are equal if they point to exactly the same asset property. Two targets that refer to the same property name of different objects (e.g., `"translation"` of two different nodes) are not equal.
+
+[NOTE]
+.Rationale
+====
+This prevents potential ambiguities when two or more animation channels update the same property simultaneously.
+====
+
+When the animation is active, it updates the values of the asset properties referenced from the animation's channels. Asset properties not referenced by the channels of the active animation retain their values.
+
+For each animation channel, the effective property value for the current timeline position is determined as follows.
+
+[none]
+- If the current timeline position is less than the first timestamp or greater than the last timestamp provided by the channel sampler's input accessor, the animated property is set to the value specified by the first keyframe or the last keyframe, respectively.
++
+[NOTE]
+.Examples
+====
+If the earliest keyframe for a channel is at 10 seconds, the animation channel sets the animated property to the value of that keyframe for all timeline positions from zero to 10 seconds.
+
+If the last keyframe for a channel is at 15 seconds but the last keyframe across all channels of the animation is at 20 seconds, the animation channel sets the animated property to the value of the channel's last keyframe for all timeline positions from 15 to 20 seconds.
+====
+
+- If the current timeline position is equal to any timestamp provided by the channel sampler's input accessor, the animated property is set to the value specified by the keyframe corresponding to the timestamp.
+
+- In all other cases, the effective value of the animated property is computed according to the sampler's interpolation mode as defined in the next section.
+
+[NOTE]
+.Implementation Note
+====
+Animations with non-linear time inputs are not directly representable with glTF animations. glTF is a runtime format and non-linear time inputs are expensive to compute at runtime. Exporter implementations should sample a non-linear time animation into linear inputs and outputs for an accurate representation.
+====
+
+[[animations-interpolations]]
+=== Computing Interpolated Values
+
+==== Overview
+
+Animation sampler interpolation modes define how to compute values of animated properties for the timestamps located between the keyframes. When the current (requested) timestamp exists in the animation data, its associated property value is used as is, without interpolation.
+
+For the following sections, let
+
+[none]
+* stem:[n] be the total number of keyframes, stem:[n > 0];
+* stem:[t_k] be the timestamp of the stem:[k]-th keyframe, stem:[k \in [1,n\]];
+* stem:[v_k] be the animated property value of the stem:[k]-th keyframe;
+* stem:[t_c] be the current (requested) timestamp, stem:[t_k < t_c < t_{k+1}];
+* stem:[t_d = t_{k + 1} - t_k] be the duration of the interpolation segment;
+* stem:[t = (t_c - t_k) / t_d] be the segment-normalized interpolation factor.
+
+The scalar-vector multiplications are per vector component.
+
+==== Step Interpolation
+
+This mode is used when the animation sampler interpolation mode is `"STEP"`.
+
+The interpolated animated property value stem:[v_t] at the current (requested) timestamp stem:[t_c] is computed as follows.
+
+[latexmath]
+++++
+v_t = v_k
+++++
+
+[[interpolation-lerp]]
+==== Linear Interpolation
+
+This mode is used when the animation sampler interpolation mode is `"LINEAR"` and the animated property is not `"rotation"`.
+
+The interpolated animated property value stem:[v_t] at the current (requested) timestamp stem:[t_c] is computed as follows.
+
+[latexmath]
+++++
+v_t = (1 - t) \cdot v_k + t \cdot v_{k+1}
+++++
+
+[[interpolation-slerp]]
+==== Spherical Linear Interpolation
+
+This mode is used when the animation sampler interpolation mode is `"LINEAR"` and the animated property is `"rotation"`, i.e., values of the animated property are unit quaternions.
+
+Let
+[none]
+* latexmath:[a = \arccos(|v_k \cdot v_{k+1}|)] be the arccosine of the absolute value of the dot product of two consecutive quaternions;
+* latexmath:[d = v_k \cdot v_{k+1}] be the dot product of two consecutive quaternions;
+* latexmath:[s = \begin{cases} +1 & \text{if } d \ge 0 \\ -1 & \text{if } d \lt 0 \end{cases}].
+
+The interpolated animated property value stem:[v_t] at the timestamp stem:[t_c] is computed as follows.
+
+[latexmath]
+++++
+v_t = \frac{\sin(a \cdot (1 - t))}{\sin(a)} \cdot v_k + s \cdot \frac{\sin(a \cdot t)}{\sin(a)} \cdot v_{k+1}
+++++
+
+[NOTE]
+.Implementation Note
+====
+Using the dot product's absolute value for computing stem:[a] and negating stem:[v_{k+1}] when stem:[d] is negative ensure that the spherical interpolation follows the short path along the great circle defined by the two quaternions.
+====
+
+Implementations **MAY** approximate these equations to reach application-specific accuracy and/or performance targets.
+
+[NOTE]
+.Implementation Note
+====
+When stem:[a] is close to zero, spherical linear interpolation turns into regular linear interpolation.
+====
+
+[[interpolation-cubic]]
+==== Cubic Spline Interpolation
+
+This mode is used when the animation sampler interpolation mode is `"CUBICSPLINE"`.
+
+For each timestamp provided by the animation sampler input accessor, there are three associated keyframe values: incoming tangent, animated property value, and outgoing tangent.
+
+Let
+[none]
+* stem:[a_k], stem:[v_k], and stem:[b_k] be the incoming tangent, property value, and outgoing tangent of the stem:[k]-th frame, respectively.
+
+The interpolated animated property value stem:[v_t] at the timestamp stem:[t_c] is computed as follows.
+
+[latexmath]
+++++
+v_t = (2t^3 - 3t^2 + 1) \cdot v_k + t_d \cdot (t^3 - 2t^2 + t) \cdot b_k + (-2t^3 + 3t^2) \cdot v_{k+1} + t_d \cdot (t^3 - t^2) \cdot a_{k+1}
+++++
+
+If the animated property is a unit quaternion, the computed value is normalized after the interpolation.
+
+When writing out rotation keyframes, exporters **SHOULD** take care to not write out values that can result in an invalid quaternion with all zero values being produced by the interpolation.
+
+[NOTE]
+.Implementation Note
+====
+This can be achieved by ensuring that latexmath:[v_k \ne -v_{k+1}] for all keyframes.
+====
+
+The first incoming tangent stem:[a_1] and last outgoing tangent stem:[b_n] **SHOULD** be zeros as they are not used in cubic spline calculations.
+
+[[animations-examples]]
+=== Examples
+
+[NOTE]
+====
+The following animation targets all animatable properties of one node. All animation samplers use the same input accessor, so the keyframes are aligned across all channels. The animation samplers omit the `interpolation` property so it defaults to `"LINEAR"`.
 
 [source,json]
 ----
 {
     "animations": [
         {
-            "name": "Animate all properties of one node with different samplers",
             "channels": [
                 {
                     "sampler": 0,
                     "target": {
-                        "node": 1,
+                        "node": 0,
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": 1,
+                    "target": {
+                        "node": 0,
+                        "path": "scale"
+                    }
+                },
+                {
+                    "sampler": 2,
+                    "target": {
+                        "node": 0,
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": 3,
+                    "target": {
+                        "node": 0,
+                        "path": "weights"
+                    }
+                }
+            ],
+            "samplers": [
+                {
+                    "input": 0,
+                    "output": 1
+                },
+                {
+                    "input": 0,
+                    "output": 2
+                },
+                {
+                    "input": 0,
+                    "output": 3
+                },
+                {
+                    "input": 0,
+                    "output": 4
+                }
+            ]
+        }
+    ]
+}
+----
+====
+
+[NOTE]
+====
+The following animation targets different properties of two nodes. The animation samplers use different input accessors, different output accessors, and different interpolation modes.
+
+[source,json]
+----
+{
+    "animations": [
+        {
+            "channels": [
+                {
+                    "sampler": 0,
+                    "target": {
+                        "node": 0,
                         "path": "rotation"
                     }
                 },
@@ -3156,9 +3569,45 @@ The following examples show the expected usage of animations.
                         "node": 1,
                         "path": "scale"
                     }
+                }
+            ],
+            "samplers": [
+                {
+                    "input": 0,
+                    "interpolation": "CUBICSPLINE",
+                    "output": 1
                 },
                 {
-                    "sampler": 2,
+                    "input": 2,
+                    "interpolation": "STEP",
+                    "output": 3
+                }
+            ]
+        }
+    ]
+}
+----
+====
+
+[NOTE]
+====
+The following animation targets translation of two nodes. Both channels use the same animation sampler.
+
+[source,json]
+----
+{
+    "animations": [
+        {
+            "channels": [
+                {
+                    "sampler": 0,
+                    "target": {
+                        "node": 0,
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": 0,
                     "target": {
                         "node": 1,
                         "path": "translation"
@@ -3167,186 +3616,16 @@ The following examples show the expected usage of animations.
             ],
             "samplers": [
                 {
-                    "input": 4,
-                    "interpolation": "LINEAR",
-                    "output": 5
-                },
-                {
-                    "input": 4,
-                    "interpolation": "LINEAR",
-                    "output": 6
-                },
-                {
-                    "input": 4,
-                    "interpolation": "LINEAR",
-                    "output": 7
-                }
-            ]
-        },
-        {
-            "name": "Animate two nodes with different samplers",
-            "channels": [
-                {
-                    "sampler": 0,
-                    "target": {
-                        "node": 0,
-                        "path": "rotation"
-                    }
-                },
-                {
-                    "sampler": 1,
-                    "target": {
-                        "node": 1,
-                        "path": "rotation"
-                    }
-                }
-            ],
-            "samplers": [
-                {
                     "input": 0,
                     "interpolation": "LINEAR",
                     "output": 1
-                },
-                {
-                    "input": 2,
-                    "interpolation": "LINEAR",
-                    "output": 3
-                }
-            ]
-        },
-        {
-            "name": "Animate two nodes with the same sampler",
-            "channels": [
-                {
-                    "sampler": 0,
-                    "target": {
-                        "node": 0,
-                        "path": "rotation"
-                    }
-                },
-                {
-                    "sampler": 0,
-                    "target": {
-                        "node": 1,
-                        "path": "rotation"
-                    }
-                }
-            ],
-            "samplers": [
-                {
-                    "input": 0,
-                    "interpolation": "LINEAR",
-                    "output": 1
-                }
-            ]
-        },
-        {
-            "name": "Animate a node rotation channel and the weights of a Morph Target it instantiates",
-            "channels": [
-                {
-                    "sampler": 0,
-                    "target": {
-                        "node": 1,
-                        "path": "rotation"
-                    }
-                },
-                {
-                    "sampler": 1,
-                    "target": {
-                        "node": 1,
-                        "path": "weights"
-                    }
-                }
-            ],
-            "samplers": [
-                {
-                    "input": 4,
-                    "interpolation": "LINEAR",
-                    "output": 5
-                },
-                {
-                    "input": 4,
-                    "interpolation": "LINEAR",
-                    "output": 6
                 }
             ]
         }
     ]
 }
 ----
-
-_Channels_ connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the index of one of the samplers present in the containing animation's `samplers` array. The `target` property is an object that identifies which node to animate using its `node` property, and which property of the node to animate using `path`. Non-animated properties **MUST** keep their values during animation.
-
-When the `node` property is not defined, the animation channel is ignored unless target information is provided by other means, such as extensions.
-
-When the `node` property is defined, valid values for the `path` property include `"translation"`, `"rotation"`, `"scale"`, and `"weights"`.
-
-If the node has the `matrix` property defined, its TRS properties **MUST NOT** be targeted, i.e., the `path` property of an animation channel target that points to such a node **MUST NOT** be any of `"translation"`, `"rotation"`, or `"scale"`.
-
-[NOTE]
-.Rationale
 ====
-Since matrix decomposition is generally ambiguous, animating only one property could result in non-portable implementation-dependent results. Note that `matrix` property presence does not affect the `"weights"` path.
-====
-
-Nodes that do not contain a mesh with morph targets **MUST NOT** be targeted with `"weights"` path.
-
-Within one animation, each target (a combination of a node and a path) **MUST NOT** be used more than once.
-
-[NOTE]
-.Implementation Note
-====
-This prevents potential ambiguities when one target is affected by two or more overlapping samplers.
-====
-
-Each of the animation's *samplers* defines the `input`/`output` pair: a set of floating-point scalar values representing linear time in seconds; and a set of vectors or scalars representing the animated property. All values are stored in a buffer and accessed via accessors; refer to the table below for output accessor types. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property. Supported `interpolation` values include `LINEAR`, `STEP`, and `CUBICSPLINE`. See <<appendix-c-interpolation,Appendix C>> for additional information about interpolation modes.
-
-The inputs of each sampler are relative to `t = 0`, defined as the beginning of the parent `animations` entry. Before and after the provided input range, output **MUST** be clamped to the nearest end of the input range.
-
-[NOTE]
-.Implementation Note
-====
-For example, if the earliest sampler input for an animation is `t = 10`, a client implementation must begin playback of that animation channel at `t = 0` with output clamped to the first available output value.
-====
-
-Samplers within a given animation **MAY** have different inputs.
-
-[options="header",cols="15%,15%,35%,35%"]
-|====
-| `channel.path`  | Accessor Type | Component Type(s) | Description
-| `"translation"` | `"VEC3"`      | _float32_         | XYZ translation vector
-| `"rotation"`    | `"VEC4"`      | _float32_ +
-                                    _snorm8_ +
-                                    _unorm8_ +
-                                    _snorm16_ +
-                                    _unorm16_         | XYZW rotation quaternion
-| `"scale"`       | `"VEC3"`      | _float32_         | XYZ scale vector
-| `"weights"`     | `"SCALAR"`    | _float32_ +
-                                    _snorm8_ +
-                                    _unorm8_ +
-                                    _snorm16_ +
-                                    _unorm16_         | Weights of morph targets
-|====
-
-Animation sampler's `input` accessor **MUST** have its `min` and `max` properties defined.
-
-Animation sampler data accessed with floating-point accessors **MUST NOT** contain infinite or NaN values.
-
-[NOTE]
-.Implementation Note
-====
-Animations with non-linear time inputs, such as time warps in Autodesk 3ds Max or Maya, are not directly representable with glTF animations. glTF is a runtime format and non-linear time inputs are expensive to compute at runtime. Exporter implementations should sample a non-linear time animation into linear inputs and outputs for an accurate representation.
-====
-
-A morph target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated morph target. These scalar sequences **MUST** lie end-to-end as a single stream in the output accessor, whose final size is equal to the number of morph targets times the number of animation frames.
-
-Morph target animation is by nature sparse, consider using <<sparse-accessors,Sparse Accessors>> for storage of morph target animation. When used with `CUBICSPLINE` interpolation, tangents (a~k~, b~k~) and values (v~k~) are grouped within keyframes:
-
-a~1~,a~2~,...a~n~,v~1~,v~2~,...v~n~,b~1~,b~2~,...b~n~
-
-See <<appendix-c-interpolation,Appendix C>> for additional information about interpolation modes.
-
-Animation of skinned mesh primitives is achieved by targeting TRS properties of the nodes used as joints by the corresponding skin objects or ancestors of those nodes.
 
 [[file-references]]
 == File references
@@ -3485,7 +3764,7 @@ This instantiates the external asset as this node in the scene hierarchy. The ro
 Nodes may contain both an `externalAsset` and other `children`. For consistency between implementations, it is recommended that the root node(s) of the external asset are attached after the other children of the node.
 ====
 
-See <<appendix-d-external-asset-diagrams, Appendix D>> for detailed diagrams outlining a sample structure and the expected scene graph.
+See <<appendix-c-external-asset-diagrams, Appendix C>> for detailed diagrams outlining a sample structure and the expected scene graph.
 
 [[shapes]]
 == Shapes
@@ -3574,7 +3853,7 @@ glTF defines an extension mechanism that allows the base format to be extended w
 ----
 ====
 
-All extensions used in a glTF asset **MUST** be listed in the top-level `extensionsUsed` array object.
+All extensions used in a glTF asset **MUST** be listed in the top-level `extensionsUsed` array.
 
 [NOTE]
 .Example
@@ -3618,24 +3897,14 @@ The set of extension names listed in the `extensionsRequired` array **MUST** be 
 
 glTF provides two delivery options that can be used together:
 
-* glTF JSON points to external binary data (geometry, key frames, skins), images, and other files.
-* glTF JSON embeds base64-encoded binary data, and images inline using data URLs.
+* glTF JSON points to external buffers, images, and other files.
+* glTF JSON embeds buffers, images, and other files inline using data URLs.
 
-Hence, loading glTF files usually requires either separate requests to fetch all binary data, or extra space due to base64-encoding. Base64-encoding requires extra processing to decode and increases the file size (by ~33% for encoded resources). While transport-layer gzip mitigates the file size increase, decompression and decoding still add significant loading time.
+Hence, loading glTF files usually requires either separate requests to fetch all binary data, or extra space and processing due to data URL encoding.
 
 To avoid this file size and processing overhead, a container format, _Binary glTF_ is introduced that enables a glTF asset, including JSON, buffers, and images, to be stored in a single binary blob.
 
 A Binary glTF asset can still refer to external resources. For example, an application that wants to keep images as separate files may embed everything needed for a scene, except images, in a Binary glTF.
-
-[[glb-file-format-specification-structure]]
-== Structure
-
-A Binary glTF (which can be a file, for example) has the following structure:
-
-* A 12-byte (binary format version 2) or 16-byte (binary format version 3) preamble, called the _header_.
-* One or more _chunks_ that contain JSON content and binary data.
-
-The _chunk_ containing JSON **MAY** refer to external resources as usual, and **MAY** also reference resources stored within other _chunks_.
 
 [[glb-file-format-specification-file-extension]]
 == File Extension & Media Type
@@ -3644,140 +3913,193 @@ The file extension to be used with Binary glTF is `.glb`.
 
 The registered media type is `model/gltf-binary`.
 
+[[glb-file-format-specification-structure]]
+== Structure
+
+A Binary glTF (which can be a file, for example) has the following structure:
+
+* An 8-byte preamble, called the _GLB header_
+* A version-specific asset size field, called the _size header_
+* One or more _chunks_ that contain JSON content, binary data, or other resources
+
 [[binary-gltf-layout]]
 == Binary glTF Layout
 
-[[binary-gltf-layout-overview]]
-=== Overview
+[[binary-gltf-glb-header]]
+=== GLB Header
 
-Binary glTF is little endian. The figure below shows an example of the binary format version 2 layout:
-
-.Binary glTF Version 2 Layout
-image::figures/glb2.svg[pdfwidth=6in,align=left]
-
-The figure below shows an example of the binary format version 3 layout:
-
-.Binary glTF Version 3 Layout
-image::figures/glb3.svg[pdfwidth=7in,align=left]
-
-The following sections describe the structure more in detail.
-
-[[binary-header]]
-=== Header
-
-The file header consists of three entries, of different sizes depending on the binary format version.
-
-For binary format version 2, the 12-byte header consists of three 4-byte entries:
+The 8-byte header consists of two 4-byte little-endian fields.
 
 [source,c]
 ----
-uint32 magic
-uint32 version
-uint32 length
+uint32_t magic
+uint32_t version
 ----
 
-For binary format version 3, the 16-byte header consists of two 4-byte entries and one 8-byte entry:
+* `magic` **MUST** be equal to equal `0x46546C67`. It is ASCII string `glTF` that can be used to identify data as Binary glTF.
+* `version` indicates the version of the Binary glTF container format.
+
+This specification defines GLB version 2 ("`GLBv2`") and GLB version 3 ("`GLBv3`"); any other version value is out of scope.
+
+The version specified in the GLB header only refers to the GLB container version. The version of the contained glTF asset is determined by the glTF JSON.
+
+[[binary-gltf-size-header]]
+=== Size Header
+
+In GLBv2, the size header consists of one 4-byte little-endian field.
 
 [source,c]
 ----
-uint32 magic
-uint32 version
-uint64 length
+uint32_t length
 ----
 
-* `magic` **MUST** be equal to equal `0x46546C67`. It is ASCII string `glTF` and can be used to identify data as Binary glTF.
-* `version` indicates the version of the Binary glTF container format. The glTF 2.1 specification defines version 2 and version 3.
-+
-Client implementations that load GLB format **MUST** also check for the <<asset,asset version properties>> in the JSON chunk, as the version specified in the GLB header only refers to the GLB container version.
-* `length` is the total length of the Binary glTF, including _header_ and all _chunks_, in bytes.
-+
-In binary format version 3, the most significant bit **MUST** be 0, which limits file sizes to 8 EiB (exbibytes).
+In GLBv3, the size header consists of one 8-byte little-endian field.
 
-[[chunks]]
+[source,c]
+----
+uint64_t length
+----
+
+* `length` is the total byte length of the Binary glTF, including the GLB header, the size header, and all chunks.
+
+In GLBv2, `length` **MUST** be a multiple of four. In GLBv3, `length` does not need to be a multiple of any number.
+
+In GLBv3, the most significant bit **MUST** be 0, which limits file sizes to 8 EiB (exbibytes).
+
+[[binary-gltf-chunks]]
 === Chunks
 
 [[chunks-overview]]
 ==== Overview
 
-Each chunk has a header followed by a variable-length payload, with the header structure depending on the binary format version.
+Each chunk has a fixed-size header followed by a variable-length payload. The chunk header structure depends on the GLB version.
 
-For binary format version 2, each chunk has an 8-byte header followed by a variable-length payload:
+[[chunks-v2]]
+==== Chunk Structure (GLBv2)
 
-[source,c]
-----
-uint32 chunkLength
-uint32 chunkType
-ubyte[] chunkData
-----
-
-For binary format version 3, each chunk has a 16-byte header followed by a variable-length payload:
+Each GLBv2 chunk header consists of two 4-byte little-endian fields.
 
 [source,c]
 ----
-uint32 chunkType
-uint32 chunkEncoding
-uint64 chunkLength
-ubyte[] chunkData
+uint32_t chunkLength
+uint32_t chunkType
+uint8_t[] chunkData
 ----
 
-* `chunkType` indicates the type of chunk. See <<table-chunktypes>> for details.
+* `chunkLength` is the byte length of `chunkData`.
+* `chunkType` is the type of the chunk.
+* `chunkData` is the payload of the chunk.
+
+The `chunkLength` value **MUST** be a multiple of four. The start and end of each chunk **MUST** be aligned to 4 bytes in GLBv2.
+
+[[chunks-v3]]
+==== Chunk Structure (GLBv3)
+
+Each GLBv3 chunk header consists of two 4-byte little-endian fields and one 8-byte little-endian field.
+
+[source,c]
+----
+uint32_t chunkType
+uint32_t chunkEncoding
+uint64_t chunkLength
+uint8_t[] chunkData
+uint8_t[] padding
+----
+
+* `chunkType` is the type of the chunk.
 * `chunkEncoding` indicates the encoding method used for the chunk data. See <<chunk-encoding>> for details.
-* `chunkLength` is the length of `chunkData`, in bytes. In binary format version 3, the most significant bit **MUST** be 0, which limits chunk sizes to 8 EiB (exbibytes).
-* `chunkData` is the binary payload of the chunk.
+* `chunkLength` is the byte length of `chunkData`.
+* `chunkData` is the payload of the chunk.
 
-In binary format version 2, the start and the end of each chunk **MUST** be aligned to a 4-byte boundary. In binary format version 3, the start of each chunk **MUST** be aligned to an 8-byte boundary. The start of each chunk is the next 4-byte (v2) or 8-byte (v3) aligned boundary after the end of the previous chunk. See chunk definitions for padding schemes. Chunks **MUST** (v2) or **SHOULD** (v3) appear in exactly the order given in <<table-chunktypes>>.
+The `chunkLength` **MUST** have the most significant bit set to 0, which limits chunk sizes to 8 EiB (exbibytes). Otherwise, the value does not have any restrictions on its length, such that the end of the chunk does not need to be aligned to any multiple of bytes.
 
-[[table-chunktypes]]
-.Chunk types
+The start of each chunk **MUST** be aligned to 8 bytes in GLBv3, and exists at the next aligned boundary after the end of the previous chunk. When a chunk's end is not a multiple of 8, and another chunk follows it, 1 to 7 padding bytes **MUST** be added to ensure that next chunk starts at an 8-byte boundary. These padding bytes are not included in `chunkLength`. These padding bytes are not read, and **SHOULD** be zero (`0x00`). The start of the next chunk can be determined by the offset after current chunk's end, rounded up to the next 8-byte boundary.
+
+[[chunks-types]]
+==== Chunk Types
+
+The following table lists chunk types defined by this specification. GLB files **MAY** contain chunks of other types but their semantics are out of scope of this specification.
+
 [options="header"]
 |====
-|    | Chunk Type | ASCII | Description             | Occurrences
-| 1. | 0x4E4F534A | JSON  | Structured JSON content | 1 (v2), 1 or more (v3)
-| 2. | 0x004E4942 | BIN\0 | Binary buffer           | 0 or 1 (v2), 0 or more (v3)
+|  Chunk Type  | ASCII | Description
+| `0x4E4F534A` | JSON  | Structured JSON content
+| `0x004E4942` | BIN\0 | Binary buffer
 |====
 
-Client implementations **MUST** ignore chunks with unknown types to enable glTF extensions to reference additional chunks with new types following the first two chunks.
+[[chunks-json]]
+===== Structured JSON Content
 
-[[structured-json-content]]
-==== Structured JSON Content
+This chunk contains a glTF JSON, as it would be provided by a standalone glTF JSON file.
 
-This chunk holds the glTF JSON, as it would be provided within a .gltf file.
+GLBv2 assets **MUST** have exactly one chunk of this type and it **MUST** be the first chunk of the asset.
+
+GLBv3 assets **MUST** have at least one chunk of this type. The first chunk that is a JSON chunk is used as the main glTF JSON content. Non-JSON chunks may precede the glTF JSON chunk in GLBv3 only.
 
 [NOTE]
-.ECMAScript Implementation Note
+.Implementation Note
 ====
-In a JavaScript implementation, the `TextDecoder` API can be used to extract the glTF content from the ArrayBuffer, and then the JSON can be parsed with `JSON.parse` as usual.
+By reading this chunk first, an implementation is able to progressively retrieve resources from subsequent chunks. This way, it is also possible to read only a selected subset of resources from a Binary glTF asset.
 ====
 
-In binary format version 2, this chunk **MUST** be the very first chunk of a Binary glTF asset. In binary format version 3, the first chunk that is a JSON chunk is the glTF JSON chunk, allowing for non-JSON chunks to precede the glTF JSON chunk. By reading this chunk first, an implementation is able to progressively retrieve resources from subsequent chunks. This way, it is also possible to read only a selected subset of resources from a Binary glTF asset.
+[NOTE]
+.Implementation Note
+====
+If the JSON byte length is not a multiple of four as required for GLBv2, it can be padded by any valid whitespace JSON characters, such as space (`U+0020`), tab (`U+0009`), line feed (`U+000A`), or carriage return (`U+000D`), when producing a GLBv2 asset.
 
-If the chunk content is padded, the padding **MUST** use trailing `Space` chars (`0x20`). If the chunk has padding after the end of the content, the padding **MUST** use trailing zeros (`0x00`).
+In GLBv3, chunk <<chunks-v3,alignment padding>> is not included in the chunk length. Padding outside of the chunk length is not read and is not considered part of the chunk's content, and so does not have the same whitespace character restriction, but **SHOULD** use trailing zeros (`0x00`).
+====
 
-[[binary-buffer]]
-==== Binary buffer
+[[chunks-bin]]
+===== Binary buffer
 
-This chunk contains the binary payload for geometry, animation key frames, skins, and images. See <<glb-stored-buffer,GLB-stored Buffer>> for details on referencing this chunk from JSON.
+This chunk contains a binary payload that usually provides data for a glTF buffer. See <<glb-stored-buffer,GLB-stored Buffer>> for details on referencing this chunk from JSON.
 
-In binary format version 2, this chunk **MUST** be the second chunk of the Binary glTF asset. In binary format version 3, binary buffer chunks are explicitly referenced by index from the JSON chunk's buffers array, allowing for multiple binary buffer chunks to be present in a Binary glTF asset.
+GLBv2 assets **MUST** have at most one chunk of this type and it **MUST** be the second chunk of the asset.
 
-If the binary buffer chunk is padded after the end of the content, the padding **MUST** be trailing zeros (`0x00`).
+GLBv3 assets **MAY** have multiple binary chunks, in any order. Binary buffer chunks are **RECOMMENDED** to be placed after the glTF JSON chunk.
 
-When the binary buffer is empty or when it is stored by other means, this chunk **SHOULD** be omitted.
+Binary buffers in glTF 2.1 **SHOULD** explicitly reference chunks by index. For backwards compatibility with glTF 2.0, the first buffer **MAY** implicitly reference a `BIN\0` chunk at index 1 as described in <<glb-stored-buffer,GLB-stored Buffer>>. Chunks explicitly referenced by glTF 2.1 binary buffers **MAY** be `BIN\0` chunks, or any other type.
+
+[NOTE]
+.Implementation Note
+====
+In GLBv2, if the buffer's byte length is not a multiple of four, it can be padded by any bytes as necessary. Note that the byte length of the corresponding glTF buffer can be less than the byte length of the chunk.
+
+In GLBv3, chunk <<chunks-v3,alignment padding>> is not included in the chunk length. Padding outside of the chunk length is not read and is not considered part of the chunk's content, and can be any value, but **SHOULD** use trailing zeros (`0x00`).
+====
 
 [[chunk-encoding]]
 ==== Chunk Encoding
 
-In binary format version 3 only, between each chunk's type and size, the `chunkEncoding` field indicates the encoding method used for the chunk data, such as compression or encryption.
+In GLBv3 only, between each chunk's type and size, the `chunkEncoding` field indicates the encoding method used for the chunk data, such as compression or encryption.
 
 The value `0x00000000` indicates that the chunk data is plainly encoded, meaning the chunk data does not need to be decoded (such as decompressed or decrypted) before use. Other values indicate that the chunk data requires decoding before use. Alternate encoding schemes **SHOULD** be defined in glTF extensions, however such extensions are not required to be marked as used in the JSON chunk.
 
-Chunk-level encoding is distinct from any encoding that may be applied to data within chunks (such as storing a `.zip` file within a buffer in a `BIN` chunk).
+Chunk-level encoding is distinct from any encoding that may be applied to data within chunks (such as storing a `.zip` file within a buffer in a `BIN\0` chunk).
 
 Each chunk specifies its own encoding, which allows chunks within the same Binary glTF asset to use different encoding methods. This allows applications to read enough of the file to determine its overall layout even when the chunk contents cannot be read, ensuring that file identification utilities can still recognize the file as a Binary glTF asset.
 
-Client implementations **MUST** refuse to load chunks with unknown encoding methods, and **MUST** refuse to load binary glTF files whose JSON chunk is encoded with an unknown method.
+Client implementations **MUST** refuse to load chunks with unknown encoding, and **MUST** refuse to load binary glTF files whose main glTF JSON chunk has unknown encoding.
 
-In binary format version 2, the `chunkEncoding` field is not present. All binary format version 2 chunks are plainly encoded, equivalent to `0x00000000` in binary format version 3.
+In GLBv2, the `chunkEncoding` field is not present. All GLBv2 chunks are plainly encoded, equivalent to `0x00000000` in GLBv3.
+
+[[glb-examples]]
+== Examples
+
+[[glb-examples-2]]
+=== GLB version 2
+
+The figure below shows an example of a Binary glTF version 2 asset that contains a binary buffer chunk and also refers to external data (e.g., additional buffers or images) from its glTF JSON chunk.
+
+image::figures/glb2.svg[pdfwidth=6in,align=left]
+
+[[glb-examples-3]]
+=== GLB version 3
+
+The figure below shows an example of a Binary glTF version 3 asset that contains a binary buffer chunk and also refers to external data (e.g., additional buffers or images) from its glTF JSON chunk.
+
+image::figures/glb3.svg[pdfwidth=7in,align=left]
 
 [[properties-reference]]
 = Properties Reference
@@ -4250,122 +4572,7 @@ More recently, <<Jakob2014,Jakob et al. (2014)>> developed a generic framework f
 * [[Walter2007]] https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.html[Walter, B., S. Marschner, H. Li, and K. Torrance (2007): Microfacet models for refraction through rough surfaces.]
 
 [appendix]
-[[appendix-c-interpolation]]
-= Animation Sampler Interpolation Modes
-
-== Overview
-
-ifndef::revdate[]
-[NOTE]
-.Note
-====
-This appendix contains formulas that may not display correctly in all preview tools.
-View the full https://www.khronos.org/registry/glTF/specs/2.1/glTF-2.1.html#appendix-c-interpolation[Appendix C: Animation Sampler Interpolation Modes].
-====
-endif::[]
-
-Animation sampler interpolation modes define how to compute values of animated properties for the timestamps located between the keyframes. When the current (requested) timestamp exists in the animation data, its associated property value is used as is, without interpolation.
-
-For the following sections, let
-
-[none]
-* stem:[n] be the total number of keyframes, stem:[n > 0];
-* stem:[t_k] be the timestamp of the stem:[k]-th keyframe, stem:[k \in [1,n\]];
-* stem:[v_k] be the animated property value of the stem:[k]-th keyframe;
-* stem:[t_c] be the current (requested) timestamp, stem:[t_k < t_c < t_{k+1}];
-* stem:[t_d = t_{k + 1} - t_k] be the duration of the interpolation segment;
-* stem:[t = (t_c - t_k) / t_d] be the segment-normalized interpolation factor.
-
-The scalar-vector multiplications are per vector component.
-
-== Step Interpolation
-
-This mode is used when the animation sampler interpolation mode is set to `STEP`.
-
-The interpolated sampler value stem:[v_t] at the current (requested) timestamp stem:[t_c] is computed as follows.
-
-[latexmath]
-++++
-v_t = v_k
-++++
-
-[[interpolation-lerp]]
-== Linear Interpolation
-
-This mode is used when the animation sampler interpolation mode is set to `LINEAR` and the animated property is not `rotation`.
-
-The interpolated sampler value stem:[v_t] at the current (requested) timestamp stem:[t_c] is computed as follows.
-
-[latexmath]
-++++
-v_t = (1 - t) \cdot v_k + t \cdot v_{k+1}
-++++
-
-[[interpolation-slerp]]
-== Spherical Linear Interpolation
-
-This mode is used when the animation sampler interpolation mode is set to `LINEAR` and the animated property is `rotation`, i.e., values of the animated property are unit quaternions.
-
-Let
-[none]
-* latexmath:[a = \arccos(|v_k \cdot v_{k+1}|)] be the arccosine of the absolute value of the dot product of two consecutive quaternions;
-* latexmath:[s = \frac{v_k \cdot v_{k+1}}{|v_k \cdot v_{k+1}|}] be the sign of the dot product of two consecutive quaternions.
-
-The interpolated sampler value stem:[v_t] at the timestamp stem:[t_c] is computed as follows.
-
-[latexmath]
-++++
-v_t = \frac{\sin(a \cdot (1 - t))}{\sin(a)} \cdot v_k + s \cdot \frac{\sin(a \cdot t)}{\sin(a)} \cdot v_{k+1}
-++++
-
-[NOTE]
-.Implementation Note
-====
-Using the dot product's absolute value for computing stem:[a] and multiplying stem:[v_{k+1}] by the dot product's sign ensure that the spherical interpolation follows the short path along the great circle defined by the two quaternions.
-====
-
-Implementations **MAY** approximate these equations to reach application-specific accuracy and/or performance targets.
-
-[NOTE]
-.Implementation Note
-====
-When stem:[a] is close to zero, spherical linear interpolation turns into regular linear interpolation.
-====
-
-[[interpolation-cubic]]
-== Cubic Spline Interpolation
-
-This mode is used when the animation sampler interpolation mode is set to `CUBICSPLINE`.
-
-An animation sampler that uses cubic spline interpolation **MUST** have at least 2 keyframes.
-
-For each timestamp stored in the animation sampler, there are three associated keyframe values: in-tangent, property value, and out-tangent.
-
-Let
-[none]
-* stem:[a_k], stem:[v_k], and stem:[b_k] be the in-tangent, the property value, and the out-tangent of the stem:[k]-th frame respectively.
-
-The interpolated sampler value stem:[v_t] at the timestamp stem:[t_c] is computed as follows.
-
-[latexmath]
-++++
-v_t = (2t^3 - 3t^2 + 1) \cdot v_k + t_d \cdot (t^3 - 2t^2 + t) \cdot b_k + (-2t^3 + 3t^2) \cdot v_{k+1} + t_d \cdot (t^3 - t^2) \cdot a_{k+1}
-++++
-
-When the animation sampler targets a node's rotation property, the interpolated quaternion **MUST** be normalized before applying the result to the node's rotation.
-
-When writing out rotation values, exporters **SHOULD** take care to not write out values that can result in an invalid quaternion with all zero values being produced by the interpolation.
-
-[NOTE]
-.Implementation Note
-====
-This can be achieved by ensuring that stem:[v_k != -v_{k+1}] for all keyframes.
-====
-
-The first in-tangent stem:[a_1] and last out-tangent stem:[b_n] **SHOULD** be zeros as they are not used in the spline calculations.
-
-[appendix]
-[[appendix-d-external-asset-diagrams]]
+[[appendix-c-external-asset-diagrams]]
 = External Asset Scene Graph Diagrams
 
 == Overview
