@@ -22,7 +22,7 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension adds one parameters to the metallic-roughness material: `bump`.
+This extension adds one parameter to the metallic-roughness material: `bump`.
 
 `bump` allows users to perturb the surface normal via a bump map. The bump map is a grayscale texture, where the value of each texel represents the height of the surface at that texel.  The height is then used to perturb the normal direction.
 
@@ -32,11 +32,11 @@ Benefits of bump maps over normal maps are primarily these two:
 
 1. Bump maps are much more compact that normal maps and lead to smaller glTF files as well as less GPU memory requirements.  This is because the normal map has to store a full 3D vector per texel with floating point precision, while the bump map only needs to store a single scalar value per texel.  Thus bump maps require 3 times less data than normal maps for transmission and GPU storage.  Normal maps are also very sensitive to texture compressions methods, while bump maps are less sensitive.
 
-2. Bump maps are useful for capturing small details in combination with a normal map for large scale structures.  For example, when rendering human faces, there are usually two layers of surface pertubation detail, the unwrapped normal map is used for representing wrinkles, and then a repeating bump map is used for skin pore details.  This is also the case for many other materials such as wood, metal, and stone, where there is both macro and micro details.
+2. Bump maps are useful for capturing small details in combination with a normal map for large scale structures.  For example, when rendering human faces, there are usually two layers of surface perturbation detail, the unwrapped normal map is used for representing wrinkles, and then a repeating bump map is used for skin pore details.  This is also the case for many other materials such as wood, metal, and stone, where there is both macro and micro details.
 
 Normal maps are more resistant to artifacts when undergoing going magnification as compared to bump maps, thus they are better suited for large scale smooth detail.  This limitation of bump maps is not significant though when bump maps are being used for detail textures where the magnification is small and they align roughly with the same texel resolution as the color map.
 
-Additionally, maybe WebGL rendering engines, including both ThreeJS and Sketchfab, already support simultaneous bump maps and normal maps in their default materials.  Without this extension, these engines can not save or load this information via glTF files.
+Additionally, many WebGL rendering engines, including both ThreeJS and Sketchfab, already support simultaneous bump maps and normal maps in their default materials.  Without this extension, these engines can not save or load this information via glTF files.
 
 ## Extending Materials
 
@@ -65,7 +65,7 @@ Factor and texture are combined by multiplication to describe a single value.
 | |Type|Description|Required|
 |-|----|-----------|--------|
 | **bumpFactor** | `number` | The height in metres per unit of the sampled texture value, measured in the space named by `heightSpace`. | No, default: `1.0` |
-| **bumpTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A texture that defines the surface height, stored in the red (`R`) channel. This will be multiplied by bumpFactor. | No |
+| **bumpTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A texture that defines the surface height, stored in the red (`R`) channel. This will be multiplied by bumpFactor. | :white_check_mark: Yes |
 | **heightSpace** | `string` | The space in which the height is measured: `"world"` or `"object"`. `"object"` is the node's local space and scales with the node transform. | No, default: `"object"` |
 
 ### Height Units

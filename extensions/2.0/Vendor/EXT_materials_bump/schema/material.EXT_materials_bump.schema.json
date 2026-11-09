@@ -26,5 +26,6 @@
         },
         "extensions": { },
         "extras": { }
-    }
+    },
+    "required": [ "bumpTexture" ]
 }
