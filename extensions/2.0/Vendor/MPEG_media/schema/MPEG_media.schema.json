@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_media",
+    "type": "object",
+    "description": "Media used to create a texture, audio source or other objects in the scene.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "media": {
+            "type": "array",
+            "description": "An array of media. A media contains data referred by other object in a scene",
+            "items": { "$ref": "MPEG_media.media.schema.json"},
+            "minItems": 1
+        }, 
+        "name": {},
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [ "media" ]
+}

@@ -1,0 +1,32 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title" : "MPEG_mesh_linking",
+    "type" : "object",
+    "description": "glTF extension to specify a logical link between two meshes",
+    "allOf": [ { "$ref": "glTFProperty.schema.json"} ],
+    "properties" : {
+        "correspondence": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "Provides a reference to the `accessor`",
+            "gltf_detailedDescription": "Provides a reference to the `accessor`, by specifying the accessor's index in accessors array, that describe the buffer where the correspondence values between the dependent mesh and its associated shadow mesh  will be made available. The componentType of the referenced accessor shall be as indicated in ISO/IEC 23090-14:7.4 and the type shall be `SCALAR`."
+        },
+        "mesh": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "Provides a reference to the shadow `mesh`",
+            "gltf_detailedDescription": "Provides a reference to the shadow `mesh`, by specifying the mesh index in meshes array, associated to the dependent mesh for which the correspondence values are established."
+        },
+        "pose": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "Provides a reference to the `accessor`",
+            "gltf_detailedDescription": "Provides a reference to the `accessor`, by specifying the accessor's index in accessors array, that describe the buffer where the transformation of the nodes associated to the dependent mesh will be made available. The componentType of the referenced accessor shall be `FLOAT` and the type shall be `MAT4`."
+        },
+        "weights": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "Provides a reference to the `accessor`",
+            "gltf_detailedDescription": "Provides a reference to the `accessor`, by specifying the accessor's index in accessors array, that describe the buffer where the “weights” to be applied to the morph targets of the shadow mesh associated to the dependent mesh will be made available. The componentType of the referenced accessor shall be `FLOAT` and the type shall be `SCALAR`."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [ "correspondence", "mesh", "pose"]
+}

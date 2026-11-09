@@ -7,7 +7,7 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Contributors
 
-* Steven Vergenz, Microsoft ([steven.vergenz@microsoft.com](mailto:steven.vergenz@microsoft.com))
+- Steven Vergenz, Microsoft ([steven.vergenz@microsoft.com](mailto:steven.vergenz@microsoft.com))
 
 Copyright (&copy;) 2017-2022 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -63,7 +63,7 @@ Though this extension's values are unbounded, they will only produce sane result
 
 ### JSON Schema
 
-[KHR_texture_transform.textureInfo.schema.json](schema/KHR_texture_transform.textureInfo.schema.json)
+[textureInfo.KHR_texture_transform.schema.json](schema/textureInfo.KHR_texture_transform.schema.json)
 
 ### Example JSON
 
@@ -156,11 +156,11 @@ employees, agents or representatives be liable for any damages, whether direct,
 indirect, special or consequential damages for lost revenues, lost profits, or
 otherwise, arising from or in connection with these materials.
 
-KhronosÂ® and VulkanÂ® are registered trademarks, and ANARIâ„¢, WebGLâ„¢, glTFâ„¢, NNEFâ„¢, OpenVXâ„¢,
-SPIRâ„¢, SPIR&#8209;Vâ„¢, SYCLâ„¢, OpenVGâ„¢ and 3D Commerceâ„¢ are trademarks of The Khronos Group Inc.
-OpenXRâ„¢ is a trademark owned by The Khronos Group Inc. and is registered as a trademark in
-China, the European Union, Japan and the United Kingdom. OpenCLâ„¢ is a trademark of Apple Inc.
-and OpenGLÂ® is a registered trademark and the OpenGL ESâ„¢ and OpenGL SCâ„¢ logos are trademarks
+Khronos® and Vulkan® are registered trademarks, and ANARI™, WebGL™, glTF™, NNEF™, OpenVX™,
+SPIR™, SPIR&#8209;V™, SYCL™, OpenVG™ and 3D Commerce™ are trademarks of The Khronos Group Inc.
+OpenXR™ is a trademark owned by The Khronos Group Inc. and is registered as a trademark in
+China, the European Union, Japan and the United Kingdom. OpenCL™ is a trademark of Apple Inc.
+and OpenGL® is a registered trademark and the OpenGL ES™ and OpenGL SC™ logos are trademarks
 of Hewlett Packard Enterprise used under license by Khronos. ASTC is a trademark of
 ARM Holdings PLC. All other product names, trademarks, and/or company names are used solely
 for identification and belong to their respective owners.

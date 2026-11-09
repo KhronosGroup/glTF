@@ -1,0 +1,42 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_clearcoat glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines the clearcoat material layer.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "clearcoatFactor": {
+            "type": "number",
+            "description": "The clearcoat layer intensity.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The clearcoat layer intensity (aka opacity) of the material. A value of 0.0 means the material has no clearcoat layer enabled."
+        },
+        "clearcoatTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The clearcoat layer intensity texture.",
+            "gltf_detailedDescription": "The clearcoat layer intensity texture. These values are sampled from the R channel.  The values are linear.  Use value 1.0 if no texture is supplied."
+        },
+        "clearcoatRoughnessFactor": {
+            "type": "number",
+            "description": "The clearcoat layer roughness.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The clearcoat layer roughness of the material."
+        },
+        "clearcoatRoughnessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The clearcoat layer roughness texture.",
+            "gltf_detailedDescription": "The clearcoat layer roughness texture. These values are sampled from the G channel.  The values are linear.  Use value 1.0 if no texture is supplied."
+        },
+        "clearcoatNormalTexture": {
+            "allOf": [ { "$ref": "material.normalTextureInfo.schema.json" } ],
+            "description": "The clearcoat normal map texture.",
+            "gltf_detailedDescription": "A tangent space normal map for the clearcoat layer.  If desired, this may be a reference to the same normal map used by the base material.  If not supplied, no normal mapping is applied to the clear coat layer."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

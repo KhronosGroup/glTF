@@ -6,7 +6,7 @@
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
     "properties": {
         "indices": {
-            "type": "integer",
+            "allOf": [ { "$ref" : "glTFid.schema.json" } ],
             "description": "The index of the accessor providing the list of highlighted lines at the edge of this primitive's triangles."
         },
         "extensions": { },

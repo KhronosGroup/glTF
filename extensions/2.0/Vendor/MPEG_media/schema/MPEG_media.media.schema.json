@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "MPEG_media.media.",
+  "type": "object",
+  "description": "Media used to create a texture, audio source, or any other media type.",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+  "properties": {
+        "name": {
+            "type": "string",
+            "description": "User-defined name of the media. "
+        },
+        "startTime": {
+            "type": "number",
+            "minimum": 0.0,
+            "default": 0.0,
+            "description": "The startTime gives the time at which the rendering of the timed media will be in seconds. ",
+            "gltf_detailedDescription": "The startTime gives the time at which the rendering of the timed media will begin. The value is provided in seconds. In the case of timed textures, the static image should be rendered as a texture until the startTime is reached. A startTime of 0 means the presentation time of the current scene. Either startTime or autoplay shall be present in glTF description." 
+        },
+        "startTimeOffset": {
+            "type": "number",
+            "minimum": 0.0,
+            "default": 0.0,          
+            "description": "The startTimeOffset indicates the time offset into the source, starting from which the timed media is generated.",
+            "gltf_detailedDescription": "The startTimeOffset indicates the time offset into the source, starting from which the timed media shall be generated. The value is provided in seconds, where 0 corresponds to the start of the source."
+        },
+        "endTimeOffset": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "The endTimeOffset indicates the time offset into the source, up to which the timed media is generated. ",
+            "gltf_detailedDescription": "The endTimeOffset indicates the end time offset into the source, up to which the timed media shall be generated. The value is provided in seconds. If not present, the endTimeOffset corresponds to the end of the source media."
+        },
+        "autoplay": {
+            "type": "boolean",
+            "default": true,
+            "description": "Specifies that the media start playing as soon as it is ready.",
+            "gltf_detailedDescription": "Specifies that the media will start playing as soon as it is ready. Either startTime or autoplay shall be present for a media item description. Rendering of all media for which the autoplay flag is set to true should happen simultaneously."
+
+        },
+        "autoplayGroup": {
+            "type": "integer",            
+            "description": "Specifies that playback starts simultaneously for all media sources with the autoplay flag set to true.",
+            "gltf_detailedDescription": "All media that have the same autoplayGroup identifier shall start playing synchronously as soon as all autoplayGroup media are ready. autoplayGroup is only allowed if autoplay is set to true."
+        },
+        "loop": {
+            "type": "boolean",
+            "default": false,
+            "description": "Specifies that the media start over again, every time it is finished.",
+            "gltf_detailedDescription": "Specifies that the media will start over again, every time it is finished. The timestamp in the buffer shall be continuously increasing when the media source loops, i.e. the playback duration prior to looping shall be added to the media time after looping."
+        },
+        "controls": {
+          "type": "boolean",
+          "default": false,
+          "description": "Specifies that media controls should be exposed to end user",
+          "gltf_detailedDescription": "Specifies that media controls should be exposed to end user (such as a play/pause button etc)."
+        },
+        "alternatives": {
+            "type": "array",
+            "description": "An array of alternatives of the same media (e.g. different video code used)",
+            "gltf_detailedDescription": "An array of items that indicate alternatives of the same media (e.g. different video codecs used). The client could select items (i.e. uri and track) included in alternatives depending on the client’s capability.",
+            "items": { "$ref": "MPEG_media.media.alternative.schema.json"},
+            "minItems": 1
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["alternatives"],
+    "oneOf": [
+        {
+            "required": [
+                "startTime"
+            ]
+        },
+        {
+            "required": [
+                "autoplay"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,47 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_viewport_recommended.viewport",
+    "type": "object",
+    "description": "specifying a recommended viewport.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json"} ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "The user-defined name of this object.",
+            "gltf_detailedDescription": "The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name."
+        },
+        "translation": {
+            "allOf": [ { "$ref": "glTFid.schema.json"}],
+            "description": "Provides a reference to `accessor`",
+            "gltf_detailedDescription": "Provides a reference to `accessor` where the timed data for the translation of camera object will be made available. The componentType of the referenced accessor shall be `FLOAT` and the type shall be `VEC3`, (x, y, z)."
+        },
+        "rotation": {
+            "allOf": [ {"$ref": "glTFid.schema.json"}],
+            "description": "Provides a reference to `accessor`",
+            "gltf_detailedDescription": "Provides a reference to `accessor` where the timed data for  the rotation of camera object will be made available. The componentType of the referenced accessor shall be `FLOAT` and the type shall be `VEC4`, as a unit quaternion, (x, y, z, w)."
+        },
+        "type": {
+            "description": "provides the type of camera.",
+            "gltf_detailedDescription": "provides the type of camera.",
+            "anyOf": [
+                {
+                    "const": "perspective"
+                },
+                {
+                    "const": "orthographic"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "default":"perspective"
+        },
+        "parameters": {
+            "description": "Provides a reference to `accessor`",
+            "gltf_detailedDescription": "Provides a reference to `accessor` where the timed data for the perspective or orthographic camera parameters will be made available. The componentType of the referenced accessor shall be `FLOAT` and the type shall be `VEC4`. When the type of the camera object which includes this extension is perspective, `FLOAT_VEC4` means (aspectRatio, yfov,  zfar, znear). When orthographic type, `FLOAT_VEC4` means (xmag, ymag, zfar, znear). The requirements on the camera parameters from ISO/IEC 12113:2021  shall apply.",
+            "allOf": [{"$ref": "glTFid.schema.json"}]
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}

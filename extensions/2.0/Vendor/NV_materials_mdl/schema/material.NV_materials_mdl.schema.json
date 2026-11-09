@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "$id": "material.NV_materials_mdl.schema.json",
+    "title": "NV_materials_mdl material extension",
+    "type": "object",
+    "description": "glTF extension that enables using MDL materials.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "functionCall": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the MDL function call. The reference function call **MUST** represent the entry point to a function call graph and have the return type `material`."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "functionCall"
+    ]
+}

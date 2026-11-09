@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "light",
+    "title": "KHR_lights_punctual Light Properties",
     "type": "object",
     "description": "A directional, point, or spot light.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],

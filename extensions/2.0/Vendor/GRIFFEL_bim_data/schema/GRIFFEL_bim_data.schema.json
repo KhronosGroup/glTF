@@ -17,7 +17,7 @@
                     "properties": {
                         "type": "array",
                         "uniqueItems": true,
-                        "item": {
+                        "items": {
                             "allOf": [ { "$ref": "glTFid.schema.json" } ],
                             "description": "Index of a property in the root level collection."
                         },

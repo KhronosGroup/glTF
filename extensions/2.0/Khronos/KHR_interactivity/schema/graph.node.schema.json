@@ -1,0 +1,32 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "graph.node.schema.json",
+    "title": "Behavior graph interactivity node",
+    "type": "object",
+    "$ref": "glTFProperty.schema.json",
+    "properties": {
+        "configuration": {
+            "title": "The configuration.",
+            "type": "object",
+            "additionalProperties": { "$ref": "graph.node.configurationValue.schema.json" },
+            "minProperties": 1
+        },
+        "declaration": {
+            "title": "The declaration index.",
+            "$ref": "glTFid.schema.json"
+        },
+        "flows": {
+            "title": "The output flow sockets.",
+            "type": "object",
+            "additionalProperties": { "$ref": "graph.node.flowSocket.schema.json" },
+            "minProperties": 1
+        },
+        "values": {
+            "title": "The input value sockets.",
+            "type": "object",
+            "additionalProperties": { "$ref": "graph.node.valueSocket.schema.json" },
+            "minProperties": 1
+        }
+    },
+    "required": [ "declaration" ]
+}

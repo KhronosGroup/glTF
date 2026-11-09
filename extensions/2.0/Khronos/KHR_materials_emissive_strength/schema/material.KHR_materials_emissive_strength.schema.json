@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_emissive_strength glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that adjusts the strength of emissive material properties.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "emissiveStrength": {
+            "type": "number",
+            "description": "The strength adjustment to be multiplied with the material's emissive value.",
+            "default": 1.0,
+            "minimum": 0.0
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_anisotropy glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines anisotropy.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "anisotropyStrength": {
+            "type": "number",
+            "description": "The anisotropy strength.",
+            "default": 0.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The anisotropy strength. When the anisotropy texture is present, this value is multiplied by the texture's blue channel."
+        },
+        "anisotropyRotation": {
+            "type": "number",
+            "description": "The rotation of the anisotropy.",
+            "default": 0.0,
+            "gltf_detailedDescription": "The rotation of the anisotropy in tangent, bitangent space, measured in radians counter-clockwise from the tangent. When the anisotropy texture is present, this value provides additional rotation to the vectors in the texture."
+        },
+        "anisotropyTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The anisotropy texture.",
+            "gltf_detailedDescription": "The anisotropy texture. Red and green channels represent the anisotropy direction in $[-1, 1]$ tangent, bitangent space, to be rotated by the anisotropy rotation. The blue channel contains strength as $[0, 1]$ to be multiplied by the anisotropy strength."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

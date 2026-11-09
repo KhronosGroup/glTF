@@ -7,7 +7,7 @@
 
 ## Status
 
-Complete
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 
@@ -72,7 +72,7 @@ Each `bufferView` can contain an extension object with the following properties:
 For the extension object to be valid, the following must hold:
 
 - When parent `bufferView` has `byteStride` defined, it matches `byteStride` in the extension JSON
-- Buffer view length is equal to `byteStride` times `count`
+- The parent `bufferView.byteLength` is equal to `byteStride` times `count`
 - When `mode` is `"ATTRIBUTES"`, `byteStride` must be divisible by 4 and must be <= 256.
 - When `mode` is `"TRIANGLES"`, `count` must be divisible by 3
 - When `mode` is `"TRIANGLES"` or `"INDICES"`, `byteStride` must be equal to 2 or 4
@@ -82,6 +82,8 @@ For the extension object to be valid, the following must hold:
 - When `filter` is `"EXPONENTIAL"`, `byteStride` must be divisible by 4
 
 The type of compressed data must match the bitstream specification (note that each `mode` specifies a different bitstream format).
+
+The parent `bufferView` properties define a layout which can hold the data decompressed from the extension object.
 
 ## Compression modes and filters
 
@@ -118,7 +120,9 @@ While the extension JSON specifies a separate buffer to source compressed data f
 { "byteLength": 1432878 }
 ```
 
-When stored in a GLB file, the dummy buffer should have index 1 or above, to avoid conflicts with GLB binary buffer.
+The `byteLength` property of such a placeholder buffer **MUST** be sufficiently large to contain all uncompressed buffer views referencing it.
+
+When stored in a GLB file, the placeholder buffer should have index 1 or above, to avoid conflicts with GLB binary buffer.
 
 This extension allows buffers to be optionally tagged as fallback by using the `fallback` attribute as follows:
 
@@ -174,6 +178,8 @@ To reduce the number of keyframes, encoders can either selectively remove keyfra
 Additionally it's important to identify tracks with the same output value and use a single keyframe for these.
 
 To reduce the size of each keyframe, rotation data should be quantized using 16-bit normalized components; for additional compression, the use of filter 2 (quaternion) is recommended. Translation/scale data can be compressed using filter 3 (exponential) with the same exponent used for all three vector components.
+
+Note that animation inputs that specify time values require enough precision to avoid animation distortion. It's recommended to either not use any filters for animation inputs to avoid any precision loss (attribute encoder can still be efficient at reducing the size of animation input track even without filters when the inputs are uniformly spaced), or use filter 3 (exponential) with maximum mantissa bit count (23).
 
 After pre-processing, both input and output data should be stored using mode 0 (attributes).
 
@@ -435,7 +441,7 @@ Octahedral filter allows to encode unit length 3D vectors (normals/tangents) usi
 
 This filter is only valid if `byteStride` is 4 or 8. When `byteStride` is 4, then the input and output of this filter are four 8-bit components, and when `byteStride` is 8, the input and output of this filter are four 16-bit signed components.
 
-The input to the filter is four 8-bit or 16-bit components, where the first two specify the X and Y components in octahedral encoding encoded as signed normalized K-bit integers (4 <= K <= 16, integers are stored in two's complement format), the third component explicitly encodes 1.0 as a signed normalized K-bit integer. The last component may contain arbitrary data which is passed through unfiltered (this can be useful for tangents).
+The input to the filter is four 8-bit or 16-bit components, where the first two specify the X and Y components in octahedral encoding encoded as signed normalized K-bit integers (2 <= K <= 16, integers are stored in two's complement format), the third component explicitly encodes 1.0 as a signed normalized K-bit integer. The last component may contain arbitrary data which is passed through unfiltered (this can be useful for tangents).
 
 The encoding of the third component allows to compute K for each vector independently from the bit representation, and must encode 1.0 precisely which is equivalent to `(1 << (K - 1)) - 1` as an integer; values of the third component that aren't equal to `(1 << (K - 1)) - 1` for a valid `K` are invalid and the result of decoding such vectors is unspecified.
 

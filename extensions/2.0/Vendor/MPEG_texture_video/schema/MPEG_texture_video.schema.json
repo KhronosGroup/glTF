@@ -1,0 +1,64 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title" : "MPEG_texture_video",
+    "type" : "object",
+    "description": "glTF extension to specify textures using MPEG defined formats",
+    "allOf": [ { "$ref": "glTFProperty.schema.json"} ],
+    "properties" : {
+        "accessor": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "Provides the accessor's index in accessors array",
+            "gltf_detailedDescription": "Provides a reference to the `accessor`, by specifying the accessor's index in accessors array, that describes the buffer where the decoded timed texture will be made available. The `accessor` shall have the `MPEG_accessor_timed` extension. The type, componentType, and count of the accessor depend on the width, height, and format."
+        },
+	    "width": {
+            "description": "Provides the maximum width of the texture.",
+            "gltf_detailedDescription": "Provides the maximum width of the texture.",
+            "type": "number"
+        },
+        "height": {
+            "description": "Provides the maximum height of the texture.",
+            "gltf_detailedDescription": "Provides the maximum height of the texture.",
+            "type": "number"
+        },
+        "format": {
+            "description": "Indicates the format of the pixel data for this video texture.",
+            "gltf_detailedDescription": "Indicates the format of the pixel data for this video texture. The semantics of these values are defined in Table 8.3 of OpenGL 4.6 specification. The number of components shall match the type indicated by the referenced `accessor`. Normalization of the pixel data shall be indicated by the normalized attribute of the accessor.",
+            "anyOf": [
+                {
+                    "const": "RED"
+                },
+                {
+                    "const": "GREEN"
+                },
+                {
+                    "const": "BLUE"
+                },
+                {
+                    "const": "RG"
+                },
+                {
+                    "const": "RGB"
+                },
+                {
+                    "const": "RGBA"
+                },
+                {
+                    "const": "BGR"
+                },
+                {
+                    "const": "BGRA"
+                },
+                {
+                    "const": "DEPTH_COMPONENT"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "default": "RGB"
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [ "accessor", "width", "height" ] 
+}

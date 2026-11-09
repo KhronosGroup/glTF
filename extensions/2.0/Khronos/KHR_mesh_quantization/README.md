@@ -7,8 +7,8 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Contributors
 
-* Arseny Kapoulkine, [@zeuxcg](https://twitter.com/zeuxcg)
-* Alexey Knyazev, [@lexaknyazev](https://github.com/lexaknyazev)
+- Arseny Kapoulkine, [@zeuxcg](https://twitter.com/zeuxcg)
+- Alexey Knyazev, [@lexaknyazev](https://github.com/lexaknyazev)
 
 Copyright 2018-2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -48,7 +48,7 @@ When `KHR_mesh_quantization` extension is supported, the following **extra** typ
 
 Note that to comply with alignment rules for accessors, each element needs to be aligned to 4-byte boundaries; for example, a `BYTE` normal is expected to have a stride of 4, not 3.
 
-For `POSITION` and `TEXCOORD` attributes, the application is free to choose normalized or unnormalized storage, as well as signed or unsigned. When normalized storage is used, often the data doesn't have to be dequantized (which eliminates the need for a dequantization transform); however, if the data is not in `[0..1]` or `[-1..1]` range, using integer storage can reduce precision loss as standard glTF normalization factors such as `1/255` and `1/65535` are not representable exactly as floating-point numbers.
+For `POSITION` and `TEXCOORD` attributes, the application is free to choose normalized or unnormalized storage, as well as signed or unsigned. When normalized storage is used, often the data doesn't have to be dequantized (which eliminates the need for a dequantization transform); however, if the data is not in `[0..1]` or `[-1..1]` range, using unnormalized integers instead of normalized integers can slightly improve precision as standard glTF normalization factors such as `1/255` and `1/65535` are not representable exactly as floating-point numbers. Note that using unnormalized integers does not change semantics of the stored values - for example, unnormalized integer `2` corresponds to `2.0` in UV space when encoding a texture coordinate - and as such, in this case it's usually necessary to specify a transformation for decoding (see Decoding Quantized Data).
 
 > **Implementation Note:** As quantization may introduce a non-negligible error, quantized normal and tangent vectors are typically not exactly unit length. Applications are expected to normalize the vectors before using them in lighting equations; this typically can be done after transforming them using the normal matrix. Even if quantization is not used, normal matrix can contain scale/skew so normalization is typically required anyway.
 

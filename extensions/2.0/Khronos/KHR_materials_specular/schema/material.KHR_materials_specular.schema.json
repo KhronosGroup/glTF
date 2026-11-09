@@ -1,0 +1,41 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_specular glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines the strength of the specular reflection.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "specularFactor": {
+            "type": "number",
+            "description": "The strength of the specular reflection.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "This parameter scales the amount of specular reflection on non-metallic surfaces. It has no effect on metals."
+        },
+        "specularTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "A texture that defines the specular factor in the alpha channel.",
+            "gltf_detailedDescription": "A texture that defines the specular factor in the alpha channel. This will be multiplied by specularFactor."
+        },
+        "specularColorFactor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0
+            },
+            "description": "The F0 RGB color of the specular reflection.",
+            "default": [ 1.0, 1.0, 1.0 ],
+            "minItems": 3,
+            "maxItems": 3,
+            "gltf_detailedDescription": "This is an additional RGB color parameter that tints the specular reflection of non-metallic surfaces. At grazing angles, the reflection still blends to white, and the parameter has not effect on metals. The value is linear."
+        },
+        "specularColorTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "A texture that defines the F0 color of the specular reflection.",
+            "gltf_detailedDescription": "A texture that defines the specular color in the RGB channels (encoded in sRGB). This will be multiplied by specularColorFactor."
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

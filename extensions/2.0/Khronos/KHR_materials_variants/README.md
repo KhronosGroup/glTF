@@ -43,9 +43,9 @@ _This section is non-normative._
 
 This extension aims to give asset creators and consumers a compact way to define multiple materials for a common set of geometry nodes in a glTF document. We explicitly optimize for the case of representing material variants which are:
 
-* **finite** - the list of variants is bounded; multi-dimensional variants (e.g. color + texture) are possible but must ultimately be representable as a flattened list
-* **premade** - the variants are produced at asset authoring time
-* **holistic** - while composable, the variants are defined at the granularity of the glTF asset; sub-variants or hierarchical variants are not considered
+- **finite** - the list of variants is bounded; multi-dimensional variants (e.g. color + texture) are possible but must ultimately be representable as a flattened list
+- **premade** - the variants are produced at asset authoring time
+- **holistic** - while composable, the variants are defined at the granularity of the glTF asset; sub-variants or hierarchical variants are not considered
 
 In digital commerce, each variant may correspond to a distinct SKU or stocked product code, which naturally meet these requirements.  In games or movies, each variant may represent a fixed set of curated asset skins which can be represented, moved across the wire, and loaded efficiently.
 

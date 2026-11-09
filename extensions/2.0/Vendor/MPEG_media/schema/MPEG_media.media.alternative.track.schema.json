@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_media.media.alternative.track",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json"} ],
+    "properties": {
+        "track": {
+            "type": "string",
+            "description": "URL fragment to access the track within the media alternative.",
+            "gltf_detailedDescription": "URL fragment to access the track within the media alternative.  The URL structure is defined for the following formats: DASH: Using MPD Anchors (URL fragments) as defined in ISO/IEC 23009-1:2019:Annex C (Table C.1); ISOBMFF: URL fragments as specified in ISO/IEC 14496-12:2020:Annex C. SDP: stream identifier of the media stream as defined in ISO/IEC 20390-14:Annex C. When V3C data is referenced in the scene description document as in item in MPEG_media.alternative.tracks and the referenced item corresponds to an ISBOBMFF track, the following applies: for single-track encapsulated V3C data, the referenced track in MPEG_media shall be the V3C bitstream track. for multi-track encapsulated V3C data, the referenced track in MPEG_media shall be the V3C atlas track."
+        },
+        "codecs": {
+            "type": "string",
+            "description": "The codecs parameter, as defined in IETF RFC 6381, of the media included in the track.",
+            "gltf_detailedDescription": "The codecs parameter, as defined in IETF RFC 6381, of the media included in the track.  When the track includes different types of codecs (e.g. the AdaptationSet includes Representations with different codecs), the codecs parameter may be signaled by comma-separated list of values of the codecs."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["track", "codecs"]                      
+  }
+  

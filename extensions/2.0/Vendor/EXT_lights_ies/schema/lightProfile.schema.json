@@ -1,0 +1,40 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "lightProfile",
+    "type": "object",
+    "description": "An IES light profile.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "uri": {
+            "type": "string",
+            "description": "The URI (or IRI) of the light profile.",
+            "format": "iri-reference",
+            "gltf_detailedDescription": "The URI (or IRI) of the light profile.  Relative paths are relative to the current glTF asset.  Instead of referencing an external file, this field **MAY** contain a `data:`-URI. This field **MUST NOT** be defined when `bufferView` is defined."
+        },
+        "mimeType": {
+            "anyOf": [
+                {
+                    "const": "application/x-ies-lm-63"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "description": "The light profile's media type. This field **MUST** be defined when `bufferView` is defined."
+        },
+        "bufferView": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the bufferView that contains the IES light profile. This field **MUST NOT** be defined when `uri` is defined."
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "dependencies": {
+        "bufferView": [ "mimeType" ]
+    },
+    "oneOf": [
+        { "required": [ "uri" ] },
+        { "required": [ "bufferView" ] }
+    ]
+}

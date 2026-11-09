@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "KHR_texture_basisu glTF extension",
+    "title": "KHR_texture_basisu glTF Texture Extension",
     "type": "object",
     "description": "glTF extension to specify textures using the KTX v2 images with Basis Universal supercompression.",
     "allOf": [ { "$ref": "glTFProperty.schema.json" } ],

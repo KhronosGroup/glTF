@@ -8,7 +8,7 @@
 
 ## Status
 
-Experimental
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 
@@ -56,6 +56,8 @@ Valid accessor type and component type for each attribute semantic property are 
 All attribute accessors in a given node **must** have the same `count`.
 
 > **Implementation Note:** When instancing is used on the node, the non-instanced version of the mesh should not be rendered.
+
+Because the extension does not provide a way to specify a non-instanced fallback, files that use the extension **should** specify it in `extensionsRequired` array.
 
 ## Transformation Order
 

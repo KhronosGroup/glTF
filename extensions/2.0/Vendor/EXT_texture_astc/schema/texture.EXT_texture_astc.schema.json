@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_texture_astc glTF Texture Extension",
+    "type": "object",
+    "description": "glTF extension to specify textures using the KTX v2 images with ASTC compression.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "source": {
+          "allOf": [ { "$ref": "glTFid.schema.json" } ],
+          "description": "The index of the image which points to a KTX v2 resource with ASTC compression."
+        },
+        "extensions": {},
+        "extras": {}
+      }
+}

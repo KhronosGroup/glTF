@@ -1,0 +1,42 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_materials_volume glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines the parameters for the volume of a material.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "thicknessFactor": {
+            "type": "number",
+            "minimum": 0.0,
+            "default": 0.0,
+            "description": "Thickness of the volume.",
+            "gltf_detailedDescription": "The thickness of the volume beneath the surface. The value is given in the coordinate space of the mesh. A value greater than 0 turns the mesh into a volume with a homogeneous medium, enabling refraction, absorption and subsurface scattering. The actual value may be ignored by renderers that are able to derive the thickness from the mesh (ray tracer)."
+        },
+        "thicknessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "Texture that defines the thickness of the volume, stored in the G channel.",
+            "gltf_detailedDescription": "A texture that defines the thickness of the volume, stored in the G channel. Will be multiplied by thicknessFactor."
+        },
+        "attenuationDistance": {
+            "type": "number",
+            "minimum": 0.0,
+            "exclusiveMinimum": true,
+            "description": "Average distance that light travels in the medium before interacting with a particle.",
+            "gltf_detailedDescription": "Density of the medium given as the average distance that light travels in the medium before interacting with a particle. The value is given in world space. When undefined, the value is assumed to be infinite."
+        },
+        "attenuationColor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "description": "Color that white light turns into due to absorption when reaching the attenuation distance.",
+            "default": [ 1.0, 1.0, 1.0 ],
+            "minItems": 3,
+            "maxItems": 3
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

@@ -111,7 +111,7 @@ Each scene can have a single IBL light attached to it by defining the `extension
                 "light" : 0
             }
         }
-    }            
+    }
 ]
 ```
 
@@ -126,3 +126,6 @@ Each scene can have a single IBL light attached to it by defining the `extension
 | `specularImages` | Declares an array of the first N mips of the prefiltered cubemap. Each mip is, in turn, defined with an array of 6 images, one for each cube face. i.e. this is an Nx6 array. | :white_check_mark: Yes |
 | `specularImageSize` | The dimension (in pixels) of the first specular mip. This is needed to determine, pre-load, the total number of mips needed. | :white_check_mark: Yes |
 
+## License
+
+Adobe and Microsoft have made this Specification available under the Open Web Foundation Agreement Version 1.0, which is available at https://www.openwebfoundation.org/the-agreements/the-owf-1-0-agreements-granted-claims/owfa-1-0.

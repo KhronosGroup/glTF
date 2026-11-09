@@ -1,0 +1,42 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "$id": "bsdfMeasurement.schema.json",
+    "title": "BSDF Measurement",
+    "type": "object",
+    "description": "A BSDF measurement (MBSDF) as defined in the MDL Language Specification.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "uri": {
+            "type": "string",
+            "description": "The URI (or IRI) of the MBSDF.",
+            "format": "iri-reference",
+            "gltf_detailedDescription": "The URI (or IRI) of the MBSDF.  Relative paths are relative to the current glTF asset.  Instead of referencing an external file, this field **MAY** contain a `data:`-URI. This field **MUST NOT** be defined when `bufferView` is defined."
+        },
+        "bufferView": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The ID of the bufferView containing the MBSDF.  This field **MUST NOT** be defined if `uri` is defined."
+        },
+        "mimeType": {
+            "anyOf": [
+                {
+                    "type": "string",
+                    "const": "application/vnd.mdl-mbsdf"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "description": "The BSDF measurement's media type.  This field **MUST** be defined when `bufferView` is defined."
+        },
+        "name": { },
+        "extensions": { },
+        "extras": { }
+    },
+    "dependencies": {
+        "bufferView": [ "mimeType" ]
+    },
+    "oneOf": [
+        { "required": [ "uri" ] },
+        { "required": [ "bufferView" ] }
+    ]
+}

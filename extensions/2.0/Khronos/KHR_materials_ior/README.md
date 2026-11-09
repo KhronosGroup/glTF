@@ -7,27 +7,27 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Contributors
 
-* Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
-* Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
-* Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
-* Emmett Lalish, Google [@elalish](https://github.com/elalish)
-* Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
-* Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
-* Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
-* Eric Chadwick, Wayfair [echadwick-wayfair](https://github.com/echadwick-wayfair)
-* Ben Houston, ThreeKit [@bhouston](https://github.com/bhouston)
-* Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
-* Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
-* Nicholas Barlow, Microsoft
-* Nicolas Savva, Autodesk [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
-* Henrik Edstrom, Autodesk
-* Bruce Cherniak, Intel
-* Adam Morris, Target [@weegeekps](https://github.com/weegeekps)
-* Sandra Voelker, Target
-* Alex Jamerson, Amazon
-* Thomas Dideriksen, Amazon
-* Alex Wood, AGI [@abwood](https://twitter.com/abwood)
-* Ed Mackey, AGI [@emackey](https://twitter.com/emackey)
+- Tobias Haeussler, Dassault Systemes [@proog128](https://github.com/proog128)
+- Bastian Sdorra, Dassault Systemes [@bsdorra](https://github.com/bsdorra)
+- Mike Bond, Adobe, [@miibond](https://github.com/MiiBond)
+- Emmett Lalish, Google [@elalish](https://github.com/elalish)
+- Don McCurdy, Google [@donrmccurdy](https://twitter.com/donrmccurdy)
+- Norbert Nopper, UX3D [@UX3DGpuSoftware](https://twitter.com/UX3DGpuSoftware)
+- Richard Sahlin, IKEA [@rsahlin](https://github.com/rsahlin)
+- Eric Chadwick, Wayfair [echadwick-wayfair](https://github.com/echadwick-wayfair)
+- Ben Houston, ThreeKit [@bhouston](https://github.com/bhouston)
+- Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
+- Sebastien Vandenberghe, Microsoft [@sebavanjs](https://twitter.com/sebavanjs)
+- Nicholas Barlow, Microsoft
+- Nicolas Savva, Autodesk [@nicolassavva-autodesk](https://github.com/nicolassavva-autodesk)
+- Henrik Edstrom, Autodesk
+- Bruce Cherniak, Intel
+- Adam Morris, Target [@weegeekps](https://github.com/weegeekps)
+- Sandra Voelker, Target
+- Alex Jamerson, Amazon
+- Thomas Dideriksen, Amazon
+- Alex Wood, AGI [@abwood](https://github.com/abwood)
+- Ed Mackey, AGI [@emackey](https://github.com/emackey)
 
 Copyright 2018-2021 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
@@ -42,16 +42,16 @@ Written against the glTF 2.0 spec.
 
 ## Exclusions
 
-* This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
-* This extension must not be used on a material that also uses `KHR_materials_unlit`.
+- This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
+- This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
 ## Overview
 
-The dielectric BRDF of the metallic-roughness material in glTF uses a fixed value of 1.5 for the index of refraction. This is a good fit for many plastics and glass, but not for other materials like water or asphalt, sapphire or diamond. This extensions allows users to set the index of refraction to a certain value.
+The dielectric BRDF of the metallic-roughness material in glTF uses a fixed value of 1.5 for the index of refraction. This is a good fit for many plastics and glass, but not for other materials like water or asphalt, sapphire or diamond. This extension allows users to set the index of refraction to a certain value.
 
 ## Extending Materials
 
-The index of refraction of a material is configured by adding the `KHR_materials_ior` extension to any glTF material. 
+The index of refraction of a material is configured by adding the `KHR_materials_ior` extension to any glTF material.
 
 ```json
 {
@@ -94,7 +94,21 @@ dielectric_brdf =
       α = roughness^2))
 ```
 
-Valid values for `ior` are numbers greater than or equal to 1. In addition, a value of 0 is allowed. This value gives full weight to `layer`, i.e., the Fresnel term evaluates to 1 independent of the view or light direction. It is useful in combination with `KHR_materials_specular` to seamlessly support the specular-glossiness workflow.
+Valid values for `ior` are numbers greater than or equal to one. As a special case, a value of zero is allowed as described below.
+
+### Specular-Glossiness Backwards Compatibility Mode
+
+Setting IOR to zero permanently switches the material into a special specular-glossiness backwards compatibility mode designed to ease content transition from the legacy specular-glossiness model (previously available via `KHR_materials_pbrSpecularGlossiness` extension) to the glTF 2.0 core metallic-roughness PBR model.
+
+This mode has the following implications:
+
+- The effective IOR becomes positive infinity and the Fresnel term **MUST** evaluate to `1.0` independently of the view or light direction.
+
+- All material features **MUST** treat IOR as having a very large value representing positive infinity, subject to numerical precision. For example, this would cause the `dispersion` property (as defined in `KHR_materials_dispersion`) to have no effect on the material appearance.
+
+- This mode cannot be toggled dynamically, e.g., with `KHR_animation_pointer` or `KHR_interactivity` extensions. If the IOR property is set to zero in JSON, glTF Asset Object Model updates of it **MUST** be ignored.
+
+- A value of zero (as well as any other value less than one) **MUST NOT** be used in an animation sampler targeting the IOR property, even if the IOR is set to zero in glTF JSON.
 
 ## Implementation
 
@@ -103,10 +117,10 @@ Valid values for `ior` are numbers greater than or equal to 1. In addition, a va
 The extension changes the computation of the Fresnel term defined in [Appendix B](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#appendix-b-brdf-implementation) to the following:
 
 ```
-const dielectricSpecular = ((ior - 1)/(ior + 1))^2
+dielectric_f0 = ((ior - 1)/(ior + 1))^2
 ```
 
-Note that for the default index of refraction `ior = 1.5` this term evaluates to `dielectricSpecular = 0.04`.
+Note that for the default index of refraction `ior = 1.5` this term evaluates to `dielectric_f0 = 0.04`.
 
 ## Interaction with other extensions
 
@@ -118,7 +132,7 @@ If `KHR_materials_volume` is used in combination with `KHR_materials_ior`, the `
 
 ## Schema
 
-- [glTF.KHR_materials_ior.schema.json](schema/glTF.KHR_materials_ior.schema.json)
+- [material.KHR_materials_ior.schema.json](schema/material.KHR_materials_ior.schema.json)
 
 ## Appendix: Full Khronos Copyright Statement
 

@@ -1,0 +1,35 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_lights_ies node extension",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "light": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The id of the light profile referenced by this node."
+        },
+        "multiplier": {
+            "type": "number",
+            "minimum": 0.0,
+            "default": 1.0,
+            "description": "Non-negative factor to scale the light's intensity."
+        },
+        "color": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [ 1.0, 1.0, 1.0 ],
+            "description": "RGB value for the light's color in linear space."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "light"
+    ]
+}

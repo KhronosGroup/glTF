@@ -7,12 +7,12 @@ SPDX-License-Identifier: LicenseRef-KhronosSpecCopyright
 
 ## Contributors
 
-* Mark Callow [@MarkCallow](https://github.com/MarkCallow)
-* Rich Geldreich, Binomial, [@richgel999](https://github.com/richgel999)
-* Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
-* Arseny Kapoulkine, Roblox, [@zeuxcg](https://twitter.com/zeuxcg)
-* Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)
-* Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)
+- Mark Callow [@MarkCallow](https://github.com/MarkCallow)
+- Rich Geldreich, Binomial, [@richgel999](https://github.com/richgel999)
+- Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)
+- Arseny Kapoulkine, Roblox, [@zeuxcg](https://twitter.com/zeuxcg)
+- Alexey Knyazev [@lexaknyazev](https://github.com/lexaknyazev)
+- Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)
 
 Copyright 2020 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 See [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.
