@@ -3396,32 +3396,39 @@ v_t = (1 - t) \cdot v_k + t \cdot v_{k+1}
 
 This mode is used when the animation sampler interpolation mode is `"LINEAR"` and the animated property is `"rotation"`, i.e., values of the animated property are unit quaternions.
 
-Let
-[none]
-* latexmath:[a = \arccos(|v_k \cdot v_{k+1}|)] be the arccosine of the absolute value of the dot product of two consecutive quaternions;
-* latexmath:[d = v_k \cdot v_{k+1}] be the dot product of two consecutive quaternions;
-* latexmath:[s = \begin{cases} +1 & \text{if } d \ge 0 \\ -1 & \text{if } d \lt 0 \end{cases}].
+The interpolated animated property value stem:[v_t] at the current (requested) timestamp stem:[t_c] is computed as follows.
 
-The interpolated animated property value stem:[v_t] at the timestamp stem:[t_c] is computed as follows.
-
+1. Let latexmath:[d = v_k \cdot v_{k+1}], i.e., the dot product of two quaternions from two adjacent keyframes.
+2. If stem:[d < 0], negate stem:[d] and all components of stem:[v_{k+1}].
++
+[NOTE]
+.Rationale
+====
+This step ensures that the interpolation follows the short path along the great circle defined by the two quaternions.
+====
+3. Clamp stem:[d] to the stem:[\[0, 1\]] range.
++
+[NOTE]
+.Rationale
+====
+Although the specification requires all rotation quaternions to be unit, their computed dot products could be slightly outside of the correct range due to floating-point precision limits.
+====
+4. If the value of stem:[d] is close to positive one within an implementation-defined threshold stem:[\epsilon], i.e., if stem:[1 - d <= \epsilon], the spherical linear interpolation is replaced with the regular linear interpolation defined in the previous section. The interpolated quaternion is then renormalized. If the components of stem:[v_{k+1}] were negated during the step 2, the regular linear interpolation uses the negated components.
++
+[NOTE]
+.Implementation Note
+====
+Although the theoretical stem:[\epsilon] value that aligns spherical and regular linear interpolations for double-precision arithmetic is approximately stem:[10^-16], many implementations use stem:[10^-6] for better numerical stability and compatibility with single-precision workflows.
+====
+5. Let latexmath:[a = \arccos(d)].
+6. Compute the interpolated rotation value stem:[v_t] at the timestamp stem:[t_c] as follows.
++
 [latexmath]
 ++++
-v_t = \frac{\sin(a \cdot (1 - t))}{\sin(a)} \cdot v_k + s \cdot \frac{\sin(a \cdot t)}{\sin(a)} \cdot v_{k+1}
+v_t = \frac{\sin(a \cdot (1 - t))}{\sin(a)} \cdot v_k + \frac{\sin(a \cdot t)}{\sin(a)} \cdot v_{k+1}
 ++++
 
-[NOTE]
-.Implementation Note
-====
-Using the dot product's absolute value for computing stem:[a] and negating stem:[v_{k+1}] when stem:[d] is negative ensure that the spherical interpolation follows the short path along the great circle defined by the two quaternions.
-====
-
 Implementations **MAY** approximate these equations to reach application-specific accuracy and/or performance targets.
-
-[NOTE]
-.Implementation Note
-====
-When stem:[a] is close to zero, spherical linear interpolation turns into regular linear interpolation.
-====
 
 [[interpolation-cubic]]
 ==== Cubic Spline Interpolation
