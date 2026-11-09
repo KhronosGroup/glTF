@@ -24,7 +24,11 @@ Written against the glTF 2.0 spec.
 
 This extension adds one parameter to the metallic-roughness material: `bump`.
 
-`bump` allows users to perturb the surface normal via a bump map. The bump map is a grayscale texture, where the value of each texel represents the height of the surface at that texel.  The height is then used to perturb the normal direction.
+`bump` allows users to perturb the surface normal via a bump map. The bump map is a single-channel texture, where the value of each texel represents the height of the surface at that texel.  The height is then used to perturb the normal direction.
+
+## Motivation
+
+*This section is non-normative.*
 
 Bump maps were introduced into computer graphics in 1978 by Blinn in "Simulation of Wrinkled Surfaces, while normal maps were introduced in 1989 by Cohen et al, "Appearance-Preserving Simplification."
 
@@ -72,7 +76,11 @@ Factor and texture are combined by multiplication to describe a single value.
 
 The height is `d = h * bumpFactor`, where `h` is the red channel of `bumpTexture` in [0, 1]. The texture **MUST** be read as linear data, without sRGB decoding. `d` is a length in metres measured in the space named by `heightSpace`. For `"world"`, `d` is the world-space height. For `"object"`, `d` scales with the node's world transform, so under uniform scale `s` the world-space height is `s * d`.
 
-The perturbed normal is `n_b = normalize(n - ∇d)`, where `∇d` is the surface gradient of `d` with respect to world-space position. Because both `d` and position are lengths, the result does not depend on texture resolution, UV scale, or viewing distance.
+The perturbed normal is `n_b = normalize(n - ∇d)`, where `n` is a unit normal and `∇d` is the surface gradient of `d`, both evaluated in the space named by `heightSpace`. For `"world"`, use world-space position and normal. For `"object"`, use object-space position and normal, then transform the perturbed normal to world space with the inverse-transpose of the node's world transform and normalize it. This preserves the object-space displacement convention under non-uniform scale and shear as well as uniform scale.
+
+The height amplitude is independent of UV scale: changing the texture's tiling does not change the height represented by a given sample value. It does change the surface distance over which that height varies, and therefore the slopes and perturbed normals. For example, tiling the same height map twice as often doubles its slopes while preserving its height amplitude.
+
+Because both height and position are lengths in the same space, the resulting slopes do not depend on viewing distance or output resolution. Changing the texture resolution while preserving the same height field does not change the intended slopes, although sampling and filtering can affect their numerical approximation.
 
 When `heightSpace` is absent, it defaults to `"object"`.
 

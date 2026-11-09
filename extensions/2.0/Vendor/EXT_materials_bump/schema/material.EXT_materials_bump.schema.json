@@ -9,19 +9,19 @@
             "type": "number",
             "description": "The bump height in metres per unit of the sampled red channel.",
             "default": 1.0,
-            "gltf_detailedDescription": "The height in metres per unit of the sampled red channel, measured in the space named by `heightSpace`. A negative value inverts the relief."
+            "gltf_detailedDescription": "The bump height in metres per unit of the sampled red channel, measured in the space named by `heightSpace`. A negative value inverts the relief."
         },
         "bumpTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-            "description": "A texture that defines the displacement in the red channel.",
-            "gltf_detailedDescription": "A texture that defines the displacement in the red channel. This will be multiplied by bumpFactor."
+            "description": "A texture that defines the surface height in the red channel.",
+            "gltf_detailedDescription": "A texture that defines the surface height in the red channel. This will be multiplied by the bump factor."
         },
         "heightSpace": {
             "type": "string",
             "enum": [ "world", "object" ],
             "default": "object",
             "description": "The space in which the bump height is measured.",
-            "gltf_detailedDescription": "`world` measures `bumpFactor` in world space. `object` measures it in the node's local space, so it scales with the node transform."
+            "gltf_detailedDescription": "The space in which the bump height is measured. `world` measures `bumpFactor` in world space. `object` measures it in the node's local space, so it scales with the node transform."
         },
         "extensions": { },
         "extras": { }
