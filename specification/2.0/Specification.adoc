@@ -421,7 +421,15 @@ A valid glTF asset **MUST** specify its version.
 [[versioning]]
 == Versioning
 
-Any updates made to the glTF Specification in a minor version **MUST** be backward and forward compatible. Backward compatibility means that any client implementation that supports loading a glTF 2.x asset will also be able to load a glTF 2.0 asset. Forward compatibility means that a client implementation that only supports glTF 2.0 can load glTF 2.x assets while gracefully ignoring any new features it does not understand.
+This specification defines glTF version 2.0, that is, major version 2 and minor version 0.
+
+Any updates made to the glTF Specification in subsequent minor versions (while keeping the major version) **MUST** be backward and forward compatible.
+
+Backward compatibility means that a glTF asset authored for this version of the specification remains valid for all later minor versions of the specification. Client implementations that support any later minor version will also support all earlier minor versions.
+
+Forward compatibility means that a glTF asset authored for any later minor version will still be valid for this version of the specification. Client implementations that support this version of the specification will be able to load such assets while gracefully ignoring any new features they do not understand.
+
+Assets **MAY** opt out of default forward compatibility by specifying the minimum specification version, see the <<asset,Asset>> section below for more details.
 
 A minor version update **MAY** introduce new features but **MUST NOT** change any previously existing behavior. Existing functionality **MAY** be deprecated in a minor version update, but it **MUST NOT** be removed.
 
