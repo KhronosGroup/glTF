@@ -8,7 +8,6 @@
         "bumpFactor": {
             "type": "number",
             "description": "The bump height in metres per unit of the sampled red channel.",
-            "default": 1.0,
             "gltf_detailedDescription": "The bump height in metres per unit of the sampled red channel, measured in the space named by `heightSpace`. A negative value inverts the relief."
         },
         "bumpTexture": {
@@ -26,5 +25,5 @@
         "extensions": { },
         "extras": { }
     },
-    "required": [ "bumpTexture" ]
+    "required": [ "bumpFactor", "bumpTexture" ]
 }

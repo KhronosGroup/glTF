@@ -68,7 +68,7 @@ Factor and texture are combined by multiplication to describe a single value.
 
 | |Type|Description|Required|
 |-|----|-----------|--------|
-| **bumpFactor** | `number` | The height in metres per unit of the sampled texture value, measured in the space named by `heightSpace`. May be negative to invert the relief. | No, default: `1.0` |
+| **bumpFactor** | `number` | The height in metres per unit of the sampled texture value, measured in the space named by `heightSpace`. May be negative to invert the relief. | :white_check_mark: Yes |
 | **bumpTexture** | [`textureInfo`](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo) | A texture that defines the surface height, stored in the red (`R`) channel. This will be multiplied by bumpFactor. | :white_check_mark: Yes |
 | **heightSpace** | `string` | The space in which the height is measured: `"world"` or `"object"`. `"object"` is the node's local space and scales with the node transform. | No, default: `"object"` |
 
