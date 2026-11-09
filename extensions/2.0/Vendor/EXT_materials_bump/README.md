@@ -76,7 +76,7 @@ Factor and texture are combined by multiplication to describe a single value.
 
 The height is `d = h * bumpFactor`, where `h` is the red channel of `bumpTexture` in [0, 1]. The texture **MUST** be read as linear data, without sRGB decoding. `d` is a length in metres measured in the space named by `heightSpace`. For `"world"`, `d` is the world-space height. For `"object"`, `d` scales with the node's world transform, so under uniform scale `s` the world-space height is `s * d`.
 
-The perturbed normal is `n_b = normalize(n - ∇d)`, where `n` is a unit normal and `∇d` is the surface gradient of `d`, both evaluated in the space named by `heightSpace`. For `"world"`, use world-space position and normal. For `"object"`, use object-space position and normal, then transform the perturbed normal to world space with the inverse-transpose of the node's world transform and normalize it. This preserves the object-space displacement convention under non-uniform scale and shear as well as uniform scale.
+The perturbed normal is `n_b = normalize(n - ∇d)`, where `n` is a unit normal and `∇d` is the surface gradient of `d`, both evaluated in the space named by `heightSpace`. For `"object"`, the perturbed normal **MUST** match the one produced by displacing the surface by `d` along the normal in object space and then applying the node's world transform, including under non-uniform scale and shear.
 
 The height amplitude is independent of UV scale: changing the texture's tiling does not change the height represented by a given sample value. It does change the surface distance over which that height varies, and therefore the slopes and perturbed normals. For example, tiling the same height map twice as often doubles its slopes while preserving its height amplitude.
 
@@ -93,6 +93,10 @@ The `bump` parameters affect the normal used in `dielectric_brdf` of the glTF 2.
 *This section is non-normative.*
 
 The `bump` parameter is used to perturb the normal direction. The normal direction is perturbed by the value of the bump map at the texel corresponding to the fragment. The perturbed normal is then used in the `dielectric_brdf` function of the glTF 2.0 metallic-roughness material.
+
+### Object-Space Height
+
+One way to meet the `"object"` requirement is to compute `n_b` from object-space position and normal, then transform it to world space with the inverse-transpose of the node's world transform and normalize it. Implementations may use any method that gives the same result.
 
 ### Blending Normal and Bump Perturbations
 
