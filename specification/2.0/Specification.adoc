@@ -773,7 +773,7 @@ Photometry units used in glTF assets are defined for a light source approximatin
 
 Implementations working with radiometry units should use the relative spectral power distribution corresponding to the light source and the spectral luminous efficiency values for photopic vision to derive per-wavelength radiant flux values.
 
-If a single luminous efficacy value of the light source's radiation is needed, it is assumed to be 176.67{nbsp}lm·W^-1^. Note that this is the ratio of the light source's luminous flux (lm) to its radiant flux (W), it does not account for the power consumed by the light source (also measured in W).
+If a single luminous efficacy value of the light source's radiation is needed, it is assumed to be 176.67{nbsp}lm·W^-1^; this value is less than the maximum luminous efficacy of 683{nbsp}lm·W^-1^ because the latter is only achievable at 555 nm. Note that this is the ratio of the light source's luminous flux (lm) to its radiant flux (W), it does not account for the power consumed by the light source (also measured in W).
 ====
 
 Red, Green, and Blue primary colors use <<bt709,Recommendation ITU-R BT.709>> chromaticity coordinates.
