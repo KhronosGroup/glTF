@@ -3,32 +3,37 @@
     "$id": "https://schema.khronos.org/gltf/2.0/specification/image.schema.json",
     "title": "Image",
     "type": "object",
-    "description": "Image data used to create a texture. Image **MAY** be referenced by an URI (or IRI) or a buffer view index.",
+    "description": "Reference to an image resource.",
     "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "bufferView": {
+            "title": "Buffer View Index",
             "$ref": "glTFid.schema.json",
-            "description": "The index of the bufferView that contains the image. This field **MUST NOT** be defined when `uri` is defined."
+            "description": "The index of the buffer view that contains the image data. Not applicable to images sourced from IRIs."
         },
         "mimeType": {
+            "title": "Media Type",
+            "type": "string",
+            "description": "The media type of the image. Required when the image is sourced from a buffer view.",
             "anyOf": [
                 {
+                    "title": "JPEG",
                     "const": "image/jpeg"
                 },
                 {
+                    "title": "PNG",
                     "const": "image/png"
                 },
                 {
                     "type": "string"
                 }
-            ],
-            "description": "The image's media type. This field **MUST** be defined when `bufferView` is defined."
+            ]
         },
         "uri": {
+            "title": "IRI (or URI)",
             "type": "string",
-            "description": "The URI (or IRI) of the image.",
-            "format": "iri-reference",
-            "gltf_detailedDescription": "The URI (or IRI) of the image.  Relative paths are relative to the current glTF asset.  Instead of referencing an external file, this field **MAY** contain a `data:`-URI. This field **MUST NOT** be defined when `bufferView` is defined."
+            "description": "The identifier used to retrieve the image data. Not applicable to images sourced from buffer views.",
+            "format": "iri-reference"
         }
     },
     "dependentRequired": {

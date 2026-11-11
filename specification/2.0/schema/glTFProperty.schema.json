@@ -3,6 +3,7 @@
     "$id": "https://schema.khronos.org/gltf/2.0/specification/glTFProperty.schema.json",
     "title": "glTF Property",
     "type": "object",
+    "description": "Common type for all glTF JSON objects that are not used as plain JSON objects.",
     "properties": {
         "extensions": {
             "$ref": "extensions.schema.json"

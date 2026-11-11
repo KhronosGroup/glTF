@@ -7,17 +7,19 @@
     "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "magFilter": {
-            "description": "Magnification filter.",
+            "title": "Magnification Filter",
+            "type": "integer",
+            "description": "Filter used when the texture's rendered dimensions are greater than its original dimensions.",
             "anyOf": [
                 {
+                    "title": "Nearest",
                     "const": 9728,
-                    "description": "NEAREST",
-                    "type": "integer"
+                    "description": "Nearest-neighbor filtering, also known as point filtering."
                 },
                 {
+                    "title": "Linear",
                     "const": 9729,
-                    "description": "LINEAR",
-                    "type": "integer"
+                    "description": "Linear filtering."
                 },
                 {
                     "type": "integer"
@@ -25,37 +27,39 @@
             ]
         },
         "minFilter": {
-            "description": "Minification filter.",
+            "title": "Minification Filter",
+            "type": "integer",
+            "description": "Filter used when the texture's rendered dimensions are less than its original dimensions.",
             "anyOf": [
                 {
+                    "title": "Nearest",
                     "const": 9728,
-                    "description": "NEAREST",
-                    "type": "integer"
+                    "description": "Nearest-neighbor filtering, also known as point filtering, without mipmapping."
                 },
                 {
+                    "title": "Linear",
                     "const": 9729,
-                    "description": "LINEAR",
-                    "type": "integer"
+                    "description": "Linear filtering without mipmapping."
                 },
                 {
+                    "title": "Nearest Mipmap Nearest",
                     "const": 9984,
-                    "description": "NEAREST_MIPMAP_NEAREST",
-                    "type": "integer"
+                    "description": "Nearest-neighbor filtering from the closest mipmap."
                 },
                 {
+                    "title": "Linear Mipmap Nearest",
                     "const": 9985,
-                    "description": "LINEAR_MIPMAP_NEAREST",
-                    "type": "integer"
+                    "description": "Linear filtering from the closest mipmap."
                 },
                 {
+                    "title": "Nearest Mipmap Linear",
                     "const": 9986,
-                    "description": "NEAREST_MIPMAP_LINEAR",
-                    "type": "integer"
+                    "description": "Nearest-neighbor filtering from the two closest mipmaps followed by linear filtering between them."
                 },
                 {
+                    "title": "Linear Mipmap Linear",
                     "const": 9987,
-                    "description": "LINEAR_MIPMAP_LINEAR",
-                    "type": "integer"
+                    "description": "Linear filtering from the two closest mipmaps followed by linear filtering between them, also known as trilinear filtering."
                 },
                 {
                     "type": "integer"
@@ -63,23 +67,25 @@
             ]
         },
         "wrapS": {
-            "description": "S (U) wrapping mode.",
+            "title": "S (U) Wrapping",
+            "type": "integer",
+            "description": "Wrapping mode for horizontal texture coordinates less than zero or greater than or equal to one.",
             "default": 10497,
             "anyOf": [
                 {
+                    "title": "Repeat",
                     "const": 10497,
-                    "description": "REPEAT",
-                    "type": "integer"
+                    "description": "The normalized range is repeated infinitely."
                 },
                 {
+                    "title": "Clamp to Edge",
                     "const": 33071,
-                    "description": "CLAMP_TO_EDGE",
-                    "type": "integer"
+                    "description": "The out-of-bounds texture coordinates are clamped."
                 },
                 {
+                    "title": "Mirrored Repeat",
                     "const": 33648,
-                    "description": "MIRRORED_REPEAT",
-                    "type": "integer"
+                    "description": "The normalized range is repeated infinitely, reversing the direction on every repeat."
                 },
                 {
                     "type": "integer"
@@ -87,23 +93,25 @@
             ]
         },
         "wrapT": {
-            "description": "T (V) wrapping mode.",
+            "title": "T (V) Wrapping",
+            "type": "integer",
+            "description": "Wrapping mode for vertical texture coordinates less than zero or greater than or equal to one.",
             "default": 10497,
             "anyOf": [
                 {
+                    "title": "Repeat",
                     "const": 10497,
-                    "description": "REPEAT",
-                    "type": "integer"
+                    "description": "The normalized range is repeated infinitely."
                 },
                 {
+                    "title": "Clamp to Edge",
                     "const": 33071,
-                    "description": "CLAMP_TO_EDGE",
-                    "type": "integer"
+                    "description": "The out-of-bounds texture coordinates are clamped."
                 },
                 {
+                    "title": "Mirrored Repeat",
                     "const": 33648,
-                    "description": "MIRRORED_REPEAT",
-                    "type": "integer"
+                    "description": "The normalized range is repeated infinitely, reversing the direction on every repeat."
                 },
                 {
                     "type": "integer"
