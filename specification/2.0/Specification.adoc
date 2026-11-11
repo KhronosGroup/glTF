@@ -1315,7 +1315,7 @@ Then the byte offset of the _i_-th accessor element within the buffer view is de
 [NOTE]
 .Implementation Note
 ====
-When _stride_ is greater than _size_, accessor elements are not tightly-packed and thus interleaved bytes would need to be skipped during iteration over accessor elements. Graphics APIs usually support that directly by accepting byte stride values associated with vertex attributes.
+When _stride_ is greater than _size_, accessor elements are not tightly-packed, and thus interleaved bytes would need to be skipped during iteration over accessor elements. Graphics APIs usually support that directly by accepting byte stride values associated with vertex attributes.
 ====
 
 The referenced buffer view **MUST** be large enough to fit all accessed elements, i.e., the buffer view's byte length **MUST** be greater than or equal to the value of the following expression.
@@ -1623,7 +1623,7 @@ The following example defines a mesh containing one primitive with explicit vert
 
 The `attributes` property is a JSON object that maps attribute semantic names to the indices of accessors providing the corresponding data.
 
-The `attributes` JSON object differs from the most of glTF JSON objects. In particular, it is treated as a flat key-value storage and thus it **MUST NOT** have any nested objects or values that are not accessor references.
+The `attributes` JSON object differs from the most of glTF JSON objects. In particular, it is treated as a flat key-value storage, and thus it **MUST NOT** have any nested objects or values that are not accessor references.
 
 Properties of the `attributes` object **SHOULD** belong to one of the following categories as follows:
 
@@ -1796,7 +1796,7 @@ Mesh geometry **SHOULD NOT** contain degenerate lines or triangles, i.e., lines 
 
 When positions are not specified, client implementations **SHOULD** skip primitive's rendering unless its positions are provided by other means (e.g., by an extension). This applies to both indexed and non-indexed geometry.
 
-When normals are not specified, the mesh primitive has implicit flat normals. The provided tangents are ignored in this case and thus they **SHOULD NOT** be present.
+When normals are not specified, the mesh primitive has implicit flat normals. The provided tangents are ignored in this case, and thus they **SHOULD NOT** be present.
 
 [NOTE]
 .Implementation Note
@@ -1827,7 +1827,7 @@ A mesh primitive **MAY** define _morph targets_.
 
 A morph target defines an alternative state of the primitive's vertex attribute values stored as differences (deltas) between the target vertex attribute values and the original vertex attributes values.
 
-Morph targets are specified in the primitive's `targets` array. The number of elements of the `targets` array defines the number of morph targets for the mesh primitive. Each element of that array is a JSON object that maps attribute semantic names to the indices of accessors providing the corresponding morph target difference values. Similarly to the primitive's `attributes` object, each element of the `targets` array is treated as a flat key-value storage and thus it **MUST NOT** have any nested objects or values that are not accessor references.
+Morph targets are specified in the primitive's `targets` array. The number of elements of the `targets` array defines the number of morph targets for the mesh primitive. Each element of that array is a JSON object that maps attribute semantic names to the indices of accessors providing the corresponding morph target difference values. Similarly to the primitive's `attributes` object, each element of the `targets` array is treated as a flat key-value storage, and thus it **MUST NOT** have any nested objects or values that are not accessor references.
 
 Vertex attribute semantic names not present in the primitive's `attributes` object **MUST NOT** be present in its morph targets. Extension-defined and application-specific attribute semantics use the same naming conventions as for the primitive's `attributes` object.
 
@@ -1854,7 +1854,7 @@ The `weights` property of the mesh, if defined, provides an array of default mor
 [NOTE]
 .Example
 ====
-The following example shows a mesh with three primitives and two morph targets. The first primitive has no morph targets and thus its vertex attributes have only one state. The second primitive defines two morph targets with difference values for both vertex attribute semantics. The third primitive defines two morph targets: the first morph target provides difference values for only one vertex attribute, the second morph target is empty. The mesh also defines default morph target weights.
+The following example shows a mesh with three primitives and two morph targets. The first primitive has no morph targets, and thus its vertex attributes have only one state. The second primitive defines two morph targets with difference values for both vertex attribute semantics. The third primitive defines two morph targets: the first morph target provides difference values for only one vertex attribute, the second morph target is empty. The mesh also defines default morph target weights.
 
 [source,json]
 ----
@@ -1966,7 +1966,7 @@ If the accessor providing stem:[A_i] values has fewer components than are otherw
 [NOTE]
 .Implementation Note
 ====
-For example, original `COLOR_n` values stored with the `"VEC3"` type imply that their alpha values are stem:[1.0] and thus `COLOR_n` delta values provided by `"VEC4"` accessors are applied as if the original values also used the `"VEC4"` type.
+For example, original `COLOR_n` values stored with the `"VEC3"` type imply that their alpha values are stem:[1.0], and thus `COLOR_n` delta values provided by `"VEC4"` accessors are applied as if the original values also used the `"VEC4"` type.
 ====
 
 If the accessor providing latexmath:[\Delta{A}_{m,i}] values has fewer components than are otherwise supported for the vertex attribute semantic, the omitted components are considered zeros for the purpose of this computation.
@@ -1987,7 +1987,7 @@ If the mesh primitive does not specify normals, i.e., if they are implicitly fla
 
 If the mesh primitive does specify normals but a morph target does not provide deltas for them, the normal vectors remain intact for that morph target.
 
-If the tangent vectors were calculated for the mesh primitive (because they were not provided or because the provided tangent vectors were ignored), the tangent vector deltas are also calculated for each morph target using the same algorithms and vertex positions, normals, and texture coordinates with the corresponding deltas applied. The provided tangent deltas are ignored in this case and thus they **SHOULD NOT** be present.
+If the tangent vectors were calculated for the mesh primitive (because they were not provided or because the provided tangent vectors were ignored), the tangent vector deltas are also calculated for each morph target using the same algorithms and vertex positions, normals, and texture coordinates with the corresponding deltas applied. The provided tangent deltas are ignored in this case, and thus they **SHOULD NOT** be present.
 
 If the mesh primitive does specify normals and tangents but a morph target does not provide tangent deltas, the tangent vectors remain intact for that morph target.
 
