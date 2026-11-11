@@ -3177,10 +3177,12 @@ where
 - stem:[n] is the array property's length if the animated property is an array, or one otherwise;
 - stem:[j] is the array property's index if the animated property is an array, or zero otherwise.
 
+The first keyframe's incoming tangent and the last keyframe's outgoing tangent are not used, and thus they **SHOULD** be zeros.
+
 [NOTE]
 .Example
 ====
-If there are three keyframes and the animated property is not an array, the output accessor would have nine elements:
+If there are three keyframes and the animated property is not an array, the output accessor would have nine elements. The latexmath:[\mathit{in}_{0,0}] and latexmath:[\mathit{out}_{2,0}] elements are unused.
 
 [latexmath]
 +++++
@@ -3192,7 +3194,7 @@ If there are three keyframes and the animated property is not an array, the outp
 \end{aligned}
 +++++
 
-If there are three keyframes and the animated property is an array of two elements, the output accessor would have 18 elements:
+If there are three keyframes and the animated property is an array of two elements, the output accessor would have 18 elements. The latexmath:[\mathit{in}_{0,0}], latexmath:[\mathit{in}_{0,1}], latexmath:[\mathit{out}_{2,0}], and latexmath:[\mathit{out}_{2,1}] elements are unused.
 
 [latexmath]
 +++++
@@ -3401,30 +3403,45 @@ Implementations **MAY** approximate these equations to reach application-specifi
 
 This mode is used when the animation sampler interpolation mode is `"CUBICSPLINE"`.
 
-For each timestamp provided by the animation sampler input accessor, there are three associated keyframe values: incoming tangent, animated property value, and outgoing tangent.
+Each interpolation segment is a third-degree polynomial specified in Hermite form, i.e., by the property values and their first derivatives at the keyframes. Keyframe's incoming and outgoing derivatives do not have to match.
+
+For each timestamp provided by the animation sampler input accessor, there are three associated keyframe values: incoming tangent (the derivative for the interpolation segment before the keyframe), animated property value, and outgoing tangent (the derivative for the interpolation segment after the keyframe).
 
 Let
 [none]
 * stem:[a_k], stem:[v_k], and stem:[b_k] be the incoming tangent, property value, and outgoing tangent of the stem:[k]-th frame, respectively.
 
-The interpolated animated property value stem:[v_t] at the timestamp stem:[t_c] is computed as follows.
+The interpolated animated property value stem:[v_t] at the current (requested) timestamp stem:[t_c] is computed as follows.
 
 [latexmath]
 ++++
-v_t = (2t^3 - 3t^2 + 1) \cdot v_k + t_d \cdot (t^3 - 2t^2 + t) \cdot b_k + (-2t^3 + 3t^2) \cdot v_{k+1} + t_d \cdot (t^3 - t^2) \cdot a_{k+1}
+v_t = (2t^3 - 3t^2 + 1) \cdot v_k + (t^3 - 2t^2 + t) \cdot b_k \cdot t_d + (-2t^3 + 3t^2) \cdot v_{k+1} + (t^3 - t^2) \cdot a_{k+1} \cdot t_d
 ++++
-
-If the animated property is a unit quaternion, the computed value is normalized after the interpolation.
-
-When writing out rotation keyframes, exporters **SHOULD** take care to not write out values that can result in an invalid quaternion with all zero values being produced by the interpolation.
 
 [NOTE]
 .Implementation Note
 ====
-This can be achieved by ensuring that latexmath:[v_k \ne -v_{k+1}] for all keyframes.
+This polynomial can also be written in standard form. Note that polynomial coefficients need to be computed only once per each interpolation segment.
+
+[latexmath]
+++++
+\begin{align*}
+A &= 2 v_k + b_k \cdot t_d - 2 v_{k+1} + a_{k+1} \cdot t_d \\
+B &= -3 v_k - 2 b_k \cdot t_d + 3 v_{k+1} - a_{k+1} \cdot t_d \\
+C &= b_k \cdot t_d \\
+D &= v_k \\
+v_t &=  A \cdot t^3 + B \cdot t^2 + C \cdot t + D
+\end{align*}
+++++
 ====
 
-The first incoming tangent stem:[a_1] and last outgoing tangent stem:[b_n] **SHOULD** be zeros as they are not used in cubic spline calculations.
+If the animated property is `"rotation"`, the quaternion is renormalized after interpolating its components. The polynomials **SHOULD NOT** have roots for stem:[t \in (0,1)] common for all four quaternion components within any interpolation segment.
+
+[NOTE]
+.Implementation Note
+====
+If stem:[r \in (0,1)] is a common root for all four polynomials, the quaternion components would be zero when stem:[t = r]. Combined with the required renormalization, this would cause numerical instability in interpolated values for stem:[t \approx r].
+====
 
 [[animations-examples]]
 === Examples
