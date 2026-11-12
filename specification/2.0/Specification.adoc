@@ -2938,11 +2938,13 @@ This specification does not define size or style of non-triangular primitives (s
 [[cameras-overview]]
 === Overview
 
-Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details. A camera is instantiated within a node using the `camera` property of the node.
+Cameras are stored in the asset's `cameras` array. A camera object defines the projection matrix that transforms scene coordinates from the view space to the clip space.
 
-A camera object defines the projection matrix that transforms scene coordinates from the view space to the clip space.
+A camera object **MUST** define a `type` property that designates the type of projection.
 
-A node containing the `camera` property instantiates a camera with that projection matrix and defines the associated view matrix that transforms scene coordinates from the global space to the view space.
+If the value of the `type` property is `"perspective"`, the camera uses perspective projection and the `perspective` property **MUST** be defined. If the value of the `type` property is `"orthographic"`, the camera uses orthographic projection and the `orthographic` property **MUST** be defined. A property not matching the camera type **SHOULD NOT** be defined.
+
+A node containing the `camera` property instantiates a camera with its projection matrix and defines the associated view matrix that transforms scene coordinates from the global space to the view space.
 
 [[view-matrix]]
 === View Matrix
