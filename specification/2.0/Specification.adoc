@@ -766,7 +766,7 @@ Chromaticity coordinates define the interpretation of each primary color channel
 
 glTF 2.0 assets **MAY** contain zero or more _scenes_, the set of visual objects to render.
 
-Scenes are defined in the `scenes` array. A scene is defined by a set of root nodes, i.e., nodes that are not descendants of any node. The indices of the scene's root nodes are defined in the `nodes` array property of the scene. The same root nodes **MAY** appear in multiple scenes.
+Scenes are defined in the `scenes` array. A scene is defined by a set of root nodes, i.e., nodes that are not descendants of any node. The indices of the scene's root nodes are defined in the `nodes` array property of the scene. All elements of the `nodes` array **MUST** be unique. The same root nodes **MAY** appear in multiple scenes.
 
 The root JSON object's `scene` property (note singular) identifies which of the scenes **SHOULD** be displayed at load time. When the `scene` property is undefined, client implementations **MAY** delay rendering until a particular scene is requested.
 
@@ -809,7 +809,7 @@ Nodes are organized in a parent-child hierarchy known informally as the _node hi
 
 The node hierarchy **MUST** be a set of disjoint strict trees. That is node hierarchy **MUST NOT** contain cycles and each node **MUST** have zero or one parent node.
 
-A node lists its children node indices in the `children` array property. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
+A node lists its children node indices in the `children` array property. Each of those nodes could in turn have its own children, creating a hierarchy of nodes. All elements of the `children` array **MUST** be unique.
 
 [NOTE]
 .Example
@@ -2083,7 +2083,7 @@ glTF 2.0 mesh primitives support Linear Blend Skinning via skin objects, joint h
 
 Skins are stored in the `skins` array of the asset. Each skin contains a **REQUIRED** `joints` property that lists the indices of nodes used as joints and an **OPTIONAL** `inverseBindMatrices` property that points to an accessor with inverse bind matrix data.
 
-The `joints` array defines mapping between skin's joint indices and glTF nodes.
+The `joints` array defines mapping between skin's joint indices and glTF nodes. All elements of the `joints` array **MUST** be unique.
 
 If the `inverseBindMatrices` property is defined, the elements of the referenced accessor provide inverse bind matrices in the order of joints. If the `inverseBindMatrices` property is not defined, all inverse bind matrices of the skin are implicitly identity.
 
@@ -3619,7 +3619,7 @@ glTF defines an extension mechanism that allows the base format to be extended w
 ----
 ====
 
-All extensions used in a glTF asset **MUST** be listed in the top-level `extensionsUsed` array.
+All extensions used in a glTF asset **MUST** be listed in the top-level `extensionsUsed` array. All elements of the `extensionsUsed` array **MUST** be unique.
 
 [NOTE]
 .Example
@@ -3635,7 +3635,7 @@ All extensions used in a glTF asset **MUST** be listed in the top-level `extensi
 ----
 ====
 
-All glTF extensions required to load and/or render an asset **MUST** be listed in the top-level `extensionsRequired` array.
+All glTF extensions required to load and/or render an asset **MUST** be listed in the top-level `extensionsRequired` array. All elements of the `extensionsRequired` array **MUST** be unique.
 
 [NOTE]
 .Example
