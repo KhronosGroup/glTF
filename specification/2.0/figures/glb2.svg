@@ -3,6 +3,7 @@
     <marker id="m" orient="auto-start-reverse" overflow="visible"><path fill="none" stroke="#000" d="m-4-2 4 2-4 2"/></marker>
     <path id="c" fill="none" stroke="#000" stroke-width=".5" d="M0 0v12h25V0z"/>
     <text id="u32" fill="#777" font-family="monospace">uint32</text>
+    <text id="u8a" fill="#777" font-family="monospace">uint8[]</text>
     <g id="c1" font-family="monospace">
       <path stroke="#000" stroke-width=".5" marker-end="url(#m)" marker-start="url(#m)" d="M.5 -3h24"/>
       <use href="#c"/>
@@ -19,7 +20,7 @@
       <use href="#c"/><use href="#c" x="25"/><use href="#c" x="50"/>
       <text x="12.5" y="5">chunkLength</text><use href="#u32" x="12.5" y="10"/>
       <text x="37.5" y="5">chunkType</text><use href="#u32" x="37.5" y="10"/>
-      <text x="62.5" y="5">chunkData</text><use href="#u32" x="62.5" y="10"/>
+      <text x="62.5" y="5">chunkData</text><use href="#u8a" x="62.5" y="10"/>
     </g>
   </defs>
   <text y="3" x="25">GLB Header</text>
