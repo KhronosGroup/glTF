@@ -35,7 +35,7 @@ More specifically, this extension consists of two parts within the glTF object s
 
 1. [An array of `micromaps`](#extending-the-gltf-root) in the glTF root extension object. Each element of this array contains data for a number of *micromap triangles*:
     * the index of a buffer view of [packed microtriangle states](#microtriangle-data),
-    * the index of a buffer view of [triangle records](#micromap-triangle-records),
+    * the index of a buffer view of [triangle records](#micromap-triangle-records-and-data),
     * and the number of micromap triangles for each combination of [subdivision level](#subdivision-and-microtriangle-order) and [format](#opacity-formats-and-states).
 2. [A mesh primitive extension object](#extending-mesh-primitives) that associates each triangle of the mesh primitive with a micromap triangle, or with a uniform opacity state.
 
@@ -90,7 +90,7 @@ Each micromap object has the following properties:
 | | Type | Description | Required |
 |-|------|-------------|----------|
 | **data** | `integer` | The index of the buffer view containing the packed microtriangle states. See [Microtriangle Data](#microtriangle-data). | :white_check_mark: Yes |
-| **triangles** | `integer` | The index of the buffer view containing the micromap triangle records. See [Micromap Triangle Records](#micromap-triangle-records). | :white_check_mark: Yes |
+| **triangles** | `integer` | The index of the buffer view containing the micromap triangle records. See [Micromap Triangle Records and Data](#micromap-triangle-records-and-data). | :white_check_mark: Yes |
 | **usageCounts** | `integer[1-*]` | The number of micromap triangles for each usage entry. | :white_check_mark: Yes |
 | **usageLevels** | `integer[1-*]` | The subdivision level of each usage entry. | :white_check_mark: Yes |
 | **usageFormats** | `integer[1-*]` | The opacity format of each usage entry. | :white_check_mark: Yes |
@@ -104,9 +104,10 @@ The `usageCounts`, `usageLevels`, and `usageFormats` arrays together form a list
 - Each element of `usageFormats` **MUST** be `1` or `2`.
 - Each pair of `(usageLevels[i], usageFormats[i])` **MUST** be distinct from the others.
 - For each entry `i`, `usageCounts[i]` **MUST** equal the number of micromap triangle records with subdivision level `usageLevels[i]` and format `usageFormats[i]`.
+- The sum of the `usageCounts` array elements must be equal to the `triangles` buffer view byte length divided by 8. (The [Micromap Triangle Records and Data](#micromap-triangle-records-and-data) section requires the `triangles` buffer view byte length to be divisible by 8, the size in bytes of a micromap triangle record.)
 
 > [!NOTE]
-> As a consequence, the sum of all `usageCounts` elements equals the number of micromap triangle records. The usage entries let an implementation compute the memory required to build a micromap without reading the records.
+> The usage entries let an implementation compute the memory required to build a micromap without reading the records.
 
 The buffer views referenced by `data` and `triangles` **MUST NOT** define `byteStride` or `target`.
 
@@ -205,21 +206,7 @@ Each micromap triangle uses one of the following formats:
 | `1` | 1 | `0` (transparent), `1` (opaque) |
 | `2` | 2 | `0` (transparent), `1` (opaque), `2` (unknown-transparent), `3` (unknown-opaque) |
 
-### Microtriangle Data
-
-The buffer view referenced by `data` contains the packed microtriangle states of all micromap triangles of the micromap. The states of a micromap triangle with subdivision level $L$ and format $F$ occupy
-
-$$
-\left\lceil \frac{4^L \cdot b}{8} \right\rceil
-$$
-
-bytes, starting at the byte offset `dataOffset` of its [record](#micromap-triangle-records), where $b$ is `1` for format `1` and `2` for format `2`.
-
-Within this region, the state of microtriangle `i` occupies bits `i * b` to `i * b + b - 1`, where bit `0` is the least significant bit of the first byte. Bits in the final byte beyond the last microtriangle are unused, and their values **MUST** be ignored.
-
-The region of each micromap triangle **MUST** lie entirely within the `data` buffer view.
-
-### Micromap Triangle Records
+### Micromap Triangle Records and Data
 
 The buffer view referenced by `triangles` contains a tightly packed array of 8-byte records, one per micromap triangle. Its `byteLength` **MUST** be a multiple of `8`. Micromap triangles are numbered by their position in this array, starting at `0`.
 
@@ -228,6 +215,16 @@ The buffer view referenced by `triangles` contains a tightly packed array of 8-b
 | `0` | `uint32` | `dataOffset` | Byte offset of the micromap triangle's states, relative to the start of the `data` buffer view. |
 | `4` | `uint16` | `subdivisionLevel` | Subdivision level. **MUST** be in the range `[0, 12]`. |
 | `6` | `uint16` | `format` | Opacity format. **MUST** be `1` or `2`. |
+
+The states of a micromap triangle with subdivision level $L$ and format $F$ occupy
+
+$$
+\left\lceil \frac{4^L \cdot F}{8} \right\rceil
+$$
+
+bytes within the buffer view referenced by `data`, starting at the byte offset `dataOffset` of its [record](#micromap-triangle-records-and-data). This region **MUST** lie directly within the `data` buffer view.
+
+Within this region, the state of microtriangle `i` occupies bits `i * F` to `(i + 1) * F - 1` inclusive, where bit `0` is the least significant bit of the first byte. Bits in the final byte beyond the last microtriangle are unused, and their values **MUST** be ignored.
 
 ## Micromap Indices
 
