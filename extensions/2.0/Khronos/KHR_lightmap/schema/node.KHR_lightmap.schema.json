@@ -1,0 +1,24 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "node.KHR_lightmap.schema.json",
+    "title": "KHR_lightmap Node Bindings",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "../../../../../specification/2.0/schema/glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "lightmaps": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "$ref": "lightmapBinding.schema.json"
+            },
+            "description": "Complete per-primitive bindings replacing material bindings on this node. Primitive indices MUST be unique."
+        }
+    },
+    "required": [
+        "lightmaps"
+    ]
+}
