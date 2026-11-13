@@ -8,11 +8,11 @@
     "properties": {
         "orthographic": {
             "$ref": "camera.orthographic.schema.json",
-            "description": "An orthographic camera containing properties to create an orthographic projection matrix. This property **MUST NOT** be defined when `perspective` is defined."
+            "description": "An orthographic camera containing properties to create an orthographic projection matrix."
         },
         "perspective": {
             "$ref": "camera.perspective.schema.json",
-            "description": "A perspective camera containing properties to create a perspective projection matrix. This property **MUST NOT** be defined when `orthographic` is defined."
+            "description": "A perspective camera containing properties to create a perspective projection matrix."
         },
         "type": {
             "description": "Specifies if the camera uses a perspective or orthographic projection.",
@@ -30,8 +30,5 @@
             ]
         }
     },
-    "required": [ "type" ],
-    "not": {
-        "required": [ "orthographic", "perspective" ]
-    }
+    "required": [ "type" ]
 }
