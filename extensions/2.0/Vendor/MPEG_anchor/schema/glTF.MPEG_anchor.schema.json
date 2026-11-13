@@ -1,0 +1,27 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title": "glTF_MPEG_anchor_extension",
+    "type": "object",
+    "description": "MPEG anchor",
+    "properties": {
+        "trackables": {
+            "type": "array",
+            "description": "Provides a list of trackables used by the anchor objects. ",
+            "items": {
+                "type": "object",
+                "$ref": "MPEG_anchor.trackable.schema.json"
+            },
+            "minItems": 1
+        },
+        "anchors": {
+            "type": "array",
+            "description": "Provides a list of anchors for a scene or for root nodes to enable AR anchoring",
+            "items": {
+                "type": "object",
+                "$ref": "MPEG_anchor.anchor.schema.json"
+            },
+            "minItems": 1
+        }
+    },
+    "required": ["trackables","anchors"]
+}
